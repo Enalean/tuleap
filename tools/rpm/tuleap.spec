@@ -36,6 +36,7 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
 
+AutoReqProv: no
 #Prereq: /sbin/chkconfig, /sbin/service
 
 # Package cutting is still a bit a mess so do not force dependency on custmization package yet
@@ -59,6 +60,8 @@ Requires: php-zendframework = 1.8.1
 Requires: php-pecl-json
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
+# Automatic perl dependencies
+#perl(APR::Pool)  perl(APR::Table)  perl(Apache2::Access)  perl(Apache2::Const)  perl(Apache2::Module)  perl(Apache2::RequestRec)  perl(Apache2::RequestUtil)  perl(Apache2::ServerRec)  perl(Carp)  perl(Cwd)  perl(DBI)  perl(Digest::MD5)  perl(Encode)  perl(File::Basename)  perl(File::Copy)  perl(HTTP::Request::Common)  perl(LWP::UserAgent)  perl(Net::LDAP)  perl(POSIX)  perl(Time::Local)  perl(strict)  perl(subs)  perl(vars)  perl(warnings) 
 # Apache
 Requires: httpd, mod_ssl, openssl
 # Mysql Client

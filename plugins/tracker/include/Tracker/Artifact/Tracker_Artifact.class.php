@@ -28,12 +28,13 @@ require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('dao/PriorityDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
+require_once('common/reference/CrossReferenceManager.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
-
-    const REFERENCE_NATURE = 'plugin_tracker_artifact';
+    const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
+    const REFERENCE_NATURE  = 'plugin_tracker_artifact';
 
     public $id;
     public $tracker_id;
@@ -148,41 +149,47 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
         }
         if ($can_access) {
-            // Full access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_FULL');
-            foreach ( $rows as $row ) {
-                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                    return true;
-                }
-            }
-
-            // 'submitter' access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_SUBMITTER');
-            foreach ($rows as $row) {
-                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                    // check that submitter is also a member
-                    $user_subby = $um->getUserById($this->getSubmittedBy());
-                    if ($user_subby->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                        return true;
-                    }
-                }
-            }
-
-            // 'assignee' access
-            $rows = $this->getTracker()->permission_db_authorized_ugroups('PLUGIN_TRACKER_ACCESS_ASSIGNEE');
-            foreach ($rows as $row) {
-                if ($user->isMemberOfUGroup($row['ugroup_id'], $this->getTracker()->getGroupId())) {
-                    $contributor_field = $this->getTracker()->getContributorField();
-                    if ($contributor_field) {
-                        // check that one of the assignees is also a member
-                        $assignees = $this->getValue($contributor_field)->getValue();
-                        foreach ($assignees as $assignee) {
-                            $user_assignee = $um->getUserById($assignee);
-                            if ($user_assignee->isMemberOfUGroup( $row['ugroup_id'], $this->getTracker()->getGroupId())) {
+            $permissions = $this->getTracker()->getPermissionsAuthorizedUgroups();
+            foreach ($permissions  as $permission => $ugroups) {
+                switch($permission) {
+                    // Full access
+                    case 'PLUGIN_TRACKER_ACCESS_FULL':
+                        foreach ($ugroups as $ugroup) {
+                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
                                 return true;
                             }
                         }
-                    }
+                        break;
+                    // 'submitter' access
+                    case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
+                        foreach ($ugroups as $ugroup) {
+                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
+                                // check that submitter is also a member
+                                $user_subby = $um->getUserById($this->getSubmittedBy());
+                                if ($user_subby->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
+                                    return true;
+                                }
+                            }
+                        }
+                    break;
+                    // 'assignee' access
+                    case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+                        foreach ($ugroups as $ugroup) {
+                            if ($user->isMemberOfUGroup($ugroup, $this->getTracker()->getGroupId())) {
+                                $contributor_field = $this->getTracker()->getContributorField();
+                                if ($contributor_field) {
+                                    // check that one of the assignees is also a member
+                                    $assignees = $this->getValue($contributor_field)->getValue();
+                                    foreach ($assignees as $assignee) {
+                                        $user_assignee = $um->getUserById($assignee);
+                                        if ($user_assignee->isMemberOfUGroup( $ugroup, $this->getTracker()->getGroupId())) {
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    break;
                 }
             }
         }
@@ -271,6 +278,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $uh = UserHelper::instance();
         $um = UserManager::instance();
         $cs = $this->getChangesets();
+        $hp = Codendi_HTMLPurifier::instance();
         $output = '';
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
@@ -293,13 +301,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     break;
                 case 'text':
                     $user = $um->getUserById($comment->submitted_by);
-                    $output = PHP_EOL;
+                    $output .= PHP_EOL;
                     $output .= '----------------------------- ';
                     $output .= PHP_EOL;
                     $output .= $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_date') . util_timestamp_to_userdateformat($comment->submitted_on);
                     $output .= "\t" . $GLOBALS['Language']->getText('plugin_tracker_artifact','mail_followup_by') . $uh->getDisplayNameFromUser($user);
                     $output .= PHP_EOL;
-                    $output .= $comment->body;
+                    $output .= $comment->getPurifiedBodyForText();
                     $output .= PHP_EOL;
                     $output .= PHP_EOL;
                     break;
@@ -629,7 +637,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $html .= '</p>';
         }
         $html .= '<b>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'add_comment') .'</b><br />';
-        $html .= '<textarea wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
+        $html .= '<textarea id="tracker_followup_comment_new" wrap="soft" rows="12" cols="80" style="width:99%;" name="artifact_followup_comment" id="artifact_followup_comment">'. $hp->purify($submitted_comment, CODENDI_PURIFIER_CONVERT_HTML).'</textarea>';
         $html .= '</div>';
 
         if ($current_user->isAnonymous()) {
@@ -661,6 +669,27 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * Returns HTML code to display the artifact history
+     *
+     * @param Codendi_Request $request The data from the user
+     *
+     * @return String The valid followup comment format
+     */
+    private function validateCommentFormat($request, $comment_format_field_name) {
+        $default_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        $formats = array(
+            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
+            Tracker_Artifact_Changeset_Comment::HTML_COMMENT
+        );
+        $comment_format = $request->getValidated(
+            $comment_format_field_name,
+            new Valid_WhiteList($comment_format_field_name, $formats),
+            $default_format
+        );
+        return $comment_format;
+    }
+
+    /**
      * Process the artifact functions
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
@@ -674,7 +703,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
-                        $changeset->updateComment($request->get('content'), $current_user);
+                        $comment_format = $this->validateCommentFormat($request, 'comment_format');
+                        $changeset->updateComment($request->get('content'), $current_user, $comment_format);
                         if ($request->isAjax()) {
                             //We assume that we can only change a comment from a followUp
                             echo $changeset->getComment()->fetchFollowUp();
@@ -707,10 +737,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'artifact-update':
 
                 //TODO : check permissions on this action?
-                $fields_data = $request->get('artifact');
+                $fields_data   = $request->get('artifact');
+                $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
-                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'))) {
+                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format)) {
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
 
@@ -932,10 +963,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param User    $submitter         The user who is doing the update
      * @param string  $email             The email of the person who updates the artifact if modification is done in anonymous mode
      * @param boolean $send_notification true if a notification must be sent, false otherwise
+     * @param string  $comment_format     The comment (follow-up) type ("text" | "html")
      *
      * @return boolean True if update is done without error, false otherwise
      */
-    public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true) {
+    public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
         $is_valid = true;
         $is_submission = false;
 
@@ -952,7 +984,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
                         //Store the comment
-                        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0);
+                        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
 
                         //extract references from the comment
                         $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupID(), $submitter->getId(), $this->getTracker()->getItemName());
@@ -1517,6 +1549,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
     }
 
+    public function delete(User $user) {
+        $this->getDao()->startTransaction();
+        foreach($this->getChangesets() as $changeset) {
+            $changeset->delete($user);
+        }
+        $this->getPermissionsManager()->clearPermission(self::PERMISSION_ACCESS, $this->getId());
+        $this->getCrossReferenceManager()->deleteEntity($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $this->getDao()->deleteArtifactLinkReference($this->getId());
+        $this->getDao()->deletePriority($this->getId());
+        $this->getDao()->delete($this->getId());
+        $this->getDao()->commit();
+    }
+
+    protected function getDao() {
+        return new Tracker_ArtifactDao();
+    }
+
+    protected function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+
+    protected function getCrossReferenceManager() {
+        return new CrossReferenceManager();
+    }
 }
 
 ?>

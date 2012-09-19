@@ -979,6 +979,10 @@ plugin_tracker_artifact	removed	removed
 plugin_tracker_artifact	added	added
 plugin_tracker_artifact	formelement_artifactlink_help	Enter artifact ids separated with a comma
 plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Create a new one
+plugin_tracker_artifact	formelement_artifactlink_choose_parent	Select $1 parent: 
+plugin_tracker_artifact	formelement_artifactlink_will_have_as_parent	Will have $1 as parent.
+plugin_tracker_artifact	formelement_artifactlink_open_parent	Open $1
+
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
 plugin_tracker_artifact	fields_not_valid	Fields are not valid
@@ -1132,6 +1136,17 @@ plugin_tracker_admin	manage_dependencies_desc	Define how values in one field dep
 
 plugin_tracker_admin	tracker_not_duplicated	Tracker $1 not duplicated
 plugin_tracker_admin	successfully_updated	Tracker successfully updated.
+
+plugin_tracker_admin	clean	Delete artifacts
+plugin_tracker_admin	clean_desc	Permanently purge an artifact from the tracker
+plugin_tracker_admin	clean_info	Allow to permanently delete an artifact. Warning: <strong>There is no way to restore the artifact</strong>. This operation should be an exception.
+plugin_tracker_admin	clean_id	Id of the artifact to delete: 
+plugin_tracker_admin	clean_error_noart	Artifact $1 doesn't exist or doesn't belong to current tracker
+plugin_tracker_admin	clean_info_deleted	Artifact $1 successfully deleted
+plugin_tracker_admin	clean_confirm	Confirm
+plugin_tracker_admin	clean_cancel	Cancel
+plugin_tracker_admin	clean_confirm_text	<h3>You are about to delete permanently the artifact "$1".</h3><p><strong>There is no way to restore the artifact.</strong></p>
+plugin_tracker_admin	clean_cancel_deleted	Delete canceled
 
 plugin_tracker_admin_notification	successfully_updated	Notifications successfully updated.
 

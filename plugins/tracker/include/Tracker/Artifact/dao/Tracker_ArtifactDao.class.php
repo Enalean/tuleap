@@ -19,6 +19,7 @@
  */
 
 require_once 'PriorityDao.class.php';
+require_once dirname(__FILE__).'/../../FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php';
 
 class Tracker_ArtifactDao extends DataAccessObject {
 
@@ -122,6 +123,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -164,6 +167,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -208,6 +213,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -299,10 +306,20 @@ class Tracker_ArtifactDao extends DataAccessObject {
                 WHERE id = $id ";
         return $this->update($sql);
     }
-    
+
     public function delete($id) {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
+    }
+
+    public function deleteArtifactLinkReference($id) {
+        $dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+        return $dao->deleteReference($id);
+    }
+
+    public function deletePriority($id) {
+        $dao = new Tracker_Artifact_PriorityDao();
+        return $dao->remove($id);
     }
 
     /**

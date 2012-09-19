@@ -44,7 +44,15 @@ class DataAccessObject {
     public function DataAccessObject($da = null) {
         $this->__construct($da);
     }
-    
+
+    public function startTransaction() {
+        $this->da->startTransaction();
+    }
+
+    public function commit() {
+        $this->da->commit();
+    }
+
     /**
      * For SELECT queries
      *

@@ -41,11 +41,11 @@ abstract class GraphOnTrackersV5_Widget_Chart extends Widget {
         $store_in_session = false;
         
         if ($chart = GraphOnTrackersV5_ChartFactory::instance()->getChart(null, $this->chart_id, $store_in_session)) {
-            echo $chart->fetch($store_in_session);
-            echo '<br />';
-            echo $chart->renderer->fetchWidgetGoToReport();
+            $content .= $chart->fetch($store_in_session);
+            $content .= '<br />';
+            $content .= $chart->renderer->fetchWidgetGoToReport();
         } else {
-            echo '<em>Chart does not exist</em>';
+            $content .= '<em>Chart does not exist</em>';
         }
         return $content;
     }

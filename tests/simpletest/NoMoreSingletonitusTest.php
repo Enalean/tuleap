@@ -19,15 +19,17 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/SingletonCounter.class.php';
+
 /**
  * Avoid contaminating new classes with singleton lookup
  */
 class NoMoreSingletonitusTest extends TuleapTestCase {
     
     public function testThereAreNoNewSingletonLookups() {
-        $expected_singleton_lookups = file_get_contents(dirname(__FILE__).'/current_singleton_count.txt');
-        $basedir                    = dirname(__FILE__).'/../..';
-        $actual_singleton_lookups   = $this->countSingletonLookupsInProject($basedir);
+        $singleton_counter          = new SingletonCounter();
+        $expected_singleton_lookups = $singleton_counter->contentsOfCountFile();
+        $actual_singleton_lookups   = $singleton_counter->countSingletonLookupsInProject();
         $new_singletons             = $actual_singleton_lookups - $expected_singleton_lookups;
 
         $this->assertFalse($new_singletons > 0, 
@@ -38,20 +40,5 @@ class NoMoreSingletonitusTest extends TuleapTestCase {
                  please decrease the current_number_of_singleton_lookups variable in this test>
                  It should be : $actual_singleton_lookups");
     }
-    
-    private function countSingletonLookupsInProject($basedir) {
-        $dirs                       = "$basedir/plugins $basedir/src $basedir/tools";
-        $count_command              = "grep -rc --exclude='*~' '::instance()' $dirs| awk -F: '{n=n+$2} END { print n}'";
-        $output                     = $this->getSystemOutput($count_command);
-        return $output[0];
-    }
-
-    private function getSystemOutput($cmd) {
-        $result;
-        exec($cmd, $result);
-        return $result;
-    }
-
 }
-
 ?>

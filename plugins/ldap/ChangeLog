@@ -1,3 +1,9 @@
+Version 3.18 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
+Version 3.17 - Tuleap 5.4
+    * Synchronize binded ldap ugroup (Contrib STMicroelectronics)
+
 Version 3.16 - Tuleap 5.3
     * Fix notice
 

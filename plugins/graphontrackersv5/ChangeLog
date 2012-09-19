@@ -1,3 +1,6 @@
+Version 5.0.4 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
 Version 5.0.3 - Tuleap 5.4
     * Ajust API after tracker v5.8.14
 

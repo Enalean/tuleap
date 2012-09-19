@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'FullTextSearch/IIndexDocuments.class.php';
 require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemManager.class.php';
 /**
  * Class responsible to send requests to an indexation server
@@ -45,6 +44,18 @@ class FullTextSearchActions {
     public function indexNewDocument(Docman_Item $item, Docman_Version $version) {
         $indexed_data = $this->getIndexedData($item, $version);
         $this->client->index($indexed_data, $item->getId());
+    }
+
+    /**
+     * Index a new document with permissions
+     *
+     * @param Docman_Item    $item    The docman item
+     * @param Docman_Version $version The version to index
+     */
+    public function indexNewVersion(Docman_Item $item, Docman_Version $version) {
+        $update_data = $this->client->initializeSetterData();
+        $update_data = $this->client->appendSetterData($update_data, 'file', $this->fileContentEncode($version->getPath()));
+        $this->client->update($item->getid(), $update_data);
     }
 
     /**

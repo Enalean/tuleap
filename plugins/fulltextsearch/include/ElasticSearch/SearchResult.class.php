@@ -21,18 +21,21 @@
 class ElasticSearch_SearchResult {
     public $item_title;
     public $url;
+    public $display_permissions;
     public $permissions;
     public $project_name;
     public $highlight;
         
-    public function __construct(array $hit, ProjectManager $project_manager) {
-        $project            = $project_manager->getProject($hit['fields']['group_id']);
-        $this->item_title   = $hit['fields']['title'];
-        $this->url          = '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
-        $this->permissions  = implode(', ', $hit['fields']['permissions']);
-        $this->project_name = $project->getPublicName();
-        $this->highlight    = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
+    public function __construct(array $hit, Project $project) {
+        $this->item_title    = $hit['fields']['title'];
+        $this->url           = '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
+        $this->project_name  = $project->getPublicName();
+        $this->highlight     = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
+        $this->has_highlight = !empty($this->highlight);
+        $this->display_permissions = isset($hit['fields']['permissions']);
+        if ($this->display_permissions) {
+            $this->permissions = implode(', ', $hit['fields']['permissions']);
+        }
     }
 }
-
 ?>

@@ -19,8 +19,11 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
+require_once 'autoload.php';
 
 class fulltextsearchPlugin extends Plugin {
+
+    const SEARCH_TYPE = 'fulltext';
 
     private $actions;
 
@@ -34,16 +37,48 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('plugin_docman_event_del', 'plugin_docman_event_del', false);
         $this->_addHook('plugin_docman_event_update', 'plugin_docman_event_update', false);
         $this->_addHook('plugin_docman_event_perms_change', 'plugin_docman_event_perms_change', false);
+        $this->_addHook('plugin_docman_event_new_version', 'plugin_docman_event_new_version', false);
 
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
 
-        // style
+        // assets
         $this->_addHook('cssfile', 'cssfile', false);
+        $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
 
         // system events
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
+
+        // Search
+        $this->_addHook('search_type_entry', 'search_type_entry', false);
+        $this->_addHook('search_type', 'search_type', false);
+    }
+
+    private function getCurrentUser() {
+        return UserManager::instance()->getCurrentUser();
+    }
+
+    public function search_type_entry($params) {
+        if ($this->getCurrentUser()->useLabFeatures()) {
+            $params['output'] .= '<option value="'. self::SEARCH_TYPE .'" ';
+            if ($params['type_of_search'] == self::SEARCH_TYPE) {
+                $params['output'] .= 'selected="selected"';
+            }
+            $params['output'] .= '>'. 'Fulltext';
+            $params['output'] .= '</option>';
+        }
+    }
+
+    public function search_type($params) {
+        if ($this->getCurrentUser()->useLabFeatures()) {
+            if ($params['type_of_search'] === self::SEARCH_TYPE) {
+                $params['search_type']        = true;
+                $params['pagination_handled'] = true;
+
+                $this->getSearchController()->search();
+            }
+        }
     }
 
     public function system_event_get_types($params) {
@@ -51,6 +86,7 @@ class fulltextsearchPlugin extends Plugin {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_DELETE';
+        $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE';
     }
 
     /**
@@ -80,7 +116,6 @@ class fulltextsearchPlugin extends Plugin {
 
     private function getActions() {
         if (!isset($this->actions) && ($search_client = $this->getIndexClient())) {
-            require_once 'FullTextSearchActions.class.php';
             $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
         }
         return $this->actions;
@@ -120,12 +155,19 @@ class fulltextsearchPlugin extends Plugin {
         $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS', SystemEvent::PRIORITY_HIGH, $params['item']);
     }
 
+    /**
+     * Event triggered when the permissions on a document version update
+     */
+    public function plugin_docman_event_new_version($params) {
+        // will be done in plugin_docman_after_new_document since we
+        // receive both event for a new document
+        if ($params['version']->getNumber() > 1) {
+            $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+        }
+    }
+
     private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
         if ($this->isAllowed($item->getGroupId())) {
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php';
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_DELETE.class.php';
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_INDEX.class.php';
-            require_once 'SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
 
             $params = $item->getGroupId() . SystemEvent::PARAMETER_SEPARATOR . $item->getId();
             if ($additional_params) {
@@ -150,57 +192,93 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function cssfile($params) {
-        // Only show the stylesheet if we're actually in the FullTextSearch pages.
-        // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if ($this->canIncludeAssets()) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
         }
     }
 
+    function combined_scripts($params) {
+        $params['scripts'] = array_merge(
+            $params['scripts'],
+            array(
+                $this->getPluginPath().'/script.js',
+            )
+        );
+    }
+
+    private function canIncludeAssets() {
+        return strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/search/') === 0;
+    }
+
     private function getIndexClient() {
-        $factory     = $this->getClientFactory();
-        $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
-        $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
-        $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-        return $factory->buildIndexClient($client_path, $server_host, $server_port);
+        $factory         = $this->getClientFactory();
+        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
+        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
+        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
+        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password);
     }
 
     private function getSearchClient() {
-        $factory     = $this->getClientFactory();
-        $client_path = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
-        $server_host = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
-        $server_port = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
-        return $factory->buildSearchClient($client_path, $server_host, $server_port, ProjectManager::instance());
+        $factory         = $this->getClientFactory();
+        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
+        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
+        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
+        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager());
+    }
+
+    private function getSearchAdminClient() {
+        $factory         = $this->getClientFactory();
+        $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
+        $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
+        $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
+        $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
+        $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
+        return $factory->buildSearchAdminClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager());
     }
 
     private function getClientFactory() {
-        require_once 'ElasticSearch/ClientFactory.class.php';
         return new ElasticSearch_ClientFactory();
     }
 
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'FulltextsearchPluginInfo')) {
-            require_once('FulltextsearchPluginInfo.class.php');
             $this->pluginInfo = new FulltextsearchPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
+    private function getSearchController() {
+        return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient());
+    }
+
+    private function getAdminController() {
+        return new FullTextSearch_Controller_Admin($this->getRequest(), $this->getSearchAdminClient());
+    }
+
+    private function getProjectManager() {
+        return ProjectManager::instance();
+    }
+
+    private function getRequest() {
+        return HTTPRequest::instance();
+    }
+
     public function process() {
+        $request = $this->getRequest();
         // Grant access only to site admin
-        if (!UserManager::instance()->getCurrentUser()->isSuperUser()) {
+        if (!$request->getCurrentUser()->isSuperUser()) {
             header('Location: ' . get_server_url());
         }
 
-        include_once 'FullTextSearch/Controller/Search.class.php';
-
-        $request    = HTTPRequest::instance();
-        $controller = new FullTextSearch_Controller_Search($request, $this->getSearchClient());
-        switch ($request->get('func')) {
-            case 'search':
+        $controller = $this->getAdminController();
+        if ($request->get('words')) {
                 $controller->search();
-                break;
-            default:
+        } else {
                 $controller->index();
         }
     }

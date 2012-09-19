@@ -977,6 +977,10 @@ plugin_tracker_artifact	removed	retiré
 plugin_tracker_artifact	added	ajouté
 plugin_tracker_artifact	formelement_artifactlink_help	Entrez des ids d'artefacts séparés par une virgule
 plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Créer un nouvel artefact
+plugin_tracker_artifact	formelement_artifactlink_choose_parent	Sélectionner un parent $1 : 
+plugin_tracker_artifact	formelement_artifactlink_will_have_as_parent	Aura $1 comme parent
+plugin_tracker_artifact	formelement_artifactlink_open_parent	$1 ouvert(es)
+
 plugin_tracker_artifact	unable_update	Impossible de mettre à jour l'artefact
 plugin_tracker_artifact	no_changes	Aucun changement pour l'artefact $1
 plugin_tracker_artifact	fields_not_valid	Les champs ne sont pas valides
@@ -1130,6 +1134,17 @@ plugin_tracker_admin	manage_dependencies_desc	Définir comment les valeurs d'un 
 
 plugin_tracker_admin	tracker_not_duplicated	L'outil de suivi $1 n'a pas été copié
 plugin_tracker_admin	successfully_updated	Outil de suivi mis à jour avec succès.
+
+plugin_tracker_admin	clean	Suppression d'artefact
+plugin_tracker_admin	clean_desc	Efface de manière permanente un artifact de ce tracker
+plugin_tracker_admin	clean_info	Cette opération efface de manière irréversible un artefact de la base. Attention : <strong>il n'y a aucune possibilité de restaurer les données</strong>. Cette opération doit rester exceptionnelle.
+plugin_tracker_admin	clean_id	Id de l'artefact à supprimer: 
+plugin_tracker_admin	clean_error_noart	L'artefact $1 n'existe pas ou n'appartient pas à ce tracker
+plugin_tracker_admin	clean_info_deleted	L'artefact $1 a été supprimé
+plugin_tracker_admin	clean_confirm	Confirmer
+plugin_tracker_admin	clean_cancel	Annuler
+plugin_tracker_admin	clean_confirm_text	<h3>Vous êtes sur le point de supprimer définitivement "$1".</h3><p><strong>Cette opération est irréversible, il n'y a aucun moyen de restauration des données supprimées.</strong></p>
+plugin_tracker_admin	clean_cancel_deleted	Suppression annulée
 
 plugin_tracker_admin_notification	successfully_updated	Notifications mises à jour avec succès.
 

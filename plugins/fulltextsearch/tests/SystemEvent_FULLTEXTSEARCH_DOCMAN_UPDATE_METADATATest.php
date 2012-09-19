@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php';
+require_once dirname(__FILE__) .'/../include/autoload.php';
 require_once 'SystemEvent_FULLTEXTSEARCH_DOCMANTest.class.php';
 
 class SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATATest extends SystemEvent_FULLTEXTSEARCH_DOCMANTest {

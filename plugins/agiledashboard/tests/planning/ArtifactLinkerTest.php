@@ -19,14 +19,15 @@
  */
 
 require_once dirname(__FILE__).'/../../include/autoload.php';
+require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../builders/aPlanning.php';
 require_once dirname(__FILE__).'/../../include/Planning/ArtifactLinker.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 class Planning_ArtifactLinkerTest extends TuleapTestCase {
 
     protected $faq_id     = 13;
+    protected $group_id   = 666;
     protected $corp_id    = 42;
     protected $product_id = 56;
     protected $release_id = 7777;
@@ -36,11 +37,13 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        // corporation     -----> theme
-        // `- product      -----> epic
-        //    `- release   -----> epic
-        //       `- sprint
+        // group
+        // `- corporation     -----> theme
+        //    `- product      -----> epic
+        //       `- release   -----> epic
+        //          `- sprint
         // faq
+        $group_tracker   = aTracker()->build();
         $corp_tracker    = aTracker()->build();
         $product_tracker = aTracker()->build();
         $release_tracker = aTracker()->build();
@@ -63,10 +66,11 @@ class Planning_ArtifactLinkerTest extends TuleapTestCase {
         $this->artifact_factory = mock('Tracker_ArtifactFactory');
 
         $this->faq     = $this->getArtifact($this->faq_id,     $faq_tracker,     array());
-        $this->corp    = $this->getArtifact($this->corp_id,    $corp_tracker,    array());
-        $this->product = $this->getArtifact($this->product_id, $product_tracker, array($this->corp));
-        $this->release = $this->getArtifact($this->release_id, $release_tracker, array($this->product, $this->corp));
-        $this->sprint  = $this->getArtifact($this->sprint_id,  $sprint_tracker,  array($this->release, $this->product, $this->corp));
+        $this->group   = $this->getArtifact($this->group_id,   $group_tracker,   array());
+        $this->corp    = $this->getArtifact($this->corp_id,    $corp_tracker,    array($this->group));
+        $this->product = $this->getArtifact($this->product_id, $product_tracker, array($this->corp, $this->group));
+        $this->release = $this->getArtifact($this->release_id, $release_tracker, array($this->product, $this->corp, $this->group));
+        $this->sprint  = $this->getArtifact($this->sprint_id,  $sprint_tracker,  array($this->release, $this->product, $this->corp, $this->group));
         $this->theme   = $this->getArtifact($this->theme_id,   $theme_tracker,   array());
         // Epic has no parent yet because the whole thing is to manage Theme creation after Epic
         $this->epic    = $this->getArtifact($this->epic_id,    $epic_tracker,    array());

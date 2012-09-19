@@ -752,6 +752,10 @@ class ReferenceManager {
     function _getReferenceFromKeywordAndNumArgs($keyword,$group_id,$num_args) {
         $this->_initProjectReferences($group_id);
         $refs = $this->activeReferencesByProject[$group_id];
+        // This part of the code prevent cross ref to wiki subpage to work
+        // wiki #sub/page/2 should extract a link to the version 2 of the wikipage "sub/page"
+        // References contains a "num_args" (args separated by '/') nevertheless
+        // we don't know in advance the number of sub pages
         if (isset($refs["$keyword"]))
             if (isset($refs["$keyword"][$num_args]))
                 return $refs["$keyword"][$num_args];

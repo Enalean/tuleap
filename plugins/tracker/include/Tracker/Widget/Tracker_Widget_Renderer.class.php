@@ -41,16 +41,31 @@ abstract class Tracker_Widget_Renderer extends Widget {
     }
 
     function getContent() {
-        $content = '';
-        $arrf = Tracker_Report_RendererFactory::instance();
-        $store_in_session = false;
-        if ($renderer = $arrf->getReportRendererById($this->renderer_id, null, $store_in_session)) {
-            $current_user = UserManager::instance()->getCurrentUser();
-            echo $renderer->fetchWidget($current_user);
+        $renderer = $this->getRenderer();
+        if ($renderer) {
+            return $renderer->fetchWidget($this->getCurrentUser());
         } else {
-            echo '<em>Renderer does not exist</em>';
+            return '<em>Renderer does not exist</em>';
         }
-        return $content;
+    }
+
+    /**
+     * Obtain the report renderer.
+     *
+     * @return Tracker_Report_Renderer
+     */
+    function getRenderer() {
+        $store_in_session = false;
+        $arrf             = Tracker_Report_RendererFactory::instance();
+        $renderer         = $arrf->getReportRendererById($this->renderer_id, null, $store_in_session);
+        if ($renderer) {
+            $tracker = $renderer->report->getTracker();
+            $project = $tracker->getProject();
+            if ($tracker->isActive() && $project->isActive()) {
+                return $renderer;
+            }
+        }
+        return null;
     }
 
     function isAjax() {

@@ -257,24 +257,8 @@ class URLVerification {
     public function verifyRequest($server) {
         $user = $this->getCurrentUser();
         if (!$GLOBALS['sys_allow_anon'] && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
-            $returnTo = urlencode((($server['REQUEST_URI'] === "/")?"/my/":$server['REQUEST_URI']));
-            $url = parse_url($server['REQUEST_URI']);
-            if (isset($url['query'])) {
-                $query = $url['query'];
-                if (strstr($query, 'pv=2')) {
-                    $returnTo .= "&pv=2";
-                }
-            }
-            if (strpos($url['path'], '/projects') === 0) {
-                $default_content_type = 'text/html';
-                $script               = 'project_home';
-                $content_type         = util_negociate_alternate_content_types($script, $default_content_type);
-                if ($content_type != $default_content_type) {
-                    header('HTTP/1.0 401 Unauthorized', true, 401);
-                    exit;
-                }
-            }
-            $this->urlChunks['script']   = '/account/login.php?return_to='.$returnTo;
+            $redirect = new URLRedirect();
+            $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
         }
     }
 
@@ -467,10 +451,8 @@ class URLVerification {
      * @return void
      */
     function displayRestrictedUserError($url) {
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit','exit_error')));
         $error = new Error_PermissionDenied_RestrictedUser($url);
         $error->buildInterface();
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
     }
     
@@ -518,17 +500,10 @@ class URLVerification {
      * @return void
      */
     function displayPrivateProjectError($url) {
-        header('HTTP/1.0 401 Unauthorized', true, 401);
-        $default_content_type = 'text/html';
-        $script               = 'project_home';
-        $content_type         = util_negociate_alternate_content_types($script, $default_content_type);
-        if ($content_type != $default_content_type) {
-            exit;
-        }
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
+        $redirect = new URLRedirect();
+        $redirect->send401UnauthorizedHeader();
         $sendMail = new Error_PermissionDenied_PrivateProject($url);
         $sendMail->buildInterface();
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
     }
 

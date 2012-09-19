@@ -23,9 +23,11 @@ $em->processEvent('plugins_powered_search', array('type_of_search' => $type_of_s
 
 
 if ($type_of_search !== "tracker" && $type_of_search !== "wiki" && !$plugins_powered_search) {
+    if (!$request->isAjax()) {
         $HTML->header(array('title'=>$Language->getText('search_index','search')));
         echo "<P><CENTER>";
         $HTML->bodySearchBox();
+    }
 }
 $hp = Codendi_HTMLPurifier::instance();
 /*
@@ -49,7 +51,10 @@ if (!$words) {
 	exit;
 }
 
-	echo '</CENTER><P>';
+if (!$request->isAjax()) {
+    echo '</CENTER><P>';
+}
+
 	
 $words = trim($words);
 $no_rows = 0;
@@ -63,6 +68,8 @@ if (isset($_REQUEST['exact']) && $_REQUEST['exact']) {
 if (!isset($offset) || !$offset || $offset < 0) {
 	$offset = 0;
 }
+
+$pagination_handled = false;
 
 if ($type_of_search == "soft") {
 	/*
@@ -515,14 +522,17 @@ if ($type_of_search == "soft") {
     $rows_returned = 0;
     $rows = 0;
 
-    $eParams = array();
-    $eParams['words']          = $_REQUEST['words'];
-    $eParams['offset']         = $offset;
-    $eParams['nbRows']         = 25;
-    $eParams['type_of_search'] = $type_of_search;
-    $eParams['search_type']    =& $matchingSearchTypeFound; 
-    $eParams['rows_returned']  =& $rows_returned;
-    $eParams['rows']           =& $rows;
+    $eParams = array(
+        'words'              => $_REQUEST['words'],
+        'offset'             => $offset,
+        'nbRows'             => 25,
+        'type_of_search'     => $type_of_search,
+        'search_type'        => &$matchingSearchTypeFound,
+        'rows_returned'      => &$rows_returned,
+        'rows'               => &$rows,
+        'pagination_handled' => &$pagination_handled,
+        'group_id'           => $request->get('group_id'),
+    );
 
     $em =& EventManager::instance();
     $em->processEvent('search_type', $eParams);
@@ -533,7 +543,7 @@ if ($type_of_search == "soft") {
 }
 
    // This code puts the nice next/prev.
-if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
+if ( !$pagination_handled && !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 
 	echo "<BR>\n";
 
@@ -571,10 +581,11 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 }
 
 
-
-if (($type_of_search !== "tracker" &&  $type_of_search !== "all_trackers" ) || !isset($ath)) {
-    $HTML->footer(array());
-} else {
-    $ath->footer(array());
+if (! $request->isAjax()) {
+    if (($type_of_search !== "tracker" &&  $type_of_search !== "all_trackers" ) || !isset($ath)) {
+        $HTML->footer(array());
+    } else {
+        $ath->footer(array());
+    }
 }
 ?>
