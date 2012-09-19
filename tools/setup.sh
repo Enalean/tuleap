@@ -19,11 +19,21 @@ if [ -e /etc/debian_version ]; then
     PROJECT_NAME="tuleap"
     PROJECT_ADMIN="www-data"
     TULEAP_CACHE_DIR="/var/cache/tuleap"
+    NAMED_SERVICE="bind9"
+    MYSQLD_SERVICE="mysql"
+    SSHD_SERVICE="ssh"
+    CROND_SERVICE="cron"
+    HTTPD_SERVICE="apache2"
 else
     INSTALL_PROFILE="rhel"
     PROJECT_NAME="codendi"
     PROJECT_ADMIN="codendiadm"
     TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
+    NAMED_SERVICE="named"
+    MYSQLD_SERVICE="mysqld"
+    SSHD_SERVICE="sshd"
+    CROND_SERVICE="crond"
+    HTTPD_SERVICE="httpd"
 fi
 
 export INSTALL_DIR="/usr/share/$PROJECT_NAME"
@@ -170,6 +180,31 @@ install_dist_conf() {
 	exit 1
     fi
 }
+
+control_service() {
+    local service="$1"
+    local command="$2"
+    if [ -x $SERVICE ]; then
+	$SERVICE $service $command
+    else
+	if [ -x /etc/init.d/$service ]; then
+	    /etc/init.d/$service $command
+	else
+	    echo "ERROR: found no way to control service $service" >&2
+	    exit 1
+	fi
+    fi
+}
+
+enable_service() {
+    local service="$1"
+    if [ "$INSTALL_PROFILE" = "rhel" ]; then
+	$CHKCONFIG $service on
+    else
+	: # On Debian, services are enabled by default
+    fi
+}
+
 ##############################################
 # Setup chunks
 ##############################################
@@ -204,10 +239,10 @@ EOF
 /usr/lib/$PROJECT_NAME/bin/cvssh-restricted
 EOF
 
-    $CHKCONFIG cvs on
-    $CHKCONFIG xinetd on
+    enable_service cvs
+    enable_service xinetd
 
-    $SERVICE xinetd start
+    control_service xinetd restart
 }
 
 ###############################################################################
@@ -263,8 +298,8 @@ EOF
     $CHMOD 644 /etc/logrotate.d/vsftpd.log
 
     # Start service
-    $CHKCONFIG vsftpd on
-    $SERVICE vsftpd start
+    enable_service vsftpd
+    control_service vsftpd restart
 }
 
 
@@ -306,8 +341,8 @@ setup_bind() {
   todo "    edit /etc/named.conf to create the new zone."
 
 
-  $CHKCONFIG named on
-  $SERVICE named start
+  enable_service $NAMED_SERVICE
+  control_service $NAMED_SERVICE restart
 }
 
 ###############################################################################
@@ -376,8 +411,8 @@ EOF
     # Subscribe $PROJECT_NAME-admin to this ML
     echo $LIST_OWNER | /usr/lib/mailman/bin/add_members -r - mailman
 
-    $CHKCONFIG mailman on
-    $SERVICE mailman start </dev/null >/dev/null 2>/dev/null &
+    enable_service mailman
+    control_service mailman restart </dev/null >/dev/null 2>/dev/null &
 }
 
 ###############################################################################
@@ -429,7 +464,7 @@ EOF
     if [ -z "$mysql_host" ]; then
 	echo "Initializing MySQL: You can ignore additionnal messages on MySQL below this line:"
 	echo "***************************************"
-	$SERVICE mysqld start
+	control_service $MYSQLD_SERVICE restart
 	echo "***************************************"
     fi
 }
@@ -1303,24 +1338,24 @@ EOF
 ##############################################
 # Make sure all major services are on
 #
-$CHKCONFIG sshd on
-$CHKCONFIG httpd on
-$CHKCONFIG mysqld on
-$CHKCONFIG crond on
+enable_service $SSHD_SERVICE
+enable_service $HTTPD_SERVICE
+enable_service $MYSQLD_SERVICE
+enable_service $CROND_SERVICE
 
 /etc/init.d/$PROJECT_NAME start
 
-$SERVICE httpd restart
-$SERVICE crond restart
+control_service $HTTPD_SERVICE restart
+control_service $CROND_SERVICE restart
 
 # NSCD is the Name Service Caching Daemon.
 # It is very useful when libnss-mysql is used for authentication
-$CHKCONFIG nscd on
-$SERVICE nscd start
+enable_service nscd
+control_service nscd restart
 
 if [ "$enable_munin" = "true" ]; then
-    $CHKCONFIG munin-node on
-    $SERVICE munin-node start
+    enable_service munin-node
+    control_service munin-node restart
 fi
 
 ##############################################
@@ -1408,8 +1443,8 @@ EOF
     echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
     # Enable service
-    $CHKCONFIG openfire on
-    $SERVICE openfire start
+    enable_service openfire
+    control_service openfire restart
 fi
 
 
