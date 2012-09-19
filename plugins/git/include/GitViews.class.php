@@ -209,9 +209,7 @@ class GitViews extends PluginViews {
     </p>
     <?php
     endif;
-    if (!empty($description)) {
-        echo '<p id="plugin_git_description">'.$this->HTMLPurifier->purify($description, CODENDI_PURIFIER_CONVERT_HTML, $this->groupId).'</p>';
-    }
+    
     ?>
     <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
             ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $repository->getAccessURL(); ?>" />

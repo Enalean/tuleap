@@ -44,6 +44,7 @@ require_once 'Git_Exec.class.php';
  *
  */
 class Git_GitoliteDriver {
+
     /**
      * @var Git_Exec
      */
@@ -251,18 +252,24 @@ class Git_GitoliteDriver {
         }
         $notified_mails = $notification_manager->getNotificationMailsByRepositoryId($repository_id);
         $repository->setNotifiedMails($notified_mails);
+        $repository->setDescription($row[GitDao::REPOSITORY_DESCRIPTION]);
         $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
         $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
         return $repository;
     }
     
-    protected function fetchReposConfig($project, $repository) {
-        $repo_config  = 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
+    protected function fetchReposConfig(Project $project, $repository) {
+        $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
+        $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
-        return $repo_config . PHP_EOL;
+        
+        $description = preg_replace( "% *\n *%", ' ', $repository->getDescription());
+        $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
+        
+        return $repo_config. PHP_EOL;
     }
     
     /**
@@ -369,6 +376,7 @@ class Git_GitoliteDriver {
                 $orig = file_get_contents('conf/projects/'. $newName .'.conf');
                 $dest = preg_replace('`(^|\n)repo '. preg_quote($oldName) .'/`', '$1repo '. $newName .'/', $orig);
                 $dest = str_replace('@'. $oldName .'_project_', '@'. $newName .'_project_', $dest);
+                $dest = preg_replace("%$oldName/(.*) = \"%", "$newName/$1 = \"", $dest);
                 file_put_contents('conf/projects/'. $newName .'.conf', $dest);
                 $this->gitExec->add('conf/projects/'. $newName .'.conf');
                 
@@ -428,32 +436,5 @@ class Git_GitoliteDriver {
         }
     }
 
-    /**
-     * Save repository description in the filesystem
-     *
-     * @param String $repoPath    Path of the git repository
-     * @param String $description Description of the git repository
-     *
-     * @return Boolean
-     */
-    /*public function setDescription($repoPath, $description) {
-        // TODO: set the description in gitolite way
-        // be careful not to use file_put_contents() like in gitshell
-        return true;
-    }*/
-
-    /**
-     * Obtain the repository description from the filesystem
-     *
-     * @param String $repoPath Path of the git repository
-     *
-     * @return String
-     */
-    /*public function getDescription($repoPath) {
-        // TODO: Uncomment this when GIT_GitoliteDriver::setDescription() is ready
-        return file_get_contents($repoPath.'/description');
-    }*/
-
 }
-
 ?>

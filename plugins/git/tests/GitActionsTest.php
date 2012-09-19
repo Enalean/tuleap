@@ -19,7 +19,7 @@
  */
 
 require_once (dirname(__FILE__).'/../include/GitActions.class.php');
-Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getController', 'getText', 'addData', 'getGitRepository', 'save'));
+Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getText', 'addData', 'getGitRepository', 'save'));
 require_once (dirname(__FILE__).'/../include/Git.class.php');
 Mock::generate('Git');
 require_once (dirname(__FILE__).'/../include/GitRepository.class.php');
@@ -35,7 +35,6 @@ Mock::generate('User');
 Mock::generate('SystemEventManager');
 Mock::generate('Layout');
 require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
-//require_once(dirname(__FILE__).'/../include/exceptions/GitRepositoryAlreadyExistsException.class.php');
 
 Mock::generate('Git_Backend_Gitolite');
 
@@ -53,7 +52,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -67,7 +66,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -84,7 +83,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'mail_prefix_updated', array('mail_prefix_updated'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -101,7 +100,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -116,7 +115,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -132,7 +131,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction->setReturnValue('getText', 'mail_existing jane.doe@acme.com', array('mail_existing', array('jane.doe@acme.com')));
         $gitAction->setReturnValue('getText', 'mail_existing john.smith@acme.com', array('mail_existing', array('john.smith@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', true);
         $gitRepository->setReturnValue('notificationAddMail', false, array('john.doe@acme.com'));
@@ -157,7 +156,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction->setReturnValue('getText', 'mail_not_added john.doe@acme.com', array('mail_not_added', array('john.doe@acme.com')));
         $gitAction->setReturnValue('getText', 'mail_not_added john.smith@acme.com', array('mail_not_added', array('john.smith@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', false);
         $gitRepository->setReturnValue('notificationAddMail', false, array('john.doe@acme.com'));
@@ -180,7 +179,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'mail_added', array('mail_added'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', false);
         $gitRepository->setReturnValue('notificationAddMail', true, array('john.doe@acme.com'));
@@ -201,7 +200,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -215,7 +214,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -229,7 +228,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'mail_not_removed john.doe@acme.com', array('mail_not_removed', array('john.doe@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('notificationRemoveMail', false);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
@@ -244,7 +243,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'mail_removed john.doe@acme.com', array('mail_removed', array('john.doe@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('notificationRemoveMail', True);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
@@ -259,7 +258,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -277,7 +276,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -295,7 +294,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -312,7 +311,7 @@ class GitActionsTest extends TuleapTestCase {
     function testConfirmPrivateNotSettingToPrivate() {
         $gitAction = new GitActionsTestVersion();
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('getAccess', 'public');
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
@@ -330,7 +329,7 @@ class GitActionsTest extends TuleapTestCase {
     function testConfirmPrivateAlreadyPrivate() {
         $gitAction = new GitActionsTestVersion();
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('getAccess', 'private');
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
@@ -348,7 +347,7 @@ class GitActionsTest extends TuleapTestCase {
     function testConfirmPrivateNoMailsToDelete() {
         $gitAction = new GitActionsTestVersion();
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('getAccess', 'public');
         $gitRepository->setReturnValue('getNonMemberMails', array());
@@ -368,7 +367,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'set_private_warn');
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('getAccess', 'public');
         $gitRepository->setReturnValue('getNonMemberMails', array('john.doe@acme.com'));

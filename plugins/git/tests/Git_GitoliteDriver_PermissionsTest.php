@@ -51,7 +51,8 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
         $this->repository = new MockGitRepository();
         $this->repository->setReturnValue('getId', $this->repository);
         PermissionsManager::setInstance(new MockPermissionsManager());
-        
+        $this->permissions_manager = PermissionsManager::instance();
+
         mkdir($this->admin_dir);
         $this->driver     = new Git_GitoliteDriver($this->admin_dir);
         
@@ -65,63 +66,63 @@ class Git_GitoliteDriver_PermissionsTest extends TuleapTestCase {
     }
 
     public function itReturnsEmptyStringForUnknownType() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array());
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array());
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, '__none__');
         $this->assertIdentical('', $result);
     }
     
     public function itReturnsEmptyStringForAUserIdLowerOrEqualThan_100() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(100));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(100));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertIdentical('', $result);
     }
     
     public function itReturnsStringWithUserIdIfIdGreaterThan_100() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(101));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertPattern('/=\s@ug_101$/', $result);
     }
     
     public function itReturnsSiteActiveIfUserGroupIsRegistered() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_REGISTERED']));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_REGISTERED']));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertPattern('/=\s@site_active @'. $this->project->getUnixName() .'_project_members$/', $result);
     }
     
     public function itReturnsProjectNameWithProjectMemberIfUserIsProjectMember() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_PROJECT_MEMBERS']));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_PROJECT_MEMBERS']));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
         $this->assertPattern('/=\s@'.$project_name.'_project_members$/', $result);
     }
     
     public function itReturnsProjectNameWithProjectAdminIfUserIsProjectAdmin() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_PROJECT_ADMIN']));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array($GLOBALS['UGROUP_PROJECT_ADMIN']));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $project_name = 'project' . $this->project_id;
         $this->assertPattern('/=\s@'.$project_name.'_project_admin$/', $result);
     }
     
     public function itPrefixesWithRForReaders() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(101));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertPattern('/^\sR\s\s\s=/', $result);
     }
     
     public function itPrefixesWithRWForWriters() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(101));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WRITE);
         $this->assertPattern('/^\sRW\s\s=/', $result);
     }
     
     public function itPrefixesWithRWPlusForWritersPlus() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(101));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(101));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_WPLUS);
         $this->assertPattern('/^\sRW\+\s=/', $result);
     }
     
     public function itReturnsAllGroupsSeparatedBySpaceIfItHasDifferentGroups() {
-        PermissionsManager::instance()->setReturnValue('getAuthorizedUgroupIds', array(666, $GLOBALS['UGROUP_REGISTERED']));
+        $this->permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(666, $GLOBALS['UGROUP_REGISTERED']));
         $result = $this->driver->fetchConfigPermissions($this->project, $this->repository, Git::PERM_READ);
         $this->assertIdentical(' R   = @ug_666 @site_active @'. $this->project->getUnixName() .'_project_members' . PHP_EOL, $result);
     }

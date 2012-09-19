@@ -31,6 +31,9 @@ Mock::generate('Git_PostReceiveMailManager');
 
 class GitoliteTestCase extends TuleapTestCase {
     
+    /** @var Git_GitoliteDriver */
+    protected $driver;
+    
     public function setUp() {
         parent::setUp();
         $this->cwd           = getcwd();
@@ -39,7 +42,7 @@ class GitoliteTestCase extends TuleapTestCase {
         $this->_glAdmDirRef  = $tmpDir.'/gitolite-admin-ref';
         $this->_glAdmDir     = $tmpDir.'/gitolite-admin';
         $this->repoDir       = $tmpDir.'/repositories';
-
+        
         // Copy the reference to save time & create symlink because
         // git is very sensitive to path you are using. Just symlinking
         // spots bugs
@@ -52,7 +55,7 @@ class GitoliteTestCase extends TuleapTestCase {
 
         $GLOBALS['sys_https_host'] = 'localhost';
         PermissionsManager::setInstance(new MockPermissionsManager());
-        
+        $this->permissions_manager = PermissionsManager::instance();
         $this->gitExec = partial_mock('Git_Exec', array('push'), array($this->_glAdmDir));
         stub($this->gitExec)->push()->returns(true);
         $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec);
@@ -203,12 +206,16 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
 
         $this->driver->updateMainConfIncludes($prj);
 
-        $gitoliteConf = file_get_contents($this->_glAdmDir.'/conf/gitolite.conf');
+        $gitoliteConf = $this->getGitoliteConf();
         // Original content still here
         $this->assertWantedPattern('#^@test = coin$#m', $gitoliteConf);
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
 
+    protected function getGitoliteConf() {
+        return file_get_contents($this->_glAdmDir.'/conf/gitolite.conf');
+    }
+    
     public function testGetMailHookConfig() {        
         $prj = new MockProject($this);
         $prj->setReturnValue('getUnixName', 'project1');
@@ -260,6 +267,84 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         );
     }
 
+    public function itAddsTheDescriptionToTheConfFile() {
+        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
+        //$driver->setAdminPath($this->_glAdmDir);
+        $repo_description = 'Vive tuleap';
+        $repo_name        = 'test_default';
+        $project_name     = 'project1';
+
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', $project_name);
+
+        // List all repo
+        $dao = stub('GitDao')->getAllGitoliteRespositories()->returnsDar(array('repository_id' => 4, 
+                    'repository_name' => $repo_name, 
+                    'repository_namespace' => '', 
+                    'repository_events_mailing_prefix' => "[SCM]", 
+                    'repository_description' => $repo_description));
+        $driver->setReturnValue('getDao', $dao);
+        
+        $permissions_manager = $this->permissions_manager;
+        // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
+        $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('2'),   array(4, 'PLUGIN_GIT_READ'));
+        $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(4, 'PLUGIN_GIT_WRITE'));
+        $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(),      array(4, 'PLUGIN_GIT_WPLUS'));
+
+
+        // Notified emails
+        $driver->setReturnValue('getPostReceiveMailManager', new MockGit_PostReceiveMailManager());
+
+        $driver->dumpProjectRepoConf($prj);
+
+        // Check every thing was commited
+        $this->assertEmptyGitStatus();
+
+        // Ensure file is correct
+        $result     = file_get_contents($this->_glAdmDir.'/conf/projects/project1.conf');
+        $this->assertPattern("%$project_name/$repo_name = \"$repo_description\"%", $result);
+    }
+    
+    public function itReplacesNewlinesBySpaces() {
+        $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
+        //$driver->setAdminPath($this->_glAdmDir);
+        $repo_description = 'Vive 
+            tuleap';
+        $repo_name        = 'test_default';
+        $project_name     = 'project1';
+
+        $prj = new MockProject($this);
+        $prj->setReturnValue('getUnixName', $project_name);
+
+        // List all repo
+        $dao = stub('GitDao')->getAllGitoliteRespositories()->returnsDar(array('repository_id' => 4, 
+                    'repository_name' => $repo_name, 
+                    'repository_namespace' => '', 
+                    'repository_events_mailing_prefix' => "[SCM]", 
+                    'repository_description' => $repo_description));
+        $driver->setReturnValue('getDao', $dao);
+        
+        $permissions_manager = $this->permissions_manager;
+        // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
+        $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('2'),   array(4, 'PLUGIN_GIT_READ'));
+        $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(4, 'PLUGIN_GIT_WRITE'));
+        $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array(),      array(4, 'PLUGIN_GIT_WPLUS'));
+
+
+        // Notified emails
+        $driver->setReturnValue('getPostReceiveMailManager', new MockGit_PostReceiveMailManager());
+
+        $driver->dumpProjectRepoConf($prj);
+
+        // Check every thing was commited
+        $this->assertEmptyGitStatus();
+
+        // Ensure file is correct
+        $result     = file_get_contents($this->_glAdmDir.'/conf/projects/project1.conf');
+        $this->assertPattern("%$project_name/$repo_name = \"Vive tuleap\"%", $result);
+    }
+
+    
     //
     // The project has 2 repositories nb 4 & 5.
     // 4 has defaults
@@ -273,15 +358,12 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $prj->setReturnValue('getId', 404);
 
         // List all repo
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories', array(404));
-        $dao->setReturnValue('getAllGitoliteRespositories', $this->arrayToDar(array('repository_id' => 4, 'repository_name' => 'test_default', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[SCM]"),
-                                                                              array('repository_id' => 5, 'repository_name' => 'test_pimped', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[KOIN] ")
-                                                            )
-        );
+        $dao = stub('GitDao')->getAllGitoliteRespositories()->once()->returnsDar(
+                array('repository_id' => 4, 'repository_name' => 'test_default', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[SCM]", 'repository_description' => ''),
+                array('repository_id' => 5, 'repository_name' => 'test_pimped', 'repository_namespace' => '', 'repository_events_mailing_prefix' => "[KOIN] ", 'repository_description' => ''));
         $driver->setReturnValue('getDao', $dao);
         
-        $permissions_manager = PermissionsManager::instance();
+        $permissions_manager = $this->permissions_manager;
         // Repo 4 (test_default): R = registered_users | W = project_members | W+ = none
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('2'),   array(4, 'PLUGIN_GIT_READ'));
         $permissions_manager->setReturnValue('getAuthorizedUgroupIds', array('3'),   array(4, 'PLUGIN_GIT_WRITE'));
@@ -310,7 +392,7 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
 
         // Check that corresponding project conf exists in main file conf
         $this->assertTrue(is_file($this->_glAdmDir.'/conf/gitolite.conf'));
-        $gitoliteConf = file_get_contents($this->_glAdmDir.'/conf/gitolite.conf');
+        $gitoliteConf = $this->getGitoliteConf();
         $this->assertWantedPattern('#^include "projects/project1.conf"$#m', $gitoliteConf);
     }
     
@@ -339,11 +421,14 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
             file_get_contents($this->_fixDir.'/perms/newone.conf'),
             file_get_contents($this->_glAdmDir.'/conf/projects/newone.conf')
         );
-        $this->assertNoPattern('`\ninclude "projects/legacy.conf"\n`', file_get_contents($this->_glAdmDir.'/conf/gitolite.conf'));
-        $this->assertPattern('`\ninclude "projects/newone.conf"\n`', file_get_contents($this->_glAdmDir.'/conf/gitolite.conf'));
+        $this->assertNoPattern('`\ninclude "projects/legacy.conf"\n`', $this->getGitoliteConf());
+        $this->assertPattern('`\ninclude "projects/newone.conf"\n`', $this->getGitoliteConf());
         $this->assertEmptyGitStatus();
     }
-    
+}
+
+class Git_GitoliteDriver_ForkTest extends GitoliteTestCase {
+
     public function testFork_CloneEmptyToSpecifiedPath() {
 
         if (posix_getgrnam('gitolite') == false) {
@@ -384,6 +469,8 @@ class Git_GitoliteDriverTest extends GitoliteTestCase {
         $this->assertFalse($this->driver->fork($name, $old_ns, $new_ns));
     }
     
+    
+    // JM: Dont understant this test, should it be in _Fork or the miscallaneous part?
     public function itIsInitializedEvenIfThereIsNoMaster() {
         $this->assertTrue($this->driver->isInitialized($this->_fixDir.'/headless.git'));
     }
