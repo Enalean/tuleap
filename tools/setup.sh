@@ -978,6 +978,8 @@ substitute "/etc/httpd/conf.d/codendi_aliases.conf" '%sys_default_domain%' "$sys
 
 # replace string patterns in database.inc
 substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
+substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
+substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbname%' "$PROJECT_NAME" 
 substitute "/etc/$PROJECT_NAME/conf/database.inc" 'localhost' "$mysql_host" 
 
 # replace string patterns in httpd.conf
