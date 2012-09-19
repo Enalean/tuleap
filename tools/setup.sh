@@ -834,9 +834,6 @@ do
 		sys_long_org_name="Tuleap ALM"
 		#rt_passwd="`dd if=/dev/urandom count=1 bs=16 2> /dev/null | md5sum | cut -c-32`"
 		auto_passwd="true"
-		mysql_host="localhost"
-		MYSQL="$MYSQL -h$mysql_host"
-		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
 		shift 1 ;;
 	--auto-passwd)
 		auto_passwd="true";shift 1 ;;
