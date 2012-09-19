@@ -987,5 +987,5 @@ project_ugroup_binding	source_project	Source project
 project_ugroup_binding	source_ugroup	Source user group
 project_ugroup_binding	no_binding	This user group is not binded to any other user group
 project_ugroup_binding	remove_binding	Remove current binding
-project_ugroup_binding	current_binded	Binding is to $1 in project $2
+project_ugroup_binding	current_binded	This user group is binded to $1 in project $2
 project_ugroup_binding	not_source	This user group is not the source of any other user group
