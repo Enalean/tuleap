@@ -108,9 +108,9 @@ class UGroupDao extends DataAccessObject {
      * @param Integer $ugroupId the binded ugroup id
      * @param Integer $sourceId the ugroup id we want to clone
      *
-     * @return boolean
+     * @return Boolean
      */
-    function updateUgroupBinding($ugroupId, $sourceId = NULL) {
+    function updateUgroupBinding($ugroupId, $sourceId = null) {
         $ugroupId = $this->da->escapeInt($ugroupId);
         if (isset($sourceId)) {
             $sourceId      = $this->da->escapeInt($sourceId);
