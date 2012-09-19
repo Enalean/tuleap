@@ -452,8 +452,8 @@ project_admin_utils	verify_dates	La date de début doit être inférieure à la 
 project_admin_utils	from	Depuis
 project_admin_utils	to	Jusqu'a
 project_admin_utils	status	Statut modifié
-project_admin_utils	ugroup_add_binding	???
-project_admin_utils	ugroup_remove_binding	???
+project_admin_utils	ugroup_add_binding	Liaison avec group d'utilisateurs ajoutée
+project_admin_utils	ugroup_remove_binding	Liaison avec group d'utilisateurs enlevée
 #... end of values
 #
 #-----------------------------------------------
@@ -969,19 +969,19 @@ project	does_not_exist	Le projet n'existe pas
 #-----------------------------------------------
 # Script: /www/project/admin/ugroup_binding.php
 #
-project_ugroup_binding	edit_binding_title	???
-project_ugroup_binding	update_binding	???
-project_ugroup_binding	add_binding	???
-project_ugroup_binding	binding_added	???
-project_ugroup_binding	add_error	???
-project_ugroup_binding	binding_removed	???
-project_ugroup_binding	remove_error	???
-project_ugroup_binding	current_binding	???
-project_ugroup_binding	binding_sources	???
-project_ugroup_binding	edit_binding	???
-project_ugroup_binding	source_project	???
-project_ugroup_binding	source_ugroup	???
-project_ugroup_binding	no_binding	???
-project_ugroup_binding	remove_binding	???
-project_ugroup_binding	current_binded	??? $1 ??? $2
-project_ugroup_binding	not_source	???
+project_ugroup_binding	edit_binding_title	Edite la liaison avec le group d'utilisateurs
+project_ugroup_binding	update_binding	Mettre a jour la liaison
+project_ugroup_binding	add_binding	Ajouter une liaison
+project_ugroup_binding	binding_added	Liaison ajoutée
+project_ugroup_binding	add_error	Une erreur est survenue lors de l'ajout de liaison avec le group d'utilisateurs
+project_ugroup_binding	binding_removed	Liaison avec le group d'utilisaturs faite avec succés
+project_ugroup_binding	remove_error	La liaison avec le group d'utilisaturs n'a pas été enlevée
+project_ugroup_binding	current_binding	Liaison actuelle
+project_ugroup_binding	binding_sources	Groups d'utilisateurs liés a celui ci
+project_ugroup_binding	edit_binding	Modifier la liaison
+project_ugroup_binding	source_project	Projet source
+project_ugroup_binding	source_ugroup	group d'utilisateurs source
+project_ugroup_binding	no_binding	Ce group d'utilisaturs n'est lié a aucun autre group
+project_ugroup_binding	remove_binding	Enlever la liaison actuelle
+project_ugroup_binding	current_binded	Ce group d'utilisaturs est lié au groupe $1 dans le projet $2
+project_ugroup_binding	not_source	Ce group d'utilisaturs n'est la source d'aucun autre group d'utilisateurs
