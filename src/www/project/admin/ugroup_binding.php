@@ -32,7 +32,7 @@ $ugroupBinding = new UGroupBinding();
 $ugroupBinding->processRequest($ugroupId, $request);
 
 project_admin_header(
-                     array('title' => $GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding'),
+                     array('title' => $GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title'),
                            'group' => $groupId,
                            'help'  => 'UserGroups.html')
                     );

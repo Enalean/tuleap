@@ -969,7 +969,7 @@ project	does_not_exist	Le projet n'existe pas
 #-----------------------------------------------
 # Script: /www/project/admin/ugroup_binding.php
 #
-project_ugroup_binding	edit_binding	???
+project_ugroup_binding	edit_binding_title	???
 project_ugroup_binding	update_binding	???
 project_ugroup_binding	add_binding	???
 project_ugroup_binding	binding_added	???
