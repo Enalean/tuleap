@@ -19,7 +19,7 @@
 
 require_once dirname(__FILE__).'/../include/LDAP_SVN_Apache.class.php';
 
-class LDAP_SVN_ApacheTest extends UnitTestCase {
+class LDAP_SVN_ApacheTest extends TuleapTestCase {
     private $ldap;
 
     public function setUp() {
@@ -48,5 +48,28 @@ class LDAP_SVN_ApacheTest extends UnitTestCase {
         $this->assertEqual($this->apache->getLDAPServersUrl(),  'ldaps://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
     }
 
+    function itIncludesBindDnAndPasswordIfAny() {
+        $dn       = 'eduid=1234,ou=people,dc=tuleap,dc=com';
+        $password = 'welcome0';
+        stub($this->ldap)->getLDAPParam('bind_dn')->returns($dn);
+        stub($this->ldap)->getLDAPParam('bind_passwd')->returns($password);
+
+        $conf = $this->apache->getProjectAuthentication(array('group_name' => "Plop"));
+        $this->assertPattern("/AuthLDAPBindDN \"$dn\"/", $conf);
+        $this->assertPattern("/AuthLDAPBindPassword \"$password\"/", $conf);
+    }
+
+    function itDoesntIncludeSpecificThingsIfNoBindDn() {
+        $conf = $this->apache->getProjectAuthentication(array('group_name' => "Plop"));
+        $this->assertNoPattern("/AuthLDAPBindDN/", $conf);
+        $this->assertNoPattern("/AuthLDAPBindPassword/", $conf);
+    }
+
+    function itDoesntIncludeSpecificThingsIfBindDnIsEmpty() {
+        stub($this->ldap)->getLDAPParam('bind_dn')->returns("");
+        $conf = $this->apache->getProjectAuthentication(array('group_name' => "Plop"));
+        $this->assertNoPattern("/AuthLDAPBindDN/", $conf);
+        $this->assertNoPattern("/AuthLDAPBindPassword/", $conf);
+    }
 }
 ?>
