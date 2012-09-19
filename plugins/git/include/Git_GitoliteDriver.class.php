@@ -167,7 +167,9 @@ class Git_GitoliteDriver {
                 }
                 $commit_msg = 'SystemEvent update all user keys';
             }
-            $this->gitExec->add('keydir');
+            if (is_dir($this->getAdminPath().'/keydir')) {
+                $this->gitExec->add('keydir');
+            }
             $this->gitExec->commit($commit_msg);
             return $this->push();
         }

@@ -183,6 +183,20 @@ class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
         $this->assertEmptyGitStatus();
     }
 
+    public function itDeletesAllTheKeys() {
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->driver->dumpSSHKeys($user);
+
+        // internal push reset the pwd
+        $this->driver->setAdminPath($this->_glAdmDir);
+
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array())->build();
+        $this->driver->dumpSSHKeys($user);
+        $this->assertCount(glob($this->_glAdmDir.'/keydir/*.pub'), 0);
+
+        $this->assertEmptyGitStatus();
+    }
+
     public function itDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
         $this->driver->dumpSSHKeys($user);
