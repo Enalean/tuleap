@@ -44,6 +44,7 @@ class GitRepository implements DVCSRepository {
     const DEFAULT_MAIL_PREFIX = '[SCM]';
     const REPO_SCOPE_PROJECT  = 'P';
     const REPO_SCOPE_INDIVIDUAL = 'I';
+    const DEFAULT_DESCRIPTION = "-- Default description --";
     
     private $id;
     private $parentId;
@@ -268,21 +269,8 @@ class GitRepository implements DVCSRepository {
      */
     public function getParent() {
         if ( empty($this->parent) ) {
-            $this->load();            
-            $parent = new GitRepository();
-            $parent->setId($this->parentId);
-            try {
-                if ( !$this->getDao()->getProjectRepositoryById($parent) ) {
-                    //no parent or error
-                    $parent = null;
-                } else {
-                    //there is a parent
-                    $this->parentId = $parent->getId();//not very useful
-                }
-            } catch (GitDaoException $e) {
-                $parent = null;
-            }
-            $this->parent = $parent;
+            $factory = new GitRepositoryFactory($this->getDao(), $this->_getProjectManager());
+            $this->parent = $factory->getRepositoryById($this->getParentId());
         }
         return $this->parent;
     }
@@ -657,7 +645,7 @@ class GitRepository implements DVCSRepository {
         $clone->setCreator( $this->getCreator() );
         $clone->setAccess( $this->getAccess() );
         $clone->setIsInitialized(1);
-        $clone->setDescription('-- Default description --');
+        $clone->setDescription(self::DEFAULT_DESCRIPTION);
         $this->getBackend()->createFork($clone);
     }
     

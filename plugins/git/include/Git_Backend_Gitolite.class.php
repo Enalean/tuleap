@@ -63,7 +63,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $this->driver->dumpProjectRepoConf($repository->getProject());
         return $this->driver->push();
     }
-
+    
     /**
      * Verify if the repository as already some content within
      *
@@ -155,8 +155,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             }
         }
         
-        $this->updateRepoConf($repository);
-
         foreach ($msgs as $msg) {
             $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
         }
@@ -404,6 +402,10 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     
     public function getDriver() {
         return $this->driver;
+    }
+
+    public function commitTransaction(GitRepository $repository) {
+        $this->updateRepoConf($repository);
     }
 
 }
