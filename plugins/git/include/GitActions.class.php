@@ -30,6 +30,7 @@ require_once('GitDao.class.php');
 require_once('Git_GitoliteDriver.class.php');
 require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
+require_once('GitRepositoryManager.class.php');
 require_once('common/layout/Layout.class.php');
 
 /**
@@ -48,18 +49,30 @@ class GitActions extends PluginActions {
      * @var GitRepositoryFactory 
      */
     private $factory;
-    
+
+    /**
+     * @var GitRepositoryManager
+     */
+    private $manager;
+
     /**
      * Constructor
      *
-     * @param PluginController     $controller         The controller
-     * @param GitRepositoryFactory $factory            The factory to manage repositories
+     * @param Git                  $controller         The controller
      * @param SystemEventManager   $systemEventManager The system manager
+     * @param GitRepositoryFactory $factory            The factory to manage repositories
+     * @param GitRepositoryManager $manager            The manager to create/delete repositories
      */
-    public function __construct(Git $controller, SystemEventManager $systemEventManager, GitRepositoryFactory $factory) {
+    public function __construct(
+        Git                $controller,
+        SystemEventManager $systemEventManager,
+        GitRepositoryFactory $factory,
+        GitRepositoryManager $manager
+    ) {
         parent::__construct($controller);
         $this->systemEventManager = $systemEventManager;
         $this->factory            = $factory;
+        $this->manager            = $manager;
 
     }
 
@@ -84,8 +97,8 @@ class GitActions extends PluginActions {
         if ($repository) {
             if ($repository->canBeDeleted()) {
                 $this->markAsDeleted($repository);
-                $c->addInfo( $this->getText('actions_delete_process') );
-                $c->addInfo( $this->getText('actions_delete_backup').' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir') );
+                $c->addInfo($this->getText('actions_delete_process', array($repository->getFullName())));
+                $c->addInfo($this->getText('actions_delete_backup', array($repository->getFullName())).' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir'));
             } else {
                 $c->addError( $this->getText('backend_delete_haschild_error') );
                 $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
@@ -122,27 +135,18 @@ class GitActions extends PluginActions {
         //$this->createGitshellReference($projectId, $repositoryName);
         $c         = $this->getController();
         $projectId = intval( $projectId );
-        
-        $repository = new GitRepository();
-        $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
 
-        if ( $repository->isNameValid($repositoryName) === false ) {
-            $c->addError( $this->getText('actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
+        try {
+            $repository = new GitRepository();
+            $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
+            $repository->setDescription('-- Default description --');
+            $repository->setCreator(UserManager::instance()->getCurrentUser());
+            $repository->setProject(ProjectManager::instance()->getProject($projectId));
+            $repository->setName($repositoryName);
 
-        $project = ProjectManager::instance()->getProject($projectId);
-
-        $repository->setDescription('-- Default description --');
-        $repository->setCreator(UserManager::instance()->getCurrentUser());
-        $repository->setProject($project);
-        $repository->setName($repositoryName);
-                
-        if (!$this->factory->isRepositoryExistingByName($project, $repositoryName)) {
-            $repository->create();
-        } else {
-            $c->addError($this->getText('actions_create_repo_exists', array($repositoryName)));
+            $this->manager->create($repository);
+        } catch (Exception $exception) {
+            $c->addError($exception->getMessage());
         }
 
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
@@ -350,14 +354,14 @@ class GitActions extends PluginActions {
         $c->addInfo($this->getText('actions_repo_access'));
     }
 
-    public function confirmDeletion($projectId, $repoId) {
+    public function confirmDeletion($projectId, $repository) {
         $c = $this->getController();
-        if ( empty($repoId) ) {
+        if (empty($repository)) {
             $c->addError( $this->getText('actions_params_error') );
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
-        $c->addWarn( $this->getText('confirm_deletion_msg'));
+        $c->addWarn($this->getText('confirm_deletion_msg', array($repository->getFullName())));
     }
 
     /**
@@ -513,77 +517,14 @@ class GitActions extends PluginActions {
      * @param Layout $response  The response object
      */
     public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
-        if ($this->forkRepositories($repos, $user, $namespace, $scope, $to_project)) {
-            $this->addInfo('successfully_forked');
-            $response->redirect($redirect_url);
-        } else {
-            $this->addError('actions_no_repository_forked');
-        }
-    }
-    
-    /**
-     * Tell the controller to show the error $error
-     * 
-     * @param string $error error message to show
-     */
-    protected function addError($key_message) {
-        $controler = $this->getController();
-        $controler->addError($this->getText($key_message));
-    }
-    /**
-     * Tell the controller to show an info referenced by first parameter
-     * 
-     * @param string $key_message message to display
-     */
-    protected function addInfo($key_message) {
-        $controler = $this->getController();
-        $controler->addInfo($this->getText($key_message));
-    }
-    
-    /**
-     * Fork a list of repositories for the given user
-     *
-     * @param array $repos a list of GitRepository
-     * @param User $user
-     *
-     * @return bool whether dofork was called once or not
-     */
-    public function forkRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
-        $repos = array_filter($repos);
-        if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
-            return $this->forkAllRepositories($repos, $user, $namespace, $scope, $project);
-        }
-        return false;
-    }
-    
-    private function isNamespaceValid(GitRepository $repository, $namespace) {
-        if ($namespace) {
-            $ns_chunk = explode('/', $namespace);
-            foreach ($ns_chunk as $chunk) {
-                if (!$repository->isNameValid($chunk)) {
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
-                    return false;
-                }
+        try {
+            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope)) {
+                $GLOBALS['Response']->addFeedback('info', $this->getText('successfully_forked'));
+                $response->redirect($redirect_url);
             }
+        } catch(Exception $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
-        return true;
-    }
-
-    private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
-        $forked = false;
-        foreach ($repos as $repo) {
-            try {
-                if ($repo->userCanRead($user)) {
-                    $repo->fork($user, $namespace, $scope, $project);
-                    $forked = true;
-                }
-            } catch (GitRepositoryAlreadyExistsException $e) {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_git', 'fork_repository_exists', array($repo->getName())));
-            } catch (Exception $e) {
-                $GLOBALS['Response']->addFeedback('warning', 'Got an unexpected error while forking ' . $repo->getName() . ': ' . $e->getMessage());
-            }
-        }
-        return $forked;
     }
 }
 

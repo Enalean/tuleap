@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Index.class.php';
-require_once dirname(__FILE__).'/../SearchResultCollection.class.php';
 
 class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public $template = 'search';
@@ -35,7 +33,15 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     }
     
     public function has_results() {
-        return ($this->result_count() > 0);
+        return ($this->query_result->count() > 0);
+    }
+    
+    public function has_facets() {
+        return (count($this->facets()) > 0);
+    }
+    
+    public function facets() {
+        return $this->query_result->getFacets();
     }
     
     public function no_results() {
@@ -43,7 +49,7 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     }
         
     public function result_count() {
-        return $this->query_result->count();
+        return $GLOBALS['Language']->getText('plugin_fulltextsearch', 'result_count', array($this->query_result->count(), number_format($this->query_result->getQueryTime(), 2, '.', '')));
     }
     
     public function search_results() {

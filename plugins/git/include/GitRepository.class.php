@@ -152,15 +152,15 @@ class GitRepository implements DVCSRepository {
             return true;
         }
         $id = $this->getId();
-        if ( empty($id) ) {            
+        if ( empty($id) ) {
             $this->loaded = $this->getDao()->getProjectRepository($this);
-        } else {            
+        } else {
             $this->loaded = $this->getDao()->getProjectRepositoryById($this);
-        }       
+        }
         //loading failed
         return $this->loaded;
     }
-    
+
     /**
      * Save current GitRepostiroy object to the database
      */
@@ -271,12 +271,16 @@ class GitRepository implements DVCSRepository {
             $this->load();            
             $parent = new GitRepository();
             $parent->setId($this->parentId);
-            if ( !$this->getDao()->getProjectRepositoryById($parent) ) {
-                //no parent or error
+            try {
+                if ( !$this->getDao()->getProjectRepositoryById($parent) ) {
+                    //no parent or error
+                    $parent = null;
+                } else {
+                    //there is a parent
+                    $this->parentId = $parent->getId();//not very useful
+                }
+            } catch (GitDaoException $e) {
                 $parent = null;
-            } else {
-                //there is a parent
-                $this->parentId = $parent->getId();//not very useful
             }
             $this->parent = $parent;
         }
@@ -672,6 +676,8 @@ class GitRepository implements DVCSRepository {
     
     /**
      * Create a reference repository
+     * @deprecated
+     * @see GitRepositoryManager::create
      */
     public function create() {        
         $this->getBackend()->createReference($this);

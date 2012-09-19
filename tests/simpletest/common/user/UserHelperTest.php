@@ -175,5 +175,24 @@ class UserHelperTest extends TuleapTestCase {
         $this->assertEqual("user_name (realname)", $uh->getDisplayNameFromUserName('user_name'));
         $this->assertEqual("user_name (realname)", $uh->getDisplayNameFromUserId(123));
     }
+
+    function itCachesUnknownNames() {
+        $name = "L'équipe de développement de PhpWiki";
+
+        $dao = mock('UserDao');
+        stub($dao)->searchByUserName($name)->returnsEmptyDar();
+
+        $um = mock('UserManager');
+        stub($um)->isUserLoadedByUserName($name)->returns(false);
+
+        $uh = new UserHelperTestVersion();
+        stub($uh)->_getUserManager()->returns($um);
+        stub($uh)->_isUserNameNone()->returns(false);
+        stub($uh)->_getCurrentUserUsernameDisplayPreference()->returns(1);
+        stub($uh)->_getUserDao()->returns($dao);
+
+        $uh->__construct();
+        $this->assertEqual($uh->getDisplayNameFromUserName($name), $name);
+    }
 }
 ?>

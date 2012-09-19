@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__).'/BreadCrumbGenerator.class.php';
 
 class BreadCrumb_AgileDashboard implements BreadCrumb_BreadCrumbGenerator {
 

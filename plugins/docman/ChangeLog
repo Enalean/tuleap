@@ -1,3 +1,22 @@
+Version 2.26.8 - Tuleap 5.5
+    * When consulting private file anonymously, a login screen should be displayed instead of permissions error screen
+
+Version 2.26.7 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
+Version 2.26.6 - Tuleap 5.5
+    * Add warning on a document when it is locked (Contrib STMicroelectronics)
+
+Version 2.26.5 - Tuleap 5.5
+    * Dev: `version` parameter of plugin_docman_event_new_version is now the
+	object, not just its id.
+
+Version 2.26.4 - Tuleap 5.5
+    * Fix: fatal error when applying permissions recursively (Contrib STMicroelectronics)
+
+Version 2.26.3 - Tuleap 5.4
+    * Refactoring to update docman item perms in fulltext
+
 Version 2.26.2 - Tuleap 5.3.1
     * Fix missing autocompleter in approval table.
 

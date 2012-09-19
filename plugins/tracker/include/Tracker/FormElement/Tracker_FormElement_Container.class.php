@@ -203,6 +203,17 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
         return $this->fetchRecursiveArtifact('fetchArtifact', array($artifact, $submitted_values));
     }
+
+    /**
+     * Fetch the element for the update artifact form
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string html
+     */
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
+        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact));
+    }
     
     protected function fetchRecursiveArtifact($method, $params = array()) {
         $html = '';
@@ -217,6 +228,19 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $html;
     }
     
+    protected function fetchRecursiveArtifactReadOnly($method, $params = array()) {
+        $html = '';
+        $content = $this->getContainerContent($method, $params);
+
+        if (count($content)) {
+            $html .= $this->fetchArtifactReadOnlyPrefix();
+            $html .= $this->fetchArtifactReadOnlyContent($content);
+            $html .= $this->fetchArtifactReadOnlySuffix();
+        }
+        $this->has_been_displayed = true;
+        return $html;
+    }
+
     protected function fetchMailRecursiveArtifact($format, $method, $params = array()) {
         $output = '';
         $content = $this->getContainerContent($method, $params);
@@ -330,6 +354,8 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     
     protected abstract function fetchArtifactPrefix();
     protected abstract function fetchArtifactSuffix();
+    protected abstract function fetchArtifactReadOnlyPrefix();
+    protected abstract function fetchArtifactReadOnlySuffix();
     protected abstract function fetchMailArtifactPrefix($format);
     protected abstract function fetchMailArtifactSuffix($format);
 
@@ -344,6 +370,10 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
     
     protected function fetchArtifactContent(array $content) {
         return implode('', $content);
+    }
+
+    protected function fetchArtifactReadOnlyContent(array $content) {
+        return $this->fetchArtifactContent($content);
     }
 }
 ?>

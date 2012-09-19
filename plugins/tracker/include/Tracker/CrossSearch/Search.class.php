@@ -95,7 +95,7 @@ class Tracker_CrossSearch_Search {
         if ($query->isEmpty()) {
             return $this->result_sorter->buildTreeWithCompleteList($artifacts_info, $tracker_ids, $hierarchy);
         } else {
-            return $this->result_sorter->buildTreeWithMissingChildren($user, $artifacts_info);
+            return $this->result_sorter->buildTreeWithMissingChildren($user, $artifacts_info, $excluded_artifact_ids);
         }
     }
 
