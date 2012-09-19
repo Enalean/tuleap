@@ -47,15 +47,11 @@ MYSQL='/usr/bin/mysql'
 MYSQLSHOW='/usr/bin/mysqlshow'
 TOUCH='/bin/touch'
 CAT='/bin/cat'
-TAIL='/usr/bin/tail'
 GREP='/bin/grep'
 CHKCONFIG='/sbin/chkconfig'
 SERVICE='/sbin/service'
 PERL='/usr/bin/perl'
-DIFF='/usr/bin/diff'
 PHP='/usr/bin/php'
-UNAME='/bin/uname'
-YUM='/usr/bin/yum -qy'
 INSTALL='/usr/bin/install'
 
 CHCON='/usr/bin/chcon'
@@ -76,9 +72,12 @@ else
 fi
 
 
-CMD_LIST="GROUPADD GROUDEL USERADD USERDEL USERMOD MV CP LN LS RM TAR \
-MKDIR RPM CHOWN CHMOD FIND TOUCH CAT TAIL GREP CHKCONFIG \
-SERVICE PERL DIFF"
+CMD_LIST="GROUPADD GROUPDEL USERADD USERDEL USERMOD MV CP LN LS RM \
+MKDIR CHOWN CHGRP CHMOD FIND TOUCH CAT GREP PERL PHP INSTALL"
+
+if [ "$INSTALL_PROFILE" = "rhel" ]; then
+    CMD_LIST="$CMD_LIST RPM CHKCONFIG SERVICE"
+fi
 
 # Functions
 create_group_withid() {
