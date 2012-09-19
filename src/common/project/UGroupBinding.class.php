@@ -301,7 +301,7 @@ class UGroupBinding {
             if ($groupId != $project['group_id']) {
                 $project = $this->_getProjectManager()->getProject($project['group_id']);
                 if ($project->userIsAdmin()) {
-                    $ugroupList = $this->_getUgroupList($sourceProject);
+                    $ugroupList = $this->_getUgroupList($project->getID());
                     if (!empty($ugroupList)) {
                         $selected = '';
                         if ($sourceProject == $project->getID()) {
