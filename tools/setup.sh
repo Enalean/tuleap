@@ -579,22 +579,24 @@ done
 ##############################################
 # Check release
 #
-RH_RELEASE="5"
-RH_UPDATE="6"
+if [ "$INSTALL_PROFILE" = "rhel" ]; then
+    RH_RELEASE="5"
+    RH_UPDATE="6"
 
-minor_version=`$RPM -qa | grep -P "^(centos|redhat)-release-${RH_RELEASE}" | sed -rn 's/(centos|redhat)-release-5-(.).*/\2/p'`
-if [ "x$minor_version" != x ] && [ "$minor_version" -ge "$RH_UPDATE" ]; then
-    echo "Running on RHEL or CentOS ${RH_RELEASE}... good!"
-else
-  cat << EOF
-This machine is not running RedHat Enterprise Linux or CentOS ${RH_RELEASE}.${RH_UPDATE}
-You should consider to upgrade your system before going any further (yum upgrade).
-EOF
-  read -p "Continue? [y|n]: " yn
-  if [ "$yn" = "n" ]; then
-      echo "Bye now!"
-      exit 1
-  fi
+    minor_version=`$RPM -qa | grep -P "^(centos|redhat)-release-${RH_RELEASE}" | sed -rn 's/(centos|redhat)-release-5-(.).*/\2/p'`
+    if [ "x$minor_version" != x ] && [ "$minor_version" -ge "$RH_UPDATE" ]; then
+	echo "Running on RHEL or CentOS ${RH_RELEASE}... good!"
+    else
+	cat <<-EOF
+	This machine is not running RedHat Enterprise Linux or CentOS ${RH_RELEASE}.${RH_UPDATE}
+	You should consider to upgrade your system before going any further (yum upgrade).
+	EOF
+	read -p "Continue? [y|n]: " yn
+	if [ "$yn" = "n" ]; then
+	    echo "Bye now!"
+	    exit 1
+	fi
+    fi
 fi
 
 # Check if IM plugin is installed
