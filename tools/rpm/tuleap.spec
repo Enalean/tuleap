@@ -50,11 +50,19 @@ Requires: jpgraph
 # = 2.3.4-0.codendi
 Provides: codendi
 %else
-Requires: %{php_base}-jpgraph-%{PKG_NAME}
 Provides: tuleap
+%if %{php_base} == php
+Requires: jpgraph-%{PKG_NAME}
+%else
+Requires: %{php_base}-jpgraph-%{PKG_NAME}
+%endif
 %endif
 Requires: %{php_base}-pecl-apc
+%if %{php_base} == php
+Requires: htmlpurifier
+%else
 Requires: %{php_base}-htmlpurifier
+%endif
 Requires: curl
 Requires: %{php_base}-zendframework = 1.8.1
 #Requires: %{php_base}-pecl-json
@@ -181,7 +189,12 @@ Summary: Git plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, git > 1.6, %{php_base}-geshi, %{php_base}-Smarty, gitolite
+Requires: %{name} >= %{version}, git > 1.6, %{php_base}-Smarty, gitolite
+%if %{php_base} == php
+Requires: geshi
+%else
+Requires: %{php_base}-geshi
+%endif
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-git = %{version}
 %else
@@ -226,6 +239,7 @@ Summary: Instant Messaging Plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
+AutoReqProv: no
 Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-im = %{version}
@@ -254,7 +268,12 @@ Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, SabreDAV = 1.4.4
+Requires: %{PKG_NAME}
+%if %{php_base} == php
+Requires: SabreDAV = 1.4.4
+%else
+Requires: %{php_base}-SabreDAV = 1.4.4
+%endif
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-webdav = %{version}
 %else
@@ -319,7 +338,12 @@ Summary: Full-Text Search
 Group: Development/Tools
 Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-elasticsearch
+Requires: %{PKG_NAME}
+%if %{php_base} == php
+Requires: elasticsearch
+%else
+Requires: %{php_base}-elasticsearch
+%endif
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 
