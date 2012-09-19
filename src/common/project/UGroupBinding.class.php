@@ -147,12 +147,14 @@ class UGroupBinding {
      *
      * @param Integer $ugroupId Id of the user group
      *
-     * @return void
+     * @return boolean
      */
     public function resetUgroup($ugroupId) {
         if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
             throw new Exception('Unable to reset ugroup');
+            return false;
         }
+        return true;
     }
 
     /**
@@ -161,12 +163,14 @@ class UGroupBinding {
      * @param Integer $ugroupId Id of the binded user group
      * @param Integer $sourceId Id of the source user group
      *
-     * @return void
+     * @return boolean
      */
     public function cloneUgroup( $ugroupId, $sourceId) {
         if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
             throw new Exception('Unable to clone ugroup');
+            return false;
         }
+        return true;
     }
 
     /**
@@ -175,12 +179,14 @@ class UGroupBinding {
      * @param Integer $ugroupId Id of the binded user group
      * @param Integer $sourceId Id of the source user group
      *
-     * @return void
+     * @return boolean
      */
     public function updateUgroupBinding($ugroupId, $sourceId) {
         if (!$this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
             throw new Exception('Unable to store ugroup binding');
+            return false;
         }
+        return true;
     }
 
     /**
@@ -192,6 +198,14 @@ class UGroupBinding {
      * @return boolean
      */
     public function addBinding($ugroupId, $sourceId) {
+        $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            $row = $dar->getRow();
+            if ($row['source_id'] == $sourceId) {
+                $GLOBALS['Response']->addFeedback('warning', 'The user group with the id '.$sourceId.' is already defined as binding source');
+                return false;
+            }
+        }
         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
         try {
             $this->resetUgroup($ugroupId);
