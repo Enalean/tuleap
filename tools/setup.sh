@@ -18,10 +18,12 @@ if [ -e /etc/debian_version ]; then
     INSTALL_PROFILE="debian"
     PROJECT_NAME="tuleap"
     PROJECT_ADMIN="www-data"
+    TULEAP_CACHE_DIR="/var/cache/tuleap"
 else
     INSTALL_PROFILE="rhel"
     PROJECT_NAME="codendi"
     PROJECT_ADMIN="codendiadm"
+    TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
 fi
 
 export INSTALL_DIR="/usr/share/$PROJECT_NAME"
@@ -755,7 +757,7 @@ build_dir /var/lib/$PROJECT_NAME/docman $PROJECT_ADMIN $PROJECT_ADMIN 700
 # log dirs
 build_dir /var/log/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
 build_dir /var/log/$PROJECT_NAME/cvslogs $PROJECT_ADMIN $PROJECT_ADMIN 775
-build_dir /var/tmp/${PROJECT_NAME}_cache $PROJECT_ADMIN $PROJECT_ADMIN 755
+build_dir $TULEAP_CACHE_DIR $PROJECT_ADMIN $PROJECT_ADMIN 755
 # config dirs
 build_dir /etc/skel_$PROJECT_NAME root root 755
 build_dir /etc/$PROJECT_NAME $PROJECT_ADMIN $PROJECT_ADMIN 755
