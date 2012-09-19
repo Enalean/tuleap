@@ -28,5 +28,3 @@ register_plugin ($admsswPluginObject) ;
 // mode: php
 // c-file-style: "bsd"
 // End:
-
-?>

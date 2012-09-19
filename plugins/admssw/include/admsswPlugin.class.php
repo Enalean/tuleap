@@ -36,7 +36,8 @@ class admsswPlugin extends Plugin {
 		$this->_addHook("script_accepted_types");
 		$this->_addHook("content_negociated_projects_list");
 	}
-	
+
+
 	/**
 	 * Declares itself as accepting RDF XML on /projects/...
 	 * @param unknown_type $params
@@ -215,5 +216,3 @@ class admsswPlugin extends Plugin {
 // mode: php
 // c-file-style: "bsd"
 // End:
-
-?>
