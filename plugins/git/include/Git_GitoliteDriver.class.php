@@ -176,22 +176,10 @@ class Git_GitoliteDriver {
         return false;
     }
 
-    /**
-     * @param User $user
-     */
     private function initUserKeys($user) {
         $keydir = 'keydir';
-
         $this->createKeydir($keydir);
-
-        // Dump keys
-        $i    = 0;
-        foreach ($user->getAuthorizedKeysArray() as $key) {
-            $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            $this->writeKeyIfChanged($filePath, $key);
-            $i++;
-        }
-        $this->removeUserExistingKeys($user, $i);
+        $this->dumpKeys($user, $keydir);
     }
 
     private function createKeydir($keydir) {
@@ -201,6 +189,16 @@ class Git_GitoliteDriver {
                 throw new Exception('Unable to create "keydir" directory in '.getcwd());
             }
         }
+    }
+
+    private function dumpKeys(User $user, $keydir) {
+        $i = 0;
+        foreach ($user->getAuthorizedKeysArray() as $key) {
+            $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
+            $this->writeKeyIfChanged($filePath, $key);
+            $i++;
+        }
+        $this->removeUserExistingKeys($user, $i);
     }
 
     private function writeKeyIfChanged($filePath, $key) {
