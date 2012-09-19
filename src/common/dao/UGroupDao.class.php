@@ -95,7 +95,7 @@ class UGroupDao extends DataAccessObject {
                 FROM ugroup 
                 WHERE group_id = '. $groupId .' AND ugroup_id = '. $ugroupId;
         $res = $this->retrieve($sql);
-        if($res && !$res->isError() && $res->rowCount() == 1) {
+        if ($res && !$res->isError() && $res->rowCount() == 1) {
             return true;
         } else {
             return false;
@@ -112,7 +112,7 @@ class UGroupDao extends DataAccessObject {
      */
     function updateUgroupBinding($ugroupId, $sourceId = NULL) {
         $ugroupId = $this->da->escapeInt($ugroupId);
-        if(isset($sourceId)) {
+        if (isset($sourceId)) {
             $sourceId      = $this->da->escapeInt($sourceId);
             $bindingclause = " SET source_id = ".$sourceId;
         } else {
@@ -131,7 +131,7 @@ class UGroupDao extends DataAccessObject {
      */
     function searchUGroupByBindingSource($sourceId) {
         $ugroupId = $this->da->escapeInt($sourceId);
-        $sql = "SELECT * FROM ugroup WHERE source_id = ".$sourceId;
+        $sql      = "SELECT * FROM ugroup WHERE source_id = ".$sourceId;
         return $this->retrieve($sql);
     }
 

@@ -32,7 +32,7 @@ class UGroupBinding {
     /**
      * Obtain UGroupDao
      *
-     * @raturn UGroupDao
+     * @return UGroupDao
      */
     protected function getUGroupDao() {
         if (!$this->_ugroupdao) {
@@ -44,7 +44,7 @@ class UGroupBinding {
     /**
      * Obtain UGroupUserDao
      *
-     * @raturn UGroupUserDao
+     * @return UGroupUserDao
      */
     protected function getUGroupUserDao() {
         if (!$this->_ugroupUserDao) {
@@ -62,7 +62,7 @@ class UGroupBinding {
      */
     public function isBinded($ugroupId) {
         $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             return  true;
         } else {
             return false;
@@ -151,13 +151,13 @@ class UGroupBinding {
      * @return Void
      */
     public function processRequest($ugroupId, Codendi_Request $request) {
-        $func = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
+        $func        = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
         $validUgroup = $this->getUGroupDao()->checkUGroupValidityByGroupId($request->get('group_id'), $ugroupId);
         if ($validUgroup) {
             switch($func) {
                 case 'add_binding':
                     $sourceId = $request->get('source_ugroup');
-                    if($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
+                    if ($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
                         // @TODO: Clean up bind users, flash ugroup before cloning...
                         $bindUsers = $this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId);
 
@@ -165,16 +165,16 @@ class UGroupBinding {
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
                     }
-                break;
+                    break;
                 case 'remove_binding':
-                    if($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
+                    if ($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'remove_error'));
                     }
-                break;
+                    break;
                 default:
-                break;
+                    break;
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
@@ -201,7 +201,7 @@ class UGroupBinding {
      */
     public function getHTMLContent($groupId, $ugroupId, $sourceProject = null) {
         $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
-        if($dar && !$dar->isError() && $dar->rowCount() == 1) {
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $ugroupManager  = new UGroupManager();
             $row            = $dar->getRow();
             $currentSource  = $ugroupManager->getById($row['source_id']);
@@ -239,7 +239,7 @@ class UGroupBinding {
      * @return String
      */
     private function getCurrentBindingHTML(Project $currentProject = null, UGroup $currentSource = null) {
-        if($currentSource) {
+        if ($currentSource) {
             if ($currentSource && $currentProject->userIsAdmin()) {
                 $currentBindHTML = $GLOBALS['Language']->getText('project_ugroup_binding', 'current_binded', array('<a href="/project/admin/ugroup.php?group_id='.$currentProject->getID().'" ><b>'.$currentSource->getName().'</b></a>', '<a href="/projects/'.$currentProject->getUnixName().'" ><b>'.$currentProject->getPublicName().'</b></a>'));
             }
@@ -290,8 +290,8 @@ class UGroupBinding {
      * @return String
      */
     private function getProjectsSelect($groupId, $sourceProject) {
-        $projects      = UserManager::instance()->getCurrentUser()->getProjects(true);
-        $projectSelect = '<select name="source_project" onchange="this.form.submit()" >';
+        $projects       = UserManager::instance()->getCurrentUser()->getProjects(true);
+        $projectSelect  = '<select name="source_project" onchange="this.form.submit()" >';
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
             if ($groupId != $project['group_id']) {
@@ -318,8 +318,8 @@ class UGroupBinding {
      * @return String
      */
     private function getUgroupSelect($sourceProject, UGroup $currentSource = null) {
-        $ugroups      = ugroup_db_get_existing_ugroups($sourceProject);
-        $ugroupSelect = '<select name="source_ugroup" >';
+        $ugroups       = ugroup_db_get_existing_ugroups($sourceProject);
+        $ugroupSelect  = '<select name="source_ugroup" >';
         $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         while ($ugroup = db_fetch_array($ugroups)) {
             if (!$this->isBinded($ugroup['ugroup_id'])) {
