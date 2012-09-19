@@ -162,7 +162,8 @@ class UGroupBinding {
                     $sourceId = $request->get('source_ugroup');
                     if ($this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
                         // @TODO: Clean up bind users, flash ugroup before cloning...
-                        $bindUsers = $this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId);
+                        $resetUsers = $this->getUGroupUserDao()->resetUgroupUserList($ugroupId);
+                        $bindUsers  = $this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId);
                         $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
                         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
                     } else {

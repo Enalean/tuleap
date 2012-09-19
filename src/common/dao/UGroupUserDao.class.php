@@ -97,6 +97,18 @@ class UGroupUserDao extends DataAccessObject {
         return $this->update($sql);
     }
 
+    /**
+     * Reset membership for a given user
+     *
+     * @param Integer $ugroupId Id of the user group
+     *
+     * @return Boolean
+     */
+    public function resetUgroupUserList($ugroupId) {
+        $ugroupId = $this->da->escapeInt($ugroupId);
+        $sql      = "DELETE FROM ugroup_user WHERE ugroup_id = $ugroupId";
+        return $this->update($sql);
+    }
 }
 
 ?>
