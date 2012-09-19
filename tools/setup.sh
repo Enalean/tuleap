@@ -139,6 +139,19 @@ has_package() {
     fi
 }
 
+input_password() {
+    local label="$1"
+    local pass1="a"
+    local pass2="b"
+    while [ "$pass1" != "$pass2" ]; do
+	read -s -p "Password for $label: " pass1
+	echo
+	read -s -p "Retype $label password: " pass2
+	echo
+    done
+    echo "$pass1"
+}
+
 ##############################################
 # Setup chunks
 ##############################################
@@ -697,54 +710,22 @@ else
     # Ask for user passwords
 
     if [ -z "$rt_passwd" ]; then
-        rt_passwd="a"; rt_passwd2="b";
-        while [ "$rt_passwd" != "$rt_passwd2" ]; do
-            read -s -p "Password for MySQL root: " rt_passwd
-            echo
-            read -s -p "Retype MySQL root password: " rt_passwd2
-            echo
-        done
+        rt_passwd=$(input_password "MySQL root")
     fi
 
-codendiadm_passwd="a"; codendiadm_passwd2="b";
-while [ "$codendiadm_passwd" != "$codendiadm_passwd2" ]; do
-    read -s -p "Password for user $PROJECT_ADMIN: " codendiadm_passwd
-    echo
-    read -s -p "Retype $PROJECT_ADMIN password: " codendiadm_passwd2
-    echo
-done
+    codendiadm_passwd=$(input_password "$PROJECT_ADMIN user")
 
-if [ "$enable_core_mailman" = "true" ]; then
-    mm_passwd="a"; mm_passwd2="b";
-    while [ "$mm_passwd" != "$mm_passwd2" ]; do
-        read -s -p "Password for user mailman: " mm_passwd
-        echo
-        read -s -p "Retype mailman password: " mm_passwd2
-        echo
-    done
-fi
+    if [ "$enable_core_mailman" = "true" ]; then
+	mm_passwd=$(input_password "mailman user")
+    fi
 
-if [ "$enable_plugin_im" = "true" ]; then
-    openfire_passwd="a"; openfire_passwd2="b";
-    while [ "$openfire_passwd" != "$openfire_passwd2" ]; do
-        read -s -p "Password for Openfire DB user: " openfire_passwd
-        echo
-        read -s -p "Retype password for Openfire DB user: " openfire_passwd2
-        echo
-    done
-fi
+    if [ "$enable_plugin_im" = "true" ]; then
+	openfire_passwd=$(input_password "Openfire DB user")
+    fi
 
-echo "DB authentication user: MySQL user that will be used for user authentication"
-echo "  Please do not reuse a password here, as this password will be stored in clear on the filesystem and will be accessible to all logged-in user."
-
-dbauth_passwd="a"; dbauth_passwd2="b";
-while [ "$dbauth_passwd" != "$dbauth_passwd2" ]; do
-    read -s -p "Password for DB Authentication user: " dbauth_passwd
-    echo
-    read -s -p "Retype password for DB Authentication user: " dbauth_passwd2
-    echo
-done
-
+    echo "DB authentication user: MySQL user that will be used for user authentication"
+    echo "  Please do not reuse a password here, as this password will be stored in clear on the filesystem and will be accessible to all logged-in user."
+    dbauth_passwd=$(input_password "DB Authentication user")
 fi
 
 # Update tuleap user password
