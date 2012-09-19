@@ -6,6 +6,7 @@ Version 5.5 (Not released yet)
 	* Fix commit-email.pl: When no notification is set, don't generate error
 	* When consulting private file anonymously, a login screen should be
 	displayed instead of permissions error screen
+	* Fix login error message when username is invalid
 
     == Plugins ==
 	* tracker: 5.18
