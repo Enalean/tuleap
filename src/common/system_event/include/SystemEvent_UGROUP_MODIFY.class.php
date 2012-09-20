@@ -94,22 +94,12 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
         } else {
             if (count($this->getParametersAsArray()) == 2) {
                 //The user group has been updated (user added / user removed), we update all its binded user groups
-                $bindedUgroups  = $bindingManager->getUGroupsByBindingSource($ugroup_id);
-                if (!empty($bindedUgroups)) {
-                    foreach ($bindedUgroups as $ugroupKey => $ugroupData) {
-                        try {
-                            $bindingManager->resetUgroup($ugroupKey);
-                            $bindingManager->cloneUgroup($ugroup_id, $ugroupKey);
-                        } catch(Exception $e) {
-                            return false;
-                        }
-                    }
-                }
+                return $bindingManager->updateBindedUGroups($ugroup_id);
             }
             return true;
         }
     }
- 
+
 }
 
 ?>

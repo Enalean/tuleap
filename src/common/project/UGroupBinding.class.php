@@ -140,6 +140,28 @@ class UGroupBinding {
     }
 
     /**
+     * Update the user list of all ugroups  binded to a given user group
+     *
+     * @param Integer $ugroupId Id of the source user group
+     *
+     * @return boolean
+     */
+    public function updateBindedUGroups($ugroupId) {
+        $bindedUgroups = $this->getUGroupsByBindingSource($ugroupId);
+        if (!empty($bindedUgroups)) {
+            foreach ($bindedUgroups as $ugroupKey => $ugroupData) {
+                try {
+                    $this->resetUgroup($ugroupKey);
+                    $this->cloneUgroup($ugroupId, $ugroupKey);
+                } catch(Exception $e) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
      * Get title of the link to binding interface
      *
      * @param Integer $ugroupId Id of the user group
