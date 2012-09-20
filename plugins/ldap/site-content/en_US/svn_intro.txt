@@ -23,7 +23,7 @@
 
 if (user_isloggedin()) {
     if($lr) {
-        $username = $lr->getLogin();
+        $username = strtolower($lr->getLogin());
     } else {
         $username='<I>username</I>';
     }
