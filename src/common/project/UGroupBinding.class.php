@@ -89,7 +89,7 @@ class UGroupBinding {
      * @return Array
      */
     public function getUGroupsByBindingSource($ugroupId) {
-        $dar = $this->getUGroupDao()->searchUGroupByBindingSource($ugroupId);
+        $dar     = $this->getUGroupDao()->searchUGroupByBindingSource($ugroupId);
         $ugroups = array();
         if ($dar && !empty($dar) && !$dar->isError()) {
             foreach ($dar as $row) {
@@ -236,7 +236,7 @@ class UGroupBinding {
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             if ($row['source_id'] == $sourceId) {
-                $GLOBALS['Response']->addFeedback('warning', 'The user group with the id '.$sourceId.' is already defined as binding source');
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('project_ugroup_binding', 'duplicate_binding_warning', array($sourceId)));
                 return false;
             }
         }
