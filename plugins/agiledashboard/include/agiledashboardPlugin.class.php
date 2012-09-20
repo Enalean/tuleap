@@ -20,6 +20,7 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'autoload.php';
+require_once 'constants.php';
 
 /**
  * AgileDashboardPlugin
@@ -34,9 +35,11 @@ class AgileDashboardPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(self::SCOPE_PROJECT);
+    }
+
+    public function getHooksAndCallbacks() {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
-            require_once 'constants.php';
             $this->_addHook('cssfile', 'cssfile', false);
             $this->_addHook(Event::JAVASCRIPT, 'javascript', false);
             $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);
@@ -46,6 +49,18 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED, 'tracker_event_artifact_association_edited', false);
             $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
+
+            if (defined('CARDWALL_BASE_DIR')) {
+                $this->_addHook(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, 'cardwall_event_get_swimline_tracker', false);
+            }
+        }
+        return parent::getHooksAndCallbacks();
+    }
+
+    public function cardwall_event_get_swimline_tracker($params) {
+        $planning_factory = new PlanningFactory(new PlanningDao(), $params['tracker_factory']);
+        if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {
+            $params['tracker'] = $planning->getBacklogTracker();
         }
     }
 

@@ -19,4 +19,16 @@
  */
 
 define('CARDWALL_BASE_DIR', dirname(__FILE__));
+
+/**
+ * Get the swimline tracker of a given tracker
+ *
+ * Parameters:
+ *  'tracker_factory' => TrackerFactory
+ *  'tracker'         => the given tracker
+ *
+ * Expected Results:
+ *  'tracker'         => the swimline tracker, if any
+ */
+define('CARDWALL_EVENT_GET_SWIMLINE_TRACKER', 'cardwall_event_get_swimline_tracker');
 ?>
