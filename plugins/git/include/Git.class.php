@@ -194,11 +194,9 @@ class Git extends PluginController {
         } else {
             $this->addPermittedAction('index');
             $this->addPermittedAction('view_last_git_pushes');
-            if ($this->user->isMember($this->groupId)) {
-                $this->addPermittedAction('fork_repositories');
-                $this->addPermittedAction('do_fork_repositories');
-            }
-            
+            $this->addPermittedAction('fork_repositories');
+            $this->addPermittedAction('do_fork_repositories');
+
             if ($repoId !== 0) {
                 $repo = $this->factory->getRepositoryById($repoId);
                 if ($repo && $repo->userCanRead($user)) {
@@ -407,7 +405,11 @@ class Git extends PluginController {
             case 'do_fork_repositories':
                 try {
                     if ($this->request->get('choose_destination') == 'personal') {
-                        $this->_doDispatchForkRepositories($this->request, $user);
+                        if ($this->user->isMember($this->groupId)) {
+                            $this->_doDispatchForkRepositories($this->request, $user);
+                        } else {
+                            $this->addError($this->getText('controller_access_denied'));
+                        }
                     } else {
                         $this->_doDispatchForkCrossProject($this->request, $user);
                     }

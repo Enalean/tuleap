@@ -110,8 +110,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         
         // Magic call that do stuff we want, yeah!
         $repositories = $this->getFlatTree($traversal);
-        
-        $tree = $traversal->getTree($repositories);
+        $user = new MockUser();
+        $tree = $traversal->getTree($repositories, $user);
         $this->assertTrue(is_array($tree['automaticTests']));
         $this->assertIsA(($tree['automaticTests']['Python']), 'GitRepository');
     }

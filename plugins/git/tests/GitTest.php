@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once (dirname(__FILE__).'/../include/Git.class.php');
+Mock::generate('User');
 Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
@@ -54,6 +55,27 @@ class GitTest extends TuleapTestCase {
         $factory = new MockGitRepositoryFactory();
         $git->setFactory($factory);
 
+        $user = new MockUser();
+        $user->setReturnValue('isMember', true);
+        $git->user = $user;
+
+        $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
+
+    }
+
+    public function testDispatchToForkRepositoriesIfRequestsPersonalAndNonMember() {
+        $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
+        $request = new Codendi_Request(array('choose_destination' => 'personal'));
+        $git->setRequest($request);
+        $git->expectNever('_doDispatchForkRepositories');
+
+        $factory = new MockGitRepositoryFactory();
+        $git->setFactory($factory);
+
+        $user = new MockUser();
+        $user->setReturnValue('isMember', false);
+        $git->user = $user;
+
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 
     }
@@ -65,6 +87,10 @@ class GitTest extends TuleapTestCase {
 
         $factory = new MockGitRepositoryFactory();
         $git->setFactory($factory);
+
+        $user = new MockUser();
+        $user->setReturnValue('isMember', true);
+        $git->user = $user;
 
         $git->expectOnce('_doDispatchForkCrossProject');
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);

@@ -39,6 +39,10 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $factory = new MockGitRepositoryFactory();
         $git->setFactory($factory);
 
+        $user = new MockUser();
+        $user->setReturnValue('isMember', true);
+        $git->user = $user;
+
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
     }
     
