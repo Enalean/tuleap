@@ -58,8 +58,8 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
             list($group_id, $ugroup_id) = $this->getParametersAsArray();
         }
         // Remove ugroup binding to this user group
-        if (!$this->cleanupUgroupBinding($ugroup_id, $group_id)) {
-            $this->error("Could not remove binding to this user group ($ugroup_id)");
+        if (!$this->processUgroupBinding($ugroup_id, $group_id)) {
+            $this->error("Could not process binding to this user group ($ugroup_id)");
             return false;
         }
 
@@ -79,18 +79,33 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     }
 
     /**
-     * Remove all user group binded to a deleted given ugrou
+     * Remove all user group binded to a deleted given ugroup
      *
      * @param Integer $ugroup_id Id of the deleted user group
      * @param Integer $group_id  Id of the project
      *
      * @return Boolean
      */
-    protected function cleanupUgroupBinding($ugroup_id, $group_id) {
+    protected function processUgroupBinding($ugroup_id, $group_id) {
         $bindingManager = new UGroupBinding();
         if (!$bindingManager->checkUGroupValidity($group_id, $ugroup_id)) {
+            //The user group is removed, we remove all its binding traces
             return $bindingManager->removeAllUGroupsBinding($ugroup_id);
         } else {
+            if (count($this->getParametersAsArray()) == 2) {
+                //The user group has been updated (user added / user removed), we update all its binded user groups
+                $bindedUgroups  = $bindingManager->getUGroupsByBindingSource($ugroup_id);
+                if (!empty($bindedUgroups)) {
+                    foreach ($bindedUgroups as $ugroupKey => $ugroupData) {
+                        try {
+                            $bindingManager->resetUgroup($ugroupKey);
+                            $bindingManager->cloneUgroup($ugroup_id, $ugroupKey);
+                        } catch(Exception $e) {
+                            return false;
+                        }
+                    }
+                }
+            }
             return true;
         }
     }
