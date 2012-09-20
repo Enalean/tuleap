@@ -12,7 +12,7 @@ Version 5.5 (Not released yet)
 	* tracker: 5.19
 	* git: 2.7.5
 	* docman: 2.26.8
-	* agiledashboard: 0.52
+	* agiledashboard: 0.53
 	* fulltextsearch: 0.12
 	* IM: 1.5.4
 	* admindelegation: 2.4
@@ -21,6 +21,7 @@ Version 5.5 (Not released yet)
 	* graphontrackersv5: 5.0.4
 	* ldap: 3.19
 	* statistics: 0.20
+	* cardwall: 0.9.6
 
 	== Development ==
 	* Add tool to easily fix the singleton count after a merge
