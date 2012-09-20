@@ -172,12 +172,12 @@ class UGroupBinding {
     /**
      * Clone a given user group
      *
-     * @param Integer $ugroupId Id of the binded user group
      * @param Integer $sourceId Id of the source user group
+     * @param Integer $ugroupId Id of the binded user group
      *
      * @return boolean
      */
-    public function cloneUgroup( $ugroupId, $sourceId) {
+    public function cloneUgroup($sourceId, $ugroupId) {
         if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
             throw new Exception('Unable to clone ugroup');
             return false;
