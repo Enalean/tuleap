@@ -28,6 +28,7 @@ class UGroupBinding {
 
     protected $ugroupdao;
     protected $ugroupUserDao;
+    protected $ugroupManager;
 
     /**
      * Obtain UGroupDao
@@ -53,6 +54,18 @@ class UGroupBinding {
         return $this->ugroupUserDao;
     }
 
+    /**
+     * Obtain UGroupManager
+     *
+     * @return UGroupManager
+     */
+    protected function getUGroupManager() {
+        if (!$this->ugroupManager) {
+            $this->ugroupManager = new UGroupManager();
+        }
+        return $this->ugroupManager;
+    }
+
    /**
      * Check if the user group is valid
      *
@@ -63,22 +76,6 @@ class UGroupBinding {
      */
     public function checkUGroupValidity($groupId, $ugroupId) {
         return $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
-    }
-
-    /**
-     * Check if the user group is binded
-     *
-     * @param Integer $ugroupId Id of the user goup
-     *
-     * @return Boolean
-     */
-    public function isBinded($ugroupId) {
-        $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            return  true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -169,7 +166,7 @@ class UGroupBinding {
      * @return String
      */
     public function getLinkTitle($ugroupId) {
-        if ($this->isBinded($ugroupId)) {
+        if ($this->getUGroupManager()->isBinded($ugroupId)) {
             return '- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'update_binding');
         } else {
             return '- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'add_binding');
@@ -324,9 +321,8 @@ class UGroupBinding {
     public function getHTMLContent($groupId, $ugroupId, $sourceProject = null) {
         $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            $ugroupManager  = new UGroupManager();
             $row            = $dar->getRow();
-            $currentSource  = $ugroupManager->getById($row['source_id']);
+            $currentSource  = $this->getUGroupManager()->getById($row['source_id']);
             $currentProject = $this->_getProjectManager()->getProject($row['group_id']);
             if ($currentProject && $currentProject->userIsAdmin()) {
                 if (!$sourceProject) {
@@ -446,7 +442,7 @@ class UGroupBinding {
         $ugroupList = array();
         $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
         while ($ugroup = db_fetch_array($ugroups)) {
-            if (!$this->isBinded($ugroup['ugroup_id'])) {
+            if (!$this->getUGroupManager()->isBinded($ugroup['ugroup_id'])) {
                 if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
                     $selected = true;
                 } else {

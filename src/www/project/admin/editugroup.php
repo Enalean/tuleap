@@ -123,7 +123,7 @@ if (($func=='edit')||($func=='do_create')) {
     echo '</form>';
 
     $ugroupBinding = new UGroupBinding();
-    $ugroupUpdateUsersAllowed = !$ugroupBinding->isBinded($ugroup_id);
+    $ugroupUpdateUsersAllowed = !$ugroupBinding->getUGroupManager()->isBinded($ugroup_id);
     $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
 
     echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup','group_members').'</b></p>';

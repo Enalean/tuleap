@@ -24,7 +24,7 @@ $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
 
 if ($ugroup_id) {
     $ugroupBinding = new UGroupBinding();
-    $ugroupUpdateUsersAllowed = !$ugroupBinding->isBinded($ugroup_id);
+    $ugroupUpdateUsersAllowed = !$ugroupBinding->getUGroupManager()->isBinded($ugroup_id);
     $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
     if ($ugroupUpdateUsersAllowed) {
         $res = ugroup_db_get_ugroup($ugroup_id);

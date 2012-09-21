@@ -84,6 +84,22 @@ class UGroupManager {
         }
     }
 
+    /**
+     * Check if the user group is binded
+     *
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return Boolean
+     */
+    public function isBinded($ugroupId) {
+        $dar = $this->getDao()->getUgroupBindingSource($ugroupId);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return  true;
+        } else {
+            return false;
+        }
+    }
+
 }
 
 ?>
