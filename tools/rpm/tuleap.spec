@@ -251,7 +251,8 @@ Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, SabreDAV = 1.4.4
+Requires: %{PKG_NAME}
+Requires: %{php_base}-sabredav = 1.4.4
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-webdav = %{version}
 %else
