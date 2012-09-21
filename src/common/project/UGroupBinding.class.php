@@ -66,6 +66,15 @@ class UGroupBinding {
         return $this->ugroupManager;
     }
 
+    /**
+     * Obtain EventManager
+     *
+     * @return EventManager
+     */
+    private function getEventManager() {
+        return EventManager::instance();
+    }
+
    /**
      * Check if the user group is valid
      *
@@ -174,6 +183,18 @@ class UGroupBinding {
     }
 
     /**
+     * Check if update users is allowed for a given user group
+     *
+     * @param Integer $ugroupId Id of the user group
+     *
+     * @return boolean
+     */
+    public function isUpdateUsersAllowed($ugroupId) {
+        $ugroupUpdateUsersAllowed = true;
+        return $this->getEventManager()->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
+    }
+
+    /**
      * Remove all users from a given user group
      *
      * @param Integer $ugroupId Id of the user group
@@ -181,10 +202,7 @@ class UGroupBinding {
      * @return boolean
      */
     public function resetUgroup($ugroupId) {
-        $em = EventManager::instance();
-        $ugroupUpdateUsersAllowed = true;
-        $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
-        if ($ugroupUpdateUsersAllowed) {
+        if ($this->isUpdateUsersAllowed($ugroupId)) {
             if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
                 throw new LogicException('Unable to reset ugroup');
                 return false;
@@ -206,10 +224,7 @@ class UGroupBinding {
      * @return boolean
      */
     public function cloneUgroup($sourceId, $ugroupId) {
-        $em = EventManager::instance();
-        $ugroupUpdateUsersAllowed = true;
-        $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
-        if (!$ugroupUpdateUsersAllowed) {
+        if (!$this->isUpdateUsersAllowed($ugroupId)) {
             if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
                 throw new LogicException('Unable to clone ugroup');
                 return false;
