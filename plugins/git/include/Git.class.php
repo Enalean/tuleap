@@ -288,8 +288,8 @@ class Git extends PluginController {
                     $this->addAction('confirmDeletion', array($this->groupId, $repository));
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
-                else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
-                    $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
+                else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
+                    $repoDesc = $repository->getDescription();
                     $valid = new Valid_Text('repo_desc');
                     $valid->required();
                     if($this->request->valid($valid)) {
