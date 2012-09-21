@@ -181,11 +181,20 @@ class UGroupBinding {
      * @return boolean
      */
     public function resetUgroup($ugroupId) {
-        if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
-            throw new Exception('Unable to reset ugroup');
+        $em = EventManager::instance();
+        $ugroupUpdateUsersAllowed = true;
+        $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
+        if ($ugroupUpdateUsersAllowed) {
+            if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
+                throw new LogicException('Unable to reset ugroup');
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            throw new RuntimeException('Update users is not allowed for the ugroup '.$ugroupId);
             return false;
         }
-        return true;
     }
 
     /**
@@ -197,11 +206,20 @@ class UGroupBinding {
      * @return boolean
      */
     public function cloneUgroup($sourceId, $ugroupId) {
-        if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
-            throw new Exception('Unable to clone ugroup');
+        $em = EventManager::instance();
+        $ugroupUpdateUsersAllowed = true;
+        $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
+        if (!$ugroupUpdateUsersAllowed) {
+            if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
+                throw new LogicException('Unable to clone ugroup');
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            throw new RuntimeException('Update users is not allowed for the ugroup '.$ugroupId);
             return false;
         }
-        return true;
     }
 
     /**
@@ -238,11 +256,20 @@ class UGroupBinding {
             }
         }
         try {
-            $this->resetUgroup($ugroupId);
-            $this->cloneUgroup($sourceId, $ugroupId);
+            try {
+                $this->resetUgroup($ugroupId);
+                $this->cloneUgroup($sourceId, $ugroupId);
+            } catch(LogicException $e) {
+                //re-throw exception
+                throw new Exception($GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
+            } catch(RuntimeException $e) {
+                //@Todo i18n Runtime exception message
+                $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
+                throw new Exception($GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
+            }
             $this->updateUgroupBinding($ugroupId, $sourceId);
-        } catch(Exception $e) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
+        }catch(Exception $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             return false;
         }
         $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_added'));
