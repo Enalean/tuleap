@@ -36,6 +36,7 @@ global	btn_close	Close
 global	btn_reset	Reset
 global	reset	reset
 global	delete	Delete
+global	warning!	Warning!
 global	yes	Yes
 global	no	No
 global	on	On

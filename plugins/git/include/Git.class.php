@@ -272,7 +272,13 @@ class Git extends PluginController {
                 $this->addView('index');
                 break;
             #EDIT
-            case 'edit':                
+            case 'edit':
+                $repository = $this->factory->getRepositoryById($repoId);
+                if (empty($repository)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
+                    return false;
+                }
                 if ( $this->isAPermittedAction('clone') && $this->request->get('clone') ) {
                     $valid = new Valid_UInt('parent_id');
                     $valid->required();
@@ -282,13 +288,7 @@ class Git extends PluginController {
                     $this->addAction( 'cloneRepository', array($this->groupId, $repositoryName, $parentId) );
                     $this->addAction( 'getRepositoryDetails', array($this->groupId, $parentId) );
                     $this->addView('view');
-                }
-                else if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
-                    $repository = $this->factory->getRepositoryById($repoId);
-                    $this->addAction('confirmDeletion', array($this->groupId, $repository));
-                    $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
-                }
-                else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
+                } else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
                     $repoDesc = $repository->getDescription();
                     $valid = new Valid_Text('repo_desc');
                     $valid->required();

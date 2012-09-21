@@ -92,7 +92,7 @@ plugin_git	view_repo_access_public	Public
 plugin_git	view_repo_access_private	Privé
 
 plugin_git	repo_not_initialized	Le dépôt n'est pas initialisé
-plugin_git	confirm_deletion_msg	Etes-vous certain(e) de vouloir supprimer le dépôt '$1' ?
+plugin_git	confirm_deletion_msg	Vous êtes en train de supprimer définitivement le dépôt '$1'. Cette action ne pourra pas être annulée. Êtes vous certain de vouloir continuer ?
 
 plugin_git	yes	Oui
 plugin_git	no	Non

@@ -28,8 +28,14 @@ abstract class GitViews_RepoManagement_Pane {
      */
     protected $repository;
 
-    public function __construct(GitRepository $repository) {
+    /**
+     * @var Codendi_Request
+     */
+    protected $request;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request) {
         $this->repository = $repository;
+        $this->request    = $request;
     }
 
     /**

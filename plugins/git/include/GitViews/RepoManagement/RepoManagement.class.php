@@ -55,11 +55,11 @@ class GitViews_RepoManagement {
      */
     private function buildPanes(GitRepository $repository) {
         $panes = array(
-            new GitViews_RepoManagement_Pane_GeneralSettings($repository),
-            new GitViews_RepoManagement_Pane_AccessControl($repository),
-            new GitViews_RepoManagement_Pane_NotificationPrefix($repository),
-            new GitViews_RepoManagement_Pane_NotificatedPeople($repository),
-            new GitViews_RepoManagement_Pane_Delete($repository),
+            new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request),
+            new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request),
+            new GitViews_RepoManagement_Pane_NotificationPrefix($repository, $this->request),
+            new GitViews_RepoManagement_Pane_NotificatedPeople($repository, $this->request),
+            new GitViews_RepoManagement_Pane_Delete($repository, $this->request),
         );
         $indexed_panes = array();
         foreach ($panes as $pane) {

@@ -95,7 +95,7 @@ plugin_git	view_repo_access_private	Private
 
 plugin_git	repo_not_initialized	Repository is not initialized
 
-plugin_git	confirm_deletion_msg	Do you really want to delete the repository '$1' ?
+plugin_git	confirm_deletion_msg	You are about to permanently delete the repository '$1'. This operation cannot be undone. Do you confirm the deletion?
 
 plugin_git	yes	Yes
 plugin_git	no	No

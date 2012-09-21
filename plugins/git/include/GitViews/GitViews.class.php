@@ -358,31 +358,6 @@ class GitViews extends PluginViews {
     }
 
     /**
-     * CONFIRM_DELETION
-     * @todo make a generic function ?
-     * @param <type> $params
-     * @return <type>
-     */
-    public function confirm_deletion( $params ) {
-        if (  empty($params['repo_id']) ) {
-            return false;
-        }        
-        $repoId = $params['repo_id'];
-        if ( !$this->getController()->isAPermittedAction('del') ) {
-            return false;
-        }
-        ?>
-    <div class="confirm">
-        <form id="confirm_deletion" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId; ?>" >
-        <input type="hidden" id="action" name="action" value="del" />
-        <input type="hidden" id="repo_id" name="repo_id" value="<?php echo $repoId; ?>" />
-        <input type="submit" id="submit" name="submit" value="<?php echo $this->getText('yes') ?>"/><span><input type="button" value="<?php echo $this->getText('no')?>" onclick="window.location='/plugins/git/?action=view&group_id=<?php echo $this->groupId;?>&repo_id=<?php echo $repoId?>'"/> </span>
-        </form>
-    </div>
-        <?php
-    }
-
-    /**
      * CREATE REF FORM
      */
     protected function _createForm() {

@@ -363,16 +363,6 @@ class GitActions extends PluginActions {
         $c->addInfo($this->getText('actions_repo_access'));
     }
 
-    public function confirmDeletion($projectId, $repository) {
-        $c = $this->getController();
-        if (empty($repository)) {
-            $this->addError('actions_params_error');
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
-        $c->addWarn($this->getText('confirm_deletion_msg', array($repository->getFullName())));
-    }
-
     /**
      * This method allows one to save any repository attribues changes from the web interface.
      * @param <type> $repoId
