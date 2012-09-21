@@ -35,7 +35,10 @@ class GitTest extends TuleapTestCase {
         $git->setAction('del');
         $git->setPermittedActions(array('del'));
         $git->setGroupId(101);
-        
+
+        $factory = new MockGitRepositoryFactory();
+        $git->setFactory($factory);
+
         $git->expectOnce('addAction', array('deleteRepository', '*'));
         $git->expectOnce('addView', array('index'));
         
@@ -47,6 +50,10 @@ class GitTest extends TuleapTestCase {
         $request = new Codendi_Request(array('choose_destination' => 'personal'));
         $git->setRequest($request);
         $git->expectOnce('_doDispatchForkRepositories');
+
+        $factory = new MockGitRepositoryFactory();
+        $git->setFactory($factory);
+
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 
     }
@@ -55,6 +62,10 @@ class GitTest extends TuleapTestCase {
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkCrossProject', 'addView'));
         $request = new Codendi_Request(array('choose_destination' => 'project'));
         $git->setRequest($request);
+
+        $factory = new MockGitRepositoryFactory();
+        $git->setFactory($factory);
+
         $git->expectOnce('_doDispatchForkCrossProject');
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 

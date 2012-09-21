@@ -155,7 +155,7 @@ class ProjectQuotaHtml {
             $output .= $this->fetchCustomQuotaTable($customQuotas, $orderBy, $projectFilterParam, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
             $output .= '<br />';
         } else {
-            $output .= '<p><em>'. $GLOBALS['Language']->getText('plugin_statistics', 'no_projects', $this->projectQuotaManager->getMaximumQuota()) .'</em></p>';
+            $output .= '<p><em>'. $GLOBALS['Language']->getText('plugin_statistics', 'no_projects', $this->projectQuotaManager->getDefaultQuota()) .'</em></p>';
         }
 
         $output .= $this->renderNewCustomQuotaForm();

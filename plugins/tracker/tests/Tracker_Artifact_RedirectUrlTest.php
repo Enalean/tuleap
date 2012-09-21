@@ -21,19 +21,25 @@
 require_once(dirname(__FILE__).'/../include/constants.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 
+class Tracker_Artifact_RedirectUrlTestVersion extends Tracker_Artifact {
+    public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
+        return parent::getRedirectUrlAfterArtifactUpdate($request);
+    }
+}
+
 class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
     public function itRedirectsToTheTrackerHomePageByDefault() {
         $request_data = array();
         $tracker_id   = 20;
         $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, null);
-        $this->assertEqual(TRACKER_BASE_URL."/?tracker=$tracker_id", $redirect_uri);
+        $this->assertEqual(TRACKER_BASE_URL."/?tracker=$tracker_id", $redirect_uri->toUrl());
     }
 
     public function itStaysOnTheCurrentArtifactWhen_submitAndStay_isSpecified() {
         $request_data = array('submit_and_stay' => true);
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertEqual(TRACKER_BASE_URL."/?aid=$artifact_id", $redirect_uri);
+        $this->assertEqual(TRACKER_BASE_URL."/?aid=$artifact_id", $redirect_uri->toUrl());
     }
 
     public function itReturnsToThePreviousArtifactWhen_fromAid_isGiven() {
@@ -41,7 +47,7 @@ class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
         $request_data = array('from_aid' => $from_aid);
         $artifact_id  = 66;
         $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertEqual(TRACKER_BASE_URL."/?aid=$from_aid", $redirect_uri);
+        $this->assertEqual(TRACKER_BASE_URL."/?aid=$from_aid", $redirect_uri->toUrl());
     }
 
     public function testSubmitAndStayHasPrecedenceOver_fromAid() {
@@ -50,20 +56,20 @@ class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
         $request_data = array('from_aid' => $from_aid,
             'submit_and_stay' => true);
         $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertUriHasArgument($redirect_uri, "aid", $artifact_id);
-        $this->assertUriHasArgument($redirect_uri, "from_aid", $from_aid);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), "aid", $artifact_id);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), "from_aid", $from_aid);
     }
 
     public function testSubmitAndStayHasPrecedenceOver_returnToAid() {
         $artifact_id  = 66;
         $request_data = array('submit_and_stay' => true);
         $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertUriHasArgument($redirect_uri, "aid", $artifact_id);
+        $this->assertUriHasArgument($redirect_uri->toUrl(), "aid", $artifact_id);
     }
 
     private function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
         $request  = new Codendi_Request($request_data);
-        $artifact = new Tracker_Artifact($artifact_id, $tracker_id, null, null, false);
+        $artifact = new Tracker_Artifact_RedirectUrlTestVersion($artifact_id, $tracker_id, null, null, false);
         return $artifact->getRedirectUrlAfterArtifactUpdate($request);
 
     }

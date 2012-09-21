@@ -22,7 +22,8 @@ require_once dirname(__FILE__).'/../../../include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Hierarchy/HierarchyFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
 require_once TRACKER_BASE_DIR.'/../tests/builders/anArtifact.php';
-require_once dirname(__FILE__).'/../../builders/aMockTracker.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/aMockArtifact.php';
 
 Mock::generate('Tracker_Hierarchy_Dao');
 
@@ -159,7 +160,7 @@ class Tracker_HierarchyFactoryTest extends TuleapTestCase {
     }
 }
 
-class Tracker_HierarchyFactoryGetParentTest extends TuleapTestCase {
+class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase {
     private $dao;
     private $hierarchy_factory;
     private $user;
@@ -335,6 +336,35 @@ class Tracker_HierarchyFactoryGetSiblingsTest extends TuleapTestCase {
         stub($this->release_1)->getHierarchyLinkedArtifacts($this->user)->returns(array($this->sprint_1, $this->sprint_2));
         stub($this->hierarchy_factory)->getParentArtifact($this->user, $this->sprint_1)->returns($this->release_1);
         $this->assertEqual(array($this->sprint_1, $this->sprint_2), $this->hierarchy_factory->getSiblings($this->user, $this->sprint_1));
+    }
+}
+
+class Tracker_HierarchyFactory_getParentTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->epic_tracker  = aTracker()->withId(111)->build();
+        $this->story_tracker = aTracker()->withId(112)->build();
+
+        $this->tracker_factory = mock('TrackerFactory');
+        stub($this->tracker_factory)->getTrackerById(111)->returns($this->epic_tracker);
+        stub($this->tracker_factory)->getTrackerById(112)->returns($this->story_tracker);
+
+        $this->dao = mock('Tracker_Hierarchy_Dao');
+        $this->hierarchy_factory = new Tracker_HierarchyFactory($this->dao, $this->tracker_factory, mock('Tracker_ArtifactFactory'));
+    }
+
+    public function itReturnsTheParentTracker() {
+        stub($this->dao)->searchTrackerHierarchy()->returnsDar(
+            array('parent_id' => 111, 'child_id' => 112)
+        );
+        $this->assertEqual($this->epic_tracker, $this->hierarchy_factory->getParent($this->story_tracker));
+    }
+
+    public function itReturnsNullIfNoParentTracker() {
+        stub($this->dao)->searchTrackerHierarchy()->returnsEmptyDar();
+        $this->assertNull($this->hierarchy_factory->getParent($this->epic_tracker));
     }
 }
 ?>

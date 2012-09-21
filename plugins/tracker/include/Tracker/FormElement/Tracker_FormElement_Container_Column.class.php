@@ -40,6 +40,21 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchRecursiveArtifact('fetchArtifact', array($artifact, $submitted_values));
     }
     
+    /**
+     * Fetch the element for the update artifact form
+     *
+     * @param Tracker_Artifact $artifact The artifact
+     *
+     * @return string html
+     */
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
+        return $this->fetchWithColumnGroup('fetchArtifactReadOnly', array($artifact));
+    }
+
+    public function fetchArtifactReadOnlyInGroup(Tracker_Artifact $artifact) {
+        return $this->fetchRecursiveArtifact('fetchArtifactReadOnly', array($artifact));
+    }
+
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         return $this->fetchWithColumnGroup('fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
@@ -139,6 +154,14 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchColumnSuffix();
     }
     
+    protected function fetchArtifactReadOnlyPrefix() {
+        return $this->fetchColumnPrefix();
+    }
+
+    protected function fetchArtifactReadOnlySuffix() {
+        return $this->fetchColumnSuffix();
+    }
+
     protected function fetchMailArtifactPrefix($format) {
         if ($format == 'text') {
             return '';

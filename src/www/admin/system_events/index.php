@@ -17,13 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('pre.php');
-require_once('common/dao/SystemEventsFollowersDao.class.php');
-require_once('common/include/Toggler.class.php');
+require_once 'pre.php';
+require_once 'common/dao/SystemEventsFollowersDao.class.php';
+require_once 'common/include/Toggler.class.php';
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 session_require(array('group'=>'1', 'admin_flags'=>'A'));
 
+$token  = new CSRFSynchronizerToken('/admin/system_events/');
+$se     = SystemEventManager::instance();
 $sefdao = new SystemEventsFollowersDao(CodendiDataAccess::instance());
+
 $default_new_followers_email = 'Type logins, emails or mailing lists. Multiple values separated by coma.';
 if ($new_followers = $request->get('new_followers')) {
     if (isset($new_followers['emails']) && $new_followers['emails'] && $new_followers['emails'] != $default_new_followers_email) {
@@ -34,6 +38,7 @@ if ($new_followers = $request->get('new_followers')) {
     }
 }
 if ($request->get('delete')) {
+    $token->check();
     $sefdao->delete($request->get('delete'));
     $GLOBALS['Response']->redirect('/admin/system_events/');
 }
@@ -41,8 +46,15 @@ if ($request->get('cancel')) {
     $GLOBALS['Response']->redirect('/admin/system_events/');
 }
 if ($request->get('save') && ($followers = $request->get('followers'))) {
+    $token->check();
     list($id, $info) = each($followers);
     $sefdao->save($id, $info['emails'], implode(',', $info['types']));
+    $GLOBALS['Response']->redirect('/admin/system_events/');
+}
+$id_to_replay = $request->get('replay');
+if ($id_to_replay) {
+    $token->check();
+    $se->replay($id_to_replay);
     $GLOBALS['Response']->redirect('/admin/system_events/');
 }
 
@@ -52,7 +64,6 @@ $title = $Language->getText('admin_system_events', 'title');
 $HTML->header(array('title' => $title));
 echo '<h2>'.  $hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
-$se = SystemEventManager::instance();
 $offset        = $request->get('offset') && !$request->exist('filter') ? (int)$request->get('offset') : 0;
 $limit         = 50;
 $full          = true;
@@ -72,6 +83,7 @@ if (!$filter_type) {
 }
 
 echo '<form action="" method="POST">';
+echo $token->fetchHTMLInput();
 echo '<fieldset>';
 echo '<legend id="system_events_filter" class="'. Toggler::getClassname('system_events_filter') .'">Filter:</legend>';
 echo '<strong>'. 'Status:'. '</strong> <input type="hidden" name="filter_status[]" value="'.  $hp->purify(SystemEvent::STATUS_NONE, CODENDI_PURIFIER_CONVERT_HTML)  .'" />';
@@ -115,7 +127,7 @@ echo '</table>';
 echo '<hr size="1" />';
 echo '<input type="submit" name="filter" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
 echo '</fieldset>';
-echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type);
+echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token);
 
 echo '<h3>'. $Language->getText('admin_system_events', 'notifications') .'</h3>';
 echo $GLOBALS['Language']->getText('admin_system_events', 'send_email');

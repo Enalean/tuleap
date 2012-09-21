@@ -27,6 +27,7 @@ require_once('common/include/GroupFactory.class.php');
 require_once('common/reference/CrossReference.class.php');
 require_once('common/dao/CrossReferenceDao.class.php');
 require_once('common/event/EventManager.class.php');
+require_once('common/dao/ArtifactDao.class.php');
 
 /**
  * Reference Manager
@@ -39,18 +40,37 @@ class ReferenceManager {
      * Example: $activeReferencesByProject[101]['art'][1] return the reference object for project 101, keyword 'art' and one argument.
      * @var array
      */
-    var $activeReferencesByProject; 
+    var $activeReferencesByProject = array();
+
     /**
      * array of Reference objects arrays indexed by group_id
      * Example: $activeReferencesByProject[101][1] return the first reference object for project 101
      * @var array
      */
-    var $referencesByProject;
+    var $referencesByProject = array();
+
     var $referenceDao;
-    var $reservedKeywords=array("art","artifact","doc","file","wiki","cvs","svn","news","forum","msg","cc","tracker","release","tag","thread","im","project","folder","plugin","img","commit","rev","revision","patch","bug","sr","task","proj","dossier"); //should be elsewhere?
     var $groupIdByName;
     var $groupIdByNameLower;
-    
+
+    /**
+     * @var array
+     */
+    var $reservedKeywords = array(
+        "art", "artifact", "doc", "file", "wiki", "cvs", "svn", "news", "forum", "msg", "cc", "tracker", "release",
+        "tag", "thread", "im", "project", "folder", "plugin", "img", "commit", "rev", "revision", "patch", "bug",
+        "sr", "task", "proj", "dossier"); //should be elsewhere?
+
+    /**
+     * @var EventManager
+     */
+    private $eventManager;
+
+    /**
+     * Hold an instance of the class
+     */
+    protected static $instance;
+
     const REFERENCE_NATURE_ARTIFACT = 'artifact';
     const REFERENCE_NATURE_DOCUMENT = 'document';
     const REFERENCE_NATURE_CVSCOMMIT = 'cvs_commit';
@@ -71,16 +91,15 @@ class ReferenceManager {
     var $tmpGroupIdForCallbackFunction = null;
 
    
-    function ReferenceManager() {
-        $this->activeReferencesByProject = array();
+    public function __construct() {
+        $this->eventManager = EventManager::instance();
         $this->loadReservedKeywords();
     }
     
     protected function loadReservedKeywords() {
         //retrieve additional reserved keywords from other part of the plateform
         $additional_reserved_keywords = array();
-        $em = EventManager::instance();
-        $em->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$additional_reserved_keywords));
+        $this->eventManager->processEvent( Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES, array('keywords' => &$additional_reserved_keywords));
         $this->reservedKeywords = array_merge($this->reservedKeywords, $additional_reserved_keywords);
     }
 
@@ -88,11 +107,11 @@ class ReferenceManager {
      * @return ReferenceManager
      */
     public static function instance() {
-        static $_referencemanager_instance;
-        if (!$_referencemanager_instance) {
-            $_referencemanager_instance = new ReferenceManager();
+        if (!isset(self::$instance)) {
+            $c = __CLASS__;
+            self::$instance = new $c;
         }
-        return $_referencemanager_instance;
+        return self::$instance;
     }
 
     /**
@@ -116,8 +135,7 @@ class ReferenceManager {
         );
     
         $plugins_natures = array();
-        $em = EventManager::instance();
-        $em->processEvent('get_available_reference_natures', array('natures' => &$plugins_natures));
+        $this->eventManager->processEvent('get_available_reference_natures', array('natures' => &$plugins_natures));
         
         $natures = array_merge($core_natures, $plugins_natures);
         $natures[self::REFERENCE_NATURE_OTHER] = array('keyword' => 'other', 'label' => $GLOBALS['Language']->getText('project_reference', 'reference_'.self::REFERENCE_NATURE_OTHER.'_nature_key'));
@@ -262,12 +280,12 @@ class ReferenceManager {
         } else return false;
     }
 
-    function loadReferenceFromKeywordAndNumArgs($keyword,$group_id=100,$num_args=1) {
+    function loadReferenceFromKeywordAndNumArgs($keyword,$group_id=100,$num_args=1, $val = null) {
         $reference_dao = $this->_getReferenceDao();
         $dar = $reference_dao->searchByKeywordAndGroupID($keyword,$group_id);
         $ref=null;
         while($row = $dar->getRow()) {
-            $ref = $this->_buildReference($row);
+            $ref = $this->_buildReference($row, $val);
             if ($ref->getNumParam()==$num_args) return $ref;
         }
         return null;
@@ -376,11 +394,27 @@ class ReferenceManager {
                                                  $group_id);
     }
 
-    function _buildReference($row) {
+    /**
+     * Return true if keyword is valid to reference artifacts
+     *
+     * @param String $keyword
+     *
+     * @return Boolean
+     */
+    private function isAnArtifactKeyword($keyword) {
+        $natures = $this->getAvailableNatures();
+        return $keyword == $natures[self::REFERENCE_NATURE_ARTIFACT]['keyword'];
+    }
+
+    protected function _buildReference($row, $val = null) {
         if (isset($row['reference_id'])) $refid=$row['reference_id'];
         else $refid=$row['id'];
         $ref = new Reference($refid,$row['keyword'],$row['description'],$row['link'],
                               $row['scope'],$row['service_short_name'],$row['nature'],$row['is_active'],$row['group_id']);
+        
+        if ($this->isAnArtifactKeyword($row['keyword']) && !$this->getGroupIdFromArtifactId($val)) {
+            $this->eventManager->processEvent(Event::BUILD_REFERENCE, array('row' => $row, 'ref_id' => $refid, 'ref' => &$ref));
+        }
         return $ref;
     }
     
@@ -404,7 +438,6 @@ class ReferenceManager {
      */
     function insertReferences(&$html,$group_id) {
         $this->tmpGroupIdForCallbackFunction = $group_id;
-        
         $locale = setlocale(LC_CTYPE, null);
         setlocale(LC_CTYPE, 'fr_FR.ISO-8859-1');
         if (!preg_match('/[^\s]{5000,}/', $html)) {             
@@ -627,14 +660,50 @@ class ReferenceManager {
 
             return '<a href="'.$ref_instance->getGotoLink().'" title="'.$desc.'" class="cross-reference">'.$ref_instance->getMatch()."</a>";
         }
+    }    
+
+    /**
+     * Returns the group id of an artifact id
+     *
+     * @param Integer $artifact_id
+     *
+     * @return mixed False if no match, the group id otherwise
+     */
+    protected function getGroupIdFromArtifactId($artifact_id) {
+        $dao    = $this->getArtifactDao();
+        $result = $dao->searchArtifactId($artifact_id);
+        if ($result && count($result)) {
+            $row = $result->getRow();
+            return $row['group_id'];
+        }
+        return false;
     }
 
+    /**
+     * Return the group_id of an artifact_id
+     * 
+     * @param Integer $artifact_id
+     *
+     * @return Integer
+     */
+    protected function getGroupIdFromArtifactIdForCallbackFunction($artifact_id) {
+        $group_id = $this->getGroupIdFromArtifactId($artifact_id);
+        if ($group_id === false) {
+            $this->eventManager->processEvent(Event::GET_ARTIFACT_REFERENCE_GROUP_ID, array('artifact_id' => $artifact_id, 'group_id' => &$group_id));
+        }
+        return $group_id;
+    }
 
     // Get a Reference object from a matching pattern
     // if it is not a reference (e.g. wrong keyword) return null;
     function _getReferenceInstanceFromMatch($match) {
         // Analyse match
-        $key=strtolower($match[1]);
+        $key     = strtolower($match[1]);
+        
+        if ($this->isAnArtifactKeyword($key)) {
+            $this->tmpGroupIdForCallbackFunction = $this->getGroupIdFromArtifactIdForCallbackFunction($match[3]);
+        }
+        
         if ($match[2]) {
             // A target project name or ID was specified
             // remove trailing colon
@@ -678,10 +747,15 @@ class ReferenceManager {
         return $refInstance;
     }
 
+        
 
     function _getReferenceFromKeywordAndNumArgs($keyword,$group_id,$num_args) {
         $this->_initProjectReferences($group_id);
         $refs = $this->activeReferencesByProject[$group_id];
+        // This part of the code prevent cross ref to wiki subpage to work
+        // wiki #sub/page/2 should extract a link to the version 2 of the wikipage "sub/page"
+        // References contains a "num_args" (args separated by '/') nevertheless
+        // we don't know in advance the number of sub pages
         if (isset($refs["$keyword"]))
             if (isset($refs["$keyword"][$num_args]))
                 return $refs["$keyword"][$num_args];
@@ -691,7 +765,7 @@ class ReferenceManager {
 
     /**
      */
-    function _initProjectReferences($group_id) {        
+    function _initProjectReferences($group_id) {   
         if (!isset($this->activeReferencesByProject[$group_id])) {
             $p = array();
             $reference_dao = $this->_getReferenceDao();
@@ -799,6 +873,13 @@ class ReferenceManager {
         return new CrossReferenceDao();
     }
 
-
+    /**
+     * Wrapper
+     *
+     * @return ArtifactDao
+     */
+    private function getArtifactDao() {
+        return new ArtifactDao();
+    }
 }
 ?>

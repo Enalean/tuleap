@@ -36,23 +36,27 @@ class Test_Tracker_Builder {
     private $project_id;
     private $name;
     private $item_name;
-    
+
+    public function __construct() {
+        $this->id = uniqid();
+    }
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withProject(Project $project) {
         $this->project    = $project;
         $this->project_id = $project->getId();
         return $this;
     }
-    
+
     public function withProjectId($project_id) {
         $this->project_id = $project_id;
         return $this;
     }
-    
+
     public function withName($name) {
         $this->name = $name;
         return $this;
@@ -64,7 +68,7 @@ class Test_Tracker_Builder {
     }
 
     /**
-     * @return \Tracker 
+     * @return \Tracker
      */
     public function build() {
         $tracker = new Tracker($this->id, $this->project_id, $this->name, null, $this->item_name, null, null, null, null, null, null, null);

@@ -513,7 +513,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
         }
         if ($request->get('only-renderer')) {
-            echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified);
+            echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
         } else {
             $this->displayHeader($layout, $request, $current_user, $report_can_be_modified);
             
@@ -720,7 +720,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
                 }
-                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified);
+                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
@@ -984,7 +984,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                             $send_notifications = true;
                         }
                     }
-                    $tracker->updateArtifactsMasschange($current_user, $masschange_aids, $masschange_data, $request->get('artifact_masschange_followup_comment'), $send_notifications);
+                    $comment_format = $request->get('comment_formatmass_change');
+                    $tracker->updateArtifactsMasschange($current_user, $masschange_aids, $masschange_data, $request->get('artifact_masschange_followup_comment'), $send_notifications, $comment_format);
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));

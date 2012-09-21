@@ -18,12 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Milestone.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/NoCrumb.class.php';
-require_once dirname(__FILE__).'/../BreadCrumbs/Merger.class.php';
-require_once 'SearchContentView.class.php';
-require_once 'MilestonePresenter.class.php';
-require_once 'MilestoneFactory.class.php';
 
 /**
  * Handles the HTTP actions related to a planning milestone.
@@ -34,6 +28,11 @@ class Planning_MilestoneController extends MVC2_Controller {
      * @var Planning_MilestoneFactory
      */
     private $milestone_factory;
+
+    /**
+     * @var Tracker_HierarchyFactory
+     */
+    private $hierarchy_factory;
 
     /**
      * @var Planning_Milestone
@@ -59,33 +58,39 @@ class Planning_MilestoneController extends MVC2_Controller {
      */
     public function __construct(Codendi_Request           $request,
                                 Planning_MilestoneFactory $milestone_factory,
-                                ProjectManager            $project_manager) {
+                                ProjectManager            $project_manager,
+                                Planning_ViewBuilder      $view_builder,
+                                Tracker_HierarchyFactory  $hierarchy_factory) {
         
         parent::__construct('agiledashboard', $request);
+        $this->milestone_factory = $milestone_factory;
+        $this->hierarchy_factory = $hierarchy_factory;
+        $project                 = $project_manager->getProject($request->get('group_id'));
         try {
-            $this->milestone_factory = $milestone_factory;
-            $project                 = $project_manager->getProject($request->get('group_id'));
-            $this->milestone         = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
+            $this->milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
                 $this->getCurrentUser(),
                 $project,
                 $request->get('planning_id'),
                 $request->get('aid')
             );
         } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
         }
+        if (!$this->milestone) {
+            $this->milestone = $this->milestone_factory->getNoMilestone($project, $request->get('planning_id'));
+        }
+        $planning     = $this->milestone->getPlanning();
+        $this->content_view = $this->buildContentView($view_builder, $planning, $project);
     }
 
-    public function show(Planning_ViewBuilder $view_builder) {
-        $project              = $this->milestone->getProject();
-        $planning             = $this->milestone->getPlanning();
+    public function show() {
+        $planning     = $this->milestone->getPlanning();
         if ($this->milestone->hasAncestors()) {
             $available_milestones = $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
         } else {
             $available_milestones = $this->getAllMilestonesOfCurrentPlanning();
         }
-        $content_view         = $this->buildContentView($view_builder, $planning, $project);
-        $presenter            = $this->getMilestonePresenter($planning, $content_view, $available_milestones);
+        $presenter = $this->getMilestonePresenter($planning, $this->content_view, $available_milestones);
         
         $this->render('show', $presenter);
     }
@@ -131,7 +136,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         return new Tracker_CrossSearch_Query($request_criteria, $semantic_criteria, $artifact_criteria);
     }
     
-    private function buildContentView(
+    protected function buildContentView(
         Planning_ViewBuilder $view_builder,
         Planning             $planning,
         Project              $project = null
@@ -139,15 +144,17 @@ class Planning_MilestoneController extends MVC2_Controller {
         
         $already_planned_artifact_ids = $this->getAlreadyPlannedArtifactsIds();
         $cross_search_query           = $this->getCrossSearchQuery();
-        $view_builder->setHierarchyFactory(Tracker_HierarchyFactory::instance());
-        
+        $backlog_tracker_ids          = $this->hierarchy_factory->getHierarchy(array($planning->getBacklogTrackerId()))->flatten();
+        $backlog_actions_presenter    = new Planning_BacklogActionsPresenter($planning->getBacklogTracker(), $this->milestone, $this->getPlanningRedirectToSelf());
+
         $view = $view_builder->build(
             $this->getCurrentUser(),
             $project,
             $cross_search_query,
             $already_planned_artifact_ids,
-            $planning->getBacklogTrackerId(),
+            $backlog_tracker_ids,
             $planning,
+            $backlog_actions_presenter,
             $this->getPlanningRedirectToSelf()
         );
         

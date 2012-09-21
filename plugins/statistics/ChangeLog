@@ -1,3 +1,9 @@
+Version 0.20 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
+Version 0.19 - Tuleap 5.4
+    * Display the default quota instead of the max quota when there is no project with a custom quota (contrib STMicroelectronics).
+
 Version 0.18 - Tuleap 5.2
     * Fix rendering of quota as well as setting of quota when no configuration set (contrib STMicroelectronics).
 
