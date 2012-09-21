@@ -118,7 +118,8 @@ class UGroupManager {
      */
     public function isUpdateUsersAllowed($ugroupId) {
         $ugroupUpdateUsersAllowed = true;
-        return $this->getEventManager()->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
+        $this->getEventManager()->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
+        return $ugroupUpdateUsersAllowed;
     }
 
 }
