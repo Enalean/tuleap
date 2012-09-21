@@ -308,7 +308,7 @@ class FileModuleMonitorFactory {
         $html .= '</table>';
         $html .= '</form>';
         return $html;
-     }
+    }
 
     /**
      * Display the HTML of the monitoring UI
@@ -329,7 +329,161 @@ class FileModuleMonitorFactory {
              $html .= $this->getAddMonitoringForm($fileModuleId);
         }
         return $html;
-     }
+    }
+
+    /**
+     * Process the self monitoring request
+     *
+     * @param HTTPRequest $request      HTTP request
+     * @param User        $currentUser  Current user
+     * @param Integer     $groupId      Id of the project
+     * @param Integer     $fileModuleId Id of the package
+     *
+     * @return String
+     */
+     public function processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId) {
+        $historyDao    = new ProjectHistoryDao(CodendiDataAccess::instance());
+        $anonymous     = true;
+        $performAction = false;
+        if ($request->get('action') == 'monitor_package') {
+            if ($request->valid(new Valid_WhiteList('frs_monitoring', array('stop_monitoring', 'anonymous_monitoring', 'public_monitoring')))) {
+                $action = $request->get('frs_monitoring');
+                switch ($action) {
+                    case 'stop_monitoring' :
+                        if ($this->isMonitoring($fileModuleId, $currentUser, false)) {
+                            $result = $this->stopMonitor($fileModuleId, $currentUser);
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitor_turned_off'));
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_emails'));
+                        }
+                        break;
+                    case 'public_monitoring' :
+                        $anonymous = false;
+                    case 'anonymous_monitoring' :
+                        if ($anonymous && (!$this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
+                            $performAction = true;
+                            $this->stopMonitor($fileModuleId, $currentUser);
+                        } elseif (!$anonymous && !$this->isMonitoring($fileModuleId, $currentUser, !$anonymous)) {
+                            $performAction = true;
+                            $historyDao->groupAddHistory("frs_self_add_monitor_package", $fileModuleId, $groupId);
+                        }
+                        if ($performAction) {
+                            $result = $this->setMonitor($fileModuleId, $currentUser, $anonymous);
+                            if (!$result) {
+                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
+                            } else {
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'p_monitored'));
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'now_emails'));
+                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
+                            }
+                        }
+                        break;
+                    default :
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Process the monitoring request
+     *
+     * @param HTTPRequest $request      HTTP request
+     * @param User        $currentUser  Current user
+     * @param Integer     $groupId      Id of the project
+     * @param Integer     $fileModuleId Id of the package
+     * @param UserManager $um           UserManager instance
+     * @param UserHelper  $userHelper   UserHelper instance
+     *
+     * @return String
+     */
+     public function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+        $frspf      = new FRSPackageFactory();
+        $package    = $frspf->getFRSPackageFromDb($fileModuleId);
+        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+
+        if ($frspf->userCanAdmin($currentUser, $groupId)) {
+            if ($request->valid(new Valid_WhiteList('action', array('add_monitoring', 'delete_monitoring')))) {
+                $action = $request->get('action');
+                switch ($action) {
+                    case 'add_monitoring' :
+                        $users = array_map('trim', preg_split('/[,;]/', $request->get('listeners_to_add')));
+                        foreach ($users as $userName) {
+                            if (!empty($userName)) {
+                                $user = $um->findUser($userName);
+                                if ($user) {
+                                    $publicly = true;
+                                    if ($frspf->userCanRead($groupId, $fileModuleId, $user->getId())) {
+                                        if (!$this->isMonitoring($fileModuleId, $user, $publicly)) {
+                                            $anonymous = false;
+                                            $result = $this->setMonitor($fileModuleId, $user, $anonymous);
+                                            if ($result) {
+                                                $historyDao->groupAddHistory("frs_add_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
+                                                $this->notifyAfterAdd($package, $user);
+                                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_added', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                            } else {
+                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
+                                            }
+                                        } else {
+                                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'already_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                        }
+                                    } else {
+                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'user_no_permission', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                    }
+                                } else {
+                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_user', array($userName)));
+                                }
+                            }
+                        }
+                        break;
+                    case 'delete_monitoring' :
+                        $users = $request->get('delete_user');
+                        if ($users && !empty($users) && is_array($users)) {
+                            foreach ($users as $userId) {
+                                $user = $um->getUserById($userId);
+                                if ($user) {
+                                    $publicly = true;
+                                    if ($this->isMonitoring($fileModuleId, $user, $publicly)) {
+                                        $onlyPublic = true;
+                                        $result = $this->stopMonitor($fileModuleId, $user, $onlyPublic);
+                                        if ($result) {
+                                            $historyDao->groupAddHistory("frs_stop_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
+                                            $this->notifyAfterDelete($package, $user);
+                                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                        } else {
+                                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_error', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                        }
+                                    } else {
+                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'not_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                                    }
+                                }
+                            }
+                        } else {
+                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_delete'));
+                        }
+                        break;
+                    default :
+                        break;
+                }
+            }
+        }
+    }
+
+    /**
+     * Process the monitoring request
+     *
+     * @param HTTPRequest $request      HTTP request
+     * @param User        $currentUser  Current user
+     * @param Integer     $groupId      Id of the project
+     * @param Integer     $fileModuleId Id of the package
+     * @param UserManager $um           UserManager instance
+     * @param UserHelper  $userHelper   UserHelper instance
+     *
+     * @return String
+     */
+     public function processMonitoringActions($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+        $this->processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId);
+        $this->processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper);
+    }
 
 }
 
