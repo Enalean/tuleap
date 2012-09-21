@@ -920,87 +920,23 @@ class ArtifactField extends Error {
 		}		 		
 	}
 
-	/**
-	 * Insert the field value for a specific artifact_id for a single value
-	 * 
-	 * @param artifact_id: the artifact
-	 * @param value: the value (single value)
-	 *
-	 * @return boolean
-	 */
-	function insertSingleValue($artifact_id,$value) {
-	
-		$sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
-		$values =  db_ei($this->getID()) .",". db_ei($artifact_id) .",";
-		
-		switch ( $this->getDataType() ) {
-		case $this->DATATYPE_TEXT:
-			$name = "valueText";
-			$values .= "'". db_es($value) ."'";
-			break;
-			
-		case $this->DATATYPE_INT:
-		case $this->DATATYPE_USER:
-            $name = "valueInt";
-            if ($this->isSelectBox() || $this->isMultiSelectBox()) {
-                if ($value != 0) {
-                    $values .= db_ei($value);
-                } else {
-                    $values .= "100";
-                }
-            } else {
-                $values .= ($value? db_ei($value) :"0");
-            }
-			break;
-			
-		case $this->DATATYPE_FLOAT:
-			$name = "valueFloat";
-			$values .= ($value? db_es($value) :"0.0");
-			break;
-			
-		case $this->DATATYPE_DATE:
-			$name = "valueDate";
-			$values .= ($value? db_ei($value) :"0");
-			break;
-		} // switch
-		
-		$sql .= $name . ") VALUES (" . $values . ")";
-		$result=db_query($sql);
-		
-		if ( !$result ) {
-                    // This might happen if the submitted type is incorrect.
-                    // In this case, insert the default value, and return false.
-                    $this->insertDefaultValue($artifact_id);
-                    return false;
-		} else {
-                    return true;
-		}
-		 		
-	}
-
-	/**
-	 * Insert the default field value for a specific artifact_id for a single value
-	 * 
-	 * @param artifact_id: the artifact
-	 *
-	 * @return boolean
-	 */
-	function insertDefaultValue($artifact_id) {
-	
-            // We could simply call insertSingleValue($artifact_id,$this->getDefaultValue()) but
-            // it might end up in an infinite loop since insertSingleValue() might call this
-            // function.
-
-            $value=$this->getDefaultValue();
-            $sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
-            $values =  db_ei($this->getID()) .",". db_ei($artifact_id) .",";
-		
-            switch ( $this->getDataType() ) {
+    /**
+     * Insert the field value for a specific artifact_id for a value
+     * 
+     * @param Integer    artifact_id the artifact
+     * @param FieldValue value       the value 
+     *
+     * @return Boolean
+     */
+    function insertFieldValue($artifact_id, $value) {
+        $sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
+        $values =  db_ei($this->getID()) .",". db_ei($artifact_id) .",";
+        switch ($this->getDataType()) {
             case $this->DATATYPE_TEXT:
                 $name = "valueText";
                 $values .= "'". db_es($value) ."'";
-                break;
-                
+            break;
+
             case $this->DATATYPE_INT:
             case $this->DATATYPE_USER:
                 $name = "valueInt";
@@ -1013,30 +949,55 @@ class ArtifactField extends Error {
                 } else {
                     $values .= ($value? db_ei($value) :"0");
                 }
-                break;
-                
+            break;
+        
             case $this->DATATYPE_FLOAT:
                 $name = "valueFloat";
                 $values .= ($value? db_es($value) :"0.0");
-                break;
-			
+            break;
+        
             case $this->DATATYPE_DATE:
                 $name = "valueDate";
                 $values .= ($value? db_ei($value) :"0");
-                break;
-            } // switch
-		
-            $sql .= $name . ") VALUES (" . $values . ")";
+            break;
+        }
+        $sql .= $name . ") VALUES (" . $values . ")";
+        return db_query($sql);
+    }
 
-            $result=db_query($sql);
-		
-            if ( !$result ) {
-                return false;
-            } else {
-                return true;
-            }
-		 		
-	}
+    /**
+     * Insert the field value for a specific artifact_id for a single value
+     * 
+     * @param artifact_id: the artifact
+     * @param value: the value (single value)
+     *
+     * @return boolean
+     */
+    function insertSingleValue($artifact_id, $value) {
+        if (!$this->insertFieldValue($artifact_id, $value)) {
+            // This might happen if the submitted type is incorrect.
+            // In this case, insert the default value, and return false.
+            $this->insertDefaultValue($artifact_id);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Insert the default field value for a specific artifact_id for a single value
+     * 
+     * @param artifact_id: the artifact
+     *
+     * @return boolean
+     */
+    function insertDefaultValue($artifact_id) {
+        // We could simply call insertSingleValue($artifact_id,$this->getDefaultValue()) but
+        // it might end up in an infinite loop since insertSingleValue() might call this
+        // function.
+        $value = $this->getDefaultValue();
+        return $this->insertFieldValue($artifact_id, $value);
+    }
 
 
 	/**
