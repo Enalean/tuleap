@@ -341,7 +341,7 @@ class FileModuleMonitorFactory {
      * @return String
      */
     public function processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId) {
-        $historyDao    = new ProjectHistoryDao(CodendiDataAccess::instance());
+        $historyDao    = new ProjectHistoryDao();
         $anonymous     = true;
         $performAction = false;
         if ($request->get('action') == 'monitor_package') {
@@ -398,7 +398,7 @@ class FileModuleMonitorFactory {
     public function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
         $frspf      = new FRSPackageFactory();
         $package    = $frspf->getFRSPackageFromDb($fileModuleId);
-        $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
+        $historyDao = new ProjectHistoryDao();
 
         if ($frspf->userCanAdmin($currentUser, $groupId)) {
             if ($request->valid(new Valid_WhiteList('action', array('add_monitoring', 'delete_monitoring')))) {
