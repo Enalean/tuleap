@@ -279,8 +279,7 @@ class UGroupBinding {
      */
     public function processRequest($ugroupId, Codendi_Request $request) {
         $func        = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
-        // @TODO: validate groupId
-        $groupId     = $request->get('group_id');
+        $groupId     = $request->getValidated('group_id', 'GroupId');
         $validUgroup = $this->checkUGroupValidity($groupId, $ugroupId);
         if ($validUgroup) {
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
