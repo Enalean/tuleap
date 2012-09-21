@@ -132,6 +132,44 @@ class FileModuleMonitorFactory {
     }
 
     /**
+     * Add package monitoring for a user
+     *
+     * @param User              $user         The user
+     * @param Integer           $groupId      Id of the project
+     * @param Integer           $fileModuleId Id of the package
+     * @param FRSPackage        $package      Package
+     * @param FRSPackageFactory $frspf        Package factory
+     * @param UserHelper        $userHelper   User helper
+     *
+     * @return Void
+     */
+    public function addUserMonitoring(User $user, $groupId, $fileModuleId, FRSPackage $package, FRSPackageFactory $frspf, UserHelper $userHelper) {
+        if ($user) {
+            $publicly = true;
+            if ($frspf->userCanRead($groupId, $fileModuleId, $user->getId())) {
+                if (!$this->isMonitoring($fileModuleId, $user, $publicly)) {
+                    $anonymous = false;
+                    $result = $this->setMonitor($fileModuleId, $user, $anonymous);
+                    if ($result) {
+                        $historyDao = new ProjectHistoryDao();
+                        $historyDao->groupAddHistory("frs_add_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
+                        $this->notifyAfterAdd($package, $user);
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_added', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
+                    }
+                } else {
+                    $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'already_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                }
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'user_no_permission', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_user', array($userName)));
+        }
+    }
+
+    /**
      * Stop the package monitoring
      *
      * @param Integer $filemodule_id Id of th package
@@ -144,6 +182,45 @@ class FileModuleMonitorFactory {
         $_id = (int) $filemodule_id;
         $dao = $this->_getFileModuleMonitorDao();
         return $dao->delete($_id, $user, $onlyPublic);
+    }
+
+    /**
+     * Stop the package monitoring for some users
+     *
+     * @param Array             $users        Array of users
+     * @param Integer           $groupId      Id of the project
+     * @param Integer           $fileModuleId Id of the package
+     * @param FRSPackage        $package      Package
+     * @param UserManager       $um           User manager
+     * @param UserHelper        $userHelper   User helper
+     *
+     * @return Void
+     */
+    function stopMonitoringForUsers($users, $groupId, $fileModuleId, FRSPackage $package, UserManager $um, UserHelper $userHelper) {
+        if ($users && !empty($users) && is_array($users)) {
+            foreach ($users as $userId) {
+                $user = $um->getUserById($userId);
+                if ($user) {
+                    $publicly = true;
+                    if ($this->isMonitoring($fileModuleId, $user, $publicly)) {
+                        $onlyPublic = true;
+                        $result = $this->stopMonitor($fileModuleId, $user, $onlyPublic);
+                        if ($result) {
+                            $historyDao = new ProjectHistoryDao();
+                            $historyDao->groupAddHistory("frs_stop_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
+                            $this->notifyAfterDelete($package, $user);
+                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                        } else {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_error', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                        }
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'not_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+                    }
+                }
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_delete'));
+        }
     }
 
     /**
@@ -396,9 +473,8 @@ class FileModuleMonitorFactory {
      * @return String
      */
     public function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
-        $frspf      = new FRSPackageFactory();
-        $package    = $frspf->getFRSPackageFromDb($fileModuleId);
-        $historyDao = new ProjectHistoryDao();
+        $frspf   = new FRSPackageFactory();
+        $package = $frspf->getFRSPackageFromDb($fileModuleId);
 
         if ($frspf->userCanAdmin($currentUser, $groupId)) {
             if ($request->valid(new Valid_WhiteList('action', array('add_monitoring', 'delete_monitoring')))) {
@@ -409,56 +485,13 @@ class FileModuleMonitorFactory {
                         foreach ($users as $userName) {
                             if (!empty($userName)) {
                                 $user = $um->findUser($userName);
-                                if ($user) {
-                                    $publicly = true;
-                                    if ($frspf->userCanRead($groupId, $fileModuleId, $user->getId())) {
-                                        if (!$this->isMonitoring($fileModuleId, $user, $publicly)) {
-                                            $anonymous = false;
-                                            $result = $this->setMonitor($fileModuleId, $user, $anonymous);
-                                            if ($result) {
-                                                $historyDao->groupAddHistory("frs_add_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
-                                                $this->notifyAfterAdd($package, $user);
-                                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_added', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
-                                            } else {
-                                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
-                                            }
-                                        } else {
-                                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'already_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
-                                        }
-                                    } else {
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'user_no_permission', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
-                                    }
-                                } else {
-                                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_user', array($userName)));
-                                }
+                                $this->addUserMonitoring($user, $groupId, $fileModuleId, $package, $frspf, $userHelper);
                             }
                         }
                         break;
                     case 'delete_monitoring' :
                         $users = $request->get('delete_user');
-                        if ($users && !empty($users) && is_array($users)) {
-                            foreach ($users as $userId) {
-                                $user = $um->getUserById($userId);
-                                if ($user) {
-                                    $publicly = true;
-                                    if ($this->isMonitoring($fileModuleId, $user, $publicly)) {
-                                        $onlyPublic = true;
-                                        $result = $this->stopMonitor($fileModuleId, $user, $onlyPublic);
-                                        if ($result) {
-                                            $historyDao->groupAddHistory("frs_stop_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
-                                            $this->notifyAfterDelete($package, $user);
-                                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
-                                        } else {
-                                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_error', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
-                                        }
-                                    } else {
-                                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'not_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
-                                    }
-                                }
-                            }
-                        } else {
-                            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_delete'));
-                        }
+                        $this->stopMonitoringForUsers($users, $groupId, $fileModuleId, $package, $um, $userHelper);
                         break;
                     default :
                         break;
