@@ -70,6 +70,15 @@ class UGroupManager {
     }
 
     /**
+     * Wrapper for EventManager
+     *
+     * @return EventManager
+     */
+    private function getEventManager() {
+        return EventManager::instance();
+    }
+
+    /**
      * Get Dynamic ugroups members
      *
      * @param Integer $ugroupId Id of the uGroup
@@ -98,6 +107,18 @@ class UGroupManager {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Check if update users is allowed for a given user group
+     *
+     * @param Integer $ugroupId Id of the user group
+     *
+     * @return boolean
+     */
+    public function isUpdateUsersAllowed($ugroupId) {
+        $ugroupUpdateUsersAllowed = true;
+        return $this->getEventManager()->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
     }
 
 }
