@@ -225,7 +225,7 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-     public function getMonitoringListHTML($fileModuleId, $um, $userHelper) {
+    public function getMonitoringListHTML($fileModuleId, $um, $userHelper) {
         $editContent = '<h3>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_people_title').'</h3>';
         $list        = $this->whoIsPubliclyMonitoringPackage($fileModuleId);
         $totalCount  = count($this->getFilesModuleMonitorFromDb($fileModuleId));
@@ -257,7 +257,7 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-     public function getAddMonitoringForm($fileModuleId) {
+    public function getAddMonitoringForm($fileModuleId) {
         $editContent .= '<form id="filemodule_monitor_form_add" method="post" >';
         $editContent .= '<input type="hidden" name="action" value="add_monitoring">';
         $editContent .= '<input type="hidden" name="package_id" value="'.$fileModuleId.'">';
@@ -276,10 +276,9 @@ class FileModuleMonitorFactory {
      * @param User    $currentUser  Current user
      * @param Integer $fileModuleId Id of the package
      *
-     * 
      * @return String
      */
-     public function getSelfMonitoringForm($currentUser, $fileModuleId) {
+    public function getSelfMonitoringForm($currentUser, $fileModuleId) {
         $html = '<h3>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'my_monitoring').'</h3>';
         $html .= '<form id="filemodule_monitor_form" method="post" >';
         $html .= '<input type="hidden" name="action" value="monitor_package">';
@@ -321,7 +320,7 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-     public function getMonitoringHTML($currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+    public function getMonitoringHTML($currentUser, $groupId, $fileModuleId, $um, $userHelper) {
         $html = $this->getSelfMonitoringForm($currentUser, $fileModuleId);
         $frspf = new FRSPackageFactory();
          if ($frspf->userCanAdmin($currentUser, $groupId)) {
@@ -341,7 +340,7 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-     public function processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId) {
+    public function processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId) {
         $historyDao    = new ProjectHistoryDao(CodendiDataAccess::instance());
         $anonymous     = true;
         $performAction = false;
@@ -396,7 +395,7 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-     public function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+    public function processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
         $frspf      = new FRSPackageFactory();
         $package    = $frspf->getFRSPackageFromDb($fileModuleId);
         $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
@@ -480,7 +479,7 @@ class FileModuleMonitorFactory {
      *
      * @return String
      */
-     public function processMonitoringActions($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+    public function processMonitoringActions($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper) {
         $this->processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId);
         $this->processEditMonitoringAction($request, $currentUser, $groupId, $fileModuleId, $um, $userHelper);
     }
