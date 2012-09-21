@@ -183,13 +183,13 @@ class UGroupBinding {
     public function resetUgroup($ugroupId) {
         if ($this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
             if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
-                throw new LogicException('Unable to reset ugroup');
+                throw new LogicException($GLOBALS['Language']->getText('project_ugroup_binding', 'reset_error', array($ugroupId)));
                 return false;
             } else {
                 return true;
             }
         } else {
-            throw new RuntimeException('Update users is not allowed for the ugroup '.$ugroupId);
+            throw new RuntimeException($GLOBALS['Language']->getText('project_ugroup_binding', 'update_user_not_allowed', array($ugroupId)));
             return false;
         }
     }
@@ -203,15 +203,15 @@ class UGroupBinding {
      * @return boolean
      */
     public function cloneUgroup($sourceId, $ugroupId) {
-        if (!$this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
+        if ($this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
             if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
-                throw new LogicException('Unable to clone ugroup');
+                throw new LogicException($GLOBALS['Language']->getText('project_ugroup_binding', 'clone_error', array($ugroupId)));
                 return false;
             } else {
                 return true;
             }
         } else {
-            throw new RuntimeException('Update users is not allowed for the ugroup '.$ugroupId);
+            throw new RuntimeException($GLOBALS['Language']->getText('project_ugroup_binding', 'update_user_not_allowed', array($ugroupId)));
             return false;
         }
     }
@@ -255,7 +255,7 @@ class UGroupBinding {
                 $this->cloneUgroup($sourceId, $ugroupId);
             } catch(LogicException $e) {
                 //re-throw exception
-                throw new Exception($GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
+                throw new Exception($e->getMessage());
             } catch(RuntimeException $e) {
                 //@Todo i18n Runtime exception message
                 $GLOBALS['Response']->addFeedback('warning', $e->getMessage());

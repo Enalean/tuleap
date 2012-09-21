@@ -990,3 +990,6 @@ project_ugroup_binding	no_binding	This user group is not binded to any other use
 project_ugroup_binding	remove_binding	Remove current binding
 project_ugroup_binding	current_binded	This user group is binded to $1 in project $2
 project_ugroup_binding	not_source	This user group is not the source of any other user group
+project_ugroup_binding	update_user_not_allowed	Update users is not allowed for the ugroup $1
+project_ugroup_binding	reset_error	Unable to reset ugroup $1
+project_ugroup_binding	clone_error	Unable to clone ugroup $1
