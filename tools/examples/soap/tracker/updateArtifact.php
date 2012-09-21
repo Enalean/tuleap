@@ -25,18 +25,18 @@ if ($argc < 4) {
     die('Usage: ".$argv[0]." project_id  tracker_id  artifact_id value \n');
 }
 
-$serverURL = 'http://sonde.cro.enalean.com';
+$serverURL = 'http://recco.cro.enalean.com';
 $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
 // Establish connection to the server
-$requesterSessionHash = $soapLogin->login('testman','testpwd')->session_hash;
+$requesterSessionHash = $soapLogin->login('goyotm','martin')->session_hash;
 
 //save values
 $project_id  = $argv[1];
 $tracker_id  = $argv[2];
-$artifact_id = $argv[3]; 
-$value       = array(array('field_name' => 'name', 
-                           'field_label' => 'Name', 
+$artifact_id = $argv[3];
+$value       = array(array('field_name' => 'summary',
+                           'field_label' => 'Summary',
                            'field_value' => $argv[4])
                );
 
@@ -48,14 +48,14 @@ $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('c
 //executing method updateArtefact
 
 if ($argc == 7) {
-    
+
     $comment      = $argv[5];
     $comment_type = $argv[6];
-    
+
     var_dump ($comment);
-    
+
     $response = $soapTracker->updateArtifact($requesterSessionHash, $project_id, $tracker_id, $artifact_id, $value, $comment, $comment_type);
-    
+
 } else {
     $response = $soapTracker->updateArtifact($requesterSessionHash, $project_id, $tracker_id, $artifact_id, $value );
 }

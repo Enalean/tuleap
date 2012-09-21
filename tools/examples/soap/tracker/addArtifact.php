@@ -18,7 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-// format : project_id  tracker_id  value 
+// format : project_id  tracker_id  value
 
 if ($argc < 4) {
     die('Usage: ".$argv[0]." project_id  tracker_id  value \n');
@@ -33,8 +33,8 @@ $requesterSessionHash = $soapLogin->login('testman','testpwd')->session_hash;
 //save values
 $project_id  = $argv[1];
 $tracker_id  = $argv[2];
-$value       = array(array('field_name' => 'name', 
-                                'field_label' => 'Name', 
+$value       = array(array('field_name' => 'name',
+                                'field_label' => 'Name',
                                 'field_value' => $argv[3]
                 ));
 

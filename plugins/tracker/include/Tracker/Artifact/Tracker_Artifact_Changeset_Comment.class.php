@@ -31,6 +31,11 @@ class Tracker_Artifact_Changeset_Comment {
      */
     const HTML_COMMENT = 'html';
 
+    /**
+    * @const Changeset available comment formats
+    */
+    private static $available_comment_formats = array(Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, Tracker_Artifact_Changeset_Comment::HTML_COMMENT);
+
     public $id;
     /**
      *
@@ -197,6 +202,20 @@ class Tracker_Artifact_Changeset_Comment {
         } else {
             return null;
         }
+    }
+
+    /**
+    * Check the comment format, to ensure it is in
+    * a known one.
+    * @param string $comment_format the format of the comment
+    * @return string $comment_format
+    */
+    public static function checkCommentFormat($comment_format) {
+        if (!in_array($comment_format, self::$available_comment_formats)) {
+            $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        }
+
+        return $comment_format;
     }
 }
 ?>
