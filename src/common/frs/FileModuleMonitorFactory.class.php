@@ -216,6 +216,121 @@ class FileModuleMonitorFactory {
         return $mail->send();
     }
 
+    /**
+     * Display the list of people monitoring the package with the delete form
+     *
+     * @param Integer     $fileModuleId Id of the package
+     * @param UserManager $um           UserManager instance
+     * @param UserHelper  $userHelper   UserHelper instance
+     *
+     * @return String
+     */
+     public function getMonitoringListHTML($fileModuleId, $um, $userHelper) {
+        $editContent = '<h3>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'monitoring_people_title').'</h3>';
+        $list        = $this->whoIsPubliclyMonitoringPackage($fileModuleId);
+        $totalCount  = count($this->getFilesModuleMonitorFromDb($fileModuleId));
+        $count       = $totalCount - count($this->whoIsPubliclyMonitoringPackage($fileModuleId));
+        if ($list->rowCount() == 0) {
+            $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'<br />';
+            $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_list');
+        } else {
+            $editContent .= '<form id="filemodule_monitor_form_delete" method="post" >';
+            $editContent .= '<input type="hidden" name="action" value="delete_monitoring">';
+            $editContent .= html_build_list_table_top(array($GLOBALS['Language']->getText('file_filemodule_monitor', 'user'), $GLOBALS['Language']->getText('global', 'delete').'?'), false, false, false);
+            $rowBgColor  = 0;
+            foreach ($list as $entry) {
+                $user        = $um->getUserById($entry['user_id']);
+                $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
+            }
+            $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'</td><td></td></tr>';
+            $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$GLOBALS['Language']->getText('global', 'total').': '.$totalCount.'</td><td><input id="filemodule_monitor_submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'delete').'" /></td></tr>';
+            $editContent .= '</table>';
+            $editContent .= '</form>';
+        }
+        return $editContent;
+    }
+
+    /**
+     * Display the form to add a user to the monitoring people by the admin
+     *
+     * @param Integer $fileModuleId Id of the package
+     *
+     * @return String
+     */
+     public function getAddMonitoringForm($fileModuleId) {
+        $editContent .= '<form id="filemodule_monitor_form_add" method="post" >';
+        $editContent .= '<input type="hidden" name="action" value="add_monitoring">';
+        $editContent .= '<input type="hidden" name="package_id" value="'.$fileModuleId.'">';
+        $editContent .= '<h3>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'add_users').'</h3>';
+        $editContent .= '<br /><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea>';
+        $autocomplete = "new UserAutoCompleter('listeners_to_add', '".util_get_dir_image_theme()."', true);";
+        $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
+        $editContent .= '<br /><input id="filemodule_monitor_submit" type="submit" value="'.$GLOBALS['Language']->getText('global', 'add').'" />';
+        $editContent .= '</form>';
+        return $editContent;
+    }
+
+    /**
+     * Display the form to manage user's self monitoring of the package
+     *
+     * @param User    $currentUser  Current user
+     * @param Integer $fileModuleId Id of the package
+     *
+     * 
+     * @return String
+     */
+     public function getSelfMonitoringForm($currentUser, $fileModuleId) {
+        $html = '<h3>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'my_monitoring').'</h3>';
+        $html .= '<form id="filemodule_monitor_form" method="post" >';
+        $html .= '<input type="hidden" name="action" value="monitor_package">';
+        $html .= '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$fileModuleId.'" />';
+        $notMonitring          = '';
+        $monitoringPublicly    = '';
+        $monitoringAnonymously = '';
+        if ($this->isMonitoring($fileModuleId, $currentUser, false)) {
+            $publicly = true;
+            if ($this->isMonitoring($fileModuleId, $currentUser, $publicly)) {
+                $monitoringPublicly = 'checked="checked"';
+            } else {
+                $monitoringAnonymously = 'checked="checked"';
+            }
+        } else {
+            $notMonitring = 'checked="checked"';
+        }
+        $html .= '<table>';
+        $html .= '<tr><td><input type="radio" id="stop_frs_monitoring" name="frs_monitoring" value="stop_monitoring" '.$notMonitring.'/></td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('file_showfiles', 'stop_monitoring').'</td></tr>';
+        $html .= '<tr><td><input type="radio" id="anonymous_frs_monitoring" name="frs_monitoring" value="anonymous_monitoring" '.$monitoringAnonymously.'/></td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'anonymous').'</td></tr>';
+        $html .= '<tr><td><input type="radio" id="public_frs_monitoring" name="frs_monitoring" value="public_monitoring" '.$monitoringPublicly.'/></td>';
+        $html .= '<td>'.$GLOBALS['Language']->getText('file_showfiles', 'start_monitoring').' ('.$GLOBALS['Language']->getText('file_filemodule_monitor', 'public').')</td></tr>';
+        $html .= '<tr><td></td><td><input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_apply').'" /></td></tr>';
+        $html .= '</table>';
+        $html .= '</form>';
+        return $html;
+     }
+
+    /**
+     * Display the HTML of the monitoring UI
+     *
+     * @param User        $currentUser  Current user
+     * @param Integer     $groupId      Id of the project
+     * @param Integer     $fileModuleId Id of the package
+     * @param UserManager $um           UserManager instance
+     * @param UserHelper  $userHelper   UserHelper instance
+     *
+     * @return String
+     */
+     public function getMonitoringHTML($currentUser, $groupId, $fileModuleId, $um, $userHelper) {
+        $html = $this->getSelfMonitoringForm($currentUser, $fileModuleId);
+        $frspf = new FRSPackageFactory();
+         if ($frspf->userCanAdmin($currentUser, $groupId)) {
+             $html .= $this->getMonitoringListHTML($fileModuleId, $um, $userHelper);
+             $html .= $this->getAddMonitoringForm($fileModuleId);
+        }
+        return $html;
+     }
+
 }
 
 ?>

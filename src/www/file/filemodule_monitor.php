@@ -64,7 +64,6 @@ if (user_isloggedin()) {
                 }
             }
 
-            $editContent = "";
             if ($frspf->userCanAdmin($currentUser, $group_id)) {
                 if ($request->valid(new Valid_WhiteList('action', array('add_monitoring', 'delete_monitoring')))) {
                     $action = $request->get('action');
@@ -129,72 +128,10 @@ if (user_isloggedin()) {
                             break;
                     }
                 }
-
-                // Display the list of people monitoring the package with the delete form
-                $editContent = '<h3>'.$Language->getText('file_filemodule_monitor', 'monitoring_people_title').'</h3>';
-                $list        = $fmmf->whoIsPubliclyMonitoringPackage($filemodule_id);
-                $totalCount  = count($fmmf->getFilesModuleMonitorFromDb($filemodule_id));
-                $count       = $totalCount - count($fmmf->whoIsPubliclyMonitoringPackage($filemodule_id));
-                if ($list->rowCount() == 0) {
-                    $editContent .= $GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'<br />';
-                    $editContent .= $Language->getText('file_filemodule_monitor', 'no_list');
-                } else {
-                    $editContent .= '<form id="filemodule_monitor_form_delete" method="post" >';
-                    $editContent .= '<input type="hidden" name="action" value="delete_monitoring">';
-                    $editContent .= html_build_list_table_top(array($Language->getText('file_filemodule_monitor', 'user'), $Language->getText('global', 'delete').'?'), false, false, false);
-                    $rowBgColor  = 0;
-                    foreach ($list as $entry) {
-                        $user        = $um->getUserById($entry['user_id']);
-                        $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$userHelper->getDisplayName($user->getName(), $user->getRealName()).'</td><td><input type="checkbox" name="delete_user[]" value="'.$entry['user_id'].'" /></td></tr>';
-                    }
-                    $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'users_monitor', $count).'</td><td></td></tr>';
-                    $editContent .= '<tr class="'. html_get_alt_row_color(++$rowBgColor) .'"><td>'.$Language->getText('global', 'total').': '.$totalCount.'</td><td><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'delete').'" /></td></tr>';
-                    $editContent .= '</table>';
-                    $editContent .= '</form>';
-                }
-
-                // Display the form to add a user to the monitoring people by the admin
-                $editContent .= '<form id="filemodule_monitor_form_add" method="post" >';
-                $editContent .= '<input type="hidden" name="action" value="add_monitoring">';
-                $editContent .= '<input type="hidden" name="package_id" value="'.$filemodule_id.'">';
-                $editContent .= '<h3>'.$Language->getText('file_filemodule_monitor', 'add_users').'</h3>';
-                $editContent .= '<br /><textarea name="listeners_to_add" value="" id="listeners_to_add" rows="2" cols="50"></textarea>';
-                $autocomplete = "new UserAutoCompleter('listeners_to_add', '".util_get_dir_image_theme()."', true);";
-                $GLOBALS['Response']->includeFooterJavascriptSnippet($autocomplete);
-                $editContent .= '<br /><input id="filemodule_monitor_submit" type="submit" value="'.$Language->getText('global', 'add').'" />';
-                $editContent .= '</form>';
             }
 
-            // Display the form to manage user's self monitoring of the package
             file_utils_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
-            echo '<h3>'.$Language->getText('file_filemodule_monitor', 'my_monitoring').'</h3>';
-            echo '<form id="filemodule_monitor_form" method="post" >';
-            echo '<input type="hidden" name="action" value="monitor_package">';
-            echo '<input type="hidden" id="filemodule_id" name="filemodule_id" value="'.$filemodule_id.'" />';
-            $notMonitring          = '';
-            $monitoringPublicly    = '';
-            $monitoringAnonymously = '';
-            if ($fmmf->isMonitoring($filemodule_id, $currentUser, false)) {
-                $publicly = true;
-                if ($fmmf->isMonitoring($filemodule_id, $currentUser, $publicly)) {
-                    $monitoringPublicly = 'checked="checked"';
-                } else {
-                    $monitoringAnonymously = 'checked="checked"';
-                }
-            } else {
-                $notMonitring = 'checked="checked"';
-            }
-            echo '<table>';
-            echo '<tr><td><input type="radio" id="stop_frs_monitoring" name="frs_monitoring" value="stop_monitoring" '.$notMonitring.'/></td>';
-            echo '<td>'.$Language->getText('file_showfiles', 'stop_monitoring').'</td></tr>';
-            echo '<tr><td><input type="radio" id="anonymous_frs_monitoring" name="frs_monitoring" value="anonymous_monitoring" '.$monitoringAnonymously.'/></td>';
-            echo '<td>'.$Language->getText('file_filemodule_monitor', 'anonymous').'</td></tr>';
-            echo '<tr><td><input type="radio" id="public_frs_monitoring" name="frs_monitoring" value="public_monitoring" '.$monitoringPublicly.'/></td>';
-            echo '<td>'.$Language->getText('file_showfiles', 'start_monitoring').' ('.$Language->getText('file_filemodule_monitor', 'public').')</td></tr>';
-            echo '<tr><td></td><td><input type="submit" value="'.$Language->getText('global', 'btn_apply').'" /></td></tr>';
-            echo '</table>';
-            echo '</form>';
-            echo $editContent;
+            echo $fmmf->getMonitoringHTML($currentUser, $group_id, $filemodule_id, $um, $userHelper);
             file_utils_footer($params);
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'no_permission'));
