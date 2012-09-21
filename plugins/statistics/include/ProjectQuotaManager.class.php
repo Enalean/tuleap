@@ -119,9 +119,23 @@ class ProjectQuotaManager {
             }
         }
     }
-    
+
     /**
-     * Get the maximum quota defined for the plateform
+     * Get the default quota defined for the platform
+     *
+     * @return int
+     */
+    public function getDefaultQuota() {
+        $dum   = new Statistics_DiskUsageManager();
+        $quota = intval($dum->getProperty('allowed_quota'));
+        if (!$quota) {
+            $quota = 5;
+        }
+        return $quota;
+    }
+
+    /**
+     * Get the maximum quota defined for the platform
      *
      * @return int
      */

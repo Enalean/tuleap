@@ -110,8 +110,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         
         // Magic call that do stuff we want, yeah!
         $repositories = $this->getFlatTree($traversal);
-        
-        $tree = $traversal->getTree($repositories);
+        $user = new MockUser();
+        $tree = $traversal->getTree($repositories, $user);
         $this->assertTrue(is_array($tree['automaticTests']));
         $this->assertIsA(($tree['automaticTests']['Python']), 'GitRepository');
     }
@@ -145,7 +145,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $this->assertPattern('%<td style="padding-left: 2em;">.*Python.*</td>%', $output);
         
         // Ensure descriptions
-        $this->assertPattern('%Python.*</td><td>-- Default description --</td>%', $output);
+        $description = GitRepository::DEFAULT_DESCRIPTION;
+        $this->assertPattern("%Python.*</td><td>$description</td>%", $output);
         
         // Ensure that there is a link to the repository
         $this->assertPattern('%<a href="[^"]*/view/3/"  >Python</a>%', $output);

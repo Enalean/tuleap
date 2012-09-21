@@ -19,8 +19,10 @@
  */
 
 require_once 'PriorityDao.class.php';
+require_once dirname(__FILE__).'/../../FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php';
 
 class Tracker_ArtifactDao extends DataAccessObject {
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_artifact';
@@ -36,26 +38,30 @@ class Tracker_ArtifactDao extends DataAccessObject {
     
     public function searchByTrackerId($tracker_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
-        $sql = "SELECT *
-                FROM $this->table_name
-                WHERE tracker_id = $tracker_id ";
+        $sql = "SELECT A.*, CVT.value AS title
+                FROM tracker_artifact AS A
+                    INNER JOIN tracker AS T ON (A.tracker_id = T.id AND T.id = $tracker_id)
+                    LEFT JOIN (
+                        tracker_changeset_value AS CV
+                        INNER JOIN tracker_semantic_title as ST ON (CV.field_id = ST.field_id)
+                        INNER JOIN tracker_changeset_value_text AS CVT ON (CV.id = CVT.changeset_value_id)
+                    ) ON (A.last_changeset_id = CV.changeset_id)";
         return $this->retrieve($sql);
     }
     
     /**
      * @param string $artifact_ids "2,14,15"
      */
-    public function searchLastChangesetIds($artifact_ids, $ugroups) {
-        $artifact_ids = explode(',', $artifact_ids); // array(2, 14, 15);
-        $artifact_ids = array_map(array($this->da, 'escapeInt'), $artifact_ids); // array(2, 14, 15)
-        $artifact_ids = implode(',', $artifact_ids); // 2,14,15
+    public function searchLastChangesetIds($artifact_ids, array $ugroups, $user_is_admin) {
+        $artifact_ids = $this->da->escapeIntImplode(explode(',', $artifact_ids));
+
         $sql = " SELECT tracker_id, GROUP_CONCAT(id) AS id, GROUP_CONCAT(last_changeset_id) AS last_changeset_id";
         $from = " FROM $this->table_name AS artifact";
         $where = " WHERE id IN (" .$artifact_ids. ")";
         $group = " GROUP BY tracker_id";
                 
-        $user = UserManager::instance()->getCurrentuser();
-        if (!$user->isSuperUser()) {
+        if (!$user_is_admin) {
+            $ugroups = $this->da->escapeIntImplode($ugroups);
             $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.id AS CHAR) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS')";
             $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". $ugroups.")))";
         }
@@ -117,6 +123,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -159,6 +167,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -203,6 +213,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -294,10 +306,43 @@ class Tracker_ArtifactDao extends DataAccessObject {
                 WHERE id = $id ";
         return $this->update($sql);
     }
-    
+
     public function delete($id) {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
     }
+
+    public function deleteArtifactLinkReference($id) {
+        $dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+        return $dao->deleteReference($id);
+    }
+
+    public function deletePriority($id) {
+        $dao = new Tracker_Artifact_PriorityDao();
+        return $dao->remove($id);
+    }
+
+    /**
+     * Retrieve the list of artifact id corresponding to a submitted on date having a specific value
+     *
+     * @param Integer $trackerId Tracker id
+     * @param Integer $date      Submitted on date
+     *
+     * @return DataAccessResult
+     */
+    public function getArtifactsBySubmittedOnDate($trackerId, $date) {
+        $trackerId  = $this->da->escapeInt($trackerId);
+        $date       = $this->da->escapeInt($date);
+        $halfDay    = 60 * 60 * 12;
+        $minDate    = $date - $halfDay;
+        $maxDate    = $date + $halfDay;
+        $sql        = "SELECT id AS artifact_id FROM
+                       tracker_artifact
+                       WHERE DATE(FROM_UNIXTIME(submitted_on)) BETWEEN DATE(FROM_UNIXTIME(".$minDate.")) AND DATE(FROM_UNIXTIME(".$maxDate."))
+                         AND tracker_id = ".$trackerId;
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>

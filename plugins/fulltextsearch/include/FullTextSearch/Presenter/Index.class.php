@@ -27,6 +27,7 @@ class FullTextSearch_Presenter_Index {
     public function __construct($index_status, $terms = '') {
         $this->index_status = $index_status;
         $this->terms        = $terms;
+        $this->search_label = $GLOBALS['Language']->getText('search_index', 'search');
     }
     
     public function index_size() {

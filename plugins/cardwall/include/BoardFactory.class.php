@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'InjectDropIntoClassnamesVisitor.class.php';
 require_once 'SwimlineFactory.class.php';
-require_once 'ColumnFactory.class.php';
+require_once 'OnTop/Config/ColumnFactory.class.php';
 require_once 'Board.class.php';
+require_once 'FieldsExtractor.class.php';
+require_once 'OnTop/Config/MappedFieldProvider.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
 /**
  * Builds Board given artifacts (for swimlines/cards) and a field (for columns)
@@ -31,25 +33,35 @@ class Cardwall_BoardFactory {
     /**
      * @return Cardwall_Board
      */
-    public function getBoard(Cardwall_InjectColumnIdVisitor $column_id_visitor, TreeNode $forests_of_artifacts, Tracker_FormElement_Field_Selectbox $field = null) {
-        $swimline_factory = new Cardwall_SwimlineFactory();
-        $column_factory   = new Cardwall_ColumnFactory($field);
+    public function getBoard(Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_retriever, 
+                             Cardwall_OnTop_Config_ColumnCollection               $columns, 
+                             TreeNode                                             $forests_of_artifacts, 
+                             Cardwall_OnTop_Config                                $config,
+                             User                                                 $user) {
+        $acc_field_provider = new Cardwall_FieldsExtractor($field_retriever);
+        $status_fields      = $acc_field_provider->extractAndIndexFieldsOf($forests_of_artifacts);
+        
+        $mapping_collection = $config->getCardwallMappings($status_fields, $columns);
+        $forests_of_cardincell_presenters = $this->transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, $user);
+        $swimlines                        = $this->getSwimlines($columns, $forests_of_cardincell_presenters, $config, $field_retriever);
 
-        $forests_of_artifacts->accept($column_id_visitor);
-        $accumulated_status_fields = $column_id_visitor->getAccumulatedStatusFields();
-
-        $mappings = $column_factory->getMappings($accumulated_status_fields);
-
-        $drop_into_visitor = new Cardwall_InjectDropIntoClassnamesVisitor($mappings);
-        $i = 0;
-        foreach ($forests_of_artifacts->getChildren() as $forest) {
-            $forest->accept($drop_into_visitor, $i++);
-        }
-
-        $columns   = $column_factory->getColumns();
-        $swimlines = $swimline_factory->getSwimlines($columns, $forests_of_artifacts->getChildren());
-
-        return new Cardwall_Board($swimlines, $columns, $mappings);
+        return new Cardwall_Board($swimlines, $columns, $mapping_collection);
+        
     }
+
+    private function transformIntoForestOfCardInCellPresenters($forests_of_artifacts, $field_retriever, $mapping_collection, User $user) {
+        
+        $card_presenter_mapper      = new TreeNodeMapper(new Cardwall_CreateCardPresenterCallback(new Tracker_CardFields(), $user));
+        $forests_of_card_presenters = $card_presenter_mapper->map($forests_of_artifacts);
+
+        $column_id_mapper           = new TreeNodeMapper(new Cardwall_CardInCellPresenterCallback($field_retriever, $mapping_collection));
+        return $column_id_mapper->map($forests_of_card_presenters);
+    }
+
+    private function getSwimlines(Cardwall_OnTop_Config_ColumnCollection $columns, TreeNode $forests_of_cardincell_presenters, $config, $field_provider) {
+        $swimline_factory = new Cardwall_SwimlineFactory($config, $field_provider);
+        return $swimline_factory->getSwimlines($columns, $forests_of_cardincell_presenters->getChildren());
+    }
+
 }
 ?>

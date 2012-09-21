@@ -63,7 +63,8 @@ class SystemEvent_GIT_REPO_CREATE extends SystemEvent {
 
         try {
             $repository = new GitRepository();
-            $repository->setDescription('-- Default description --');
+            $repository->setBackend(Backend::instance('Git','GitBackend'));
+            $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
             //default access is private when restricted users are allowed
             if ( $sys_allow_restricted_users == 1) {
                 $repository->setAccess( GitRepository::PRIVATE_ACCESS );

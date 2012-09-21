@@ -97,7 +97,9 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
             $this->artifacts_to_select,
             $milestone,
             $this->user,
-            'planning['. (int)$this->planning->getId() .']='
+            mock('Codendi_Request'),
+            'planning['. (int)$this->planning->getId() .']=',
+            'planning['. (int)$this->planning->getId() .']=-1'
         );
     }
     
@@ -202,6 +204,8 @@ class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_Milesto
                         $this->artifacts_to_select,
                         new Planning_NoMilestone(mock('Project'), $this->planning),
                         $this->user,
+                        mock('Codendi_Request'),
+                        '',
                         ''
         );
     }
@@ -212,6 +216,61 @@ class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_Milesto
         $this->sprint_artifact = $this->getAnArtifact(30, array($this->getAnArtifact(37)), $sprint_tracker);
 
         $this->assertNull($this->presenter->getPlannedArtifactsTree());
+    }
+}
+
+class Planning_MilestonePresenter_OverCapacityTest extends Planning_MilestonePresenter_Common {
+    private $presenter;
+    private $sprint_milestone;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user                = mock('User');
+        $this->planning            = mock('Planning');
+        $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
+        $this->artifacts_to_select = array();
+        $this->sprint_milestone    = mock('Planning_ArtifactMilestone');
+
+        $this->presenter = new Planning_MilestonePresenter(
+            $this->planning,
+            $this->content_view,
+            $this->artifacts_to_select,
+            $this->sprint_milestone,
+            $this->user,
+            mock('Codendi_Request'),
+            '',
+            ''
+        );
+    }
+
+    public function itIsOverCapacityIfRemainingEffortIsGreaterThanCapacity() {
+        stub($this->sprint_milestone)->getRemainingEffort()->returns(5);
+        stub($this->sprint_milestone)->getCapacity()->returns(3);
+        $this->assertTrue($this->presenter->isOverCapacity());
+    }
+
+    public function itIsNotOverCapacityIfRemainingEffortIsEqualTo0() {
+        stub($this->sprint_milestone)->getRemainingEffort()->returns(0);
+        stub($this->sprint_milestone)->getCapacity()->returns(3);
+        $this->assertFalse($this->presenter->isOverCapacity());
+    }
+
+    public function itIsNotOverCapacityIfNoRemainingEffort() {
+        stub($this->sprint_milestone)->getRemainingEffort()->returns(null);
+        stub($this->sprint_milestone)->getCapacity()->returns(3);
+        $this->assertFalse($this->presenter->isOverCapacity());
+    }
+
+    public function itIsNotOverCapacityIfNoCapacity() {
+        stub($this->sprint_milestone)->getRemainingEffort()->returns(5);
+        stub($this->sprint_milestone)->getCapacity()->returns(null);
+        $this->assertFalse($this->presenter->isOverCapacity());
+    }
+
+    public function itIsNotOverCapacityCapacityIsNegative() {
+        stub($this->sprint_milestone)->getRemainingEffort()->returns(0);
+        stub($this->sprint_milestone)->getCapacity()->returns(-5);
+        $this->assertTrue($this->presenter->isOverCapacity());
     }
 }
 ?>

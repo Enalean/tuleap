@@ -52,5 +52,11 @@ class Tracker_FileInfoDao extends DataAccessObject {
                 VALUES ($submitted_by, $description, $filename, $filesize, $filetype)";
         return $this->updateAndGetLastId($sql);
     }
+
+    public function delete($id) {
+        $id  = $this->da->quoteSmart($id);
+        $sql = "DELETE FROM $this->table_name WHERE id = $id";
+        return $this->update($sql);
+    }
 }
 ?>

@@ -19,9 +19,6 @@
  */
 
 require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
-require_once('PlanningDao.class.php');
-require_once('Planning.class.php');
-require_once 'PlanningParameters.class.php';
 
 class PlanningFactory {
     
@@ -115,7 +112,13 @@ class PlanningFactory {
         $planning =  $this->dao->searchById($planning_id)->getRow();
         if ($planning) {
             $backlog_tracker_id = $this->getBacklogTrackerId($planning_id);
-            return new Planning($planning_id, $planning['name'], $planning['group_id'], $planning['backlog_title'], $planning['plan_title'], $backlog_tracker_id, $planning['planning_tracker_id']);
+            return new Planning($planning_id, 
+                                $planning['name'], 
+                                $planning['group_id'], 
+                                $planning['backlog_title'], 
+                                $planning['plan_title'], 
+                                $backlog_tracker_id, 
+                                $planning['planning_tracker_id']);
         }
         return null;
     }
@@ -135,16 +138,52 @@ class PlanningFactory {
         $planning = $this->dao->searchByPlanningTrackerId($planning_tracker->getId())->getRow();
         
         if($planning) {
-            return new Planning($planning['id'],
-                                $planning['name'],
-                                $planning['group_id'],
-                                $planning['backlog_title'],
-                                $planning['plan_title'],
-                                array(),
-                                $planning['planning_tracker_id']);
+            $p = new Planning($planning['id'],
+                              $planning['name'],
+                              $planning['group_id'],
+                              $planning['backlog_title'],
+                              $planning['plan_title'],
+                              null,
+                              $planning['planning_tracker_id']);
+            $p->setPlanningTracker($this->getPlanningTracker($p));
+            $p->setBacklogTracker($this->getBacklogTracker($p));
+            return $p;
         }
     }
-    
+
+    /**
+     * Returns all the Planning that use given tracker as backlog tracker
+     *
+     * Given:
+     *   Epic  -> Product
+     *   Epic  -> Release
+     *   Story -> Sprint
+     * When getPlanningsByBacklogTracker(Epic) -> [Product, Release]
+     * When getPlanningsByBacklogTracker(Story) -> [Sprint]
+     *
+     * @param Tracker $backlog_tracker
+     *
+     * @return Planning
+     */
+    public function getPlanningsByBacklogTracker(Tracker $backlog_tracker) {
+        $plannings = array();
+        foreach ($this->dao->searchByBacklogTrackerId($backlog_tracker->getId()) as $planning) {
+            $p = new Planning(
+                $planning['id'],
+                $planning['name'],
+                $planning['group_id'],
+                $planning['backlog_title'],
+                $planning['plan_title'],
+                $backlog_tracker->getId(),
+                $planning['planning_tracker_id']
+            );
+            $p->setBacklogTracker($backlog_tracker);
+            $p->setPlanningTracker($this->getPlanningTracker($p));
+            $plannings[] = $p;
+        }
+        return $plannings;
+    }
+
     public function getPlanningWithTrackers($planning_id) {
         $planning = $this->getPlanning($planning_id);
         

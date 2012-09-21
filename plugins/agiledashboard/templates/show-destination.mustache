@@ -3,8 +3,13 @@
         {{#getCardPresenter}}
             {{> card-actions}}
         {{/getCardPresenter}}
-        {{> select-destination}}
-        <hr />
+        {{#canDisplayRemainingEffort}}
+        <div>
+            <span class="{{#isOverCapacity}}planning_overcapacity{{/isOverCapacity}}">
+            {{{getRemainingEffort}}}
+            </span>
+        </div>
+        {{/canDisplayRemainingEffort}}
         <p class="help">{{plannedArtifactsHelp}}</p>
         {{^canDrop}}
             {{{errorCantDrop}}}

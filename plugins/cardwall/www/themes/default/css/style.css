@@ -1,3 +1,6 @@
+.cardwall_board-actions {
+    text-align: right;
+}
 .cardwall_board table {
     clear:both;
     border-collapse: collapse;
@@ -39,6 +42,10 @@
   -moz-box-shadow:none;
   -webkit-box-shadow: none;
   box-shadow: none;
+}
+.cardwall_board .nodrag .card,
+.cardwall_board .nodrag .card > .card-container {
+    background: #f9f9f9;
 }
 
 .widget .cardwall_board .card {

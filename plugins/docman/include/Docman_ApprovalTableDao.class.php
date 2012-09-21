@@ -96,7 +96,7 @@ require_once('Docman_ItemDao.class.php');
         return $this->update($sql);
     }
 
-    function updateTable($tableId, $description=null, $status=null, $notification=null, $owner=null) {
+    function updateTable($tableId, $description=null, $status=null, $notification=null, $notificationOccurence=null, $owner=null) {
         $_updStmt = '';
         if($description !== null) {
             $_updStmt .= sprintf('description = %s',
@@ -115,6 +115,15 @@ require_once('Docman_ItemDao.class.php');
             }
             $_updStmt .= sprintf('notification = %d', $notification); 
         }
+
+        if($notificationOccurence !== null) {
+            if($_updStmt != '') {
+                $_updStmt .= ',';
+            }
+            $_updStmt .= sprintf('notification_occurence = %d', $notificationOccurence); 
+        }
+
+
 
         if($owner !== null) {
             if($_updStmt != '') {
@@ -154,6 +163,20 @@ require_once('Docman_ItemDao.class.php');
         }
         return $inserted;
     }
+
+    /**
+     * Get all approval tables that may send reminder notification
+     *
+     * @return DataAccessResult
+     */
+    function getTablesForReminder() {
+        $sql  = 'SELECT * from plugin_docman_approval
+                 WHERE status = 1
+                   AND notification != 0
+                   AND notification_occurence != 0';
+        return $this->retrieve($sql);
+    }
+
 }
 
 /**

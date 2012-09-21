@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../include/AgileDashboardRouter.class.php';
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aRequest.php';
 
@@ -25,23 +26,22 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        
+
         $this->planning_controller = mock('Planning_Controller');
         $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
                                              array('getViewBuilder',
                                                    'renderAction',
                                                    'executeAction',
                                                    'buildController',
-                                                   'getPlanningFactory',
                                                    'getProjectManager',
                                                    'getArtifactFactory',
-                                                   'getMilestoneFactory'));
-        $this->router->__construct(mock('Plugin'));
+                                                   'buildMilestoneController'));
+        $this->router->__construct(mock('Plugin'), mock('Planning_MilestoneFactory'), mock('PlanningFactory'), mock('Tracker_HierarchyFactory'));
         
         stub($this->router)->buildController()->returns($this->planning_controller);
-        stub($this->router)->getViewBuilder()->returns(mock('Tracker_CrossSearch_ViewBuilder'));
+        stub($this->router)->getViewBuilder()->returns(mock('Planning_ViewBuilder'));
         stub($this->router)->getProjectManager()->returns(mock('ProjectManager'));
-        stub($this->router)->getMilestoneFactory()->returns(mock('Planning_MilestoneFactory'));
+        stub($this->router)->buildMilestoneController()->returns(mock('Planning_MilestoneController'));
     }
     
     public function itRoutesPlanningEditionRequests() {
@@ -60,6 +60,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
     
     public function itRoutesToTheArtifactPlannificationByDefault() {
         $request = aRequest()->withUri('someurl')->build();
+        $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_MilestoneSelectorController'), 'show'));
         $this->router->expectOnce('renderAction', array(new IsAExpectation('Planning_MilestoneController'), 'show', $request, '*'));
         $this->router->routeShowPlanning($request);
     }
@@ -71,7 +72,6 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
     }
 
     public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
-        stub($this->router)->getPlanningFactory()->returns(mock('PlanningFactory'));
         $request = new Codendi_Request(array('aid' => '-1'));
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
         $this->router->routeShowPlanning($request);

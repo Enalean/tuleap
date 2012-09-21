@@ -27,7 +27,7 @@ require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
 require_once(dirname(__FILE__).'/../Tracker_Valid_Rule.class.php');
 
 class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
-    
+
     /**
      * @var Tracker_ArtifactFactory
      */
@@ -238,19 +238,78 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     protected function getCriteriaDao() {
         return new Tracker_Report_Criteria_ArtifactLink_ValueDao();
     }
-    
+
+    private function fetchParentSelector($prefill_parent, $name, Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
+        $html  = '';
+        $html .= '<p>';
+        list($label, $possible_parents, $display_selector) = $this->getPossibleArtifactParents($parent_tracker, $user);
+        if ($display_selector) {
+            $html .= '<label>';
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_choose_parent', $parent_tracker->getItemName());
+            $html .= '<select name="'. $name .'[parent]">';
+            $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+            $html .= '<option value="-1">'. $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_create_new_parent') .'</option>';
+            $html .= $this->fetchArtifactParentsOptions($prefill_parent, $label, $possible_parents, $hp);
+            $html .= '</select>';
+            $html .= '</label>';
+        } elseif ($possible_parents) {
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_will_have_as_parent', array($possible_parents[0]->fetchDirectLinkToArtifactWithTitle()));
+        }
+        $html .= '</p>';
+        return $html;
+    }
+
+    private function fetchArtifactParentsOptions($prefill_parent, $label, array $possible_parents, Codendi_HTMLPurifier $hp) {
+        $html  = '';
+        if ($possible_parents) {
+            $html .= '<optgroup label="'. $label .'">';
+            foreach ($possible_parents as $possible_parent) {
+                $selected = '';
+                if ($possible_parent->getId() == $prefill_parent) {
+                    $selected = ' selected="selected"';
+                }
+                $html .= '<option value="'. $possible_parent->getId() .'"'.$selected.'>'. $hp->purify($possible_parent->getXRefAndTitle()) .'</option>';
+            }
+            $html .= '</optgroup>';
+        }
+        return $html;
+    }
+
+    private function getPossibleArtifactParents(Tracker $parent_tracker, User $user) {
+        $label            = '';
+        $possible_parents = array();
+        $display_selector = true;
+        EventManager::instance()->processEvent(
+            TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR,
+            array(
+                'user'             => $user,
+                'parent_tracker'   => $parent_tracker,
+                'possible_parents' => &$possible_parents,
+                'label'            => &$label,
+                'display_selector' => &$display_selector,
+            )
+        );
+        if (!$possible_parents) {
+            $label            = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_open_parent', array($parent_tracker->getName()));
+            $possible_parents = $this->getArtifactFactory()->getOpenArtifactsByTrackerIdUserCanView($user, $parent_tracker->getId());
+        }
+        return array($label, $possible_parents, $display_selector);
+    }
+
     /**
      * Fetch the html widget for the field
      *
-     * @param string $name                   The name, if any
-     * @param array  $artifact_links         The current artifact links
-     * @param string $prefill_new_values     Prefill new values field (what the user has submitted, if any)
-     $ @param array  $prefill_removed_values Pre-remove values (what the user has submitted, if any)
-     * @param bool   $read_only              True if the user can't add or remove links
+     * @param Tracker_Artifact $artifact               Artifact on which we operate
+     * @param string           $name                   The name, if any
+     * @param array            $artifact_links         The current artifact links
+     * @param string           $prefill_new_values     Prefill new values field (what the user has submitted, if any)
+     * @param array            $prefill_removed_values Pre-remove values (what the user has submitted, if any)
+     * @param string           $prefill_parent         Prefilled parent (what the user has submitted, if any) - Only valid on submit
+     * @param bool             $read_only              True if the user can't add or remove links
      *
      * @return string html
      */
-    protected function fetchHtmlWidget($name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only, $from_aid = null) {
+    protected function fetchHtmlWidget(Tracker_Artifact $artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_parent, $read_only, $from_aid = null) {
         $html = '';
         $html_name_new = '';
         $html_name_del = '';
@@ -267,7 +326,15 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                              value="'.  $hp->purify($prefill_new_values, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
                              title="' . $GLOBALS['Language']->getText('plugin_tracker_artifact', 'formelement_artifactlink_help') . '" />';
             $html .= '</div>';
+
+            $parent_tracker = $this->getTracker()->getParent();
+            $is_submit      = $artifact->getId() == -1;
+            if ($parent_tracker && $is_submit) {
+                $current_user = $this->getCurrentUser();
+                $html .= $this->fetchParentSelector($prefill_parent, $name, $parent_tracker, $current_user, $hp);
+            }
         }
+
         $html .= '<div class="tracker-form-element-artifactlink-list">';
         if ($artifact_links) {
             $ids = array();
@@ -370,17 +437,14 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $this_project_id = $this->getTracker()->getProject()->getGroupId();
                 $hp = Codendi_HTMLPurifier::instance();
                 
-                $u = UserManager::instance()->getCurrentUser();
-                $group_id = $this->getTracker()->getGroupId();
-                $ugroups = $u->getUgroups($group_id, array());
-                $ugroups = implode(',', $ugroups);
+                $ugroups = $current_user->getUgroups($this_project_id, array());
                 
                 $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = array();
                 $result  = array();
                 //We must retrieve the last changeset ids of each artifact id.
                 $dao = new Tracker_ArtifactDao();
-                foreach($dao->searchLastChangesetIds($ids, $ugroups) as $matching_ids) {
+                foreach($dao->searchLastChangesetIds($ids, $ugroups, $current_user->isSuperUser()) as $matching_ids) {
                     $tracker_id = $matching_ids['tracker_id'];
                     $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project = $tracker->getProject();
@@ -437,19 +501,12 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $read_only              = true;
                 $use_data_from_db       = false;
                 
-                $this_project_id = $this->getTracker()->getProject()->getGroupId();
-                $hp = Codendi_HTMLPurifier::instance();
-
-                $u = UserManager::instance()->getCurrentUser();
-                $group_id = $this->getTracker()->getGroupId();
-                $ugroups = $u->getUgroups($group_id, array());
-                $ugroups = implode(',', $ugroups);
-
-                $ids = $request->get('ids'); //2, 14, 15
+                $ugroups = $current_user->getUgroups($this->getTracker()->getGroupId(), array());
+                $ids     = $request->get('ids'); //2, 14, 15
                 $tracker = array();
                 $json = array('tabs' => array());
                 $dao = new Tracker_ArtifactDao();
-                foreach ($dao->searchLastChangesetIds($ids, $ugroups) as $matching_ids) {
+                foreach ($dao->searchLastChangesetIds($ids, $ugroups, $current_user->isSuperUser()) as $matching_ids) {
                     $tracker_id = $matching_ids['tracker_id'];
                     $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
                     $project = $tracker->getProject();
@@ -552,8 +609,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $read_only = false;
         $name      = 'artifact['. $this->id .']';
         $from_aid      = $artifact->getId();
+        $prefill_parent = '';
         
-        return $this->fetchHtmlWidget($name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only, $from_aid);
+        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only, $prefill_parent, $from_aid);
     }
     
     
@@ -574,7 +632,8 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $name                   = '';
         $prefill_new_values     = '';
         $prefill_removed_values = array();
-        return $this->fetchHtmlWidget($name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only);
+        $prefill_parent         = '';
+        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_parent, $read_only);
     }
     
     /**
@@ -592,13 +651,20 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         } else if ($this->hasDefaultValue()) {
             $prefill_new_values = $this->getDefaultValue();
         }
-        
+        $prefill_parent = '';
+        if (isset($submitted_values[$this->getId()]['parent'])) {
+            $prefill_parent = $submitted_values[$this->getId()]['parent'];
+        }
         $read_only              = false;
         $name                   = 'artifact['. $this->id .']';
         $prefill_removed_values = array();
         $artifact_links         = array();
-        
-        return $this->fetchHtmlWidget($name, $artifact_links, $prefill_new_values, $prefill_removed_values, $read_only);
+
+        // Well, shouldn't be here but API doesn't provide a Null Artifact on creation yet
+        // Here to avoid having to pass null arg for fetchHtmlWidget
+        $artifact = new Tracker_Artifact(-1, $this->tracker_id, $this->getCurrentUser()->getId(), 0, false);
+
+        return $this->fetchHtmlWidget($artifact, $name, $artifact_links, $prefill_new_values, $prefill_removed_values, $prefill_parent, $read_only);
     }
 
     /**
@@ -765,7 +831,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @return bool true if there are differences
      */
-    public function hasChanges(Tracker_Artifact_ChangesetValue $old_value, $new_value) {
+    public function hasChanges(Tracker_Artifact_ChangesetValue_ArtifactLink $old_value, $new_value) {
         return $old_value->hasChanges($new_value);
     }
     
@@ -899,6 +965,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 }
             }
         }
+        if (isset($value['parent']) && empty($value['parent'])) {
+            $is_valid = false;
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'error_artifactlink_choose_parent'));
+        }
         return $is_valid;
     }
     
@@ -923,9 +993,16 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function getTrackerFactory() {
         return TrackerFactory::instance();
     }
-    
+
     protected function getTrackerChildrenFromHierarchy(Tracker $tracker) {
-        return Tracker_HierarchyFactory::instance()->getChildren($tracker->getId());
+        return $this->getHierarchyFactory()->getChildren($tracker->getId());
+    }
+
+    /**
+     * @return Tracker_HierarchyFactory
+     */
+    protected function getHierarchyFactory() {
+        return Tracker_HierarchyFactory::instance();
     }
     
     /**
@@ -1062,11 +1139,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $dao = $this->getValueDao();
         // we create the new changeset
         foreach ($artifacts_to_link as $artifact_to_link) {
-            $tracker = $artifact_to_link->getTracker();
-            if ($tracker) {
+            if ($this->canLinkArtifacts($artifact, $artifact_to_link)) {
+                $tracker = $artifact_to_link->getTracker();
                 if ($dao->create($changeset_value_id, $artifact_to_link->getId(), $tracker->getItemName(), $tracker->getGroupId())) {
-                    // extract cross references
-                    $this->updateCrossReferences($artifact_to_link, $value);
+                    $this->updateCrossReferences($artifact, $value);
                 } else {
                     $success = false;
                 }
@@ -1074,14 +1150,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $success;
     }
-    
+
+    private function canLinkArtifacts(Tracker_Artifact $src_artifact, Tracker_Artifact $artifact_to_link) {
+        return ($src_artifact->getId() != $artifact_to_link->getId()) && $artifact_to_link->getTracker();
+    }
+
     /**
      * Update cross references of this field
      *
      * @param Tracker_Artifact $artifact the artifact that is currently updated
      * @param array            $values   the array of added and removed artifact links ($values['added_values'] is a string and $values['removed_values'] is an array of artifact ids
      */
-    private function updateCrossReferences($artifact, $values) {
+    protected function updateCrossReferences(Tracker_Artifact $artifact, $values) {
         $added_artifact_ids = array();
         if (array_key_exists('new_values', $values)) {
             if (trim($values['new_values']) != '') {
@@ -1092,8 +1172,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         if (array_key_exists('removed_values', $values)) {
             $removed_artifact_ids = $values['removed_values'];
         }
-        $af = Tracker_ArtifactFactory::instance();
-        $rm = ReferenceManager::instance();
+        $af           = $this->getArtifactFactory();
+        $rm           = $this->getReferenceManager();
+        $current_user = $this->getCurrentUser();
         foreach ($added_artifact_ids as $added_artifact_id) {
             $artifact_target = $af->getArtifactById((int)trim($added_artifact_id));
             $artifactlink = new Tracker_ArtifactLinkInfo(
@@ -1103,11 +1184,23 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
                 $artifact_target->getTracker()->getId(),
                 $artifact_target->getLastChangeset()->getId()
             );
-            $rm->extractCrossRef($artifactlink->getLabel(), $artifact->getId(), Tracker_Artifact::REFERENCE_NATURE, $this->getTracker()->getGroupId(), UserManager::instance()->getCurrentUser()->getId(), $this->getTracker()->getItemName());
+            $source_tracker = $artifact->getTracker();
+            $rm->extractCrossRef(
+                $artifactlink->getLabel(),
+                $artifact->getId(),
+                Tracker_Artifact::REFERENCE_NATURE,
+                $source_tracker->getGroupId(),
+                $current_user->getId(),
+                $source_tracker->getItemName()
+            );
         }
         // TODO : remove the removed elements
     }
-    
+
+    protected function getReferenceManager() {
+        return ReferenceManager::instance();
+    }
+
     /**
      * Retrieve linked artifacts according to user's permissions
      * 
@@ -1129,6 +1222,23 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         }
         return $artifacts;
     }
-    
+
+    /**
+     * If request come with a 'parent', it should be automagically transformed as
+     * 'new_values'.
+     * Please note that it only work on artifact creation.
+     * 
+     * @param type $fields_data
+     */
+    public function augmentDataFromRequest(&$fields_data) {
+        if (!empty($fields_data[$this->getId()]['parent'])) {
+            $parent = intval($fields_data[$this->getId()]['parent']);
+            if ($parent > 0) {
+                $new_values   = array_filter(explode(',', $fields_data[$this->getId()]['new_values']));
+                $new_values[] = $parent;
+                $fields_data[$this->getId()]['new_values'] = implode(',', $new_values);
+            }
+        }
+    }
 }
 ?>

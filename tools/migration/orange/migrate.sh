@@ -7,7 +7,7 @@ forgeupgrade_conf_file=/etc/codendi/forgeupgrade/config.ini
 forgeupgrade_db_structure=/usr/share/forgeupgrade/db/install-mysql.sql
 srcdir=/usr/share/codendi
 
-function read_db_conf() {
+read_db_conf() {
     echo "<?php echo \$$1; ?>" | php -d auto_prepend_file=$db_conf_file
 }
 

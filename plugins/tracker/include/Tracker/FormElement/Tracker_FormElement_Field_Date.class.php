@@ -420,13 +420,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        $html = '';
-        $value = '';        
-        if (!empty($submitted_values)) {            
-            $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
+        $html  = '';
+        $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $html .= $GLOBALS['HTML']->getDatePicker("tracker_admin_field_".$this->id, "artifact[". $this->id ."]", $value);
         return $html;
     }
@@ -757,5 +752,38 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         }
     }
 
+    /**
+     * Return the field last value
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Date
+     */
+    public function getLastValue(Tracker_Artifact $artifact) {
+        return $artifact->getValue($this)->getValue();
+    }
+
+    /**
+     * Get artifacts that responds to some criteria
+     *
+     * @param date    $date      The date criteria
+     * @param Integer $trackerId The Tracker Id
+     *
+     * @return Array
+     */
+    public function getArtifactsByCriterias($date, $trackerId = null) {
+        $artifacts = array();
+        $dao = new Tracker_FormElement_Field_Value_DateDao();
+        $dar = $dao->getArtifactsByFieldAndValue($this->id, $date);
+        if ($dar && !$dar->isError()) {
+            $artifactFactory = Tracker_ArtifactFactory::instance();
+            foreach ($dar as $row) {
+                $artifacts[] = $artifactFactory->getArtifactById($row['artifact_id']);
+            }
+        }
+        return $artifacts;
+    }
+
 }
+
 ?>

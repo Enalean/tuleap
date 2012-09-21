@@ -202,6 +202,7 @@ class User {
         $this->language_id        = isset($row['language_id'])        ? $row['language_id']        : null;
         $this->last_pwd_update    = isset($row['last_pwd_update'])    ? $row['last_pwd_update']    : null;
         $this->expiry_date        = isset($row['expiry_date'])        ? $row['expiry_date']        : null;
+        $this->has_avatar         = isset($row['has_avatar'])         ? $row['has_avatar']         : null;
         
         $this->id = $this->user_id;
         
@@ -253,7 +254,8 @@ class User {
             'theme'              => $this->theme,
             'language_id'        => $this->language_id,
             'last_pwd_update'    => $this->last_pwd_update,
-            'expiry_date'        => $this->expiry_date
+            'expiry_date'        => $this->expiry_date,
+            'has_avatar'         => $this->has_avatar,
         );
     }
     
@@ -629,7 +631,21 @@ class User {
         $unix_id = $this->unix_uid + $GLOBALS['unix_uid_add'];
         return $unix_id;
     }
+
+    public function getAuthorizedKeysRaw() {
+        return $this->getAuthorizedKeys();
+    }
+
+    public function getAuthorizedKeysArray() {
+        return $this->getAuthorizedKeys(true);
+    }
+
     /**
+     *
+     * @deprecated Flag methods are evil
+     * @see User::getAuthorizedKeysRaw
+     * @see User::getAuthorizedKeysArray
+     *
      * @return string authorized keys of the user
      */
     function getAuthorizedKeys($split=false) {
@@ -639,7 +655,7 @@ class User {
             return $this->authorized_keys;
         }
     }
-    
+
     /**
      * @return string resume of the user
      */
@@ -1195,15 +1211,15 @@ class User {
       *
       * @return string html
       */
-     public function fetchHtmlAvatar() {
+     public function fetchHtmlAvatar($width = 50) {
          $purifier = Codendi_HTMLPurifier::instance();
          $html = '';
-         $html .= '<div class="avatar">';
+         $html .= '<div class="avatar" title="'. $purifier->purify($this->getRealName()) .'" style="width: '. ($width+2) .'px; height: '. ($width+2) .'px;">';
          if ($this->isAnonymous()) {
-             $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s=50&amp;d=wavatar" />';
+             $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar" />';
          } else {
              if ($this->hasAvatar()) {
-                 $html .= '<img src="/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" />';
+                 $html .= '<img src="'. get_server_url() .'/users/'. $purifier->purify($this->getUserName()) .'/avatar.png" width="'. $width .'" />';
              }
          }
          $html .= '</div>';

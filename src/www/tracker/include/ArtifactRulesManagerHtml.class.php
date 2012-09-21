@@ -55,7 +55,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     function displayFieldsAndValuesAsJavascript() {
         $hp = Codendi_HTMLPurifier::instance();
         echo "\n//------------------------------------------------------\n";
-        $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+        $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
@@ -80,7 +80,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
         $rules = $this->getAllRulesByArtifactTypeWithOrder($this->artifact_type->getId());
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
-                $html =& new ArtifactRuleValueJavascript($rules[$key]);
+                $html = new ArtifactRuleValueJavascript($rules[$key]);
                 echo 'codendi.tracker.rules_definitions.push(';
                 $html->display();
                 echo ");\n";
@@ -91,7 +91,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     
     function getAllSourceFields($target_id) {
         $sources = array();
-        $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+        $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
@@ -107,7 +107,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
     
     function getAllTargetFields($source_id) {
         $targets = array();
-        $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+        $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
         $used_fields = $art_field_fact->getAllUsedFields();
         foreach($used_fields as $field) {
             if ($field->getName() != 'submitted_by') {
@@ -273,7 +273,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             case 'source': // 1 source -> n targets
                 $this->deleteRuleValueBySource($this->artifact_type->getId(), $request->get('source_field'), $request->get('value'), $request->get('target_field'));
                 //get target values
-                $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+                $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
                 $target_field   = $art_field_fact->getFieldFromId($request->get('target_field'));
                 $target_values  = $target_field->getFieldPredefinedValues($this->artifact_type->getID());
                 while ($row = db_fetch_array($target_values)) {
@@ -287,7 +287,7 @@ class ArtifactRulesManagerHtml extends ArtifactRulesManager {
             case 'target': // n sources -> 1 target
                 $this->deleteRuleValueByTarget($this->artifact_type->getId(), $request->get('source_field'), $request->get('target_field'), $request->get('value'));
                 //get source values
-                $art_field_fact =& new ArtifactFieldFactory($this->artifact_type);
+                $art_field_fact = new ArtifactFieldFactory($this->artifact_type);
                 $source_field   =& $art_field_fact->getFieldFromId($request->get('source_field'));
                 $source_values  = $source_field->getFieldPredefinedValues($this->artifact_type->getID());
                 while ($row = db_fetch_array($source_values)) {

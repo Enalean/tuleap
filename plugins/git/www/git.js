@@ -66,9 +66,9 @@ document.observe('dom:loaded', function () {
            submitted = true;
         });
 
-        function toggleDestination(evt) {
-            var optionBox = Event.element(evt);
-            if (optionBox.id == "choose_project" && optionBox.checked) {
+        function toggleDestination() {
+            var optionBox = $('choose_project');
+            if (optionBox.checked) {
                 fork_destination.enable();
                 fork_path.disable();
                 fork_path.placeholder = codendi.locales.git.path_placeholder_disabled; 
@@ -82,6 +82,7 @@ document.observe('dom:loaded', function () {
         }
         
         fork_destination.disable();
+        toggleDestination();
         $('choose_project').observe('change', toggleDestination); 
         $('choose_personal').observe('change', toggleDestination);
         $('choose_project').observe('click', toggleDestination); 

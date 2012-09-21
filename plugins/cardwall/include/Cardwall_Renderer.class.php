@@ -18,13 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
+require_once TRACKER_BASE_DIR .'/constants.php';
 require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
-require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/CrossSearch/ArtifactNode.class.php';
 require_once 'RendererPresenter.class.php';
+require_once 'ArtifactNodeTreeProvider.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'QrCode.class.php';
 require_once 'Form.class.php';
-require_once 'InjectColumnIdCustomFieldVisitor.class.php';
+require_once 'FieldProviders/CustomFieldProvider.class.php';
+require_once 'CreateCardPresenterCallback.class.php';
+require_once 'CardInCellPresenterCallback.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
@@ -35,6 +40,9 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     protected $plugin;
     
     private $enable_qr_code = true;
+    
+    /** @var Cardwall_OnTop_Config */
+    private $config;
     
     /**
      * Constructor
@@ -48,11 +56,13 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param int    $field_id       the field id
      * @param bool   $enable_qr_code Display the QR code to ease usage of tablets
      */
-    public function __construct($plugin, $id, $report, $name, $description, $rank, $field_id, $enable_qr_code) {
+    public function __construct(Plugin $plugin, Cardwall_OnTop_IConfig $config,
+                                $id, $report, $name, $description, $rank, $field_id, $enable_qr_code) {
         parent::__construct($id, $report, $name, $description, $rank);
         $this->plugin         = $plugin;
         $this->field_id       = $field_id;
         $this->enable_qr_code = $enable_qr_code;
+        $this->config         = $config;
     }
     
     public function initiateSession() {
@@ -97,19 +107,22 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      *
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, User $user) {
         $used_sb = $this->getFormElementFactory()->getUsedFormElementsByType($this->report->getTracker(), array('sb'));
         $form    = new Cardwall_Form($this->report->id, $this->id, $request->get('pv'), $this->getField(), $used_sb);
-        return $this->fetchCards($matching_ids, $form);
+        return $this->fetchCards($matching_ids, $user, $form);
     }
     
-    private function fetchCards($matching_ids, $form = null) {
+    private function fetchCards($matching_ids, User $user, $form = null) {
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         if (!$total_rows) {
             return '<p>'. $GLOBALS['Language']->getText('plugin_tracker', 'no_artifacts') .'</p>';
         }
 
-        $presenter = $this->getPresenter($this->getForestsOfArtifacts(explode(',', $matching_ids['id'])), $form);
+        $artifact_ids     = explode(',', $matching_ids['id']);
+        $artifacts = $this->getForestsOfArtifacts($artifact_ids, Tracker_ArtifactFactory::instance());
+        $presenter = $this->getPresenter($artifacts, $user, $form);
+
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
         
         return $renderer->renderToString('renderer', $presenter);
@@ -118,34 +131,27 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * @return TreeNode
      */
-    private function getForestsOfArtifacts(array $artifact_ids) {
-        $forest = new TreeNode();
-        foreach ($artifact_ids as $id) {
-            $node = new TreeNode();
-            $node->setId((int)$id);
-            $node->setData(array(
-                'id' => (int)$id,
-            ));
-            $forest->addChild($node);
-        }
-        $root = new TreeNode();
-        $root->addChild($forest);
-
-        $visitor = Cardwall_ArtifactTreeNodeVisitor::build();
-        $root->accept($visitor);
-
-        return $root;
+    public function getForestsOfArtifacts(array $artifact_ids, Tracker_ArtifactFactory $artifact_factory) {
+        $provider = new Cardwall_ArtifactNodeTreeProvider();
+        return $provider->flatForestOfArtifacts($artifact_ids, $artifact_factory);
     }
-
+    
     /**
-     * @return Cardwall_PaneContentPresenter
+     * @return Cardwall_RendererPresenter
      */
-    private function getPresenter(TreeNode $forest_of_artifacts, $form = null) {
-        $field              = $this->getField();
-        $visitor            = new Cardwall_InjectColumnIdCustomFieldVisitor($field);
-        $board_factory      = new Cardwall_BoardFactory();
-        $board              = $board_factory->getBoard($visitor, $forest_of_artifacts, $field);
+    private function getPresenter(TreeNode $forest_of_artifacts, User $user, $form = null) {
         $redirect_parameter = 'cardwall[renderer]['. $this->report->id .']='. $this->id;
+        
+        $field              = $this->getField();
+        
+        if (! $field) {
+            $board = new Cardwall_Board(array(), new Cardwall_OnTop_Config_ColumnCollection(), new Cardwall_MappingCollection());
+        } else {
+            $board_factory      = new Cardwall_BoardFactory();
+            $field_retriever    = new Cardwall_FieldProviders_CustomFieldRetriever($field);
+            $columns            = $this->config->getRendererColumns($field);
+            $board              = $board_factory->getBoard($field_retriever, $columns, $forest_of_artifacts, $this->config, $user);
+        }
 
         return new Cardwall_RendererPresenter($board, $this->getQrCode(), $redirect_parameter, $field, $form);
     }
@@ -196,10 +202,10 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget() {
+    public function fetchWidget(User $user) {
         $this->enable_qr_code = false;
         $html  = '';
-        $html .= $this->fetchCards($this->report->getMatchingIds());
+        $html .= $this->fetchCards($this->report->getMatchingIds(), $user);
         $html .= $this->fetchWidgetGoToReport();
         return $html;
     }
@@ -260,11 +266,12 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      * @param $formsMapping the form elements mapping
      */
-    public function exportToXML($root, $formsMapping) {
-        parent::exportToXML(&$root, $formsMapping);
+    public function exportToXML(&$root, $formsMapping) {
+        parent::exportToXML($root, $formsMapping);
         if ($mapping = (string)array_search($this->field_id, $formsMapping)) {
             $root->addAttribute('field_id', $mapping);
         }
     }
+
 }
 ?>

@@ -19,10 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/TreeNode/NodeDuplicator.class.php';
+
 /**
  * TreeNode containing a Tracker_CardPresenter
  */
-class Tracker_TreeNode_CardPresenterNode extends TreeNode {
+class Tracker_TreeNode_CardPresenterNode extends NodeDuplicator {
 
     /**
      * @var Tracker_CardPresenter
@@ -30,14 +32,8 @@ class Tracker_TreeNode_CardPresenterNode extends TreeNode {
     private $presenter;
     
     public function __construct(TreeNode $node, Tracker_CardPresenter $presenter) {
-        parent::__construct($node->getData(), $node->getId());
-        $this->setChildren($node->getChildren());
-        $this->setObject($node->getObject());
+        parent::__construct($node);
         $this->presenter = $presenter;
-    }
-
-    public static function build(TreeNode $node, Tracker_CardPresenter $presenter) {
-        return new Tracker_TreeNode_CardPresenterNode($node, $presenter);
     }
 
     /**
@@ -47,5 +43,4 @@ class Tracker_TreeNode_CardPresenterNode extends TreeNode {
         return $this->presenter;
     }
 }
-
 ?>

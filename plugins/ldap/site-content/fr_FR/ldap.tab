@@ -65,9 +65,10 @@ plugin_ldap	ugroup_edit_group_remove	Supprimer le lien entre ce groupe est l'ann
 plugin_ldap	ugroup_edit_group_synchro	Lors de la synchronisation avec l'annuaire :  
 plugin_ldap	ugroup_edit_group_synchro_add	les utilisateurs de l'annuaire non membre de ce groupe y sont ajouté ;
 plugin_ldap	ugroup_edit_group_synchro_del	les utilisateurs membres de ce groupe mais pas dans l'annuaire sont supprimés si vous ne choisissez pas l'option 'Préserver les membres'.
-plugin_ldap	ugroup_edit_group_no_auto	Il n'y a <strong>pas de synchronisation automatique</strong> entre l'annuaire et $1 pour l'instant.
 plugin_ldap	ugroup_edit_group_preserve_members_info	Choisissez cette option si vous ne voulez pas supprimer les membres de ce groupe qui n'appartiennent pas au groupe de l'annuaire.
 plugin_ldap	ugroup_edit_group_preserve_members_option	Préserver les membres
+plugin_ldap	ugroup_edit_group_synchronize_info	Choisissez cette option si vous voulez synchroniser ce groupe avec le groupe de l'annuaire.
+plugin_ldap	ugroup_edit_group_synchronize_option	Synchroniser
 plugin_ldap	ugroup_edit_group_add_users	Utilisateurs à ajouter :
 plugin_ldap	ugroup_edit_group_bind_with_group	Lier avec un groupe de l'annuaire :
 plugin_ldap	ugroup_edit_btn_update	Mettre à jour

@@ -56,7 +56,7 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
     public function delete() {
         return $this->getDao()->delete($this->id);
     }
-    
+
     /**
      * Fetch the html code to display the field value in new artifact submission form
      * @param array $submitted_values the values already submitted
@@ -64,14 +64,9 @@ class Tracker_FormElement_Field_String extends Tracker_FormElement_Field_Text {
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values=array()) {
-        $html = '';
-        $value = '';
-        if (!empty($submitted_values)) {            
-            $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
-        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $value = $this->getValueFromSubmitOrDefault($submitted_values);
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text" 
                          name="artifact['. $this->id .']"  
                          '. ($this->isRequired() ? 'required' : '') .' 

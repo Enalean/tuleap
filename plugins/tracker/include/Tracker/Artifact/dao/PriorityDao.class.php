@@ -42,7 +42,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
     public function moveArtifactBefore($artifact_id, $successor_id) {
         $this->da->startTransaction();
         $predecessor_id = $this->searchPredecessor($successor_id);
-        if ($predecessor_id !== false && $this->removeAndInsert($predecessor_id, $artifact_id)) {
+        if ($predecessor_id !== false && $predecessor_id != $artifact_id && $this->removeAndInsert($predecessor_id, $artifact_id)) {
             $this->da->commit();
             return true;
         }
@@ -82,6 +82,8 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
      *
      * @see PriorityDao.phpt for the test cases
      *
+     * @todo: check that the artifact doesn't already exist in the list
+     *
      * @return bool true if success
      */
     public function putArtifactAtTheEnd($artifact_id) {
@@ -115,7 +117,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
     /**
      * Remove an item from the linked list
      */
-    private function remove($id) {
+    public function remove($id) {
         $id = $this->da->escapeInt($id);
 
         // Change the successor pointer of the actual parent

@@ -93,12 +93,13 @@ class Docman_Controller extends Controler {
                          'plugin_docman_event_set_version_author',
                          'plugin_docman_event_set_version_date',
                          'plugin_docman_event_lock_add',
-                         'plugin_docman_event_lock_del'
+                         'plugin_docman_event_lock_del',
+                         'plugin_docman_event_perms_change',
                      );
                      
         $this->logger  =& new Docman_Log();
         foreach ($logEvents as $event) {
-        	$event_manager->addListener($event, $this->logger, 'log', true, 0);
+            $event_manager->addListener($event, $this->logger, 'log', true, 0);
         }
 
         // Other events
@@ -149,7 +150,7 @@ class Docman_Controller extends Controler {
         $user = $this->getUser();
 
         // Clone Docman permissions
-        $dPm =& Docman_PermissionsManager::instance($this->getGroupId());
+        $dPm = $this->_getPermissionsManager();
         if($ugroupsMapping === false) {
             $dPm->setDefaultDocmanPermissions($dstGroupId);
         }
@@ -185,7 +186,16 @@ class Docman_Controller extends Controler {
     function _getEventManager() {
         return EventManager::instance();
     }
-    
+
+    /**
+     * Obtain instance of Docman_PermissionsManager
+     *
+     * @return Docman_PermissionsManager
+     */
+    function _getPermissionsManager() {
+        return Docman_PermissionsManager::instance($this->getGroupId());
+    }
+
     function &getUser() {
         if($this->user === null) {
             $um =& UserManager::instance();
@@ -196,22 +206,22 @@ class Docman_Controller extends Controler {
     
     /***************** PERMISSIONS ************************/
     function userCanRead($item_id) {
-        $dPm  =& Docman_PermissionsManager::instance($this->getGroupId());
+        $dPm  = $this->_getPermissionsManager();
         $user =& $this->getUser();
         return $dPm->userCanRead($user, $item_id);
     }
     function userCanWrite($item_id) {
-        $dPm  =& Docman_PermissionsManager::instance($this->getGroupId());
+        $dPm  = $this->_getPermissionsManager();
         $user =& $this->getUser();
         return $dPm->userCanWrite($user, $item_id);
     }
     function userCanManage($item_id) {
-        $dPm  =& Docman_PermissionsManager::instance($this->getGroupId());
+        $dPm  = $this->_getPermissionsManager();
         $user =& $this->getUser();
         return $dPm->userCanManage($user, $item_id);
     }
     function userCanAdmin() {
-        $dPm  =& Docman_PermissionsManager::instance($this->getGroupId());
+        $dPm  = $this->_getPermissionsManager();
         $user =& $this->getUser();
         return $dPm->userCanAdmin($user);
     }
@@ -480,7 +490,7 @@ class Docman_Controller extends Controler {
                         $this->_set_doesnot_belong_to_project_error($item, $g);
                     } else {
                         $user = $this->getUser();
-                        $dpm =& Docman_PermissionsManager::instance($this->getGroupId());
+                        $dpm = $this->_getPermissionsManager();
                         $can_read = $dpm->userCanAccess($user, $item->getId());
                         $folder_or_document = is_a($item, 'Docman_Folder') ? 'folder' : 'document';
                         if (!$can_read) {
@@ -515,7 +525,7 @@ class Docman_Controller extends Controler {
     function _dispatch($view, $item, $root, $get_show_view) {
         $item_factory =& $this->_getItemFactory();
         $user =& $this->getUser();
-        $dpm =& Docman_PermissionsManager::instance($this->getGroupId());
+        $dpm = $this->_getPermissionsManager();
 
         switch ($view) {
         case 'show':
@@ -952,6 +962,10 @@ class Docman_Controller extends Controler {
                 $this->feedback->log('error', $GLOBALS['Language']->getText('plugin_docman', 'error_perms_edit'));
                 $this->view = 'Details';
             } else {
+                $dPm = $this->_getPermissionsManager();
+                if($dPm->getLockFactory()->itemIsLocked($item)) {
+                    $this->feedback->log('warning', $GLOBALS['Language']->getText('plugin_docman', 'event_lock_add'));
+                }
                 $this->view   = 'NewVersion';
             }
             break;
@@ -1091,9 +1105,12 @@ class Docman_Controller extends Controler {
                 $this->_actionParams['item']   = $item;
 
                 // Settings
-                $this->_actionParams['status'] = (int) $this->request->get('status');
-                $this->_actionParams['description'] = $this->request->get('description');
+                $this->_actionParams['status']       = (int) $this->request->get('status');
+                $this->_actionParams['description']  = $this->request->get('description');
                 $this->_actionParams['notification'] = (int) $this->request->get('notification');
+                $this->_actionParams['reminder']     = $this->request->get('reminder');
+                $this->_actionParams['occurence']    = (int) $this->request->get('occurence');
+                $this->_actionParams['period']       = (int) $this->request->get('period');
 
                 // Users
                 $this->_actionParams['user_list'] = $this->request->get('user_list');

@@ -33,12 +33,13 @@ class Tracker_Chart_Burndown {
      * @var Tracker_Chart_Data_IProvideDataForBurndownChart
      */
     private $burndown_data;
+    
     private $start_date;
     private $duration = 10;
-    private $title = '';
-    private $description = '';
-    private $width = 640;
-    private $height = 480;
+    protected $title = '';
+    protected $description = '';
+    protected $width = 640;
+    protected $height = 480;
 
     private $graph_data_ideal_burndown   = array();
     private $graph_data_human_dates      = array();
@@ -46,7 +47,7 @@ class Tracker_Chart_Burndown {
     
     public function __construct(Tracker_Chart_Data_IProvideDataForBurndownChart $burndown_data) {
         $this->burndown_data = $burndown_data;
-        $this->start_date = $_SERVER['REQUEST_TIME'] / self::SECONDS_IN_A_DAY - $this->duration ;
+        $this->start_date    = $_SERVER['REQUEST_TIME'] / self::SECONDS_IN_A_DAY - $this->duration ;
     }
 
     public function setStartDate($start_date) {

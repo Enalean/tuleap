@@ -324,9 +324,17 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
         return '';
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        $locale = $this->getCurrentUser()->getLocale();
         return 'widget-preview-'.($this->id).'-'.$locale;
     }
+
+    /**
+     * @return User
+     */
+    function getCurrentUser() {
+        return UserManager::instance()->getCurrentUser();
+    }
+
     function getAjaxUrl($owner_id, $owner_type) {
         return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=ajax&name['. $this->id .']='. $this->getInstanceId();
     }

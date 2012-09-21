@@ -1251,14 +1251,8 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getId', 666);
         $tracker->setReturnValue('getGroupId', 222);
-        $perms_tracker_access_full = false;
-        $perms_tracker_access_assignee = false;
-        $perms_tracker_access_submitter = array(
-                    array('ugroup_id' => $ugroup_sub)
-                );
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_full,      array('PLUGIN_TRACKER_ACCESS_FULL'));
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_assignee,  array('PLUGIN_TRACKER_ACCESS_ASSIGNEE'));
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_submitter, array('PLUGIN_TRACKER_ACCESS_SUBMITTER'));
+        $permissions = array("PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub));
+        $tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
 
         $artifact_submitter = new Tracker_ArtifactTestPermissions();
         $artifact_submitter->setReturnReference('getUserManager', $user_manager);
@@ -1330,14 +1324,9 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getId', 666);
         $tracker->setReturnValue('getGroupId', 222);
-        $perms_tracker_access_full = false;
-        $perms_tracker_access_assignee = array(
-                    array('ugroup_id' => $ugroup_ass)
-                );
-        $perms_tracker_access_submitter = false;
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_full,      array('PLUGIN_TRACKER_ACCESS_FULL'));
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_assignee,  array('PLUGIN_TRACKER_ACCESS_ASSIGNEE'));
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_submitter, array('PLUGIN_TRACKER_ACCESS_SUBMITTER'));
+        $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE" => array(0 => $ugroup_ass));
+        $tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
+
         $contributor_field = new MockTracker_FormElement_Field();
         $tracker->setReturnReference('getContributorField', $contributor_field);
         $artifact_assignee = new Tracker_ArtifactTestPermissions();
@@ -1415,16 +1404,11 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getId', 666);
         $tracker->setReturnValue('getGroupId', 222);
-        $perms_tracker_access_full = false;
-        $perms_tracker_access_assignee = array(
-                    array('ugroup_id' => $ugroup_ass)
-                );
-        $perms_tracker_access_submitter = array(
-                    array('ugroup_id' => $ugroup_sub)
-                );
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_full,      array('PLUGIN_TRACKER_ACCESS_FULL'));
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_assignee,  array('PLUGIN_TRACKER_ACCESS_ASSIGNEE'));
-        $tracker->setReturnReference('permission_db_authorized_ugroups', $perms_tracker_access_submitter, array('PLUGIN_TRACKER_ACCESS_SUBMITTER'));
+        $permissions = array("PLUGIN_TRACKER_ACCESS_ASSIGNEE"  => array(0 => $ugroup_ass),
+                             "PLUGIN_TRACKER_ACCESS_SUBMITTER" => array(0 => $ugroup_sub)
+                            );
+        $tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
+
         $contributor_field = new MockTracker_FormElement_Field();
         $tracker->setReturnReference('getContributorField', $contributor_field);
         $artifact_subass = new Tracker_ArtifactTestPermissions();
@@ -1443,6 +1427,149 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->assertTrue($artifact_subass->userCanView($u_ass));
         $this->assertFalse($artifact_subass->userCanView($other));
         $this->assertFalse($artifact_subass->userCanView($u));
+    }
+
+    function testUserCanViewTrackerAccessFull() {
+        $ugroup_ass = 101;
+        $ugroup_sub = 102;
+        $ugroup_ful = 103;
+
+        // $assignee is in (UgroupAss - ugroup_id=101)
+        // $submitter is in (UgroupSub - ugroup_id=102)
+        // $u is in (UgroupFul - ugroup_id=103);
+        // $other do not belong to any ugroup
+        //
+        $u = new MockUser();
+        $u->setReturnValue('getId', 120);
+        $u->setReturnValue('isMemberOfUgroup', true,  array(103, 222));
+        $u->setReturnValue('isMemberOfUgroup', false, array(101, 222));
+        $u->setReturnValue('isMemberOfUgroup', false, array(102, 222));
+        $u->setReturnValue('isSuperUser', false);
+        //
+        $assignee = new MockUser();
+        $assignee->setReturnValue('getId', 121);
+        $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
+        $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
+        $assignee->setReturnValue('isMemberOfUgroup', false, array(103, 222));
+        $assignee->setReturnValue('isSuperUser', false);
+        //
+        $submitter = new MockUser();
+        $submitter->setReturnValue('getId', 122);
+        $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
+        $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
+        $submitter->setReturnValue('isMemberOfUgroup', false,  array(103, 222));
+        $submitter->setReturnValue('isSuperUser', false);
+        //
+        $other = new MockUser();
+        $other->setReturnValue('getId', 123);
+        $other->setReturnValue('isMemberOfUgroup', false);
+        $other->setReturnValue('isSuperUser', false);
+
+        $user_manager = new MockUserManager();
+        $user_manager->setReturnReference('getUserById', $u, array(120));
+        $user_manager->setReturnReference('getUserById', $assignee, array(121));
+        $user_manager->setReturnReference('getUserById', $submitter, array(122));
+        $user_manager->setReturnReference('getUserById', $other, array(123));
+
+        // $artifact_subass has been submitted by $submitter and assigned to $assignee
+        // $u should have the right to see it.
+        // $other, $submitter and assigned should not have the right to see it
+        $tracker = new MockTracker();
+        $tracker->setReturnValue('getId', 666);
+        $tracker->setReturnValue('getGroupId', 222);
+        $permissions = array("PLUGIN_TRACKER_ACCESS_FULL" => array(0 => $ugroup_ful));
+        $tracker->setReturnReference('getPermissionsAuthorizedUgroups', $permissions);
+
+        $contributor_field = new MockTracker_FormElement_Field();
+        $tracker->setReturnReference('getContributorField', $contributor_field);
+        $artifact_subass = new Tracker_ArtifactTestPermissions();
+        $artifact_subass->setReturnReference('getUserManager', $user_manager);
+        $artifact_subass->setReturnReference('getTracker', $tracker);
+        $artifact_subass->setReturnValue('useArtifactPermissions', false);
+        $artifact_subass->setReturnValue('getSubmittedBy', 123);
+        $user_changeset_value = new MockTracker_Artifact_ChangesetValue();
+        $contributors = array(121);
+        $user_changeset_value->setReturnReference('getValue', $contributors);
+        $artifact_subass->setReturnReference('getValue', $user_changeset_value, array($contributor_field));
+
+        $this->assertFalse($artifact_subass->userCanView($submitter));
+        $this->assertFalse($artifact_subass->userCanView($assignee));
+        $this->assertFalse($artifact_subass->userCanView($other));
+        $this->assertTrue($artifact_subass->userCanView($u));
+    }
+}
+
+class Tracker_Artifact_ParentAndAncestorsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
+
+        $this->sprint = anArtifact()->build();
+        $this->sprint->setHierarchyFactory($this->hierarchy_factory);
+    }
+
+    public function itReturnsTheParentArtifactFromAncestors() {
+        $release = anArtifact()->withId(1)->build();
+        $product = anArtifact()->withId(2)->build();
+
+        stub($this->hierarchy_factory)->getAllAncestors()->returns(array($release, $product));
+
+        $this->assertEqual($release, $this->sprint->getParent(aUser()->build()));
+    }
+
+    public function itReturnsNullWhenNoAncestors() {
+        stub($this->hierarchy_factory)->getAllAncestors()->returns(array());
+
+        $this->assertEqual(null, $this->sprint->getParent(aUser()->build()));
+    }
+}
+
+class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->group_id    = 687;
+        $tracker           = aTracker()->withProjectId($this->group_id)->build();
+        $this->artifact_id = 12345;
+
+        $this->artifact = partial_mock(
+            'Tracker_Artifact',
+            array('getChangesets', 'getDao', 'getPermissionsManager', 'getCrossReferenceManager'),
+            array($this->artifact_id, null, null, null, null)
+        );
+        $this->artifact->setTracker($tracker);
+
+        $this->user = aUser()->build();
+    }
+
+    public function itDeletesAllChangeset() {
+        $changeset_1 = mock('Tracker_Artifact_Changeset');
+        $changeset_1->expectOnce('delete', array($this->user));
+        $changeset_2 = mock('Tracker_Artifact_Changeset');
+        $changeset_2->expectOnce('delete', array($this->user));
+        $changeset_3 = mock('Tracker_Artifact_Changeset');
+        $changeset_3->expectOnce('delete', array($this->user));
+        
+        stub($this->artifact)->getChangesets()->returns(array($changeset_1, $changeset_2, $changeset_3));
+        
+        $dao = mock('Tracker_ArtifactDao');
+        $dao->expectOnce('delete', array($this->artifact_id));
+        $dao->expectOnce('deleteArtifactLinkReference', array($this->artifact_id));
+        $dao->expectOnce('deletePriority', array($this->artifact_id));
+        stub($this->artifact)->getDao()->returns($dao);
+
+        $permissions_manager = mock('PermissionsManager');
+        $permissions_manager->expectOnce('clearPermission', array('PLUGIN_TRACKER_ARTIFACT_ACCESS', $this->artifact_id));
+        stub($this->artifact)->getPermissionsManager()->returns($permissions_manager);
+
+        $cross_ref_mgr = mock('CrossReferenceManager');
+        $cross_ref_mgr->expectOnce('deleteEntity', array($this->artifact_id, 'plugin_tracker_artifact', $this->group_id));
+        stub($this->artifact)->getCrossReferenceManager()->returns($cross_ref_mgr);
+
+        $this->artifact->delete($this->user);
     }
 }
 ?>

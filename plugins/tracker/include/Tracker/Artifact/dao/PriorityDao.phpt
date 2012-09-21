@@ -14,8 +14,8 @@ It's fine in a dev environment. *Do not run this on a production environment or 
 
 @TODO: integration with Continuous Integration ?
 --INI--
-include_path=/home/nicolas/tuleap/src:.
-;include_path=/usr/share/codendi/src:.
+;include_path=/home/nicolas/tuleap/src:.
+include_path=/usr/share/codendi/src:.
 --FILE--
 <?php
     $sys_dbhost   = 'localhost';
@@ -64,6 +64,12 @@ include_path=/home/nicolas/tuleap/src:.
     dump_priorities("1 is > than 101");
     $dao->moveArtifactAfter(42, 1);
     dump_priorities("42 is < than 1");
+    $dao->moveArtifactBefore(42,101);
+    dump_priorities("42 is > than 101 (nothing changed)");
+    $dao->moveArtifactAfter(1,123);
+    dump_priorities("1 is < than 123 (nothing changed)");
+    $dao->remove(123);
+    dump_priorities("123 was deleted");
 --EXPECT--
 Table is empty
 .
@@ -105,4 +111,26 @@ Three more elements are added at the end
 42,101,4,
 101,,5,
 .
-
+42 is > than 101 (nothing changed)
+,66,0,
+66,123,1,
+123,1,2,
+1,42,3,
+42,101,4,
+101,,5,
+.
+1 is < than 123 (nothing changed)
+,66,0,
+66,123,1,
+123,1,2,
+1,42,3,
+42,101,4,
+101,,5,
+.
+123 was deleted
+,66,0,
+66,1,1,
+1,42,2,
+42,101,3,
+101,,4,
+.

@@ -21,7 +21,6 @@
 
 
 require_once('common/plugin/PluginFileInfo.class.php');
-require_once('FulltextsearchPluginDescriptor.class.php');
 
 class FulltextsearchPluginInfo extends PluginFileInfo {
     

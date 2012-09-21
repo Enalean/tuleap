@@ -302,7 +302,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Fetch content of the renderer
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, User $user) {
         $html = '';
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         $offset     = (int)$request->get('offset');
@@ -332,7 +332,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             $html .= $this->_fetchSort();
         }
         
-        if ($report_can_be_modified && $this->report->userCanUpdate(UserManager::instance()->getCurrentUser())) {
+        if ($report_can_be_modified && $this->report->userCanUpdate($user)) {
             //Display the column switcher
             $html .= $this->_fetchAddColumn();
         }
@@ -453,7 +453,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget() {
+    public function fetchWidget(User $user) {
         $html = '';
         $use_data_from_db = true;
         $store_in_session = false;
@@ -1657,6 +1657,9 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      */
     protected function saveRendererProperties ($renderer_id) {
         $dao = new Tracker_Report_Renderer_TableDao();
+        if (!$dao->searchByRendererId($renderer_id)->getRow()) {
+            $dao->create($renderer_id, $this->chunksz);
+        }
         $dao->save($renderer_id, $this->chunksz, $this->multisort);
     }
     
@@ -1705,7 +1708,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      *     
      * @return bool true if success, false if failure
      */
-    public function update() {        
+    public function update() {
         $success = true;
         if ($this->id > 0) {
             //first delete existing columns and sort
@@ -1721,7 +1724,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
             
             //MultiSort/Chunksz
             $this->saveRendererProperties($this->id);
-                        
+            
             //Sort
             $this->saveSortRenderer($this->id);
             

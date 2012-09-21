@@ -369,13 +369,13 @@ class Tracker_Report_RendererFactory {
             $this->report_session->changeSessionNamespace('renderers');
         }
 
-        if ( !isset($this->renderers[$row['id']]) || $row['id']==0 ) {
+        if ( !isset($this->renderers[$row['id']]) || $row['id']== 0 ) {
             $instance = null;
             switch ($row['renderer_type']) {
                 case Tracker_Report_Renderer::TABLE:
                     //First retrieve specific properties of the renderer that are not saved in the generic table
                     if ( !isset($row['chunksz']) || !isset($row['multisort']) ) {
-                        $row['chunksz']   = 10;
+                        $row['chunksz']   = 15;
                         $row['multisort'] = 0;
                         $table_row = $this->getTableDao()
                                     ->searchByRendererId($row['id'])

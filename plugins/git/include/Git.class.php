@@ -194,15 +194,12 @@ class Git extends PluginController {
         } else {
             $this->addPermittedAction('index');
             $this->addPermittedAction('view_last_git_pushes');
-            if ($this->user->isMember($this->groupId)) {
-                $this->addPermittedAction('fork_repositories');
-                $this->addPermittedAction('do_fork_repositories');
-            }
-            
+            $this->addPermittedAction('fork_repositories');
+            $this->addPermittedAction('do_fork_repositories');
+
             if ($repoId !== 0) {
-                $repo = new GitRepository();
-                $repo->setId($repoId);
-                if ($repo->exists() && $repo->userCanRead($user)) {
+                $repo = $this->factory->getRepositoryById($repoId);
+                if ($repo && $repo->userCanRead($user)) {
                     $this->addPermittedAction('view');
                     $this->addPermittedAction('edit');
                     $this->addPermittedAction('clone');
@@ -287,11 +284,12 @@ class Git extends PluginController {
                     $this->addView('view');
                 }
                 else if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
-                    $this->addAction('confirmDeletion', array($this->groupId, $repoId) );
+                    $repository = $this->factory->getRepositoryById($repoId);
+                    $this->addAction('confirmDeletion', array($this->groupId, $repository));
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
-                else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
-                    $repoDesc = null;
+                else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
+                    $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
                     $valid = new Valid_Text('repo_desc');
                     $valid->required();
                     if($this->request->valid($valid)) {
@@ -378,7 +376,8 @@ class Git extends PluginController {
             #confirm_private
             case 'confirm_private':
                 if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
-                    $this->addAction('confirmDeletion', array($this->groupId, $repoId) );
+                    $repository = $this->factory->getRepositoryById($repoId);
+                    $this->addAction('confirmDeletion', array($this->groupId, $repository));
                     $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
                 }
                 else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
@@ -408,7 +407,11 @@ class Git extends PluginController {
             case 'do_fork_repositories':
                 try {
                     if ($this->request->get('choose_destination') == 'personal') {
-                        $this->_doDispatchForkRepositories($this->request, $user);
+                        if ($this->user->isMember($this->groupId)) {
+                            $this->_doDispatchForkRepositories($this->request, $user);
+                        } else {
+                            $this->addError($this->getText('controller_access_denied'));
+                        }
                     } else {
                         $this->_doDispatchForkCrossProject($this->request, $user);
                     }
@@ -454,19 +457,19 @@ class Git extends PluginController {
         $sem = SystemEventManager::instance();
         $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_CLONE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         foreach ($dar as $row) {
+            $p = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
+            $repository = $this->factory->getDeletedRepository($p[1]);
             switch($row['type']) {
             case 'GIT_REPO_CREATE':
-                $p = explode('::', $row['parameters']);
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
                 break;
 
             case 'GIT_REPO_CLONE':
-                $p = explode('::', $row['parameters']);
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_fork', array($p[1])));
                 break;
 
             case 'GIT_REPO_DELETE':
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete'));
+                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_delete', array($repository->getFullName())));
                 break;
             }
             
@@ -490,7 +493,9 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        return new $action($this, SystemEventManager::instance(), $this->factory);
+        $system_event_manager   = SystemEventManager::instance();
+        $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
+        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {

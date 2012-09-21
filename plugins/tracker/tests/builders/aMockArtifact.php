@@ -35,6 +35,8 @@ class MockArtifactBuilder {
         $this->allowedChildrenTypes   = array();
         $this->uri      = '';
         $this->xref     = '';
+        $this->value    = null;
+        $this->parent   = null;
     }
 
     /** @return \MockArtifactBuilder */
@@ -42,13 +44,13 @@ class MockArtifactBuilder {
         $this->id = $id;
         return $this;
     }
-    
+
     /** @return \MockArtifactBuilder */
     public function withTracker(Tracker $tracker) {
         $this->tracker = $tracker;
         return $this;
     }
-    
+
     /** @return \MockArtifactBuilder */
     public function withTitle($title) {
         $this->title = $title;
@@ -60,31 +62,48 @@ class MockArtifactBuilder {
         $this->linkedArtifacts = $linkedArtifacts;
         return $this;
     }
-    
+
     /** @return \MockArtifactBuilder */
     public function withAllowedChildrenTypes(array $types) {
         $this->allowedChildrenTypes = $types;
         return $this;
     }
-    
+
     /** @return \MockArtifactBuilder */
     public function withUniqueLinkedArtifacts($uniqueLinkedArtifacts) {
         $this->uniqueLinkedArtifacts = $uniqueLinkedArtifacts;
         return $this;
     }
-    
+
     /** @return \MockArtifactBuilder */
     public function withUri($uri) {
         $this->uri = $uri;
         return $this;
     }
-    
+
     /** @return \MockArtifactBuilder */
     public function withXRef($xref) {
         $this->xref = $xref;
         return $this;
     }
-    
+
+    /**
+     * @param Tracker_Artifact_ChangesetValue $value
+     * @return \MockArtifactBuilder
+     */
+    public function withValue($value) {
+        $this->value = $value;
+        return $this;
+    }
+
+    public function withParent($parent) {
+        if ($parent && !($parent instanceof Tracker_Artifact)) {
+            throw new InvalidArgumentException('Argument 1 passed to MockArtifactBuilder::withParent() must be an object of class Tracker_Artifact');
+        }
+        $this->parent = $parent;
+        return $this;
+    }
+
     /** @return \Tracker_Artifact */
     public function build() {
         $this->artifact->setReturnValue('getId', $this->id);
@@ -95,7 +114,9 @@ class MockArtifactBuilder {
         $this->artifact->setReturnValue('getLinkedArtifacts', $this->linkedArtifacts);
         $this->artifact->setReturnValue('getUniqueLinkedArtifacts', $this->uniqueLinkedArtifacts);
         $this->artifact->setReturnValue('getAllowedChildrenTypes', $this->allowedChildrenTypes);
-        
+        $this->artifact->setReturnValue('getValue', $this->value);
+        $this->artifact->setReturnValue('getParent', $this->parent);
+
         return $this->artifact;
     }
 }

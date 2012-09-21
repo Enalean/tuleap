@@ -14,7 +14,7 @@ require_once('lib/WikiDB/backend/PearDB.php');
 
 //TODO: create tables on virgin wiki
 /*
-    $db = &new DB_sqlite();
+    $db = new DB_sqlite();
     $db->connect($DBParams['dsn'], array('persistent'=> true) );
     $result = $db->query("CREATE TABLE $table (comment varchar(50), 
       datetime varchar(50));");

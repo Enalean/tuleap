@@ -28,7 +28,7 @@ function aNode() {
 
 class Test_TreeNode_Builder {
 
-    private $children;
+    protected $children;
     private $data;
     private $object;
     private $id;

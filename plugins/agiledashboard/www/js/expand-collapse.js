@@ -3,13 +3,13 @@ tuleap.agiledashboard = tuleap.agiledashboard || { };
 tuleap.agiledashboard.planning = tuleap.agiledashboard.planning || { };
 
 tuleap.agiledashboard.planning.TreeView = Class.create({
-    initialize : function(root, nodeSelector) {
+    initialize: function(root, nodeSelector) {
         this.root         = $(root);
         this.nodeSelector = nodeSelector;
         this.linkSelector = '.toggle-collapse';
         
         if (this.root !== null ) {
-            this.collapseAll();
+            this.expandUntilDraggable();
             this.root.select(this.nodeSelector + ' ' + this.linkSelector).invoke('observe', 'click', this._eventOnNode.bindAsEventListener(this));
         }
     },
@@ -26,6 +26,21 @@ tuleap.agiledashboard.planning.TreeView = Class.create({
     expandAll: function() {
         this.root.getElementsBySelector(this.nodeSelector).each(this.expand, this);
         return this;
+    },
+
+    expandUntilDraggable: function() {
+        this.collapseAll();
+        this.root.select('.planning-draggable').each( function(draggable) {
+            this.expandParent(draggable);
+        }.bind(this));
+    },
+
+    expandParent: function (item) {
+        var parent = $(item).up(this.nodeSelector);
+        if (parent && !this.isExpanded(parent)) {
+            this.expand(parent);
+            this.expandParent(parent);
+        }
     },
 
     collapse: function(nodeElement) {

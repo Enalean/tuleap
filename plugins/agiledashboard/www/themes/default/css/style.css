@@ -1,3 +1,28 @@
+#planner {
+    position: relative;
+}
+#planner .planner_feedback {
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: visibility 0s linear 0.5s,opacity 0.5s linear;
+    -moz-transition: visibility 0s linear 0.5s,opacity 0.5s linear;
+    -o-transition: visibility 0s linear 0.5s,opacity 0.5s linear;
+    transition: visibility 0s linear 0.5s,opacity 0.5s linear;
+}
+#planner .planner_feedback > div {
+    display: inline-block;
+    margin: 0 auto;
+}
+#planner .planner_feedback > div > .feedback_info,
+#planner .planner_feedback > div > .feedback_warning {
+    margin: 0;
+}
+#planner.show_feedback .planner_feedback {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
 .agiledashboard .tracker_report_criteria_advanced_toggle {
     display: none;
 }
@@ -14,12 +39,7 @@
 }
 .agiledashboard .release_planner {
     border: 1px solid lightgray;
-    min-height: 200px;
     padding: 0 0.5em;
-}
-
-.planning-draggable > .card {
-    cursor: move;
 }
 
 .release_planner > .tracker_artifact_title {
@@ -31,26 +51,22 @@
     margin-top: 0;
 }
 
-.cards {
+.agiledashboard .cards {
   list-style: none;
   margin: 0;
   padding: 0;
 }
-.cards .cards {
+.agiledashboard .cards .cards {
   margin-left: 2em;
 }
-.card {
-    padding: 0.25em;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
-    margin-bottom: 1em;
-    border:1px solid #B2B39D;
+
+.planning-item > .card,
+.planning-item > .card > .card-container {
     background: #f8f8f8;
-    min-width: 200px;
-    color: gray;
 }
 
-.planning-draggable > .card {
+.planning-item.planning-draggable > .card,
+.planning-item.planning-draggable > .card > .card-container {
     background: #ffe;
     font-style: normal;
 }
@@ -116,4 +132,40 @@
 .toggle-collapse {
     display: inline-block;
     width: .8em;
+}
+
+.planning_overcapacity {
+    font-weight: bold;
+}
+
+.planning_overcapacity .planning_remaining_effort {
+    color: red;
+}
+
+.card-planning-controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    opacity:0.1;
+}
+.card:hover > .card-planning-controls {
+    opacity:0.5;
+}
+.card > .card-planning-controls:hover {
+    opacity:1;
+}
+
+.card-planning-controls > div {
+    padding: 0.5em 0.5em 0em;
+    background: rgba(128, 128, 128, 0.1);
+    -webkit-border-top-left-radius: 1em;
+    -moz-border-radius-topleft: 1em;
+    border-top-left-radius: 1em;
+}
+.card-planning-controls > div > i {
+    cursor: pointer;
+    opacity:0.5;
+}
+.card-planning-controls > div > i:hover {
+    opacity:1;
 }

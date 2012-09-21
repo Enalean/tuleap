@@ -124,14 +124,14 @@ http://&SYS_DEFAULT_DOMAIN;/projects/short_project_name
       </figure>
       
       <para>&SYS_PRODUCT_NAME; allows project admins to personalize the Project Dashboard. 
-      The content of the page is made of <emphasis>widgets</emphasis>. All widgets can be moved (1), 
-      collapsed or closed (2). Some of them can provide an rss feed (3) or 
-      preferences can be set (4).</para>
+      The content of the page is made of <emphasis>widgets</emphasis>. All widgets can be moved, 
+      collapsed or closed. Some of them can provide an rss feed or 
+      preferences can be set.</para>
       
       <para>Other users than project admins will see the corresponding static page. 
       The widgets will be the same, in the same position, but they won't be able to modify the page.</para>
       
-      <para>New widgets can be added through the link "Add widgets" (5). Here is an
+      <para>New widgets can be added through the link "Add widgets". Here is an
       incomplete list of available widgets for the project dashboard:</para>
       
       <itemizedlist mark="bullet">

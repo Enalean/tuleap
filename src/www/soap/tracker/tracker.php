@@ -1602,7 +1602,7 @@ function artifactrule_to_soap($rule) {
 
 function artifactrules_to_soap($artifact_type) {
     $return = array();
-    $arm =& new ArtifactRulesManager();
+    $arm = new ArtifactRulesManager();
     $rules = $arm->getAllRulesByArtifactTypeWithOrder($artifact_type->getID());
     if ($rules && count($rules) > 0) {
         foreach ($rules as $key => $rule) {
@@ -2120,7 +2120,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         
         //Check Field Dependencies
         require_once('common/tracker/ArtifactRulesManager.class.php');
-        $arm =& new ArtifactRulesManager();
+        $arm = new ArtifactRulesManager();
         if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
             return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'addArtifact');
         }
@@ -2129,7 +2129,7 @@ function addArtifact($sessionKey, $group_id, $group_artifact_id, $status_id, $cl
         } else {
             
             // Send the notification
-            $agnf =& new ArtifactGlobalNotificationFactory();
+            $agnf = new ArtifactGlobalNotificationFactory();
             $addresses = $agnf->getAllAddresses($ath->getID());
             $a->mailFollowupWithPermissions($addresses);
             
@@ -2278,7 +2278,7 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
         
         //Check Field Dependencies
         require_once('common/tracker/ArtifactRulesManager.class.php');
-        $arm =& new ArtifactRulesManager();
+        $arm = new ArtifactRulesManager();
         if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
             return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'updateArtifact');
         }
@@ -2294,7 +2294,7 @@ function updateArtifact($sessionKey, $group_id, $group_artifact_id, $artifact_id
             $a->update_last_update_date();
             // Send the notification
             if ($changes) {
-                $agnf =& new ArtifactGlobalNotificationFactory();
+                $agnf = new ArtifactGlobalNotificationFactory();
                 $addresses = $agnf->getAllAddresses($ath->getID(), true);
                 $a->mailFollowupWithPermissions($addresses, $changes);
             }
@@ -2954,7 +2954,7 @@ function addArtifactAttachedFile($sessionKey,$group_id,$group_artifact_id,$artif
         } else {
             // Send the notification
             if ($changes) {
-                $agnf =& new ArtifactGlobalNotificationFactory();
+                $agnf = new ArtifactGlobalNotificationFactory();
                 $addresses = $agnf->getAllAddresses($at->getID(), true);
                 $a->mailFollowupWithPermissions($addresses, $changes);
             }
@@ -3144,7 +3144,7 @@ function updateArtifactFollowUp($sessionKey, $group_id, $group_artifact_id, $art
             
             // Send the notification
             if ($changes) {
-                $agnf =& new ArtifactGlobalNotificationFactory();
+                $agnf = new ArtifactGlobalNotificationFactory();
                 $addresses = $agnf->getAllAddresses($at->getID(), true);
                 $a->mailFollowupWithPermissions($addresses, $changes);
             }
@@ -3293,7 +3293,7 @@ function deleteArtifactDependency($sessionKey, $group_id, $group_artifact_id, $a
  *              - the add failed
  */
 function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact_id,$body, $comment_type_id, $format) {
-    global $art_field_fact; 
+    global $art_field_fact, $ath;
     if (session_continue($sessionKey)) {
         try {
             $pm = ProjectManager::instance();
@@ -3302,21 +3302,21 @@ function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact
             return $e;
         }
 
-        $at = new ArtifactType($grp,$group_artifact_id);
-        if (!$at || !is_object($at)) {
+        $ath = new ArtifactType($grp,$group_artifact_id);
+        if (!$ath || !is_object($ath)) {
             return new SoapFault(get_artifact_type_fault,'Could Not Get ArtifactType','addArtifactFollowup');
-        } elseif ($at->isError()) {
-            return new SoapFault(get_artifact_type_fault,$at->getErrorMessage(),'addArtifactFollowup');
+        } elseif ($ath->isError()) {
+            return new SoapFault(get_artifact_type_fault,$ath->getErrorMessage(),'addArtifactFollowup');
         }
 
-        $art_field_fact = new ArtifactFieldFactory($at);
+        $art_field_fact = new ArtifactFieldFactory($ath);
         if (!$art_field_fact || !is_object($art_field_fact)) {
             return new SoapFault(get_artifact_field_factory_fault, 'Could Not Get ArtifactFieldFactory','addArtifactFollowup');
         } elseif ($art_field_fact->isError()) {
             return new SoapFault(get_artifact_field_factory_fault, $art_field_fact->getErrorMessage(),'addArtifactFollowup');
         }
 
-        $a = new Artifact($at,$artifact_id);
+        $a = new Artifact($ath,$artifact_id);
         if (!$a || !is_object($a)) {
             return new SoapFault(get_artifact_fault,'Could Not Get Artifact','addArtifactFollowup');
         } elseif ($a->isError()) {
@@ -3327,8 +3327,8 @@ function addArtifactFollowup($sessionKey, $group_id,$group_artifact_id,$artifact
             return new SoapFault(create_followup_fault, 'Comment could not be saved', 'addArtifactFollowup');
         } else {
             // Send notification
-            $agnf =& new ArtifactGlobalNotificationFactory();
-            $addresses = $agnf->getAllAddresses($at->getID(), true);
+            $agnf = new ArtifactGlobalNotificationFactory();
+            $addresses = $agnf->getAllAddresses($ath->getID(), true);
             $a->mailFollowupWithPermissions($addresses, $changes);
             return true;
         }

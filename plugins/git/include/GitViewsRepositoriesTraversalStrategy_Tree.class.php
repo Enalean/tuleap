@@ -88,13 +88,23 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     protected function getGroupWrapper($label, $inner) {
         return $inner;
     }
-    
-    public function getTree(array $repositories) {
+
+    /**
+     * Obtain the tree of git repositories for a user
+     *
+     * @param Array $repositories Array of raw representation of repositories, indexed by repository id (the person that made the choice of the format must be executed)
+     * @param User  $user         The user who traverse the forest (yet another foolish expression)
+     *
+     * @result Array
+     */
+    public function getTree(array $repositories, User $user) {
         $tree = array();
         foreach ($repositories as $repoId => $row) {
             $path = explode('/', unixPathJoin(array($row['repository_namespace'], $row['repository_name'])));
             $repo = $this->getRepository($row);
-            $this->insertInTree($tree, $repo, $path);
+            if ($repo->userCanRead($user)) {
+                $this->insertInTree($tree, $repo, $path);
+            }
         }
         return $tree;
     }
@@ -123,23 +133,27 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
         if (empty($repositories)) {
             return '';
         }
-        $tree = $this->getTree($repositories);
-        $html .= '<table cellspacing="0" id="git_repositories_list">';
-        
-        // header
-        $html .= '<thead>';
-        $html .= '<tr>';
-        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_repository') .'</th>';
-        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_description') .'</th>';
-        $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_last_push') .'</th>';
-        $html .= '</tr>';
-        $html .= '</thead>';
-        
-        // body
-        $rowCount = 0;
-        $html .= '<tbody>'. $this->fetchRows($tree, 0) .'</tbody>';
-        
-        $html .= '</table>';
+        $tree = $this->getTree($repositories, $user);
+        if (!empty($tree)) {
+            $html .= '<table cellspacing="0" id="git_repositories_list">';
+
+            // header
+            $html .= '<thead>';
+            $html .= '<tr>';
+            $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_repository') .'</th>';
+            $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_description') .'</th>';
+            $html .= '<th>'. $GLOBALS['Language']->getText('plugin_git', 'tree_view_last_push') .'</th>';
+            $html .= '</tr>';
+            $html .= '</thead>';
+
+            // body
+            $rowCount = 0;
+            $html .= '<tbody>'. $this->fetchRows($tree, 0) .'</tbody>';
+
+            $html .= '</table>';
+        } else {
+            $html .= "<h3>".$GLOBALS['Language']->getText('plugin_git', 'tree_msg_no_available_repo')."</h3>";
+        }
         return $html;
     }
     

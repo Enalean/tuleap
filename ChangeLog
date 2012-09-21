@@ -1,17 +1,101 @@
-Version 5.3 (not released yet)
+Version 5.5 (Not released yet)
+    == Bug Fix ==
+        * fix sla #433: wiki references with version number
+	* Allow anonymous to browse public forumml archives
+	* Fix art #1277: Wrong URL inheritance when creating a project
+	* Fix commit-email.pl: When no notification is set, don't generate error
+	* When consulting private file anonymously, a login screen should be
+	displayed instead of permissions error screen
+	* Fix login error message when username is invalid
+
+    == Plugins ==
+	* tracker: 5.19
+	* git: 2.7.6
+	* docman: 2.26.8
+	* agiledashboard: 0.53
+	* fulltextsearch: 0.12
+	* IM: 1.5.4
+	* admindelegation: 2.4
+	* forumml: 2.6.4
+	* graphontrackers: 1.6
+	* graphontrackersv5: 5.0.4
+	* ldap: 3.19
+	* statistics: 0.20
+	* cardwall: 0.9.6
+
+	== Development ==
+	* Add tool to easily fix the singleton count after a merge
+	* Add tool to easily generate release notes
+	* Various permissions cleanups and POSIX compatibility for shell scripts
+	(Contrib Raphaël Hertzog)
+
+    
+Version 5.4 (Wednesday, August 29th 2012)
+	== Bug fix ==
+	* Fix typo in french translation.
+	* Avatar was not sent in tracker v3 notifications
+	* art #... does not work cross project
+	* Fix fatal error raised when creating a followup comment using SOAP (contrib STMicroelectronics).
+	* Make possible the restore into a hidden release in FRS (contrib STMicroelectronics).
+	* Don't display hiddent content in TV3 HTML notification, outlook doesn't understand display:none (contrib STMicroelectronics).
+	* Create 'user' dir (in /var/lib/.../) to store avatars during install
+	* Fix sla #1063: field dependencies default values might be broken dependending on the order of definitions of the rules.
+	* Fix Wiki XHTML ZIP Snapshot link can't be unzipped (contrib STMicroelectronics).
+
 	== Plugins ==
-	* Cardwall: 0.5.7
-	* Tracker: 5.7.33
-	* Agildashboard: 0.36
+	* agiledashboard: 0.51
+	* cardwall: 0.9.5
+	* docman: 2.26.3
+	* forumml: 2.6.2
+	* fulltextsearch: 0.10
+	* git: 2.7.2
+	* graphontrackers: 1.5
+	* graphontrackersv5: 5.0.3
+	* hudson: 1.9
+	* ldap: 3.17
+	* pluginsadministration: 1.2
+	* statistics: 0.19
+	* template: 1.2
+	* tests: 5.5
+	* tracker: 5.10
+	* userlog: 1.2
+
+	== Development ==
+	* Add script to prepare plugins changelog (to be used by Tuleap integrators when merging into stable)
+	* Continue PHP 5.3 compat (Contrib Philippe Goetz)
+	* All unit tests pass with PHP 5.3
+	* First step toward autoloading in order to increase performances
+
+Version 5.3.1 (Monday, July 23rd 2012)
+	== Plugins ==
+	* Docman 2.26.2
+	* Tracker: 5.8.7
+
+	== Bug fix ==
+	* Fix bug on user SSH key dump on filesystem (didn't take case into account and process context was not restored).
+	* Fix warning on Subversion conf serialization.
+
+Version 5.3 (Thursday, July 19th 2012)
+	== Plugins ==
+	* Agildashboard: 0.45
+	* Cardwall: 0.9.1
+	* Docman: 2.26.1
 	* FullTextSearch: 0.6
-	* Test: 5
+	* Git: 2.6.3
 	* LDAP: 3.16
+	* Test: 5.1
+	* Tracker: 5.8.6
+	* GraphOnTrackerv5 5.0.2
+
+	== Enhancement ==
+   * Documentation update (remove references to old screenshots).
 
 	== Development ==
 	Update mustache renderer
 	Start PHP 5.3 cleaning (For Tuleap 5.3 \o/)
 	Introduce transactions methods in DataAccess
 	Display queries sorted by time taken in debug mode
+	Automate synchro with github tuleap repo
 
 Version 5.2 (Friday, June 22th 2012)
 	== Bug Fix ==

@@ -35,6 +35,14 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $git = TestHelper::getPartialMock('Git', array('_doDispatchForkRepositories', 'addView'));
         $git->setRequest($request);
         $git->expectOnce('addView', array('forkRepositories'));
+
+        $factory = new MockGitRepositoryFactory();
+        $git->setFactory($factory);
+
+        $user = new MockUser();
+        $user->setReturnValue('isMember', true);
+        $git->user = $user;
+
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
     }
     

@@ -17,13 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'BoardFactory.class.php';
 require_once 'PaneContentPresenter.class.php';
 require_once 'QrCode.class.php';
-require_once 'InjectColumnIdVisitor.class.php';
-require_once 'ArtifactTreeNodeVisitor.class.php';
+require_once 'CreateCardPresenterCallback.class.php';
+require_once 'CardInCellPresenterCallback.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard
@@ -40,9 +42,21 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $enable_qr_code;
 
-    public function __construct(Planning_Milestone $milestone, $enable_qr_code) {
+    /**
+     * @var Cardwall_OnTop_Config
+     */
+    private $config;
+
+    /**
+     * @var User
+     */
+    private $user;
+
+    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user) {
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
+        $this->config         = $config;
+        $this->user           = $user;
     }
 
     /**
@@ -63,28 +77,28 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getContent()
      */
     public function getContent() {
-        $tracker = $this->milestone->getPlanning()->getBacklogTracker();
-        $field   = Tracker_Semantic_StatusFactory::instance()->getByTracker($tracker)->getField();
-        if (! $field) {
-            return $GLOBALS['Language']->getText('plugin_cardwall', 'on_top_miss_status');
-        }
+        $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-        
-        return $renderer->renderToString('agiledashboard-pane', $this->getPresenter($field));
+        return $renderer->renderToString('agiledashboard-pane', $this->getPresenterUsingMappedFields($columns));
+        // TODO what if no semantic status and no mapping????
     }
 
     /**
      * @return Cardwall_PaneContentPresenter
      */
-    private function getPresenter(Tracker_FormElement_Field_Selectbox $field = null) {
+    private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
         $board_factory      = new Cardwall_BoardFactory();
-        $pa                 = $this->milestone->getPlannedArtifacts();
-        Cardwall_ArtifactTreeNodeVisitor::build()->visit($pa);
-        $board              = $board_factory->getBoard(new Cardwall_InjectColumnIdVisitor(), $pa, $field);
+        $planned_artifacts  = $this->milestone->getPlannedArtifacts();
+
+        $field_retriever    = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
+                                new Cardwall_FieldProviders_SemanticStatusFieldRetriever());
+
+        $board              = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
+        $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
 
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title);
+        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $configure_url);
     }
 
     /**

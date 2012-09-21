@@ -45,10 +45,25 @@ class Cardwall_MappingCollection implements IteratorAggregate {
         $this->mappings_by_field_id[$mapping->field_id][] = $mapping;
     }
 
+
+    /**
+     * Returns the list of static field values of the swimline
+     * 
+     * @param int $field_id
+     * @return array of int
+     */
+    public function getSwimLineValues($field_id) {
+        $swim_line_values = array();
+        foreach ($this->getMappingsByFieldId($field_id) as $mapping) {
+            $swim_line_values[] = $mapping->column_id;
+        }
+        return $swim_line_values;
+    }
+
     /**
      * @return array of Cardwall_Mapping
      */
-    public function getMappingsByFieldId($field_id) {
+    private function getMappingsByFieldId($field_id) {
         if (isset($this->mappings_by_field_id[$field_id])) {
             return $this->mappings_by_field_id[$field_id];
         }

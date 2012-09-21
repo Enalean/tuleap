@@ -18,24 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/TestHelper.class.php';
+
 /**
  * Returns a DSL like mockgenerator
- * 
+ *
  * <code>
  * stub('someclass')->someMethod($arg1, $arg2, ...)->returns($someResult);
  * </code>
- * 
+ *
  * that is an alternative to :
- * 
+ *
  * <code>
  * Mock::generate('SomeClass');
  * $mock = new MockSomeClass();
  * $mock->setReturnValue('someMethod', $someResult, array($arg1, $arg2, ...);
  * </code>
- * 
+ *
  * @param a class name or a simpletest mock
- * 
- * @return \OngoingIntelligentStub 
+ *
+ * @return \OngoingIntelligentStub
  */
 function stub($classname_or_simpletest_mock) {
     if (is_object($classname_or_simpletest_mock)) {
@@ -48,17 +50,17 @@ function stub($classname_or_simpletest_mock) {
 
 /**
  * mock('SomeClass');
- * 
+ *
  * is exactly the same as
- * 
+ *
  * <code>
  * Mock::generate('SomeClass');
  * $mock = new MockSomeClass();
  * </code>
- * 
+ *
  * @param type $classname
- * 
- * @return a simpletest mock 
+ *
+ * @return a simpletest mock
  */
 function mock($classname) {
     Mock::generate($classname);
@@ -66,20 +68,68 @@ function mock($classname) {
     return new $mockclassname();
 }
 
+function partial_stub($classname_or_simpletest_mock, array $mocked_methods) {
+    if (is_object($classname_or_simpletest_mock)) {
+        $mock = $classname_or_simpletest_mock;
+    } else {
+        $mock = partial_mock($classname_or_simpletest_mock);
+    }
+    return new OngoingIntelligentStub($mock);
+}
+
+function partial_mock($classname, array $mocked_methods, array $construct_params = null) {
+    $object = TestHelper::getPartialMock($classname, $mocked_methods);
+    if ($construct_params) {
+        call_user_func_array(array($object, '__construct'), $construct_params);
+    }
+    return $object;
+}
+
 class OngoingIntelligentStub {
+    public $mock;
+    private $method;
+    private $arguments;
 
     function __construct($mock) {
         $this->mock = $mock;
     }
 
     public function __call($name, $arguments) {
-        $this->method = $name;
+        if ($this->method) {
+            throw new Exception("Cannot stub '{$name}()', method '{$this->method}()' already stubbed. Wrong usage of stub()");
+        }
+
+        $this->method    = $name;
         $this->arguments = $arguments;
         return $this;
     }
 
+    public function once() {
+        if (empty($this->arguments)) {
+            $this->mock->expectOnce($this->method);
+        } else {
+            $this->mock->expectOnce($this->method, $this->arguments);
+        }
+        return $this;
+    }
+
+    public function never() {
+        $this->mock->expectNever($this->method);
+        return $this;
+    }
+
+    public function at($timing) {
+        $this->mock->expectAt($timing, $this->method, $this->arguments);
+        return $this;
+    }
+
+    public function count($count) {
+        $this->mock->expectCallCount($this->method, $count);
+        return $this;
+    }
+
     /**
-     * @return the configured mock 
+     * @return the configured mock
      */
     public function returns($value) {
         if (empty($this->arguments)) {
@@ -89,7 +139,40 @@ class OngoingIntelligentStub {
         }
         return $this->mock;
     }
-    
 
+    /**
+     * Ease return of DatabaseAccessResult objects:
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsDar(array('id' => '1'), array('id' => '2'));
+     *
+     * Returns 2 rows out of the database:
+     * |Id|
+     * |1 |
+     * |2 |
+     */
+    public function returnsDar() {
+        return $this->returns(TestHelper::argListToDar(func_get_args()));
+    }
+
+    /**
+     * Ease returns of empty DatabaseAccessResult
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsEmptyDar()
+     */
+    public function returnsEmptyDar() {
+        return $this->returns(TestHelper::emptyDar());
+    }
+
+    /**
+     * Ease returns of DatabaseAccessResult with errors
+     *
+     * Example:
+     * stub('Dao')->getStuff()->returnsDarWithErrors()
+     */
+    public function returnsDarWithErrors() {
+        return $this->returns(TestHelper::errorDar());
+    }
 }
 ?>

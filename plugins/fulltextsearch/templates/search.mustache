@@ -1,24 +1,12 @@
-{{> index}}
-
-{{#has_results}}
-<p>{{result_count}} document(s) match:
-    <ol>
-    {{#search_results}}
-        <li class="fts_result">
-            <div class="fts_title">
-                <a href="{{url}}">{{item_title}}</a>
+<div class="container-fluid">
+    <form name="fts_query" method="get" action="/search/">
+        <input type="hidden" name="type_of_search" value="fulltext" />
+        <div class="row">
+            <div class="span12">
+                <input type="text" name="words" value="{{terms}}" size="30" />
+                <input type="submit" value="{{search_label}}" />
             </div>
-            <div class="fts_highlight">{{{highlight}}}...</div>
-            <div class="fts_metadata">Project: {{project_name}}</div>
-            <div class="fts_metadata">Permissions: {{permissions}}</div>
-        </li>
-    {{/search_results}}
-    </ol>
-</p>
-
-<p>Query took {{elapsed_time}}s</p>
-{{/has_results}}
-
-{{#no_results}}
-No results found
-{{/no_results}}
+        </div>
+        <br />
+    {{> search-results-facets}}
+</div>

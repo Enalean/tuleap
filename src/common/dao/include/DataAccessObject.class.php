@@ -44,7 +44,15 @@ class DataAccessObject {
     public function DataAccessObject($da = null) {
         $this->__construct($da);
     }
-    
+
+    public function startTransaction() {
+        $this->da->startTransaction();
+    }
+
+    public function commit() {
+        $this->da->commit();
+    }
+
     /**
      * For SELECT queries
      *
@@ -71,9 +79,7 @@ class DataAccessObject {
      * @return mixed
      */
     protected function retrieveFirstRow($sql) {
-        foreach($this->retrieve($sql) as $row) {
-            return $row;
-        }
+        return $this->retrieve($sql)->getRow();
     }
     
     /**

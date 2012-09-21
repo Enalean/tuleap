@@ -257,15 +257,8 @@ class URLVerification {
     public function verifyRequest($server) {
         $user = $this->getCurrentUser();
         if (!$GLOBALS['sys_allow_anon'] && $user->isAnonymous() && !$this->isScriptAllowedForAnonymous($server)) {
-            $returnTo = urlencode((($server['REQUEST_URI'] === "/")?"/my/":$server['REQUEST_URI']));
-            $url = parse_url($server['REQUEST_URI']);
-            if (isset($url['query'])) {
-                $query = $url['query'];
-                if (strstr($query, 'pv=2')) {
-                    $returnTo .= "&pv=2";
-                }
-            }
-            $this->urlChunks['script']   = '/account/login.php?return_to='.$returnTo;
+            $redirect = new URLRedirect();
+            $this->urlChunks['script']   = $redirect->buildReturnToLogin($server);
         }
     }
 
@@ -458,10 +451,8 @@ class URLVerification {
      * @return void
      */
     function displayRestrictedUserError($url) {
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit','exit_error')));
         $error = new Error_PermissionDenied_RestrictedUser($url);
         $error->buildInterface();
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
     }
     
@@ -509,10 +500,8 @@ class URLVerification {
      * @return void
      */
     function displayPrivateProjectError($url) {
-        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
         $sendMail = new Error_PermissionDenied_PrivateProject($url);
         $sendMail->buildInterface();
-        $GLOBALS['HTML']->footer(array('showfeedback' => false));
         exit;
     }
 

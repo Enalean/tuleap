@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS tracker_field_string;
 DROP TABLE IF EXISTS tracker_field_msb;
 DROP TABLE IF EXISTS tracker_field_date;
 DROP TABLE IF EXISTS tracker_field_list;
+DROP TABLE IF EXISTS tracker_field_computed;
 DROP TABLE IF EXISTS tracker_field_openlist;
 DROP TABLE IF EXISTS tracker_field_openlist_value;
 DROP TABLE IF EXISTS tracker_field_list_bind_users;
@@ -66,6 +67,7 @@ DROP TABLE IF EXISTS tracker_semantic_status;
 DROP TABLE IF EXISTS tracker_semantic_contributor;
 DROP TABLE IF EXISTS tracker_perm;
 DROP TABLE IF EXISTS tracker_rule;
+DROP TABLE IF EXISTS tracker_reminder;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
 DELETE FROM permissions_values WHERE permission_type LIKE 'PLUGIN_TRACKER_%';

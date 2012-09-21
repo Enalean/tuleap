@@ -375,7 +375,7 @@ function frs_display_release_form($is_update, &$release, $group_id, $title, $url
         if (isset($release['date'])) {
             $release_date = $release['date'];
         }
-        $release =& new FRSRelease($release);
+        $release = new FRSRelease($release);
     }
     if ($is_update) {
         $files = $release->getFiles();

@@ -29,6 +29,7 @@ require_once 'common/layout/Layout.class.php';
 Mock::generate('Layout');
 
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/user/UserTestBuilder.php';
+require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aRequest.php';
 
 require_once 'MockBuilder.php';
 
@@ -170,6 +171,18 @@ abstract class TuleapTestCase extends UnitTestCase {
      */
     protected function assertStringBeginsWith($string, $start_sequence) {
         return $this->assertPattern("%^$start_sequence%", $string);
+    }
+    
+    /**
+     * Passes if var is inside or equal to either of the two bounds
+     * 
+     * @param type $var
+     * @param type $lower_bound
+     * @param type $higher_bound
+     */
+    protected function assertBetweenClosedInterval($var, $lower_bound, $higher_bound) {
+        $this->assertTrue($var <= $higher_bound, "$var should be lesser than or equal to $higher_bound");
+        $this->assertTrue($var >= $lower_bound,  "$var should be greater than or equal to $lower_bound");
     }
 
     /**

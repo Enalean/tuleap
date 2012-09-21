@@ -65,15 +65,17 @@ extends DataAccessObject
     /**
      * Associate one Codendi user group to an LDAP group
      *
-     * @param Integer $ugroupId    Codendi user group id 
-     * @param String  $ldapGroupDn LDAP group distinguish name
-     * 
+     * @param Integer $ugroupId           Codendi user group id 
+     * @param String  $ldapGroupDn        LDAP group distinguish name
+     * @param String  $bindOption         The bind option can take one of 2 possible values 'bind' or 'preserve_members'
+     * @param String  $synchroPolicy      Synchronization option
+     *
      * @return Boolean
      */
-    function linkGroupLdap($ugroupId, $ldapGroupDn) 
-    {
-        $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn)'.
-            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'")';
+    function linkGroupLdap($ugroupId, $ldapGroupDn, $bindOption, $synchroPolicy) {
+        $synchroPolicy = $this->da->quoteSmart($synchroPolicy);
+        $sql = 'INSERT INTO plugin_ldap_ugroup (ugroup_id, ldap_group_dn, synchro_policy, bind_option)'.
+            ' VALUES ('.db_ei($ugroupId).',"'.db_es($ldapGroupDn).'",'.$synchroPolicy.', "'.db_es($bindOption).'")';
         return $this->update($sql);
     }
     
@@ -147,6 +149,74 @@ extends DataAccessObject
         }
         return $ret;
     }
+
+    /**
+     * Retieve Tuleap ugroup having the synchronize option enabled
+     *
+     * @return DataAccessResult
+     */
+    function getSynchronizedUgroups() {
+        $sql = "SELECT * FROM plugin_ldap_ugroup
+                WHERE synchro_policy = ".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Check if a given ugroup is synchronized with an ldap group
+     *
+     * @param Integer $ugroup_id User group id to check
+     *
+     * @return Boolean
+     */
+    function isSynchronizedUgroup($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $sql = "SELECT * FROM plugin_ldap_ugroup
+                WHERE ugroup_id = ".$ugroup_id." and synchro_policy = ".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+        $rs  = $this->retrieve($sql);
+        if(!empty($rs) && $rs->rowCount() == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if a given ugroup is preserving members
+     *
+     * @param Integer $ugroup_id User group id to check
+     *
+     * @return Boolean
+     */
+    function isMembersPreserving($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $sql = 'SELECT * FROM plugin_ldap_ugroup
+                WHERE ugroup_id = '.$ugroup_id.' and bind_option = '.$this->da->quoteSmart(LDAP_GroupManager::PRESERVE_MEMBERS_OPTION);
+        $rs  = $this->retrieve($sql);
+        if(!empty($rs) && $rs->rowCount() == 1) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if the update of members of an ugroup is allowed
+     *
+     * @param Integer $ugroup_id User group id
+     *
+     * @return Boolean
+     */
+    public function isMembersUpdateAllowed($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $sql       = "SELECT * FROM plugin_ldap_ugroup
+                      WHERE ugroup_id = ".$ugroup_id."
+                        AND bind_option = ".$this->da->quoteSmart(LDAP_GroupManager::BIND_OPTION)."
+                        AND synchro_policy = ".$this->da->quoteSmart(LDAP_GroupManager::AUTO_SYNCHRONIZATION);
+        $rs  = $this->retrieve($sql);
+        if(!empty($rs) && $rs->rowCount() == 1) {
+            return false;
+        }
+        return true;
+    }
+
 }
 
 ?>

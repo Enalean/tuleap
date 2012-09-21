@@ -92,4 +92,36 @@ define('TRACKER_EVENT_ADMIN_ITEMS', 'tracker_event_admin_items');
  *  default processing (eg: display the tracker)
  */
 define('TRACKER_EVENT_PROCESS', 'tracker_event_process');
+
+/**
+ * An artifact has just been (un)associated to another one
+ *
+ * Parameters:
+ * 'artifact'             => The artifact which receive the (un)association
+ * 'linked-artifact-id'   => The (previously) linked artifact id
+ * 'request'              => The request
+ * 'user'                 => The user who made the request
+ * 'form_element_factory' => The FormElementFactory
+ *
+ * Expected results:
+ *  No expected results
+ */
+define('TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED', 'tracker_event_artifact_association_edited');
+
+/**
+ * Should we display a selector to choose the parent of an item during creation?
+ * If so, which artifacts are possible parents for the created item?
+ *
+ * By default, we display the selector with open artifacts parents
+ *
+ * Parameters:
+ * 'user'             => User    The current user
+ * 'parent_tracker'   => Tracker The parent tracker
+ *
+ * Re
+ * 'possible_parents' => array of Tracker_Artifact
+ * 'label'            => string the label of the possible parents list
+ * 'display_selector' => bool true if we can display the selector
+ */
+define('TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR', 'tracker_event_artifact_parents_selector');
 ?>

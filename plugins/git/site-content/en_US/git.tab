@@ -68,17 +68,17 @@ plugin_git	disable_fork_gitolite	It's not yet possible to fork "Gitolite" based 
 
 plugin_git	actions_params_error	Empty required parameter(s)
 plugin_git	actions_long_description	Too long description
-plugin_git	actions_delete_process	Repository will be removed in a few seconds
+plugin_git	actions_delete_process	Repository '$1' will be removed in a few seconds
 plugin_git	actions_input_format_error	Repository name is not well formatted. Allowed characters: $1 and max length is $2, no slashes at the beginning or the end, it also must not finish with ".git".
 plugin_git	actions_create_repo_process	Repository will be created in a few seconds
-plugin_git	actions_create_repo_exists	Repository $1 already exists
+plugin_git	actions_create_repo_exists	Repository $1 already exists or would override an existing path
 plugin_git	actions_delete_ok	Repository has been deleted
 plugin_git	actions_no_repository_forked	No repository has been forked.
 
 plugin_git	actions_repo_not_found	The repository does not exist
 plugin_git	actions_repo_access	Repository access permissions are going to be modified in a few seconds
 plugin_git	actions_save_repo_process	Repository informations have been saved
-plugin_git	actions_delete_backup	A repository backup will be available in the backup directory
+plugin_git	actions_delete_backup	A repository backup of '$1' will be available in the backup directory
 plugin_git	actions_name_not_available	     A file already exists with this name under gitroot
 
 
@@ -95,7 +95,7 @@ plugin_git	view_repo_access_private	Private
 
 plugin_git	repo_not_initialized	Repository is not initialized
 
-plugin_git	confirm_deletion_msg	Do you really want to delete this repository ?
+plugin_git	confirm_deletion_msg	Do you really want to delete the repository '$1' ?
 
 plugin_git	yes	Yes
 plugin_git	no	No
@@ -134,7 +134,7 @@ plugin_git	set_private_mails	List of mails to remove from notification
 
 plugin_git	feedback_event_create	There is an event in queue for a repository creation ($1), it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_fork	There is an event in queue for a repository fork ($1), it will be processed in one minute or two. Please be patient!
-plugin_git	feedback_event_delete	There is an event in queue for a repository deletion, it will be processed in one minute or two. Please be patient!
+plugin_git	feedback_event_delete	There is an event in queue for repository '$1' deletion, it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_access	There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!
 
 plugin_git	gitolite_lab_feature_title	Fine grain permissions on git repositories
@@ -145,7 +145,8 @@ plugin_git	perm_W	Write
 plugin_git	perm_W+	Rewind
 
 plugin_git	fork_repositories	Fork repositories
-plugin_git	fork_repositories_desc	<p>You can create personal forks of any reference repositories. By default forks will end up into your personal area of this project.</p><p>You might choose to fork into another project instead. In this case, fork creates new "References" in the target project.<br />You need to be administrator of the target project to do so and Git service must be activated.</p>
+plugin_git	fork_personal_repositories_desc	<p>You can create personal forks of any reference repositories. By default forks will end up into your personal area of this project.</p></p>
+plugin_git	fork_project_repositories_desc	<p>You might choose to fork into another project. In this case, fork creates new "References" in the target project.<br />You need to be administrator of the target project to do so and Git service must be activated.</p>
 plugin_git	fork_repositories_select	Select repositories to fork
 plugin_git	fork_repositories_path	Choose the path for the forks
 plugin_git	fork_repositories_placeholder	Enter a path or leave it blank

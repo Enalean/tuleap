@@ -33,6 +33,7 @@ Mock::generatePartial('Tracker',
                           'displayAdminFormElements',
                           'getTrackerSemanticManager',
                           'getNotificationsManager',
+                          'getDateReminderManager',
                           'getCannedResponseManager',
                           'getCannedResponseFactory',
                           'getFormElementFactory',
@@ -65,6 +66,7 @@ Mock::generatePartial('Tracker',
                           'displayAdminFormElements',
                           'getTrackerSemanticManager',
                           'getNotificationsManager',
+                          'getDateReminderManager',
                           'getCannedResponseManager',
                           'getCannedResponseFactory',
                           'getFormElementFactory',
@@ -117,6 +119,9 @@ Mock::generate('Tracker_SemanticManager');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker_NotificationsManager.class.php');
 Mock::generate('Tracker_NotificationsManager');
 
+require_once(dirname(__FILE__).'/../include/Tracker/DateReminder/Tracker_DateReminderManager.class.php');
+Mock::generate('Tracker_DateReminderManager');
+
 require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseManager.class.php');
 Mock::generate('Tracker_CannedResponseManager');
 
@@ -151,6 +156,8 @@ require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFo
 Mock::generate('Tracker_SharedFormElementFactory');
 
 require_once dirname(__FILE__).'/builders/aTracker.php';
+require_once dirname(__FILE__).'/builders/anArtifact.php';
+require_once dirname(__FILE__).'/builders/aMockArtifact.php';
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
     public function exportToXML($root, &$xmlMapping, &$index) {
@@ -183,6 +190,10 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->setReturnReference('getNotificationsManager', $this->tnm);
         $this->tracker1->setReturnReference('getNotificationsManager', $this->tnm);
         $this->tracker2->setReturnReference('getNotificationsManager', $this->tnm);
+        $this->trr = new MockTracker_DateReminderManager();
+        $this->tracker->setReturnReference('getDateReminderManager', $this->trr);
+        $this->tracker1->setReturnReference('getDateReminderManager', $this->trr);
+        $this->tracker2->setReturnReference('getDateReminderManager', $this->trr);
         $this->tcrm = new MockTracker_CannedResponseManager();
         $this->tracker->setReturnReference('getCannedResponseManager', $this->tcrm);
         $this->tracker1->setReturnReference('getCannedResponseManager', $this->tcrm);
@@ -988,6 +999,7 @@ class TrackerTest extends TuleapTestCase {
         // site admin can access tracker notification admin part
         $this->tracker->expectOnce('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->site_admin_user);
+        $this->tracker->expectCallCount('getDateReminderManager', 1);
     }
     public function testPermsAdminNotificationTrackerProjectAdmin() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -996,6 +1008,7 @@ class TrackerTest extends TuleapTestCase {
         // project admin can access tracker notification admin part
         $this->tracker->expectOnce('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->project_admin_user);
+        $this->tracker->expectCallCount('getDateReminderManager', 1);
     }
     public function testPermsAdminNotificationTrackerTrackerAdmin() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1034,6 +1047,7 @@ class TrackerTest extends TuleapTestCase {
         // project member can't access tracker notification admin part
         $this->tracker->expectNever('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->project_member_user);
+        $this->tracker->expectNever('getDateReminderManager');
     }
     public function testPermsAdminNotificationTrackerRegisteredUser() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1042,6 +1056,7 @@ class TrackerTest extends TuleapTestCase {
         // registered user can't access tracker notification admin part
         $this->tracker->expectNever('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->registered_user);
+        $this->tracker->expectNever('getDateReminderManager');
     }
     public function testPermsAdminNotificationTrackerAnonymousUser() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1050,6 +1065,7 @@ class TrackerTest extends TuleapTestCase {
         // anonymous user can't access tracker notification admin part
         $this->tracker->expectNever('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->anonymous_user);
+        $this->tracker->expectNever('getDateReminderManager');
     }
     
     //
@@ -1062,6 +1078,7 @@ class TrackerTest extends TuleapTestCase {
         // site admin can access tracker notification user part
         $this->tracker->expectOnce('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->site_admin_user);
+        $this->tracker->expectCallCount('getDateReminderManager', 1);
     }
     public function testPermsNotificationTrackerProjectAdmin() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1070,6 +1087,7 @@ class TrackerTest extends TuleapTestCase {
         // project admin can access tracker notification user part
         $this->tracker->expectOnce('getNotificationsManager');
         $this->tracker->process($this->tracker_manager, $request_admin_notification_tracker, $this->project_admin_user);
+        $this->tracker->expectCallCount('getDateReminderManager', 1);
     }
     public function testPermsNotificationTrackerTrackerAdmin() {
         $request_admin_notification_tracker = new MockCodendi_Request($this);
@@ -1659,50 +1677,5 @@ class TrackerTest extends TuleapTestCase {
         return array($tracker, $factory, $sharedFactory, $user);
     }
 }
-
-class Tracker_ArtifactSubmit_RedirectUrlTest extends TuleapTestCase {
-    public function itRedirectsToTheTrackerHomePageByDefault() {
-        $request_data = array();
-        $tracker_id   = 20;
-        $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, null);
-        $this->assertEqual(TRACKER_BASE_URL."/?tracker=$tracker_id", $redirect_uri);
-    }
-    
-    public function itStaysOnTheCurrentArtifactWhen_submitAndStay_isSpecified() {
-        $request_data = array('submit_and_stay' => true);
-        $artifact_id  = 66;
-        $redirect_uri = $this->getRedirectUrlFor($request_data, null, $artifact_id);
-        $this->assertEqual(TRACKER_BASE_URL."/?aid=$artifact_id", $redirect_uri);
-    }
-    
-    public function itRedirectsToNewArtifactCreationWhen_submitAndContinue_isSpecified() {
-        $request_data = array('submit_and_continue' => true);
-        $tracker_id  = 73;
-        $artifact_id = 66;
-        $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
-        $this->assertStringBeginsWith($redirect_uri, TRACKER_BASE_URL);
-        $this->assertUriHasArgument($redirect_uri, 'func', 'new-artifact');
-        $this->assertUriHasArgument($redirect_uri, 'tracker', $tracker_id);
-    }
-
-    public function testSubmitAndContinue() {
-        $request_data = array('submit_and_continue' => true);
-        $tracker_id   = 73;
-        $artifact_id  = 66;
-        $redirect_uri = $this->getRedirectUrlFor($request_data, $tracker_id, $artifact_id);
-        $this->assertUriHasArgument($redirect_uri, "func", 'new-artifact');
-    }
-    
-    private function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
-        $request = new Codendi_Request($request_data);
-        $tracker = aTracker()->withId($tracker_id)->build();
-        return $tracker->redirectUrlAfterArtifactSubmission($request, $tracker_id, $artifact_id);
-        
-    }
-
-
-}
-
-
 
 ?>
