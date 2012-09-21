@@ -928,7 +928,7 @@ class ArtifactField extends Error {
      *
      * @return Boolean
      */
-    function insertFieldValue($artifact_id, $value) {
+    private function insertFieldValue($artifact_id, $value) {
         $sql = "INSERT INTO artifact_field_value (field_id,artifact_id,";
         $values =  db_ei($this->getID()) .",". db_ei($artifact_id) .",";
         switch ($this->getDataType()) {
