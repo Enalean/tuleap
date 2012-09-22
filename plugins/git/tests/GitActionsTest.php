@@ -77,7 +77,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitRepository->expectNever('changeMailPrefix');
         $gitAction->expectNever('addData');
 
-        $this->assertFalse($gitAction->notificationUpdatePrefix(1, null, '[new prefix]'));
+        $this->assertFalse($gitAction->notificationUpdatePrefix(1, null, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationUpdatePrefixPass() {
@@ -94,7 +94,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitRepository->expectOnce('changeMailPrefix');
         $gitAction->expectCallCount('addData', 2);
 
-        $this->assertTrue($gitAction->notificationUpdatePrefix(1, 1, '[new prefix]'));
+        $this->assertTrue($gitAction->notificationUpdatePrefix(1, 1, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationAddMailFailNoRepoId() {

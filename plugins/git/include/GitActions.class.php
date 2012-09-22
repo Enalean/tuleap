@@ -249,7 +249,7 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix) {
+    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane) {
         $c = $this->getController();
         if (empty($repositoryId)) {
             $this->addError('actions_params_error');
@@ -261,6 +261,7 @@ class GitActions extends PluginActions {
         $repository->changeMailPrefix();
         $c->addInfo($this->getText('mail_prefix_updated'));
         $this->addData(array('repository'=>$repository));
+        $this->redirectToRepoManagement($projectId, $repositoryId, $pane);
         return true;
     }
 

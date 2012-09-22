@@ -250,6 +250,7 @@ class Git extends PluginController {
     }
     
     public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
+        $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
             case 'create':
@@ -301,7 +302,6 @@ class Git extends PluginController {
                     if($this->request->valid($valid) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
                     }
-                    $pane = $this->request->get('pane');
                     $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc, $pane) );
                     $this->addView('view');
                 } else {
@@ -323,7 +323,7 @@ class Git extends PluginController {
                 } else {
                     $mailPrefix = '';
                 }
-                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix));
+                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix, $pane));
                 $this->addView('repoManagement');
                 break;
             #add mail
