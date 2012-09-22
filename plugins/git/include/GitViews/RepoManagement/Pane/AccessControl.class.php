@@ -33,7 +33,7 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
     public function getTitle() {
-        return 'Access Control';
+        return $GLOBALS['Language']->getText('plugin_git', 'view_repo_access_control');
     }
 
     /**
@@ -41,7 +41,7 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
      */
     public function getContent() {
         $html  = '';
-        $html .= '<h3>'. 'Access Control' .'</h3>';
+        $html .= '<h3>'. $this->getTitle() .'</h3>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         $html .= '<input type="hidden" id="action" name="action" value="edit" />';
         $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';

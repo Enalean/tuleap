@@ -33,7 +33,7 @@ class GitViews_RepoManagement_Pane_NotificationPrefix extends GitViews_RepoManag
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
     public function getTitle() {
-        return 'Notification Prefix';
+        return $GLOBALS['Language']->getText('plugin_git', 'mail_prefix_label');
     }
 
     /**

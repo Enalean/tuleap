@@ -33,7 +33,7 @@ class GitViews_RepoManagement_Pane_NotificatedPeople extends GitViews_RepoManage
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
     public function getTitle() {
-        return 'Notificated People';
+        return $GLOBALS['Language']->getText('plugin_git', 'add_mail_label');
     }
 
     /**

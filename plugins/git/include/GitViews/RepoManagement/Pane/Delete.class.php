@@ -33,7 +33,7 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
     public function getTitle() {
-        return 'Delete';
+        return ucfirst($GLOBALS['Language']->getText('global', 'delete'));
     }
 
     /**
@@ -41,7 +41,7 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
      */
     public function getContent() {
         $html  = '';
-        $html .= '<h3>'. $GLOBALS['Language']->getText('global', 'delete') .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'admin_deletion_submit') .'</h3>';
 
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';

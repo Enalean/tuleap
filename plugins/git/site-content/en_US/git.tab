@@ -43,6 +43,7 @@ plugin_git	admin_deletion_submit	Delete this repository
 plugin_git	admin_deletion_input_name	Delete
 plugin_git	admin_save_submit	Save
 
+plugin_git	admin_settings	General Settings
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 
@@ -89,13 +90,14 @@ plugin_git	view_repo_parent	Parent
 plugin_git	view_repo_initialized	Initialized
 plugin_git	view_repo_not_initialized	Not initialized
 plugin_git	view_repo_clone_url	Clone url
+plugin_git	view_repo_access_control	Access Control
 plugin_git	view_repo_access	Access
 plugin_git	view_repo_access_public	Public
 plugin_git	view_repo_access_private	Private
 
 plugin_git	repo_not_initialized	Repository is not initialized
 
-plugin_git	confirm_deletion_msg	You are about to permanently delete the repository '$1'. This operation cannot be undone. Do you confirm the deletion?
+plugin_git	confirm_deletion_msg	You are about to permanently delete the repository <strong>$1</strong>. This operation <strong>cannot</strong> be undone. Do you confirm the deletion?
 
 plugin_git	yes	Yes
 plugin_git	no	No
@@ -106,10 +108,12 @@ plugin_git	reference_commit_nature_key	Git commit
 
 plugin_git	admin_repo_management	Repository management
 
+plugin_git	mail_prefix_label	Notification Prefix
 plugin_git	mail_prefix_title	Update notification mail prefix
 plugin_git	mail_prefix	New prefix
 plugin_git	mail_prefix_submit	Update
 
+plugin_git	add_mail_label	Notificated People
 plugin_git	add_mail_title	Add a mail address or a user to notify
 plugin_git	add_mail_msg	You can add more than one mail/user using comma or semi-column as separator.
 plugin_git	add_mail	Mail address/User

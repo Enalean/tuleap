@@ -33,7 +33,7 @@ class GitViews_RepoManagement_Pane_GeneralSettings extends GitViews_RepoManageme
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
     public function getTitle() {
-        return 'General Settings';
+        return $GLOBALS['Language']->getText('plugin_git', 'admin_settings');
     }
 
     /**
