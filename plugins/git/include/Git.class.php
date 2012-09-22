@@ -292,9 +292,11 @@ class Git extends PluginController {
                 } else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
                     $repoDesc = $repository->getDescription();
                     $valid = new Valid_Text('repo_desc');
-                    $valid->required();
                     if($this->request->valid($valid)) {
                         $repoDesc = $this->request->get('repo_desc');
+                        if (! trim($repoDesc)) {
+                            $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
+                        }
                     }
                     $repoAccess = null;
                     $valid = new Valid_String('repo_access');
