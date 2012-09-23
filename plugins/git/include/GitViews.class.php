@@ -28,7 +28,7 @@ require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Selectbox.cla
 require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
 require_once 'www/project/admin/permissions.php';
 require_once 'common/include/CSRFSynchronizerToken.class.php';
-require_once 'RepoManagement/RepoManagement.class.php';
+require_once 'GitViews/RepoManagement/RepoManagement.class.php';
 
 /**
  * GitViews
