@@ -19,7 +19,7 @@
  */
 
 require_once dirname(__FILE__) .'/../include/constants.php';
-require_once GIT_BASE_DIR .'/GitViews/GitViews.class.php';
+require_once GIT_BASE_DIR .'/GitViews.class.php';
 
 Mock::generate('Project');
 Mock::generate('User');

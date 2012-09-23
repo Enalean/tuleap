@@ -20,7 +20,7 @@
 
 require_once 'GitViewsRepositoriesTraversalStrategy.class.php';
 require_once 'GitRepository.class.php';
-require_once 'GitViews/GitViews.class.php';
+require_once 'GitViews.class.php';
 require_once 'html.php';
 
 /**
