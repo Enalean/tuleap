@@ -63,7 +63,6 @@ class GitViews_RepoManagement_Pane_NotificatedPeople extends GitViews_RepoManage
      */
     private function listOfMails() {
         $html  = '';
-        $hp    = Codendi_HTMLPurifier::instance();
         $mails = $this->repository->getNotifiedMails();
         if ($mails) {
             $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'notified_mails_title') .'</h3>';
@@ -76,9 +75,9 @@ class GitViews_RepoManagement_Pane_NotificatedPeople extends GitViews_RepoManage
             $i = 0;
             foreach ($mails as $mail) {
                 $html .= '<tr class="'.html_get_alt_row_color(++$i).'">';
-                $html .= '<td>'.$mail.'</td>';
+                $html .= '<td>'.$this->hp->purify($mail).'</td>';
                 $html .= '<td>';
-                $html .= '<input type="checkbox" name="mail[]" value="'.$hp->purify($mail).'" />';
+                $html .= '<input type="checkbox" name="mail[]" value="'.$this->hp->purify($mail).'" />';
                 $html .= '</a>';
                 $html .= '</td>';
                 $html .= '</tr>';

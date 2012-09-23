@@ -40,7 +40,6 @@ class GitViews_RepoManagement_Pane_GeneralSettings extends GitViews_RepoManageme
      * @see GitViews_RepoManagement_Pane::getContent()
      */
     public function getContent() {
-        $hp = Codendi_HTMLPurifier::instance();
         $html  = '';
         $html .= '<h3>'. $this->getTitle() .'</h3>';
         $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
@@ -51,7 +50,7 @@ class GitViews_RepoManagement_Pane_GeneralSettings extends GitViews_RepoManageme
         $html .= '<p>';
         $html .= '<label for="repo_desc">'. $GLOBALS['Language']->getText('plugin_git', 'view_repo_description') .':</label>';
         $html .= '<textarea class="text" id="repo_desc" name="repo_desc">';
-        $html .= $hp->purify($this->repository->getDescription(), CODENDI_PURIFIER_CONVERT_HTML, $this->repository->getProjectId());
+        $html .= $this->hp->purify($this->repository->getDescription(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</textarea>';
         $html .= '</p>';
 

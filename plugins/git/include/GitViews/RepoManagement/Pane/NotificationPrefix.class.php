@@ -41,7 +41,6 @@ class GitViews_RepoManagement_Pane_NotificationPrefix extends GitViews_RepoManag
      */
     public function getContent() {
         $html  = '';
-        $hp = Codendi_HTMLPurifier::instance();
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'mail_prefix_title') .'</h3>';
         $html .= '<form id="mail_prefix_form" action="/plugins/git/" method="POST">';
         $html .= '<input type="hidden" id="action" name="action" value="mail_prefix" />';
@@ -49,7 +48,7 @@ class GitViews_RepoManagement_Pane_NotificationPrefix extends GitViews_RepoManag
         $html .= '<input type="hidden" id="group_id" name="group_id" value="'. $this->repository->getProjectId() .'" />';
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
         $html .= '<label for="mail_prefix">'. $GLOBALS['Language']->getText('plugin_git', 'mail_prefix') .'</label>';
-        $html .= '<input name="mail_prefix" id="mail_prefix" class="plugin_git_mail_prefix" type="text" value="'. $hp->purify($this->repository->getMailPrefix(), CODENDI_PURIFIER_CONVERT_HTML, $this->repository->getProjectId()) .'" /></td>';
+        $html .= '<input name="mail_prefix" id="mail_prefix" class="plugin_git_mail_prefix" type="text" value="'. $this->hp->purify($this->repository->getMailPrefix()) .'" /></td>';
         $html .= '<p>';
         $html .= '<input type="submit" id="mail_prefix_submit" name="mail_prefix_submit" value="'. $GLOBALS['Language']->getText('plugin_git', 'mail_prefix_submit') .'" />';
         $html .= '</p>';

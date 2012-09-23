@@ -36,6 +36,7 @@ abstract class GitViews_RepoManagement_Pane {
     public function __construct(GitRepository $repository, Codendi_Request $request) {
         $this->repository = $repository;
         $this->request    = $request;
+        $this->hp         = Codendi_HTMLPurifier::instance();
     }
 
     /**
