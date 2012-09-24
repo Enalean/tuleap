@@ -851,6 +851,86 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
     }
 
     /**
+     * Project delete Ugroup binding fail
+     *
+     * @return Void
+     */
+    public function testProjectDeleteUgroupBindingFail() {
+        $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+
+        // The project
+        $project = new MockProject();
+        $project->setReturnValue('usesCVS', true);
+        $project->setReturnValue('usesSVN', true);
+        $evt->setReturnValue('getProject', $project, array('142'));
+
+        //Remove users from project
+        $evt->setReturnValue('removeProjectMembers', true);
+
+        $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', false);
+
+        //Cleanup FRS
+        $evt->setReturnValue('cleanupProjectFRS', true);
+
+        //Delete all trackers
+        $atf = new  MockArtifactTypeFactory();
+        $atf->setReturnValue('preDeleteAllProjectArtifactTypes', true);
+        $evt->setReturnValue('getArtifactTypeFactory', $atf, array($project));
+
+        // System
+        $backendSystem = new MockBackendSystem();
+        $backendSystem->setReturnValue('projectHomeExists', true);
+        $backendSystem->setReturnValue('archiveProjectHome', true);
+        $backendSystem->setReturnValue('archiveProjectFtp', true);
+        $backendSystem->expectOnce('setNeedRefreshGroupCache');
+        $evt->setReturnValue('getBackend', $backendSystem, array('System'));
+
+        // Wiki attachments
+        $wa = new MockWikiAttachment();
+        $wa->setReturnValue('deleteProjectAttachments', true);
+        $wa->expectOnce('deleteProjectAttachments');
+        $evt->setReturnValue('getWikiAttachment', $wa);
+
+        // CVS
+        $backendCVS = new MockBackendCVS();
+        $backendCVS->setReturnValue('repositoryExists', true);
+        $backendCVS->setReturnValue('archiveProjectCVS', true);
+        $backendCVS->expectOnce('setCVSRootListNeedUpdate');
+        $evt->setReturnValue('getBackend', $backendCVS, array('CVS'));
+
+        // SVN
+        $backendSVN = new MockBackendSVN();
+        $backendSVN->setReturnValue('repositoryExists', true);
+        $backendSVN->setReturnValue('archiveProjectSVN', true);
+        $backendSVN->expectOnce('setSVNApacheConfNeedUpdate');
+        $evt->setReturnValue('getBackend', $backendSVN, array('SVN'));
+
+        // MailingList
+        $backendMailingList = new MockBackendMailingList();
+        $backendMailingList->setReturnValue('deleteProjectMailingLists', true);
+        $backendMailingList->expectOnce('deleteProjectMailingLists');
+        $evt->setReturnValue('getBackend', $backendMailingList, array('MailingList'));
+
+        // Aliases
+        $backendAliases = new MockBackendAliases();
+        $backendAliases->expectOnce('setNeedUpdateMailAliases');
+        $evt->setReturnValue('getBackend', $backendAliases, array('Aliases'));
+
+        $evt->expectNever('done');
+        $evt->expectOnce('error', array("Could not remove ugroups binding"));
+
+        $em = new MockEventManager();
+        $evt->setReturnValue('getEventManager', $em);
+
+        // Launch the event
+        $this->assertFalse($evt->process());
+    }
+
+    /**
      * Project delete Succeed
      *
      * @return Void
@@ -932,4 +1012,5 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
     }
 
 }
+
 ?>

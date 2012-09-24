@@ -82,7 +82,7 @@ if ($func=='create') {
         $group_arr[]       = $row['name'];
         $group_arr_value[] = $row['ugroup_id'];
     }
-    echo html_build_select_box_from_arrays ($group_arr_value, $group_arr, "group_templates", 'cx_empty', false);
+    echo html_build_select_box_from_arrays($group_arr_value, $group_arr, "group_templates", 'cx_empty', false);
      
     echo '</td>
             </tr><tr><td><input type="submit" value="'.$Language->getText('project_admin_editugroup', 'create_ug').'"></tr></td>
