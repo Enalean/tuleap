@@ -1,4 +1,11 @@
 #!/bin/sh
+
+#
+# /!\ Prototype, do not use it /!\
+#
+
+exit 1
+
 # Migrate a Tuleap CentOS 5 RPM install from PHP 5.1 to PHP 5.3
 
 TULEAP_REPO_NAME=tuleap-local
