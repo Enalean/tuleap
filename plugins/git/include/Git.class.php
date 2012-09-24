@@ -290,12 +290,13 @@ class Git extends PluginController {
                     $this->addAction( 'getRepositoryDetails', array($this->groupId, $parentId) );
                     $this->addView('view');
                 } else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
-                    $repoDesc = $repository->getDescription();
-                    $valid = new Valid_Text('repo_desc');
-                    if($this->request->valid($valid)) {
-                        $repoDesc = $this->request->get('repo_desc');
-                        if (! trim($repoDesc)) {
-                            $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
+                    $repoDesc = null;
+                    if ($this->request->exist('repo_desc')) {
+                        $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
+                        $valid = new Valid_Text('repo_desc');
+                        $valid->required();
+                        if($this->request->valid($valid)) {
+                            $repoDesc = $this->request->get('repo_desc');
                         }
                     }
                     $repoAccess = null;

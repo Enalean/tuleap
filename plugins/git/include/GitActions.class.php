@@ -390,10 +390,12 @@ class GitActions extends PluginActions {
             return false;
         }
 
-        if (strlen($repoDescription) > 1024) {
-            $this->addError('actions_long_description');
-        } else {
-            $repository->setDescription($repoDescription);
+        if ($repoDescription) {
+            if (strlen($repoDescription) > 1024) {
+                $this->addError('actions_long_description');
+            } else {
+                $repository->setDescription($repoDescription);
+            }
         }
 
         try {
