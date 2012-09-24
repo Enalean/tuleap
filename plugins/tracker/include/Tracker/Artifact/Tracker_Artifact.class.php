@@ -676,17 +676,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return String The valid followup comment format
      */
     private function validateCommentFormat($request, $comment_format_field_name) {
-        $default_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
-        $formats = array(
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
-            Tracker_Artifact_Changeset_Comment::HTML_COMMENT
-        );
-        $comment_format = $request->getValidated(
-            $comment_format_field_name,
-            new Valid_WhiteList($comment_format_field_name, $formats),
-            $default_format
-        );
-        return $comment_format;
+        $comment_format = $request->get($comment_format_field_name);
+        return Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
     }
 
     /**
@@ -975,6 +966,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if ($this->validateFields($fields_data, false)) {
                 $comment = trim($comment);
                 $last_changeset = $this->getLastChangeset();
+                $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
                 if ($comment || $last_changeset->hasChanges($fields_data)) {
                     //There is a comment or some change in fields: create a changeset
 
@@ -1573,6 +1565,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getCrossReferenceManager() {
         return new CrossReferenceManager();
     }
+
 }
 
 ?>
