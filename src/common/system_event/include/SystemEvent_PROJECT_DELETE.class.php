@@ -46,8 +46,10 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
         return $txt;
     }
     
-    /** 
+    /**
      * Process stored event
+     *
+     * @return Boolean
      */
     function process() {
         // Check parameters
@@ -149,7 +151,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
      /**
      * Remove all users from a given project.
      *
-     * @param Project $project
+     * @param Project $project Project to be deleted
      *
      * @return Boolean
      */
@@ -162,7 +164,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
      * Deletes ugroups assigned to recieve membership request notification 
      * And the message set from a given project.
      *
-     * @param Integer $groupId
+     * @param Integer $groupId Id of the project to be deleted
      *
      * @return Boolean
      */
@@ -175,7 +177,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
     /**
      * Remove Files, releases and packages for a given project.
      *
-     * @param Integer $groupId
+     * @param Integer $groupId Id of the project to be deleted
      *
      * @return Boolean
      */
@@ -186,6 +188,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
 
     /**
      * Returns a ArtifactTypeFactory
+     *
+     * @param Project $project Project to be deleted
      *
      * @return ArtifactTypeFactory
      */
