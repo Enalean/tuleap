@@ -61,6 +61,8 @@ class UGroup {
     /**
      * Constructor of the class
      *
+     * @param Array $row ugroup row
+     *
      * @return Void
      */
     public function __construct($row = null) {
@@ -184,7 +186,7 @@ class UGroup {
      * Add the given user to the group
      * This method can add to any group, either dynamic or static.
      *
-     * @param User $user
+     * @param User $user User to add
      *
      * @throws UGroup_Invalid_Exception
      *
@@ -282,9 +284,9 @@ class UGroup {
      * Remove given user from user group
      * This method can remove from any group, either dynamic or static.
      *
-     * @throws UGroup_Invalid_Exception
-     *
      * @param User $user
+     *
+     * @throws UGroup_Invalid_Exception
      *
      * @return Void
      */
@@ -333,9 +335,9 @@ class UGroup {
     /**
      * Convert a dynamic ugroup_id into it's DB table update to remove someone from given group
      *
-     * @throws UGroup_Invalid_Exception
-     *
      * @param Integer $id Id of the ugroup
+     *
+     * @throws UGroup_Invalid_Exception
      *
      * @return String
      */

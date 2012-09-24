@@ -87,7 +87,7 @@ class UGroupManager {
      * @return DataAccessResult
      */
     public function getDynamicUGroupsMembers($ugroupId, $groupId) {
-        if($ugroupId <= 100) {
+        if ($ugroupId <= 100) {
             $dao = new UGroupUserDao();
             return $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
         }

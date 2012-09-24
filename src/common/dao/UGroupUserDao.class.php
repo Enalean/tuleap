@@ -31,7 +31,9 @@ class UGroupUserDao extends DataAccessObject {
     * 
     * Return all Active or Restricted ugroup members
     * Only return active & restricted to keep it coherent with Group::getMembersUserNames
-    * 
+    *
+    * @param Integer $ugroup_id Id of the ugroup
+    *
     * @return DataAccessResult
     */
     function searchUserByStaticUGroupId($ugroup_id) {
@@ -47,8 +49,8 @@ class UGroupUserDao extends DataAccessObject {
     /**
      * Return project admins of given static group
      * 
-     * @param Integer $groupId
-     * @param Array $ugroups
+     * @param Integer $groupId Id of the project
+     * @param Array   $ugroups List of ugroups
      * 
      * @return Data Access Result
      */
@@ -62,7 +64,7 @@ class UGroupUserDao extends DataAccessObject {
                     AND u.status IN ("A", "R") 
                     AND ug.group_id ='.$this->da->escapeInt($groupId).' 
                     AND u.status IN ("A", "R") 
-                    AND uu.ugroup_id IN ('.implode(",",$ugroups).')';
+                    AND uu.ugroup_id IN ('.implode(",", $ugroups).')';
         return $this->retrieve($sql);
     }
 
