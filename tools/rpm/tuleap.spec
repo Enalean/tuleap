@@ -53,19 +53,16 @@ Provides: codendi
 Provides: tuleap
 %if %{php_base} == php
 Requires: jpgraph-%{PKG_NAME}
+Requires: htmlpurifier
+Requires: %{php_base}-pecl-json
 %else
 Requires: %{php_base}-jpgraph-%{PKG_NAME}
+Requires: %{php_base}-htmlpurifier
 %endif
 %endif
 Requires: %{php_base}-pecl-apc
-%if %{php_base} == php
-Requires: htmlpurifier
-%else
-Requires: %{php_base}-htmlpurifier
-%endif
 Requires: curl
 Requires: %{php_base}-zendframework = 1.8.1
-#Requires: %{php_base}-pecl-json
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
 # Automatic perl dependencies
