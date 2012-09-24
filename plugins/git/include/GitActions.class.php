@@ -417,11 +417,11 @@ class GitActions extends PluginActions {
             
         } catch (GitDaoException $e) {
             $c->addError( $e->getMessage() );
-            $c->redirectToRepoManagement($projectId, $repoId, $pane);
+            $this->redirectToRepoManagement($projectId, $repoId, $pane);
             return false;
         }
         $c->addInfo( $this->getText('actions_save_repo_process') );
-        $c->redirectToRepoManagement($projectId, $repoId, $pane);
+        $this->redirectToRepoManagement($projectId, $repoId, $pane);
         return;
     }
 
