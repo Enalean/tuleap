@@ -257,7 +257,6 @@ class UGroupBinding {
                 //re-throw exception
                 throw new Exception($e->getMessage());
             } catch (RuntimeException $e) {
-                //@Todo i18n Runtime exception message
                 $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
                 throw new Exception($GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
             }
