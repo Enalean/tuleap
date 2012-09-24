@@ -178,19 +178,15 @@ class UGroupBinding {
      *
      * @param Integer $ugroupId Id of the user group
      *
-     * @return boolean
+     * @return void
      */
     public function resetUgroup($ugroupId) {
         if ($this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
             if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
                 throw new LogicException($GLOBALS['Language']->getText('project_ugroup_binding', 'reset_error', array($ugroupId)));
-                return false;
-            } else {
-                return true;
             }
         } else {
             throw new RuntimeException($GLOBALS['Language']->getText('project_ugroup_binding', 'update_user_not_allowed', array($ugroupId)));
-            return false;
         }
     }
 
@@ -200,19 +196,15 @@ class UGroupBinding {
      * @param Integer $sourceId Id of the source user group
      * @param Integer $ugroupId Id of the binded user group
      *
-     * @return boolean
+     * @return void
      */
     public function cloneUgroup($sourceId, $ugroupId) {
         if ($this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
             if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
                 throw new LogicException($GLOBALS['Language']->getText('project_ugroup_binding', 'clone_error', array($ugroupId)));
-                return false;
-            } else {
-                return true;
             }
         } else {
             throw new RuntimeException($GLOBALS['Language']->getText('project_ugroup_binding', 'update_user_not_allowed', array($ugroupId)));
-            return false;
         }
     }
 
@@ -222,14 +214,12 @@ class UGroupBinding {
      * @param Integer $ugroupId Id of the binded user group
      * @param Integer $sourceId Id of the source user group
      *
-     * @return boolean
+     * @return void
      */
     public function updateUgroupBinding($ugroupId, $sourceId) {
         if (!$this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
             throw new Exception('Unable to store ugroup binding');
-            return false;
         }
-        return true;
     }
 
     /**
