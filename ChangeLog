@@ -9,7 +9,7 @@ Version 5.5 (Not released yet)
 	* Fix login error message when username is invalid
 
     == Plugins ==
-	* tracker: 5.19
+	* tracker: 5.20
 	* git: 2.7.6
 	* docman: 2.26.8
 	* agiledashboard: 0.53
