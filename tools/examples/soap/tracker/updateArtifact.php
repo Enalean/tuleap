@@ -35,12 +35,13 @@ $requesterSessionHash = $soapLogin->login('goyotm','martin')->session_hash;
 $project_id  = $argv[1];
 $tracker_id  = $argv[2];
 $artifact_id = $argv[3];
-$value       = array(array('field_name' => 'summary',
-                           'field_label' => 'Summary',
-                           'field_value' => $argv[4])
-               );
-
-print_r($value);
+$value       = array(
+    array(
+        'field_name' => 'summary',
+        'field_label' => 'Summary',
+        'field_value' => $argv[4]
+    )
+);
 
 // Connecting to the soap's tracker client
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
@@ -51,8 +52,6 @@ if ($argc == 7) {
 
     $comment      = $argv[5];
     $comment_type = $argv[6];
-
-    var_dump ($comment);
 
     $response = $soapTracker->updateArtifact($requesterSessionHash, $project_id, $tracker_id, $artifact_id, $value, $comment, $comment_type);
 

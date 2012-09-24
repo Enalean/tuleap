@@ -21,6 +21,7 @@
 require_once('common/date/DateHelper.class.php');
 
 class Tracker_Artifact_Changeset_Comment {
+
     /**
      * @const Changeset comment format is text.
      */
@@ -34,7 +35,10 @@ class Tracker_Artifact_Changeset_Comment {
     /**
     * @const Changeset available comment formats
     */
-    private static $available_comment_formats = array(Tracker_Artifact_Changeset_Comment::TEXT_COMMENT, Tracker_Artifact_Changeset_Comment::HTML_COMMENT);
+    private static $available_comment_formats = array(
+        self::TEXT_COMMENT,
+        self::HTML_COMMENT,
+    );
 
     public $id;
     /**
@@ -205,13 +209,15 @@ class Tracker_Artifact_Changeset_Comment {
     }
 
     /**
-    * Check the comment format, to ensure it is in
-    * a known one.
-    * @param string $comment_format the format of the comment
-    * @return string $comment_format
-    */
+     * Check the comment format, to ensure it is in
+     * a known one.
+     *
+     * @param string $comment_format the format of the comment
+     *
+     * @return string $comment_format
+     */
     public static function checkCommentFormat($comment_format) {
-        if (!in_array($comment_format, self::$available_comment_formats)) {
+        if (! in_array($comment_format, self::$available_comment_formats)) {
             $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
         }
 

@@ -33,12 +33,13 @@ $requesterSessionHash = $soapLogin->login('testman','testpwd')->session_hash;
 //save values
 $project_id  = $argv[1];
 $tracker_id  = $argv[2];
-$value       = array(array('field_name' => 'name',
-                                'field_label' => 'Name',
-                                'field_value' => $argv[3]
-                ));
-
-print_r($value);
+$value       = array(
+    array(
+        'field_name' => 'name',
+        'field_label' => 'Name',
+        'field_value' => $argv[3]
+    )
+);
 
 // Connecting to the soap's tracker client
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
