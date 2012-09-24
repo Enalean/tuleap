@@ -66,16 +66,13 @@ class Planning_MilestoneController extends MVC2_Controller {
         $this->milestone_factory = $milestone_factory;
         $this->hierarchy_factory = $hierarchy_factory;
         $project                 = $project_manager->getProject($request->get('group_id'));
-        try {
-            $this->milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
-                $this->getCurrentUser(),
-                $project,
-                $request->get('planning_id'),
-                $request->get('aid')
-            );
-        } catch (Tracker_Hierarchy_MoreThanOneParentException $e) {
-            $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-        }
+
+        $this->milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
+            $this->getCurrentUser(),
+            $project,
+            $request->get('planning_id'),
+            $request->get('aid')
+        );
         if (!$this->milestone) {
             $this->milestone = $this->milestone_factory->getNoMilestone($project, $request->get('planning_id'));
         }

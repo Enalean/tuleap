@@ -66,12 +66,7 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
         $artifact = $node->getObject();
 
         if ($artifact) {
-            $parent = null;
-            try {
-                $parent = $artifact->getParent($this->user);
-            } catch(Tracker_Hierarchy_MoreThanOneParentException $e) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
-            }
+            $parent         = $artifact->getParent($this->user);
             $planning_item  = new Planning_Item($artifact, $this->planning, $parent);
             $presenter      = new Planning_ItemPresenter($planning_item, $this->card_fields, $this->classname);
             $presenter_node = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
