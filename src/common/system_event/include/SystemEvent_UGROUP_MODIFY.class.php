@@ -20,7 +20,9 @@
  * 
  */
 
+require_once 'common/project/Project.class.php';
 require_once('common/project/UGroupBinding.class.php');
+require_once 'common/system_event/SystemEvent.class.php';
 
 /**
 * System Event classes
@@ -68,7 +70,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
         if ($project = $this->getProject($group_id)) {
             // Update SVN access file
             if ($project->usesSVN()) {
-                $backendSVN = Backend::instance('SVN');
+                $backendSVN = $this->getBackend('SVN');
                 if (!$backendSVN->updateSVNAccess($group_id, $ugroup_name, $ugroup_old_name)) {
                     $this->error("Could not update SVN access file ($group_id)");
                     return false;
@@ -89,7 +91,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * @return Boolean
      */
     protected function processUgroupBinding($ugroup_id, $group_id) {
-        $bindingManager = new UGroupBinding();
+        $bindingManager = $this->getUgroupBinding();
         if (!$bindingManager->checkUGroupValidity($group_id, $ugroup_id)) {
             //The user group is removed, we remove all its binding traces
             return $bindingManager->removeAllUGroupsBinding($ugroup_id);
@@ -100,6 +102,15 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
             }
             return true;
         }
+    }
+
+    /**
+     * Obtain instance of UGroupBinding
+     *
+     * @return UGroupBinding
+     */
+    public function getUgroupBinding() {
+        return new UGroupBinding();
     }
 
 }
