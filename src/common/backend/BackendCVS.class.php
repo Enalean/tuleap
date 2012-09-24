@@ -649,7 +649,7 @@ class BackendCVS extends Backend {
         $filename = $GLOBALS['cvs_prefix'].'/'.$newName.'/CVSROOT/config';
         $this->_RcsCheckout($filename);
         $file = file_get_contents($filename);
-        $file = preg_replace('%'. preg_quote($oldLockDir) .'%m', $newLockDir, $file);
+        $file = preg_replace('%'.$oldLockDir.'%m', $newLockDir, $file);
         file_put_contents($filename, $file);
         $this->_RcsCommit($filename);
 
