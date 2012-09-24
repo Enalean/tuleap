@@ -21,8 +21,7 @@
 require_once GIT_BASE_DIR .'/GitRepository.class.php';
 require_once 'Pane/GeneralSettings.class.php';
 require_once 'Pane/AccessControl.class.php';
-require_once 'Pane/NotificationPrefix.class.php';
-require_once 'Pane/NotificatedPeople.class.php';
+require_once 'Pane/Notification.class.php';
 require_once 'Pane/Delete.class.php';
 
 /**
@@ -57,8 +56,7 @@ class GitViews_RepoManagement {
         $panes = array(
             new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request),
             new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request),
-            new GitViews_RepoManagement_Pane_NotificationPrefix($repository, $this->request),
-            new GitViews_RepoManagement_Pane_NotificatedPeople($repository, $this->request),
+            new GitViews_RepoManagement_Pane_Notification($repository, $this->request),
             new GitViews_RepoManagement_Pane_Delete($repository, $this->request),
         );
         $indexed_panes = array();

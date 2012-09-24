@@ -256,12 +256,13 @@ class GitActions extends PluginActions {
             return false;
         }
         $repository = $this->_loadRepository($projectId, $repositoryId);
-        $repository->setMailPrefix($mailPrefix);
-        $repository->save();
-        $repository->changeMailPrefix();
-        $c->addInfo($this->getText('mail_prefix_updated'));
-        $this->addData(array('repository'=>$repository));
-        $this->redirectToRepoManagement($projectId, $repositoryId, $pane);
+        if ($repository->getMailPrefix() != $mailPrefix) {
+            $repository->setMailPrefix($mailPrefix);
+            $repository->save();
+            $repository->changeMailPrefix();
+            $c->addInfo($this->getText('mail_prefix_updated'));
+            $this->addData(array('repository'=>$repository));
+        }
         return true;
     }
 
@@ -288,7 +289,6 @@ class GitActions extends PluginActions {
         //Display this message, just if all the entred mails have been added
         if ($res) {
             $c->addInfo($this->getText('mail_added'));
-            $this->redirectToRepoManagement($projectId, $repositoryId, $pane);
         }
         return true;
     }
@@ -309,11 +309,10 @@ class GitActions extends PluginActions {
                 $ret = false;
             }
         }
-        $this->redirectToRepoManagement($projectId, $repositoryId, $pane);
         return $ret;
     }
-    
-    private function redirectToRepoManagement($projectId, $repositoryId, $pane) {
+
+    public function redirectToRepoManagement($projectId, $repositoryId, $pane) {
         $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
             array(
                 'action'   => 'repo_management',
@@ -418,11 +417,11 @@ class GitActions extends PluginActions {
             
         } catch (GitDaoException $e) {
             $c->addError( $e->getMessage() );
-            $this->redirectToRepoManagement($projectId, $repoId, $pane);
+            $c->redirectToRepoManagement($projectId, $repoId, $pane);
             return false;
         }
         $c->addInfo( $this->getText('actions_save_repo_process') );
-        $this->redirectToRepoManagement($projectId, $repoId, $pane);
+        $c->redirectToRepoManagement($projectId, $repoId, $pane);
         return;
     }
 
