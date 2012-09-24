@@ -335,11 +335,7 @@ Group: Development/Tools
 Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}
-%if %{php_base} == php
-Requires: elasticsearch
-%else
 Requires: %{php_base}-elasticsearch
-%endif
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 
