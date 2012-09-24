@@ -22,7 +22,7 @@ require_once('common/dao/UGroupDao.class.php');
 require_once('common/project/UGroupManager.class.php');
 
 /**
- * UGroup object
+ * UGroup binding
  */
 class UGroupBinding {
 
@@ -150,7 +150,7 @@ class UGroupBinding {
                 try {
                     $this->resetUgroup($ugroupKey);
                     $this->cloneUgroup($ugroupId, $ugroupKey);
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     return false;
                 }
             }
@@ -253,16 +253,16 @@ class UGroupBinding {
             try {
                 $this->resetUgroup($ugroupId);
                 $this->cloneUgroup($sourceId, $ugroupId);
-            } catch(LogicException $e) {
+            } catch (LogicException $e) {
                 //re-throw exception
                 throw new Exception($e->getMessage());
-            } catch(RuntimeException $e) {
+            } catch (RuntimeException $e) {
                 //@Todo i18n Runtime exception message
                 $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
                 throw new Exception($GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
             }
             $this->updateUgroupBinding($ugroupId, $sourceId);
-        }catch(Exception $e) {
+        } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             return false;
         }
