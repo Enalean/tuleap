@@ -30,6 +30,7 @@ global	btn_close	Fermer
 global	btn_reset	Réinitialiser
 global	reset	réinitialiser
 global	delete	Supprimer
+global	warning!	Attention !
 global	yes	Oui
 global	no	Non
 global	on	Activé

@@ -1,21 +1,6 @@
 document.observe('dom:loaded', function () {
-    var repoDesc = $('repo_desc')
-      , fork_repositories_prefix = $('fork_repositories_prefix');
+    var fork_repositories_prefix = $('fork_repositories_prefix');
 
-    if ( repoDesc ) {
-        var span = new Element('span').update( repoDesc.value.escapeHTML() );
-        repoDesc.insert({before:span});
-        repoDesc.hide();
-        var link = new Element('a',{href:'#'}).update( new Element('img', {src:'/themes/common/images/ic/edit.png',alt:'edit'}) );
-        link.observe('click', function (evt) {
-            span.hide();
-            link.hide();
-            repoDesc.show();
-            evt.stop();
-        });
-        span.insert({after:link});
-    }
-    
     if (fork_repositories_prefix) {
         var fork_destination = $('fork_destination');
         var fork_path        = $('fork_repositories_path');

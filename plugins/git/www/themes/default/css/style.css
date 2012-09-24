@@ -26,7 +26,7 @@ textarea.text {
     width:      600px;
 }
 
-#plugin_git_reference h2 {
+#plugin_git_reference h1 {
     float:          left;
     padding-bottom: 0;
     padding-top:    0;
@@ -70,10 +70,6 @@ textarea.text {
     margin: 0.5em 0 0.5em 0;
 }
 
-#plugin_git_confirm_deletion {
-    float: right;
-}
-
 #plugin_git_fork_form {
     white-space:no-wrap;
     margin-top:0em;
@@ -110,11 +106,6 @@ td.plugin_git_first_col {
 
 .plugin_git_mail_prefix {
     width:15em;
-}
-
-.plugin_git_add_mail {
-    width:  60em;
-    height: 3em;
 }
 
 #gitphp {
@@ -160,4 +151,9 @@ td.plugin_git_first_col {
 .widget-preview-plugin_git_project_pushes-en_US,
 .widget-preview-plugin_git_project_pushes-fr_FR {
     background-image:url('../images/widget-preview-project_pushes.png');
+}
+
+#git_repomanagement label {
+    display: block;
+    margin-bottom: 5px;
 }
