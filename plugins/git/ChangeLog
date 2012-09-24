@@ -1,3 +1,6 @@
+Version 2.7.7 - Tuleap 5.5
+    * improve look and feel of the ui of git repository admin
+
 Version 2.7.6 - Tuleap 5.5
     * Make possible the fork action for people having read access on a git repository but are not project members (Contrib STMicroelectronics)
 
