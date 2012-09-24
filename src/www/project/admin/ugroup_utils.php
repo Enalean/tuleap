@@ -95,7 +95,16 @@ function ugroup_db_get_members($ugroup_id, $with_display_preferences = false, $k
     return $sql;
 }
 
-// Return name and id (as DB result) of all ugroups belonging to a specific project.
+/**
+ * Return name and id (as DB result) of all ugroups belonging to a specific project.
+ *
+ * @param Integer $groupId    Id of the project
+ * @param Array   $predefined List of predefined ugroup id
+ *
+ * @deprecated Use UGroupManager::getExistingUgroups() instead
+ *
+ * @return DB result set
+ */
 function ugroup_db_get_existing_ugroups($group_id, $predefined=null) {
     $_extra = '';
     if($predefined !== null && is_array($predefined)) {

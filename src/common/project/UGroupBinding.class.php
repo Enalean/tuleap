@@ -126,9 +126,9 @@ class UGroupBinding {
      * @return boolean
      */
     public function removeProjectUGroupsBinding($groupId) {
-        $ugroups        = ugroup_db_get_existing_ugroups($groupId);
+        $ugroups        = $this->getUGroupManager()->getExistingUgroups($groupId);
         $bindingRemoved = true;
-        while ($ugroup = db_fetch_array($ugroups)) {
+        foreach ($ugroups as $ugroup) {
             if (!$this->removeAllUGroupsBinding($ugroup['ugroup_id'])) {
                 $bindingRemoved = false;
             }

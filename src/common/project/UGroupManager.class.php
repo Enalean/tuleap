@@ -122,6 +122,23 @@ class UGroupManager {
         return $ugroupUpdateUsersAllowed;
     }
 
+    /**
+     * Return name and id of all ugroups belonging to a specific project
+     *
+     * @param Integer $groupId    Id of the project
+     * @param Array   $predefined List of predefined ugroup id
+     *
+     * @return DataAccessResult
+     */
+    public function getExistingUgroups($groupId, $predefined = null) {
+        $dar = $this->getDao()->getExistingUgroups($groupId, $predefined);
+        if ($dar && !$dar->isError()) {
+            return $dar;
+        } else {
+            return array();
+        }
+    }
+
 }
 
 ?>
