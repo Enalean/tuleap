@@ -60,7 +60,7 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
         $html .= '<input type="hidden" id="action" name="action" value="repo_management" />';
         $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
         $disabled = '';
-        if ($this->repository->hasChild()) {
+        if (!$this->repository->canBeDeleted()) {
             $html .= '<p>'. 'You cannot delete' .'</p>';
             $disabled = 'readonly="readonly" disabled="disabled"';
         }
