@@ -77,5 +77,30 @@ class UGroupBindingTest extends UnitTestCase {
         $this->expectException(new LogicException());
         $ugroupBinding->resetUgroup($ugroup_id);
     }
+
+    function testCloneUgroupFailureUpdateUGroupNotAllowed() {
+        $ugroup_id     = 200;
+        $source_id     = 300;
+        $ugroupBinding = new UGroupBindingTestVersion();
+        $ugroupManager = new MockUGroupManager();
+        $ugroupManager->setReturnValue('isUpdateUsersAllowed', false);
+        $ugroupBinding->setReturnValue('getUGroupManager', $ugroupManager);
+        $this->expectException(new RuntimeException());
+        $ugroupBinding->cloneUgroup($source_id, $ugroup_id);
+    }
+
+    function testCloneUgroupUpdateUGroupNotAllowed() {
+        $ugroup_id     = 200;
+        $source_id     = 300;
+        $ugroupBinding = new UGroupBindingTestVersion();
+        $ugroupManager = new MockUGroupManager();
+        $ugroupUserDao = new MockUGroupUserDao();
+        $ugroupManager->setReturnValue('isUpdateUsersAllowed', true);
+        $ugroupUserDao->setReturnValue('cloneUgroup', false);
+        $ugroupBinding->setReturnValue('getUGroupManager', $ugroupManager);
+        $ugroupBinding->setReturnValue('getUGroupUserDao', $ugroupUserDao);
+        $this->expectException(new LogicException());
+        $ugroupBinding->cloneUgroup($source_id, $ugroup_id);
+    }
 }
 ?>
