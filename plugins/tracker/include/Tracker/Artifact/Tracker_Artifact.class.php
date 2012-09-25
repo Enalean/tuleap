@@ -377,9 +377,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return void
      */
     public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $tracker = $this->getTracker();
-        $title = $hp->purify($tracker->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
+        // the following statement needs to be called before displayHeader
+        // in order to get the feedback, if any
+        $hierarchy = $this->getAllAncestors($current_user);
+
+        $hp          = Codendi_HTMLPurifier::instance();
+        $tracker     = $this->getTracker();
+        $title       = $hp->purify($tracker->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
         $breadcrumbs = array(
             array('title' => $title,
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->id)
@@ -414,7 +418,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
 
-        $html .= $this->fetchTitleInHierarchy($current_user);
+        $html .= $this->fetchTitleInHierarchy($hierarchy);
 
         $html .= $this->fetchFields($request->get('artifact'));
 
@@ -434,11 +438,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         exit();
     }
 
-    private function fetchTitleInHierarchy(User $current_user) {
-        $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
+    private function fetchTitleInHierarchy(array $hierarchy) {
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
         $html .= $this->fetchHiddenTrackerId();
-        $hierarchy = $this->getAllAncestors($current_user);
         if ($hierarchy) {
             array_unshift($hierarchy, $this);
             $html .= $this->fetchParentsTitle($hp, $hierarchy);
