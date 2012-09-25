@@ -2,6 +2,10 @@ ifeq ($(strip $(RPM_TMP)),)
 	RPM_TMP=$(HOME)/rpmbuild
 endif
 
+ifeq ($(strip $(PHP_BASE)),)
+	PHP_BASE=php
+endif
+
 BASE_DIR=$(shell cd ../..; pwd)
 
 ifeq (,$(shell echo "$$DOCBOOK_TOOLS_DIR"))
