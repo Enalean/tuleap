@@ -89,7 +89,7 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroupBinding->cloneUgroup($source_id, $ugroup_id);
     }
 
-    function testCloneUgroupUpdateUGroupNotAllowed() {
+    function testCloneUgroupDaoFailure() {
         $ugroup_id     = 200;
         $source_id     = 300;
         $ugroupBinding = new UGroupBindingTestVersion();
