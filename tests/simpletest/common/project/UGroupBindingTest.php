@@ -22,7 +22,6 @@ require_once 'common/project/UGroupBinding.class.php';
 
 Mock::generate('UGroupBinding');
 Mock::generatePartial('UGroupBinding', 'UGroupBindingTestVersion', array('getUGroupDao', 'getUGroupUserDao', 'getUGroupManager'));
-Mock::generatePartial('UGroupDao', 'UGroupDaoTestVersion', array('updateUgroupBinding'));
 Mock::generate('UGroup');
 Mock::generate('UGroupDao');
 Mock::generate('UGroupUserDao');
@@ -47,7 +46,7 @@ class UGroupBindingTest extends UnitTestCase {
     function testRemoveUgroupBinding() {
         $ugroup_id     = 200;
         $ugroupBinding = new UGroupBindingTestVersion();
-        $ugroupDao     = new UGroupDaoTestVersion();
+        $ugroupDao     = new MockUGroupDao();
         $ugroupDao->setReturnValue('updateUgroupBinding', true);
         $ugroupBinding->setReturnValue('getUGroupDao', $ugroupDao);
         $GLOBALS['Language']->expectOnce('getText', array('project_ugroup_binding','binding_removed'));
@@ -102,5 +101,17 @@ class UGroupBindingTest extends UnitTestCase {
         $this->expectException(new LogicException());
         $ugroupBinding->cloneUgroup($source_id, $ugroup_id);
     }
+
+    function testUpdateUgroupBindingFailure() {
+        $ugroup_id     = 200;
+        $source_id     = 300;
+        $ugroupBinding = new UGroupBindingTestVersion();
+        $ugroupDao     = new MockUGroupDao();
+        $ugroupDao->setReturnValue('updateUgroupBinding', false);
+        $ugroupBinding->setReturnValue('getUGroupDao', $ugroupDao);
+        $this->expectException(new Exception('Unable to store ugroup binding'));
+        $ugroupBinding->updateUgroupBinding($ugroup_id, $source_id);
+    }
+
 }
 ?>
