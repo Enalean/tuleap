@@ -7,6 +7,7 @@ Version 5.5 (Not released yet)
 	* When consulting private file anonymously, a login screen should be
 	displayed instead of permissions error screen
 	* Fix login error message when username is invalid
+	* Improve php 5.3 compatibility as well as packaging for Vagrant
 
     == Plugins ==
 	* tracker: 5.20
