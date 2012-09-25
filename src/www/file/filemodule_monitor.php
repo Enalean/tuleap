@@ -26,7 +26,7 @@ if (user_isloggedin()) {
 
             file_utils_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
             echo $fmmf->getMonitoringHTML($currentUser, $group_id, $filemodule_id, $um, $userHelper);
-            file_utils_footer($params);
+            file_utils_footer(array());
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'no_permission'));
             $GLOBALS['Response']->redirect('showfiles.php?group_id='.$group_id);

@@ -335,7 +335,7 @@ class FileModuleMonitorFactory {
      * @return String
      */
     public function getAddMonitoringForm($fileModuleId) {
-        $editContent .= '<form id="filemodule_monitor_form_add" method="post" >';
+        $editContent = '<form id="filemodule_monitor_form_add" method="post" >';
         $editContent .= '<input type="hidden" name="action" value="add_monitoring">';
         $editContent .= '<input type="hidden" name="package_id" value="'.$fileModuleId.'">';
         $editContent .= '<h3>'.$GLOBALS['Language']->getText('file_filemodule_monitor', 'add_users').'</h3>';
@@ -398,8 +398,10 @@ class FileModuleMonitorFactory {
      * @return String
      */
     public function getMonitoringHTML($currentUser, $groupId, $fileModuleId, $um, $userHelper) {
-        $html = $this->getSelfMonitoringForm($currentUser, $fileModuleId);
-        $frspf = new FRSPackageFactory();
+        $frspf   = new FRSPackageFactory();
+        $package = $frspf->getFRSPackageFromDb($fileModuleId);
+        $html    = '<h2>'.$GLOBALS['Language']->getText('file_admin_editpackagepermissions', 'p').' <a href="showfiles.php?group_id='.$groupId.'" >'.$package->getName().'</a></h2>';
+        $html   .= $this->getSelfMonitoringForm($currentUser, $fileModuleId);
          if ($frspf->userCanAdmin($currentUser, $groupId)) {
              $html .= $this->getMonitoringListHTML($fileModuleId, $um, $userHelper);
              $html .= $this->getAddMonitoringForm($fileModuleId);
@@ -427,6 +429,7 @@ class FileModuleMonitorFactory {
                 switch ($action) {
                     case 'stop_monitoring' :
                         if ($this->isMonitoring($fileModuleId, $currentUser, false)) {
+                            $performAction = true;
                             $result = $this->stopMonitor($fileModuleId, $currentUser);
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitor_turned_off'));
                             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_emails'));
@@ -437,12 +440,12 @@ class FileModuleMonitorFactory {
                     case 'anonymous_monitoring' :
                         if ($anonymous && (!$this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
                             $performAction = true;
-                            $this->stopMonitor($fileModuleId, $currentUser);
                         } elseif (!$anonymous && !$this->isMonitoring($fileModuleId, $currentUser, !$anonymous)) {
                             $performAction = true;
                             $historyDao->groupAddHistory("frs_self_add_monitor_package", $fileModuleId, $groupId);
                         }
                         if ($performAction) {
+                            $this->stopMonitor($fileModuleId, $currentUser);
                             $result = $this->setMonitor($fileModuleId, $currentUser, $anonymous);
                             if (!$result) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
@@ -455,6 +458,9 @@ class FileModuleMonitorFactory {
                         break;
                     default :
                         break;
+                }
+                if ($performAction) {
+                    $GLOBALS['Response']->redirect('showfiles.php?group_id='.$groupId);
                 }
             }
         }
