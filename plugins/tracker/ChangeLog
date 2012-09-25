@@ -1,3 +1,6 @@
+Version 5.21 - Tuleap 5.5
+    * Fix sla #1444: artifacts with two parents throw an exception
+
 Version 5.20 - Tuleap 5.5
     * Fix comment format checking
 
