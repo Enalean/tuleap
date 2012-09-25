@@ -43,21 +43,26 @@ AutoReqProv: no
 #Requires: %{PKG_NAME}-customization
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
-Requires: php, php-mysql, php-xml, php-mbstring, php-gd, php-soap, php-pear, gd
+Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, gd
 Requires: dejavu-lgc-fonts
 %if %{PKG_NAME} == codendi_st
 Requires: jpgraph
 # = 2.3.4-0.codendi
 Provides: codendi
 %else
-Requires: jpgraph-%{PKG_NAME}
 Provides: tuleap
-%endif
-Requires: php-pecl-apc
+%if %{php_base} == php
+Requires: jpgraph-%{PKG_NAME}
 Requires: htmlpurifier
+Requires: %{php_base}-pecl-json
+%else
+Requires: %{php_base}-jpgraph-%{PKG_NAME}
+Requires: %{php_base}-htmlpurifier
+%endif
+%endif
+Requires: %{php_base}-pecl-apc
 Requires: curl
-Requires: php-zendframework = 1.8.1
-Requires: php-pecl-json
+Requires: %{php_base}-zendframework = 1.8.1
 # Perl
 Requires: perl, perl-DBI, perl-DBD-MySQL, perl-suidperl, perl-URI, perl-HTML-Tagset, perl-HTML-Parser, perl-libwww-perl, perl-DateManip
 # Automatic perl dependencies
@@ -164,7 +169,7 @@ Summary: ForumML plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_FORUMML_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-pear-Mail-mimeDecode php-pear-Mail-Mime php-pear-Mail-Mbox php-pear-Mail
+Requires: %{PKG_NAME}, %{php_base}-pear-Mail-mimeDecode %{php_base}-pear-Mail-Mime %{php_base}-pear-Mail-Mbox %{php_base}-pear-Mail
 %if %{PKG_NAME} == codendi_st
 Requires: codendi-core-mailman
 Provides: codendi-plugin-forumml = %{version}
@@ -181,7 +186,12 @@ Summary: Git plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_GIT_VERSION@@
 Release: 1%{?dist}
-Requires: %{name} >= %{version}, git > 1.6, geshi, php-Smarty, gitolite
+Requires: %{name} >= %{version}, git > 1.6, %{php_base}-Smarty, gitolite
+%if %{php_base} == php
+Requires: geshi
+%else
+Requires: %{php_base}-geshi
+%endif
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-git = %{version}
 %else
@@ -211,7 +221,7 @@ Summary: Tuleap plugin to manage LDAP integration
 Group: Development/Tools
 Version: @@PLUGIN_LDAP_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-ldap, perl-LDAP, python-ldap
+Requires: %{PKG_NAME}, %{php_base}-ldap, perl-LDAP, python-ldap
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-ldap = %{version}
 %else
@@ -226,6 +236,7 @@ Summary: Instant Messaging Plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_IM_VERSION@@
 Release: 1%{?dist}
+AutoReqProv: no
 Requires: %{PKG_NAME}, openfire, openfire-codendi-plugins
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-im = %{version}
@@ -254,7 +265,8 @@ Summary: WebDAV plugin for Tuleap
 Group: Development/Tools
 Version: @@PLUGIN_WEBDAV_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, SabreDAV = 1.4.4
+Requires: %{PKG_NAME}
+Requires: %{php_base}-sabredav = 1.4.4
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-webdav = %{version}
 %else
@@ -268,7 +280,7 @@ Summary: Insert Remedy tickets using Codex
 Group: Development/Tools
 Version: @@PLUGIN_REQUESTHELP_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-pecl-oci8 = 1.4.5
+Requires: %{PKG_NAME}, %{php_base}-pecl-oci8 = 1.4.5
 %if %{PKG_NAME} == codendi_st
 Provides: codendi-plugin-requesthelp = %{version}
 %else
@@ -319,7 +331,8 @@ Summary: Full-Text Search
 Group: Development/Tools
 Version: @@PLUGIN_FULLTEXTSEARCH_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}, php-elasticsearch
+Requires: %{PKG_NAME}
+Requires: %{php_base}-elasticsearch
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 

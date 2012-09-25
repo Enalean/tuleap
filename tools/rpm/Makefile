@@ -64,6 +64,7 @@ rpmprep: $(RPM_TMP) ~/.rpmmacros
 	@echo '%_tmppath %{_topdir}/TMP' >> ~/.rpmmacros
 	@echo '%_buildroot %{_tmppath}/%{name}-root' >> ~/.rpmmacros
 	@echo '%_sysconfdir /etc' >> ~/.rpmmacros
+	@echo '%php_base $(PHP_BASE)' >> ~/.rpmmacros
 
 $(RPM_TMP):
 	@[ -d $@ ] || mkdir -p $@ $@/BUILD $@/RPMS $@/SOURCES $@/SPECS $@/SRPMS $@/TMP
