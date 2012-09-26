@@ -357,7 +357,7 @@ class ProjectQuotaHtml {
                     $validQuota->required();
                     $quota = null;
                     if ($request->valid($validQuota)) {
-                        $quota   = $request->get('quota');
+                        $quota = $request->get('quota');
                     }
                     $validMotivation = new Valid_Text('motivation');
                     $validMotivation->required();
@@ -369,7 +369,7 @@ class ProjectQuotaHtml {
                     break;
                 case 'delete' :
                     $this->csrf->check();
-                    $list       = $request->get('delete_quota');
+                    $list = $request->get('delete_quota');
                     if (!empty($list)) {
                         $projects       = array();
                         $validProjectId = new Valid_UInt();
@@ -391,6 +391,7 @@ class ProjectQuotaHtml {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_statistics', 'invalid_action'));
         }
     }
+
 }
 
 ?>
