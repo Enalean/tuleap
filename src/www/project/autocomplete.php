@@ -27,7 +27,7 @@ require_once('common/project/ProjectManager.class.php');
 //
 $vName = new Valid_String('name');
 $vName->required();
-if($request->valid($vName)) {
+if ($request->valid($vName)) {
     $name = $request->get('name');
 } else {
     // Finish script, no output
@@ -49,19 +49,19 @@ if ($user->isRestricted()) {
 $vPrivate = new Valid_Whitelist('private', array('1'));
 $vPrivate->required();
 // Allow the autocomplete to include private projects only to super user
-if($request->valid($vPrivate) && $user->isSuperUser()) {
+if ($request->valid($vPrivate) && $user->isSuperUser()) {
     $isPrivate = true;
 }
 
-$prjManager = ProjectManager::instance();
+$prjManager     = ProjectManager::instance();
 $nbProjectFound = 0;
-$projects = $prjManager->searchProjectsNameLike($name, $limit, $nbProjectFound, $user, $isMember, $isAdmin, $isPrivate);
-foreach($projects as $project) {
+$projects       = $prjManager->searchProjectsNameLike($name, $limit, $nbProjectFound, $user, $isMember, $isAdmin, $isPrivate);
+foreach ($projects as $project) {
     $list[] = $project->getPublicName(). " (".$project->getUnixName().")";
 }
 
 $nbLeft = $nbProjectFound - $limit; 
-if($nbLeft > 0) {
+if ($nbLeft > 0) {
     $list[] = '<strong>'.$nbLeft.' left ...</strong>';
 }
 
@@ -70,7 +70,7 @@ if($nbLeft > 0) {
 //
 
 echo "<ul>\n";
-foreach($list as $entry) {
+foreach ($list as $entry) {
     echo "  <li>$entry</li>\n";
 }
 echo "</ul>\n";

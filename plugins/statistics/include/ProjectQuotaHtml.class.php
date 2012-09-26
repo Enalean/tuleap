@@ -57,7 +57,7 @@ class ProjectQuotaHtml {
         $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
         $valid->addRule(new Rule_Int());
         $valid->addRule(new Rule_GreaterOrEqual(0));
-        if($request->valid($valid)) {
+        if ($request->valid($valid)) {
             $offset = $request->get('offset');
         } else {
             $offset = 0;
@@ -164,7 +164,7 @@ class ProjectQuotaHtml {
         }
         if ($resultExist) {
             $output .= $this->fetchFilterForm();
-            $output .= $this->fetchCustomQuotaTable($customQuotas, $orderBy, $projectFilterParam, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
+            $output .= $this->fetchCustomQuotaTable($customQuotas, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
             $output .= '<br />';
         } else {
             $output .= '<p><em>'. $GLOBALS['Language']->getText('plugin_statistics', 'no_projects', $this->projectQuotaManager->getDefaultQuota()) .'</em></p>';
@@ -175,6 +175,8 @@ class ProjectQuotaHtml {
     }
 
     /**
+     * Get the HTML of the filter form
+     *
      * @return string html
      */
     private function fetchFilterForm() {
@@ -187,10 +189,20 @@ class ProjectQuotaHtml {
     }
 
     /**
-     * @return string html
+     * Get the html output of the table of projects having custom quota
+     *
+     * @param Iterator $customQuotas       Database result of the projects custom quota
+     * @param Integer  $offset             Pagination offset
+     * @param Integer  $count              Items to display by page
+     * @param String   $sortBy             Property used for the sort
+     * @param String   $orderBy            Ascending or descending
+     * @param String   $projectFilterParam Project filter
+     * @param Array    $list               List of project Id's
+     *
+     * @return String html
      */
-    private function fetchCustomQuotaTable(Iterator $customQuotas, $orderBy, $projectFilterParam, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
-        $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
+    private function fetchCustomQuotaTable(Iterator $customQuotas, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
+        $paginationParams = $this->getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $customQuotas);
         $nextHref = $paginationParams['nextHref'];
         $prevHref = $paginationParams['prevHref'];
         $orderBy  = $this->toggleOrderBy($orderBy);
@@ -227,6 +239,8 @@ class ProjectQuotaHtml {
     }
 
     /**
+     * Obtain the list of projects id corresponding to the filter
+     *
      * @param string $filter The filter
      *
      * @return array of int (groups ids)
@@ -246,17 +260,17 @@ class ProjectQuotaHtml {
     /**
      * Render pagination for project quota display
      *
-     * @param int    $offset   From where the result will be displayed.
-     * @param int    $count    How many results are returned.
-     * @param String $sortBy   Order result set according to this parameter
-     * @param String $orderBy  Specifiy if the result set sort is ascending or descending
-     * @param Array  $list     List of projects Id corresponding to a given filter
+     * @param int    $offset            From where the result will be displayed.
+     * @param int    $count             How many results are returned.
+     * @param String $sortBy            Order result set according to this parameter
+     * @param String $orderBy           Specifiy if the result set sort is ascending or descending
+     * @param String projectFilterParam Search filter
+     * @param Array  $foundRowsRes      List of projects Id corresponding to a given filter
      *
      * @return Array
      */
-    private function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
-        $params       = array(); 
-        $foundRowsRes = $this->projectQuotaManager->getAllCustomQuota($list);
+    private function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $foundRowsRes) {
+        $params       = array();
         $foundRows    = $foundRowsRes->rowCount();
         $prevHref     = '&lt;Previous';
         if ($offset > 0) {
