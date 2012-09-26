@@ -104,7 +104,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                         $row_value['ugroup_id']
                     );
                 }
-                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, $values, $default_value, $decorators);
+                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators);
                 break;
             default:
                 break;
@@ -247,7 +247,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                         $values[$ID] = $this->getUgroupsValueInstance($ID, $field->getTracker()->getProject(), (string)$item['ugroup_id']);
                     }
                 }
-                $row['values'] = $values;
+                $row['values'] = array_filter($values);
 
                 break;
             default: return null;
@@ -280,7 +280,9 @@ class Tracker_FormElement_Field_List_BindFactory {
      */
     function getUgroupsValueInstance($id, Project $project, $ugroup_id) {
         $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
-        return new Tracker_FormElement_Field_List_Bind_UgroupsValue($id, $ugroup);
+        if ($ugroup) {
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($id, $ugroup);
+        }
     }
 
     /**

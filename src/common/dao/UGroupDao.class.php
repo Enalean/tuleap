@@ -55,11 +55,13 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    function searchByGroupIdAndUGroupId($ugroup_id) {
+    function searchByGroupIdAndUGroupId($group_id, $ugroup_id) {
+        $group_id  = $this->da->escapeInt($group_id);
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * 
                 FROM ugroup 
-                WHERE ugroup_id = $ugroup_id ORDER BY name";
+                WHERE group_id = $group_id AND ugroup_id = $ugroup_id
+                ORDER BY ugroup_id";
         return $this->retrieve($sql);
     }
 

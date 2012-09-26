@@ -78,10 +78,10 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
         return $this->update($sql);
     }
 
-    public function delete($id) {
-        $id       = $this->da->escapeInt($id);
+    public function deleteByFieldId($field_id) {
+        $id       = $this->da->escapeInt($field_id);
         $sql = "DELETE FROM $this->table_name
-                WHERE id = $id ";
+                WHERE field_id = $field_id ";
 
         return $this->update($sql);
     }

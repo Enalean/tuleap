@@ -33,7 +33,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
     }
 
     public function getLabel() {
-        return $this->ugroup->getName();
+        return $this->ugroup->getTranslatedName();
     }
 
     public function __toString() {

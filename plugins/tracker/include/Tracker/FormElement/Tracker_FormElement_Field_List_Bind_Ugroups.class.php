@@ -445,8 +445,17 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @return void
      */
     public function process($params, $no_redirect = false, $redirect = false) {
+        $value_dao = $this->getValueDao();
         foreach ($params as $key => $value) {
             switch ($key) {
+                case 'values':
+                    $value_dao->deleteByFieldId($this->field->getId());
+                    foreach ($value as $ugroup_id) {
+                        if ($ugroup_id) {
+                            $value_dao->create($this->field->getId(), $ugroup_id);
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
