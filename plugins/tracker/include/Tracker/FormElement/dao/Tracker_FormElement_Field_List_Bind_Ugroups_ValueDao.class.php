@@ -89,7 +89,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
     public function searchChangesetValues($changeset_id, $field_id) {
         $changeset_id = $this->da->escapeInt($changeset_id);
         $field_id     = $this->da->escapeInt($field_id);
-        $sql = "SELECT f.id
+        $sql = "SELECT f.id, f.ugroup_id
                 FROM tracker_field_list_bind_ugroups_value AS f
                      INNER JOIN tracker_changeset_value_list AS l ON (l.bindvalue_id = f.id)
                      INNER JOIN tracker_changeset_value AS c

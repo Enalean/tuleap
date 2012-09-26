@@ -125,7 +125,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         return array(
             'select'     => "tracker_field_list_bind_ugroups_value.id,
                              tracker_field_list_bind_ugroups_value.ugroup_id",
-            'select_nb'  => 3,
+            'select_nb'  => 2,
             'from'       => 'tracker_field_list_bind_ugroups_value',
             'join_on_id' => 'tracker_field_list_bind_ugroups_value.id',
         );
@@ -424,9 +424,10 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $html .= '<input type="hidden" name="'. $select_name .'" value="" />';
         $html .= '<select multiple="multiple" name="'. $select_name .'" size="'. min(9, max(5, count($ugroups))) .'">';
 
+        $selected_ugroup_ids = array_map(array(__CLASS__, 'getSelectedUgroupIds'), $values);
         foreach ($ugroups as $ugroup) {
             $selected = "";
-            if (isset($values[$ugroup->getId()])) {
+            if (in_array($ugroup->getId(), $selected_ugroup_ids)) {
                 $selected = 'selected="selected"';
             }
             $html .= '<option value="'. $ugroup->getId() .'" '.$selected.'>';
@@ -436,6 +437,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $html .= '</select>';
         return $html;
     }
+
+    private static function getSelectedUgroupIds($value) {
+        return $value->getUgroupId();
+    }
+
     /**
      * Process the request
      *

@@ -36,6 +36,10 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return $this->ugroup->getTranslatedName();
     }
 
+    public function getUgroupId() {
+        return $this->ugroup->getId();
+    }
+
     public function __toString() {
         return __CLASS__ .' #'. $this->getId();
     }
