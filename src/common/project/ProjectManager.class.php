@@ -129,13 +129,14 @@ class ProjectManager {
      * @param User    $user
      * @param Boolean $isMember
      * @param Boolean $isAdmin
+     * @param Boolean $isPrivate Display private projects if true
      *
      * @return Array of Project
      */
-    public function searchProjectsNameLike($name, $limit, &$nbFound, $user=null, $isMember=false, $isAdmin=false) {
+    public function searchProjectsNameLike($name, $limit, &$nbFound, $user=null, $isMember=false, $isAdmin=false, $isPrivate = false) {
         $projects = array();
         $dao = new ProjectDao(CodendiDataAccess::instance());
-        $dar = $dao->searchProjectsNameLike($name, $limit, $user->getId(), $isMember, $isAdmin);
+        $dar = $dao->searchProjectsNameLike($name, $limit, $user->getId(), $isMember, $isAdmin, $isPrivate);
         $nbFound = $dao->foundRows();
         foreach($dar as $row) {
             $projects[] = $this->getAndCacheProject($row);
@@ -464,4 +465,5 @@ class ProjectManager {
     }
 
 }
+
 ?>

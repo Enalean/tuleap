@@ -35,19 +35,27 @@ if($request->valid($vName)) {
 }
 
 // Number of user to display
-$limit      = 15;
-$list   = array();
-$isMember = false;
-$isAdmin  = false;
+$limit     = 15;
+$list      = array();
+$isMember  = false;
+$isAdmin   = false;
+$isPrivate = false;
 
 $user = UserManager::instance()->getCurrentUser();
 if ($user->isRestricted()) {
     $isMember = true;
 }
 
+$vPrivate = new Valid_Whitelist('private', array('1'));
+$vPrivate->required();
+// Allow the autocomplete to include private projects only to super user
+if($request->valid($vPrivate) && $user->isSuperUser()) {
+    $isPrivate = true;
+}
+
 $prjManager = ProjectManager::instance();
 $nbProjectFound = 0;
-$projects = $prjManager->searchProjectsNameLike($name, $limit, $nbProjectFound, $user, $isMember, $isAdmin);
+$projects = $prjManager->searchProjectsNameLike($name, $limit, $nbProjectFound, $user, $isMember, $isAdmin, $isPrivate);
 foreach($projects as $project) {
     $list[] = $project->getPublicName(). " (".$project->getUnixName().")";
 }

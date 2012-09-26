@@ -72,13 +72,18 @@ class ProjectDao extends DataAccessObject {
      * @param Integer $userId
      * @param Boolean $isMember
      * @param Boolean $isAdmin
-     * 
+     * @param Boolean $isPrivate Display private projects if true
+     *
      * @return DataAccessResult
      */
-    public function searchProjectsNameLike($name, $limit, $userId=null, $isMember=false, $isAdmin=false) {
+    public function searchProjectsNameLike($name, $limit, $userId=null, $isMember=false, $isAdmin=false, $isPrivate = false) {
         $join    = '';
         $where   = '';
         $groupby = '';
+        $public  = ' g.is_public = 1 ';
+        if ($isPrivate) {
+            $public = ' 1 ';
+        }
         if ($userId != null) {
             if ($isMember || $isAdmin) {
                 // Manage if we search project the user is member or admin of
@@ -90,13 +95,13 @@ class ProjectDao extends DataAccessObject {
             } else {
                 // Either public projects or private projects the user is member of
                 $join  .= ' LEFT JOIN user_group ug ON (ug.group_id = g.group_id)';
-                $where .= ' AND (g.is_public = 1'.
+                $where .= ' AND ('.$public.
                           '      OR (g.is_public = 0 and ug.user_id = '.$this->da->escapeInt($userId).'))';
             }
             $groupby .= ' GROUP BY g.group_id';
         } else {
             // If no user_id provided, only return public projects
-            $where .= ' AND g.is_public = 1';
+            $where .= ' AND '.$public;
         }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS g.*".

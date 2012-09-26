@@ -53,7 +53,7 @@ class ProjectQuotaHtml {
      * @return Integer
      */
     private function validateOffset(HTTPRequest $request) {
-        $valid        = new Valid('offset');
+        $valid = new Valid('offset');
         $valid->setErrorMessage('Invalid offset submitted. Force it to 0 (zero).');
         $valid->addRule(new Rule_Int());
         $valid->addRule(new Rule_GreaterOrEqual(0));
@@ -73,8 +73,8 @@ class ProjectQuotaHtml {
      * @return String
      */
     private function validateProjectFilter(HTTPRequest $request) {
-        $validFilter        = new Valid_String('project_filter');
-        $filter             = null;
+        $validFilter = new Valid_String('project_filter');
+        $filter      = null;
         if ($request->valid($validFilter)) {
             $filter = $request->get('project_filter');
         }
@@ -144,13 +144,25 @@ class ProjectQuotaHtml {
         $projectFilterParam = '';
         if ($filter) {
             if (empty($list)) {
-                $output .= '<div id="feedback"><ul class="feedback_warning"><li>'.$GLOBALS['Language']->getText('plugin_statistics', 'no_search_result').'</li></ul></div>';
+                $output .= $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_statistics', 'no_search_result'));
             }
             $projectFilterParam = '&amp;project_filter='.$filter;
         }
 
+        $resultExist  = false;
         $customQuotas = $this->projectQuotaManager->getAllCustomQuota($list, $offset, $count, $sortBy, $orderBy);
         if ($customQuotas && !$customQuotas->isError() && $customQuotas->rowCount() > 0) {
+            $resultExist = true;
+        } else {
+            if ($filter) {
+                $output .= $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_statistics', 'no_search_result'));
+            }
+            $customQuotas = $this->projectQuotaManager->getAllCustomQuota(array(), $offset, $count, $sortBy, $orderBy);
+            if ($customQuotas && !$customQuotas->isError() && $customQuotas->rowCount() > 0) {
+                $resultExist = true;
+            }
+        }
+        if ($resultExist) {
             $output .= $this->fetchFilterForm();
             $output .= $this->fetchCustomQuotaTable($customQuotas, $orderBy, $projectFilterParam, $offset, $count, $sortBy, $orderBy, $projectFilterParam, $list);
             $output .= '<br />';
@@ -161,7 +173,7 @@ class ProjectQuotaHtml {
         $output .= $this->renderNewCustomQuotaForm();
         return $output;
     }
-    
+
     /**
      * @return string html
      */
@@ -344,17 +356,19 @@ class ProjectQuotaHtml {
                 case 'delete' :
                     $this->csrf->check();
                     $list       = $request->get('delete_quota');
-                    $projects   = array();
-                    $validProjectId = new Valid_UInt();
-                    foreach ($list as $projectId) {
-                        if ($validProjectId->validate($projectId)) {
-                            $project = $this->projectManager->getProject($projectId);
-                            if ($project) {
-                                $projects[$project->getId()] = $project->getPublicName();
+                    if (!empty($list)) {
+                        $projects       = array();
+                        $validProjectId = new Valid_UInt();
+                        foreach ($list as $projectId) {
+                            if ($validProjectId->validate($projectId)) {
+                                $project = $this->projectManager->getProject($projectId);
+                                if ($project) {
+                                    $projects[$project->getId()] = $project->getPublicName();
+                                }
                             }
                         }
+                        $this->projectQuotaManager->deleteCustomQuota($projects);
                     }
-                    $this->projectQuotaManager->deleteCustomQuota($projects);
                     break;
                 default :
                     break;
