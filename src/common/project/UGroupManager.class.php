@@ -20,6 +20,7 @@
  */
 
 require_once 'UGroup.class.php';
+require_once 'Project.class.php';
 require_once 'common/dao/UGroupDao.class.php';
 require_once 'common/dao/UGroupUserDao.class.php';
 
@@ -29,6 +30,25 @@ class UGroupManager {
      * @var UGroupDao
      */
     private $dao;
+
+    public function __construct(UGroupDao $dao = null) {
+        $this->dao = $dao;
+    }
+
+    /**
+     * @return UGroup of the given project or null if not found
+     */
+    public function getUGroup(Project $project, $ugroup_id) {
+        $project_id = $project->getID();
+        if ($ugroup_id <= 100) {
+            $project_id = 100;
+        }
+
+        $row = $this->getDao()->searchByGroupIdAndUGroupId($project_id, $ugroup_id)->getRow();
+        if ($row) {
+            return new UGroup($row);
+        }
+    }
 
     /**
      * Return all UGroups the user belongs to
