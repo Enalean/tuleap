@@ -68,6 +68,10 @@ class UGroup {
         $this->is_dynamic  = $this->id < 100;
     }
 
+    public function getId() {
+        return $this->id;
+    }
+
     protected function getUGroupDao() {
         if (!$this->_ugroupdao) {
             $this->_ugroupdao = new UGroupDao();
@@ -91,6 +95,10 @@ class UGroup {
 
     public function getName() {
         return $this->name;
+    }
+
+    public function getTranslatedName() {
+        return util_translate_name_ugroup($this->getName());
     }
 
     /**
