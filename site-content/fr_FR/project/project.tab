@@ -969,6 +969,8 @@ project	does_not_exist	Le projet n'existe pas
 #-----------------------------------------------
 # Script: /www/project/admin/ugroup_binding.php
 #
+project_ugroup_binding	ugroup	Group d'utilisateurs
+project_ugroup_binding	binding	Liaisons
 project_ugroup_binding	edit_binding_title	Editer la liaison avec le groupe d'utilisateurs
 project_ugroup_binding	update_binding	Mettre à jour la liaison
 project_ugroup_binding	add_binding	Ajouter une liaison

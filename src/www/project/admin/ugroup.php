@@ -90,12 +90,11 @@ echo '
 ';
 
 $title_arr=array();
-$title_arr[100]=$Language->getText('project_admin_ugroup','ug_name');
-// @TODO: i18n
-$title_arr[200]='Binding';
-$title_arr[300]=$Language->getText('project_admin_editugroup','desc');
-$title_arr[400]=$Language->getText('project_admin_ugroup','members');
-$title_arr[500]=$Language->getText('project_admin_servicebar','del?');
+$title_arr[100] = $Language->getText('project_admin_ugroup', 'ug_name');
+$title_arr[200] = $GLOBALS['Language']->getText('project_ugroup_binding', 'binding');
+$title_arr[300] = $Language->getText('project_admin_editugroup', 'desc');
+$title_arr[400] = $Language->getText('project_admin_ugroup', 'members');
+$title_arr[500] = $Language->getText('project_admin_servicebar', 'del?');
 ksort($title_arr);
 echo "<tr class=\"boxtable\">\n";
 foreach($title_arr as $title) {

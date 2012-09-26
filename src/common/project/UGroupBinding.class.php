@@ -388,7 +388,7 @@ class UGroupBinding {
     private function _getClonesHTML($clones) {
         $clonesHTML = '<table>';
         if (!empty($clones)) {
-            $clonesHTML .= html_build_list_table_top(array($GLOBALS['Language']->getText('project_reference', 'ref_scope_P'), 'UGroup'), false, false, false);
+            $clonesHTML .= html_build_list_table_top(array($GLOBALS['Language']->getText('project_reference', 'ref_scope_P'), $GLOBALS['Language']->getText('project_ugroup_binding', 'ugroup')), false, false, false);
             $count      = 0;
             $i          = 0;
             foreach ($clones as $cloneId => $clone) {
