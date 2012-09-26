@@ -43,7 +43,7 @@ class UGroupDao extends DataAccessObject {
         $sql = "SELECT * 
                 FROM ugroup 
                 WHERE group_id = $group_id OR (group_id = 100 and ugroup_id <= 100)
-                ORDER BY name";
+                ORDER BY ugroup_id";
         return $this->retrieve($sql);
     }
 

@@ -392,6 +392,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @return string html
      */
     public static function fetchAdminCreateForm($field) {
+        return self::fetchSelectUsers('formElement_data[bind][values][]', $field, array());
     }
 
     /**
@@ -401,7 +402,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function fetchAdminEditForm() {
         $html = '';
-        $html .= '<h3>'. 'Bind to ugroups' .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','bind_to_ugroups') .'</h3>';
+        $html .= self::fetchSelectUsers('bind[values][]', $this->field, $this->values);
 
         //Select default values
         $html .= $this->getSelectDefaultValues();
@@ -409,6 +411,31 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         return $html;
     }
 
+    protected static function fetchSelectUsers($select_name, $field, $values) {
+        $hp             = Codendi_HTMLPurifier::instance();
+        $ugroup_manager = new UGroupManager();
+
+        $ugroups = $ugroup_manager->getUGroups(
+            $field->getTracker()->getProject(),
+            array(UGROUP::NONE, UGROUP::ANONYMOUS, UGroup::REGISTERED)
+        );
+
+        $html  = '';
+        $html .= '<input type="hidden" name="'. $select_name .'" value="" />';
+        $html .= '<select multiple="multiple" name="'. $select_name .'" size="'. min(9, max(5, count($ugroups))) .'">';
+
+        foreach ($ugroups as $ugroup) {
+            $selected = "";
+            if (isset($values[$ugroup->getId()])) {
+                $selected = 'selected="selected"';
+            }
+            $html .= '<option value="'. $ugroup->getId() .'" '.$selected.'>';
+            $html .= $hp->purify($ugroup->getTranslatedName());
+            $html .= '</option>';
+        }
+        $html .= '</select>';
+        return $html;
+    }
     /**
      * Process the request
      *

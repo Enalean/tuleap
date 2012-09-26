@@ -71,9 +71,14 @@ class UGroupManager_getUGroup_Test extends UGroupManager_BaseTest {
 
 class UGroupManager_getUGroups_Test extends UGroupManager_BaseTest {
 
-    public function itReturnsAllUGroupsOfAProject() {
+    public function itReturnsAllUgroupsOfAProject() {
         $ugroups = $this->ugroup_manager->getUGroups($this->project);
         $this->assertCount($ugroups, 11);
+    }
+
+    public function itExcludesGivenUgroups() {
+        $ugroups = $this->ugroup_manager->getUGroups($this->project, array(UGROUP::NONE, UGROUP::ANONYMOUS));
+        $this->assertCount($ugroups, 9);
     }
 }
 ?>
