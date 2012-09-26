@@ -50,6 +50,14 @@ class UGroupManager {
         }
     }
 
+    public function getUGroups(Project $project) {
+        $ugroups = array();
+        foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
+            $ugroups[] = new UGroup($row);
+        }
+        return $ugroups;
+    }
+
     /**
      * Return all UGroups the user belongs to
      *

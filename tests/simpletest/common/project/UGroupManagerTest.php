@@ -20,7 +20,7 @@
 
 require_once 'common/project/UGroupManager.class.php';
 
-class UGroupManagerTest extends TuleapTestCase {
+class UGroupManager_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         $this->non_existent_ugroup_id = 102;
@@ -46,10 +46,13 @@ class UGroupManagerTest extends TuleapTestCase {
             stub($dao)->searchByGroupIdAndUGroupId((int)$def['group_id'], (int)$def['ugroup_id'])->returnsDar($def);
         }
         stub($dao)->searchByGroupIdAndUGroupId()->returnsEmptyDar();
+        stub($dao)->searchDynamicAndStaticByGroupId(123)->returns(TestHelper::argListToDar($ugroup_definitions));
 
         $this->ugroup_manager = new UGroupManager($dao);
     }
+}
 
+class UGroupManager_getUGroup_Test extends UGroupManager_BaseTest {
     public function itReturnsNullIfNoMatch() {
         $ugroup = $this->ugroup_manager->getUGroup($this->project, $this->non_existent_ugroup_id);
         $this->assertNull($ugroup);
@@ -63,6 +66,14 @@ class UGroupManagerTest extends TuleapTestCase {
     public function itReturnsDynamicUgroupForAGivenProject() {
         $ugroup = $this->ugroup_manager->getUGroup($this->project, UGroup::PROJECT_MEMBERS);
         $this->assertEqual('ugroup_project_members_name_key', $ugroup->getName());
+    }
+}
+
+class UGroupManager_getUGroups_Test extends UGroupManager_BaseTest {
+
+    public function itReturnsAllUGroupsOfAProject() {
+        $ugroups = $this->ugroup_manager->getUGroups($this->project);
+        $this->assertCount($ugroups, 11);
     }
 }
 ?>

@@ -38,6 +38,15 @@ class UGroupDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    function searchDynamicAndStaticByGroupId($group_id) {
+        $group_id = $this->da->escapeInt($group_id);
+        $sql = "SELECT * 
+                FROM ugroup 
+                WHERE group_id = $group_id OR (group_id = 100 and ugroup_id <= 100)
+                ORDER BY name";
+        return $this->retrieve($sql);
+    }
+
     function searchByUGroupId($ugroup_id) {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * 
