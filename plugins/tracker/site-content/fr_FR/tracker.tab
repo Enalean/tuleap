@@ -1067,6 +1067,7 @@ plugin_tracker_formelement_admin	open_list_description	Un champ texte contenant 
 plugin_tracker_formelement_admin	values	Valeurs
 plugin_tracker_formelement_admin	choose_values	Choisir les valeurs
 plugin_tracker_formelement_admin	bind_to_users	Associer à un groupe d'utilisateurs
+plugin_tracker_formelement_admin	bind_to_ugroups	Associer à des groupes d'utilisateurs
 plugin_tracker_formelement_admin	alphabetically_sort	par ordre alphabétique
 plugin_tracker_formelement_admin	add_row	Ajouter une valeur par ligne
 plugin_tracker_formelement_admin	type_search_term	Saisir un élément de recherche

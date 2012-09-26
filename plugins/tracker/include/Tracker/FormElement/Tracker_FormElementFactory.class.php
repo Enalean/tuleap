@@ -591,7 +591,7 @@ class Tracker_FormElementFactory {
             $form_element_id = $row['id']; 
             $unused[$form_element_id] = $this->getCachedInstanceFromRow($row);
         }
-        return $unused;
+        return array_filter($unused);
     }
     
     public function getUsedFormElementForTracker($tracker) {
