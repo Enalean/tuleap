@@ -158,7 +158,9 @@ class GitPlugin extends Plugin {
         require_once('GitActions.class.php');
         $groupId   = $params[0];
         $isPrivate = $params[1];
-        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate);
+        $dao       = new GitDao();
+        $factory   = $this->getRepositoryFactory();
+        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate, $dao, $factory);
     }
 
     public function systemEventProjectRename($params) {

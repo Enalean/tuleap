@@ -431,32 +431,27 @@ class GitActions extends PluginActions {
      * @param <type> $isPublic
      * @return <type>
      */
-    public static function changeProjectRepositoriesAccess($projectId, $isPrivate) {
+    public static function changeProjectRepositoriesAccess($projectId, $isPrivate, GitDao $dao, GitRepositoryFactory $factory) {
         //if the project is private, then no changes may be applied to repositories,
         //in other words only if project is set to private, its repositories have to be set to private
         if ( empty($isPrivate) ) {
             return;
         }
-        $dao          = new GitDao();
         $repositories = $dao->getProjectRepositoryList($projectId);
-        if ( empty($repositories) ) {
-            return false;
-        }
-
         foreach ( $repositories as $repoId=>$repoData ) {
-            $r = $this->factory->getRepositoryById($repoId);
+            $r = $factory->getRepositoryById($repoId);
             if ( !$r ) {
                 continue;
             }
-            $newAccess = !empty($isPrivate) ? GitRepository::PRIVATE_ACCESS : GitRepository::PUBLIC_ACCESS;
-            if ( $r->getAccess() == $newAccess ) {
+            if ( $r->getAccess() == GitRepository::PRIVATE_ACCESS) {
                 continue;
             }
-            $r->setAccess( $newAccess );
+            $r->setAccess( GitRepository::PRIVATE_ACCESS );
             $r->changeAccess();
             unset($r);
         }
 
+        
     }
 
     /**
