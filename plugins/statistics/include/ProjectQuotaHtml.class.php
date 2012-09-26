@@ -260,12 +260,12 @@ class ProjectQuotaHtml {
     /**
      * Render pagination for project quota display
      *
-     * @param int    $offset            From where the result will be displayed.
-     * @param int    $count             How many results are returned.
-     * @param String $sortBy            Order result set according to this parameter
-     * @param String $orderBy           Specifiy if the result set sort is ascending or descending
-     * @param String projectFilterParam Search filter
-     * @param Array  $foundRowsRes      List of projects Id corresponding to a given filter
+     * @param int    $offset             From where the result will be displayed.
+     * @param int    $count              How many results are returned.
+     * @param String $sortBy             Order result set according to this parameter
+     * @param String $orderBy            Specifiy if the result set sort is ascending or descending
+     * @param String $projectFilterParam Search filter
+     * @param Array  $foundRowsRes       List of projects Id corresponding to a given filter
      *
      * @return Array
      */
