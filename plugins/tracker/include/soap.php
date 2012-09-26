@@ -151,9 +151,12 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
-        'tracker_id' => array('name'=>'tracker_id', 'type' => 'xsd:int'),
-        'value' => array('name'=>'value', 'type' => 'tns:ArrayOfArtifactFieldValue')
+        'artifact_id'      => array('name' => 'artifact_id', 'type' => 'xsd:int'),
+        'tracker_id'       => array('name' => 'tracker_id', 'type' => 'xsd:int'),
+        'submitted_by'     => array('name' => 'submitted_by', 'type' => 'xsd:int'),
+        'submitted_on'     => array('name' => 'submitted_on', 'type' => 'xsd:int'),
+        'last_update_date' => array('name' => 'last_update_date', 'type' => 'xsd:int'),
+        'value'            => array('name' => 'value', 'type' => 'tns:ArrayOfArtifactFieldValue')
     )
 );
 
@@ -774,47 +777,32 @@ function getArtifact($sessionKey,$group_id,$tracker_id, $artifact_id) {
  * @param Object{Artifact} $artifact the artifact to convert.
  * @return array the SOAPArtifact corresponding to the Artifact Object
  */
-function artifact_to_soap($artifact) {
+function artifact_to_soap(Tracker_Artifact $artifact) {
     $return = array();
-    
+
     // We check if the user can view this artifact
     if ($artifact->userCanView()) {
-        
-        // artifact_id
-        $return['artifact_id'] = $artifact->getId();
-        // tracker_id
-        $return['tracker_id'] = $artifact->getTrackerId();
-        
-        // value
-        $artifact_value = array();
-        $last_changeset = $artifact->getLastChangeset();
-        $last_changeset_values = $last_changeset->getValues();
         $ff = Tracker_FormElementFactory::instance();
-        foreach ($last_changeset_values as $field_id => $field_value) {
-            
-            
-            if ($field_value) {
-            
-            
-            
-            if ($field = $ff->getFormElementById($field_id)) {
-                if ($field->userCanRead()) {
-                    $artifact_value[] = array(
-                        'field_name' => $field->getName(),
-                        'field_label' => $field->getLabel(),
-                        'field_value' => $field_value->getSoapValue()
-                    );
-                }
+        $last_changeset = $artifact->getLastChangeset();
+
+        $return['artifact_id']      = $artifact->getId();
+        $return['tracker_id']       = $artifact->getTrackerId();
+        $return['submitted_by']     = $artifact->getSubmittedBy();
+        $return['submitted_on']     = $artifact->getSubmittedOn();
+        $return['last_update_date'] = $last_changeset->getSubmittedOn();
+
+        $return['value'] = array();
+        foreach ($last_changeset->getValues() as $field_id => $field_value) {
+            if ($field_value &&
+               ($field = $ff->getFormElementById($field_id)) &&
+               ($field->userCanRead())) {
+                $return['value'][] = array(
+                    'field_name'  => $field->getName(),
+                    'field_label' => $field->getLabel(),
+                    'field_value' => $field_value->getSoapValue()
+                );
             }
-            
-            
-            }
-            
-            
-            
         }
-        $return['value'] = $artifact_value;
-        
     }
     return $return;
 }
