@@ -29,12 +29,6 @@ class b201209251711_add_table_bind_ugroups extends ForgeUpgrade_Bucket {
     }
 
     public function up() {
-        $sql = "CREATE TABLE tracker_field_list_bind_ugroups(
-                    field_id INT(11) NOT NULL PRIMARY KEY,
-                    is_rank_alpha TINYINT(1) NOT NULL
-                ) ENGINE=InnoDB";
-        $this->createTable('tracker_field_list_bind_ugroups', $sql);
-
         $sql = "CREATE TABLE tracker_field_list_bind_ugroups_value(
                     id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
                     field_id INT(11) NOT NULL,
