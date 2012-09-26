@@ -198,8 +198,9 @@ CREATE TABLE tracker_field_list_bind_ugroups(
 
 DROP TABLE IF EXISTS tracker_field_list_bind_ugroups_value;
 CREATE TABLE tracker_field_list_bind_ugroups_value(
-    field_id INT(11) NOT NULL PRIMARY KEY,
-    value_id TINYINT(1) NOT NULL
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    field_id INT(11) NOT NULL,
+    ugroup_id INT(11) NOT NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_field_list_bind_defaultvalue;
