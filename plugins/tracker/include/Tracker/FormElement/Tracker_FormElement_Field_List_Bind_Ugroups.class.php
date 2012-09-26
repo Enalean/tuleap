@@ -72,8 +72,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function getChangesetValues($changeset_id) {
         $values = array();
-        foreach($this->getDao()->searchChangesetValues($changeset_id, $this->field->id) as $row) {
-            $values[] =  new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $this->field->getTracker()->getProject(), $row['ugroup_id']);
+        foreach($this->getValueDao()->searchChangesetValues($changeset_id, $this->field->id) as $row) {
+            $values[] = $this->getValueFromRow($row);
         }
         return $values;
     }
@@ -262,7 +262,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         return "LEFT JOIN ( tracker_changeset_value AS $R1
                     INNER JOIN $changesetvalue_table AS $R3 ON ($R3.changeset_value_id = $R1.id)
                     LEFT JOIN tracker_field_list_bind_ugroups_value AS $R2 ON ($R2.id = $R3.bindvalue_id AND $R2.field_id = ". $this->field->id ." )
-                    INNER JOIN ugroup AS $R4 ON ($R4.ugroup_id = $R3.ugroup_id AND (
+                    INNER JOIN ugroup AS $R4 ON ($R4.ugroup_id = $R2.ugroup_id AND (
                         ($R4.ugroup_id > 100 AND $R4.group_id = ". $this->field->getTracker()->getProject()->getID() ." )
                         OR
                         ($R4.ugroup_id <= 100 AND $R4.group_id = 100))
@@ -319,6 +319,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getQuerySelectAggregate($functions) {
         $R1  = 'R1_'. $this->field->id;
         $R2  = 'R2_'. $this->field->id;
+        $R3  = 'R3_'. $this->field->id;
+        $R4  = 'R4_'. $this->field->id;
         $same     = array();
         $separate = array();
         foreach ($functions as $f) {
@@ -326,11 +328,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                 if (substr($f, -5) === '_GRBY') {
                     $separate[] = array(
                         'function' => $f,
-                        'select'   => "$R2.user_name AS label, count(*) AS value",
-                        'group_by' => "$R2.user_name",
+                        'select'   => "$R4.name AS label, count(*) AS value",
+                        'group_by' => "$R2.name",
                     );
                 } else {
-                    $select = "$f($R2.user_name) AS `". $this->field->name ."_$f`";
+                    $select = "$f($R4.name) AS `". $this->field->name ."_$f`";
                     if ($this->field->isMultiple()) {
                         $separate[] = array(
                             'function' => $f,
