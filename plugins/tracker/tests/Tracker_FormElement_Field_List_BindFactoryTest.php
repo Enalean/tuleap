@@ -39,7 +39,7 @@ Mock::generate('Tracker_FormElement_Field_List_BindValue');
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindDecorator.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindDecorator');
 
-class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
+class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase {
     
     public function testImport_statik() {
         
@@ -149,16 +149,20 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
             'getInstanceFromRow', 
             array(
                 array(
-                    'type'           => 'users',
+                    'type'           => 'unknown',
                     'field'          => $field,
-                    'default_values' => null,
+                    'default_values' => array(),
                     'decorators'     => null,
                 )
             )
         );
-        $this->assertNull($bind->getInstanceFromXML($xml, $field, $mapping));
         $this->assertEqual($mapping, array());
     }
 
+    function itRaisesAnErrorIfUnkownType() {
+        $factory = new Tracker_FormElement_Field_List_BindFactory();
+        $this->expectError('Unknown bind "unknown"');
+        $factory->getInstanceFromRow(array('type' => 'unknown', 'field' => 'a_field_object'));
+    }
 }
 ?>

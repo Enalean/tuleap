@@ -108,7 +108,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                 $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators, $this->ugroup_manager);
                 break;
             default:
-                trigger_error('Unkown bind "'. $type .'"', E_USER_WARNING);
+                trigger_error('Unknown bind "'. $type .'"', E_USER_WARNING);
                 break;
         }
         return $bind;
@@ -166,7 +166,7 @@ class Tracker_FormElement_Field_List_BindFactory {
      * @param array the row allowing the construction of a bind
      * @return Field_List_Bind Object
      */
-    protected function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row) {
         switch($row['type']) {
             case self::STATIK:
                 return new Tracker_FormElement_Field_List_Bind_Static($row['field'],
@@ -185,7 +185,9 @@ class Tracker_FormElement_Field_List_BindFactory {
                                                                        $row['default_values'],
                                                                        $row['decorators'],
                                                                        $this->ugroup_manager);
-            default: return null;
+            default:
+                trigger_error('Unknown bind "'. $row['type'] .'"', E_USER_WARNING);
+                return new Tracker_FormElement_Field_List_Bind_Null($row['field']);
         }
     }
 
@@ -211,7 +213,8 @@ class Tracker_FormElement_Field_List_BindFactory {
                        $field, $ID, (int)$deco['r'], (int)$deco['g'], (int)$deco['b']);
             }
         }
-        switch((string)$xml['type']) {
+        $type = (string)$xml['type'];
+        switch ($type) {
             case self::STATIK:
                 $row['is_rank_alpha'] = (int)$xml['is_rank_alpha'];
                 $values = array();
@@ -231,8 +234,8 @@ class Tracker_FormElement_Field_List_BindFactory {
                     }
                 }
                 $row['values'] = $values;
-
                 break;
+
             case self::USERS:
                 $values = array();
                 if ($xml->items->item) {
@@ -242,6 +245,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                 }
                 $row['value_function'] = implode(',', $values);
                 break;
+
             case self::UGROUPS:
                 $values = array();
                 if ($xml->items->item) {
@@ -251,11 +255,10 @@ class Tracker_FormElement_Field_List_BindFactory {
                     }
                 }
                 $row['values'] = array_filter($values);
-
                 break;
+
             default:
-                trigger_error('Unkown bind "'. $type .'"', E_USER_WARNING);
-                return new Tracker_FormElement_Field_List_Bind_Null($field);
+                break;
         }
         if (isset($xml->default_values)) {
             $row['default_values'] = array();
