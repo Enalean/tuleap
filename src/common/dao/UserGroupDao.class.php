@@ -122,7 +122,7 @@ class UserGroupDao extends DataAccessObject {
      */
     public function getExistingUgroups($groupId, $predefined = null) {
         $extra = '';
-        if($predefined !== null && is_array($predefined)) {
+        if ($predefined !== null && is_array($predefined)) {
             $predefined = implode(',', $predefined);
             $extra = ' OR ugroup_id IN ('.$this->da->quoteSmart($predefined).')';
         }

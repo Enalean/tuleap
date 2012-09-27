@@ -988,6 +988,6 @@ project_ugroup_binding	no_binding	Ce groupe d'utilisateurs n'est lié a aucun au
 project_ugroup_binding	remove_binding	Enlever la liaison actuelle
 project_ugroup_binding	current_binded	Ce groupe d'utilisateurs est lié au groupe $1 dans le projet $2
 project_ugroup_binding	not_source	Ce groupe d'utilisateurs n'est la source d'aucun autre groupe d'utilisateurs
-project_ugroup_binding	update_user_not_allowed	La mise à jour d'utilsateurs n'est pas autorisée pour le groupe d'utilsateurs $1
+project_ugroup_binding	update_user_not_allowed	La mise à jour d'utilisateurs n'est pas autorisée pour le groupe d'utilisateurs $1
 project_ugroup_binding	reset_error	Impossible de réinitialiser le groupe d'utilisateurs $1
 project_ugroup_binding	clone_error	Impossible de cloner le groupe d'utilisateurs $1

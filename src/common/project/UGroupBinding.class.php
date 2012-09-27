@@ -88,7 +88,7 @@ class UGroupBinding {
     public function getUGroupsByBindingSource($ugroupId) {
         $dar     = $this->getUGroupDao()->searchUGroupByBindingSource($ugroupId);
         $ugroups = array();
-        if ($dar && !empty($dar) && !$dar->isError()) {
+        if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
                 $cloneId = $row['ugroup_id'];
                 $ugroups[$cloneId]['cloneName'] = $row['name'];
