@@ -60,8 +60,16 @@ class UGroupDao extends DataAccessObject {
         $ugroup_id = $this->da->escapeInt($ugroup_id);
         $sql = "SELECT * 
                 FROM ugroup 
-                WHERE group_id = $group_id AND ugroup_id = $ugroup_id
-                ORDER BY ugroup_id";
+                WHERE group_id = $group_id AND ugroup_id = $ugroup_id";
+        return $this->retrieve($sql);
+    }
+
+    function searchByGroupIdAndName($group_id, $name) {
+        $group_id  = $this->da->escapeInt($group_id);
+        $name      = $this->da->quoteSmart($name);
+        $sql = "SELECT *
+                FROM ugroup
+                WHERE group_id = $group_id AND name = $name";
         return $this->retrieve($sql);
     }
 

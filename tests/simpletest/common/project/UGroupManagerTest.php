@@ -40,12 +40,15 @@ class UGroupManager_BaseTest extends TuleapTestCase {
             array('ugroup_id' => "14",  'name' => "ugroup_wiki_admin_name_key",         'description' => "ugroup_wiki_admin_desc_key",          'group_id' => "100"),
             array('ugroup_id' => "15",  'name' => "ugroup_tracker_admins_name_key",     'description' => "ugroup_tracker_admins_desc_key",      'group_id' => "100"),
             array('ugroup_id' => "100", 'name' => "ugroup_nobody_name_key",             'description' => "ugroup_nobody_desc_key",              'group_id' => "100"),
-            array('ugroup_id' => "103", 'name' =>  "Integrators",                       'description' => "",                                    'group_id' => "123")
+            array('ugroup_id' => "103", 'name' => "Integrators",                        'description' => "",                                    'group_id' => "123"),
+            array('ugroup_id' => "103", 'name' => "ugroup_supra_name_key",              'description' => "",                                    'group_id' => "123"),
         );
         foreach ($ugroup_definitions as $def) {
             stub($dao)->searchByGroupIdAndUGroupId((int)$def['group_id'], (int)$def['ugroup_id'])->returnsDar($def);
+            stub($dao)->searchByGroupIdAndName((int)$def['group_id'], $def['name'])->returnsDar($def);
         }
         stub($dao)->searchByGroupIdAndUGroupId()->returnsEmptyDar();
+        stub($dao)->searchByGroupIdAndName()->returnsEmptyDar();
         stub($dao)->searchDynamicAndStaticByGroupId(123)->returns(TestHelper::argListToDar($ugroup_definitions));
 
         $this->ugroup_manager = new UGroupManager($dao);
@@ -73,12 +76,38 @@ class UGroupManager_getUGroups_Test extends UGroupManager_BaseTest {
 
     public function itReturnsAllUgroupsOfAProject() {
         $ugroups = $this->ugroup_manager->getUGroups($this->project);
-        $this->assertCount($ugroups, 11);
+        $this->assertCount($ugroups, 12);
     }
 
     public function itExcludesGivenUgroups() {
         $ugroups = $this->ugroup_manager->getUGroups($this->project, array(UGROUP::NONE, UGROUP::ANONYMOUS));
-        $this->assertCount($ugroups, 9);
+        $this->assertCount($ugroups, 10);
+    }
+}
+
+class UGroupManager_getUGroupByName_Test extends UGroupManager_BaseTest {
+
+    public function itReturnsAStaticUGroupOfAProject() {
+        $ugroup = $this->ugroup_manager->getUGroupByName($this->project, 'Integrators');
+        $this->assertEqual($ugroup->getName(), 'Integrators');
+    }
+
+    public function itReturnsASpecialNamedStaticUGroupOfAProject() {
+        $ugroup = $this->ugroup_manager->getUGroupByName($this->project, 'ugroup_supra_name_key');
+        $this->assertEqual($ugroup->getName(), 'ugroup_supra_name_key');
+    }
+
+    public function itReturnsADynamicUGroupOfAProject() {
+        $ugroup = $this->ugroup_manager->getUGroupByName($this->project, 'ugroup_project_members_name_key');
+        $this->assertEqual($ugroup->getName(), 'ugroup_project_members_name_key');
+    }
+
+    public function itReturnsNullIfNoDynamicMatch() {
+        $this->assertNull($this->ugroup_manager->getUGroupByName($this->project, 'ugroup_BLA_name_key'));
+    }
+
+    public function itReturnsNullIfNoStaticMatch() {
+        $this->assertNull($this->ugroup_manager->getUGroupByName($this->project, 'BLA'));
     }
 }
 ?>
