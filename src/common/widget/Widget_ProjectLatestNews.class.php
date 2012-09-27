@@ -45,7 +45,13 @@ class Widget_ProjectLatestNews extends Widget {
         return $this->content ? true : false;
     }
     function hasRss() {
-        return true;
+        $pm = ProjectManager::instance();
+        $request = HTTPRequest::instance();
+        $project = $pm->getProject($request->get('group_id'));
+        if ($project && $project->isPublic()) {
+            return true;
+        } 
+        return false;
     }
     function displayRss() {
         global $Language;
