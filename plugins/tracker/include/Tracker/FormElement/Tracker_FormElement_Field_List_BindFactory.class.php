@@ -45,8 +45,8 @@ class Tracker_FormElement_Field_List_BindFactory {
      */
     private $ugroup_manager;
 
-    public function __construct() {
-        $this->ugroup_manager = new UgroupManager();
+    public function __construct($ugroup_manager = null) {
+        $this->ugroup_manager = $ugroup_manager ? $ugroup_manager : new UgroupManager();
     }
 
     /**
@@ -250,8 +250,10 @@ class Tracker_FormElement_Field_List_BindFactory {
                 $values = array();
                 if ($xml->items->item) {
                     foreach ($xml->items->item as $item) {
-                        $ID = (string)$item['ID'];
-                        $values[$ID] = $this->getUgroupsValueInstance($ID, $field->getTracker()->getProject(), (string)$item['ugroup_id']);
+                        $ugroup = $this->ugroup_manager->getUGroupByName($field->getTracker()->getProject(), (string)$item['label']);
+                        if ($ugroup) {
+                            $values[] = new Tracker_FormElement_Field_List_Bind_UgroupsValue(0, $ugroup);
+                        }
                     }
                 }
                 $row['values'] = array_filter($values);
