@@ -283,7 +283,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         // add children
         if ($xml->formElements) {
             foreach ($xml->formElements->formElement as $elem) {
-                $this->formElements[] = $this->getFormElementFactory()->getInstanceFromXML($elem, $xmlMapping);
+                $this->formElements[] = $this->getFormElementFactory()->getInstanceFromXML($this->getTracker(), $elem, $xmlMapping);
             }
         }
     }
