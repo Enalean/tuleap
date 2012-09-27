@@ -75,16 +75,13 @@ textarea.text {
     margin-top:0em;
 }
 
-#plugin_git_clone_url {
-    margin: 0;
-}
-
 #plugin_git_clone_field {
     cursor:       text;
     border:       1px solid rgb(196,196,196);
     font-family:  Monaco, 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
     padding-left: 5px;
     width:        80%;
+    font-size:    12px;
 }
 
 #plugin_git_description textarea {

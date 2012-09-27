@@ -44,7 +44,7 @@ interface Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl(GitRepository $repository);
+    public function getAccessURL(GitRepository $repository);
 
     /**
      * Return the base root of all git repositories

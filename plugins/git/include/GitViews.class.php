@@ -74,12 +74,7 @@ class GitViews extends PluginViews {
     <h3><?php echo $this->getText('help_reference_title'); ?></h3>
     <p>
                        <?php
-                       if (isset($params['repository'])) {
-                           $access = $params['repository']->getAccessURL();
-                       } else {
-                           $access = 'user@'.$_SERVER['SERVER_NAME'].':/path/to/repo.git';
-                       }
-                       echo '<ul>'.$this->getText('help_init_reference', array($access)).'</ul>';
+                       echo '<ul>'.$this->getText('help_init_reference').'</ul>';
                        ?>
     </p>
     </div>
@@ -142,12 +137,11 @@ class GitViews extends PluginViews {
             }
             $creationDate = html_time_ago(strtotime($repository->getCreationDate()));
 
-            if ( $initialized ) {
-                ob_start();
-                $this->getView($repository);
-                $gitphp = ob_get_contents();
-                ob_end_clean();    
-            }
+            ob_start();
+            $this->getView($repository);
+            $gitphp = ob_get_contents();
+            ob_end_clean();
+
             //download
             if ( $this->request->get('noheader') == 1 ) {
                 die($gitphp);
@@ -155,7 +149,6 @@ class GitViews extends PluginViews {
 
             echo '<br />';
             if ( !$initialized ) {
-                echo '<div class="feedback_warning">'.$this->getText('help_init_reference_msg').'</div>';
                 $this->help('init', array('repository'=>$repository));
             }
             $this->_getBreadCrumb();
@@ -198,14 +191,27 @@ class GitViews extends PluginViews {
     endif;
     
     ?>
-    <p id="plugin_git_clone_url"><?php echo $this->getText('view_repo_clone_url');
-            ?>: <input id="plugin_git_clone_field" type="text" value="git clone <?php echo $repository->getAccessURL(); ?>" />
+    <p id="plugin_git_clone_url">
+        <?php
+        $hp = Codendi_HTMLPurifier::instance();
+        $urls = $repository->getAccessURL();
+        list(,$first_url) = each($urls);
+        if (count($urls) > 1) {
+            $selected = 'checked="checked"';
+            foreach ($urls as $transport => $url) {
+                echo '<label>';
+                echo '<input type="radio" class="plugin_git_transport" name="plugin_git_transport" value="'. $hp->purify($url) .'" '.$selected.' />';
+                echo $transport;
+                echo '</label> ';
+                $selected  = '';
+            }
+        }
+        ?>
+        <input id="plugin_git_clone_field" type="text" value="<?= $first_url; ?>" /></label>
     </p>
         <?php
         echo '</div>';
-        if ( $initialized ) {
-            echo $gitphp;
-        }
+        echo $gitphp;
     }
 
     /**
@@ -216,7 +222,6 @@ class GitViews extends PluginViews {
         $repository   = $params['repository'];
         $repoId       = $repository->getId();
         $repoName     = $repository->getName();
-
         echo "<br/>";
         $this->_getBreadCrumb();
         echo '<h2>'. $this->_getRepositoryPageUrl($repoId, $repoName) .' - '. $this->getText('admin_repo_management') .'</h2>';

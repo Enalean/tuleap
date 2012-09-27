@@ -1,6 +1,13 @@
 document.observe('dom:loaded', function () {
     var fork_repositories_prefix = $('fork_repositories_prefix');
 
+    // Update clone url field value according to selected protocol
+    $$('.plugin_git_transport').each(function (radio) {
+       radio.observe('click', function (event) {
+           $('plugin_git_clone_field').value = event.target.value;
+       }) 
+    });
+
     if (fork_repositories_prefix) {
         var fork_destination = $('fork_destination');
         var fork_path        = $('fork_repositories_path');
