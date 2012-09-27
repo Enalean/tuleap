@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('Tracker_FormElement_Field_List_Bind_Null.class.php');
 require_once('Tracker_FormElement_Field_List_Bind_Static.class.php');
 require_once('Tracker_FormElement_Field_List_Bind_StaticValue.class.php');
 require_once('Tracker_FormElement_Field_List_Bind_Users.class.php');
@@ -69,7 +70,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                                                                                   $row['blue']);
         }
 
-        $bind = null;
+        $bind = new Tracker_FormElement_Field_List_Bind_Null($field);
         switch($type) {
             case self::STATIK:
                 $dao = new Tracker_FormElement_Field_List_Bind_StaticDao();
@@ -107,6 +108,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                 $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators);
                 break;
             default:
+                trigger_error('Unkown bind "'. $type .'"', E_USER_WARNING);
                 break;
         }
         return $bind;
@@ -250,7 +252,9 @@ class Tracker_FormElement_Field_List_BindFactory {
                 $row['values'] = array_filter($values);
 
                 break;
-            default: return null;
+            default:
+                trigger_error('Unkown bind "'. $type .'"', E_USER_WARNING);
+                return new Tracker_FormElement_Field_List_Bind_Null($field);
         }
         if (isset($xml->default_values)) {
             $row['default_values'] = array();

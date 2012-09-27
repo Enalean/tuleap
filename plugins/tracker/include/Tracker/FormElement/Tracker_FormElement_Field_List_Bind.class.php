@@ -330,6 +330,35 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         
         return $html;
     }
+
+    /**
+     * Fetch sql snippets needed to compute aggregate functions on this field.
+     *
+     * @param array $functions The needed function. @see getAggregateFunctions
+     *
+     * @return array of the form array('same_query' => string(sql snippets), 'separate' => array(sql snippets))
+     *               example:
+     *               array(
+     *                   'same_query'       => "AVG(R2_1234.value) AS velocity_AVG, STD(R2_1234.value) AS velocity_AVG",
+     *                   'separate_queries' => array(
+     *                       array(
+     *                           'function' => 'COUNT_GRBY',
+     *                           'select'   => "R2_1234.value AS label, count(*) AS value",
+     *                           'group_by' => "R2_1234.value",
+     *                       ),
+     *                       //...
+     *                   )
+     *              )
+     *
+     *              Same query handle all queries that can be run concurrently in one query. Example:
+     *               - numeric: avg, count, min, max, std, sum
+     *               - selectbox: count
+     *              Separate queries handle all queries that must be run spearately on their own. Example:
+     *               - numeric: count group by
+     *               - selectbox: count group by
+     *               - multiselectbox: all (else it breaks other computations)
+     */
+    public abstract function getQuerySelectAggregate($functions);
     
     /**
      * Saves a bind in the database
