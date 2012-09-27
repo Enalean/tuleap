@@ -191,26 +191,24 @@ class GitViews extends PluginViews {
     endif;
     
     ?>
-    <div id="plugin_git_clone_url">
+    <p id="plugin_git_clone_url">
         <?php
         $hp = Codendi_HTMLPurifier::instance();
         $urls = $repository->getAccessURL();
         list(,$first_url) = each($urls);
         if (count($urls) > 1) {
-            echo '<ul>';
             $selected = 'checked="checked"';
             foreach ($urls as $transport => $url) {
-                echo '<li><label>';
+                echo '<label>';
                 echo '<input type="radio" class="plugin_git_transport" name="plugin_git_transport" value="'. $hp->purify($url) .'" '.$selected.' />';
                 echo $transport;
-                echo '</label></li>';
+                echo '</label> ';
                 $selected  = '';
             }
-            echo '</ul>';
         }
         ?>
         <input id="plugin_git_clone_field" type="text" value="<?= $first_url; ?>" /></label>
-    </div>
+    </p>
         <?php
         echo '</div>';
         echo $gitphp;

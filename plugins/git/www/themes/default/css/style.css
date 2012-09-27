@@ -75,21 +75,6 @@ textarea.text {
     margin-top:0em;
 }
 
-#plugin_git_clone_url {
-    margin: 0;
-}
-
-#plugin_git_clone_url ul {
-    padding-left: 0;
-    display: inline;
-}
-
-#plugin_git_clone_url ul li {
-    list-style: none;
-    display: inline;
-    margin-right: 0.5em;
-}
-
 #plugin_git_clone_field {
     cursor:       text;
     border:       1px solid rgb(196,196,196);
