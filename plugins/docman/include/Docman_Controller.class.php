@@ -192,7 +192,7 @@ class Docman_Controller extends Controler {
      *
      * @return Docman_PermissionsManager
      */
-    function _getPermissionsManager() {
+    private function _getPermissionsManager() {
         return Docman_PermissionsManager::instance($this->getGroupId());
     }
 
