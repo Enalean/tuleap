@@ -100,7 +100,7 @@ class UGroupUserDao extends DataAccessObject {
     }
 
     /**
-     * Reset membership for a given user
+     * Remove all users of an ugroup
      *
      * @param Integer $ugroupId Id of the user group
      *
