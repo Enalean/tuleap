@@ -1922,7 +1922,8 @@ document.observe('dom:loaded', function() {
 
                 $label .= '&nbsp;'.$hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;';
             } else {
-                $label = $hp->purify($service_data['label']);
+                $label  = '<span title="'.$hp->purify($service_data['description']).'">';
+                $label .= $hp->purify($service_data['label']).'</span>';
             }
             $tabs[] = array('link'        => $link,
                             'icon'        => null,
