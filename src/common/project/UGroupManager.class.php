@@ -32,7 +32,7 @@ class UGroupManager {
     private $dao;
 
     public function __construct(UGroupDao $dao = null) {
-        $this->dao = $dao ? $dao : new UGroupDao();
+        $this->dao = $dao;
     }
 
     /**
@@ -62,9 +62,9 @@ class UGroupManager {
     }
 
     public function getUGroupByName(Project $project, $name) {
-        $row = $this->dao->searchByGroupIdAndName($project->getID(), $name)->getRow();
+        $row = $this->getDao()->searchByGroupIdAndName($project->getID(), $name)->getRow();
         if (!$row && preg_match('/^ugroup_.*_key$/', $name)) {
-            $row = $this->dao->searchByGroupIdAndName(100, $name)->getRow();
+            $row = $this->getDao()->searchByGroupIdAndName(100, $name)->getRow();
         }
         if ($row) {
             return new UGroup($row);
@@ -105,6 +105,9 @@ class UGroupManager {
      * @return UGroupDao
      */
     private function getDao() {
+        if (!$this->dao) {
+             $this->dao = new UGroupDao();
+        }
         return $this->dao;
     }
 
