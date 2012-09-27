@@ -339,7 +339,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                     $separate[] = array(
                         'function' => $f,
                         'select'   => "$R4.name AS label, count(*) AS value",
-                        'group_by' => "$R2.name",
+                        'group_by' => "$R4.name",
                     );
                 } else {
                     $select = "$f($R4.name) AS `". $this->field->name ."_$f`";
