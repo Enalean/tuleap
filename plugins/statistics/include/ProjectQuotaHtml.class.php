@@ -265,13 +265,13 @@ class ProjectQuotaHtml {
      * @param String $sortBy             Order result set according to this parameter
      * @param String $orderBy            Specifiy if the result set sort is ascending or descending
      * @param String $projectFilterParam Search filter
-     * @param Array  $foundRowsRes       List of projects Id corresponding to a given filter
+     * @param Array  $list               List of projects Id corresponding to a given filter
      *
      * @return Array
      */
-    private function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $foundRowsRes) {
+    private function getPagination($offset, $count, $sortBy, $orderBy, $projectFilterParam, $list) {
         $params       = array();
-        $foundRows    = $foundRowsRes->rowCount();
+        $foundRows    = $list->rowCount();
         $prevHref     = '&lt;Previous';
         if ($offset > 0) {
             $prevOffset = $offset - $count;
