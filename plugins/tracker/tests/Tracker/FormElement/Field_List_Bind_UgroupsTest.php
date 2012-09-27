@@ -71,4 +71,17 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends TuleapT
     }
 }
 
+
+class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends TuleapTestCase {
+
+    public function itSavesNothingWhenNoValue() {
+        $this->field = aSelectBoxField()->build();
+        $this->ugroup_manager = mock('UGroupManager');
+        $this->value_dao = mock('Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao');
+        $values = array();
+        $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
+        stub($this->value_dao)->create()->never();
+        $bind->saveObject();
+    }
+}
 ?>
