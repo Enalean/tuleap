@@ -6,6 +6,7 @@
 * 
 * 
 */
+require_once 'common/project/ProjectManager.class.php';
 
 function service_create_service($arr, $group_id, $template, $force_enable = false) {
     // Convert link to real values
@@ -21,9 +22,8 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
         } else { $sys_default_protocol='http'; }
         $link=str_replace('$sys_default_protocol',$sys_default_protocol,$link);
     } else {
-      //for non-system templates
-      $link=str_replace($template['name'],$pm->getProject($group_id)->getUnixName(),$link);
-      $link=preg_replace('/group_id='. $template['id'] .'([^\d]|$)/', 'group_id='. $group_id .'$1', $link);
+        //for non-system templates
+        $link = service_replace_template_name_in_link($link, $template, $pm->getProject($group_id));
     }
 
     $is_used   = isset($template['is_used'])   ? $template['is_used']   : $arr['is_used'];
@@ -41,5 +41,14 @@ function service_create_service($arr, $group_id, $template, $force_enable = fals
     } else {
         return false;
     }
+}
+
+/**
+ * @return string
+ */
+function service_replace_template_name_in_link($link, array $template , Project $project) {
+    $link = preg_replace('#(/www/|/projects/|group=)'.$template['name'].'(/|&|$)#','$1'.$project->getUnixName().'$2',$link);
+    $link = preg_replace('/group_id='. $template['id'] .'([^\d]|$)/', 'group_id='. $project->getGroupId() .'$1', $link);
+    return $link;
 }
 ?>

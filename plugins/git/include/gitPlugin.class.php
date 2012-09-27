@@ -19,6 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
+require_once 'constants.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
 
@@ -55,7 +56,6 @@ class GitPlugin extends Plugin {
 
         $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
 
-        $this->_addHook(Event::EDIT_SSH_KEYS,                              'edit_ssh_keys',                                false);
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
 
@@ -158,7 +158,9 @@ class GitPlugin extends Plugin {
         require_once('GitActions.class.php');
         $groupId   = $params[0];
         $isPrivate = $params[1];
-        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate);
+        $dao       = new GitDao();
+        $factory   = $this->getRepositoryFactory();
+        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate, $dao, $factory);
     }
 
     public function systemEventProjectRename($params) {
@@ -240,23 +242,6 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * Called by hook when SSH keys of users are modified.
-     *
-     * @param array $params
-     */
-    public function edit_ssh_keys($params) {
-        require_once 'Git_GitoliteDriver.class.php';
-        $user = UserManager::instance()->getUserById($params['user_id']);
-        if ($user) {
-            $gitolite = new Git_GitoliteDriver();
-            if (is_dir($gitolite->getAdminPath())) {
-                $gitolite->initUserKeys($user);
-                $gitolite->push();
-            }
-        }
-    }
-
-    /**
      * Called by backend to ensure that all ssh keys are in gitolite conf
      * 
      * As we are root we use a dedicated script to be run as codendiadm.
@@ -268,6 +253,9 @@ class GitPlugin extends Plugin {
         $retVal = 0;
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
+        if (isset($params['user'])) {
+            $mvCmd .= ' '.$params['user']->getId();
+        }
         $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
         exec($cmd, $output, $retVal);
         if ($retVal == 0) {

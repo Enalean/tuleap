@@ -42,5 +42,16 @@ class CrossReferenceDao extends DataAccessObject {
                        $this->da->quoteSmart($group_id));       
         return $this->update($sql);
     }
+
+    public function deleteEntity($id, $nature, $group_id) {
+        $id       = $this->da->escapeInt($id);
+        $nature   = $this->da->quoteSmart($nature);
+        $group_id = $this->da->escapeInt($group_id);
+
+        $sql = "DELETE FROM $this->table_name
+                WHERE (source_type = $nature AND source_id = $id AND source_gid = $group_id)
+                   OR (target_type = $nature AND target_id = $id AND target_gid = $group_id)";
+        return $this->update($sql);
+    }
 }
 ?>

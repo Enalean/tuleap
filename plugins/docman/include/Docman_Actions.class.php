@@ -277,10 +277,9 @@ class Docman_Actions extends Actions {
 
             $eArray = array('group_id' => $item->getGroupId(),
                             'item'     => &$item,
-                            'version'  => $vId,
+                            'version'  => $newVersion,
                             'user'     => &$user);
-            $this->event_manager->processEvent('plugin_docman_event_new_version',
-                                               $eArray);
+            $this->event_manager->processEvent('plugin_docman_event_new_version', $eArray);
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_'.$_action_type));
 
             // Approval table
@@ -383,7 +382,8 @@ class Docman_Actions extends Actions {
                     $new_item =& $item_factory->getItemFromDb($id);
                     $parent   =& $item_factory->getItemFromDb($item['parent_id']);
                     if ($request->exist('permissions') && $this->_controler->userCanManage($parent->getId())) {
-                        $this->permissions(array('id' => $id, 'force' => true));
+                        $force = true;
+                        $this->setPermissionsOnItem($new_item, $force, $user);
                     } else {
                         $pm = $this->_getPermissionsManagerInstance();
                         $pm->clonePermissions($item['parent_id'], $id, array('PLUGIN_DOCMAN_READ', 'PLUGIN_DOCMAN_WRITE', 'PLUGIN_DOCMAN_MANAGE'));
@@ -927,7 +927,8 @@ class Docman_Actions extends Actions {
 
     /**
     * User has asked to set or to change permissions on an item
-    * This method is the direct action of the docman controler but can also be called internally (@see createItem)
+    * This method is the direct action of the docman controler
+    *
     * To call it directly, you have to give two extra parameters (in $params):
     * - id : the id of the item
     * - force : true if you want to bypass permissions checking (@see permission_add_ugroup).
@@ -944,76 +945,89 @@ class Docman_Actions extends Actions {
     * top item. And for each child node, there is a callback to
     * Docman_Actions::recursivePermission (see each method for details).
     */
-    function permissions($params) {
-        $request =& $this->_controler->request;
-        $id = isset($params['id']) ? $params['id'] : $request->get('id');
+    public function permissions($params) {
+        $id    = isset($params['id'])    ? $params['id']    : $this->_controler->request->get('id');
         $force = isset($params['force']) ? $params['force'] : false;
-        if ($id && $request->exist('permissions')) {
+        if ($id && $this->_controler->request->exist('permissions')) {
             $user =& $this->_controler->getUser();
-
-            $item_factory =& $this->_getItemFactory();
-            $item =& $item_factory->getItemFromDb($id);
-            if ($item) {
-                $permission_definition = array(
-                    100 => array(
-                        'order' => 0,
-                        'type'  => null,
-                        'label' => null,
-                        'previous' => null
-                    ),
-                    1 => array(
-                        'order' => 1,
-                        'type'  => 'PLUGIN_DOCMAN_READ',
-                        'label' => permission_get_name('PLUGIN_DOCMAN_READ'),
-                        'previous' => 0
-                    ),
-                    2 => array(
-                        'order' => 2,
-                        'type'  => 'PLUGIN_DOCMAN_WRITE',
-                        'label' => permission_get_name('PLUGIN_DOCMAN_WRITE'),
-                        'previous' => 1
-                    ),
-                    3 => array(
-                        'order' => 3,
-                        'type'  => 'PLUGIN_DOCMAN_MANAGE',
-                        'label' => permission_get_name('PLUGIN_DOCMAN_MANAGE'),
-                        'previous' => 2
-                    )
-                );
-                $permissions = $request->get('permissions');
-                $old_permissions = permission_get_ugroups_permissions($item->getGroupId(), $item->getId(), array('PLUGIN_DOCMAN_READ','PLUGIN_DOCMAN_WRITE','PLUGIN_DOCMAN_MANAGE'), false);
-                $done_permissions = array();
-                $history = array(
-                    'PLUGIN_DOCMAN_READ'  => false,
-                    'PLUGIN_DOCMAN_WRITE' => false,
-                    'PLUGIN_DOCMAN_MANAGE' => false
-                );
-                foreach($permissions as $ugroup_id => $wanted_permission) {
-                    $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, $history, $force);
-                }
-
-                $updated = false;
-                foreach($history as $perm => $put_in_history) {
-                    if ($put_in_history) {
-                        permission_add_history($item->getGroupId(), $perm, $item->getId());
-                        $updated = true;
-                    }
-                }
-
-                $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
-
-                // If requested by user, apply permissions recursively on sub items
-                if ($this->_controler->request->get('recursive')) {
-                    //clone permissions for sub items
-                    // Recursive application via a callback of Docman_Actions::recursivePermissions in
-                    // Docman_ItemFactory::breathFirst
-                    $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
-                    $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
-                }
-            }
+            $item =& $this->_getItemFactory()->getItemFromDb($id);
+            $this->setPermissionsOnItem($item, $force, $user);
+            $this->event_manager->processEvent(
+                'plugin_docman_event_perms_change',
+                array(
+                    'group_id' => $item->getGroupId(),
+                    'item'     => $item,
+                    'user'     => $user,
+                )
+            );
         }
     }
 
+    /**
+     * @param Docman_Item  $item  The id of the item
+     * @param bool         $force true if you want to bypass permissions checking (@see permission_add_ugroup)
+     * @param User         $user  The current user
+     */
+    private function setPermissionsOnItem(Docman_Item $item, $force, User $user) {
+        $permission_definition = array(
+            100 => array(
+                'order' => 0,
+                'type'  => null,
+                'label' => null,
+                'previous' => null
+            ),
+            1 => array(
+                'order' => 1,
+                'type'  => 'PLUGIN_DOCMAN_READ',
+                'label' => permission_get_name('PLUGIN_DOCMAN_READ'),
+                'previous' => 0
+            ),
+            2 => array(
+                'order' => 2,
+                'type'  => 'PLUGIN_DOCMAN_WRITE',
+                'label' => permission_get_name('PLUGIN_DOCMAN_WRITE'),
+                'previous' => 1
+            ),
+            3 => array(
+                'order' => 3,
+                'type'  => 'PLUGIN_DOCMAN_MANAGE',
+                'label' => permission_get_name('PLUGIN_DOCMAN_MANAGE'),
+                'previous' => 2
+            )
+        );
+        $permissions = $this->_controler->request->get('permissions');
+        $old_permissions = permission_get_ugroups_permissions($item->getGroupId(), $item->getId(), array('PLUGIN_DOCMAN_READ','PLUGIN_DOCMAN_WRITE','PLUGIN_DOCMAN_MANAGE'), false);
+        $done_permissions = array();
+        $history = array(
+            'PLUGIN_DOCMAN_READ'  => false,
+            'PLUGIN_DOCMAN_WRITE' => false,
+            'PLUGIN_DOCMAN_MANAGE' => false
+        );
+        foreach($permissions as $ugroup_id => $wanted_permission) {
+            $this->_setPermission($item->getGroupId(), $item->getId(), $permission_definition, $old_permissions, $done_permissions, $ugroup_id, $permissions, $history, $force);
+        }
+
+        $updated = false;
+        foreach($history as $perm => $put_in_history) {
+            if ($put_in_history) {
+                permission_add_history($item->getGroupId(), $perm, $item->getId());
+                $updated = true;
+            }
+        }
+
+        $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_updated'));
+
+        // If requested by user, apply permissions recursively on sub items
+        if ($this->_controler->request->get('recursive')) {
+            //clone permissions for sub items
+            // Recursive application via a callback of Docman_Actions::recursivePermissions in
+            // Docman_ItemFactory::breathFirst
+            $item_factory = $this->_getItemFactory();
+            $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
+            $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
+        }
+    }
+    
     /**
      * Apply permissions of the reference item on the target item.
      *

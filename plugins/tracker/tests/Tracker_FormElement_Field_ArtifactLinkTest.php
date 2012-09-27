@@ -17,7 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+require_once dirname(__FILE__).'/../include/constants.php';
+
 require_once 'common/language/BaseLanguage.class.php';
 Mock::generate('BaseLanguage');
 
@@ -178,6 +179,14 @@ class Tracker_FormElement_Field_ArtifactLinkTest extends TuleapTestCase {
         $this->assertFalse($f->isValid($a, array('new_values' => '')));
         $this->assertFalse($f->isValid($a, array('new_values' => '123, toto')));
         $this->assertFalse($f->isValid($a, null));
+    }
+
+    function itRaisesAnErrorWhenTheSelectedParentIsInvalid() {
+        $field = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('isRequired'));
+        stub($field)->isRequired()->returns(false);
+
+        $artifact = anArtifact()->build();
+        $this->assertFalse($field->isValid($artifact, array('new_values' => '', 'parent' => '')));
     }
     
     function testIsValidNotRequiredField() {
@@ -483,6 +492,87 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateCrossRefTest extends TuleapTe
         );
 
         $this->field->updateCrossReferences($source_artifact, $values);
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_AugmentDataFromRequestTest extends TuleapTestCase {
+
+    public function itDoesNothingWhenThereAreNoParentsInRequest() {
+        $new_values  = '32';
+        $art_link_id = 555;
+        $fields_data = array(
+            $art_link_id => array(
+                'new_values' => $new_values
+            )
+        );
+        $field = anArtifactLinkField()->withId($art_link_id)->build();
+        $field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
+    }
+
+    public function itSetParentHasNewValues() {
+        $new_values  = '';
+        $parent_id   = '657';
+        $art_link_id = 555;
+        $fields_data = array(
+            $art_link_id => array(
+                'new_values' => $new_values,
+                'parent'     => $parent_id
+            )
+        );
+        $field = anArtifactLinkField()->withId($art_link_id)->build();
+        $field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], $parent_id);
+    }
+
+    public function itAppendsParentToNewValues() {
+        $new_values  = '356';
+        $parent_id   = '657';
+        $art_link_id = 555;
+        $fields_data = array(
+            $art_link_id => array(
+                'new_values' => $new_values,
+                'parent'     => $parent_id
+            )
+        );
+        $field = anArtifactLinkField()->withId($art_link_id)->build();
+        $field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], "$new_values,$parent_id");
+    }
+
+    public function itDoesntAppendPleaseChooseOption() {
+        $new_values  = '356';
+        $parent_id   = '';
+        $art_link_id = 555;
+        $fields_data = array(
+            $art_link_id => array(
+                'new_values' => $new_values,
+                'parent'     => $parent_id
+            )
+        );
+        $field = anArtifactLinkField()->withId($art_link_id)->build();
+        $field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
+    }
+
+    public function itDoesntAppendCreateNewOption() {
+        $new_values  = '356';
+        $parent_id   = '-1';
+        $art_link_id = 555;
+        $fields_data = array(
+            $art_link_id => array(
+                'new_values' => $new_values,
+                'parent'     => $parent_id
+            )
+        );
+        $field = anArtifactLinkField()->withId($art_link_id)->build();
+        $field->augmentDataFromRequest($fields_data);
+
+        $this->assertEqual($fields_data[$art_link_id]['new_values'], $new_values);
     }
 }
 

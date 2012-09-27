@@ -121,10 +121,13 @@ if (($func=='edit')||($func=='do_create')) {
     echo '<tr><td></td><td><input type="submit" value="'.$Language->getText('global','btn_submit').'" /></td></tr>';
     echo '</table>';
     echo '</form>';
-    
+
+    $ugroupUpdateUsersAllowed = true;
+    $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
+
     echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup','group_members').'</b></p>';
     echo '<div style="padding-left:10px">';
-    
+
     // Get existing members from group
     $uGroupMgr = new UGroupManager();
     $uGroup    = $uGroupMgr->getById($request->get('ugroup_id'));
@@ -140,9 +143,11 @@ if (($func=='edit')||($func=='do_create')) {
         foreach ($members as $user) {
             echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
             echo '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
-            echo '<td>';
-            project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
-            echo '</td>';
+            if ($ugroupUpdateUsersAllowed) {
+                echo '<td>';
+                project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
+                echo '</td>';
+            }
             echo '</tr>';
         }
         echo '</table>';
@@ -150,8 +155,11 @@ if (($func=='edit')||($func=='do_create')) {
     } else {
         echo $Language->getText('project_admin_editugroup','nobody_yet');
     }
-    echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup','add_user').'</a></p>';
-    echo '</div>';
+
+    if ($ugroupUpdateUsersAllowed) {
+        echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup','add_user').'</a></p>';
+        echo '</div>';
+    }
 
     echo '<p><a href="/project/admin/ugroup.php?group_id='. $group_id .'">&laquo; '.$Language->getText('project_admin_editugroup','go_back').'</a></p>';
         

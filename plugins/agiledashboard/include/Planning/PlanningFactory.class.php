@@ -19,9 +19,6 @@
  */
 
 require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/TrackerFactory.class.php';
-require_once('PlanningDao.class.php');
-require_once('Planning.class.php');
-require_once 'PlanningParameters.class.php';
 
 class PlanningFactory {
     
@@ -153,7 +150,40 @@ class PlanningFactory {
             return $p;
         }
     }
-    
+
+    /**
+     * Returns all the Planning that use given tracker as backlog tracker
+     *
+     * Given:
+     *   Epic  -> Product
+     *   Epic  -> Release
+     *   Story -> Sprint
+     * When getPlanningsByBacklogTracker(Epic) -> [Product, Release]
+     * When getPlanningsByBacklogTracker(Story) -> [Sprint]
+     *
+     * @param Tracker $backlog_tracker
+     *
+     * @return Planning
+     */
+    public function getPlanningsByBacklogTracker(Tracker $backlog_tracker) {
+        $plannings = array();
+        foreach ($this->dao->searchByBacklogTrackerId($backlog_tracker->getId()) as $planning) {
+            $p = new Planning(
+                $planning['id'],
+                $planning['name'],
+                $planning['group_id'],
+                $planning['backlog_title'],
+                $planning['plan_title'],
+                $backlog_tracker->getId(),
+                $planning['planning_tracker_id']
+            );
+            $p->setBacklogTracker($backlog_tracker);
+            $p->setPlanningTracker($this->getPlanningTracker($p));
+            $plannings[] = $p;
+        }
+        return $plannings;
+    }
+
     public function getPlanningWithTrackers($planning_id) {
         $planning = $this->getPlanning($planning_id);
         

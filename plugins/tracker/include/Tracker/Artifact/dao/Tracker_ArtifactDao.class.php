@@ -19,6 +19,7 @@
  */
 
 require_once 'PriorityDao.class.php';
+require_once dirname(__FILE__).'/../../FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php';
 
 class Tracker_ArtifactDao extends DataAccessObject {
 
@@ -51,17 +52,16 @@ class Tracker_ArtifactDao extends DataAccessObject {
     /**
      * @param string $artifact_ids "2,14,15"
      */
-    public function searchLastChangesetIds($artifact_ids, $ugroups) {
-        $artifact_ids = explode(',', $artifact_ids); // array(2, 14, 15);
-        $artifact_ids = array_map(array($this->da, 'escapeInt'), $artifact_ids); // array(2, 14, 15)
-        $artifact_ids = implode(',', $artifact_ids); // 2,14,15
+    public function searchLastChangesetIds($artifact_ids, array $ugroups, $user_is_admin) {
+        $artifact_ids = $this->da->escapeIntImplode(explode(',', $artifact_ids));
+
         $sql = " SELECT tracker_id, GROUP_CONCAT(id) AS id, GROUP_CONCAT(last_changeset_id) AS last_changeset_id";
         $from = " FROM $this->table_name AS artifact";
         $where = " WHERE id IN (" .$artifact_ids. ")";
         $group = " GROUP BY tracker_id";
                 
-        $user = UserManager::instance()->getCurrentuser();
-        if (!$user->isSuperUser()) {
+        if (!$user_is_admin) {
+            $ugroups = $this->da->escapeIntImplode($ugroups);
             $from   .= " LEFT JOIN permissions ON (permissions.object_id = CAST(artifact.id AS CHAR) AND permissions.permission_type = 'PLUGIN_TRACKER_ARTIFACT_ACCESS')";
             $where  .= " AND (artifact.use_artifact_permissions = 0 OR  (permissions.ugroup_id IN (". $ugroups.")))";
         }
@@ -123,6 +123,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -165,6 +167,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -209,6 +213,8 @@ class Tracker_ArtifactDao extends DataAccessObject {
                         OR 
                         CVL2.bindvalue_id = SS.open_value_id
                      )
+                  AND G.status = 'A'
+                  AND T.deletion_date IS NULL
                ORDER BY G.group_name ASC, T.id ASC, A.id DESC";
         return $this->retrieve($sql);
     }
@@ -300,10 +306,20 @@ class Tracker_ArtifactDao extends DataAccessObject {
                 WHERE id = $id ";
         return $this->update($sql);
     }
-    
+
     public function delete($id) {
         $sql = "DELETE FROM $this->table_name WHERE id = ". $this->da->escapeInt($id);
         return $this->update($sql);
+    }
+
+    public function deleteArtifactLinkReference($id) {
+        $dao = new Tracker_FormElement_Field_Value_ArtifactLinkDao();
+        return $dao->deleteReference($id);
+    }
+
+    public function deletePriority($id) {
+        $dao = new Tracker_Artifact_PriorityDao();
+        return $dao->remove($id);
     }
 
     /**

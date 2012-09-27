@@ -135,5 +135,12 @@ interface Git_Backend_Interface {
      */
     public function delete(GitRepository $repository);
 
+    /**
+     * Persist the modifications to the $repository
+     * 
+     * @param GitRepository $repository
+     */
+    public function commitTransaction(GitRepository $repository);
+    
 }
 ?>

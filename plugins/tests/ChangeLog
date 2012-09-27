@@ -1,7 +1,10 @@
-Version 5.4
+Version 5.5 - Tuleap 5.4
+    * First step toward autoloading in order to increase performances
+
+Version 5.4 - Tuleap 5.4
     * Make unit tests pass with PHP 5.3
 
-Version 5.3
+Version 5.3 - Tuleap 5.4
     * Add FakeDAR to ease mocking
 
 Version 5.2 - Tuleap 5.4

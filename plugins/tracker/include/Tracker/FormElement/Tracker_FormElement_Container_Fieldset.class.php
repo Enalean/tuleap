@@ -44,6 +44,14 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         return $html;
     }
     
+    protected function fetchArtifactReadOnlyPrefix() {
+        return $this->fetchArtifactPrefix();
+    }
+
+    protected function fetchArtifactReadOnlySuffix() {
+        return $this->fetchArtifactSuffix();
+    }
+
     protected function fetchMailArtifactPrefix($format) {
         if ($format == 'text') {
             $label = $this->getLabel();

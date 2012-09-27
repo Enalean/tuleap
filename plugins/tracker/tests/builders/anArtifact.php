@@ -36,6 +36,7 @@ class Test_Artifact_Builder {
     private $formElementFactory;
     private $changesets;
     private $hierarchy_factory;
+    private $ancestors;
     
     public function withId($id) {
         $this->id = $id;
@@ -62,6 +63,11 @@ class Test_Artifact_Builder {
         $this->hierarchy_factory = $hierarchy_factory;
         return $this;
     }
+    
+    public function withoutParent() {
+        $this->ancestors = array();
+        return $this;
+    }
         
     public function build() {
         $artifact = new Tracker_Artifact($this->id, $this->tracker_id, null, null, null);
@@ -76,6 +82,9 @@ class Test_Artifact_Builder {
         }
         if ($this->hierarchy_factory) {
             $artifact->setHierarchyFactory($this->hierarchy_factory);
+        }
+        if (isset($this->ancestors)) {
+            $artifact->setAllAncestors($this->ancestors);
         }
         return $artifact;
     }

@@ -22,6 +22,7 @@ require_once('common/include/URL.class.php');
 require_once('common/mail/Mail.class.php');
 require_once('common/project/Project.class.php');
 require_once('common/user/User.class.php');
+require_once('common/include/URLRedirect.class.php');
 
 /**
  * It allows the management of permission denied error.
@@ -86,39 +87,16 @@ abstract class Error_PermissionDenied {
      * 
      */
     function buildInterface() {
-        $groupId =  (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $this->url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
-        $userId = $this->getUserManager()->getCurrentUser()->getId();
-        
-        $param = $this->returnBuildInterfaceParam();
-        
-        echo "<b>".$GLOBALS['Language']->getText($this->getTextBase(), 'perm_denied')."</b>";
-        echo '<br></br>';
-        echo "<br>".$GLOBALS['Language']->getText($this->getTextBase(), $param['index']);
-        
-        //In case of restricted user, we only show the zone text area to ask for membership 
-        //just when the requested page belongs to a project
-        if (!(($param['func'] == 'restricted_user_request') && (!isset($groupId)))) {
-            $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
-            $pm = ProjectManager::instance();
-            $dar = $pm->getMessageToRequesterForAccessProject($groupId);
-            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-                $row = $dar->current();
-                if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester" ) {
-                    $message = $row['msg_to_requester'];
-                }
-            } 
-            echo $GLOBALS['Language']->getText($this->getTextBase(), 'request_to_admin');
-            echo '<br></br>';
-            echo '<form action="'.$param['action'].'" method="post" name="display_form">
-                  <textarea wrap="virtual" rows="5" cols="70" name="'.$param['name'].'">'.$message.' </textarea></p>
-                  <input type="hidden" id="func" name="func" value="'.$param['func'].'">
-                  <input type="hidden" id="groupId" name="groupId" value="' .$groupId. '">
-                  <input type="hidden" id="userId" name="userId" value="' .$userId. '">
-                  <input type="hidden" id="data" name="url_data" value="' .$_SERVER['REQUEST_URI']. '">
-                  <br><input name="Submit" type="submit" value="'.$GLOBALS['Language']->getText('include_exit', 'send_mail').'"/></br>
-              </form>';
+        $user = $this->getUserManager()->getCurrentUser();
+
+        if ($user->isAnonymous()) {
+            $redirect = new URLRedirect();
+            $redirect->redirectToLogin();
+        } else {
+            $this->buildPermissionDeniedInterface();
         }
     }
+
 
     /**
      *
@@ -275,6 +253,48 @@ abstract class Error_PermissionDenied {
      */
     protected function getUGroup() {
         return new UGroup();
+    }
+
+    /**
+     * Build the Permission Denied error interface
+     */
+    private function buildPermissionDeniedInterface(){
+        $groupId = (isset($GLOBALS['group_id'])) ? $GLOBALS['group_id'] : $this->url->getGroupIdFromUrl($_SERVER['REQUEST_URI']);
+        $userId = $this->getUserManager()->getCurrentUser()->getId();
+        $param = $this->returnBuildInterfaceParam();
+
+
+        site_header(array('title' => $GLOBALS['Language']->getText('include_exit', 'exit_error')));
+
+        echo "<b>" . $GLOBALS['Language']->getText($this->getTextBase(), 'perm_denied') . "</b>";
+        echo '<br></br>';
+        echo "<br>" . $GLOBALS['Language']->getText($this->getTextBase(), $param['index']);
+
+        //In case of restricted user, we only show the zone text area to ask for membership
+        //just when the requested page belongs to a project
+        if (!(($param['func'] == 'restricted_user_request') && (!isset($groupId)))) {
+            $message = $GLOBALS['Language']->getText('project_admin_index', 'member_request_delegation_msg_to_requester');
+            $pm = ProjectManager::instance();
+            $dar = $pm->getMessageToRequesterForAccessProject($groupId);
+            if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+                $row = $dar->current();
+                if ($row['msg_to_requester'] != "member_request_delegation_msg_to_requester") {
+                    $message = $row['msg_to_requester'];
+                }
+            }
+            echo $GLOBALS['Language']->getText($this->getTextBase(), 'request_to_admin');
+            echo '<br></br>';
+            echo '<form action="' . $param['action'] . '" method="post" name="display_form">
+                  <textarea wrap="virtual" rows="5" cols="70" name="' . $param['name'] . '">' . $message . ' </textarea></p>
+                  <input type="hidden" id="func" name="func" value="' . $param['func'] . '">
+                  <input type="hidden" id="groupId" name="groupId" value="' . $groupId . '">
+                  <input type="hidden" id="userId" name="userId" value="' . $userId . '">
+                  <input type="hidden" id="data" name="url_data" value="' . $_SERVER['REQUEST_URI'] . '">
+                  <br><input name="Submit" type="submit" value="' . $GLOBALS['Language']->getText('include_exit', 'send_mail') . '"/></br>
+              </form>';
+        }
+
+        $GLOBALS['HTML']->footer(array('showfeedback' => false));
     }
 }
 ?>

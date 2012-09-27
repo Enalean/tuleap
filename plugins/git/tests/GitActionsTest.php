@@ -18,8 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once (dirname(__FILE__).'/../include/GitActions.class.php');
-Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getController', 'getText', 'addData', 'getGitRepository', 'save'));
+Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getText', 'addData', 'getGitRepository', 'save'));
 require_once (dirname(__FILE__).'/../include/Git.class.php');
 Mock::generate('Git');
 require_once (dirname(__FILE__).'/../include/GitRepository.class.php');
@@ -35,7 +36,6 @@ Mock::generate('User');
 Mock::generate('SystemEventManager');
 Mock::generate('Layout');
 require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');
-//require_once(dirname(__FILE__).'/../include/exceptions/GitRepositoryAlreadyExistsException.class.php');
 
 Mock::generate('Git_Backend_Gitolite');
 
@@ -53,7 +53,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -67,7 +67,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -77,14 +77,14 @@ class GitActionsTest extends TuleapTestCase {
         $gitRepository->expectNever('changeMailPrefix');
         $gitAction->expectNever('addData');
 
-        $this->assertFalse($gitAction->notificationUpdatePrefix(1, null, '[new prefix]'));
+        $this->assertFalse($gitAction->notificationUpdatePrefix(1, null, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationUpdatePrefixPass() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'mail_prefix_updated', array('mail_prefix_updated'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -94,14 +94,14 @@ class GitActionsTest extends TuleapTestCase {
         $gitRepository->expectOnce('changeMailPrefix');
         $gitAction->expectCallCount('addData', 2);
 
-        $this->assertTrue($gitAction->notificationUpdatePrefix(1, 1, '[new prefix]'));
+        $this->assertTrue($gitAction->notificationUpdatePrefix(1, 1, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationAddMailFailNoRepoId() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -109,21 +109,21 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectNever('addInfo');
 
         $mails = array('john.doe@acme.com');
-        $this->assertFalse($gitAction->notificationAddMail(1, null, $mails));
+        $this->assertFalse($gitAction->notificationAddMail(1, null, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailFailNoMails() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationAddMail(1, 1, null));
+        $this->assertFalse($gitAction->notificationAddMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationAddMailFailAlreadyNotified() {
@@ -132,7 +132,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction->setReturnValue('getText', 'mail_existing jane.doe@acme.com', array('mail_existing', array('jane.doe@acme.com')));
         $gitAction->setReturnValue('getText', 'mail_existing john.smith@acme.com', array('mail_existing', array('john.smith@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', true);
         $gitRepository->setReturnValue('notificationAddMail', false, array('john.doe@acme.com'));
@@ -149,7 +149,7 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails));
+        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailPartialPass() {
@@ -157,7 +157,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction->setReturnValue('getText', 'mail_not_added john.doe@acme.com', array('mail_not_added', array('john.doe@acme.com')));
         $gitAction->setReturnValue('getText', 'mail_not_added john.smith@acme.com', array('mail_not_added', array('john.smith@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', false);
         $gitRepository->setReturnValue('notificationAddMail', false, array('john.doe@acme.com'));
@@ -173,14 +173,14 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails));
+        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailPass() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'mail_added', array('mail_added'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('isAlreadyNotified', false);
         $gitRepository->setReturnValue('notificationAddMail', true, array('john.doe@acme.com'));
@@ -194,42 +194,42 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails));
+        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationRemoveMailFailNoRepoId() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, null, 'john.doe@acme.com'));
+        $this->assertFalse($gitAction->notificationRemoveMail(1, null, 'john.doe@acme.com', 'a_pane'));
     }
 
     function testNotificationRemoveMailFailNoMail() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, null));
+        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailNotRemoved() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'mail_not_removed john.doe@acme.com', array('mail_not_removed', array('john.doe@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('notificationRemoveMail', false);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
@@ -237,14 +237,14 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectOnce('addError', array('mail_not_removed john.doe@acme.com'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com')));
+        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailPass() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'mail_removed john.doe@acme.com', array('mail_removed', array('john.doe@acme.com')));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('notificationRemoveMail', True);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
@@ -252,14 +252,14 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectNever('addError');
         $git->expectOnce('addInfo', array('mail_removed john.doe@acme.com'));
 
-        $this->assertTrue($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com')));
+        $this->assertTrue($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testConfirmPrivateFailNoRepoId() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -277,7 +277,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -295,7 +295,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
 
@@ -312,7 +312,7 @@ class GitActionsTest extends TuleapTestCase {
     function testConfirmPrivateNotSettingToPrivate() {
         $gitAction = new GitActionsTestVersion();
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('getAccess', 'public');
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
@@ -330,7 +330,7 @@ class GitActionsTest extends TuleapTestCase {
     function testConfirmPrivateAlreadyPrivate() {
         $gitAction = new GitActionsTestVersion();
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('getAccess', 'private');
         $gitAction->setReturnValue('getGitRepository', $gitRepository);
@@ -348,7 +348,7 @@ class GitActionsTest extends TuleapTestCase {
     function testConfirmPrivateNoMailsToDelete() {
         $gitAction = new GitActionsTestVersion();
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('getAccess', 'public');
         $gitRepository->setReturnValue('getNonMemberMails', array());
@@ -368,7 +368,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'set_private_warn');
         $git = new MockGit($this);
-        $gitAction->setReturnValue('getController', $git);
+        $gitAction->setController($git);
         $gitRepository = new MockGitRepository($this);
         $gitRepository->setReturnValue('getAccess', 'public');
         $gitRepository->setReturnValue('getNonMemberMails', array('john.doe@acme.com'));
@@ -516,6 +516,72 @@ class GitActions_ForkTests extends TuleapTestCase {
         $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope));
 
         $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url);
+    }
+}
+
+
+class GitActions_ProjectPrivacyTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->dao = mock('GitDao');
+        $this->factory = mock('GitRepositoryFactory');
+    }
+
+    public function itDoesNothingWhenThereAreNoRepositories() {
+        $project_id = 99;
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array());
+        $this->changeProjectRepositoriesAccess($project_id, true);
+        $this->changeProjectRepositoriesAccess($project_id, false);
+    }
+
+    public function itDoesNothingWeAreMakingItTheProjectPublic() {
+        $project_id = 99;
+        $is_private = false;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess()->never()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    public function itMakesRepositoriesPrivateWhenProjectBecomesPrivate() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+
+    }
+    
+    public function itDoesNothingIfThePermissionsAreAlreadyCorrect() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess()->never()->returns("whatever");
+        stub($repo)->getAccess()->returns(GitRepository::PRIVATE_ACCESS);
+        stub($repo)->changeAccess()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    public function itHandlesAllRepositoriesOfTheProject() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id1 = 333;
+        $repo_id2 = 444;
+        $repo1 = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        $repo2 = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id1 => null, $repo_id2 => null));
+        stub($this->factory)->getRepositoryById($repo_id1)->returns($repo1);
+        stub($this->factory)->getRepositoryById($repo_id2)->returns($repo2);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    private function changeProjectRepositoriesAccess($project_id, $is_private) {
+        return GitActions::changeProjectRepositoriesAccess($project_id, $is_private, $this->dao, $this->factory);
     }
 }
 ?>

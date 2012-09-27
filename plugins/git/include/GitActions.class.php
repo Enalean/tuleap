@@ -89,7 +89,7 @@ class GitActions extends PluginActions {
         $projectId    = intval($projectId);
         $repositoryId = intval($repositoryId);
         if ( empty($projectId) || empty($repositoryId) ) {
-            $c->addError( $this->getText('actions_params_error') );            
+            $this->addError('actions_params_error');
             return false;
         }
         
@@ -97,15 +97,15 @@ class GitActions extends PluginActions {
         if ($repository) {
             if ($repository->canBeDeleted()) {
                 $this->markAsDeleted($repository);
-                $c->addInfo( $this->getText('actions_delete_process') );
-                $c->addInfo( $this->getText('actions_delete_backup').' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir') );
+                $c->addInfo($this->getText('actions_delete_process', array($repository->getFullName())));
+                $c->addInfo($this->getText('actions_delete_backup', array($repository->getFullName())).' : '.$c->getPlugin()->getConfigurationParameter('git_backup_dir'));
             } else {
-                $c->addError( $this->getText('backend_delete_haschild_error') );
-                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repositoryId.'/');
+                $this->addError('backend_delete_haschild_error');
+                $this->redirectToRepo($projectId, $repositoryId);
                 return false;
             }
         } else {
-            $c->addError($this->getText('actions_repo_not_found'));
+            $this->addError('actions_repo_not_found');
         }
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
     }
@@ -139,7 +139,7 @@ class GitActions extends PluginActions {
         try {
             $repository = new GitRepository();
             $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
-            $repository->setDescription('-- Default description --');
+            $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
             $repository->setCreator(UserManager::instance()->getCurrentUser());
             $repository->setProject(ProjectManager::instance()->getProject($projectId));
             $repository->setName($repositoryName);
@@ -159,33 +159,32 @@ class GitActions extends PluginActions {
         $projectId = intval($projectId);
         $parentId  = intval($parentId);
         if ( empty($projectId) || empty($forkName) || empty($parentId) ) {
-            $c->addError($this->getText('actions_params_error'));            
+            $this->addError('actions_params_error');
             return false;
         }
-        $parentRepo = new GitRepository();
-        $parentRepo->setId($parentId);
-        try {
-            $parentRepo->load();
+        
+        $parentRepo = $this->factory->getRepositoryById($parentId);
+        if ($parentRepo) {
             
             // Disable possibility to delete gitolite repositories
             if ($parentRepo->getBackend() instanceof Git_Backend_Gitolite) {
-                $c->addError( $this->getText('disable_fork_gitolite') );
-                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+                $this->addError('disable_fork_gitolite');
+                $this->redirectToRepo($projectId, $parentId);
             }
 
             if ($parentRepo->isNameValid($forkName) === false) {
                 $c->addError( $this->getText('actions_input_format_error', array($parentRepo->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
-                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+                $this->redirectToRepo($projectId, $parentId);
                 return false;
             }
 
             if ( !$parentRepo->isInitialized() ) {
-                $c->addError( $this->getText('repo_not_initialized') );
-                $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+                $this->addError('repo_not_initialized');
+                $this->redirectToRepo($projectId, $parentId);
                 return false;
             }
-        } catch ( GitDaoException $e ) {
-            $c->addError( $e->getMessage() );
+        } else {
+            $this->addError( 'actions_repo_not_found' );
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
@@ -195,7 +194,7 @@ class GitActions extends PluginActions {
             SystemEvent::PRIORITY_MEDIUM
         );
         $c->addInfo( $this->getText('actions_create_repo_process') );
-        $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$parentId.'/');
+        $this->redirectToRepo($projectId, $parentId);
         return;
     }
 
@@ -209,7 +208,7 @@ class GitActions extends PluginActions {
      */
     public function getProjectRepositoryList($projectId, $userId = null) {
         $onlyGitShell = false;
-        $scope = true;
+        $scope        = true;
         $dao          = $this->getDao();
         $this->addData(array(
             'repository_list'     => $dao->getProjectRepositoryList($projectId, $onlyGitShell, $scope, $userId),
@@ -227,16 +226,12 @@ class GitActions extends PluginActions {
         $projectId    = intval($projectId);
         $repositoryId = intval($repositoryId);
         if ( empty($repositoryId) ) {
-            $c->addError( $this->getText('actions_params_error') );
+            $this->addError('actions_params_error');
             return false;
         }
-         
-        $repository = new GitRepository();
-        $repository->setId($repositoryId);        
-        try {
-            $repository->load();            
-        } catch (GitDaoException $e) {
-            $c->addError( $this->getText('actions_repo_not_found') );
+        $repository = $this->factory->getRepositoryById($repositoryId);
+        if (!$repository) {
+            $this->addError('actions_repo_not_found');
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return;
         }
@@ -247,33 +242,35 @@ class GitActions extends PluginActions {
     public function repoManagement($projectId, $repositoryId) {
         $c = $this->getController();
         if (empty($repositoryId)) {
-            $c->addError($this->getText('actions_params_error'));
+            $this->addError('actions_params_error');
             return false;
         }
         $this->_loadRepository($projectId, $repositoryId);
         return true;
     }
 
-    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix) {
+    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane) {
         $c = $this->getController();
         if (empty($repositoryId)) {
-            $c->addError($this->getText('actions_params_error'));
+            $this->addError('actions_params_error');
             return false;
         }
         $repository = $this->_loadRepository($projectId, $repositoryId);
-        $repository->setMailPrefix($mailPrefix);
-        $repository->save();
-        $repository->changeMailPrefix();
-        $c->addInfo($this->getText('mail_prefix_updated'));
-        $this->addData(array('repository'=>$repository));
+        if ($repository->getMailPrefix() != $mailPrefix) {
+            $repository->setMailPrefix($mailPrefix);
+            $repository->save();
+            $repository->changeMailPrefix();
+            $c->addInfo($this->getText('mail_prefix_updated'));
+            $this->addData(array('repository'=>$repository));
+        }
         return true;
     }
 
-    public function notificationAddMail($projectId, $repositoryId, $mails) {
+    public function notificationAddMail($projectId, $repositoryId, $mails, $pane) {
         $c = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
-            $c->addError($this->getText('actions_params_error'));
+            $this->addError('actions_params_error');
             return false;
         }
 
@@ -296,11 +293,11 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function notificationRemoveMail($projectId, $repositoryId, $mails) {
+    public function notificationRemoveMail($projectId, $repositoryId, $mails, $pane) {
         $c = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
-            $c->addError($this->getText('actions_params_error'));
+            $this->addError('actions_params_error');
             return false;
         }
         $ret = true;
@@ -315,10 +312,22 @@ class GitActions extends PluginActions {
         return $ret;
     }
 
+    public function redirectToRepoManagement($projectId, $repositoryId, $pane) {
+        $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
+            array(
+                'action'   => 'repo_management',
+                'group_id' => $projectId,
+                'repo_id'  => $repositoryId,
+                'pane'     => $pane,
+            )
+        );
+        $this->getController()->redirect($redirect_url);
+    }
+
     public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
         $c = $this->getController();
         if (empty($repoId) || empty($repoAccess) || empty($repoDescription)) {
-            $c->addError($this->getText('actions_params_error'));
+            $this->addError('actions_params_error');
             return false;
         }
         $repository = $this->_loadRepository($projectId, $repoId);
@@ -340,7 +349,7 @@ class GitActions extends PluginActions {
     public function setPrivate($projectId, $repoId) {
         $c = $this->getController();
         if (empty($repoId)) {
-            $c->addError($this->getText('actions_params_error'));
+            $this->addError('actions_params_error');
             return false;
         }
         $repository = $this->_loadRepository($projectId, $repoId);
@@ -354,16 +363,6 @@ class GitActions extends PluginActions {
         $c->addInfo($this->getText('actions_repo_access'));
     }
 
-    public function confirmDeletion($projectId, $repoId) {
-        $c = $this->getController();
-        if ( empty($repoId) ) {
-            $c->addError( $this->getText('actions_params_error') );
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
-        $c->addWarn( $this->getText('confirm_deletion_msg'));
-    }
-
     /**
      * This method allows one to save any repository attribues changes from the web interface.
      * @param <type> $repoId
@@ -371,22 +370,35 @@ class GitActions extends PluginActions {
      * @param <type> $repoDescription
      * @return <type>
      */
-    public function save( $projectId, $repoId, $repoAccess, $repoDescription ) {
+    public function save( $projectId, $repoId, $repoAccess, $repoDescription, $pane) {
         $c = $this->getController();
         if ( empty($repoId) ) {
-            $c->addError( $this->getText('actions_params_error') );
+            $this->addError('actions_params_error');
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return false;
         }
-        if ( empty($repoAccess) || empty($repoDescription) ) {
-            $c->addError( $this->getText('actions_params_error') );
-            $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
+        $repository = $this->factory->getRepositoryById($repoId);
+        if (! $repository) {
+            $this->addError('actions_repo_not_found');
+            $c->redirect('/plugins/git/?group_id='.$projectId);
             return false;
-        }        
-        $repository = new GitRepository();
-        $repository->setId($repoId);
+        }
+        if (empty($repoAccess) && empty($repoDescription)) {
+            $this->addError('actions_params_error');
+            $this->redirectToRepo($projectId, $repoId);
+            return false;
+        }
+
+        if ($repoDescription) {
+            if (strlen($repoDescription) > 1024) {
+                $this->addError('actions_long_description');
+            } else {
+                $repository->setDescription($repoDescription);
+            }
+        }
+
         try {
-            $repository->load();
+            $repository->save();
             if ( !empty($repoAccess) ) {
                 if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
                     $repository->getBackend()->savePermissions($repository, $repoAccess);
@@ -401,30 +413,15 @@ class GitActions extends PluginActions {
                     }
                 }
             }
-            if (strlen($repoDescription) > 1024) {
-                $c->addError( $this->getText('actions_long_description') );
-            } elseif (!empty($repoDescription)) {
-                $repository->setDescription($repoDescription);
-            }
+            $repository->getBackend()->commitTransaction($repository);
+            
         } catch (GitDaoException $e) {
-            $c->addError( $this->getText('actions_repo_not_found') );
-            $c->redirect('/plugins/git/?group_id='.$projectId);            
-            return false;
-        } catch (GitRepositoryException $e1) {
-            die('GitRepositoryException');
-            $c->addError( $e1->getMessage() );
-            return false;
-        }
-
-        try {
-            $repository->save();
-        } catch (GitDaoException $e) {
-            $c->addError( $e->getMessage() );             
-             $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
+            $c->addError( $e->getMessage() );
+            $this->redirectToRepoManagement($projectId, $repoId, $pane);
             return false;
         }
         $c->addInfo( $this->getText('actions_save_repo_process') );
-        $c->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
+        $this->redirectToRepoManagement($projectId, $repoId, $pane);
         return;
     }
 
@@ -434,33 +431,27 @@ class GitActions extends PluginActions {
      * @param <type> $isPublic
      * @return <type>
      */
-    public static function changeProjectRepositoriesAccess($projectId, $isPrivate) {
+    public static function changeProjectRepositoriesAccess($projectId, $isPrivate, GitDao $dao, GitRepositoryFactory $factory) {
         //if the project is private, then no changes may be applied to repositories,
         //in other words only if project is set to private, its repositories have to be set to private
         if ( empty($isPrivate) ) {
             return;
         }
-        $dao          = new GitDao();
         $repositories = $dao->getProjectRepositoryList($projectId);
-        if ( empty($repositories) ) {
-            return false;
-        }
-
         foreach ( $repositories as $repoId=>$repoData ) {
-            $r = new GitRepository();
-            $r->setId($repoId);
-            if ( !$r->exists() ) {
+            $r = $factory->getRepositoryById($repoId);
+            if ( !$r ) {
                 continue;
             }
-            $newAccess = !empty($isPrivate) ? GitRepository::PRIVATE_ACCESS : GitRepository::PUBLIC_ACCESS;
-            if ( $r->getAccess() == $newAccess ) {
+            if ( $r->getAccess() == GitRepository::PRIVATE_ACCESS) {
                 continue;
             }
-            $r->setAccess( $newAccess );
+            $r->setAccess( GitRepository::PRIVATE_ACCESS );
             $r->changeAccess();
             unset($r);
         }
 
+        
     }
 
     /**
@@ -487,24 +478,22 @@ class GitActions extends PluginActions {
     }
 
     function _loadRepository($projectId, $repositoryId) {
-        $repository = $this->getGitRepository();
-        $repository->setId($repositoryId);
-        try {
-            $repository->load();
+        $repository = $this->getGitRepository($repositoryId);
+        if ($repository) {
             $this->addData(array('repository'=>$repository));
-        } catch (Exception $e) {
+            return $repository;
+        } else {
             $c = $this->getController();
-            $c->addError($this->getText('actions_repo_not_found'));
+            $this->addError('actions_repo_not_found');
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
         }
-        return $repository;
     }
 
     /**
      * Wrapper used for tests to get a new GitRepository
      */
-    function getGitRepository() {
-        return new GitRepository();
+    function getGitRepository($repositoryId) {
+        return $this->factory->getRepositoryById($repositoryId);
     }
 
     /**
@@ -525,6 +514,14 @@ class GitActions extends PluginActions {
         } catch(Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
+    }
+    
+    private function redirectToRepo($projectId, $repoId) {
+        $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
+    }
+
+    private function addError($error_key) {
+        $this->getController()->addError($this->getText($error_key));
     }
 }
 

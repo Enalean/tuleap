@@ -24,6 +24,7 @@ require_once dirname(__FILE__).'/../../include/Planning/SearchContentView.class.
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aMockTemplateRenderer.php';
 
 class Planning_SearchContentViewTest extends Tracker_CrossSearch_SearchContentViewTest {
+
     public function itCanGenerateALinkToAddNewBacklogRootItems() {
         $report = mock('Tracker_Report');
         $criteria = array();
@@ -31,16 +32,17 @@ class Planning_SearchContentViewTest extends Tracker_CrossSearch_SearchContentVi
         $artifact_factory = mock('Tracker_ArtifactFactory');
         $form_element_factory = mock('Tracker_FormElementFactory');
         $user = mock('User');
+        $backlog_actions_presenter = mock('Planning_BacklogActionsPresenter');
         $planning = mock('Planning');
         $planning_redirect_param = '';
         
         $backlog_actions_markup = 'Some backlog actions';
         $renderer = aMockTemplateRenderer()->build();
         
-        $view = new Planning_SearchContentView($report, $criteria, $tree_of_artifacts, $artifact_factory, $form_element_factory, $user, $planning, $planning_redirect_param);
+        $view = new Planning_SearchContentView($report, $criteria, $tree_of_artifacts, $artifact_factory, $form_element_factory, $user, $backlog_actions_presenter, $planning, $planning_redirect_param);
         $view->setRenderer($renderer);
         
-        stub($renderer)->renderToString('backlog-actions', $view)->returns($backlog_actions_markup);
+        stub($renderer)->renderToString('backlog-actions', $backlog_actions_presenter)->returns($backlog_actions_markup);
         
         $output = $view->fetch();
         

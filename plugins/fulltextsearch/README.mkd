@@ -3,34 +3,100 @@ Elastic Search
 
 This plugin is still in heavy development: do not use in production!
 
+QA Server deployment
+--------------------
 
-Development setup
------------------
+You need to install elasticsearch server packages:
+    $ yum install elasticsearch elasticsearch-plugin-jetty elasticsearch-plugin-mapper-attachments
 
-Install elasticsearch server:
+> Note: while you can install elasticsearch on the same server than tuleap, we strongly recommend
+> not to do so as elasticsearch might consume a huge amount of disk/cpu/ram.
+> It depends of the size of your installation but for big deployments, it's worth considering a 
+> dedicated server (or even pool of servers).
 
-    $ cd /opt
-    $ wget --no-check-certificate https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.0.tar.gz
-    $ tar zxf elasticsearch-0.19.0.tar.gz
-    $ cd elasticsearch-0.19.0
 
-Install the elasticsearch attachments plugin:
+Security
+--------
+If you install elasticsearch on a dedicated server, it's worth considering setting up permissions. 
+See https://github.com/sonian/elasticsearch-jetty
 
-    $ ./bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.2.0
+If you install elasticsearch on the same server than tuleap the very minimal setup is to restrict 
+server port binding to localhost only (otherwise anybody can query index anonymously):
 
-Start the elasticsearch server:
+    $ edit /etc/elasticsearch/elasticsearch.yml
+      ...
+      network.host: 127.0.0.1
+      ...
 
-    $ ./bin/elasticsearch
+Setup same credentials in plugin properties (fulltextsearch_user, fulltextsearch_password) than 
+in elasticsearch/conf/realm.properties.
 
-Create the index:
+Edit elasticsearch/conf/jetty.xml to restrict access to ES server:
 
-    $ curl -X PUT "localhost:9200/tuleap" -d '{
+    <New class="org.eclipse.jetty.http.security.Constraint"
+         id="NoneSecurityConstraint">
+        <Set name="authenticate">true</Set>
+        <Set name="name">BASIC</Set>
+        <Set name="roles">
+            <Array type="java.lang.String">
+                <Item>readwrite</Item>
+            </Array>
+        </Set>
+    </New>
+
+    <New class="org.eclipse.jetty.http.security.Constraint"
+         id="ReadOnlyUserDataSecurityConstraint">
+        <Set name="authenticate">true</Set>
+        <Set name="name">BASIC</Set>
+        <Set name="roles">
+            <Array type="java.lang.String">
+                <Item>readwrite</Item>
+            </Array>
+        </Set>
+    </New>
+
+    <New class="org.eclipse.jetty.http.security.Constraint"
+         id="ReadOnlyClusterDataSecurityConstraint">
+        <Set name="authenticate">true</Set>
+        <Set name="name">BASIC</Set>
+        <Set name="roles">
+            <Array type="java.lang.String">
+                <Item>readwrite</Item>
+            </Array>
+        </Set>
+    </New>
+
+Cluster
+-------
+ElasticSearch works in a cluster. It autodiscovers nodes you add to it. This means that for each tuleap instance you need 
+to have a dedicated cluster. See http://www.elasticsearch.org/guide/reference/modules/discovery/ for details.
+
+Give a unique name to your cluster in elasticsearch.yml
+
+    cluster.name: <unique-name>
+
+
+Setup index
+-----------
+Then you can start the server:
+
+    $ service elasticsearch start
+
+After few seconds you should be able to test access:
+
+    $ curl -u superuser:Adm1n -XGET localhost:9200
+
+Now we can create the minimal index configuration.
+Create the index: (please note that the number of shards|replicas are for development purpose)
+
+
+    $ curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap" -d '{
       "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
       }'
 
 Define the attachment mapping:
 
-    $ curl -X PUT "localhost:9200/tuleap/docman/_mapping" -d '{
+    $ curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap/docman/_mapping" -d '{
       "docman" : {
         "properties" : {
           "file" : {
@@ -39,6 +105,10 @@ Define the attachment mapping:
               "title" : { "store" : "yes" },
               "file" : { "term_vector":"with_positions_offsets", "store":"yes" }
             }
+          },
+          "permissions": {
+            "type": "string",
+            "index": "not_analyzed"
           }
         }
       }
@@ -46,7 +116,28 @@ Define the attachment mapping:
 
 Check it worked:
 
-    $ curl "localhost:9200/tuleap/docman/_mapping"
+    $ curl -u superuser:Adm1n "localhost:9200/tuleap/docman/_mapping?pretty"
+    ...
+
+Now you can activate the plugin in Tuleap admin interface and start uploading documents
+
+Development setup
+-----------------
+
+Install elasticsearch server:
+
+    $ cd /opt
+    $ wget --no-check-certificate https://github.com/downloads/elasticsearch/elasticsearch/elasticsearch-0.19.8.tar.gz
+    $ tar zxf elasticsearch-0.19.8.tar.gz
+    $ cd elasticsearch-0.19.8
+
+Install the elasticsearch attachments plugin:
+
+    $ ./bin/plugin -install elasticsearch/elasticsearch-mapper-attachments/1.4.0
+
+Start the elasticsearch server:
+
+    $ ./bin/elasticsearch
 
 Now upload a file into the docman. Then, for some text (e.g. Foo) in the
 uploaded file:
@@ -58,6 +149,8 @@ Monitoring
 
 You can install elasticsearch-head to monitor your ElasticSearch cluster.
 See more information on http://mobz.github.com/elasticsearch-head/
+
+> Note: You may encounter problems if you set up Basic Auth.
 
 References
 ----------

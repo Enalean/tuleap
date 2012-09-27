@@ -374,7 +374,8 @@ $GLOBALS['server']->register(
         'tracker_id'=>'xsd:int',
         'artifact_id'=>'xsd:int',
         'value'=>'tns:ArrayOfArtifactFieldValue',
-        'comment' => 'xsd:string'
+        'comment' => 'xsd:string',
+        'comment_format' => 'xsd:string'
     ),
     array('return'=>'xsd:int'),
     $GLOBALS['uri'],
@@ -907,9 +908,8 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
         if ($artifact = $af->createArtifact($tracker, $fields_data, $user, null)) {
             return $artifact->getId();
         } else {
-            $response = new Response();
-            if ($response->feedbackHasErrors()) {
-                return new SoapFault(update_artifact_fault, $response->getRawFeedback(),'addArtifact');
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
+                return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(),'addArtifact');
             } else {
                 return new SoapFault(update_artifact_fault, 'Unknown error','addArtifact');
             }
@@ -928,7 +928,8 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
  * @param int    $tracker_id  the ID of the tracker we want to update the artifact
  * @param int    $artifact_id the ID of the artifact to update
  * @param array{SOAPArtifactFieldValue} $value the fields value to update
- * @param string $comment     the comment associated with the modification, or null if no follow-up comment.
+ * @param string  $comment     the comment associated with the modification, or null if no follow-up comment.
+ * @param string  $comment_format     The comment (follow-up) type ("text" | "html")
  *
  * @return int The artifact id if update was fine,
  *              or a soap fault if :
@@ -938,7 +939,7 @@ function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
  *              - the given values are breaking a field dependency rule
  *              - the artifact modification failed.
  */
-function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $value, $comment) {
+function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format) {
     if (session_continue($sessionKey)) {
         $user = UserManager::instance()->getCurrentUser();
         $pm = ProjectManager::instance();
@@ -999,8 +1000,8 @@ function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $valu
                     }
                 }
             }
-            
-            if ($artifact->createNewChangeset($fields_data, $comment, $user, null)) {
+
+            if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
                 return $artifact_id;
             } else {
                 $response = new Response();

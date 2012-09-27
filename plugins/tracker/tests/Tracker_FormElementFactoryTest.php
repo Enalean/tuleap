@@ -452,4 +452,34 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
     }
 }
+
+class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->user    = mock('User');
+        $this->tracker = mock('Tracker');
+        $this->field   = mock('Tracker_FormElement_Field_ArtifactLink');
+
+        $this->factory = partial_mock('Tracker_FormElementFactory', array('getUsedArtifactLinkFields'));
+        stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($this->field));
+    }
+
+    public function itReturnsNullIfThereAreNoArtifactLinkFields() {
+        $factory = partial_mock('Tracker_FormElementFactory', array('getUsedArtifactLinkFields'));
+        stub($factory)->getUsedArtifactLinkFields($this->tracker)->returns(array());
+        $this->assertEqual($factory->getAnArtifactLinkField($this->user, $this->tracker), null);
+    }
+
+    public function itReturnsNullIfUserCannotSeeArtifactLinkField() {
+        stub($this->field)->userCanRead($this->user)->returns(false);
+        $this->assertEqual($this->factory->getAnArtifactLinkField($this->user, $this->tracker), null);
+    }
+
+    public function itReturnsFieldIfUserCanSeeArtifactLinkField() {
+        stub($this->field)->userCanRead($this->user)->returns(true);
+        $this->assertEqual($this->factory->getAnArtifactLinkField($this->user, $this->tracker), $this->field);
+    }
+
+}
 ?>

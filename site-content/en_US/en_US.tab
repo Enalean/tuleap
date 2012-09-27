@@ -36,6 +36,7 @@ global	btn_close	Close
 global	btn_reset	Reset
 global	reset	reset
 global	delete	Delete
+global	warning!	Warning!
 global	yes	Yes
 global	no	No
 global	on	On
@@ -83,4 +84,4 @@ global	pick_date	Pick up a date
 global	show_frame	Show only this frame
 global	null	NULL
 global	error_synchronizertoken	Your request doesn't appear to be valid. Please retry.
-
+global	operation_not_allowed	Operation not allowed

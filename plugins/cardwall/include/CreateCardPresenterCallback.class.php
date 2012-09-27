@@ -26,14 +26,22 @@ require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
  * Creates a CardPresenter given a TreeNode with Artifact
  */
 class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
-   private $card_fields;
-    
-    public function __construct($card_fields) {
-        $this->card_fields = $card_fields;
+
+    private $card_fields;
+
+    /**
+     * @var User
+     */
+    private $user;
+
+    public function __construct($card_fields, User $user) {
+         $this->card_fields = $card_fields;
+         $this->user        = $user;
     }
+
     /**
      * @see TreeNodeCallback
-     * 
+     *
      * @param TreeNode $node
      * @return \Tracker_TreeNode_CardPresenterNode
      */
@@ -41,7 +49,9 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
         if (! $node instanceof ArtifactNode) {
             return clone $node;
         }
-        $presenter = new Cardwall_CardPresenter($node->getArtifact(), $this->card_fields);
+
+        $artifact  = $node->getArtifact();
+        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $artifact->getParent($this->user));
         $new_node  = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
         return $new_node;
     }

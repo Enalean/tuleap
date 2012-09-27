@@ -45,8 +45,22 @@ class UGroupLiteralizer {
      * @return array Ex: array('site_active', 'gpig1_project_members')
      */
     public function getUserGroupsForUserName($user_name) {
-        $user = $this->getValidUserByName($user_name);
+        $user = UserManager::instance()->getUserByUserName($user_name);
         if (!$user) {
+            return array();
+        }
+        return $this->getUserGroupsForUser($user);
+    }
+
+    /**
+     * Return User groups for a given user
+     *
+     * @param User $user
+     *
+     * @return array Ex: array('site_active', 'gpig1_project_members')
+     */
+    public function getUserGroupsForUser(User $user) {
+        if (!$this->isValidUser($user)) {
             return array();
         }
         $groups = array(self::$user_status[$user->getStatus()]);
@@ -54,6 +68,19 @@ class UGroupLiteralizer {
         $groups = $this->appendStaticUgroups($user, $groups);
 
         return $groups;
+    }
+
+    /**
+     * Return User groups for a given user
+     *
+     * @param User $user
+     *
+     * @return array Ex: array('site_active', 'gpig1_project_members')
+     */
+    public function getUserGroupsForUserWithArobase(User $user) {
+        $groups = $this->getUserGroupsForUser($user);
+
+        return array_map(array($this, 'injectArobase'), $groups);
     }
 
     /**
@@ -94,18 +121,10 @@ class UGroupLiteralizer {
     }
 
     /**
-     * return an user if it's active or restricted
-     *
-     * @param string $user_name
-     *
-     * @return User if exists false otherwise
+     * @return bool true if the user is considered valid (active or restricted)
      */
-    private function getValidUserByName($user_name) {
-        $user = UserManager::instance()->getUserByUserName($user_name);
-        if ($user && isset(self::$user_status[$user->getStatus()])) {
-            return $user;
-        }
-        return false;
+    private function isValidUser(User $user) {
+        return isset(self::$user_status[$user->getStatus()]);
     }
 
     /**
@@ -134,6 +153,13 @@ class UGroupLiteralizer {
     }
 
     /**
+     * @see ugroupIdToString
+     */
+    private function injectArobase($value) {
+        return '@'. $value;
+    }
+
+    /**
      * Return a list of groups with permissions of type $permissions_type
      * for the given object of a given project
      *
@@ -154,12 +180,15 @@ class UGroupLiteralizer {
     }
 
     public function ugroupIdsToString($ugroup_ids, Project $project) {
-        $project_name   = $project->getUnixName();
+        $project_name = $project->getUnixName();
+        $strings      = array();
         foreach ($ugroup_ids as $key => $ugroup_id) {
-            $ugroup_ids[$key] = $this->ugroupIdToString($ugroup_id, $project_name);
+            foreach (explode(' ', $this->ugroupIdToString($ugroup_id, $project_name)) as $string) {
+                $strings[] = $string;
+            }
         }
 
-        return array_values(array_filter($ugroup_ids));
+        return array_values(array_unique(array_filter($strings)));
     }
 }
 ?>
