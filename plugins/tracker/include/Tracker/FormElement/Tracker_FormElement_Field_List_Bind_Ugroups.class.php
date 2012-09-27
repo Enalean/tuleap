@@ -486,14 +486,10 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @param string           $fieldID     XML ID of the binded field
      */
     public function exportToXML($root, &$xmlMapping, $fieldID) {
-        //if ($this->value_function) {
-        //    $child = $root->addChild('items');
-        //    foreach ($this->value_function as $vf) {
-        //        if ($vf) {
-        //            $child->addChild('item')->addAttribute('label', $vf);
-        //        }
-        //    }
-        //}
+        $items = $root->addChild('items');
+        foreach ($this->values as $value) {
+            $items->addChild('item')->addAttribute('label', $value->getLabel());
+        }
     }
 
     /**

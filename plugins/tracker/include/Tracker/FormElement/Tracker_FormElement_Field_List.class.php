@@ -28,27 +28,6 @@ require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_List_Valu
 require_once(dirname(__FILE__).'/../../workflow/TransitionFactory.class.php');
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
-    /**
-     * Base constructor
-     * 
-     * @param int    $id                          The id of the field
-     * @param int    $tracker_id                  The id of the tracker this field belongs to
-     * @param int    $parent_id                   The id of the parent element
-     * @param string $name                        The short name of the field
-     * @param string $label                       The label of the element
-     * @param string $description                 The description of the element
-     * @param bool   $use_it                      Is the element used?
-     * @param string $scope                       The scope of the plugin 'S' | 'P'
-     * @param bool   $required                    Is the element required? Todo: move this in field?
-     * @param int    $rank                        The rank of the field (in the parent)
-     * @param Tracker_FormElement $original_field The field the current field is refering to (null if no references)
-     * 
-     * @return void
-     */
-    public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, Tracker_FormElement $original_field = null) {
-        parent::__construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, $original_field);
-        $this->getBind();
-    }
 
     protected $bind;
     /**
