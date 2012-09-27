@@ -167,10 +167,11 @@ class UGroupBinding {
      */
     public function getLinkTitle($ugroupId) {
         if ($this->getUGroupManager()->isBinded($ugroupId)) {
-            return '- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'update_binding');
+            $action = 'update_binding';
         } else {
-            return '- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'add_binding');
+            $action = 'add_binding';
         }
+        return '- '.$GLOBALS['Language']->getText('project_ugroup_binding', $action);
     }
 
     /**
