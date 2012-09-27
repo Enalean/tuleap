@@ -5,7 +5,7 @@
 // This file is licensed under the GNU General Public License version 2. See the file COPYING.
 -->
 
-<chapter id="ProjectLinksService">
+<chapter id="ProjectLinks">
     <title>Project Links</title>
 
     <para>Project Links superimpose a structure onto Codex project workspaces making easily visible the relationships between projects, and they can simplify finding related project. Applications include:</para>
