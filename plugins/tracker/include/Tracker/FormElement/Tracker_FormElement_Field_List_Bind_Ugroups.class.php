@@ -22,12 +22,16 @@ require_once('Tracker_FormElement_Field_List_Bind.class.php');
 require_once('Tracker_FormElement_Field_List_Bind_UgroupsValue.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind {
-
+    /**
+     * @var UGroupManager
+     */
+    protected $ugroup_manager;
     protected $values;
 
-    public function __construct($field, $values, $default_values, $decorators) {
+    public function __construct($field, $values, $default_values, $decorators, UGroupManager $ugroup_manager) {
         parent::__construct($field, $default_values, $decorators);
         $this->values = $values;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
     /**
@@ -102,12 +106,18 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     /**
      * Get a bindvalue by its row
      *
+     * Duplicate of BindFactory::getUgroupsValueInstance
+     *
      * @param array $row The row identifying the bindvalue
      *
      * @return Tracker_FormElement_Field_List_BindValue
      */
     public function getValueFromRow($row) {
-        return new Tracker_FormElement_Field_List_Bind_UsersValue($row['id'], $this->field->getTracker()->getProject(), $row['ugroup_id']);
+        $ugroup = $this->ugroup_manager->getUGroup($this->field->getTracker()->getProject(), $row['ugroup_id']);
+        if ($ugroup) {
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup);
+        }
+        return null;
     }
 
     /**

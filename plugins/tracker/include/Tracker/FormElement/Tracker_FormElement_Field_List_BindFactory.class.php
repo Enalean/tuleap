@@ -105,7 +105,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                         $row_value['ugroup_id']
                     );
                 }
-                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators);
+                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators, $this->ugroup_manager);
                 break;
             default:
                 trigger_error('Unkown bind "'. $type .'"', E_USER_WARNING);
@@ -181,9 +181,10 @@ class Tracker_FormElement_Field_List_BindFactory {
                                                                       $row['decorators']);
             case self::UGROUPS:
                 return new Tracker_FormElement_Field_List_Bind_Ugroups($row['field'],
-                                                                      $row['values'],
-                                                                      $row['default_values'],
-                                                                      $row['decorators']);
+                                                                       $row['values'],
+                                                                       $row['default_values'],
+                                                                       $row['decorators'],
+                                                                       $this->ugroup_manager);
             default: return null;
         }
     }
@@ -278,11 +279,11 @@ class Tracker_FormElement_Field_List_BindFactory {
     }
 
     /**
-     * Buil an instance of static value
+     * Build an instance of static value
      *
      * @return Tracker_FormElement_Field_List_Bind_UgroupsValue
      */
-    function getUgroupsValueInstance($id, Project $project, $ugroup_id) {
+    private function getUgroupsValueInstance($id, Project $project, $ugroup_id) {
         $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
         if ($ugroup) {
             return new Tracker_FormElement_Field_List_Bind_UgroupsValue($id, $ugroup);
@@ -368,7 +369,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                 }
                 break;
             case self::UGROUPS:
-                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array(), array(), array());
+                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array(), array(), array(), $this->ugroup_manager);
                 $bind->process($bind_data, 'no redirect');
                 break;
             default:
