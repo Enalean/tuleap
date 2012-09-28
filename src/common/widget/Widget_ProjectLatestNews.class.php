@@ -21,49 +21,115 @@
 require_once('Widget.class.php');
 
 /**
-* Widget_ProjectLatestNews
-*/
+ * Widget_ProjectLatestNews
+ */
 class Widget_ProjectLatestNews extends Widget {
+
     var $content;
+
+    /**
+     * Constructor of the class
+     *
+     * @retun Void
+     */
     function Widget_ProjectLatestNews() {
         $this->Widget('projectlatestnews');
-        $request =& HTTPRequest::instance();
-        $pm = ProjectManager::instance();
+        $request = $this->_getHTTPRequest();
+        $pm      = $this->_getProjectManager();
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
             require_once('www/news/news_utils.php');
             $this->content = news_show_latest($request->get('group_id'),10,false);
         }
     }
+
+    /**
+     * Title of the widget
+     *
+     * @return String
+     */
     function getTitle() {
         return $GLOBALS['Language']->getText('include_project_home','latest_news');
     }
+
+    /**
+     * Content of the widget
+     *
+     * @return String
+     */
     function getContent() {
         return $this->content;
     }
+
     function isAvailable() {
         return $this->content ? true : false;
     }
-    function hasRss() {
-        $pm = ProjectManager::instance();
-        $request = HTTPRequest::instance();
+
+    /**
+     * Allow RSS display
+     *
+     * @Return Boolean
+     */
+    public function hasRss() {
+        $pm      = $this->_getProjectManager();
+        $request = $this->_getHTTPRequest();
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $project->isPublic()) {
             return true;
-        } 
+        }
         return false;
     }
+
+    /**
+     * Display RSS
+     *
+     * @return Void
+     */
     function displayRss() {
         global $Language;
-        $request =& HTTPRequest::instance();
+        $request  = $this->_getHTTPRequest();
         $group_id = $request->get('group_id');
         include('www/export/rss_sfnews.php');
     }
-    function canBeUsedByProject(&$project) {
+
+    /**
+     * Does project has news
+     *
+     * @param Project $project The project
+     *
+     * @return Boolean
+     */
+    function canBeUsedByProject($project) {
         return $project->usesNews();
     }
+
+    /**
+     * Description of the widget
+     *
+     * @return String
+     */
     function getDescription() {
         return $GLOBALS['Language']->getText('widget_description_project_latest_news','description');
     }
+
+    /**
+     * HTTPRequest instance
+     *
+     * @return HTTPRequest
+     */
+    private function _getHTTPRequest() {
+        return HTTPRequest::instance();
+    }
+
+    /**
+     * ProjectManager instance
+     *
+     * @return ProjectManager
+     */
+    private function _getProjectManager() {
+        return ProjectManager::instance();
+    }
+
 }
+
 ?>
