@@ -38,6 +38,10 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends TuleapT
         $this->customers_ugroup_name = 'customers';
         $this->customers_ugroup = new UGroup(array('name' => $this->customers_ugroup_name));
         $this->customers_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(687, $this->customers_ugroup);
+
+        $this->project_members_ugroup_name = 'ugroup_project_members_name_key';
+        $this->project_members_ugroup = new UGroup(array('name' => $this->project_members_ugroup_name));
+        $this->project_members_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(4545, $this->project_members_ugroup);
     }
 
     public function itExportsEmptyUgroupList() {
@@ -56,6 +60,17 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends TuleapT
         $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['label'], $this->integrators_ugroup_name);
+    }
+
+    public function itExportsOneDynamicUgroup() {
+        $values = array(
+            $this->project_members_ugroup_value
+        );
+        $bind_ugroup = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
+
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
+        $items = $this->root->items->children();
+        $this->assertEqual($items[0]['label'], $this->project_members_ugroup_name);
     }
 
     public function itExportsTwoUgroups() {

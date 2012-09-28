@@ -506,7 +506,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function exportToXML($root, &$xmlMapping, $fieldID) {
         $items = $root->addChild('items');
         foreach ($this->values as $value) {
-            $items->addChild('item')->addAttribute('label', $value->getLabel());
+            $items->addChild('item')->addAttribute('label', $value->getUGroupName());
         }
     }
 
