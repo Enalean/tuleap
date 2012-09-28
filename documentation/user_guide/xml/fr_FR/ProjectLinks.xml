@@ -11,15 +11,15 @@
     <para>Liens inter-projet superposer une structure sur des espaces de travail de projet du Tuleap rendant visible les relations entre les projets, et ils peuvent simplifier la recherche de projets connexes. Les applications comprennent:</para>
     <itemizedlist mark="bullet" spacing="compact">
         <listitem>Familles projet de sorte qu'un espace de travail projet parent ne peut accéder facilement à ses projets enfants (par exemple pour la gestion du programme).</listitem>
-        <listitem>Anneaux d'intérêt, où plusieurs projets peuvent décider qu'ils ont suffisamment en commun qu'ils souhaitent être liées (par exemple les projets qui utilisent la même technologie), mais aucun d'entre eux est strictement un maître, et chacun est libre d'adhérer ou de quitter le ring.</listitem>
-        <listitem>Liaison d'un espace de travail liée au produit d'un projet d'appui qui couvre un certain nombre de produits - c'est à dire un lien facile entre le produit et son soutien et de l'appui généralisé à un produit spécifique (à noter que c'est un projet simplifié de la famille, à chaque projet montrant l' d'autres comme une relation).</listitem>
+        <listitem>Anneaux d'intérêt, où plusieurs projets peuvent décider qu'ils ont suffisamment en commun qu'ils souhaitent être liées (par exemple les projets qui utilisent la même technologie), mais aucun d'entre eux est strictement un maître, et chacun est libre d'adhérer ou de quitter l'anneau.</listitem>
+        <listitem>Liaison d'un espace de travail liée au produit d'un projet d'appui qui couvre un certain nombre de produits - c'est à dire un lien facile entre le produit et son soutien et de l'appui généralisé à un produit spécifique (à noter que c'est un projet simplifié de la famille, à chaque projet montrant d'autres comme une relation).</listitem>
     </itemizedlist>
 
-    <para>Pour créer une relation, un projet définit d'abord un type de lien et puis assigne ce type lien à autant de projets que s'il le souhaite. Le type de lien est nommé en aucune façon (sauf qu'il doit être unique dans le projet), par exemple "sous-projets", "projets connexes", "Division", "Team", "C + + Projets". La principale utilisation de ce nom est aussi une rubrique où les projets liés sont répertoriés.</para>
+    <para>Pour créer une relation, un projet définit d'abord un type de lien et puis assigne ce type lien à autant de projets qu'il souhaite. Le type de lien est nommé en aucune façon (sauf qu'il doit être unique dans le projet), par exemple "sous-projets", "projets connexes", "Division", "Team", "C + + Projets". La principale utilisation de ce nom est aussi une rubrique où les projets liés sont répertoriés.</para>
 
-    <para>Lorsque vous faites référence à un lien de parenté, le projet qui administre le lien est le propriétaire et le projet référencé par le lien est la cible du lien. Un type de lien spécifie également un nom d'inversion, qui est utilisé quand un projet répertorie ceux dont il est la cible. Par exemple, "enfants" peut être le nom d'un type de lien et "Parent" le nom du lien inverse pour ce type même lien. Projets liés de cette façon serait inscrit sous la rubrique «enfants» dans le projet propriétaire, mais ces projets n'auraient voir la relation (inverse) en tant que «parent».</para>
+    <para>Lorsque vous faites référence à un lien de parenté, le projet qui administre le lien est le propriétaire et le projet référencé par le lien est la cible du lien. Un type de lien spécifie également un nom d'inversion, qui est utilisé quand un projet répertorie ceux dont il est la cible. Par exemple, "enfants" peut être le nom d'un type de lien et "Parent" le nom du lien inverse pour ce type même lien. Projets liés de cette façon serait inscrit sous la rubrique «enfants» dans le projet propriétaire, mais ces projets ne pourraient pas voir la relation (inverse) en tant que «parent».</para>
 
-    <para>Pour créer un "cercle d'intérêts», quelqu'un doit prendre la responsabilité de créer (et gérer) un projet de Monsieur Loyal (qui se comporte comme un projet parent dans une famille du projet mais sa seule fonction (aujourd'hui) est d'être les liens du projet propriétaire) - l'administrateur anneau aurait dû normalement prendre la responsabilité d'être l'animateur anneau (celui qui fait le travail et anneau). Pour vous joindre à un anneau d'intérêt, un projet doit demander l'animateur en anneau pour créer une relation avec elle dans le projet de Monsieur Loyal.</para>
+    <para>Pour créer un "cercle d'intérêts», quelqu'un doit prendre la responsabilité de créer (et gérer) un projet de Monsieur Loyal (qui se comporte comme un projet parent dans une famille du projet mais sa seule fonction (aujourd'hui) est d'être les liens du projet propriétaire) - l'administrateur anneau aurait dû normalement prendre la responsabilité d'être l'animateur anneau (celui qui fait le travail et anneau). Pour se joindre à un anneau d'intérêt, un projet doit demander l'animateur en anneau pour créer une relation avec elle dans le projet de Monsieur Loyal.</para>
 
     <para>Quand un nouveau projet est créé à partir d'un modèle de projet il hérite d'une copie de tous les liens de projet (et les types de lien) à partir du modèle. En outre, tout projet qui fait référence à un modèle en tant que cible gagnera un lien vers le nouveau projet (cela signifie que le projet veut que tous les projets créés à partir du modèle à être liés comme le modèle est). Ainsi, un projet de master peut garder un œil sur tous les projets créés à partir d'un modèle, et un cycle peut augmenter automatiquement. Il existe également un mécanisme qui permet aux projets de resynchroniser les types de lien avec leur modèle. Nouvellement créer des liens sont mis en évidence avec une étoile jaune pâle - principalement à mettre en évidence les liens créés à partir de modèles.</para>
 
@@ -30,18 +30,18 @@
     <section id="CreatingLinks">
         <title>Créer des liens</title>
 
-        <para>Utilisateur admin Un projet peut ajouter de nouveaux projets liés à l'aide de la procédure suivante:</para>
+        <para>L’administrateur du projet peut ajouter de nouveaux projets liés à l'aide de la procédure suivante:</para>
         <para>Sur la page 'Liens Projet de configuration »de votre projet de master, d'abord mis en place au moins un type de lien (s'il n'y en a déjà) en cliquant sur« Ajouter un type de lien de projet ».</para>
-        <para>Puis cochez la case "Créer des liens de projet de ce projet" boîte et suivre ce processus:</para>
+        <para>Puis cochez la case "Créer des liens de projet de ce projet" et suivre ce processus:</para>
 
         <itemizedlist mark="bullet" spacing="compact">
             <listitem>aller chercher un projet que vous souhaitez mettre un lien vers utilisant tous les moyens que vous aimez (via ma page personnelle, arborescence du projet, la navigation, les favoris, ...)</listitem>
             <listitem>cliquez sur le "lien pour ce projet" bouton / icône sur la page de résumé</listitem>
-            <listitem>vous revenez au contexte du projet maître, il vous sélectionnez le type de lien (à partir de la liste présentée) et "add" le lien</listitem>
+            <listitem>vous revenez au contexte du projet maître, sélectionnez le type de lien (à partir de la liste présentée) et "ajoutez" le lien</listitem>
             <listitem>soit aller chercher un autre projet que vous souhaitez mettre un lien vers (en répétant les étapes ci-dessus), ou décochez la case "lien vers ce projet"</listitem>
         </itemizedlist>
 
-        <para>Notez que "pour ce projet" est un cadre personnel, et non pour le projet, de sorte que vous pouvez le laisser contrôler tout le temps si vous le souhaitez, ce qui laisse visible dans tous les projets ont visité le "lien pour ce projet" bouton / icône sur le page de résumé. En cochant cette option dans un autre projet fait juste que l'un le futur maître, il n'est pas nécessaire de décocher le premier.</para>
+        <para>Notez que "pour ce projet" est un cadre personnel, et non pour le projet, de sorte que vous pouvez le laisser contrôler tout le temps si vous le souhaitez, ce qui laisse visible dans tous les projets ont visité le "lien pour ce projet" bouton / icône sur la page de résumé. En cochant cette option dans un autre projet fait juste que l'un le futur maître, il n'est pas nécessaire de décocher le premier.</para>
 
     </section>
 
@@ -68,7 +68,7 @@
               </row>
               <row>
                     <entry><emphasis role="bold">Lien Admin</emphasis></entry>
-                    <entry>Les utilisateurs qui sont autorisés à créer des types de liens et de modifier les liens du projet - admins du projet sont automatiquement relier les admins.</entry>
+                    <entry>Les utilisateurs qui sont autorisés à créer des types de liens et de modifier les liens du projet - admins du projet sont automatiquement reliés.</entry>
               </row>
               <row>
                     <entry><emphasis role="bold">Lien Tapez</emphasis></entry>
@@ -80,7 +80,7 @@
               </row>
               <row>
                     <entry><emphasis role="bold">Famille projet</emphasis></entry>
-                    <entry>Une hiérarchie stricte où il ya un projet parent avec un ou plusieurs enfant (ou sous-) projets.</entry>
+                    <entry>Une hiérarchie stricte où il y'a un projet parent avec un ou plusieurs enfants (ou sous-) projets.</entry>
               </row>
               <row>
                     <entry><emphasis role="bold">Lien Projet / Lien Relation</emphasis></entry>
@@ -117,7 +117,7 @@
         <title>Lien Administration</title>
 
         <para>L'administration de la liaison fait partie du projet propriétaire liaison, le projet vers lequel pointe le lien est appelé le projet cible (la cible du lien).</para>
-        <para>Admin users du projet sont automatiquement relier les utilisateurs admin.</para>
+        <para>Les administrateurs du projet sont automatiquement reliés aux utilisateurs admin.</para>
         <para>Sur la page d'administration (lien), l'utilisateur du projet lien admin peut:</para>
 
         <itemizedlist mark="bullet" spacing="compact">
@@ -156,10 +156,10 @@
 
         <itemizedlist mark="bullet" spacing="compact">
             <listitem>Types de liens définis dans le modèle et non présent dans le projet cible sont ajoutés (donc types récemment ajoutées au modèle peut être adoptée dans le projet).</listitem>
-            <listitem>Types de liens qui partagent un nom avec le modèle de projet sont remplacés par les modèles (c.-à-types portant le même nom dans le modèle et le projet sont supposés être les mêmes, et il est supposé que le modèle est le maître, de sorte qu'ils sont copiés à partir le modèle remplaçant la version du projet, si elle est confirmée)</listitem>
+            <listitem>Types de liens qui partagent un nom avec le modèle de projet sont remplacés par les modèles (c’est-à-dire types portant le même nom dans le modèle et le projet sont supposés être les mêmes, et il est supposé que le modèle est le maître, de sorte qu'ils sont copiés à partir le modèle remplaçant la version du projet, si elle est confirmée)</listitem>
             <listitem>Projets liés à la matrice qui ne sont pas liés par le projet sont ajoutés.</listitem>
-            <listitem>Les projets qui spécifient le modèle comme cible, mais ne pas lier au projet sont identifiés à titre indicatif (c'est à dire si le projet ont été nouvellement créé, il sera ajouté automatiquement aux liens du projet maître, mais lors de l'actualisation nous ne pouvons pas être certains que il n'a pas été supprimé par ce projet, ni qu'il est vraiment voulu comme un lien).</listitem>
-            <listitem>Ringmaster projets référencés par le modèle sont offerts à rejoindre le ring.</listitem>
+            <listitem>Les projets qui spécifient le modèle comme cible, mais ne sont pas liés au projet sont identifiés à titre indicatif (c'est à dire si le projet ont été nouvellement créé, il sera ajouté automatiquement aux liens du projet maître, mais lors de l'actualisation nous ne pouvons pas être certains qu'il n'a pas été supprimé par ce projet, ni qu'il est vraiment voulu comme un lien).</listitem>
+            <listitem>Les anneaux maitres des projets référencés par le modèle sont offerts à rejoindre l'anneau.</listitem>
         </itemizedlist>
 
         <para>Remarque: les types de liens qui sont définis dans le projet cible, mais pas dans le modèle de projet ne sont ni modifiés ni supprimés - aucune proposition n'est faite à l'utilisateur; ils sont énumérés à titre indicatif.</para>
