@@ -156,13 +156,13 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @return mixed The values or null if there are no specific available values
      */
     public function getSoapAvailableValues() {
+        $values      = $this->getAllValues();
         $soap_values = array();
-        $values = $this->getAllValues();
         foreach ($values as $id => $value) {
             $soap_values[] = array(
-                'field_id' => $this->field->getId(),
-                'bind_value_id' => $id,
-                'bind_value_label' => $value->getLabel(),
+                'field_id'         => $this->field->getId(),
+                'bind_value_id'    => $id,
+                'bind_value_label' => $value->getUGroupName(),
             );
         }
         return $soap_values;

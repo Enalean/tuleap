@@ -127,4 +127,71 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends TuleapT
         $bind->saveObject();
     }
 }
+
+class Tracker_FormElement_Field_List_Bind_Ugroups_SOAPTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+
+        $this->field_id       = 789;
+        $this->field          = aSelectBoxField()->withId($this->field_id)->build();
+        $this->ugroup_manager = mock('UGroupManager');
+        $this->value_dao      = mock('Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao');
+    }
+
+    public function testGetSoapAvailableValues() {
+        $static_ugroup_id = 103;
+        $values = array(
+            1 => new Tracker_FormElement_Field_List_Bind_UgroupsValue(1, new UGroup(array('ugroup_id' => UGROUP::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key'))),
+            2 => new Tracker_FormElement_Field_List_Bind_UgroupsValue(2, new UGroup(array('ugroup_id' => $static_ugroup_id, 'name' => 'Customers'))),
+        );
+
+        $ugroups = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
+
+        $this->assertEqual(count($ugroups->getSoapAvailableValues()), 2);
+        $soap_values = array(
+            array(
+                'field_id'         => $this->field_id,
+                'bind_value_id'    => 1,
+                'bind_value_label' => 'ugroup_project_members_name_key',
+            ),
+            array(
+                'field_id'         => $this->field_id,
+                'bind_value_id'    => 2,
+                'bind_value_label' => 'Customers',
+            )
+        );
+        $this->assertEqual($ugroups->getSoapAvailableValues(), $soap_values);
+    }
+}
+
+/*class Tracker_FormElement_Field_List_Bind_Ugroups_CSVAndWebImportTest extends TuleapTestCase {
+    function testGetFieldData() {
+        $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv1->setReturnValue('getUsername', 'john.smith');
+        $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv2->setReturnValue('getUsername', 'sam.anderson');
+        $field = $is_rank_alpha = $default_values = $decorators = '';
+        $values = array(108 => $bv1, 110 => $bv2);
+        $f = new Tracker_FormElement_Field_List_Bind_UsersTestVersion($field, $is_rank_alpha, $values, $default_values, $decorators);
+        $f->setReturnReference('getAllValues', $values);
+        $this->assertEqual('108', $f->getFieldData('john.smith', false));
+    }
+
+    function testGetFieldDataMultiple() {
+        $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv1->setReturnValue('getUsername', 'john.smith');
+        $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv2->setReturnValue('getUsername', 'sam.anderson');
+        $bv3 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv3->setReturnValue('getUsername', 'tom.brown');
+        $bv4 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv4->setReturnValue('getUsername', 'patty.smith');
+        $field = $is_rank_alpha = $default_values = $decorators = '';
+        $values = array(108 => $bv1, 110 => $bv2, 113 => $bv3, 115 => $bv4);
+        $f = new Tracker_FormElement_Field_List_Bind_UsersTestVersion($field, $is_rank_alpha, $values, $default_values, $decorators);
+        $f->setReturnReference('getAllValues', $values);
+        $res = array(108,113);
+        $this->assertEqual($res, $f->getFieldData('john.smith,tom.brown', true));
+    }
+}*/
 ?>
