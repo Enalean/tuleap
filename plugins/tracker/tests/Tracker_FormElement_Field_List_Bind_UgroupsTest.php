@@ -166,6 +166,17 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker
         stub($this->value_dao)->create($this->field_id, $this->hidden_ugroup_id, true)->at(1);
         $bind->saveObject();
     }
+
+    public function itSetsTheNewIdOfTheValueSoThatDefaultValuesAreProperlySaved() {
+        $this->integrators_ugroup_value->setId('F1-V23 (from xml structure)');
+        $values = array(
+            $this->integrators_ugroup_value,
+        );
+        $bind = $this->buildBindUgroups($values);
+        stub($this->value_dao)->create()->returns('new id');
+        $bind->saveObject();
+        $this->assertEqual($this->integrators_ugroup_value->getId(), 'new id');
+    }
 }
 
 class Tracker_FormElement_Field_List_Bind_Ugroups_SOAPTest extends Tracker_FormElement_Field_List_Bind_BaseTest {

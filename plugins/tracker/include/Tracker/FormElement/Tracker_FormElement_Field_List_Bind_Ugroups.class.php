@@ -508,7 +508,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function saveObject() {
         foreach ($this->values as $value) {
-            $this->getValueDao()->create($this->field->getId(), $value->getUgroupId(), $value->isHidden());
+            if ($id = $this->getValueDao()->create($this->field->getId(), $value->getUgroupId(), $value->isHidden())) {
+                $value->setId($id);
+            }
         }
         parent::saveObject();
     }
