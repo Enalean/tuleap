@@ -432,7 +432,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
 
         $ugroups = $ugroup_manager->getUGroups(
             $field->getTracker()->getProject(),
-            array(UGROUP::NONE, UGROUP::ANONYMOUS, UGroup::REGISTERED)
+            array(UGROUP::NONE, UGROUP::ANONYMOUS, UGroup::REGISTERED, UGroup::DOCUMENT_ADMIN, UGroup::DOCUMENT_TECH)
         );
 
         $html  = '';
