@@ -598,7 +598,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getRecipients(Tracker_Artifact_ChangesetValue_List $changeset_value) {
         $recipients = array();
         foreach ($changeset_value->getListValues() as $ugroups_value) {
-            $recipients = array_merge($recipients, $ugroups_value->getMembers());
+            $recipients = array_merge($recipients, $ugroups_value->getMembersName());
         }
         return $recipients;
     }

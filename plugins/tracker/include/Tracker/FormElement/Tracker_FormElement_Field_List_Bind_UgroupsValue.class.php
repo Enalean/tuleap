@@ -47,8 +47,12 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return __CLASS__ .' #'. $this->getId();
     }
 
-    public function getMembers() {
-        return $this->ugroup->getMembers();
+    public function getMembersName() {
+        return array_map(array($this, 'getUserName'), $this->ugroup->getMembers());
+    }
+
+    private function getUserName(User $user) {
+        return $user->getUserName();
     }
 
     public function getSoapValue() {
