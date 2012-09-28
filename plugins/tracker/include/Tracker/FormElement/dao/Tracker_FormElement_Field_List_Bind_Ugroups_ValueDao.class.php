@@ -54,12 +54,13 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
         return $this->updateAndGetLastId($sql);
     }
 
-    public function create($field_id, $ugroup_id) {
+    public function create($field_id, $ugroup_id, $is_hidden) {
         $field_id  = $this->da->escapeInt($field_id);
         $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $is_hidden = $is_hidden ? 1 : 0;
 
         $sql = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
-                VALUES ($field_id, $ugroup_id, 0)";
+                VALUES ($field_id, $ugroup_id, $is_hidden)";
         return $this->updateAndGetLastId($sql);
     }
 

@@ -51,8 +51,8 @@ class Tracker_FormElement_Field_List_Bind_BaseTest extends TuleapTestCase {
         $this->hidden_ugroup_value = new Tracker_FormElement_Field_List_Bind_UgroupsValue(666, $this->hidden_ugroup, true);
     }
 
-    protected function buildBindUgroups(array $values = array()) {
-        $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
+    protected function buildBindUgroups(array $values = array(), array $default_values = array()) {
+        $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, $default_values, array(), $this->ugroup_manager, $this->value_dao);
         $bind->setDefaultValueDao($this->default_value_dao);
         return $bind;
     }
@@ -63,7 +63,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
     public function itExportsEmptyUgroupList() {
         $bind_ugroup = $this->buildBindUgroups();
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, 'F1');
         $this->assertCount($this->root->items->children(), 0);
     }
 
@@ -73,7 +73,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, 'F1');
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['label'], $this->integrators_ugroup_name);
     }
@@ -84,7 +84,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, 'F1');
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['is_hidden'], true);
     }
@@ -95,7 +95,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, 'F1');
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['label'], $this->project_members_ugroup_name);
     }
@@ -107,10 +107,25 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends Tracker
         );
         $bind_ugroup = $this->buildBindUgroups($values);
 
-        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, 'F1');
         $items = $this->root->items->children();
         $this->assertEqual($items[0]['label'], $this->integrators_ugroup_name);
         $this->assertEqual($items[1]['label'], $this->customers_ugroup_name);
+    }
+
+    public function itExportsDefaultValues() {
+        $values = array(
+            $this->integrators_ugroup_value,
+            $this->customers_ugroup_value
+        );
+        $default_values = array(
+            "{$this->customers_ugroup_value->getId()}" => true,
+        );
+        $bind_ugroup = $this->buildBindUgroups($values, $default_values);
+
+        $bind_ugroup->exportToXML($this->root, $this->xml_mapping, 'F1');
+        $items = $this->root->default_values->children();
+        $this->assertEqual((string)$items->value['REF'], 'F1-V1');
     }
 }
 
@@ -128,7 +143,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker
             $this->customers_ugroup_value,
         );
         $bind = $this->buildBindUgroups($values);
-        stub($this->value_dao)->create($this->field_id, $this->customers_ugroup_id)->once();
+        stub($this->value_dao)->create($this->field_id, $this->customers_ugroup_id, false)->once();
         $bind->saveObject();
     }
 
@@ -138,8 +153,17 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker
             $this->customers_ugroup_value,
         );
         $bind = $this->buildBindUgroups($values);
-        stub($this->value_dao)->create($this->field_id, UGROUP::PROJECT_MEMBERS)->at(0);
-        stub($this->value_dao)->create($this->field_id, $this->customers_ugroup_id)->at(1);
+        stub($this->value_dao)->create($this->field_id, UGROUP::PROJECT_MEMBERS, false)->at(0);
+        stub($this->value_dao)->create($this->field_id, $this->customers_ugroup_id, false)->at(1);
+        $bind->saveObject();
+    }
+
+    public function itSavesTheHiddenState() {
+        $values = array(
+            $this->hidden_ugroup_value,
+        );
+        $bind = $this->buildBindUgroups($values);
+        stub($this->value_dao)->create($this->field_id, $this->hidden_ugroup_id, true)->at(1);
         $bind->saveObject();
     }
 }
@@ -195,7 +219,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends
     }
 
     public function itCreatesNewValue() {
-        stub($this->value_dao)->create($this->field_id, $this->integrators_ugroup_id)->once();
+        stub($this->value_dao)->create($this->field_id, $this->integrators_ugroup_id, true)->once();
     }
 
     public function itHidesPreviouslyUsedValue() {

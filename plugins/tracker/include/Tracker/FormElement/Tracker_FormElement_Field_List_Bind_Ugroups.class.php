@@ -489,7 +489,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                                     $value_dao->show($all_values[$ugroup_id]->getId());
                                 }
                             } else {
-                                $value_dao->create($this->field->getId(), $ugroup_id);
+                                $value_dao->create($this->field->getId(), $ugroup_id, true);
                             }
                         }
                     }
@@ -508,7 +508,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function saveObject() {
         foreach ($this->values as $value) {
-            $this->getValueDao()->create($this->field->getId(), $value->getUgroupId());
+            $this->getValueDao()->create($this->field->getId(), $value->getUgroupId(), $value->isHidden());
         }
         parent::saveObject();
     }
@@ -522,10 +522,22 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function exportToXML($root, &$xmlMapping, $fieldID) {
         $items = $root->addChild('items');
+        $i = 0;
         foreach ($this->values as $value) {
             $item = $items->addChild('item');
+            $id = $fieldID . '-V' . $i++;
+            $item->addAttribute('ID', $id);
+            $xmlMapping['values'][$id] = $value->getId();
             $item->addAttribute('label', $value->getUGroupName());
             $item->addAttribute('is_hidden', (int)$value->isHidden());
+        }
+        if ($this->default_values) {
+            $default_child = $root->addChild('default_values');
+            foreach ($this->default_values as $id => $nop) {
+                if ($ref = array_search($id, $xmlMapping['values'])) {
+                    $default_child->addChild('value')->addAttribute('REF', $ref);
+                }
+            }
         }
     }
 

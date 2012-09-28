@@ -268,9 +268,11 @@ class Tracker_FormElement_Field_List_BindFactory {
                 if ($xml->items->item) {
                     foreach ($xml->items->item as $item) {
                         $ugroup = $this->ugroup_manager->getUGroupByName($field->getTracker()->getProject(), (string)$item['label']);
-                        $is_hidden = isset($item['is_hidden']) && (int)$item['is_hidden'] ? 1 : 0;
                         if ($ugroup) {
-                            $values[] = new Tracker_FormElement_Field_List_Bind_UgroupsValue(0, $ugroup, $is_hidden);
+                            $ID              = (string)$item['ID'];
+                            $is_hidden       = isset($item['is_hidden']) && (int)$item['is_hidden'] ? 1 : 0;
+                            $values[$ID]     = new Tracker_FormElement_Field_List_Bind_UgroupsValue($ID, $ugroup, $is_hidden);
+                            $xmlMapping[$ID] = $values[$ID];
                         }
                     }
                 }
