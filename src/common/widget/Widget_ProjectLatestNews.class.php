@@ -39,7 +39,7 @@ class Widget_ProjectLatestNews extends Widget {
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
             require_once('www/news/news_utils.php');
-            $this->content = news_show_latest($request->get('group_id'),10,false);
+            $this->content = news_show_latest($request->get('group_id'), 10, false);
         }
     }
 
@@ -49,7 +49,7 @@ class Widget_ProjectLatestNews extends Widget {
      * @return String
      */
     function getTitle() {
-        return $GLOBALS['Language']->getText('include_project_home','latest_news');
+        return $GLOBALS['Language']->getText('include_project_home', 'latest_news');
     }
 
     /**
@@ -61,6 +61,11 @@ class Widget_ProjectLatestNews extends Widget {
         return $this->content;
     }
 
+    /**
+     * Content is available
+     *
+     * @return Boolean
+     */
     function isAvailable() {
         return $this->content ? true : false;
     }
@@ -68,7 +73,7 @@ class Widget_ProjectLatestNews extends Widget {
     /**
      * Allow RSS display
      *
-     * @Return Boolean
+     * @return Boolean
      */
     public function hasRss() {
         $pm      = $this->_getProjectManager();
@@ -109,7 +114,7 @@ class Widget_ProjectLatestNews extends Widget {
      * @return String
      */
     function getDescription() {
-        return $GLOBALS['Language']->getText('widget_description_project_latest_news','description');
+        return $GLOBALS['Language']->getText('widget_description_project_latest_news', 'description');
     }
 
     /**
