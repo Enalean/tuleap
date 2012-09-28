@@ -70,10 +70,13 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     /**
+     *
+     * @param Tracker_FormElement_Field_List_Bind_UgroupsValue $value
+     *
      * @return string
      */
     public function formatChangesetValueForCSV($value) {
-        return $value->fetchFormatted();
+        return $value->getUGroupName();
     }
 
     /**
