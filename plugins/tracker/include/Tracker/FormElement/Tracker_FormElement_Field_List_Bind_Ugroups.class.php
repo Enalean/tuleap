@@ -182,7 +182,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             $return = array();
             $soap_values = explode(',', $soap_value);
             foreach ($values as $id => $value) {
-                if (in_array($value->getLabel(), $soap_values)) {
+                if (in_array($value->getUGroupName(), $soap_values)) {
                     $return[] = $id;
                 }
             }
@@ -194,7 +194,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             }
         } else {
             foreach ($values as $id => $value) {
-                if ($value->getLabel() == $soap_value) {
+                if ($value->getUGroupName() == $soap_value) {
                     return $id;
                 }
             }
