@@ -46,8 +46,8 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
     public function duplicate($from_value_id, $to_field_id) {
         $from_value_id  = $this->da->escapeInt($from_value_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
-        $insert = "INSERT INTO $this->table_name (field_id, ugroup_id)
-                SELECT $to_field_id, ugroup_id
+        $insert = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
+                SELECT $to_field_id, ugroup_id, is_hidden
                 FROM $this->table_name
                 WHERE id = $from_value_id";
 
@@ -58,31 +58,16 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
         $field_id  = $this->da->escapeInt($field_id);
         $ugroup_id = $this->da->escapeInt($ugroup_id);
 
-        $sql = "INSERT INTO $this->table_name (field_id, ugroup_id)
-                VALUES ($field_id, $ugroup_id)";
+        $sql = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
+                VALUES ($field_id, $ugroup_id, 0)";
         return $this->updateAndGetLastId($sql);
     }
 
-    public function save($id, $field_id, $ugroup_id) {
-        $id        = $this->da->escapeInt($id);
-        $field_id  = $this->da->escapeInt($field_id);
-        $ugroup_id = $this->da->escapeInt($ugroup_id);
-
+    public function hide($id) {
+        $id  = $this->da->escapeInt($id);
         $sql = "UPDATE $this->table_name
-                SET label = $label,
-                    description = $description,
-                    rank = $rank,
-                    is_hidden = $is_hidden
-                WHERE id = $id
-                  OR original_value_id = $id";
-        return $this->update($sql);
-    }
-
-    public function deleteByFieldId($field_id) {
-        $id       = $this->da->escapeInt($field_id);
-        $sql = "DELETE FROM $this->table_name
-                WHERE field_id = $field_id ";
-
+                SET is_hidden = 1
+                WHERE id = $id";
         return $this->update($sql);
     }
 

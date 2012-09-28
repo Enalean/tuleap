@@ -117,7 +117,8 @@ class Tracker_FormElement_Field_List_BindFactory {
                     $values[$row_value['id']] = $this->getUgroupsValueInstance(
                         $row_value['id'],
                         $field->getTracker()->getProject(),
-                        $row_value['ugroup_id']
+                        $row_value['ugroup_id'],
+                        $row_value['is_hidden']
                     );
                 }
                 $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators, $this->ugroup_manager, $this->getUgroupsValueDao());
@@ -267,8 +268,9 @@ class Tracker_FormElement_Field_List_BindFactory {
                 if ($xml->items->item) {
                     foreach ($xml->items->item as $item) {
                         $ugroup = $this->ugroup_manager->getUGroupByName($field->getTracker()->getProject(), (string)$item['label']);
+                        $is_hidden = isset($item['is_hidden']) && (int)$item['is_hidden'] ? 1 : 0;
                         if ($ugroup) {
-                            $values[] = new Tracker_FormElement_Field_List_Bind_UgroupsValue(0, $ugroup);
+                            $values[] = new Tracker_FormElement_Field_List_Bind_UgroupsValue(0, $ugroup, $is_hidden);
                         }
                     }
                 }
@@ -304,10 +306,10 @@ class Tracker_FormElement_Field_List_BindFactory {
      *
      * @return Tracker_FormElement_Field_List_Bind_UgroupsValue
      */
-    private function getUgroupsValueInstance($id, Project $project, $ugroup_id) {
+    private function getUgroupsValueInstance($id, Project $project, $ugroup_id, $is_hidden) {
         $ugroup = $this->ugroup_manager->getUGroup($project, $ugroup_id);
         if ($ugroup) {
-            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($id, $ugroup);
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($id, $ugroup, $is_hidden);
         }
     }
 

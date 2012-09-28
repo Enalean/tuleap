@@ -26,9 +26,9 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
      */
     protected $ugroup;
 
-    public function __construct($id, UGroup $ugroup) {
-        parent::__construct($id);
-        $this->ugroup = $ugroup;
+    public function __construct($id, UGroup $ugroup, $is_hidden) {
+        parent::__construct($id, $is_hidden);
+        $this->ugroup    = $ugroup;
     }
 
     public function getLabel() {

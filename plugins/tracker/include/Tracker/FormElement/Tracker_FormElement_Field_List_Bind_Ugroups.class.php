@@ -123,9 +123,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function getValueFromRow($row) {
         $ugroup = $this->ugroup_manager->getUGroup($this->field->getTracker()->getProject(), $row['ugroup_id']);
         if ($ugroup) {
-            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup);
+            return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup, $row['is_hidden']);
         }
-        return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new UGroup(array('ugroup_id' => 0, 'name' => "")));
+        return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new UGroup(array('ugroup_id' => 0, 'name' => "")), true);
     }
 
     /**
@@ -470,11 +470,15 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function process($params, $no_redirect = false, $redirect = false) {
         $value_dao = $this->getValueDao();
-        foreach ($params as $key => $value) {
+        foreach ($params as $key => $param_value) {
             switch ($key) {
                 case 'values':
-                    $value_dao->deleteByFieldId($this->field->getId());
-                    foreach ($value as $ugroup_id) {
+                    foreach ($this->getAllValues() as $value) {
+                        if (! in_array($value->getUGroupId(), $param_value)) {
+                            $value_dao->hide($value->getId());
+                        }
+                    }
+                    foreach ($param_value as $ugroup_id) {
                         if ($ugroup_id) {
                             $value_dao->create($this->field->getId(), $ugroup_id);
                         }
@@ -509,7 +513,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function exportToXML($root, &$xmlMapping, $fieldID) {
         $items = $root->addChild('items');
         foreach ($this->values as $value) {
-            $items->addChild('item')->addAttribute('label', $value->getUGroupName());
+            $item = $items->addChild('item');
+            $item->addAttribute('label', $value->getUGroupName());
+            $item->addAttribute('is_hidden', (int)$value->isHidden());
         }
     }
 

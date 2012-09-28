@@ -188,8 +188,8 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <bind type="ugroups">
                 <items>
-                    <item label="Integrators"/>
-                    <item label="Customers"/>
+                    <item label="Integrators" is_hidden="0" />
+                    <item label="Customers" is_hidden="0" />
                 </items>
             </bind>'
         );
@@ -208,7 +208,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <bind type="ugroups">
                 <items>
-                    <item label="NotInProject"/>
+                    <item label="NotInProject" is_hidden="0" />
                 </items>
             </bind>'
         );
@@ -224,7 +224,7 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <bind type="ugroups">
                 <items>
-                    <item label="ugroup_registered_users_name_key"/>
+                    <item label="ugroup_registered_users_name_key" is_hidden="0" />
                 </items>
             </bind>'
         );
@@ -235,6 +235,23 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
 
         $values = $bind->getAllValues();
         $this->assertEqual($values[0]->getLabel(), 'Registered users');
+    }
+
+    public function itImportsHiddenValues() {
+        $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
+            <bind type="ugroups">
+                <items>
+                    <item label="ugroup_registered_users_name_key" is_hidden="1" />
+                </items>
+            </bind>'
+        );
+
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new UGroup(array('name' => 'ugroup_registered_users_name_key')));
+
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+
+        $values = $bind->getAllValues();
+        $this->assertTrue($values[0]->isHidden());
     }
 }
 ?>

@@ -21,7 +21,12 @@
 require_once 'Tracker_FormElement_Field_Shareable.class.php';
 
 abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
-    
+
+    /**
+     * @var Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     */
+    protected $default_value_dao;
+
     protected $default_values;
     protected $decorators;
     protected $field;
@@ -262,13 +267,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             }
             $redirect = true;
         }
-        $dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
         
         $default = array();
         if (isset($params['default'])) {
             $default = $params['default'];
         }
-        $dao->save($this->field->getId(), $default);
+        $this->getDefaultValueDao()->save($this->field->getId(), $default);
         $redirect = true;
         
         if (!$no_redirect && $redirect) {
@@ -279,7 +283,21 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         }
         return $redirect;
     }
-    
+
+    /**
+     * @return Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     */
+    protected function getDefaultValueDao() {
+        if (!$this->default_value_dao) {
+            $this->default_value_dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
+        }
+        return $this->default_value_dao;
+    }
+
+    public function setDefaultValueDao(Tracker_FormElement_Field_List_Bind_DefaultvalueDao $dao) {
+        $this->default_value_dao = $dao;
+    }
+
     /**
      * Allow the user to define the bind
      *
@@ -374,8 +392,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             $this->default_values = $t;
             
             if (count($this->default_values)) {
-                $dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
-                $dao->save($this->field->getId(), array_keys($this->default_values));
+                $this->getDefaultValueDao()->save($this->field->getId(), array_keys($this->default_values));
             }
         }
         
