@@ -6,105 +6,105 @@
 -->
 
 <chapter id="ProjectLinks">
-    <title>Project Links</title>
+    <title>Liens inter-projet</title>
 
-    <para>Project Links superimpose a structure onto Codex project workspaces making easily visible the relationships between projects, and they can simplify finding related project. Applications include:</para>
+    <para>Liens inter-projet superposer une structure sur des espaces de travail de projet du Tuleap rendant visible les relations entre les projets, et ils peuvent simplifier la recherche de projets connexes. Les applications comprennent:</para>
     <itemizedlist mark="bullet" spacing="compact">
-        <listitem>Project families so that a parent project workspace can gain easy access to its child projects (for example for programme management).</listitem>
-        <listitem>Rings of interest, where several projects may decide they have sufficient in common that they wish to be related (e.g. projects that use the same technology), but none of them is strictly a master, and each is free to join or leave the ring.</listitem>
-        <listitem>Linking a product-related workspace with a support project that covers a number of products - i.e. an easy linkage from the product to its support and from generalised support to a specific product (note that this is a simplified project family, with each project showing the other as a relation).</listitem>
+        <listitem>Familles projet de sorte qu'un espace de travail projet parent ne peut accéder facilement à ses projets enfants (par exemple pour la gestion du programme).</listitem>
+        <listitem>Anneaux d'intérêt, où plusieurs projets peuvent décider qu'ils ont suffisamment en commun qu'ils souhaitent être liées (par exemple les projets qui utilisent la même technologie), mais aucun d'entre eux est strictement un maître, et chacun est libre d'adhérer ou de quitter le ring.</listitem>
+        <listitem>Liaison d'un espace de travail liée au produit d'un projet d'appui qui couvre un certain nombre de produits - c'est à dire un lien facile entre le produit et son soutien et de l'appui généralisé à un produit spécifique (à noter que c'est un projet simplifié de la famille, à chaque projet montrant l' d'autres comme une relation).</listitem>
     </itemizedlist>
 
-    <para>To create a project relationship, a project first defines a link type and then assigns that link type to as many projects as it wishes. The link type is named in any way (except it must be unique within the project), for example "Sub-projects", "Related projects", "Division", "Team", "C++ Projects". The main use of the name is as a heading when the linked projects are listed.</para>
+    <para>Pour créer une relation, un projet définit d'abord un type de lien et puis assigne ce type lien à autant de projets que s'il le souhaite. Le type de lien est nommé en aucune façon (sauf qu'il doit être unique dans le projet), par exemple "sous-projets", "projets connexes", "Division", "Team", "C + + Projets". La principale utilisation de ce nom est aussi une rubrique où les projets liés sont répertoriés.</para>
 
-    <para>When referring to a relationship link, the project that administers the link is the owner and the project referenced by the link is the target of the link. A link type also specifies a reverse name, which is used when a project lists those of which it is the target. For example "Children" may be the name of a link type and "Parent" the reverse link name for that same link type. Projects linked this way would be listed under "Children" in the owner project, but those projects would see the (reverse) relationship as "Parent".</para>
+    <para>Lorsque vous faites référence à un lien de parenté, le projet qui administre le lien est le propriétaire et le projet référencé par le lien est la cible du lien. Un type de lien spécifie également un nom d'inversion, qui est utilisé quand un projet répertorie ceux dont il est la cible. Par exemple, "enfants" peut être le nom d'un type de lien et "Parent" le nom du lien inverse pour ce type même lien. Projets liés de cette façon serait inscrit sous la rubrique «enfants» dans le projet propriétaire, mais ces projets n'auraient voir la relation (inverse) en tant que «parent».</para>
 
-    <para>To create a "ring of interest", someone must take responsibility to create (and administer) a ringmaster project (which behaves just as a parent project in a project family but its only function (today) is to be the owner project links) - the ring admin would normally take responsibility to be the ring animator (the one who makes the ring work well). To join a ring of interest, a project must request the ring animator to create a relationship with it in the ringmaster project.</para>
+    <para>Pour créer un "cercle d'intérêts», quelqu'un doit prendre la responsabilité de créer (et gérer) un projet de Monsieur Loyal (qui se comporte comme un projet parent dans une famille du projet mais sa seule fonction (aujourd'hui) est d'être les liens du projet propriétaire) - l'administrateur anneau aurait dû normalement prendre la responsabilité d'être l'animateur anneau (celui qui fait le travail et anneau). Pour vous joindre à un anneau d'intérêt, un projet doit demander l'animateur en anneau pour créer une relation avec elle dans le projet de Monsieur Loyal.</para>
 
-    <para>When a new project is created from a template project it inherits a copy of all the project links (and link types) from the template. Additionally, any project that references a template as a target will gain a link to the new project (it means that the project wants all projects created from the template to be linked as the template is). Thus a master project may keep tabs on all projects created from a template, and a ring may automatically expand. There is also a mechanism that allows projects to resynchronise link types with their template. Newly create links are highlighted with a faint yellow star - mainly to highlight those created from template links.</para>
+    <para>Quand un nouveau projet est créé à partir d'un modèle de projet il hérite d'une copie de tous les liens de projet (et les types de lien) à partir du modèle. En outre, tout projet qui fait référence à un modèle en tant que cible gagnera un lien vers le nouveau projet (cela signifie que le projet veut que tous les projets créés à partir du modèle à être liés comme le modèle est). Ainsi, un projet de master peut garder un œil sur tous les projets créés à partir d'un modèle, et un cycle peut augmenter automatiquement. Il existe également un mécanisme qui permet aux projets de resynchroniser les types de lien avec leur modèle. Nouvellement créer des liens sont mis en évidence avec une étoile jaune pâle - principalement à mettre en évidence les liens créés à partir de modèles.</para>
 
-    <para>A project shows reverse linkages (those projects for which it is the target of a link) on the summary page.</para>
+    <para>Un projet montre les liens inverses (les projets pour lesquels il est la cible d'un lien) sur la page de résumé.</para>
 
-    <para>In the future, a project may have views that group together data and documents from its related projects; this is termed Data Aggregation. Data Aggregation is not expanded upon here; it is a set of features that will be built upon the Related Projects structure.</para>
+    <para>Dans l'avenir, un projet peut avoir des opinions qui regroupent des données et des documents de ses projets connexes; c'est ce qu'on appelle l'agrégation des données. Agrégation de données n'est pas complétée par ici, c'est un ensemble de fonctionnalités qui seront construits sur la structure de Projets relatifs.</para>
 
     <section id="CreatingLinks">
-        <title>Creating links</title>
+        <title>Créer des liens</title>
 
-        <para>A project's admin user may add new related projects by using the following procedure:</para>
-        <para>On the 'Project Links Configuration' page of your master project, first set up at least one link type (if none already exist) by clicking 'Add a project link type'.</para>
-        <para>Then tick the "Create Project links from this project" box and follow this process:</para>
+        <para>Utilisateur admin Un projet peut ajouter de nouveaux projets liés à l'aide de la procédure suivante:</para>
+        <para>Sur la page 'Liens Projet de configuration »de votre projet de master, d'abord mis en place au moins un type de lien (s'il n'y en a déjà) en cliquant sur« Ajouter un type de lien de projet ».</para>
+        <para>Puis cochez la case "Créer des liens de projet de ce projet" boîte et suivre ce processus:</para>
 
         <itemizedlist mark="bullet" spacing="compact">
-            <listitem>go and find a project you want to link to using any means you like (via My Personal page, project tree, browsing, favorites, ...)</listitem>
-            <listitem>click the "link to this project" button/icon on the summary page</listitem>
-            <listitem>this takes you back to the context of the master project, there you select the link type (from the presented list) and "add" the link</listitem>
-            <listitem>either go and find another project you want to link to (repeating the above steps), or uncheck "link to this project"</listitem>
+            <listitem>aller chercher un projet que vous souhaitez mettre un lien vers utilisant tous les moyens que vous aimez (via ma page personnelle, arborescence du projet, la navigation, les favoris, ...)</listitem>
+            <listitem>cliquez sur le "lien pour ce projet" bouton / icône sur la page de résumé</listitem>
+            <listitem>vous revenez au contexte du projet maître, il vous sélectionnez le type de lien (à partir de la liste présentée) et "add" le lien</listitem>
+            <listitem>soit aller chercher un autre projet que vous souhaitez mettre un lien vers (en répétant les étapes ci-dessus), ou décochez la case "lien vers ce projet"</listitem>
         </itemizedlist>
 
-        <para>Note that "link to this project" is a personal setting, not for the project, so you can leave it checked all the time if you wish, which leaves visible in all projects visited the "link to this project" button/icon on the summary page. Checking it in another project just makes that one the future master, there's no need to uncheck it first.</para>
+        <para>Notez que "pour ce projet" est un cadre personnel, et non pour le projet, de sorte que vous pouvez le laisser contrôler tout le temps si vous le souhaitez, ce qui laisse visible dans tous les projets ont visité le "lien pour ce projet" bouton / icône sur le page de résumé. En cochant cette option dans un autre projet fait juste que l'un le futur maître, il n'est pas nécessaire de décocher le premier.</para>
 
     </section>
 
     <section id="TermsAndDefinitions">
-        <title>Terms and Definitions</title>
+        <title>Termes et définitions</title>
 
         <table frame="all">
-            <title>Project links terms and definitions</title>
+            <title>Liens Projet termes et définitions</title>
             <tgroup cols="2">
             <colspec colname="c1" colwidth="200pt" />
             <colspec colname="c2" colwidth="250pt"  />
 
             <thead>
                 <row>
-                    <entry>Term</entry>
-                    <entry>Definition</entry>
+                    <entry>Terme</entry>
+                    <entry>Définition</entry>
                 </row>
             </thead>
 
             <tbody>
                 <row>
-                    <entry><emphasis role="bold">Data Aggregation</emphasis></entry>
-                    <entry>The process of collecting data from related projects for display in a collated form.</entry>
+                    <entry><emphasis role="bold">Agrégation de données</emphasis></entry>
+                    <entry>Le processus de collecte des données de projets liés à l'affichage sous forme assemblé.</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Link Admin</emphasis></entry>
-                    <entry>The users who are allowed to create link types and to modify project linkages - project admins are automatically link admins.</entry>
+                    <entry><emphasis role="bold">Lien Admin</emphasis></entry>
+                    <entry>Les utilisateurs qui sont autorisés à créer des types de liens et de modifier les liens du projet - admins du projet sont automatiquement relier les admins.</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Link Type</emphasis></entry>
-                    <entry>The data item that defines the properties of a project linkage and gives it a name. They are defined within a project, and are inherited from a template.</entry>
+                    <entry><emphasis role="bold">Lien Tapez</emphasis></entry>
+                    <entry>La donnée qui définit les propriétés d'une liaison projet et lui donne un nom. Elles sont définies dans un projet, et sont héritées d'un modèle.</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Owner</emphasis></entry>
-                    <entry>The project that is responsible for creating and administering a link.</entry>
+                    <entry><emphasis role="bold">Le propriétaire</emphasis></entry>
+                    <entry>Le projet qui est chargé de créer et d'administrer un lien.</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Project Family</emphasis></entry>
-                    <entry>A strict hierarchy where there is a parent project with one or more child (or sub-) projects.</entry>
+                    <entry><emphasis role="bold">Famille projet</emphasis></entry>
+                    <entry>Une hiérarchie stricte où il ya un projet parent avec un ou plusieurs enfant (ou sous-) projets.</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Project Link / Relationship Link</emphasis></entry>
-                    <entry>The data item that joins one project with another to create related projects - an instance of a project link type</entry>
+                    <entry><emphasis role="bold">Lien Projet / Lien Relation</emphasis></entry>
+                    <entry>L'élément de données qui relie un projet à un autre pour créer des projets connexes - une instance d'un type de lien de projet</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Related Projects</emphasis></entry>
-                    <entry>Two projects for which there is a link entry in at least one of them pointing to the other.</entry>
+                    <entry><emphasis role="bold">Projets connexes</emphasis></entry>
+                    <entry>Deux projets pour lesquels il existe une entrée de lien dans au moins l'un d'eux me montrant l'autre.</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Reverse name/linkage</emphasis></entry>
-                    <entry>The name (defined in the owner project) to be used to describe the relationship within its target projects' context (e.g. parent and children).</entry>
+                    <entry><emphasis role="bold">Inverser nom / lien</emphasis></entry>
+                    <entry>Le nom (défini dans le projet propriétaire) doit être utilisé pour décrire la relation dans le contexte de ses projets cibles (parent et enfant).</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Ring of interest</emphasis></entry>
-                    <entry>A group of projects that have declared themselves as having something in common and are linked together to share information.</entry>
+                    <entry><emphasis role="bold">Anneau d'intérêt</emphasis></entry>
+                    <entry>Un groupe de projets qui se sont déclarés comme ayant quelque chose en commun et sont reliés entre eux pour échanger des informations.</entry>
               </row>
               <row>
                     <entry><emphasis role="bold">Ringmaster</emphasis></entry>
-                    <entry>A project that exists (only) so that other projects may reference it to become members of a ring.</entry>
+                    <entry>Un projet qui existe (seulement) de sorte que d'autres projets peuvent se référer à devenir membres d'un anneau.</entry>
               </row>
               <row>
-                    <entry><emphasis role="bold">Target</emphasis></entry>
-                    <entry>The project that is the subject of a link from another project.</entry>
+                    <entry><emphasis role="bold">Cible</emphasis></entry>
+                    <entry>Le projet qui fait l'objet d'un lien depuis un autre projet.</entry>
               </row>
 
             </tbody>
@@ -114,56 +114,56 @@
     </section>
 
     <section id="LinkAdministration">
-        <title>Link Administration</title>
+        <title>lien Administration</title>
 
-        <para>Administration of the linkage belongs to the link owner project, the project to which the link points is called the target project (the target of the link).</para>
-        <para>Project admin users are automatically link admin users. </para>
-        <para>On the (link) admin page, the project's link admin user may: </para>
+        <para>L'administration de la liaison fait partie du projet propriétaire liaison, le projet vers lequel pointe le lien est appelé le projet cible (la cible du lien).</para>
+        <para>Admin users du projet sont automatiquement relier les utilisateurs admin.</para>
+        <para>Sur la page d'administration (lien), l'utilisateur du projet lien admin peut:</para>
 
         <itemizedlist mark="bullet" spacing="compact">
-            <listitem>Add new link types.</listitem>
-            <listitem>Modify (including change the link type of) existing relationships with target project.</listitem>
-            <listitem>Delete individual project relationships (i.e. remove them from the list of related projects).</listitem>
-            <listitem>Delete relationship types - all referenced projects with that relationship are disconnected (i.e. the whole relationship is deleted).</listitem>
-            <listitem>Refresh link types from the project's template (if it has one, see details below)</listitem>
-            <listitem>Clone link type: creates an exact copy of a link type (with a different name)</listitem>
-            <listitem>Modify link types (all attributes) </listitem>
+            <listitem>Ajouter de nouveaux types de liens.</listitem>
+            <listitem>Modifier (y compris changer le type de lien) les relations existantes avec le projet cible.</listitem>
+            <listitem>Supprimer les relations de projets individuels (c.-à les retirer de la liste des projets).</listitem>
+            <listitem>Supprimer des types de relations - tous les projets référencés avec cette relation sont déconnectés (c'est à dire l'ensemble des relations est supprimé).</listitem>
+            <listitem>Actualiser les types de liens gabarit du projet (s'il en a un, voir les détails ci-dessous)</listitem>
+            <listitem>Type de lien Clone: crée une copie exacte d'un type de lien (avec un nom différent)</listitem>
+            <listitem>Modifier les types de liens (tous les attributs)</listitem>
         </itemizedlist>
 
-        <para>Note that a project relationship linkage has an explicit direction (owner project and target project); only the owner project link admin can establish and remove project links.</para>
+        <para>Notez qu'un lien relation projet a un sens explicite (projet de propriétaire et projet cible); seul l'administrateur lien porteur de projet peut créer et supprimer les liens du projet.</para>
 
     </section>
 
     <section id="RingAdministration">
-        <title>Ring Administration</title>
+        <title>Anneau d'administration</title>
 
-        <para>A ringmaster project is a special type of project that just displays the list of projects that link to it using a ring-type link.</para>
+        <para>Un projet de Monsieur Loyal est un type particulier de projet qui affiche simplement la liste des projets ayant un lien vers l'aide d'un lien de type annulaire.</para>
 
     </section>
 
     <section id="TemplateProjects">
-        <title>Template Projects</title>
+        <title>Projets de modèle</title>
 
-        <para>The following are inherited from a template project at project creation:</para>
-
-        <itemizedlist mark="bullet" spacing="compact">
-            <listitem>Project link types</listitem>
-            <listitem>Related project</listitem>
-        </itemizedlist>
-
-        <para>If a template project is the target of a relationship, the new project is (silently) added to that linkage at project creation.</para>
-        <para>When a project is refreshed from its template, the following actions are proposed to the user for individual confirmation:</para>
+        <para>Ce qui suit sont héritées d'un modèle de projet de création d'un projet:</para>
 
         <itemizedlist mark="bullet" spacing="compact">
-            <listitem>Link types defined in the template and not present in the target project are added (thus types recently added to the template can be adopted into the project).</listitem>
-            <listitem>Link types sharing a name with the template project are replaced with the template ones (i.e. types with the same name in the template and project are assumed to be the same; and it is assumed that the template is the master, so they are copied from the template overwriting the project's version, if confirmed)</listitem>
-            <listitem>Linked projects in the template that are not linked to by the project are added. </listitem>
-            <listitem>Projects that specify the template as target but do not link to the project are identified for information only (i.e. if the project were being newly created, it would be added automatically to the master project's links, but when refreshing we can't be certain that it has not been deleted by that project, nor that it is really wanted as a link).</listitem>
-            <listitem>Ringmaster projects referenced by the template are offered to join the ring.</listitem>
+            <listitem>Types de liens de projet</listitem>
+            <listitem>Projet connexe</listitem>
         </itemizedlist>
 
-        <para>Note: link types that are defined in the target project but not in the template project are neither modified nor deleted - no proposal is made to the user; they are listed for information only.</para>
-        <para>No mechanism is proposed for a template project to force an update upon its offspring; the template admin user must ask the project admins to do the refresh themselves.</para>
+        <para>Si un modèle de projet est la cible d'une relation, le nouveau projet est (silence) ajouté à ce lien lors de la création du projet.</para>
+        <para>Quand un projet est actualisé à partir de son modèle, les actions suivantes sont proposées à l'utilisateur pour confirmation individuelle:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>Types de liens définis dans le modèle et non présent dans le projet cible sont ajoutés (donc types récemment ajoutées au modèle peut être adoptée dans le projet).</listitem>
+            <listitem>Types de liens qui partagent un nom avec le modèle de projet sont remplacés par les modèles (c.-à-types portant le même nom dans le modèle et le projet sont supposés être les mêmes, et il est supposé que le modèle est le maître, de sorte qu'ils sont copiés à partir le modèle remplaçant la version du projet, si elle est confirmée)</listitem>
+            <listitem>Projets liés à la matrice qui ne sont pas liés par le projet sont ajoutés.</listitem>
+            <listitem>Les projets qui spécifient le modèle comme cible, mais ne pas lier au projet sont identifiés à titre indicatif (c'est à dire si le projet ont été nouvellement créé, il sera ajouté automatiquement aux liens du projet maître, mais lors de l'actualisation nous ne pouvons pas être certains que il n'a pas été supprimé par ce projet, ni qu'il est vraiment voulu comme un lien).</listitem>
+            <listitem>Ringmaster projets référencés par le modèle sont offerts à rejoindre le ring.</listitem>
+        </itemizedlist>
+
+        <para>Remarque: les types de liens qui sont définis dans le projet cible, mais pas dans le modèle de projet ne sont ni modifiés ni supprimés - aucune proposition n'est faite à l'utilisateur; ils sont énumérés à titre indicatif.</para>
+        <para>Aucun mécanisme n'est proposé pour un modèle de projet pour forcer une mise à jour sur sa descendance; l'utilisateur admin modèle doit demander aux administrateurs de projets à faire la mise à jour eux-mêmes.</para>
 
     </section>
 

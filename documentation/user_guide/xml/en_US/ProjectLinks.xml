@@ -8,7 +8,7 @@
 <chapter id="ProjectLinks">
     <title>Project Links</title>
 
-    <para>Project Links superimpose a structure onto Codex project workspaces making easily visible the relationships between projects, and they can simplify finding related project. Applications include:</para>
+    <para>Project Links superimpose a structure onto Tuleap project workspaces making easily visible the relationships between projects, and they can simplify finding related project. Applications include:</para>
     <itemizedlist mark="bullet" spacing="compact">
         <listitem>Project families so that a parent project workspace can gain easy access to its child projects (for example for programme management).</listitem>
         <listitem>Rings of interest, where several projects may decide they have sufficient in common that they wish to be related (e.g. projects that use the same technology), but none of them is strictly a master, and each is free to join or leave the ring.</listitem>
@@ -117,8 +117,8 @@
         <title>Link Administration</title>
 
         <para>Administration of the linkage belongs to the link owner project, the project to which the link points is called the target project (the target of the link).</para>
-        <para>Project admin users are automatically link admin users. </para>
-        <para>On the (link) admin page, the project's link admin user may: </para>
+        <para>Project admin users are automatically link admin users.</para>
+        <para>On the (link) admin page, the project's link admin user may:</para>
 
         <itemizedlist mark="bullet" spacing="compact">
             <listitem>Add new link types.</listitem>
@@ -127,7 +127,7 @@
             <listitem>Delete relationship types - all referenced projects with that relationship are disconnected (i.e. the whole relationship is deleted).</listitem>
             <listitem>Refresh link types from the project's template (if it has one, see details below)</listitem>
             <listitem>Clone link type: creates an exact copy of a link type (with a different name)</listitem>
-            <listitem>Modify link types (all attributes) </listitem>
+            <listitem>Modify link types (all attributes)</listitem>
         </itemizedlist>
 
         <para>Note that a project relationship linkage has an explicit direction (owner project and target project); only the owner project link admin can establish and remove project links.</para>
@@ -157,7 +157,7 @@
         <itemizedlist mark="bullet" spacing="compact">
             <listitem>Link types defined in the template and not present in the target project are added (thus types recently added to the template can be adopted into the project).</listitem>
             <listitem>Link types sharing a name with the template project are replaced with the template ones (i.e. types with the same name in the template and project are assumed to be the same; and it is assumed that the template is the master, so they are copied from the template overwriting the project's version, if confirmed)</listitem>
-            <listitem>Linked projects in the template that are not linked to by the project are added. </listitem>
+            <listitem>Linked projects in the template that are not linked to by the project are added.</listitem>
             <listitem>Projects that specify the template as target but do not link to the project are identified for information only (i.e. if the project were being newly created, it would be added automatically to the master project's links, but when refreshing we can't be certain that it has not been deleted by that project, nor that it is really wanted as a link).</listitem>
             <listitem>Ringmaster projects referenced by the template are offered to join the ring.</listitem>
         </itemizedlist>
