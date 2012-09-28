@@ -178,19 +178,21 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends
         $values = array(
             1 => $this->project_members_ugroup_value,
             2 => $this->customers_ugroup_value,
+            3 => $this->hidden_ugroup_value,
         );
         $this->bind   = $this->buildBindUgroups($values);
         $this->params = array(
             'values' => array(
                 UGroup::PROJECT_MEMBERS,
-                $this->integrators_ugroup_id
+                $this->integrators_ugroup_id,
+                $this->hidden_ugroup_id,
             )
         );
     }
 
-    /*public function itDoesntRecreateTheValueIfAlreadyUsed() {
-        stub($this->value_dao)->create($this->field_id, UGROUP::PROJECT_MEMBERS)->never();
-    }*/
+    public function itActivatesAlreadyExistingHiddenValues() {
+        stub($this->value_dao)->show($this->hidden_ugroup_value->getId())->once();
+    }
 
     public function itCreatesNewValue() {
         stub($this->value_dao)->create($this->field_id, $this->integrators_ugroup_id)->once();

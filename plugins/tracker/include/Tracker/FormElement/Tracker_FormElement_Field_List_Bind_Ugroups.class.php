@@ -457,7 +457,9 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     private static function getSelectedUgroupIds($value) {
-        return $value->getUgroupId();
+        if (!$value->isHidden()) {
+            return $value->getUgroupId();
+        }
     }
 
     /**
@@ -475,14 +477,20 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                 case 'values':
                     $all_values = array();
                     foreach ($this->getAllValues() as $value) {
-                        $all_values[$value->getUGroupId()] = true;
+                        $all_values[$value->getUGroupId()] = $value;
                         if (! in_array($value->getUGroupId(), $param_value)) {
                             $value_dao->hide($value->getId());
                         }
                     }
                     foreach ($param_value as $ugroup_id) {
-                        if ($ugroup_id && !isset($all_values[$ugroup_id])) {
-                            $value_dao->create($this->field->getId(), $ugroup_id);
+                        if ($ugroup_id) {
+                            if (isset($all_values[$ugroup_id])) {
+                                if ($all_values[$ugroup_id]->isHidden()) {
+                                    $value_dao->show($all_values[$ugroup_id]->getId());
+                                }
+                            } else {
+                                $value_dao->create($this->field->getId(), $ugroup_id);
+                            }
                         }
                     }
                     break;

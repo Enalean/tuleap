@@ -64,9 +64,19 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
     }
 
     public function hide($id) {
-        $id  = $this->da->escapeInt($id);
+        return $this->toggleHidden($id, 1);
+    }
+
+    public function show($id) {
+        return $this->toggleHidden($id, 0);
+    }
+
+    private function toggleHidden($id, $is_hidden) {
+        $id        = $this->da->escapeInt($id);
+        $is_hidden = $is_hidden ? 1 : 0;
+
         $sql = "UPDATE $this->table_name
-                SET is_hidden = 1
+                SET is_hidden = $is_hidden
                 WHERE id = $id";
         return $this->update($sql);
     }
