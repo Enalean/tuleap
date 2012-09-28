@@ -114,7 +114,7 @@
     </section>
 
     <section id="LinkAdministration">
-        <title>lien Administration</title>
+        <title>Lien Administration</title>
 
         <para>L'administration de la liaison fait partie du projet propriétaire liaison, le projet vers lequel pointe le lien est appelé le projet cible (la cible du lien).</para>
         <para>Admin users du projet sont automatiquement relier les utilisateurs admin.</para>
