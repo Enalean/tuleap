@@ -125,7 +125,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         if ($ugroup) {
             return new Tracker_FormElement_Field_List_Bind_UgroupsValue($row['id'], $ugroup);
         }
-        return null;
+        return new Tracker_FormElement_Field_List_Bind_UgroupsValue(-1, new UGroup(array('ugroup_id' => 0, 'name' => "")));
     }
 
     /**
