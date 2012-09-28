@@ -473,13 +473,15 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         foreach ($params as $key => $param_value) {
             switch ($key) {
                 case 'values':
+                    $all_values = array();
                     foreach ($this->getAllValues() as $value) {
+                        $all_values[$value->getUGroupId()] = true;
                         if (! in_array($value->getUGroupId(), $param_value)) {
                             $value_dao->hide($value->getId());
                         }
                     }
                     foreach ($param_value as $ugroup_id) {
-                        if ($ugroup_id) {
+                        if ($ugroup_id && !isset($all_values[$ugroup_id])) {
                             $value_dao->create($this->field->getId(), $ugroup_id);
                         }
                     }

@@ -188,12 +188,12 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends
         );
     }
 
-    public function itOverridesValueIfAlreadyUsed() {
-        stub($this->value_dao)->create($this->field_id, UGROUP::PROJECT_MEMBERS)->at(0);
-    }
+    /*public function itDoesntRecreateTheValueIfAlreadyUsed() {
+        stub($this->value_dao)->create($this->field_id, UGROUP::PROJECT_MEMBERS)->never();
+    }*/
 
     public function itCreatesNewValue() {
-        stub($this->value_dao)->create($this->field_id, $this->integrators_ugroup_id)->at(1);
+        stub($this->value_dao)->create($this->field_id, $this->integrators_ugroup_id)->once();
     }
 
     public function itHidesPreviouslyUsedValue() {
