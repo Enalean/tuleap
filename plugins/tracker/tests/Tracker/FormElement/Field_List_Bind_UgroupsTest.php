@@ -25,6 +25,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends TuleapT
     public function setUp() {
         parent::setUp();
         $this->ugroup_manager = mock('UGroupManager');
+        $this->value_dao      = mock('Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao');
         $this->field = aSelectBoxField()->build();
         $this->root        = new SimpleXMLElement('<bind type="ugroups" />');
         $this->xml_mapping = array();
@@ -40,7 +41,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends TuleapT
     }
 
     public function itExportsEmptyUgroupList() {
-        $bind_ugroup = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, array(), array(), array(), $this->ugroup_manager);
+        $bind_ugroup = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, array(), array(), array(), $this->ugroup_manager, $this->value_dao);
 
         $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
         $this->assertCount($this->root->items->children(), 0);
@@ -50,7 +51,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends TuleapT
         $values = array(
             $this->integrators_ugroup_value
         );
-        $bind_ugroup = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager);
+        $bind_ugroup = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
 
         $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
         $items = $this->root->items->children();
@@ -62,7 +63,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends TuleapT
             $this->integrators_ugroup_value,
             $this->customers_ugroup_value
         );
-        $bind_ugroup = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager);
+        $bind_ugroup = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
 
         $bind_ugroup->exportToXML($this->root, $this->xml_mapping, $this->field_id);
         $items = $this->root->items->children();
@@ -73,14 +74,41 @@ class Tracker_FormElement_Field_List_Bind_UgroupsExportToXmlTest extends TuleapT
 
 
 class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
 
-    public function itSavesNothingWhenNoValue() {
-        $this->field = aSelectBoxField()->build();
+        $this->field_id = 789;
+        $this->field = aSelectBoxField()->withId($this->field_id)->build();
         $this->ugroup_manager = mock('UGroupManager');
         $this->value_dao = mock('Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao');
+    }
+
+    public function itSavesNothingWhenNoValue() {
         $values = array();
         $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
         stub($this->value_dao)->create()->never();
+        $bind->saveObject();
+    }
+
+    public function itSavesOneValue() {
+        $ugroup_id = 103;
+        $values = array(
+            new Tracker_FormElement_Field_List_Bind_UgroupsValue(0, new UGroup(array('ugroup_id' => $ugroup_id, 'name' => 'whatever'))),
+        );
+        $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
+        stub($this->value_dao)->create($this->field_id, $ugroup_id)->once();
+        $bind->saveObject();
+    }
+
+    public function itSavesBothStaticAndDynamicValues() {
+        $static_ugroup_id = 103;
+        $values = array(
+            new Tracker_FormElement_Field_List_Bind_UgroupsValue(0, new UGroup(array('ugroup_id' => UGROUP::PROJECT_MEMBERS, 'name' => 'whatever'))),
+            new Tracker_FormElement_Field_List_Bind_UgroupsValue(0, new UGroup(array('ugroup_id' => $static_ugroup_id, 'name' => 'whatever'))),
+        );
+        $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($this->field, $values, array(), array(), $this->ugroup_manager, $this->value_dao);
+        stub($this->value_dao)->create($this->field_id, UGROUP::PROJECT_MEMBERS)->at(0);
+        stub($this->value_dao)->create($this->field_id, $static_ugroup_id)->at(1);
         $bind->saveObject();
     }
 }

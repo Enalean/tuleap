@@ -1,17 +1,17 @@
 <?php
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
- * 
+ *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
- * 
+ *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
@@ -27,10 +27,16 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     protected $ugroup_manager;
     protected $values;
 
-    public function __construct($field, $values, $default_values, $decorators, UGroupManager $ugroup_manager) {
+    /**
+     * @var Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao
+     */
+    protected $value_dao;
+
+    public function __construct($field, $values, $default_values, $decorators, UGroupManager $ugroup_manager, Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao $value_dao) {
         parent::__construct($field, $default_values, $decorators);
-        $this->values = $values;
+        $this->values         = $values;
         $this->ugroup_manager = $ugroup_manager;
+        $this->value_dao      = $value_dao;
     }
 
     /**
@@ -390,7 +396,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         //return new Tracker_FormElement_Field_List_Bind_UsersDao();
     }
     public function getValueDao() {
-        return new Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao();
+        return $this->value_dao;
     }
 
     /**
@@ -476,6 +482,18 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             }
         }
         return parent::process($params, $no_redirect, $redirect);
+    }
+
+    /**
+     * Saves a bind in the database
+     *
+     * @return void
+     */
+    public function saveObject() {
+        foreach ($this->values as $value) {
+            $this->getValueDao()->create($this->field->getId(), $value->getUgroupId());
+        }
+        parent::saveObject();
     }
 
     /**

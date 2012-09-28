@@ -173,11 +173,13 @@ class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends Tuleap
     public function setUp() {
         parent::setUp();
 
-        $this->mapping = array();
-        $this->project = mock('Project');
-        $this->field = aSelectBoxField()->withTracker(aTracker()->withProject($this->project)->build())->build();
+        $this->mapping        = array();
+        $this->project        = mock('Project');
+        $this->field          = aSelectBoxField()->withTracker(aTracker()->withProject($this->project)->build())->build();
         $this->ugroup_manager = mock('UGroupManager');
-        $this->bind_factory = new Tracker_FormElement_Field_List_BindFactory($this->ugroup_manager);
+        $this->value_dao      = mock('Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao'); 
+        $this->bind_factory   = new Tracker_FormElement_Field_List_BindFactory($this->ugroup_manager);
+        $this->bind_factory->setUgroupsValueDao($this->value_dao);
 
         $this->setText('Registered users', array('project_ugroup', 'ugroup_registered_users_name_key'));
     }

@@ -45,8 +45,24 @@ class Tracker_FormElement_Field_List_BindFactory {
      */
     private $ugroup_manager;
 
-    public function __construct($ugroup_manager = null) {
-        $this->ugroup_manager = $ugroup_manager ? $ugroup_manager : new UgroupManager();
+    /**
+     * @var Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao
+     */
+    private $ugroups_value_dao;
+
+    public function __construct(UgroupManager $ugroup_manager = null) {
+        $this->ugroup_manager    = $ugroup_manager ? $ugroup_manager : new UgroupManager();
+    }
+
+    private function getUgroupsValueDao() {
+        if (!$this->ugroups_value_dao) {
+            $this->ugroups_value_dao = new Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao();
+        }
+        return $this->ugroups_value_dao;
+    }
+
+    public function setUgroupsValueDao(Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao $dao) {
+        $this->ugroups_value_dao = $dao;
     }
 
     /**
@@ -97,15 +113,14 @@ class Tracker_FormElement_Field_List_BindFactory {
                 break;
             case self::UGROUPS:
                 $values = array();
-                $dao = new Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao();
-                foreach($dao->searchByFieldId($field->id) as $row_value) {
+                foreach($this->getUgroupsValueDao()->searchByFieldId($field->id) as $row_value) {
                     $values[$row_value['id']] = $this->getUgroupsValueInstance(
                         $row_value['id'],
                         $field->getTracker()->getProject(),
                         $row_value['ugroup_id']
                     );
                 }
-                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators, $this->ugroup_manager);
+                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array_filter($values), $default_value, $decorators, $this->ugroup_manager, $this->getUgroupsValueDao());
                 break;
             default:
                 trigger_error('Unknown bind "'. $type .'"', E_USER_WARNING);
@@ -184,7 +199,8 @@ class Tracker_FormElement_Field_List_BindFactory {
                                                                        $row['values'],
                                                                        $row['default_values'],
                                                                        $row['decorators'],
-                                                                       $this->ugroup_manager);
+                                                                       $this->ugroup_manager,
+                                                                       $this->getUgroupsValueDao());
             default:
                 trigger_error('Unknown bind "'. $row['type'] .'"', E_USER_WARNING);
                 return new Tracker_FormElement_Field_List_Bind_Null($row['field']);
@@ -374,7 +390,7 @@ class Tracker_FormElement_Field_List_BindFactory {
                 }
                 break;
             case self::UGROUPS:
-                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array(), array(), array(), $this->ugroup_manager);
+                $bind = new Tracker_FormElement_Field_List_Bind_Ugroups($field, array(), array(), array(), $this->ugroup_manager, $this->getUgroupsValueDao());
                 $bind->process($bind_data, 'no redirect');
                 break;
             default:
