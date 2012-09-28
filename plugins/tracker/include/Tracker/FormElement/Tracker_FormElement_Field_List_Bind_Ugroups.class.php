@@ -410,7 +410,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @return string html
      */
     public static function fetchAdminCreateForm($field) {
-        return self::fetchSelectUsers('formElement_data[bind][values][]', $field, array());
+        return self::fetchSelectUgroups('formElement_data[bind][values][]', $field, array());
     }
 
     /**
@@ -421,7 +421,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     public function fetchAdminEditForm() {
         $html = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','bind_to_ugroups') .'</h3>';
-        $html .= self::fetchSelectUsers('bind[values][]', $this->field, $this->values);
+        $html .= self::fetchSelectUgroups('bind[values][]', $this->field, $this->values);
 
         //Select default values
         $html .= $this->getSelectDefaultValues();
@@ -429,7 +429,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         return $html;
     }
 
-    protected static function fetchSelectUsers($select_name, $field, $values) {
+    protected static function fetchSelectUgroups($select_name, $field, $values) {
         $hp             = Codendi_HTMLPurifier::instance();
         $ugroup_manager = new UGroupManager();
 
