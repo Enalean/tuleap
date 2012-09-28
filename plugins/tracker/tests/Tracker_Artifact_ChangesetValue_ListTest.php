@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'builders/all.php';
+
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
@@ -37,7 +39,7 @@ class Tracker_Artifact_ChangesetValue_ListTest extends TuleapTestCase {
     
     function testLists() {
         $bind_value = new MockTracker_FormElement_Field_List_BindValue();
-        $bind_value->setReturnValue('getLabel', 'Reopen');
+        $bind_value->setReturnValue('getSoapValue', 'Reopen');
         $bind_value->setReturnValue('getId', 106);
         $field      = new $this->field_class();
         $value_list = new $this->changesetvalue_class(111, $field, false, array($bind_value));
@@ -151,13 +153,13 @@ class Tracker_Artifact_ChangesetValue_ListTest extends TuleapTestCase {
     
     function testSoapValue() {
         $bv_1 = new MockTracker_FormElement_Field_List_BindValue();
-        $bv_1->setReturnValue('getLabel', 'Jenny');
+        $bv_1->setReturnValue('getSoapValue', 'Jenny');
         $bv_2 = new MockTracker_FormElement_Field_List_BindValue();
-        $bv_2->setReturnValue('getLabel', 'Bob');
+        $bv_2->setReturnValue('getSoapValue', 'Bob');
         $bv_3 = new MockTracker_FormElement_Field_List_BindValue();
-        $bv_3->setReturnValue('getLabel', 'Rob');
+        $bv_3->setReturnValue('getSoapValue', 'Rob');
         $bv_4 = new MockTracker_FormElement_Field_List_BindValue();
-        $bv_4->setReturnValue('getLabel', 'Anne');
+        $bv_4->setReturnValue('getSoapValue', 'Anne');
         
         $field      = new $this->field_class();
         $value_list = new $this->changesetvalue_class(111, $field, false, array($bv_1, $bv_2, $bv_3, $bv_4));
