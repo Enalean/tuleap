@@ -50,5 +50,9 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
     public function getMembers() {
         return $this->ugroup->getMembers();
     }
+
+    public function getSoapValue() {
+        return $this->getUGroupName();
+    }
 }
 ?>

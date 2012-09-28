@@ -63,6 +63,10 @@ abstract class Tracker_FormElement_Field_List_Value {
     public function isHidden() {
         return false;
     }
+
+    public function getSoapValue() {
+        return $this->getLabel();
+    }
 }
 
 ?>
