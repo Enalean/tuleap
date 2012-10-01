@@ -308,6 +308,7 @@
             <value>sb</value>
             <value>msb</value>
             <value>tbl</value>
+            <value>cb</value>
           </choice>
         </attribute>
         <ref name="bindContent"/>
