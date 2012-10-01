@@ -46,10 +46,19 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao extends DataAccessObj
     public function duplicate($from_value_id, $to_field_id) {
         $from_value_id  = $this->da->escapeInt($from_value_id);
         $to_field_id    = $this->da->escapeInt($to_field_id);
-        $insert = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
-                SELECT $to_field_id, ugroup_id, is_hidden
-                FROM $this->table_name
-                WHERE id = $from_value_id";
+        $sql = "REPLACE INTO $this->table_name (field_id, ugroup_id, is_hidden)
+                SELECT $to_field_id, u1.ugroup_id, v.is_hidden
+                FROM ugroup u1
+                    INNER JOIN tracker t ON (
+                        t.group_id = u1.group_id AND u1.ugroup_id > 100
+                        OR
+                        u1.ugroup_id <= 100
+                    )
+                    INNER JOIN tracker_field AS f ON (t.id = f.tracker_id)
+                    INNER JOIN ugroup u2 ON (u1.name = u2.name)
+                    INNER JOIN $this->table_name v ON (v.ugroup_id = u2.ugroup_id)
+                    WHERE f.id = $to_field_id
+                      AND v.id = $from_value_id";
 
         return $this->updateAndGetLastId($sql);
     }

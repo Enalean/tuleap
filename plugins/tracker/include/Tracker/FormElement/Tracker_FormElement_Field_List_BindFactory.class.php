@@ -169,6 +169,14 @@ class Tracker_FormElement_Field_List_BindFactory {
             }
         }
 
+        //duplicate Ugroups value, if any
+        $dao = $this->getUgroupsValueDao();
+        foreach($dao->searchByFieldId($from_field_id) as $row) {
+            if ($id = $dao->duplicate($row['id'], $to_field_id)) {
+                $value_mapping[$row['id']] = $id;
+            }
+        }
+
         $dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
         $dao->duplicate($from_field_id, $to_field_id, $value_mapping);
 

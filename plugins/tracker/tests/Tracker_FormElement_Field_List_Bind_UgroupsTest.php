@@ -230,7 +230,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends
     }
 
     public function itCreatesNewValue() {
-        stub($this->value_dao)->create($this->field_id, $this->integrators_ugroup_id, true)->once();
+        stub($this->value_dao)->create($this->field_id, $this->integrators_ugroup_id, false)->once();
     }
 
     public function itHidesPreviouslyUsedValue() {

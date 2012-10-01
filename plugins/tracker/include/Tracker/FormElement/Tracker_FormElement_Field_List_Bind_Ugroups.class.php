@@ -489,7 +489,7 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
                                     $value_dao->show($all_values[$ugroup_id]->getId());
                                 }
                             } else {
-                                $value_dao->create($this->field->getId(), $ugroup_id, true);
+                                $value_dao->create($this->field->getId(), $ugroup_id, false);
                             }
                         }
                     }
@@ -549,19 +549,6 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @return true if Tracler is ok
      */
     public function testImport() {
-        //if(parent::testImport()){
-        //    if (get_class($this) == 'Tracker_FormElement_Field_Text') {
-        //        if (!(isset($this->default_properties['rows']) && isset($this->default_properties['cols']))) {
-        //            var_dump($this, 'Properties must be "rows" and "cols"');
-        //            return false;
-        //        }
-        //    } elseif (get_class($this) == 'Tracker_FormElement_Field_String') {
-        //        if (!(isset($this->default_properties['maxchars']) && isset($this->default_properties['size']))) {
-        //            var_dump($this, 'Properties must be "maxchars" and "size"');
-        //            return false;
-        //        }
-        //    }
-        //}
         return true;
     }
 
