@@ -24,8 +24,17 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     /**
      * @var UGroupManager
      */
-    protected $ugroup_manager;
-    protected $values;
+    private $ugroup_manager;
+
+    /**
+     * @var array of Tracker_FormElement_Field_List_Bind_UgroupsValue
+     */
+    private $values;
+
+    /**
+     * @var array of Tracker_FormElement_Field_List_Bind_UgroupsValue
+     */
+    private $values_indexed_by_ugroup_id;
 
     /**
      * @var Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao
@@ -37,6 +46,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $this->values         = $values;
         $this->ugroup_manager = $ugroup_manager;
         $this->value_dao      = $value_dao;
+
+        $this->values_indexed_by_ugroup_id = array();
+        foreach ($values as $value) {
+            $this->values_indexed_by_ugroup_id[$value->getUGroupId()] = $value;
+        }
     }
 
     /**
@@ -475,22 +489,16 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         foreach ($params as $key => $param_value) {
             switch ($key) {
                 case 'values':
-                    $all_values = array();
-                    foreach ($this->getAllValues() as $value) {
-                        $all_values[$value->getUGroupId()] = $value;
-                        if (! in_array($value->getUGroupId(), $param_value)) {
-                            $value_dao->hide($value->getId());
-                        }
-                    }
-                    foreach ($param_value as $ugroup_id) {
-                        if ($ugroup_id) {
-                            if (isset($all_values[$ugroup_id])) {
-                                if ($all_values[$ugroup_id]->isHidden()) {
-                                    $value_dao->show($all_values[$ugroup_id]->getId());
-                                }
-                            } else {
-                                $value_dao->create($this->field->getId(), $ugroup_id, false);
+                    $wanted_ugroup_ids = array_filter($param_value);
+                    $this->hideUnwantedValues($wanted_ugroup_ids);
+                    foreach ($wanted_ugroup_ids as $ugroup_id) {
+                        $value = $this->getValueByUGroupId($ugroup_id);
+                        if ($value) {
+                            if ($value->isHidden()) {
+                                $value_dao->show($value->getId());
                             }
+                        } else {
+                            $value_dao->create($this->field->getId(), $ugroup_id, false);
                         }
                     }
                     break;
@@ -499,6 +507,23 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
             }
         }
         return parent::process($params, $no_redirect, $redirect);
+    }
+
+    private function hideUnwantedValues(array $wanted_ugroup_ids) {
+        foreach ($this->getAllValues() as $value) {
+            if (! in_array($value->getUGroupId(), $wanted_ugroup_ids)) {
+                $this->getValueDao()->hide($value->getId());
+            }
+        }
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_List_Bind_UgroupsValue or null if no match
+     */
+    private function getValueByUGroupId($ugroup_id) {
+        if (isset($this->values_indexed_by_ugroup_id[$ugroup_id])) {
+            return $this->values_indexed_by_ugroup_id[$ugroup_id];
+        }
     }
 
     /**
