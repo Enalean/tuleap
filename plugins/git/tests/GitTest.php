@@ -98,6 +98,31 @@ class GitTest extends TuleapTestCase {
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
 
     }
+    
+    
+    public function test_migrate_to_gerritRouteDispatchesTo_migrateToGerrit_withRepoManagementView() {
+        $group_id    = 101;
+        $user        = stub('User')->isMember($group_id, 'A')->returns(true);
+        $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
+        $request     = new HTTPRequest();
+        $repo_id = 999;
+        $request->set('repo_id', $repo_id);
+
+        $git = TestHelper::getPartialMock('Git', array('_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
+        $git->setRequest($request);
+        $git->setUserManager($usermanager);
+        $git->setAction('migrate_to_gerrit');
+        $git->setGroupId($group_id);
+
+//        $factory = stub('GitRepositoryFactory')->getRepositoryById($repo_id);
+//        $git->setFactory($factory);
+
+        $git->expectOnce('addAction', array('migrateToGerrit', $repo_id));
+        $git->expectOnce('addView', array('repoManagement'));
+        
+        $git->request();
+    }
+
 }
 
 ?>

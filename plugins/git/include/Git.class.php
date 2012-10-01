@@ -188,6 +188,7 @@ class Git extends PluginController {
                                             'fork_repositories',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
+                                            'migrate_to_gerrit',
             );
         } else {
             $this->addPermittedAction('index');
@@ -384,6 +385,10 @@ class Git extends PluginController {
                 }
                 $imageRenderer = new Git_LastPushesGraph($groupId, $weeksNumber);
                 $imageRenderer->display();
+                break;
+            case 'migrate_to_gerrit':
+                $this->addAction('migrateToGerrit', $repoId);
+                $this->addView('repoManagement');
                 break;
             #LIST
             default:
