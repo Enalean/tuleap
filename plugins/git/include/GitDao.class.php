@@ -235,7 +235,7 @@ class GitDao extends DataAccessObject {
         $userId    = $this->da->escapeInt($userId);
 
         if (empty($projectId)) {
-            return false;
+            return array();
         }
         if ($scope) {
             if (empty($userId)) {

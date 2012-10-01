@@ -518,4 +518,70 @@ class GitActions_ForkTests extends TuleapTestCase {
         $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url);
     }
 }
+
+
+class GitActions_ProjectPrivacyTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->dao = mock('GitDao');
+        $this->factory = mock('GitRepositoryFactory');
+    }
+
+    public function itDoesNothingWhenThereAreNoRepositories() {
+        $project_id = 99;
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array());
+        $this->changeProjectRepositoriesAccess($project_id, true);
+        $this->changeProjectRepositoriesAccess($project_id, false);
+    }
+
+    public function itDoesNothingWeAreMakingItTheProjectPublic() {
+        $project_id = 99;
+        $is_private = false;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess()->never()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    public function itMakesRepositoriesPrivateWhenProjectBecomesPrivate() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+
+    }
+    
+    public function itDoesNothingIfThePermissionsAreAlreadyCorrect() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess()->never()->returns("whatever");
+        stub($repo)->getAccess()->returns(GitRepository::PRIVATE_ACCESS);
+        stub($repo)->changeAccess()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    public function itHandlesAllRepositoriesOfTheProject() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id1 = 333;
+        $repo_id2 = 444;
+        $repo1 = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        $repo2 = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id1 => null, $repo_id2 => null));
+        stub($this->factory)->getRepositoryById($repo_id1)->returns($repo1);
+        stub($this->factory)->getRepositoryById($repo_id2)->returns($repo2);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    private function changeProjectRepositoriesAccess($project_id, $is_private) {
+        return GitActions::changeProjectRepositoriesAccess($project_id, $is_private, $this->dao, $this->factory);
+    }
+}
 ?>
