@@ -170,7 +170,7 @@ class Git extends PluginController {
     }
 
     protected function definePermittedActions($repoId, $user) {
-        if ( $this->user->isMember($this->groupId, 'A') === true ) {
+        if ( $user->isMember($this->groupId, 'A') === true ) {
             $this->permittedActions = array('index',
                                             'view' ,
                                             'edit',
