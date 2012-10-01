@@ -46,6 +46,9 @@ plugin_git	admin_save_submit	Save
 plugin_git	admin_mail	Notifications
 
 plugin_git	admin_settings	General settings
+plugin_git	gerrit_settings	Gerrit
+plugin_git	gerrit_url	Url of the gerrit server
+plugin_git	gerrit_migrate_to	Migrate repo to Gerrit
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 

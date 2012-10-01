@@ -106,6 +106,9 @@ plugin_git	reference_commit_desc_key	Commit Git
 plugin_git	admin_repo_management	Gestion du dépôt GIT
 
 plugin_git	admin_settings	Options générales
+plugin_git	gerrit_settings	Gerrit
+plugin_git	gerrit_url	Url du serveur gerrit
+plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification

@@ -23,6 +23,7 @@ require_once 'Pane/GeneralSettings.class.php';
 require_once 'Pane/AccessControl.class.php';
 require_once 'Pane/Notification.class.php';
 require_once 'Pane/Delete.class.php';
+require_once 'Pane/Gerrit.class.php';
 
 /**
  * Dedicated screen for repo management
@@ -58,6 +59,7 @@ class GitViews_RepoManagement {
             new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request),
             new GitViews_RepoManagement_Pane_Notification($repository, $this->request),
             new GitViews_RepoManagement_Pane_Delete($repository, $this->request),
+            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request),
         );
         $indexed_panes = array();
         foreach ($panes as $pane) {
