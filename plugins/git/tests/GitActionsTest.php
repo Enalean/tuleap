@@ -586,15 +586,21 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
 }
 
 class GitActions_migrateToGerritTest extends TuleapTestCase {
+    /** @var GitActions */
     private $actions;
+    /** @var SystemEventManager */
+    private $em;
 
     public function setUp() {
         parent::setUp();
         $this->manager = mock('GitRepositoryManager');
-        $this->actions = new GitActions(mock('Git'), mock('SystemEventManager'), mock('GitRepositoryFactory'), $this->manager);
+        $this->em      = mock('SystemEventManager');
+        $this->actions = new GitActions(mock('Git'), $this->em, mock('GitRepositoryFactory'), $this->manager);
     }
     
     public function itDoesNothingIfTheRepoDoesNotExist() {
+        $this->actions->migrateToGerrit($repo_id);
+        $this->em->expectNever('createEvent');
 //        $this->
     }
 }

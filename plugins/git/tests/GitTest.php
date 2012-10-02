@@ -113,8 +113,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         $request->set('repo_id', $repo_id);
         
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(mock('GitRepository'));
-        $git = $this->getGit($request, $usermanager, $factory);
-        $git->setGroupId($group_id);
+        $git = $this->getGit($request, $usermanager, $factory, $group_id);
         
         $git->expectOnce('addAction', array('migrateToGerrit', array($repo_id)));
         $git->expectOnce('addView', array('repoManagement'));
@@ -129,11 +128,12 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         $repo_id     = 999;
         $request->set('repo_id', $repo_id);
         
-        $git = $this->getGit($request, $usermanager, mock('GitRepositoryFactory'));
+        $whatever_group_id = 2487374;
+        $git = $this->getGit($request, $usermanager, mock('GitRepositoryFactory'), $whatever_group_id);
         
         $git->expectOnce('addError', array('*'));
         $git->expectNever('addAction');
-        $git->expectOnce('redirect');
+        $git->expectOnce('redirect', array('/plugins/git/?group_id='. $whatever_group_id));
         
         $git->request();
     }
@@ -149,22 +149,22 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         // not necessary, but we specify it to make it clear why we don't want he action to be called
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(null);
         
-        $git = $this->getGit($request, $usermanager, $factory);
-        $git->setGroupId($group_id);
+        $git = $this->getGit($request, $usermanager, $factory, $group_id);
         
         $git->expectOnce('addError', array('*'));
         $git->expectNever('addAction');
         
-        $git->expectOnce('redirect', array('/plugins/git/?action=index&group_id='. $group_id));
+        $git->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id));
         
         $git->request();
     }
     
-    private function getGit($request, $usermanager, $factory) {
+    private function getGit($request, $usermanager, $factory, $group_id) {
         $git = TestHelper::getPartialMock('Git', array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'));
         $git->setRequest($request);
         $git->setUserManager($usermanager);
         $git->setAction('migrate_to_gerrit');
+        $git->setGroupId($group_id);
         
         $git->setFactory($factory);        
         return $git;

@@ -389,7 +389,7 @@ class Git extends PluginController {
             case 'migrate_to_gerrit':
                 if (!$this->factory->getRepositoryById($repoId)) {
                     $this->addError($this->getText('actions_params_error'));
-                    $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
                     $this->addAction('migrateToGerrit', array($repoId));
                     $this->addView('repoManagement');
