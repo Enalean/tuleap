@@ -52,6 +52,11 @@ if (!$user) {
 
 }
 
+//
+// Following function was imported from FusionForge (almost) "as is"
+// Code should be kept as close as possible (ideally shared).
+// 
+
 function negociate_content_user_home(PFO_User $user, $default_content_type) {
     $script='user_home';
     $content_type = util_negociate_alternate_content_types($script, $default_content_type);
