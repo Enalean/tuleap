@@ -10,7 +10,6 @@ require_once('pre.php');
 
 $default_content_type = 'text/html';
 
-$event_manager = EventManager::instance();
 $project       = null;
 $expl_pathinfo = explode('/', $request->getFromServer('REQUEST_URI'));
 if (isset($expl_pathinfo[2])) {
@@ -24,31 +23,7 @@ if ($project && !$project->isError()) {
     $request = HTTPRequest::instance();
     $request->params['group_id'] = $_REQUEST['group_id'];
     
-    $script='project_home';
-    $content_type = util_negociate_alternate_content_types($script, $default_content_type);
-
-    // if a custom content-type is selected, then redirect to plugin's rendering
-    if($content_type != $default_content_type) {
-         $content             = '';
-         $accept_content_type = $content_type;
-         $content_type        = '';
-         $hook_params = array(
-            'groupname'    => $project->getUnixName(),
-            'accept'       => $accept_content_type,
-            'return'       => '',
-            'content_type' => &$content_type,
-            'group_id'     => $project->getID(),
-            'content'      => &$content,
-        );
-        $event_manager->processEvent('content_negociated_project_home', $hook_params);
-        if ($content_type != ''){
-            header('Content-type: '. $content_type);
-            echo $content;
-        } else {
-            header('HTTP/1.1 406 Not Acceptable',true,406);
-            exit(0);
-        }
-    } else {
+    if(!negotiate_content_project_home($project, $default_content_type)) {
         if ($request->isAjax()) {
             header('Content-type: application/json');
             echo json_encode(
@@ -91,7 +66,49 @@ if ($project && !$project->isError()) {
         }
     }
 } else {
+    if (!negotiate_content_projects_list($default_content_type)) {
+        header("HTTP/1.0 404 Not Found");
+        if (!$request->isAjax()) {
+            exit_no_group();
+        }
+    }
+}
 
+//
+// Following functions were imported from FusionForge (almost) "as is"
+// Code should be kept as close as possible (ideally shared).
+// 
+
+function negotiate_content_project_home(PFO_Project $project, $default_content_type) {
+    $script='project_home';
+    $content_type = util_negociate_alternate_content_types($script, $default_content_type);
+
+    // if a custom content-type is selected, then redirect to plugin's rendering
+    if($content_type != $default_content_type) {
+         $content             = '';
+         $accept_content_type = $content_type;
+         $content_type        = '';
+         $hook_params = array(
+            'groupname'    => $project->getUnixName(),
+            'accept'       => $accept_content_type,
+            'return'       => '',
+            'content_type' => &$content_type,
+            'group_id'     => $project->getID(),
+            'content'      => &$content,
+        );
+        EventManager::instance()->processEvent('content_negociated_project_home', $hook_params);
+        if ($content_type != ''){
+            header('Content-type: '. $content_type);
+            echo $content;
+        } else {
+            header('HTTP/1.1 406 Not Acceptable',true,406);
+        }
+        exit(0);
+    }
+    return false;
+}
+
+function negotiate_content_projects_list($default_content_type) {
     $script = 'projects_list';
     $content_type = util_negociate_alternate_content_types($script, $default_content_type);
 
@@ -105,20 +122,16 @@ if ($project && !$project->isError()) {
             'content_type' => &$content_type,
             'content'      => &$content,
         );
-        $event_manager->processEvent('content_negociated_projects_list', $hook_params);
+        EventManager::instance()->processEvent('content_negociated_projects_list', $hook_params);
         if ($content_type != ''){
             header('Content-type: '. $content_type);
             echo $content;
         } else {
             header('HTTP/1.1 406 Not Acceptable',true,406);
-            exit(0);
         }
-    } else {
-        header("HTTP/1.0 404 Not Found");
-        if (!$request->isAjax()) {
-            exit_no_group();
-        }
+        exit(0);
     }
+    return false;
 }
 
 // Local Variables:

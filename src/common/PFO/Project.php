@@ -21,6 +21,20 @@
 interface PFO_Project {
 
     /**
+     * Returns project numeric id (aka group_id)
+     *
+     * @return Integer
+     */
+    public function getID();
+
+    /**
+     * Returns project short name
+     *
+     * @return String
+     */
+    public function getUnixName();
+
+    /**
      * Returns all administrators of the project
      *
      * @return Array of User
