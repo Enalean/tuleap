@@ -18,6 +18,8 @@ require_once('ProjectManager.class.php');
 require_once('ServiceNotAllowedForProjectException.class.php');
 
 require_once 'UGroupManager.class.php';
+require_once 'common/PFO/Project.php';
+
 /*
 
 	An object wrapper for project data
@@ -63,7 +65,7 @@ function getProjectsDescFieldsInfos(){
 }	
 
 
-class Project extends Group {
+class Project extends Group implements PFO_Project {
 
     /**
      * The project is active
