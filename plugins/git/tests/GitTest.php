@@ -100,12 +100,15 @@ class GitTest extends TuleapTestCase {
     }
     
     
-    public function test_migrate_to_gerritRouteDispatchesTo_migrateToGerrit_withRepoManagementView() {
+
+}
+class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
+    public function itDispatchesTo_migrateToGerrit_withRepoManagementView() {
         $group_id    = 101;
         $user        = stub('User')->isMember($group_id, 'A')->returns(true);
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
         $request     = new HTTPRequest();
-        $repo_id = 999;
+        $repo_id     = 999;
         $request->set('repo_id', $repo_id);
 
         $git = TestHelper::getPartialMock('Git', array('_informAboutPendingEvents', 'addAction', 'addView', 'checkSynchronizerToken'));
@@ -114,15 +117,32 @@ class GitTest extends TuleapTestCase {
         $git->setAction('migrate_to_gerrit');
         $git->setGroupId($group_id);
 
-//        $factory = stub('GitRepositoryFactory')->getRepositoryById($repo_id);
-//        $git->setFactory($factory);
-
-        $git->expectOnce('addAction', array('migrateToGerrit', $repo_id));
+        $git->expectOnce('addAction', array('migrateToGerrit', array($repo_id)));
         $git->expectOnce('addView', array('repoManagement'));
         
         $git->request();
     }
-
+    
+    public function itIsForbiddenForNonProjectAdmins() {
+        $user        = mock('User');
+        $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
+        $request     = new HTTPRequest();
+        
+        $git = TestHelper::getPartialMock('Git', array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'));
+        $git->setRequest($request);
+        $git->setUserManager($usermanager);
+        $git->setAction('migrate_to_gerrit');
+        
+        $git->expectOnce('addError', array('*'));
+        $git->expectNever('addAction');
+        $git->expectOnce('redirect');
+        
+        $git->request();
+    }
+    
+    // needs valid repo_id, group_id
+    //
+    
 }
 
 ?>

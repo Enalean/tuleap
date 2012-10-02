@@ -236,6 +236,7 @@ class Git extends PluginController {
 
         //check permissions
         if ( empty($this->permittedActions) || !$this->isAPermittedAction($this->action) ) {
+            
             $this->addError($this->getText('controller_access_denied'));
             $this->redirect('/plugins/git/?group_id='.$this->groupId);
             return;
@@ -387,7 +388,7 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
-                $this->addAction('migrateToGerrit', $repoId);
+                $this->addAction('migrateToGerrit', array($repoId));
                 $this->addView('repoManagement');
                 break;
             #LIST
