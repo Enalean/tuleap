@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once 'GitViewsRepositoriesTraversalStrategyTest.class.php';
 require_once dirname(__FILE__) .'/../include/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
 Mock::generate('GitViews');
@@ -110,8 +110,8 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         
         // Magic call that do stuff we want, yeah!
         $repositories = $this->getFlatTree($traversal);
-        
-        $tree = $traversal->getTree($repositories);
+        $user = new MockUser();
+        $tree = $traversal->getTree($repositories, $user);
         $this->assertTrue(is_array($tree['automaticTests']));
         $this->assertIsA(($tree['automaticTests']['Python']), 'GitRepository');
     }

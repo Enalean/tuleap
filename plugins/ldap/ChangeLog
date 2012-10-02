@@ -1,3 +1,7 @@
+Version 3.19 - Tuleap 5.5
+    * LDAP plugin now includes bind_dn/password in Apache configuration if needed
+    * Normalize to lowercase
+
 Version 3.18 - Tuleap 5.5
     * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
 

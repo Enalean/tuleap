@@ -10,4 +10,8 @@ $weeks_number   = 12;
 // -> mainly used for tests
 // $gitphp_path = "/usr/share/gitphp-tuleap";
 
+// Tell to Tuleap that an HTTPS server for git is available at the given
+// address
+// $git_http_url = "https://git.tuleap.example.com/p";
+
 ?>

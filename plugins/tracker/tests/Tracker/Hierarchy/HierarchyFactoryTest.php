@@ -212,7 +212,7 @@ class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase {
         $this->assertEqual($parent, null);
     }
 
-    public function itThrowAnExceptionWhen2Parents() {
+    public function itGeneratesAWarningWhen2Parents() {
         $artifact_345_row = array('id' => '345');
         $artifact_346_row = array('id' => '346');
         stub($this->dao)->getParentsInHierarchy()->returnsDar($artifact_345_row, $artifact_346_row);
@@ -221,7 +221,7 @@ class Tracker_HierarchyFactoryGetParentArtifactTest extends TuleapTestCase {
         $this->artifact_factory->setReturnValueAt(1, 'getInstanceFromRow', aMockArtifact()->withId(346)->build());
 
 
-        $this->expectException('Tracker_Hierarchy_MoreThanOneParentException');
+        stub($GLOBALS['Response'])->addFeedback('warning', '*', '*')->once();
 
         $this->hierarchy_factory->getParentArtifact($this->user, $this->artifact);
     }

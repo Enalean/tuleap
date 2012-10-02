@@ -153,11 +153,6 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
 
                 //Display a lock icon for the locked document
                 $dpm = Docman_PermissionsManager::instance($item->getGroupId());
-                if($dpm->getLockFactory()->itemIsLocked($item)) {
-                    $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
-                    $lockIcon    = '<img src= "'. $lockIconSrc .'" id="docman_item_icon_locked_'.$item->getId().'" class="docman_item_icon" />';
-                    $this->html  .=  $lockIcon;
-                }
 
                 if ($action) {
                     $this->html .= '</a>';
@@ -171,12 +166,18 @@ class Docman_View_ItemTreeUlVisitor /* implements Visitor*/ {
                                                             isset($params['popup_doc']) ? true : false);
                     $this->html .= '<a href="'.$url.'" id="docman_item_title_link_'.$item->getId().'">';
                 }
+                
                 $this->html .=   $this->hp->purify($item->getTitle(), CODENDI_PURIFIER_CONVERT_HTML) ;
                 if ($action) {
                     $this->html .= '</a>';
                 }
                 $this->html .=  '</span>';
                 
+                if($dpm->getLockFactory()->itemIsLocked($item)) {
+                    $lockIconSrc = $this->params['docman_icons']->getIcon('lock_delete.png');
+                    $lockIcon    = '<i id="docman_item_icon_locked_'.$item->getId().'"  title="'.$GLOBALS['Language']->getText('plugin_docman','event_lock_add').'" class="icon-lock"></i>';
+                    $this->html .=  $lockIcon;
+                }
                 $this->html .= $this->view->getItemMenu($item, $this->params);
                 $this->js .= $this->view->getActionForItem($item);
                 $this->html .= '</div>';

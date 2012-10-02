@@ -1,3 +1,9 @@
+Version 0.54 - Tuleap 5.5
+    * Fix sla #1444: artifacts with two parents throw an exception
+
+Version 0.53 - Tuleap 5.5
+    * Fix sla #1444 - Tracker page don't display when cardwall is activated
+
 Version 0.52 - Tuleap 5.5
     * Fix fatal error when no planning on parent
 

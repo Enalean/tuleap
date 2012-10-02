@@ -40,6 +40,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     protected $permissionsManager;
 
     /**
+     * @var gitPlugin
+     */
+    protected $gitPlugin;
+
+    /**
      * Constructor
      * 
      * @param Git_GitoliteDriver $driver
@@ -87,9 +92,28 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl(GitRepository $repository) {
+    public function getAccessURL(GitRepository $repository) {
+        $transports = array('ssh' => $this->getSSHAccessURL($repository));
+        $http_transport = $this->getHTTPAccessURL($repository);
+        if ($http_transport) {
+            $transports['http'] = $http_transport;
+        }
+        return $transports;
+    }
+
+    private function getSSHAccessURL(GitRepository $repository) {
         $serverName = $_SERVER['SERVER_NAME'];
         return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+    }
+
+    public function getHTTPAccessURL(GitRepository $repository) {
+        $git_plugin = $this->getGitPlugin();
+        if ($git_plugin) {
+            $http_url = $git_plugin->getConfigurationParameter('git_http_url');
+            if ($http_url) {
+                return  $http_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+            }
+        }
     }
 
     /**
@@ -404,10 +428,26 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return $this->driver;
     }
 
+    protected function getGitPlugin() {
+        if (!$this->gitPlugin) {
+            $plugin_manager  = PluginManager::instance();
+            $this->gitPlugin = $plugin_manager->getPluginByName('git');
+        }
+        return $this->gitPlugin;
+    }
+
+    /**
+     * Setter for tests
+     *
+     * @param GitPlugin $gitPlugin
+     */
+    public function setGitPlugin(GitPlugin $gitPlugin) {
+        $this->gitPlugin = $gitPlugin;
+    }
+
     public function commitTransaction(GitRepository $repository) {
         $this->updateRepoConf($repository);
     }
-
 }
 
 ?>

@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once (dirname(__FILE__).'/../include/GitActions.class.php');
 Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getText', 'addData', 'getGitRepository', 'save'));
 require_once (dirname(__FILE__).'/../include/Git.class.php');
@@ -76,7 +77,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitRepository->expectNever('changeMailPrefix');
         $gitAction->expectNever('addData');
 
-        $this->assertFalse($gitAction->notificationUpdatePrefix(1, null, '[new prefix]'));
+        $this->assertFalse($gitAction->notificationUpdatePrefix(1, null, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationUpdatePrefixPass() {
@@ -93,7 +94,7 @@ class GitActionsTest extends TuleapTestCase {
         $gitRepository->expectOnce('changeMailPrefix');
         $gitAction->expectCallCount('addData', 2);
 
-        $this->assertTrue($gitAction->notificationUpdatePrefix(1, 1, '[new prefix]'));
+        $this->assertTrue($gitAction->notificationUpdatePrefix(1, 1, '[new prefix]', 'a_pane'));
     }
 
     function testNotificationAddMailFailNoRepoId() {
@@ -108,7 +109,7 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectNever('addInfo');
 
         $mails = array('john.doe@acme.com');
-        $this->assertFalse($gitAction->notificationAddMail(1, null, $mails));
+        $this->assertFalse($gitAction->notificationAddMail(1, null, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailFailNoMails() {
@@ -122,7 +123,7 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationAddMail(1, 1, null));
+        $this->assertFalse($gitAction->notificationAddMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationAddMailFailAlreadyNotified() {
@@ -148,7 +149,7 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails));
+        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailPartialPass() {
@@ -172,7 +173,7 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails));
+        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationAddMailPass() {
@@ -193,7 +194,7 @@ class GitActionsTest extends TuleapTestCase {
         $mails = array('john.doe@acme.com',
                        'jane.doe@acme.com',
                        'john.smith@acme.com');
-        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails));
+        $this->assertTrue($gitAction->notificationAddMail(1, 1, $mails, 'a_pane'));
     }
 
     function testNotificationRemoveMailFailNoRepoId() {
@@ -207,7 +208,7 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, null, 'john.doe@acme.com'));
+        $this->assertFalse($gitAction->notificationRemoveMail(1, null, 'john.doe@acme.com', 'a_pane'));
     }
 
     function testNotificationRemoveMailFailNoMail() {
@@ -221,7 +222,7 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectOnce('addError', array('actions_params_error'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, null));
+        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, null, 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailNotRemoved() {
@@ -236,7 +237,7 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectOnce('addError', array('mail_not_removed john.doe@acme.com'));
         $git->expectNever('addInfo');
 
-        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com')));
+        $this->assertFalse($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testNotificationRemoveMailFailMailPass() {
@@ -251,7 +252,7 @@ class GitActionsTest extends TuleapTestCase {
         $git->expectNever('addError');
         $git->expectOnce('addInfo', array('mail_removed john.doe@acme.com'));
 
-        $this->assertTrue($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com')));
+        $this->assertTrue($gitAction->notificationRemoveMail(1, 1, array('john.doe@acme.com'), 'a_pane'));
     }
 
     function testConfirmPrivateFailNoRepoId() {
@@ -515,6 +516,72 @@ class GitActions_ForkTests extends TuleapTestCase {
         $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope));
 
         $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url);
+    }
+}
+
+
+class GitActions_ProjectPrivacyTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->dao = mock('GitDao');
+        $this->factory = mock('GitRepositoryFactory');
+    }
+
+    public function itDoesNothingWhenThereAreNoRepositories() {
+        $project_id = 99;
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array());
+        $this->changeProjectRepositoriesAccess($project_id, true);
+        $this->changeProjectRepositoriesAccess($project_id, false);
+    }
+
+    public function itDoesNothingWeAreMakingItTheProjectPublic() {
+        $project_id = 99;
+        $is_private = false;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess()->never()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    public function itMakesRepositoriesPrivateWhenProjectBecomesPrivate() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+
+    }
+    
+    public function itDoesNothingIfThePermissionsAreAlreadyCorrect() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id = 333;
+        $repo = stub('GitRepository')->setAccess()->never()->returns("whatever");
+        stub($repo)->getAccess()->returns(GitRepository::PRIVATE_ACCESS);
+        stub($repo)->changeAccess()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id => null));
+        stub($this->factory)->getRepositoryById($repo_id)->returns($repo);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    public function itHandlesAllRepositoriesOfTheProject() {
+        $project_id = 99;
+        $is_private = true;
+        $repo_id1 = 333;
+        $repo_id2 = 444;
+        $repo1 = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        $repo2 = stub('GitRepository')->setAccess(GitRepository::PRIVATE_ACCESS)->once()->returns("whatever");
+        stub($this->dao)->getProjectRepositoryList($project_id)->returns(array($repo_id1 => null, $repo_id2 => null));
+        stub($this->factory)->getRepositoryById($repo_id1)->returns($repo1);
+        stub($this->factory)->getRepositoryById($repo_id2)->returns($repo2);
+        $this->changeProjectRepositoriesAccess($project_id, $is_private);
+    }
+    
+    private function changeProjectRepositoriesAccess($project_id, $is_private) {
+        return GitActions::changeProjectRepositoriesAccess($project_id, $is_private, $this->dao, $this->factory);
     }
 }
 ?>

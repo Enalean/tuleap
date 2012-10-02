@@ -18,6 +18,8 @@
  * along with Codendi; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/Git_PostReceiveMailManager.class.php';
 Mock::generatePartial('Git_PostReceiveMailManager', 'PostReceiveMailManagerTestVersion', array('addMail', '_getDao','removeMailByRepository','_getGitDao', '_getGitRepository'));
 Mock::generatePartial('Git_PostReceiveMailManager', 'PostReceiveMailManagerTestRemoveRepository', array('addMail', '_getDao','_getGitDao', '_getGitRepository'));

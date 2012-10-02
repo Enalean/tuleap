@@ -208,7 +208,7 @@ class GitActions extends PluginActions {
      */
     public function getProjectRepositoryList($projectId, $userId = null) {
         $onlyGitShell = false;
-        $scope = true;
+        $scope        = true;
         $dao          = $this->getDao();
         $this->addData(array(
             'repository_list'     => $dao->getProjectRepositoryList($projectId, $onlyGitShell, $scope, $userId),
@@ -249,22 +249,24 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix) {
+    public function notificationUpdatePrefix($projectId, $repositoryId, $mailPrefix, $pane) {
         $c = $this->getController();
         if (empty($repositoryId)) {
             $this->addError('actions_params_error');
             return false;
         }
         $repository = $this->_loadRepository($projectId, $repositoryId);
-        $repository->setMailPrefix($mailPrefix);
-        $repository->save();
-        $repository->changeMailPrefix();
-        $c->addInfo($this->getText('mail_prefix_updated'));
-        $this->addData(array('repository'=>$repository));
+        if ($repository->getMailPrefix() != $mailPrefix) {
+            $repository->setMailPrefix($mailPrefix);
+            $repository->save();
+            $repository->changeMailPrefix();
+            $c->addInfo($this->getText('mail_prefix_updated'));
+            $this->addData(array('repository'=>$repository));
+        }
         return true;
     }
 
-    public function notificationAddMail($projectId, $repositoryId, $mails) {
+    public function notificationAddMail($projectId, $repositoryId, $mails, $pane) {
         $c = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
@@ -291,7 +293,7 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function notificationRemoveMail($projectId, $repositoryId, $mails) {
+    public function notificationRemoveMail($projectId, $repositoryId, $mails, $pane) {
         $c = $this->getController();
         $repository = $this->_loadRepository($projectId, $repositoryId);
         if (empty($repositoryId) || empty($mails)) {
@@ -308,6 +310,18 @@ class GitActions extends PluginActions {
             }
         }
         return $ret;
+    }
+
+    public function redirectToRepoManagement($projectId, $repositoryId, $pane) {
+        $redirect_url = GIT_BASE_URL .'/?'. http_build_query(
+            array(
+                'action'   => 'repo_management',
+                'group_id' => $projectId,
+                'repo_id'  => $repositoryId,
+                'pane'     => $pane,
+            )
+        );
+        $this->getController()->redirect($redirect_url);
     }
 
     public function confirmPrivate($projectId, $repoId, $repoAccess, $repoDescription) {
@@ -349,16 +363,6 @@ class GitActions extends PluginActions {
         $c->addInfo($this->getText('actions_repo_access'));
     }
 
-    public function confirmDeletion($projectId, $repository) {
-        $c = $this->getController();
-        if (empty($repository)) {
-            $this->addError('actions_params_error');
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
-        $c->addWarn($this->getText('confirm_deletion_msg', array($repository->getFullName())));
-    }
-
     /**
      * This method allows one to save any repository attribues changes from the web interface.
      * @param <type> $repoId
@@ -366,7 +370,7 @@ class GitActions extends PluginActions {
      * @param <type> $repoDescription
      * @return <type>
      */
-    public function save( $projectId, $repoId, $repoAccess, $repoDescription ) {
+    public function save( $projectId, $repoId, $repoAccess, $repoDescription, $pane) {
         $c = $this->getController();
         if ( empty($repoId) ) {
             $this->addError('actions_params_error');
@@ -376,19 +380,21 @@ class GitActions extends PluginActions {
         $repository = $this->factory->getRepositoryById($repoId);
         if (! $repository) {
             $this->addError('actions_repo_not_found');
-            $c->redirect('/plugins/git/?group_id='.$projectId);            
+            $c->redirect('/plugins/git/?group_id='.$projectId);
             return false;
         }
-        if ( empty($repoAccess) ) {
+        if (empty($repoAccess) && empty($repoDescription)) {
             $this->addError('actions_params_error');
             $this->redirectToRepo($projectId, $repoId);
             return false;
-        }        
+        }
 
-        if (strlen($repoDescription) > 1024) {
-            $this->addError('actions_long_description');
-        } else {
-            $repository->setDescription($repoDescription);
+        if ($repoDescription) {
+            if (strlen($repoDescription) > 1024) {
+                $this->addError('actions_long_description');
+            } else {
+                $repository->setDescription($repoDescription);
+            }
         }
 
         try {
@@ -410,12 +416,12 @@ class GitActions extends PluginActions {
             $repository->getBackend()->commitTransaction($repository);
             
         } catch (GitDaoException $e) {
-            $c->addError( $e->getMessage() );             
-            $this->redirectToRepo($projectId, $repoId);
+            $c->addError( $e->getMessage() );
+            $this->redirectToRepoManagement($projectId, $repoId, $pane);
             return false;
         }
         $c->addInfo( $this->getText('actions_save_repo_process') );
-        $this->redirectToRepo($projectId, $repoId);
+        $this->redirectToRepoManagement($projectId, $repoId, $pane);
         return;
     }
 
@@ -425,32 +431,27 @@ class GitActions extends PluginActions {
      * @param <type> $isPublic
      * @return <type>
      */
-    public static function changeProjectRepositoriesAccess($projectId, $isPrivate) {
+    public static function changeProjectRepositoriesAccess($projectId, $isPrivate, GitDao $dao, GitRepositoryFactory $factory) {
         //if the project is private, then no changes may be applied to repositories,
         //in other words only if project is set to private, its repositories have to be set to private
         if ( empty($isPrivate) ) {
             return;
         }
-        $dao          = new GitDao();
         $repositories = $dao->getProjectRepositoryList($projectId);
-        if ( empty($repositories) ) {
-            return false;
-        }
-
         foreach ( $repositories as $repoId=>$repoData ) {
-            $r = $this->factory->getRepositoryById($repoId);
+            $r = $factory->getRepositoryById($repoId);
             if ( !$r ) {
                 continue;
             }
-            $newAccess = !empty($isPrivate) ? GitRepository::PRIVATE_ACCESS : GitRepository::PUBLIC_ACCESS;
-            if ( $r->getAccess() == $newAccess ) {
+            if ( $r->getAccess() == GitRepository::PRIVATE_ACCESS) {
                 continue;
             }
-            $r->setAccess( $newAccess );
+            $r->setAccess( GitRepository::PRIVATE_ACCESS );
             $r->changeAccess();
             unset($r);
         }
 
+        
     }
 
     /**
