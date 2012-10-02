@@ -24,7 +24,7 @@
 $HTML->header(array('title'=>$Language->getText('include_user_home','devel_profile')));
 $GLOBALS['HTML']->includeFooterJavascriptFile('/scripts/tiny_mce/tiny_mce.js');
 
-if (!$res_user || db_numrows($res_user) < 1) {
+if (!$user) {
 	exit_error($Language->getText('include_user_home','no_such_user'),$Language->getText('include_user_home','no_such_user'));
 }
 
@@ -43,22 +43,22 @@ echo '
 <TABLE width=100% cellpadding=0 cellspacing=0 border=0>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','user_id').': </TD>
-	<TD><B>'.db_result($res_user,0,'user_id').'</B></TD>
+	<TD><B>'.$user->getId().'</B></TD>
 </TR>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','login_name').': </TD>
-	<TD><B>'.db_result($res_user,0,'user_name').'</B></TD>
+	<TD><B>'.$user->getUserName().'</B></TD>
 </TR>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','real_name').': </TD>
-	<TD><B>'. $hp->purify(db_result($res_user,0,'realname'), CODENDI_PURIFIER_CONVERT_HTML) .'</B></TD>
+	<TD><B>'. $hp->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML) .'</B></TD>
 </TR>
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','email_addr').': </TD>
 	<TD>
 	<B>
-	<A HREF="mailto:'.db_result($res_user,0,'email').'">
-	'.db_result($res_user,0,'email').'	
+	<A HREF="mailto:'.$user->getEmail().'">
+	'.$user->getEmail().'	
 	</A></B>
 	</TD>
 </TR>';
@@ -68,7 +68,7 @@ if(array_key_exists('sys_enable_user_skills', $GLOBALS) && $GLOBALS['sys_enable_
 <TR valign=top>
 	<TD>'.$Language->getText('include_user_home','user_prof').': </TD>
         <TD>
-        <A HREF="/people/viewprofile.php?user_id='.db_result($res_user,0,'user_id').'"><B>'.$Language->getText('include_user_home','see_skills').'</B></A></TD>
+        <A HREF="/people/viewprofile.php?user_id='.$user->getId().'"><B>'.$Language->getText('include_user_home','see_skills').'</B></A></TD>
 </TR>';
 }
 
@@ -77,14 +77,14 @@ echo '
 	<TD>
 	'.$Language->getText('include_user_home','member_since').': 
 	</TD>
-	<TD><B>'.date("M d, Y",db_result($res_user,0,'add_date')).'</B></TD>
+	<TD><B>'.date("M d, Y",$user->getAddDate()).'</B></TD>
 
 <TR>
 	<TD>
 	'.$Language->getText('include_user_home','user_status').': 
 	</TD>
 	<TD><B>';
-        switch(db_result($res_user,0,'status')) {
+        switch($user->getStatus()) {
         case 'A':
             echo $Language->getText('include_user_home','active');
             break;
@@ -114,7 +114,7 @@ $entry_value = array();
 
 $em =& EventManager::instance();
 $eParams = array();
-$eParams['user_id']     =  db_result($res_user,0,'user_id');
+$eParams['user_id']     =  $user->getId();
 $eParams['entry_label'] =& $entry_label;
 $eParams['entry_value'] =& $entry_value;
 $em->processEvent('user_home_pi_entry', $eParams);
@@ -134,7 +134,7 @@ $hooks_output = "";
 $em =& EventManager::instance();
 $eParams = array();
 $eParams['showdir']   =  isset($_REQUEST['showdir'])?$_REQUEST['showdir']:"";
-$eParams['user_name'] =  db_result($res_user,0,'user_name');
+$eParams['user_name'] =  $user->getUnixName();
 $eParams['ouput']     =& $hooks_output;
 $em->processEvent('user_home_pi_tail', $eParams);
 
@@ -156,7 +156,7 @@ $res_cat = db_query("SELECT groups.group_name, "
 	. "groups.group_id, "
 	. "user_group.admin_flags, "
 	. "user_group.bug_flags FROM "
-	. "groups,user_group WHERE user_group.user_id='".db_ei($user_id)."' AND "
+	. "groups,user_group WHERE user_group.user_id='".$user->getId()."' AND "
 	. "groups.group_id=user_group.group_id AND groups.is_public='1' AND groups.status='A' AND groups.type='1'");
 
 // see if there were any groups
@@ -182,11 +182,11 @@ $HTML->box1_bottom(); ?>
 
 if (user_isloggedin()) {
 
-    $HTML->box1_top($Language->getText('include_user_home','send_message_to').' '. $hp->purify(db_result($res_user,0,'realname'), CODENDI_PURIFIER_CONVERT_HTML));
+    $HTML->box1_top($Language->getText('include_user_home','send_message_to').' '. $hp->purify($user->getRealName(), CODENDI_PURIFIER_CONVERT_HTML));
 
     echo '
 	<FORM ACTION="/sendmessage.php" METHOD="POST">
-	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user_id.'">';
+	<INPUT TYPE="HIDDEN" NAME="touser" VALUE="'.$user->getId().'">';
 
 	$my_name=user_getrealname(user_getid());
     $cc = (isset($_REQUEST['cc'])?htmlspecialchars(trim($_REQUEST['cc'])):"");

@@ -24,6 +24,13 @@
 interface PFO_User {
 
     /**
+     * User name
+     *
+     * @return String
+     */
+    public function getUserName();
+
+    /**
      * User login on underlying unix system
      *
      * @return String
