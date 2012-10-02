@@ -1,3 +1,5 @@
+AUTOLOADED_PATH=src/common/PFO plugins/agiledashboard/include plugins/fulltextsearch/include
+
 default:
 	@echo "possible targets: 'doc' 'test'"
 
@@ -6,3 +8,9 @@ doc:
 
 test:
 	@php -d allow_call_time_pass_reference=On tests/bin/simpletest tests/simpletest plugins
+
+autoload:
+	@for path in $(AUTOLOADED_PATH); do \
+	     echo "Generate $$path"; \
+	     (cd "$$path"; phpab --compat -o autoload.php .) \
+        done;
