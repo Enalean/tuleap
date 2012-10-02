@@ -26,7 +26,7 @@ Mock::generate('Project');
 Mock::generate('ProjectManager');
 Mock::generate('GitRepositoryFactory');
 
-class GitTest extends TuleapTestCase {
+class GitTest extends TuleapTestCase  {
     
     public function testTheDelRouteExecutesDeleteRepositoryWithTheIndexView() {
         $usermanager = new MockUserManager();
@@ -111,8 +111,9 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         $request     = new HTTPRequest();
         $repo_id     = 999;
         $request->set('repo_id', $repo_id);
-
-        $git = $this->getGit($request, $usermanager, mock('GitRepositoryFactory'));
+        
+        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(mock('GitRepository'));
+        $git = $this->getGit($request, $usermanager, $factory);
         $git->setGroupId($group_id);
         
         $git->expectOnce('addAction', array('migrateToGerrit', array($repo_id)));
@@ -146,13 +147,15 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         $request->set('repo_id', $repo_id);
 
         // not necessary, but we specify it to make it clear why we don't want he action to be called
-        $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(null);
+        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(null);
         
         $git = $this->getGit($request, $usermanager, $factory);
+        $git->setGroupId($group_id);
         
         $git->expectOnce('addError', array('*'));
         $git->expectNever('addAction');
-        $git->expectOnce('redirect');
+        
+        $git->expectOnce('redirect', array('/plugins/git/?action=index&group_id='. $group_id));
         
         $git->request();
     }
