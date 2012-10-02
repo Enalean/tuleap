@@ -21,8 +21,8 @@
 
 // format : project_id  tracker_id  artifact_id value [comment]
 
-if ($argc < 3) {
-    die('Usage: ".$argv[0]." project_id  tracker_id  artifact_id'.PHP_EOL);
+if ($argc < 1) {
+    die('Usage: ".$argv[0]." artifact_id'.PHP_EOL);
 }
 
 $serverURL = 'http://shunt.cro.enalean.com';
@@ -32,15 +32,13 @@ $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL
 $requesterSessionHash = $soapLogin->login('manuel','')->session_hash;
 
 //save values
-$project_id  = $argv[1];
-$tracker_id  = $argv[2];
-$artifact_id = $argv[3];
+$artifact_id = $argv[1];
 
 // Connecting to the soap's tracker client
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
 
-$response = $soapTracker->getArtifact($requesterSessionHash, $project_id, $tracker_id, $artifact_id);
+$response = $soapTracker->getArtifact($requesterSessionHash, $artifact_id);
 
 
 var_dump($response);
