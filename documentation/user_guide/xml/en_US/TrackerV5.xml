@@ -2140,14 +2140,13 @@
 	        <para><emphasis role="underline">Select Box</emphasis>: a
 	        &#34;Select Box&#34; field takes its value from a predefined list
 	        of values defined by the tracker administrator. The predefined values 
-	        can either be a:
+	        can either be a:</para>
                 <itemizedlist mark="bullet" spacing="compact">
                     <listitem>static list of values,</listitem>
                     <listitem>a list of users,</listitem>
                     <listitem>a list of user groups.</listitem>
                 </itemizedlist>
                 <para>For more details on each possible values, see <link linkend="TrackerV5ModifyFieldBind">bind type configuration</link>.</para>
-                </para>
                 <para>
 	        Depending on the browser you use it may be displayed slightly
 	        differently but it is generally shown as a pull-down menu
@@ -2493,38 +2492,13 @@
                 <para>It's useful when you have complex setup and want to have several people notified at once for an action.</para>
                 <para>On the following picture, we define a list of support groups that will be in charge of the artifact according to their responsabilities:
                     <figure id="TrackerV5AdminFieldUsageBindUserGroup">
-                        <title>Select box bond to a list of users</title>
+                        <title>Select box bond to a list of user groups</title>
                         <mediaobject><imageobject>
                             <imagedata format="PNG" fileref="../../screenshots/en_US/sc_conf_vs_end_usergroup.png" />
                         </imageobject></mediaobject>
                     </figure>
                 </para>
-            </listitem>
-                            <!--
-                <itemizedlist mark="bullet" spacing="compact">
-                    <listitem>static list of values (e.g. the list of components of your application: front-end, back-end, etc.)</listitem>
-                    <listitem>a list of users, allows to select one user among the list. 
-                    It is useful to define a field of people assigned to an artifact. You define a user group in project administration page named "SupportTeam" and bind it to a select box field.
-                    Then people will automatically see the list of users.
-                    <figure id="TrackerV5AdminFieldUsageBindUser">
-                        <title>Select box bond to a list of users</title>
-                        <mediaobject><imageobject>
-                            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_conf_vs_end_user.png" />
-                        </imageobject></mediaobject>
-                    </figure>
-                    </listitem>
-                    <listitem>a list of user groups, allows to select one user group among the list.
-                    It is an extension of the "bind to a list of users", but instead of assigning the artifact to one user, it's assigned to the whole group.
-                    <figure id="TrackerV5AdminFieldUsageBindUserGroup">
-                        <title>Select box bond to a list of users</title>
-                        <mediaobject><imageobject>
-                            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_conf_vs_end_usergroup.png" />
-                        </imageobject></mediaobject>
-                    </figure>
-                    </listitem>
-                </itemizedlist>
-                -->
-            
+            </listitem>            
          </itemizedlist>
       </listitem>
     </itemizedlist>

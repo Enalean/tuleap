@@ -2048,13 +2048,19 @@
 	        <para><emphasis role="underline">Boîte de sélection</emphasis> :
             un champ de type &#34;Boîte de sélection&#34; prend sa valeur parmi une liste de valeurs
             prédéfinies par l'administrateur de l'outil de suivi.
-            Les valeurs prédéfinies peuvent être soit une list de valeurs statique, 
-            soit une liste dynamique (d'utilisateurs par exemple).
+            Les valeurs prédéfinies peuvent être soit:</para>
+            <itemizedlist mark="bullet" spacing="compact">
+                    <listitem>une liste statique de valeurs,</listitem>
+                    <listitem>une liste dynamique d'utilisateurs,</listitem>
+                    <listitem>une liste dynamique de groupes utilisateurs.</listitem>
+            </itemizedlist>
+                <para>
             Selon le navigateur que vous utilisez l'apparence de ce type de
             champ peut varier mais ils sont en général affichés sous la
             forme d'un menu déroulant montrant les valeurs
             prédéfinies. A un instant donné, ce type de champ ne peut
             avoir qu'une seule valeur.</para>
+            <para>Ce type de champ peut également generer des notifications email, voir <xref linkend="TrackerV5FieldModificationConfigureNotifications" />.</para>
         </listitem>
 
         <listitem>
@@ -2342,11 +2348,11 @@
             </listitem>
             <listitem>
                 <para><emphasis role="bold">Une liste d'utilisateurs</emphasis>:
-                &SYS_PRODUCT_NAME; offre la possiblité d'associer les types de champs cités au-dessus
-                à une liste de valeurs prédefinie, qui est générée dynamiquement par
-	            &SYS_PRODUCT_NAME;. Ceci peut être utilisé pour créer une liste de choix
-                comportant tous les membres du projet,  plutôt que de saisir et de maintenir cette
-                liste de valeur à la main, &SYS_PRODUCT_NAME; maintient cette liste pour vous.
+                vous avez la possiblité d'associer les types de champs cités au-dessus
+                à une liste de valeurs prédefinie, qui est générée dynamiquement par la plateforme.
+                Ceci peut être utilisé pour créer une liste de choix
+                comportant tous les membres du projet.  Plutôt que de saisir et de maintenir cette
+                liste de valeur à la main, vous ré-utilisez la définition faite dans l'administration du projet.
                 </para>
                 <para>Notez que si vous décidez de lier un champ à une liste de valeur générée
                 automatiquement, vous ne pourrez plus ajouter vos propres valeurs.
@@ -2376,7 +2382,27 @@
                         </para>
 	              </listitem>
 	            </itemizedlist>
-                
+                    <para>Sur l'image suivante on peut constater que le champ "Assigned to" est construit à partir de la liste d'utilisteurs du groupe "SupportTeam".
+                        <figure id="TrackerV5AdminFieldUsageBindUser">
+                        <title>Une boite de séléction associée à une liste d'utilisateurs</title>
+                        <mediaobject><imageobject>
+                            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_conf_vs_end_user.png" />
+                        </imageobject></mediaobject>
+                        </figure>
+                    </para>  
+            </listitem>
+            <listitem>
+                <para><emphasis role="bold">Une liste de groupes utilisateurs</emphasis>: 
+                À l'instar de la liste d'utilisateurs, la liste de groupes permet de choisir parmis les groupes définis dans l'administration du projet (voir <xref linkend="UserGroups" />).</para>
+                <para>Cette option permet la mise en œuvre de configurations avancées telles que la définition de groupes de support où plusieurs personnes doivent être notifiées simultanément.</para>
+                <para>Sur l'image suivante, on peut voir que le champ permet de selectionner parmis les groupes d'utilisteurs en fonction de la nature du problème remonté:
+                    <figure id="TrackerV5AdminFieldUsageBindUserGroup">
+                        <title>Une boite de séléction associée à une liste de groupes d'utilisateurs</title>
+                        <mediaobject><imageobject>
+                            <imagedata format="PNG" fileref="../../screenshots/en_US/sc_conf_vs_end_usergroup.png" />
+                        </imageobject></mediaobject>
+                    </figure>
+                </para>
             </listitem>
             
          </itemizedlist>
@@ -2446,7 +2472,7 @@
                  </para>
                 </listitem>
                 <listitem>
-                 <para><emphasis role="bold">Configurer les notifications</emphasis> :
+                 <para id="TrackerV5FieldModificationConfigureNotifications" xreflabel="Configurer les notifications"><emphasis role="bold">Configurer les notifications</emphasis> :
                  Si le champ est une &#34;Liste de choix&#34;, une &#34;Liste à choix multiple&#34; ou une
                  &#34;Liste ouverte&#34; liée à un groupe d'utilisateurs, une case à cocher 
                  "Envoyer des notifications aux personnes selectionnées" s'affiche.
