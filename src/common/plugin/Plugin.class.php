@@ -25,7 +25,7 @@ require_once('PluginManager.class.php');
 /**
  * Plugin
  */
-class Plugin {
+class Plugin implements PFO_Plugin {
     
     var $id;
     var $pluginInfo;
