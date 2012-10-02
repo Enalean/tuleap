@@ -584,4 +584,18 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
         return GitActions::changeProjectRepositoriesAccess($project_id, $is_private, $this->dao, $this->factory);
     }
 }
+
+class GitActions_migrateToGerritTest extends TuleapTestCase {
+    private $actions;
+
+    public function setUp() {
+        parent::setUp();
+        $this->manager = mock('GitRepositoryManager');
+        $this->actions = new GitActions(mock('Git'), mock('SystemEventManager'), mock('GitRepositoryFactory'), $this->manager);
+    }
+    
+    public function itDoesNothingIfTheRepoDoesNotExist() {
+//        $this->
+    }
+}
 ?>
