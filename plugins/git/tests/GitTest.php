@@ -111,11 +111,11 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         $request     = new HTTPRequest();
         $repo_id     = 999;
         $request->set('repo_id', $repo_id);
-        
-        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(mock('GitRepository'));
+        $repo        = mock('GitRepository');
+        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns($repo);
         $git = $this->getGit($request, $usermanager, $factory, $group_id);
         
-        $git->expectOnce('addAction', array('migrateToGerrit', array($repo_id)));
+        $git->expectOnce('addAction', array('migrateToGerrit', array($repo)));
         $git->expectOnce('addView', array('repoManagement'));
         
         $git->request();
