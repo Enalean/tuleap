@@ -53,7 +53,7 @@ class SingletonCounter {
     }
 
     public function expectedSingletonCount() {
-        return file_get_contents(SINGLETON_COUNT_FILE);        
+        return trim(file_get_contents(SINGLETON_COUNT_FILE));
     }
     
     public function getSingletoncountFilename() {
