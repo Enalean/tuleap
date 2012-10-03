@@ -151,9 +151,12 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
-        'tracker_id' => array('name'=>'tracker_id', 'type' => 'xsd:int'),
-        'value' => array('name'=>'value', 'type' => 'tns:ArrayOfArtifactFieldValue')
+        'artifact_id'      => array('name' => 'artifact_id', 'type' => 'xsd:int'),
+        'tracker_id'       => array('name' => 'tracker_id', 'type' => 'xsd:int'),
+        'submitted_by'     => array('name' => 'submitted_by', 'type' => 'xsd:int'),
+        'submitted_on'     => array('name' => 'submitted_on', 'type' => 'xsd:int'),
+        'last_update_date' => array('name' => 'last_update_date', 'type' => 'xsd:int'),
+        'value'            => array('name' => 'value', 'type' => 'tns:ArrayOfArtifactFieldValue')
     )
 );
 
@@ -436,7 +439,7 @@ $GLOBALS['server']->register(
     $GLOBALS['uri'].'#getArtifact',
     'rpc',
     'encoded',
-    'Returns the artifact (Artifact) identified by the id artifact_id in the tracker tracker_id of the project group_id. 
+    'Returns the artifact (Artifact) identified by the id artifact_id
      Returns a soap fault if the group_id is not a valid one, if the tracker_id is not a valid one, 
      or if the artifact_id is not a valid one.'
 );
@@ -714,19 +717,30 @@ function getArtifacts($sessionKey,$group_id,$tracker_id, $criteria, $offset, $ma
 }
 
 /**
- * getArtifact - returns the Artifacts that belongs to the project $group_id, to the tracker $tracker_id,
- *                  and that is identified by the ID $artifact_id
+ * getArtifact - returns the Artifacts that is identified by the ID $artifact_id
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
- * @param int $group_id the ID of the group we want to retrieve the artifact
- * @param int $tracker_id the ID of the tracker we want to retrieve the artifact
+ * @param int $group_id the ID of the project. Not used, here for backward compatibility reason. Will be removed in 6.0
+ * @param int $tracker_id the ID of the tracker. Not used, here for backward compatibility reason. Will be removed in 6.0
  * @param int $artifact_id the ID of the artifact we are looking for
  * @return array the SOAPArtifact identified by ID $artifact_id,
- *          or a soap fault if group_id does not match with a valid project, or if tracker_id does not match with a valid tracker,
- *          or if artifact_id is not a valid artifact of this tracker.
+ *          or a soap fault if artifact_id is not a valid artifact
  */
 function getArtifact($sessionKey,$group_id,$tracker_id, $artifact_id) {
+
     if (session_continue($sessionKey)){
+        $af = Tracker_ArtifactFactory::instance();
+        $artifact = $af->getArtifactById($artifact_id);
+        if (! $artifact) {
+            return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifact');
+        }
+
+        $tracker = $artifact->getTracker();
+        if (! $tracker) {
+            return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
+        }
+        $group_id = $tracker->getProject()->getGroupId();
+
         $pm = ProjectManager::instance();
         try {
             $project = $pm->getGroupByIdForSoap($group_id, 'getArtifact');
@@ -737,28 +751,11 @@ function getArtifact($sessionKey,$group_id,$tracker_id, $artifact_id) {
         if (!$project->usesService('plugin_tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifact');
         }
-        
-        $tf = TrackerFactory::instance();
-        if (!$tf) {
-            return new SoapFault(get_tracker_factory_fault, 'Could Not Get TrackerFactory', 'getArtifact');
-        } 
-        
-        $tracker = $tf->getTrackerById($tracker_id);
-        
-        if ($tracker == null) {
-            return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
+
+        if (! $tracker->userCanView()) {
+            return new SoapFault(get_tracker_factory_fault,'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
         } else {
-            if (! $tracker->userCanView()) {
-                return new SoapFault(get_tracker_factory_fault,'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
-            } else {
-                $af = Tracker_ArtifactFactory::instance();
-                $artifact = $af->getArtifactById($artifact_id);
-                if ($artifact) {
-                    return artifact_to_soap($artifact);
-                } else {
-                    return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifact');
-                }
-            }
+            return artifact_to_soap($artifact);
         }
     } else {
        return new SoapFault(invalid_session_fault,'Invalid Session','getArtifact');
@@ -774,47 +771,32 @@ function getArtifact($sessionKey,$group_id,$tracker_id, $artifact_id) {
  * @param Object{Artifact} $artifact the artifact to convert.
  * @return array the SOAPArtifact corresponding to the Artifact Object
  */
-function artifact_to_soap($artifact) {
+function artifact_to_soap(Tracker_Artifact $artifact) {
     $return = array();
-    
+
     // We check if the user can view this artifact
     if ($artifact->userCanView()) {
-        
-        // artifact_id
-        $return['artifact_id'] = $artifact->getId();
-        // tracker_id
-        $return['tracker_id'] = $artifact->getTrackerId();
-        
-        // value
-        $artifact_value = array();
-        $last_changeset = $artifact->getLastChangeset();
-        $last_changeset_values = $last_changeset->getValues();
         $ff = Tracker_FormElementFactory::instance();
-        foreach ($last_changeset_values as $field_id => $field_value) {
-            
-            
-            if ($field_value) {
-            
-            
-            
-            if ($field = $ff->getFormElementById($field_id)) {
-                if ($field->userCanRead()) {
-                    $artifact_value[] = array(
-                        'field_name' => $field->getName(),
-                        'field_label' => $field->getLabel(),
-                        'field_value' => $field_value->getSoapValue()
-                    );
-                }
+        $last_changeset = $artifact->getLastChangeset();
+
+        $return['artifact_id']      = $artifact->getId();
+        $return['tracker_id']       = $artifact->getTrackerId();
+        $return['submitted_by']     = $artifact->getSubmittedBy();
+        $return['submitted_on']     = $artifact->getSubmittedOn();
+        $return['last_update_date'] = $last_changeset->getSubmittedOn();
+
+        $return['value'] = array();
+        foreach ($last_changeset->getValues() as $field_id => $field_value) {
+            if ($field_value &&
+               ($field = $ff->getFormElementById($field_id)) &&
+               ($field->userCanRead())) {
+                $return['value'][] = array(
+                    'field_name'  => $field->getName(),
+                    'field_label' => $field->getLabel(),
+                    'field_value' => $field_value->getSoapValue()
+                );
             }
-            
-            
-            }
-            
-            
-            
         }
-        $return['value'] = $artifact_value;
-        
     }
     return $return;
 }
