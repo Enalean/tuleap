@@ -17,16 +17,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once(dirname(__FILE__).'/../builders/all.php');
+require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
+
 class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
 
     public function itConvertsFloat() {
         $criteria = array(
-            array('field_name'  => '',
-                  'field_value' => '3.14',
-                  'operator'    => '=')
+            array('name'  => 'float_field',
+                  'value' => '>3.14'),
+            /*array('field_name'  => 'date_field',
+                  'op'          => '',
+                  'from_value'  => '1324654654654',
+                  'to_value'    => '1324654654654'),*/
         );
 
-        $server = new Tracker_SOAPServer();
+        $current_user        = mock('User');
+        $tracker             = aMockTracker()->build();
+        $permissions_manager = mock('PermissionsManager');
+        $dao                 = mock('Tracker_ReportDao');
+        stub($dao)->searchMatchingIds()->returnsEmptyDar();
+        $soap_report = new Tracker_Report_SOAP($current_user, $tracker, $permissions_manager, $dao);
+        
+        $server = new Tracker_SOAPServer($soap_report);
         $server->getArtifacts(null, null, null, $criteria, null, null);
     }
 }

@@ -187,17 +187,31 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $this->criteria[$field_id];
     }
 
-   
+    protected $current_user;
+    private function getCurrentUser() {
+        if (!$this->current_user) {
+            $this->current_user = UserManager::instance()->getCurrentUser();
+        }
+        return $this->current_user;
+    }
+
+    private function getPermissionsManager() {
+        if (!$this->permissions_manager) {
+            $this->permissions_manager = PermissionsManager::instance();
+        }
+        return $this->permissions_manager;
+    }
+
     protected $matching_ids;
     public function getMatchingIds($request = null, $use_data_from_db = false) {
         if (!$this->matching_ids) {
-            $u = UserManager::instance()->getCurrentUser();
+            $user = $this->getCurrentUser();
             if ($use_data_from_db) {
                 $criteria = $this->getCriteriaFromDb();
             } else {
                 $criteria = $this->getCriteria();
             }
-            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), PermissionsManager::instance(), $this->getTracker(), $u, $criteria);
+            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), $this->getPermissionsManager(), $this->getTracker(), $user, $criteria);
        }
        return $this->matching_ids;
     }
@@ -796,8 +810,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
     }
     
+    protected $tracker;
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerById($this->tracker_id);
+        if (!$this->tracker) {
+            $this->tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
+        }
+        return $this->tracker;
     }
     
     /**
@@ -1311,11 +1329,15 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
     }
     
+    protected $dao;
     /**
      * @return Tracker_ReportDao
      */
     public function getDao() {
-        return new Tracker_ReportDao();
+        if (!$this->dao) {
+            $this->dao = new Tracker_ReportDao();
+        }
+        return $this->dao;
     }
 }
 

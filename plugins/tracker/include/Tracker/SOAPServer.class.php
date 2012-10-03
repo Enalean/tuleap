@@ -17,10 +17,20 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'Report/Tracker_Report_SOAP.class.php';
+
 class Tracker_SOAPServer {
+    /**
+     * @var Tracker_Report_SOAP
+     */
+    private $report;
+
+    public function __construct(Tracker_Report_SOAP $report) {
+        $this->report = $report;
+    }
 
     public function getArtifacts($session_key, $group_id, $tracker_id, $criteria, $offset, $max_rows) {
-        
+       $this->report->getMatchingIds(); 
     }
 }
 
