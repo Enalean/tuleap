@@ -635,61 +635,79 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
     protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
         $html = '';
-        $multiple = ' ';
-        $size     = ' ';
-        if ($this->isMultiple()) {
-            $multiple = ' multiple="multiple" ';
-            $size     = ' size="'. min($this->getMaxSize(), count($this->getBind()->getAllValues()) + 2) .'" ';
-            if ($name) {
+        if ($name) {
+            if ($this->isMultiple()) {
                 $name .= '[]';
             }
+            $name = 'name="'. $name .'"';
         }
-        $html .= '<select ';
+
         if ($id) {
-            $html .= 'id="'. $id .'" ';
+            $id = 'id="'. $id .'"';
         }
-        if ($name) {
-            $html .= 'name="'. $name .'" ';
-        }
-        $html .= $size . $multiple .'>';
+
+        $html .= $this->fetchFieldContainerStart($id, $name);
+
         $from = $this->getSelectedValue($selected_values);
         if ($from == null && !isset($submitted_values)) { 
-               $selected = isset($selected_values[100]) ? 'selected="selected"' : '';
+            $none_is_selected = isset($selected_values[100]);
         } else {
-               $selected = ($submitted_values=='100') ? 'selected="selected"' : '';
+            $none_is_selected = ($submitted_values=='100');
         }
 
         if (!$this->fieldHasEnableWorkflow()) {
-            $html .= '<option value="100" '. $selected .'>'. $GLOBALS['Language']->getText('global','none') .'</option>';
+            $none_value = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+            $this->fetchFieldValue($none_value, $name, $none_is_selected);
         }
         
         if (($submitted_values) && !is_array($submitted_values)) {
             $submitted_values_array[] = $submitted_values;
             $submitted_values = $submitted_values_array;
         }
-        
+
         foreach($this->getBind()->getAllValues() as $id => $value) {
             $transition_id = null;
             if ($this->isTransitionValid($from, $value)) {
                 $transition_id = $this->getTransitionId($from, $value->getId());
                 if (!empty($submitted_values)) {
-                    $selected = in_array($id, array_values($submitted_values)) ? 'selected="selected"' : '';
+                    $is_selected = in_array($id, array_values($submitted_values));
                 } else {
-                    $selected = isset($selected_values[$id]) ? 'selected="selected"' : '';
+                    $is_selected = isset($selected_values[$id]);
                 }
                 if ($this->userCanMakeTransition($transition_id)) {
                     if (!$value->isHidden()) {
-                        $style = $this->getBind()->getSelectOptionInlineStyle($id);
-                        $html .= '<option value="'. $id .'" '.$selected.' style="'. $style .'">';
-                        $html .= $this->getBind()->formatArtifactValue($id);
-                        $html .= '</option>';
+                        $html .= $this->fetchFieldValue($value, $name, $is_selected);
                     }
                 }
             }
         }
         
-        $html .= '</select>';
+        $html .= $this->fetchFieldContainerEnd();
         return $html;
+    }
+
+    protected function fetchFieldContainerStart($id, $name) {
+        $html     = '';
+        $multiple = '';
+        $size     = '';
+        if ($this->isMultiple()) {
+            $multiple = 'multiple="multiple"';
+            $size     = 'size="'. min($this->getMaxSize(), count($this->getBind()->getAllValues()) + 2) .'"';
+        }
+        $html .= "<select $id $name $multiple $size>";
+        return $html;
+    }
+
+    protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
+        $id       = $value->getId();
+        $label    = $this->getBind()->formatArtifactValue($id);
+        $style    = $this->getBind()->getSelectOptionInlineStyle($id);
+        $selected = $is_selected ? 'selected="selected"' : '';
+        return '<option value="'. $id .'" '. $selected .' style="'. $style .'">'. $label .'</option>';
+    }
+
+    protected function fetchFieldContainerEnd() {
+        return '</select>';
     }
 
 

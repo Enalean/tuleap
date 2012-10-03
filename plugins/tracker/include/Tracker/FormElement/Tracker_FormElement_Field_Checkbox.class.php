@@ -20,54 +20,30 @@
 
 require_once('Tracker_FormElement_Field_MultiSelectbox.class.php');
 
-class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox 
-{
-    
-    
-    
-    protected function _fetchField($id, $name, $selected_values, $submitted_values = array()) {
-        $html = '';
-        $group_name = '';
-        if ($name) {
-            $group_name = 'name="'. $name .'[]" ';
-        }
-        
-        $html .= '<ul class="tracker-form-element-checkbox"';
-        if ($id) {
-            $html .= 'id="'. $id .'" ';
-        }
-        $html .= '>';
- 
-        if (($submitted_values) && !is_array($submitted_values)) {
-            $submitted_values_array[] = $submitted_values;
-            $submitted_values = $submitted_values_array;
-        }
-        $from = $this->getSelectedValue($selected_values);
-        foreach ($this->getBind()->getAllValues() as $id => $value) {
-            $transition_id = null;
-            if ($this->isTransitionValid($from, $value)) {
-                $transition_id = $this->getTransitionId($from, $value->getId());
-                if (!empty($submitted_values)) {
-                    $checked = in_array($id, array_values($submitted_values)) ? 'checked="checked"' : '';
-                    
-                } else {
-                    $checked = isset($selected_values[$id]) ? 'checked="checked"' : '';
-                }
-                if ($this->userCanMakeTransition($transition_id)) {
-                    if (!$value->isHidden()) {
-                        $html .= '<li><input type="checkbox" '. $group_name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
-                        $html .= '<label for="cb_'. $id .'" >'. $this->getBind()->formatChangesetValue($value) .'</label>';
-                        $html .= '</li>';
-                    }
-                }
-            }
-        }
-        
-        $html .= '</ul>';
+class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
+
+    protected function fetchFieldContainerStart($id, $name) {
+        $class = 'class="tracker-form-element-checkbox"';
+        $html  = '';
+        $html .= "<ul $class $id>";
         return $html;
     }
-    
-    
+
+    protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
+        $id      = $value->getId();
+        $html    = '';
+        $checked = $is_selected ? 'checked="checked"' : '';
+
+        $html .= '<li><input type="checkbox" '. $name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
+        $html .= '<label for="cb_'. $id .'" >'. $this->getBind()->formatChangesetValue($value) .'</label>';
+        $html .= '</li>';
+        return $html;
+    }
+
+    protected function fetchFieldContainerEnd() {
+        return '</ul>';
+    }
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
@@ -110,8 +86,5 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         }
         return false;
     }
-    
-
-    
 }
 ?>
