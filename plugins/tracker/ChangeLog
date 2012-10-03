@@ -1,3 +1,6 @@
+Version 5.22 - Tuleap 5.6
+    * SOAP: Add missing info on getArtifact: submitted_on, submitted_by, last_update_date
+
 Version 5.21 - Tuleap 5.5
     * Fix sla #1444: artifacts with two parents throw an exception
 

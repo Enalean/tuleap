@@ -1,3 +1,7 @@
+Version 5.6 (Not Released Yet)
+   == Plugins ==
+	* tracker: 5.22
+
 Version 5.5.3 (Thursday, Octobre 3rd 2012)
     == Bug fix ==
     * Fix bug on cross reference extraction when parameters are not clean.
