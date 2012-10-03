@@ -424,7 +424,10 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      * @return string html
      */
     public static function fetchAdminCreateForm($field) {
-        return self::fetchSelectUgroups('formElement_data[bind][values][]', $field, array());
+        $html  = '';
+        $html .= '<p class="help-block">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'bind_to_ugroups_help') .'</p>';
+        $html .= self::fetchSelectUgroups('formElement_data[bind][values][]', $field, array());
+        return $html;
     }
 
     /**

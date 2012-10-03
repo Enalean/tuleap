@@ -493,7 +493,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @return string html
      */
     public static function fetchAdminCreateForm($field) {
-        return self::fetchSelectUsers('formElement_data[bind][value_function][]', $field, array());
+        $html  = '';
+        $html .= '<p class="help-block">'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'bind_to_users_help') .'</p>';
+        '' .'</p>';
+        $html .= self::fetchSelectUsers('formElement_data[bind][value_function][]', $field, array());
+        return $html;
     }
     
     /**
@@ -503,7 +507,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function fetchAdminEditForm() {
         $html = '';
-        $html .= '<h3>'. 'Bind to users' .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','bind_to_users') .'</h3>';
         $html .= self::fetchSelectUsers('bind[value_function][]', $this->field, $this->value_function);
         
         //Select default values

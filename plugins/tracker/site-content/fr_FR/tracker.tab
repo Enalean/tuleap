@@ -1068,6 +1068,8 @@ plugin_tracker_formelement_admin	values	Valeurs
 plugin_tracker_formelement_admin	choose_values	Choisir les valeurs
 plugin_tracker_formelement_admin	bind_to_users	Associer à un groupe d'utilisateurs
 plugin_tracker_formelement_admin	bind_to_ugroups	Associer à des groupes d'utilisateurs
+plugin_tracker_formelement_admin	bind_to_users_help	La liste proposera comme valeurs les membres <br /> des groupes d'utilisateurs sélectionnés.
+plugin_tracker_formelement_admin	bind_to_ugroups_help	L'utilisateur sélectionnera un groupe parmis <br /> une liste. Utile par exemple si vous voulez <br /> que plusieurs personnes soient notifiées <br /> d'un coup lors d'une action.
 plugin_tracker_formelement_admin	alphabetically_sort	par ordre alphabétique
 plugin_tracker_formelement_admin	add_row	Ajouter une valeur par ligne
 plugin_tracker_formelement_admin	type_search_term	Saisir un élément de recherche
