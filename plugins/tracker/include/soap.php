@@ -430,6 +430,8 @@ $GLOBALS['server']->register(
 $GLOBALS['server']->register(
     'getArtifact',
     array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'tracker_id'=>'xsd:int',
           'artifact_id'=>'xsd:int'
     ),
     array('return'=>'tns:Artifact'),
@@ -718,26 +720,27 @@ function getArtifacts($sessionKey,$group_id,$tracker_id, $criteria, $offset, $ma
  * getArtifact - returns the Artifacts that is identified by the ID $artifact_id
  *
  * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+ * @param int $group_id the ID of the project. Not used, here for backward compatibility reason. Will be removed in 6.0
+ * @param int $tracker_id the ID of the tracker. Not used, here for backward compatibility reason. Will be removed in 6.0
  * @param int $artifact_id the ID of the artifact we are looking for
  * @return array the SOAPArtifact identified by ID $artifact_id,
- *          or a soap fault if group_id does not match with a valid project, or if tracker_id does not match with a valid tracker,
- *          or if artifact_id is not a valid artifact of this tracker.
+ *          or a soap fault if artifact_id is not a valid artifact
  */
-function getArtifact($sessionKey, $artifact_id) {
-    
+function getArtifact($sessionKey,$group_id,$tracker_id, $artifact_id) {
+
     if (session_continue($sessionKey)){
         $af = Tracker_ArtifactFactory::instance();
         $artifact = $af->getArtifactById($artifact_id);
         if (! $artifact) {
             return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifact');
         }
-        
-        $tracker = $artifact->getTracker(); 
+
+        $tracker = $artifact->getTracker();
         if (! $tracker) {
             return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
         }
         $group_id = $tracker->getProject()->getGroupId();
-        
+
         $pm = ProjectManager::instance();
         try {
             $project = $pm->getGroupByIdForSoap($group_id, 'getArtifact');
@@ -754,7 +757,6 @@ function getArtifact($sessionKey, $artifact_id) {
         } else {
             return artifact_to_soap($artifact);
         }
- 
     } else {
        return new SoapFault(invalid_session_fault,'Invalid Session','getArtifact');
     }

@@ -38,7 +38,7 @@ $artifact_id = $argv[1];
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
 
-$response = $soapTracker->getArtifact($requesterSessionHash, $artifact_id);
+$response = $soapTracker->getArtifact($requesterSessionHash, '', '', $artifact_id);
 
 
 var_dump($response);
