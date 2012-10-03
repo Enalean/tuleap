@@ -1,3 +1,10 @@
+Version 5.5.3 (Thursday, Octobre 3rd 2012)
+    == Bug fix ==
+    * Fix bug on cross reference extraction when parameters are not clean.
+
+    == Plugins ==
+    * git: 2.7.11
+
 Version 5.5.2 (Thursday, September 27th 2012)
     == Bug Fix ==
         * fix sla #433: wiki references with version number
