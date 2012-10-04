@@ -143,7 +143,7 @@ class Tracker_SOAPServer {
             }
 
             // Check if the user can view this tracker
-            if ($tracker->userCanView($user->getId())) {
+            if ($tracker->userCanView($user)) {
 
                 // get the reports description (light desc of reports)
                 //$report_fact = new ArtifactReportFactory();
