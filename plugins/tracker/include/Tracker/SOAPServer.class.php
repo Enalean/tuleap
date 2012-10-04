@@ -66,6 +66,313 @@ class Tracker_SOAPServer {
         $matching = $report->getMatchingIds();
         return explode(',', $matching['id']);
     }
+
+    /**
+     * getTrackerList - returns an array of Tracker that belongs to the project identified by group_id
+     *
+     * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+     * @param int $group_id the ID of the group we want to retrieve the list of trackers
+     * @return array the array of SOAPTracker that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
+     */
+    public function getTrackerList($sessionKey, $group_id) {
+       if (session_continue($sessionKey)) {
+           $pm = ProjectManager::instance();
+           try {
+               $project = $pm->getGroupByIdForSoap($group_id, 'getTrackerList');
+           } catch (SoapFault $e) {
+               return $e;
+           }
+
+           if (!$project->usesService('plugin_tracker')) {
+               return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerList');
+           }
+
+           $tf = TrackerFactory::instance();
+           if (!$tf) {
+               return new SoapFault(get_tracker_factory_fault, 'Could Not Get TrackerFactory','getTrackerList');
+           }
+
+           // The function getTrackersByGroupId returns all trackers,
+           // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
+           $trackers = $tf->getTrackersByGroupId($group_id);
+           return trackerlist_to_soap($trackers);
+       } else {
+           return new SoapFault(invalid_session_fault,'Invalid Session','getTrackerList');
+       }
+   }
+
+   /**
+    * getTrackerFields - returns an array of TrackerFields used in the tracker tracker_id of the project identified by group_id
+    *
+    * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+    * @param int $group_id the ID of the project
+    * @param int $tracker_id the ID of the Tracker
+    * @return array the array of SOAPTrackerFields used in the tracker $tracker_id in the project identified by $group_id,
+    *          or a soap fault if tracker_id or group_id does not match with a valid project/tracker.
+    */
+   public function getTrackerFields($sessionKey, $group_id, $tracker_id) {
+       if (session_continue($sessionKey)) {
+           $pm = ProjectManager::instance();
+           try {
+               $project = $pm->getGroupByIdForSoap($group_id, 'getTrackerFields');
+           } catch (SoapFault $e) {
+               return $e;
+           }
+
+           if (!$project->usesService('plugin_tracker')) {
+               return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerFields');
+           }
+
+           $tf = TrackerFactory::instance();
+           if (!$tf) {
+               return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker Factory','getTrackerFields');
+           }
+           $tracker = $tf->getTrackerById($tracker_id);
+           if ($tracker == null) {
+               return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker','getTrackerFields');
+           } elseif ($tracker->getGroupId() != $group_id) {
+               return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'getTrackerFields');
+           }
+
+           $fef = Tracker_FormElementFactory::instance();
+           if (!$fef) {
+               return new SoapFault(get_tracker_factory_fault, 'Could Not Get Field Factory','getTrackerFields');
+           }
+           // The function getTrackerFields returns all tracker fields,
+           // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
+           $tracker_fields = $fef->getUsedFields($tracker);
+           return trackerfields_to_soap($tracker, $tracker_fields);
+       } else {
+           return new SoapFault(invalid_session_fault,'Invalid Session','getTrackerFields');
+       }
+   }
+
+   /**
+    * getArtifact - returns the Artifacts that is identified by the ID $artifact_id
+    *
+    * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+    * @param int $group_id the ID of the project. Not used, here for backward compatibility reason. Will be removed in 6.0
+    * @param int $tracker_id the ID of the tracker. Not used, here for backward compatibility reason. Will be removed in 6.0
+    * @param int $artifact_id the ID of the artifact we are looking for
+    * @return array the SOAPArtifact identified by ID $artifact_id,
+    *          or a soap fault if artifact_id is not a valid artifact
+    */
+   function getArtifact($sessionKey,$group_id,$tracker_id, $artifact_id) {
+
+       if (session_continue($sessionKey)){
+           $af = Tracker_ArtifactFactory::instance();
+           $artifact = $af->getArtifactById($artifact_id);
+           if (! $artifact) {
+               return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifact');
+           }
+
+           $tracker = $artifact->getTracker();
+           if (! $tracker) {
+               return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
+           }
+           $group_id = $tracker->getProject()->getGroupId();
+
+           $pm = ProjectManager::instance();
+           try {
+               $project = $pm->getGroupByIdForSoap($group_id, 'getArtifact');
+           } catch (SoapFault $e) {
+               return $e;
+           }
+
+           if (!$project->usesService('plugin_tracker')) {
+               return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifact');
+           }
+
+           if (! $tracker->userCanView()) {
+               return new SoapFault(get_tracker_factory_fault,'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
+           } else {
+               return artifact_to_soap($artifact);
+           }
+       } else {
+          return new SoapFault(invalid_session_fault,'Invalid Session','getArtifact');
+       }
+   }
+
+   /**
+    * addArtifact - add an artifact in tracker $tracker_id of the project $group_id with given values
+    *
+    * @param string $sessionKey the session hash associated with the session opened by the person who calls the service
+    * @param int    $group_id   the ID of the group we want to add the artifact
+    * @param int    $tracker_id the ID of the tracker we want to add the artifact
+    * @param array  $value      The fields values of the artifact (array of {SOAPArtifactFieldValue})
+    *
+    * @return int the ID of the new created artifact,
+    *              or a soap fault if :
+    *              - group_id does not match with a valid project,
+    *              - tracker_name does not match with a valid tracker,
+    *              - the user does not have the permissions to submit an artifact
+    *              - the given values are breaking a field dependency rule
+    *              - the artifact creation failed.
+    */
+   public function addArtifact($sessionKey, $group_id, $tracker_id, $value) {
+
+       if (session_continue($sessionKey)) {
+           $user = UserManager::instance()->getCurrentUser();
+           $pm = ProjectManager::instance();
+           try {
+               $project = $pm->getGroupByIdForSoap($group_id, 'addArtifact');
+           } catch (SoapFault $e) {
+               return $e;
+           }
+
+           $tf = TrackerFactory::instance();
+           $tracker = $tf->getTrackerById($tracker_id);
+           if ($tracker == null) {
+               return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'addArtifact');
+           } elseif ($tracker->getGroupId() != $group_id) {
+               return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'addArtifact');
+           }
+
+           $fef = Tracker_FormElementFactory::instance();
+
+           $fields_data = array();
+           foreach ($value as $field_value) {
+               // field are identified by name, we need to retrieve the field id
+               if ($field_value->field_name) {
+
+                   $field = $fef->getUsedFieldByName($tracker_id, $field_value->field_name);
+                   if ($field) {
+
+                       $field_data = $field->getFieldData($field_value->field_value);
+                       if ($field_data != null) {
+                           // $field_value is an object: SOAP must cast it in ArtifactFieldValue
+                           if (isset($fields_data[$field->getId()])) {
+                               if ( ! is_array($fields_data[$field->getId()]) ) {
+                                   $fields_data[$field->getId()] = array($fields_data[$field->getId()]);
+                               }
+                               $fields_data[$field->getId()][] = $field_data;
+                           } else {
+                               $fields_data[$field->getId()] = $field_data;
+                           }
+                       } else {
+                           return new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: '.$field_value->field_name ,'addArtifact');
+                       }
+                   } else {
+                       return new SoapFault(update_artifact_fault, 'Unknown field: '.$field_value->field_name ,'addArtifact');
+                   }
+               }
+           }
+
+           $af = Tracker_ArtifactFactory::instance();
+           if ($artifact = $af->createArtifact($tracker, $fields_data, $user, null)) {
+               return $artifact->getId();
+           } else {
+               if ($GLOBALS['Response']->feedbackHasErrors()) {
+                   return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(),'addArtifact');
+               } else {
+                   return new SoapFault(update_artifact_fault, 'Unknown error','addArtifact');
+               }
+           }
+
+       } else {
+              return new SoapFault(invalid_session_fault,'Invalid Session ','addArtifact');
+       }
+   }
+
+    /**
+     * updateArtifact - update the artifact $artifact_id in tracker $tracker_id of the project $group_id with given values
+     *
+     * @param string $sessionKey  the session hash associated with the session opened by the person who calls the service
+     * @param int    $group_id    the ID of the group we want to update the artifact
+     * @param int    $tracker_id  the ID of the tracker we want to update the artifact
+     * @param int    $artifact_id the ID of the artifact to update
+     * @param array{SOAPArtifactFieldValue} $value the fields value to update
+     * @param string  $comment     the comment associated with the modification, or null if no follow-up comment.
+     * @param string  $comment_format     The comment (follow-up) type ("text" | "html")
+     *
+     * @return int The artifact id if update was fine,
+     *              or a soap fault if :
+     *              - group_id does not match with a valid project,
+     *              - tracker_id does not match with a valid tracker,
+     *              - artifact_id does not match with a valid artifact,
+     *              - the given values are breaking a field dependency rule
+     *              - the artifact modification failed.
+     */
+    public function updateArtifact($sessionKey, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format) {
+        if (session_continue($sessionKey)) {
+            $user = UserManager::instance()->getCurrentUser();
+            $pm = ProjectManager::instance();
+            try {
+                $project = $pm->getGroupByIdForSoap($group_id, 'updateArtifact');
+            } catch (SoapFault $e) {
+                return $e;
+            }
+
+            $tf = TrackerFactory::instance();
+            $tracker = $tf->getTrackerById($tracker_id);
+            if ($tracker == null) {
+                return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'updateArtifact');
+            } elseif ($tracker->getGroupId() != $group_id) {
+                return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'updateArtifact');
+            }
+
+            $af = Tracker_ArtifactFactory::instance();
+            if ($artifact = $af->getArtifactById($artifact_id)) {
+                if ($artifact->getTrackerId() != $tracker_id) {
+                    return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
+                }
+
+                //Check Field Dependencies
+                // TODO : implement it
+                /*require_once('common/tracker/ArtifactRulesManager.class.php');
+                $arm =& new ArtifactRulesManager();
+                if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
+                    return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'updateArtifact');
+                }*/
+
+                $fef = Tracker_FormElementFactory::instance();
+
+                $fields_data = array();
+                foreach ($value as $field_value) {
+                    // field are identified by name, we need to retrieve the field id
+                    if ($field_value->field_name) {
+
+                        $field = $fef->getUsedFieldByName($tracker_id, $field_value->field_name);
+                        if ($field) {
+
+                            $field_data = $field->getFieldData($field_value->field_value);
+                            if ($field_data != null) {
+                                // $field_value is an object: SOAP must cast it in ArtifactFieldValue
+                                if (isset($fields_data[$field->getId()])) {
+                                    if ( ! is_array($fields_data[$field->getId()]) ) {
+                                        $fields_data[$field->getId()] = array($fields_data[$field->getId()]);
+                                    }
+                                    $fields_data[$field->getId()][] = $field_data;
+                                } else {
+                                    $fields_data[$field->getId()] = $field_data;
+                                }
+                            } else {
+                                return new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: '.$field_value->field_name ,'addArtifact');
+                            }
+                        } else {
+                            return new SoapFault(update_artifact_fault, 'Unknown field: '.$field_value->field_name ,'addArtifact');
+                        }
+                    }
+                }
+
+                if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
+                    return $artifact_id;
+                } else {
+                    $response = new Response();
+                    if ($response->feedbackHasErrors()) {
+                        return new SoapFault(update_artifact_fault, $response->getRawFeedback(),'updateArtifact');
+                    } else {
+                        return new SoapFault(update_artifact_fault, 'Unknown error','updateArtifact');
+                    }
+                }
+            } else {
+                return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
+            }
+
+        } else {
+            return new SoapFault(invalid_session_fault,'Invalid Session ','updateArtifact');
+        }
+    }
 }
 
 ?>
