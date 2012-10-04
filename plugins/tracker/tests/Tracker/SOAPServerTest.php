@@ -23,24 +23,32 @@ require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
 
     public function itConvertsFloat() {
+        $session_key = 'zfsdfs65465';
+        $tracker_id = 1235;
+        $field_name = 'float_field';
         $criteria = array(
-            array('name'  => 'float_field',
-                  'value' => '>3.14'),
-            /*array('field_name'  => 'date_field',
-                  'op'          => '',
-                  'from_value'  => '1324654654654',
-                  'to_value'    => '1324654654654'),*/
+            array('name'  => $field_name,
+                  'value' => '>3'),
         );
 
-        $current_user        = mock('User');
-        $tracker             = aMockTracker()->build();
+        $integer_field = anIntegerField()->withId(321)->isUsed()->build();
+
+        $current_user        = stub('User')->isSuperUser()->returns(true);
+        $user_manager        = stub('UserManager')->getCurrentUser($session_key)->returns($current_user);
+        $tracker             = aMockTracker()->withId($tracker_id)->build();
         $permissions_manager = mock('PermissionsManager');
+
         $dao                 = mock('Tracker_ReportDao');
         stub($dao)->searchMatchingIds()->returnsEmptyDar();
-        $soap_report = new Tracker_Report_SOAP($current_user, $tracker, $permissions_manager, $dao);
-        
-        $server = new Tracker_SOAPServer($soap_report);
-        $server->getArtifacts(null, null, null, $criteria, null, null);
+
+        $formelement_factory = mock('Tracker_FormElementFactory');
+        stub($formelement_factory)->getFormElementByName($tracker_id, $field_name)->returns($integer_field);
+
+        $tracker_factory = mock('TrackerFactory');
+        stub($tracker_factory)->getTrackerById($tracker_id)->returns($tracker);
+
+        $server = new Tracker_SOAPServer($user_manager, $tracker_factory, $permissions_manager, $dao, $formelement_factory);
+        $server->getArtifacts($session_key, null, $tracker_id, $criteria, null, null);
     }
 }
 

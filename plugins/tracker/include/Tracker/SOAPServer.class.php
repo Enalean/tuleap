@@ -21,16 +21,50 @@ require_once 'Report/Tracker_Report_SOAP.class.php';
 
 class Tracker_SOAPServer {
     /**
-     * @var Tracker_Report_SOAP
+     * @var UserManager
      */
-    private $report;
+    private $user_manager;
 
-    public function __construct(Tracker_Report_SOAP $report) {
-        $this->report = $report;
+    /**
+     * @var TrackerFactory
+     */
+    private $tracker_factory;
+
+    /**
+     * @var PermissionsManager
+     */
+    private $permissions_manager;
+
+    /**
+     * @var Tracker_FormElementFactory
+     */
+    private $formelement_factory;
+
+    /**
+     * @var Tracker_ReportDao
+     */
+    private $report_dao;
+
+    public function __construct(
+            UserManager $user_manager,
+            TrackerFactory $tracker_factory,
+            PermissionsManager $permissions_manager,
+            Tracker_ReportDao $dao,
+            Tracker_FormElementFactory $formelement_factory) {
+        $this->user_manager        = $user_manager;
+        $this->tracker_factory     = $tracker_factory;
+        $this->permissions_manager = $permissions_manager;
+        $this->report_dao          = $dao;
+        $this->formelement_factory = $formelement_factory;
     }
 
     public function getArtifacts($session_key, $group_id, $tracker_id, $criteria, $offset, $max_rows) {
-       $this->report->getMatchingIds(); 
+        $current_user = $this->user_manager->getCurrentUser($session_key);
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        $report = new Tracker_Report_SOAP($current_user, $tracker, $this->permissions_manager, $this->report_dao, $this->formelement_factory);
+        $report->setSoapCriteria($criteria);
+        $matching = $report->getMatchingIds();
+        return explode(',', $matching['id']);
     }
 }
 

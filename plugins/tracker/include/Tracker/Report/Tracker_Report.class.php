@@ -188,13 +188,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     protected $current_user;
-    private function getCurrentUser() {
+    protected function getCurrentUser() {
         if (!$this->current_user) {
             $this->current_user = UserManager::instance()->getCurrentUser();
         }
         return $this->current_user;
     }
 
+    protected $permissions_manager;
     private function getPermissionsManager() {
         if (!$this->permissions_manager) {
             $this->permissions_manager = PermissionsManager::instance();
