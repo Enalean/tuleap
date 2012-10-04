@@ -37,6 +37,7 @@ class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
         $project_manager     = mock('ProjectManager');
         $tracker             = aMockTracker()->withId($this->tracker_id)->build();
         $permissions_manager = mock('PermissionsManager');
+        $artifact_factory    = mock('Tracker_ArtifactFactory');
 
         $dao                 = mock('Tracker_ReportDao');
         stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForIntegerBiggerThan3()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
@@ -50,7 +51,15 @@ class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
         $tracker_factory = mock('TrackerFactory');
         stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($tracker);
 
-        $this->server = new Tracker_SOAPServer(new SOAP_UserManager($user_manager), $project_manager, $tracker_factory, $permissions_manager, $dao, $formelement_factory);
+        $this->server = new Tracker_SOAPServer(
+            new SOAP_UserManager($user_manager),
+            $project_manager,
+            $tracker_factory,
+            $permissions_manager,
+            $dao,
+            $formelement_factory,
+            $artifact_factory
+        );
     }
 
     private function getFromForIntegerBiggerThan3() {

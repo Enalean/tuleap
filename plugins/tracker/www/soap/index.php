@@ -60,7 +60,8 @@ if ($request->exist('wsdl')) {
         TrackerFactory::instance(),
         PermissionsManager::instance(),
         new Tracker_ReportDao(),
-        Tracker_FormElementFactory::instance()
+        Tracker_FormElementFactory::instance(),
+        Tracker_ArtifactFactory::instance()
     );
     $server->handle();
 }

@@ -50,19 +50,26 @@ class Tracker_SOAPServer {
      */
     private $report_dao;
 
+    /**
+     * @var Tracker_ArtifactFactory
+     */
+    private $artifact_factory;
+
     public function __construct(
             SOAP_UserManager $soap_user_manager,
             ProjectManager $project_manager,
             TrackerFactory $tracker_factory,
             PermissionsManager $permissions_manager,
             Tracker_ReportDao $dao,
-            Tracker_FormElementFactory $formelement_factory) {
+            Tracker_FormElementFactory $formelement_factory,
+            Tracker_ArtifactFactory $artifact_factory) {
         $this->soap_user_manager   = $soap_user_manager;
         $this->project_manager     = $project_manager;
         $this->tracker_factory     = $tracker_factory;
         $this->permissions_manager = $permissions_manager;
         $this->report_dao          = $dao;
         $this->formelement_factory = $formelement_factory;
+        $this->artifact_factory    = $artifact_factory;
     }
 
     public function getArtifacts($session_key, $group_id, $tracker_id, $criteria, $offset, $max_rows) {
@@ -83,7 +90,7 @@ class Tracker_SOAPServer {
      */
     public function getTrackerList($session_key, $group_id) {
         $this->soap_user_manager->continueSession($session_key);
-        $this->getProject($group_id, 'getTrackerList');
+        $this->getProjectById($group_id, 'getTrackerList');
 
         // The function getTrackersByGroupId returns all trackers,
         // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
@@ -102,8 +109,8 @@ class Tracker_SOAPServer {
     */
    public function getTrackerFields($session_key, $group_id, $tracker_id) {
         $this->soap_user_manager->continueSession($session_key);
-        $this->getProject($group_id, 'getTrackerFields');
-        $tracker = $this->getTracker($group_id, $tracker_id, 'getTrackerFields');
+        $this->getProjectById($group_id, 'getTrackerFields');
+        $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerFields');
 
         // The function getTrackerFields returns all tracker fields,
         // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
@@ -123,19 +130,14 @@ class Tracker_SOAPServer {
      */
     function getArtifact($session_key, $group_id, $tracker_id, $artifact_id) {
         $this->soap_user_manager->continueSession($session_key);
-
-        $af = Tracker_ArtifactFactory::instance();
-        $artifact = $af->getArtifactById($artifact_id);
-        if (!$artifact) {
-            return new SoapFault(get_artifact_fault, 'Could Not Get Artifact', 'getArtifact');
-        }
+        $artifact = $this->getArtifactById($artifact_id, 'getArtifact');
 
         $tracker = $artifact->getTracker();
         if (!$tracker) {
             return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
         }
-        $group_id = $tracker->getProject()->getGroupId();
-        $this->getProject($group_id, 'getArtifact');
+        $group_id = $tracker->getProjectById()->getGroupId();
+        $this->getProjectById($group_id, 'getArtifact');
 
         if (!$tracker->userCanView()) {
             return new SoapFault(get_tracker_factory_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
@@ -162,8 +164,8 @@ class Tracker_SOAPServer {
      */
     public function addArtifact($session_key, $group_id, $tracker_id, $value) {
         $user = $this->soap_user_manager->continueSession($session_key);
-        $this->getProject($group_id, 'addArtifact');
-        $tracker = $this->getTracker($group_id, $tracker_id, 'addArtifact');
+        $this->getProjectById($group_id, 'addArtifact');
+        $tracker = $this->getTrackerById($group_id, $tracker_id, 'addArtifact');
 
         $fields_data = array();
         foreach ($value as $field_value) {
@@ -193,8 +195,7 @@ class Tracker_SOAPServer {
             }
         }
 
-        $af = Tracker_ArtifactFactory::instance();
-        if ($artifact = $af->createArtifact($tracker, $fields_data, $user, null)) {
+        if ($artifact = $this->artifact_factory->createArtifact($tracker, $fields_data, $user, null)) {
             return $artifact->getId();
         } else {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
@@ -226,11 +227,10 @@ class Tracker_SOAPServer {
      */
     public function updateArtifact($session_key, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format) {
         $user = $this->soap_user_manager->continueSession($session_key);
-        $this->getProject($group_id, 'updateArtifact');
-        $this->getTracker($group_id, $tracker_id, 'updateArtifact');
+        $this->getProjectById($group_id, 'updateArtifact');
+        $this->getTrackerById($group_id, $tracker_id, 'updateArtifact');
 
-        $af = Tracker_ArtifactFactory::instance();
-        if ($artifact = $af->getArtifactById($artifact_id)) {
+        if ($artifact = $this->getArtifactById($artifact_id, 'updateArtifact')) {
             if ($artifact->getTrackerId() != $tracker_id) {
                 return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
             }
@@ -286,7 +286,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function getProject($group_id, $method_name) {
+    private function getProjectById($group_id, $method_name) {
         $project = $this->project_manager->getGroupByIdForSoap($group_id, $method_name);
         if (!$project->usesService('plugin_tracker')) {
             throw new SoapFault(get_service_fault, 'Tracker service is not used for this project.', $method_name);
@@ -294,7 +294,7 @@ class Tracker_SOAPServer {
         return $project;
     }
 
-    private function getTracker($group_id, $tracker_id, $method_name) {
+    private function getTrackerById($group_id, $tracker_id, $method_name) {
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if ($tracker == null) {
             throw new SoapFault(get_tracker_fault, 'Could not get Tracker.', $method_name);
@@ -303,6 +303,15 @@ class Tracker_SOAPServer {
         }
         return $tracker;
     }
+
+    private function getArtifactById($artifact_id, $method_name) {
+        $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+        if (!$artifact) {
+            throw new SoapFault(get_artifact_fault, 'Could Not Get Artifact', $method_name);
+        }
+        return $artifact;
+    }
+
 }
 
 ?>
