@@ -16,38 +16,19 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
+require_once 'common/soap/SOAP_UserManager.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
-
-class SOAP_UserManager {
-    private $user_manager;
-
-    public function __construct(UserManager $user_manager) {
-        $this->user_manager = $user_manager;
-    }
-
-    /**
-     *
-     * @see session_continue
-     *
-     * @param String $sessionKey
-     *
-     * @return User
-     */
-    public function continueSession($sessionKey) {
-        $user = $this->user_manager->getCurrentUser($sessionKey);
-        if ($user->isLoggedIn()) {
-            return $user;
-        }
-        throw new SoapFault('3001', 'Invalid session');
-    }
-}
 
 class Tracker_SOAPServer {
     /**
      * @var SOAP_UserManager
      */
     private $soap_user_manager;
+
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
     /**
      * @var TrackerFactory
@@ -71,11 +52,13 @@ class Tracker_SOAPServer {
 
     public function __construct(
             SOAP_UserManager $soap_user_manager,
+            ProjectManager $project_manager,
             TrackerFactory $tracker_factory,
             PermissionsManager $permissions_manager,
             Tracker_ReportDao $dao,
             Tracker_FormElementFactory $formelement_factory) {
         $this->soap_user_manager   = $soap_user_manager;
+        $this->project_manager     = $project_manager;
         $this->tracker_factory     = $tracker_factory;
         $this->permissions_manager = $permissions_manager;
         $this->report_dao          = $dao;
@@ -100,16 +83,7 @@ class Tracker_SOAPServer {
      */
     public function getTrackerList($session_key, $group_id) {
         $this->soap_user_manager->continueSession($session_key);
-        $pm = ProjectManager::instance();
-        try {
-            $project = $pm->getGroupByIdForSoap($group_id, 'getTrackerList');
-        } catch (SoapFault $e) {
-            return $e;
-        }
-
-        if (!$project->usesService('plugin_tracker')) {
-            return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerList');
-        }
+        $this->getProject($group_id, 'getTrackerList');
 
         $tf = TrackerFactory::instance();
         if (!$tf) {
@@ -133,17 +107,7 @@ class Tracker_SOAPServer {
     */
    public function getTrackerFields($session_key, $group_id, $tracker_id) {
         $this->soap_user_manager->continueSession($session_key);
-
-        $pm = ProjectManager::instance();
-        try {
-            $project = $pm->getGroupByIdForSoap($group_id, 'getTrackerFields');
-        } catch (SoapFault $e) {
-            return $e;
-        }
-
-        if (!$project->usesService('plugin_tracker')) {
-            return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getTrackerFields');
-        }
+        $this->getProject($group_id, 'getTrackerFields');
 
         $tf = TrackerFactory::instance();
         if (!$tf) {
@@ -190,17 +154,7 @@ class Tracker_SOAPServer {
             return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
         }
         $group_id = $tracker->getProject()->getGroupId();
-
-        $pm = ProjectManager::instance();
-        try {
-            $project = $pm->getGroupByIdForSoap($group_id, 'getArtifact');
-        } catch (SoapFault $e) {
-            return $e;
-        }
-
-        if (!$project->usesService('plugin_tracker')) {
-            return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifact');
-        }
+        $this->getProject($group_id, 'getArtifact');
 
         if (!$tracker->userCanView()) {
             return new SoapFault(get_tracker_factory_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
@@ -227,13 +181,7 @@ class Tracker_SOAPServer {
      */
     public function addArtifact($session_key, $group_id, $tracker_id, $value) {
         $user = $this->soap_user_manager->continueSession($session_key);
-
-        $pm = ProjectManager::instance();
-        try {
-            $project = $pm->getGroupByIdForSoap($group_id, 'addArtifact');
-        } catch (SoapFault $e) {
-            return $e;
-        }
+        $this->getProject($group_id, 'addArtifact');
 
         $tf = TrackerFactory::instance();
         $tracker = $tf->getTrackerById($tracker_id);
@@ -306,13 +254,7 @@ class Tracker_SOAPServer {
      */
     public function updateArtifact($session_key, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format) {
         $user = $this->soap_user_manager->continueSession($session_key);
-
-        $pm = ProjectManager::instance();
-        try {
-            $project = $pm->getGroupByIdForSoap($group_id, 'updateArtifact');
-        } catch (SoapFault $e) {
-            return $e;
-        }
+        $this->getProject($group_id, 'updateArtifact');
 
         $tf = TrackerFactory::instance();
         $tracker = $tf->getTrackerById($tracker_id);
@@ -379,6 +321,14 @@ class Tracker_SOAPServer {
         } else {
             return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
         }
+    }
+
+    private function getProject($group_id, $method_name) {
+        $project = $this->project_manager->getGroupByIdForSoap($group_id, $method_name);
+        if (!$project->usesService('plugin_tracker')) {
+            throw new SoapFault(get_service_fault, 'Tracker service is not used for this project.', $method_name);
+        }
+        return $project;
     }
 }
 
