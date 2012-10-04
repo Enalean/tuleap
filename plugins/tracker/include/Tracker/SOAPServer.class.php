@@ -19,6 +19,32 @@
 require_once 'common/soap/SOAP_UserManager.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
 
+//define fault code constants
+define ('get_group_fault', '3000');
+define ('get_artifact_type_factory_fault', '3002');
+define ('get_artifact_factory_fault', '3003');
+define ('get_artifact_field_factory_fault', '3004');
+define ('get_artifact_type_fault', '3005');
+define ('get_artifact_fault', '3006');
+define ('create_artifact_fault', '3007');
+define ('invalid_field_dependency_fault', '3009');
+define ('update_artifact_fault', '3010');
+define ('get_artifact_file_fault', '3011');
+define ('add_dependency_fault', '3012');
+define ('delete_dependency_fault', '3013');
+define ('create_followup_fault', '3014');
+define ('get_artifact_field_fault', '3015');
+define ('add_cc_fault', '3016');
+define ('invalid_field_fault', '3017');
+define ('delete_cc_fault', '3018');
+define ('get_service_fault', '3020');
+define ('get_artifact_report_fault', '3021');
+define('update_artifact_followup_fault','3022');
+define('delete_artifact_followup_fault','3023');
+
+define('get_tracker_factory_fault','3024');
+define('get_tracker_fault','3025');
+
 class Tracker_SOAPServer {
     /**
      * @var SOAP_UserManager
@@ -390,6 +416,66 @@ class Tracker_SOAPServer {
         } else {
             return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
         }
+    }
+
+    /**
+     * getArtifactHistory - returns the array of ArtifactHistory of the artifact $artifact_id in the tracker $tracker_id of the project $group_id
+     *
+     * @param string $session_key the session hash associated with the session opened by the person who calls the service
+     * @param int $group_id the ID of the group we want to retrieve the history
+     * @param int $tracker_id the ID of the tracker we want to retrieve the history
+     * @param int $artifact_id the ID of the artifact we want to retrieve the history
+     * @return array{SOAPArtifactHistory} the array of the history of the artifact,
+     *              or a soap fault if :
+     *              - group_id does not match with a valid project,
+     *              - tracker_id does not match with a valid tracker
+     *              - artifact_id does not match with a valid artifact
+     */
+    public function getArtifactHistory($session_key, $group_id, $tracker_id, $artifact_id) {
+        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $this->getProjectById($group_id, 'getArtifactHistory');
+        $tracker = $this->getTrackerById($group_id, $tracker_id, 'getArtifactHistory');
+
+        if (! $tracker->userCanView($current_user)) {
+            throw new SoapFault(get_tracker_factory_fault,'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifactFollowups');
+        } else {
+            $artifact = $this->getArtifactById($artifact_id, 'getArtifactHistory');
+            $changesets = $artifact->getChangesets();
+            return $this->history_to_soap($changesets);
+        }
+   }
+
+   private function history_to_soap($changesets) {
+        $return = array();
+        foreach ($changesets as $changeset_id => $changeset) {
+
+            if ($previous_changeset = $changeset->getArtifact()->getPreviousChangeset($changeset->getId())) {
+
+                $changes = array();
+
+                foreach ($changeset->getValues() as $field_id => $current_changeset_value) {
+                    if ($field = $this->formelement_factory->getFieldById($field_id)) {
+                        if ($current_changeset_value->hasChanged()) {
+                            if ($previous_changeset_value = $previous_changeset->getValue($field)) {
+                                if ($diff = $current_changeset_value->diff($previous_changeset_value)) {
+                                    $changes[] = $field->getLabel() . ': ' . $diff;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                $return[] = array(
+                    'artifact_id'     => $changeset->artifact->getId(),
+                    'changeset_id'    => $changeset_id,
+                    'changes'         => $changes,
+                    'modification_by' => $changeset->submitted_by,
+                    'date'            => $changeset->submitted_on,
+                    'comment'         => $changeset->getComment()
+                );
+            }
+        }
+        return $return;
     }
 
     private function getProjectById($group_id, $method_name) {

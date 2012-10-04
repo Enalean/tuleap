@@ -48,7 +48,6 @@ if ($request->exist('wsdl')) {
     $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
     $server->service($HTTP_RAW_POST_DATA);
 } else {
-    require_once TRACKER_BASE_DIR.'/soap.php';
     require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
     $server = new SoapServer($uri.'/?wsdl',
