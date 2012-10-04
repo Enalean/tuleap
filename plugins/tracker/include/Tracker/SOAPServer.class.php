@@ -85,14 +85,9 @@ class Tracker_SOAPServer {
         $this->soap_user_manager->continueSession($session_key);
         $this->getProject($group_id, 'getTrackerList');
 
-        $tf = TrackerFactory::instance();
-        if (!$tf) {
-            return new SoapFault(get_tracker_factory_fault, 'Could Not Get TrackerFactory', 'getTrackerList');
-        }
-
         // The function getTrackersByGroupId returns all trackers,
         // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
-        $trackers = $tf->getTrackersByGroupId($group_id);
+        $trackers = $this->tracker_factory->getTrackersByGroupId($group_id);
         return trackerlist_to_soap($trackers);
     }
 
@@ -109,24 +104,16 @@ class Tracker_SOAPServer {
         $this->soap_user_manager->continueSession($session_key);
         $this->getProject($group_id, 'getTrackerFields');
 
-        $tf = TrackerFactory::instance();
-        if (!$tf) {
-            return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker Factory', 'getTrackerFields');
-        }
-        $tracker = $tf->getTrackerById($tracker_id);
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if ($tracker == null) {
             return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getTrackerFields');
         } elseif ($tracker->getGroupId() != $group_id) {
             return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'getTrackerFields');
         }
 
-        $fef = Tracker_FormElementFactory::instance();
-        if (!$fef) {
-            return new SoapFault(get_tracker_factory_fault, 'Could Not Get Field Factory', 'getTrackerFields');
-        }
         // The function getTrackerFields returns all tracker fields,
         // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
-        $tracker_fields = $fef->getUsedFields($tracker);
+        $tracker_fields = $this->formelement_factory->getUsedFields($tracker);
         return trackerfields_to_soap($tracker, $tracker_fields);
     }
 
@@ -183,22 +170,19 @@ class Tracker_SOAPServer {
         $user = $this->soap_user_manager->continueSession($session_key);
         $this->getProject($group_id, 'addArtifact');
 
-        $tf = TrackerFactory::instance();
-        $tracker = $tf->getTrackerById($tracker_id);
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if ($tracker == null) {
             return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'addArtifact');
         } elseif ($tracker->getGroupId() != $group_id) {
             return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'addArtifact');
         }
 
-        $fef = Tracker_FormElementFactory::instance();
-
         $fields_data = array();
         foreach ($value as $field_value) {
             // field are identified by name, we need to retrieve the field id
             if ($field_value->field_name) {
 
-                $field = $fef->getUsedFieldByName($tracker_id, $field_value->field_name);
+                $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
                 if ($field) {
 
                     $field_data = $field->getFieldData($field_value->field_value);
@@ -256,8 +240,7 @@ class Tracker_SOAPServer {
         $user = $this->soap_user_manager->continueSession($session_key);
         $this->getProject($group_id, 'updateArtifact');
 
-        $tf = TrackerFactory::instance();
-        $tracker = $tf->getTrackerById($tracker_id);
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         if ($tracker == null) {
             return new SoapFault(get_tracker_fault, 'Could not get Tracker.', 'updateArtifact');
         } elseif ($tracker->getGroupId() != $group_id) {
@@ -278,14 +261,12 @@ class Tracker_SOAPServer {
               return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'updateArtifact');
               } */
 
-            $fef = Tracker_FormElementFactory::instance();
-
             $fields_data = array();
             foreach ($value as $field_value) {
                 // field are identified by name, we need to retrieve the field id
                 if ($field_value->field_name) {
 
-                    $field = $fef->getUsedFieldByName($tracker_id, $field_value->field_name);
+                    $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
                     if ($field) {
 
                         $field_data = $field->getFieldData($field_value->field_value);
