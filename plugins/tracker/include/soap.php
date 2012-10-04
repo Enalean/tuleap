@@ -37,47 +37,7 @@ require_once ('Tracker/Artifact/Tracker_Artifact.class.php');
 require_once ('Tracker/Artifact/Tracker_ArtifactFactory.class.php');
 require_once ('Tracker/FormElement/Tracker_FormElementFactory.class.php');
 
-/**
- * trackerlist_to_soap : return the soap ArrayOfTracker structure giving an array of PHP Tracker Object.
- * @access private
- *
- * WARNING : We check the permissions here : only the readable trackers are returned.
- *
- * @param array of Object{Tracker} $tf_arr the array of ArtifactTrackers to convert.
- * @return array the SOAPArrayOfTracker corresponding to the array of Trackers Object
- */
-function trackerlist_to_soap($tf_arr) {
-    $user_id = UserManager::instance()->getCurrentUser()->getId();
-    $return = array();
-    foreach ($tf_arr as $tracker_id => $tracker) {
 
-            // Check if this tracker is active (not deleted)
-            if ( !$tracker->isActive()) {
-                return new SoapFault(get_tracker_fault, 'This tracker is no longer valid.','getTrackerList');
-            }
-
-            // Check if the user can view this tracker
-            if ($tracker->userCanView($user_id)) {
-
-                // get the reports description (light desc of reports)
-                //$report_fact = new ArtifactReportFactory();
-                /*if (!$report_fact || !is_object($report_fact)) {
-                    return new SoapFault(get_artifact_type_fault, 'Could Not Get ArtifactReportFactory', 'getArtifactTrackers');
-                }
-                $reports_desc = artifactreportsdesc_to_soap($report_fact->getReports($at_arr[$i]->data_array['group_artifact_id'], $user_id));*/
-
-                $return[]=array(
-                    'tracker_id'  => $tracker->getId(),
-                    'group_id'    => $tracker->getGroupID(),
-                    'name'        => SimpleSanitizer::unsanitize($tracker->getName()),
-                    'description' => SimpleSanitizer::unsanitize($tracker->getDescription()),
-                    'item_name'   => $tracker->getItemName()
-                    /*'reports_desc' => $reports_desc*/
-                );
-            }
-    }
-    return $return;
-}
 
 
 
