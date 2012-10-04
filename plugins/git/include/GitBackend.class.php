@@ -362,7 +362,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $gitolite[]            = "Gitolite created repositories";
         $gitoliteActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitoliteActive[]      = "Gitolite created repositories (still active)";
-        $dar             = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
+        $dar                   = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
                 $gitShellIndex[] = $row['month']." ".$row['year'];
