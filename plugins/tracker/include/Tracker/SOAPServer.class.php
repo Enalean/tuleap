@@ -149,14 +149,41 @@ class Tracker_SOAPServer {
     *          or a soap fault if tracker_id or group_id does not match with a valid project/tracker.
     */
    public function getTrackerFields($session_key, $group_id, $tracker_id) {
-        $this->soap_user_manager->continueSession($session_key);
+        $current_user = $this->soap_user_manager->continueSession($session_key);
         $this->getProjectById($group_id, 'getTrackerFields');
         $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerFields');
 
         // The function getTrackerFields returns all tracker fields,
         // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
         $tracker_fields = $this->formelement_factory->getUsedFields($tracker);
-        return trackerfields_to_soap($tracker, $tracker_fields);
+        return $this->trackerfields_to_soap($current_user, $tracker, $tracker_fields);
+    }
+
+    /**
+     * trackerfields_to_soap : return the soap ArrayOfTrackerField structure giving an array of PHP Tracker_FormElement_Field Object.
+     * @access private
+     *
+     * WARNING : We check the permissions here : only the readable fields are returned.
+     *
+     * @param Tracker $tracker the tracker
+     * @param array of Object{Field} $tracker_fields the array of TrackerFields to convert.
+     * @return array the SOAPArrayOfTrackerField corresponding to the array of Tracker Fields Object
+     */
+    private function trackerfields_to_soap(User $user, Tracker $tracker, $tracker_fields) {
+        $return = array();
+        foreach ($tracker_fields as $tracker_field) {
+            if ($tracker_field->userCanRead($user)) {
+                $return[] = array(
+                    'tracker_id' => $tracker->getId(),
+                    'field_id'   => $tracker_field->getId(),
+                    'short_name' => $tracker_field->getName(),
+                    'label'      => $tracker_field->getLabel(),
+                    'type'       => $this->formelement_factory->getType($tracker_field),
+                    'values'     => $tracker_field->getSoapAvailableValues(),
+                );
+            }
+        }
+        return $return;
     }
 
     /**

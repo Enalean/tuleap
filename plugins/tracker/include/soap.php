@@ -43,35 +43,7 @@ require_once ('Tracker/FormElement/Tracker_FormElementFactory.class.php');
 
 
 
-/**
- * trackerfields_to_soap : return the soap ArrayOfTrackerField structure giving an array of PHP Tracker_FormElement_Field Object.
- * @access private
- *
- * WARNING : We check the permissions here : only the readable fields are returned.
- *
- * @param Tracker $tracker the tracker
- * @param array of Object{Field} $tracker_fields the array of TrackerFields to convert.
- * @return array the SOAPArrayOfTrackerField corresponding to the array of Tracker Fields Object
- */
-function trackerfields_to_soap($tracker, $tracker_fields) {
-    $user = UserManager::instance()->getCurrentUser();
-    $fef  = Tracker_FormElementFactory::instance();
-    $return = array();
-    foreach ($tracker_fields as $tracker_field) {
-            // Check if the user can read this field
-            if ($tracker_field->userCanRead( $user )) {
-                $return[] = array(
-                    'tracker_id' => $tracker->getId(),
-                    'field_id'   => $tracker_field->getId(),
-                    'short_name' => $tracker_field->getName(),
-                    'label'      => $tracker_field->getLabel(),
-                    'type'       => $fef->getType($tracker_field),
-                    'values'     => $tracker_field->getSoapAvailableValues(),
-                );
-            }
-    }
-    return $return;
-}
+
 
 /**
  * getArtifacts - returns an ArtifactQueryResult that belongs to the project $group_id, to the tracker $group_artifact_id,
