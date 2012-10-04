@@ -125,8 +125,8 @@ class Git_LogDao extends DataAccessObject {
     /**
      * Return the SQL Statement for logs daily pushs
      *
-     * @param Integer $groupId
-     * @param String $logsCond
+     * @param Integer $groupId  Id of the project
+     * @param String  $logsCond Condition
      *
      * @return String
      */
@@ -145,8 +145,8 @@ class Git_LogDao extends DataAccessObject {
     /**
      * Count all Git pushes for the given period
      *
-     * @param String $startDate Period start date
-     * @param String $endDate   Period end date
+     * @param String  $startDate Period start date
+     * @param String  $endDate   Period end date
      * @param Integer $projectId Id of the project we want to retrieve its git stats
      *
      * @return DataAccessResult

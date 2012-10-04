@@ -456,16 +456,20 @@ class GitDao extends DataAccessObject {
     /**
      * Count number of repositories grouped by backend type
      *
-     * @param String  $startDate
-     * @param String  $endDate
-     * @param Integer $projectId
+     * @param String  $startDate   Start date
+     * @param String  $endDate     End date
+     * @param Integer $projectId   Project Id
+     * @param Boolean $stillActive Select only reposirtories that still active
      *
      * @return DataAccessResult
      */
-    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null) {
+    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null, $stillActive = false) {
         $condition = '';
         if ($projectId) {
             $condition = "AND ".self::FK_PROJECT_ID."=".$this->da->escapeInt($projectId);
+        }
+        if ($stillActive) {
+            $condition .= " AND status = 'A' AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00' "
         }
         $query = "SELECT count(repository_id) AS count,
                   YEAR(repository_creation_date) AS year,
@@ -475,8 +479,6 @@ class GitDao extends DataAccessObject {
                   WHERE repository_backend_type = ".$this->da->quoteSmart($backend)."
                     AND repository_creation_date BETWEEN CAST(".$this->da->quoteSmart($startDate)." AS DATETIME) AND CAST(".$this->da->quoteSmart($endDate)." AS DATETIME)
                     ".$condition."
-                    AND status = 'A'
-                    AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
                   GROUP BY year, month
                   ORDER BY year, STR_TO_DATE(month,'%M')";
         return $this->retrieve($query);

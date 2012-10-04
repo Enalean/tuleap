@@ -387,7 +387,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      *
      * @param Statistics_Formatter $formatter instance of statistics formatter class
      *
-     * @return void
+     * @return Void
      */
     private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
@@ -414,6 +414,13 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         }
     }
 
+    /**
+     * Do nothing :)
+     *
+     * @param GitRepository $repository Useless param :p
+     *
+     * @return Void
+     */
     public function commitTransaction(GitRepository $repository) {
         // this action is not necessary for this type of backend
     }
