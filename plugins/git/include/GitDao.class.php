@@ -477,10 +477,11 @@ class GitDao extends DataAccessObject {
                     ".$condition."
                     AND status = 'A'
                     AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
-                  GROUP BY year, month";
+                  GROUP BY year, month
+                  ORDER BY year, STR_TO_DATE(month,'%M')";
         return $this->retrieve($query);
     }
-    
+
     public function isRepositoryExisting($project_id, $path) {
         $project_id = $this->da->escapeInt($project_id);
         $path       = $this->da->quoteSmart($path);

@@ -415,7 +415,7 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     }
 
     public function commitTransaction(GitRepository $repository) {
-        // this action is not necessary for thhis type of backend
+        // this action is not necessary for this type of backend
     }
 }
 
