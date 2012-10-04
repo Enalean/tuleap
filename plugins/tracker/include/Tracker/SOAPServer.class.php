@@ -197,21 +197,59 @@ class Tracker_SOAPServer {
      *          or a soap fault if artifact_id is not a valid artifact
      */
     function getArtifact($session_key, $group_id, $tracker_id, $artifact_id) {
-        $this->soap_user_manager->continueSession($session_key);
-        $artifact = $this->getArtifactById($artifact_id, 'getArtifact');
+        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $artifact     = $this->getArtifactById($artifact_id, 'getArtifact');
 
         $tracker = $artifact->getTracker();
         if (!$tracker) {
-            return new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
+            throw new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
         }
-        $group_id = $tracker->getProjectById()->getGroupId();
+        $group_id = $tracker->getProject()->getGroupId();
         $this->getProjectById($group_id, 'getArtifact');
 
-        if (!$tracker->userCanView()) {
-            return new SoapFault(get_tracker_factory_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
+        if (!$tracker->userCanView($current_user)) {
+            throw new SoapFault(get_tracker_factory_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
         } else {
-            return artifact_to_soap($artifact);
+            return $this->artifact_to_soap($current_user, $artifact);
         }
+    }
+
+    /**
+     * artifact_to_soap : return the soap artifact structure giving a PHP Artifact Object.
+     * @access private
+     *
+     * WARNING : We check the permissions here : only the readable fields are returned.
+     *
+     * @param Object{Artifact} $artifact the artifact to convert.
+     * @return array the SOAPArtifact corresponding to the Artifact Object
+     */
+    private function artifact_to_soap(User $user, Tracker_Artifact $artifact) {
+        $return = array();
+
+        // We check if the user can view this artifact
+        if ($artifact->userCanView($user)) {
+            $last_changeset = $artifact->getLastChangeset();
+
+            $return['artifact_id']      = $artifact->getId();
+            $return['tracker_id']       = $artifact->getTrackerId();
+            $return['submitted_by']     = $artifact->getSubmittedBy();
+            $return['submitted_on']     = $artifact->getSubmittedOn();
+            $return['last_update_date'] = $last_changeset->getSubmittedOn();
+
+            $return['value'] = array();
+            foreach ($last_changeset->getValues() as $field_id => $field_value) {
+                if ($field_value &&
+                        ($field = $this->formelement_factory->getFormElementById($field_id)) &&
+                        ($field->userCanRead($user))) {
+                    $return['value'][] = array(
+                        'field_name' => $field->getName(),
+                        'field_label' => $field->getLabel(),
+                        'field_value' => $field_value->getSoapValue()
+                    );
+                }
+            }
+        }
+        return $return;
     }
 
     /**

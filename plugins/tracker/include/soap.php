@@ -107,44 +107,7 @@ function getArtifacts($sessionKey,$group_id,$tracker_id, $criteria, $offset, $ma
 
 
 
-/**
- * artifact_to_soap : return the soap artifact structure giving a PHP Artifact Object.
- * @access private
- *
- * WARNING : We check the permissions here : only the readable fields are returned.
- *
- * @param Object{Artifact} $artifact the artifact to convert.
- * @return array the SOAPArtifact corresponding to the Artifact Object
- */
-function artifact_to_soap(Tracker_Artifact $artifact) {
-    $return = array();
 
-    // We check if the user can view this artifact
-    if ($artifact->userCanView()) {
-        $ff = Tracker_FormElementFactory::instance();
-        $last_changeset = $artifact->getLastChangeset();
-
-        $return['artifact_id']      = $artifact->getId();
-        $return['tracker_id']       = $artifact->getTrackerId();
-        $return['submitted_by']     = $artifact->getSubmittedBy();
-        $return['submitted_on']     = $artifact->getSubmittedOn();
-        $return['last_update_date'] = $last_changeset->getSubmittedOn();
-
-        $return['value'] = array();
-        foreach ($last_changeset->getValues() as $field_id => $field_value) {
-            if ($field_value &&
-               ($field = $ff->getFormElementById($field_id)) &&
-               ($field->userCanRead())) {
-                $return['value'][] = array(
-                    'field_name'  => $field->getName(),
-                    'field_label' => $field->getLabel(),
-                    'field_value' => $field_value->getSoapValue()
-                );
-            }
-        }
-    }
-    return $return;
-}
 
 function artifacts_to_soap($artifacts) {
     $return = array();
