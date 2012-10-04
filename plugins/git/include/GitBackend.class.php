@@ -354,10 +354,14 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $formatter->clearContent();
         $formatter->addEmptyLine();
         $formatter->addHeader('Git');
-        $gitShellIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitShell[]      = "Git shell";
-        $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitolite[]      = "Gitolite";
+        $gitShellIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShell[]            = "Git shell created repositories";
+        $gitShellActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShellActive[]      = "Git shell created repositories (still active)";
+        $gitoliteIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitolite[]            = "Gitolite created repositories";
+        $gitoliteActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitoliteActive[]      = "Gitolite created repositories (still active)";
         $dar             = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
@@ -366,6 +370,17 @@ class GitBackend extends Backend implements Git_Backend_Interface {
             }
             $formatter->addLine($gitShellIndex);
             $formatter->addLine($gitShell);
+            $formatter->addEmptyLine();
+        }
+        $dar = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId, true);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row) {
+                $gitShellActiveIndex[] = $row['month']." ".$row['year'];
+                $gitShellActive[]      = intval($row['count']);
+            }
+            $formatter->addLine($gitShellActiveIndex);
+            $formatter->addLine($gitShellActive);
+            $formatter->addEmptyLine();
         }
         $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
         if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
@@ -375,6 +390,17 @@ class GitBackend extends Backend implements Git_Backend_Interface {
             }
             $formatter->addLine($gitoliteIndex);
             $formatter->addLine($gitolite);
+            $formatter->addEmptyLine();
+        }
+        $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId, true);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row) {
+                $gitoliteActiveIndex[] = $row['month']." ".$row['year'];
+                $gitoliteActive[]      = intval($row['count']);
+            }
+            $formatter->addLine($gitoliteActiveIndex);
+            $formatter->addLine($gitoliteActive);
+            $formatter->addEmptyLine();
         }
         $this->retrieveLoggedPushesStatistics($formatter);
         $content = $formatter->getCsvContent();
