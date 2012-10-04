@@ -469,7 +469,7 @@ class GitDao extends DataAccessObject {
             $condition = "AND ".self::FK_PROJECT_ID."=".$this->da->escapeInt($projectId);
         }
         if ($stillActive) {
-            $condition .= " AND status = 'A' AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00' "
+            $condition .= " AND status = 'A' AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00' ";
         }
         $query = "SELECT count(repository_id) AS count,
                   YEAR(repository_creation_date) AS year,
