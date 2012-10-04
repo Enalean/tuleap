@@ -172,15 +172,51 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
+    'CriteriaValueDate',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'op'      => array('type' => 'xsd:string'),
+        'to_date' => array('type' => 'xsd:int'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'CriteriaValueDateAdvanced',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'from_date' => array('type' => 'xsd:int'),
+        'to_date'   => array('type' => 'xsd:int'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'CriteriaValue',
+    'complexType',
+    'struct',
+    'choice',
+    '',
+    array(
+        'value'        => array('type' => 'xsd:string'),
+        'date'         => array('type' => 'tns:CriteriaValueDate'),
+        'dateAdvanced' => array('type' => 'tns:CriteriaValueDateAdvanced'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
     'Criteria',
     'complexType',
     'struct',
     'sequence',
     '',
     array(
-        'field_name' => array('name'=>'field_name', 'type' => 'xsd:string'),
-        'field_value' => array('name'=>'field_value', 'type' => 'xsd:string'),
-        'operator' => array('name'=>'operator', 'type' => 'xsd:string')
+        'field_name' => array('type' => 'xsd:string'),
+        'value'      => array('type' => 'tns:CriteriaValue'),
     )
 );
 
@@ -261,32 +297,32 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:ArtifactFile'
 );
 
-$GLOBALS['server']->wsdl->addComplexType(
-    'ArtifactHistory',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(                  
-        'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),    
-        'changeset_id' => array('name'=>'changeset_id', 'type' => 'xsd:int'),
-        'changes' => array('name'=>'changes', 'type' => 'tns:ArrayOfString'),
-        'modification_by' => array('name'=>'modification_by', 'type' => 'xsd:string'),
-        'date' => array('name'=>'date', 'type' => 'xsd:int'),
-        'comment' => array('name'=>'comment', 'type' => 'tns:ArtifactFollowup')
-    )
-);
-
-$GLOBALS['server']->wsdl->addComplexType(
-    'ArrayOfArtifactHistory',
-    'complexType',
-    'array',
-    '',
-    'SOAP-ENC:Array',
-    array(),
-    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactHistory[]')),
-    'tns:ArtifactHistory'
-);
+//$GLOBALS['server']->wsdl->addComplexType(
+//    'ArtifactHistory',
+//    'complexType',
+//    'struct',
+//    'sequence',
+//    '',
+//    array(                  
+//        'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),    
+//        'changeset_id' => array('name'=>'changeset_id', 'type' => 'xsd:int'),
+//        'changes' => array('name'=>'changes', 'type' => 'tns:ArrayOfString'),
+//        'modification_by' => array('name'=>'modification_by', 'type' => 'xsd:string'),
+//        'date' => array('name'=>'date', 'type' => 'xsd:int'),
+//        'comment' => array('name'=>'comment', 'type' => 'tns:ArtifactFollowup')
+//    )
+//);
+//
+//$GLOBALS['server']->wsdl->addComplexType(
+//    'ArrayOfArtifactHistory',
+//    'complexType',
+//    'array',
+//    '',
+//    'SOAP-ENC:Array',
+//    array(),
+//    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactHistory[]')),
+//    'tns:ArtifactHistory'
+//);
 
 $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfInt',
@@ -678,6 +714,7 @@ function trackerfields_to_soap($tracker, $tracker_fields) {
  *          or a soap fault if group_id does not match with a valid project, or if group_artifact_id does not match with a valid tracker.
  */
 function getArtifacts($sessionKey,$group_id,$tracker_id, $criteria, $offset, $max_rows) {
+    trigger_error(var_export($criteria, 1), E_USER_NOTICE);
     if (session_continue($sessionKey)) {
         $pm = ProjectManager::instance();
         try {
@@ -685,7 +722,6 @@ function getArtifacts($sessionKey,$group_id,$tracker_id, $criteria, $offset, $ma
         } catch (SoapFault $e) {
             return $e;
         }
-
         if (!$project->usesService('plugin_tracker')) {
             return new SoapFault(get_service_fault, 'Tracker service is not used for this project.', 'getArtifacts');
         }
