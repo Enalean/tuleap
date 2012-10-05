@@ -874,7 +874,7 @@ class GitRepository implements DVCSRepository {
     }
     
     public function isMigratableToGerrit() {
-        throw new ErrorException(' not implemented');
+        return $this->getBackendType() == GitDao::BACKEND_GITOLITE;
     }
 }
 

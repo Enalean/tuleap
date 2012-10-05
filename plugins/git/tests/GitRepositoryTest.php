@@ -34,7 +34,7 @@ Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('DataAccessResult');
 
-class GitRepositoryTest extends UnitTestCase {
+class GitRepositoryTest extends TuleapTestCase {
 
     public function setUp() {
         $link =dirname(__FILE__).'/_fixtures/tmp/perms';
@@ -319,6 +319,24 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
         
         $this->assertFalse($repo->belongsTo($user));
+    }
+    
+    public function itIsMigratableIfItIsAGitoliteRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $this->assertTrue($repo->isMigratableToGerrit());
+    }
+    
+    public function itIsNotMigratableIfItIsAGitshellRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITSHELL);
+        $this->assertFalse($repo->isMigratableToGerrit());
+    }
+    
+    public function itIsNotMigratableIfAlreadyAGerritRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITSHELL);
+        $this->assertFalse($repo->isMigratableToGerrit());
     }
 }
 
