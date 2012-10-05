@@ -190,6 +190,15 @@ CREATE TABLE tracker_field_list_bind_static(
     is_rank_alpha TINYINT(1) NOT NULL
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_field_list_bind_ugroups_value;
+CREATE TABLE tracker_field_list_bind_ugroups_value(
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    field_id INT(11) NOT NULL,
+    ugroup_id INT(11) NOT NULL,
+    is_hidden TINYINT(1) NOT NULL DEFAULT '0',
+    UNIQUE KEY idx(field_id, ugroup_id)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_field_list_bind_defaultvalue;
 CREATE TABLE tracker_field_list_bind_defaultvalue(
     field_id INT(11) NOT NULL,

@@ -145,8 +145,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getFieldData($soap_value, $is_multiple) {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $soap_values = explode(",", $soap_value);
             $return = array();
+            $soap_values = explode(",", $soap_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getLabel(), $soap_values)) {
                     $return[] = $id;

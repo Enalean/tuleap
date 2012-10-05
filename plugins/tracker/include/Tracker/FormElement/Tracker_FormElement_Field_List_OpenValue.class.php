@@ -25,7 +25,7 @@ class Tracker_FormElement_Field_List_OpenValue extends Tracker_FormElement_Field
     protected $label;
     
     public function __construct($id, $label) {
-        parent::__construct($id);
+        parent::__construct($id, false);
         $this->label = $label;
     }
     

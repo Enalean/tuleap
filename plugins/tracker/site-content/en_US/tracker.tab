@@ -1069,6 +1069,7 @@ plugin_tracker_formelement_admin	open_list_description	Provides a textbox contai
 plugin_tracker_formelement_admin	values	Values
 plugin_tracker_formelement_admin	choose_values	Choose values
 plugin_tracker_formelement_admin	bind_to_users	Bind to users
+plugin_tracker_formelement_admin	bind_to_ugroups	Bind to user groups
 plugin_tracker_formelement_admin	alphabetically_sort	alphabetically sort values
 plugin_tracker_formelement_admin	add_row	Add one value per row
 plugin_tracker_formelement_admin	type_search_term	Type in a search term

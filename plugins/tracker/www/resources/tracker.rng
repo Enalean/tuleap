@@ -331,6 +331,9 @@
         <attribute name="type">
           <value>users</value>
         </attribute>
+        <attribute name="type">
+          <value>ugroups</value>
+        </attribute>
       </choice>
       <optional>
         <element name="items">

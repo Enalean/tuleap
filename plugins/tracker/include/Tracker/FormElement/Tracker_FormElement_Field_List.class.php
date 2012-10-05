@@ -28,7 +28,7 @@ require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_List_Valu
 require_once(dirname(__FILE__).'/../../workflow/TransitionFactory.class.php');
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
-    
+
     protected $bind;
     /**
      * @return Tracker_FormElement_Field_List_Bind
