@@ -203,16 +203,7 @@ class FileModuleMonitorFactory {
                 if ($user) {
                     $publicly = true;
                     if ($this->isMonitoring($fileModuleId, $user, $publicly)) {
-                        $onlyPublic = true;
-                        $result = $this->stopMonitor($fileModuleId, $user, $onlyPublic);
-                        if ($result) {
-                            $historyDao = new ProjectHistoryDao();
-                            $historyDao->groupAddHistory("frs_stop_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
-                            $this->notifyAfterDelete($package, $user);
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
-                        } else {
-                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_error', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
-                        }
+                        $this->stopMonitoringForUser($fileModuleId, $user, $groupId, $package, $userHelper);
                     } else {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'not_monitoring', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
                     }
@@ -220,6 +211,28 @@ class FileModuleMonitorFactory {
             }
         } else {
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_delete'));
+        }
+    }
+
+    /**
+     * Stop only the public package monitoring for a given user
+     *
+     * @param Integer    $fileModuleId Id of the package
+     * @param User       $user         User we want to stop its monitoring
+     * @param Integer    $groupId      Id of the project
+     * @param FRSPackage $package      Package
+     * @param UserHelper $userHelper   User helper
+     *
+     * @return Void
+     */
+    private function stopMonitoringForUser($fileModuleId, $user, $groupId, FRSPackage $package, UserHelper $userHelper) {
+        if ($this->stopMonitor($fileModuleId, $user, true)) {
+            $historyDao = new ProjectHistoryDao();
+            $historyDao->groupAddHistory("frs_stop_monitor_package", $fileModuleId."_".$user->getId(), $groupId);
+            $this->notifyAfterDelete($package, $user);
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'deleted', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'delete_error', array($userHelper->getDisplayName($user->getName(), $user->getRealName()))));
         }
     }
 
@@ -453,7 +466,7 @@ class FileModuleMonitorFactory {
      *
      * @return Boolean
      */
-    public function stopMonitorActionListener($currentUser, $fileModuleId) {
+    private function stopMonitorActionListener($currentUser, $fileModuleId) {
         if ($this->isMonitoring($fileModuleId, $currentUser, false)) {
             $result = $this->stopMonitor($fileModuleId, $currentUser);
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitor_turned_off'));
@@ -474,7 +487,7 @@ class FileModuleMonitorFactory {
      *
      * @return Boolean
      */
-    public function anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId) {
+    private function anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId) {
         $performAction = false;
         if ($anonymous && (!$this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
             $performAction = true;
