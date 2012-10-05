@@ -84,21 +84,23 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
 
 class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
 
+    public function itRaisesASoapFaultIfTheTrackerIsNotReadableByTheUser() {
+        $this->expectException('SoapFault');
+        $this->server->getArtifacts($this->session_key, null, $this->unreadable_tracker_id, array(), null, null);
+    }
+
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheQuery() {
         $criteria = array(
             array(
                 'name'  => $this->int_field_name,
-                'value' => '>3'
+                'value' => (
+                    array('value' => '>3')
+                )
             ),
         );
 
         $artifacts_id = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
         $this->assertEqual($artifacts_id, array(42, 66, 9001));
-    }
-
-    public function itRaisesASoapFaultIfTheTrackerIsNotReadableByTheUser() {
-        $this->expectException('SoapFault');
-        $this->server->getArtifacts($this->session_key, null, $this->unreadable_tracker_id, array(), null, null);
     }
 }
 

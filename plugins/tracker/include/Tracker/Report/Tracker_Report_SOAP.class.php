@@ -39,7 +39,7 @@ class Tracker_Report_SOAP extends Tracker_Report {
             $is_advanced = isset($value['is_advanced']) ? $value['is_advanced'] : 0 ;
             if ($formelement = $this->formelement_factory->getFormElementByName($this->getTracker()->getId(), $value['name'])) {
                 if ($formelement->userCanRead($this->current_user)) {
-                    $formelement->setCriteriaValue( !empty($value['value']) ? $value['value']: '' ) ;
+                    $formelement->setCriteriaValueFromSOAP($value['value']);
                     $this->criteria[$formelement->getId()] = new Tracker_Report_Criteria(
                             0,
                             $this,
