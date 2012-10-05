@@ -872,6 +872,10 @@ class GitRepository implements DVCSRepository {
     public function belongsTo(User $user) {
         return $this->getScope() == self::REPO_SCOPE_INDIVIDUAL && $this->getCreatorId() == $user->getId();
     }
+    
+    public function isMigratableToGerrit() {
+        throw new ErrorException(' not implemented');
+    }
 }
 
 ?>

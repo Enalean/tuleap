@@ -23,6 +23,7 @@ require_once('events/SystemEvent_GIT_REPO_CREATE.class.php');
 require_once('events/SystemEvent_GIT_REPO_CLONE.class.php');
 require_once('events/SystemEvent_GIT_REPO_DELETE.class.php');
 require_once('events/SystemEvent_GIT_REPO_ACCESS.class.php');
+require_once('events/SystemEvent_GIT_GERRIT_MIGRATION.class.php');
 require_once('common/system_event/SystemEventManager.class.php');
 require_once('GitBackend.class.php');
 require_once('GitRepository.class.php');
@@ -516,6 +517,13 @@ class GitActions extends PluginActions {
         }
     }
     
+    public function migrateToGerrit(GitRepository $repository) {
+        if ($repository->isMigratableToGerrit()) {
+            $this->systemEventManager->createEvent(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, $repository->getId(), SystemEvent::PRIORITY_HIGH);
+            
+        }
+    }
+    
     private function redirectToRepo($projectId, $repoId) {
         $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
     }
@@ -523,6 +531,8 @@ class GitActions extends PluginActions {
     private function addError($error_key) {
         $this->getController()->addError($this->getText($error_key));
     }
+    
+    
 }
 
 ?>

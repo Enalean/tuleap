@@ -598,10 +598,22 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         $this->actions = new GitActions(mock('Git'), $this->em, mock('GitRepositoryFactory'), $this->manager);
     }
     
-    public function itDoesNothingIfTheRepoDoesNotExist() {
-        $this->actions->migrateToGerrit($repo_id);
+    //not if already gerrit
+    //not if gitshell
+    //happy path
+    public function itDoesNothingWhenItIsntMigratable() {
+        $repo = stub('GitRepository')->isMigratableToGerrit()->returns(false);
         $this->em->expectNever('createEvent');
-//        $this->
+        $this->actions->migrateToGerrit($repo);
     }
+
+    public function itCreatesASystemEvent() {
+        $repo = stub('GitRepository')->isMigratableToGerrit()->returns(true);
+        stub($repo)->getId()->returns(456);
+        $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, 456, SystemEvent::PRIORITY_HIGH));
+        $this->actions->migrateToGerrit($repo);
+    }
+    
+    
 }
 ?>
