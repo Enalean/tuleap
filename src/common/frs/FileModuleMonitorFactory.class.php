@@ -433,23 +433,7 @@ class FileModuleMonitorFactory {
                     case 'public_monitoring' :
                         $anonymous = false;
                     case 'anonymous_monitoring' :
-                        if ($anonymous && (!$this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
-                            $performAction = true;
-                        } elseif (!$anonymous && !$this->isMonitoring($fileModuleId, $currentUser, !$anonymous)) {
-                            $performAction = true;
-                            $historyDao->groupAddHistory("frs_self_add_monitor_package", $fileModuleId, $groupId);
-                        }
-                        if ($performAction) {
-                            $this->stopMonitor($fileModuleId, $currentUser);
-                            $result = $this->setMonitor($fileModuleId, $currentUser, $anonymous);
-                            if (!$result) {
-                                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
-                            } else {
-                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'p_monitored'));
-                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'now_emails'));
-                                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
-                            }
-                        }
+                        $performAction = $this->anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId);
                         break;
                     default :
                         break;
@@ -464,8 +448,8 @@ class FileModuleMonitorFactory {
     /**
      * Listening to stop self monitoring action
      *
-     * @param User        $currentUser  Current user
-     * @param Integer     $fileModuleId Id of the package
+     * @param User    $currentUser  Current user
+     * @param Integer $fileModuleId Id of the package
      *
      * @return Boolean
      */
@@ -477,8 +461,40 @@ class FileModuleMonitorFactory {
             return true;
         } else {
             return false;
+        }
     }
-}
+
+    /**
+     * Listening to anonymous monitoring action
+     *
+     * @param User    $currentUser  Current user
+     * @param Integer $fileModuleId Id of the package
+     * @param Boolean $anonymous    Anonymous monitoring flag
+     * @param Integer $groupId      Id of the project
+     *
+     * @return Boolean
+     */
+    public function anonymousMonitoringActionListener($currentUser, $fileModuleId, $anonymous, $groupId) {
+        $performAction = false;
+        if ($anonymous && (!$this->isMonitoring($fileModuleId, $currentUser, false) || $this->isMonitoring($fileModuleId, $currentUser, $anonymous))) {
+            $performAction = true;
+        } elseif (!$anonymous && !$this->isMonitoring($fileModuleId, $currentUser, !$anonymous)) {
+            $performAction = true;
+            $historyDao->groupAddHistory("frs_self_add_monitor_package", $fileModuleId, $groupId);
+        }
+        if ($performAction) {
+            $this->stopMonitor($fileModuleId, $currentUser);
+            $result = $this->setMonitor($fileModuleId, $currentUser, $anonymous);
+            if (!$result) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('file_filemodule_monitor', 'insert_err'));
+            } else {
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'p_monitored'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'now_emails'));
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
+            }
+        }
+        return $performAction;
+    }
 
     /**
      * Process the monitoring request
