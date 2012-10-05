@@ -19,36 +19,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$host       = 'http://crampons.cro.enalean.com';
-$user       = 'admin';
-$pass       = 'secret';
+$host       = 'http://shunt.cro.enalean.com';
+$user       = 'manuel';
+$pass       = '';
 $project_id = 0; //not needed
-$tracker_id = 270;
+$tracker_id = 276;
 $offset     = 0;
-$limit      = 10;
+$limit      = 100;
 $criteria = array(
+//    array(
+//        'field_name' => 'description',
+//        'value' => array('value' => '/^(Choose|Integrate)/')
+//    ),
+//    array(
+//        'field_name' => 'submitted_on',
+//        'value' => array(
+//            'date' => array('op' => '>', 'to_date' => mktime(0,0,0,10,1,2012))
+//        )
+//    ),
+//    array(
+//        'field_name' => 'submitted_on',
+//        'value' => array(
+//            'dateAdvanced' => array(
+//                'from_date' => mktime(0, 0, 0, 8, 14, 2012),
+//                'to_date'   => mktime(0, 0, 0, 8, 20, 2012)
+//            )
+//        )
+//    ),
     array(
-        'field_name' => 'details',
-        'value' => array('value' => '/^(Update|My Monitor)/')
-    ),
-    //array(
-    //    'field_name' => 'close_date',
-    //    'value' => array(
-    //        'date' => array('op' => '>', 'to_date' => 1349827200)
-    //    )
-    //),
-    //array(
-    //    'field_name' => 'close_date',
-    //    'value' => array(
-    //        'dateAdvanced' => array(
-    //            'from_date' => '1349827200',
-    //            'to_date'   => 1350432000
-    //        )
-    //    )
-    //),
-    array(
-        'field_name' => 'assigned_to',
-        'value' => array('value' => '106')
+        'field_name' => 'status',
+        'value' => array('value' => '4746')
     )
 );
 
@@ -74,13 +74,27 @@ try {
         $offset,
         $limit
     );
-
     var_dump($response);
+    
+    echo "total_artifacts_number: ".$response->total_artifacts_number."\n";
+    foreach ($response->artifacts as $artifact) {
+        $message = "#".$artifact->artifact_id;
+        foreach ($artifact->value as $value) {
+            if ((string)$value->field_name == "description") {
+                $message .= " ".(string)$value->field_value;
+            }
+            if ((string)$value->field_name == "remaining_effort" && (string)$value->field_value) {
+                $message .= " (".(string)$value->field_label.": ".(string)$value->field_value.")";
+            }
+        }
+        echo $message."\n";
+    }
+    
 } catch(Exception $e) {
     echo $e->getMessage();
     echo "\n";
     echo $client_tracker->__getLastResponse();
     echo "\n";
 }
-echo "\n";
+
 ?>

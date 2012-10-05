@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,10 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// format : project_id  tracker_id  artifact_id value [comment]
 
 if ($argc < 1) {
-    die('Usage: ".$argv[0]." artifact_id'.PHP_EOL);
+    die('Usage: ".$argv[0]." project_id tracker_id'.PHP_EOL);
 }
 
 $serverURL = 'http://shunt.cro.enalean.com';
@@ -32,13 +30,14 @@ $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL
 $requesterSessionHash = $soapLogin->login('manuel','')->session_hash;
 
 //save values
-$artifact_id = $argv[1];
+$project_id = $argv[1];
+$tracker_id = $argv[2];
 
 // Connecting to the soap's tracker client
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
 
-$response = $soapTracker->getArtifact($requesterSessionHash, '', '', $artifact_id);
+$response = $soapTracker->getTrackerFields($requesterSessionHash, $project_id, $tracker_id);
 
 
 var_dump($response);
