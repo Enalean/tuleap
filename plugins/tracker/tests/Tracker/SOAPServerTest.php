@@ -27,6 +27,7 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     protected $unreadable_tracker_id = 5321;
     protected $int_field_name        = 'int_field';
     protected $date_field_name       = 'date_field';
+    protected $list_field_name       = 'list_field';
     protected $expected_artifact_42  = array(
         'artifact_id'       => 42,
         'tracker_id'        => 1235,
@@ -96,9 +97,14 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function setUpFields(Tracker_FormElementFactory $formelement_factory) {
+        $list_field    = aSelectboxField()->withId(323)->isUsed()->build();
         $date_field    = aDateField()->withId(322)->isUsed()->build();
         $integer_field = anIntegerField()->withId(321)->isUsed()->build();
 
+        $static_bind = aBindStatic()->withField($list_field)->build();
+        $list_field->setBind($static_bind);
+
+        stub($formelement_factory)->getFormElementByName($this->tracker_id, $this->list_field_name)->returns($list_field);
         stub($formelement_factory)->getFormElementByName($this->tracker_id, $this->date_field_name)->returns($date_field);
         stub($formelement_factory)->getFormElementByName($this->tracker_id, $this->int_field_name)->returns($integer_field);
     }
@@ -121,6 +127,12 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         );
         stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForDateFieldAdvanced()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '42,9001', 'last_changeset_id' => '421,90011')
+        );
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForListField()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+            array('id' => '42', 'last_changeset_id' => '421')
+        );
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForListFieldAdvanced()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+            array('id' => '42,66', 'last_changeset_id' => '421,661')
         );
         stub($dao)->searchMatchingIds()->returnsDar(
             array('id' => null, 'last_changeset_id' => null)
@@ -158,6 +170,24 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
                          ) ';
     }
 
+    private function getFromForListField() {
+        // Todo: find a way to not have to copy past this sql fragment
+        return ' INNER JOIN tracker_changeset_value AS A_323 ON (A_323.changeset_id = c.id AND A_323.field_id IN (323))
+                     INNER JOIN tracker_changeset_value_list AS C_323 ON (
+                        C_323.changeset_value_id = A_323.id
+                        AND C_323.bindvalue_id IN(106)
+                     ) ';
+    }
+
+    private function getFromForListFieldAdvanced() {
+        // Todo: find a way to not have to copy past this sql fragment
+        return ' INNER JOIN tracker_changeset_value AS A_323 ON (A_323.changeset_id = c.id AND A_323.field_id IN (323))
+                     INNER JOIN tracker_changeset_value_list AS C_323 ON (
+                        C_323.changeset_value_id = A_323.id
+                        AND C_323.bindvalue_id IN(106,107)
+                     ) ';
+    }
+
     protected function convertCriteriaToSoapParameter($criteria) {
         //SOAP send objects, not associative array.
         //Use json as a trick to convert to objects the criteria
@@ -188,7 +218,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
         ));
     }
 
-    public function itReturnsTheIdsOfTheArtifactsThatMatchTheQueryForAnIntegerField() {
+    public function itReturnsTheArtifactsThatMatchTheQueryForAnIntegerField() {
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->int_field_name,
@@ -207,7 +237,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
         ));
     }
 
-    public function itReturnsTheIdsOfTheArtifactsThatMatchTheQueryForADateField() {
+    public function itReturnsTheArtifactsThatMatchTheQueryForADateField() {
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->date_field_name,
@@ -226,7 +256,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
         ));
     }
 
-    public function itReturnsTheIdsOfTheArtifactsThatMatchTheAdvancedQueryForADateField() {
+    public function itReturnsTheArtifactsThatMatchTheAdvancedQueryForADateField() {
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->date_field_name,
@@ -242,6 +272,41 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             'artifacts' => array(
                 $this->expected_artifact_42,
                 $this->expected_artifact_9001,
+            )
+        ));
+    }
+
+    public function itReturnsTheArtifactsThatMatchTheQueryForAListField() {
+        $criteria = $this->convertCriteriaToSoapParameter(array(
+            array(
+                'field_name' => $this->list_field_name,
+                'value'      => array('value' => '106')
+            ),
+        ));
+
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $this->assertEqual($results, array(
+            'total_artifacts_number' => 1,
+            'artifacts' => array(
+                $this->expected_artifact_42,
+            )
+        ));
+    }
+
+    public function itReturnsTheArtifactsThatMatchTheAdvancedQueryForAListField() {
+        $criteria = $this->convertCriteriaToSoapParameter(array(
+            array(
+                'field_name' => $this->list_field_name,
+                'value'      => array('value' => '106,107')
+            ),
+        ));
+
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $this->assertEqual($results, array(
+            'total_artifacts_number' => 2,
+            'artifacts' => array(
+                $this->expected_artifact_42,
+                $this->expected_artifact_66,
             )
         ));
     }

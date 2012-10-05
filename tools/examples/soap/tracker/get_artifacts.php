@@ -37,14 +37,18 @@ $criteria = array(
     //        'date' => array('op' => '>', 'to_date' => 1349827200)
     //    )
     //),
+    //array(
+    //    'field_name' => 'close_date',
+    //    'value' => array(
+    //        'dateAdvanced' => array(
+    //            'from_date' => '1349827200',
+    //            'to_date'   => 1350432000
+    //        )
+    //    )
+    //),
     array(
-        'field_name' => 'close_date',
-        'value' => array(
-            'dateAdvanced' => array(
-                'from_date' => '1349827200',
-                'to_date'   => 1350432000
-            )
-        )
+        'field_name' => 'assigned_to',
+        'value' => array('value' => '106')
     )
 );
 
