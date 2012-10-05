@@ -101,6 +101,8 @@ class Tracker_SOAPServer {
     public function getArtifacts($session_key, $group_id, $tracker_id, $criteria, $offset, $max_rows) {
         $current_user = $this->soap_user_manager->continueSession($session_key);
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        $this->checkUserCanViewTracker($tracker, $current_user);
+
         $report = new Tracker_Report_SOAP($current_user, $tracker, $this->permissions_manager, $this->report_dao, $this->formelement_factory);
         $report->setSoapCriteria($criteria);
         $matching = $report->getMatchingIds();
@@ -166,15 +168,15 @@ class Tracker_SOAPServer {
     }
 
     /**
-    * getTrackerFields - returns an array of TrackerFields used in the tracker tracker_id of the project identified by group_id
-    *
-    * @param string $session_key the session hash associated with the session opened by the person who calls the service
-    * @param int $group_id the ID of the project
-    * @param int $tracker_id the ID of the Tracker
-    * @return array the array of SOAPTrackerFields used in the tracker $tracker_id in the project identified by $group_id,
-    *          or a soap fault if tracker_id or group_id does not match with a valid project/tracker.
-    */
-   public function getTrackerFields($session_key, $group_id, $tracker_id) {
+     * getTrackerFields - returns an array of TrackerFields used in the tracker tracker_id of the project identified by group_id
+     *
+     * @param string $session_key the session hash associated with the session opened by the person who calls the service
+     * @param int $group_id the ID of the project
+     * @param int $tracker_id the ID of the Tracker
+     * @return array the array of SOAPTrackerFields used in the tracker $tracker_id in the project identified by $group_id,
+     *          or a soap fault if tracker_id or group_id does not match with a valid project/tracker.
+     */
+    public function getTrackerFields($session_key, $group_id, $tracker_id) {
         $current_user = $this->soap_user_manager->continueSession($session_key);
         $this->getProjectById($group_id, 'getTrackerFields');
         $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerFields');
@@ -222,7 +224,7 @@ class Tracker_SOAPServer {
      * @return array the SOAPArtifact identified by ID $artifact_id,
      *          or a soap fault if artifact_id is not a valid artifact
      */
-    function getArtifact($session_key, $group_id, $tracker_id, $artifact_id) {
+    public function getArtifact($session_key, $group_id, $tracker_id, $artifact_id) {
         $current_user = $this->soap_user_manager->continueSession($session_key);
         $artifact     = $this->getArtifactById($artifact_id, 'getArtifact');
 
@@ -233,10 +235,16 @@ class Tracker_SOAPServer {
         $group_id = $tracker->getProject()->getGroupId();
         $this->getProjectById($group_id, 'getArtifact');
 
-        if (!$tracker->userCanView($current_user)) {
+        $this->checkUserCanViewTracker($tracker, $current_user);
+        return $this->artifact_to_soap($current_user, $artifact);
+    }
+
+    /**
+     * @throws SoapFault if user can't view the tracker
+     */
+    private function checkUserCanViewTracker(Tracker $tracker, User $user) {
+        if (!$tracker->userCanView($user)) {
             throw new SoapFault(get_tracker_factory_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
-        } else {
-            return $this->artifact_to_soap($current_user, $artifact);
         }
     }
 
@@ -336,7 +344,7 @@ class Tracker_SOAPServer {
                 return new SoapFault(update_artifact_fault, 'Unknown error', 'addArtifact');
             }
         }
-   }
+    }
 
     /**
      * updateArtifact - update the artifact $artifact_id in tracker $tracker_id of the project $group_id with given values
@@ -443,9 +451,9 @@ class Tracker_SOAPServer {
             $changesets = $artifact->getChangesets();
             return $this->history_to_soap($changesets);
         }
-   }
+    }
 
-   private function history_to_soap($changesets) {
+    private function history_to_soap($changesets) {
         $return = array();
         foreach ($changesets as $changeset_id => $changeset) {
 

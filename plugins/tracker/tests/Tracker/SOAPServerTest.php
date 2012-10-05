@@ -20,13 +20,15 @@
 require_once(dirname(__FILE__).'/../builders/all.php');
 require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
-class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
+class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
+
+    protected $session_key           = 'zfsdfs65465';
+    protected $tracker_id            = 1235;
+    protected $unreadable_tracker_id = 5321;
+    protected $int_field_name        = 'int_field';
 
     public function setUp() {
         parent::setUp();
-        $this->session_key    = 'zfsdfs65465';
-        $this->tracker_id     = 1235;
-        $this->int_field_name = 'int_field';
 
         $integer_field = anIntegerField()->withId(321)->isUsed()->build();
 
@@ -35,7 +37,6 @@ class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
         stub($current_user)->isLoggedIn()->returns(true);
         $user_manager        = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);
         $project_manager     = mock('ProjectManager');
-        $tracker             = aMockTracker()->withId($this->tracker_id)->build();
         $permissions_manager = mock('PermissionsManager');
         $artifact_factory    = mock('Tracker_ArtifactFactory');
 
@@ -49,7 +50,7 @@ class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
         stub($formelement_factory)->getFormElementByName($this->tracker_id, $this->int_field_name)->returns($integer_field);
 
         $tracker_factory = mock('TrackerFactory');
-        stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($tracker);
+        $this->setUpTrackers($tracker_factory);
 
         $this->server = new Tracker_SOAPServer(
             new SOAP_UserManager($user_manager),
@@ -62,6 +63,15 @@ class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
         );
     }
 
+    private function setUpTrackers(TrackerFactory $tracker_factory) {
+        $tracker            = aMockTracker()->withId($this->tracker_id)->build();
+        $unreadable_tracker = aMockTracker()->withId($this->unreadable_tracker_id)->build();
+        stub($tracker)->userCanView()->returns(true);
+        stub($unreadable_tracker)->userCanView()->returns(false);
+        stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($tracker);
+        stub($tracker_factory)->getTrackerById($this->unreadable_tracker_id)->returns($unreadable_tracker);
+    }
+
     private function getFromForIntegerBiggerThan3() {
         // Todo: find a way to not have to copy past this sql fragment
         return ' INNER JOIN tracker_changeset_value AS A_321 ON (A_321.changeset_id = c.id AND A_321.field_id = 321 )
@@ -70,6 +80,9 @@ class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
                             AND B_321.value > 3
                          ) ';
     }
+}
+
+class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
 
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheQuery() {
         $criteria = array(
@@ -81,6 +94,11 @@ class Tracker_SOAPServer_CriteriaTransformTest extends TuleapTestCase {
 
         $artifacts_id = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
         $this->assertEqual($artifacts_id, array(42, 66, 9001));
+    }
+
+    public function itRaisesASoapFaultIfTheTrackerIsNotReadableByTheUser() {
+        $this->expectException('SoapFault');
+        $this->server->getArtifacts($this->session_key, null, $this->unreadable_tracker_id, array(), null, null);
     }
 }
 
