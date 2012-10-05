@@ -110,8 +110,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $this->criteria_value = $criteria_value;
     }
 
-    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, $soap_criteria_value) {
-        $this->setCriteriaValue(!empty($soap_criteria_value['value']) ? $soap_criteria_value['value']: '');
+    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
+        $this->setCriteriaValue(!empty($soap_criteria_value->value) ? $soap_criteria_value->value: '');
     }
 
     /**

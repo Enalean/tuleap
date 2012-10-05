@@ -155,6 +155,12 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
                                                    AND 1338 + 24 * 60 * 60
                          ) ';
     }
+
+    protected function convertCriteriaToSoapParameter($criteria) {
+        //SOAP send objects, not associative array.
+        //Use json as a trick to convert to objects the criteria
+        return json_decode(json_encode($criteria));
+    }
 }
 
 class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
@@ -165,12 +171,12 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheQueryForAnIntegerField() {
-        $criteria = array(
+        $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->int_field_name,
                 'value'      => array('value' => '>3')
             ),
-        );
+        ));
 
         $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
         $this->assertEqual($results, array(
@@ -184,12 +190,12 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheQueryForADateField() {
-        $criteria = array(
+        $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->date_field_name,
                 'value'      => array('op' => '=', 'to_date' => '12334567')
             ),
-        );
+        ));
 
         $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
         $this->assertEqual($results, array(
@@ -201,12 +207,12 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheAdvancedQueryForADateField() {
-        $criteria = array(
+        $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->date_field_name,
                 'value'      => array('from_date' => '1337', 'to_date' => '1338')
             ),
-        );
+        ));
 
         $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
         $this->assertEqual($results, array(
