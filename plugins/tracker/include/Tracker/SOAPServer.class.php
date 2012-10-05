@@ -114,12 +114,14 @@ class Tracker_SOAPServer {
             'artifacts' => array(),
             'total_artifacts_number' => 0
         );
-        foreach (explode(',', $id_list) as $artifact_id) {
-            $artifact = $this->artifact_factory->getArtifactById((int)$artifact_id);
-            $soap_artifact = $this->artifact_to_soap($user, $artifact);
-            if (count($soap_artifact)) {
-                $return['artifacts'][] = $soap_artifact;
-                $return['total_artifacts_number']++;
+        if ($id_list) {
+            foreach (explode(',', $id_list) as $artifact_id) {
+                $artifact = $this->artifact_factory->getArtifactById((int)$artifact_id);
+                $soap_artifact = $this->artifact_to_soap($user, $artifact);
+                if (count($soap_artifact)) {
+                    $return['artifacts'][] = $soap_artifact;
+                    $return['total_artifacts_number']++;
+                }
             }
         }
         return $return;

@@ -122,7 +122,9 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForDateFieldAdvanced()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '42,9001', 'last_changeset_id' => '421,90011')
         );
-        stub($dao)->searchMatchingIds()->returnsEmptyDar();
+        stub($dao)->searchMatchingIds()->returnsDar(
+            array('id' => null, 'last_changeset_id' => null)
+        );
     }
 
     private function getFromForIntegerBiggerThan3() {
@@ -168,6 +170,22 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     public function itRaisesASoapFaultIfTheTrackerIsNotReadableByTheUser() {
         $this->expectException('SoapFault');
         $this->server->getArtifacts($this->session_key, null, $this->unreadable_tracker_id, array(), null, null);
+    }
+
+    public function itReturnsEmptyResultsWhenThereIsNoMatch() {
+        $criteria = $this->convertCriteriaToSoapParameter(array(
+            array(
+                'field_name' => $this->int_field_name,
+                'value'      => array('value' => 'A value that returns empty results')
+            ),
+        ));
+
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $this->assertEqual($results, array(
+            'total_artifacts_number' => 0,
+            'artifacts' => array(
+            )
+        ));
     }
 
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheQueryForAnIntegerField() {
