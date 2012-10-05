@@ -251,7 +251,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $additional_where[] = $w;
             }
         }
-        
+        var_dump($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id);
         $matching_ids = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
         if ($matching_ids) {
             if (substr($matching_ids['id'], -1) === ',') {

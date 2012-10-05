@@ -50,7 +50,16 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             )
         )
     );
-    
+
+    public function setCriteriaValueFromSOAP($soap_criteria_value) {
+        $criteria_value = array(
+            'op'        => $soap_criteria_value['op'],
+            'from_date' => null,
+            'to_date'   => $soap_criteria_value['to_date'],
+        );
+        $this->setCriteriaValue($criteria_value);
+    }
+
     /**
      * Continue the initialisation from an xml (FormElementFactory is not smart enough to do all stuff.
      * Polymorphism rulez!!!
