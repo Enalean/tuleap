@@ -27,6 +27,30 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     protected $unreadable_tracker_id = 5321;
     protected $int_field_name        = 'int_field';
     protected $date_field_name       = 'date_field';
+    protected $expected_artifact_42  = array(
+        'artifact_id'       => 42,
+        'tracker_id'        => 1235,
+        'submitted_by'      => '',
+        'submitted_on'      => '',
+        'last_update_date'  => '',
+        'value'             => array(),
+    );
+    protected $expected_artifact_66 = array(
+        'artifact_id'       => 66,
+        'tracker_id'        => 1235,
+        'submitted_by'      => '',
+        'submitted_on'      => '',
+        'last_update_date'  => '',
+        'value'             => array(),
+    );
+    protected $expected_artifact_9001 = array(
+        'artifact_id'       => 9001,
+        'tracker_id'        => 1235,
+        'submitted_by'      => '',
+        'submitted_on'      => '',
+        'last_update_date'  => '',
+        'value'             => array(),
+    );
 
     public function setUp() {
         parent::setUp();
@@ -37,7 +61,9 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $user_manager        = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);
         $project_manager     = mock('ProjectManager');
         $permissions_manager = mock('PermissionsManager');
+
         $artifact_factory    = mock('Tracker_ArtifactFactory');
+        $this->setUpArtifacts($artifact_factory);
 
         $dao = mock('Tracker_ReportDao');
         $this->setUpArtifactResults($dao);
@@ -57,6 +83,16 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
             $formelement_factory,
             $artifact_factory
         );
+    }
+
+    private function setUpArtifacts(Tracker_ArtifactFactory $artifact_factory) {
+        $changesets = array(stub('Tracker_Artifact_Changeset')->getValues()->returns(array()));
+        $artifact_42   = anArtifact()->withId(42)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
+        $artifact_66   = anArtifact()->withId(66)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
+        $artifact_9001 = anArtifact()->withId(9001)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
+        stub($artifact_factory)->getArtifactById(42)->returns($artifact_42);
+        stub($artifact_factory)->getArtifactById(66)->returns($artifact_66);
+        stub($artifact_factory)->getArtifactById(9001)->returns($artifact_9001);
     }
 
     private function setUpFields(Tracker_FormElementFactory $formelement_factory) {
@@ -136,8 +172,15 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         );
 
-        $artifacts_id = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
-        $this->assertEqual($artifacts_id, array(42, 66, 9001));
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $this->assertEqual($results, array(
+            'total_artifacts_number' => 3,
+            'artifacts' => array(
+                $this->expected_artifact_42,
+                $this->expected_artifact_66,
+                $this->expected_artifact_9001,
+            )
+        ));
     }
 
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheQueryForADateField() {
@@ -148,8 +191,13 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         );
 
-        $artifacts_id = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
-        $this->assertEqual($artifacts_id, array(9001));
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $this->assertEqual($results, array(
+            'total_artifacts_number' => 1,
+            'artifacts' => array(
+                $this->expected_artifact_9001,
+            )
+        ));
     }
 
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheAdvancedQueryForADateField() {
@@ -160,8 +208,14 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         );
 
-        $artifacts_id = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
-        $this->assertEqual($artifacts_id, array(42,9001));
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $this->assertEqual($results, array(
+            'total_artifacts_number' => 2,
+            'artifacts' => array(
+                $this->expected_artifact_42,
+                $this->expected_artifact_9001,
+            )
+        ));
     }
 }
 
