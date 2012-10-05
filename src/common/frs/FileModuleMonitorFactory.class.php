@@ -428,12 +428,7 @@ class FileModuleMonitorFactory {
                 $action = $request->get('frs_monitoring');
                 switch ($action) {
                     case 'stop_monitoring' :
-                        if ($this->isMonitoring($fileModuleId, $currentUser, false)) {
-                            $performAction = true;
-                            $result = $this->stopMonitor($fileModuleId, $currentUser);
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitor_turned_off'));
-                            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_emails'));
-                        }
+                        $performAction = $this->stopMonitorActionListener($currentUser, $fileModuleId);
                         break;
                     case 'public_monitoring' :
                         $anonymous = false;
@@ -465,6 +460,25 @@ class FileModuleMonitorFactory {
             }
         }
     }
+
+    /**
+     * Display the HTML of the monitoring UI
+     *
+     * @param User        $currentUser  Current user
+     * @param Integer     $fileModuleId Id of the package
+     *
+     * @return Boolean
+     */
+    public function stopMonitorActionListener($currentUser, $fileModuleId) {
+        if ($this->isMonitoring($fileModuleId, $currentUser, false)) {
+            $result = $this->stopMonitor($fileModuleId, $currentUser);
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'monitor_turned_off'));
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('file_filemodule_monitor', 'no_emails'));
+            return true;
+        } else {
+            return false;
+    }
+}
 
     /**
      * Process the monitoring request
