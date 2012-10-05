@@ -36,8 +36,8 @@ class Tracker_Report_SOAP extends Tracker_Report {
         $rank = 0;
 
         foreach ($this->soap_criteria as $key => $value) {
-            $is_advanced = isset($value['is_advanced']) ? $value['is_advanced'] : 0 ;
-            if ($formelement = $this->formelement_factory->getFormElementByName($this->getTracker()->getId(), $value['name'])) {
+            $is_advanced = false;
+            if ($formelement = $this->formelement_factory->getFormElementByName($this->getTracker()->getId(), $value['field_name'])) {
                 if ($formelement->userCanRead($this->current_user)) {
                     $criteria = new Tracker_Report_Criteria(
                         0,

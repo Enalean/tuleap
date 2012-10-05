@@ -167,8 +167,8 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheQueryForAnIntegerField() {
         $criteria = array(
             array(
-                'name'  => $this->int_field_name,
-                'value' => array('value' => '>3')
+                'field_name' => $this->int_field_name,
+                'value'      => array('value' => '>3')
             ),
         );
 
@@ -186,8 +186,8 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheQueryForADateField() {
         $criteria = array(
             array(
-                'name'  => $this->date_field_name,
-                'value' => array('op' => '=', 'to_date' => '12334567')
+                'field_name' => $this->date_field_name,
+                'value'      => array('op' => '=', 'to_date' => '12334567')
             ),
         );
 
@@ -203,8 +203,8 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     public function itReturnsTheIdsOfTheArtifactsThatMatchTheAdvancedQueryForADateField() {
         $criteria = array(
             array(
-                'name'  => $this->date_field_name,
-                'value' => array('from_date' => '1337', 'to_date' => '1338')
+                'field_name' => $this->date_field_name,
+                'value'      => array('from_date' => '1337', 'to_date' => '1338')
             ),
         );
 
