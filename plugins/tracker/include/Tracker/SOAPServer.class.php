@@ -106,7 +106,23 @@ class Tracker_SOAPServer {
         $report = new Tracker_Report_SOAP($current_user, $tracker, $this->permissions_manager, $this->report_dao, $this->formelement_factory);
         $report->setSoapCriteria($criteria);
         $matching = $report->getMatchingIds();
-        return explode(',', $matching['id']);
+        return $this->artifactListToSoap($current_user, $matching['id']);
+    }
+
+    private function artifactListToSoap(User $user, $id_list) {
+        $return = array(
+            'artifacts' => array(),
+            'total_artifacts_number' => 0
+        );
+        foreach (explode(',', $id_list) as $artifact_id) {
+            $artifact = $this->artifact_factory->getArtifactById($artifact_id);
+            $soap_artifact = $this->artifact_to_soap($user, $artifact);
+            if (count($soap_artifact)) {
+                $return['artifacts'][] = $soap_artifact;
+                $return['total_artifacts_number']++;
+            }
+        }
+        return $return;
     }
 
     /**
