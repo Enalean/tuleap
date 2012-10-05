@@ -210,7 +210,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         ));
 
-        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, 0, 10);
         $this->assertEqual($results, array(
             'total_artifacts_number' => 0,
             'artifacts' => array(
@@ -226,12 +226,47 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         ));
 
-        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, 0, 10);
         $this->assertEqual($results, array(
             'total_artifacts_number' => 3,
             'artifacts' => array(
                 $this->expected_artifact_42,
                 $this->expected_artifact_66,
+                $this->expected_artifact_9001,
+            )
+        ));
+    }
+
+    public function itPaginatesFromTheStart() {
+        $criteria = $this->convertCriteriaToSoapParameter(array(
+            array(
+                'field_name' => $this->int_field_name,
+                'value'      => array('value' => '>3')
+            ),
+        ));
+
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, 0, 2);
+        $this->assertEqual($results, array(
+            'total_artifacts_number' => 3,
+            'artifacts' => array(
+                $this->expected_artifact_42,
+                $this->expected_artifact_66,
+            )
+        ));
+    }
+
+    public function itContinuesPagination() {
+        $criteria = $this->convertCriteriaToSoapParameter(array(
+            array(
+                'field_name' => $this->int_field_name,
+                'value'      => array('value' => '>3')
+            ),
+        ));
+
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, 2, 2);
+        $this->assertEqual($results, array(
+            'total_artifacts_number' => 3,
+            'artifacts' => array(
                 $this->expected_artifact_9001,
             )
         ));
@@ -247,7 +282,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         ));
 
-        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, 0, 10);
         $this->assertEqual($results, array(
             'total_artifacts_number' => 1,
             'artifacts' => array(
@@ -266,7 +301,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         ));
 
-        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, 0, 10);
         $this->assertEqual($results, array(
             'total_artifacts_number' => 2,
             'artifacts' => array(
@@ -284,7 +319,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         ));
 
-        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, 0, 10);
         $this->assertEqual($results, array(
             'total_artifacts_number' => 1,
             'artifacts' => array(
@@ -301,7 +336,7 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
             ),
         ));
 
-        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $results = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, 0, 10);
         $this->assertEqual($results, array(
             'total_artifacts_number' => 2,
             'artifacts' => array(
