@@ -98,6 +98,18 @@ class Tracker_SOAPServer {
         $this->artifact_factory    = $artifact_factory;
     }
 
+    /**
+     * Return artifacts according to given criteria
+     *
+     * @param String  $session_key
+     * @param Integer $group_id
+     * @param Integer $tracker_id
+     * @param Array   $criteria
+     * @param Integer $offset
+     * @param Integer $max_rows
+     *
+     * @return Array
+     */
     public function getArtifacts($session_key, $group_id, $tracker_id, $criteria, $offset, $max_rows) {
         $current_user = $this->soap_user_manager->continueSession($session_key);
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
