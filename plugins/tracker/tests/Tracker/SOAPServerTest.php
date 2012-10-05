@@ -193,7 +193,9 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->date_field_name,
-                'value'      => array('op' => '=', 'to_date' => '12334567')
+                'value'      => array(
+                    'date' => array('op' => '=', 'to_date' => '12334567')
+                )
             ),
         ));
 
@@ -210,7 +212,9 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
         $criteria = $this->convertCriteriaToSoapParameter(array(
             array(
                 'field_name' => $this->date_field_name,
-                'value'      => array('from_date' => '1337', 'to_date' => '1338')
+                'value'      => array(
+                    'dateAdvanced' => array('from_date' => '1337', 'to_date' => '1338')
+                )
             ),
         ));
 

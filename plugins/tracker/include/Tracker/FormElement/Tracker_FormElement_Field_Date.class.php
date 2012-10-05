@@ -52,18 +52,20 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     );
 
     public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
-        $criteria_value = array(
-            'op'        => null,
-            'from_date' => null,
-            'to_date'   => $soap_criteria_value->to_date,
-        );
-        if (!empty($soap_criteria_value->op)) {
-            $criteria_value['op'] = $soap_criteria_value->op;
-        }
-        if (!empty($soap_criteria_value->from_date)) {
+        if (isset($soap_criteria_value->dateAdvanced)) {
+            $criteria_date = $soap_criteria_value->dateAdvanced;
             $criteria->setIsAdvanced(true);
-            $criteria_value['from_date'] = $soap_criteria_value->from_date;
+        } elseif (isset($soap_criteria_value->date)) {
+            $criteria_date = $soap_criteria_value->date;
+        } else {
+            return;
         }
+
+        $criteria_value = array(
+            'op'        => !empty($criteria_date->op)        ? $criteria_date->op        : null,
+            'from_date' => !empty($criteria_date->from_date) ? $criteria_date->from_date : null,
+            'to_date'   => $criteria_date->to_date,
+        );
         $this->setCriteriaValue($criteria_value);
     }
 
