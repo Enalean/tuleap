@@ -79,9 +79,12 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     private function setUpArtifactResults(Tracker_ReportDao $dao) {
         stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForIntegerBiggerThan3()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '42,66,9001', 'last_changeset_id' => '421,661,90011')
-            );
+        );
         stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForDateFieldEqualsTo()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '9001', 'last_changeset_id' => '90011')
+        );
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForDateFieldAdvanced()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+            array('id' => '42,9001', 'last_changeset_id' => '421,90011')
         );
         stub($dao)->searchMatchingIds()->returnsEmptyDar();
     }
@@ -101,9 +104,19 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
                          ON (A_322.changeset_id = c.id AND A_322.field_id = 322 )
                          INNER JOIN tracker_changeset_value_date AS B_322
                          ON (A_322.id = B_322.changeset_value_id
-                             AND B_322.value
-                             AND  B_322.value BETWEEN 12334567
+                             AND B_322.value BETWEEN 12334567
                                                            AND 12334567 + 24 * 60 * 60
+                         ) ';
+    }
+
+    private function getFromForDateFieldAdvanced() {
+        // Todo: find a way to not have to copy past this sql fragment
+        return ' INNER JOIN tracker_changeset_value AS A_322
+                         ON (A_322.changeset_id = c.id AND A_322.field_id = 322 )
+                         INNER JOIN tracker_changeset_value_date AS B_322
+                         ON (A_322.id = B_322.changeset_value_id
+                             AND B_322.value BETWEEN 1337
+                                                   AND 1338 + 24 * 60 * 60
                          ) ';
     }
 }
@@ -137,6 +150,18 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
 
         $artifacts_id = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
         $this->assertEqual($artifacts_id, array(9001));
+    }
+
+    public function itReturnsTheIdsOfTheArtifactsThatMatchTheAdvancedQueryForADateField() {
+        $criteria = array(
+            array(
+                'name'  => $this->date_field_name,
+                'value' => array('from_date' => '1337', 'to_date' => '1338')
+            ),
+        );
+
+        $artifacts_id = $this->server->getArtifacts($this->session_key, null, $this->tracker_id, $criteria, null, null);
+        $this->assertEqual($artifacts_id, array(42,9001));
     }
 }
 

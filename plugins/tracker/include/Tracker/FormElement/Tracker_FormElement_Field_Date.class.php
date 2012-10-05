@@ -51,12 +51,19 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
         )
     );
 
-    public function setCriteriaValueFromSOAP($soap_criteria_value) {
+    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, $soap_criteria_value) {
         $criteria_value = array(
-            'op'        => $soap_criteria_value['op'],
+            'op'        => null,
             'from_date' => null,
             'to_date'   => $soap_criteria_value['to_date'],
         );
+        if (!empty($soap_criteria_value['op'])) {
+            $criteria_value['op'] = $soap_criteria_value['op'];
+        }
+        if (!empty($soap_criteria_value['from_date'])) {
+            $criteria->setIsAdvanced(true);
+            $criteria_value['from_date'] = $soap_criteria_value['from_date'];
+        }
         $this->setCriteriaValue($criteria_value);
     }
 
@@ -162,11 +169,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                     $criteria_value['to_date'],
                     $b. '.value'
                 );
-                return " INNER JOIN tracker_changeset_value AS $a 
+                return " INNER JOIN tracker_changeset_value AS $a
                          ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
                          INNER JOIN tracker_changeset_value_date AS $b
                          ON ($a.id = $b.changeset_value_id
-                             AND $b.value 
                              AND $compare_date_stmt
                          ) ";
             }
@@ -240,19 +246,19 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             if ( ! $to ) {
                 $to = PHP_INT_MAX; //infinity
             }
-            $and_compare_date = " $column BETWEEN ". $from ." 
-                                                   AND ". $to ." + 24 * 60 * 60 ";
+            $and_compare_date = "$column BETWEEN ". $from ."
+                                                   AND ". $to ." + 24 * 60 * 60";
         } else {
             switch ($op) {
                 case '<':
-                    $and_compare_date = " $column < ". $to; 
+                    $and_compare_date = "$column < ". $to; 
                     break;
                 case '=':
-                    $and_compare_date = " $column BETWEEN ". $to ."
-                                                           AND ". $to ." + 24 * 60 * 60 ";
+                    $and_compare_date = "$column BETWEEN ". $to ."
+                                                           AND ". $to ." + 24 * 60 * 60";
                     break;
                 default:
-                    $and_compare_date = " $column > ". $to ." + 24 * 60 * 60 ";
+                    $and_compare_date = "$column > ". $to ." + 24 * 60 * 60";
                     break;
             }
         }
