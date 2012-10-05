@@ -19,45 +19,64 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-// format : project_id  tracker_id  artifact_id value [comment]
-
-if ($argc < 1) {
-    die('Usage: ".$argv[0]." artifact_id'.PHP_EOL);
-}
-
-$serverURL = 'http://shunt.cro.enalean.com';
-$soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
-
-// Establish connection to the server
-$requesterSessionHash = $soapLogin->login('manuel','')->session_hash;
-
-//save values
-//$artifact_id = $argv[1];
-
-// Connecting to the soap's tracker client
-$soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
-
-
+$host       = 'http://crampons.cro.enalean.com';
+$user       = 'admin';
+$pass       = 'secret';
+$project_id = 0; //not needed
+$tracker_id = 270;
+$offset     = 0;
+$limit      = 10;
 $criteria = array(
     array(
-        'field_name' => 'remaining_effort',
-        'value' => array('value' => "bla")
+        'field_name' => 'details',
+        'value' => array('value' => '/^(Update|My Monitor)/')
     ),
+    //array(
+    //    'field_name' => 'close_date',
+    //    'value' => array(
+    //        'date' => array('op' => '>', 'to_date' => 1349827200)
+    //    )
+    //),
     array(
-        'field_name' => 'stuff_date',
+        'field_name' => 'close_date',
         'value' => array(
-            'date' => array(
-                'op' => '=',
-                'to_date' => '1234'
+            'dateAdvanced' => array(
+                'from_date' => '1349827200',
+                'to_date'   => 1350432000
             )
         )
     )
-    
 );
 
-$response = $soapTracker->getArtifacts($requesterSessionHash, 114, 276, $criteria, 0, 100);
+$soap_options = array(
+    'cache_wsdl' => WSDL_CACHE_NONE,
+    'exceptions' => 1,
+    'trace'      => 1,
+);
+$host_login   = $host .'/soap/?wsdl';
+$host_tracker = $host .'/plugins/tracker/soap/?wsdl';
 
+// Establish connection to the server
+$client_login = new SoapClient($host_login, $soap_options);
+$session_hash = $client_login->login($user, $pass)->session_hash;
+try {
+    // Connecting to the soap's tracker api
+    $client_tracker = new SoapClient($host_tracker, $soap_options);
+    $response = $client_tracker->getArtifacts(
+        $session_hash,
+        $project_id,
+        $tracker_id,
+        $criteria,
+        $offset,
+        $limit
+    );
 
-var_dump($response);
-
+    var_dump($response);
+} catch(Exception $e) {
+    echo $e->getMessage();
+    echo "\n";
+    echo $client_tracker->__getLastResponse();
+    echo "\n";
+}
+echo "\n";
 ?>
