@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Planning.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Tracker_Artifact.class.php';
 
 /**
@@ -55,12 +54,19 @@ class Planning_Item {
     private $artifact;
     
     /**
+     * @var Tracker_Artifact
+     */
+    private $parent;
+    
+    /**
      * @param Tracker_Artifact $artifact The underlying artifact to be planned.
      * @param Planning         $planning The planning this item belongs to.
+     * @param Tracker_Artifact $parent   The parent of $artifact or null if no parent (pattern nullobject?)
      */
-    public function __construct(Tracker_Artifact $artifact, Planning $planning) {
+    public function __construct(Tracker_Artifact $artifact, Planning $planning, Tracker_Artifact $parent = null) {
         $this->planning = $planning;
         $this->artifact = $artifact;
+        $this->parent   = $parent;
     }
     
     /**
@@ -117,6 +123,13 @@ class Planning_Item {
         return $this->artifact;
     }
     
+    /**
+     * @return int
+     */
+    public function getAncestorId() {
+        return $this->parent ? $this->parent->getId() : 0;
+    }
+    
     /** 
      * Checks whether or not this item can be assigned to a milestone.
      * 
@@ -130,35 +143,11 @@ class Planning_Item {
      * @see Tracker_Artifact::getAllowedChildrenTypes()
      */
     public function getAllowedChildrenTypes() {
-        return $this->appendBacklogTrackerIfRoot($this->artifact->getAllowedChildrenTypes());
-    }
-
-    /**
-     * Allow to create artifacts when the item comes from the planning tracker and if
-     * the backlog tracker is at the root of the hierarchy.
-     *
-     * Example:
-     * Given I have a planning Epic -> Release
-     * And Epic has not parent (root of hierarchy)
-     * Then I can create an Epic right in the release
-     *
-     * Counter example:
-     * Given I have a planning Story -> Sprint
-     * And I have a hierarchy Epic -> Story
-     * Then I cannot create Story directly below Sprint
-     *
-     * @param array $allowed_trackers
-     * @return type
-     */
-    private function appendBacklogTrackerIfRoot(array $allowed_trackers) {
-        $backlog_tracker = array();
+        $trackers = $this->artifact->getAllowedChildrenTypes();
         if ($this->getTracker() == $this->planning->getPlanningTracker()) {
-            $backlog_hierarchy = $this->planning->getBacklogTracker()->getHierarchy();
-            if ($backlog_hierarchy->isRoot($this->planning->getBacklogTrackerId())) {
-                $backlog_tracker = array($this->planning->getBacklogTracker());
-            }
+            $trackers[] = $this->planning->getBacklogTracker();
         }
-        return array_merge($allowed_trackers, $backlog_tracker);
+        return $trackers;
     }
 }
 

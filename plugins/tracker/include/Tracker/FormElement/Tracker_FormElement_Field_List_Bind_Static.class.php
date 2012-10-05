@@ -155,8 +155,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getFieldData($soap_value, $is_multiple) {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $soap_values = explode(",", $soap_value);
             $return = array();
+            $soap_values = explode(",", $soap_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getLabel(), $soap_values)) {
                     $return[] = $id;
@@ -596,8 +596,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 case 'is_rank_alpha':
                     $is_rank_alpha = $value ? 1 : 0;
                     if ($this->is_rank_alpha != $is_rank_alpha) {
-                        $this->getDao()->save($this->field->id, $this->is_rank_alpha);
-                        $GLOBALS['Response']->addFeedback('info', 'Alpha ranking updated');
+                        $this->getDao()->save($this->field->id, $is_rank_alpha);
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','alpha_ranking_updated'));
                     }
                     break;
                 case 'delete':

@@ -15,7 +15,10 @@ if (defined('E_STRICT')
 define ('EM_FATAL_ERRORS', E_ERROR | E_PARSE | E_CORE_ERROR | E_COMPILE_ERROR | E_USER_ERROR | ~2048);
 define ('EM_WARNING_ERRORS',
 	E_WARNING | E_CORE_WARNING | E_COMPILE_WARNING | E_USER_WARNING);
-define ('EM_NOTICE_ERRORS', E_NOTICE | E_USER_NOTICE);
+if (defined('E_DEPRECATED'))
+  define ('EM_NOTICE_ERRORS', E_NOTICE | E_USER_NOTICE | E_DEPRECATED);
+else
+  define ('EM_NOTICE_ERRORS', E_NOTICE | E_USER_NOTICE);
 
 /* It is recommended to leave assertions on. 
    You can simply comment the two lines below to leave them on.

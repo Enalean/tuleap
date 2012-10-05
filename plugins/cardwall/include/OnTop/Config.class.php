@@ -50,6 +50,11 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
      */
     private $tracker_mapping_factory;
 
+    /**
+     * @var array
+     */
+    private $cached_mappings = array();
+
     public function __construct(
         Tracker $tracker,
         Tracker $swimline_tracker,
@@ -86,7 +91,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
 
     /**
      * Get Frestyle columns for Cardwall_OnTop, or status columns if none
-     * 
+     *
      * @param Tracker $tracker
      * @return Cardwall_OnTop_Config_ColumnCollection
      */
@@ -101,18 +106,21 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
     public function getRendererColumns(Tracker_FormElement_Field_List $cardwall_field) {
         return $this->column_factory->getRendererColumns($cardwall_field);
     }
-    
+
     public function getMappings() {
-        return $this->tracker_mapping_factory->getMappings($this->tracker, $this->getDashboardColumns());
+        if (!isset($this->cached_mappings[$this->tracker->getId()][$this->swimline_tracker->getId()])) {
+            $this->cached_mappings[$this->tracker->getId()][$this->swimline_tracker->getId()] = $this->tracker_mapping_factory->getMappings($this->tracker, $this->getDashboardColumns());
+        }
+        return $this->cached_mappings[$this->tracker->getId()][$this->swimline_tracker->getId()];
     }
 
     public function getTrackers() {
         return $this->tracker_mapping_factory->getTrackers($this->tracker);
     }
-    
+
     /**
      * @param Tracker $mapping_tracker
-     * 
+     *
      * @return Cardwall_OnTop_Config_TrackerMapping
      */
     public function getMappingFor(Tracker $mapping_tracker) {
@@ -120,8 +128,8 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         return isset($mappings[$mapping_tracker->getId()]) ? $mappings[$mapping_tracker->getId()] : null;
     }
 
-    public function isInColumn(Tracker_Artifact                                     $artifact, 
-                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider, 
+    public function isInColumn(Tracker_Artifact                                     $artifact,
+                               Cardwall_FieldProviders_IProvideFieldGivenAnArtifact $field_provider,
                                Cardwall_Column                                      $column) {
         $artifact_status = null;
         $field           = $field_provider->getField($artifact);
@@ -132,7 +140,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
     }
 
     /**
-     * Get the column/field/value mappings by duck typing the colums labels 
+     * Get the column/field/value mappings by duck typing the colums labels
      * with the values of the given fields
      *
      * @param array $fields array of Tracker_FormElement_Field_Selectbox
@@ -145,9 +153,9 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         $this->fillMappingsWithOnTopMappings($mappings, $cardwall_columns);
         return $mappings;
     }
-    
-    private function fillMappingsByDuckType(Cardwall_MappingCollection             $mappings, 
-                                            array                                  $fields, 
+
+    private function fillMappingsByDuckType(Cardwall_MappingCollection             $mappings,
+                                            array                                  $fields,
                                             Cardwall_OnTop_Config_ColumnCollection $columns) {
         foreach ($fields as $status_field) {
             foreach ($status_field->getVisibleValuesPlusNoneIfAny() as $value) {
@@ -161,7 +169,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         return $mappings;
     }
 
-    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings, 
+    public function fillMappingsWithOnTopMappings(Cardwall_MappingCollection             $mappings,
                                                   Cardwall_OnTop_Config_ColumnCollection $columns) {
         foreach ($this->getMappings() as $field_mapping) {
             foreach ($field_mapping->getValueMappings() as $value_mapping) {
@@ -175,7 +183,7 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         }
     }
 
-    
+
 
 }
 ?>

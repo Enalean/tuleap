@@ -77,6 +77,17 @@ class Tracker_Hierarchy {
     }
 
     /**
+     * Return the parent of given tracker_id or null if tracker has no parent
+     *
+     * @param Integer $tracker_id
+     *
+     * @return Integer
+     */
+    public function getParent($tracker_id) {
+        return isset($this->parents[$tracker_id]) ? $this->parents[$tracker_id] : null;
+    }
+
+    /**
      * @throws Tracker_Hierarchy_NotInHierarchyException
      * @throws Tracker_Hierarchy_CyclicHierarchyException
      *
@@ -117,6 +128,13 @@ class Tracker_Hierarchy {
         $callstack[] = $tracker_id;
     }
 
+    /**
+     * Returns all trackers defined in hierarchy from the top (older) to bottom
+     * if there are trackers outside hierarchy in the given list, happend to
+     * the end
+     *
+     * @return Array
+     */
     public function sortTrackerIds(array $tracker_ids) {
         // God will kill plenty of kittens every day that this bug is not fixed:
         // https://bugs.php.net/bug.php?id=50688

@@ -302,10 +302,11 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl(GitRepository $repository) {
+    public function getAccessURL(GitRepository $repository) {
         $serverName  = $_SERVER['SERVER_NAME'];
         $user = UserManager::instance()->getCurrentUser();
-        return  $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git';
+        return array('ssh' => $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git');
+        
     }
 
     /**
@@ -411,6 +412,10 @@ class GitBackend extends Backend implements Git_Backend_Interface {
             $formatter->addLine($gitUsers);
             $formatter->addLine($gitRepo);
         }
+    }
+
+    public function commitTransaction(GitRepository $repository) {
+        // this action is not necessary for thhis type of backend
     }
 }
 

@@ -38,7 +38,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
     }
     function testLists() {
         $bind_value = new MockTracker_FormElement_Field_List_BindValue();
-        $bind_value->setReturnValue('getLabel', 'Reopen');
+        $bind_value->setReturnValue('getSoapValue', 'Reopen');
         $bind_value->setReturnValue('getId', 106);
         $bind_value->setReturnValue('getJsonId', 'b106');
         $field      = new $this->field_class();

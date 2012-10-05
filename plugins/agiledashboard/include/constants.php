@@ -26,6 +26,7 @@ define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
  *
  * Parameters:
  * 'milestone' => The current Planning_Milestone
+ * 'user'      => The current user
  *
  * Expected results
  * 'panes'     => Input/Output parameter, array of type AgileDashboard_Pane

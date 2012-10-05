@@ -47,6 +47,11 @@ class UserTestBuilder {
         return $this;
     }
     
+    function withAuthorizedKeysArray(array $keys) {
+        $this->params['authorized_keys'] = implode('###', $keys);
+        return $this;
+    }
+
     function build() {
         return new User($this->params);
     }

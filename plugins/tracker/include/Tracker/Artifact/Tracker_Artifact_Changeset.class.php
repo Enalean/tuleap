@@ -121,6 +121,32 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
+     * Delete the changeset
+     *
+     * @param User $user the user who wants to delete the changeset
+     *
+     * @return void
+     */
+    public function delete(User $user) {
+        if ($this->userCanDeletePermanently($user)) {
+            $this->getChangesetDao()->delete($this->id);
+            $this->getCommentDao()->delete($this->id);
+            $this->deleteValues();
+        }
+    }
+
+    protected function deleteValues() {
+        $value_dao = $this->getValueDao();
+        $factory = $this->getFormElementFactory();
+        foreach ($value_dao->searchById($this->id) as $row) {
+            if ($field = $factory->getFieldById($row['field_id'])) {
+                $field->deleteChangesetValue($row['id']);
+            }
+        }
+        $value_dao->delete($this->id);
+    }
+
+    /**
      * Returns the ValueDao
      *
      * @return Tracker_Artifact_Changeset_ValueDao The dao
@@ -245,6 +271,18 @@ class Tracker_Artifact_Changeset {
     }
 
     /**
+     * Say if a user can permanently (no restore) delete a changeset
+     *
+     * @param User $user The user who does the delete
+     *
+     * @return boolean true if the user can delete
+     */
+    protected function userCanDeletePermanently(User $user) {
+        // Only tracker admin can edit a comment
+        return $this->artifact->getTracker()->userIsAdmin($user);
+    }
+
+    /**
      * Say if a user can delete a changeset
      *
      * @param User $user The user. If null, the current logged in user will be used.
@@ -255,7 +293,7 @@ class Tracker_Artifact_Changeset {
         if (!$user) {
             $user = $this->getUserManager()->getCurrentUser();
         }
-        // Only super user can edit a comment
+        // Only tracker admin can edit a comment
         return $user->isSuperUser();
     }
 
@@ -277,30 +315,15 @@ class Tracker_Artifact_Changeset {
     /**
      * Update the content
      *
-     * @param string $body The new content
-     * @param User   $user The user
+     * @param string  $body          The new content
+     * @param User    $user          The user
+     * @param String  $comment_format Format of the comment
      *
      * @return void
      */
-    public function updateComment($body, $user) {
+    public function updateComment($body, $user, $comment_format) {
         if ($this->userCanEdit($user)) {
-            $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id);
-        }
-    }
-
-    /**
-     * Delete the changeset
-     *
-     * @param User $user the user who wants to delete the changeset
-     *
-     * @return void
-     */
-    public function delete(User $user) {
-        if ($this->userCanDelete($user)) {
-            $this->getChangesetDao()->delete($this->id);
-            $this->getCommentDao()->delete($this->id);
-            $this->getValueDao()->delete($this->id);
-            //todo go deeper in the deletion cascade
+            $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $comment_format);
         }
     }
 
@@ -320,6 +343,7 @@ class Tracker_Artifact_Changeset {
                                                     $row['submitted_by'],
                                                     $row['submitted_on'],
                                                     $row['body'],
+                                                    $row['body_format'],
                                                     $row['parent_id']);
         }
         return $this->latest_comment;

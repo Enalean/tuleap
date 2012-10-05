@@ -129,7 +129,7 @@ extends WikiDB_backend_PearDB
             $exclude = " AND $page_tbl.pagename NOT IN ".$this->_sql_set($exclude);
 
         $sql = "SELECT $page_tbl.pagename,linked.pagename as wantedfrom"
-            . " FROM $link_tbl,$page_tbl as linked "
+            . " FROM $page_tbl as linked, $link_tbl "
             . " LEFT JOIN $page_tbl ON ($link_tbl.linkto=$page_tbl.id)"
             . " LEFT JOIN $nonempty_tbl ON ($link_tbl.linkto=$nonempty_tbl.id)" 
             . " WHERE ISNULL($nonempty_tbl.id) AND linked.id=$link_tbl.linkfrom AND linked.group_id=".GROUP_ID

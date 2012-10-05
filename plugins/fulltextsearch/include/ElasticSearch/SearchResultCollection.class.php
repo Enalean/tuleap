@@ -18,15 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SearchResult.class.php';
-require_once dirname(__FILE__).'/../FullTextSearch/SearchResultCollection.class.php';
 
 class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResultCollection {
     private $nb_documents_found = 0;
     private $query_time         = 0;
     private $results            = array();
+    private $facets             = array();
     
-    public function __construct(array $result, ProjectManager $project_manager) {
+    public function __construct(array $result, array $submitted_facets, ProjectManager $project_manager) {
         if (isset($result['hits']['total'])) {
             $this->nb_documents_found = $result['hits']['total'];
         }
@@ -35,8 +34,16 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
         }
         if (isset($result['hits']['hits'])) {
             foreach ($result['hits']['hits'] as $hit) {
-                $this->results[] = new ElasticSearch_SearchResult($hit, $project_manager);
+                $project = $project_manager->getProject($hit['fields']['group_id']);
+                if ($project->isError()) {
+                    $this->nb_documents_found--;
+                } else {
+                    $this->results[] = new ElasticSearch_SearchResult($hit, $project);
+                }
             }
+        }
+        if (isset($result['facets']['projects'])) {
+            $this->facets = new ElasticSearch_SearchResultProjectsFacetCollection($result['facets']['projects'], $project_manager, $submitted_facets);
         }
     }
     
@@ -50,6 +57,10 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
     
     public function getResults() {
         return $this->results;
+    }
+    
+    public function getFacets() {
+        return $this->facets;
     }
 }
 

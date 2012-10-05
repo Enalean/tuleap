@@ -51,14 +51,10 @@ class Cardwall_OnTop_ConfigFactory {
      * @return \Tracker
      */
     private function getSwimlineTracker(Tracker $tracker) {
-        //TODO This file should be in agile dashboard and the generic part of the cardwall in plugin/tracker
-        @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
-        if (class_exists('PlanningFactory')) {
-            $planning_factory = new PlanningFactory(new PlanningDao(), $this->tracker_factory);
-            if ($planning = $planning_factory->getPlanningByPlanningTracker($tracker)) {
-                return $planning->getBacklogTracker();
-            }
-        }
+        EventManager::instance()->processEvent(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, array(
+            'tracker_factory' => $this->tracker_factory,
+            'tracker'         => &$tracker
+        ));
         return $tracker;
     }
 

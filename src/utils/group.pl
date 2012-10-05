@@ -186,8 +186,6 @@ sub get_emails_by_path {
                 push @emails, $emailVal;
             }
         }
-    } else {
-        print STDERR "$query\nCan't select field: $DBI::errstr\n";
     }
     return @emails;
 }

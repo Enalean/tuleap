@@ -24,9 +24,14 @@
 require_once 'pre.php';
 require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
 
+$user = null;
+if (isset($argv[1])) {
+    $user = UserManager::instance()->getUserById($argv[1]);
+}
+
 $driver = new Git_GitoliteDriver();
-if ($driver->dumpSSHKeys()) {
-    echo "Rename done!\n";
+if ($driver->dumpSSHKeys($user)) {
+    echo "SSH Keys dump done!\n";
     exit(0);
 } else {
     echo "*** ERROR: Fail to dump ssh keys".PHP_EOL;

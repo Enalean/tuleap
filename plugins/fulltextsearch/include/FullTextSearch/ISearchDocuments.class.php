@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SearchResultCollection.class.php';
 
 /**
  * Interface which define the base contract for search library clients
@@ -26,24 +25,15 @@ require_once 'SearchResultCollection.class.php';
 interface FullTextSearch_ISearchDocuments {
 
     /**
-     * Search for data in the index
+     * Search for data in the index, filter them with permissions
      * 
-     * @param String $term terms
+     * @param String $term   terms
+     * @param array  $facets submitted by user for faceted navigation
+     * @param int    $offset The offset of the search
+     * @param User   $user   The user which do the request
      * 
      * @return FullTextSearch_SearchResultCollection
      */
-    public function searchDocuments($terms);
-    
-
-    /**
-     * Return status of the index
-     * 
-     * The returned array is:
-     * array('size'   => string with human readable size
-     *       'nb_docs => integer, number of documents in index)
-     * 
-     * @return array 
-     */
-    public function getStatus();
+    public function searchDocuments($terms, array $facets, $offset, User $user);
 }
 ?>

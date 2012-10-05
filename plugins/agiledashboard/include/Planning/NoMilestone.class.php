@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Milestone.class.php';
 
 /**
  * Null-object pattern for planning milestones.

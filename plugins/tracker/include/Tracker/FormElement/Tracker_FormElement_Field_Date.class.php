@@ -420,13 +420,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        $html = '';
-        $value = '';        
-        if (!empty($submitted_values)) {            
-            $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
+        $html  = '';
+        $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $html .= $GLOBALS['HTML']->getDatePicker("tracker_admin_field_".$this->id, "artifact[". $this->id ."]", $value);
         return $html;
     }

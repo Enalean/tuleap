@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'common/mvc2/Controller.class.php';
-require_once 'PlanningFactory.class.php';
 
 /**
  * Handles HTTP actions related to milestone artifact creation.

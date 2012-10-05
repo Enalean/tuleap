@@ -18,24 +18,29 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Hierarchy_MoreThanOneParentException extends Exception {
+require_once 'common/system_event/SystemEvent.class.php';
 
-    public function __construct(Tracker_Artifact $child, array $parents) {
-        parent::__construct($this->getTranslatedMessage(array($this->getParentTitle($child), $this->getParentsList($parents))));
+class SysteEvent_For_Testing_Purpose extends SystemEvent {
+    public function verbalizeParameters($with_link) {
+        return $this->parameters;
     }
-
-    private function getTranslatedMessage(array $arguments) {
-        return $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'error_more_than_one_parent', $arguments);
-    }
-
-    private function getParentsList(array $parents) {
-        return implode(', ', array_map(array($this, 'getParentTitle'), $parents));
-    }
-
-    private function getParentTitle(Tracker_Artifact $artifact) {
-        return '"'.$artifact->getTitle().' ('.$artifact->fetchXRefLink().')"';
-    }
-
 }
 
+function aSystemEvent() {
+    return new Test_SystemEvent_Builder();
+}
+
+class Test_SystemEvent_Builder {
+    private $parameters;
+
+    public function withParameters($parameters) {
+        $this->parameters = $parameters;
+        return $this;
+    }
+
+    public function build() {
+        $id = $type = $priority = $status = $create_date = $process_date = $end_date = $log = null;
+        return new SysteEvent_For_Testing_Purpose($id, $type, $this->parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
+    }
+}
 ?>

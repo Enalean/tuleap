@@ -124,6 +124,10 @@ grammar {
                 (
                     attribute type { "users" }
                 )
+            |
+                (
+                    attribute type { "ugroups" }
+                )
             ),
             element items { 
                 element item {

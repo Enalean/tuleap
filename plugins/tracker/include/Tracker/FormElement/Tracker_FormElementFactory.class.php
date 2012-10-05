@@ -183,8 +183,8 @@ class Tracker_FormElementFactory {
      * @return Tracker_FormElement_Field
      */
     function getFormElementById($form_element_id) {
-        if (!isset($this->formElements[$form_element_id])) {
-            if ($row = $this->getDao()->searchById($form_element_id)->getRow()) {
+        if (!array_key_exists($form_element_id, $this->formElements)) {
+            if ($form_element_id && ($row = $this->getDao()->searchById($form_element_id)->getRow())) {
                 return $this->getCachedInstanceFromRow($row);
             }
             $this->formElements[$form_element_id] = null;
@@ -236,8 +236,8 @@ class Tracker_FormElementFactory {
      * @return Tracker_FormElement_Field, or null if not found
      */
     function getUsedFieldByName($tracker_id, $name) {
-        if (!isset($this->used_formElements_by_name[$tracker_id][$name])) {
-            if ($row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $name)->getRow()) {
+        if (!isset($this->used_formElements_by_name[$tracker_id]) || !array_key_exists($name, $this->used_formElements_by_name[$tracker_id])) {
+            if ($tracker_id && $name && ($row = $this->getDao()->searchUsedByTrackerIdAndName($tracker_id, $name)->getRow())) {
                 $this->used_formElements_by_name[$tracker_id][$name] = $this->getCachedInstanceFromRow($row);
             } else {
                 $this->used_formElements_by_name[$tracker_id][$name] = null;
@@ -419,8 +419,20 @@ class Tracker_FormElementFactory {
     public function getUsedArtifactLinkFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('art_link'));
     }
-    
-    
+
+    /**
+     * Return the first (and only one) ArtifactLink field (if any)
+     *
+     * @return Tracker_FormElement_Field_ArtifactLink
+     */
+    public function getAnArtifactLinkField(User $user, Tracker $tracker) {
+        $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
+        if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {
+            return $artifact_link_fields[0];
+        }
+        return null;
+    }
+
     /**
      * @param Tracker $tracker
      *
@@ -513,24 +525,21 @@ class Tracker_FormElementFactory {
             }
             //First duplicate formElement info
             if ($id = $this->getDao()->duplicate($from_row['id'], $to_tracker_id)) {
-                if (!$has_workflow) {
-                    //Then duplicate formElement
-                    $mapping[] = array('from' => $from_row['id'], 
-                                    'to' => $id,
-                                    'values' => $this->getFormElementById($id)->duplicate($from_row['id'], $id),
-                                    'workflow'=> false);
-                } else {
-                    $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
-                    $values = $this->getFormElementById($id)->duplicate($from_row['id'], $id);
-                    $mapping[] = array('from' => $from_row['id'],
-                                    'to' => $id,
-                                    'values' => $values, 
-                                    'workflow'=> true);
+                $created_form_element = $this->getFormElementById($id);
+                if ($created_form_element) {
+                    $created_values = $created_form_element->duplicate($from_row['id'], $id);
+                    if ($has_workflow) {
+                        $workflow = $this->getFormElementById($from_row['id'])->getWorkflow();
+                    }
+                    $mapping[] = array(
+                        'from'    => $from_row['id'],
+                        'to'      => $id,
+                        'values'  => $created_values,
+                        'workflow'=> $has_workflow
+                    );
+                    $type = $this->getType($created_form_element);
                 }
-               
-                $type = $this->getType($this->getFormElementById($id));
-                $tracker = TrackerFactory::instance()->getTrackerByid($to_tracker_id);                
-
+                $tracker = TrackerFactory::instance()->getTrackerByid($to_tracker_id);
             }
         }
         $this->getDao()->mapNewParentsAfterDuplication($to_tracker_id, $mapping);
@@ -584,7 +593,7 @@ class Tracker_FormElementFactory {
             $form_element_id = $row['id']; 
             $unused[$form_element_id] = $this->getCachedInstanceFromRow($row);
         }
-        return $unused;
+        return array_filter($unused);
     }
     
     public function getUsedFormElementForTracker($tracker) {
@@ -686,13 +695,13 @@ class Tracker_FormElementFactory {
     /**
      * Creates a Tracker_FormElement Object
      * 
+     * @param Tracker          $tracker     the new tracker
      * @param SimpleXMLElement $xml         containing the structure of the imported Tracker_FormElement
      * @param array            &$xmlMapping where the newly created formElements indexed by their XML IDs are stored
-     * @param Tracker          $tracker     to which the tooltip is attached
      * 
      * @return Tracker_FormElement Object 
      */
-    public function getInstanceFromXML($xml, &$xmlMapping) {
+    public function getInstanceFromXML(Tracker $tracker, $xml, &$xmlMapping) {
         $att = $xml->attributes();
         $row = array(
             'formElement_type' => (string)$att['type'],
@@ -710,6 +719,7 @@ class Tracker_FormElementFactory {
             'original_field_id'=> null,
         );
         $curElem = $this->getInstanceFromRow($row);
+        $curElem->setTracker($tracker);
         $xmlMapping[(string)$xml['ID']] = $curElem;
         $curElem->continueGetInstanceFromXML($xml, $xmlMapping);
         return $curElem;

@@ -40,7 +40,7 @@ class Docman_Log { /* implements EventListener */
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['item']->getParentId(), $params['parent']->getId());
                 break;
             case PLUGIN_DOCMAN_EVENT_NEW_VERSION:
-                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['version']);
+                $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, null, $params['version']->getId());
                 break;
            case PLUGIN_DOCMAN_EVENT_DEL_VERSION:
                 $this->dao->create($params['group_id'], $params['item']->getId(), $params['user']->getId(), $event, $params['old_value'], null);

@@ -1,7 +1,65 @@
-Version 5.8.12
+Version 5.23 - Tuleap 5.6
+    * 
+
+Version 5.22 - Tuleap 5.6
+    * SOAP: Add missing info on getArtifact: submitted_on, submitted_by, last_update_date
+
+Version 5.21 - Tuleap 5.5
+    * Fix sla #1444: artifacts with two parents throw an exception
+
+Version 5.20 - Tuleap 5.5
+    * Fix comment format checking
+
+Version 5.19 - Tuleap 5.5
+    * Improve tracker v5 installation
+
+Version 5.18 - Tuleap 5.5
+    * Fix upgrade error from v5.17
+
+Version 5.17 - Tuleap 5.5
+    * Tracker admin can permanently delete an artifact
+
+Version 5.16 - Tuleap 5.5
+    * Fix tracker v5 'tracker permission' issue
+
+Version 5.15 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
+Version 5.14 - Tuleap 5.5
+    * Add html follow-ups (Contrib STMicroelectronics)
+
+Version 5.13 - Tuleap 5.5
+    * Allow one to remove attachment from an artifact
+
+Version 5.12 - Tuleap 5.5
+    * Improve JS performance on cross search
+
+Version 5.11 - Tuleap 5.5
+    * Tracker v5 artifacts or reports are no longer displayed if the project they belong to is inactive or deleted. (contrib STMicroelectronics).
+
+Version 5.10 - Tuleap 5.4
+    * Create backlog item in milestone context: choose parent upon artifact creation
+
+Version 5.9 - Tuleap 5.4
+    * Refactor artifact creation to take into account automatic parent creation according to hierarchy
+    * On artifact update, display it's parents
+    * On artifact creation allow to choose to link to an existing artifact.
+
+Version 5.8.15 - Tuleap 5.4
+    * Static values from SB field can be sorted alphabetically (sla #1217)
+
+Version 5.8.14 - Tuleap 5.4
+    * Add new User parameter for renderer plugin invokation.
+    * Add caching on hierarchy.
+    * Clean code and tests.
+
+Version 5.8.13 - Tuleap 5.4
+    * Fix sla #1063: field dependencies default values might be broken dependending on the order of definitions of the rules.
+
+Version 5.8.12 - Tuleap 5.4
     * art #... does not work cross projects
 
-Version 5.8.11
+Version 5.8.11 - Tuleap 5.4
     * Make unit tests pass with PHP 5.3
 
 Version 5.8.10 - Tuleap 5.4

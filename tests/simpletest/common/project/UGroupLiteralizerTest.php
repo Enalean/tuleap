@@ -24,17 +24,15 @@ require_once 'common/project/Project.class.php';
 class UGroupLiteralizerTest extends TuleapTestCase {
 
     protected $membership;
-    protected $user_stub;
     protected $user;
     const PERMISSIONS_TYPE = 'PLUGIN_DOCMAN_%';
 
     public function setUp() {
         parent::setUp();
-        $this->user      = mock('User');
-        $this->user_stub = stub($this->user);
-        $userManager     = mock('UserManager');
-        stub($userManager)->getUserByUserName()->returns($this->user);
-        UserManager::setInstance($userManager);
+        $this->user   = mock('User');
+        $user_manager = mock('UserManager');
+        stub($user_manager)->getUserByUserName()->returns($this->user);
+        UserManager::setInstance($user_manager);
         $this->ugroup_literalizer = new UGroupLiteralizer();
     }
 
@@ -44,73 +42,79 @@ class UGroupLiteralizerTest extends TuleapTestCase {
     }
 
     public function itIsProjectMember() {
-        $this->user_stub->getStatus()->returns('A');
+        stub($this->user)->getStatus()->returns('A');
         $userProjects = array(
                 array('group_id'=>101, 'unix_group_name'=>'gpig1')
         );
-        $this->user_stub->getProjects()->returns($userProjects);
-        $this->user_stub->isMember()->returns(false);
-        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
+        stub($this->user)->getProjects()->returns($userProjects);
+        stub($this->user)->isMember()->returns(false);
+        stub($this->user)->getAllUgroups()->returnsEmptyDar();
 
-        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $expected = array('site_active','gpig1_project_members');
-        $this->assertEqual($expected, $groups);
+        $this->assertUserGroupsForUser(array('site_active','gpig1_project_members'));
     }
 
     public function itIsProjectAdmin() {
-        $this->user_stub->getStatus()->returns('A');
+        stub($this->user)->getStatus()->returns('A');
         $userProjects = array(
                 array('group_id'=>102, 'unix_group_name'=>'gpig2')
         );
-        $this->user_stub->getProjects()->returns($userProjects);
-        $this->user_stub->isMember()->returns(true);
-        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
+        stub($this->user)->getProjects()->returns($userProjects);
+        stub($this->user)->isMember()->returns(true);
+        stub($this->user)->getAllUgroups()->returnsEmptyDar();
 
-        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $expected = array('site_active','gpig2_project_members', 'gpig2_project_admin');
-        $this->assertEqual($expected, $groups);
+        $this->assertUserGroupsForUser(array('site_active','gpig2_project_members', 'gpig2_project_admin'));
     }
 
     public function itIsMemberOfAStaticUgroup() {
-        $this->user_stub->getStatus()->returns('A');
-        $this->user_stub->getProjects()->returns(array());
-        $this->user_stub->isMember()->returns(false);
-        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar(array('ugroup_id'=>304)));
+        stub($this->user)->getStatus()->returns('A');
+        stub($this->user)->getProjects()->returns(array());
+        stub($this->user)->isMember()->returns(false);
+        stub($this->user)->getAllUgroups()->returnsDar(array('ugroup_id'=>304));
 
-        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $expected = array('site_active','ug_304');
-        $this->assertEqual($expected, $groups);
+        $this->assertUserGroupsForUser(array('site_active','ug_304'));
     }
 
     public function itIsRestricted() {
-        $this->user_stub->getStatus()->returns('R');
-        $this->user_stub->getProjects()->returns(array());
-        $this->user_stub->isMember()->returns(false);
-        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
+        stub($this->user)->getStatus()->returns('R');
+        stub($this->user)->getProjects()->returns(array());
+        stub($this->user)->isMember()->returns(false);
+        stub($this->user)->getAllUgroups()->returnsEmptyDar();
 
-        $groups   = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $expected = array('site_restricted');
-        $this->assertEqual($expected, $groups);
+        $this->assertUserGroupsForUser(array('site_restricted'));
     }
 
 
     public function itIsNeitherRestrictedNorActive() {
-        $this->user_stub->getStatus()->returns('Not exists');
-        $this->user_stub->getProjects()->returns(array());
-        $this->user_stub->isMember()->returns(false);
-        $this->user_stub->getAllUgroups()->returns(TestHelper::arrayToDar());
+        stub($this->user)->getStatus()->returns('Not exists');
+        stub($this->user)->getProjects()->returns(array());
+        stub($this->user)->isMember()->returns(false);
+        stub($this->user)->getAllUgroups()->returnsEmptyDar();
 
-        $groups = $this->ugroup_literalizer->getUserGroupsForUserName('john_do');
-        $this->assertEqual(array(), $groups);
+        $this->assertUserGroupsForUser(array());
+    }
+
+    private function assertUserGroupsForUser(array $expected) {
+        $this->assertEqual($expected, $this->ugroup_literalizer->getUserGroupsForUserName('john_do'));
+        $this->assertEqual($expected, $this->ugroup_literalizer->getUserGroupsForUser($this->user));
     }
 
     public function itCanTransformAnArrayWithUGroupMembersConstantIntoString() {
         $ugroup_ids = array(Ugroup::PROJECT_MEMBERS);
-        $project    = mock('Project');
-        stub($project)->getUnixName()->returns('gpig');
         $expected   = array('@gpig_project_members');
-        $result     = $this->ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
+        $this->assertUgroupIdsToString($ugroup_ids, $expected);
+    }
 
+    public function itDoesntIncludeTwiceProjectMemberIfSiteActive() {
+        $ugroup_ids = array(Ugroup::REGISTERED, Ugroup::PROJECT_MEMBERS);
+        $expected   = array('@site_active', '@gpig_project_members');
+        $this->assertUgroupIdsToString($ugroup_ids, $expected);
+    }
+
+    private function assertUgroupIdsToString($ugroup_ids, $expected) {
+        $project = mock('Project');
+        stub($project)->getUnixName()->returns('gpig');
+
+        $result = $this->ugroup_literalizer->ugroupIdsToString($ugroup_ids, $project);
         $this->assertEqual($expected, $result);
     }
 
