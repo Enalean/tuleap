@@ -1,3 +1,6 @@
+Version 5.23 - Tuleap 5.6
+    * 
+
 Version 5.22 - Tuleap 5.6
     * SOAP: Add missing info on getArtifact: submitted_on, submitted_by, last_update_date
 
