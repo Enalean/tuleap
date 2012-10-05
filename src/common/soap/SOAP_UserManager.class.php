@@ -1,8 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2011. All Rights Reserved.
- *
- * This file is a part of Tuleap.
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,19 +17,28 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once ('pre.php');
+class SOAP_UserManager {
+    private $user_manager;
 
-// Load WSDL
-$xmlDoc = new DOMDocument();
-$src    = dirname(dirname($_SERVER['SCRIPT_URI']))."/soap/?wsdl";
-$xml    = file_get_contents($src);
-$xmlDoc->loadXML($xml);
+    public function __construct(UserManager $user_manager) {
+        $this->user_manager = $user_manager;
+    }
 
-// Apply XSLT transform
-$xslDoc = new DOMDocument();
-$xslDoc->load(Config::get('codendi_dir')."/src/www/soap/wsdl-viewer.xsl");
+    /**
+     *
+     * @see session_continue
+     *
+     * @param String $sessionKey
+     *
+     * @return User
+     */
+    public function continueSession($sessionKey) {
+        $user = $this->user_manager->getCurrentUser($sessionKey);
+        if ($user->isLoggedIn()) {
+            return $user;
+        }
+        throw new SoapFault('3001', 'Invalid session');
+    }
+}
 
-$proc = new XSLTProcessor();
-$proc->importStylesheet($xslDoc);
-echo $proc->transformToXML($xmlDoc);
 ?>

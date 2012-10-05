@@ -45,7 +45,14 @@ class Tracker_Report_Criteria {
         $this->rank        = $rank;
         $this->is_advanced = $is_advanced;
     }
-    
+
+    /**
+     * @param bool $is_advanced
+     */
+    public function setIsAdvanced($is_advanced) {
+        $this->is_advanced = $is_advanced;
+    }
+
     public function getFrom() {
         return $this->field->getCriteriaFrom($this);
     }
