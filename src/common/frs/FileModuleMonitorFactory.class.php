@@ -462,7 +462,7 @@ class FileModuleMonitorFactory {
     }
 
     /**
-     * Display the HTML of the monitoring UI
+     * Listening to stop self monitoring action
      *
      * @param User        $currentUser  Current user
      * @param Integer     $fileModuleId Id of the package
