@@ -119,19 +119,19 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function setUpArtifactResults(Tracker_ReportDao $dao) {
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForIntegerBiggerThan3()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForIntegerBiggerThan3(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '42,66,9001', 'last_changeset_id' => '421,661,90011')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForDateFieldEqualsTo()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForDateFieldEqualsTo(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '9001', 'last_changeset_id' => '90011')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForDateFieldAdvanced()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForDateFieldAdvanced(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '42,9001', 'last_changeset_id' => '421,90011')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForListField()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListField(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '42', 'last_changeset_id' => '421')
         );
-        stub($dao)->searchMatchingIds('*', $this->tracker_id, array($this->getFromForListFieldAdvanced()), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
+        stub($dao)->searchMatchingIds('*', $this->tracker_id, $this->getFromForListFieldAdvanced(), '*', '*', '*', '*', '*', '*', '*')->returnsDar(
             array('id' => '42,66', 'last_changeset_id' => '421,661')
         );
         stub($dao)->searchMatchingIds()->returnsDar(
@@ -140,58 +140,68 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function getFromForIntegerBiggerThan3() {
-        // Todo: find a way to not have to copy past this sql fragment
-        return ' INNER JOIN tracker_changeset_value AS A_321 ON (A_321.changeset_id = c.id AND A_321.field_id = 321 )
-                         INNER JOIN tracker_changeset_value_int AS B_321 ON (
-                            B_321.changeset_value_id = A_321.id
-                            AND B_321.value > 3
-                         ) ';
+        return new FromFragmentsExpectation(array('/ tracker_changeset_value_int AS ..321.* ..321.value > 3/s'));
     }
 
     private function getFromForDateFieldEqualsTo() {
-        // Todo: find a way to not have to copy past this sql fragment
-        return ' INNER JOIN tracker_changeset_value AS A_322
-                         ON (A_322.changeset_id = c.id AND A_322.field_id = 322 )
-                         INNER JOIN tracker_changeset_value_date AS B_322
-                         ON (A_322.id = B_322.changeset_value_id
-                             AND B_322.value BETWEEN 12334567
-                                                           AND 12334567 + 24 * 60 * 60
-                         ) ';
+        return new FromFragmentsExpectation(array('/ tracker_changeset_value_date AS ..322.* ..'.
+            preg_quote('322.value BETWEEN 12334567') .'\s* '. preg_quote('AND 12334567 + 24 * 60 * 60') .'/s'));
     }
 
     private function getFromForDateFieldAdvanced() {
-        // Todo: find a way to not have to copy past this sql fragment
-        return ' INNER JOIN tracker_changeset_value AS A_322
-                         ON (A_322.changeset_id = c.id AND A_322.field_id = 322 )
-                         INNER JOIN tracker_changeset_value_date AS B_322
-                         ON (A_322.id = B_322.changeset_value_id
-                             AND B_322.value BETWEEN 1337
-                                                   AND 1338 + 24 * 60 * 60
-                         ) ';
+        return new FromFragmentsExpectation(array('/ tracker_changeset_value_date AS ..322.* ..'.
+            preg_quote('322.value BETWEEN 1337') .'\s* '. preg_quote('AND 1338 + 24 * 60 * 60') .'/s'));
     }
 
     private function getFromForListField() {
-        // Todo: find a way to not have to copy past this sql fragment
-        return ' INNER JOIN tracker_changeset_value AS A_323 ON (A_323.changeset_id = c.id AND A_323.field_id IN (323))
-                     INNER JOIN tracker_changeset_value_list AS C_323 ON (
-                        C_323.changeset_value_id = A_323.id
-                        AND C_323.bindvalue_id IN(106)
-                     ) ';
+        return new FromFragmentsExpectation(array('/ tracker_changeset_value_list AS ..323.* ..'.
+            preg_quote('323.bindvalue_id IN(106)') .'/s'));
     }
 
     private function getFromForListFieldAdvanced() {
-        // Todo: find a way to not have to copy past this sql fragment
-        return ' INNER JOIN tracker_changeset_value AS A_323 ON (A_323.changeset_id = c.id AND A_323.field_id IN (323))
-                     INNER JOIN tracker_changeset_value_list AS C_323 ON (
-                        C_323.changeset_value_id = A_323.id
-                        AND C_323.bindvalue_id IN(106,107)
-                     ) ';
+        return new FromFragmentsExpectation(array('/ tracker_changeset_value_list AS ..323.* ..'.
+            preg_quote('323.bindvalue_id IN(106,107)') .'/s'));
     }
 
     protected function convertCriteriaToSoapParameter($criteria) {
         //SOAP send objects, not associative array.
         //Use json as a trick to convert to objects the criteria
         return json_decode(json_encode($criteria));
+    }
+}
+
+class FromFragmentsExpectation extends SimpleExpectation {
+
+    /**
+     * @var array of pattern
+     */
+    private $expected_fragments;
+
+    public function __construct(array $expected_fragments) {
+        $this->expected_fragments = $expected_fragments;
+    }
+
+    public function test($fragments) {
+        if (count($fragments) !== count($this->expected_fragments)) {
+            return false;
+        }
+        foreach ($fragments as $i => $fragment) {
+            if (!preg_match($this->expected_fragments[$i], $fragment)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public function testMessage($fragments) {
+        if (count($fragments) !== count($this->expected_fragments)) {
+            return 'Number of fragments differ ('. count($fragments) .' expected: '. count($this->expected_fragments) .')';
+        }
+        foreach ($fragments as $i => $fragment) {
+            if (!preg_match($this->expected_fragments[$i], $fragment)) {
+                return "Fragment #$i [$fragment] does not match [{$this->expected_fragments[$i]}]";
+            }
+        }
     }
 }
 
