@@ -397,4 +397,57 @@ class BackendSystemTest extends UnitTestCase {
         $this->assertTrue($backend->cleanupFRS());
     }
 }
+
+class BackendSystem_SSHKeysTest extends TuleapTestCase {
+    private $user_name;
+    private $user_home;
+
+    public function setUp() {
+        parent::setUp();
+        EventManager::setInstance(mock('EventManager'));
+        $GLOBALS['homedir_prefix'] = dirname(__FILE__).'/_fixtures/home/users';
+        $this->user_name = 'toto';
+        $this->user_home = $GLOBALS['homedir_prefix'].'/'.$this->user_name;
+        mkdir($this->user_home);
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        EventManager::clearInstance();
+        unset($GLOBALS['homedir_prefix']);
+        unlink($this->user_home.'/.ssh/authorized_keys');
+        rmdir($this->user_home.'/.ssh');
+        rmdir($this->user_home);
+    }
+
+    public function itWriteTheKeyInTheAutorizedKeyFile() {
+        $key  = 'bla';
+        $user = aUser()->withUserName($this->user_name)
+                       ->withAuthorizedKeysArray(array($key))
+                       ->withUnixStatus('A')
+                       ->build();
+
+        $backend = partial_mock('BackendSystem', array('chown','chmod', 'chgrp', 'log', 'changeProcessUidGidToUser', 'restoreRootUidGid'));
+
+        stub($backend)->log(new PatternExpectation('/Authorized_keys for '.$this->user_name.' written/'), 'info')->once();
+
+        $backend->expectCallCount('chown', 2);
+        stub($backend)->chown($this->user_home.'/.ssh', $this->user_name)->at(0);
+        stub($backend)->chown($this->user_home.'/.ssh/authorized_keys', $this->user_name)->at(1);
+
+        $backend->expectCallCount('chgrp', 2);
+        stub($backend)->chgrp($this->user_home.'/.ssh', $this->user_name)->at(0);
+        stub($backend)->chgrp($this->user_home.'/.ssh/authorized_keys', $this->user_name)->at(1);
+
+        $backend->expectCallCount('chmod', 4);
+        stub($backend)->chmod($this->user_home.'/.ssh', 0700)->at(0);
+        stub($backend)->chmod($this->user_home.'/.ssh/authorized_keys', 0600)->at(1);
+        stub($backend)->chmod($this->user_home.'/.ssh', 0700)->at(2);
+        stub($backend)->chmod($this->user_home.'/.ssh/authorized_keys', 0600)->at(3);
+
+        $backend->dumpSSHKeysForUser($user);
+        $this->assertEqual($key, file_get_contents($this->user_home.'/.ssh/authorized_keys'));
+    }
+}
+
 ?>
