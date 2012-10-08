@@ -427,7 +427,7 @@ class BackendSystem_SSHKeysTest extends TuleapTestCase {
                        ->withUnixStatus('A')
                        ->build();
 
-        $backend = partial_mock('BackendSystem', array('chown','chmod', 'chgrp', 'log', 'changeProcessUidGidToUser', 'restoreRootUidGid'));
+        $backend = partial_mock('BackendSystem', array('chown', 'chgrp', 'log', 'changeProcessUidGidToUser', 'restoreRootUidGid'));
 
         stub($backend)->log(new PatternExpectation('/Authorized_keys for '.$this->user_name.' written/'), 'info')->once();
 
@@ -439,14 +439,15 @@ class BackendSystem_SSHKeysTest extends TuleapTestCase {
         stub($backend)->chgrp($this->user_home.'/.ssh', $this->user_name)->at(0);
         stub($backend)->chgrp($this->user_home.'/.ssh/authorized_keys', $this->user_name)->at(1);
 
-        $backend->expectCallCount('chmod', 4);
-        stub($backend)->chmod($this->user_home.'/.ssh', 0700)->at(0);
-        stub($backend)->chmod($this->user_home.'/.ssh/authorized_keys', 0600)->at(1);
-        stub($backend)->chmod($this->user_home.'/.ssh', 0700)->at(2);
-        stub($backend)->chmod($this->user_home.'/.ssh/authorized_keys', 0600)->at(3);
-
         $backend->dumpSSHKeysForUser($user);
         $this->assertEqual($key, file_get_contents($this->user_home.'/.ssh/authorized_keys'));
+        $this->assertEqual('0700', $this->getFileModeAsString($this->user_home.'/.ssh'));
+        $this->assertEqual('0600', $this->getFileModeAsString($this->user_home.'/.ssh/authorized_keys'));
+
+    }
+
+    private function getFileModeAsString($filename) {
+        return substr(sprintf('%o', fileperms($filename)), -4);
     }
 }
 

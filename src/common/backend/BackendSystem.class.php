@@ -543,15 +543,16 @@ class BackendSystem extends Backend {
     }
 
     private function writeSSHFile(User $user, $ssh_dir) {
-        touch("$ssh_dir/authorized_keys_new");
-        $this->chmod("$ssh_dir/authorized_keys", 0600);
+        $authorized_keys_new = "$ssh_dir/authorized_keys_new";
+        touch($authorized_keys_new);
+        $this->chmod($authorized_keys_new, 0600);
 
         $ssh_keys = implode("\n", $user->getAuthorizedKeysArray());
-        if (file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys) === false) {
+        if (file_put_contents($authorized_keys_new, $ssh_keys) === false) {
             throw new RuntimeException("Unable to write authorized_keys_new file for ".$user->getUserName());
         }
-        if (rename("$ssh_dir/authorized_keys_new", "$ssh_dir/authorized_keys") === false) {
-            throw new RuntimeException("Unable to rename authorized_keys_new file for ".$user->getUserName());
+        if (rename($authorized_keys_new, "$ssh_dir/authorized_keys") === false) {
+            throw new RuntimeException("Unable to rename $authorized_keys_new file for ".$user->getUserName());
         }
     }
 
