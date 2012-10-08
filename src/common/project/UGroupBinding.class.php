@@ -330,6 +330,8 @@ class UGroupBinding {
      * @return String
      */
     public function getHTMLContent($groupId, $ugroupId, $sourceProject = null) {
+        $currentProject = null;
+        $currentSource  = null;
         $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row            = $dar->getRow();
@@ -374,7 +376,7 @@ class UGroupBinding {
             }
             $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'remove_binding').'"/></form>';
         } else {
-            $currentBindHTML .= $GLOBALS['Language']->getText('project_ugroup_binding', 'no_binding');
+            $currentBindHTML = $GLOBALS['Language']->getText('project_ugroup_binding', 'no_binding');
         }
         return $currentBindHTML;
     }
