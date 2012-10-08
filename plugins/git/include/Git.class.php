@@ -450,7 +450,7 @@ class Git extends PluginController {
     }
 
     protected function _informAboutPendingEvents($repoId) {
-        $sem = SystemEventManager::instance();
+        $sem = $this->_getSystemEventManager();
         $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_CLONE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         foreach ($dar as $row) {
             $p = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
@@ -489,7 +489,7 @@ class Git extends PluginController {
      * @return PluginActions
      */
     protected function instantiateAction($action) {
-        $system_event_manager   = SystemEventManager::instance();
+        $system_event_manager   = $this->_getSystemEventManager();
         $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
         return new $action($this, $system_event_manager, $this->factory, $git_repository_manager);
     }
@@ -571,6 +571,15 @@ class Git extends PluginController {
     public function logsDaily($params) {
         $logger  = new GitLog();
         $logger->logsDaily($params);
+    }
+
+    /**
+     * Get SystemEventManager
+     *
+     * @return SystemEventManager
+     */
+    private function _getSystemEventManager() {
+        return SystemEventManager::instance();
     }
 
 }

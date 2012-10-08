@@ -35,9 +35,10 @@ class ArchivedeleteditemsPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass',    false);
-        $this->_addHook('archive_deleted_item',        'archive',                false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'systemEventGetTypes', false);
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
+
+        $this->_addHook('archive_deleted_item', 'archive', false);
     }
 
     /**
@@ -71,14 +72,14 @@ class ArchivedeleteditemsPlugin extends Plugin {
      *
      * @return Void
      */
-    public function system_event_get_types($params) {
+    public function systemEventGetTypes($params) {
         $params['types'][] = 'ARCHIVE_DELETED_ITEMS';
     }
 
     /**
      * This callback make SystemEvent manager knows about plugin System Events
      *
-     * @param Array $params
+     * @param Array $params Hook params
      *
      * @return Void
      */
@@ -91,7 +92,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
     /**
      * Copy files to the archiving directory
      *
-     * @param Array @params Hook parameters
+     * @param Array $params Hook parameters
      *
      * @return Void
      */

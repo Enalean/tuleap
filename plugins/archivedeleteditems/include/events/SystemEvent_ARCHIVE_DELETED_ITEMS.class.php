@@ -24,9 +24,9 @@ require_once('common/system_event/SystemEvent.class.php');
 class SystemEvent_ARCHIVE_DELETED_ITEMS extends SystemEvent {
 
     /**
-     * >Process the system event
+     * Process the system event
      *
-     * @raturn Boolean
+     * @return Boolean
      */
     public function process() {
         $parameters   = $this->getParametersAsArray();
@@ -56,7 +56,7 @@ class SystemEvent_ARCHIVE_DELETED_ITEMS extends SystemEvent {
     /**
      * Verbalize params
      *
-     * @param Boolean $xithLink With link
+     * @param Boolean $withLink With link
      *
      * @return Array
      */
