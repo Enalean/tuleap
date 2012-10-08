@@ -1,7 +1,7 @@
 AUTOLOADED_PATH=src/common/PFO plugins/agiledashboard/include plugins/fulltextsearch/include
 
 default:
-	@echo "possible targets: 'doc' 'test'"
+	@echo "possible targets: 'doc' 'test' 'autoload'"
 
 doc:
 	$(MAKE) -C documentation all
