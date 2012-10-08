@@ -501,6 +501,13 @@ class BackendSystem extends Backend {
             $this->writeSSHFile($user, $ssh_dir);
             $this->restoreRootUidGid();
 
+            $this->chown($ssh_dir, $user->getUserName());
+            $this->chgrp($ssh_dir, $user->getUserName());
+            $this->chown("$ssh_dir/authorized_keys", $user->getUserName());
+            $this->chgrp("$ssh_dir/authorized_keys", $user->getUserName());
+            $this->chmod($ssh_dir, 0700);
+            $this->chmod("$ssh_dir/authorized_keys", 0600);
+
             $this->log("Authorized_keys for ".$user->getUserName()." written.", Backend::LOG_INFO);
             return true;
         } catch (Exception $exception) {
@@ -510,7 +517,7 @@ class BackendSystem extends Backend {
         }
     }
 
-    private function changeProcessUidGidToUser(User $user) {
+    protected function changeProcessUidGidToUser(User $user) {
         $user_unix_info = posix_getpwnam($user->getUserName());
         if (empty($user_unix_info['uid']) || empty($user_unix_info['gid'])) {
             throw new RuntimeException("User ".$user->getUserName()." has no uid/gid");
@@ -520,7 +527,7 @@ class BackendSystem extends Backend {
         }
     }
 
-    private function restoreRootUidGid() {
+    protected function restoreRootUidGid() {
         posix_setegid(0);
         posix_seteuid(0);
     }
@@ -529,8 +536,6 @@ class BackendSystem extends Backend {
         if (!is_dir($ssh_dir)) {
             if (mkdir($ssh_dir)) {
                 $this->chmod($ssh_dir, 0700);
-                $this->chown($ssh_dir, $user->getUserName());
-                $this->chgrp($ssh_dir, $user->getUserName());
             } else {
                 throw new RuntimeException("Unable to create user home ssh directory for ".$user->getUserName());
             }
@@ -538,6 +543,9 @@ class BackendSystem extends Backend {
     }
 
     private function writeSSHFile(User $user, $ssh_dir) {
+        touch("$ssh_dir/authorized_keys_new");
+        $this->chmod("$ssh_dir/authorized_keys", 0600);
+
         $ssh_keys = implode("\n", $user->getAuthorizedKeysArray());
         if (file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys) === false) {
             throw new RuntimeException("Unable to write authorized_keys_new file for ".$user->getUserName());
@@ -545,10 +553,6 @@ class BackendSystem extends Backend {
         if (rename("$ssh_dir/authorized_keys_new", "$ssh_dir/authorized_keys") === false) {
             throw new RuntimeException("Unable to rename authorized_keys_new file for ".$user->getUserName());
         }
-
-        $this->chmod("$ssh_dir/authorized_keys", 0600);
-        $this->chown("$ssh_dir/authorized_keys", $user->getUserName());
-        $this->chgrp("$ssh_dir/authorized_keys", $user->getUserName());
     }
 
     /**

@@ -21,10 +21,10 @@ require_once 'common/user/User.class.php';
 
 /**
  * Ease creation of User object
- * 
+ *
  * $user = aUser()->withId(123)->withUserName('pouet')->build();
- * 
- * @return \UserTestBuilder 
+ *
+ * @return \UserTestBuilder
  */
 function aUser() {
     return new UserTestBuilder();
@@ -36,19 +36,24 @@ function anAnonymousUser() {
 
 class UserTestBuilder {
     private $params = array('language_id' => 'en_US');
-    
+
     function withUserName($name) {
         $this->params['user_name'] = $name;
         return $this;
     }
-    
+
     function withId($id) {
         $this->params['user_id'] = $id;
         return $this;
     }
-    
+
     function withAuthorizedKeysArray(array $keys) {
         $this->params['authorized_keys'] = implode('###', $keys);
+        return $this;
+    }
+
+    function withUnixStatus($status) {
+        $this->params['unix_status'] = $status;
         return $this;
     }
 
