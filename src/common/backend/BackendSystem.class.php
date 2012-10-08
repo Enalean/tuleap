@@ -501,12 +501,8 @@ class BackendSystem extends Backend {
             $this->writeSSHFile($user, $ssh_dir);
             $this->restoreRootUidGid();
 
-            $this->chown($ssh_dir, $user->getUserName());
-            $this->chgrp($ssh_dir, $user->getUserName());
-            $this->chown("$ssh_dir/authorized_keys", $user->getUserName());
-            $this->chgrp("$ssh_dir/authorized_keys", $user->getUserName());
-            $this->chmod($ssh_dir, 0700);
-            $this->chmod("$ssh_dir/authorized_keys", 0600);
+            $this->changeOwnerGroupMode($ssh_dir, $user->getUserName(), $user->getUserName(), 0700);
+            $this->changeOwnerGroupMode("$ssh_dir/authorized_keys", $user->getUserName(), $user->getUserName(), 0600);
 
             $this->log("Authorized_keys for ".$user->getUserName()." written.", Backend::LOG_INFO);
             return true;

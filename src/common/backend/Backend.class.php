@@ -173,6 +173,22 @@ class Backend {
         return chown($path, $uid);
     }
 
+    /**
+     * Set file's owner, group and mode
+     *
+     * @param String  $file
+     * @param String  $user
+     * @param String  $group
+     * @param Integer $mode
+     *
+     * @return void
+     */
+    public function changeOwnerGroupMode($file, $user, $group, $mode) {
+        $this->chown($file, $user);
+        $this->chgrp($file, $group);
+        $this->chmod($file, $mode);
+    }
+
     /** 
      * Create chgrp function to allow mocking in unit tests 
      * Attempts to change the group of the file filename  to group .
