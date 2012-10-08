@@ -18,6 +18,7 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
+require_once(dirname(__FILE__).'/events/SystemEvent_ARCHIVE_DELETED_ITEMS.class.php');
 
 /**
  * Archive
@@ -34,6 +35,9 @@ class ArchivedeleteditemsPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass',    false);
+        $this->_addHook('archive_deleted_item',        'archive',                false);
     }
 
     /**
@@ -58,6 +62,42 @@ class ArchivedeleteditemsPlugin extends Plugin {
      */
     public function getConfigurationParameter($key) {
         return $this->getPluginInfo()->getPropertyValueForName($key);
+    }
+
+    /**
+     * Get types of system events
+     *
+     * @params Array $params Hook params
+     *
+     * @return Void
+     */
+    public function system_event_get_types($params) {
+        $params['types'][] = 'ARCHIVE_DELETED_ITEMS';
+    }
+
+    /**
+     * This callback make SystemEvent manager knows about plugin System Events
+     *
+     * @param Array $params
+     *
+     * @return Void
+     */
+    public function getSystemEventClass($params) {
+        if ($params['type'] == 'ARCHIVE_DELETED_ITEMS') {
+            $params['class'] = 'SystemEvent_ARCHIVE_DELETED_ITEMS';
+        }
+    }
+
+    /**
+     * Copy files to the archiving directory
+     *
+     * @param Array @params Hook parameters
+     *
+     * @return Void
+     */
+    public function archive($params) {
+        $archivePath = $this->getConfigurationParameter('archive_path');
+        SystemEventManager::instance()->createEvent('ARCHIVE_DELETED_ITEMS', $params['source_path'].SystemEvent::PARAMETER_SEPARATOR.$archivePath, SystemEvent::PRIORITY_MEDIUM);
     }
 
 }
