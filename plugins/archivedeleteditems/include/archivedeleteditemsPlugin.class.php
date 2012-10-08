@@ -68,7 +68,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
     /**
      * Get types of system events
      *
-     * @params Array $params Hook params
+     * @param Array $params Hook params
      *
      * @return Void
      */
