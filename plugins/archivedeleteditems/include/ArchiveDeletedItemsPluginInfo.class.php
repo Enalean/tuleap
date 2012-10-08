@@ -32,7 +32,7 @@ class ArchiveDeletedItemsPluginInfo extends PluginFileInfo {
      * @return Void
      */
     public function __construct(ArchivedeleteditemsPlugin $plugin) {
-        parent::__construct($plugin, 'config');
+        parent::__construct($plugin, 'archivedeleteditems');
         $this->setPluginDescriptor(new ArchiveDeletedItemsPluginDescriptor());
     }
 
