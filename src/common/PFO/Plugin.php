@@ -21,13 +21,6 @@
 interface PFO_Plugin {
 
     /**
-     * Callback called when the plugin is loaded
-     *
-     * @return void
-     */
-    public function loaded();
-
-    /**
      * Listen to an event and associate a callback
      *
      * @param String  $hook       Event name
@@ -38,14 +31,6 @@ interface PFO_Plugin {
      */
     public function addHook($hook, $callback = null, $recallHook = false);
 
-    /**
-     * Plugin no longer listen to given hook
-     *
-     * @param type $hook
-     *
-     * @return void
-     */
-    public function removeHook($hook);
 }
 
 ?>
