@@ -128,10 +128,6 @@ class GitPlugin extends Plugin {
                 require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_CREATE.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_CREATE';
                 break;
-            case 'GIT_REPO_CLONE' :
-                require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_CLONE.class.php');
-                $params['class'] = 'SystemEvent_GIT_REPO_CLONE';
-                break;
             case 'GIT_REPO_DELETE' :
                 require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_DELETE.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
@@ -360,7 +356,6 @@ class GitPlugin extends Plugin {
     
     public function system_event_get_types($params) {
         $params['types'][] = 'GIT_REPO_ACCESS';
-        $params['types'][] = 'GIT_REPO_CLONE';
         $params['types'][] = 'GIT_REPO_CREATE';
         $params['types'][] = 'GIT_REPO_DELETE';
     }

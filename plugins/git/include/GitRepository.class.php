@@ -632,23 +632,6 @@ class GitRepository implements DVCSRepository {
         return $this->getBackend()->getAccessURL($this);
     }
 
-    /**
-     * Clone a repository, it inherits access
-     * @param String forkName
-     */
-    public function forkShell($forkName) {
-        $clone = new GitRepository();
-        $clone->setName($forkName);
-        $clone->setProject( $this->getProject() );
-        $clone->setParent( $this );               
-        $clone->setCreationDate( date('Y-m-d H:i:s') );
-        $clone->setCreator( $this->getCreator() );
-        $clone->setAccess( $this->getAccess() );
-        $clone->setIsInitialized(1);
-        $clone->setDescription(self::DEFAULT_DESCRIPTION);
-        $this->getBackend()->createFork($clone);
-    }
-    
     public function fork($user, $namespace, $scope, Project $project) {
         $clone = clone $this;
         $clone->setProject($project);

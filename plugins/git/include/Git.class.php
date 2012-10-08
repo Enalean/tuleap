@@ -464,17 +464,13 @@ class Git extends PluginController {
 
     protected function _informAboutPendingEvents($repoId) {
         $sem = SystemEventManager::instance();
-        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_CLONE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         foreach ($dar as $row) {
             $p = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
             $repository = $this->factory->getDeletedRepository($p[1]);
             switch($row['type']) {
             case 'GIT_REPO_CREATE':
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
-                break;
-
-            case 'GIT_REPO_CLONE':
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_fork', array($p[1])));
                 break;
 
             case 'GIT_REPO_DELETE':

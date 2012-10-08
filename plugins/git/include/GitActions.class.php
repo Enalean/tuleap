@@ -154,51 +154,6 @@ class GitActions extends PluginActions {
         return;
     }
 
-    public function cloneRepository( $projectId, $forkName, $parentId) {
-        
-        $c         = $this->getController();
-        $projectId = intval($projectId);
-        $parentId  = intval($parentId);
-        if ( empty($projectId) || empty($forkName) || empty($parentId) ) {
-            $this->addError('actions_params_error');
-            return false;
-        }
-        
-        $parentRepo = $this->factory->getRepositoryById($parentId);
-        if ($parentRepo) {
-            
-            // Disable possibility to delete gitolite repositories
-            if ($parentRepo->getBackend() instanceof Git_Backend_Gitolite) {
-                $this->addError('disable_fork_gitolite');
-                $this->redirectToRepo($projectId, $parentId);
-            }
-
-            if ($parentRepo->isNameValid($forkName) === false) {
-                $c->addError( $this->getText('actions_input_format_error', array($parentRepo->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
-                $this->redirectToRepo($projectId, $parentId);
-                return false;
-            }
-
-            if ( !$parentRepo->isInitialized() ) {
-                $this->addError('repo_not_initialized');
-                $this->redirectToRepo($projectId, $parentId);
-                return false;
-            }
-        } else {
-            $this->addError( 'actions_repo_not_found' );
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
-        $this->systemEventManager->createEvent(
-            'GIT_REPO_CLONE',
-            $projectId.SystemEvent::PARAMETER_SEPARATOR.$forkName.SystemEvent::PARAMETER_SEPARATOR.$parentId.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
-            SystemEvent::PRIORITY_MEDIUM
-        );
-        $c->addInfo( $this->getText('actions_create_repo_process') );
-        $this->redirectToRepo($projectId, $parentId);
-        return;
-    }
-
     /**
      * Action to load the user's repositories of a project. If user is not given, then load the project repositories instead.
      * 
