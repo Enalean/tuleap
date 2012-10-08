@@ -63,7 +63,7 @@ function negociate_content_user_home(PFO_User $user, $default_content_type) {
     if($content_type != $default_content_type) {
         $content = '';
         $params = array(
-            'username'     => $user->getUserName(),
+            'username'     => $user->getUnixName(),
             'accept'       => $content_type,
             'content'      => &$content,
             'content_type' => &$content_type,
