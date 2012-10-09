@@ -205,32 +205,64 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
 
     public function setUp() {
         parent::setUp();
+        $tracker_factory   = mock('TrackerFactory');
+        $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
+        $hierarchy_factory = new Tracker_HierarchyFactory($hierarchy_dao, $tracker_factory, mock('Tracker_ArtifactFactory'));
+
+        $this->setUpTrackers($tracker_factory, $hierarchy_dao);
+        $this->setUpPlannings($tracker_factory, $hierarchy_factory);
+    }
+
+    private function setUpTrackers(TrackerFactory $tracker_factory, Tracker_Hierarchy_Dao $hierarchy_dao) {
         $this->epic_tracker  = aMockTracker()->withId(104)->build();
         $this->story_tracker = aMockTracker()->withId(103)->build();
 
+        stub($tracker_factory)->getTrackerById($this->epic_tracker->getId())->returns($this->epic_tracker);
+        stub($tracker_factory)->getTrackerById($this->story_tracker->getId())->returns($this->story_tracker);
+
+        stub($hierarchy_dao)->searchTrackerHierarchy(array(103, 104))->returnsDar(
+            array('parent_id' => '104', 'child_id' => '103')
+        );
+        stub($hierarchy_dao)->searchTrackerHierarchy()->returnsEmptyDar();
+    }
+
+    private function setUpPlannings(TrackerFactory $tracker_factory, Tracker_HierarchyFactory $hierarchy_factory) {
         $dao = mock('PlanningDao');
         stub($dao)->searchPlannings($this->project_id)->returnsDar(
-            array('id' => 1, 'name' => 'Release Planning', 'group_id' => 123, 'planning_tracker_id' => 104, 'backlog_title' => 'Product Backlog', 'plan_title' => 'Release Plan'),
-            array('id' => 2, 'name' => 'Sprint Planning', 'group_id' => 123, 'planning_tracker_id' => 103, 'backlog_title' => 'Release Backlog', 'plan_title' => 'Sprint Plan')
+            array(
+                'id'                  => 1,
+                'name'                => 'Sprint Planning',
+                'group_id'            => 123,
+                'planning_tracker_id' => 103,
+                'backlog_title'       => 'Release Backlog',
+                'plan_title'          => 'Sprint Plan'
+            ),
+            array(
+                'id'                  => 2,
+                'name'                => 'Release Planning',
+                'group_id'            => 123,
+                'planning_tracker_id' => 104,
+                'backlog_title'       => 'Product Backlog',
+                'plan_title'          => 'Release Plan'
+            )
         );
         stub($dao)->searchPlannings($this->project_id_without_planning)->returnsEmptyDar();
 
-        $factory_builder = aPlanningFactory()->withDao($dao);
+        $this->factory = aPlanningFactory()
+            ->withDao($dao)
+            ->withTrackerFactory($tracker_factory)
+            ->withHierarchyFactory($hierarchy_factory)
+            ->build();
 
-        stub($factory_builder->tracker_factory)->getTrackerById($this->epic_tracker->getId())->returns($this->epic_tracker);
-        stub($factory_builder->tracker_factory)->getTrackerById($this->story_tracker->getId())->returns($this->story_tracker);
-
-        $this->factory = $factory_builder->build();
-
-        $this->release_planning = new Planning(1, 'Release Planning', 123, 'Product Backlog', 'Release Plan', null, $this->epic_tracker->getId());
-        $this->sprint_planning  = new Planning(2, 'Sprint Planning', 123, 'Release Backlog', 'Sprint Plan', null, $this->story_tracker->getId());
+        $this->release_planning = new Planning(2, 'Release Planning', 123, 'Product Backlog', 'Release Plan', null, $this->epic_tracker->getId());
+        $this->sprint_planning  = new Planning(1, 'Sprint Planning', 123, 'Release Backlog', 'Sprint Plan', null, $this->story_tracker->getId());
     }
 
     public function itReturnAnEmptyArrayIfThereIsNoPlanningDefinedForAProject() {
         $this->assertEqual(array(), $this->factory->getPlannings($this->user, $this->project_id_without_planning));
     }
 
-    public function itReturnAllDefinedPlanningsForAProject() {
+    public function itReturnAllDefinedPlanningsForAProjectInTheOrderDefinedByTheHierarchy() {
         stub($this->epic_tracker)->userCanView($this->user)->returns(true);
         stub($this->story_tracker)->userCanView($this->user)->returns(true);
 
