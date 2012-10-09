@@ -174,10 +174,13 @@
     list-style: none;
     margin: 0;
     padding: 0;
+    text-align: center;
 }
 .ad_index_planning {
     margin-right: 1em;
+    text-align: left;
     
+    background: #fcfcfc;
     min-width: 100px;
     border:1px solid #ccc;
     padding: 0.25em 1em;
