@@ -6,3 +6,4 @@ tests/simpletest/common/include/_fixtures/big_file
 documentation/user_guide/html/*
 *~
 centos-5.8-x86_64-chef.box
+.vagrant
