@@ -95,7 +95,9 @@ class PlanningFactory {
         foreach ($this->dao->searchPlannings($group_id) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
             if ($tracker && $tracker->userCanView($user)) {
-                $plannings[] = new Planning($row['id'], $row['name'], $row['group_id'], $row['backlog_title'], $row['plan_title']);
+                $planning = new Planning($row['id'], $row['name'], $row['group_id'], $row['backlog_title'], $row['plan_title'], null, $row['planning_tracker_id']);
+                $planning->setPlanningTracker($tracker);
+                $plannings[] = $planning;
             }
         }
         return $plannings;

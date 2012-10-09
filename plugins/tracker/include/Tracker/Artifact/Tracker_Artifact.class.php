@@ -800,6 +800,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
+     * @return string html
+     */
+    public function fetchDirectLinkToArtifactWithoutXRef() {
+        $hp = Codendi_HTMLPurifier::instance();
+        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $hp->purify($this->getTitle()) . '</a>';
+    }
+
+    /**
      * @return string
      */
     public function getUri() {

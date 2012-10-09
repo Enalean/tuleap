@@ -163,6 +163,14 @@ class Planning {
     public function getBacklogTracker() {
         return $this->backlog_tracker;
     }
+    
+    public function getLastTenOpenArtifacts() {
+        $artifact_factory = Tracker_ArtifactFactory::instance();
+        $user       = HTTPRequest::instance()->getCurrentUser();
+        $artifacts  = $artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $this->getPlanningTrackerId());
+        ksort($artifacts);
+        return array_slice($artifacts, -10);
+    }
 }
 
 

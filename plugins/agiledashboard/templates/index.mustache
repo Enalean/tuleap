@@ -4,8 +4,9 @@
     <li class="ad_index_planning">
         <h2>{{getName}}</h2>
         <ul>
-            <li>Lorem</li>
-            <li>Ipsum</li>
+            {{#getLastTenOpenArtifacts}}
+            <li>{{{fetchDirectLinkToArtifactWithoutXRef}}}</li>
+            {{/getLastTenOpenArtifacts}}
         </ul>
     </li>
     {{/getPlannings}}
