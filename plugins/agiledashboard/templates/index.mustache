@@ -1,1 +1,18 @@
-nasty stuff to come! Stay tuned!
+{{#hasPlannings}}
+<ul class="ad_index_plannings">
+    {{#getPlannings}}
+    <li class="ad_index_planning">
+        <h2>{{getName}}</h2>
+        <ul>
+            <li>Lorem</li>
+            <li>Ipsum</li>
+        </ul>
+    </li>
+    {{/getPlannings}}
+</ul>
+{{/hasPlannings}}
+{{^hasPlannings}}
+<p>
+    <em>Nothing has been setup yet. Please come again later!</em>
+</p>
+{{/hasPlannings}}

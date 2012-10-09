@@ -169,3 +169,20 @@
 .card-planning-controls > div > i:hover {
     opacity:1;
 }
+
+.ad_index_plannings {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+.ad_index_planning {
+    margin-right: 1em;
+    display: inline-block;
+    zoom: 1;
+    *display: inline;
+}
+.ad_index_planning > ul {
+    list-style: none;
+    margin-left: 0;
+    padding: 0;
+}
