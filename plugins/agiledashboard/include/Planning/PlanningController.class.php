@@ -61,6 +61,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function create() {
+        $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory);
         
         if ($validator->isValid($this->request)) {
@@ -83,6 +84,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function update() {
+        $this->checkUserIsAdmin();
         $validator = new Planning_RequestValidator($this->planning_factory);
         
         if ($validator->isValid($this->request)) {
@@ -100,6 +102,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function delete() {
+        $this->checkUserIsAdmin();
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         $this->redirect(array('group_id' => $this->group_id));
     }
@@ -123,6 +126,17 @@ class Planning_Controller extends MVC2_Controller {
      */
     public function getBreadcrumbs($plugin_path) {
         return new BreadCrumb_AgileDashboard($plugin_path, (int) $this->request->get('group_id'));
+    }
+
+    private function checkUserIsAdmin() {
+        $project = $this->request->getProject();
+        $user    = $this->request->getCurrentUser();
+        if (! $project->userIsAdmin($user)) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
+            $this->redirect(array('group_id' => $this->group_id));
+            // the below is only run by tests (redirect should exit but is mocked)
+            throw new Exception($GLOBALS['Language']->getText('global', 'perm_denied'));
+        }
     }
 }
 

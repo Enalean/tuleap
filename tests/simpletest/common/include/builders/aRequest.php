@@ -21,17 +21,22 @@
 require_once 'common/include/Codendi_Request.class.php';
 
 class Codendi_Request_TestBuilder {
-    
+
     /**
      * @var array
      */
     private $params = array();
-    
+
     /**
      * @var User
      */
     private $user;
-    
+
+    /**
+     * @var Project
+     */
+    private $project;
+
     public function with($param_name, $param_value) {
         $this->params[$param_name] = $param_value;
         return $this;
@@ -41,49 +46,57 @@ class Codendi_Request_TestBuilder {
         $this->params = array_merge($this->params, $params);
         return $this;
     }
-    
+
     public function withUri($uri) {
         $this->withParams($this->extractParamsFromUri($uri));
         return $this;
     }
-    
+
     public function withUser(User $user) {
         $this->user = $user;
         return $this;
     }
-    
+
+    public function withProject(Project $project) {
+        $this->project = $project;
+        return $this->with('group_id', $project->getID());
+    }
+
     private function buildUser() {
         $user = $this->user ? $this->user : aUser()->build();
         return $user;
     }
-    
+
     public function build() {
         $request = new Codendi_Request($this->params);
         $request->setCurrentUser($this->buildUser());
+        if ($this->project) {
+            $request->setProject($this->project);
+        }
         return $request;
     }
 
     private function extractParamsFromUri($uri) {
         $query  = $this->extractQueryFromUri($uri);
         $params = $this->extractParamsFromQuery($query);
-        
+
         return $params;
     }
-    
+
     private function extractQueryFromUri($uri) {
         $uri_parts = parse_url($uri);
         return isset($uri_parts['query']) ? $uri_parts['query'] : '';
     }
-    
+
     private function extractParamsFromQuery($query) {
         $params = array();
         if ($query === '') return $params;
-        
+
         foreach(explode('&', $query) as $param_name_and_value) {
             list($param_name, $param_value) = explode('=', $param_name_and_value);
             $params[$param_name] = $param_value;
         }
-        
+
         return $params;
     }
 }

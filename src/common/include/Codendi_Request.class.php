@@ -24,23 +24,28 @@ class Codendi_Request {
      * @access protected
      */
     protected $_validated_input;
-    
+
     /**
      * @var array
      * @access protected
      */
     protected $_last_access_to_input;
-    
+
     /**
      * @var array
      */
     public $params;
-    
+
     /**
      * @var UserManager
      */
     protected $current_user;
-    
+
+    /**
+     * @var Project
+     */
+    protected $project;
+
     /**
      * Constructor
      */
@@ -49,24 +54,24 @@ class Codendi_Request {
         $this->_validated_input      = array();
         $this->_last_access_to_input = array();
     }
-    
+
     public function registerShutdownFunction() {
         if (Config::get('DEBUG_MODE') && (strpos($_SERVER['REQUEST_URI'], '/soap/') !== 0)) {
             $php_code = '$request =& '. get_class($this) .'::instance(); $request->checkThatAllVariablesAreValidated();';
             register_shutdown_function(create_function('', $php_code));
         }
     }
-    
+
     public function getCookie($name) {
         $cookie_manager = new CookieManager();
         return $cookie_manager->getCookie($name);
     }
-    
+
     public function isCookie($name) {
         $cookie_manager = new CookieManager();
         return $cookie_manager->isCookie($name);
     }
-    
+
     public function isAjax() {
         return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtoupper($_SERVER['HTTP_X_REQUESTED_WITH']) == 'XMLHTTPREQUEST';
     }
@@ -109,14 +114,14 @@ class Codendi_Request {
     /**
      * Get value of $idx[$variable] user submitted values.
      *
-     * For instance if you have: 
+     * For instance if you have:
      *   user_preference[103] => "awesome"
      * You gets "awesome" with
      *   getInArray('user_preference', 103);
      *
      * @param String $idx The index of the variable array in $this->params.
      * @param String Name of the parameter to get.
-     * 
+     *
      * @return mixed If the variable exist, the value is returned (string)
      * otherwise return false;
      */
@@ -130,7 +135,7 @@ class Codendi_Request {
     }
 
     /**
-     * Get the value of $variable in $array. 
+     * Get the value of $variable in $array.
      *
      * @access protected
      * @param string $variable Name of the parameter to get.
@@ -153,7 +158,7 @@ class Codendi_Request {
     public function exist($variable) {
         return $this->_exist($variable, $this->params);
     }
-    
+
     /**
      * Check if $variable exists in $array.
      *
@@ -164,7 +169,7 @@ class Codendi_Request {
     protected function _exist($variable, $array) {
         return isset($array[$variable]);
     }
-    
+
     /**
      * Check if $variable exists and is not empty in user submitted parameters.
      *
@@ -174,7 +179,7 @@ class Codendi_Request {
     public function existAndNonEmpty($variable) {
         return ($this->exist($variable) && trim($this->params[$variable]) != '');
     }
-    
+
     /**
      * Apply validator on submitted user value.
      *
@@ -204,7 +209,7 @@ class Codendi_Request {
                     }
                 }
             } else {
-                $isValid = $validator->validate(null); 
+                $isValid = $validator->validate(null);
             }
         } else {
             $isValid = false;
@@ -235,7 +240,7 @@ class Codendi_Request {
         $this->_validated_input[$key] = true;
         return $rule->isValid($this->get($key));
     }
-    
+
     /**
      * Apply validator on submitted user value and return the value if valid
      * Else return default value
@@ -252,7 +257,7 @@ class Codendi_Request {
         }
         return $is_valid ? $this->get($variable) : $default_value;
     }
-    
+
     /**
      * Check that all submitted value has been validated
      */
@@ -271,10 +276,10 @@ class Codendi_Request {
             }
         }
     }
-    
+
     /**
      * Return the authenticated current user if any (null otherwise)
-     * 
+     *
      * @return User
      */
     public function getCurrentUser() {
@@ -283,16 +288,37 @@ class Codendi_Request {
         }
         return $this->current_user;
     }
-    
+
     /**
      * Set a current user (should be used only for tests)
-     * 
-     * @param User $user 
+     *
+     * @param User $user
      */
     public function setCurrentUser(User $user) {
         $this->current_user = $user;
     }
-    
+
+    /**
+     * Return the requested project (url parameter: group_id)
+     *
+     * @return Project
+     */
+    public function getProject() {
+        if (!$this->project) {
+            $this->project = ProjectManager::instance()->getProject($this->get('group_id'));
+        }
+        return $this->project;
+    }
+
+    /**
+     * Set the project (should be used only for tests)
+     *
+     * @param Project $project
+     */
+    public function setProject(Project $project) {
+        $this->project = $project;
+    }
+
     /**
      * For debug only
      */
