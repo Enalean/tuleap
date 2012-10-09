@@ -529,6 +529,9 @@ class BackendSystem extends Backend {
     }
 
     private function createSSHDirForUser(User $user, $ssh_dir) {
+        if (is_link($ssh_dir)) {
+            unlink($ssh_dir);
+        }
         if (!is_dir($ssh_dir)) {
             if (mkdir($ssh_dir)) {
                 $this->chmod($ssh_dir, 0700);

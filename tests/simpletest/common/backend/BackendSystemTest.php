@@ -399,51 +399,93 @@ class BackendSystemTest extends UnitTestCase {
 }
 
 class BackendSystem_SSHKeysTest extends TuleapTestCase {
-    private $user_name;
-    private $user_home;
+    private $toto_name;
+    private $toto_home;
+    private $foobar_home;
+    private $key;
+    private $user;
+    private $backend;
 
     public function setUp() {
         parent::setUp();
         EventManager::setInstance(mock('EventManager'));
         $GLOBALS['homedir_prefix'] = dirname(__FILE__).'/_fixtures/home/users';
-        $this->user_name = 'toto';
-        $this->user_home = $GLOBALS['homedir_prefix'].'/'.$this->user_name;
-        mkdir($this->user_home);
+        $this->toto_name = 'toto';
+        $this->toto_home = $GLOBALS['homedir_prefix'].'/'.$this->toto_name;
+        mkdir($this->toto_home);
+
+        $this->foobar_home = $GLOBALS['homedir_prefix'].'/foobar';
+        mkdir($this->foobar_home.'/.ssh', 0751, true);
+        touch($this->foobar_home.'/.ssh/authorized_keys');
+
+        $this->key  = 'bla';
+        $this->user = aUser()->withUserName($this->toto_name)
+                             ->withAuthorizedKeysArray(array($this->key))
+                             ->withUnixStatus('A')
+                             ->build();
+        $this->backend = partial_mock('BackendSystem', array(
+            'chown',
+            'chgrp',
+            'log',
+            'changeProcessUidGidToUser',
+            'restoreRootUidGid'
+        ));
     }
 
     public function tearDown() {
         parent::tearDown();
         EventManager::clearInstance();
         unset($GLOBALS['homedir_prefix']);
-        unlink($this->user_home.'/.ssh/authorized_keys');
-        rmdir($this->user_home.'/.ssh');
-        rmdir($this->user_home);
+        $backend = Backend::instance();
+        $backend->recurseDeleteInDir($this->toto_home);
+        rmdir($this->toto_home);
+
+        $backend->recurseDeleteInDir($this->foobar_home);
+        rmdir($this->foobar_home);
     }
 
     public function itWriteTheKeyInTheAutorizedKeyFile() {
-        $key  = 'bla';
-        $user = aUser()->withUserName($this->user_name)
-                       ->withAuthorizedKeysArray(array($key))
-                       ->withUnixStatus('A')
-                       ->build();
+        stub($this->backend)->log(new PatternExpectation('/Authorized_keys for '.$this->toto_name.' written/'), 'info')->once();
 
-        $backend = partial_mock('BackendSystem', array('chown', 'chgrp', 'log', 'changeProcessUidGidToUser', 'restoreRootUidGid'));
+        $this->backend->expectCallCount('chown', 2);
+        stub($this->backend)->chown($this->toto_home.'/.ssh', $this->toto_name)->at(0);
+        stub($this->backend)->chown($this->toto_home.'/.ssh/authorized_keys', $this->toto_name)->at(1);
 
-        stub($backend)->log(new PatternExpectation('/Authorized_keys for '.$this->user_name.' written/'), 'info')->once();
+        $this->backend->expectCallCount('chgrp', 2);
+        stub($this->backend)->chgrp($this->toto_home.'/.ssh', $this->toto_name)->at(0);
+        stub($this->backend)->chgrp($this->toto_home.'/.ssh/authorized_keys', $this->toto_name)->at(1);
 
-        $backend->expectCallCount('chown', 2);
-        stub($backend)->chown($this->user_home.'/.ssh', $this->user_name)->at(0);
-        stub($backend)->chown($this->user_home.'/.ssh/authorized_keys', $this->user_name)->at(1);
+        $this->backend->dumpSSHKeysForUser($this->user);
+        $this->assertEqual($this->key, file_get_contents($this->toto_home.'/.ssh/authorized_keys'));
+        $this->assertEqual('0700', $this->getFileModeAsString($this->toto_home.'/.ssh'));
+        $this->assertEqual('0600', $this->getFileModeAsString($this->toto_home.'/.ssh/authorized_keys'));
 
-        $backend->expectCallCount('chgrp', 2);
-        stub($backend)->chgrp($this->user_home.'/.ssh', $this->user_name)->at(0);
-        stub($backend)->chgrp($this->user_home.'/.ssh/authorized_keys', $this->user_name)->at(1);
+    }
 
-        $backend->dumpSSHKeysForUser($user);
-        $this->assertEqual($key, file_get_contents($this->user_home.'/.ssh/authorized_keys'));
-        $this->assertEqual('0700', $this->getFileModeAsString($this->user_home.'/.ssh'));
-        $this->assertEqual('0600', $this->getFileModeAsString($this->user_home.'/.ssh/authorized_keys'));
+    public function itDoesntModifyFilesWhenUserMadeASymlink() {
+        // The user tries to compromise the system, it has an SSH account on the
+        // server and made a link from its own authorized_keys file onto someoneelse
+        // example /home/users/toto/.ssh/authorized_keys -> /root/.ssh/authorized_keys
+        // if following test fails, it means that a mere user can use it to ssh
+        // the machine as root!
+        mkdir($this->toto_home.'/.ssh', 0751, true);
+        symlink($this->foobar_home.'/.ssh/authorized_keys', $this->toto_home.'/.ssh/authorized_keys');
 
+        $this->backend->dumpSSHKeysForUser($this->user);
+        $this->assertEqual($this->key, file_get_contents($this->toto_home.'/.ssh/authorized_keys'));
+        $this->assertEqual('', file_get_contents($this->foobar_home.'/.ssh/authorized_keys'));
+        $this->assertFalse(is_link($this->toto_home.'/.ssh/authorized_keys'));
+        $this->assertFalse(is_link($this->foobar_home.'/.ssh/authorized_keys'));
+    }
+
+    public function itDoesntModifyDirectoriesWhenUserMadeASymlink() {
+        // variation of previous test but user did:
+        // /home/users/toto/.ssh -> /root/.ssh
+        symlink($this->foobar_home.'/.ssh', $this->toto_home.'/.ssh');
+
+        $this->backend->dumpSSHKeysForUser($this->user);
+        $this->assertEqual($this->key, file_get_contents($this->toto_home.'/.ssh/authorized_keys'));
+        $this->assertEqual('', file_get_contents($this->foobar_home.'/.ssh/authorized_keys'));
     }
 
     private function getFileModeAsString($filename) {
