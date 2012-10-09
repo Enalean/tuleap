@@ -486,6 +486,8 @@ class BackendSystem_SSHKeysTest extends TuleapTestCase {
         $this->backend->dumpSSHKeysForUser($this->user);
         $this->assertEqual($this->key, file_get_contents($this->toto_home.'/.ssh/authorized_keys'));
         $this->assertEqual('', file_get_contents($this->foobar_home.'/.ssh/authorized_keys'));
+        $this->assertFalse(is_link($this->toto_home.'/.ssh'));
+        $this->assertFalse(is_link($this->foobar_home.'/.ssh'));
     }
 
     private function getFileModeAsString($filename) {
