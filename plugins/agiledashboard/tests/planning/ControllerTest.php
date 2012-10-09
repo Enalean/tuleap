@@ -71,14 +71,14 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
     }
 }
 
-abstract class Planning_ControllerIndexTest extends Planning_Controller_BaseTest {
+abstract class Planning_ControllerAdminTest extends Planning_Controller_BaseTest {
 
-    protected function renderIndex() {
+    protected function renderAdmin() {
         $this->planning_factory->expectOnce('getPlannings', array($this->current_user, $this->group_id));
         $this->planning_factory->setReturnValue('getPlannings', $this->plannings);
 
         ob_start();
-        $this->controller->index();
+        $this->controller->admin();
         $this->output = ob_get_clean();
     }
 
@@ -87,11 +87,11 @@ abstract class Planning_ControllerIndexTest extends Planning_Controller_BaseTest
     }
 }
 
-class Planning_ControllerEmptyIndexTest extends Planning_ControllerIndexTest {
+class Planning_ControllerEmptyAdminTest extends Planning_ControllerAdminTest {
     function setUp() {
         parent::setUp();
         $this->plannings = array();
-        $this->renderIndex();
+        $this->renderAdmin();
     }
 
     public function itListsNothing() {
@@ -99,7 +99,7 @@ class Planning_ControllerEmptyIndexTest extends Planning_ControllerIndexTest {
     }
 }
 
-class Planning_ControllerNonEmptyIndexTest extends Planning_ControllerIndexTest {
+class Planning_ControllerNonEmptyAdminTest extends Planning_ControllerAdminTest {
     function setUp() {
         parent::setUp();
 
@@ -108,7 +108,7 @@ class Planning_ControllerNonEmptyIndexTest extends Planning_ControllerIndexTest 
             aPlanning()->withId(2)->withName('Sprint Planning')->build(),
         );
 
-        $this->renderIndex();
+        $this->renderAdmin();
     }
 
     public function itListsExistingPlannings() {

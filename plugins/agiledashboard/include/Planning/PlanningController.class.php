@@ -47,6 +47,12 @@ class Planning_Controller extends MVC2_Controller {
         $this->planning_factory = $planning_factory;
     }
     
+    public function admin() {
+        $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
+        $presenter = new Planning_ListPresenter($plannings, $this->group_id);
+        $this->render('admin', $presenter);
+    }
+    
     public function index() {
         $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
         $presenter = new Planning_ListPresenter($plannings, $this->group_id);

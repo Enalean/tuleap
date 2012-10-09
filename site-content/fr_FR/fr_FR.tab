@@ -56,6 +56,7 @@ global	activate	activer
 global	deactivate	désactiver
 global	Project	Projet
 global	System	Système
+global	Admin	Admin
 global	Personal	Personnel
 global	default	Défaut
 global	no_mail_for_account	Ce compte n'a pas d'adresse mail.

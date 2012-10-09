@@ -59,6 +59,10 @@ class Planning_FormPresenter extends PlanningPresenter {
         return new Planning_TrackerPresenter($this->planning, $tracker);
     }
     
+    public function adminTitle() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
+    }
+    
     public function createPlanning() {
         return  $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
     }
