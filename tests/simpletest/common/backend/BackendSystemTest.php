@@ -478,27 +478,32 @@ class BackendSystem_SSHKeysTest extends TuleapTestCase {
         $this->assertFalse(is_link($this->foobar_home.'/.ssh/authorized_keys'));
     }
 
-    public function itDoesntModifyDirectoriesWhenUserMadeASymlink() {
-        // variation of previous test but user did:
-        // /home/users/toto/.ssh -> /root/.ssh
-        symlink($this->foobar_home.'/.ssh', $this->toto_home.'/.ssh');
-
-        $this->backend->dumpSSHKeysForUser($this->user);
-        $this->assertEqual($this->key, file_get_contents($this->toto_home.'/.ssh/authorized_keys'));
-        $this->assertEqual('', file_get_contents($this->foobar_home.'/.ssh/authorized_keys'));
-        $this->assertFalse(is_link($this->toto_home.'/.ssh'));
-        $this->assertFalse(is_link($this->foobar_home.'/.ssh'));
-    }
-
     public function itRaisesAnErrorWhenUserAttemptedToMakeALinkOnSshDir() {
         // variation of previous test but user did:
         // /home/users/toto/.ssh -> /root/.ssh
         symlink($this->foobar_home.'/.ssh', $this->toto_home.'/.ssh');
 
-        stub($this->backend)->log('*', 'error')->at(0);
-        stub($this->backend)->log('*', 'info')->at(1);
+        stub($this->backend)->log('*', 'error')->once();
 
         $this->backend->dumpSSHKeysForUser($this->user);
+    }
+
+    public function itDoesntModifyDirectoriesWhenUserMadeASymlink() {
+        // variation of previous test but user did:
+        // /home/users/toto/.ssh -> /root/.ssh
+        symlink($this->foobar_home.'/.ssh', $this->toto_home.'/.ssh');
+
+        // First call will fail (see previous test) ...
+        $this->backend->dumpSSHKeysForUser($this->user);
+
+        $this->assertFalse(is_link($this->toto_home.'/.ssh'));
+        $this->assertFalse(is_link($this->foobar_home.'/.ssh'));
+
+        // ... so execute twice to see is things are properly cleaned-up
+        $this->backend->dumpSSHKeysForUser($this->user);
+
+        $this->assertEqual($this->key, file_get_contents($this->toto_home.'/.ssh/authorized_keys'));
+        $this->assertEqual('', file_get_contents($this->foobar_home.'/.ssh/authorized_keys'));
     }
 
     private function getFileModeAsString($filename) {
