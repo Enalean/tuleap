@@ -48,7 +48,7 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->current_user     = stub('User')->getId()->returns(666);
         $this->request          = aRequest()->withProject($this->project)->withUser($this->current_user)->build();
         $this->planning_factory = new MockPlanningFactory();
-        $this->controller       = new Planning_Controller($this->request, $this->planning_factory);
+        $this->controller       = new Planning_Controller($this->request, $this->planning_factory, mock('Planning_MilestoneFactory'));
     }
 
     protected function userIsAdmin() {
@@ -139,7 +139,7 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         $this->dao              = mock('PlanningDao');
         $this->planning_factory = aPlanningFactory()->withDao($this->dao)->build();
         $this->tracker_factory  = $this->planning_factory->getTrackerFactory();
-        $this->controller       = new Planning_Controller($this->request, $this->planning_factory);
+        $this->controller       = new Planning_Controller($this->request, $this->planning_factory, mock('Planning_MilestoneFactory'));
         $GLOBALS['Language']    = new MockBaseLanguage_Planning_ControllerNewTest();
 
         $this->available_backlog_trackers = array(
@@ -251,7 +251,7 @@ class Planning_Controller_EditTest extends TuleapTestCase {
         stub($planning_factory)->getAvailableTrackers($group_id)->returns(array());
         stub($planning_factory)->getAvailablePlanningTrackers($planning)->returns(array());
 
-        $controller->__construct($request, $planning_factory);
+        $controller->__construct($request, $planning_factory, mock('Planning_MilestoneFactory'));
 
         $controller->expectOnce('render', array('edit', new IsAExpectation('Planning_FormPresenter')));
         $controller->edit();

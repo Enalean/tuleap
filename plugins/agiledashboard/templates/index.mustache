@@ -1,19 +1,20 @@
-{{#hasPlannings}}
+{{#hasShortAccess}}
 <ul class="ad_index_plannings">
-    {{#getPlannings}}
+    {{#getShortAccess}}
     <li class="ad_index_planning">
-        <h2>{{getName}}</h2>
+        <h2>{{#planning}}{{getName}}{{/planning}}</h2>
         <ul>
             {{#getLastTenOpenArtifacts}}
-            <li>{{{fetchDirectLinkToArtifactWithoutXRef}}}</li>
+            <li>
+                <a class="direct-link-to-artifact" href="{{getUri}}">{{getTitle}}{{^getTitle}}{{getXRef}}{{/getTitle}}</a></li>
             {{/getLastTenOpenArtifacts}}
         </ul>
     </li>
-    {{/getPlannings}}
+    {{/getShortAccess}}
 </ul>
-{{/hasPlannings}}
-{{^hasPlannings}}
+{{/hasShortAccess}}
+{{^hasShortAccess}}
 <p>
     <em>Nothing has been setup yet. Please come again later!</em>
 </p>
-{{/hasPlannings}}
+{{/hasShortAccess}}

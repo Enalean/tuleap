@@ -40,11 +40,12 @@ class Planning_Controller extends MVC2_Controller {
      */
     private $planning_factory;
 
-    public function __construct(Codendi_Request $request, PlanningFactory $planning_factory) {
+    public function __construct(Codendi_Request $request, PlanningFactory $planning_factory, Planning_MilestoneFactory $milestone_factory) {
         parent::__construct('agiledashboard', $request);
         
-        $this->group_id         = $request->get('group_id');
-        $this->planning_factory = $planning_factory;
+        $this->group_id          = $request->get('group_id');
+        $this->planning_factory  = $planning_factory;
+        $this->milestone_factory = $milestone_factory;
     }
     
     public function admin() {
@@ -54,8 +55,8 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function index() {
-        $plannings = $this->planning_factory->getPlannings($this->getCurrentUser(), $this->group_id);
-        $presenter = new Planning_IndexPresenter($plannings, $this->group_id);
+        $plannings = $this->planning_factory->getPlanningsShortAccess($this->getCurrentUser(), $this->group_id, $this->milestone_factory);
+        $presenter = new Planning_IndexPresenter($plannings);
         $this->render('index', $presenter);
     }
     

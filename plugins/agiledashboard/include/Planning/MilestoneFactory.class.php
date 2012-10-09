@@ -69,6 +69,12 @@ class Planning_MilestoneFactory {
         return new Planning_NoMilestone($project, $planning);
     }
 
+    public function getLastTenOpenMilestones(User $user, Planning $planning) {
+        $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        ksort($artifacts);
+        return array_slice($artifacts, -10);
+    }
+
     /**
      * Loads the milestone matching the given planning and artifact ids.
      *

@@ -18,19 +18,31 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Planning_IndexPresenter {
+class Planning_ShortAccess {
 
-    public function __construct(array $short_access) {
-        $this->short_access = $short_access;
+    /**
+     * @var User
+     */
+    private $user;
+
+    /**
+     * @var Planning
+     */
+    public $planning;
+
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    protected $milestone_factory;
+
+    public function __construct(Planning $planning, User $user, Planning_MilestoneFactory $milestone_factory) {
+        $this->user              = $user;
+        $this->planning          = $planning;
+        $this->milestone_factory = $milestone_factory;
     }
 
-    public function getShortAccess() {
-        return $this->short_access;
-    }
-
-    public function hasShortAccess() {
-        return count($this->short_access);
+    public function getLastTenOpenArtifacts() {
+        return $this->milestone_factory->getLastTenOpenMilestones($this->user, $this->planning);
     }
 }
-
 ?>
