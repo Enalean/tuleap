@@ -20,6 +20,20 @@
 require_once 'common/backend/Backend.class.php';
 require_once 'User.class.php';
 
+/**
+ * This class is very sensitive because it stronly interact with secuirty
+ * mecanisms and it's designed to be run by root
+ *
+ * Moreover it's uterly complex to test as:
+ * - it relies on system stuff (chgrp, chown)
+ * - it change current process UID/GID to write keys
+ *
+ * The process change was introduced to avoid one user to take over ssh account
+ * of another one by creating a symlink on target account (see tests for more details).
+ *
+ * In other words: do not modify this part if you are not a trained warrior and
+ * for reviewers: review carfully and test to destroy the code.
+ */
 class User_SSHKeyDumper {
     /**
      * @var Backend
@@ -33,8 +47,6 @@ class User_SSHKeyDumper {
     /**
      * Write SSH authorized_keys into a user homedir
      *
-     * /!\ Be careful, this method change current process UID/GID to write keys
-     *
      * @param User $user
      *
      * @return Boolean
@@ -43,6 +55,10 @@ class User_SSHKeyDumper {
         try {
             $ssh_dir  = $user->getUnixHomeDir().'/.ssh';
 
+            // Subtlety: between the 2 process owner change, there is no way to
+            // write any logs because the process is owned by a mere user but
+            // the log file is only writtable by codendiadm and root. So the
+            // exceptions... welcome to the real world Neo.
             $this->changeProcessUidGidToUser($user);
             $this->createSSHDirForUser($user, $ssh_dir);
             $this->writeSSHFile($user, $ssh_dir);
