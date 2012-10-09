@@ -21,21 +21,8 @@
 
 class BreadCrumb_AgileDashboard implements BreadCrumb_BreadCrumbGenerator {
 
-    public function __construct($plugin_path, $project_id) {
-        $this->project_id = $project_id;
-        $this->plugin_path = $plugin_path;
-    }
-    
     public function getCrumbs() {
-        $url_parameters = array(
-            'group_id' => (int) $this->project_id,
-        );
-        $breadcrumbs   = array();
-        $breadcrumbs[] = array(
-            'url'   => $this->plugin_path .'/?'. http_build_query($url_parameters),
-            'title' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key')
-        );
-        return $breadcrumbs;
+        return array();
     }
 }
 ?>
