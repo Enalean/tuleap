@@ -72,7 +72,11 @@ class Planning_MilestoneFactory {
     public function getLastTenOpenMilestones(User $user, Planning $planning) {
         $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         ksort($artifacts);
-        return array_slice($artifacts, -10);
+        $milestones = array();
+        foreach (array_slice($artifacts, -10) as $artifact) {
+            $milestones[] = $this->getMilestoneFromArtifact($artifact);
+        }
+        return $milestones;
     }
 
     /**

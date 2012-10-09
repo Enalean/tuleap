@@ -42,7 +42,12 @@ class Planning_ShortAccess {
     }
 
     public function getLastTenOpenArtifacts() {
-        return $this->milestone_factory->getLastTenOpenMilestones($this->user, $this->planning);
+        $presenters = array();
+        $milestones = $this->milestone_factory->getLastTenOpenMilestones($this->user, $this->planning);
+        foreach ($milestones as $milestone) {
+            $presenters[] = new Planning_MilestoneLinkPresenter($milestone);
+        }
+        return $presenters;
     }
 }
 ?>

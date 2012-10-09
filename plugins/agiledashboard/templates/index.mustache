@@ -6,7 +6,7 @@
         <ul>
             {{#getLastTenOpenArtifacts}}
             <li>
-                <a class="direct-link-to-artifact" href="{{getUri}}">{{getTitle}}{{^getTitle}}{{getXRef}}{{/getTitle}}</a></li>
+                <a href="{{getUri}}">{{getTitle}}{{^getTitle}}{{getXRef}}{{/getTitle}}</a></li>
             {{/getLastTenOpenArtifacts}}
         </ul>
     </li>
