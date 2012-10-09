@@ -96,7 +96,6 @@ class PlanningFactory {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
             if ($tracker && $tracker->userCanView($user)) {
                 $planning = new Planning($row['id'], $row['name'], $row['group_id'], $row['backlog_title'], $row['plan_title'], null, $row['planning_tracker_id']);
-                $planning->setPlanningTracker($tracker);
                 $plannings[] = $planning;
             }
         }
