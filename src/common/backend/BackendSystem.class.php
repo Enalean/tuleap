@@ -531,6 +531,7 @@ class BackendSystem extends Backend {
     private function createSSHDirForUser(User $user, $ssh_dir) {
         if (is_link($ssh_dir)) {
             unlink($ssh_dir);
+            $this->log('SECURITY ISSUE! User "'.$user->getUserName().'" made a symbolic link on it\'s .ssh dir. Link was deleted but you should investigate.', BACKEND::LOG_ERROR);
         }
         if (!is_dir($ssh_dir)) {
             if (mkdir($ssh_dir)) {

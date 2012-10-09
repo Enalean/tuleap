@@ -490,6 +490,17 @@ class BackendSystem_SSHKeysTest extends TuleapTestCase {
         $this->assertFalse(is_link($this->foobar_home.'/.ssh'));
     }
 
+    public function itRaisesAnErrorWhenUserAttemptedToMakeALinkOnSshDir() {
+        // variation of previous test but user did:
+        // /home/users/toto/.ssh -> /root/.ssh
+        symlink($this->foobar_home.'/.ssh', $this->toto_home.'/.ssh');
+
+        stub($this->backend)->log('*', 'error')->at(0);
+        stub($this->backend)->log('*', 'info')->at(1);
+
+        $this->backend->dumpSSHKeysForUser($this->user);
+    }
+
     private function getFileModeAsString($filename) {
         return substr(sprintf('%o', fileperms($filename)), -4);
     }
