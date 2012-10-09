@@ -93,8 +93,9 @@ class User_SSHKeyDumper {
 
     private function createSSHDirForUser(User $user, $ssh_dir) {
         if (is_link($ssh_dir)) {
+            $link_path = readlink($ssh_dir);
             unlink($ssh_dir);
-            throw new RuntimeException('SECURITY ISSUE! User "'.$user->getUserName().'" made a symbolic link on it\'s .ssh dir. Link was deleted but you should investigate.');
+            throw new RuntimeException('SECURITY ISSUE! User "'.$user->getUserName().'" made a symbolic link on it\'s .ssh dir (was a link to "'.$link_path.'"). Link was deleted but you should investigate.');
         }
         if (!is_dir($ssh_dir)) {
             if (mkdir($ssh_dir)) {

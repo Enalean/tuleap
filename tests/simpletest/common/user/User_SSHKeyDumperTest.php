@@ -106,9 +106,10 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
     public function itRaisesAnErrorWhenUserAttemptedToMakeALinkOnSshDir() {
         // variation of previous test but user did:
         // /home/users/toto/.ssh -> /root/.ssh
-        symlink($this->foobar_home.'/.ssh', $this->toto_home.'/.ssh');
+        $foobar_ssh = $this->foobar_home.'/.ssh';
+        symlink($foobar_ssh, $this->toto_home.'/.ssh');
 
-        stub($this->backend)->log('*', 'error')->once();
+        stub($this->backend)->log(new PatternExpectation('%was a link to "'.$foobar_ssh.'"%'), 'error')->once();
 
         $this->sshkey_dumper->writeSSHKeys($this->user);
     }
