@@ -52,7 +52,7 @@ Vagrant::Config.run do |config|
     #   - tuleap_development: set up an instance from your local sources
     #   - tuleap_packaging: set up everything to package and install tuleap
     #                       from local repositories
-    chef.add_role 'tuleap_packaging'
+    chef.add_role 'tuleap_development'
     
     # Additional configuration (may be role-specific)
     chef.json = {:tuleap => {
