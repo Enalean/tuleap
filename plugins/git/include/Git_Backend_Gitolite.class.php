@@ -20,10 +20,11 @@
  */
 
 require_once 'Git_Backend_Interface.php';
+require_once 'GitRepositoryCreator.class.php';
 require_once 'Git.class.php';
 require_once 'exceptions/GitRepositoryAlreadyExistsException.class.php';
 
-class Git_Backend_Gitolite implements Git_Backend_Interface {
+class Git_Backend_Gitolite implements Git_Backend_Interface, GitRepositoryCreator {
     /**
      * @var Git_GitoliteDriver
      */

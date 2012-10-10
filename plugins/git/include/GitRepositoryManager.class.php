@@ -203,6 +203,8 @@ class GitRepositoryManager {
     private function stripFinalDotGit($path) {
         return substr($path, 0, strrpos($path, '.git'));
     }
+
+
 }
 
 ?>
