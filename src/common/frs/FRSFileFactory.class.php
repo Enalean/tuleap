@@ -597,8 +597,12 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function purgeFile($file, $backend) {
-        //@todo Isolate backup stuff to avoid troubles when the 'archiving_deleted_docs' plugin is not available
-        $params = array('source_path' => $this->getStagingPath($file));
+        $release  = $file->getRelease();
+        $unixName = $release->getProject()->getUnixName(false);
+        $sub_dir  = $this->getUploadSubDirectory($release);
+        $prefix   = $unixName.'_'.$sub_dir.'_'.$file->getFileID();
+        $params   = array('source_path'    => $this->getStagingPath($file),
+                          'archive_prefix' => $prefix);
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
 
         $dao = $this->_getFRSFileDao();
