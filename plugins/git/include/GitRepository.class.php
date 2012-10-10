@@ -634,7 +634,7 @@ class GitRepository implements DVCSRepository {
     
     /**
      * Create a reference repository
-     * @deprecated
+     * @deprecated to be removed when we purge gitshell creation from the code  (SystemEvent_GIT_REPO_CREATE)
      * @see GitRepositoryManager::create
      */
     public function create() {        
