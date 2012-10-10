@@ -32,7 +32,7 @@ Mock::generate('Docman_VersionDao');
 Mock::generate('Docman_Version');
 Mock::generate('Docman_ItemFactory');
 Mock::generate('Docman_File');
-Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersionDeleteFile', array('_getVersionDao'));
+Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersionDeleteFile', array('_getVersionDao', 'archiveBeforePurge'));
 
 Mock::generatePartial('Docman_VersionFactory', 'Docman_VersionFactoryTestVersion', array('purgeDeletedVersion', '_getVersionDao', '_purge', '_getEventManager', '_getItemFactory', '_getUserManager'));
 
@@ -102,6 +102,7 @@ class Docman_VersionFactoryTest extends UnitTestCase {
                                             'filetype'  => null,
                                             'path'      => dirname(__FILE__).'/_fixtures/noFile'));
 
+        $versionFactory->expectOnce('archiveBeforePurge', array($version));
         $this->assertFalse($versionFactory->PurgeDeletedVersion($version));
     }
 
@@ -125,6 +126,7 @@ function testPurgeDeletedVersion() {
                                             'path'      => dirname(__FILE__).'/_fixtures/fileToPurge_txt'));
 
         $fp = fopen($version->getPath(), 'w');
+        $versionFactory->expectOnce('archiveBeforePurge', array($version));
 
         $this->assertTrue($versionFactory->PurgeDeletedVersion($version));
         $this->assertFalse(file_exists($version->getPath()));
