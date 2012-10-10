@@ -154,8 +154,10 @@ class Docman_VersionFactory {
      * @return Boolean
      */
     public function purgeDeletedVersion($version) {
-        //@todo Isolate backup stuff to avoid troubles when the 'archiving_deleted_docs' plugin is not available
-        $params = array('source_path' => $version->getPath());
+        $item     = $this->_getItemFactory()->getItemFromDb($version->getItemId());
+        $prefix   = $item->getGroupId().'_i'.$version->getItemId().'_v'.$version->getNumber();
+        $params   = array('source_path'    => $version->getPath(),
+                          'archive_prefix' => $prefix);
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
 
         if (file_exists($version->getPath()) && $this->physicalDeleteVersion($version->getPath())) {
