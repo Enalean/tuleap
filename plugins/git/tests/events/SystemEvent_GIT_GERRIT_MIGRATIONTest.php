@@ -29,7 +29,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
      */
     protected $event;
     protected $repository_id = 123;
-    protected $repository;
+//    protected $repository;
     
     public function setUp() {
         parent::setUp();
@@ -48,9 +48,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
 class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
     
     public function itSwitchesTheBackendToGerrit() {
-//        $this->assertIsA($repository->getBackend(), 'Git_Gerrit_Backend');
-//        stub($this->dao)->save($repository)->once();`
-        stub($this->dao)->switchToGerrit($this->repository_id)->once();
+        expect($this->dao)->switchToGerrit($this->repository_id)->once();
         $this->event->process();
     }
 }
