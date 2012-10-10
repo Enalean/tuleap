@@ -35,10 +35,11 @@ class Planning_ShortAccess {
      */
     protected $milestone_factory;
 
-    public function __construct(Planning $planning, User $user, Planning_MilestoneFactory $milestone_factory) {
+    public function __construct(Planning $planning, User $user, Planning_MilestoneFactory $milestone_factory, PlanningFactory $planning_factory) {
         $this->user              = $user;
         $this->planning          = $planning;
         $this->milestone_factory = $milestone_factory;
+        $this->planning_factory  = $planning_factory;
     }
 
     public function getLastTenOpenArtifacts() {
@@ -48,6 +49,21 @@ class Planning_ShortAccess {
             $presenters[] = new Planning_MilestoneLinkPresenter($milestone, $this->user);
         }
         return $presenters;
+    }
+    
+    public function getCurrentArtifact() {
+        $milestone = $this->milestone_factory->getCurrentMilestone($this->user, $this->planning->getId());
+        return new Planning_MilestoneLinkPresenter($milestone, $this->user);
+    }
+    
+    public function planningTrackerId() {
+        return $this->planning->getPlanningTrackerId();
+    }
+    
+    //TODO: use the one in MilestonePresenter???
+    public function createNewItemToPlan() {
+        $tracker = $this->planning_factory->getPlanningTracker($this->planning);
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($tracker->getItemName()));
     }
 }
 ?>

@@ -22,7 +22,7 @@
  * Presents everything needed to render a link to the planning view of a
  * milestone.
  */
-class Planning_MilestoneLinkPresenter {
+class Planning_MilestoneLinkPresenter{
     
     /**
      * @var Planning_Milestone
@@ -52,13 +52,17 @@ class Planning_MilestoneLinkPresenter {
         return $this->milestone->getXref();
     }
     
+    public function getBacklogTrackerId() {
+        return $this->milestone->getTrackerId();
+    }
+
     /**
      * @return string The milestone title (i.e. the artifact's one).
      */
     public function getTitle() {
         return $this->milestone->getArtifactTitle();
     }
-    
+
     public function additionalPanes() {
         $additional_panes = array();
         EventManager::instance()->processEvent(
@@ -71,5 +75,6 @@ class Planning_MilestoneLinkPresenter {
         );
         return $additional_panes;
     }
+
 }
 ?>

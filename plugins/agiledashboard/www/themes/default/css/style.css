@@ -190,9 +190,16 @@
     zoom: 1;
     *display: inline;
     vertical-align: top;
+    position: relative;
 }
 .ad_index_planning > ul {
     list-style: none;
     margin-left: 0;
     padding: 0;
 }
+
+.ad_index_planning > span {
+    position: absolute;
+    bottom:0;
+}
+
