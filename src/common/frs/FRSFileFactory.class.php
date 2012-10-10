@@ -589,6 +589,24 @@ class FRSFileFactory extends Error {
     }
 
     /**
+     * Invoque ''archive deleted item' hook in order to make a backup of a given file.
+     * This method should be used whithin the FRS purge process
+     *
+     * @param FRSFile $file File to delete
+     * @param Backend $backend
+     *
+     * @return Boolean
+     */
+    private function archiveBeforePurge($file) {
+        $release  = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
+        $sub_dir  = $this->getUploadSubDirectory($release);
+        $prefix   = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
+        $params   = array('source_path'    => $this->getStagingPath($file),
+                          'archive_prefix' => $prefix);
+        $this->_getEventManager()->processEvent('archive_deleted_item', $params);
+    }
+
+    /**
      * Erase from the file system one file
      *
      * @param FRSFile $file File to delete
@@ -597,13 +615,7 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function purgeFile($file, $backend) {
-        $release  = $file->getRelease();
-        $unixName = $release->getProject()->getUnixName(false);
-        $sub_dir  = $this->getUploadSubDirectory($release);
-        $prefix   = $unixName.'_'.$sub_dir.'_'.$file->getFileID();
-        $params   = array('source_path'    => $this->getStagingPath($file),
-                          'archive_prefix' => $prefix);
-        $this->_getEventManager()->processEvent('archive_deleted_item', $params);
+        $this->archiveBeforePurge($file);
 
         $dao = $this->_getFRSFileDao();
         if (file_exists($this->getStagingPath($file))) {
