@@ -24,30 +24,44 @@ require_once dirname(__FILE__).'/../../builders/aGitRepository.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 require_once 'common/include/Config.class.php';
 class Git_Driver_Gerrit_createTest extends TuleapTestCase {
-    
+
     protected $host = 'tuleap.example.com';
-    
+
+    /**
+     * @var GitRepository
+     */
+    protected $repository;
+
+    /**
+     * @var RemoteSshCommand
+     */
+    protected $ssh;
+
     public function setUp() {
         parent::setUp();
         Config::store();
         Config::set('sys_default_domain', $this->host);
+
+        $project = stub('Project')->getUnixName()->returns('firefox');
+
+        $this->repository = aGitRepository()
+            ->withProject($project)
+            ->withNamespace('jean-claude')
+            ->withName('dusse')
+            ->build();
+
+        $this->ssh    = mock('RemoteSshCommand');
+        $this->driver = new Git_Driver_Gerrit($this->ssh);
     }
 
     public function tearDown() {
         parent::tearDown();
         Config::restore();
     }
-    
+
     public function itExecutesTheCreateCommandOnTheGerritServer() {
-        $ssh    = mock('RemoteSshCommand');
-        $driver = new Git_Driver_Gerrit($ssh);
-        $repo = aGitRepository()
-                ->withProject(aMockProject()->withShortName('Firefox')->build())
-                ->withName('dusse')
-                ->withNamespace('jean-claude')
-                ->build();
-        expect($ssh)->execute("gerrit create $this->host-Firefox/jean-claude/dusse");
-        $driver->createProject($repo);
+        expect($this->ssh)->execute("gerrit create tuleap.example.com-firefox/jean-claude/dusse")->once();
+        $this->driver->createProject($this->repository);
     }
 }
 ?>

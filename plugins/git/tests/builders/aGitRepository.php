@@ -36,6 +36,16 @@ class Test_Git_RepositoryBuilder {
         return $this;
     }
 
+    public function withNamespace($namespace) {
+        $this->repository->setNamespace($namespace);
+        return $this;
+    }
+
+    public function withName($name) {
+        $this->repository->setName($name);
+        return $this;
+    }
+
     public function withProject(Project $project) {
         $this->repository->setProject($project);
         return $this;

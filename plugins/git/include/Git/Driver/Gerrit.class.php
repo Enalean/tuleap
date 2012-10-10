@@ -21,14 +21,26 @@
 
 
 class Git_Driver_Gerrit {
-    
-    public function createProject() {
-        
+
+    const GERRIT_COMMAND = 'gerrit ';
+
+    private $ssh;
+
+    public function __construct(RemoteSshCommand $ssh) {
+        $this->ssh = $ssh;
+    }
+
+    public function createProject(GitRepository $repository) {
+        $host    = Config::get('sys_default_domain');
+        $project = $repository->getProject()->getUnixName();
+        $repo    = $repository->getFullName();
+        $this->ssh->execute(self::GERRIT_COMMAND ."create $host-$project/$repo");
     }
 }
 
 class RemoteSshCommand {
-    //put your code here
+    public function execute($cmd) {
+        throw new Exception('Not yet implemented');
+    }
 }
-
 ?>
