@@ -98,7 +98,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
      */
     public function archive($params) {
         $archivePath = $this->getConfigurationParameter('archive_path');
-        SystemEventManager::instance()->createEvent('ARCHIVE_DELETED_ITEMS', $params['source_path'].SystemEvent::PARAMETER_SEPARATOR.$archivePath, SystemEvent::PRIORITY_MEDIUM);
+        SystemEventManager::instance()->createEvent('ARCHIVE_DELETED_ITEMS', $params['source_path'].SystemEvent::PARAMETER_SEPARATOR.$archivePath.SystemEvent::PARAMETER_SEPARATOR.$params['archive_prefix'], SystemEvent::PRIORITY_MEDIUM);
     }
 
 }
