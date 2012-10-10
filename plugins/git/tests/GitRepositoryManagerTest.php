@@ -155,37 +155,37 @@ class GitRepositoryManager_IsRepositoryNameAlreadyUsedTest extends TuleapTestCas
 
 class GitRepositoryManager_CreateTest extends TuleapTestCase {
 
+    private $creator;
     public function setUp() {
         parent::setUp();
-        $this->backend    = mock('Git_Backend_Interface');
+        $this->creator    = mock('GitRepositoryCreator');
         $this->repository = mock('GitRepository');
-        stub($this->repository)->getBackend()->returns($this->backend);
 
         $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
     }
 
     public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(true);
-        stub($this->repository)->isNameValid()->returns(true);
+        stub($this->creator)->isNameValid()->returns(true);
 
         $this->expectException();
-        $this->manager->create($this->repository);
+        $this->manager->create($this->repository, $this->creator);
     }
 
     public function itThrowsAnExceptionIfNameIsNotCompliantToBackendStandards() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
-        stub($this->repository)->isNameValid()->returns(false);
+        stub($this->creator)->isNameValid()->returns(false);
 
         $this->expectException();
-        $this->manager->create($this->repository);
+        $this->manager->create($this->repository, $this->creator);
     }
 
     public function itCreatesOnRepositoryBackendIfEverythingIsClean() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
-        stub($this->repository)->isNameValid()->returns(true);
+        stub($this->creator)->isNameValid()->returns(true);
 
-        $this->backend->expectOnce('createReference');
-        $this->manager->create($this->repository);
+        $this->creator->expectOnce('createReference');
+        $this->manager->create($this->repository, $this->creator);
     }
 }
 
@@ -225,7 +225,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $path  = 'toto';
 
         $this->repository->setReturnValue('userCanRead', true, array($this->user));
-        $this->repository->setReturnValue('isNameValid', true, array($path));
+        $this->backend->setReturnValue('isNameValid', true, array($path));
 
         $this->backend->expectOnce('fork');
         $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, $path, null);
@@ -241,7 +241,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
             $repo = new MockGitRepository();
             $repo->setReturnValue('getId', $id);
             $repo->setReturnValue('userCanRead', true, array($this->user));
-            $repo->setReturnValue('isNameValid', true, array($namespace));
+            $this->backend->setReturnValue('isNameValid', true, array($namespace));
             stub($repo)->getBackend()->returns($this->backend);
             $repos[] = $repo;
         }
@@ -370,7 +370,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     }
 
     function testForkAssertNamespaceIsValid() {
-        $this->repository->setReturnValue('isNameValid', false);
+        $this->backend->setReturnValue('isNameValid', false);
         $this->backend->expectNever('fork');
 
         $this->expectException();
@@ -382,7 +382,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $repo = new MockGitRepository();
         $repo->setReturnValue('getId', $id);
         $repo->setReturnValue('userCanRead', true);
-        $repo->setReturnValue('isNameValid', true);
+        $this->backend->setReturnValue('isNameValid', true);
         stub($repo)->getBackend()->returns($this->backend);
         return $repo;
     }

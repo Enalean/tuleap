@@ -775,24 +775,6 @@ class GitRepository implements DVCSRepository {
     }
     
     /**
-     * Validate the name for a repository
-     *
-     * @param string $name The name to validate
-     *
-     * @return bool true if valid, false otherwise
-     */
-    public function isNameValid($name) {
-        $len = strlen($name);
-        return 1 <= $len && $len < GitDao::REPO_NAME_MAX_LENGTH &&
-               !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name) &&
-               !preg_match('`(?:^|/)\.`', $name) && //do not allow dot at the begining of a world
-               !preg_match('%/$|^/%', $name) && //do not allow a slash at the beginning nor the end
-               !preg_match('`\.\.`', $name) && //do not allow double dots (prevent path collisions)
-               !preg_match('/\.git$/', $name) && //do not allow ".git" at the end since Tuleap will automatically add it, to avoid repository names like "repository.git.git"
-               !preg_match('%^u/%', $name);
-    }
-    
-    /**
      * Check if path is a subpath of referencepath
      *
      * @param String $referencePath The path the repository is supposed to belong to

@@ -34,6 +34,15 @@ interface GitRepositoryCreator {
      */
     public function getAllowedCharsInNamePattern();
 
+    /**
+     * Validate the name for a repository
+     *
+     * @param string $name The name to validate
+     *
+     * @return bool true if valid, false otherwise
+     */
+    public function isNameValid($name);
+
 }
 
 ?>

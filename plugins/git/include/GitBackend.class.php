@@ -334,16 +334,6 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     }
     
     /**
-     * Get the regexp pattern to use for name repository validation
-     *
-     * @return string
-     */
-    public function getAllowedCharsInNamePattern() {
-        //alphanums, underscores and dash
-        return 'a-zA-Z0-9_.-';
-    }
-
-    /**
      * Obtain statistics about backend format for CSV export
      *
      * @param Statistics_Formatter $formatter instance of statistics formatter class
@@ -418,6 +408,14 @@ class GitBackend extends Backend implements Git_Backend_Interface, GitRepository
     public function commitTransaction(GitRepository $repository) {
         // this action is not necessary for thhis type of backend
         // well actually it might recieve the code from save.
+    }
+
+    public function getAllowedCharsInNamePattern() {
+        throw new Exception('not implemented');
+    }
+
+    public function isNameValid($name) {
+        throw new Exception('not implemented');
     }
 }
 

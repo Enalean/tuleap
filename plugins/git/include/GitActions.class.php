@@ -138,13 +138,12 @@ class GitActions extends PluginActions {
 
         try {
             $repository = new GitRepository();
-            $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
             $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
             $repository->setCreator(UserManager::instance()->getCurrentUser());
             $repository->setProject(ProjectManager::instance()->getProject($projectId));
             $repository->setName($repositoryName);
 
-            $this->manager->create($repository);
+            $this->manager->create($repository, new Git_Backend_Gitolite(new Git_GitoliteDriver()));
         } catch (Exception $exception) {
             $c->addError($exception->getMessage());
         }

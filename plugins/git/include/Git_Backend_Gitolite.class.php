@@ -20,11 +20,11 @@
  */
 
 require_once 'Git_Backend_Interface.php';
-require_once 'GitRepositoryCreator.class.php';
+require_once 'GitRepositoryCreatorImpl.class.php';
 require_once 'Git.class.php';
 require_once 'exceptions/GitRepositoryAlreadyExistsException.class.php';
 
-class Git_Backend_Gitolite implements Git_Backend_Interface, GitRepositoryCreator {
+class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
     /**
      * @var Git_GitoliteDriver
      */
@@ -257,16 +257,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface, GitRepositoryCreato
         return $this->changeRepositoryMailingList($repository);
     }
 
-    /**
-     * Get the regexp pattern to use for name repository validation
-     *
-     * @return string
-     */
-    public function getAllowedCharsInNamePattern() {
-        //alphanums, underscores, slashes and dash
-        return 'a-zA-Z0-9/_.-';
-    }
-    
     /**
      * Rename a project
      *

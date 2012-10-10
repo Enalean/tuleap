@@ -47,42 +47,7 @@ class GitRepositoryTest extends TuleapTestCase {
     public function tearDown() {
         unlink(dirname(__FILE__).'/_fixtures/tmp/perms');
     }
-
-    public function test_isNameValid() {
-        $gitolite = new MockGit_Backend_Gitolite();
-        $gitolite->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9/_.-');
-        
-        $gitshell = new MockGitBackend();
-        $gitshell->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9_.-');
-        
-        $repo = new GitRepository();
-        
-        $repo->setBackend($gitolite);
-        $this->checkNameValidation($repo);
-        $this->assertTrue($repo->isNameValid('jambon/beurre'));
-        
-        $repo->setBackend($gitshell);
-        $this->checkNameValidation($repo);
-        $this->assertFalse($repo->isNameValid('jambon/beurre'));
-    }
-    
-    private function checkNameValidation(GitRepository $repo) {
-        $this->assertFalse($repo->isNameValid(''));
-        $this->assertFalse($repo->isNameValid('/'));
-        $this->assertFalse($repo->isNameValid('/jambon'));
-        $this->assertFalse($repo->isNameValid('jambon/'));
-        $this->assertTrue($repo->isNameValid('jambon'));
-        $this->assertTrue($repo->isNameValid('jambon.beurre'));
-        $this->assertTrue($repo->isNameValid('jambon-beurre'));
-        $this->assertTrue($repo->isNameValid('jambon_beurre'));
-        $this->assertFalse($repo->isNameValid('jambon/.beurre'));
-        $this->assertFalse($repo->isNameValid('jambon..beurre'));
-        $this->assertFalse($repo->isNameValid('jambon...beurre'));
-        $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
-        $this->assertFalse($repo->isNameValid('repo.git'));
-        $this->assertFalse($repo->isNameValid('u/toto'));
-    }
-    
+   
         
     public function testDeletionPathShouldBeInProjectPath() {
         $repo = new GitRepository();
