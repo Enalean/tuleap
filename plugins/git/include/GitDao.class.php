@@ -492,6 +492,10 @@ class GitDao extends DataAccessObject {
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
     }
+    
+    public function switchToGerrit($repository_id) {
+        
+    }
 }
 
 ?>
