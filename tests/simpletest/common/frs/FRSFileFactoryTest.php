@@ -21,8 +21,8 @@ Mock::generate('FRSFile');
 Mock::generate('BackendSystem');
 Mock::generate('BaseLanguage');
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestVersion', array('_getFRSReleaseFactory', '_getProjectManager', 'moveDeletedFilesToStagingArea'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile'));
-Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeFiles', array('_getFRSFileDao', 'purgeFile', 'archiveBeforePurge'));
+Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeOneFile', array('_getFRSFileDao', 'archiveBeforePurge'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestMoveToStaging', array('_getFRSFileDao', 'moveDeletedFileToStagingArea'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestPurgeDeletedFiles', array('purgeFiles', 'moveDeletedFilesToStagingArea', 'cleanStaging', 'restoreDeletedFiles'));
 Mock::generatePartial('FRSFileFactory', 'FRSFileFactoryTestRestore', array('_getFRSReleaseFactory', '_getFRSFileDao', '_getUserManager', '_getEventManager'));
@@ -387,6 +387,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('setPurgeDate', array(12, '*'));
         $dao->setReturnValue('setPurgeDate', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
+        $ff->expectOnce('archiveBeforePurge', array($file));
 
         $backend = new MockBackendSystem();
         $backend->expectNever('log', array('File p1_r1/foobar.xls(12) not purged, Set purge date in DB fail', 'error'));
@@ -411,6 +412,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
+        $ff->expectOnce('archiveBeforePurge', array($file));
 
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('setPurgeDate', array(12, '*'));
@@ -443,6 +445,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('setPurgeDate', array(12, '*'));
         $dao->setReturnValue('setPurgeDate', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
+        $ff->expectOnce('archiveBeforePurge', array($file));
 
         $backend = new MockBackendSystem();
         $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warn'));

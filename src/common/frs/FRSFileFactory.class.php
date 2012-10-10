@@ -596,7 +596,7 @@ class FRSFileFactory extends Error {
      *
      * @return void
      */
-    private function archiveBeforePurge($file) {
+    public function archiveBeforePurge($file) {
         $release  = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
         $sub_dir  = $this->getUploadSubDirectory($release);
         $prefix   = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
