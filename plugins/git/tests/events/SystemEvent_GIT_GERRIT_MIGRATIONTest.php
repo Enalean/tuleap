@@ -29,17 +29,26 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
      */
     protected $event;
     protected $repository_id = 123;
-//    protected $repository;
+    protected $driver;
+    protected $repository;
     
     public function setUp() {
         parent::setUp();
         
         $this->dao = mock('GitDao');
         
+        $this->driver = mock('Git_Driver_Gerrit');
+        
+        $factory = mock('GitRepositoryFactory');
+        stub($factory)->getRepositoryById($this->repository_id)->returns($this->repository);
+        
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
         $this->event = new SystemEvent_GIT_GERRIT_MIGRATION($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
         $this->event->setParameters("$this->repository_id");
         $this->event->setGitDao($this->dao);
+        $this->event->setGerritDriver($this->driver);
+        $this->event->setRepositoryFactory($factory);
+        
 //        $this->repository = new GitRepository();
 //        $this->repository->setBackendType(GitDao::BACKEND_GITOLITE);
 //        stub('GItRepositoryFactory')->getRepositoryById($this->repository_id)->returns($this->repository);
@@ -55,7 +64,11 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
 
 class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
     
-    public function itCreatesAProject() {    }
+    public function itCreatesAProject() { 
+        //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
+        expect($this->driver)->createProject($this->repository)->once();
+        $this->event->process();
+    }
     
     public function itCreatesContributorsGroup() {   }
     
