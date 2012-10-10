@@ -48,6 +48,10 @@ function stub($classname_or_simpletest_mock) {
     return new OngoingIntelligentStub($mock);
 }
 
+function expect($classname_or_simpletest_mock) {
+    return stub($classname_or_simpletest_mock);
+}
+
 /**
  * mock('SomeClass');
  *
