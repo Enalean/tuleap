@@ -45,7 +45,7 @@ class Planning_ShortAccess {
         $presenters = array();
         $milestones = $this->milestone_factory->getLastTenOpenMilestones($this->user, $this->planning);
         foreach ($milestones as $milestone) {
-            $presenters[] = new Planning_MilestoneLinkPresenter($milestone);
+            $presenters[] = new Planning_MilestoneLinkPresenter($milestone, $this->user);
         }
         return $presenters;
     }

@@ -35,7 +35,8 @@ class Planning_MilestoneLinkPresenterTest extends TuleapTestCase {
                                        ->withGroup($project)
                                        ->withPlanningId(789)
                                        ->build();
-        $this->presenter = new Planning_MilestoneLinkPresenter($this->milestone);
+        $this->user      = aUser()->build();
+        $this->presenter = new Planning_MilestoneLinkPresenter($this->milestone, $this->user);
     }
     
     public function itHasAnUriPointingToThePlanningViewOfTheMilestone() {
