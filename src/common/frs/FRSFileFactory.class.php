@@ -592,10 +592,9 @@ class FRSFileFactory extends Error {
      * Invoque ''archive deleted item' hook in order to make a backup of a given file.
      * This method should be used whithin the FRS purge process
      *
-     * @param FRSFile $file File to delete
-     * @param Backend $backend
+     * @param FRSFile $file File to archive
      *
-     * @return Boolean
+     * @return void
      */
     private function archiveBeforePurge($file) {
         $release  = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
