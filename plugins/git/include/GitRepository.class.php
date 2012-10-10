@@ -631,19 +631,6 @@ class GitRepository implements DVCSRepository {
     public function getAccessURL() {
         return $this->getBackend()->getAccessURL($this);
     }
-
-    public function fork($user, $namespace, $scope, Project $project) {
-        $clone = clone $this;
-        $clone->setProject($project);
-        $clone->setCreator($user);
-        $clone->setParent($this);
-        $clone->setNamespace($namespace);
-        $clone->setId(null);
-        $path = unixPathJoin(array($project->getUnixName(), $namespace, $this->getName())).'.git';
-        $clone->setPath($path);
-        $clone->setScope($scope);
-        $this->getBackend()->fork($this, $clone);
-    }
     
     /**
      * Create a reference repository

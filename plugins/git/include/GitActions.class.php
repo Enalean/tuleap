@@ -20,7 +20,6 @@
   */
 require_once('mvc/PluginActions.class.php');
 require_once('events/SystemEvent_GIT_REPO_CREATE.class.php');
-require_once('events/SystemEvent_GIT_REPO_CLONE.class.php');
 require_once('events/SystemEvent_GIT_REPO_DELETE.class.php');
 require_once('events/SystemEvent_GIT_REPO_ACCESS.class.php');
 require_once('events/SystemEvent_GIT_GERRIT_MIGRATION.class.php');

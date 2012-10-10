@@ -215,56 +215,6 @@ class GitRepositoryTest extends TuleapTestCase {
         $project->expectNever('getID');
     }
     
-    public function testForkCreatesAnewRepoAndPassesItToTheBackend() {
-        $user = $this->_newUser("sandra");
-        $backend = new MockGit_Backend_Gitolite();
-        $project = new Mockproject();
-        $project->setReturnValue('getUnixName', 'tulip');
-        
-        $repo    = new GitRepository();
-        $repo->setBackend($backend);
-        $repo->setProject($project);
-        
-        $namespace = "toto/tata";
-        $clone = $this->_aGitRepoWith($user, $repo, $namespace, $backend, GitRepository::REPO_SCOPE_INDIVIDUAL);
-        $clone->setProject($repo->getProject());
-        $clone->setPath(unixPathJoin(array($project->getUnixName(), $namespace, $repo->getName())).'.git');
-
-        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($clone)));
-
-        $repo->fork($user, $namespace, GitRepository::REPO_SCOPE_INDIVIDUAL, $project);
-    }
-    public function testForkCrossProjectClonesByChangingTheProjectAndPath() {
-        $user = $this->_newUser("sandra");
-        $backend = new MockGit_Backend_Gitolite();
-        $project = new Mockproject();
-        $project->setReturnValue('getUnixName', 'tulip');
-
-        $to_project = new Mockproject();
-        $to_project->setReturnValue('getUnixName', 'blabla');
-
-        $repo    = new GitRepository();
-        $repo->setBackend($backend);
-        $repo->setProject($project);
-        
-        $expectedRepo = $this->_aGitRepoWith($user, $repo, '', $backend, GitRepository::REPO_SCOPE_PROJECT);
-        $expectedRepo->setProject($to_project);
-        $expectedRepo->setPath(unixPathJoin(array($to_project->getUnixName(), '', $repo->getName())).'.git');
-
-        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($expectedRepo)));
-        $repo->fork($user, '', GitRepository::REPO_SCOPE_PROJECT, $to_project);
-    }
-    private function _aGitRepoWith($user, $repo, $namespace, $backend, $scope) {
-        $clone = new GitRepository();
-        $clone->setCreator($user);
-        $clone->setNamespace($namespace);
-        $clone->setBackend($backend);
-        $clone->setParent($repo);
-        $clone->setScope($scope);
-        $clone->setName($repo->getName());
-        return $clone;
-    }
-    
     public function _newUser($name) {
         $user = new User(array('language_id' => 1));
         $user->setUserName($name);
