@@ -54,7 +54,13 @@ class SystemEvent_ARCHIVE_DELETED_ITEMS extends SystemEvent {
             $this->error('Missing argument archive path');
             return false;
         }
-        $archivePrefix = $parameters[2];
+
+        if (!empty($parameters[2])) {
+            $archivePrefix = $parameters[2];
+        } else {
+            $this->error('Missing argument archive prefix');
+            return false;
+        }
 
         if (copy($sourcePath, $archivePath.$archivePrefix.'_'.basename($sourcePath))) {
             $this->done();
