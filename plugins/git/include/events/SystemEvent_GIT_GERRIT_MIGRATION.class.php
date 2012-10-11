@@ -35,12 +35,16 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
+    /** @var GerritServerFactory */
+    private $server_factory;
+    
     public function process() {
         $repo_id = (int)$this->getParameter(0);
         $this->dao->switchToGerrit($repo_id);
 
         $repository = $this->repository_factory->getRepositoryById($repo_id);
-        $this->driver->createProject($repository);
+        $server     = $this->server_factory->getServer($repository);
+        $this->driver->createProject($server, $repository);
     }
 
     public function verbalizeParameters($with_link) {
@@ -50,11 +54,13 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     public function injectDependencies(
         GitDao $dao,
         Git_Driver_Gerrit $driver,
-        GitRepositoryFactory $repository_factory
+        GitRepositoryFactory $repository_factory,
+        GerritServerFactory  $server_factory
     ) {
         $this->dao                = $dao;
         $this->driver             = $driver;
         $this->repository_factory = $repository_factory;
+        $this->server_factory     = $server_factory;
     }
 }
 

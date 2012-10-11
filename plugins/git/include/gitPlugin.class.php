@@ -143,6 +143,7 @@ class GitPlugin extends Plugin {
                     $this->getGitDao(),
                     $this->getGerritDriver(),
                     $this->getRepositoryFactory(),
+                    $this->getGerritServerFactory()
                 );
                 break;
             default:
@@ -577,6 +578,10 @@ class GitPlugin extends Plugin {
                 $params['codendi_widgets'][] = 'plugin_git_project_pushes';
             }
         }
+    }
+
+    public function getGerritServerFactory() {
+        return new GerritServerFactory();
     }
 }
 

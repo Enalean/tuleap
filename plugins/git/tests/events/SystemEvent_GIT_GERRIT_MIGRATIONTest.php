@@ -31,6 +31,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
     protected $repository_id = 123;
     protected $driver;
     protected $repository;
+    protected $gerrit_server;
     
     public function setUp() {
         parent::setUp();
@@ -39,17 +40,20 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
         
         $this->driver = mock('Git_Driver_Gerrit');
         
+        $this->gerrit_server = mock('GerritServer');
+        $this->repository = mock('GitRepository');
+        
+        $gerrit_server_factory = mock('GerritServerFactory');
+        stub($gerrit_server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+
         $factory = mock('GitRepositoryFactory');
         stub($factory)->getRepositoryById($this->repository_id)->returns($this->repository);
         
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
         $this->event = new SystemEvent_GIT_GERRIT_MIGRATION($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
         $this->event->setParameters("$this->repository_id");
-        $this->event->injectDependencies($this->dao, $this->driver, $factory);
+        $this->event->injectDependencies($this->dao, $this->driver, $factory, $gerrit_server_factory);
         
-//        $this->repository = new GitRepository();
-//        $this->repository->setBackendType(GitDao::BACKEND_GITOLITE);
-//        stub('GItRepositoryFactory')->getRepositoryById($this->repository_id)->returns($this->repository);
     }
 }
 class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
@@ -58,13 +62,14 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         expect($this->dao)->switchToGerrit($this->repository_id)->once();
         $this->event->process();
     }
+    
 }
 
 class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
     
     public function itCreatesAProject() { 
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        expect($this->driver)->createProject($this->repository)->once();
+        expect($this->driver)->createProject($this->gerrit_server, $this->repository)->once();
         $this->event->process();
     }
     

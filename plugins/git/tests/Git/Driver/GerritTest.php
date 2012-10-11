@@ -31,6 +31,9 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
      * @var GitRepository
      */
     protected $repository;
+    
+    /** @var GerritServer */
+    protected $gerrit_server;
 
     /**
      * @var RemoteSshCommand
@@ -50,6 +53,8 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
             ->withName('dusse')
             ->build();
 
+        $this->gerrit_server = mock('GerritServer');
+        
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->driver = new Git_Driver_Gerrit($this->ssh);
     }
@@ -61,7 +66,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
 
     public function itExecutesTheCreateCommandOnTheGerritServer() {
         expect($this->ssh)->execute("gerrit create-project tuleap.example.com-firefox/jean-claude/dusse")->once();
-        $this->driver->createProject($this->repository);
+        $this->driver->createProject($this->gerrit_server, $this->repository);
     }
     
     public function _itCallsTheRealThing() {
