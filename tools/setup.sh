@@ -692,7 +692,45 @@ EOF
 }
 
 setup_apache_debian() {
-    :
+    # Enabled by subversion.conf on RHEL setup
+    a2enmod dav
+    a2enmod dav_svn
+    a2enmod authz_svn
+    # Enabled by ssl.conf on RHEL setup
+    a2enmod ssl
+    # Enabled by php.conf on RHEL setup
+    a2enmod php5
+    # Enabled by auth_mysql.conf on RHEL setup
+    a2enmod auth_mysql
+    # Required by codendi_aliases.conf
+    a2enmod rewrite
+    a2enmod proxy
+    a2enmod proxy_http
+    # Listed in http.conf on RHEL setup
+    # XXX: Find out which ones are really required
+    a2enmod alias
+    a2enmod autoindex
+    a2enmod negotiation
+    a2enmod mime
+    a2enmod deflate
+    a2enmod vhost_alias
+
+    install_dist_conf /etc/apache2/sites-available/tuleap
+    mkdir -p /etc/apache2/tuleap
+    install_dist_conf /etc/apache2/tuleap/codendi_aliases.conf
+    install_dist_conf /etc/apache2/tuleap/php.conf
+    install_dist_conf /etc/apache2/tuleap/auth_mysql.conf
+
+    touch /etc/apache2/tuleap_svnroot.conf
+
+    substitute "/etc/apache2/tuleap/codendi_aliases.conf" '%sys_default_domain%' "$sys_default_domain"
+    substitute '/etc/apache2/sites-available/tuleap' '%sys_default_domain%' "$sys_default_domain"
+    if [ -f '/etc/apache2/conf.d/munin.conf' ]; then
+	substitute '/etc/apache2/conf.d/munin.conf' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+    fi
+
+    a2ensite tuleap
+    a2dissite default
 }
 
 setup_apache() {

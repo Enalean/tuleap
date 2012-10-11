@@ -8,10 +8,12 @@ update_parameter() {
 
 update_paths_in() {
     local file=$1
-    perl -pi -e 's|/usr/share/codendi|/usr/share/tuleap|' $file
-    perl -pi -e 's|/usr/lib/codendi|/usr/lib/tuleap|' $file
-    perl -pi -e 's|/var/lib/codendi|/var/lib/tuleap|' $file
-    perl -pi -e 's|/etc/codendi|/etc/tuleap|' $file
+    perl -pi -e 's|/usr/share/codendi|/usr/share/tuleap|g' $file
+    perl -pi -e 's|/usr/lib/codendi|/usr/lib/tuleap|g' $file
+    perl -pi -e 's|/var/lib/codendi|/var/lib/tuleap|g' $file
+    perl -pi -e 's|/etc/codendi|/etc/tuleap|g' $file
+    perl -pi -e 's|/var/tmp/codendi_cache|/var/cache/tuleap|g' $file
+    perl -pi -e 's|/var/www/cgi-bin|/usr/lib/cgi-bin|g' $file
 }
 
 for file in $(grep -r -l /codendi debian/tuleap/); do
