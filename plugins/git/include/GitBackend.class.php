@@ -362,50 +362,39 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $gitolite[]            = "Gitolite created repositories";
         $gitoliteActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitoliteActive[]      = "Gitolite created repositories (still active)";
-        $dar                   = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitShellIndex[] = $row['month']." ".$row['year'];
-                $gitShell[]      = intval($row['count']);
-            }
-            $formatter->addLine($gitShellIndex);
-            $formatter->addLine($gitShell);
-            $formatter->addEmptyLine();
-        }
-        $dar = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId, true);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitShellActiveIndex[] = $row['month']." ".$row['year'];
-                $gitShellActive[]      = intval($row['count']);
-            }
-            $formatter->addLine($gitShellActiveIndex);
-            $formatter->addLine($gitShellActive);
-            $formatter->addEmptyLine();
-        }
-        $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitoliteIndex[] = $row['month']." ".$row['year'];
-                $gitolite[]      = intval($row['count']);
-            }
-            $formatter->addLine($gitoliteIndex);
-            $formatter->addLine($gitolite);
-            $formatter->addEmptyLine();
-        }
-        $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId, true);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitoliteActiveIndex[] = $row['month']." ".$row['year'];
-                $gitoliteActive[]      = intval($row['count']);
-            }
-            $formatter->addLine($gitoliteActiveIndex);
-            $formatter->addLine($gitoliteActive);
-            $formatter->addEmptyLine();
-        }
+        $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellIndex,       $gitShell,       false);
+        $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellActiveIndex, $gitShellActive, true);
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex,       $gitolite,       false);
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteActiveIndex, $gitoliteActive, true);
         $this->retrieveLoggedPushesStatistics($formatter);
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
         return $content;
+    }
+
+    /**
+     * Fill statistics by Backend type
+     *
+     * @param Statistics_Formatter $formatter instance of statistics formatter class
+     * @param String               $type
+     * @param Array                $typeIndex  
+     * @param Array                $typeArray
+     * @param Boolean              $keepedAlive
+     *
+     * @return Void
+     */
+    private function fillBackendStatisticsByType(Statistics_Formatter $formatter, $type, $typeIndex, $typeArray, $keepedAlive) {
+        $dao = $this->getDao();
+        $dar = $dao->getBackendStatistics($type, $formatter->startDate, $formatter->endDate, $formatter->groupId, $keepedAlive);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row) {
+                $typeIndex[] = $row['month']." ".$row['year'];
+                $typeArray[]      = intval($row['count']);
+            }
+            $formatter->addLine($typeIndex);
+            $formatter->addLine($typeArray);
+            $formatter->addEmptyLine();
+        }
     }
 
     /**
