@@ -161,6 +161,29 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         $git->request();
     }
     
+    public function itNeedsAValidServerId() {
+        $group_id    = 101;
+        $user        = stub('User')->isMember($group_id, 'A')->returns(true);
+        $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
+        $request     = new HTTPRequest();
+        $repo_id     = 999;
+        $request->set('repo_id', $repo_id);
+        $not_valid   = 'a_string';
+        $request->set('remote_server_id', $not_valid);
+
+        // not necessary, but we specify it to make it clear why we don't want he action to be called
+        $factory = stub('GitRepositoryFactory')->getRepositoryById()->once()->returns(mock('GitRepositoryFactory'));
+        
+        $git = $this->getGit($request, $usermanager, $factory, $group_id);
+        
+        $git->expectOnce('addError', array('*'));
+        $git->expectNever('addAction');
+        
+        $git->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id));
+        
+        $git->request();
+    }
+    
     private function getGit($request, $usermanager, $factory, $group_id) {
         $git = TestHelper::getPartialMock('Git', array('_informAboutPendingEvents', 'addAction', 'addView', 'addError', 'checkSynchronizerToken', 'redirect'));
         $git->setRequest($request);
