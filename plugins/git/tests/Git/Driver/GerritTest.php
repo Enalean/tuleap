@@ -50,7 +50,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
             ->withName('dusse')
             ->build();
 
-        $this->ssh    = mock('RemoteSshCommand');
+        $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->driver = new Git_Driver_Gerrit($this->ssh);
     }
 

@@ -60,7 +60,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
     public function getGerritDriver() {
         if ($this->driver == null) {
-            $this->driver = new Git_Driver_Gerrit();
+            $this->driver = new Git_Driver_Gerrit(
+                new Git_Driver_Gerrit_RemoteSSHCommand()
+            );
         }
         return $this->driver;
     }
