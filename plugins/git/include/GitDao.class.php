@@ -50,6 +50,7 @@ class GitDao extends DataAccessObject {
 
     const BACKEND_GITSHELL = 'gitshell';
     const BACKEND_GITOLITE = 'gitolite';
+    const REMOTE_SERVER_ID = 'remote_server_id';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -450,6 +451,7 @@ class GitDao extends DataAccessObject {
         $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
         $repository->setNamespace($result[self::REPOSITORY_NAMESPACE]);
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
+        $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->loadNotifiedMails();
     }
 
