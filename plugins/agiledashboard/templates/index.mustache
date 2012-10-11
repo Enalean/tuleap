@@ -2,7 +2,14 @@
 <ul class="ad_index_plannings">
     {{#getShortAccess}}
     <li class="ad_index_planning">
-        <h2>{{#planning}}{{getName}}{{/planning}}</h2>
+        <div class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <h2>{{#planning}}{{getName}}{{/planning}} <b class="caret"></b></h2>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1">{{createNewItemToPlan}}</a></li>
+            </ul>
+        </div>
         <ul>
             {{#getLastTenOpenArtifacts}}
             <li>
@@ -14,8 +21,6 @@
             </li>
             {{/getLastTenOpenArtifacts}}
         </ul>
-        <br />
-        <span><a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1">{{createNewItemToPlan}}</a></span>
     </li>
     {{/getShortAccess}}
 </ul>

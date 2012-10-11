@@ -198,8 +198,10 @@
     padding: 0;
 }
 
-.ad_index_planning > span {
-    position: absolute;
-    bottom:0;
+.ad_index_planning > .dropdown > a:hover {
+    text-decoration: none;
+}
+.ad_index_planning > .dropdown > a > h2 {
+    color: #333;
 }
 
