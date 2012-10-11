@@ -44,8 +44,33 @@ class Git_Driver_Gerrit {
 
 class GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
-    function __construct() {
-        
+    
+    private $host;
+    private $port;
+    private $login;
+    private $identity_file;
+    
+    public function __construct($host, $port, $login, $identity_file) {
+        $this->host          = $host;
+        $this->port          = $port;
+        $this->login         = $login;
+        $this->identity_file = $identity_file;
+    }
+
+    public function getHost() {
+        return $this->host;
+    }
+
+    public function getIdentityFile() {
+        return $this->identity_file;
+    }
+
+    public function getLogin() {
+        return $this->login;
+    }
+
+    public function getPort() {
+        return $this->port;
     }
 
 }

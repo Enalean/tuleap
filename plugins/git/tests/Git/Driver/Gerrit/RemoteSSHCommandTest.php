@@ -21,6 +21,7 @@
 
 require_once dirname(__FILE__).'/../../../../include/constants.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RemoteSSHCommand.class.php';
+require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 
 class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
@@ -32,6 +33,9 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
     protected $identity_file = '/path/to/codendiadm/.ssh/id_rsa';
 
+    /** @var Git_Driver_Gerrit_RemoteSSHConfig */
+    private $config;
+    
     /**
      * @var RemoteSshCommand
      */
@@ -41,14 +45,14 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         parent::setUp();
         $this->ssh = partial_mock(
             'Git_Driver_Gerrit_RemoteSSHCommand',
-            array('sshExec'),
-            array($this->host, $this->port, $this->login, $this->identity_file)
+            array('sshExec')
         );
+        $this->config = new GerritServer($this->host, $this->port, $this->login, $this->identity_file);
     }
 
     public function itExecutesTheCreateCommandOnTheGerritServer() {
         expect($this->ssh)->sshExec('-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com a_remote_command')->once();
-        $this->ssh->execute(mock('Git_Driver_Gerrit_RemoteSSHConfig'), 'a_remote_command');
+        $this->ssh->execute($this->config, 'a_remote_command');
     }
 }
 ?>

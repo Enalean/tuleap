@@ -20,19 +20,12 @@
 
 class Git_Driver_Gerrit_RemoteSSHCommand {
     
-    private $host;
-    private $login;
-    private $identity_file;
-    
-    public function __construct($host, $port, $login, $identity_file) {
-        $this->host          = $host;
-        $this->port          = $port;
-        $this->login         = $login;
-        $this->identity_file = $identity_file;
-    }
-    
     public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd) {
-        $this->sshExec("-p $this->port -i $this->identity_file $this->login@$this->host $cmd");
+        $port          = $config->getPort();
+        $host          = $config->getHost();
+        $login         = $config->getLogin();
+        $identity_file = $config->getIdentityFile();
+        $this->sshExec("-p $port -i $identity_file $login@$host $cmd");
     }
     
     protected function sshExec($cmd) {
@@ -41,6 +34,9 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
 }
 
 interface Git_Driver_Gerrit_RemoteSSHConfig {
-    
+    public function getPort();
+    public function getHost();
+    public function getLogin();
+    public function getIdentityFile();
 }
 ?>
