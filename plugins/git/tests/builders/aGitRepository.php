@@ -55,7 +55,12 @@ class Test_Git_RepositoryBuilder {
         $this->repository->setBackend($backend);
         return $this;
     }
-
+    
+    public function withRemoteServerId($id) {
+        $this->repository->setRemoteServerId($id);
+        return $this;
+    }
+    
     public function build() {
         return $this->repository;
     }

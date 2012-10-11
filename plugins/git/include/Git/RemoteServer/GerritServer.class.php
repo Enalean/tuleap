@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
 class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
     

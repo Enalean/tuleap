@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http:__www.gnu.org_licenses_>.
  */
 
+require_once 'RemoteSSHConfig.class.php';
+
 class Git_Driver_Gerrit_RemoteSSHCommand {
     
     public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd) {
@@ -33,10 +35,4 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     }
 }
 
-interface Git_Driver_Gerrit_RemoteSSHConfig {
-    public function getPort();
-    public function getHost();
-    public function getLogin();
-    public function getIdentityFile();
-}
 ?>

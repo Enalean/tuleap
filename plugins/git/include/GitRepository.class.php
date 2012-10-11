@@ -72,6 +72,7 @@ class GitRepository implements DVCSRepository {
     private $dao;
     private $namespace;
     private $scope;
+    private $remote_server_id;
     
     protected $backendType;
 
@@ -827,6 +828,15 @@ class GitRepository implements DVCSRepository {
     
     public function isMigratableToGerrit() {
         return $this->getBackendType() == GitDao::BACKEND_GITOLITE;
+    }
+
+    public function setRemoteServerId($id) {
+        $this->remote_server_id = $id;
+    }
+
+    public function getRemoteServerId() {
+        return $this->remote_server_id;
+        
     }
 }
 

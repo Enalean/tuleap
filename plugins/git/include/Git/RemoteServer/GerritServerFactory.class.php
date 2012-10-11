@@ -20,17 +20,31 @@
  */
 
 require_once 'GerritServer.class.php';
+require_once 'Dao.class.php';
+require_once GIT_BASE_DIR .'/GitRepository.class.php';
 
 class Git_RemoteServer_GerritServerFactory {
 
-    public function __construct() {
-        
+    /** @var Git_RemoteServer_Dao */
+    private $dao;
+    
+    public function __construct(Git_RemoteServer_Dao $dao) {
+        $this->dao = $dao;
     }
     
     public function getServer(GitRepository $repository) {
-        
+        $id  = $repository->getRemoteServerId();
+        $row = $this->dao->searchById($id)->getRow();
+        if ($row) {
+            return new Git_RemoteServer_GerritServer($row['host'], $row['port'], $row['login'], $row['identity_file']);
+        }
+        throw new GerritServerNotFoundException($id);
     }
-
 }
 
+class GerritServerNotFoundException extends Exception {
+    public function __construct($id) {
+        parent::__construct("No server found with the id: $id");
+    }
+}
 ?>
