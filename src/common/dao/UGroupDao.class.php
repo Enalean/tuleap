@@ -112,7 +112,7 @@ class UGroupDao extends DataAccessObject {
     /**
      * Update binding option for a given UGroup
      *
-     * @param Integer $ugroupId The binded ugroup id
+     * @param Integer $ugroupId The bound ugroup id
      * @param Integer $sourceId The ugroup id we want to clone
      *
      * @return Boolean
@@ -130,7 +130,7 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-     * Retrieve all binded UGroups of a given UGroup
+     * Retrieve all bound UGroups of a given UGroup
      *
      * @param Integer $sourceId The source ugroup id
      *
@@ -143,7 +143,7 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-     * Retrieve the source user group from a given binded ugroup id
+     * Retrieve the source user group from a given bound ugroup id
      *
      * @param Integer $ugroupId The source ugroup id
      *

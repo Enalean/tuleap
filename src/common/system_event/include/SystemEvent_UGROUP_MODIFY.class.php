@@ -83,7 +83,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     }
 
     /**
-     * Remove all user group binded to a deleted given ugroup
+     * Remove all user group bound to a deleted given ugroup
      *
      * @param Integer $ugroup_id Id of the deleted user group
      * @param Integer $group_id  Id of the project
@@ -97,7 +97,7 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
             return $bindingManager->removeAllUGroupsBinding($ugroup_id);
         } else {
             if (count($this->getParametersAsArray()) == 2) {
-                //The user group has been updated (user added / user removed), we update all its binded user groups
+                //The user group has been updated (user added / user removed), we update all its bound user groups
                 return $bindingManager->updateBindedUGroups($ugroup_id);
             }
             return true;

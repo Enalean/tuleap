@@ -94,7 +94,7 @@ class UGroupManager {
     }
 
     /**
-     * Check if the user group is binded
+     * Check if the user group is bound
      *
      * @param Integer $ugroupId Id of the user goup
      *

@@ -79,7 +79,7 @@ class UGroupBinding {
     }
 
     /**
-     * Retrieve All Ugroups binded to a given Ugroup
+     * Retrieve All Ugroups bound to a given Ugroup
      *
      * @param Integer $ugroupId Id of the source user goup
      *
@@ -137,7 +137,7 @@ class UGroupBinding {
     }
 
     /**
-     * Update the user list of all ugroups  binded to a given user group
+     * Update the user list of all ugroups  bound to a given user group
      *
      * @param Integer $ugroupId Id of the source user group
      *
@@ -195,7 +195,7 @@ class UGroupBinding {
      * Clone a given user group
      *
      * @param Integer $sourceId Id of the source user group
-     * @param Integer $ugroupId Id of the binded user group
+     * @param Integer $ugroupId Id of the bound user group
      *
      * @return void
      */
@@ -210,9 +210,9 @@ class UGroupBinding {
     }
 
     /**
-     * Mark a given user group as binded to another one
+     * Mark a given user group as bound to another one
      *
-     * @param Integer $ugroupId Id of the binded user group
+     * @param Integer $ugroupId Id of the bound user group
      * @param Integer $sourceId Id of the source user group
      *
      * @return void
@@ -226,7 +226,7 @@ class UGroupBinding {
     /**
      * Bind a given user group to another one
      *
-     * @param Integer $ugroupId Id of the binded user group
+     * @param Integer $ugroupId Id of the bound user group
      * @param Integer $sourceId Id of the source user group
      *
      * @return boolean
@@ -364,8 +364,8 @@ class UGroupBinding {
     /**
      * Get the HTML output for current binding
      *
-     * @param Project $currentProject Project of the currently binded ugroup
-     * @param UGroup  $currentSource  Currently binded ugroup
+     * @param Project $currentProject Project of the currently bound ugroup
+     * @param UGroup  $currentSource  Currently bound ugroup
      *
      * @return String
      */
@@ -382,9 +382,9 @@ class UGroupBinding {
     }
 
     /**
-     * Get the HTML output for ugroups binded to the current one
+     * Get the HTML output for ugroups bound to the current one
      *
-     * @param Array $clones List of ugroups binded to this one
+     * @param Array $clones List of ugroups bound to this one
      *
      * @return String
      */
@@ -447,7 +447,7 @@ class UGroupBinding {
      * Get the list of source ugroups by project
      *
      * @param Integer $sourceProject Id of the current soucrce project
-     * @param UGroup  $currentSource Currently binded ugroup
+     * @param UGroup  $currentSource Currently bound ugroup
      *
      * @return Array
      */
@@ -471,7 +471,7 @@ class UGroupBinding {
      * Get the HTML select listing the source ugroups by project
      *
      * @param Integer $sourceProject Id of the current soucrce project
-     * @param UGroup  $currentSource Currently binded ugroup
+     * @param UGroup  $currentSource Currently bound ugroup
      *
      * @return String
      */

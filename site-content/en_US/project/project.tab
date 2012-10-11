@@ -984,13 +984,13 @@ project_ugroup_binding	duplicate_binding_warning	The user group with the id $1 i
 project_ugroup_binding	binding_removed	User group binding successfully removed
 project_ugroup_binding	remove_error	User group binding not removed
 project_ugroup_binding	current_binding	Current binding
-project_ugroup_binding	binding_sources	User groups binded to this one
+project_ugroup_binding	binding_sources	User groups bound to this one
 project_ugroup_binding	edit_binding	Edit binding
 project_ugroup_binding	source_project	Source project
 project_ugroup_binding	source_ugroup	Source user group
-project_ugroup_binding	no_binding	This user group is not binded to any other user group
+project_ugroup_binding	no_binding	This user group is not bound to any other user group
 project_ugroup_binding	remove_binding	Remove current binding
-project_ugroup_binding	current_binded	This user group is binded to $1 in project $2
+project_ugroup_binding	current_binded	This user group is bound to $1 in project $2
 project_ugroup_binding	not_source	This user group is not the source of any other user group
 project_ugroup_binding	update_user_not_allowed	Update users is not allowed for the ugroup $1
 project_ugroup_binding	reset_error	Unable to reset ugroup $1
