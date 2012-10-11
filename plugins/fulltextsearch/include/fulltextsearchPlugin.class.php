@@ -41,6 +41,7 @@ class fulltextsearchPlugin extends Plugin {
 
         // tracker
         $this->_addHook('tracker_report_followup_search', 'tracker_report_followup_search', false);
+        $this->_addHook('tracker_report_followup_search_process', 'tracker_report_followup_search_process', false);
 
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
@@ -179,8 +180,26 @@ class fulltextsearchPlugin extends Plugin {
     public function tracker_report_followup_search(&$params) {
         $params['html'] .= '<div class="tracker_report_query">';
         $params['html'] .= '<h3 class="' . Toggler::getClassname('followups_search') . '" id="followups_search" >Followups search</h3>';
-        $params['html'] .= '<div>Future form content</div>';
+        $params['html'] .= '<form>';
+        $params['html'] .= '<input type="hidden" value="'.$params['report_id'].'" name="report">';
+        $params['html'] .= '<input type="hidden" value="followup_search" name="func">';
+        $params['html'] .= 'Search in followup comments: <input name="search_followups" />';
+        $params['html'] .= '<div align="center" style=""><input type="submit" value="Submit" ></div>';
+        $params['html'] .= '</form>';
         $params['html'] .= '</div>';
+    }
+
+    /**
+     * Process search in tracker followup
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_report_followup_search_process($params) {
+        if ($params['request']->get('func') == 'followup_search') {
+            //@TODO: process search
+        }
     }
 
     private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {

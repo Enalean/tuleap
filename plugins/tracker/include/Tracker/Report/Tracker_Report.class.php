@@ -473,7 +473,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
         $html .= '</form>';
         $html .= '</div>';
-        $params = array('html' => '');
+        $params = array('html' => '', 'report_id' => $this->id);
         EventManager::instance()->processEvent('tracker_report_followup_search', &$params);
         $html .= $params['html'];
         return $html;
@@ -1185,6 +1185,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $criteria_values = $request->get('criteria');
                     $this->updateCriteriaValues($criteria_values);
                 }
+                $params = array('request' => $request);
+                EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
                 $this->display($layout, $request, $current_user);
                 break;
         }
