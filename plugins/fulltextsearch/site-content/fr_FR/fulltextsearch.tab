@@ -4,3 +4,6 @@ plugin_fulltextsearch	plugin_description	Recherche en texte intégral dans Tulea
 plugin_fulltextsearch	client_library_not_found	Librairie cliente requise
 
 plugin_fulltextsearch	result_count	$1 résultats ($2 seconds)
+
+plugin_fulltextsearch	followups_search	Recerche dans les commentaires
+plugin_fulltextsearch	search_followup_comments	Rechercher dans les commentaires

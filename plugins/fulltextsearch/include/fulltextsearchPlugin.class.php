@@ -179,12 +179,12 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function tracker_report_followup_search(&$params) {
         $params['html'] .= '<div class="tracker_report_query">';
-        $params['html'] .= '<h3 class="' . Toggler::getClassname('followups_search') . '" id="followups_search" >Followups search</h3>';
+        $params['html'] .= '<h3 class="' . Toggler::getClassname('followups_search') . '" id="followups_search" >'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search').'</h3>';
         $params['html'] .= '<form>';
         $params['html'] .= '<input type="hidden" value="'.$params['report_id'].'" name="report">';
         $params['html'] .= '<input type="hidden" value="followup_search" name="func">';
-        $params['html'] .= 'Search in followup comments: <input name="search_followups" />';
-        $params['html'] .= '<div align="center" style=""><input type="submit" value="Submit" ></div>';
+        $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').': <input name="search_followups" />';
+        $params['html'] .= '<div align="center" style=""><input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" ></div>';
         $params['html'] .= '</form>';
         $params['html'] .= '</div>';
     }
