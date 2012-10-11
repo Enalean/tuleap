@@ -38,11 +38,11 @@ class Git_Driver_Gerrit {
         $host    = Config::get('sys_default_domain');
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
-        $this->ssh->execute(self::GERRIT_COMMAND ."create-project $host-$project/$repo");
+        $this->ssh->execute($server, self::GERRIT_COMMAND ."create-project $host-$project/$repo");
     }
 }
 
-class GerritServer {
+class GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
     function __construct() {
         

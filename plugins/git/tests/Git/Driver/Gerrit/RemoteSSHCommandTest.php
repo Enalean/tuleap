@@ -48,7 +48,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
     public function itExecutesTheCreateCommandOnTheGerritServer() {
         expect($this->ssh)->sshExec('-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com a_remote_command')->once();
-        $this->ssh->execute('a_remote_command');
+        $this->ssh->execute(mock('Git_Driver_Gerrit_RemoteSSHConfig'), 'a_remote_command');
     }
 }
 ?>

@@ -31,12 +31,16 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         $this->identity_file = $identity_file;
     }
     
-    public function execute($cmd) {
+    public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd) {
         $this->sshExec("-p $this->port -i $this->identity_file $this->login@$this->host $cmd");
     }
     
     protected function sshExec($cmd) {
         exec("ssh ". $cmd);
     }
+}
+
+interface Git_Driver_Gerrit_RemoteSSHConfig {
+    
 }
 ?>

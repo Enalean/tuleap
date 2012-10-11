@@ -65,7 +65,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
     }
 
     public function itExecutesTheCreateCommandOnTheGerritServer() {
-        expect($this->ssh)->execute("gerrit create-project tuleap.example.com-firefox/jean-claude/dusse")->once();
+        expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project tuleap.example.com-firefox/jean-claude/dusse")->once();
         $this->driver->createProject($this->gerrit_server, $this->repository);
     }
     
