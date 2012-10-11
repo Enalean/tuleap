@@ -328,7 +328,7 @@ setup_bind() {
     if [ -f $ZONE_DIR/$PROJECT_NAME.zone ]; then
         $CP -af $ZONE_DIR/$PROJECT_NAME.zone $ZONE_DIR/$PROJECT_NAME.zone.orig
     fi
-    $CP -f $INSTALL_DIR/src/etc/codendi.zone $ZONE_DIR/$PROJECT_NAME.zone
+    $CP -f $INSTALL_DIR/src/etc/codendi.zone.dist $ZONE_DIR/$PROJECT_NAME.zone
 
     $CHOWN root:$NAMED_GID $ZONE_DIR/$PROJECT_NAME.zone
     if [ -f "$ETC_DIR/named.conf" ]; then
