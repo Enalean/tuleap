@@ -74,6 +74,15 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
     /**
+     * @see AgileDashboard_Pane::getIcon()
+     */
+    public function getIcon() {
+        return "/plugins/cardwall/themes/default/images/ic/sticky-note-pin.png";
+        //TODO: use this one
+        return CARDWALL_BASE_URL.$GLOBALS['HTML']->getImagePath('ic/sticky-note-pin.png');
+    }
+
+    /**
      * @see AgileDashboard_Pane::getContent()
      */
     public function getContent() {
@@ -99,12 +108,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
 
         return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $configure_url);
-    }
-
-    public function getIcon() {
-        return "/plugins/cardwall/themes/default/images/ic/sticky-note-pin.png";
-        //TODO: use this one
-        return CARDWALL_BASE_URL.$GLOBALS['HTML']->getImagePath('ic/sticky-note-pin.png');
     }
     
     /**

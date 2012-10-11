@@ -7,6 +7,7 @@
                 <h2>{{#planning}}{{getName}}{{/planning}} <b class="caret"></b></h2>
             </a>
             <ul class="dropdown-menu">
+                <!-- TODO: do not hard code url? -->
                 <li><a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1">{{createNewItemToPlan}}</a></li>
             </ul>
         </div>

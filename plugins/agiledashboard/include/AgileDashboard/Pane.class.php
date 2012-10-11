@@ -57,5 +57,10 @@ abstract class AgileDashboard_Pane {
      * @return string eg: '<table>...</table>'
      */
     public abstract function getContent();
+
+    /**
+    * @see string eg: '/themes/common/images/ic/duck.png'
+     */
+    public abstract function getIcon();
 }
 ?>
