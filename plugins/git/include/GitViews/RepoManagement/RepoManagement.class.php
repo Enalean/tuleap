@@ -40,11 +40,17 @@ class GitViews_RepoManagement {
      */
     private $request;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request) {
-        $this->repository   = $repository;
-        $this->request      = $request;
-        $this->panes        = $this->buildPanes($repository);
-        $this->current_pane = 'settings';
+    /**
+     * @var array
+     */
+    private $gerrit_servers;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request, array $gerrit_servers) {
+        $this->repository     = $repository;
+        $this->request        = $request;
+        $this->gerrit_servers = $gerrit_servers;
+        $this->panes          = $this->buildPanes($repository);
+        $this->current_pane   = 'settings';
         if (isset($this->panes[$request->get('pane')])) {
             $this->current_pane = $request->get('pane');
         }
@@ -59,7 +65,7 @@ class GitViews_RepoManagement {
             new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request),
             new GitViews_RepoManagement_Pane_Notification($repository, $this->request),
             new GitViews_RepoManagement_Pane_Delete($repository, $this->request),
-            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request),
+            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->gerrit_servers),
         );
         $indexed_panes = array();
         foreach ($panes as $pane) {

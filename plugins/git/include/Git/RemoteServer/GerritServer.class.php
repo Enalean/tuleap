@@ -22,17 +22,22 @@
 require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
 class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
-    
+    private $id;
     private $host;
     private $port;
     private $login;
     private $identity_file;
     
-    public function __construct($host, $port, $login, $identity_file) {
+    public function __construct($id, $host, $port, $login, $identity_file) {
+        $this->id            = $id;
         $this->host          = $host;
         $this->port          = $port;
         $this->login         = $login;
         $this->identity_file = $identity_file;
+    }
+
+    public function getId() {
+        return $this->id;
     }
 
     public function getHost() {

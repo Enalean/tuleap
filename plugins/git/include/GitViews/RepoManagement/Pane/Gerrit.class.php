@@ -19,7 +19,17 @@
  */
 
 class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
-    
+
+    /**
+     * @var array
+     */
+    private $gerrit_servers;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request, array $gerrit_servers) {
+        parent::__construct($repository, $request);
+        $this->gerrit_servers = $gerrit_servers;
+    }
+
     /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
@@ -47,7 +57,12 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
         $html .= '<p>';
         $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
-        $html .= '<input type="text" id="gerrit_url" name="remote_server_id" value="gerrit.tuleap.net">';
+        $html .= '<select name="remote_server_id" id="gerrit_url">';
+        $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+        foreach ($this->gerrit_servers as $server) {
+            $html .= '<option value="'. (int)$server->getId() .'">'. $this->hp->purify($server->getHost()) .'</option>';
+        }
+        $html .= '</select>';
         $html .= '</p>';
 
         $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';

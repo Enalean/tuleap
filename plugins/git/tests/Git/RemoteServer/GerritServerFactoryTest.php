@@ -24,34 +24,75 @@ require_once GIT_BASE_DIR.'/Git/RemoteServer/GerritServerFactory.class.php';
 require_once dirname(__FILE__).'/../../builders/aGitRepository.php';
 
 class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
-    
-    
+
+    private $server_id     = 1;
+    private $host          = 'g.tuleap.net';
+    private $port          = 32915;
+    private $login         = 'chuck';
+    private $identity_file = '/home/chuck/.ssh/id_rsa';
+
+    private $alternate_server_id = 2;
+    private $alternate_host      = 'h.tuleap.net';
+
+    public function setUp() {
+        parent::setUp();
+        $dar_1 = array(
+            'id'            => $this->server_id,
+            'host'          => $this->host,
+            'port'          => $this->port,
+            'login'         => $this->login,
+            'identity_file' => $this->identity_file
+        );
+        $dar_2 = array(
+            'id'            => $this->alternate_server_id,
+            'host'          => $this->alternate_host,
+            'port'          => $this->port,
+            'login'         => $this->login,
+            'identity_file' => $this->identity_file
+        );
+        $dao = mock('Git_RemoteServer_Dao');
+        stub($dao)->searchAll()->returnsDar($dar_1, $dar_2);
+        stub($dao)->searchById($this->server_id)->returnsDar($dar_1);
+        stub($dao)->searchById()->returnsEmptyDar();
+        $this->factory = new Git_RemoteServer_GerritServerFactory($dao);
+
+        $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
+            $this->server_id,
+            $this->host,
+            $this->port,
+            $this->login,
+            $this->identity_file
+        );
+        $this->alt_gerrit_server  = new Git_RemoteServer_GerritServer(
+            $this->alternate_server_id,
+            $this->alternate_host,
+            $this->port,
+            $this->login,
+            $this->identity_file
+        );
+    }
+
     public function itThrowsAnExceptionIfThereIsNoSuchServer() {
-        $id   = 34;
-        $repo = stub('GitRepository')->getRemoteServerId()->returns($id);
-        $dao     = stub('Git_RemoteServer_Dao')->searchById()->returnsEmptyDar();
-        $factory = new Git_RemoteServer_GerritServerFactory($dao);
+        $unexisting_server_id   = 34;
+        $repo = aGitRepository()->withRemoteServerId($unexisting_server_id)->build();
         try {
-            $factory->getServer($repo);
+            $this->factory->getServer($repo);
             $this->fail('Should have thrown GerritServerNotFoundException');
         } catch (GerritServerNotFoundException $e) {
-            $this->assertEqual($e->getMessage(), "No server found with the id: $id");
+            $this->assertEqual($e->getMessage(), "No server found with the id: $unexisting_server_id");
         }
     }
-    
+
     public function itReturnsAGerritServer() {
-        $host = 'g.tuleap.net';
-        $port = 32915;
-        $login = 'chuck';
-        $identity_file = '/home/chuck/.ssh/id_rsa';
-        $dar = array('id' => 99, 'host' => $host, 'port' => $port, 'login' => $login, 'identity_file' => $identity_file);
-        $dao = stub('Git_RemoteServer_Dao')->searchById(99)->returnsDar($dar);
-        $factory = new Git_RemoteServer_GerritServerFactory($dao);
-        $repo = aGitRepository()->withRemoteServerId(99)->build();
-        $server = $factory->getServer($repo);
-        $this->assertEqual($server, new Git_RemoteServer_GerritServer($host, $port, $login, $identity_file));
+        $repo   = aGitRepository()->withRemoteServerId($this->server_id)->build();
+        $server = $this->factory->getServer($repo);
+        $this->assertEqual($server, $this->main_gerrit_server);
     }
-    
+
+    public function itGetsAllServers() {
+        $servers = $this->factory->getServers();
+        $this->assertEqual($servers, array($this->main_gerrit_server, $this->alt_gerrit_server));
+    }
 }
 
 ?>

@@ -29,6 +29,10 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function searchAll() {
+        $sql = "SELECT * FROM plugin_git_remote_servers";
+        return $this->retrieve($sql);
+    }
 }
 
 ?>

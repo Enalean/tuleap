@@ -33,6 +33,8 @@ require_once('GitRepositoryFactory.class.php');
 require_once('GitRepositoryManager.class.php');
 require_once('common/layout/Layout.class.php');
 
+require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
+
 /**
  * GitActions
  * @todo call Event class instead of SystemEvent
@@ -56,6 +58,11 @@ class GitActions extends PluginActions {
     private $manager;
 
     /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $gerrit_server_factory;
+
+    /**
      * Constructor
      *
      * @param Git                  $controller         The controller
@@ -67,12 +74,14 @@ class GitActions extends PluginActions {
         Git                $controller,
         SystemEventManager $systemEventManager,
         GitRepositoryFactory $factory,
-        GitRepositoryManager $manager
+        GitRepositoryManager $manager,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
     ) {
         parent::__construct($controller);
-        $this->systemEventManager = $systemEventManager;
-        $this->factory            = $factory;
-        $this->manager            = $manager;
+        $this->systemEventManager    = $systemEventManager;
+        $this->factory               = $factory;
+        $this->manager               = $manager;
+        $this->gerrit_server_factory = $gerrit_server_factory;
 
     }
 
@@ -200,6 +209,7 @@ class GitActions extends PluginActions {
             return false;
         }
         $this->_loadRepository($projectId, $repositoryId);
+        $this->addData(array('gerrit_servers' => $this->gerrit_server_factory->getServers()));
         return true;
     }
 

@@ -27,18 +27,33 @@ class Git_RemoteServer_GerritServerFactory {
 
     /** @var Git_RemoteServer_Dao */
     private $dao;
-    
+
     public function __construct(Git_RemoteServer_Dao $dao) {
         $this->dao = $dao;
     }
-    
+
     public function getServer(GitRepository $repository) {
         $id  = $repository->getRemoteServerId();
         $row = $this->dao->searchById($id)->getRow();
         if ($row) {
-            return new Git_RemoteServer_GerritServer($row['host'], $row['port'], $row['login'], $row['identity_file']);
+            return $this->instantiateFromRow($row);
         }
         throw new GerritServerNotFoundException($id);
+    }
+
+    /**
+     * @return array of Git_RemoteServer_GerritServer
+     */
+    public function getServers() {
+        $servers = array();
+        foreach ($this->dao->searchAll() as $row) {
+            $servers[] = $this->instantiateFromRow($row);
+        }
+        return $servers;
+    }
+
+    private function instantiateFromRow(array $row) {
+        return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['port'], $row['login'], $row['identity_file']);
     }
 }
 

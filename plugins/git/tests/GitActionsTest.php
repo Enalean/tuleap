@@ -50,17 +50,27 @@ class GitActionsTest extends TuleapTestCase {
     }
 
     function testRepoManagement() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
-        $gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
+        $repository = mock('GitRepository');
+        $controller = mock('Git');
+        $factory    = stub('GitRepositoryFactory')->getRepositoryById()->returns($repository);
 
-        $git->expectOnce('addError', array('actions_params_error'));
+        $action = partial_mock(
+            'GitActions',
+            array('getText'),
+            array(
+                $controller,
+                mock('SystemEventManager'),
+                $factory,
+                mock('GitRepositoryManager'),
+                mock('Git_RemoteServer_GerritServerFactory')
+            )
+        );
+        $action->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
 
-        $this->assertFalse($gitAction->repoManagement(1, null));
-        $this->assertTrue($gitAction->repoManagement(1, 1));
+        expect($controller)->addError('actions_params_error')->once();
+
+        $this->assertFalse($action->repoManagement(1, null));
+        $this->assertTrue($action->repoManagement(1, 1));
     }
 
     function testNotificationUpdatePrefixFail() {
@@ -460,7 +470,13 @@ class GitActions_Delete_Tests extends TuleapTestCase {
 
         stub($git_repository_factory)->getRepositoryById($this->repository_id)->returns($this->repository);
 
-        $this->git_actions = new GitActions($controler, $this->system_event_manager, $git_repository_factory, mock('GitRepositoryManager'));
+        $this->git_actions = new GitActions(
+            $controler,
+            $this->system_event_manager,
+            $git_repository_factory,
+            mock('GitRepositoryManager'),
+            mock('Git_RemoteServer_GerritServerFactory')
+        );
     }
 
     public function itMarksRepositoryAsDeleted() {
@@ -501,7 +517,13 @@ class GitActions_ForkTests extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->manager = mock('GitRepositoryManager');
-        $this->actions = new GitActions(mock('Git'), mock('SystemEventManager'), mock('GitRepositoryFactory'), $this->manager);
+        $this->actions = new GitActions(
+            mock('Git'),
+            mock('SystemEventManager'),
+            mock('GitRepositoryFactory'),
+            $this->manager,
+            mock('Git_RemoteServer_GerritServerFactory')
+        );
     }
 
     public function itDelegatesForkToGitManager() {
@@ -595,7 +617,13 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         parent::setUp();
         $this->manager = mock('GitRepositoryManager');
         $this->em      = mock('SystemEventManager');
-        $this->actions = new GitActions(mock('Git'), $this->em, mock('GitRepositoryFactory'), $this->manager);
+        $this->actions = new GitActions(
+            mock('Git'),
+            $this->em,
+            mock('GitRepositoryFactory'),
+            $this->manager,
+            mock('Git_RemoteServer_GerritServerFactory')
+        );
     }
     
     //not if already gerrit
