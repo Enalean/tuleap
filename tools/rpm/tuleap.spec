@@ -336,6 +336,20 @@ Requires: %{php_base}-elasticsearch
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 
+%package plugin-archivedeleteditems
+Summary: Archiving plugin
+Group: Development/Tools
+Version: @@PLUGIN_ARCHIVEDELETEDITEMS_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-archivedeleteditems = %{version}
+%else
+Provides: tuleap-plugin-archivedeleteditems = %{version}
+%endif
+%description plugin-archivedeleteditems
+Archive deleted items before purging them from filesystem
+
 #
 ## Themes
 #
@@ -897,6 +911,11 @@ fi
 %files plugin-fulltextsearch
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/fulltextsearch
+
+%files plugin-archivedeleteditems
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/archivedeleteditems
+%attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/archivedeleteditems
 
 #
 # Themes
