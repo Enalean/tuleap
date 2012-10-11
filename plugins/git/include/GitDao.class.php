@@ -496,12 +496,15 @@ class GitDao extends DataAccessObject {
     /**
      * 
      * @param int $repository_id
+     * @param int $remote_server_id
+     * 
      * @return Boolean
      */
-    public function switchToGerrit($repository_id) {
-        $repository_id = $this->da->escapeInt($repository_id);
+    public function switchToGerrit($repository_id, $remote_server_id) {
+        $repository_id    = $this->da->escapeInt($repository_id);
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
         $sql = "UPDATE plugin_git
-                SET remote_type = 'gerrit'
+                SET remote_server_id = $remote_server_id
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }

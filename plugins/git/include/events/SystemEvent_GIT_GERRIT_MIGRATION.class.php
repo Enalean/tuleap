@@ -40,8 +40,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     private $server_factory;
     
     public function process() {
-        $repo_id = (int)$this->getParameter(0);
-        $this->dao->switchToGerrit($repo_id);
+        $repo_id           = (int)$this->getParameter(0);
+        $remote_server_id  = (int)$this->getParameter(1);
+        $this->dao->switchToGerrit($repo_id, $remote_server_id);
 
         $repository = $this->repository_factory->getRepositoryById($repo_id);
         $server     = $this->server_factory->getServer($repository);

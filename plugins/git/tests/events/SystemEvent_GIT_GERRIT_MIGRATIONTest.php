@@ -28,7 +28,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
      * @var SystemEvent_GIT_GERRIT_MIGRATION
      */
     protected $event;
-    protected $repository_id = 123;
+    protected $repository_id    = 123;
+    protected $remote_server_id = 12;
     protected $driver;
     protected $repository;
     protected $gerrit_server;
@@ -51,7 +52,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
         
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
         $this->event = new SystemEvent_GIT_GERRIT_MIGRATION($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
-        $this->event->setParameters("$this->repository_id");
+        $this->event->setParameters("$this->repository_id::$this->remote_server_id");
         $this->event->injectDependencies($this->dao, $this->driver, $factory, $gerrit_server_factory);
         
     }
@@ -59,7 +60,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
 class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
     
     public function itSwitchesTheBackendToGerrit() {
-        expect($this->dao)->switchToGerrit($this->repository_id)->once();
+        expect($this->dao)->switchToGerrit($this->repository_id, $this->remote_server_id)->once();
         $this->event->process();
     }
     
