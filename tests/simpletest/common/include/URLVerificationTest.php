@@ -25,11 +25,6 @@ Mock::generate('Project');
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/include/URLVerification.class.php');
-Mock::generatePartial(
-    'URLVerification',
-    'URLVerificationTestVersion',
-    array('getCurrentUser', 'getEventManager')
-);
 
 Mock::generatepartial('URLVerification',
                       'URLVerificationTestVersion2',
@@ -86,7 +81,7 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testIsScriptAllowedForAnonymous() {
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEM4Anonymous($this);
         $em->setReturnValue('processEvent', array('anonymous_allowed' => false));
         $urlVerification->setReturnValue('getEventManager', $em);
@@ -108,7 +103,7 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testIsScriptAllowedForAnonymousFromHook() {
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEM4Anonymous($this);
         $em->setReturnValue('processEvent', array('anonymous_allowed' => true));
         $urlVerification->setReturnValue('getEventManager', $em);
@@ -118,7 +113,7 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testIsScriptAllowedForAnonymousFromSiteContent() {
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEM4Anonymous($this);
         $em->setReturnValue('processEvent', array('anonymous_allowed' => false));
         $urlVerification->setReturnValue('getEventManager', $em);
@@ -126,21 +121,6 @@ class URLVerificationTest extends UnitTestCase {
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/allowed_url_anonymous.txt');
 
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
-    }
-
-    function testIsException() {
-        $urlVerification = new URLVerification();
-
-        $this->assertTrue($urlVerification->isException(array('SERVER_NAME'  => 'localhost',    'SCRIPT_NAME' => '/projects/foobar')));
-        $this->assertFalse($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/projects/foobar')));
-
-        $this->assertTrue($urlVerification->isException(array('SERVER_NAME'  => 'codendi.org',  'SCRIPT_NAME' => '/api/reference/extractCross')));
-        $this->assertTrue($urlVerification->isException(array('SERVER_NAME'  => 'codendi.org',  'SCRIPT_NAME' => '/soap/index.php')));
-        $this->assertFalse($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/plugins/tracker')));
-        $this->assertTrue($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/plugins/tracker/soap/')));
-        $this->assertFalse($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/forged/url?q=/plugins/tracker/soap/')));
-        $this->assertTrue($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/plugins/docman/soap/')));
-        $this->assertFalse($urlVerification->isException(array('SERVER_NAME' => 'codendi.org', 'SCRIPT_NAME'  => '/projects/foobar')));
     }
 
     function testVerifyProtocolHTTPAndForceSslEquals1() {
@@ -178,32 +158,6 @@ class URLVerificationTest extends UnitTestCase {
         $urlVerification->verifyProtocol($server);
         $chunks = $urlVerification->getUrlChunks();
         $this->assertEqual($chunks['protocol'], null);
-    }
-
-    function testVerifyHostExceptionAndForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'localhost',
-                        'SERVER_NAME' => 'localhost',
-                        'SCRIPT_NAME' => '');
-
-        $GLOBALS['sys_force_ssl'] = 0;
-
-        $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], null);
-    }
-
-    function testVerifyHostExceptionAndForceSslEquals1() {
-        $server = array('HTTP_HOST'   => 'localhost',
-                        'SERVER_NAME' => 'localhost',
-                        'SCRIPT_NAME' => '');
-
-        $GLOBALS['sys_force_ssl'] = 1;
-
-        $urlVerification = new URLVerification();
-        $urlVerification->verifyHost($server);
-        $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], null);
     }
 
    function testVerifyHostHTTPSAndForceSslEquals1() {
@@ -278,7 +232,7 @@ class URLVerificationTest extends UnitTestCase {
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
         $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], 'codendi.org');
+        $this->assertEqual($chunks['host'], null);
     }
 
     function testVerifyHostInvalidHostHTTPSForceSslEquals0() {
@@ -294,7 +248,7 @@ class URLVerificationTest extends UnitTestCase {
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
         $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], 'secure.codendi.org');
+        $this->assertEqual($chunks['host'], null);
     }
 
     function testVerifyHostInvalidHostForceSslEquals1() {
@@ -310,14 +264,14 @@ class URLVerificationTest extends UnitTestCase {
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
         $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], 'secure.codendi.org');
+        $this->assertEqual($chunks['host'], null);
     }
 
     function testVerifyRequestAnonymousWhenScriptException() {
         $server = array('SERVER_NAME' => 'codendi.org',
                         'SCRIPT_NAME' => '/account/login.php');
 
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
         $urlVerification->verifyRequest($server);
@@ -335,7 +289,7 @@ class URLVerificationTest extends UnitTestCase {
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', true);
 
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
         $urlVerification->setReturnValue('getCurrentUser', $user);
@@ -354,7 +308,7 @@ class URLVerificationTest extends UnitTestCase {
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', false);
 
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
         $urlVerification->setReturnValue('getCurrentUser', $user);
@@ -377,7 +331,7 @@ class URLVerificationTest extends UnitTestCase {
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
         $urlVerification->setReturnValue('getCurrentUser', $user);
@@ -400,7 +354,7 @@ class URLVerificationTest extends UnitTestCase {
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
         $urlVerification->setReturnValue('getCurrentUser', $user);
@@ -423,7 +377,7 @@ class URLVerificationTest extends UnitTestCase {
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
 
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
         $urlVerification->setReturnValue('getCurrentUser', $user);
@@ -442,7 +396,7 @@ class URLVerificationTest extends UnitTestCase {
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', false);
 
-        $urlVerification = new URLVerificationTestVersion($this);
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $em = new MockEventManager();
         $urlVerification->setReturnValue('getEventManager', $em);
         $urlVerification->setReturnValue('getCurrentUser', $user);
@@ -519,14 +473,14 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testUserCanAccessProjectActive() {
-        $urlVerification = new URLVerificationTestVersion();
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $project = new MockProject();
         $project->setReturnValue('isActive', true);
         $this->assertTrue($urlVerification->userCanAccessProject($project));
     }
 
     function testUserCanAccessProjectSuperUser() {
-        $urlVerification = new URLVerificationTestVersion();
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $project = new MockProject();
         $project->setReturnValue('isActive', false);
         $user = new MockUser();
@@ -536,7 +490,7 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testUserCanAccessProjectAccessDenied() {
-        $urlVerification = new URLVerificationTestVersion();
+        $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $project = new MockProject();
         $project->setReturnValue('isActive', false);
         $user = new MockUser();
