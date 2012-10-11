@@ -250,10 +250,15 @@ EOF
 # FTP server configuration
 #
 setup_vsftpd() {
+    for conf in /etc/vsftpd.conf /etc/vsftpd/vsftpd.conf; do
+	if [ -e "$conf" ]; then
+	    VSFTPD_CONF="$conf"
+	fi
+    done
     # Configure vsftpd
-    $PERL -i'.orig' -p -e "s/^#anon_upload_enable=YES/anon_upload_enable=YES/g" /etc/vsftpd/vsftpd.conf 
-    $PERL -pi -e "s/^#ftpd_banner=.*/ftpd_banner=Welcome to Tuleap FTP service./g" /etc/vsftpd/vsftpd.conf 
-    $PERL -pi -e "s/^local_umask=.*/local_umask=002/g" /etc/vsftpd/vsftpd.conf 
+    $PERL -i'.orig' -p -e "s/^#?anon_upload_enable=.*/anon_upload_enable=YES/g" $VSFTPD_CONF
+    $PERL -pi -e "s/^#?ftpd_banner=.*/ftpd_banner=Welcome to Tuleap FTP service./g" $VSFTPD_CONF
+    $PERL -pi -e "s/^#?local_umask=.*/local_umask=002/g" $VSFTPD_CONF
 
     # Add welcome messages
     $CAT <<EOF > /var/lib/$PROJECT_NAME/ftp/.message
@@ -276,8 +281,10 @@ Upload new file releases here
 EOF
     $CHOWN ftpadmin.ftpadmin /var/lib/$PROJECT_NAME/ftp/incoming/.message
 
-    # Log Rotate
-    $CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/g" >/etc/logrotate.d/vsftpd.log
+    if [ "$INSTALL_PROFILE" = "rhel" ]; then
+	# Debian provides a logrotate file by default
+	# Log Rotate
+	$CAT <<'EOF' | sed -e "s/@@PROJECT_NAME@@/$PROJECT_NAME/g" >/etc/logrotate.d/vsftpd.log
 /var/log/xferlog {
     # ftpd doesn't handle SIGHUP properly
     nocompress
@@ -294,8 +301,9 @@ EOF
     endscript
 }
 EOF
-    $CHOWN root:root /etc/logrotate.d/vsftpd.log
-    $CHMOD 644 /etc/logrotate.d/vsftpd.log
+	$CHOWN root:root /etc/logrotate.d/vsftpd.log
+	$CHMOD 644 /etc/logrotate.d/vsftpd.log
+    fi
 
     # Start service
     enable_service vsftpd
