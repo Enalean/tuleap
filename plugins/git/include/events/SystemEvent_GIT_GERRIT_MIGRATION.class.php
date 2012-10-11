@@ -31,54 +31,29 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
     /** @var Git_Driver_Gerrit */
     private $driver;
-    
+
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
     public function process() {
         $repo_id = (int)$this->getParameter(0);
-        $this->getDao()->switchToGerrit($repo_id);
+        $this->dao->switchToGerrit($repo_id);
 
-        $repository = $this->getRepositoryFactory()->getRepositoryById($repo_id);
-        $this->getGerritDriver()->createProject($repository);
+        $repository = $this->repository_factory->getRepositoryById($repo_id);
+        $this->driver->createProject($repository);
     }
 
     public function verbalizeParameters($with_link) {
         return  $this->parameters;
     }
 
-    public function setGitDao(GitDao $dao) {
-        $this->dao = $dao;
-    }
-
-    public function getDao() {
-        if ($this->dao == null) {
-            $this->dao = new GitDao();
-        }
-        return $this->dao;
-    }
-
-    public function getGerritDriver() {
-        if ($this->driver == null) {
-            $this->driver = new Git_Driver_Gerrit(
-                new Git_Driver_Gerrit_RemoteSSHCommand()
-            );
-        }
-        return $this->driver;
-    }
-
-    public function setGerritDriver(Git_Driver_Gerrit $driver) {
-        $this->driver = $driver;
-    }
-
-    public function getRepositoryFactory() {
-        if ($this->repository_factory == null) {
-            $this->repository_factory = new GitRepositoryFactory($this->getDao(), ProjectManager::instance());
-        }
-        return $this->repository_factory;
-    }
-
-    public function setRepositoryFactory(GitRepositoryFactory $repository_factory) {
+    public function injectDependencies(
+        GitDao $dao,
+        Git_Driver_Gerrit $driver,
+        GitRepositoryFactory $repository_factory
+    ) {
+        $this->dao                = $dao;
+        $this->driver             = $driver;
         $this->repository_factory = $repository_factory;
     }
 }

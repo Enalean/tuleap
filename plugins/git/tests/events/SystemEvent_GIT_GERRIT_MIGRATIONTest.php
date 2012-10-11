@@ -45,9 +45,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
         $this->event = new SystemEvent_GIT_GERRIT_MIGRATION($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
         $this->event->setParameters("$this->repository_id");
-        $this->event->setGitDao($this->dao);
-        $this->event->setGerritDriver($this->driver);
-        $this->event->setRepositoryFactory($factory);
+        $this->event->injectDependencies($this->dao, $this->driver, $factory);
         
 //        $this->repository = new GitRepository();
 //        $this->repository->setBackendType(GitDao::BACKEND_GITOLITE);
