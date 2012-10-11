@@ -38,7 +38,7 @@ class Git_Driver_Gerrit {
         $host    = Config::get('sys_default_domain');
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
-        $this->ssh->execute(self::GERRIT_COMMAND ."create $host-$project/$repo");
+        $this->ssh->execute(self::GERRIT_COMMAND ."create-project $host-$project/$repo");
     }
 }
 ?>

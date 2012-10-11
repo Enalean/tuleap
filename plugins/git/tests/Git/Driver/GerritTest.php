@@ -60,8 +60,21 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
     }
 
     public function itExecutesTheCreateCommandOnTheGerritServer() {
-        expect($this->ssh)->execute("gerrit create tuleap.example.com-firefox/jean-claude/dusse")->once();
+        expect($this->ssh)->execute("gerrit create-project tuleap.example.com-firefox/jean-claude/dusse")->once();
         $this->driver->createProject($this->repository);
+    }
+    
+    public function _itCallsTheRealThing() {
+        $r = new GitRepository();
+        $r->setName('dusse');
+        $r->setNamespace('jean_claude');
+        //$p = new Project(array('unix_group_name' => 'LesBronzes', 'group_id' => 50));
+        $p = stub('Project' )->getUnixName()->returns('LesBronzes');
+        $r->setProject($p);
+
+        $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand('gerrit.tuleap.net', 29418, 'johan', '~/.ssh/id_rsa.pub'));
+        $driver->createProject($r);
+
     }
 }
 ?>
