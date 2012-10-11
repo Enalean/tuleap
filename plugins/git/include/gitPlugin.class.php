@@ -136,6 +136,15 @@ class GitPlugin extends Plugin {
                 require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_ACCESS.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_ACCESS';
                 break;
+            case 'GIT_GERRIT_MIGRATION':
+                require_once(dirname(__FILE__).'/events/SystemEvent_GIT_GERRIT_MIGRATION.class.php');
+                $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
+                $params['dependencies'] = array(
+                    $this->getGitDao(),
+                    $this->getGerritDriver(),
+                    $this->getRepositoryFactory(),
+                )
+                break;
             default:
                 break;
         }
@@ -358,6 +367,7 @@ class GitPlugin extends Plugin {
         $params['types'][] = 'GIT_REPO_ACCESS';
         $params['types'][] = 'GIT_REPO_CREATE';
         $params['types'][] = 'GIT_REPO_DELETE';
+        $params['types'][] = 'GIT_GERRIT_MIGRATION';
     }
 
     /**
@@ -384,7 +394,19 @@ class GitPlugin extends Plugin {
 
     private function getRepositoryFactory() {
         require_once 'GitRepositoryFactory.class.php';
-        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+        return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
+    }
+
+    private function getGitDao() {
+        require_once 'GitDao.class.php';
+        return new GitDao()
+    }
+
+    private function getGerritDriver() {
+        require_once 'Git/Driver/Gerrit.class.php';
+        return new Git_Driver_Gerrit(
+            new Git_Driver_Gerrit_RemoteSSHCommand('host', 'port', 'login', 'identity_file')
+        );
     }
 
     /**
