@@ -21,6 +21,7 @@
 
 require_once GIT_BASE_DIR .'/GitDao.class.php';
 require_once GIT_BASE_DIR .'/Git/Driver/Gerrit.class.php';
+require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
 
 class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
@@ -35,7 +36,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
-    /** @var GerritServerFactory */
+    /** @var Git_RemoteServer_GerritServerFactory */
     private $server_factory;
     
     public function process() {
@@ -55,7 +56,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         GitDao $dao,
         Git_Driver_Gerrit $driver,
         GitRepositoryFactory $repository_factory,
-        GerritServerFactory  $server_factory
+        Git_RemoteServer_GerritServerFactory  $server_factory
     ) {
         $this->dao                = $dao;
         $this->driver             = $driver;

@@ -47,7 +47,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             'Git_Driver_Gerrit_RemoteSSHCommand',
             array('sshExec')
         );
-        $this->config = new GerritServer($this->host, $this->port, $this->login, $this->identity_file);
+        $this->config = new Git_RemoteServer_GerritServer($this->host, $this->port, $this->login, $this->identity_file);
     }
 
     public function itExecutesTheCreateCommandOnTheGerritServer() {

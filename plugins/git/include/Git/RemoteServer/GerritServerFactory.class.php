@@ -19,28 +19,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/Gerrit/RemoteSSHCommand.class.php';
-require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServer.class.php';
+require_once 'GerritServer.class.php';
 
-class Git_Driver_Gerrit {
+class Git_RemoteServer_GerritServerFactory {
 
-    const GERRIT_COMMAND = 'gerrit ';
-
-    /**
-     * @var Git_Driver_Gerrit_RemoteSSHCommand
-     */
-    private $ssh;
-
-    public function __construct(Git_Driver_Gerrit_RemoteSSHCommand $ssh) {
-        $this->ssh = $ssh;
+    public function __construct() {
+        
+    }
+    
+    public function getServer(GitRepository $repository) {
+        
     }
 
-    public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
-        $host    = Config::get('sys_default_domain');
-        $project = $repository->getProject()->getUnixName();
-        $repo    = $repository->getFullName();
-        $this->ssh->execute($server, self::GERRIT_COMMAND ."create-project $host-$project/$repo");
-    }
 }
 
 ?>

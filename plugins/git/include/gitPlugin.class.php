@@ -581,7 +581,7 @@ class GitPlugin extends Plugin {
     }
 
     public function getGerritServerFactory() {
-        return new GerritServerFactory();
+        return new Git_RemoteServer_GerritServerFactory();
     }
 }
 

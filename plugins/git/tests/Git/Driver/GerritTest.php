@@ -32,7 +32,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
      */
     protected $repository;
     
-    /** @var GerritServer */
+    /** @var Git_RemoteServer_GerritServer */
     protected $gerrit_server;
 
     /**
@@ -53,7 +53,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
             ->withName('dusse')
             ->build();
 
-        $this->gerrit_server = mock('GerritServer');
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
         
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->driver = new Git_Driver_Gerrit($this->ssh);

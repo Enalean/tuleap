@@ -19,28 +19,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/Gerrit/RemoteSSHCommand.class.php';
-require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServer.class.php';
+class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
-class Git_Driver_Gerrit {
-
-    const GERRIT_COMMAND = 'gerrit ';
-
-    /**
-     * @var Git_Driver_Gerrit_RemoteSSHCommand
-     */
-    private $ssh;
-
-    public function __construct(Git_Driver_Gerrit_RemoteSSHCommand $ssh) {
-        $this->ssh = $ssh;
+    
+    private $host;
+    private $port;
+    private $login;
+    private $identity_file;
+    
+    public function __construct($host, $port, $login, $identity_file) {
+        $this->host          = $host;
+        $this->port          = $port;
+        $this->login         = $login;
+        $this->identity_file = $identity_file;
     }
 
-    public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
-        $host    = Config::get('sys_default_domain');
-        $project = $repository->getProject()->getUnixName();
-        $repo    = $repository->getFullName();
-        $this->ssh->execute($server, self::GERRIT_COMMAND ."create-project $host-$project/$repo");
+    public function getHost() {
+        return $this->host;
     }
+
+    public function getIdentityFile() {
+        return $this->identity_file;
+    }
+
+    public function getLogin() {
+        return $this->login;
+    }
+
+    public function getPort() {
+        return $this->port;
+    }
+
 }
 
 ?>

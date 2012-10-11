@@ -40,10 +40,10 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
         
         $this->driver = mock('Git_Driver_Gerrit');
         
-        $this->gerrit_server = mock('GerritServer');
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
         $this->repository = mock('GitRepository');
         
-        $gerrit_server_factory = mock('GerritServerFactory');
+        $gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
         stub($gerrit_server_factory)->getServer($this->repository)->returns($this->gerrit_server);
 
         $factory = mock('GitRepositoryFactory');
