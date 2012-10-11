@@ -375,11 +375,11 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     /**
      * Fill statistics by Backend type
      *
-     * @param Statistics_Formatter $formatter instance of statistics formatter class
-     * @param String               $type
-     * @param Array                $typeIndex  
-     * @param Array                $typeArray
-     * @param Boolean              $keepedAlive
+     * @param Statistics_Formatter $formatter   instance of statistics formatter class
+     * @param String               $type        backend type
+     * @param Array                $typeIndex   backend type index
+     * @param Array                $typeArray   backend type array
+     * @param Boolean              $keepedAlive keep only reposirtories that still active
      *
      * @return Void
      */
