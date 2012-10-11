@@ -63,6 +63,10 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         expect($this->dao)->switchToGerrit($this->repository_id, $this->remote_server_id)->once();
         $this->event->process();
     }
+    public function itCallsDone() {
+    }
+    public function itLogsErrors() {
+    }
     
 }
 
@@ -88,5 +92,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT
     }
     public function itRaisesAnErrorIfTheProjectAlreadyExist() {
     }
+    
+    
 }
 ?>
