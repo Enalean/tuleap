@@ -316,41 +316,56 @@ EOF
 # Bind DNS server configuration
 #
 setup_bind() {
-    if [ -f /var/named/chroot/var/named/$PROJECT_NAME.zone ]; then
-        $CP -af /var/named/chroot/var/named/$PROJECT_NAME.zone /var/named/chroot/var/named/$PROJECT_NAME.zone.orig
+    if [ "$INSTALL_PROFILE" = "rhel" ]; then
+	ZONE_DIR="/var/named/chroot/var/named"
+	NAMED_GID="named"
+	ETC_DIR="/var/named/chroot/etc"
+    else
+	ZONE_DIR="/etc/bind"
+	NAMED_GID="bind"
+	ETC_DIR="/etc/bind"
     fi
-    $CP -f $INSTALL_DIR/src/etc/codendi.zone /var/named/chroot/var/named/$PROJECT_NAME.zone
+    if [ -f $ZONE_DIR/$PROJECT_NAME.zone ]; then
+        $CP -af $ZONE_DIR/$PROJECT_NAME.zone $ZONE_DIR/$PROJECT_NAME.zone.orig
+    fi
+    $CP -f $INSTALL_DIR/src/etc/codendi.zone $ZONE_DIR/$PROJECT_NAME.zone
 
-    $CHOWN root:named /var/named/chroot/var/named/$PROJECT_NAME.zone
-    if [ -f "/var/named/chroot/etc/named.conf" ]; then
-        $CHGRP named /var/named/chroot/etc/named.conf
+    $CHOWN root:$NAMED_GID $ZONE_DIR/$PROJECT_NAME.zone
+    if [ -f "$ETC_DIR/named.conf" ]; then
+        $CHGRP $NAMED_GID $ETC_DIR/named.conf
     fi
 
     if [ $SELINUX_ENABLED ]; then
-        $CHCON -h system_u:object_r:named_zone_t /var/named/chroot/var/named/$PROJECT_NAME.zone
-        if [ -f "/var/named/chroot/etc/named.conf" ]; then
-            $CHCON -h system_u:object_r:named_conf_t /var/named/chroot/etc/named.conf
+        $CHCON -h system_u:object_r:named_zone_t $ZONE_DIR/$PROJECT_NAME.zone
+        if [ -f "$ETC_DIR/named.conf" ]; then
+            $CHCON -h system_u:object_r:named_conf_t $ETC_DIR/named.conf
         fi
     fi
 
-  # replace string patterns in $PROJECT_NAME.zone
-  sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
-  dns_serial=`date +%Y%m%d`01
-  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%sys_default_domain%' "$sys_default_domain" 
-  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%sys_fullname%' "$sys_fullname"
-  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%sys_ip_address%' "$sys_ip_address"
-  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%sys_shortname%' "$sys_shortname"
-  substitute "/var/named/chroot/var/named/$PROJECT_NAME.zone" '%dns_serial%' "$dns_serial"
+    # replace string patterns in $PROJECT_NAME.zone
+    sys_shortname=`echo $sys_fullname | $PERL -pe 's/\.(.*)//'`
+    dns_serial=`date +%Y%m%d`01
+    substitute "$ZONE_DIR/$PROJECT_NAME.zone" '%sys_default_domain%' "$sys_default_domain"
+    substitute "$ZONE_DIR/$PROJECT_NAME.zone" '%sys_fullname%' "$sys_fullname"
+    substitute "$ZONE_DIR/$PROJECT_NAME.zone" '%sys_ip_address%' "$sys_ip_address"
+    substitute "$ZONE_DIR/$PROJECT_NAME.zone" '%sys_shortname%' "$sys_shortname"
+    substitute "$ZONE_DIR/$PROJECT_NAME.zone" '%dns_serial%' "$dns_serial"
 
-  todo "Create the DNS configuration files as explained in the Tuleap Installation Guide:"
-  todo "    update /var/named/chroot/var/named/$PROJECT_NAME.zone - replace all words starting with %%."
-  todo "    make sure the file is readable by 'other':"
-  todo "      > chmod o+r /var/named/chroot/var/named/$PROJECT_NAME.zone"
-  todo "    edit /etc/named.conf to create the new zone."
+    todo "Create the DNS configuration files as explained in the Tuleap Installation Guide:"
+    todo "    update $ZONE_DIR/$PROJECT_NAME.zone - replace all words starting with %%."
+    todo "    make sure the file is readable by 'other':"
+    todo "      > chmod o+r $ZONE_DIR/$PROJECT_NAME.zone"
 
+    if [ -e /etc/bind/named.conf.local ]; then
+	if ! grep -q "$PROJECT_NAME.zone" /etc/bind/named.conf.local; then
+	    echo "zone \"$sys_default_domain\" { type master; file \"$ZONE_DIR/$PROJECT_NAME.zone\"; };" >> /etc/bind/named.conf.local
+	fi
+    else
+	todo "    edit $ETC_DIR/named.conf to create the new zone."
+    fi
 
-  enable_service $NAMED_SERVICE
-  control_service $NAMED_SERVICE restart
+    enable_service $NAMED_SERVICE
+    control_service $NAMED_SERVICE restart
 }
 
 ###############################################################################
