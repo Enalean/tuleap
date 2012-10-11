@@ -39,6 +39,9 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('plugin_docman_event_perms_change', 'plugin_docman_event_perms_change', false);
         $this->_addHook('plugin_docman_event_new_version', 'plugin_docman_event_new_version', false);
 
+        // tracker
+        $this->_addHook('tracker_report_followup_search', 'tracker_report_followup_search', false);
+
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
 
@@ -164,6 +167,20 @@ class fulltextsearchPlugin extends Plugin {
         if ($params['version']->getNumber() > 1) {
             $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
         }
+    }
+
+    /**
+     * Display search form in tracker followup
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_report_followup_search(&$params) {
+        $params['html'] .= '<div class="tracker_report_query">';
+        $params['html'] .= '<h3 class="' . Toggler::getClassname('followups_search') . '" id="followups_search" >Followups search</h3>';
+        $params['html'] .= '<div>Future form content</div>';
+        $params['html'] .= '</div>';
     }
 
     private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
