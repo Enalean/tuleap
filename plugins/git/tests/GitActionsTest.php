@@ -604,14 +604,16 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
     public function itDoesNothingWhenItIsntMigratable() {
         $repo = stub('GitRepository')->isMigratableToGerrit()->returns(false);
         $this->em->expectNever('createEvent');
-        $this->actions->migrateToGerrit($repo);
+        $this->actions->migrateToGerrit($repo, 0);
     }
 
     public function itCreatesASystemEvent() {
         $repo = stub('GitRepository')->isMigratableToGerrit()->returns(true);
-        stub($repo)->getId()->returns(456);
-        $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, 456, SystemEvent::PRIORITY_HIGH));
-        $this->actions->migrateToGerrit($repo);
+        $server_id = 888;
+        $repo_id   = 456;
+        stub($repo)->getId()->returns($repo_id);
+        $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, "$repo_id::$server_id", SystemEvent::PRIORITY_HIGH));
+        $this->actions->migrateToGerrit($repo, $server_id);
     }
     
     

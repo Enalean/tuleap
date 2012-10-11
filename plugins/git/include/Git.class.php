@@ -392,7 +392,7 @@ class Git extends PluginController {
                     $this->addError($this->getText('actions_params_error'));
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
-                    $this->addAction('migrateToGerrit', array($repo));
+                    $this->addAction('migrateToGerrit', array($repo, $this->request->get('remote_server_id')));
                     $this->addView('repoManagement');
                     
                 }

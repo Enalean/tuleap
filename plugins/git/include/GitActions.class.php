@@ -470,9 +470,16 @@ class GitActions extends PluginActions {
         }
     }
     
-    public function migrateToGerrit(GitRepository $repository) {
+    /**
+     * 
+     * @param GitRepository $repository
+     * @param int $remote_server_id the id of the server to which we want to migrate
+     */
+    public function migrateToGerrit(GitRepository $repository, $remote_server_id) {
         if ($repository->isMigratableToGerrit()) {
-            $this->systemEventManager->createEvent(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, $repository->getId(), SystemEvent::PRIORITY_HIGH);
+            $this->systemEventManager->createEvent(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, 
+                                                   $repository->getId().SystemEvent::PARAMETER_SEPARATOR.$remote_server_id, 
+                                                   SystemEvent::PRIORITY_HIGH);
             
         }
     }
