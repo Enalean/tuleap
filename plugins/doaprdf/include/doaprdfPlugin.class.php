@@ -81,7 +81,8 @@ class doaprdfPlugin extends Plugin {
 					'rdf' => 'http://www.w3.org/1999/02/22-rdf-syntax-ns#',
 					'rdfs' => 'http://www.w3.org/2000/01/rdf-schema#',
 					'doap' => 'http://usefulinc.com/ns/doap#',
-					'dcterms' => 'http://purl.org/dc/terms/' 
+					'dcterms' => 'http://purl.org/dc/terms/',
+					'schema' => 'http://schema.org/'
 			);
 				
 			$conf = array(
