@@ -51,11 +51,6 @@ class Planning_ShortAccess {
         return $presenters;
     }
     
-    public function getCurrentArtifact() {
-        $milestone = $this->milestone_factory->getCurrentMilestone($this->user, $this->planning->getId());
-        return new Planning_MilestoneLinkPresenter($milestone, $this->user);
-    }
-    
     public function planningTrackerId() {
         return $this->planning->getPlanningTrackerId();
     }

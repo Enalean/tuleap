@@ -31,6 +31,11 @@ class Planning_IndexPresenter {
     public function hasShortAccess() {
         return count($this->short_access);
     }
+    
+    public function getLatestLeafMilestone() {
+        $latest_short_access = end($this->short_access);
+        return end($latest_short_access->getLastTenOpenArtifacts());
+    }
 }
 
 ?>

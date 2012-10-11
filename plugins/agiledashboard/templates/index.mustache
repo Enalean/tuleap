@@ -17,16 +17,17 @@
         <br />
         <span><a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1">{{createNewItemToPlan}}</a></span>
     </li>
-    {{#getCurrentArtifact}}
-      
-            {{#additionalPanes}}
-                
-            {{/additionalPanes}}
- 
-    {{/getCurrentArtifact}}
     {{/getShortAccess}}
 </ul>
 
+    {{#getLatestLeafMilestone}}
+            {{#additionalPanes}}
+                <div>
+                    {{{getContent}}}
+                </div>
+            {{/additionalPanes}}
+ 
+    {{/getLatestLeafMilestone}}
 
 {{/hasShortAccess}}
 {{^hasShortAccess}}
