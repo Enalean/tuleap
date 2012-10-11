@@ -784,13 +784,13 @@ setup_nss() {
 	# shadow
 	$GREP ^shadow  /etc/nsswitch.conf | $GREP -q mysql
 	if [ $? -ne 0 ]; then
-	    $PERL -i'.orig' -p -e "s/^shadow(.*)/shadow\1 mysql/g" /etc/nsswitch.conf
+	    $PERL -i -p -e "s/^shadow(.*)/shadow\1 mysql/g" /etc/nsswitch.conf
 	fi
 
 	# group
 	$GREP ^group  /etc/nsswitch.conf | $GREP -q mysql
 	if [ $? -ne 0 ]; then
-	    $PERL -i'.orig' -p -e "s/^group(.*)/group\1 mysql/g" /etc/nsswitch.conf
+	    $PERL -i -p -e "s/^group(.*)/group\1 mysql/g" /etc/nsswitch.conf
 	fi
     else
 	echo '/etc/nsswitch.conf does not exist. Cannot use MySQL authentication!'
