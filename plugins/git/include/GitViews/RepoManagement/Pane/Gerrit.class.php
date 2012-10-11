@@ -47,7 +47,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
         $html .= '<p>';
         $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
-        $html .= '<input type="text" id="gerrit_url" value="gerrit.tuleap.net">';
+        $html .= '<input type="text" id="gerrit_url" name="remote_server_id" value="gerrit.tuleap.net">';
         $html .= '</p>';
 
         $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
