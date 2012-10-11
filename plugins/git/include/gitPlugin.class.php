@@ -143,7 +143,7 @@ class GitPlugin extends Plugin {
                     $this->getGitDao(),
                     $this->getGerritDriver(),
                     $this->getRepositoryFactory(),
-                )
+                );
                 break;
             default:
                 break;
@@ -399,7 +399,7 @@ class GitPlugin extends Plugin {
 
     private function getGitDao() {
         require_once 'GitDao.class.php';
-        return new GitDao()
+        return new GitDao();
     }
 
     private function getGerritDriver() {
