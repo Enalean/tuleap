@@ -37,38 +37,42 @@ class Test_Artifact_Builder {
     private $changesets;
     private $hierarchy_factory;
     private $ancestors;
-    
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withTracker(Tracker $tracker) {
         $this->tracker    = $tracker;
-        $this->tracker_id = $tracker->getId();
+        return $this->withTrackerId($tracker->getId());
+    }
+
+    public function withTrackerId($tracker_id) {
+        $this->tracker_id = $tracker_id;
         return $this;
     }
-    
+
     public function withFormElementFactory(Tracker_FormElementFactory $factory) {
         $this->formElementFactory = $factory;
         return $this;
     }
-    
+
     public function withChangesets(array $changesets) {
         $this->changesets = $changesets;
         return $this;
     }
-    
+
     public function withHierarchyFactory($hierarchy_factory) {
         $this->hierarchy_factory = $hierarchy_factory;
         return $this;
     }
-    
+
     public function withoutParent() {
         $this->ancestors = array();
         return $this;
     }
-        
+
     public function build() {
         $artifact = new Tracker_Artifact($this->id, $this->tracker_id, null, null, null);
         if ($this->tracker) {

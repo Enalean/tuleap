@@ -20,6 +20,7 @@
  */
 
 require_once 'UGroup.class.php';
+require_once 'Project.class.php';
 require_once 'common/dao/UGroupDao.class.php';
 require_once 'common/dao/UGroupUserDao.class.php';
 
@@ -29,6 +30,47 @@ class UGroupManager {
      * @var UGroupDao
      */
     private $dao;
+
+    public function __construct(UGroupDao $dao = null) {
+        $this->dao = $dao;
+    }
+
+    /**
+     * @return UGroup of the given project or null if not found
+     */
+    public function getUGroup(Project $project, $ugroup_id) {
+        $project_id = $project->getID();
+        if ($ugroup_id <= 100) {
+            $project_id = 100;
+        }
+
+        $row = $this->getDao()->searchByGroupIdAndUGroupId($project_id, $ugroup_id)->getRow();
+        if ($row) {
+            return new UGroup($row);
+        }
+    }
+
+    public function getUGroups(Project $project, array $exclude = array()) {
+        $ugroups = array();
+        foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
+            if (in_array($row['ugroup_id'], $exclude)) {
+                continue;
+            }
+            $ugroups[] = new UGroup($row);
+        }
+        return $ugroups;
+    }
+
+    public function getUGroupByName(Project $project, $name) {
+        $row = $this->getDao()->searchByGroupIdAndName($project->getID(), $name)->getRow();
+        if (!$row && preg_match('/^ugroup_.*_key$/', $name)) {
+            $row = $this->getDao()->searchByGroupIdAndName(100, $name)->getRow();
+        }
+        if ($row) {
+            return new UGroup($row);
+        }
+        return null;
+    }
 
     /**
      * Return all UGroups the user belongs to

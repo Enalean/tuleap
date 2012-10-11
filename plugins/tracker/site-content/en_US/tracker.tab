@@ -1069,6 +1069,7 @@ plugin_tracker_formelement_admin	open_list_description	Provides a textbox contai
 plugin_tracker_formelement_admin	values	Values
 plugin_tracker_formelement_admin	choose_values	Choose values
 plugin_tracker_formelement_admin	bind_to_users	Bind to users
+plugin_tracker_formelement_admin	bind_to_ugroups	Bind to user groups
 plugin_tracker_formelement_admin	alphabetically_sort	alphabetically sort values
 plugin_tracker_formelement_admin	add_row	Add one value per row
 plugin_tracker_formelement_admin	type_search_term	Type in a search term
@@ -1136,6 +1137,17 @@ plugin_tracker_admin	manage_dependencies_desc	Define how values in one field dep
 
 plugin_tracker_admin	tracker_not_duplicated	Tracker $1 not duplicated
 plugin_tracker_admin	successfully_updated	Tracker successfully updated.
+
+plugin_tracker_admin	clean	Delete artifacts
+plugin_tracker_admin	clean_desc	Permanently purge an artifact from the tracker
+plugin_tracker_admin	clean_info	Allow to permanently delete an artifact. Warning: <strong>There is no way to restore the artifact</strong>. This operation should be an exception.
+plugin_tracker_admin	clean_id	Id of the artifact to delete: 
+plugin_tracker_admin	clean_error_noart	Artifact $1 doesn't exist or doesn't belong to current tracker
+plugin_tracker_admin	clean_info_deleted	Artifact $1 successfully deleted
+plugin_tracker_admin	clean_confirm	Confirm
+plugin_tracker_admin	clean_cancel	Cancel
+plugin_tracker_admin	clean_confirm_text	<h3>You are about to delete permanently the artifact "$1".</h3><p><strong>There is no way to restore the artifact.</strong></p>
+plugin_tracker_admin	clean_cancel_deleted	Delete canceled
 
 plugin_tracker_admin_notification	successfully_updated	Notifications successfully updated.
 

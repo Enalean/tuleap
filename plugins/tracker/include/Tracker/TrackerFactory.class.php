@@ -216,7 +216,7 @@ class TrackerFactory {
         // association between ids in XML and php objects
         $xmlMapping = array();
         foreach ($xml->formElements->formElement as $index => $elem) {
-            $tracker->formElements[] = $this->getFormElementFactory()->getInstanceFromXML($elem, $xmlMapping);
+            $tracker->formElements[] = $this->getFormElementFactory()->getInstanceFromXML($tracker, $elem, $xmlMapping);
         }
 
         // set semantics

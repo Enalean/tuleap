@@ -21,7 +21,12 @@
 require_once 'Tracker_FormElement_Field_Shareable.class.php';
 
 abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
-    
+
+    /**
+     * @var Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     */
+    protected $default_value_dao;
+
     protected $default_values;
     protected $decorators;
     protected $field;
@@ -262,13 +267,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             }
             $redirect = true;
         }
-        $dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
         
         $default = array();
         if (isset($params['default'])) {
             $default = $params['default'];
         }
-        $dao->save($this->field->getId(), $default);
+        $this->getDefaultValueDao()->save($this->field->getId(), $default);
         $redirect = true;
         
         if (!$no_redirect && $redirect) {
@@ -279,7 +283,21 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         }
         return $redirect;
     }
-    
+
+    /**
+     * @return Tracker_FormElement_Field_List_Bind_DefaultvalueDao
+     */
+    protected function getDefaultValueDao() {
+        if (!$this->default_value_dao) {
+            $this->default_value_dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
+        }
+        return $this->default_value_dao;
+    }
+
+    public function setDefaultValueDao(Tracker_FormElement_Field_List_Bind_DefaultvalueDao $dao) {
+        $this->default_value_dao = $dao;
+    }
+
     /**
      * Allow the user to define the bind
      *
@@ -330,6 +348,35 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         
         return $html;
     }
+
+    /**
+     * Fetch sql snippets needed to compute aggregate functions on this field.
+     *
+     * @param array $functions The needed function. @see getAggregateFunctions
+     *
+     * @return array of the form array('same_query' => string(sql snippets), 'separate' => array(sql snippets))
+     *               example:
+     *               array(
+     *                   'same_query'       => "AVG(R2_1234.value) AS velocity_AVG, STD(R2_1234.value) AS velocity_AVG",
+     *                   'separate_queries' => array(
+     *                       array(
+     *                           'function' => 'COUNT_GRBY',
+     *                           'select'   => "R2_1234.value AS label, count(*) AS value",
+     *                           'group_by' => "R2_1234.value",
+     *                       ),
+     *                       //...
+     *                   )
+     *              )
+     *
+     *              Same query handle all queries that can be run concurrently in one query. Example:
+     *               - numeric: avg, count, min, max, std, sum
+     *               - selectbox: count
+     *              Separate queries handle all queries that must be run spearately on their own. Example:
+     *               - numeric: count group by
+     *               - selectbox: count group by
+     *               - multiselectbox: all (else it breaks other computations)
+     */
+    public abstract function getQuerySelectAggregate($functions);
     
     /**
      * Saves a bind in the database
@@ -345,8 +392,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             $this->default_values = $t;
             
             if (count($this->default_values)) {
-                $dao = new Tracker_FormElement_Field_List_Bind_DefaultvalueDao();
-                $dao->save($this->field->getId(), array_keys($this->default_values));
+                $this->getDefaultValueDao()->save($this->field->getId(), array_keys($this->default_values));
             }
         }
         

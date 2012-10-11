@@ -74,6 +74,7 @@ class Tracker_FormElement_Container_FieldsetTest extends UnitTestCase {
         $factory->setReturnReference('getInstanceFromXML', $a_formelement);
         
         $f = new Tracker_FormElement_Container_FieldsetTestVersion();
+        $f->setTracker(aTracker()->withProject(mock('Project'))->build());
         $f->setReturnReference('getFormElementFactory', $factory);
         
         $f->continueGetInstanceFromXML($xml, $mapping);

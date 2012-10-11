@@ -1,20 +1,45 @@
-Version 5.5 (Not released yet)
-	== Bug Fix ==
-	* fix sla #433: wiki references with version number
-	* Allow anonymous to browse public forumml archives
+Version 5.6 (Not Released Yet)
+   == Plugins ==
+	* tracker: 5.24
+	* tests: 5.6
+
+Version 5.5.3 (Thursday, Octobre 3rd 2012)
+    == Bug fix ==
+    * Fix bug on cross reference extraction when parameters are not clean.
 
     == Plugins ==
-	* tracker: 5.14
-	* git: 2.7.3
-	* docman: 2.26.6
-	* agiledashboard: 0.52
+    * git: 2.7.11
+
+Version 5.5.2 (Thursday, September 27th 2012)
+    == Bug Fix ==
+        * fix sla #433: wiki references with version number
+	* Allow anonymous to browse public forumml archives
+	* Fix art #1277: Wrong URL inheritance when creating a project
+	* Fix commit-email.pl: When no notification is set, don't generate error
+	* When consulting private file anonymously, a login screen should be displayed instead of permissions error screen
+	* Fix login error message when username is invalid
+	* Improve php 5.3 compatibility as well as packaging for Vagrant
+
+    == Plugins ==
+	* tracker: 5.21
+	* git: 2.7.10
+	* docman: 2.26.9
+	* agiledashboard: 0.54
 	* fulltextsearch: 0.12
+	* IM: 1.5.4
+	* admindelegation: 2.4
+	* forumml: 2.6.4
+	* graphontrackers: 1.6
+	* graphontrackersv5: 5.0.4
+	* ldap: 3.19
+	* statistics: 0.20
+	* cardwall: 0.9.6
 
 	== Development ==
 	* Add tool to easily fix the singleton count after a merge
 	* Add tool to easily generate release notes
+	* Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
 
-    
 Version 5.4 (Wednesday, August 29th 2012)
 	== Bug fix ==
 	* Fix typo in french translation.

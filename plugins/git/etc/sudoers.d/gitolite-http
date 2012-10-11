@@ -1,0 +1,4 @@
+# Gitolite smart http
+Defaults:codendiadm !requiretty
+Defaults:codendiadm !env_reset
+codendiadm ALL= (gitolite) SETENV: NOPASSWD: /usr/bin/gl-auth-command

@@ -118,6 +118,10 @@ class UGroup {
         return $this->name;
     }
 
+    public function getTranslatedName() {
+        return util_translate_name_ugroup($this->getName());
+    }
+
     /**
      * Get the ugroup id
      *

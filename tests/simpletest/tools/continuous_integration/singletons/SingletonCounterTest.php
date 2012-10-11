@@ -30,20 +30,20 @@ class SingletonCounterTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->counter = new SingletonCounter();
-        $this->value_b4_test = $this->counter->contentsOfCountFile();
+        $this->value_b4_test = $this->counter->expectedSingletonCount();
     }
     
     public function itCanReplaceTheCurrentAmount() {
-        $this->counter->replaceCurrentSingletonCountWith(0);
-        $this->assertNotEqual($this->counter->contentsOfCountFile(), $this->counter->countSingletonLookupsInProject());
+        $this->counter->replaceExpectedSingletonCountWith(0);
+        $this->assertNotEqual($this->counter->expectedSingletonCount(), $this->counter->countSingletonLookupsInProject());
         
-        $this->counter->replaceCurrentSingletonCountWithActualCount();
-        $this->assertEqual($this->counter->contentsOfCountFile(), $this->counter->countSingletonLookupsInProject());
+        $this->counter->replaceExpectedSingletonCountWithActualCount();
+        $this->assertEqual($this->counter->expectedSingletonCount(), $this->counter->countSingletonLookupsInProject());
     }
     
     public function tearDown() {
         parent::tearDown();
-        $this->counter->replaceCurrentSingletonCountWith($this->value_b4_test);
+        $this->counter->replaceExpectedSingletonCountWith($this->value_b4_test);
     }
 
 }

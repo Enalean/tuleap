@@ -1,3 +1,33 @@
+Version 5.24 - Tuleap 5.6
+    * SOAP: getArtifacts now returns filtered results
+
+Version 5.23 - Tuleap 5.6
+    * 
+
+Version 5.22 - Tuleap 5.6
+    * SOAP: Add missing info on getArtifact: submitted_on, submitted_by, last_update_date
+
+Version 5.21 - Tuleap 5.5
+    * Fix sla #1444: artifacts with two parents throw an exception
+
+Version 5.20 - Tuleap 5.5
+    * Fix comment format checking
+
+Version 5.19 - Tuleap 5.5
+    * Improve tracker v5 installation
+
+Version 5.18 - Tuleap 5.5
+    * Fix upgrade error from v5.17
+
+Version 5.17 - Tuleap 5.5
+    * Tracker admin can permanently delete an artifact
+
+Version 5.16 - Tuleap 5.5
+    * Fix tracker v5 'tracker permission' issue
+
+Version 5.15 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
 Version 5.14 - Tuleap 5.5
     * Add html follow-ups (Contrib STMicroelectronics)
 

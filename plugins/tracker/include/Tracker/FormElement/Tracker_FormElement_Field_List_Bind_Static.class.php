@@ -145,8 +145,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getFieldData($soap_value, $is_multiple) {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $soap_values = explode(",", $soap_value);
             $return = array();
+            $soap_values = explode(",", $soap_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getLabel(), $soap_values)) {
                     $return[] = $id;
@@ -261,7 +261,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             $c = 'C_'. $this->field->id;
             $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id IN (".implode(',', $fields_id)."))
                      INNER JOIN tracker_changeset_value_list AS $c ON (
-                        $c.changeset_value_id = $a.id 
+                        $c.changeset_value_id = $a.id
                         AND $c.bindvalue_id IN(". implode(',', $values_id) .")
                      ) ";
             return $sql;

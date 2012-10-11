@@ -46,12 +46,12 @@ SRC_CRON_SCRIPT_OFF=$CODENDI_HOME/src/utils/cron.d/codendi-stop
 
 DST_CRON_SCRIPT=/etc/cron.d/codendi
 
-function InstallCron()
+InstallCron()
 {
     install -m644 -o root -g root $SRC_CRON_SCRIPT_ON $DST_CRON_SCRIPT
 }
 
-function RemoveCron()
+RemoveCron()
 {
     install -m644 -o root -g root $SRC_CRON_SCRIPT_OFF $DST_CRON_SCRIPT
 }
@@ -62,25 +62,25 @@ function RemoveCron()
 RETVAL=0
 prog="codendi"
 
-function start()
+start()
 {
-    echo -n $"Starting $prog: "
+    echo -n "Starting $prog: "
     InstallCron
     echo "[OK]"
     RETVAL=$?
     return $RETVAL
 }
 
-function stop()
+stop()
 {
-    echo -n $"Shutting down $prog: "
+    echo -n "Shutting down $prog: "
     RemoveCron
     echo "[OK]"
     RETVAL=$?
     return $RETVAL
 }
 
-function restart()
+restart()
 {
     stop
     start
@@ -88,7 +88,7 @@ function restart()
     return $RETVAL
 }
 
-function status()
+status()
 {
     cmp -s "$DST_CRON_SCRIPT" "SRC_CRON_SCRIPT_ON"
     RETVAL=$?
@@ -127,7 +127,7 @@ case "$1" in
     ;;
 
 *)
-    echo $"Usage: $prog {start|stop|restart|condrestart}"
+    echo "Usage: $prog {start|stop|restart|condrestart}"
 	RETVAL=3
     ;;
 

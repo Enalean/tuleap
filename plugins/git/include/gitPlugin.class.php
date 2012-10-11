@@ -19,6 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
+require_once 'constants.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
 
@@ -157,7 +158,9 @@ class GitPlugin extends Plugin {
         require_once('GitActions.class.php');
         $groupId   = $params[0];
         $isPrivate = $params[1];
-        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate);
+        $dao       = new GitDao();
+        $factory   = $this->getRepositoryFactory();
+        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate, $dao, $factory);
     }
 
     public function systemEventProjectRename($params) {

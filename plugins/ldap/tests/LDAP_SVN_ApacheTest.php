@@ -19,42 +19,57 @@
 
 require_once dirname(__FILE__).'/../include/LDAP_SVN_Apache.class.php';
 
-Mock::generate('LDAP');
-Mock::generate('LDAP_ProjectManager');
+class LDAP_SVN_ApacheTest extends TuleapTestCase {
+    private $ldap;
 
-class LDAP_SVN_ApacheTest extends UnitTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->ldap = mock('LDAP');
+        stub($this->ldap)->getLDAPParam('dn')->returns('dc=tuleap,dc=com');
 
-    private function GivenAnLDAPObject() {
-        $ldap = new MockLDAP();
-        $ldap->setReturnValue('getLDAPParam', 'dc=tuleap,dc=com', array('dn'));
-        return $ldap;
+        $this->apache  = new LDAP_SVN_Apache($this->ldap, mock('LDAP_ProjectManager'), array());
     }
-    
-    private function ThenUrlShouldEquals($ldap, $reference) {
-        $ldapMgr = new MockLDAP_ProjectManager();
-        $apache  = new LDAP_SVN_Apache($ldap, $ldapMgr, array());
-        $this->assertEqual($apache->getLDAPServersUrl(), $reference);
-    }
-    
+
     function testGetLDAPServersUrlWithOneServer() {
-        $ldap = $this->GivenAnLDAPObject();
-        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap.tuleap.com', array('server'));
-        
-        $this->ThenUrlShouldEquals($ldap, 'ldap://ldap.tuleap.com/dc=tuleap,dc=com');
+        stub($this->ldap)->getLDAPParam('server')->returns('ldap://ldap.tuleap.com');
+
+        $this->assertEqual($this->apache->getLDAPServersUrl(), 'ldap://ldap.tuleap.com/dc=tuleap,dc=com');
     }
 
     function testGetLDAPServersUrlWithTwoServers() {
-        $ldap = $this->GivenAnLDAPObject();
-        $ldap->setReturnValue('getLDAPParam', 'ldap://ldap1.tuleap.com, ldap://ldap2.tuleap.com', array('server'));
-        
-        $this->ThenUrlShouldEquals($ldap, 'ldap://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
+        stub($this->ldap)->getLDAPParam('server')->returns('ldap://ldap1.tuleap.com, ldap://ldap2.tuleap.com');
+
+        $this->assertEqual($this->apache->getLDAPServersUrl(),  'ldap://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
     }
     
     function testGetLDAPServersUrlWithTwoServersLdaps() {
-        $ldap = $this->GivenAnLDAPObject();
-        $ldap->setReturnValue('getLDAPParam', 'ldaps://ldap1.tuleap.com, ldaps://ldap2.tuleap.com', array('server'));
-        
-        $this->ThenUrlShouldEquals($ldap, 'ldaps://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
+        stub($this->ldap)->getLDAPParam('server')->returns('ldaps://ldap1.tuleap.com, ldaps://ldap2.tuleap.com');
+
+        $this->assertEqual($this->apache->getLDAPServersUrl(),  'ldaps://ldap1.tuleap.com ldap2.tuleap.com/dc=tuleap,dc=com');
+    }
+
+    function itIncludesBindDnAndPasswordIfAny() {
+        $dn       = 'eduid=1234,ou=people,dc=tuleap,dc=com';
+        $password = 'welcome0';
+        stub($this->ldap)->getLDAPParam('bind_dn')->returns($dn);
+        stub($this->ldap)->getLDAPParam('bind_passwd')->returns($password);
+
+        $conf = $this->apache->getProjectAuthentication(array('group_name' => "Plop"));
+        $this->assertPattern("/AuthLDAPBindDN \"$dn\"/", $conf);
+        $this->assertPattern("/AuthLDAPBindPassword \"$password\"/", $conf);
+    }
+
+    function itDoesntIncludeSpecificThingsIfNoBindDn() {
+        $conf = $this->apache->getProjectAuthentication(array('group_name' => "Plop"));
+        $this->assertNoPattern("/AuthLDAPBindDN/", $conf);
+        $this->assertNoPattern("/AuthLDAPBindPassword/", $conf);
+    }
+
+    function itDoesntIncludeSpecificThingsIfBindDnIsEmpty() {
+        stub($this->ldap)->getLDAPParam('bind_dn')->returns("");
+        $conf = $this->apache->getProjectAuthentication(array('group_name' => "Plop"));
+        $this->assertNoPattern("/AuthLDAPBindDN/", $conf);
+        $this->assertNoPattern("/AuthLDAPBindPassword/", $conf);
     }
 }
 ?>

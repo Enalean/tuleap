@@ -1283,11 +1283,6 @@ if (defined('WIKI_SOAP')   and WIKI_SOAP)   return;
     $request->finish();
 }
 
-//$x = error_reporting();  // DEBUG: why is it 1 here? should be E_ALL
-if (defined('E_STRICT') and (E_ALL & E_STRICT)) // strict php5?
-    error_reporting(E_ALL & ~E_STRICT); 	// exclude E_STRICT
-else
-    error_reporting(E_ALL); // php4
 // don't run the main loop for special requests (test, getimg, xmlrpc, soap, ...)
 if (!defined('PHPWIKI_NOMAIN') or !PHPWIKI_NOMAIN)
     main();
