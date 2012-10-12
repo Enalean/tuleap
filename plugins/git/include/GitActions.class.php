@@ -146,13 +146,15 @@ class GitActions extends PluginActions {
         $projectId = intval( $projectId );
 
         try {
+            $backend    = new Git_Backend_Gitolite(new Git_GitoliteDriver());
             $repository = new GitRepository();
+            $repository->setBackend($backend);
             $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
             $repository->setCreator(UserManager::instance()->getCurrentUser());
             $repository->setProject(ProjectManager::instance()->getProject($projectId));
             $repository->setName($repositoryName);
 
-            $this->manager->create($repository, new Git_Backend_Gitolite(new Git_GitoliteDriver()));
+            $this->manager->create($repository, $backend);
         } catch (Exception $exception) {
             $c->addError($exception->getMessage());
         }
@@ -490,7 +492,6 @@ class GitActions extends PluginActions {
             $this->systemEventManager->createEvent(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, 
                                                    $repository->getId().SystemEvent::PARAMETER_SEPARATOR.$remote_server_id, 
                                                    SystemEvent::PRIORITY_HIGH);
-            
         }
     }
     

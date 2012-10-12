@@ -836,8 +836,6 @@ class GitRepository implements DVCSRepository {
 
     public function getRemoteServerId() {
         return $this->remote_server_id;
-        
     }
 }
-
 ?>
