@@ -109,14 +109,14 @@ Include tuleap/php.conf
 	# the certificate is encrypted, then you will be prompted for a
 	# pass phrase.  Note that a kill -HUP will prompt again.  A new
 	# certificate can be generated using the genkey(1) command.
-	SSLCertificateFile /etc/pki/tls/certs/localhost.crt
+	SSLCertificateFile /etc/ssl/certs/localhost.crt
 
 	#   Server Private Key:
 	#   If the key is not combined with the certificate, use this
 	#   directive to point at the key file.  Keep in mind that if
 	#   you've both a RSA and a DSA private key you can configure
 	#   both in parallel (to also allow the use of DSA ciphers, etc.)
-	SSLCertificateKeyFile /etc/pki/tls/private/localhost.key
+	SSLCertificateKeyFile /etc/ssl/private/localhost.key
 
 	#   Server Certificate Chain:
 	#   Point SSLCertificateChainFile at a file containing the

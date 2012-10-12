@@ -21,6 +21,16 @@ SERVICE='/sbin/service'
 OPENSSL='/usr/bin/openssl'
 TAR='/bin/tar'
 
+if [ -e /etc/debian_version ]; then
+    KEYDIR="/etc/ssl/private"
+    CERTDIR="/etc/ssl/certs"
+else
+    KEYDIR="/etc/pki/tls/private"
+    CERTDIR="/etc/pki/tls/certs"
+fi
+
+mkdir -p $KEYDIR $CERTDIR
+
 echo "Generating a self-signed certificate to enable SSL support."
 echo "When asked to enter the 'Common Name', please use your server domain name (sys_default_domain)."
 echo "This will remove any existing SSL key and certificate."
@@ -30,9 +40,10 @@ if [ "$yn" = "n" ]; then
     exit 1
 fi
 
-export SSL_KEY='/etc/pki/tls/private/localhost.key'
-SSL_CERT='/etc/pki/tls/certs/localhost.crt'
-SSL_CSR='/etc/pki/tls/certs/localhost.csr'
+export SSL_KEY="$KEYDIR/localhost.key"
+SSL_CERT="$CERTDIR/localhost.crt"
+SSL_CSR="$CERTDIR/localhost.csr"
+
 # Remove existing key and certificate
 if [ -f $SSL_CSR ]; then 
   $TAR cf /var/tmp/oldcert.tar $SSL_KEY $SSL_CERT $SSL_CSR
