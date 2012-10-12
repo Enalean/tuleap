@@ -144,6 +144,7 @@ class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
         $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
     }
+
     public function testAddUserKey() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
 
@@ -182,6 +183,35 @@ class Git_GitoliteDriver_UserKeysTest extends GitoliteTestCase {
 
         // Ensure second key was deleted
         $this->assertFalse(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'), "Second key should be deleted");
+
+        $this->assertEmptyGitStatus();
+    }
+
+    public function itDeletesAllTheKeys() {
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->driver->dumpSSHKeys($user);
+
+        // internal push reset the pwd
+        $this->driver->setAdminPath($this->_glAdmDir);
+
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array())->build();
+        $this->driver->dumpSSHKeys($user);
+        $this->assertCount(glob($this->_glAdmDir.'/keydir/*.pub'), 0);
+
+        $this->assertEmptyGitStatus();
+    }
+
+    public function itFlipsTheKeys() {
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
+        $this->driver->dumpSSHKeys($user);
+
+        // internal push reset the pwd
+        $this->driver->setAdminPath($this->_glAdmDir);
+
+        $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key2, $this->key1))->build();
+        $this->driver->dumpSSHKeys($user);
+        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key2);
+        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $this->key1);
 
         $this->assertEmptyGitStatus();
     }

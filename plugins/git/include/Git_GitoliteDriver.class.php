@@ -157,46 +157,61 @@ class Git_GitoliteDriver {
      */
     public function dumpSSHKeys(User $user = null) {
         if (is_dir($this->getAdminPath())) {
+            $keydir = 'keydir';
+            $this->createKeydir($keydir);
             if ($user) {
-                $this->initUserKeys($user);
+                $this->initUserKeys($user, $keydir);
                 $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
             } else {
                 $userdao = new UserDao();
                 foreach ($userdao->searchSSHKeys() as $row) {
                     $user = new User($row);
-                    $this->initUserKeys($user);
+                    $this->initUserKeys($user, $keydir);
                 }
                 $commit_msg = 'SystemEvent update all user keys';
             }
-            $this->gitExec->add('keydir');
+            if (is_dir($this->getAdminPath().'/keydir')) {
+                $this->gitExec->add('keydir');
+            }
             $this->gitExec->commit($commit_msg);
             return $this->push();
         }
         return false;
     }
 
-    /**
-     * @param User $user
-     */
-    private function initUserKeys($user) {
-        // First remove existing keys
-        $this->removeUserExistingKeys($user);
+    private function initUserKeys(User $user, $keydir) {
+        $this->dumpKeys($user, $keydir);
+    }
 
-        // Create path if need
+    private function createKeydir($keydir) {
         clearstatcache();
-        $keydir = 'keydir';
         if (!is_dir($keydir)) {
             if (!mkdir($keydir)) {
                 throw new Exception('Unable to create "keydir" directory in '.getcwd());
             }
         }
+    }
 
-        // Dump keys
-        $i    = 0;
-        foreach ($user->getAuthorizedKeys(true) as $key) {
+    private function dumpKeys(User $user, $keydir) {
+        $i = 0;
+        foreach ($user->getAuthorizedKeysArray() as $key) {
             $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            file_put_contents($filePath, $key);
+            $this->writeKeyIfChanged($filePath, $key);
             $i++;
+        }
+        $this->removeUserExistingKeys($user, $i);
+    }
+
+    private function writeKeyIfChanged($filePath, $key) {
+        $changed = true;
+        if (is_file($filePath)) {
+            $stored_key = file_get_contents($filePath);
+            if ($stored_key == $key) {
+                $changed = false;
+            }
+        }
+        if ($changed) {
+            file_put_contents($filePath, $key);
         }
     }
 
@@ -205,14 +220,16 @@ class Git_GitoliteDriver {
      *
      * @param User $user
      */
-    protected function removeUserExistingKeys($user) {
+    private function removeUserExistingKeys($user, $last_key_id) {
         $keydir = 'keydir';
         if (is_dir($keydir)) {
-            $dir = new DirectoryIterator($keydir);
-            foreach ($dir as $file) {
-                $userbase = $user->getUserName().'@';
-                if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
-                     $this->gitExec->rm($file->getPathname());
+            $userbase = $user->getUserName().'@';
+            foreach (glob("$keydir/$userbase*.pub") as $file) {
+                $matches = array();
+                if (preg_match('%^'.$keydir.'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
+                    if ($matches[1] >= $last_key_id) {
+                        $this->gitExec->rm($file);
+                    }
                 }
             }
         }
