@@ -44,6 +44,13 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                 VALUES ($id, $host, $port, $login, $identity_file)";
         return $this->update($sql);
     }
+
+    public function delete($id) {
+        $id  = $this->da->escapeInt($id);
+        $sql = "DELETE FROM plugin_git_remote_servers 
+                where ID = $id";
+        return $this->update($sql);
+    }
 }
 
 ?>

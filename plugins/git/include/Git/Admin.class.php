@@ -80,6 +80,9 @@ class Git_Admin {
         $html .= '<td><label>'. 'Port:' .'<br /><input type="text" name="gerrit_servers['. $id .'][port]" value="'. $hp->purify($server->getPort()) .'" /></label></td>';
         $html .= '<td><label>'. 'Login:' .'<br /><input type="text" name="gerrit_servers['. $id .'][login]" value="'. $hp->purify($server->getLogin()) .'" /></label></td>';
         $html .= '<td><label>'. 'Identity File:' .'<br /><input type="text" name="gerrit_servers['. $id .'][identity_file]" value="'. $hp->purify($server->getIdentityFile()) .'" /></label></td>';
+        if ($id) {
+            $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
+        }
         $html .= '</tbody></table>';
         $html .= '</dd>';
         return $html;
@@ -99,6 +102,11 @@ class Git_Admin {
             if (empty($gerrit_servers[$id])) {
                 continue;
             }
+            if (! empty($settings['delete'])) {
+                $this->gerrit_server_factory->delete($gerrit_servers[$id]);
+                continue;
+            }
+
             $host          = isset($settings['host'])          ? $settings['host']          : '';
             $port          = isset($settings['port'])          ? $settings['port']          : '';
             $login         = isset($settings['login'])         ? $settings['login']         : '';

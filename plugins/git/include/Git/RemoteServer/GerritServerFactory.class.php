@@ -62,6 +62,10 @@ class Git_RemoteServer_GerritServerFactory {
         );
     }
 
+    public function delete(Git_RemoteServer_GerritServer $server) {
+        $this->dao->delete($server->getId());
+    }
+
     private function instantiateFromRow(array $row) {
         return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['port'], $row['login'], $row['identity_file']);
     }

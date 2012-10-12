@@ -68,5 +68,14 @@ class Git_Admin_process_Test extends TuleapTestCase {
         expect($this->factory)->save($expected)->once();
         $this->admin->process($this->request);
     }
+
+    public function itDeletesGerritServer() {
+        $request_gerrit_servers = array(1 => $this->request_update_existing_server);
+        $request_gerrit_servers[1]['delete'] = 1;
+        $this->request->set('gerrit_servers', $request_gerrit_servers);
+        expect($this->factory)->delete($this->an_existing_server)->once();
+        expect($this->factory)->save($this->an_existing_server)->never();
+        $this->admin->process($this->request);
+    }
 }
 ?>
