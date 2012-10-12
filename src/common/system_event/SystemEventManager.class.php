@@ -301,7 +301,7 @@ class SystemEventManager {
      *
      * @return SystemEvent
      */
-    protected function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row) {
         $em           = EventManager::instance();
         $sysevent     = null;
         $klass        = null;
