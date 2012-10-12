@@ -42,7 +42,7 @@ class User_SSHKeyValidator {
 
     private function validateAllKeys(array $all_keys) {
         $valid_keys = array();
-        $key_file   = tempnam('/var/tmp/codendi_cache/', 'ssh_key_');
+        $key_file   = tempnam(Config::get('codendi_cache_dir'), 'ssh_key_');
         foreach ($all_keys as $key) {
             if ($this->isValid($key_file, $key)) {
                 $valid_keys[] = $key;
