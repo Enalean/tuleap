@@ -85,8 +85,6 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
     }
     public function itInformsAboutPermissionsConfiguration() {
     }
-        //list non added users (cause they're not in gerrit)
-        //
     
     public function itInformsAboutAnyDriverFailure() {
         stub($this->driver)->createProject()->throws(new Exception("failure detail"));
@@ -121,11 +119,5 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT
         //the following users couldn't be added to their corresponding groups, because they don't exist in Gerrit.
     }
 
-    public function itRaisesAnErrorIfGerritServerIsUnreachable() {
-    }
-    public function itRaisesAnErrorIfTheProjectAlreadyExist() {
-    }
-    
-    
 }
 ?>

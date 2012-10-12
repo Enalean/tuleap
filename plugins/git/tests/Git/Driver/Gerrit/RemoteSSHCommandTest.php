@@ -65,6 +65,11 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             $this->assertEqual($e->getMessage(), "The identity file $non_existing_identity doesn't exist");
         }
     }
+    
+    public function itRaisesAnErrorIfGerritServerIsUnreachable() {
+    }
+        //ssh connexion permission denied
 
+    
 }
 ?>

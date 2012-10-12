@@ -86,10 +86,9 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $driver->createProject($r);
     }
     
-        //cant reach gerrit host
-        //project already exists
-        //ssh connexion permission denied
-        //malformed gerrit host????
+    public function itRaisesAnErrorIfTheProjectAlreadyExist() {
+    }
+    
         //groups already exists
 
 }
