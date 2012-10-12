@@ -63,6 +63,7 @@ class SystemEventProcessor {
             BackendCVS         $backend_cvs,
             BackendSVN         $backend_svn,
             BackendSystem      $backend_system) {
+        $this->system_event_manager = $system_event_manager;
         $this->dao             = $dao;
         $this->backend_aliases = $backend_aliases;
         $this->backend_cvs     = $backend_cvs;
@@ -82,7 +83,11 @@ class SystemEventProcessor {
                 // Process $sysevent
                 if ($sysevent) {
                     $this->backend_system->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
-                    $sysevent->process();
+                    try {
+                        $sysevent->process();
+                    } catch (Exception $exception) {
+                        $sysevent->logException($exception);
+                    }
                     $this->dao->close($sysevent);
                     $sysevent->notify();
                     $this->backend_system->log("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);

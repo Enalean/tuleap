@@ -453,7 +453,7 @@ class SystemEventManager {
                     $html .= '<td>'. $sysevent->getCreateDate().'</td>';
                     $html .= '<td>'. $sysevent->getProcessDate() .'</td>';
                     $html .= '<td>'. $sysevent->getEndDate() .'</td>';
-                    $html .= '<td>'. $sysevent->getLog() .'</td>';
+                    $html .= '<td>'. nl2br($sysevent->getLog()) .'</td>';
                     $html .= '<td>'. $replay_link .'</td>';
                 }
                 
