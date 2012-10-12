@@ -24,3 +24,5 @@ update_parameter codendi_cache_dir /var/cache/tuleap
 update_parameter sys_http_user www-data
 update_parameter codendi_shell_skel /etc/tuleap_skel
 
+perl -pi -e "s|codendiadm|www-data|g" debian/tuleap/usr/share/tuleap/src/utils/cron.d/codendi
+perl -pi -e "s|tmpwatch|tmpreaper|g" debian/tuleap/usr/share/tuleap/src/utils/cron.d/codendi
