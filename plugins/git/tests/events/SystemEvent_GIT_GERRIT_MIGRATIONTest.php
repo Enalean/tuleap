@@ -45,34 +45,34 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
         $this->repository = mock('GitRepository');
         
-        $gerrit_server_factory = mock('Git_RemoteServer_GerritServerFactory');
-        stub($gerrit_server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        $this->server_factory = mock('Git_RemoteServer_GerritServerFactory');
 
         $factory = mock('GitRepositoryFactory');
         stub($factory)->getRepositoryById($this->repository_id)->returns($this->repository);
         
         $id= $type= $parameters= $priority= $status= $create_date= $process_date= $end_date= $log = 0;
-        $this->event = TestHelper::getPartialMock('SystemEvent_GIT_GERRIT_MIGRATION', array('done'), 
+        $this->event = TestHelper::getPartialMock('SystemEvent_GIT_GERRIT_MIGRATION', array('done', 'error'), 
                                                   array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log));
         $this->event->setParameters("$this->repository_id::$this->remote_server_id");
-        $this->event->injectDependencies($this->dao, $this->driver, $factory, $gerrit_server_factory);
+        $this->event->injectDependencies($this->dao, $this->driver, $factory, $this->server_factory);
         
     }
 }
 class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
     
     public function itSwitchesTheBackendToGerrit() {
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         expect($this->dao)->switchToGerrit($this->repository_id, $this->remote_server_id)->once();
         $this->event->process();
     }
     public function itCallsDoneAndReturnsTrue() {
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         expect($this->event)->done()->once();
         $this->assertTrue($this->event->process());
     }
     
-    public function itLogsErrors() {
-    }
-    public function itLogsInformationAboutProgress() {
+    public function itInformsAboutCreationSuccess() {
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
         $gerrit_host  = 'gerrit.instance.net';
         stub($this->driver)->createProject()->returns($remote_project);
@@ -81,11 +81,35 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         $this->event->process();
     }
     
+    public function itInformsAboutGroupCreation() {
+    }
+    public function itInformsAboutPermissionsConfiguration() {
+    }
+
+    public function itInformsAboutMissingIdentityFile() {
+        $identity_file = '/home/captainamerica/.ssh/id_dsa';
+        stub($this->server_factory)->getServer()->throws(new IdentityFileNotFoundException($identity_file));
+        expect($this->event)->error("The identity file $identity_file doesn't exist")->once();
+        $this->event->process();
+
+        //cant reach gerrit host
+//        stub($this->driver)->createProject()->throws(new UnreachableHost(host?))
+        //project already exists
+        //ssh connexion permission denied
+        //malformed gerrit host????
+        //groups already exists
+        
+        
+        //list non added users (cause they're not in gerrit)
+        //
+    }
+    
 }
 
 class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
     
     public function itCreatesAProject() { 
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
         expect($this->driver)->createProject($this->gerrit_server, $this->repository)->once();
         $this->event->process();

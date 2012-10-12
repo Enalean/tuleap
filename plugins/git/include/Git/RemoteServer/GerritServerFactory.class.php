@@ -90,4 +90,11 @@ class GerritServerNotFoundException extends Exception {
         parent::__construct("No server found with the id: $id");
     }
 }
+class IdentityFileNotFoundException extends Exception {
+
+    function __construct($file) {
+        parent::__construct("The identity file $file doesn't exist");
+    }
+    
+}
 ?>
