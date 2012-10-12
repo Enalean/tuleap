@@ -56,7 +56,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         stub($this->dao)->searchAll()->returnsDar($dar_1, $dar_2);
         stub($this->dao)->searchById($this->server_id)->returnsDar($dar_1);
         stub($this->dao)->searchById()->returnsEmptyDar();
-        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao);
+        $this->factory = $this->newGit_RemoteServer_GerritServerFactory($this->dao, $git_dao);
 
         $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
             $this->server_id,
@@ -86,6 +86,23 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->assertEqual($e->getMessage(), "No server found with the id: $unexisting_server_id");
         }
     }
+    
+    public function itThrowsAnExceptionIftheIdentityFileDoesntExist() {
+        $this->expectException('IdentityFileNotFoundException');
+        $dar_1 = array(
+            'id'            => $this->server_id,
+            'host'          => $this->host,
+            'port'          => $this->port,
+            'login'         => $this->login,
+            'identity_file' => '/non/existing/file'
+        );
+        
+        $dao = stub('Git_RemoteServer_Dao')->searchById()->returnsDar($dar_1);
+
+        $this->factory = new Git_RemoteServer_GerritServerFactory($dao, mock('GitDao'));
+        $this->factory->getServer(mock('GitRepository'));
+        
+    }
 
     public function itReturnsAGerritServer() {
         $repo   = aGitRepository()->withRemoteServerId($this->server_id)->build();
@@ -112,6 +129,13 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     public function itDoesNotDeleteUsedServer() {
         expect($this->dao)->delete($this->server_id)->never();
         $this->factory->delete($this->main_gerrit_server);
+    }
+
+    public function newGit_RemoteServer_GerritServerFactory($dao, $git_dao) {
+        $factory = TestHelper::getPartialMock('Git_RemoteServer_GerritServerFactory', array('fileExists'));
+        $factory->__construct($dao, $git_dao);
+        stub($factory)->fileExists()->returns(true);
+        return $factory;
     }
 }
 

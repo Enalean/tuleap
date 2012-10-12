@@ -81,7 +81,15 @@ class Git_RemoteServer_GerritServerFactory {
     }
 
     private function instantiateFromRow(array $row) {
-        return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['port'], $row['login'], $row['identity_file']);
+        $file = $row['identity_file'];
+        if (! $this->fileExists($file)) {
+            throw new IdentityFileNotFoundException($file);
+        }
+        return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['port'], $row['login'], $file);
+    }
+
+    public function fileExists($file) {
+        return file_exists($file);
     }
 }
 
