@@ -49,8 +49,36 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         $this->driver->createProject($server, $repository);
     }
 
+    /**
+     * @return string a human readable representation of parameters
+     */
     public function verbalizeParameters($with_link) {
-        return  $this->parameters;
+        $txt = '';
+
+        $repo_id          = (int)$this->getParameter(0);
+        $remote_server_id = (int)$this->getParameter(1);
+        $txt .= 'repo: '. $this->verbalizeRepoId($repo_id, $with_link) .', remote server: '. $this->verbalizeRemoteServerId($remote_server_id, $with_link);
+        return $txt;
+    }
+
+    private function verbalizeRepoId($repo_id, $with_link) {
+        $txt = '#'. $repo_id;
+        if ($with_link) {
+            $hp = Codendi_HTMLPurifier::instance();
+            $repo = $this->repository_factory->getRepositoryById($repo_id);
+            $txt = '<a href="/plugins/git/index.php/'. $repo->getProjectId() .'/view/'. $repo_id .'/" title="'. $hp->purify($repo->getFullName()) .'">'. $txt .'</a>';
+        }
+        return $txt;
+    }
+
+    private function verbalizeRemoteServerId($remote_server_id, $with_link) {
+        $txt = '#'. $remote_server_id;
+        if ($with_link) {
+            $hp = Codendi_HTMLPurifier::instance();
+            $server = $this->server_factory->getServerById($remote_server_id);
+            $txt = $server->getHost();
+        }
+        return $txt;
     }
 
     public function injectDependencies(

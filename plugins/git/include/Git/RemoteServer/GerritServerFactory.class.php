@@ -38,6 +38,10 @@ class Git_RemoteServer_GerritServerFactory {
 
     public function getServer(GitRepository $repository) {
         $id  = $repository->getRemoteServerId();
+        return $this->getServerById($id);
+    }
+
+    public function getServerById($id) {
         $row = $this->dao->searchById($id)->getRow();
         if ($row) {
             return $this->instantiateFromRow($row);
