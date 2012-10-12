@@ -197,7 +197,7 @@ class GitPlugin extends Plugin {
      */
     public function processAdmin(Codendi_Request $request) {
         require_once GIT_BASE_DIR .'/Git/Admin.class.php';
-        $admin = new Git_Admin($this->getGerritServerFactory());
+        $admin = new Git_Admin($this->getGerritServerFactory(), new CSRFSynchronizerToken('/plugin/git/admin/'));
         $admin->process($request);
         $admin->display();
     }
@@ -427,6 +427,11 @@ class GitPlugin extends Plugin {
         );
     }
 
+    private function getGerritServerFactory() {
+        require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
+        return new Git_RemoteServer_GerritServerFactory(new Git_RemoteServer_Dao(), $this->getGitDao());
+    }
+
     /**
      * Display git backend statistics in CSV format
      *
@@ -595,11 +600,6 @@ class GitPlugin extends Plugin {
                 $params['codendi_widgets'][] = 'plugin_git_project_pushes';
             }
         }
-    }
-
-    public function getGerritServerFactory() {
-        require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
-        return new Git_RemoteServer_GerritServerFactory(new Git_RemoteServer_Dao());
     }
 }
 

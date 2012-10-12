@@ -510,6 +510,18 @@ class GitDao extends DataAccessObject {
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }
+    
+    /**
+     * @return bool
+     */
+    public function isRemoteServerUsed($remote_server_id) {
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        echo $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE remote_server_id = $remote_server_id
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
+    }
 }
 
 ?>

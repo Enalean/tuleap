@@ -50,11 +50,13 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'login'         => $this->login,
             'identity_file' => $this->identity_file
         );
+
+        $git_dao   = mock('GitDao');
         $this->dao = mock('Git_RemoteServer_Dao');
         stub($this->dao)->searchAll()->returnsDar($dar_1, $dar_2);
         stub($this->dao)->searchById($this->server_id)->returnsDar($dar_1);
         stub($this->dao)->searchById()->returnsEmptyDar();
-        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao);
+        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao);
 
         $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
             $this->server_id,
@@ -63,13 +65,15 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->login,
             $this->identity_file
         );
-        $this->alt_gerrit_server  = new Git_RemoteServer_GerritServer(
+        $this->alternate_gerrit_server  = new Git_RemoteServer_GerritServer(
             $this->alternate_server_id,
             $this->alternate_host,
             $this->port,
             $this->login,
             $this->identity_file
         );
+        stub($git_dao)->isRemoteServerUsed($this->server_id)->returns(true);
+        stub($git_dao)->isRemoteServerUsed($this->alternate_server_id)->returns(false);
     }
 
     public function itThrowsAnExceptionIfThereIsNoSuchServer() {
@@ -91,7 +95,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
     public function itGetsAllServers() {
         $servers = $this->factory->getServers();
-        $this->assertEqual($servers, array(1 => $this->main_gerrit_server, 2 => $this->alt_gerrit_server));
+        $this->assertEqual($servers, array(1 => $this->main_gerrit_server, 2 => $this->alternate_gerrit_server));
     }
 
     public function itSavesAnExistingServer() {
@@ -101,7 +105,12 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     }
 
     public function itDeletesAnExistingServer() {
-        expect($this->dao)->delete($this->server_id)->once();
+        expect($this->dao)->delete($this->alternate_server_id)->once();
+        $this->factory->delete($this->alternate_gerrit_server);
+    }
+
+    public function itDoesNotDeleteUsedServer() {
+        expect($this->dao)->delete($this->server_id)->never();
         $this->factory->delete($this->main_gerrit_server);
     }
 }

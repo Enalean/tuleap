@@ -28,8 +28,12 @@ class Git_RemoteServer_GerritServerFactory {
     /** @var Git_RemoteServer_Dao */
     private $dao;
 
-    public function __construct(Git_RemoteServer_Dao $dao) {
-        $this->dao = $dao;
+    /** @var GitDao */
+    private $git_dao;
+
+    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao) {
+        $this->dao     = $dao;
+        $this->git_dao = $git_dao;
     }
 
     public function getServer(GitRepository $repository) {
@@ -63,7 +67,13 @@ class Git_RemoteServer_GerritServerFactory {
     }
 
     public function delete(Git_RemoteServer_GerritServer $server) {
-        $this->dao->delete($server->getId());
+        if (! $this->isServerUsed($server)) {
+            $this->dao->delete($server->getId());
+        }
+    }
+
+    public function isServerUsed(Git_RemoteServer_GerritServer $server) {
+        return $this->git_dao->isRemoteServerUsed($server->getId());
     }
 
     private function instantiateFromRow(array $row) {

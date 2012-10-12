@@ -52,7 +52,7 @@ class Git_Admin {
         $html  = '';
         $html .= '<h1>'. $title .'</h1>';
         $html .= '<form method="POST" action="">';
-        $html .= $this->token->fetchHTMLInput();
+        $html .= $this->csrf->fetchHTMLInput();
         $html .= '<h2>'. 'Admin gerrit servers' .'</h2>';
         $html .= '<dl>';
         foreach ($servers as $server) {
@@ -85,7 +85,7 @@ class Git_Admin {
         $html .= '<td><label>'. 'Port:' .'<br /><input type="text" name="gerrit_servers['. $id .'][port]" value="'. $hp->purify($server->getPort()) .'" /></label></td>';
         $html .= '<td><label>'. 'Login:' .'<br /><input type="text" name="gerrit_servers['. $id .'][login]" value="'. $hp->purify($server->getLogin()) .'" /></label></td>';
         $html .= '<td><label>'. 'Identity File:' .'<br /><input type="text" name="gerrit_servers['. $id .'][identity_file]" value="'. $hp->purify($server->getIdentityFile()) .'" /></label></td>';
-        if ($id) {
+        if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
             $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
         }
         $html .= '</tbody></table>';
