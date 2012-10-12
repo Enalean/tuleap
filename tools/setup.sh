@@ -1508,6 +1508,13 @@ fi
 /usr/lib/forgeupgrade/bin/forgeupgrade --config=/etc/$PROJECT_NAME/forgeupgrade/config.ini record-only
 
 
+# Ensure /etc/sudoers.d is used
+if [ -e /etc/sudoers ]; then
+    if ! grep -q /etc/sudoers.d /etc/sudoers; then
+	echo "#includedir /etc/sudoers.d" >>/etc/sudoers
+    fi
+fi
+
 ##############################################
 # End of installation
 #
