@@ -38,6 +38,7 @@ class GitPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
+        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->_addHook('cssfile',                                         'cssFile',                                      false);
         $this->_addHook('javascript_file',                                 'jsFile',                                       false);
         $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                                   false);
@@ -76,6 +77,12 @@ class GitPlugin extends Plugin {
         $this->_addHook('logs_daily',                                       'logsDaily',                                   false);
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
+    }
+
+    public function site_admin_option_hook() {
+        $url  = $this->getPluginPath().'/';
+        $name = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        echo '<li><a href="', $url, '">', $name, '</a></li>';
     }
 
     public function getPluginInfo() {
