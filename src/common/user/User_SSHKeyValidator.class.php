@@ -47,7 +47,7 @@ class User_SSHKeyValidator {
             if ($this->isValid($key_file, $key)) {
                 $valid_keys[] = $key;
             } else {
-                $GLOBALS['Response']->addFeedback('warning', "Skip invalid key $key");
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'invalid_key', array($key)));
             }
         }
         unlink($key_file);
