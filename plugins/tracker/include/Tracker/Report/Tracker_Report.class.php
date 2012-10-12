@@ -187,17 +187,32 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $this->criteria[$field_id];
     }
 
-   
+    protected $current_user;
+    protected function getCurrentUser() {
+        if (!$this->current_user) {
+            $this->current_user = UserManager::instance()->getCurrentUser();
+        }
+        return $this->current_user;
+    }
+
+    protected $permissions_manager;
+    private function getPermissionsManager() {
+        if (!$this->permissions_manager) {
+            $this->permissions_manager = PermissionsManager::instance();
+        }
+        return $this->permissions_manager;
+    }
+
     protected $matching_ids;
     public function getMatchingIds($request = null, $use_data_from_db = false) {
         if (!$this->matching_ids) {
-            $u = UserManager::instance()->getCurrentUser();
+            $user = $this->getCurrentUser();
             if ($use_data_from_db) {
                 $criteria = $this->getCriteriaFromDb();
             } else {
                 $criteria = $this->getCriteria();
             }
-            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), PermissionsManager::instance(), $this->getTracker(), $u, $criteria);
+            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), $this->getPermissionsManager(), $this->getTracker(), $user, $criteria);
        }
        return $this->matching_ids;
     }
@@ -236,7 +251,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $additional_where[] = $w;
             }
         }
-        
         $matching_ids = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
         if ($matching_ids) {
             if (substr($matching_ids['id'], -1) === ',') {
@@ -796,8 +810,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
     }
     
+    protected $tracker;
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerById($this->tracker_id);
+        if (!$this->tracker) {
+            $this->tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
+        }
+        return $this->tracker;
     }
     
     /**
@@ -984,7 +1002,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                             $send_notifications = true;
                         }
                     }
-                    $tracker->updateArtifactsMasschange($current_user, $masschange_aids, $masschange_data, $request->get('artifact_masschange_followup_comment'), $send_notifications);
+                    $comment_format = $request->get('comment_formatmass_change');
+                    $tracker->updateArtifactsMasschange($current_user, $masschange_aids, $masschange_data, $request->get('artifact_masschange_followup_comment'), $send_notifications, $comment_format);
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -1310,11 +1329,15 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
     }
     
+    protected $dao;
     /**
      * @return Tracker_ReportDao
      */
     public function getDao() {
-        return new Tracker_ReportDao();
+        if (!$this->dao) {
+            $this->dao = new Tracker_ReportDao();
+        }
+        return $this->dao;
     }
 }
 

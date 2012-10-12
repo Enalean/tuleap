@@ -163,7 +163,7 @@ class Tracker_CrossSearch_Query {
     public function setSelectedArtifacts($tracker_id, array $artifact_list) {
         $selected = isset($this->artifact_ids[$tracker_id]);
         foreach($artifact_list as $artifact) {
-            $artifact->isSelected = $selected && in_array($artifact->getId(), $this->artifact_ids[$tracker_id]);
+            $artifact->isSelected = $selected && !empty($this->artifact_ids[$tracker_id]) && in_array($artifact->getId(), $this->artifact_ids[$tracker_id]);
         }
         return $artifact_list;
     }

@@ -39,7 +39,26 @@ class Tracker_ArtifactLinkInfo {
         $this->tracker_id        = $tracker_id;
         $this->last_changeset_id = $last_changeset_id;
     }
-    
+
+    /**
+     * Instanciate a new object based on a artifact
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Tracker_ArtifactLinkInfo
+     */
+    public static function buildFromArtifact(Tracker_Artifact $artifact) {
+        $tracker = $artifact->getTracker();
+        $klass   = __CLASS__;
+        return new $klass(
+            $artifact->getId(),
+            $tracker->getItemName(),
+            $tracker->getGroupId(),
+            $tracker->getId(),
+            $artifact->getLastChangeset()->getId()
+        );
+    }
+
     /**
      * @return int the id of the artifact link
      */

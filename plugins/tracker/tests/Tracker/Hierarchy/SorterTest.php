@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../../include/constants.php';
 require_once dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Sorter.class.php';
 require_once dirname(__FILE__).'/../../builders/aCrossSearchCriteria.php';
 require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/Query.class.php';

@@ -43,6 +43,12 @@ require_once 'LDAP.class.php';
  */
 abstract class LDAP_GroupManager
 {
+
+    const NO_SYNCHRONIZATION      = 'never';
+    const AUTO_SYNCHRONIZATION    = 'auto';
+    const BIND_OPTION             = 'bind';
+    const PRESERVE_MEMBERS_OPTION = 'preserve_members';
+
     /**
      * @type LDAP
      */
@@ -96,6 +102,17 @@ abstract class LDAP_GroupManager
     }
 
     /**
+     * Set LDAP group distinguish name to be used for further processing
+     *
+     * @param String $groupDn LDAP group identifier
+     *
+     * @return Void
+     */
+    public function setGroupDn($groupDn) {
+        $this->groupDn = $groupDn;
+    }
+
+    /**
      * Return the GroupDn for the current group name 
      * 
      * @return String
@@ -115,16 +132,20 @@ abstract class LDAP_GroupManager
     /**
      * Link and synchronize a Codendi Group and an LDAP group
      *
-     * @param string $option 'bind' or 'preserve_members'. The latter keeps ugroup membres that are not members of directory group.
+     * @param String  $option 'bind' or 'preserve_members'. The latter keeps ugroup membres that are not members of directory group.
+     * @param String  $synchroPolicy   The option to synchrorize the ugroup nightly
+     * @param Boolean $displayFeedback While set to true, it allows the feedback display
+     *
      * @return void
      */
-    public function bindWithLdap($option='bind') 
-    {
+    public function bindWithLdap($option = self::BIND_OPTION, $synchroPolicy = self::NO_SYNCHRONIZATION, $displayFeedback = true) {
         if ($this->getGroupDn()) {
-             $this->bindWithLdapGroup();
-             $this->syncMembersWithLdap($option);
+            $this->bindWithLdapGroup($option, $synchroPolicy);
+            $this->syncMembersWithLdap($option);
         } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_ldap_group_not_found', $groupName));
+            if ($displayFeedback) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_ldap_group_not_found', $groupName));
+            }
         }
     }
 
@@ -145,8 +166,8 @@ abstract class LDAP_GroupManager
                 $this->addUserToGroup($this->id, $userId);
             }
         }
-        if($option == 'bind') {
-            $toRemove = $this->getUsersToBeRemoved('bind');
+        if($option == self::BIND_OPTION) {
+            $toRemove = $this->getUsersToBeRemoved(self::BIND_OPTION);
             if ($toRemove) {
                 foreach($toRemove as $userId) {
                     $this->removeUserFromGroup($this->id, $userId);
@@ -173,7 +194,7 @@ abstract class LDAP_GroupManager
             $this->usersNotImpacted = array();
 
             foreach($projectMembers as $userId) {
-                if (!isset($ldapGroupMembers[$userId]) && $option != 'preserve_members') {
+                if (!isset($ldapGroupMembers[$userId]) && $option != self::PRESERVE_MEMBERS_OPTION) {
                     $this->usersToRemove[$userId] = $userId;
                 } else {
                     $this->usersNotImpacted[$userId] = $userId;
@@ -311,16 +332,19 @@ abstract class LDAP_GroupManager
     /**
      * Save link between Codendi Group and LDAP group
      *
+     * @param  String  $bindOption
+     * @param  String  $synchroPolicy
+     *
      * @return Boolean
      */
-    protected function bindWithLdapGroup()
+    protected function bindWithLdapGroup($bindOption = self::BIND_OPTION, $synchroPolicy = self::NO_SYNCHRONIZATION)
     {
         $dao = $this->getDao();
         $row = $dao->searchByGroupId($this->id);
         if ($row !== false) {
             $dao->unlinkGroupLdap($this->id);
         }
-        return $dao->linkGroupLdap($this->id, $this->groupDn);
+        return $dao->linkGroupLdap($this->id, $this->groupDn, $bindOption, $synchroPolicy);
     }
     
     /**

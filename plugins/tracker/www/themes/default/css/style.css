@@ -1212,3 +1212,31 @@ td.first-column {
     font-weight: bold;
 }
 /* }}} */
+.tracker_artifact_attachment_delete.pc_check_unchecked {
+    background-image:url('../images/ic/cross-disabled.png');
+}
+.tracker_artifact_attachment_delete.pc_check_checked {
+    background-image:url('../images/ic/cross.png');
+}
+.tracker_artifact_attachment_deleted {
+   text-decoration: line-through;
+}
+
+/* {{{ */
+.tracker_confirm_delete {
+    width: 50%;
+    margin: auto;
+    border:medium solid red;
+    background:#FFC;
+    padding:4px 10px;
+}
+.tracker_confirm_delete_buttons {
+    text-align:center;
+}
+.tracker_confirm_delete_preview {
+    border: medium inset lightgray;
+    background: #eee;
+    padding: 0.5em 1em;
+    margin: 1em auto;
+}
+/* }}} */

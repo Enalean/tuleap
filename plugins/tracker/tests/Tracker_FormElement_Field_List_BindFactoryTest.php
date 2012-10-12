@@ -17,12 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
+require_once 'builders/all.php';
+
 require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.class.php');
 Mock::generatePartial(
-    'Tracker_FormElement_Field_List_BindFactory', 
-    'Tracker_FormElement_Field_List_BindFactoryTestVersion', 
+    'Tracker_FormElement_Field_List_BindFactory',
+    'Tracker_FormElement_Field_List_BindFactoryTestVersion',
     array(
         'getInstanceFromRow',
         'getStaticValueInstance',
@@ -39,10 +41,10 @@ Mock::generate('Tracker_FormElement_Field_List_BindValue');
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindDecorator.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindDecorator');
 
-class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
-    
+class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase {
+
     public function testImport_statik() {
-        
+
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <bind type="static" is_rank_alpha="1">
                 <items>
@@ -58,14 +60,14 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
                 </default_values>
             </bind>'
         );
-        
+
         $mapping = array();
-        
+
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v2 = new MockTracker_FormElement_Field_List_BindValue();
         $d1 = new MockTracker_FormElement_Field_List_BindDecorator();
         $d2 = new MockTracker_FormElement_Field_List_BindDecorator();
-        
+
         $field = new MockTracker_FormElement_Field_List();
         $bind  = new Tracker_FormElement_Field_List_BindFactoryTestVersion();
         $bind->expectAt(0, 'getStaticValueInstance', array('F6-V0', 'Open', '', 0, 0));
@@ -75,7 +77,7 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
         $bind->setReturnReference('getDecoratorInstance', $d1, array($field, 'F6-V0', 255, 0, 0));
         $bind->setReturnReference('getDecoratorInstance', $d2, array($field, 'F6-V1', 0, 255, 0));
         $bind->expect(
-            'getInstanceFromRow', 
+            'getInstanceFromRow',
             array(
                 array(
                     'type'           => 'static',
@@ -99,9 +101,9 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
         $this->assertReference($mapping['F6-V0'], $v1);
         $this->assertReference($mapping['F6-V1'], $v2);
     }
-    
+
     public function testImport_users() {
-        
+
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <bind type="users">
                 <items>
@@ -110,13 +112,13 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
                 </items>
             </bind>'
         );
-        
+
         $mapping = array();
-        
+
         $field = new MockTracker_FormElement_Field_List();
         $bind  = new Tracker_FormElement_Field_List_BindFactoryTestVersion();
         $bind->expect(
-            'getInstanceFromRow', 
+            'getInstanceFromRow',
             array(
                 array(
                     'type'           => 'users',
@@ -130,9 +132,9 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
         $bind->getInstanceFromXML($xml, $field, $mapping);
         $this->assertEqual($mapping, array());
     }
-    
+
     public function testImport_unknown_type() {
-        
+
         $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
             <bind type="unknown">
                 <items>
@@ -140,25 +142,116 @@ class Tracker_FormElement_Field_List_BindFactoryTest extends UnitTestCase {
                 </items>
             </bind>'
         );
-        
+
         $mapping = array();
-        
+
         $field = new MockTracker_FormElement_Field_List();
         $bind  = new Tracker_FormElement_Field_List_BindFactoryTestVersion();
         $bind->expect(
-            'getInstanceFromRow', 
+            'getInstanceFromRow',
             array(
                 array(
-                    'type'           => 'users',
+                    'type'           => 'unknown',
                     'field'          => $field,
-                    'default_values' => null,
+                    'default_values' => array(),
                     'decorators'     => null,
                 )
             )
         );
-        $this->assertNull($bind->getInstanceFromXML($xml, $field, $mapping));
         $this->assertEqual($mapping, array());
     }
 
+    function itRaisesAnErrorIfUnkownType() {
+        $factory = new Tracker_FormElement_Field_List_BindFactory(mock('UGroupManager'));
+        $this->expectError('Unknown bind "unknown"');
+        $factory->getInstanceFromRow(array('type' => 'unknown', 'field' => 'a_field_object'));
+    }
+}
+
+class Tracker_FormElement_Field_List_BindFactoryImportUGroupsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->mapping        = array();
+        $this->project        = mock('Project');
+        $this->field          = aSelectBoxField()->withTracker(aTracker()->withProject($this->project)->build())->build();
+        $this->ugroup_manager = mock('UGroupManager');
+        $this->value_dao      = mock('Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao'); 
+        $this->bind_factory   = new Tracker_FormElement_Field_List_BindFactory($this->ugroup_manager);
+        $this->bind_factory->setUgroupsValueDao($this->value_dao);
+
+        $this->setText('Registered users', array('project_ugroup', 'ugroup_registered_users_name_key'));
+    }
+
+    public function itImportsStaticUgroups() {
+        $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
+            <bind type="ugroups">
+                <items>
+                    <item ID="F1-V0" label="Integrators" is_hidden="0" />
+                    <item ID="F1-V1" label="Customers" is_hidden="0" />
+                </items>
+            </bind>'
+        );
+
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'Integrators')->returns(new UGroup(array('name' => 'Integrators')));
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'Customers')->returns(new UGroup(array('name' => 'Customers')));
+
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+
+        $values = $bind->getAllValues();
+        $this->assertEqual($values["F1-V0"]->getLabel(), 'Integrators');
+        $this->assertEqual($values["F1-V1"]->getLabel(), 'Customers');
+    }
+
+    public function itImportsIgnoresStaticUgroupThatDoesntBelongToProject() {
+        $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
+            <bind type="ugroups">
+                <items>
+                    <item ID="F1-V0" label="NotInProject" is_hidden="0" />
+                </items>
+            </bind>'
+        );
+
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'NotInProject')->returns(false);
+
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+
+        $this->assertCount($bind->getAllValues(), 0);
+    }
+
+    public function itImportsDynamicUgroups() {
+        $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
+            <bind type="ugroups">
+                <items>
+                    <item ID="F1-V0" label="ugroup_registered_users_name_key" is_hidden="0" />
+                </items>
+            </bind>'
+        );
+
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new UGroup(array('name' => 'ugroup_registered_users_name_key')));
+
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+
+        $values = $bind->getAllValues();
+        $this->assertEqual($values["F1-V0"]->getLabel(), 'Registered users');
+    }
+
+    public function itImportsHiddenValues() {
+        $xml = new SimpleXMLElement('<?xml version="1.0" standalone="yes"?>
+            <bind type="ugroups">
+                <items>
+                    <item ID="F1-V0" label="ugroup_registered_users_name_key" is_hidden="1" />
+                </items>
+            </bind>'
+        );
+
+        stub($this->ugroup_manager)->getUGroupByName($this->project, 'ugroup_registered_users_name_key')->returns(new UGroup(array('name' => 'ugroup_registered_users_name_key')));
+
+        $bind = $this->bind_factory->getInstanceFromXML($xml, $this->field, $this->mapping);
+
+        $values = $bind->getAllValues();
+        $this->assertTrue($values["F1-V0"]->isHidden());
+    }
 }
 ?>

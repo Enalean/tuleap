@@ -1,21 +1,13 @@
 document.observe('dom:loaded', function () {
-    var repoDesc = $('repo_desc')
-      , fork_repositories_prefix = $('fork_repositories_prefix');
+    var fork_repositories_prefix = $('fork_repositories_prefix');
 
-    if ( repoDesc ) {
-        var span = new Element('span').update( repoDesc.value.escapeHTML() );
-        repoDesc.insert({before:span});
-        repoDesc.hide();
-        var link = new Element('a',{href:'#'}).update( new Element('img', {src:'/themes/common/images/ic/edit.png',alt:'edit'}) );
-        link.observe('click', function (evt) {
-            span.hide();
-            link.hide();
-            repoDesc.show();
-            evt.stop();
-        });
-        span.insert({after:link});
-    }
-    
+    // Update clone url field value according to selected protocol
+    $$('.plugin_git_transport').each(function (radio) {
+       radio.observe('click', function (event) {
+           $('plugin_git_clone_field').value = event.target.value;
+       }) 
+    });
+
     if (fork_repositories_prefix) {
         var fork_destination = $('fork_destination');
         var fork_path        = $('fork_repositories_path');
@@ -81,9 +73,9 @@ document.observe('dom:loaded', function () {
            submitted = true;
         });
 
-        function toggleDestination(evt) {
-            var optionBox = Event.element(evt);
-            if (optionBox.id == "choose_project" && optionBox.checked) {
+        function toggleDestination() {
+            var optionBox = $('choose_project');
+            if (optionBox.checked) {
                 fork_destination.enable();
                 fork_path.disable();
                 fork_path.placeholder = codendi.locales.git.path_placeholder_disabled; 
@@ -97,6 +89,7 @@ document.observe('dom:loaded', function () {
         }
         
         fork_destination.disable();
+        toggleDestination();
         $('choose_project').observe('change', toggleDestination); 
         $('choose_personal').observe('change', toggleDestination);
         $('choose_project').observe('click', toggleDestination); 

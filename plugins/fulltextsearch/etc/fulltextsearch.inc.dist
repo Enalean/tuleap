@@ -9,4 +9,12 @@ $fulltextsearch_host = 'localhost';
 // elastic search server port
 $fulltextsearch_port = 9200;
 
+// Basic Auth user for elasticsearch server
+// It is highly recommended to set a Basic Auth to access your ElasticSearch server
+// Else all your ES server are belong to your users
+$fulltextsearch_user = 'superuser';
+
+// Basic Auth password for elasticsearch server
+$fulltextsearch_password = 'Adm1n';
+
 ?>

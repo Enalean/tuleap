@@ -125,7 +125,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        if ($submitted_values[$this->id]) {
+        if (isset($submitted_values[$this->id])) {
             return $this->fetchOpenList($this->toObj($submitted_values[$this->id]));
         }
         return $this->fetchOpenList();

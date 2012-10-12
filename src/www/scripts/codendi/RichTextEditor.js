@@ -25,7 +25,7 @@ codendi.RTE = Class.create(
         initialize: function (element, options) {
             this.element = $(element);
             this.options = Object.extend({
-                toolbar: 'basic', //basic | full
+                toolbar: 'basic', //basic | full | minimal
                 onLoad: Prototype.emptyFunction,
                 toggle: false,
                 default_in_html: true
@@ -44,20 +44,29 @@ codendi.RTE = Class.create(
             }
         },
         init_rte: function () {
-            this.rte = CKEDITOR.replace(this.element.id, { 
-                toolbar: this.options.toolbar === 'basic' ?
-                    [
-                        ['Styles', 'Format', 'Font', 'FontSize'],
-                        ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
-                        '/',
-                        ['TextColor', 'BGColor'],
-                        ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
-                        ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
-                        ['Link', 'Unlink', 'Anchor', 'Image']
-                    ] : 
-                    'Full'
-                }
-            );
+            if (CKEDITOR.instances && CKEDITOR.instances[this.element.id]) {
+                CKEDITOR.instances[this.element.id].destroy(true);
+            }
+            if (this.options.toolbar == 'basic') {
+                var toolbar = [
+                                  ['Styles', 'Format', 'Font', 'FontSize'],
+                                  ['Bold', 'Italic', 'Underline', 'Strike', '-', 'Subscript', 'Superscript'],
+                                  '/',
+                                  ['TextColor', 'BGColor'],
+                                  ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', 'Blockquote'],
+                                  ['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+                                  ['Link', 'Unlink', 'Anchor', 'Image']
+                              ];
+            } else if (this.options.toolbar == 'minimal') {
+                var toolbar = [
+                                  ['Bold', 'Italic', 'Underline'],
+                                  ['NumberedList', 'BulletedList', '-', 'Blockquote', 'Format'],
+                                  ['Link', 'Unlink', 'Anchor', 'Image']
+                              ];
+            } else {
+                var toolbar = 'Full'
+            }
+            this.rte = CKEDITOR.replace(this.element.id, {toolbar: toolbar});
             CKEDITOR.on('instanceCreated', function (evt) {
                 if (evt.editor === this.rte) {
                     this.options.onLoad();

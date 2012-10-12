@@ -28,7 +28,7 @@ require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_List_Valu
 require_once(dirname(__FILE__).'/../../workflow/TransitionFactory.class.php');
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
-    
+
     protected $bind;
     /**
      * @return Tracker_FormElement_Field_List_Bind
@@ -249,7 +249,12 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         }        
         return $this->criteria_value;
     }
-    
+
+    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
+        $criteria_value = explode(',', $soap_criteria_value->value);
+        $this->setCriteriaValue($criteria_value);
+    }
+
     /**
      * Format the criteria value submitted by the user for storage purpose (dao or session)
      *

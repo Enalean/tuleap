@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ClientFacade.class.php';
-require_once dirname(__FILE__) .'/../FullTextSearch/IIndexDocuments.class.php';
 
 class ElasticSearch_IndexClientFacade extends ElasticSearch_ClientFacade implements FullTextSearch_IIndexDocuments {
     

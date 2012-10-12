@@ -6,9 +6,9 @@
 	var currentCategory = 0;
 	
 	function uncheck(category) {
-		var inputBoxes = Form.getInputs(category, 'checkbox');
-		if (inputBoxes.length > 0) {
-			inputBoxes[0].checked = false;
+		var inputBox = $(category).down('input[type=checkbox]');
+		if (inputBox) {
+			inputBox.checked = false;
 			uncheck(category.up('li.category'));
 		}
 	}
@@ -18,16 +18,13 @@
 		inputBoxes.each(function(inputBox){
 			Event.observe(inputBox, 'change', (function (evt) {
 				var checked = this.checked;
-				var col = this.parentNode.getElementsByTagName('input');
-				var len = col.length;
-				for (var i = 0 ; i < len ; ++i) {
-					if (col[i]['type'] == 'checkbox') {
-						col[i].checked = checked;
-					}
-				}
+				console.log(this.up('li'));
+				this.up('li').select('input[type=checkbox]').each(function (input) {
+                    input.checked = checked;
+				});
 				//On remonte
 				if (!checked && this.parentNode.id != 'menu') {
-					uncheck(this.parentNode.parentNode.parentNode);
+					uncheck(this.up('li.category'));
 				}
 			}).bind(inputBox));
 		});

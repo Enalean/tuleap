@@ -23,11 +23,12 @@ class Planning_BacklogActionsPresenter {
      * @var Tracker
      */
     private $tracker;
-    
     private $planning_redirect_parameter;
+    private $current_milestone;
 
-    public function __construct(Tracker $tracker = null, $planning_redirect_parameter = null) {
+    public function __construct(Tracker $tracker, Planning_Milestone $current_milestone, $planning_redirect_parameter) {
         $this->tracker                     = $tracker;
+        $this->current_milestone           = $current_milestone;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
     }
     
@@ -41,6 +42,10 @@ class Planning_BacklogActionsPresenter {
 
     public function planning_redirect_parameter() {
         return $this->planning_redirect_parameter;
+    }
+
+    public function current_milestone_id() {
+        return $this->current_milestone->getArtifactId();
     }
 }
 

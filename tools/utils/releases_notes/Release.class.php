@@ -18,24 +18,36 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Hierarchy_MoreThanOneParentException extends Exception {
+require_once 'Section.class.php';
 
-    public function __construct(Tracker_Artifact $child, array $parents) {
-        parent::__construct($this->getTranslatedMessage(array($this->getParentTitle($child), $this->getParentsList($parents))));
+class Release {
+
+    public $version;
+    public $date;
+    public $sections;
+
+    public function __construct($version, $date) {
+        $this->version  = $version;
+        $this->date     = $date;
+        $this->sections = array();
     }
 
-    private function getTranslatedMessage(array $arguments) {
-        return $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'error_more_than_one_parent', $arguments);
+    /**
+     * @return Release
+     */
+    public static function buildFromChangeLog($tuleap_version, $line) {
+        preg_match('/\((.*)\)/', $line, $matches);
+        $klass = __CLASS__;
+        return new $klass($tuleap_version, $matches[1]);
     }
 
-    private function getParentsList(array $parents) {
-        return implode(', ', array_map(array($this, 'getParentTitle'), $parents));
+    /**
+     * @return Section
+     */
+    public function addSectionFromChangeLog($line) {
+        $section = Section::buildFromChangeLog($line);
+        $this->sections[] = $section;
+        return $section;
     }
-
-    private function getParentTitle(Tracker_Artifact $artifact) {
-        return '"'.$artifact->getTitle().' ('.$artifact->fetchXRefLink().')"';
-    }
-
 }
-
 ?>

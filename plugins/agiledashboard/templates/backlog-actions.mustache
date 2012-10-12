@@ -4,7 +4,7 @@
         <ul class="dropdown-menu">
         {{#getBacklogTracker}}
             <li>
-                <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
+                <a href="/plugins/tracker/?tracker={{getId}}&func=new-artifact&child_milestone={{current_milestone_id}}&{{planning_redirect_parameter}}">{{getAddNewLabel}}</a>
             </li>
         {{/getBacklogTracker}}
         </ul>

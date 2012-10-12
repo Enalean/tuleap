@@ -124,7 +124,11 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
             )
         );
         
-        $f = $tf->getInstanceFromXML($xml, $mapping);
+        $tracker = aTracker()->build();
+        
+        stub($a_formelement)->setTracker($tracker)->once();
+        
+        $f = $tf->getInstanceFromXML($tracker, $xml, $mapping);
         
         $this->assertReference($f, $a_formelement);
         $this->assertReference($mapping['F0'], $a_formelement);
@@ -451,5 +455,35 @@ class Tracker_SharedFormElementFactoryDuplicateTest extends TuleapTestCase {
         
         $this->factory->fixOriginalFieldIdsAfterDuplication($this->project_id, $this->template_id, $field_mapping);
     }
+}
+
+class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->user    = mock('User');
+        $this->tracker = mock('Tracker');
+        $this->field   = mock('Tracker_FormElement_Field_ArtifactLink');
+
+        $this->factory = partial_mock('Tracker_FormElementFactory', array('getUsedArtifactLinkFields'));
+        stub($this->factory)->getUsedArtifactLinkFields($this->tracker)->returns(array($this->field));
+    }
+
+    public function itReturnsNullIfThereAreNoArtifactLinkFields() {
+        $factory = partial_mock('Tracker_FormElementFactory', array('getUsedArtifactLinkFields'));
+        stub($factory)->getUsedArtifactLinkFields($this->tracker)->returns(array());
+        $this->assertEqual($factory->getAnArtifactLinkField($this->user, $this->tracker), null);
+    }
+
+    public function itReturnsNullIfUserCannotSeeArtifactLinkField() {
+        stub($this->field)->userCanRead($this->user)->returns(false);
+        $this->assertEqual($this->factory->getAnArtifactLinkField($this->user, $this->tracker), null);
+    }
+
+    public function itReturnsFieldIfUserCanSeeArtifactLinkField() {
+        stub($this->field)->userCanRead($this->user)->returns(true);
+        $this->assertEqual($this->factory->getAnArtifactLinkField($this->user, $this->tracker), $this->field);
+    }
+
 }
 ?>

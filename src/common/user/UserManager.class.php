@@ -483,6 +483,10 @@ class UserManager {
                     //The delay is 2 sec/nb of bad attempt.
                     sleep(2 * $accessInfo['nb_auth_failure']);
                 }
+            } else {
+                //invalid user_name
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','invalid_pwd'));
+                
             }
         }
 

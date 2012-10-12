@@ -417,8 +417,20 @@ class Tracker_FormElementFactory {
     public function getUsedArtifactLinkFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('art_link'));
     }
-    
-    
+
+    /**
+     * Return the first (and only one) ArtifactLink field (if any)
+     *
+     * @return Tracker_FormElement_Field_ArtifactLink
+     */
+    public function getAnArtifactLinkField(User $user, Tracker $tracker) {
+        $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
+        if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {
+            return $artifact_link_fields[0];
+        }
+        return null;
+    }
+
     /**
      * @param Tracker $tracker
      *
@@ -579,7 +591,7 @@ class Tracker_FormElementFactory {
             $form_element_id = $row['id']; 
             $unused[$form_element_id] = $this->getCachedInstanceFromRow($row);
         }
-        return $unused;
+        return array_filter($unused);
     }
     
     public function getUsedFormElementForTracker($tracker) {
@@ -681,13 +693,13 @@ class Tracker_FormElementFactory {
     /**
      * Creates a Tracker_FormElement Object
      * 
+     * @param Tracker          $tracker     the new tracker
      * @param SimpleXMLElement $xml         containing the structure of the imported Tracker_FormElement
      * @param array            &$xmlMapping where the newly created formElements indexed by their XML IDs are stored
-     * @param Tracker          $tracker     to which the tooltip is attached
      * 
      * @return Tracker_FormElement Object 
      */
-    public function getInstanceFromXML($xml, &$xmlMapping) {
+    public function getInstanceFromXML(Tracker $tracker, $xml, &$xmlMapping) {
         $att = $xml->attributes();
         $row = array(
             'formElement_type' => (string)$att['type'],
@@ -705,6 +717,7 @@ class Tracker_FormElementFactory {
             'original_field_id'=> null,
         );
         $curElem = $this->getInstanceFromRow($row);
+        $curElem->setTracker($tracker);
         $xmlMapping[(string)$xml['ID']] = $curElem;
         $curElem->continueGetInstanceFromXML($xml, $xmlMapping);
         return $curElem;

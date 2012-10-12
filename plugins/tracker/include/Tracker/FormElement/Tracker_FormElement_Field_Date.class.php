@@ -50,7 +50,25 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             )
         )
     );
-    
+
+    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
+        if (isset($soap_criteria_value->dateAdvanced)) {
+            $criteria_date = $soap_criteria_value->dateAdvanced;
+            $criteria->setIsAdvanced(true);
+        } elseif (isset($soap_criteria_value->date)) {
+            $criteria_date = $soap_criteria_value->date;
+        } else {
+            return;
+        }
+
+        $criteria_value = array(
+            'op'        => !empty($criteria_date->op)        ? $criteria_date->op        : null,
+            'from_date' => !empty($criteria_date->from_date) ? $criteria_date->from_date : null,
+            'to_date'   => $criteria_date->to_date,
+        );
+        $this->setCriteriaValue($criteria_value);
+    }
+
     /**
      * Continue the initialisation from an xml (FormElementFactory is not smart enough to do all stuff.
      * Polymorphism rulez!!!
@@ -153,11 +171,10 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
                     $criteria_value['to_date'],
                     $b. '.value'
                 );
-                return " INNER JOIN tracker_changeset_value AS $a 
+                return " INNER JOIN tracker_changeset_value AS $a
                          ON ($a.changeset_id = c.id AND $a.field_id = $this->id )
                          INNER JOIN tracker_changeset_value_date AS $b
                          ON ($a.id = $b.changeset_value_id
-                             AND $b.value 
                              AND $compare_date_stmt
                          ) ";
             }
@@ -231,19 +248,19 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             if ( ! $to ) {
                 $to = PHP_INT_MAX; //infinity
             }
-            $and_compare_date = " $column BETWEEN ". $from ." 
-                                                   AND ". $to ." + 24 * 60 * 60 ";
+            $and_compare_date = "$column BETWEEN ". $from ."
+                                                   AND ". $to ." + 24 * 60 * 60";
         } else {
             switch ($op) {
                 case '<':
-                    $and_compare_date = " $column < ". $to; 
+                    $and_compare_date = "$column < ". $to; 
                     break;
                 case '=':
-                    $and_compare_date = " $column BETWEEN ". $to ."
-                                                           AND ". $to ." + 24 * 60 * 60 ";
+                    $and_compare_date = "$column BETWEEN ". $to ."
+                                                           AND ". $to ." + 24 * 60 * 60";
                     break;
                 default:
-                    $and_compare_date = " $column > ". $to ." + 24 * 60 * 60 ";
+                    $and_compare_date = "$column > ". $to ." + 24 * 60 * 60";
                     break;
             }
         }
@@ -420,13 +437,8 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        $html = '';
-        $value = '';        
-        if (!empty($submitted_values)) {            
-            $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
+        $html  = '';
+        $value = $this->getValueFromSubmitOrDefault($submitted_values);
         $html .= $GLOBALS['HTML']->getDatePicker("tracker_admin_field_".$this->id, "artifact[". $this->id ."]", $value);
         return $html;
     }

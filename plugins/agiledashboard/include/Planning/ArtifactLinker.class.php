@@ -21,7 +21,7 @@
 /**
  * Ensure consistency of backlogs.
  *
- * When an element is added to a Plannification item, it must be add to Parents
+ * When an element is added to a Plannification item, it must be added to Parents
  * plannification item as well
  *
  * Given I have following plannings
@@ -36,23 +36,59 @@
  */
 class Planning_ArtifactLinker {
     private $artifact_factory;
+    private $planning_factory;
 
-    public function __construct(Tracker_ArtifactFactory $artifact_factory) {
+    public function __construct(Tracker_ArtifactFactory $artifact_factory, PlanningFactory $planning_factory) {
         $this->artifact_factory = $artifact_factory;
+        $this->planning_factory = $planning_factory;
     }
 
-    public function linkWithParents(Codendi_Request $request, Tracker_Artifact $artifact) {
-        $user      = $request->getCurrentUser();
-        $ancestors = $artifact->getAllAncestors($user);
-        if (count($ancestors) == 0) {
-            $artifact_id     = (int)$request->getValidated('link-artifact-id', 'uint', 0);
-            $source_artifact = $this->artifact_factory->getArtifactById($artifact_id);
-            if ($source_artifact) {
-                foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
+    /**
+     * Ensure consistency of backlogs
+     *
+     * This method returns the last milestone artifact we linked $artifact with
+     *
+     * @param Codendi_Request  $request  The comment about the request parameter
+     * @param Tracker_Artifact $artifact The just created artifact
+     *
+     * @return Tracker_Artifact
+     */
+    public function linkBacklogWithPlanningItems(Codendi_Request $request, Tracker_Artifact $artifact) {
+        $user               = $request->getCurrentUser();
+        $milestone_artifact = $this->getMilestoneArtifact($user, $request, $artifact);
+        return $this->linkWithMilestoneArtifact($user, $artifact, $milestone_artifact);
+    }
+
+    private function getMilestoneArtifact(User $user, Codendi_Request $request, Tracker_Artifact $artifact) {
+        $source_artifact = null;
+        if ($request->exist('link-artifact-id')) {
+            $ancestors = $artifact->getAllAncestors($user);
+            if (count($ancestors) == 0) {
+                $source_artifact = $this->getSourceArtifact($request, 'link-artifact-id');
+            }
+        } else {
+            $source_artifact = $this->getSourceArtifact($request, 'child_milestone');
+        }
+        return $source_artifact;
+    }
+
+    private function getSourceArtifact(Codendi_Request $request, $key) {
+        $artifact_id = (int) $request->getValidated($key, 'uint', 0);
+        return $this->artifact_factory->getArtifactById($artifact_id);
+    }
+
+    private function linkWithMilestoneArtifact(User $user, Tracker_Artifact $artifact, Tracker_Artifact $source_artifact = null) {
+        $last_ancestor = $source_artifact;
+        if ($source_artifact) {
+            foreach ($source_artifact->getAllAncestors($user) as $ancestor) {
+                $planning = $this->planning_factory->getPlanningByPlanningTracker($ancestor->getTracker());
+                if ($planning && $planning->getBacklogTracker() == $artifact->getTracker()) {
                     $ancestor->linkArtifact($artifact->getId(), $user);
+                    $last_ancestor = $ancestor;
                 }
             }
         }
+        return $last_ancestor;
     }
 }
 

@@ -18,10 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/../include/autoload.php';
+require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemManager.class.php';
 require_once dirname(__FILE__).'/Constants.php';
 require_once dirname(__FILE__).'/builders/Parameters_Builder.php';
-require_once dirname(__FILE__).'/../include/FullTextSearchActions.class.php';
-require_once dirname(__FILE__) .'/../include/ElasticSearch/ClientFacade.class.php';
 
 class FullTextSearchActionsTests extends TuleapTestCase {
     protected $client;
@@ -31,6 +31,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+
         $this->client              = mock('FullTextSearch_IIndexDocuments');
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
         $this->actions = new FullTextSearchActions($this->client, $this->permissions_manager);

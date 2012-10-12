@@ -277,10 +277,9 @@ class Docman_Actions extends Actions {
 
             $eArray = array('group_id' => $item->getGroupId(),
                             'item'     => &$item,
-                            'version'  => $vId,
+                            'version'  => $newVersion,
                             'user'     => &$user);
-            $this->event_manager->processEvent('plugin_docman_event_new_version',
-                                               $eArray);
+            $this->event_manager->processEvent('plugin_docman_event_new_version', $eArray);
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_create_'.$_action_type));
 
             // Approval table
@@ -1023,6 +1022,7 @@ class Docman_Actions extends Actions {
             //clone permissions for sub items
             // Recursive application via a callback of Docman_Actions::recursivePermissions in
             // Docman_ItemFactory::breathFirst
+            $item_factory = $this->_getItemFactory();
             $item_factory->breathFirst($item->getId(), array(&$this, 'recursivePermissions'), array('id' => $item->getId()));
             $this->_controler->feedback->log('info', $GLOBALS['Language']->getText('plugin_docman', 'info_perms_recursive_updated'));
         }
