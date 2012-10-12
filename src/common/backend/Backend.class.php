@@ -81,7 +81,7 @@ class Backend {
      *
      * @return Backend
      */
-    public static final function instance($type = self::BACKEND, $base = null, $setup = null) {
+    public static function instance($type = self::BACKEND, $base = null, $setup = null) {
         if (!isset(self::$backend_instances[$type])) {
             $backend = null;
             
