@@ -71,7 +71,7 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
         $this->assertEqual($mock->greet('John Doe'), 'Hello, John Doe');
         $this->assertEqual($mock->greet('Rasmus', 'Lerdorf'), 'Hello, Rasmus Lerdorf');
     }
-
+    
     public function itEnsuresThatMethodIsCalledOnceWithoutArguments() {
         $mock = mock('Toto');
         stub($mock)->greet()->once();
@@ -110,12 +110,36 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
         $mock->greet('Rasmus', 'Lerdorf');
         $mock->greet();
     }
+    
+    public function itCanThrowExceptions() {
+        $mock = stub('Toto')->greet()->throws(new SomeException());
+        $this->expectException('SomeException');
+        $mock->greet();
+    }
+    
+    public function itCanThrowExceptionsDependingOnArguments() {
+        $mock = stub('Toto')->greet('john')->throws(new SomeException());
+        $mock->greet('dave');
+        $this->expectException('SomeException');
+        $mock->greet('john');
+    }
+    
+    public function itDoesNotStoreArgumentsBetweenThrowConfigurations() {
+        $mock = stub('Toto')->greet('john')->throws(new SomeException());
+        stub($mock)->sayGoodbye()->throws(new SomeException());
+        $this->expectException('SomeException');
+        $mock->sayGoodbye('dave'); 
+    }
 }
 
 class Toto {
 
     function greet() {
         // this function is mocked out in the tests
+    }
+    
+    function sayGoodBye() {
+        
     }
 
 }
@@ -124,5 +148,9 @@ class SomeClass {
     function someMethod() {
         // mocked
     }
+}
+
+class SomeException extends Exception {
+
 }
 ?>

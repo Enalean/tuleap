@@ -178,5 +178,14 @@ class OngoingIntelligentStub {
     public function returnsDarWithErrors() {
         return $this->returns(TestHelper::errorDar());
     }
+    
+    public function throws(Exception $e) {
+        if (empty($this->arguments)) {
+            $this->mock->throwOn($this->method, $e);
+        } else {
+            $this->mock->throwOn($this->method, $e, $this->arguments);
+        }
+        return $this->mock;
+    }
 }
 ?>
