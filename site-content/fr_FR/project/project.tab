@@ -452,6 +452,9 @@ project_admin_utils	verify_dates	La date de début doit être inférieure à la 
 project_admin_utils	from	Depuis
 project_admin_utils	to	Jusqu'a
 project_admin_utils	status	Statut modifié
+project_admin_utils	frs_self_add_monitor_package	Auto ajout du suivi de paquet
+project_admin_utils	frs_add_monitor_package	Ajout du suivi de paquet
+project_admin_utils	frs_stop_monitor_package	Arrêt du suivi de paquet
 #... end of values
 #
 #-----------------------------------------------

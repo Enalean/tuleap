@@ -36,6 +36,8 @@ global	btn_close	Close
 global	btn_reset	Reset
 global	reset	reset
 global	delete	Delete
+global	add	Add
+global	total	Total
 global	warning!	Warning!
 global	yes	Yes
 global	no	No

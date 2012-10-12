@@ -175,8 +175,8 @@ while (list ($package_id, $package) = each($packages)) {
                 //print '     &nbsp;&nbsp;&nbsp;&nbsp;<a href="admin/package.php?func=delete&amp;group_id='. $group_id .'&amp;id=' . $package_id .'" title="'. htmlentities($GLOBALS['Language']->getText('file_admin_editreleases', 'delete'), ENT_QUOTES, 'UTF-8') .'" onclick="return confirm(\''. htmlentities($GLOBALS['Language']->getText('file_admin_editpackages', 'warn'), ENT_QUOTES, 'UTF-8') .'\');">'. $GLOBALS['HTML']->getImage('ic/trash.png') .'</a>';
             }
             print ' &nbsp; ';
-            print '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '">';
-            if ($fmmf->isMonitoring($package_id)) {
+            print '  <a href="filemodule_monitor.php?filemodule_id=' . $package_id . '&group_id='.$group_id.'">';
+            if ($fmmf->isMonitoring($package_id, $user, false)) {
                 print '<img src="'.util_get_image_theme("ic/notification_stop.png").'" alt="'.$Language->getText('file_showfiles', 'stop_monitoring').'" title="'.$Language->getText('file_showfiles', 'stop_monitoring').'" />';
             } else {
                 print '<img src="'.util_get_image_theme("ic/notification_start.png").'" alt="'.$Language->getText('file_showfiles', 'start_monitoring').'" title="'.$Language->getText('file_showfiles', 'start_monitoring').'" />';
