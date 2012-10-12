@@ -104,6 +104,12 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         //
     }
     
+    public function itInformsAboutAnyDriverFailure() {
+        stub($this->driver)->createProject()->throws(new Exception("failure detail"));
+        expect($this->event)->error("failure detail")->once();
+        $this->event->process();
+    }
+    
 }
 
 class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
