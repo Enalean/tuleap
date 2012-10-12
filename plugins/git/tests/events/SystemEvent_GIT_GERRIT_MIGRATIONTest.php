@@ -85,24 +85,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
     }
     public function itInformsAboutPermissionsConfiguration() {
     }
-
-    public function itInformsAboutMissingIdentityFile() {
-        $identity_file = '/home/captainamerica/.ssh/id_dsa';
-        stub($this->server_factory)->getServer()->throws(new IdentityFileNotFoundException($identity_file));
-        expect($this->event)->error("The identity file $identity_file doesn't exist")->once();
-        $this->event->process();
-
-        //cant reach gerrit host
-//        stub($this->driver)->createProject()->throws(new UnreachableHost(host?))
-        //project already exists
-        //ssh connexion permission denied
-        //malformed gerrit host????
-        //groups already exists
-        
-        
         //list non added users (cause they're not in gerrit)
         //
-    }
     
     public function itInformsAboutAnyDriverFailure() {
         stub($this->driver)->createProject()->throws(new Exception("failure detail"));

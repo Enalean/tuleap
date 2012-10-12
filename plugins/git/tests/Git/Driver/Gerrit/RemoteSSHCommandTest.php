@@ -54,5 +54,17 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         expect($this->ssh)->sshExec('-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com a_remote_command')->once();
         $this->ssh->execute($this->config, 'a_remote_command');
     }
+    
+    //TODO uncomment
+    public function _itInformsAboutMissingIdentityFile() {
+        $non_existing_identity = '/home/captainamerica/.ssh/id_dsa';
+        try {
+            $this->ssh->sshExec("-i $non_existing_identity localhost ls");
+            $this->fail("expected IdentityFileNotFoundException");
+        } catch (Exception $e) {
+            $this->assertEqual($e->getMessage(), "The identity file $non_existing_identity doesn't exist");
+        }
+    }
+
 }
 ?>

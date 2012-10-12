@@ -85,5 +85,12 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand('gerrit.tuleap.net', 29418, 'johan', '~/.ssh/id_rsa.pub'));
         $driver->createProject($r);
     }
+    
+        //cant reach gerrit host
+        //project already exists
+        //ssh connexion permission denied
+        //malformed gerrit host????
+        //groups already exists
+
 }
 ?>
