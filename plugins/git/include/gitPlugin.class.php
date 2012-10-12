@@ -258,7 +258,7 @@ class GitPlugin extends Plugin {
         if ($retVal == 0) {
             return true;
         } else {
-            throw new Exception('Unable to dump ssh keys (error code: '.$retVal.'): '.implode('%%%', $output));
+            throw new Exception('Unable to dump ssh keys (error code: '.$retVal.'): '.implode("\n", $output));
             return false;
         }
     }
