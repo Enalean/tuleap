@@ -35,9 +35,10 @@ class User_SSHKeyValidator {
         $valid_keys = $this->validateAllKeys($all_keys);
 
         $user->setAuthorizedKeys(implode('###', $valid_keys));
-        $this->user_manager->updateDb($user);
-
-        $this->event_manager->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
+        if ($this->user_manager->updateDb($user)) {
+            $GLOBALS['Response']->addFeedback('info', "User keys updated in database, will be propagated on filesystem in a few minutes, please be patient.");
+            $this->event_manager->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
+        }
     }
 
     private function validateAllKeys(array $all_keys) {
