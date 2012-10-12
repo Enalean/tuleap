@@ -516,7 +516,7 @@ class GitDao extends DataAccessObject {
      */
     public function isRemoteServerUsed($remote_server_id) {
         $remote_server_id = $this->da->escapeInt($remote_server_id);
-        echo $sql = "SELECT NULL
+        $sql = "SELECT NULL
                 FROM plugin_git
                 WHERE remote_server_id = $remote_server_id
                 LIMIT 1";
