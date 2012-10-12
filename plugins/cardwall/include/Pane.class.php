@@ -52,11 +52,17 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $user;
 
-    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user) {
+    /**
+     * @var string
+     */
+    private $plugin_theme_path;
+
+    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user, $plugin_theme_path) {
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
         $this->user           = $user;
+        $this->plugin_theme_path = $plugin_theme_path;
     }
 
     /**
@@ -77,9 +83,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getIcon()
      */
     public function getIcon() {
-        return "/plugins/cardwall/themes/default/images/ic/sticky-note-pin.png";
-        //TODO: use this one
-        return CARDWALL_BASE_URL.$GLOBALS['HTML']->getImagePath('ic/sticky-note-pin.png');
+        return $this->plugin_theme_path .'/images/ic/sticky-note-pin.png';
     }
 
     /**
