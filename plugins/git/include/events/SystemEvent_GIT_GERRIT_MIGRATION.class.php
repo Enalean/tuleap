@@ -47,6 +47,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         $repository = $this->repository_factory->getRepositoryById($repo_id);
         $server     = $this->server_factory->getServer($repository);
         $this->driver->createProject($server, $repository);
+        $this->done();
+        return true;
+        
     }
 
     /**
