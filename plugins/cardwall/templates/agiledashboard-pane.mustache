@@ -1,5 +1,8 @@
 <p class="cardwall_board-actions">
-    <a href="{{configure_url}}">Configure</a>
+    {{#canConfigure}}
+        <a href="{{configure_url}}">Configure</a>
+    {{/canConfigure}}
 </p>
+
 {{> board}}
 {{> qr-code}}
