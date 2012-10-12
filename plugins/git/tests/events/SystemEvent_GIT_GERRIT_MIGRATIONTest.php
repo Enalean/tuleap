@@ -33,6 +33,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
     protected $driver;
     protected $repository;
     protected $gerrit_server;
+    protected $server_factory;
     
     public function setUp() {
         parent::setUp();
@@ -72,6 +73,12 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
     public function itLogsErrors() {
     }
     public function itLogsInformationAboutProgress() {
+        $remote_project = 'tuleap.net-Firefox/mobile';
+        $gerrit_host  = 'gerrit.instance.net';
+        stub($this->driver)->createProject()->returns($remote_project);
+        stub($this->gerrit_server)->getHost()->returns($gerrit_host);
+        expect($this->event)->done("Created project $remote_project on $gerrit_host")->once();
+        $this->event->process();
     }
     
 }

@@ -69,6 +69,11 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $this->driver->createProject($this->gerrit_server, $this->repository);
     }
     
+    public function itReturnsTheNameOfTheCreatedProject() {
+        $project_name = $this->driver->createProject($this->gerrit_server, $this->repository);
+        $this->assertEqual($project_name, $this->host."-firefox/jean-claude/dusse");
+    }
+    
     public function _itCallsTheRealThing() {
         $r = new GitRepository();
         $r->setName('dusse');
@@ -79,7 +84,6 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
 
         $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand('gerrit.tuleap.net', 29418, 'johan', '~/.ssh/id_rsa.pub'));
         $driver->createProject($r);
-
     }
 }
 ?>

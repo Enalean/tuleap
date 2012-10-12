@@ -40,6 +40,7 @@ class Git_Driver_Gerrit {
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
         $this->ssh->execute($server, self::GERRIT_COMMAND ."create-project $host-$project/$repo");
+        return "$host-$project/$repo";
     }
 }
 
