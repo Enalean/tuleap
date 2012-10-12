@@ -20,7 +20,7 @@
  */
 
 class Git_RemoteServer_Dao extends DataAccessObject {
-    
+
     public function searchById($id) {
         $id = $this->da->escapeInt($id);
         $sql = "SELECT * 
@@ -28,10 +28,21 @@ class Git_RemoteServer_Dao extends DataAccessObject {
                 WHERE id = $id";
         return $this->retrieve($sql);
     }
-    
+
     public function searchAll() {
         $sql = "SELECT * FROM plugin_git_remote_servers";
         return $this->retrieve($sql);
+    }
+
+    public function save($id, $host, $port, $login, $identity_file) {
+        $id            = $this->da->escapeInt($id);
+        $host          = $this->da->quoteSmart($host);
+        $port          = $this->da->escapeInt($port);
+        $login         = $this->da->quoteSmart($login);
+        $identity_file = $this->da->quoteSmart($identity_file);
+        $sql = "REPLACE INTO plugin_git_remote_servers (id, host, port, login, identity_file)
+                VALUES ($id, $host, $port, $login, $identity_file)";
+        return $this->update($sql);
     }
 }
 

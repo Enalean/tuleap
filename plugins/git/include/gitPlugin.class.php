@@ -80,7 +80,7 @@ class GitPlugin extends Plugin {
     }
 
     public function site_admin_option_hook() {
-        $url  = $this->getPluginPath().'/';
+        $url  = $this->getPluginPath().'/admin/';
         $name = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         echo '<li><a href="', $url, '">', $name, '</a></li>';
     }
@@ -190,6 +190,16 @@ class GitPlugin extends Plugin {
         require_once('Git.class.php');
         $controler = new Git($this, $this->getGerritServerFactory());
         $controler->process();
+    }
+
+    /**
+     * We expect that the check fo access right to this method has already been done by the caller
+     */
+    public function processAdmin(Codendi_Request $request) {
+        require_once GIT_BASE_DIR .'/Git/Admin.class.php';
+        $admin = new Git_Admin($this->getGerritServerFactory());
+        $admin->process($request);
+        $admin->display();
     }
 
     /**
@@ -588,6 +598,7 @@ class GitPlugin extends Plugin {
     }
 
     public function getGerritServerFactory() {
+        require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
         return new Git_RemoteServer_GerritServerFactory(new Git_RemoteServer_Dao());
     }
 }

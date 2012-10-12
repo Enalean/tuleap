@@ -47,9 +47,19 @@ class Git_RemoteServer_GerritServerFactory {
     public function getServers() {
         $servers = array();
         foreach ($this->dao->searchAll() as $row) {
-            $servers[] = $this->instantiateFromRow($row);
+            $servers[$row['id']] = $this->instantiateFromRow($row);
         }
         return $servers;
+    }
+
+    public function save(Git_RemoteServer_GerritServer $server) {
+        $this->dao->save(
+            $server->getId(),
+            $server->getHost(),
+            $server->getPort(),
+            $server->getLogin(),
+            $server->getIdentityFile()
+        );
     }
 
     private function instantiateFromRow(array $row) {

@@ -50,11 +50,11 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'login'         => $this->login,
             'identity_file' => $this->identity_file
         );
-        $dao = mock('Git_RemoteServer_Dao');
-        stub($dao)->searchAll()->returnsDar($dar_1, $dar_2);
-        stub($dao)->searchById($this->server_id)->returnsDar($dar_1);
-        stub($dao)->searchById()->returnsEmptyDar();
-        $this->factory = new Git_RemoteServer_GerritServerFactory($dao);
+        $this->dao = mock('Git_RemoteServer_Dao');
+        stub($this->dao)->searchAll()->returnsDar($dar_1, $dar_2);
+        stub($this->dao)->searchById($this->server_id)->returnsDar($dar_1);
+        stub($this->dao)->searchById()->returnsEmptyDar();
+        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao);
 
         $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
             $this->server_id,
@@ -91,7 +91,13 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
     public function itGetsAllServers() {
         $servers = $this->factory->getServers();
-        $this->assertEqual($servers, array($this->main_gerrit_server, $this->alt_gerrit_server));
+        $this->assertEqual($servers, array(1 => $this->main_gerrit_server, 2 => $this->alt_gerrit_server));
+    }
+
+    public function itSavesAnExistingServer() {
+        $this->main_gerrit_server->setLogin('new_login');
+        expect($this->dao)->save($this->server_id, $this->host, $this->port, 'new_login', $this->identity_file)->once();
+        $this->factory->save($this->main_gerrit_server);
     }
 }
 
