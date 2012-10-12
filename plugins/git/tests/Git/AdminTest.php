@@ -25,9 +25,10 @@ class Git_Admin_process_Test extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->factory = mock('Git_RemoteServer_GerritServerFactory');
-        $this->admin = new Git_Admin($this->factory);
         $this->request = aRequest()->build();
+        $this->csrf    = $this->setUpCSRF();
+        $this->factory = mock('Git_RemoteServer_GerritServerFactory');
+        $this->admin   = new Git_Admin($this->factory, $this->csrf);
 
         $this->request_new_server = array(
             'host'          => 'host',
@@ -47,11 +48,32 @@ class Git_Admin_process_Test extends TuleapTestCase {
         stub($this->factory)->getServers()->returns(array(
             1 => $this->an_existing_server
         ));
+
+        $this->request->set($this->csrf->getTokenName(), $this->csrf->getToken());
+    }
+
+    /**
+     * @return CSRFSynchronizerToken
+     */
+    private function setUpCSRF() {
+        $user = mock('User');
+        $csrf = TestHelper::getPartialMock('CSRFSynchronizerToken', array('getUser'));
+        stub($csrf)->getUser()->returns($user);
+        $csrf->__construct('/plugin/git/admin/');
+        return $csrf;
     }
 
     public function itDoesNotSaveAnythingIfTheRequestIsNotValid() {
         $this->request->set('gerrit_servers', false);
         expect($this->factory)->save()->never();
+        $this->admin->process($this->request);
+    }
+
+    public function itGivesUpIfTheRequestIsForged() {
+        $this->request->set('gerrit_servers', array(0 => $this->request_new_server));
+        $this->request->set($this->csrf->getTokenName(), 'a-F0rG3d-7ok3N');
+        stub($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        stub($GLOBALS['Response'])->redirect('/plugin/git/admin/')->once();
         $this->admin->process($this->request);
     }
 

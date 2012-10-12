@@ -28,13 +28,18 @@ class Git_Admin {
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
 
-    public function __construct(Git_RemoteServer_GerritServerFactory $gerrit_server_factory) {
+    /** @var CSRFSynchronizerToken */
+    private $csrf;
+
+    public function __construct(Git_RemoteServer_GerritServerFactory $gerrit_server_factory, CSRFSynchronizerToken $csrf) {
         $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->csrf                  = $csrf;
     }
 
     public function process(Codendi_Request $request) {
         $request_gerrit_servers = $request->get('gerrit_servers');
         if (is_array($request_gerrit_servers)) {
+            $this->csrf->check();
             $gerrit_servers = $this->getGerritServers();
             $this->updateServers($request_gerrit_servers, $gerrit_servers);
         }
@@ -47,7 +52,7 @@ class Git_Admin {
         $html  = '';
         $html .= '<h1>'. $title .'</h1>';
         $html .= '<form method="POST" action="">';
-        //TODO: CSRF!
+        $html .= $this->token->fetchHTMLInput();
         $html .= '<h2>'. 'Admin gerrit servers' .'</h2>';
         $html .= '<dl>';
         foreach ($servers as $server) {
