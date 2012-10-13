@@ -1,3 +1,169 @@
+Version 0.54 - Tuleap 5.5
+    * Fix sla #1444: artifacts with two parents throw an exception
+
+Version 0.53 - Tuleap 5.5
+    * Fix sla #1444 - Tracker page don't display when cardwall is activated
+
+Version 0.52 - Tuleap 5.5
+    * Fix fatal error when no planning on parent
+
+Version 0.51 - Tuleap 5.4
+    * Create backlog item in milestone context: choose parent upon artifact creation
+
+Version 0.50 - Tuleap 5.4
+    * Finally allow to properly create Story directly into a Sprint (actually any kind of backlog stuff in a plan stuff).
+      It will automatically handle the parent creation or linking and create everything in the corresponding backlogs.
+
+Version 0.49 - Tuleap 5.4
+    * First step toward autoloading in order to increase performances
+
+Version 0.48 - Tuleap 5.4
+    * Display all parents in backlog (allow to create children and make priority setting more coherent)
+    * Replace drag'n drop for planning by action arrows (drag'n drop still possible for priority setting)
+    * Add action arrows for priority setting
+
+Version 0.47 - Tuleap 5.4
+    * Fix fatal error when an artifact has several parents.
+
+Version 0.46 - Tuleap 5.4
+    * Reduce number of click to get on agile dashboard.
+    * Allow to switch from one sprint to another from cardwall
+    * Display only sibling sprints in selector
+    * Allow to create epics directly into release plan
+
+Version 0.45 - Tuleap 5.3
+    * Fix selection of backlog tracker
+    * Fix display of remaining effort
+
+Version 0.44 - Tuleap 5.3
+    * Centralize management of ancestors in Planning view.
+
+Version 0.43 - Tuleap 5.3
+    * Fix bug on breadcrumbs display (wrong order of planning parents).
+
+Version 0.42 - Tuleap 5.3
+    * Breadcrumbs display context (A sprint in a release)
+    * When a sprint belong to a release, the release backlog is displayed by default.
+
+Version 0.41 - Tuleap 5.3
+    * Field values (remaining_effort, impediment, assigned_to) are displyed on planning cards
+
+Version 0.40 - Tuleap 5.3
+    * Refactoring: Second stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.39 - Tuleap 5.3
+    * Display a feedback when the user D'nD things
+
+Version 0.38 - Tuleap 5.3
+    * Display remaining effort and capacity in planning view
+
+Version 0.36 - Tuleap 5.3
+    * Allow to sort artifacts in the planning by drag 'n droping
+
+Version 0.35 - Tuleap 5.3
+    * Refactoring: First stage of TreeNode clean-up across tracker/planning/cardwall
+
+Version 0.34 - Tuleap 5.3
+    * Update mustache renderer
+
+Version 0.33 - Tuleap 5.2
+    * Fix fatal error while duplicating planning
+
+Version 0.32 - Tuleap 5.2
+     * Fix regression introduced in 0.31 on templates
+
+Version 0.31 - Tuleap 5.2
+     * Fix display of hierarchy on backlog side
+     * Add expand collapse on cards
+
+Version 0.30 - Tuleap 5.2
+     * Allow plugins to add panes in the dashboard (on a milestone)
+
+Version 0.29 - Tuleap 5.2
+     * Fix bug when attempt to create an artifact in an empty milestone.
+
+Version 0.28 - Tuleap 5.2
+     * Allow edition of an existing planning
+
+Version 0.26 - Tuleap 5.2
+     * Introduce base interface for \Planning\Milestone
+
+Version 0.25 - Tuleap 5.2
+     * Fix merge issue at commit #ee35e7d7ba0f
+
+Version 0.24 - Tuleap 5.2
+     * Fix bug when artifacts are displayed on both side of the planning
+
+Version 0.23 - Tuleap 5.2
+     * Only one tracker can be selected for backlog
+     * Inherit columns titles definition from project templates
+
+Version 0.22 - Tuleap 5.2
+     * One can add new content into backlog when the backlog is empty.
+
+Version 0.21 - Tuleap 5.2
+     * Display planning sub-elements (eg. On release planning view, display sprints).
+
+Version 0.20 - Tuleap 5.2
+     * Refactoring of "external permissions"
+     * Display all sub hierarchy in the planning instead of just the first
+       level
+
+Version 0.19 - Tuleap 5.1
+    * Heavy refactoring of AgilePlannification now known as Milestone
+    * Take permissions on tracker cross search (v5.7.13) into account.
+
+Version 0.18 - Tuleap 5.1
+    * Clean-up refactoring of view builder
+
+Version 0.17 - Tuleap 5.1
+    * Allow to define a name for each planning pane (Backlog/Plan)
+    * Refactoring of view builder + rename to make code a little bit more readable.
+    * Fix issues with IE7
+
+Version 0.16 - Tuleap 5.1
+    * Some refactoring and polishing of version 0.16
+
+Version 0.15 - Tuleap 5.1
+    * Allow to create new elements from the Planning interface.
+      * For instance, for sprint planning: New sprints, new stories into the
+	current sprint, new tasks in planned stories, ...
+
+Version 0.14 - Tuleap 5.1
+    * Check permissions
+
+Version 0.13 - Tuleap 5.0
+    * Inherit planning definition from project templates
+
+Version 0.12 - Tuleap 5.0
+    * Adapt code after Tracker v5.7 update
+    * Planning view now takes into account user permissions on planning tracker and artifact_link field on planning tracker.
+
+Version 0.11 - Tuleap 5.0
+    * Take into account cross search based on artifact link (see tracker 5.6 changelog for details)
+
+Version 0.10 - Tuleap 5.0
+    * Remove an artifact already planified
+    
+Version 0.9 - Tuleap 5.0
+    * Take into account cross tracker search based on semantic (see tracker 5.5 changelog for details).
+
+Version 0.8 - Tuleap 5.0
+    * Improve styling of cards when they are planned
+    * Allow to remove one artifact from a planning
+
+Version 0.7.1 - Tuleap 5.0
+    * Refactoring.
+    
+Version 0.7 - Tuleap 4.0.28
+    * Add install and uninstall db scripts
+    
+Version 0.6 - Tuleap 4.0.28
+    * Introduce a plannification view. 
+      It enables agile teams to organise their release or sprint backlogs.
+      The user search for items (say user stories) and drag 'n drop them 
+      in a specific release.
+
 Version 0.5 - Tuleap 4.0.28
     * Transfer cross tracker search into tracker plugin
 

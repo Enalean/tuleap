@@ -6,3 +6,31 @@ plugin_cardwall	title	Card Wall
 plugin_cardwall	warn_no_values	There is no values in the field $1. Please choose another one.
 plugin_cardwall	warn_please_choose	Please select a field to group artifacts in columns.
 plugin_cardwall	nifty_view	free-hand drawing view
+
+plugin_cardwall	on_top_short_title	Card Wall
+plugin_cardwall	on_top_title	Card Wall
+plugin_cardwall	on_top_description	Manage card wall options
+plugin_cardwall	on_top_enabled	Now a cardwall exists on top of the tracker
+plugin_cardwall	on_top_disabled	Cardwall disabled
+plugin_cardwall	on_top_use_freestyle	Use a custom set of columns
+plugin_cardwall	on_top_label	Enable cardwall on top of this tracker
+plugin_cardwall	on_top_miss_status	The tracker must have a status semantic
+plugin_cardwall	configure_cardwall_label	Configure
+plugin_cardwall	details	details
+plugin_cardwall	on_top_new_column	New column:
+plugin_cardwall	on_top_column_placeholders	Todo|On Going|Done|Done-Done
+plugin_cardwall	on_top_column_placeholder_default	On Going
+plugin_cardwall	on_top_column_placeholder_suggestion	E.g.: $1
+plugin_cardwall	on_top_no_matching_for_column	No matching for this column
+plugin_cardwall	on_top_custom_mapping	Custom mapping
+plugin_cardwall	on_top_no_values	There isn't any value
+plugin_cardwall	on_top_column_added	Column added
+plugin_cardwall	on_top_column_removed	Column removed
+plugin_cardwall	on_top_column_changed	Column $1 changed
+plugin_cardwall	on_top_mapping_added	Mapping on $1 added
+plugin_cardwall	on_top_mapping_removed	Mapping on $1 removed
+plugin_cardwall	on_top_mapping_changed	Mapping on $1 changed to $2
+plugin_cardwall	on_top_mapping_values_changed	Values mapping changed for "$1" field
+plugin_cardwall	on_top_semantic_status_column_definition_speech	<p>The columns used for the cardwall are bound to the Status Semantic.</p>
+plugin_cardwall	on_top_semantic_freestyle_column_definition_speech_no_column	<p>You can define your own set of columns for the cardwall. Values will be associated is they match column title (be careful to lower case/upper case).</p>
+plugin_cardwall	on_top_semantic_freestyle_column_definition_speech_with_columns	<p>Note: you can delete a column by removing its name (make text field blank).</p>

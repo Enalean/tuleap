@@ -1,3 +1,171 @@
+#planner {
+    position: relative;
+}
+#planner .planner_feedback {
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: visibility 0s linear 0.5s,opacity 0.5s linear;
+    -moz-transition: visibility 0s linear 0.5s,opacity 0.5s linear;
+    -o-transition: visibility 0s linear 0.5s,opacity 0.5s linear;
+    transition: visibility 0s linear 0.5s,opacity 0.5s linear;
+}
+#planner .planner_feedback > div {
+    display: inline-block;
+    margin: 0 auto;
+}
+#planner .planner_feedback > div > .feedback_info,
+#planner .planner_feedback > div > .feedback_warning {
+    margin: 0;
+}
+#planner.show_feedback .planner_feedback {
+    opacity: 1;
+    visibility: visible;
+    transition-delay: 0s;
+}
 .agiledashboard .tracker_report_criteria_advanced_toggle {
     display: none;
+}
+
+.agiledashboard label {
+    font-weight: bold;
+}
+
+.planning-backlog > table {
+    width: 100%;
+}
+.planning-backlog .tracker_report_query {
+    z-index: inherit;
+}
+.agiledashboard .release_planner {
+    border: 1px solid lightgray;
+    padding: 0 0.5em;
+}
+
+.release_planner > .tracker_artifact_title {
+    margin-bottom:0;
+    margin-top: 0.5em;
+}
+.release_planner > .help {
+    color: #999;
+    margin-top: 0;
+}
+
+.agiledashboard .cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.agiledashboard .cards .cards {
+  margin-left: 2em;
+}
+
+.planning-item > .card,
+.planning-item > .card > .card-container {
+    background: #f8f8f8;
+}
+
+.planning-item.planning-draggable > .card,
+.planning-item.planning-draggable > .card > .card-container {
+    background: #ffe;
+    font-style: normal;
+}
+
+.milestone-content > ul.cards,
+.backlog-content > ul.cards {
+    min-height: 1.5em;
+}
+
+.backlog-actions, 
+.card-actions {
+    float:right;
+}
+
+.backlog-content {
+    clear:both;
+    padding-top: 0.5em;
+}
+.release_planner {
+    background: white;
+}
+
+.planning-backlog-hover .tracker_report_renderer,
+.planning-droppable-hover {
+    background: #fcfcfc;
+    -moz-box-shadow:1px 1px 3px rgba(33,33,33, .7) inset;
+    -webkit-box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+    box-shadow: 1px 1px 3px rgba(33,33,33,.7) inset;
+}
+
+.planning-artifact-chooser {
+    padding: 0.5em 1em;
+}
+.planning-artifact-chooser > option {
+}
+
+/* {{{ same as card-actions in tracker style.css */
+.backlog-actions {
+    float:right;
+}
+.backlog-actions ul {
+    list-style: none;
+    padding: 0.25em 0.5em;
+}
+.backlog-actions .caret {
+  margin-top: 6px;
+}
+.backlog-actions:hover .caret {
+  opacity: 1;
+  filter: alpha(opacity=100);
+}
+.backlog-actions .dropdown.open .dropdown-toggle {
+    color: #005580;
+    background: none;
+}
+/* }}} */
+
+.agiledashboard hr {
+    border:0px; 
+    border-top:1px solid #ccc;
+}
+
+.toggle-collapse {
+    display: inline-block;
+    width: .8em;
+}
+
+.planning_overcapacity {
+    font-weight: bold;
+}
+
+.planning_overcapacity .planning_remaining_effort {
+    color: red;
+}
+
+.card-planning-controls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    opacity:0.1;
+}
+.card:hover > .card-planning-controls {
+    opacity:0.5;
+}
+.card > .card-planning-controls:hover {
+    opacity:1;
+}
+
+.card-planning-controls > div {
+    padding: 0.5em 0.5em 0em;
+    background: rgba(128, 128, 128, 0.1);
+    -webkit-border-top-left-radius: 1em;
+    -moz-border-radius-topleft: 1em;
+    border-top-left-radius: 1em;
+}
+.card-planning-controls > div > i {
+    cursor: pointer;
+    opacity:0.5;
+}
+.card-planning-controls > div > i:hover {
+    opacity:1;
 }

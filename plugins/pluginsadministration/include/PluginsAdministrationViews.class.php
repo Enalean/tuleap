@@ -341,7 +341,7 @@ EOS;
             $this->_plugins    = array();
             $this->_priorities =  array();
             
-            $plugin_hook_priority_manager =& new PluginHookPriorityManager();
+            $plugin_hook_priority_manager = new PluginHookPriorityManager();
             $plugin_manager               =& PluginManager::instance();
             try {
                 $forgeUpgradeConfig = new ForgeUpgradeConfig();

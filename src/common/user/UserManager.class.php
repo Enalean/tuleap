@@ -45,10 +45,18 @@ class UserManager {
      */
     public static function instance() {
         if (!isset(self::$_instance)) {
-            $c = __CLASS__;
-            self::$_instance = new $c();
+            $userManager = __CLASS__;
+            self::$_instance = new $userManager();
         }
         return self::$_instance;
+    }
+    
+    public static function setInstance($instance) {
+        self::$_instance = $instance;
+    }
+    
+    public static function clearInstance() {
+        self::$_instance = null;
     }
     
     /**
@@ -475,6 +483,10 @@ class UserManager {
                     //The delay is 2 sec/nb of bad attempt.
                     sleep(2 * $accessInfo['nb_auth_failure']);
                 }
+            } else {
+                //invalid user_name
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_session','invalid_pwd'));
+                
             }
         }
 

@@ -53,31 +53,12 @@ codendi.imgroot = codendi.imgroot || '/themes/common/images/';
 codendi.locales = codendi.locales || { };
 
 codendi.getText = function(key1, key2) {
-    return codendi.locales[key1][key2];
+    var str = codendi.locales[key1][key2];
+    str = $A(arguments).slice(2).inject(str, function (str, value, index) {
+        return str.gsub('$' + (index + 1), value);
+    });
+    return str
 };
-
-codendi.feedback = {
-    log: function (level, msg) {
-        var feedback = $('feedback');
-        if (feedback) {
-            var current = null;
-            if (feedback.childElements().size() && (current = feedback.childElements().reverse(0)[0]) && current.hasClassName('feedback_' + level)) {
-                current.insert(new Element('li').update(msg));
-            } else {
-                feedback.insert(new Element('ul').addClassName('feedback_'+level).insert(new Element('li').update(msg)));
-            }
-        } else {
-            alert(level + ': ' + msg);
-        }
-    },
-    clear: function () {
-        var feedback = $('feedback');
-        if (feedback) {
-            feedback.update('');
-        }
-    }
-};
-
 
 document.observe('dom:loaded', function () {
     

@@ -53,10 +53,16 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
     function process() {
 
         $groups=explode(',',$this->parameters);
+        
+        $backendSystem = Backend::instance('System');
+        
+        // Force NSCD flush (otherwise uid & gid will not exist)
+        $backendSystem->flushNscdAndFsCache();
+        
         foreach ($groups as $group_id) {
         
             if ($project = $this->getProject($group_id)) {
-                $backendSystem = Backend::instance('System');
+                
                 if (!$backendSystem->createProjectHome($group_id)) {
                     $this->error("Could not create project home");
                     return false;
@@ -85,8 +91,7 @@ class SystemEvent_PROJECT_CREATE extends SystemEvent {
                 $backendSystem->log("Project ".$project->getUnixName()." created");            
             }
         }
-        // Need to update system group cache
-        $backendSystem->setNeedRefreshGroupCache();
+
 
         $this->done();
         return true;

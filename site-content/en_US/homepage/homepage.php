@@ -20,57 +20,42 @@
 // customized in etc/site-content homepage.tab, we display him
 // instead of following text.
 if ($Language->hasText('homepage', 'introduction')) {
-    echo stripcslashes($Language->getText('homepage', 'introduction',array($GLOBALS['sys_org_name'],$GLOBALS['sys_name'])));
+    echo stripcslashes($Language->getText('homepage', 'introduction', array($GLOBALS['sys_org_name'], $GLOBALS['sys_name'])));
     return;
 }
 
-if (isset($GLOBALS['sys_exchange_policy_url'])) {
-    $exchangePolicyUrl = $GLOBALS['sys_exchange_policy_url'];
-} else {
-    $exchangePolicyUrl = "/plugins/docman/?group_id=1";
+$main_content_span = 'span12';
+$login_input_span  = 'span3';
+if ($display_homepage_news) {
+    $main_content_span = 'span8';
+    $login_input_span  = 'span2';
 }
 ?>
+
+
 <div class="hero-unit">
-    <h1>Collaborative Software Development at <?= $GLOBALS['sys_org_name']?></h1>
-    <p><a href="/docs/site/about_codendi.php"><?= $GLOBALS['sys_name']?></a> is a service to all 
-    <?= $GLOBALS['sys_org_name']?> software development teams.</p>
-
-    <P><?= $GLOBALS['sys_name']?> offers an easy access to a full featured and totally web-based project management environment.
-    Using <?= $GLOBALS['sys_name']?> project teams can better focus on software development while making their community of users
-    and developers grow.</p>
-    <p><a href="/plugins/docman/?group_id=1" class="btn btn-large">Learn more on <?= $GLOBALS['sys_name']?> Services »</a></p>
+    <?php include($Language->getContent('homepage/homepage_herounit', null, null, '.php')); ?>
 </div>
+
 <div class="row-fluid">
-    <div class="span4">
-        <h2>Site Participation</h2>
-        <p>In order to get the most out of <?= $GLOBALS['sys_name']?>, you should 
-        <a href="/account/register.php">register as a site user</a>. It's easy and 
-        fast and it allows you to participate fully in all we have to offer. Also 
-        make sure you read the <b><A href="<?php echo $exchangePolicyUrl ?>">
-        <?= $GLOBALS['sys_org_name']?> Code Exchange Policy</a></b> before using this site.</p>
-        <p><a href="/account/login.php" class="btn btn-primary btn-large">Login to <?= $GLOBALS['sys_name']?> <i class="icon-chevron-right icon-white"></i></a><br>
-        Or <a href="/account/register.php">register a new account</a>
-        </p>
+    <div class="<?= $main_content_span ?>">
+        <div class="row-fluid">
+            <div class="span6">
+                <?php include($Language->getContent('homepage/homepage_about', null, null, '.php')); ?>
+            </div>
+            <div class="span6">
+                <?php include($Language->getContent('homepage/homepage_interactions', null, null, '.php')); ?>
+            </div>
+        </div>
+        <?php include($Language->getContent('homepage/homepage_boxes', null, null, '.php')); ?>
     </div>
-
-    <div class="span4">
-        <h2>Set Up Your Own Project</h2>
-        <p>After you <A href="/account/register.php">register as a site user</A>, you can 
-        <A HREF="/account/login.php">login</A> and <A HREF="/project/register.php">register your project</A>.
-        It only takes a couple of minutes to get a fully working environment to share your code.</p>
-        <p><a HREF="/project/register.php" class="btn">Register your project »</a></p>
-   </div>
-
-   <div class="span4">
-        <h2>CLI</h2>
-        <p>This site provides a Command Line Interface based on the <a href="/soap/index.php">SOAP API</a> 
-        to access it through a command line client. You can download the 
-        <a href="/downloads/Codendi_CLI.zip">CLI client</a> and its 
-        <a href="documentation/cli/pdf/en_US/Codendi_CLI.pdf">documentation</a>.</p>
-        <p><a HREF="/downloads/Codendi_CLI.zip" class="btn">Download the CLI client <i class="icon-download-alt"></i></a></p>
-   </div>
+    <?php include($Language->getContent('homepage/homepage_news', null, null, '.php')); ?>
 </div>
 
 <?php
-// Because of to aggressive continuous integration check on closing tags...
+
+//tell the upper script that it should'nt display boxes
+$display_homepage_boxes = false;
+$display_homepage_news  = false;
+
 ?>

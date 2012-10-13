@@ -18,7 +18,7 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once('exceptions/GitRepositoryException.class.php');
+require_once('GitRepositoryException.class.php');
 
 /**
  * Description of GitRepositoryAlreadyExistsException

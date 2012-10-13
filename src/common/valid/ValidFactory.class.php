@@ -23,17 +23,24 @@
 require_once('common/valid/Valid.class.php');
 
 /**
- * Check that value is a decimal integer greater or equal to zero.
- * @package Codendi
+ * Check that value is a decimal integer.
  */
-class Valid_UInt
+class Valid_Int
 extends Valid {
     function validate($value) {
         $this->addRule(new Rule_Int());
+        return parent::validate($value);
+    }
+}
+
+/**
+ * Check that value is a decimal integer greater or equal to zero.
+ */
+class Valid_UInt extends Valid_Int {
+    function validate($value) {
         $this->addRule(new Rule_GreaterOrEqual(0));
         return parent::validate($value);
     }
-
 }
 
 /**
@@ -91,7 +98,7 @@ extends Valid_Text {
 }
 
 /**
- * Check that value is a string with neither carrige return nor null char.
+ * Check that value is an array.
  */
 class Valid_Array
 extends Valid {
@@ -103,7 +110,7 @@ extends Valid {
 
 
 /**
- * Wrapprt for 'WhiteList' rule
+ * Wrapper for 'WhiteList' rule
  */
 class Valid_WhiteList
 extends Valid {

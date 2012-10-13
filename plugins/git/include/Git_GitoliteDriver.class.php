@@ -21,11 +21,12 @@
 
 require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
-require_once 'common/permission/PermissionsManager.class.php';
+require_once 'common/project/UGroupManager.class.php';
+require_once 'common/project/UGroupLiteralizer.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
-require_once 'exceptions/Git_Command_Exception.class.php';
 require_once 'PathJoinUtil.php';
+require_once 'Git_Exec.class.php';
 
 
 /**
@@ -43,13 +44,20 @@ require_once 'PathJoinUtil.php';
  *
  */
 class Git_GitoliteDriver {
+
+    /**
+     * @var Git_Exec
+     */
+    private $gitExec;
+
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
-
-    public function repoFullName(GitRepository $repo, $unix_name) {
-        return unixPathJoin(array($unix_name, $repo->getFullName()));
-    }
+    public static $permissions_types = array(
+        Git::PERM_READ  => ' R  ',
+        Git::PERM_WRITE => ' RW ',
+        Git::PERM_WPLUS => ' RW+'
+    );
 
     /**
      * Constructor
@@ -57,13 +65,18 @@ class Git_GitoliteDriver {
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null) {
+    public function __construct($adminPath = null, Git_Exec $gitExec = null) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
+        $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
     }
-    
+
+    public function repoFullName(GitRepository $repo, $unix_name) {
+        return unixPathJoin(array($unix_name, $repo->getFullName()));
+    }
+
     /**
      * Getter for $adminPath
      *
@@ -108,7 +121,7 @@ class Git_GitoliteDriver {
     }
 
     public function push() {
-        $res = $this->gitPush();
+        $res = $this->gitExec->push();
         chdir($this->oldCwd);
         return $res;
     }
@@ -132,7 +145,7 @@ class Git_GitoliteDriver {
                 }
             }
             if ($backend->addBlock($this->confFilePath, $newConf)) {
-                return $this->gitAdd($this->confFilePath);
+                return $this->gitExec->add($this->confFilePath);
             }
             return false;
         }
@@ -142,13 +155,21 @@ class Git_GitoliteDriver {
     /**
      * Dump ssh keys into gitolite conf
      */
-    public function dumpSSHKeys() {
+    public function dumpSSHKeys(User $user = null) {
         if (is_dir($this->getAdminPath())) {
-            $userdao = new UserDao(CodendiDataAccess::instance());
-            foreach ($userdao->searchSSHKeys() as $row) {
-                $user = new User($row);
+            if ($user) {
                 $this->initUserKeys($user);
+                $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
+            } else {
+                $userdao = new UserDao();
+                foreach ($userdao->searchSSHKeys() as $row) {
+                    $user = new User($row);
+                    $this->initUserKeys($user);
+                }
+                $commit_msg = 'SystemEvent update all user keys';
             }
+            $this->gitExec->add('keydir');
+            $this->gitExec->commit($commit_msg);
             return $this->push();
         }
         return false;
@@ -157,7 +178,7 @@ class Git_GitoliteDriver {
     /**
      * @param User $user
      */
-    public function initUserKeys($user) {
+    private function initUserKeys($user) {
         // First remove existing keys
         $this->removeUserExistingKeys($user);
 
@@ -174,13 +195,9 @@ class Git_GitoliteDriver {
         $i    = 0;
         foreach ($user->getAuthorizedKeys(true) as $key) {
             $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            if (file_put_contents($filePath, $key) == strlen($key)) {
-                $this->gitAdd($filePath);
-            }
+            file_put_contents($filePath, $key);
             $i++;
         }
-
-        $this->gitCommit('Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys');
     }
 
     /**
@@ -195,94 +212,71 @@ class Git_GitoliteDriver {
             foreach ($dir as $file) {
                 $userbase = $user->getUserName().'@';
                 if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
-                    //unlink($file->getPathname());
-                    $this->gitRm($file->getPathname());
+                     $this->gitExec->rm($file->getPathname());
                 }
             }
         }
     }
 
-    protected function gitMv($from, $to) {
-        $cmd = 'git mv '.escapeshellarg($from) .' '. escapeshellarg($to);
-        return $this->gitCmd($cmd);
-    }
-
-    protected function gitAdd($file) {
-        $cmd = 'git add '.escapeshellarg($file);
-        return $this->gitCmd($cmd);
-    }
-
-    protected function gitRm($file) {
-        $cmd = 'git rm '.escapeshellarg($file);
-        return $this->gitCmd($cmd);
-    }
-
     /**
-     * Commit stuff to repository
-     * 
-     * Always force commit, even when there no changes it's mandatory with
-     * dump ssh keys event, otherwise the commit is empty and it raises errors.
-     * TODO: find a better way to manage that!
+     * Save on filesystem all permission configuration for a project
      *
-     * @param String $message
+     * @param Project $project
      */
-    protected function gitCommit($message) {
-        $cmd = 'git commit --allow-empty -m '.escapeshellarg($message);
-        return $this->gitCmd($cmd);
-    }
-    
-    protected function gitPush() {
-        $cmd = 'git push origin master';
-        return $this->gitCmd($cmd);
-    }
-    
-    protected function gitCmd($cmd) {
-        $cmd = $cmd.' 2>&1';
-        exec($cmd, $output, $retVal);
-        if ($retVal == 0) {
-            return true;
-        } else {
-            throw new Git_Command_Exception($cmd, $output, $retVal);
+    public function dumpProjectRepoConf($project) {
+        $dar = $this->getDao()->getAllGitoliteRespositories($project->getId());
+        if (!$dar || $dar->isError()) {
+            return;
+        }
+        $project_config   = '';
+        $notification_manager = $this->getPostReceiveMailManager();
+        foreach ($dar as $row) {
+            $repository      = $this->buildRepositoryFromRow($row, $project, $notification_manager);
+            $project_config .= $this->fetchReposConfig($project, $repository);  
+        }
+        
+        $config_file = $this->getProjectPermissionConfFile($project);
+        if ($this->writeGitConfig($config_file, $project_config)) {
+            return $this->commitConfigFor($project);
         }
     }
     
-    /**
-     * Fetch the gitolite readable conf for permissions on a repository
-     *
-     * @return string
-     */
-    public function fetchPermissions($project, $readers, $writers, $rewinders) {
-        $s = '';
-        
-        array_walk($readers,   array($this, 'ugroupId2GitoliteFormat'), $project);
-        array_walk($writers,   array($this, 'ugroupId2GitoliteFormat'), $project);
-        array_walk($rewinders, array($this, 'ugroupId2GitoliteFormat'), $project);
-        
-        $readers   = array_filter($readers);
-        $writers   = array_filter($writers);
-        $rewinders = array_filter($rewinders);
-        
-        // Readers
-        if (count($readers)) {
-            $s .= ' R   = '. implode(' ', $readers);
-            $s .= PHP_EOL;
+    protected function buildRepositoryFromRow($row, $project, $notification_manager = null) {
+        $repository_id = $row[GitDao::REPOSITORY_ID];
+        $repository = new GitRepository();
+        $repository->setId($repository_id);
+        $repository->setName($row[GitDao::REPOSITORY_NAME]);
+        $repository->setProject($project);
+        if (! $notification_manager ) {
+            $notification_manager = $this->getPostReceiveMailManager();
         }
-        
-        // Writers
-        if (count($writers)) {
-            $s .= ' RW  = '. implode(' ', $writers);
-            $s .= PHP_EOL;
-        }
-        
-        // Rewinders
-        if (count($rewinders)) {
-            $s .= ' RW+ = '. implode(' ', $rewinders);
-            $s .= PHP_EOL;
-        }
-        
-        return $s;
+        $notified_mails = $notification_manager->getNotificationMailsByRepositoryId($repository_id);
+        $repository->setNotifiedMails($notified_mails);
+        $repository->setDescription($row[GitDao::REPOSITORY_DESCRIPTION]);
+        $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
+        $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
+        return $repository;
     }
-
+    
+    protected function fetchReposConfig(Project $project, $repository) {
+        $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
+        $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
+        $repo_config .= $this->fetchMailHookConfig($project, $repository);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
+        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        
+        // Do not dump repository description as it seems to produce wiered effect @ST
+        // 
+        // More informations about the feature:
+        // @see https://github.com/sitaramc/gitolite/blob/v1.5.9.1/doc/2-admin.mkd#specifying-gitweb-and-daemon-access
+        // 
+        // $description = preg_replace( "% *\n *%", ' ', $repository->getDescription());
+        // $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
+        
+        return $repo_config. PHP_EOL;
+    }
+    
     /**
      * Returns post-receive-email hook config in gitolite format
      *
@@ -307,91 +301,21 @@ class Git_GitoliteDriver {
     }
 
     /**
-     * Convert given ugroup id to a format managed by Git_GitoliteMembershipPgmTest
+     * Fetch the gitolite readable conf for permissions on a repository
      *
-     * @param String $ug UGroupId
+     * @return string
      */
-    protected function ugroupId2GitoliteFormat(&$ug, $key, $project) {
-        if ($ug > 100) {
-            $ug = '@ug_'. $ug;
-        } else {
-            switch ($ug) {
-                case $GLOBALS['UGROUP_REGISTERED']:
-                    $ug = '@site_active';
-                    break;
-                case $GLOBALS['UGROUP_PROJECT_MEMBERS'];
-                    $ug = '@'.$project->getUnixName().'_project_members';
-                    break;
-                case $GLOBALS['UGROUP_PROJECT_ADMIN']:
-                    $ug = '@'.$project->getUnixName().'_project_admin';
-                    break;
-                default:
-                    $ug = null;
-                    break;
-            }
+    public function fetchConfigPermissions($project, $repository, $permission_type) {
+        if (!isset(self::$permissions_types[$permission_type])) {
+            return '';
         }
-        return false;
-    }
-
-    /**
-     * Save on filesystem all permission configuration for a project
-     *
-     * @param Project $project
-     */
-    public function dumpProjectRepoConf($project) {
-        $dar = $this->getDao()->getAllGitoliteRespositories($project->getId());
-        if ($dar && !$dar->isError()) {
-            // Get perms
-            $perms    = '';
-            $pm       = $this->getPermissionsManager();
-            $notifMgr = $this->getPostReceiveMailManager();
-            foreach ($dar as $row) {
-                $repository = new GitRepository();
-                $repository->setId($row[GitDao::REPOSITORY_ID]);
-                $repository->setName($row[GitDao::REPOSITORY_NAME]);
-                $repository->setProject($project);
-                $repository->setNotifiedMails($notifMgr->getNotificationMailsByRepositoryId($row[GitDao::REPOSITORY_ID]));
-                $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
-                $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
-
-                // Name of the repo
-                $perms .= 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
-                
-                // Hook config
-                $perms .= $this->fetchMailHookConfig($project, $repository);
-
-                // Perms
-                $readers   = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_READ);
-                $writers   = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_WRITE);
-                $rewinders = $this->getAuthorizedUgroupsId($row[GitDao::REPOSITORY_ID], Git::PERM_WPLUS);
-                $perms    .= $this->fetchPermissions($project, $readers, $writers, $rewinders);
-
-                $perms .= PHP_EOL;
-            }
-
-            // Save into file
-            $confFile = $this->getProjectPermissionConfFile($project);
-            $written  = file_put_contents($confFile, $perms);
-            if ($written && strlen($perms) == $written) {
-                if ($this->gitAdd($confFile)) {
-                    if ($this->updateMainConfIncludes($project)) {
-                        return $this->gitCommit('Update: '.$project->getUnixName());
-                    }
-                }
-            }
+        
+        $ugroup_literalizer = new UGroupLiteralizer();
+        $repository_groups  = $ugroup_literalizer->getUGroupsThatHaveGivenPermissionOnObject($project, $repository->getId(), $permission_type);
+        if (count($repository_groups) == 0) {
+            return '';
         }
-    }
-
-    protected function getAuthorizedUgroupsId($id, $perm) {
-        $ug  = array();
-        $pm  = $this->getPermissionsManager();
-        $dar = $pm->getAuthorizedUgroups($id, $perm);
-        if ($dar && !$dar->isError()) {
-            foreach ($dar as $row) {
-                $ug[] = $row['ugroup_id'];
-            }
-        }
-        return $ug;
+        return self::$permissions_types[$permission_type] . ' = ' . implode(' ', $repository_groups) . PHP_EOL; 
     }
     
     protected function getProjectPermissionConfFile($project) {
@@ -402,13 +326,17 @@ class Git_GitoliteDriver {
         return $prjConfDir.'/'.$project->getUnixName().'.conf';
     }
     
-    /**
-     * Wrapper for PermissionsManager
-     *
-     * @return PermissionsManager
-     */
-    protected function getPermissionsManager() {
-        return PermissionsManager::instance();
+    protected function writeGitConfig($config_file, $config_datas) {
+        if (strlen($config_datas) !== file_put_contents($config_file, $config_datas)) {
+            return false;
+        }
+        return $this->gitExec->add($config_file);
+    }
+    
+    protected function commitConfigFor($project) {
+        if ($this->updateMainConfIncludes($project)) {
+            return $this->gitExec->commit('Update: '.$project->getUnixName());
+        }
     }
 
     /**
@@ -444,7 +372,7 @@ class Git_GitoliteDriver {
     public function renameProject($oldName, $newName) {
         $ok = true;
         if (is_file('conf/projects/'. $oldName .'.conf')) {
-            $ok = $this->gitMv(
+            $ok = $this->gitExec->mv(
                 'conf/projects/'. $oldName .'.conf',
                 'conf/projects/'. $newName .'.conf'
             );
@@ -453,17 +381,18 @@ class Git_GitoliteDriver {
                 $orig = file_get_contents('conf/projects/'. $newName .'.conf');
                 $dest = preg_replace('`(^|\n)repo '. preg_quote($oldName) .'/`', '$1repo '. $newName .'/', $orig);
                 $dest = str_replace('@'. $oldName .'_project_', '@'. $newName .'_project_', $dest);
+                $dest = preg_replace("%$oldName/(.*) = \"%", "$newName/$1 = \"", $dest);
                 file_put_contents('conf/projects/'. $newName .'.conf', $dest);
-                $this->gitAdd('conf/projects/'. $newName .'.conf');
+                $this->gitExec->add('conf/projects/'. $newName .'.conf');
                 
                 //conf/gitolite.conf
                 $orig = file_get_contents($this->confFilePath);
                 $dest = str_replace('include "projects/'. $oldName .'.conf"', 'include "projects/'. $newName .'.conf"', $orig);
                 file_put_contents($this->confFilePath, $dest);
-                $this->gitAdd($this->confFilePath);
+                $this->gitExec->add($this->confFilePath);
                 
                 //commit
-                $ok = $this->gitCommit('Rename project '. $oldName .' to '. $newName) && $this->gitPush();
+                $ok = $this->gitExec->commit('Rename project '. $oldName .' to '. $newName) && $this->gitExec->push();
             }
         }
         return $ok;
@@ -481,53 +410,36 @@ class Git_GitoliteDriver {
         return true;
     }
     
-    public function fork($repo, $old_ns, $new_ns){
+    public function fork($repo, $old_ns, $new_ns) {
         $source = unixPathJoin(array($this->getRepositoriesPath(), $old_ns, $repo)) .'.git';
         $target = unixPathJoin(array($this->getRepositoriesPath(), $new_ns, $repo)) .'.git';
         if (!is_dir($target)) {
             $asGroupGitolite = 'sg - gitolite -c ';
             $cmd = 'umask 0007; '.$asGroupGitolite.' "git clone --bare '. $source .' '. $target.'"';
-            $clone_result = $this->gitCmd($cmd);
+            $clone_result = $this->executeShellCommand($cmd);
             
             $copyHooks  = 'cd '.$this->getRepositoriesPath().'; ';
             $copyHooks .= $asGroupGitolite.' "cp -f '.$source.'/hooks/* '.$target.'/hooks/"';
-            $this->gitCmd($copyHooks);
+            $this->executeShellCommand($copyHooks);
             
             $saveNamespace = 'cd '.$this->getRepositoriesPath().'; ';
             $saveNamespace .= $asGroupGitolite.' "echo -n '.$new_ns.' > '.$target.'/tuleap_namespace"';
-            $this->gitCmd($saveNamespace);
+            $this->executeShellCommand($saveNamespace);
             
             return $clone_result;
         }
         return false;
     }
 
-    /**
-     * Save repository description in the filesystem
-     *
-     * @param String $repoPath    Path of the git repository
-     * @param String $description Description of the git repository
-     *
-     * @return Boolean
-     */
-    /*public function setDescription($repoPath, $description) {
-        // TODO: set the description in gitolite way
-        // be careful not to use file_put_contents() like in gitshell
-        return true;
-    }*/
-
-    /**
-     * Obtain the repository description from the filesystem
-     *
-     * @param String $repoPath Path of the git repository
-     *
-     * @return String
-     */
-    /*public function getDescription($repoPath) {
-        // TODO: Uncomment this when GIT_GitoliteDriver::setDescription() is ready
-        return file_get_contents($repoPath.'/description');
-    }*/
+    protected function executeShellCommand($cmd) {
+        $cmd = $cmd.' 2>&1';
+        exec($cmd, $output, $retVal);
+        if ($retVal == 0) {
+            return true;
+        } else {
+            throw new Git_Command_Exception($cmd, $output, $retVal);
+        }
+    }
 
 }
-
 ?>

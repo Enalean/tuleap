@@ -60,7 +60,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
         
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $expected)));
+        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($field->getLabel(), $expected)));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
         $post_action->__construct($transition, $id, $field, $value_type);
@@ -90,7 +90,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
         
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel())));
+        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_clear', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
         $post_action->__construct($transition, $id, $field, $value_type);
@@ -118,7 +118,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $value_type  = Transition_PostAction_Field_Date::FILL_CURRENT_TIME;
         
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_current_time', array($field->getLabel(), $expected)));
+        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_value_set', array($field->getLabel(), $expected)));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
         $post_action->__construct($transition, $id, $field, $value_type);
@@ -149,7 +149,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
         $value_type = Transition_PostAction_Field_Date::CLEAR_DATE;
         
         $post_action = new Transition_PostAction_Field_DateTestVersion();
-        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_date_clear', array($field->getLabel())));
+        $post_action->expectOnce('addFeedback', array('info', 'workflow_postaction', 'field_clear', array($field->getLabel())));
         $post_action->setReturnReference('getFormElementFactory', $factory);
         
         $post_action->__construct($transition, $id, $field, $value_type);

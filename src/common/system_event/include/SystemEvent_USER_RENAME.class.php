@@ -102,7 +102,10 @@ class SystemEvent_USER_RENAME extends SystemEvent {
                 $renameState = $renameState & false;
             }
        
+            $backendSystem->setNeedRefreshGroupCache();
+            $backendSystem->setNeedRefreshUserCache();
         }
+        
         if ($renameState) {
             $this->done();
         } 

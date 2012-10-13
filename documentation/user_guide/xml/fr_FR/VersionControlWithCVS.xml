@@ -283,7 +283,7 @@
     </section>
   </section>
 
-  <section id="CVSIntegrationinCodendi">
+  <section id="CVSIntegration">
     <title>Intégration de CVS dans &SYS_PRODUCT_NAME;</title>
 
     <section id="TheCVSRepository">
@@ -1290,7 +1290,7 @@ export nom_projet-1.2
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

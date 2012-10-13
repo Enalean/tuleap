@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'Tracker_FormElement_Field_ValueDao.class.php';
+
 class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElement_Field_ValueDao {
     public function __construct() {
         parent::__construct();
@@ -29,7 +31,9 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         $sql = "SELECT cv.*, a.tracker_id, a.last_changeset_id
                 FROM $this->table_name AS cv
                     INNER JOIN tracker_artifact AS a ON (a.id = cv.artifact_id)
-                WHERE changeset_value_id = $changeset_value_id ";
+                    INNER JOIN tracker_artifact_priority ON (tracker_artifact_priority.curr_id = a.id)
+                WHERE changeset_value_id = $changeset_value_id
+                ORDER BY tracker_artifact_priority.rank";
         return $this->retrieve($sql);
     }
     
@@ -72,6 +76,13 @@ class Tracker_FormElement_Field_Value_ArtifactLinkDao extends Tracker_FormElemen
         $sql = "UPDATE $this->table_name SET 
 			keyword=$keyword
             WHERE keyword=$oldKeyword AND group_id=$group_id";
+        return $this->update($sql);
+    }
+
+    public function deleteReference($artifact_id) {
+        $artifact_id = $this->da->escapeInt($artifact_id);
+        $sql = "DELETE FROM $this->table_name
+                WHERE artifact_id = $artifact_id";
         return $this->update($sql);
     }
 }

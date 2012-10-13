@@ -677,7 +677,7 @@ function handle_monitoring($forum_id,$thread_id,$msg_id) {
 
 		if ($result && db_numrows($result) > 0) {
             list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);
-            $mail =& new Mail();
+            $mail = new Mail();
             $mail->setFrom($GLOBALS['sys_noreply']);
             $mail->setSubject("[" . db_result($result,0,'unix_group_name'). " - " . util_unconvert_htmlspecialchars(db_result($result,0,'forum_name'))." - ". db_result($result,0, 'user_name') ."] " . util_unconvert_htmlspecialchars(db_result($result,0,'subject')));
             $mail->setBcc($tolist);

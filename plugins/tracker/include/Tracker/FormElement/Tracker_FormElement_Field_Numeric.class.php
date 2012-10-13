@@ -18,8 +18,10 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Alphanum.class.php');
-abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum {
+require_once 'Tracker_FormElement_Field_Alphanum.class.php';
+require_once 'IComputeValues.class.php';
+
+abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Field_Alphanum implements Tracker_FormElement_IComputeValues {
     
     public $default_properties = array(
         'maxchars'      => array(
@@ -38,7 +40,51 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
             'size'  => 40,
         ),
     );
-    
+
+    /**
+     * Given an artifact, return a numerical value of the field for this artifact.
+     *
+     * @param User             $user     The user who see the results
+     * @param Tracker_Artifact $artifact The artifact on which the value is computed
+     *
+     * @return mixed
+     */
+    public function getComputedValue(User $user, Tracker_Artifact $artifact, $timestamp = null) {
+        if ($this->userCanRead($user)) {
+            if ($timestamp !== null) {
+                return $this->getComputedValueAt($artifact, $timestamp);
+            } else {
+                return $this->getCurrentComputedValue($artifact);
+            }
+        }
+    }
+
+    /**
+     * @param User             $user
+     * @param Tracker_Artifact $artifact
+     * @param int              $timestamp
+     * 
+     * @return mixed
+     */
+    private function getComputedValueAt(Tracker_Artifact $artifact, $timestamp) {
+        $row = $this->getValueDao()->getValueAt($artifact->getId(), $this->getId(), $timestamp);
+        return $row['value'];
+    }
+
+    /**
+     * @param User             $user
+     * @param Tracker_Artifact $artifact
+     * 
+     * @return mixed
+     */
+    private function getCurrentComputedValue(Tracker_Artifact $artifact) {
+        $value = $artifact->getValue($this);
+        if ($value) {
+            return $value->getValue();
+        }
+        return null;
+    }
+
     public function getQuerySelect() {
         $R1 = 'R1_'. $this->id;
         $R2 = 'R2_'. $this->id;
@@ -143,14 +189,9 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return string html
      */
     protected function fetchSubmitValue($submitted_values = array()) {
-        $html = '';
-        $value = '';
-        if (!empty($submitted_values)) {            
-            $value=$submitted_values[$this->getId()];
-        }else if ($this->hasDefaultValue()) {
-            $value = $this->getDefaultValue();
-        }
-        $hp = Codendi_HTMLPurifier::instance();
+        $html  = '';
+        $value = $this->getValueFromSubmitOrDefault($submitted_values);
+        $hp    = Codendi_HTMLPurifier::instance();
         $html .= '<input type="text" 
                          size="'. $this->getProperty('size') .'"
                          '. ($this->getProperty('maxchars') ? 'maxlength="'. $this->getProperty('maxchars') .'"' : '')  .'
@@ -303,6 +344,17 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return bool true if the value is considered ok
      */
     protected function validate(Tracker_Artifact $artifact, $value) {
+        return $this->validateValue($value);
+    }
+    
+    /**
+     * Validate a value
+     *
+     * @param mixed            $value    data coming from the request. May be string or array. 
+     *
+     * @return bool true if the value is considered ok
+     */
+    public function validateValue($value) {
         $is_valid = true;
         if ($value) {
             if (!($is_valid = preg_match('/^'. $this->pattern .'$/', $value))) {
@@ -311,7 +363,6 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
         }
         return $is_valid;
     }
-    
     /**
      * @return string the i18n error message to display if the value submitted by the user is not valid
      */

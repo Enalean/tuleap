@@ -18,10 +18,12 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'IProvideDataAccessResult.class.php';
+
 /**
  *  Fetches MySQL database rows as objects
  */
-class DataAccessResult  implements Iterator, Countable {
+class DataAccessResult implements IProvideDataAccessResult {
     /**
      * $da stores data access object
      */

@@ -334,7 +334,7 @@ function create_project($data, $do_not_exit = false) {
                 //}
                         
                 // Create corresponding reference
-                $ref=& new Reference(0, // no ID yet
+                $ref = new Reference(0, // no ID yet
                                      strtolower($ath_temp->getItemName()),
                                      $GLOBALS['Language']->getText('project_reference','reference_art_desc_key'), // description
                                      '/tracker/?func=detail&aid=$1&group_id=$group_id', // link
@@ -369,8 +369,8 @@ function create_project($data, $do_not_exit = false) {
         // Raise an event for plugin configuration
         $em =& EventManager::instance();
         $em->processEvent('register_project_creation', array(
-            'reportMapping'  => $report_mapping,
-            'trackerMapping' => $tracker_mapping,
+            'reportMapping'  => $report_mapping, // Trackers v3
+            'trackerMapping' => $tracker_mapping, // Trackers v3
             'ugroupsMapping' => $ugroup_mapping,
             'group_id'       => $group_id,
             'template_id'    => $template_id

@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php';
 require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
 require_once 'common/project/Project.class.php';
@@ -102,72 +103,6 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $this->assertTrue(is_dir($this->fixtureRenamePath .'/newone'));
     }
 
-    public function testDeleteProjectRepositoriesDaoError() {
-        $backend = new Git_Backend_GitoliteTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories');
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', true);
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $backend->setReturnValue('getDao', $dao);
-        $backend->expectNever('loadRepositoryFromId');
-        $this->assertFalse($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesNothingToDelete() {
-        $backend = new Git_Backend_GitoliteTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories');
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValue('getRow', false);
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $backend->setReturnValue('getDao', $dao);
-        $backend->expectNever('loadRepositoryFromId');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesDeleteFail() {
-        $backend = new Git_Backend_GitoliteTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories');
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', false);
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $dar->setReturnValueAt(0, 'getRow', array('repository_id' => 1));
-        $dar->setReturnValueAt(1, 'getRow', array('repository_id' => 2));
-        $dar->setReturnValueAt(2, 'getRow', array('repository_id' => 3));
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $backend->setReturnValue('getDao', $dao);
-        $repository = new MockGitRepository();
-        $repository->setReturnValueAt(0, 'delete', true);
-        $repository->setReturnValueAt(1, 'delete', false);
-        $repository->setReturnValueAt(2, 'delete', true);
-        $backend->setReturnValue('loadRepositoryFromId', $repository);
-        $backend->expectCallCount('loadRepositoryFromId', 3);
-        $repository->expectCallCount('delete', 3);
-        $this->assertFalse($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesSuccess() {
-        $backend = new Git_Backend_GitoliteTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getAllGitoliteRespositories');
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('isError', false);
-        $dar->setReturnValueAt(0, 'getRow', array('repository_id' => 1));
-        $dar->setReturnValueAt(1, 'getRow', array('repository_id' => 2));
-        $dar->setReturnValueAt(2, 'getRow', array('repository_id' => 3));
-        $dao->setReturnValue('getAllGitoliteRespositories', $dar);
-        $backend->setReturnValue('getDao', $dao);
-        $repository = new MockGitRepository();
-        $repository->setReturnValue('delete', true);
-        $backend->setReturnValue('loadRepositoryFromId', $repository);
-        $backend->expectCallCount('loadRepositoryFromId', 3);
-        $repository->expectCallCount('delete', 3);
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-    
     public function testFork_clonesRepositoryAndPushesConf() {
         $name  = 'tuleap';
         $old_namespace = '';
@@ -257,7 +192,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $backend->__construct($driver);
         $backend->setDao($dao);
         
-        $this->expectException('GitBackendException');
+        $this->expectException('GitRepositoryAlreadyExistsException');
         
         $backend->expectNever('clonePermissions');
         $dao->expectNever('save');
@@ -284,12 +219,14 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
 
     protected function _GivenABackendGitolite() {
-        $driver             = new MockGit_GitoliteDriver();
-        $dao                = new MockGitDao();
-        $permissionsManager = new MockPermissionsManager();
+        $driver             = mock('Git_GitoliteDriver');
+        $dao                = mock('GitDao');
+        $permissionsManager = mock('PermissionsManager');
+        $gitPlugin          = mock('GitPlugin');
         $backend = new Git_Backend_Gitolite($driver);
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
+        $backend->setGitPlugin($gitPlugin);
         return $backend;
     }
 
@@ -297,8 +234,9 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', 'u/johndoe/uber');
         $backend    = $this->_GivenABackendGitolite();
         
-        $url = $backend->getAccessUrl($repository);
-        
+        $urls = $backend->getAccessUrl($repository);
+        $url  = array_shift($urls);
+
         // url starts by gitolite
         $this->assertPattern('%^gitolite@%', $url);
     }
@@ -307,8 +245,9 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', 'u/johndoe/uber');
         $backend    = $this->_GivenABackendGitolite();
         
-        $url = $backend->getAccessUrl($repository);
-        
+        $urls = $backend->getAccessUrl($repository);
+        $url  = array_shift($urls);
+
         // url ends by the namespace + name
         $this->assertPattern('%:gpig/u/johndoe/uber/bionic\.git$%', $url);
     }
@@ -317,8 +256,9 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $repository = $this->_GivenAGitRepoWithNameAndNamespace('bionic', '');
         $backend    = $this->_GivenABackendGitolite();
         
-        $url = $backend->getAccessUrl($repository);
-        
+        $urls = $backend->getAccessUrl($repository);
+        $url  = array_shift($urls);
+
         // url ends by the namespace + name
         $this->assertPattern('%:gpig/bionic\.git$%', $url);
     }

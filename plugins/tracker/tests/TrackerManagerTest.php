@@ -54,9 +54,7 @@ require_once('common/project/Project.class.php');
 Mock::generate('Project');
 Mock::generate('ReferenceManager');
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/coin');
-}
+require_once(dirname(__FILE__).'/../include/constants.php');
 
 class TrackerManagerTest extends TuleapTestCase {
     

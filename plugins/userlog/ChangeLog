@@ -1,3 +1,6 @@
-1.1 - Tuleap 4.0.21
+Version 1.2 - Tuleap 5.4
+    * Continue PHP 5.3 compat (Contrib Philippe Goetz)
+
+Version 1.1 - Tuleap 4.0.21
 	* Refactoring on Dao
 

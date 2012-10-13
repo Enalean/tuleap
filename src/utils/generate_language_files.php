@@ -30,7 +30,7 @@
 require(getenv('CODENDI_LOCAL_INC')?getenv('CODENDI_LOCAL_INC'):'/etc/codendi/conf/local.inc');
 require('common/language/BaseLanguage.class.php');
 
-$Language =& new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
+$Language = new BaseLanguage($GLOBALS['sys_supported_languages'], $GLOBALS['sys_lang']);
 
 $Language->compileAllLanguageFiles();
 

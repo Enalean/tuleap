@@ -260,6 +260,26 @@ file_filemodule_monitor	turn_monitor_off	To turn off monitoring, simply click th
 file_filemodule_monitor	monitor_turned_off	Monitoring has been turned off
 file_filemodule_monitor	no_emails	You will not receive any more emails from this package.
 file_filemodule_monitor	choose_p	Error - Choose a package First
+file_filemodule_monitor	no_permission	You don't have enough permissions to perform this action
+file_filemodule_monitor	monitoring_people_title	People monitoring the package
+file_filemodule_monitor	users_monitor	$1 user(s) are monitoring anonymously.
+file_filemodule_monitor	no_list	No users publicly monitoring this package
+file_filemodule_monitor	user	User
+file_filemodule_monitor	add_users	Add users to the monitoring list
+file_filemodule_monitor	my_monitoring	My package monitoring
+file_filemodule_monitor	anonymous	Monitor anonymously
+file_filemodule_monitor	public	admin will know that you are monitoring this package
+file_filemodule_monitor	no_delete	Nothing to delete
+file_filemodule_monitor	not_monitoring	User "$1" wasn't monitoring this package
+file_filemodule_monitor	delete_error	Couldn't delete monitoring for user "$1"
+file_filemodule_monitor	deleted	Monitoring deleted for user "$1"
+file_filemodule_monitor	no_user	Couldn't find user "$1"
+file_filemodule_monitor	user_no_permission	User "$1" doesn't have permission to read the package
+file_filemodule_monitor	already_monitoring	User "$1" was already monitoring this package
+file_filemodule_monitor	monitoring_added	Package is now being monitored by "$1"
+file_filemodule_monitor	mail_subject	[$1] Monitoring package "$2"
+file_filemodule_monitor	add_monitor_mail	You were added to monitor the package
+file_filemodule_monitor	delete_monitor_mail	You were removed from monitoring the package
 #
 #-----------------------------------------------
 # Script: SF/www/file/file_utils.php

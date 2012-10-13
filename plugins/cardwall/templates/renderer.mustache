@@ -1,0 +1,46 @@
+<input type="hidden" id="tracker_report_cardwall_to_be_refreshed" value="0" />
+{{#form}}
+<form id="tracker_report_cardwall_settings" action="" method="POST">
+    <input type="hidden" value="{{report_id}}" name="report" />
+    <input type="hidden" value="{{renderer_id}}" name="renderer" />
+    {{#has_printer_version}}
+        <input type="hidden" value="{{printer_version}}" name="pv">
+    {{/has_printer_version}}
+    <input type="hidden" value="renderer" name="func" />
+    <p>Columns:
+        {{#has_possible_columns}}
+        <select name="renderer_cardwall[columns]" id="tracker_report_cardwall_settings_column" autocomplete="off" onchange="this.form.submit();">
+            {{^one_selected}}
+                <option selected="selected" value="">{{please_choose_dashed}}</option>
+            {{/one_selected}}
+            {{#possible_columns}}
+                {{#field}}
+                    <option value="{{getId}}" {{#selected}}selected="selected"{{/selected}}>{{getLabel}}</option>
+                {{/field}}
+            {{/possible_columns}}
+        </select>
+        {{/has_possible_columns}}
+        <input type="submit" value="{{submit}}" />
+    </p>
+</form>
+{{/form}}
+{{^field}}
+    <div class="alert-message block-message warning">
+        {{warn_please_choose}}
+    </div>
+{{/field}}
+{{#field}}
+    {{^has_columns}}
+        <div class="alert-message block-message warning">
+            {{warn_no_values}}
+        </div>
+    {{/has_columns}}
+    {{#has_columns}}
+        <label id="cardwall_board-nifty">
+            <input type="checkbox" onclick="$(this).up().next('div.cardwall_board').toggleClassName('nifty'); new Ajax.Request('/toggler.php?id=cardwall_board-nifty');" {{#nifty}}checked{{/nifty}}>
+            free-hand drawing view
+        </label>
+        {{> board}}
+        {{> qr-code}}
+    {{/has_columns}}
+{{/field}}

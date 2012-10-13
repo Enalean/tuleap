@@ -22,12 +22,13 @@ require_once('Tracker_FormElement.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('common/user/UserHelper.class.php');
+require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
  * Composite fields are excluded.
  */
-abstract class Tracker_FormElement_Field extends Tracker_FormElement {
+abstract class Tracker_FormElement_Field extends Tracker_FormElement implements Tracker_Report_Field  {
     
     protected $has_errors = false;
     
@@ -39,15 +40,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      */
     public abstract function fetchCriteriaValue($criteria);
     
-    /**
-     * Display the field as a Changeset value.
-     * Used in report table
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     * @return string
-     */
-    public abstract function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null);
     
     /**
      * Display the field as a Changeset value.
@@ -117,7 +109,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     public function setCriteriaValue($criteria_value) {
         $this->criteria_value = $criteria_value;
     }
-    
+
+    public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
+        $this->setCriteriaValue(!empty($soap_criteria_value->value) ? $soap_criteria_value->value: '');
+    }
+
     /**
      * Format the criteria value submitted by the user for storage purpose (dao or session)
      *
@@ -165,11 +161,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         return "$R.value_id";
     }
     
-    /**
-     * Display the field as a criteria
-     * @param Tracker_Report_Criteria $criteria
-     * @return string
-     */
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
         $html = '';
         if ($this->criteriaCanBeAdvanced()) {
@@ -234,7 +225,18 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     public function fetchSubmitAdditionnalInfo() {
         return '';
     }
-    
+
+    /**
+     * Remove a changeset value corresponding to field an id
+     *
+     * @param Integer $changeset_value_id
+     *
+     * @return Boolean
+     */
+    public function deleteChangesetValue($changeset_value_id) {
+        return $this->getValueDao()->delete($changeset_value_id);
+    }
+
     /**
      * Delete the criteria value
      * @param Criteria $criteria the corresponding criteria
@@ -309,23 +311,44 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      * @return string html
      */
     public function fetchArtifact(Tracker_Artifact $artifact, $submitted_values = array()) {
+        if ($this->userCanUpdate()) {
+            $value       = $artifact->getLastChangeset()->getValue($this);
+            $html_value  = $this->fetchArtifactValue($artifact, $value, $submitted_values);
+            $html_value .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
+            return $this->fetchArtifactField($artifact, $html_value);
+        }
+        return $this->fetchArtifactReadOnly($artifact);
+    }
+
+    /**
+     * Get the html code to display the field for the given artifact in read only mode
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string html
+     */
+    public function fetchArtifactReadOnly(Tracker_Artifact $artifact) {
+        $value       = $artifact->getLastChangeset()->getValue($this);
+        $html_value  = $this->fetchArtifactValueReadOnly($artifact, $value);
+        $html_value .= $this->fetchArtifactAdditionnalInfo($value);
+        return $this->fetchArtifactField($artifact, $html_value);
+    }
+
+    /**
+     * @param Tracker_Artifact $artifact   the artifact
+     * @param string           $html_value in html
+     *
+     * @return string html
+     */
+    private function fetchArtifactField(Tracker_Artifact $artifact, $html_value) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanRead()) {
             $required = $this->required ? ' <span class="highlight">*</span>' : '';
             $html .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
             $html .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
-
-            $value = $artifact->getLastChangeset()->getValue($this);
-
             $html .= '<br />';
-            if ($this->userCanUpdate()) {
-                $html .= $this->fetchArtifactValue($artifact, $value, $submitted_values);
-                $html .= $this->fetchArtifactAdditionnalInfo($value, $submitted_values);
-            } else if ($this->userCanRead()) {
-                $html .= $this->fetchArtifactValueReadOnly($artifact, $value);
-                $html .= $this->fetchArtifactAdditionnalInfo($value);
-            }
+            $html .= $html_value;
             $html .= '</div>';
         }
         return $html;
@@ -450,6 +473,23 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     protected abstract function fetchSubmitValue();
 
     /**
+     * Return a value from user submitted request (if any) or from default value (if any)
+     *
+     * @param mixed $submitted_values
+     * 
+     * @return mixed
+     */
+    protected function getValueFromSubmitOrDefault($submitted_values) {
+        $value = '';
+        if (isset($submitted_values[$this->getId()])) {
+            $value = $submitted_values[$this->getId()];
+        } else if ($this->hasDefaultValue()) {
+            $value = $this->getDefaultValue();
+        }
+        return $value;
+    }
+
+    /**
      * Fetch the html code to display the field value in masschange submission form
      *
      * @return string html
@@ -464,6 +504,32 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
      */
     protected abstract function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null);
     
+    /**
+     * Fetch the html code to display the field value in card
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string
+     */
+    protected function fetchCardValue(Tracker_Artifact $artifact) {
+        return $this->fetchTooltipValue($artifact, $artifact->getLastChangeset()->getValue($this));
+    }
+    
+    /**
+     * Fetch the html code to display the field in card
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string
+     */
+    public function fetchCard(Tracker_Artifact $artifact) {
+        $value = $this->fetchCardValue($artifact);
+        if ($value) {
+            return '<tr><td>'. $this->getLabel().":</td><td>". $value .'</td></tr>';
+        }
+        return null;
+    }
+
     /**
      * Get the value corresponding to the $value_id
      * @param int $value_id
@@ -749,18 +815,20 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
     /**
      * Save the value submitted by the user in the new changeset
      *
-     * @param Tracker_Artifact           $artifact         The artifact
-     * @param Tracker_Artifact_Changeset $old_changeset    The old changeset. null if it is the first one
-     * @param int                        $new_changeset_id The id of the new changeset
-     * @param mixed                      $submitted_value  The value submitted by the user
-     * @param boolean $is_submission true if artifact submission, false if artifact update
+     * @param Tracker_Artifact           $artifact           The artifact
+     * @param Tracker_Artifact_Changeset $old_changeset      The old changeset. null if it is the first one
+     * @param int                        $new_changeset_id   The id of the new changeset
+     * @param mixed                      $submitted_value    The value submitted by the user
+     * @param User                       $submitter          The user who made the modification
+     * @param boolean                    $is_submission      True if artifact submission, false if artifact update
+     * @param boolean                    $bypass_permissions If true, permissions to update/submit the value on field is not checked
      *
      * @return bool true if success
      */
-    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, $is_submission = false, $bypass_permissions = false) {
+    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
         $updated        = false;
         $save_new_value = false;
-        $dao            = new Tracker_Artifact_Changeset_ValueDao();
+        $dao            = $this->getChangesetValueDao();
         
         if ($bypass_permissions) {
             $hasPermission = true;
@@ -772,12 +840,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
             }
         }
         
-        //Look for the previous value, if any
-        $previous_changesetvalue = null;
-        if ($old_changeset) {
-            $previous_changesetvalue = $old_changeset->getValue($this);
-        }
-        
+        $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         if ($previous_changesetvalue) {
             if ($submitted_value === null || !$hasPermission || !$this->hasChanges($previous_changesetvalue, $submitted_value)) {
                 //keep the old value
@@ -799,6 +862,19 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement {
         }
         
         return $updated;
+    }
+    
+    protected function getChangesetValueDao() {
+        return new Tracker_Artifact_Changeset_ValueDao();
+    }
+
+
+    protected function getPreviousChangesetValue($old_changeset) {
+        $previous_changesetvalue = null;
+        if ($old_changeset) {
+            $previous_changesetvalue = $old_changeset->getValue($this);
+        }
+        return $previous_changesetvalue;
     }
     
     /**

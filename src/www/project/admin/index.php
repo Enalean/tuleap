@@ -303,20 +303,8 @@ echo '
 if ($group->usesForum()) {
     echo '	<A HREF="/forum/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','forum_admin').'</A><BR>';
 }
-if ($group->usesBugs()) {
-    echo '	<A HREF="/bugs/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','bug_admin').'</A><BR>';
-}
-if ($group->usesSupport()) {
-    echo '	<A HREF="/support/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','support_admin').'</A><BR>';
-}
-if ($group->usesPatch()) {
-    echo '	<A HREF="/patch/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','patch_admin').'</A><BR>';
-}
 if ($group->usesMail()) {
     echo '	<A HREF="/mail/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','lists_admin').'</A><BR>';
-}
-if ($group->usesPm()) {
-    echo '	<A HREF="/pm/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','task_admin').'</A><BR>';
 }
 if ($group->usesDocman()) {
     echo '	<A HREF="/docman/admin/?group_id='.$group_id.'">'.$Language->getText('project_admin_index','doc_admin').'</A><BR>';

@@ -21,7 +21,25 @@
 require_once('common/date/DateHelper.class.php');
 
 class Tracker_Artifact_Changeset_Comment {
-    
+
+    /**
+     * @const Changeset comment format is text.
+     */
+    const TEXT_COMMENT = 'text';
+
+    /**
+     * @const Changeset comment format is HTML
+     */
+    const HTML_COMMENT = 'html';
+
+    /**
+    * @const Changeset available comment formats
+    */
+    private static $available_comment_formats = array(
+        self::TEXT_COMMENT,
+        self::HTML_COMMENT,
+    );
+
     public $id;
     /**
      *
@@ -33,8 +51,25 @@ class Tracker_Artifact_Changeset_Comment {
     public $submitted_by;
     public $submitted_on;
     public $body;
+    public $bodyFormat;
     public $parent_id;
-    
+
+    /**
+     * @var array of purifier levels to be used when the comment is displayed in text/plain context
+     */
+    public static $PURIFIER_LEVEL_IN_TEXT = array(
+        'html' => CODENDI_PURIFIER_STRIP_HTML,
+        'text' => CODENDI_PURIFIER_DISABLED,
+    );
+
+    /**
+     * @var array of purifier levels to be used when the comment is displayed in text/html context
+     */
+    public static $PURIFIER_LEVEL_IN_HTML = array(
+        'html' => CODENDI_PURIFIER_FULL,
+        'text' => CODENDI_PURIFIER_BASIC,
+    );
+
     /**
      * Constructor
      *
@@ -45,15 +80,17 @@ class Tracker_Artifact_Changeset_Comment {
      * @param int                        $submitted_by       The Id of the user that made the comment
      * @param int                        $submitted_on       The date the comment has been done
      * @param string                     $body               The comment (aka follow-up comment)
+     * @param string                     $bodyFormat         The comment type (text or html follow-up comment)
      * @param int                        $parent_id          The id of the parent (if comment has been modified)
      */
-    public function __construct($id, 
-                                $changeset, 
-                                $comment_type_id, 
-                                $canned_response_id, 
-                                $submitted_by, 
-                                $submitted_on, 
-                                $body, 
+    public function __construct($id,
+                                $changeset,
+                                $comment_type_id,
+                                $canned_response_id,
+                                $submitted_by,
+                                $submitted_on,
+                                $body,
+                                $bodyFormat,
                                 $parent_id) {
         $this->id                 = $id;
         $this->changeset          = $changeset;
@@ -62,9 +99,31 @@ class Tracker_Artifact_Changeset_Comment {
         $this->submitted_by       = $submitted_by;
         $this->submitted_on       = $submitted_on;
         $this->body               = $body;
+        $this->bodyFormat         = $bodyFormat;
         $this->parent_id          = $parent_id;
     }
-    
+
+    /**
+     * @return string the cleaned body to be included in a text/plain context
+     */
+    public function getPurifiedBodyForText() {
+        $level = self::$PURIFIER_LEVEL_IN_TEXT[$this->bodyFormat];
+        return $this->purifyBody($level);
+    }
+
+    /**
+     * @return string the cleaned body to be included in a text/html context
+     */
+    public function getPurifiedBodyForHTML() {
+        $level = self::$PURIFIER_LEVEL_IN_HTML[$this->bodyFormat];
+        return $this->purifyBody($level);
+    }
+
+    private function purifyBody($level) {
+        $hp = Codendi_HTMLPurifier::instance();
+        return $hp->purify($this->body, $level, $this->changeset->artifact->getTracker()->group_id);
+    }
+
     /**
      * Returns the HTML code of this comment
      *
@@ -77,11 +136,11 @@ class Tracker_Artifact_Changeset_Comment {
     public function fetchFollowUp($format='html', $forMail = false, $ignoreEmptyBody = false) {
         if ($ignoreEmptyBody || !empty($this->body)) {
             $uh = UserHelper::instance();
+            $hp = Codendi_HTMLPurifier::instance();
             switch ($format) {
                 case 'html':
                     $html = '';
-                    $hp = Codendi_HTMLPurifier::instance();
-                    if ($forMail) {                        
+                    if ($forMail) {
                         $html .= '<div class="tracker_artifact_followup_title">';
                         $html .= '<span class="tracker_artifact_followup_title_user">';
                         $user = UserManager::instance()->getUserById($this->submitted_by);
@@ -116,11 +175,12 @@ class Tracker_Artifact_Changeset_Comment {
                         $html .= '</div>';
                     }
                     if (!$forMail || !empty($this->body)) {
+                        $html .= '<input type="hidden" id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'" name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'" value="'.$this->bodyFormat.'" >';
                         $html .= '<div class="tracker_artifact_followup_comment_body">';
                         if ($this->parent_id && !trim($this->body)) {
                             $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
                         } else {
-                            $html .= $hp->purify($this->body, CODENDI_PURIFIER_BASIC, $this->changeset->artifact->getTracker()->group_id);
+                            $html .= $this->getPurifiedBodyForHTML();
                         }
                         $html .= '</div>';
                     }
@@ -137,7 +197,8 @@ class Tracker_Artifact_Changeset_Comment {
                     //$output .= ' '.DateHelper::timeAgoInWords($this->submitted_on).PHP_EOL;
                     //}
                     if ( !empty($this->body) ) {
-                        $output .= PHP_EOL.PHP_EOL.$this->body.PHP_EOL.PHP_EOL;
+                        $body    = $this->getPurifiedBodyForText();
+                        $output .= PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
                     }
                     return $output;
                     break;
@@ -145,6 +206,22 @@ class Tracker_Artifact_Changeset_Comment {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Check the comment format, to ensure it is in
+     * a known one.
+     *
+     * @param string $comment_format the format of the comment
+     *
+     * @return string $comment_format
+     */
+    public static function checkCommentFormat($comment_format) {
+        if (! in_array($comment_format, self::$available_comment_formats)) {
+            $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
+        }
+
+        return $comment_format;
     }
 }
 ?>

@@ -307,7 +307,7 @@ class DB
             return $tmp;
         }
 
-        @$obj =& new $classname;
+        @$obj = new $classname;
 
         foreach ($options as $option => $value) {
             $test = $obj->setOption($option, $value);
@@ -381,7 +381,7 @@ class DB
             return $tmp;
         }
 
-        @$obj =& new $classname;
+        @$obj = new $classname;
 
         foreach ($options as $option => $value) {
             $test = $obj->setOption($option, $value);
@@ -887,7 +887,7 @@ class DB_result
                 if ($object_class == 'stdClass') {
                     $arr = (object) $arr;
                 } else {
-                    $arr = &new $object_class($arr);
+                    $arr = new $object_class($arr);
                 }
             }
             return $arr;

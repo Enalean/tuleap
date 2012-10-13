@@ -214,30 +214,13 @@ class Project extends Group {
         return isset($this->use_service['svn']) && $this->use_service['svn'];
     }
 
-    function usesBugs() {
-        return isset($this->use_service['bugs']) && $this->use_service['bugs'];
-    }
-
-    function usesSupport() {
-        return isset($this->use_service['support']) && $this->use_service['support'];
-    }
-
     function usesDocman() {
         return isset($this->use_service['doc']) && $this->use_service['doc'];
-    }
-
-    function usesPatch() {
-        return isset($this->use_service['patch']) && $this->use_service['patch'];
     }
 
     function usesFile() {
         return isset($this->use_service['file']) && $this->use_service['file'];
     }
-
-    function usesPm() {
-        return isset($this->use_service['task']) && $this->use_service['task'];
-    }
-
 
     //whether or not this group has opted to use mailing lists
     function usesMail() {
@@ -303,48 +286,6 @@ class Project extends Group {
     }
     
     /*
-		email address to send new 
-		bugs/patches/support requests to
-    */
-    function getNewBugAddress() {
-        return $this->project_data_array['new_bug_address'];
-    }
-
-    function getNewSupportAddress() {
-        return $this->project_data_array['new_support_address'];
-    }
-
-    function getNewPatchAddress() {
-        return $this->project_data_array['new_patch_address'];
-    }
-
-    function getNewTaskAddress() {
-        return $this->project_data_array['new_task_address'];
-    }
-
-    /*
-
-    boolean flags to determine whether or not to send
-		an email on every bug/patch/support update
-
-    */
-    function sendAllBugUpdates() {
-        return $this->project_data_array['send_all_bugs'];
-    }
-
-    function sendAllSupportUpdates() {
-        return $this->project_data_array['send_all_support'];
-    }
-
-    function sendAllPatchUpdates() {
-        return $this->project_data_array['send_all_patches'];
-    }
-
-    function sendAllTaskUpdates() {
-        return $this->project_data_array['send_all_tasks'];
-    }
-
-    /*
 
     Subversion and CVS settings
 
@@ -372,10 +313,6 @@ class Project extends Group {
     
     function isCVSPrivate() {
         return $this->project_data_array['cvs_is_private'];
-    }
-
-    function getSVNMailingList() {
-        return $this->project_data_array['svn_events_mailing_list'];
     }
 
     function getSVNMailingHeader() {

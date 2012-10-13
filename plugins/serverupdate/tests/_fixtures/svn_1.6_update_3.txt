@@ -1,4 +1,0 @@
-C    fake1.txt
-Updated to revision 8.
-Summary of conflicts:
-  Text conflicts: 1

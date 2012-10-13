@@ -50,6 +50,36 @@ class GitRepositoryFactory {
     }
 
     /**
+     * Return all git repositories of a project (gitshell, gitolite, personal forks)
+     *
+     * @param Project $project
+     *
+     * @return Array of GitRepository
+     */
+    public function getAllRepositories(Project $project) {
+        $repositories = array();
+        $repository_list = $this->dao->getProjectRepositoryList($project->getID(), false, false);
+        foreach ($repository_list as $row) {
+            $repository = new GitRepository();
+            $this->dao->hydrateRepositoryObject($repository, $row);
+            $repositories[] = $repository;
+        }
+        return $repositories;
+    }
+
+    /**
+     * Get a deleted repository by its id
+     *
+     * @param int $id         The id of the repository to load
+     *
+     * @return GitRepository the repository or null if not found
+     */
+    public function getDeletedRepository($id) {
+        $dar = $this->dao->searchDeletedRepositoryById($id);
+        return $this->getRepositoryFromDar($dar);
+    }
+
+    /**
      * Get a project repository by its id
      *
      * @param int $id         The id of the repository to load
@@ -118,11 +148,6 @@ class GitRepositoryFactory {
             $this->dao->hydrateRepositoryObject($repository, $dar->getRow());
         }
         return $repository;
-    }
-    
-    public function isRepositoryExistingByName(Project $project, $name) {
-        $path = GitRepository::getPathFromProjectAndName($project, $name);
-        return $this->dao->isRepositoryExisting($project->getID(), $path);
     }
 }
 

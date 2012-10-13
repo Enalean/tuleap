@@ -155,7 +155,8 @@ class ProjectDao extends DataAccessObject {
      * @param Integer $limit
      * @param String  $status
      * @param String  $groupName
-     * @return Array
+     *
+     * @return Array ('projects' => DataAccessResult, 'numrows' => int)
      */
     public function returnAllProjects($offset, $limit, $status=false, $groupName=false) {
         $cond = array();
@@ -276,6 +277,21 @@ class ProjectDao extends DataAccessObject {
     public function setMessageToRequesterForAccessProject($groupId, $message) {
         $sql = 'INSERT INTO groups_notif_delegation_message (group_id, msg_to_requester) VALUES ('.$this->da->quoteSmart($groupId).', '.$this->da->quoteSmart($message).')'.
                 ' ON DUPLICATE KEY UPDATE msg_to_requester='.$this->da->quoteSmart($message);
+        return $this->update($sql);
+    }
+
+    /**
+     * Set SVN header
+     *
+     * @param Integer $groupId
+     * @param String  $mailingHeader
+     *
+     * @return Boolean
+     */
+    function setSvnHeader($groupId, $mailingHeader) {
+        $sql = ' UPDATE groups
+                 SET svn_events_mailing_header = '.$this->da->quoteSmart($mailingHeader).'
+                 WHERE group_id = '.$this->da->escapeInt($groupId);
         return $this->update($sql);
     }
 }

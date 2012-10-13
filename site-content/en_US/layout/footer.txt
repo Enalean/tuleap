@@ -1,3 +1,16 @@
-<p class="pull-right"><a href="#">Back to top</a></p>
-<p>Powered by <a href="https://tuleap.net/" target="_blank">Tuleap</a> version <?php echo $version; ?>. Copyright © 2011 <a href="http://enalean.com/" target="_blank">Enalean</a>.<br />
-Tuleap is free software licensed under GPL License <a href="/tos/tos.php">[tos]</a> - <a href="/tos/privacy.php">[privacy]</a></p>
+<div class="footer container">
+    <div class="row-fluid">
+        <div class="span3">
+            <?php include($Language->getContent('layout/footer_about', null, null, '.php')); ?>
+        </div>
+        <div class="span3">
+            <?php include($Language->getContent('layout/footer_links', null, null, '.php')); ?>
+        </div>
+        <div class="span3">
+            <?php include($Language->getContent('layout/footer_cli', null, null, '.php')); ?>
+        </div>
+        <div class="span3">
+            <?php include($Language->getContent('layout/footer_help', null, null, '.php')); ?>
+        </div>
+    </div>
+</div>

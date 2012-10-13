@@ -228,8 +228,8 @@ class Codendi_HTMLPurifier {
             }
         case CODENDI_PURIFIER_STRIP_HTML:
         case CODENDI_PURIFIER_FULL:
-            require_once($GLOBALS['htmlpurifier_dir'].'/HTMLPurifier.auto.php');
-            $hp =& HTMLPurifier::getInstance();
+            require_once('HTMLPurifier.auto.php');
+            $hp = HTMLPurifier::getInstance();
             $config = $this->getHPConfig($level);
             $clean = $hp->purify($html, $config);
             // Quite big object, it's better to unset it (memory).

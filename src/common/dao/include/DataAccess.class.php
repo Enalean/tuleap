@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once('common/include/Config.class.php');
 require_once('DataAccessResult.class.php');
 require_once('DataAccessException.class.php');
 
@@ -255,6 +256,17 @@ class DataAccess {
     }
     
     /**
+     * Escape the ints, and implode them.
+     * 
+     * @param array $ints
+     * 
+     * $return string
+     */
+    public function escapeIntImplode(array $ints) {
+        return implode(',', array_map(array($this, 'escapeInt'), $ints));
+    }
+    
+    /**
      * Retrieves the number of rows from a result set.
      *
      * @param resource $result The result resource that is being evaluated. This result comes from a call to query().
@@ -288,5 +300,25 @@ class DataAccess {
         return mysql_data_seek($result, $row_number);
     }
 
+    /**
+     * Start a sql transaction
+     */
+    public function startTransaction() {
+        return $this->query('START TRANSACTION');
+    }
+
+    /**
+     * Rollback a sql transaction
+     */
+    public function rollback() {
+        return $this->query('ROLLBACK');
+    }
+
+    /**
+     * Commit a sql transaction
+     */
+    public function commit() {
+        return $this->query('COMMIT');
+    }
 }
 ?>

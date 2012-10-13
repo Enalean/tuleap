@@ -588,6 +588,7 @@ CREATE TABLE filemodule (
 CREATE TABLE filemodule_monitor (
   filemodule_id int(11) NOT NULL default '0',
   user_id int(11) NOT NULL default '0',
+  anonymous TINYINT(1) NOT NULL default '1',
   KEY idx_filemodule_monitor_id (filemodule_id)
 );
 
@@ -1019,7 +1020,6 @@ CREATE TABLE groups (
   cvs_is_private TINYINT(1) NOT NULL DEFAULT 0,
   svn_tracker int(11)   NOT NULL default '1',
   svn_mandatory_ref TINYINT NOT NULL default '0',
-  svn_events_mailing_list text NOT NULL,
   svn_events_mailing_header varchar(64) binary DEFAULT NULL,
   svn_preamble text NOT NULL,
   svn_accessfile text NULL,
@@ -1993,6 +1993,7 @@ CREATE TABLE user (
   language_id VARCHAR( 17 ) NOT NULL DEFAULT 'en_US',
   last_pwd_update int(11) NOT NULL default '0',
   expiry_date int(11),
+  has_avatar TINYINT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY  (user_id),
   INDEX idx_user_name(user_name(10)),
   KEY idx_user_user (status)
@@ -3429,6 +3430,20 @@ CREATE TABLE IF NOT EXISTS soap_call_counter (
     date int(11) unsigned NOT NULL,
     INDEX (method_name, date)
 );
+
+# --------------------------------------------------------
+
+#
+# Table structure for Svn notification
+#
+
+CREATE TABLE IF NOT EXISTS svn_notification (
+    group_id int(11) NOT NULL,
+    svn_events_mailing_list text NOT NULL DEFAULT "",
+    path varchar(255) DEFAULT "/",
+    PRIMARY KEY (group_id, path)
+);
+
 
 #
 # EOF

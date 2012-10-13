@@ -263,7 +263,7 @@ flush privileges;
       </para>
       <programlisting width="40" format="linespecific" linenumbering="unnumbered">
 cvs -d:pserver:user_name@cvs.codendi.servername.com:/cvsroot/codendi checkout\
-    -r CX_2_0_SUP SF cgi-bin codendi_tools documentation site-content
+    -r CX_2_0_SUP SF cgi-bin tools documentation site-content
       </programlisting>
       <para>
         ...where user_name is the login name, and servername.com is the name of 

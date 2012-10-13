@@ -27,9 +27,6 @@ require_once('common/widget/Widget_MyMonitoredForums.class.php');
 require_once('common/widget/Widget_MyMonitoredFp.class.php');
 require_once('common/widget/Widget_MyLatestSvnCommits.class.php');
 require_once('common/widget/Widget_MyArtifacts.class.php');
-require_once('common/widget/Widget_MyBugs.class.php');
-require_once('common/widget/Widget_MySrs.class.php');
-require_once('common/widget/Widget_MyTasks.class.php');
 require_once('common/widget/Widget_MyRss.class.php');
 require_once('common/widget/Widget_MyAdmin.class.php');
 require_once('common/widget/Widget_MyTwitterFollow.class.php');
@@ -156,54 +153,49 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
     }
     function destroy($id) {
     }
-    /* static */ function & getInstance($widget_name) {
+
+    /**
+     * @return Widget
+     */
+    public static function getInstance($widget_name) {
         $o = null;
         switch($widget_name) {
             case 'mysurveys':
-                $o =& new Widget_MySurveys();
+                $o = new Widget_MySurveys();
                 break;
             case 'myprojects':
-                $o =& new Widget_MyProjects();
+                $o = new Widget_MyProjects();
                 break;
             case 'mybookmarks':
-                $o =& new Widget_MyBookmarks();
+                $o = new Widget_MyBookmarks();
                 break;
             case 'mymonitoredforums':
-                $o =& new Widget_MyMonitoredForums();
+                $o = new Widget_MyMonitoredForums();
                 break;
             case 'mymonitoredfp':
-                $o =& new Widget_MyMonitoredFp();
+                $o = new Widget_MyMonitoredFp();
                 break;
             case 'mylatestsvncommits':
-                $o =& new Widget_MyLatestSvnCommits();
+                $o = new Widget_MyLatestSvnCommits();
                 break;  
             case 'myartifacts':
-                $o =& new Widget_MyArtifacts();
-                break;
-            case 'mybugs':
-                $o =& new Widget_MyBugs();
-                break;
-            case 'mytasks':
-                $o =& new Widget_MyTasks();
-                break;
-            case 'mysrs':
-                $o =& new Widget_MySrs();
+                $o = new Widget_MyArtifacts();
                 break;
             case 'myrss':
-                $o =& new Widget_MyRss();
+                $o = new Widget_MyRss();
                 break;
             case 'mytwitterfollow':
-                $o =& new Widget_MyTwitterFollow();
+                $o = new Widget_MyTwitterFollow();
                 break;
             //case 'mywikipage':                   //not yet
-            //    $o =& new Widget_MyWikiPage();
+            //    $o = new Widget_MyWikiPage();
             //    break;
             case 'myimageviewer':
-                $o =& new Widget_MyImageViewer();
+                $o = new Widget_MyImageViewer();
                 break;
             case 'myadmin':
                 if (user_is_super_user()) { //This widget is only for super admin
-                    $o =& new Widget_MyAdmin();
+                    $o = new Widget_MyAdmin();
                 }
                 break;
             case 'mysystemevent':
@@ -212,46 +204,46 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
                 }
                 break;
             case 'projectdescription':
-                $o =& new Widget_ProjectDescription();
+                $o = new Widget_ProjectDescription();
                 break;
             case 'projectclassification':
-                $o =& new Widget_ProjectClassification();
+                $o = new Widget_ProjectClassification();
                 break;
             case 'projectmembers':
-                $o =& new Widget_ProjectMembers();
+                $o = new Widget_ProjectMembers();
                 break;
             case 'projectlatestfilereleases':
-                $o =& new Widget_ProjectLatestFileReleases();
+                $o = new Widget_ProjectLatestFileReleases();
                 break;
             case 'projectlatestnews':
-                $o =& new Widget_ProjectLatestNews();
+                $o = new Widget_ProjectLatestNews();
                 break;
             case 'projectpublicareas':
-                $o =& new Widget_ProjectPublicAreas();
+                $o = new Widget_ProjectPublicAreas();
                 break;
             case 'projectrss':
-                $o =& new Widget_ProjectRss();
+                $o = new Widget_ProjectRss();
                 break;
             case 'projecttwitterfollow':
-                $o =& new Widget_ProjectTwitterFollow();
+                $o = new Widget_ProjectTwitterFollow();
                 break;
             case 'projectsvnstats':
-                $o =& new Widget_ProjectSvnStats();
+                $o = new Widget_ProjectSvnStats();
                 break;
             //case 'projectwikipage':                    //not yet
-            //    $o =& new Widget_ProjectWikiPage();
+            //    $o = new Widget_ProjectWikiPage();
             //    break;
             case 'projectlatestsvncommits':
-                $o =& new Widget_ProjectLatestSvnCommits();
+                $o = new Widget_ProjectLatestSvnCommits();
                 break;
             case 'projectlatestcvscommits':
-                $o =& new Widget_ProjectLatestCvsCommits();
+                $o = new Widget_ProjectLatestCvsCommits();
                 break;
             case 'projectimageviewer':
-                $o =& new Widget_ProjectImageViewer();
+                $o = new Widget_ProjectImageViewer();
                 break;
             default:
-                $em =& EventManager::instance();
+                $em = EventManager::instance();
                 $em->processEvent('widget_instance', array('widget' => $widget_name, 'instance' => &$o));
                 break;
         }
@@ -289,7 +281,7 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
         }
         
         $plugins_widgets = array();
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $em->processEvent('widgets', array('codendi_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
         
         if (is_array($plugins_widgets)) {
@@ -316,7 +308,7 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
         }
         
         $plugins_widgets = array();
-        $em =& EventManager::instance();
+        $em = EventManager::instance();
         $em->processEvent('widgets', array('external_widgets' => &$plugins_widgets, 'owner_type' => $owner_type));
         
         if (is_array($plugins_widgets)) {
@@ -332,9 +324,17 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
         return '';
     }
     function getPreviewCssClass() {
-        $locale = UserManager::instance()->getCurrentUser()->getLocale();
+        $locale = $this->getCurrentUser()->getLocale();
         return 'widget-preview-'.($this->id).'-'.$locale;
     }
+
+    /**
+     * @return User
+     */
+    function getCurrentUser() {
+        return UserManager::instance()->getCurrentUser();
+    }
+
     function getAjaxUrl($owner_id, $owner_type) {
         return '/widgets/widget.php?owner='. $owner_type.$owner_id .'&action=ajax&name['. $this->id .']='. $this->getInstanceId();
     }

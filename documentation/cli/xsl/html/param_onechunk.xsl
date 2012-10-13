@@ -26,7 +26,7 @@ procedure before
 </xsl:param>
 
 <!-- CX-SBT: Name of the single HTML file, without the .html extension -->
-<xsl:param name="root.filename" select="'Codendi_CLI'"></xsl:param>
+<xsl:param name="root.filename" select="'CLI'"></xsl:param>
 
 <!-- CX-SBT: Generate the legal notice in the same file -->
 <xsl:param name="generate.legalnotice.link" select="0"/>

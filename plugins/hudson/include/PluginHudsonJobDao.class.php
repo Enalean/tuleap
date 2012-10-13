@@ -86,7 +86,7 @@ class PluginHudsonJobDao extends DataAccessObject {
     
     /**
     * create a row in the table plugin_hudson_job 
-    * @return true if there is no error
+    * @return inserted job id if there is no error
     */
     function createHudsonJob($group_id, $hudson_job_url, $job_name, $use_svn_trigger = false, $use_cvs_trigger = false, $token = null) {
         $sql = sprintf("INSERT INTO plugin_hudson_job (group_id, job_url, name, use_svn_trigger, use_cvs_trigger, token) VALUES (%s, %s, %s, %s, %s, %s)",
@@ -97,8 +97,10 @@ class PluginHudsonJobDao extends DataAccessObject {
                 ($use_cvs_trigger?1:0),
                 (($token !== null)?$this->da->quoteSmart($token):$this->da->quoteSmart(''))
                 );
-        $ok = $this->update($sql);
-		return $ok;
+        if ($this->update($sql)) {
+            return $this->da->lastInsertId();
+        }
+        return false;
     }
     
     function updateHudsonJob($job_id, $hudson_job_url, $job_name, $use_svn_trigger = false, $use_cvs_trigger = false, $token = null) {

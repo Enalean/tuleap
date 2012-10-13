@@ -19,6 +19,7 @@
   */
 require_once('common/backend/Backend.class.php');
 require_once('GitDao.class.php');
+require_once('Git_LogDao.class.php');
 require_once('GitDriver.class.php');
 require_once('Git_Backend_Interface.php');
 require_once('GitRepository.class.php');
@@ -125,50 +126,18 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         return true;
     }
 
-    public function delete($repository, $ignoreHasChildren = false) {
-        $path = $repository->getPath();
-        if ( empty($path) ) {
-            throw new GitBackendException('Bad repository path: '.$path);
-        }
-        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$path;        
-        if ($ignoreHasChildren === false && $this->getDao()->hasChild($repository) === true) {
-            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
-        }
-        
-        if ($repository->canBeDeleted()) {
-            $this->archive($repository);
-            $this->getDao()->delete($repository);        
-            $this->getDriver()->delete($path);
-            return true;
-        } else {
-            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
-        }
-        
+    public function canBeDeleted(GitRepository $repository) {
+        return ($this->getDao()->hasChild($repository) !== true);
     }
 
-    /**
-     * Delete all repositories of a project
-     *
-     * @param Integer $projectId Id of the project
-     *
-     * @return Boolean
-     */
-    public function deleteProjectRepositories($projectId) {
-        $deleteStatus   = true;
-        $repositoryList = $this->getDao()->getProjectRepositoryList($projectId, true);
-        if (!empty($repositoryList)) {
-            $sem = $this->getSystemEventManager();
-            foreach ($repositoryList as $repositoryId => $repoData) {
-                $sem->createEvent('GIT_REPO_DELETE',
-                                   $projectId.SystemEvent::PARAMETER_SEPARATOR.$repositoryId.SystemEvent::PARAMETER_SEPARATOR.true,
-                                   SystemEvent::PRIORITY_MEDIUM);
-            }
-        }
-        return $deleteStatus;
+    public function markAsDeleted(GitRepository $repository) {
+        $this->getDao()->delete($repository);
     }
 
-    function getSystemEventManager() {
-        return SystemEventManager::instance();
+    public function delete(GitRepository $repository) {
+        $path = $this->getGitRootPath().DIRECTORY_SEPARATOR.$repository->getPath();        
+        $this->archive($repository);
+        $this->getDriver()->delete($path);
     }
 
     public function save($repository) {
@@ -333,10 +302,11 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl(GitRepository $repository) {
+    public function getAccessURL(GitRepository $repository) {
         $serverName  = $_SERVER['SERVER_NAME'];
         $user = UserManager::instance()->getCurrentUser();
-        return  $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git';
+        return array('ssh' => $user->getUserName() .'@'. $serverName .':/gitroot/'. $repository->getProject()->getUnixName().'/'.$repository->getName().'.git');
+        
     }
 
     /**
@@ -389,26 +359,63 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
         $gitolite[]      = "Gitolite";
         $dar             = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
                 $gitShellIndex[] = $row['month']." ".$row['year'];
                 $gitShell[]      = intval($row['count']);
             }
+            $formatter->addLine($gitShellIndex);
+            $formatter->addLine($gitShell);
         }
         $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError()) {
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
             foreach ($dar as $row) {
                 $gitoliteIndex[] = $row['month']." ".$row['year'];
                 $gitolite[]      = intval($row['count']);
             }
+            $formatter->addLine($gitoliteIndex);
+            $formatter->addLine($gitolite);
         }
-        $formatter->addLine($gitShellIndex);
-        $formatter->addLine($gitShell);
-        $formatter->addLine($gitoliteIndex);
-        $formatter->addLine($gitolite);
+        $this->retrieveLoggedPushesStatistics($formatter);
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
         return $content;
+    }
+
+    /**
+     * Retrieve logged pushes statistics for CSV export
+     *
+     * @param Statistics_Formatter $formatter instance of statistics formatter class
+     *
+     * @return void
+     */
+    private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
+        $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
+        $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
+        $gitUsers[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_users');
+        $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
+
+        $gitLogDao = new Git_LogDao();
+        $dar       = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row) {
+                $gitIndex[]   = $row['month']." ".$row['year'];
+                $gitPushes[]  = intval($row['pushes_count']);
+                $gitCommits[] = intval($row['commits_count']);
+                $gitUsers[]   = intval($row['users']);
+                $gitRepo[]    = intval($row['repositories']);
+            }
+            $formatter->addLine($gitIndex);
+            $formatter->addLine($gitPushes);
+            $formatter->addLine($gitCommits);
+            $formatter->addLine($gitUsers);
+            $formatter->addLine($gitRepo);
+        }
+    }
+
+    public function commitTransaction(GitRepository $repository) {
+        // this action is not necessary for thhis type of backend
     }
 }
 

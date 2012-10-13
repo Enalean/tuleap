@@ -1,0 +1,34 @@
+Version 0.12 - Tuleap 5.5
+    * When a new version is uploaded, index it in ES
+
+Version 0.11 - Tuleap 5.5
+    * Users can now search documents in FullText
+
+Version 0.10 - Tuleap 5.5
+    * Add support for Basic Auth
+
+Version 0.9 - Tuleap 5.4
+    * Provides RPMS for elastic search
+
+Version 0.8 - Tuleap 5.4
+    * Asynchronous document indexing for better responsivness of UI.
+
+Version 0.7 - Tuleap 5.4
+    * Update docman item perms in fulltext
+
+Version 0.6 - Tuleap 5.3
+    * Admin chooses which projects can index docs
+
+Version 0.5 - Tuleap 5.3
+    * Update mustache renderer
+
+Version 0.4 - Tuleap 5.2
+    * First version of search interface available through site admin
+
+Version 0.3 - Tuleap 5.2
+    * On document title/description update, update the corresponding index.
+
+Version 0.2 - Tuleap 5.1
+    * First version of the plugin
+    ** index/delete a document in ElasticSearch when it is added/removed in the docman
+    ** Only title, description and content of pdf files are indexed

@@ -18,17 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../../../include/constants.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Presenter.class.php');
 require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Controller.class.php');
-require_once(dirname(__FILE__).'/../../Test_Tracker_Builder.php');
+require_once(dirname(__FILE__).'/../../builders/aTracker.php');
 Mock::generate('Tracker');
 Mock::generate('Tracker_Hierarchy_HierarchicalTrackerFactory');
 Mock::generate('TrackerFactory');
 Mock::generate('Tracker_Hierarchy_Dao');
 
-if (!defined('TRACKER_BASE_URL')) {
-    define('TRACKER_BASE_URL', '/plugins/tracker');
-}
 
 class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
     
@@ -105,8 +103,8 @@ class Tracker_Hierarchy_ControllerTest extends TuleapTestCase {
         
         $content = $this->WhenICaptureTheOutputOfEditAction();
         
-        $this->assertPattern("%/plugins/tracker/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
-        $this->assertPattern("%/plugins/tracker/\?tracker=$stories_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%".TRACKER_BASE_URL."/\?tracker=$sprints_id&func=admin-hierarchy%", $content);
+        $this->assertPattern("%".TRACKER_BASE_URL."/\?tracker=$stories_id&func=admin-hierarchy%", $content);
     }
     
     private function WhenICaptureTheOutputOfEditAction() {

@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/GitBackend.class.php';
 Mock::generatePartial('GitBackend', 'GitBackendTestVersion', array('getDao', 'getDriver', 'getSystemEventManager'));
 Mock::generatePartial('GitBackend', 'GitBackend4SetUp', array('getDao', 'getDriver', 'deployPostReceive', 'setRepositoryPermissions', 'changeRepositoryAccess'));
@@ -136,40 +137,6 @@ class GitBackendTest extends UnitTestCase {
         $backend->setReturnValue('getDao', $dao);
 
         $backend->setUpRepository($repo);
-    }
-
-    public function testDeleteProjectRepositoriesNothingToDelete() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array());
-        $backend->setReturnValue('getDao', $dao);
-        $backend->expectNever('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesDeleteFail() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array(2 => array(), 1 => array(), 3 => array()));
-        $backend->setReturnValue('getDao', $dao);
-        $sem = new MockSystemEventManager();
-        $backend->setReturnValue('getSystemEventManager', $sem);
-        $backend->expectOnce('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
-    }
-
-    public function testDeleteProjectRepositoriesSuccess() {
-        $backend = new GitBackendTestVersion();
-        $dao = new MockGitDao();
-        $dao->expectOnce('getProjectRepositoryList');
-        $dao->setReturnValue('getProjectRepositoryList', array(2 => array(), 1 => array(), 3 => array()));
-        $backend->setReturnValue('getDao', $dao);
-        $sem = new MockSystemEventManager();
-        $backend->setReturnValue('getSystemEventManager', $sem);
-        $backend->expectOnce('getSystemEventManager');
-        $this->assertTrue($backend->deleteProjectRepositories(1));
     }
 
     public function testArchiveCreatesATarGz() {

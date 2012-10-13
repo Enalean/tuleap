@@ -48,7 +48,7 @@ if (!$res_new || db_numrows($res_new) < 4) {
 //LJ Modified by LJ. If there is exactly 0 no new
 //LJ release then it's not an error
 //LJ
-echo '<h2>'.$Language->getText('new_index','new_releases').' '.help_button('TheCodendiMainMenu.html#NewReleases').'</h2>';
+echo '<h2>'.$Language->getText('new_index','new_releases').' '.help_button('TheMainMenu.html#NewReleases').'</h2>';
 if (!$res_new || db_numrows($res_new) < 1) {
 	if (!$res_new) {
 		echo $query . "<BR><BR>"	;
@@ -66,8 +66,8 @@ if (!$res_new || db_numrows($res_new) < 1) {
 	}
 
 	print "\t<TABLE width=100% cellpadding=0 cellspacing=0 border=0>";
-        $frspf =& new FRSPackageFactory();
-        $frsrf =& new FRSReleaseFactory();
+        $frspf = new FRSPackageFactory();
+        $frsrf = new FRSReleaseFactory();
 	for ($i=0; $i<$rows; $i++) {
 	  $row_new = db_fetch_array($res_new);
 	  // avoid dupulicates of different file types

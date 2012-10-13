@@ -19,6 +19,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
+require_once 'constants.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
 
@@ -37,35 +38,44 @@ class GitPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook('cssfile',                                         'cssFile',                         false);
-        $this->_addHook('javascript_file',                                 'jsFile',                          false);
-        $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                      false);
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',             false);
-        $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',            false);
-        $this->_addHook('get_available_reference_natures',                 'getReferenceNatures',             false);
-        $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess', false);
-        $this->_addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',        false);
-        $this->_addHook('project_is_deleted',                              'project_is_deleted',              false);
-        $this->_addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',         false);
+        $this->_addHook('cssfile',                                         'cssFile',                                      false);
+        $this->_addHook('javascript_file',                                 'jsFile',                                       false);
+        $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                                   false);
+        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS,                     'getSystemEventClass',                          false);
+        $this->_addHook(Event::GET_PLUGINS_AVAILABLE_KEYWORDS_REFERENCES,  'getReferenceKeywords',                         false);
+        $this->_addHook('get_available_reference_natures',                 'getReferenceNatures',                          false);
+        $this->_addHook('SystemEvent_PROJECT_IS_PRIVATE',                  'changeProjectRepositoriesAccess',              false);
+        $this->_addHook('SystemEvent_PROJECT_RENAME',                      'systemEventProjectRename',                     false);
+        $this->_addHook('project_is_deleted',                              'project_is_deleted',                           false);
+        $this->_addHook('file_exists_in_data_dir',                         'file_exists_in_data_dir',                      false);
 
         // Stats plugin
-        $this->_addHook('plugin_statistics_disk_usage_collect_project', 'plugin_statistics_disk_usage_collect_project', false);
-        $this->_addHook('plugin_statistics_disk_usage_service_label',   'plugin_statistics_disk_usage_service_label',   false);
-        $this->_addHook('plugin_statistics_color',                      'plugin_statistics_color',                      false);
+        $this->_addHook('plugin_statistics_disk_usage_collect_project',    'plugin_statistics_disk_usage_collect_project', false);
+        $this->_addHook('plugin_statistics_disk_usage_service_label',      'plugin_statistics_disk_usage_service_label',   false);
+        $this->_addHook('plugin_statistics_color',                         'plugin_statistics_color',                      false);
 
-        $this->_addHook('project_admin_remove_user', 'projectRemoveUserFromNotification', false);
-        
-        $this->_addHook(Event::EDIT_SSH_KEYS, 'edit_ssh_keys', false);
-        $this->_addHook(Event::DUMP_SSH_KEYS, 'dump_ssh_keys', false);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
-        
-        $this->_addHook('permission_get_name',               'permission_get_name',               false);
-        $this->_addHook('permission_get_object_type',        'permission_get_object_type',        false);
-        $this->_addHook('permission_get_object_name',        'permission_get_object_name',        false);
-        $this->_addHook('permission_get_object_fullname',    'permission_get_object_fullname',    false);
-        $this->_addHook('permission_user_allowed_to_change', 'permission_user_allowed_to_change', false);
-        $this->_addHook('permissions_for_ugroup',            'permissions_for_ugroup',            false);
-        $this->_addHook('statistics_collector',              'statistics_collector',                    false);
+        $this->_addHook('project_admin_remove_user',                       'projectRemoveUserFromNotification',            false);
+
+        $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
+        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
+
+        $this->_addHook('permission_get_name',                             'permission_get_name',                          false);
+        $this->_addHook('permission_get_object_type',                      'permission_get_object_type',                   false);
+        $this->_addHook('permission_get_object_name',                      'permission_get_object_name',                   false);
+        $this->_addHook('permission_get_object_fullname',                  'permission_get_object_fullname',               false);
+        $this->_addHook('permission_user_allowed_to_change',               'permission_user_allowed_to_change',            false);
+        $this->_addHook('permissions_for_ugroup',                          'permissions_for_ugroup',                       false);
+
+        $this->_addHook('statistics_collector',                            'statistics_collector',                         false);
+
+        $this->_addHook('collect_ci_triggers',                             'collect_ci_triggers',                          false);
+        $this->_addHook('save_ci_triggers',                                'save_ci_triggers',                             false);
+        $this->_addHook('update_ci_triggers',                              'update_ci_triggers',                           false);
+        $this->_addHook('delete_ci_triggers',                              'delete_ci_triggers',                           false);
+
+        $this->_addHook('logs_daily',                                       'logsDaily',                                   false);
+        $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
+        $this->_addHook('widgets',                                          'widgets',                                     false);
     }
 
     public function getPluginInfo() {
@@ -76,10 +86,22 @@ class GitPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
+    /**
+     * Returns the configuration defined for given variable name
+     *
+     * @param String $key
+     *
+     * @return Mixed
+     */
+    public function getConfigurationParameter($key) {
+        return $this->getPluginInfo()->getPropertyValueForName($key);
+    }
+
     public function cssFile($params) {
         // Only show the stylesheet if we're actually in the Git pages.
         // This stops styles inadvertently clashing with the main site.
-        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0) {
+        if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+            strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/style.css" />';
             echo '<link rel="stylesheet" type="text/css" href="'.$this->getThemePath().'/css/gitphp.css" />';
         }
@@ -136,7 +158,9 @@ class GitPlugin extends Plugin {
         require_once('GitActions.class.php');
         $groupId   = $params[0];
         $isPrivate = $params[1];
-        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate);
+        $dao       = new GitDao();
+        $factory   = $this->getRepositoryFactory();
+        GitActions::changeProjectRepositoriesAccess($groupId, $isPrivate, $dao, $factory);
     }
 
     public function systemEventProjectRename($params) {
@@ -218,23 +242,6 @@ class GitPlugin extends Plugin {
     }
 
     /**
-     * Called by hook when SSH keys of users are modified.
-     *
-     * @param array $params
-     */
-    public function edit_ssh_keys($params) {
-        require_once 'Git_GitoliteDriver.class.php';
-        $user = UserManager::instance()->getUserById($params['user_id']);
-        if ($user) {
-            $gitolite = new Git_GitoliteDriver();
-            if (is_dir($gitolite->getAdminPath())) {
-                $gitolite->initUserKeys($user);
-                $gitolite->push();
-            }
-        }
-    }
-
-    /**
      * Called by backend to ensure that all ssh keys are in gitolite conf
      * 
      * As we are root we use a dedicated script to be run as codendiadm.
@@ -246,6 +253,9 @@ class GitPlugin extends Plugin {
         $retVal = 0;
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
+        if (isset($params['user'])) {
+            $mvCmd .= ' '.$params['user']->getId();
+        }
         $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
         exec($cmd, $output, $retVal);
         if ($retVal == 0) {
@@ -283,6 +293,7 @@ class GitPlugin extends Plugin {
     function permission_get_object_name($params) {
         if (!$params['object_name']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -297,6 +308,7 @@ class GitPlugin extends Plugin {
     function permission_get_object_fullname($params) {
         if (!$params['object_fullname']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -311,6 +323,7 @@ class GitPlugin extends Plugin {
     function permissions_for_ugroup($params) {
         if (!$params['results']) {
             if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                require_once('GitRepository.class.php');
                 $repository = new GitRepository();
                 $repository->setId($params['object_id']);
                 try {
@@ -327,6 +340,7 @@ class GitPlugin extends Plugin {
         if (!$params['allowed']) {
             if (!$this->_cached_permission_user_allowed_to_change) {
                 if (in_array($params['permission_type'], array('PLUGIN_GIT_READ', 'PLUGIN_GIT_WRITE', 'PLUGIN_GIT_WPLUS'))) {
+                    require_once('GitRepository.class.php');
                     $repository = new GitRepository();
                     $repository->setId($params['object_id']);
                     try {
@@ -359,16 +373,23 @@ class GitPlugin extends Plugin {
      * @return void
      */
     public function project_is_deleted($params) {
-        require_once('GitActions.class.php');
         if (!empty($params['group_id'])) {
-            $projectId = intval($params['group_id']);
-            // Delete all gitolite repositories of the project
-            $gitoliteBackend = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-            $gitoliteBackend->deleteProjectRepositories($projectId);
-            // Delete all git repositories of the project
-            $gitBackend = Backend::instance('Git','GitBackend');
-            $gitBackend->deleteProjectRepositories($projectId);
+            $project = ProjectManager::instance()->getProject($params['group_id']);
+            if ($project) {
+                $repository_manager = $this->getRepositoryManager();
+                $repository_manager->deleteProjectRepositories($project);
+            }
         }
+    }
+
+    private function getRepositoryManager() {
+        require_once 'GitRepositoryManager.class.php';
+        return new GitRepositoryManager($this->getRepositoryFactory(), SystemEventManager::instance());
+    }
+
+    private function getRepositoryFactory() {
+        require_once 'GitRepositoryFactory.class.php';
+        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
     }
 
     /**
@@ -387,6 +408,159 @@ class GitPlugin extends Plugin {
         }
     }
 
+    /**
+     * Add ci trigger information for Git service
+     *
+     * @param Array $params Hook parms
+     *
+     * @return Void
+     */
+    public function collect_ci_triggers($params) {
+        require_once('Git_Ci.class.php');
+        $ci = new Git_Ci();
+        $triggers = $ci->retrieveTriggers($params);
+        $params['services'][] = $triggers;
+    }
+
+    /**
+     * Save ci trigger for Git service
+     *
+     * @param Array $params Hook parms
+     *
+     * @return Void
+     */
+    public function save_ci_triggers($params) {
+        if (isset($params['job_id']) && !empty($params['job_id']) && isset($params['request']) && !empty($params['request'])) {
+            $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
+            if ($repositoryId) {
+                $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
+                $vRepoId->required();
+                if($params['request']->valid($vRepoId)) {
+                    require_once('Git_Ci.class.php');
+                    $ci = new Git_Ci();
+                    if (!$ci->saveTrigger($params['job_id'], $repositoryId)) {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
+                    }
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_bad_repo_id'));
+                }
+            }
+        }
+    }
+
+    /**
+     * Update ci trigger for Git service
+     *
+     * @param Array $params Hook parms
+     *
+     * @return Void
+     */
+    public function update_ci_triggers($params) {
+        if (isset($params['request']) && !empty($params['request'])) {
+            $jobId        = $params['request']->get('job_id');
+            $repositoryId = $params['request']->get('hudson_use_plugin_git_trigger');
+            if ($jobId) {
+                $vJobId = new Valid_Uint('job_id');
+                $vJobId->required();
+                if($params['request']->valid($vJobId)) {
+                    require_once('Git_Ci.class.php');
+                    $ci = new Git_Ci();
+                    $vRepoId = new Valid_Uint('hudson_use_plugin_git_trigger');
+                    $vRepoId->required();
+                    if ($params['request']->valid($vRepoId)) {
+                        if (!$ci->saveTrigger($jobId, $repositoryId)) {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_saved'));
+                        }
+                    } else {
+                        if (!$ci->deleteTrigger($jobId)) {
+                            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));
+                        }
+                    }
+                } else {
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_bad_repo_id'));
+                }
+            }
+        }
+    }
+
+    /**
+     * Delete ci trigger for Git service
+     *
+     * @param Array $params Hook parms
+     *
+     * @return Void
+     */
+    public function delete_ci_triggers($params) {
+        if (isset($params['job_id']) && !empty($params['job_id'])) {
+            require_once('Git_Ci.class.php');
+            $ci = new Git_Ci();
+            if (!$ci->deleteTrigger($params['job_id'])) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_git','ci_trigger_not_deleted'));
+            }
+        }
+    }
+
+    /**
+     * Add log access for git pushs
+     * 
+     * @param Array $params parameters of the event
+     *
+     * @return Void
+     */
+    function logsDaily($params) {
+        $pm      = ProjectManager::instance();
+        $project = $pm->getProject($params['group_id']);
+        if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            require_once('Git.class.php');
+            $controler = new Git($this);
+            $controler->logsDaily($params);
+        }
+    }
+
+    /**
+     * Instanciate the corresponding widget
+     *
+     * @param Array $params Name and instance of the widget
+     *
+     * @return Void
+     */
+    function myPageBox($params) {
+        switch ($params['widget']) {
+            case 'plugin_git_user_pushes':
+                require_once('Git_Widget_UserPushes.class.php');
+                $params['instance'] = new Git_Widget_UserPushes($this->getPluginPath());
+                break;
+            case 'plugin_git_project_pushes':
+                require_once('Git_Widget_ProjectPushes.class.php');
+                $params['instance'] = new Git_Widget_ProjectPushes($this->getPluginPath());
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * List plugin's widgets in customize menu
+     *
+     * @param Array $params List of widgets
+     *
+     * @return Void
+     */
+    function widgets($params) {
+        require_once('common/widget/WidgetLayoutManager.class.php');
+        if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_USER) {
+            $params['codendi_widgets'][] = 'plugin_git_user_pushes';
+        }
+        $request = HTTPRequest::instance();
+        $groupId = $request->get('group_id');
+        $pm      = ProjectManager::instance();
+        $project = $pm->getProject($groupId);
+        if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
+            if ($params['owner_type'] == WidgetLayoutManager::OWNER_TYPE_GROUP) {
+                $params['codendi_widgets'][] = 'plugin_git_project_pushes';
+            }
+        }
+    }
 }
 
 ?>

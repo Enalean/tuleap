@@ -20,9 +20,11 @@
 
 abstract class Tracker_FormElement_Field_List_Value {
     protected $id;
+    protected $is_hidden = false;
     
-    public function __construct($id) {
-        $this->id = $id;
+    public function __construct($id, $is_hidden) {
+        $this->id        = $id;
+        $this->is_hidden = $is_hidden;
     }
     
     public function getId() {
@@ -61,7 +63,11 @@ abstract class Tracker_FormElement_Field_List_Value {
     }
     
     public function isHidden() {
-        return false;
+        return $this->is_hidden;
+    }
+
+    public function getSoapValue() {
+        return $this->getLabel();
     }
 }
 

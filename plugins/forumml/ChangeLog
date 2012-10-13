@@ -1,3 +1,12 @@
+Version 2.6.4 - Tuleap 5.5
+    * Fix send message through interface
+
+Version 2.6.3 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
+Version 2.6.2 - Tuleap 5.4
+    * Continue PHP 5.3 compat (Contrib Philippe Goetz)
+
 Version 2.6
     * Make forumml compliant with default purifier
     * Fix title typo

@@ -33,14 +33,15 @@ function rgb2html($r, $g=-1, $b=-1)
     $color = (strlen($r) < 2?'0':'').$r;
     $color .= (strlen($g) < 2?'0':'').$g;
     $color .= (strlen($b) < 2?'0':'').$b;
-    return '#'.$color;
+    return '<div style="background:#'. $color .';"><a href="#">#'. $color .'</a></div>';
 }
 
-$a = html2rgb('eae191');
-$b = html2rgb('D14B4B');
+$a = html2rgb('ffffe0');
+$b = html2rgb('ff9480');
       
 $size = 9;
-header('Content-type: text/plain');
+echo '<link rel="stylesheet" href="css/style.css" />';
+echo '<div class="contenttable">';
 for($i = 0 ; $i <= 100 ; $i += 100/($size - 1)) {
    echo rgb2html(array(
       $a[0] + ($b[0] - $a[0]) * $i / 100,
@@ -48,4 +49,5 @@ for($i = 0 ; $i <= 100 ; $i += 100/($size - 1)) {
       $a[2] + ($b[2] - $a[2]) * $i / 100
    ))."\n";
 }
+echo '</div>';
 ?>

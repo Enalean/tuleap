@@ -346,8 +346,10 @@ class SystemEventManager {
      * @return SystemEvent
      */
     protected function getInstanceFromRow($row) {
-        $sysevent = null;
-        $klass    = null;
+        $em           = EventManager::instance();
+        $sysevent     = null;
+        $klass        = null;
+        $klass_params = null;
         switch ($row['type']) {
         case SystemEvent::TYPE_SYSTEM_CHECK:
         case SystemEvent::TYPE_EDIT_SSH_KEYS:
@@ -367,12 +369,11 @@ class SystemEventManager {
         case SystemEvent::TYPE_PROJECT_IS_PRIVATE:
         case SystemEvent::TYPE_SERVICE_USAGE_SWITCH:
         case SystemEvent::TYPE_ROOT_DAILY:
-            case SystemEvent::TYPE_COMPUTE_MD5SUM:
-            $klass = 'SystemEvent_'. $row['type'];            
+        case SystemEvent::TYPE_COMPUTE_MD5SUM:
+            $klass = 'SystemEvent_'. $row['type'];
             break;
         default:
-            $em = EventManager::instance();
-            $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type'=>$row['type'], 'class'=>&$klass) );
+            $em->processEvent(Event::GET_SYSTEM_EVENT_CLASS, array('type' => $row['type'], 'class' => &$klass, 'dependencies' => &$klass_params));
             break;
         }
         if (!empty($klass)) {
@@ -385,6 +386,9 @@ class SystemEventManager {
                                    $row['process_date'],
                                    $row['end_date'],
                                    $row['log']);
+            if (!empty($klass_params)) {
+                call_user_func_array(array($sysevent, 'injectDependencies'), $klass_params);
+            }
         }
         return $sysevent;
     }
@@ -411,15 +415,16 @@ class SystemEventManager {
     /**
      * Compute a html table to display the status of the last n events
      * 
-     * @param int     $offset        the offset of the pagination
-     * @param int     $limit         the number of event to includ in the table
-     * @param boolean $full          display a full table or only a summary
-     * @param array   $filter_status the filter on status
-     * @param array   $filter_type   the filter on type
+     * @param int                   $offset        the offset of the pagination
+     * @param int                   $limit         the number of event to includ in the table
+     * @param boolean               $full          display a full table or only a summary
+     * @param array                 $filter_status the filter on status
+     * @param array                 $filter_type   the filter on type
+     * @param CSRFSynchronizerToken $csrf          The token to use to build actions on events
      *
      * @return string html
      */
-    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false) {
+    public function fetchLastEventsStatus($offset = 0, $limit = 10, $full = false, $filter_status = false, $filter_type = false, CSRFSynchronizerToken $csrf = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $html .= '<table class="table table-bordered table-striped table-condensed" width="100%">';
@@ -435,12 +440,17 @@ class SystemEventManager {
             $html .= '<th class="boxtitle">'. 'process_date' .'</th>';
             $html .= '<th class="boxtitle">'. 'end_date' .'</th>';
             $html .= '<th class="boxtitle">'. 'log' .'</th>';
+            $html .= '<th class="boxtitle">'. 'actions' .'</th>';
             
             $html .= '</tr></thead>';
             
         }
         $html .= '<tbody>';
         
+        $replay_action_params = array();
+        if ($csrf) {
+            $replay_action_params[$csrf->getTokenName()] = $csrf->getToken();
+        }
         if (!$filter_status) {
             $filter_status = array(
                 SystemEvent::STATUS_NEW, 
@@ -474,12 +484,21 @@ class SystemEventManager {
                 $html .= '</td>';
                 
                 if ($full) {
+                    $replay_link = '';
+                    if ($sysevent->getStatus() == SystemEvent::STATUS_ERROR) {
+                        $replay_action_params['replay'] = $sysevent->getId();
+                        $replay_link .= '<a href="/admin/system_events/?'. http_build_query($replay_action_params) .'" title="Replay this event">'; 
+                        $replay_link .= $GLOBALS['HTML']->getImage('ic/arrow-circle.png');
+                        $replay_link .= '</a>';
+                    }
+
                     $html .= '<td style="text-align:center">'. $sysevent->getPriority() .'</td>';
                     $html .= '<td>'. $sysevent->verbalizeParameters(true) .'</td>';
                     $html .= '<td>'. $sysevent->getCreateDate().'</td>';
                     $html .= '<td>'. $sysevent->getProcessDate() .'</td>';
                     $html .= '<td>'. $sysevent->getEndDate() .'</td>';
                     $html .= '<td>'. $sysevent->getLog() .'</td>';
+                    $html .= '<td>'. $replay_link .'</td>';
                 }
                 
                 $html .= '</tr>';
@@ -573,6 +592,16 @@ class SystemEventManager {
         return false;
     }
 
+    /**
+     * Reset the status of an event to NEW to replay it
+     *
+     * @param int $id The id of the event to replay
+     *
+     * @return bool true if success
+     */
+    public function replay($id) {
+        return $this->_getDao()->resetStatus($id, SystemEvent::STATUS_NEW);
+    }
 }
 
 ?>

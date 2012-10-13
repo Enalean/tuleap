@@ -31,16 +31,7 @@ function svn_data_update_general_settings($group_id,$svn_tracked,$svn_preamble,$
     $result = db_query($query);
     return ($result ? true : false);
 }
-   
-function svn_data_update_notification($group_id,$svn_mailing_list,$svn_mailing_header) {
-    
-    $query = "update groups set svn_events_mailing_list='".db_es($svn_mailing_list).
-	"', svn_events_mailing_header='".db_es($svn_mailing_header).
-	"' where group_id='".db_ei($group_id)."'";
-    $result = db_query($query);
-    return ($result ? true : false);
-}
-   
+
 // list the number of commits by user either since the beginning of
 // history if the period argument is not given or if it is given then
 // over the last "period" of time.

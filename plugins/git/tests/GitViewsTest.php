@@ -18,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../include/GitViews.class.php';
+require_once dirname(__FILE__) .'/../include/constants.php';
+require_once GIT_BASE_DIR .'/GitViews.class.php';
 
 Mock::generate('Project');
 Mock::generate('User');
@@ -89,7 +90,7 @@ class GitViewsTest extends UnitTestCase {
     private function GivenAProject($id, $name, $unixName = null, $useGit = true) {
         $project = new MockProject();
         $project->setReturnValue('getId', $id);
-        $project->setReturnValue('getPublicName', $name);
+        $project->setReturnValue('getPublicName', htmlspecialchars($name)); //see create_project()
         $project->setReturnValue('getUnixName', $unixName);
         $project->setReturnValue('usesService', $useGit, array(GitPlugin::SERVICE_SHORTNAME));
         return $project;

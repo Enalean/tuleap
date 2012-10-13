@@ -8,15 +8,15 @@
 -->
 
   <chapter id="FileRelease">
-    <title>File Release</title>
+    <title>Delivery Manager</title>
 
     <section id="SourceCodeReleaseGuidelines">
-      <title>Source Code Release: Guidelines</title>
+      <title>Guidelines</title>
 
       <para>There are 2 ways by which project administrators can
       provide access to their project source code on &SYS_PRODUCT_NAME;: the
       software configuration management repository (CVS or Subversion)
-      and the File Release mechanism. At first glance, having two
+      and the Delivery Manager. At first glance, having two
       distinct &SYS_PRODUCT_NAME; services seems redundant. However both have been
       developed with different objectives and target audience in mind
       and they are very much complementary. Providing both is
@@ -39,8 +39,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">The File Release
-          mechanism</emphasis> allows you to deliver pre-packaged
+          <para><emphasis role="bold">The Delivery Manager</emphasis> allows you to publish pre-packaged
           version of the source code and/or binaries in one or several
           archive file (zip, tar, jar,...) that an authorized user can
           easily download from the &SYS_PRODUCT_NAME; Web site. No specific tools
@@ -61,16 +60,15 @@
     </section>
 
     <section id="FileReleaseJargon">
-      <title>File Release Jargon</title>
+      <title>Delivery Manager Jargon</title>
 
-      <para>Before we get further into the description of the File Release
-      service let&#39;s review the terms used throughout this section. These
-      terms are key for the understanding of the File Release mechanism both
+      <para>Before we get further into the description of the Delivery Manager let&#39;s review the terms used throughout this section. These
+      terms are key for the understanding of the tool mechanism both
       for users and administrators (see <xref
       linkend="FigureTheFileReleaseStructure" />).</para>
 
       <figure id="FigureTheFileReleaseStructure">
-        <title>The File Release Structure</title>
+        <title>Delivery Manager Structure</title>
 
         <mediaobject>
           <imageobject>
@@ -82,9 +80,9 @@
 
       <itemizedlist mark="bullet">
         <listitem>
-          <para><emphasis role="bold">Packages</emphasis> :These are the
-          topmost entities visible in the File Release service. A package is a
-          container for one or several Releases. In general a package do
+          <para><emphasis role="bold">Packages</emphasis> : these are the
+          topmost entities visible in the Delivery Manager. A package is a
+          container for one or several releases. In general a package do
           correspond with high-level deliverables of your software products.
           Let&#39;s assume that your team is working on a database engine.
           Possible packages could be DB-engine for the database engine itself
@@ -94,7 +92,7 @@
         </listitem>
 
         <listitem>
-          <para><emphasis role="bold">Releases</emphasis>: A release is a
+          <para><emphasis role="bold">Releases</emphasis>: a release is a
           collection of individual files that were all frozen and time stamped
           at a given moment in time. In that sense it is also a container like
           a package but one level below. The files contained in a release
@@ -123,8 +121,7 @@
         </listitem>
       </itemizedlist>
 
-      <note><para>At first glance, this structure may appear a bit
-      complex. However this is really the kind of structure a project team
+      <note><para>This is really the kind of structure a project team
       should aim at to make their deliverables easy to understand and easy to
       access for the community. Thinking about the structure of your
       software and documentation deliverables ahead of time can help you
@@ -136,14 +133,14 @@
       <title>File Release Browsing and Download</title>
 
       <para>The latest version of each project package (if any) is always
-      visible on the Project Summary page (see <xref
+      visible on the Project Dashboard (see <xref
       linkend="FigureASampleProjectSummaryPage" />). The latest version can
       immediately be downloaded by clicking on the &#34;Download&#34; link or visit the
       complete list of packages and release by clicking on the &#34;[View ALL
       project files]&#34; link.</para>
 
       <figure id="FigureTheFileReleaseScreenOfTheCodendiProject">
-        <title>The File Release screen of the &SYS_PRODUCT_NAME; Administration project</title>
+        <title>Example of a Delivery Manager screen</title>
 
         <mediaobject>
           <imageobject>
@@ -155,7 +152,7 @@
 
       <para>The first example given on <xref
       linkend="FigureTheFileReleaseScreenOfTheCodendiProject" />
-      shows the File Release screen of the &SYS_PRODUCT_NAME; Administration project.
+      shows the Delivery Manager screen of the Playground project.
       </para>
       
       <section id="FileReleaseBrowsingPackages">
@@ -163,8 +160,7 @@
         <para>
         As explained in the <xref linkend="FileReleaseJargon" />, projects 
         can contain several packages. In the example, 
-        the project has three packages called &#34;&SYS_PRODUCT_NAME; Installation ISO Image&#34;,
-        &#34;&SYS_PRODUCT_NAME; specifics themes&#34; and &#34;&SYS_PRODUCT_NAME; CLI&#34;.
+        the Playground project has four packages.
         </para>
         <para>
         The content of each package can be hidden by clicking the 
@@ -191,8 +187,7 @@
         <title>Browsing releases</title>
         <para>
         A package can contain several releases. In the example,
-        the package &#34;&SYS_PRODUCT_NAME; Installation ISO Image&#34; contains 8 releases 
-        from 2.4 to 3.0.1 listed in chronological order. Each release contains a 
+        the package "Camellia" has 2 releases called v6.34 and v.620, listed in chronological order. Each release contains a 
         certain number of files.
         </para>
         <para>
@@ -225,10 +220,10 @@
     </section>
 
     <section id="FileReleaseDelivery">
-      <title>File Release Delivery and Administration</title>
+      <title>Delivery manager Administration</title>
 
-      <para>This section is for project admins and file admins only. 
-      It goes through a detailed explanation of the File Release delivery process. 
+      <para>This section is for project admins and file admins. 
+      It goes through a detailed explanation of the Delivery Manager process. 
       This is a 2-step process:</para>
 
       <procedure>
@@ -246,10 +241,10 @@
       </procedure>
       
       <para>When you are project admin or file admin, you are able to perform 
-      the admin actions on the File Release System home page. (See 
+      the admin actions on the Delivery Manager home page. (See 
       <xref linkend="FigureTheFileReleaseAdminScreenOfTheCodendiProject" />
           <figure id="FigureTheFileReleaseAdminScreenOfTheCodendiProject">
-            <title>The File Release screen of the &SYS_PRODUCT_NAME; Administration project, when you are admin</title>
+            <title>The Delivery Manager screen of the Playground project, when you are an admin</title>
     
             <mediaobject>
               <imageobject>
@@ -271,9 +266,9 @@
         <title>Package Creation</title>
         
         <para>To create a package, you just have to click the [add a package] 
-        link located on the top of the File Release screen.
+        link located on the top of the Delivery Manager screen.
         Then, fill the form, giving the package name, its relative rank on the 
-        File Release screen, and its status:
+        Delivery Manager screen, and its status:
         
         <itemizedlist mark="bullet" spacing="compact">
             <listitem>
@@ -292,7 +287,7 @@
             <listitem>
                 <para><emphasis role="bold">Status</emphasis>: an active package 
                 will be displayed, whereas a package with a hidden status won't 
-                appear on the File Release screen. For project admins or file admins,
+                appear on the Delivery Manager screen. For project admins or file admins,
                 the hidden packages are displayed in italic, in order to update them.
                 </para>
             </listitem>
@@ -311,7 +306,7 @@
         (see <xref linkend="FigureAPartOfThePackageAdministrationScreenCodendiProject" />).
         </para>
         <figure id="FigureAPartOfThePackageAdministrationScreenCodendiProject">
-          <title>Package Edition Screen of the CLI package, in the &SYS_PRODUCT_NAME; Administration project</title>
+          <title>Package editing of the Camellia package</title>
     
           <mediaobject>
             <imageobject>
@@ -356,7 +351,7 @@
         </para>
         
         <figure id="FigureTheReleaseModificationScreenOfTheCodendiProject">
-          <title>The release update screen of the &SYS_PRODUCT_NAME; project</title>
+          <title>The release update screen</title>
 
           <mediaobject>
             <imageobject>
@@ -508,7 +503,7 @@
             submit a news about the release they've just created (if you're 
             not project admin or news admin, you won't see this step). A default 
             subject and message are pre-filled. You are of course free to modify 
-            it. The news will be displayed on your project summary page.
+            it. The news will be displayed on your project dashboard.
             It is a good way to advertise the users that a new release have been done.
             The news will also appear in the news administration page, like others.
             </para>
@@ -551,7 +546,7 @@
           Depending the project or working domain, you could be 
           interested in adding processors to the existing list.
           To do it, follow the admin link &#34;Manage processors&#34; of the 
-          File Release System. Then, you have the list of the available processors. 
+          Delivery Manager. Then, you have the list of the available processors. 
           System processors are not editable. 
           The other processors are specifics to the current project. 
           You can edit them, delete them, as well as create new ones.
@@ -563,7 +558,7 @@
  </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

@@ -1,3 +1,6 @@
-*.swp
 src/www/scripts/combined/*
-*.swo
+src/utils/*.pyc
+src/utils/cvs1/*.pyc
+src/utils/svn/*.pyc
+tests/simpletest/common/include/_fixtures/big_file
+documentation/user_guide/html/*

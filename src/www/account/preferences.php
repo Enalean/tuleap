@@ -14,9 +14,6 @@ my_header(array('title'=>$Language->getText('account_options', 'preferences')));
 
 $user = UserManager::instance()->getCurrentUser();
 
-$res_user = db_query("SELECT * FROM user WHERE user_id=" . user_getid());
-$row_user = db_fetch_array($res_user);
-
 // ############################# Preferences
 echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
 ?>
@@ -110,10 +107,10 @@ print "</select>\n";
 <?php echo $Language->getText('account_options', 'theme'); ?>: </td><td>
 <?php
 // see what current user them is
-if ($row_user['theme'] == "" || $row_user['theme'] == "default") {
+if ($user->getTheme() == "" || $user->getTheme() == "default") {
     $user_theme = $GLOBALS['sys_themedefault'];
 } else {
-    $user_theme = $row_user['theme'];
+    $user_theme = $user->getTheme();
 }
 
 // $theme_list is defined in /www/include/utils.php
@@ -133,27 +130,22 @@ print "</select>\n";
 
 </td></tr>
 <?php
-echo '<tr><td>'.$Language->getText('account_options', 'font_size').': </td><td><select name="user_fontsize">
-<option value="'.FONT_SIZE_BROWSER.'"';
-
-if ( $row_user['fontsize'] == FONT_SIZE_BROWSER ) print "selected";
-echo '>'.$Language->getText('account_options', 'font_size_browser');
-?></option>
-<option value="<? echo FONT_SIZE_SMALL.'" ';
-if ( $row_user['fontsize'] == FONT_SIZE_SMALL ) print "selected";
-echo '>'.$Language->getText('account_options', 'font_size_small');
-?></option>
-<option value="<? echo FONT_SIZE_NORMAL.'" ';
-if ( $row_user['fontsize'] == FONT_SIZE_NORMAL ) print "selected";
-echo '>'.$Language->getText('account_options', 'font_size_normal');
-?></option>
-<option value="<? echo FONT_SIZE_LARGE.'" ';
-if ( $row_user['fontsize'] == FONT_SIZE_LARGE ) print "selected";
-echo '>'.$Language->getText('account_options', 'font_size_large');
-?></option>
-</select>
-                        </td>
-                    </tr>
+$font_vals  = array(
+    FONT_SIZE_BROWSER,
+    FONT_SIZE_SMALL,
+    FONT_SIZE_NORMAL,
+    FONT_SIZE_LARGE
+);
+$font_texts = array(
+    $Language->getText('account_options', 'font_size_browser'),
+    $Language->getText('account_options', 'font_size_small'),
+    $Language->getText('account_options', 'font_size_normal'),
+    $Language->getText('account_options', 'font_size_large')
+);
+echo '<tr><td>'.$Language->getText('account_options', 'font_size').': </td>
+          <td>'.html_build_select_box_from_arrays($font_vals, $font_texts, "user_fontsize", $user->getFontSize(), false).'</td>
+      </tr>';
+?>
                     <tr>
                         <td>
 <?php echo $Language->getText('account_options', 'language'); ?>: </td><td>

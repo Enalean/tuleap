@@ -18,19 +18,19 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
- 
+
 require_once ('pre.php');
 
 // Load WSDL
 $xmlDoc = new DOMDocument();
-$src    = dirname(dirname($_SERVER['SCRIPT_URI']))."/soap/wsdl?wsdl";
+$src    = dirname(dirname($_SERVER['SCRIPT_URI']))."/soap/?wsdl";
 $xml    = file_get_contents($src);
 $xmlDoc->loadXML($xml);
 
 // Apply XSLT transform
 $xslDoc = new DOMDocument();
 $xslDoc->load(Config::get('codendi_dir')."/src/www/soap/wsdl-viewer.xsl");
- 
+
 $proc = new XSLTProcessor();
 $proc->importStylesheet($xslDoc);
 echo $proc->transformToXML($xmlDoc);

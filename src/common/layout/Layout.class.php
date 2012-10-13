@@ -1279,6 +1279,8 @@ class Layout extends Response {
     
     protected function displayCommonStylesheetElements($params) {
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
+        echo '<!--[if IE 7]><link rel="stylesheet" href="/themes/common/css/font-awesome-ie7.css"><![endif]-->';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/print.css" media="print" />';
         $css = $GLOBALS['sys_user_theme'] . $this->getFontSizeName($GLOBALS['sys_user_font_size']) .'.css';
         echo '<link rel="stylesheet" type="text/css" href="'. $this->getStylesheetTheme($css) .'" />';
@@ -1455,19 +1457,42 @@ class Layout extends Response {
         // Display all queries used to generate the page
         echo '<fieldset><legend id="footer_debug_allqueries" class="'. Toggler::getClassname('footer_debug_allqueries') .'">All queries:</legend>';
         echo '<pre>';
-        $queries = array();
+        $queries               = array();
+        $queries_by_time_taken = array();
+        $i                     = 0;
         foreach($GLOBALS['QUERIES'] as $sql) {
             $t = 0;
             foreach($GLOBALS['DBSTORE'][md5($sql)]['trace'] as $trace) {
                 $t += $trace[2] - $trace[1];
             }
-            $queries[] = array(
+            $q = array(
                 'sql' => $sql,
                 'total time' => number_format(1000 * $t, 0, '.', "'") .' ms',
             );
+            $queries[] = $q;
+            $queries_by_time_taken[] = array('n°' => $i++, 't' => $t) + $q;
+                
         }
         print_r($queries);
         echo '</pre>';
+        echo '</fieldset>';
+        
+        // Display all queries used to generate the page ordered by time taken
+        usort($queries_by_time_taken, array(__CLASS__, 'sort_queries_by_time_taken'));
+        echo '<fieldset><legend id="footer_debug_allqueries_time_taken" class="'. Toggler::getClassname('footer_debug_allqueries_time_taken') .'">All queries by time taken:</legend>';
+        echo '<table border="1" style="border-collapse:collapse" cellpadding="2" cellspacing="0">';
+        echo '<thead><tr><th>n°</th><th style="white-space:nowrap;">time taken</th><th>sum</th><th>sql</th></tr></thead>';
+        $i   = 0;
+        $sum = 0;
+        foreach($queries_by_time_taken as $q) {
+            echo '<tr valign="top" class="'. html_get_alt_row_color($i++) .'">';
+            echo '<td>'. $q['n°'] .'</td>';
+            echo '<td style="white-space:nowrap;">'. $q['total time'] .'</td>';
+            echo '<td style="white-space:nowrap;">'. number_format(1000 * ($sum += $q['t']), 0, '.', "'") .' ms' .'</td>';
+            echo '<td><pre>'. $q['sql'] .'</pre></td>';
+            echo '</tr>';
+        }
+        echo '</table>';
         echo '</fieldset>';
 
         echo '<fieldset><legend id="footer_debug_queriespaths" class="'. Toggler::getClassname('footer_dubug_queriespaths') .'">Path of all queries:</legend>';
@@ -1546,6 +1571,10 @@ class Layout extends Response {
         echo '</fieldset>';
         echo "</pre>\n";
         echo '</div>';
+    }
+    
+    private static function sort_queries_by_time_taken($a, $b) {
+        return strnatcasecmp($b['total time'], $a['total time']);
     }
 
     public static function _debug_backtraces($backtraces) {
@@ -2112,7 +2141,17 @@ document.observe('dom:loaded', function() {
      * @return string <img src="/themes/CodeXTab/images/trash.png" alt="Beautiful image" />
      */
     function getImage($src, $args = array()) {
-        $return = '<img src="'. $this->getImagePath($src) .'"';
+        return $this->getAbsoluteImage($this->getImagePath($src), $args);
+    }
+    
+    /**
+     * Same as getImage but with absolute path to the image.
+     * Usefull for plugin related image for example
+     *
+     * @see getImage
+     */
+    function getAbsoluteImage($src, $args = array()) {
+        $return = '<img src="'. $src .'"';
         foreach($args as $k => $v) {
             $return .= ' '.$k.'="'.$v.'"';
         }

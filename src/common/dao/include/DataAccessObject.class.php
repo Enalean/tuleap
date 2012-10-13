@@ -18,15 +18,18 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'DataAccessResult.class.php';
+require_once 'DataAccessResultEmpty.class.php';
+
 /**
  *  Base class for data access objects
  */
 class DataAccessObject {
     /**
-    * Private
-    * $da stores data access object
+     * Private
+     * $da stores data access object
      * @var DataAccess
-    */
+     */
     var $da;
 
     //! A constructor
@@ -41,7 +44,15 @@ class DataAccessObject {
     public function DataAccessObject($da = null) {
         $this->__construct($da);
     }
-    
+
+    public function startTransaction() {
+        $this->da->startTransaction();
+    }
+
+    public function commit() {
+        $this->da->commit();
+    }
+
     /**
      * For SELECT queries
      *
@@ -58,6 +69,41 @@ class DataAccessObject {
             $result = false;
         }
         return $result;
+    }
+    
+    /**
+     * Like retrieve, but returns only the first row.
+     * 
+     * @param string $sql the query string
+     * 
+     * @return mixed
+     */
+    protected function retrieveFirstRow($sql) {
+        return $this->retrieve($sql)->getRow();
+    }
+    
+    /**
+     * Like retrieve, but returns only the ids.
+     * 
+     * @param string $sql the query string
+     * @return array of string
+     */
+    protected function retrieveIds($sql) {
+        return $this->extractIds($this->retrieve($sql));
+    }
+    
+    /**
+     * Extracts ids from a DataAccessResult.
+     * 
+     * @param DataAccessResult $dar
+     * @return array of string
+     */
+    private function extractIds(DataAccessResult $dar) {
+        $ids = array();
+        foreach ($dar as $row) { 
+            $ids[] = $row['id'];
+        }
+        return $ids;
     }
 
     //! An accessor

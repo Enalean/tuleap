@@ -20,23 +20,23 @@
 
 class Tracker_CrossSearch_SharedField {
     
-    private $fieldIds = array();
-    private $valueIds = array();
+    private $field_ids = array();
+    private $value_ids = array();
     
     public function addFieldId($id) {
-        $this->fieldIds[] = $id;
+        $this->field_ids[] = $id;
     }
     
     public function getFieldIds() {
-        return $this->fieldIds;
+        return $this->field_ids;
     }
     
     public function addValueId($id) {
-        $this->valueIds[] = $id;
+        $this->value_ids[] = $id;
     }
     
     public function getValueIds() {
-        return $this->valueIds;
+        return $this->value_ids;
     }
 }
 

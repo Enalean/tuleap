@@ -145,8 +145,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     public function getFieldData($soap_value, $is_multiple) {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $soap_values = explode(",", $soap_value);
             $return = array();
+            $soap_values = explode(",", $soap_value);
             foreach ($values as $id => $value) {
                 if (in_array($value->getLabel(), $soap_values)) {
                     $return[] = $id;
@@ -261,7 +261,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             $c = 'C_'. $this->field->id;
             $sql = " INNER JOIN tracker_changeset_value AS $a ON ($a.changeset_id = c.id AND $a.field_id IN (".implode(',', $fields_id)."))
                      INNER JOIN tracker_changeset_value_list AS $c ON (
-                        $c.changeset_value_id = $a.id 
+                        $c.changeset_value_id = $a.id
                         AND $c.bindvalue_id IN(". implode(',', $values_id) .")
                      ) ";
             return $sql;
@@ -586,8 +586,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                 case 'is_rank_alpha':
                     $is_rank_alpha = $value ? 1 : 0;
                     if ($this->is_rank_alpha != $is_rank_alpha) {
-                        $this->getDao()->save($this->field->id, $this->is_rank_alpha);
-                        $GLOBALS['Response']->addFeedback('info', 'Alpha ranking updated');
+                        $this->getDao()->save($this->field->id, $is_rank_alpha);
+                        $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','alpha_ranking_updated'));
                     }
                     break;
                 case 'delete':
@@ -744,6 +744,18 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     
     public function isValid($value) {
         return true;
+    }
+    
+    /**
+     * @see Tracker_FormElement_Field_Shareable
+     */
+    public function fixOriginalValueIds(array $value_mapping) {
+        $value_dao = $this->getValueDao();
+        $field_id  = $this->getField()->getId();
+        
+        foreach($value_mapping as $old_original_value_id => $new_original_value_id) {
+            $value_dao->updateOriginalValueId($field_id, $old_original_value_id, $new_original_value_id);
+        }
     }
 }
 ?>

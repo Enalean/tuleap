@@ -43,7 +43,7 @@ class Response {
             }
         }
         if (!$this->_feedback) {
-            $this->_feedback =& new Feedback();
+            $this->_feedback = new Feedback();
         }
     }
     function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) {
@@ -62,7 +62,7 @@ class Response {
         return $this->_feedback->fetchAsPlainText();
     }
     function &_getFeedbackDao() {
-        $f =& new FeedbackDao(CodendiDataAccess::instance());
+        $f = new FeedbackDao(CodendiDataAccess::instance());
         return $f;
     }
     function _serializeFeedback() {
@@ -70,12 +70,16 @@ class Response {
         $dao->create(session_hash(), serialize($this->_feedback));
     }
     function setCookie($name, $value, $expire = 0) {
-        $cookie_manager =& new CookieManager();
+        $cookie_manager = new CookieManager();
         $cookie_manager->setCookie($name, $value, $expire);
     }
     function removeCookie($name) {
-        $cookie_manager =& new CookieManager();
+        $cookie_manager = new CookieManager();
         $cookie_manager->removeCookie($name);
+    }
+    public function sendStatusCode($code) {
+        header("HTTP/1.0 $code");
+        echo $this->getRawFeedback();
     }
 }
 ?>

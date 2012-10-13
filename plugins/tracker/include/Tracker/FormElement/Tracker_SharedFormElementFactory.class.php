@@ -27,18 +27,20 @@ class Tracker_SharedFormElementFactory {
      * @var Tracker_FormElement_Field_List_BindFactory $boundValuesFactory 
      */
     private $boundValuesFactory;
-            
+
     function __construct(Tracker_FormElementFactory $factory, Tracker_FormElement_Field_List_BindFactory $boundValuesFactory) {
         $this->boundValuesFactory = $boundValuesFactory;
         $this->factory = $factory;
     }
-    
-    public function getDao() {
-        return new Tracker_FormElement_FieldDao();
-    }
+
     
     public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
-        $field = $this->getRootOriginalField($this->factory->getFormElementById($formElement_data['field_id']));
+        $formElement = $this->factory->getFormElementById($formElement_data['field_id']);
+        if (!$formElement) {
+            $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'wrong_field_id', $formElement_data['field_id']);
+            throw new Exception($exception_message);
+        }
+        $field = $this->getRootOriginalField($formElement);
         $this->assertFieldCanBeCopied($field, $user);
         
         $data = $this->populateFormElementDataForASharedField($field);
@@ -64,14 +66,16 @@ class Tracker_SharedFormElementFactory {
     private function assertFieldIsReadable(Tracker_FormElement $field, User $user) {
         if ( ! ($field->userCanRead($user) 
               && $field->getTracker()->userCanView($user))) {
-            throw new Exception('Permission denied');
+            $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied');
+            throw new Exception($exception_message);
         }
     }
     
     private function assertFieldIsStaticSelectbox(Tracker_FormElement $field) {
         if ( ! ($field instanceof Tracker_FormElement_Field_Selectbox
                 && $field->getBind() instanceof Tracker_FormElement_Field_List_Bind_Static)) {
-            throw new Exception('Can only share static selectbox fields');
+            $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'field_must_be_static');
+            throw new Exception($exception_message);
         }
     }
     
@@ -89,18 +93,6 @@ class Tracker_SharedFormElementFactory {
         );
     }
     
-    /**
-     * @return Tracker_FormElement
-     */
-    public function getFieldFromTrackerAndSharedField(Tracker $tracker, Tracker_FormElement $shared) {
-        $dar = $this->getDao()->searchFieldFromTrackerIdAndSharedFieldId($tracker->getId(), $shared->getId());
-        $row = $dar->getRow();
-        if ($row) {
-            $field_id = $row['id'];
-            return $this->factory->getFormElementById($field_id);
-        }
-        return null;
-    }
 }
 
 ?>

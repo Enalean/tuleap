@@ -262,7 +262,7 @@
     </section>
   </section>
 
-  <section id="CVSIntegrationinCodendi">
+  <section id="CVSIntegration">
     <title>CVS Integration in &SYS_PRODUCT_NAME;</title>
 
     <section id="TheCVSRepository">
@@ -971,17 +971,17 @@ cvs commit -m&#34;Explain the nature of the change here...&#34; [filenames]
       <para>The reason why diff files are so popular is because they
       follow a well-documented format. Diff files are sent to the
       original project team which, upon reception, is going to use
-      another universal tool called <litteral>patch</litteral> to
+      another universal tool called <literal>patch</literal> to
       automatically merge the contributed changes with the master copy
       of the source code. This is why, by extension, a diff file is
       also known as a <emphasis>patch</emphasis>.</para>
 
       <para>Diff files can be generated either with the
-        <litteral>diff</litteral> tool (part of the GNU tools) that is
+        <literal>diff</literal> tool (part of the GNU tools) that is
         available on all platforms including Windows or directly with CVS if
         you have been hacking on a CVS working copy.</para>
 
-      <para><emphasis role="bold">The <litteral>diff</litteral> way:</emphasis></para>
+      <para><emphasis role="bold">The <literal>diff</literal> way:</emphasis></para>
 
       <itemizedlist mark="bullet"
         spacing="compact">
@@ -1198,7 +1198,7 @@ export projectname-1.2
   </chapter>
 <!--
 Local Variables:
-sgml-parent-document: ("Codendi_User_Guide.xml" "book" "chapter")
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
 End:
 -->
 

@@ -1,3 +1,103 @@
+Version 2.7.11 - Tuleap 5.5.3
+    * Disable dump of repository description for Gitolite backend as it seems to make trouble in some configuration.
+
+Version 2.7.10 - Tuleap 5.5.2
+    * Git repositories can be accessed in HTTPS
+
+Version 2.7.9 - Tuleap 5.5
+    * Fix backend issues when switching project to private
+
+Version 2.7.8 - Tuleap 5.5
+    * Fix regression preventing the deletion of a repository that has been forked
+
+Version 2.7.7 - Tuleap 5.5
+    * improve look and feel of the ui of git repository admin
+
+Version 2.7.6 - Tuleap 5.5
+    * Make possible the fork action for people having read access on a git repository but are not project members (Contrib STMicroelectronics)
+
+Version 2.7.5 - Tuleap 5.5
+    * Project admin can set gitolite repository descriptions
+
+Version 2.7.4 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
+Version 2.7.3 - Tuleap 5.5
+    * Fix: fatal error while trying to browse forked repository after deleting its parent (Contrib STMicroelectronics)
+
+Version 2.7.2 - Tuleap 5.4
+    * Fix git cross-references (sla #1156)
+    
+Version 2.7.1 - Tuleap 5.4
+    * Add info message about the name of the repository on deletion process (contrib STMicroelectronics).
+
+Version 2.7 - Tuleap 5.4
+    * SSH keys are now dumped asynchronously to avoid potential conflicts with several concurrent updates (sla #1215).
+
+Version 2.6.5 - Tuleap 5.4
+    * Make unit tests pass with PHP 5.3
+
+Version 2.6.4 - Tuleap 5.4
+    * Creation of git repo containing existing-repo leads to a bug
+
+Version 2.6.3 - Tuleap 5.3
+    * Add the possibility to delete personal repository
+
+Version 2.6.2 - Tuleap 5.2
+    * Fix display of git push project widget for non project admin (contrib STMicroelectronics).
+
+Version 2.6.1 - Tuleap 5.2
+    * Instrument gitphp to use a temporary directory where we can write into.
+
+Version 2.6 - Tuleap 5.2
+    * Allow to use another gitphp than bundled one
+      You may want to install gitphp-tuleap rpm package as well for test.
+      If so, you need to edit the plugin configuration and set:
+      $gitphp_path = "/usr/share/gitphp-tuleap";
+
+Version 2.5.6 - Tuleap 5.2
+    * Fix fatal error while creating a new repo
+
+Version 2.5.5 - Tuleap 5.2
+    * Refactoring of "external permissions"
+
+Version 2.5.4 (Tuleap 5.1)
+    * Fix typo in fr_FR L10n
+
+Version 2.5.3 (Tuleap 5.1)
+    * Add Git pushs stats in statistics plugin (contrib STMicroelectronics)
+
+Version 2.5.2 (Tuleap 5.1)
+    * Fix bug with restricted users. They had no access to repositories when
+      repo where available to 'registered_users'. They of course still need to
+      be project members to access repository.
+
+Version 2.5.1 (Tuleap 5.1)
+    * Select of git repository in Continuous Integration interface is done with a selectbox (contrib STMicroelectronics).
+
+Version 2.5 (Tuleap 5.0.2)
+    * Fix require order
+
+Version 2.4 (Tuleap 5.0)
+    * Fix issues with gitphp: 'plain' commitdiff output & FRS Fixture filename (for Windows workstation users). (contrib STMicroelectronics).
+
+Version 2.3 (Tuleap 5.0)
+    * Add widgets for both project page (display graph with push on repositories) and personal page. (contrib STMicroelectronics).
+
+Version 2.2 (Tuleap 5.0)
+    * Link Git and Continuous Integration plugins. On git push, Tuleap can trigger a build on an hudson/jenkins CI server (contrib STMicroelectronics).
+
+Version 2.1.7 (Tuleap 4.0.28)
+    * Display meaningful info when fork fails due to already exiting repo
+    * Prevent usage of non alphanum characters in fork namespace
+    * Fix RPM installation due to new path in recent version of EPEL gitolite
+
+Version 2.1.6 (Tuleap 4.0.28)
+    * Fix display of html code in combobox
+
+Version 2.1.5 (Tuleap 4.0.28)
+    * Fix display bug on fork while changing from cross project to personal fork.
+
 Version 2.1.4 (Tuleap 4.0.27.3)
     * Fix various bugs on git repository clone/delete/recreate senario.
     * Fix git push logging (log for repositories outside project root works).

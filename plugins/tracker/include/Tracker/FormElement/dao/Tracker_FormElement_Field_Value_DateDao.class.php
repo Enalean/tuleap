@@ -64,5 +64,30 @@ class Tracker_FormElement_Field_Value_DateDao extends Tracker_FormElement_Field_
                 WHERE changeset_value_id = $from";
         return $this->update($sql);
     }
+
+    /**
+     * Retrieve the list of artifact id corresponding to a date field having a specific value
+     *
+     * @param Integer $fieldId Date field
+     * @param Integer $date    Value of the date field
+     *
+     * @return
+     */
+    public function getArtifactsByFieldAndValue($fieldId, $date) {
+        $fieldId  = $this->da->escapeInt($fieldId);
+        $date     = $this->da->escapeInt($date);
+        $halfDay  = 60 * 60 * 12;
+        $minDate  = $date - $halfDay;
+        $maxDate  = $date + $halfDay;
+        $sql      = "SELECT t.id AS artifact_id FROM
+                     tracker_changeset_value_date d
+                     JOIN tracker_changeset_value v on v.id = d.changeset_value_id
+                     JOIN tracker_artifact t on t.last_changeset_id = v.changeset_id
+                     WHERE d.value BETWEEN ".$minDate." AND ".$maxDate."
+                       AND v.field_id = ".$fieldId;
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>

@@ -1,3 +1,12 @@
+Version 1.5.4 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
+Version 1.5.3 - Tuleap 5.0.3
+    * added codendi_auth.jar that was missing since the migration to git
+    
+Version 1.5.2 - Tuleap 5.0
+    * Remove unused test file
+    
 Version 1.5 - Tuleap 4.0.26
     * Disable debug mode
     

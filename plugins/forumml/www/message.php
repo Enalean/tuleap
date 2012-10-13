@@ -37,11 +37,12 @@ require_once(dirname(__FILE__).'/../include/ForumML_FileStorage.class.php');
 require_once(dirname(__FILE__).'/../include/ForumML_HTMLPurifier.class.php');
 require_once(dirname(__FILE__).'/../include/ForumML_MessageManager.class.php');
 
-$plugin_manager =& PluginManager::instance();
-$p =& $plugin_manager->getPluginByName('forumml');
+$plugin_manager = PluginManager::instance();
+$p = $plugin_manager->getPluginByName('forumml');
 if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 
-	$request =& HTTPRequest::instance();
+	$request = HTTPRequest::instance();
+	$user    = $request->getCurrentUser();
 	
 	$vGrp = new Valid_UInt('group_id');
 	$vGrp->required();
@@ -86,7 +87,10 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 		exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
 	} else {
 		$list_id = $request->get('list');
-		if (!user_isloggedin() || (!mail_is_list_public($list_id) && !user_ismember($group_id))) {
+		$project = ProjectManager::instance()->getProject($group_id);
+		if (!$user->isMember($group_id) && 
+		    ($user->isRestricted() || !mail_is_list_public($list_id) || !$project->isPublic())
+		) {
 			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
 		}		
 		if (!mail_is_list_active($list_id)) {
@@ -105,9 +109,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	}
 
 	// Build the mail to be sent
-	$vSrep = new Valid_WhiteList('send_reply',array('Submit'));
-	$vSrep->required();
-	if ($request->valid($vSrep)) {
+	if ($request->exist('send_reply')) {
 		// process the mail
 		$ret = plugin_forumml_process_mail($p,true);
 		if ($ret) {
@@ -132,7 +134,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	}
 	mail_header($params);
 
-	if ($request->valid($vSrep) && $request->valid($vTopic)) {
+	if ($request->exist('send_reply') && $request->valid($vTopic)) {
 		if (isset($ret) && $ret) {
 			// wait few seconds before redirecting to archives page
 			echo "<script> setTimeout('window.location=\"/plugins/forumml/message.php?group_id=".$group_id."&list=".$list_id."&topic=".$topic."\"',3000) </script>";

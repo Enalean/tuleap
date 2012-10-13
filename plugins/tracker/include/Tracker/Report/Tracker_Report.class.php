@@ -27,6 +27,7 @@ require_once('Tracker_Report_RendererFactory.class.php');
 require_once('Tracker_Report_Criteria.class.php');
 require_once('Tracker_Report_Session.class.php');
 require_once('common/include/Toggler.class.php');
+require_once dirname(__FILE__).'/../IFetchTrackerSwitcher.class.php';
 
 /**
  * Tracker_ report.
@@ -186,22 +187,48 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $this->criteria[$field_id];
     }
 
-   
+    protected $current_user;
+    protected function getCurrentUser() {
+        if (!$this->current_user) {
+            $this->current_user = UserManager::instance()->getCurrentUser();
+        }
+        return $this->current_user;
+    }
+
+    protected $permissions_manager;
+    private function getPermissionsManager() {
+        if (!$this->permissions_manager) {
+            $this->permissions_manager = PermissionsManager::instance();
+        }
+        return $this->permissions_manager;
+    }
+
     protected $matching_ids;
     public function getMatchingIds($request = null, $use_data_from_db = false) {
         if (!$this->matching_ids) {
-            $u = UserManager::instance()->getCurrentUser();
+            $user = $this->getCurrentUser();
             if ($use_data_from_db) {
                 $criteria = $this->getCriteriaFromDb();
             } else {
                 $criteria = $this->getCriteria();
             }
-            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), PermissionsManager::instance(), $this->getTracker(), $u, $criteria);
+            $this->matching_ids = $this->getMatchingIdsInDb($this->getDao(), $this->getPermissionsManager(), $this->getTracker(), $user, $criteria);
        }
        return $this->matching_ids;
     }
     
     protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+        $dump_criteria = array();
+        foreach ($criteria as $c) {
+            $dump_criteria[$c->field->getName()] = $c->field->getCriteriaValue($c);
+        }
+        $dao->logStart(__METHOD__, json_encode(array(
+            'user'     => $user->getUserName(),
+            'project'  => $tracker->getGroupId(), 
+            'query'    => $dump_criteria,
+            'trackers' => array($tracker->getId()),
+        )));
+        
         $matching_ids = array();
         
         $group_id             = $tracker->getGroupId();
@@ -209,7 +236,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $ugroups              = $user->getUgroups($group_id, $instances);
         $static_ugroups       = $user->getStaticUgroups($group_id);
         $dynamic_ugroups      = $user->getDynamicUgroups($group_id, $instances);
-        $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId(), $ugroups);
+        $permissions          = $permissionManager->getPermissionsAndUgroupsByObjectid($tracker->getId());
         $contributor_field    = $tracker->getContributorField();
         $contributor_field_id = $contributor_field ? $contributor_field->getId() : null;
         
@@ -224,14 +251,22 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 $additional_where[] = $w;
             }
         }
-        
         $matching_ids = $dao->searchMatchingIds($group_id, $tracker->getId(), $additional_from, $additional_where, $user->isSuperUser(), $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)->getRow();
-        if (substr($matching_ids['id'], -1) === ',') {
-            $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
+        if ($matching_ids) {
+            if (substr($matching_ids['id'], -1) === ',') {
+                $matching_ids['id'] = substr($matching_ids['id'], 0, -1);
+            }
+            if (substr($matching_ids['last_changeset_id'], -1) === ',') {
+                $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
+            }
+        } else {
+            $matching_ids['id']                = '';
+            $matching_ids['last_changeset_id'] = '';
         }
-        if (substr($matching_ids['last_changeset_id'], -1) === ',') {
-            $matching_ids['last_changeset_id'] = substr($matching_ids['last_changeset_id'], 0, -1);
-        }
+        
+        $nb_matching = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
+        $dao->logEnd(__METHOD__, $nb_matching);
+        
         return $matching_ids;
     }
     
@@ -252,17 +287,16 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return '';
     }
     
-    protected function displayHeader(TrackerManager $tracker_manager, $request, $current_user, $report_can_be_modified) {
+    protected function displayHeader(Tracker_IFetchTrackerSwitcher $layout, $request, $current_user, $report_can_be_modified) {
         $hp = Codendi_HTMLPurifier::instance();
-        
         $link_artifact_id = (int)$request->get('link-artifact-id');
         $title            = '';
         $breadcrumbs      = array();
         if ($report_can_be_modified) {
-            $this->getTracker()->displayHeader($tracker_manager, $title, $breadcrumbs);
+            $this->getTracker()->displayHeader($layout, $title, $breadcrumbs);
         }
         
-        if ($request->existAndNonEmpty('pv')) {
+        if ($request->get('pv')) {
             return;
         }
         
@@ -335,7 +369,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             if ($artifact) {
                 $project = $artifact->getTracker()->getProject();
             }
-            echo $tracker_manager->fetchTrackerSwitcher($current_user, '<br />', $project, $this->getTracker());
+            echo $layout->fetchTrackerSwitcher($current_user, '<br />', $project, $this->getTracker());
             
             
             //Reports
@@ -428,8 +462,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
             if ($criterion->field->isUsed()) {
-                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->id . '">' . $criterion->fetch() . '</li>';
-                $used[$criterion->field->id] = $criterion->field;
+                $criteria_fetched[] = '<li id="tracker_report_crit_' . $criterion->field->getId() . '">' . $criterion->fetch() . '</li>';
+                $used[$criterion->field->getId()] = $criterion->field;
             }
         }
         if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
@@ -442,7 +476,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $html;
     }
 
-    public function display(TrackerManager $tracker_manager, $request, $current_user) {
+    public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         
         $link_artifact_id       = (int)$request->get('link-artifact-id');
         $report_can_be_modified = !$link_artifact_id;
@@ -493,9 +527,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
         }
         if ($request->get('only-renderer')) {
-            echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified);
+            echo $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
         } else {
-            $this->displayHeader($tracker_manager, $request, $current_user, $report_can_be_modified);
+            $this->displayHeader($layout, $request, $current_user, $report_can_be_modified);
             
             $html = '';
             
@@ -700,13 +734,13 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
                 }
-                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified);
+                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
             echo $html;
             if ($report_can_be_modified) {
-                $this->getTracker()->displayFooter($tracker_manager);
+                $this->getTracker()->displayFooter($layout);
                 exit();
             }
         }
@@ -776,8 +810,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
     }
     
+    protected $tracker;
     public function getTracker() {
-        return TrackerFactory::instance()->getTrackerById($this->tracker_id);
+        if (!$this->tracker) {
+            $this->tracker = TrackerFactory::instance()->getTrackerById($this->tracker_id);
+        }
+        return $this->tracker;
     }
     
     /**
@@ -844,7 +882,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $session_criterion = $this->report_session->getCriterion($formElement_id);
             if ( $session_criterion ) {
                 if ($field = $ff->getFormElementById($formElement_id)) {
-                    $this->report_session->storeCriterion($formElement_id, $field->getFormattedCriteriaValue($new_value));                   ;
+                    $this->report_session->storeCriterion($formElement_id, $field->getFormattedCriteriaValue($new_value));
                 }
             }
         }        
@@ -856,10 +894,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * @param Request $request
      * @return ReportRenderer
      */
-    public function processRendererRequest($renderer_id, TrackerManager $tracker_manager, $request, $current_user, $store_in_session = true) {
+    public function processRendererRequest($renderer_id, Tracker_IDisplayTrackerLayout $layout, $request, $current_user, $store_in_session = true) {
         $rrf = Tracker_Report_RendererFactory::instance();
         if ($renderer = $rrf->getReportRendererByReportAndId($this, $renderer_id, $store_in_session)) {
-            $renderer->process($tracker_manager, $request, $current_user);
+            $renderer->process($layout, $request, $current_user);
         }
     }
     
@@ -918,7 +956,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     
-    public function process(TrackerManager $tracker_manager, $request, $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         if ($this->isObsolete()) {
             header('X-Codendi-Tracker-Report-IsObsolete: '. $this->getLastUpdaterUserName());
         }
@@ -940,7 +978,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_masschange_detail', 'no_items_selected'));
                         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
                     }
-                    $tracker->displayMasschangeForm($tracker_manager, $masschange_aids);
+                    $tracker->displayMasschangeForm($layout, $masschange_aids);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
@@ -964,7 +1002,8 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                             $send_notifications = true;
                         }
                     }
-                    $tracker->updateArtifactsMasschange($current_user, $masschange_aids, $masschange_data, $request->get('artifact_masschange_followup_comment'), $send_notifications);
+                    $comment_format = $request->get('comment_formatmass_change');
+                    $tracker->updateArtifactsMasschange($current_user, $masschange_aids, $masschange_data, $request->get('artifact_masschange_followup_comment'), $send_notifications, $comment_format);
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $tracker->getId());
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
@@ -1014,7 +1053,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     if ($request->exist('store_in_session')) {
                         $store_in_session = (bool)$request->get('store_in_session');
                     }
-                    $this->processRendererRequest($request->get('renderer'), $tracker_manager, $request, $current_user, $store_in_session);
+                    $this->processRendererRequest($request->get('renderer'), $layout, $request, $current_user, $store_in_session);
                 }
                 break;
             case 'rename-renderer':
@@ -1143,7 +1182,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $criteria_values = $request->get('criteria');
                     $this->updateCriteriaValues($criteria_values);
                 }
-                $this->display($tracker_manager, $request, $current_user);
+                $this->display($layout, $request, $current_user);
                 break;
         }
     }
@@ -1290,11 +1329,15 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
     }
     
+    protected $dao;
     /**
      * @return Tracker_ReportDao
      */
     public function getDao() {
-        return new Tracker_ReportDao();
+        if (!$this->dao) {
+            $this->dao = new Tracker_ReportDao();
+        }
+        return $this->dao;
     }
 }
 

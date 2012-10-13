@@ -26,7 +26,7 @@ textarea.text {
     width:      600px;
 }
 
-#plugin_git_reference h2 {
+#plugin_git_reference h1 {
     float:          left;
     padding-bottom: 0;
     padding-top:    0;
@@ -70,17 +70,9 @@ textarea.text {
     margin: 0.5em 0 0.5em 0;
 }
 
-#plugin_git_confirm_deletion {
-    float: right;
-}
-
 #plugin_git_fork_form {
     white-space:no-wrap;
     margin-top:0em;
-}
-
-#plugin_git_clone_url {
-    margin: 0;
 }
 
 #plugin_git_clone_field {
@@ -89,6 +81,7 @@ textarea.text {
     font-family:  Monaco, 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
     padding-left: 5px;
     width:        80%;
+    font-size:    12px;
 }
 
 #plugin_git_description textarea {
@@ -110,11 +103,6 @@ td.plugin_git_first_col {
 
 .plugin_git_mail_prefix {
     width:15em;
-}
-
-.plugin_git_add_mail {
-    width:  60em;
-    height: 3em;
 }
 
 #gitphp {
@@ -150,4 +138,19 @@ td.plugin_git_first_col {
 #fork_repositories td.last {
     padding-right: 0em;
     border-right: none;
+}
+
+.widget-preview-plugin_git_user_pushes-en_US,
+.widget-preview-plugin_git_user_pushes-fr_FR {
+    background-image:url('../images/widget-preview-user_pushes.png');
+}
+
+.widget-preview-plugin_git_project_pushes-en_US,
+.widget-preview-plugin_git_project_pushes-fr_FR {
+    background-image:url('../images/widget-preview-project_pushes.png');
+}
+
+#git_repomanagement label {
+    display: block;
+    margin-bottom: 5px;
 }

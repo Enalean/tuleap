@@ -21,6 +21,7 @@ $user_pwd    =  !empty($argv[7]) ? $argv[7] : 'siteadmin';
 
 $GLOBALS['Response'] = new Response();
 $user = UserManager::instance()->forceLogin($user_name, $user_pwd);
+
 if ($user->isAnonymous()) {
     die("Unable to authenticate the user, cannot import the template".PHP_EOL);
 }

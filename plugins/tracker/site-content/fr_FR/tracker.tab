@@ -11,7 +11,11 @@ plugin_tracker_homenav	search	Recherche
 
 plugin_tracker_crosssearch	title	Recherche
 
-plugin_tracker_crosssearch	summary	Titre
+plugin_tracker_crosssearch	semantic_title_label	Titre (Sémantique)
+plugin_tracker_crosssearch	semantic_status_label	État (Sémantique)
+plugin_tracker_crosssearch	semantic_status_any	Tous
+plugin_tracker_crosssearch	semantic_status_open	Ouvert
+plugin_tracker_crosssearch	semantic_status_closed	Fermé
 
 plugin_tracker_crosssearch	included_trackers_title	Liste des outils de suivi inclus dans la recherche :
 plugin_tracker_crosssearch	included_trackers_not_found	Aucun outil de suivi ne correspond.
@@ -25,7 +29,7 @@ plugin_tracker_crosssearch	no_matching_artifact	Aucun artefact ne correspond à 
 # Script: SF/www/tracker/add.php
 #
 plugin_tracker_add	invalid	Cet outil de suivi n'est plus valide.
-plugin_tracker_add	add_a	Créer un(e) 
+plugin_tracker	add_a	Créer un(e) $1
 #
 #-----------------------------------------------
 # Script: SF/www/tracker/browse.php
@@ -671,12 +675,13 @@ plugin_tracker_common_artifact	followup_upd_fail	La mise à jour du commentaire 
 plugin_tracker_common_artifact	err_required	Le champ $1 est obligatoire.
 plugin_tracker_common_artifact	transition_not_valid	La transition vers la valeur "$1" est invalide.
 plugin_tracker_common_artifact	transition_to_none	La transition vers la valeur "Aucun" est invalide.
-plugin_tracker_common_artifact	error_openlist_value	contient une valeur qui n'est pas une adresse électronique.
+plugin_tracker_common_artifact	error_openlist_value	contient une valeur qui n'est pas un login ou une adresse électronique.
 plugin_tracker_common_artifact	error_integer_value	n'est pas une valeur du type entier.
 plugin_tracker_common_artifact	error_float_value	n'est pas une valeur du type flottant.
 plugin_tracker_common_artifact	error_string_value	$1 n'est pas une valeur de type chaîne de caractère.
 plugin_tracker_common_artifact	error_string_value_characters	$1 ne peut contenir ni retour chariot, ni le caractère null.
 plugin_tracker_common_artifact	error_artifactlink_value	$1 : $2 n'est pas un id d'artefact.
+plugin_tracker_common_artifact	error_artifactlink_choose_parent	Vous devez lier cet artefact à un parent existant ou en créer un nouveau.
 plugin_tracker_common_artifact	error_date_value	$1 n'est pas une valeur du type date.
 plugin_tracker_common_artifact	error_text_value	$1 n'est pas une valeur du type texte.
 
@@ -961,7 +966,7 @@ plugin_tracker	submit_new_artifact	Soumettre un nouvel artefact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration
 plugin_tracker	help	Aide
-plugin_tracker	linked_to	This artifact (of $3) will be linked to <a href="/tracker/?aid=$1" target="_blank">$2 #$1</a>
+plugin_tracker	linked_to	This artifact (of $2) will be linked to $1
 plugin_tracker	tracker_switcher	Sélectionnez un outil de suivi
 
 plugin_tracker_artifact	set_to	à 
@@ -971,6 +976,11 @@ plugin_tracker_artifact	to	à
 plugin_tracker_artifact	removed	retiré
 plugin_tracker_artifact	added	ajouté
 plugin_tracker_artifact	formelement_artifactlink_help	Entrez des ids d'artefacts séparés par une virgule
+plugin_tracker_artifact	formelement_artifactlink_create_new_parent	Créer un nouvel artefact
+plugin_tracker_artifact	formelement_artifactlink_choose_parent	Sélectionner un parent $1 : 
+plugin_tracker_artifact	formelement_artifactlink_will_have_as_parent	Aura $1 comme parent
+plugin_tracker_artifact	formelement_artifactlink_open_parent	$1 ouvert(es)
+
 plugin_tracker_artifact	unable_update	Impossible de mettre à jour l'artefact
 plugin_tracker_artifact	no_changes	Aucun changement pour l'artefact $1
 plugin_tracker_artifact	fields_not_valid	Les champs ne sont pas valides
@@ -996,8 +1006,12 @@ plugin_tracker_artifact_changeset	header_artifact	ARTEFACT
 plugin_tracker_artifact_changeset	header_html_changeset	Dernières modifications
 plugin_tracker_artifact_changeset	header_html_snapshot	État
 
+plugin_tracker_formelement_admin	aggregate_label	Champ calculé
+plugin_tracker_formelement_admin	aggregate_description	Calcul la valeur (somme des valeurs) du champ en fonction des artefacts liés.
 plugin_tracker_formelement_admin	crossreferences_label	Références Croisées
 plugin_tracker_formelement_admin	crossreferences_description	Affiche les références croisées de l'artefact
+plugin_tracker_formelement_admin	burndown_label	Diagramme de complétion
+plugin_tracker_formelement_admin	burndown_description	Diagramme de complétion pour l'artefact
 plugin_tracker_formelement_admin	submittedby_label	Auteur de l'artefact
 plugin_tracker_formelement_admin	submittedby_description	Affiche l'auteur de l'artéfact
 plugin_tracker_formelement_admin	submittedby_help	Le champ est automatiquement renseigné avec l'utilisateur qui a soumis l'artéfact
@@ -1053,6 +1067,7 @@ plugin_tracker_formelement_admin	open_list_description	Un champ texte contenant 
 plugin_tracker_formelement_admin	values	Valeurs
 plugin_tracker_formelement_admin	choose_values	Choisir les valeurs
 plugin_tracker_formelement_admin	bind_to_users	Associer à un groupe d'utilisateurs
+plugin_tracker_formelement_admin	bind_to_ugroups	Associer à des groupes d'utilisateurs
 plugin_tracker_formelement_admin	alphabetically_sort	par ordre alphabétique
 plugin_tracker_formelement_admin	add_row	Ajouter une valeur par ligne
 plugin_tracker_formelement_admin	type_search_term	Saisir un élément de recherche
@@ -1072,6 +1087,7 @@ plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloi
 plugin_tracker_formelement_admin	delete_field_impossible	Impossible de supprimer ce champ (utilisé en sémantique, pour le workflow ou sur une dépendance entre champs)
 plugin_tracker_formelement_admin	hide_value_impossible	Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans la sémantique 'status', dans le workflow ou sur une dépendance entre champs
 plugin_tracker_formelement_admin	hide_value	Afficher/cacher cette valeur
+plugin_tracker_formelement_admin	alpha_ranking_updated	Ordre alphabétique mis à jour
 
 plugin_tracker_formelement_property	hint	Indication
 plugin_tracker_formelement_property	default_value_type	Valeur par défaut
@@ -1082,6 +1098,11 @@ plugin_tracker_formelement_property	rows	Lignes
 plugin_tracker_formelement_property	cols	Colonnes
 plugin_tracker_formelement_property	static_value	Valeur statique
 plugin_tracker_formelement_property	default_value_today	Date du jour
+plugin_tracker_formelement_property	target_field_name	Champ cible
+
+plugin_tracker_formelement_exception	wrong_field_id	Aucun champ avec l'ID:$1
+plugin_tracker_formelement_exception	permission_denied	Permissions insuffisantes
+plugin_tracker_formelement_exception	field_must_be_static	Il n'est pas possible de partager d'autres champs que des boites de sélection statiques
 
 plugin_tracker_widget_my	no_artifacts	Aucun artefact trouvé.
 
@@ -1114,6 +1135,17 @@ plugin_tracker_admin	manage_dependencies_desc	Définir comment les valeurs d'un 
 
 plugin_tracker_admin	tracker_not_duplicated	L'outil de suivi $1 n'a pas été copié
 plugin_tracker_admin	successfully_updated	Outil de suivi mis à jour avec succès.
+
+plugin_tracker_admin	clean	Suppression d'artefact
+plugin_tracker_admin	clean_desc	Efface de manière permanente un artifact de ce tracker
+plugin_tracker_admin	clean_info	Cette opération efface de manière irréversible un artefact de la base. Attention : <strong>il n'y a aucune possibilité de restaurer les données</strong>. Cette opération doit rester exceptionnelle.
+plugin_tracker_admin	clean_id	Id de l'artefact à supprimer: 
+plugin_tracker_admin	clean_error_noart	L'artefact $1 n'existe pas ou n'appartient pas à ce tracker
+plugin_tracker_admin	clean_info_deleted	L'artefact $1 a été supprimé
+plugin_tracker_admin	clean_confirm	Confirmer
+plugin_tracker_admin	clean_cancel	Annuler
+plugin_tracker_admin	clean_confirm_text	<h3>Vous êtes sur le point de supprimer définitivement "$1".</h3><p><strong>Cette opération est irréversible, il n'y a aucun moyen de restauration des données supprimées.</strong></p>
+plugin_tracker_admin	clean_cancel_deleted	Suppression annulée
 
 plugin_tracker_admin_notification	successfully_updated	Notifications mises à jour avec succès.
 
@@ -1183,6 +1215,7 @@ plugin_tracker_admin_hierarchy	current_full_hierarchy_title	Hiérarchie actuelle
 
 plugin_tracker_hierarchy	error_is_cyclic	La hiérarchie est cyclique
 plugin_tracker_hierarchy	tracker_not_in_hierarchy	Le tracker n'appartient pas à la hiérarchie
+plugin_tracker_hierarchy	error_more_than_one_parent	L'artefact $1 a plusieurs parents: $2
 plugin_tracker_hierarchy	controller_bad_request	La requête contient des données invalides (paramètre 'children')
 
 plugin_tracker_renderer_table	items_range_of	sur
@@ -1282,7 +1315,12 @@ workflow_admin	permissions_updated	Les mises à jour ont été prises en compte.
 workflow_admin	permissions_transition	Peut effectuer la transition
 workflow_admin	new_artifact	Nouvel artefact
 workflow_admin	change_value_date_field_to	Le champ date $1 prend pour valeur $2
+workflow_admin	change_value_int_field_to	Le champ entier $1 prend pour valeur $2
+workflow_admin	change_value_float_field_to	Le champ flottant $1 prend pour valeur $2
 workflow_admin	post_action_change_value_date_field	Mettre à jour la valeur d'un champ date
+workflow_admin	post_action_change_value_int_field	Mettre à jour la valeur d'un champ de type entier
+workflow_admin	post_action_change_value_float_field	Mettre à jour la valeur d'un champ de type flottant
+
 workflow_admin	under_the_following_condition	Sous les conditions suivantes :
 workflow_admin	following_action_performed	Les actions ci-dessous seront executées :
 workflow_admin	add_new_action	Ajouter une nouvelle action : 
@@ -1293,9 +1331,8 @@ workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	la date courante
 workflow_admin	post_action_not_defined	Cette action sera inactive tant qu'elle ne sera pas complètement définie
 
-workflow_postaction	field_date_current_time	Le champs '$1' a été automatiquement valué à $2
-workflow_postaction	field_date_clear	Le valeur du champs '$1' a été automatiquement effacée
-workflow_postaction	field_date_no_perms	Impossible de valuer automatiquement le champs '$1' : erreurs de permissions
+workflow_postaction	field_value_set	Le champs '$1' a été automatiquement valué à $2
+workflow_postaction	field_clear	Le valeur du champs '$1' a été automatiquement effacée
 
 plugin_tracker_permissions	plugin_tracker_artifact_access	Accès à un artefact
 plugin_tracker_permissions	plugin_tracker_full_access	Accès à tous les artefacts du tracker
@@ -1316,3 +1353,60 @@ plugin_tracker_widget_myartifacts	s_info	submitted by me [S]
 plugin_tracker_widget_myartifacts	as_info	assigned to or submitted by me [AS]
 plugin_tracker_widget_myartifacts	description	Affiche la liste des artefacts par projet que vous avez soumis ou qui vous ont été assignés.
 plugin_tracker_widget_myartifacts	no_artifacts	Pas d'artefact.
+
+plugin_tracker	must_have_artifact_link_field	L'artefact n'a pas de champ de type lien vers artefact ou alors vous n'avez pas la permission de le modifier, merci de reconfigurer l'outil de suivi
+plugin_tracker	burndown_missing_start_date_warning	L'outil de suivi n'a pas de champ "start_date" de type Date ou bien vous n'avez pas la permission d'y acceder.
+plugin_tracker	burndown_missing_duration_warning	L'outil de suivi n'a pas de champ "duration" de type Entier ou bien vous n'avez pas la permission d'y acceder.
+plugin_tracker	burndown_missing_remaining_effort_warning	Des outils de suivi enfants n'ont pas de champ "remaining_effort" de type Entier ou Flottant :
+plugin_tracker	burndown_empty_start_date_warning	Le champ "start date" est vide ou invalide
+plugin_tracker	burndown_empty_duration_warning	Le champ "duration" est vide ou invalide
+plugin_tracker	burndown_no_linked_artifacts	Aucun artifact lié n'a été trouvé ou le champ "remaining_effort" n'existe pas sur ces artefacts.
+plugin_tracker	burndown_email_as_of_today	L'image précédente est calculée en temps réel. L'information représentée correspond à la date courante, et non à la date d'envoi du message.
+plugin_tracker	unable_to_render_the_chart	Impossible de construire le graphique
+plugin_tracker	burndown_permission_denied	Vous n'avez pas la permission d'acceder ce champ.
+
+# DateReminder
+plugin_tracker_date_reminder	subject	Rappel: '$1' $2 for '$3'
+plugin_tracker_date_reminder	body_header	$1 a été chargé de vous rappeler aujourd'hui que '$2' dans l'artefact suivant est $3.
+plugin_tracker_date_reminder	body_art_link	Vous pouvez accéder à l'artefact ici: $1
+plugin_tracker_date_reminder	body_art_html_link	Vous pouvez accéder à l'artefact <a href="$1">ici</a>.
+plugin_tracker_date_reminder	tracker_date_reminder_actions	Actions
+plugin_tracker_date_reminder	tracker_date_reminder_add_title	Ajouter un rappel
+plugin_tracker_date_reminder	tracker_date_reminder_notification_distance_label	jour(s)
+plugin_tracker_date_reminder	tracker_date_reminder_notification_when	Quand
+plugin_tracker_date_reminder	tracker_date_reminder_send_to	Envoyer un email à
+plugin_tracker_date_reminder	tracker_date_reminder_field	Champs
+plugin_tracker_date_reminder	tracker_date_reminder_notification_details	$1 jour(s) $2
+plugin_tracker_date_reminder	tracker_date_reminder_edit_title	Modifier le rappel
+plugin_tracker_date_reminder	tracker_date_reminder_deleted	Rappel sur date de tracker supprimé avec succés
+plugin_tracker_date_reminder	tracker_date_reminder_added	Rappel sur date de tracker ajouté avec succés
+plugin_tracker_date_reminder	tracker_date_reminder_updated	Rappel sur date de tracker modififé avec succés
+plugin_tracker_date_reminder	tracker_date_reminder_add_failure	Impossible d'ajouter un rappel sur le champ date $1 du tracker $2
+plugin_tracker_date_reminder	tracker_date_reminder_update_failure	Impossible de mettre à jour le Rappel sur date de tracker $1
+plugin_tracker_date_reminder	tracker_date_reminder_delete_failure	Impossible de supprimer le Rappel sur date de tracker $1
+plugin_tracker_date_reminder	tracker_date_reminder_status	Status
+plugin_tracker_date_reminder	tracker_date_reminder_update_action	Modifier
+plugin_tracker_date_reminder	tracker_date_reminder_delete_action	supprimer
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_txt	<h3>Confirmez la suppression du rappel sur une date du tracker</h3><p>Vous êtes sur le point de supprimer sur une date du tracker:</p><p>$1</p><p>Êtes vous sûr de vouloir continuer ?</p>
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_cancel	Non, je ne veux pas le supprimer
+plugin_tracker_date_reminder	tracker_adate_reminder_delete_confirm	Oui, je suis sûr !
+
+project_admin_utils	tracker_date_reminder_title	Options de Rappel sur date de tracker
+project_admin_utils	tracker_date_reminder_add	Rappel sur date de tracker ajouté $1
+project_admin_utils	tracker_date_reminder_edit	Rappel sur date de tracker mis a jour $1
+project_admin_utils	tracker_date_reminder_delete	Rappel sur date de tracker supprimé $1
+project_admin_utils	tracker_date_reminder_sent	Rappel de date sur le tracker envoyé $1
+project_admin_utils	tracker_date_reminder_before	Avant
+project_admin_utils	tracker_date_reminder_after	Après
+project_admin_utils	tracker_date_reminder_enabled	Activé
+project_admin_utils	tracker_date_reminder_disabled	Desactivé
+project_admin_utils	tracker_date_reminder_invalid_field	'$1' n'est pas un Id de champs date valide
+project_admin_utils	tracker_date_reminder_invalid_distance	'$1' n'est pas une distance valide
+project_admin_utils	tracker_date_reminder_invalid_Tracker	'$1' n'est pas un Id de tracker valide
+project_admin_utils	tracker_date_reminder_invalid_notification_type	'$1' n'est pas un type de notification valide
+project_admin_utils	tracker_date_reminder_invalid_status	'$1' n'est pas un status valide
+project_admin_utils	tracker_date_reminder_invalid_reminder	'$1' n'est pas un rappel sur un champ de type date valide
+project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un ugroup valide
+project_admin_utils	tracker_date_reminder_empty_ugroup_param	Vous devez sélectionner au moins un ugroup valide
+project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajouter un rappel sur date de tracker avant le champ 'SubmittedOn'
+project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker

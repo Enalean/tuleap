@@ -16,7 +16,7 @@
 //
 -->
 
-<xsl:import href="/usr/local/docbook-xsl/html/chunk.xsl"/>
+<xsl:import href="../../../lib/docbook-xsl/html/chunk.xsl"/>
 <xsl:import href="../html/param.xsl"/>
 <xsl:import href="../common/labels.xsl"/>
 <xsl:import href="../html/admon.xsl"/>

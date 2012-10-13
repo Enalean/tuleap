@@ -49,7 +49,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
     function totalRead($startDate, $endDate) {
         $sql = "SELECT MONTHNAME(STR_TO_DATE(MONTH(day), '%m')) AS month,
                 YEAR(day) AS year,
-                svn_checkouts + svn_access_count + svn_browse AS count,
+                SUM(svn_access_count) AS count,
                 COUNT(DISTINCT(group_id)) AS projects,
                 COUNT(DISTINCT(user_id)) AS users
                 FROM group_svn_full_history
@@ -91,7 +91,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function readByProject($startDate, $endDate) {
-        $sql = "SELECT unix_group_name AS project, SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse) AS count
+        $sql = "SELECT unix_group_name AS project, SUM(svn_access_count) AS count
                 FROM group_svn_full_history
                 JOIN groups g USING (group_id)
                 WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
@@ -131,7 +131,7 @@ class Statistics_ScmSvnDao extends DataAccessObject {
      * @return DataAccessResult
      */
     function readByUser($startDate, $endDate) {
-        $sql = "SELECT user_name AS user, SUM(svn_checkouts) + SUM(svn_access_count) + SUM(svn_browse) AS count
+        $sql = "SELECT user_name AS user, SUM(svn_access_count) AS count
                 FROM group_svn_full_history
                 JOIN user u USING (user_id)
                 WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
@@ -160,26 +160,6 @@ class Statistics_ScmSvnDao extends DataAccessObject {
                 GROUP BY user
                 ORDER BY count DESC
                 LIMIT 10";
-
-        return $this->retrieve($sql);
-    }
-
-    /**
-     * Number of SVN repo having handeled at least 1 commit
-     * in the given period
-     *
-     * @param String $startDate Period start date
-     * @param String $endDate   Period end date
-     *
-     * @return DataAccessResult
-     */
-    function repositoriesEvolutionForPeriod($startDate, $endDate) {
-        $sql = "SELECT MONTH(FROM_UNIXTIME(date)) AS month,
-                YEAR(FROM_UNIXTIME(date)) AS year ,
-                COUNT(DISTINCT(repositoryid)) AS repo_count
-                FROM svn_commits 
-                WHERE date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
-                GROUP BY year, month";
 
         return $this->retrieve($sql);
     }

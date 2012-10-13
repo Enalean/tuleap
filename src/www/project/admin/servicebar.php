@@ -113,6 +113,7 @@ if (user_is_super_user()) {
     $is_superuser=true;
 }
 
+if (!isset($is_used)) $is_used=false;
 if (!isset($func)) $func="";
 
 if ($func=='delete') {

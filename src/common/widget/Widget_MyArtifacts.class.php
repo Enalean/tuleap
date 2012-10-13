@@ -30,6 +30,7 @@ require_once('common/tracker/ArtifactReportFactory.class.php');
 require_once('common/tracker/ArtifactReport.class.php');
 require_once('common/tracker/ArtifactReportField.class.php');
 require_once('common/tracker/ArtifactFactory.class.php');
+require_once('www/my/my_utils.php');
 
 /**
 * Widget_MyArtifacts
@@ -49,7 +50,7 @@ class Widget_MyArtifacts extends Widget {
     function getTitle() {
         return $GLOBALS['Language']->getText('my_index', 'my_arts');
     }
-    function updatePreferences(&$request) {
+    function updatePreferences($request) {
         $request->valid(new Valid_String('cancel'));
         $vShow = new Valid_WhiteList('show', array('A', 'S', 'N', 'AS'));
         $vShow->required();
@@ -105,7 +106,7 @@ class Widget_MyArtifacts extends Widget {
         return $html_my_artifacts;
     }
     function _display_artifacts($list_trackers, $print_box_begin) {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
 
         $vItemId = new Valid_UInt('hide_item_id');
         $vItemId->required();
@@ -154,19 +155,19 @@ class Widget_MyArtifacts extends Widget {
             }
             if (!isset($artifact_types[$group_id][$atid])) {
                 $artifact_types[$group_id][$atid] = array();
-                $artifact_types[$group_id][$atid]['at'] =& new ArtifactType($group,$atid);
+                $artifact_types[$group_id][$atid]['at'] = new ArtifactType($group,$atid);
                 $artifact_types[$group_id][$atid]['user_can_view_at']             = $artifact_types[$group_id][$atid]['at']->userCanView();
                 $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] = null;
             }
             //Check if user can view artifact
             if ($artifact_types[$group_id][$atid]['user_can_view_at'] && $artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'] !== false) {
                 if (is_null($artifact_types[$group_id][$atid]['user_can_view_summary_or_aid'])) {
-                    $at =& $artifact_types[$group_id][$atid]['at'];
+                    $at = $artifact_types[$group_id][$atid]['at'];
                     //Create ArtifactFieldFactory object
                     if (!isset($artifact_types[$group_id][$atid]['aff'])) {
-                        $artifact_types[$group_id][$atid]['aff'] =& new ArtifactFieldFactory($at);
+                        $artifact_types[$group_id][$atid]['aff'] = new ArtifactFieldFactory($at);
                     }
-                    $aff =& $artifact_types[$group_id][$atid]['aff'];
+                    $aff = $artifact_types[$group_id][$atid]['aff'];
                     //Retrieve artifact_id field
                     $field = $aff->getFieldFromName('artifact_id');
                     //Check if user can read it
@@ -274,7 +275,7 @@ class Widget_MyArtifacts extends Widget {
     }
     
     function getAjaxUrl($owner_id, $owner_type) {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         $ajax_url = parent::getAjaxUrl($owner_id, $owner_type);
         if ($request->exist('hide_item_id') || $request->exist('hide_artifact')) {
             $ajax_url .= '&hide_item_id=' . $request->get('hide_item_id') . '&hide_artifact=' . $request->get('hide_artifact');

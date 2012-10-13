@@ -21,18 +21,18 @@
 require_once('include/DataAccessObject.class.php');
 
 /**
- *  Data Access Object for mailing lists 
+ *  Data Access Object for mailing lists
  */
 class MailingListDao extends DataAccessObject {
 
     /**
-    * Search active (=not deteted) mailing lists 
+    * Search active (=not deteted) mailing lists
     * return all active lists
     * @return DataAccessResult
     */
     function searchAllActiveML() {
-        $sql = "SELECT * 
-                FROM mail_group_list 
+        $sql = "SELECT *
+                FROM mail_group_list
                 WHERE is_public IN (0,1)";
         return $this->retrieve($sql);
     }
@@ -43,7 +43,7 @@ class MailingListDao extends DataAccessObject {
     */
     function searchByGroupListId($group_list_id) {
         $group_list_id = $this->da->escapeInt($group_list_id);
-        $sql = "SELECT * FROM mail_group_list 
+        $sql = "SELECT * FROM mail_group_list
                 WHERE group_list_id = $group_list_id";
         return $this->retrieve($sql);
     }
@@ -57,7 +57,7 @@ class MailingListDao extends DataAccessObject {
     */
     function searchByProject($projectId) {
         $projectId = $this->da->escapeInt($projectId);
-        $sql = "SELECT * FROM mail_group_list 
+        $sql = "SELECT * FROM mail_group_list
                 WHERE group_id = $projectId";
         return $this->retrieve($sql);
     }
@@ -72,6 +72,20 @@ class MailingListDao extends DataAccessObject {
     function deleteList($listId) {
         $listId = $this->da->escapeInt($listId);
         $sql="UPDATE mail_group_list SET is_public=9 ".
+             " WHERE group_list_id=".$listId;
+        return $this->update($sql);
+	}
+
+	/**
+     * Delete the list
+     *
+     * @param Integer $listId Id of the mailing list
+     *
+     * @return Boolean
+     */
+    function deleteListDefinitively($listId) {
+        $listId = $this->da->escapeInt($listId);
+        $sql="DELETE FROM mail_group_list ".
              " WHERE group_list_id=".$listId;
         return $this->update($sql);
     }

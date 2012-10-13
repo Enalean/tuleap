@@ -77,36 +77,7 @@ class Widget_ProjectPublicAreas extends Widget {
             }
         */
         }
-        
-        // ##################### Bug tracking 
-        
-        if ($project->usesBugs()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/bugs/?group_id='.$group_id.'">';
-            html_image("ic/bug16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','bug_track'))); 
-            print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','bug_track').'</A>';
-            $res_count = db_query("SELECT count(*) AS count FROM bug WHERE group_id=$group_id AND status_id != 3");
-            $row_count = db_fetch_array($res_count);
-            print " ( <B>$row_count[count]</B>";
-            $res_count = db_query("SELECT count(*) AS count FROM bug WHERE group_id=$group_id");
-            $row_count = db_fetch_array($res_count);
-            print ' '.$GLOBALS['Language']->getText('include_project_home','open_bugs').', '.$GLOBALS['Language']->getText('include_project_home','total',$row_count['count']).' )';
-        }
-        
-        // ##################### Support Manager (only for Active)
-         
-        if ($project->usesSupport()) {
-            print '
-            <HR SIZE="1" width="99%" NoShade>
-            <A href="/support/?group_id='.$group_id.'">';
-            html_image("ic/support16b.jpg",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','supp_manager')));
-            print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','tech_supp_manager').'</A>';
-            $res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id");
-            $row_count = db_fetch_array($res_count);
-            $res_count = db_query("SELECT count(*) AS count FROM support WHERE group_id=$group_id AND support_status_id='1'");
-            $row_count2 = db_fetch_array($res_count);
-            print ' ( '.$GLOBALS['Language']->getText('include_project_home','open_requ', $row_count2['count']).', '.$GLOBALS['Language']->getText('include_project_home','open_requ', $row_count['count']).' )';
-        }
-        
+
         // ##################### Doc Manager (only for Active)
         
         if ($project->usesDocman()) {
@@ -125,21 +96,6 @@ class Widget_ProjectPublicAreas extends Widget {
         */
         }
         
-        // ##################### Patch Manager (only for Active)
-        
-        if ($project->usesPatch()) {
-            print '
-                <HR SIZE="1" width="99%" NoShade>
-                <A href="/patch/?group_id='.$group_id.'">';
-            html_image("ic/patch.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','patch_manager')));
-            print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','patch_manager').'</A>';
-            $res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=$group_id");
-            $row_count = db_fetch_array($res_count);
-            $res_count = db_query("SELECT count(*) AS count FROM patch WHERE group_id=$group_id AND patch_status_id='1'");
-            $row_count2 = db_fetch_array($res_count);
-            print ' ( '.$GLOBALS['Language']->getText('include_project_home','open_patches',$row_count2['count']).', '.$GLOBALS['Language']->getText('include_project_home','total',$row_count['count']).' )';
-        }
-        
         // ##################### Mailing lists (only for Active)
         
         if ($project->usesMail()) {
@@ -149,27 +105,6 @@ class Widget_ProjectPublicAreas extends Widget {
             $res_count = db_query("SELECT count(*) AS count FROM mail_group_list WHERE group_id=$group_id AND is_public=1");
             $row_count = db_fetch_array($res_count);
             print ' ( '.$GLOBALS['Language']->getText('include_project_home','public_mail_lists',$row_count['count']).' )';
-        }
-        
-        // ##################### Task Manager (only for Active)
-        
-        if ($project->usesPm()) {
-            print '<HR SIZE="1" width="99%" NoShade><A href="/pm/?group_id='.$group_id.'">';
-            html_image("ic/taskman16b.png",array('width'=>'20', 'height'=>'20', 'alt'=>$GLOBALS['Language']->getText('include_project_home','task_manager')));
-            print '&nbsp;'.$GLOBALS['Language']->getText('include_project_home','proj_task_man').'</A>';
-            $sql="SELECT * FROM project_group_list WHERE group_id='$group_id' AND is_public=1";
-            $result = db_query ($sql);
-            $rows = db_numrows($result);
-            if (!$result || $rows < 1) {
-                echo '<BR><I>'.$GLOBALS['Language']->getText('include_project_home','no_public_proj').'</I>';
-            } else {
-                for ($j = 0; $j < $rows; $j++) {
-                    echo '
-                    <BR> &nbsp; - <A HREF="/pm/task.php?group_project_id='.db_result($result, $j, 'group_project_id').
-                    '&group_id='.$group_id.'&func=browse">'.db_result($result, $j, 'project_name').'</A>';
-                }
-        
-            }
         }
         
         // ######################### Wiki (only for Active)

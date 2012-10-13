@@ -20,6 +20,7 @@ require_once 'Project.class.php';
 require_once 'Project_InvalidShortName_Exception.class.php';
 require_once 'Project_InvalidFullName_Exception.class.php';
 require_once 'Project_Creation_Exception.class.php';
+require_once 'common/valid/Rule.class.php';
 
 /**
  * Manage creation of a new project in the forge.

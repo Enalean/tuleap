@@ -280,6 +280,11 @@
             <data type="string"/>
           </attribute>
         </optional>
+        <optional>
+          <attribute name="target_field_name">
+            <data type="string"/>
+          </attribute>
+        </optional>
       </element>
     </optional>
     <choice>
@@ -325,6 +330,9 @@
         </group>
         <attribute name="type">
           <value>users</value>
+        </attribute>
+        <attribute name="type">
+          <value>ugroups</value>
         </attribute>
       </choice>
       <optional>
@@ -406,6 +414,30 @@
           <element name="postaction_field_date">
             <attribute name="valuetype">
               <data type="int"/>
+            </attribute>
+            <element name="field_id">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <element name="postaction_field_int">
+            <attribute name="value">
+              <data type="int"/>
+            </attribute>
+            <element name="field_id">
+              <attribute name="REF">
+                <data type="IDREF"/>
+              </attribute>
+            </element>
+          </element>
+        </zeroOrMore>
+        <zeroOrMore>
+          <element name="postaction_field_float">
+            <attribute name="value">
+              <data type="float"/>
             </attribute>
             <element name="field_id">
               <attribute name="REF">

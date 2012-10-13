@@ -186,7 +186,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
         $values = $this->getListValues();
         $soap_array = array();
         foreach ($values as $value) {
-            $soap_array[] = $value->getLabel();
+            $soap_array[] = $value->getSoapValue();
         }
         return implode(",", $soap_array);
     }

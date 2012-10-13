@@ -158,7 +158,6 @@ INSERT INTO groups SET \
   cvs_preamble = '', \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
-  svn_events_mailing_list = '', \
   svn_events_mailing_header = '', \
   svn_preamble = '' ;
 
@@ -197,7 +196,6 @@ INSERT INTO groups SET \
   cvs_preamble = '', \
   svn_tracker = '0', \
   svn_mandatory_ref = '0', \
-  svn_events_mailing_list = '', \
   svn_events_mailing_header = '', \
   svn_preamble = '' ;
 
@@ -237,7 +235,6 @@ INSERT INTO groups SET \
   cvs_preamble = '', \
   svn_tracker = '1', \
   svn_mandatory_ref = '0', \
-  svn_events_mailing_list = '', \
   svn_events_mailing_header = '', \
   svn_preamble = '' ;
 

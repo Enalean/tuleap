@@ -178,6 +178,8 @@ function get_history_entries() {
                                         'perm_granted_for_docgroup'),
                  'event_project' =>     array('rename_done',
                                         'rename_with_error',
+                                        'add_custom_quota',
+                                        'restore_default_quota',
                                         'approved',
                                         'deleted',
                                         'rename_request',
@@ -190,7 +192,10 @@ function get_history_entries() {
                                         'membership_request_updated',
                                         'import',
                                         'mass_change',
-                                        'status'),
+                                        'status',
+                                        'frs_self_add_monitor_package',
+                                        'frs_add_monitor_package',
+                                        'frs_stop_monitor_package'),
                  'event_ug' =>  array('upd_ug',
                                         'del_ug',
                                         'changed_member_perm'),
@@ -222,6 +227,7 @@ function get_history_entries() {
  * @return String
  */
 function convert_project_history_events($array, $subevents) {
+    $hp = Codendi_HTMLPurifier::instance();
     $output = '{ }';
     if (is_array($array)) {
         if (count($array)) {
@@ -232,15 +238,20 @@ function convert_project_history_events($array, $subevents) {
                 if ($subevents) {
                     if(list($key, $value) = each($array)) {
                         if (is_string($value) && !empty($value)) {
-                            $output .= $comma . "'" . $value . "'" . ': '. "'". $GLOBALS['Language']->getText('project_admin_utils', $value). "'";
+                            $value            = $hp->purify($value, CODENDI_PURIFIER_JS_QUOTE);
+                            $translated_value = $hp->purify($GLOBALS['Language']->getText('project_admin_utils', $value), CODENDI_PURIFIER_JS_QUOTE);
+                            
+                            $output .= $comma . "'$value': '$translated_value'";
                             $comma = ', ';
                         }
                     }
                 } else {
                     if(list($key, $value) = each($array)) {
                         if (is_string($key)) {
-                            $output .= $comma . "'" . $key . "'" .': '.convert_project_history_events($value, true);
-                            $comma = ', ';
+                            $key     = $hp->purify($key, CODENDI_PURIFIER_JS_QUOTE);
+                            $value   = convert_project_history_events($value, true);
+                            $output .= $comma . "'$key': $value";
+                            $comma   = ', ';
                         }
                     }
                 }
@@ -261,7 +272,7 @@ function convert_project_history_events($array, $subevents) {
  *
  * @return void
  */
-function displayProjectHistoryResults($group_id, $res, $export = false, $i = 1) {
+function displayProjectHistoryResults($group_id, $res, $export = false, &$i = 1) {
     global $Language;
 
     $hp = Codendi_HTMLPurifier::instance();
@@ -409,7 +420,7 @@ function show_grouphistory ($group_id, $offset, $limit, $event = null, $subEvent
         echo html_build_list_table_top ($title_arr);
         $i=1;
 
-        displayProjectHistoryResults($group_id, $res, false, &$i);
+        displayProjectHistoryResults($group_id, $res, false, $i);
 
         echo '</TABLE>';
 

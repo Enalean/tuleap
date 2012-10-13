@@ -26,7 +26,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     protected $display_name;
     
     public function __construct($id, $user_name = null, $display_name = null) {
-        parent::__construct($id);
+        parent::__construct($id, false);
         $this->user_name    = $user_name;
         $this->display_name = $display_name;
     }
@@ -75,6 +75,13 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     
     public function fetchFormatted() {
         return $this->getLink();
+    }
+    
+    public function fetchCard() {
+        if ($this->getId() == 100) {
+            return '';
+        }
+        return '<div style="display: inline-block;">'. $this->getUser()->fetchHtmlAvatar(16) .'</div>';
     }
     
     public function fetchFormattedForCSV() {

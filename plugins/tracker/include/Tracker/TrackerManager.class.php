@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'IDisplayTrackerLayout.class.php';
+require_once 'IFetchTrackerSwitcher.class.php';
 require_once('TrackerFactory.class.php');
 require_once('Tracker_URL.class.php');
 require_once('Tracker_CannotAccessTrackerException.class.php');
@@ -27,11 +29,14 @@ require_once('Report/Tracker_ReportFactory.class.php');
 require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
 require_once('CrossSearch/SearchController.class.php');
+require_once('CrossSearch/SearchViewBuilder.class.php');
 require_once('CrossSearch/Search.class.php');
+require_once('CrossSearch/SemanticValueFactory.class.php');
 require_once 'HomeNavPresenter.class.php';
-require_once dirname(__FILE__) . '/../MustacheRenderer.class.php';
+require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
+require_once 'common/templating/TemplateRendererFactory.class.php';
 
-class TrackerManager { /* extends Engine? */
+class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     
     /**
      * Check that the service is used and the plugin is allowed for project $project
@@ -169,7 +174,7 @@ class TrackerManager { /* extends Engine? */
                                 break;
                             case 'cross-search':
                                 $controller = $this->getCrossSearchController($request);
-                                $controller->search();
+                                $controller->search($user);
                                 break;
                             default:
                                 $this->displayAllTrackers($project, $user);
@@ -181,34 +186,18 @@ class TrackerManager { /* extends Engine? */
         }
     }
     
-    protected function getCrossSearchController(Codendi_Request $request) {        
-        $formElementFactory = Tracker_FormElementFactory::instance();
-        
-        $sharedFieldFactory = new Tracker_CrossSearch_SharedFieldFactory();
-        $dao                = new Tracker_CrossSearch_SearchDao();
-        $search             = new Tracker_CrossSearch_Search($sharedFieldFactory, $dao, $formElementFactory);
-        
+    /**
+     * @return Tracker_CrossSearch_SearchController 
+     */
+    protected function getCrossSearchController(Codendi_Request $request) {
         return new Tracker_CrossSearch_SearchController(
             $request,
             ProjectManager::instance(),
-            $formElementFactory,
             $GLOBALS['Response'],
-            $search,
-            new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao()),
-            $this->getTrackerFactory()
+            $this->getCrossSearchViewBuilder($request->get('group_id'), $request->getCurrentUser())
         );
     }
     
-    /**
-     * Display header for tracker service
-     *
-     * @param Project $project    The project
-     * @param string  $title      The title for this page
-     * @param array   $breadcrumb The breadcrumbs for this page
-     * @param ?       $toolbar    The toolbar
-     *
-     * @return void
-     */
     public function displayHeader($project, $title, $breadcrumbs, $toolbar) {
         if (count($breadcrumbs)) {
             $breadcrumbs = array_merge(
@@ -229,11 +218,6 @@ class TrackerManager { /* extends Engine? */
         }
     }
     
-    /**
-     * Display footer for tracker service
-     *
-     * @param Project $project The project
-     */
     public function displayFooter($project) {
         if ($service = $project->getService('plugin_tracker')) {
             $service->displayFooter();
@@ -258,7 +242,8 @@ class TrackerManager { /* extends Engine? */
             }
         } else {
             // Otherwise tries duplicate
-            $new_tracker = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
+            $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
+            $new_tracker = $duplicate['tracker'];
         }
 
         if ($new_tracker) {
@@ -451,9 +436,9 @@ class TrackerManager { /* extends Engine? */
     
     public function displayTrackerHomeNav(Project $project) {
         $presenter = new Tracker_HomeNavPresenter($project);
-        $renderer  = new MustacheRenderer(dirname(__FILE__).'/../../templates');
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
         
-        echo $renderer->render('tracker-home-nav', $presenter);
+        $renderer->renderToPage('tracker-home-nav', $presenter);
     }
     
     /**
@@ -589,21 +574,6 @@ class TrackerManager { /* extends Engine? */
         $this->displayFooter($project);
     }
     
-    /**
-     * Display a selectbox to switch to a tracker of:
-     *  + any projects the user is member of
-     *  + an additional project
-     *
-     * The additionnal project may be useful for example in the ArtifactLink selector,
-     * To make sure that the project of the main artifact is included.
-     *
-     * @param User    $user            the user
-     * @param string  $separator       the separator between the title and the selectbox (eg: '<br />' or ' ')
-     * @param Project $include_project the project to include in the selectbox (null if no one)
-     * @param Tracker $current_tracker the current tracker (default is null, aka no current tracker)
-     *
-     * @return string html
-     */
     public function fetchTrackerSwitcher(User $user, $separator, Project $include_project = null, Tracker $current_tracker = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
@@ -739,24 +709,26 @@ class TrackerManager { /* extends Engine? */
     protected function getTrackerFactory() {
         return TrackerFactory::instance();
     }
-    protected function getTracker_FormElementFactory() {
-        return Tracker_FormElementFactory::instance();
-    }
+    
     protected function getArtifactFactory() {
         return Tracker_ArtifactFactory::instance();
     }
+    
     protected function getArtifactReportFactory() {
         return Tracker_ReportFactory::instance();
     }
+    
     protected function getProject($group_id) {
         return ProjectManager::instance()->getProject($group_id);
     }
+    
     /**
      * @return ReferenceManager
      */
     protected function getReferenceManager() {
         return ReferenceManager::instance();
     }
+    
     /**
      * Check if user has permission to create a tracker or not
      *
@@ -765,7 +737,7 @@ class TrackerManager { /* extends Engine? */
      *
      * @return boolean true if user has persission to create trackers, false otherwise
      */
-    function userCanCreateTracker($group_id, $user = false) {
+    public function userCanCreateTracker($group_id, $user = false) {
         if (!is_a($user, 'User')) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
@@ -773,7 +745,7 @@ class TrackerManager { /* extends Engine? */
         return $user->isMember($group_id, 'A');
     }
     
-    function search($request, $current_user) {
+    public function search($request, $current_user) {
         if ($request->exist('tracker')) {
             $tracker_id = $request->get('tracker');
             $tracker = $this->getTrackerFactory()->getTrackerById($tracker_id);
@@ -785,10 +757,7 @@ class TrackerManager { /* extends Engine? */
                     $GLOBALS['HTML']->redirect(TRACKER_BASE_URL.'/?group_id='. $tracker->getGroupId());
                 }
             }
-        } else {
-            
         }
-        
     }
 
     /**
@@ -798,18 +767,101 @@ class TrackerManager { /* extends Engine? */
      *
      * @return Boolean
      */
-    function deleteProjectTrackers($groupId) {
-        $deleteStatus = true;
+    public function deleteProjectTrackers($groupId) {
+        $delete_status = true;
         $trackers = $this->getTrackerFactory()->getTrackersByGroupId($groupId);
         if (!empty($trackers)) {
             foreach ($trackers as $tracker) {
                 if (!$this->getTrackerFactory()->markAsDeleted($tracker->getId())) {
-                    $deleteStatus = false;
+                    $delete_status = false;
                 }
             }
         }
-        return $deleteStatus;
+        return $delete_status;
     }
 
+    public function getCrossSearch(array $art_link_column_field_ids) {
+        $hierarchy_factory    = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getArtifactFactory());
+        $shared_field_factory = new Tracker_CrossSearch_SharedFieldFactory();
+        $dao                  = new Tracker_CrossSearch_SearchDao();
+        $search               = new Tracker_CrossSearch_Search($shared_field_factory, $dao, $hierarchy_factory, $art_link_column_field_ids);
+        return $search;
+    }
+    
+    public function getCrossSearchViewBuilder($group_id, User $user) {
+        $form_element_factory    = Tracker_FormElementFactory::instance();
+        $planning_trackers       = $this->getPlanningTrackers($group_id, $user);
+        $art_link_field_ids      = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
+        $criteria_builder        = $this->getCriteriaBuilder($user, $planning_trackers);
+        
+        return new Tracker_CrossSearch_SearchViewBuilder(
+            $form_element_factory, 
+            $this->getTrackerFactory(), 
+            $this->getCrossSearch($art_link_field_ids), 
+            $criteria_builder
+        );
+    }
+
+    /**
+     * Return the 'Planning' tracker (tracker we should be able to use artifacts to perform search.
+     * 
+     * This method hard code dependency with agile dashboard and planning stuff.
+     * It should be renamed later on when planning definition is clearly defined.
+     * 
+     * @param Integer $group_id
+     * 
+     * @return Array of Integer
+     */
+    private function getPlanningTrackers($group_id, User $user) {
+        $trackers = array();
+        @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
+        if (class_exists('PlanningFactory')) {
+            $planning_factory = new PlanningFactory(new PlanningDao(), $this->getTrackerFactory());
+            $trackers = $planning_factory->getPlanningTrackers($group_id, $user);
+        }
+        return $trackers;
+    }
+
+    public function getCriteriaBuilder($user, $trackers) {
+        $artifact_factory        = Tracker_ArtifactFactory::instance();
+        $semantic_title_factory  = Tracker_Semantic_TitleFactory::instance();
+        $semantic_status_factory = Tracker_Semantic_StatusFactory::instance();
+        $tracker_factory         = TrackerFactory::instance();
+        $semantic_value_factory  = new Tracker_CrossSearch_SemanticValueFactory($artifact_factory, $semantic_title_factory, $semantic_status_factory, $tracker_factory);
+
+        return new Tracker_CrossSearch_CriteriaBuilder(Tracker_FormElementFactory::instance(), $semantic_value_factory, $trackers);
+
+    }
+
+    /**
+     * Get all trackers having at least on active date reminder
+     *
+     * @return Array
+     */
+    protected function getTrackersHavingDateReminders() {
+        $trackers = array();
+        $dao = new Tracker_DateReminderDao();
+        $dar = $dao->getTrackersHavingDateReminders();
+        if ($dar && !$dar->isError()) {
+            foreach ($dar as $row) {
+                $trackers[] = $this->getTrackerFactory()->getTrackerById($row['tracker_id']);
+            }
+        }
+        return $trackers;
+    }
+
+    /**
+     * Send Date reminder
+     *
+     * @return Void
+     */
+    public function sendDateReminder() {
+        $trackers       = $this->getTrackersHavingDateReminders();
+        foreach ($trackers as $tracker) {
+            $dateReminderManager = new Tracker_DateReminderManager($tracker);
+            $dateReminderManager->process();
+        }
+    }
 }
+
 ?>

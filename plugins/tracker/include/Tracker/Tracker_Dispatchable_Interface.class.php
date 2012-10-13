@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'IDisplayTrackerLayout.class.php';
+
 /**
  * All elements that must be dispatched from TrackerManager have to implement this
  * interface.
@@ -35,12 +37,12 @@ interface Tracker_Dispatchable_Interface {
     /**
      * Process the request
      *
-     * @param TrackerManager  $trackerManager The tracker manager
-     * @param Codendi_Request $request        The data coming from the user
-     * @param User            $current_user   The user who mades the request
+     * @param Tracker_IDisplayTrackerLayout  $layout       The tracker manager
+     * @param Codendi_Request                $request      The data coming from the user
+     * @param User                           $current_user The user who mades the request
      *
      * @return void
      */
-    public function process(TrackerManager $trackerManager, $request, $current_user);
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user);
 }
 ?>

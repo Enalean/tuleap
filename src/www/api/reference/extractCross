@@ -41,15 +41,16 @@ header('Content-type: text/plain');
 
 $request = HTTPRequest::instance();
 
+$group_id = 100;
 if ($request->existAndNonEmpty('group_id')) {
     $group_id = $request->getValidated('group_id', 'uint', 100);
- } else {
+} else {
     $group_name = $request->getValidated('group_name', 'string', false);
     if ($group_name != false) {
         $project  = ProjectManager::instance()->getProjectByUnixName(trim($group_name));
-        $group_id = $project->getID();
-    } else {
-        $group_id = 100;
+        if ($project) {
+            $group_id = $project->getID();
+        }
     }
 }
 
@@ -57,14 +58,13 @@ if (!$request->get('text')||!$request->get('login')||!$request->get('type')||!$r
     echo $GLOBALS['Language']->getText('include_exit', 'missing_param_err')."\n";
     echo $GLOBALS['Language']->getText('project_reference', 'extract_syntax');
     exit;
- }
+}
  
+$user_id = 100;
 $login = $request->getValidated('login', 'string', 'None');
 $user = UserManager::instance()->getUserByUserName(trim($login));
 if ($user !== null) {
     $user_id = $user->getId();
-} else {
-    $user_id = 100;
 }
 
 $text=trim($request->get('text'));

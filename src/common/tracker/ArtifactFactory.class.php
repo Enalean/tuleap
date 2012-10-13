@@ -313,7 +313,7 @@ class ArtifactFactory extends Error {
         $artifact_report = new ArtifactReport($report_id, $group_artifact_id);
 
         // get the total number of artifact that answer the query, and the corresponding IDs
-        $total_artifacts = $artifact_report->selectReportItems($prefs, $morder, $advsrch, &$aids);
+        $total_artifacts = $artifact_report->selectReportItems($prefs, $morder, $advsrch, $aids);
         
         // get the SQL query corresponding to the query
         $sql = $artifact_report->createQueryReport($prefs, $morder, $advsrch, $offset, $chunksz, $aids);

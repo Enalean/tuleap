@@ -42,6 +42,52 @@ class Tracker_Hierarchy {
     }
     
     /**
+     * Return the internal hierarchy flattened
+     *
+     * @return Array
+     */
+    public function flatten() {
+        return array_filter(array_keys($this->parents));
+    }
+
+    /**
+     * Returns true if $tracker_id belongs to the hierarchy
+     * 
+     * @param int $tracker_id
+     * 
+     * @return boolean 
+     */
+    public function exists($tracker_id) {
+        try {
+            $this->getLevel($tracker_id);
+            return true;
+        } catch (Tracker_Hierarchy_NotInHierarchyException $e) {
+            return false;
+        }
+    }
+
+    /**
+     * Return True if given tracker is at the root of the Hierarchy
+     *
+     * @param type $tracker_id
+     * @return type
+     */
+    public function isRoot($tracker_id) {
+        return $this->getLevel($tracker_id) == 0;
+    }
+
+    /**
+     * Return the parent of given tracker_id or null if tracker has no parent
+     *
+     * @param Integer $tracker_id
+     *
+     * @return Integer
+     */
+    public function getParent($tracker_id) {
+        return isset($this->parents[$tracker_id]) ? $this->parents[$tracker_id] : null;
+    }
+
+    /**
      * @throws Tracker_Hierarchy_NotInHierarchyException
      * @throws Tracker_Hierarchy_CyclicHierarchyException
      *
@@ -80,6 +126,39 @@ class Tracker_Hierarchy {
             throw new Tracker_Hierarchy_CyclicHierarchyException();
         }
         $callstack[] = $tracker_id;
+    }
+
+    /**
+     * Returns all trackers defined in hierarchy from the top (older) to bottom
+     * if there are trackers outside hierarchy in the given list, happend to
+     * the end
+     *
+     * @return Array
+     */
+    public function sortTrackerIds(array $tracker_ids) {
+        // God will kill plenty of kittens every day that this bug is not fixed:
+        // https://bugs.php.net/bug.php?id=50688
+        // Ignore all E_WARNING errors during the usort.
+        // Or use @usort()?
+        $old_level = error_reporting();
+        error_reporting($old_level ^ E_WARNING);
+        usort($tracker_ids, array($this, 'sortByLevel'));
+        error_reporting($old_level);
+        return $tracker_ids;
+    }
+    
+    protected function sortByLevel($tracker1_id, $tracker2_id) {
+        try {
+            $level1 = $this->getLevel($tracker1_id);
+        } catch (Exception $e) {
+            return 1;
+        }
+        try {
+            $level2 = $this->getLevel($tracker2_id);
+        } catch (Exception $e) {
+            return -1;
+        }
+        return strcmp($level1, $level2);
     }
 }
 ?>

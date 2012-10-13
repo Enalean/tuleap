@@ -111,10 +111,40 @@ class Toggler {
                         $report_factory->save($report);
                     }
                 } else {
-                    $current_user->setPreference('toggle_'. $id, 1 - (int)$current_user->getPreference('toggle_'. $id));
+                    self::togglePreference($current_user, $id);
                 }
             }
         }
+    }
+    
+    /**
+     * Returns true if the toggler should be displayed
+     *
+     * @param User   $user    The user
+     * @param string $id      the id of the toggler
+     * @param bool   $default if we don't know, return $default
+     *
+     * @return bool
+     */
+    public static function shouldBeDisplayed(User $user, $id, $default) {
+        if ($user->isLoggedIn()) {
+            $should_be_displayed = $user->getPreference('toggle_'. $id); //TODO: DRY 'toggle_'. $id
+            if ($should_be_displayed !== false) {
+                return $should_be_displayed;
+            }
+        }
+        return $default;
+    }
+    
+    /**
+     * Toggle the preference.
+     * Should not be called directly unless you know what you do
+     *
+     * @param User   $current_user The user
+     * @param string $id           the id of the toggler
+     */
+    public static function togglePreference(User $current_user, $id) {
+        $current_user->setPreference('toggle_'. $id, 1 - (int)$current_user->getPreference('toggle_'. $id));
     }
 }
 ?>

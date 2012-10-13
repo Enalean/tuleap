@@ -826,6 +826,27 @@ function util_split_emails($addresses) {
     return split(',',$addresses);
 }
 
+/**
+ * Sparate invalid email addresses
+ *
+ * @param String $addresses List of mail addresses to be cleaned
+ *
+ * @return Array containing two arrays one containing good addresses the other contain bad ones
+ */
+function util_cleanup_email_list($addresses) {
+    $list             = util_split_emails($addresses);
+    $cleanedAddresses = array();
+    $badAddresses     = array();
+    foreach ($list as $address) {
+        if (validate_email($address)) {
+            $cleanedAddresses[] = $address;
+        } else {
+            $badAddresses[] = $address;
+        }
+    }
+    return array('clean' => $cleanedAddresses, 'bad' => $badAddresses);
+}
+
 // One Email Verification
 function validate_email ($address) {
     $rule = new Rule_Email();

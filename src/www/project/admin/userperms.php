@@ -68,26 +68,19 @@ if (isset($submit)) {
             } else {
                 $admin_flags="admin_user_$row_dev[user_id]";
             }
-            $bug_flags="bugs_user_$row_dev[user_id]";
             $forum_flags="forums_user_$row_dev[user_id]";
-            $project_flags="projects_user_$row_dev[user_id]";
-            $patch_flags="patch_user_$row_dev[user_id]";
-            $support_flags="support_user_$row_dev[user_id]";
             $doc_flags="doc_user_$row_dev[user_id]";
             $file_flags="file_user_$row_dev[user_id]";
             $wiki_flags="wiki_user_$row_dev[user_id]";
             $svn_flags="svn_user_$row_dev[user_id]";
             $news_flags="news_user_$row_dev[user_id]";
 		
-            $flags = array('bug_flags', 
-                'forum_flags', 
-                'project_flags',
+            $flags = array(
+                'forum_flags',
                 'doc_flags', 
                 'file_flags', 
-                'patch_flags', 
                 'wiki_flags', 
-                'news_flags', 
-                'support_flags',
+                'news_flags',
                 'svn_flags'
             );
             $sql = "UPDATE user_group SET admin_flags='".$$admin_flags."'";
@@ -283,9 +276,6 @@ if ($project->usesCVS()) {
 if ($project->usesSVN()) {
     $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','svn').'</TD>';
 }
-if ($project->usesBugs()) {
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','bug_track').'</TD>';
-}                               
 if ($project->usesForum()) {    
     $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','forums').'</TD>';
 }                               
@@ -295,17 +285,6 @@ if ($project->usesWiki()) {
 if ($project->usesNews()) {     
     $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','news').'</TD>';
 }                               
-if ($project->usesPm()) {       
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','task_man').'</TD>';
-}                               
-                                
-if ($project->usesPatch()) {    
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','patch_man').'</TD>';
-}                               
-if ($project->usesSupport()) {  
-    $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','supp_man').'</TD>';
-}                               
-                                
 if ($project->usesDocman()) {   
     $head .= '<TD class="boxtitle">'.$Language->getText('project_admin_userperms','doc_man').'</TD>';
 }
@@ -360,20 +339,6 @@ echo $head;
             $cell .= '</SELECT></FONT></TD>';
             echo $cell;
         }
-
-        // bug selects
-        if ($project->usesBugs()) {
-            $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="bugs_user_'.$row_dev['user_id'].'">';
-            $cell .= '<OPTION value="0"'.(($row_dev['bug_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
-            $cell .= '<OPTION value="1"'.(($row_dev['bug_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
-            $cell .= '<OPTION value="2"'.(($row_dev['bug_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
-            $cell .= '<OPTION value="3"'.(($row_dev['bug_flags']==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
-            $cell .= '</SELECT></FONT></TD>';
-            echo $cell;
-        } else {
-            print '<input type="Hidden" name="bugs_user_'.$row_dev['user_id'].'" value="'.$row_dev['bug_flags'].'">';
-        }
         
         // forums
         if ($project->usesForum()) {
@@ -403,48 +368,6 @@ echo $head;
             $cell .= '<OPTION value="2"'.(($row_dev['news_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_index','admin');
             $cell .= '</SELECT></FONT></TD>';
             echo $cell;
-        }
-            
-        // project selects
-        if ($project->usesPm()) {
-            $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="projects_user_'.$row_dev['user_id'].'">';
-            $cell .= '<OPTION value="0"'.(($row_dev['project_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
-            $cell .= '<OPTION value="1"'.(($row_dev['project_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
-            $cell .= '<OPTION value="2"'.(($row_dev['project_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
-            $cell .= '<OPTION value="3"'.(($row_dev['project_flags']==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
-            $cell .= '</SELECT></FONT></TD>';
-            echo $cell;
-        } else {
-            print '<input type="Hidden" name="projects_user_'.$row_dev['user_id'].'" value="'.$row_dev['project_flags'].'">';
-        }
-
-        // patch selects
-        if ($project->usesPatch()) {
-            $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="patch_user_'.$row_dev['user_id'].'">';
-            $cell .= '<OPTION value="0"'.(($row_dev['patch_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
-            $cell .= '<OPTION value="1"'.(($row_dev['patch_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
-            $cell .= '<OPTION value="2"'.(($row_dev['patch_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
-            $cell .= '<OPTION value="3"'.(($row_dev['patch_flags']==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
-            $cell .= '</SELECT></FONT></TD>';
-            echo $cell;
-        } else {
-            print '<input type="hidden" name="patch_user_'.$row_dev['user_id'].'" value="'.$row_dev['patch_flags'].'" />';
-        }
-
-        // support selects
-        if ($project->usesSupport()) {
-            $cell = '';
-            $cell .= '<TD><FONT size="-1"><SELECT name="support_user_'.$row_dev['user_id'].'">';
-            $cell .= '<OPTION value="0"'.(($row_dev['support_flags']==0)?" selected":"").'>'.$Language->getText('global','none');
-            $cell .= '<OPTION value="1"'.(($row_dev['support_flags']==1)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech_only');
-            $cell .= '<OPTION value="2"'.(($row_dev['support_flags']==2)?" selected":"").'>'.$Language->getText('project_admin_userperms','tech&admin');
-            $cell .= '<OPTION value="3"'.(($row_dev['support_flags']==3)?" selected":"").'>'.$Language->getText('project_admin_userperms','admin_only');
-            $cell .= '</SELECT></FONT></TD>';
-            echo $cell;
-        } else {
-            print '<input type="Hidden" name="support_user_'.$row_dev['user_id'].'" value="'.$row_dev['support_flags'].'">';
         }
 	
         //documentation states

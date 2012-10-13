@@ -21,6 +21,7 @@
 
 require_once 'Git_Backend_Interface.php';
 require_once 'Git.class.php';
+require_once 'exceptions/GitRepositoryAlreadyExistsException.class.php';
 
 class Git_Backend_Gitolite implements Git_Backend_Interface {
     /**
@@ -37,6 +38,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @var PermissionsManager
      */
     protected $permissionsManager;
+
+    /**
+     * @var gitPlugin
+     */
+    protected $gitPlugin;
 
     /**
      * Constructor
@@ -62,7 +68,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $this->driver->dumpProjectRepoConf($repository->getProject());
         return $this->driver->push();
     }
-
+    
     /**
      * Verify if the repository as already some content within
      *
@@ -86,9 +92,28 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl(GitRepository $repository) {
+    public function getAccessURL(GitRepository $repository) {
+        $transports = array('ssh' => $this->getSSHAccessURL($repository));
+        $http_transport = $this->getHTTPAccessURL($repository);
+        if ($http_transport) {
+            $transports['http'] = $http_transport;
+        }
+        return $transports;
+    }
+
+    private function getSSHAccessURL(GitRepository $repository) {
         $serverName = $_SERVER['SERVER_NAME'];
         return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+    }
+
+    public function getHTTPAccessURL(GitRepository $repository) {
+        $git_plugin = $this->getGitPlugin();
+        if ($git_plugin) {
+            $http_url = $git_plugin->getConfigurationParameter('git_http_url');
+            if ($http_url) {
+                return  $http_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+            }
+        }
     }
 
     /**
@@ -154,8 +179,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             }
         }
         
-        $this->updateRepoConf($repository);
-
         foreach ($msgs as $msg) {
             $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
         }
@@ -302,34 +325,27 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             return false;
         }
     }
-    
-    public function delete($repository, $ignoreHasChildren = false) {
-        $path = $repository->getPath();
-        if ( empty($path) ) {
-            throw new GitBackendException('Bad repository path: '.$path);
-        }
-        $path = $this->getGitRootPath().$path;
-        
-        if ($ignoreHasChildren === false && $this->getDao()->hasChild($repository) === true) {
-            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_haschild_error') );
-        }
-        
-        if ($repository->canBeDeleted()) {
-            if ($this->deletePermissions($repository) && $this->getDao()->delete($repository)) {
-                $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
-                $this->updateRepoConf($repository);                
-                $this->getDriver()->delete($path);
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            throw new GitBackendException( $GLOBALS['Language']->getText('plugin_git', 'backend_delete_path_error') );
-        }
-        
-        return false;
+
+    public function canBeDeleted(GitRepository $repository) {
+        return true;
     }
 
+    public function markAsDeleted(GitRepository $repository) {
+        $this->deletePermissions($repository);
+        $this->getDao()->delete($repository);
+
+        $this->getDriver()->setAdminPath($this->getDriver()->getAdminPath());
+        $this->updateRepoConf($repository);
+    }
+
+    public function delete(GitRepository $repository) {
+        $path = $this->getGitRootPath().$repository->getPath();
+        $this->getDriver()->delete($path);
+    }
+
+    /**
+     * @throws GitRepositoryAlreadyExistsException 
+     */
     public function fork(GitRepository $old, GitRepository $new) {
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
@@ -338,7 +354,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         
         $new_project = $new->getProject();
         if ($this->getDao()->isRepositoryExisting($new_project->getId(), $new->getPath())) {
-            throw new GitBackendException('Respository already exists');
+            throw new GitRepositoryAlreadyExistsException('Respository already exists');
         } else {
             $forkSucceeded = $this->getDriver()->fork($name, $old_namespace, $new_namespace);
             if ($forkSucceeded) {
@@ -374,31 +390,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             $this->permissionsManager = PermissionsManager::instance();
         }
         return $this->permissionsManager;
-    }
-    
-    /**
-     * Delete all gitolite repositories of a project
-     *
-     * @param Integer $projectId Id of the project
-     *
-     * @return Boolean
-     */
-    public function deleteProjectRepositories($projectId) {
-        $deleteStatus = true;
-        $res          = $this->getDao()->getAllGitoliteRespositories($projectId);
-        if (empty($res) || $res->isError()) {
-            return false;
-        } else {
-            while ($row = $res->getRow()) {
-                $repository = $this->loadRepositoryFromId($row[GitDao::REPOSITORY_ID]);
-                try {
-                    $deleteStatus = $repository->delete(true) && $deleteStatus;
-                } catch (GitBackendException $e) {
-                    $deleteStatus = false;
-                }
-            }
-        }
-        return $deleteStatus;
     }
 
     /**
@@ -437,6 +428,26 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return $this->driver;
     }
 
+    protected function getGitPlugin() {
+        if (!$this->gitPlugin) {
+            $plugin_manager  = PluginManager::instance();
+            $this->gitPlugin = $plugin_manager->getPluginByName('git');
+        }
+        return $this->gitPlugin;
+    }
+
+    /**
+     * Setter for tests
+     *
+     * @param GitPlugin $gitPlugin
+     */
+    public function setGitPlugin(GitPlugin $gitPlugin) {
+        $this->gitPlugin = $gitPlugin;
+    }
+
+    public function commitTransaction(GitRepository $repository) {
+        $this->updateRepoConf($repository);
+    }
 }
 
 ?>

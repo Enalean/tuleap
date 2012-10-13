@@ -94,6 +94,5 @@ abstract class Tracker_Artifact_ChangesetValue {
      * @return string The value of this artifact changeset value
      */
     public abstract function getValue();
-
 }
 ?>

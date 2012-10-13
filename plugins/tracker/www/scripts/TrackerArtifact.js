@@ -27,6 +27,18 @@ codendi.tracker = codendi.tracker || { };
 
 codendi.tracker.artifact = { };
 
+function invertFollowups(followupSection) {
+    var element  = followupSection.down('.tracker_artifact_followups').cleanWhitespace();
+    var elements = [];
+    var len      = element.childNodes.length;
+    for (var i = len - 1 ; i >= 0 ; --i) {
+        elements.push(Element.remove(element.childNodes[i]));
+    }
+    for (var j = 0 ; j < len ; ++j) {
+        element.appendChild(elements[j]);
+    }
+}
+
 document.observe('dom:loaded', function () {
     $$('.tracker_statistics').each(function (div) {
         codendi.Tooltips.push(
@@ -61,7 +73,17 @@ document.observe('dom:loaded', function () {
     
     $$('#tracker_artifact_followup_comments').each(function (followup_section) {
         //We only have one followup_section but I'm too lazy to do a if()
-        
+
+        new Ajax.Request(codendi.tracker.base_url + "comments_order.php", {
+            parameters: {
+                tracker_id: $('tracker_id').value
+            },
+            onSuccess: function (transport) {
+                if (!transport.responseText) {
+                    invertFollowups(followup_section);
+                }
+            }
+        });
         var div = new Element('div').setStyle({
                     textAlign: 'right'
                 }).insert(new Element('a', {
@@ -69,15 +91,12 @@ document.observe('dom:loaded', function () {
                     title: 'invert order of follow-up comments'
                 }).update('<img src="' + codendi.imgroot + '/ic/reorder-followups.png" alt="invert order of follow-up comments" />')
                 .observe('click', function (evt) {
-                    var element = followup_section.down('.tracker_artifact_followups').cleanWhitespace();
-                    var elements = [];
-                    var len = element.childNodes.length;
-                    for (var i = len - 1 ; i >= 0 ; --i) {
-                        elements.push(Element.remove(element.childNodes[i]));
-                    }
-                    for (var j = 0 ; j < len ; ++j) {
-                        element.appendChild(elements[j]);
-                    }
+                    invertFollowups(followup_section);
+                    new Ajax.Request(codendi.tracker.base_url + "invert_comments_order.php", {
+                        parameters: {
+                            tracker_id: $('tracker_id').value
+                        }
+                    });
                     Event.stop(evt);
                     return false;
                 }));
@@ -97,13 +116,19 @@ document.observe('dom:loaded', function () {
                 var comment_panel = edit.up().next();
                 if (comment_panel.visible()) {
                     
-                    var textarea = new Element('textarea');
-                    textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body')
-                                                  .innerHTML
-                                                  .stripTags();
+                    var textarea = new Element('textarea', {id: 'tracker_followup_comment_edit_'+id});
+                    if ($('tracker_artifact_followup_comment_body_format_'+id).value == 'html') {
+                        textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML;
+                        var htmlFormat = true;
+                    } else {
+                        textarea.value = comment_panel.down('.tracker_artifact_followup_comment_body').innerHTML.stripTags();
+                        var htmlFormat = false;
+                    }
                     
-                    var edit_panel = new Element('div', { style: 'text-align: right;'}).update(textarea);
+                    var rteSpan    = new Element('span', { style: 'text-align: left;'}).update(textarea);
+                    var edit_panel = new Element('div', { style: 'text-align: right;'}).update(rteSpan);
                     comment_panel.insert({before: edit_panel});
+                    new tuleap.trackers.followup.RTE(textarea, {toggle: true, default_in_html: false, id: id, htmlFormat: htmlFormat});
                     while (textarea.offsetWidth < comment_panel.offsetWidth) {
                         textarea.cols++;
                     }
@@ -113,11 +138,18 @@ document.observe('dom:loaded', function () {
                     comment_panel.hide();
                     textarea.focus();
                     var button = new Element('button').update('Ok').observe('click', function (evt) {
+                        if (CKEDITOR.instances && CKEDITOR.instances['tracker_followup_comment_edit_'+id]) {
+                            var content = CKEDITOR.instances['tracker_followup_comment_edit_'+id].getData();
+                        } else {
+                            var content = $('tracker_followup_comment_edit_'+id).getValue();
+                        }
+                        var format = document.getElementsByName('comment_format'+id)[0].checked? 'text' : 'html';
                         var req = new Ajax.Request(location.href, {
                             parameters: {
-                                func:         'update-comment',
-                                changeset_id: id,
-                                content:      textarea.getValue()
+                                func:           'update-comment',
+                                changeset_id:   id,
+                                content:        content,
+                                comment_format: format
                             },
                             onSuccess: function (transport) {
                                 if (transport.responseText) {
@@ -196,15 +228,15 @@ document.observe('dom:loaded', function () {
     );
     
     if ($('tracker_artifact_canned_response_sb')) {
-        var artifact_followup_comment_has_changed = $('artifact_followup_comment').value !== '';
-        $('artifact_followup_comment').observe('change', function () {
-            artifact_followup_comment_has_changed = $('artifact_followup_comment').value !== '';
+        var artifact_followup_comment_has_changed = $('tracker_followup_comment_new').value !== '';
+        $('tracker_followup_comment_new').observe('change', function () {
+            artifact_followup_comment_has_changed = $('tracker_followup_comment_new').value !== '';
         });
         $('tracker_artifact_canned_response_sb').observe('change', function (evt) {
             var sb = Event.element(evt);
             var value = '';
             if (artifact_followup_comment_has_changed) {
-                value += $('artifact_followup_comment').value;
+                value += $('tracker_followup_comment_new').value;
                 if (sb.getValue()) {
                     if (value.substring(value.length - 1) !== "\n") {
                         value += "\n\n";
@@ -214,7 +246,10 @@ document.observe('dom:loaded', function () {
                 }
             }
             value += sb.getValue();
-            $('artifact_followup_comment').value = value;
+            $('tracker_followup_comment_new').value = value;
+            if (CKEDITOR.instances && CKEDITOR.instances['tracker_followup_comment_new']) {
+                CKEDITOR.instances['tracker_followup_comment_new'].setData(CKEDITOR.instances['tracker_followup_comment_new'].getData()+'<p>'+value+'</p>');
+            }
         });
     }
     
@@ -224,7 +259,21 @@ document.observe('dom:loaded', function () {
         });
     }
 
+    function toggle_tracker_artifact_attachment_delete(elem) {
+        if (elem.checked) {
+            elem.up('td').nextSiblings().invoke('addClassName', 'tracker_artifact_attachment_deleted');
+            elem.up('tr').select('.tracker_artifact_preview_attachment').invoke('setOpacity', 0.4);
+        } else {
+            elem.up('td').nextSiblings().invoke('removeClassName', 'tracker_artifact_attachment_deleted');
+            elem.up('tr').select('.tracker_artifact_preview_attachment').invoke('setOpacity', 1);
+        }
+    }
+
+    $$(".tracker_artifact_attachment_delete > input[type=checkbox]").each(function (elem) {
+        //on load strike (useful when the checkbox is already checked on dom:loaded. (Missing required field for example)
+        toggle_tracker_artifact_attachment_delete(elem);
+        elem.observe('click', function (evt) { toggle_tracker_artifact_attachment_delete(elem); });
+    });
 });
 
 codendi.Tooltip.selectors.push('a[class=direct-link-to-artifact]');
-

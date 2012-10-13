@@ -23,9 +23,11 @@ $em->processEvent('plugins_powered_search', array('type_of_search' => $type_of_s
 
 
 if ($type_of_search !== "tracker" && $type_of_search !== "wiki" && !$plugins_powered_search) {
+    if (!$request->isAjax()) {
         $HTML->header(array('title'=>$Language->getText('search_index','search')));
         echo "<P><CENTER>";
         $HTML->bodySearchBox();
+    }
 }
 $hp = Codendi_HTMLPurifier::instance();
 /*
@@ -49,7 +51,10 @@ if (!$words) {
 	exit;
 }
 
-	echo '</CENTER><P>';
+if (!$request->isAjax()) {
+    echo '</CENTER><P>';
+}
+
 	
 $words = trim($words);
 $no_rows = 0;
@@ -63,6 +68,8 @@ if (isset($_REQUEST['exact']) && $_REQUEST['exact']) {
 if (!isset($offset) || !$offset || $offset < 0) {
 	$offset = 0;
 }
+
+$pagination_handled = false;
 
 if ($type_of_search == "soft") {
 	/*
@@ -213,168 +220,6 @@ if ($type_of_search == "soft") {
 		}
 		echo "</TABLE>\n";
 	}
-
-} else if ($type_of_search == 'bugs') {
-
-	$array=explode(" ",$words);
-	$words1=implode($array,"%' $crit bug.details LIKE '%");
-	$words2=implode($array,"%' $crit bug.summary LIKE '%");
-	$words3=implode($array,"%' $crit bug_history.old_value LIKE '%");
-
-	$sql =	"SELECT bug.bug_id,bug.summary,bug.date,user.user_name "
-		. "FROM bug "
-		. "    INNER JOIN user ON user.user_id=bug.submitted_by "
-		. "    LEFT JOIN bug_history ON bug_history.bug_id=bug.bug_id "
-		. "WHERE "
-		. "    bug.group_id='$group_id' "
-		. "    AND ((bug.details LIKE '%$words1%') "
-		. "      OR (bug.summary LIKE '%$words2%') "
-		. "      OR (bug_history.field_name='details' "
-		. "          AND (bug_history.old_value LIKE '%$words3%'))) "
-		. "GROUP BY bug_id,summary,date,user_name LIMIT $offset,26";
-
-	//	echo "DBG: $sql<br>";
-	$result = db_query($sql);
-	$rows = $rows_returned = db_numrows($result);
-
-	if ( !$result || $rows < 1) {
-		$no_rows = 1;
-		echo '<H2>'.$Language->getText('search_index','no_match_found',htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')).'</H2>';
-		echo db_error();
-	} else {
-
-		if ( $rows_returned > 25) {
-			$rows = 25;
-		}
-
-		echo '<H3>'.$Language->getText('search_index','search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned))."</H3><P>\n";
-
-		$title_arr = array();
-		$title_arr[] = $Language->getText('search_index','bug_summary');
-		$title_arr[] = $Language->getText('search_index','submitted_by');
-		$title_arr[] = $Language->getText('search_index','date');
-
-		echo html_build_list_table_top ($title_arr);
-
-		echo "\n";
-
-		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"\n<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/bugs/?group_id=$group_id&func=detailbug&bug_id="
-				. db_result($result, $i, "bug_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
-				. db_result($result, $i, "summary")."</A></TD>"
-				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"date"))."</TD></TR>";
-		}
-		echo "</TABLE>\n";
-	}
-} else if ($type_of_search == 'support') {
-
-	$array=explode(" ",$words);
-	$words1=implode($array,"%' $crit support.summary LIKE '%");
-	$words3=implode($array,"%' $crit support_messages.body LIKE '%");
-
-	$sql =	"SELECT support.support_id,support.summary,support.open_date,user.user_name "
-		. "FROM support "
-		. "    INNER JOIN user ON user.user_id=support.submitted_by "
-		. "    LEFT JOIN support_messages ON support_messages.support_id=support.support_id "
-		. "WHERE "
-		. "    support.group_id='$group_id' "
-		. "    AND ((support.summary LIKE '%$words1%') "
-		. "      OR (support_messages.body LIKE '%$words3%')) "
-		. "GROUP BY support_id,summary,open_date,user_name LIMIT $offset,26";
-	$array=explode(" ",$words);
-	$words1=implode($array,"%' $crit support.summary LIKE '%");
-
-	$result = db_query($sql);
-	$rows = $rows_returned = db_numrows($result);
-
-	if ( !$result || $rows < 1) {
-		$no_rows = 1;
-		echo '<H2>'.$Language->getText('search_index','no_match_found',htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')).'</H2>';
-		echo db_error();
-	} else {
-
-		if ( $rows_returned > 25) {
-			$rows = 25;
-		}
-
-		echo '<H3>'.$Language->getText('search_index','search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned))."</H3><P>\n";
-
-		$title_arr = array();
-		$title_arr[] = $Language->getText('search_index','sr_summary');
-		$title_arr[] = $Language->getText('search_index','submitted_by');
-		$title_arr[] = $Language->getText('search_index','date');
-
-		echo html_build_list_table_top ($title_arr);
-
-		echo "\n";
-
-		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"\n<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/support/?group_id=$group_id&func=detailsupport&support_id="
-				. db_result($result, $i, "support_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
-				. db_result($result, $i, "summary")."</A></TD>"
-				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"open_date"))."</TD></TR>";
-		}
-		echo "</TABLE>\n";
-	}
-
-} else if ($type_of_search == 'tasks') {
-
-	$array=explode(" ",$words);
-	$words1=implode($array,"%' $crit project_task.details LIKE '%");
-	$words2=implode($array,"%' $crit project_task.summary LIKE '%");
-	$words3=implode($array,"%' $crit project_history.old_value LIKE '%");
-
-	$sql =	"SELECT project_task.project_task_id,project_task.group_project_id,project_task.summary,"
-	    . "project_task.start_date,project_task.end_date,user.user_name "
-		. "FROM project_group_list,project_task,user "
-		. "    LEFT JOIN project_history ON project_history.project_task_id=project_task.project_task_id "
-		. "WHERE user.user_id=project_task.created_by AND "
-		. "  (    (project_task.details LIKE '%$words1%') "
-		. "    OR (project_task.summary LIKE '%$words2%') "
-		. "    OR (project_history.field_name = 'details' AND project_history.old_value like '%$words3%') ) "
-	    . "AND (project_task.group_project_id=project_group_list.group_project_id AND project_group_list.group_id='$group_id') "
-		. "GROUP BY project_task_id,summary,start_date,user_name LIMIT $offset,26";
-	//echo "DBG: $sql<br>";
-
-	$result = db_query($sql);
-	$rows = $rows_returned = db_numrows($result);
-
-	if ( !$result || $rows < 1) {
-		$no_rows = 1;
-		echo '<H2>'.$Language->getText('search_index','no_match_found',htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8')).'</H2>';
-		echo db_error();
-	} else {
-
-		if ( $rows_returned > 25) {
-			$rows = 25;
-		}
-
-		echo '<H3>'.$Language->getText('search_index','search_res', array(htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8'), $rows_returned))."</H3><P>\n";
-
-		$title_arr = array();
-		$title_arr[] = $Language->getText('search_index','task_summary');
-		$title_arr[] = $Language->getText('search_index','created_by');
-		$title_arr[] = $Language->getText('search_index','start_date');
-		$title_arr[] = $Language->getText('search_index','end_date');
-
-		echo html_build_list_table_top ($title_arr);
-
-		echo "\n";
-
-		for ( $i = 0; $i < $rows; $i++ ) {
-			print	"\n<TR class=\"". html_get_alt_row_color($i) ."\"><TD><A HREF=\"/pm/task.php?group_id=$group_id&func=detailtask&project_task_id="
-				. db_result($result, $i, "project_task_id")
-			    ."&group_project_id=".db_result($result, $i, "group_project_id")."\"><IMG SRC=\"".util_get_image_theme('msg.png')."\" BORDER=0 HEIGHT=12 WIDTH=10> "
-				. db_result($result, $i, "summary")."</A></TD>"
-				. "<TD>".db_result($result, $i, "user_name")."</TD>"
-			        . "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result, $i, "start_date"))."</TD>"
-				. "<TD>".format_date($GLOBALS['Language']->getText('system', 'datefmt'),db_result($result,$i,"end_date"))."</TD></TR>";
-		}
-		echo "</TABLE>\n";
-	}
-
 } else if ($type_of_search == 'snippets') {
 
 	/*
@@ -677,14 +522,17 @@ if ($type_of_search == "soft") {
     $rows_returned = 0;
     $rows = 0;
 
-    $eParams = array();
-    $eParams['words']          = $_REQUEST['words'];
-    $eParams['offset']         = $offset;
-    $eParams['nbRows']         = 25;
-    $eParams['type_of_search'] = $type_of_search;
-    $eParams['search_type']    =& $matchingSearchTypeFound; 
-    $eParams['rows_returned']  =& $rows_returned;
-    $eParams['rows']           =& $rows;
+    $eParams = array(
+        'words'              => $_REQUEST['words'],
+        'offset'             => $offset,
+        'nbRows'             => 25,
+        'type_of_search'     => $type_of_search,
+        'search_type'        => &$matchingSearchTypeFound,
+        'rows_returned'      => &$rows_returned,
+        'rows'               => &$rows,
+        'pagination_handled' => &$pagination_handled,
+        'group_id'           => $request->get('group_id'),
+    );
 
     $em =& EventManager::instance();
     $em->processEvent('search_type', $eParams);
@@ -695,7 +543,7 @@ if ($type_of_search == "soft") {
 }
 
    // This code puts the nice next/prev.
-if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
+if ( !$pagination_handled && !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 
 	echo "<BR>\n";
 
@@ -733,10 +581,11 @@ if ( !$no_rows && ( ($rows_returned > $rows) || ($offset != 0) ) ) {
 }
 
 
-
-if (($type_of_search !== "tracker" &&  $type_of_search !== "all_trackers" ) || !isset($ath)) {
-    $HTML->footer(array());
-} else {
-    $ath->footer(array());
+if (! $request->isAjax()) {
+    if (($type_of_search !== "tracker" &&  $type_of_search !== "all_trackers" ) || !isset($ath)) {
+        $HTML->footer(array());
+    } else {
+        $ath->footer(array());
+    }
 }
 ?>

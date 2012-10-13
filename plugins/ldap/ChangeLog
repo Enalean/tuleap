@@ -1,3 +1,26 @@
+Version 3.19 - Tuleap 5.5
+    * LDAP plugin now includes bind_dn/password in Apache configuration if needed
+    * Normalize to lowercase
+
+Version 3.18 - Tuleap 5.5
+    * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
+
+Version 3.17 - Tuleap 5.4
+    * Synchronize binded ldap ugroup (Contrib STMicroelectronics)
+
+Version 3.16 - Tuleap 5.3
+    * Fix notice
+
+Version 3.15 - Tuleap 5.2
+    * Fix the fix made for version 3.14 (typo in method name).
+    * Makes non anonymous bind work with Python connector (used in viewvc).
+
+Version 3.14 - Tuleap 5.2
+    * Fix first bind done to check connexion validity. If anonymous bind is disabled, all bind should be authenticated otherwise server can disable the connexion. Thanks to Marc Dumais for investigation and report.
+
+Version 3.13 - Tuleap 5.0
+    * Fix unit tests
+
 Version 3.12 - Tuleap 4.0.27
     * Add 2 new variables for fine grain LDAP plugin behaviour:
       * $sys_ldap_user_management: Enable usage of LDAP for people management. For instance autocompletion on  user list, automatic creation of users not already referenced in the forge.

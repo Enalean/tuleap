@@ -48,12 +48,13 @@ Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class Tracker_FormElement_Field_FileTest extends UnitTestCase {
+class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
     function setUp() {
+        parent::setUp();
         Config::store();
         mkdir(dirname(__FILE__) .'/_fixtures/attachments/thumbnails/');
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Language'] = new MockBaseLanguage();
+        $this->tmp_name         = dirname(__FILE__) .'/_fixtures/uploaded_file.txt';
+        $this->another_tmp_name = dirname(__FILE__) .'/_fixtures/another_uploaded_file.txt';
     }
     
     function tearDown() {
@@ -64,7 +65,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
             }
         }
         rmdir(dirname(__FILE__) .'/_fixtures/attachments/thumbnails');
-        unset($GLOBALS['Response']);
+        parent::tearDown();
     }
     
     function testGetChangesetValue() {
@@ -564,7 +565,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
                 'description' =>  "Capture d'ecran",
                 'name'        =>  'Screenshot.png',
                 'type'        =>  'image/png',
-                'tmp_name'    =>  'erfe',
+                'tmp_name'    =>  $this->tmp_name,
                 'error'       =>  UPLOAD_ERR_OK,
                 'size'        =>  0,
             )
@@ -586,7 +587,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
                 'description' =>  "Capture d'ecran",
                 'name'        =>  'Screenshot.png',
                 'type'        =>  'image/png',
-                'tmp_name'    =>  'erfe',
+                'tmp_name'    =>  $this->tmp_name,
                 'error'       =>  UPLOAD_ERR_OK,
                 'size'        =>  123,
             ),
@@ -594,7 +595,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
                 'description' =>  'Specs',
                 'name'        =>  'Specifications.doc',
                 'type'        =>  'application/msword',
-                'tmp_name'    =>  'ertgrthg',
+                'tmp_name'    =>  $this->another_tmp_name,
                 'error'       =>  UPLOAD_ERR_OK,
                 'size'        =>  456,
             )
@@ -616,7 +617,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
                 'description' =>  "Capture d'ecran",
                 'name'        =>  'Screenshot.png',
                 'type'        =>  'image/png',
-                'tmp_name'    =>  'erfe',
+                'tmp_name'    =>  $this->tmp_name,
                 'error'       =>  UPLOAD_ERR_OK,
                 'size'        =>  123,
             ),
@@ -624,7 +625,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
                 'description' =>  'Specs',
                 'name'        =>  'Specifications.doc',
                 'type'        =>  'application/msword',
-                'tmp_name'    =>  'ertgrthg',
+                'tmp_name'    =>  $this->another_tmp_name,
                 'error'       =>  UPLOAD_ERR_PARTIAL,
                 'size'        =>  0,
             )
@@ -646,7 +647,7 @@ class Tracker_FormElement_Field_FileTest extends UnitTestCase {
                 'description' =>  "Capture d'ecran",
                 'name'        =>  'Screenshot.png',
                 'type'        =>  'image/png',
-                'tmp_name'    =>  'erfe',
+                'tmp_name'    =>  $this->tmp_name,
                 'error'       =>  UPLOAD_ERR_OK,
                 'size'        =>  123,
             ),

@@ -40,7 +40,7 @@ function send_new_project_email($group_id) {
         $p = $pm->getProject($group_id);
         $host = $GLOBALS['sys_default_domain'];
         if ($p && $p->usesService('svn')) {
-           $sf =& new ServerFactory();
+           $sf = new ServerFactory();
            if ($s =& $sf->getServerById($p->services['svn']->getServerId())) {
                $host = URL::getHost($s->getUrl(session_issecure()));
            }
@@ -57,7 +57,7 @@ function send_new_project_email($group_id) {
         // LJ Uncomment to test
         //echo $message; return
     
-        $mail =& new Mail();
+        $mail = new Mail();
         $mail->setTo($row_admins['email']);
         $mail->setSubject($GLOBALS['sys_name'].' '.$Language->getText('include_proj_email','proj_approve',$row_grp['unix_group_name']));
         $mail->setBody($message);
