@@ -195,6 +195,27 @@ class UGroupBinding {
     }
 
     /**
+     * Remove all users from a given user group then make a copy from another one
+     *
+     * @param Integer $ugroupId Id of the bound user group
+     * @param Integer $sourceId Id of the source user group
+     *
+     * @return void
+     */
+    public function reloadUgroupBinding($ugroupId, $sourceId) {
+        try {
+            $this->resetUgroup($ugroupId);
+            $this->cloneUgroup($sourceId, $ugroupId);
+        } catch (LogicException $e) {
+            //re-throw exception
+            throw new Exception($e->getMessage());
+        } catch (RuntimeException $e) {
+            $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
+            throw new Exception($GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
+        }
+    }
+
+    /**
      * Bind a given user group to another one
      *
      * @param Integer $ugroupId Id of the bound user group
@@ -212,16 +233,7 @@ class UGroupBinding {
             }
         }
         try {
-            try {
-                $this->resetUgroup($ugroupId);
-                $this->cloneUgroup($sourceId, $ugroupId);
-            } catch (LogicException $e) {
-                //re-throw exception
-                throw new Exception($e->getMessage());
-            } catch (RuntimeException $e) {
-                $GLOBALS['Response']->addFeedback('warning', $e->getMessage());
-                throw new Exception($GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
-            }
+            $this->reloadUgroupBinding($ugroupId, $sourceId);
             $this->updateUgroupBinding($ugroupId, $sourceId);
         } catch (Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
