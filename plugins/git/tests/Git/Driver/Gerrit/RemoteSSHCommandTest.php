@@ -70,7 +70,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
 
     public function itThrowsAnExceptionWithTheErrorCode() {
-        stub($this->ssh)->sshExec()->returns(array('exit_code' => 125, 'std_err' => ''));
+        stub($this->ssh)->sshExec()->returns(array('exit_code' => 125, 'std_err' => '', 'std_out' =>''));
         try {
             $this->ssh->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
@@ -103,9 +103,23 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
     }
     
+    public function itRaisesAnErrorThatContainsTheStdOut() {
+        stub($this->ssh)->sshExec()->returns(array('exit_code' => 125, 
+            'std_err' => 'cant access subdirectory toto', 
+            'std_out' => 'somefile someotherfile
+                          yetanotherfile'));
+        try {
+            $this->ssh->execute($this->config, 'ls -aR *');
+            $this->fail('expected exception');
+        } catch (RemoteSSHCommandFailure $e) {
+            $this->assertArrayNotEmpty($e->getStdOut(), "ls always produces some output on standard out");
+        }
+    }
+    
     public function itRaisesAnErrorThatContainsTheStdErr() {
         stub($this->ssh)->sshExec()->returns(array( 'exit_code' => 1,
-                                                    'std_err' => 'command someFailingCommand not found\nOn host '.$this->host));
+                                                    'std_out'   => '',
+                                                    'std_err'   => 'command someFailingCommand not found\nOn host '.$this->host));
         try {
             $this->ssh->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');

@@ -32,8 +32,9 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         $result = $this->sshExec("-p $port -i $identity_file $login@$host $cmd");
         $exit_code = $result['exit_code'];
         $std_err = $result['std_err'];
+        $std_out = $result['std_out'];
         if ($exit_code != self::SUCCESS) {
-            throw new RemoteSSHCommandFailure($exit_code, $std_err);
+            throw new RemoteSSHCommandFailure($exit_code, $std_out, $std_err);
         }
         
     }
@@ -41,19 +42,25 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     protected function sshExec($cmd) {
         $output;
         $exit_code;
-        exec("ssh ". $cmd. " 2>&1", $output, $exit_code);
+        $filename = '/tmp/stderr';
+        exec("ssh $cmd 2>$filename", $output, $exit_code);
+        $stderr = file_get_contents($filename);
         return array('exit_code' => $exit_code,
-                     'std_err'   => $output);
+                     'std_out'   => $output, 
+                     'std_err'   => $stderr);
     }
 }
 
 class RemoteSSHCommandFailure extends Exception {
 
     private $exit_code;
+    private $std_out;
     private $std_err;
-    function __construct($exit_code, $std_err) {
+    
+    function __construct($exit_code, $std_out, $std_err) {
         parent::__construct("");
         $this->exit_code = $exit_code;
+        $this->std_out = $std_out;
         $this->std_err = $std_err;
     }
 
@@ -65,6 +72,10 @@ class RemoteSSHCommandFailure extends Exception {
     public function getStdErr() {
         return $this->std_err;
         
+    }
+
+    public function getStdOut() {
+        return $this->std_out;
     }
 }
 
