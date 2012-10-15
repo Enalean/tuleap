@@ -23,10 +23,5 @@ document.observe('dom:loaded', function () {
         new tuleap.agiledashboard.Planning(planner);
     }
     
-    $$('.ad_index_plannings').each(function (block) {
-        var max_height = block.childElements().inject(0, function(m, v) {
-            return Math.max(m, v.getHeight());
-        });
-        block.childElements().invoke('setStyle', {height: max_height+'px'});
-    });
+    tuleap.agiledashboard.fix_short_access_height.defer();
 });

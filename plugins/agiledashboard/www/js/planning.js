@@ -370,3 +370,12 @@ tuleap.agiledashboard.Planning = Class.create({
         return parseInt(card.id.match(/art-(\d+)/)[1]);
     }
 });
+
+tuleap.agiledashboard.fix_short_access_height = function() {
+    $$('.ad_index_plannings').each(function (block) {
+        var max_height = block.childElements().inject(0, function(m, v) {
+            return Math.max(m, v.getHeight());
+        });
+        block.childElements().invoke('setStyle', {height: max_height+'px'});
+    });
+}
