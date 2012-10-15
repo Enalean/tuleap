@@ -42,7 +42,8 @@ class User_SSHKeyValidator {
             if ($this->isValid($key_file, $key)) {
                 $valid_keys[] = $key;
             } else {
-                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'invalid_key', array($key)));
+                $middle_ellipsed_key = substr($key, 0, 20).'...'.substr($key, -20);
+                $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('account_editsshkeys', 'invalid_key', array($middle_ellipsed_key)));
             }
         }
         unlink($key_file);
