@@ -61,7 +61,7 @@ class RemoteSSHCommandFailure extends Exception {
     private $std_err;
     
     function __construct($exit_code, $std_out, $std_err) {
-        parent::__construct("");
+        parent::__construct(implode(PHP_EOL, array("exit_code: $exit_code", "std_err: $std_err", "std_out: $std_out")));
         $this->exit_code = $exit_code;
         $this->std_out = $std_out;
         $this->std_err = $std_err;

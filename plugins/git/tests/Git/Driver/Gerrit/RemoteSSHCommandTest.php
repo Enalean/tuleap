@@ -135,5 +135,19 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
         $this->assertEqual($result, 'Some successful output');
     }
+    
+}
+
+class RemoteSSHCommandFailureTest extends TuleapTestCase {
+    
+    public function itConcatenatesEverythingInGetMessage() {
+        $exit_code = 133;
+        $std_err   = 'some error';
+        $std_out   = 'output for the people';
+        $e         = new RemoteSSHCommandFailure($exit_code, $std_out, $std_err);
+        $this->assertStringContains($e->getMessage(), "exit_code: $exit_code");
+        $this->assertStringContains($e->getMessage(), "std_out: $std_out");
+        $this->assertStringContains($e->getMessage(), "std_err: $std_err");
+    }
 }
 ?>
