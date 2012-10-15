@@ -26,7 +26,7 @@ require_once('common/project/UGroupBinding.class.php');
  */
 class UGroupBindingViewer {
 
-    protected $ugroupBinding;
+    private $ugroupBinding;
 
     /**
      * Constructor of the class
@@ -55,7 +55,7 @@ class UGroupBindingViewer {
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row            = $dar->getRow();
             $currentSource  = $this->ugroupBinding->getUGroupManager()->getById($row['source_id']);
-            $currentProject = $this->ugroupBinding->_getProjectManager()->getProject($row['group_id']);
+            $currentProject = $this->ugroupBinding->getProjectManager()->getProject($row['group_id']);
             if ($currentProject && $currentProject->userIsAdmin()) {
                 if (!$sourceProject) {
                     $sourceProject = $currentProject->getID();
@@ -114,7 +114,7 @@ class UGroupBindingViewer {
             $count      = 0;
             $i          = 0;
             foreach ($clones as $cloneId => $clone) {
-                $project = $this->_getProjectManager()->getProject($clone['group_id']);
+                $project = $this->ugroupBinding->getProjectManager()->getProject($clone['group_id']);
                 if ($project->userIsAdmin()) {
                     $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'"><td><a href="/projects/'.$project->getUnixName().'" >'.$project->getPublicName().'</a></td><td><a href="/project/admin/ugroup.php?group_id='.$project->getID().'" >'.$clone['cloneName'].'</a></td></tr>';
                 } else {
@@ -145,7 +145,7 @@ class UGroupBindingViewer {
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
             if ($groupId != $project['group_id']) {
-                $project = $this->ugroupBinding->_getProjectManager()->getProject($project['group_id']);
+                $project = $this->ugroupBinding->getProjectManager()->getProject($project['group_id']);
                 if ($project->userIsAdmin()) {
                     $ugroupList = $this->getUgroupList($project->getID());
                     if (!empty($ugroupList)) {
