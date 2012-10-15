@@ -26,44 +26,14 @@ require_once('common/project/UGroupManager.class.php');
  */
 class UGroupBinding {
 
-    protected $ugroupdao;
-    protected $ugroupUserDao;
-    protected $ugroupManager;
+    public $ugroupdao;
+    public $ugroupUserDao;
+    public $ugroupManager;
 
-    /**
-     * Obtain UGroupDao
-     *
-     * @return UGroupDao
-     */
-    public function getUGroupDao() {
-        if (!$this->ugroupdao) {
-            $this->ugroupdao = new UGroupDao();
-        }
-        return $this->ugroupdao;
-    }
-
-    /**
-     * Obtain UGroupUserDao
-     *
-     * @return UGroupUserDao
-     */
-    public function getUGroupUserDao() {
-        if (!$this->ugroupUserDao) {
-            $this->ugroupUserDao = new UGroupUserDao();
-        }
-        return $this->ugroupUserDao;
-    }
-
-    /**
-     * Obtain UGroupManager
-     *
-     * @return UGroupManager
-     */
-    public function getUGroupManager() {
-        if (!$this->ugroupManager) {
-            $this->ugroupManager = new UGroupManager();
-        }
-        return $this->ugroupManager;
+    public function __construct() {
+        $this->ugroupdao     = new UGroupDao();
+        $this->ugroupUserDao = new UGroupUserDao();
+        $this->ugroupManager = new UGroupManager();
     }
 
    /**
@@ -75,7 +45,7 @@ class UGroupBinding {
      * @return Boolean
      */
     public function checkUGroupValidity($groupId, $ugroupId) {
-        return $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
+        return $this->ugroupdao->checkUGroupValidityByGroupId($groupId, $ugroupId);
     }
 
     /**
@@ -86,7 +56,7 @@ class UGroupBinding {
      * @return Array
      */
     public function getUGroupsByBindingSource($ugroupId) {
-        $dar     = $this->getUGroupDao()->searchUGroupByBindingSource($ugroupId);
+        $dar     = $this->ugroupdao->searchUGroupByBindingSource($ugroupId);
         $ugroups = array();
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
@@ -110,7 +80,7 @@ class UGroupBinding {
         $bindingRemoved = true;
         if (!empty($bindedUgroups)) {
             foreach ($bindedUgroups as $ugroupKey => $ugroupData) {
-                if (!$this->getUGroupDao()->updateUgroupBinding($ugroupKey)) {
+                if (!$this->ugroupdao->updateUgroupBinding($ugroupKey)) {
                     $bindingRemoved = false;
                 }
             }
@@ -126,7 +96,7 @@ class UGroupBinding {
      * @return boolean
      */
     public function removeProjectUGroupsBinding($groupId) {
-        $ugroups        = $this->getUGroupManager()->getExistingUgroups($groupId);
+        $ugroups        = $this->ugroupManager->getExistingUgroups($groupId);
         $bindingRemoved = true;
         foreach ($ugroups as $ugroup) {
             if (!$this->removeAllUGroupsBinding($ugroup['ugroup_id'])) {
@@ -166,7 +136,7 @@ class UGroupBinding {
      * @return String
      */
     public function getLinkTitle($ugroupId) {
-        if ($this->getUGroupManager()->isBinded($ugroupId)) {
+        if ($this->ugroupManager->isBinded($ugroupId)) {
             $action = 'update_binding';
         } else {
             $action = 'add_binding';
@@ -182,8 +152,8 @@ class UGroupBinding {
      * @return void
      */
     public function resetUgroup($ugroupId) {
-        if ($this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
-            if (!$this->getUGroupUserDao()->resetUgroupUserList($ugroupId)) {
+        if ($this->ugroupManager->isUpdateUsersAllowed($ugroupId)) {
+            if (!$this->ugroupUserDao->resetUgroupUserList($ugroupId)) {
                 throw new LogicException($GLOBALS['Language']->getText('project_ugroup_binding', 'reset_error', array($ugroupId)));
             }
         } else {
@@ -200,8 +170,8 @@ class UGroupBinding {
      * @return void
      */
     public function cloneUgroup($sourceId, $ugroupId) {
-        if ($this->getUGroupManager()->isUpdateUsersAllowed($ugroupId)) {
-            if (!$this->getUGroupUserDao()->cloneUgroup($sourceId, $ugroupId)) {
+        if ($this->ugroupManager->isUpdateUsersAllowed($ugroupId)) {
+            if (!$this->ugroupUserDao->cloneUgroup($sourceId, $ugroupId)) {
                 throw new LogicException($GLOBALS['Language']->getText('project_ugroup_binding', 'clone_error', array($ugroupId)));
             }
         } else {
@@ -218,7 +188,7 @@ class UGroupBinding {
      * @return void
      */
     public function updateUgroupBinding($ugroupId, $sourceId) {
-        if (!$this->getUGroupDao()->updateUgroupBinding($ugroupId, $sourceId)) {
+        if (!$this->ugroupdao->updateUgroupBinding($ugroupId, $sourceId)) {
             throw new Exception('Unable to store ugroup binding');
         }
     }
@@ -232,7 +202,7 @@ class UGroupBinding {
      * @return boolean
      */
     public function addBinding($ugroupId, $sourceId) {
-        $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
+        $dar = $this->ugroupdao->getUgroupBindingSource($ugroupId);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
             if ($row['source_id'] == $sourceId) {
@@ -268,7 +238,7 @@ class UGroupBinding {
      * @return boolean
      */
     public function removeBinding($ugroupId) {
-        if ($this->getUGroupDao()->updateUgroupBinding($ugroupId)) {
+        if ($this->ugroupdao->updateUgroupBinding($ugroupId)) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'binding_removed'));
             return true;
         } else {
