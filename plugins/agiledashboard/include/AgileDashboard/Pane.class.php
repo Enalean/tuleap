@@ -54,13 +54,23 @@ abstract class AgileDashboard_Pane {
     public abstract function getTitle();
 
     /**
-     * @return string eg: '<table>...</table>'
+     * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
-    public abstract function getContent();
+    public abstract function getFullContent();
 
     /**
-    * @see string eg: '/themes/common/images/ic/duck.png'
+     * @return string eg: '<table>...</table>'
+     */
+    public abstract function getMinimalContent();
+
+    /**
+     * @see string eg: '/themes/common/images/ic/duck.png'
      */
     public abstract function getIcon();
+
+    /**
+     * @return string eg: 'Access to cardwall'
+     */
+    public abstract function getIconTitle();
 }
 ?>

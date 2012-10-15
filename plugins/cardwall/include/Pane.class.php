@@ -95,12 +95,23 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
     
     /**
-     * @see AgileDashboard_Pane::getContent()
+     * @see AgileDashboard_Pane::getFullContent()
      */
-    public function getContent() {
+    public function getFullContent() {
+        return $this->getPaneContent('agiledashboard-fullpane');
+    }
+
+    /**
+     * @see AgileDashboard_Pane::getMinimalContent()
+     */
+    public function getMinimalContent() {
+        return $this->getPaneContent('agiledashboard-minimalpane');
+    }
+
+    private function getPaneContent($template) {
         $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-        return $renderer->renderToString('agiledashboard-pane', $this->getPresenterUsingMappedFields($columns));
+        return $renderer->renderToString($template, $this->getPresenterUsingMappedFields($columns));
         // TODO what if no semantic status and no mapping????
     }
 
