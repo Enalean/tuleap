@@ -118,8 +118,7 @@ class UGroupBinding {
         if (!empty($bindedUgroups)) {
             foreach ($bindedUgroups as $ugroupKey => $ugroupData) {
                 try {
-                    $this->resetUgroup($ugroupKey);
-                    $this->cloneUgroup($ugroupId, $ugroupKey);
+                    $this->reloadUgroupBinding($ugroupId, $ugroupKey);
                 } catch (Exception $e) {
                     return false;
                 }
