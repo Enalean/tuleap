@@ -38,8 +38,7 @@ EOT;
         $sql = 'SELECT user_id, user_name, realname, email, authorized_keys FROM user WHERE authorized_keys != "" AND authorized_keys IS NOT NULL';
         $res = $this->db->dbh->query($sql);
         $key_file = '/var/tmp/codendi_cache/ssh_key_check';
-        foreach ($res as $row) {
-            //$this->log->info('og');
+        foreach ($res->fetchAll() as $row) {
             $valid_keys = array();
             $keys = array_filter(explode('###', $row['authorized_keys']));
             foreach ($keys as $key) {
