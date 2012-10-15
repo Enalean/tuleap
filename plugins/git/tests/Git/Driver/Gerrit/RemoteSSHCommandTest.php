@@ -51,22 +51,9 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
 
     public function itExecutesTheCreateCommandOnTheRemoteServer() {
-        expect($this->ssh)->sshExec('-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com a_remote_command')->once();
+        $cmd = '-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com a_remote_command';
+        expect($this->ssh)->sshExec($cmd)->once();
         $this->ssh->execute($this->config, 'a_remote_command');
-    }
-
-    //TODO uncomment
-    public function _itInformsAboutMissingIdentityFile() {
-        $non_existing_identity = '/home/captainamerica/.ssh/id_dsa';
-        try {
-            $this->ssh->sshExec("-i $non_existing_identity localhost ls");
-            $this->fail("expected IdentityFileNotFoundException");
-        } catch (Exception $e) {
-            $this->assertEqual($e->getMessage(), "The identity file $non_existing_identity doesn't exist");
-        }
-    }
-
-    public function itReturnsTheStdoutAndStdErr() {
     }
 
     public function itThrowsAnExceptionWithTheErrorCode() {
@@ -89,10 +76,6 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
     }
 
-    public function itRaisesAnErrorIfGerritServerIsUnreachable() {
-    
-    }
-    
     public function itRaisesAnErrorThatContainsTheStdErr_withoutStubbingCallToSystem() {
         $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand();
         try {
@@ -117,9 +100,10 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
     
     public function itRaisesAnErrorThatContainsTheStdErr() {
-        stub($this->ssh)->sshExec()->returns(array( 'exit_code' => 1,
-                                                    'std_out'   => '',
-                                                    'std_err'   => 'command someFailingCommand not found\nOn host '.$this->host));
+        stub($this->ssh)->sshExec()->returns(
+                  array('exit_code' => 1,
+                        'std_out'   => '',
+                        'std_err'   => 'command someFailingCommand not found\nOn host '.$this->host));
         try {
             $this->ssh->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
@@ -138,9 +122,9 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         }
 
         $nb_files_after = count(scandir('/tmp'));
-        $this->assertEqual($nb_files_b4, $nb_files_after, "expected number of files in /tmp to be the same before ($nb_files_b4) and after ($nb_files_after) the test");
+        $this->assertEqual($nb_files_b4, $nb_files_after, 
+                "expected number of files in /tmp to be the same before ($nb_files_b4) and after ($nb_files_after) the test");
     }
-        //ssh connexion permission denied
 
     public function itReturnsStdout(){
         stub($this->ssh)->sshExec()->returns(array('exit_code' => 0, 'std_out' => 'Some successful output'));

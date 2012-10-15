@@ -44,7 +44,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     protected function sshExec($cmd) {
         $output;
         $exit_code;
-        $filename = '/tmp/stderr_'.  uniqid();
+        $filename = tempnam('/tmp', 'stderr_');
         exec("ssh $cmd 2>$filename", $output, $exit_code);
         $stderr = file_get_contents($filename);
         unlink($filename);
@@ -80,7 +80,6 @@ class RemoteSSHCommandFailure extends Exception {
      */
     public function getStdErr() {
         return $this->std_err;
-        
     }
 
     /**
