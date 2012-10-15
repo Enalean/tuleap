@@ -59,7 +59,9 @@ EOT;
                 $update_sth->execute(array(':authorized_keys' => $str_valid_keys, ':user_id' => $row['user_id']));
             }
         }
-        unlink($key_file);
+        if (file_exists($key_file)) {
+            unlink($key_file);
+        }    
     }
 }
 
