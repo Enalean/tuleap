@@ -91,14 +91,14 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * @return Boolean
      */
     protected function processUgroupBinding($ugroup_id, $group_id) {
-        $bindingManager = $this->getUgroupBinding();
-        if (!$bindingManager->checkUGroupValidity($group_id, $ugroup_id)) {
+        $ugroupBinding = $this->getUgroupBinding();
+        if (!$ugroupBinding->checkUGroupValidity($group_id, $ugroup_id)) {
             //The user group is removed, we remove all its binding traces
-            return $bindingManager->removeAllUGroupsBinding($ugroup_id);
+            return $ugroupBinding->removeAllUGroupsBinding($ugroup_id);
         } else {
             if (count($this->getParametersAsArray()) == 2) {
                 //The user group has been updated (user added / user removed), we update all its bound user groups
-                return $bindingManager->updateBindedUGroups($ugroup_id);
+                return $ugroupBinding->updateBindedUGroups($ugroup_id);
             }
             return true;
         }
