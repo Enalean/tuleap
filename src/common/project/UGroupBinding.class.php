@@ -136,7 +136,8 @@ class UGroupBinding {
      * @return String
      */
     public function getLinkTitle($ugroupId) {
-        if ($this->ugroupManager->isBinded($ugroupId)) {
+        $ugroup = new UGroup();
+        if ($ugroup->isBound($ugroupId)) {
             $action = 'update_binding';
         } else {
             $action = 'add_binding';

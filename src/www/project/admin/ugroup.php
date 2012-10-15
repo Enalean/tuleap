@@ -15,7 +15,7 @@ require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
 require_once('common/project/UGroupBinding.class.php');
-require_once 'common/project/UGroupManager.class.php';
+require_once 'common/project/UGroup.class.php';
 
 function format_html_row($row, &$row_num) {
     echo "<tr class=\"". util_get_alt_row_color($row_num++) ."\">\n";
@@ -122,11 +122,11 @@ if ($group_id != 100) {
   $result = db_query("SELECT * FROM ugroup WHERE group_id=$group_id ORDER BY name");
   if (db_numrows($result) > 0) {
     $uGroupBinding = new UGroupBinding();
-    $uGroupManager = new UGroupManager();
+    $uGroup        = new UGroup();
     while ($row = db_fetch_array($result)) {
         $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']).'</a>';
         $bindingContent = '<a href="/project/admin/ugroup_binding.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'" >'.$uGroupBinding->getLinkTitle($row['ugroup_id']).'</a>';
-        if (!$uGroupManager->isBinded($row['ugroup_id'])) {
+        if (!$uGroup->isBound($row['ugroup_id'])) {
             $em->processEvent('ugroup_table_row', array('row' => $row, 'html' => &$bindingContent));
         }
         $ugroupRow[200] = array('value' => $bindingContent, 'html_attrs' => 'align="center"');

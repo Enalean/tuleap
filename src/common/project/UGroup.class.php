@@ -365,6 +365,22 @@ class UGroup {
         }
     }
 
+    /**
+     * Check if the user group is bound
+     *
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return Boolean
+     */
+    public function isBound($ugroupId) {
+        $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return  true;
+        } else {
+            return false;
+        }
+    }
+
 }
 
 ?>

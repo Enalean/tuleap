@@ -182,9 +182,10 @@ class UGroupBindingViewer {
      */
     private function getUgroupList($sourceProject, UGroup $currentSource = null) {
         $ugroupList = array();
-        $ugroups = ugroup_db_get_existing_ugroups($sourceProject);
+        $userGroup  = new UGroup();
+        $ugroups    = ugroup_db_get_existing_ugroups($sourceProject);
         while ($ugroup = db_fetch_array($ugroups)) {
-            if (!$this->ugroupBinding->ugroupManager->isBinded($ugroup['ugroup_id'])) {
+            if (!$userGroup->isBound($ugroup['ugroup_id'])) {
                 if ($currentSource && $currentSource->getId() == $ugroup['ugroup_id']) {
                     $selected = true;
                 } else {
