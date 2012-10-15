@@ -21,7 +21,7 @@
 require_once 'common/project/UGroupBinding.class.php';
 
 Mock::generate('UGroupBinding');
-Mock::generatePartial('UGroupBinding', 'UGroupBindingTestVersion', array('getUGroupDao', 'getUGroupUserDao', 'getUGroupManager', 'getUGroupsByBindingSource'));
+Mock::generatePartial('UGroupBinding', 'UGroupBindingTestVersion', array('getUGroupsByBindingSource'));
 Mock::generate('UGroup');
 Mock::generate('UGroupDao');
 Mock::generate('UGroupUserDao');
@@ -48,7 +48,7 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroupBinding = new UGroupBindingTestVersion();
         $ugroupDao     = new MockUGroupDao();
         $ugroupDao->setReturnValue('updateUgroupBinding', true);
-        $ugroupBinding->setReturnValue('getUGroupDao', $ugroupDao);
+        $ugroupBinding->ugroupdao = $ugroupDao;
         $GLOBALS['Language']->expectOnce('getText', array('project_ugroup_binding','binding_removed'));
         $GLOBALS['Response']->expectOnce('addFeedback');
         $this->assertTrue($ugroupBinding->removeBinding($ugroup_id));
@@ -59,7 +59,7 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroupBinding = new UGroupBindingTestVersion();
         $ugroupManager = new MockUGroupManager();
         $ugroupManager->setReturnValue('isUpdateUsersAllowed', false);
-        $ugroupBinding->setReturnValue('getUGroupManager', $ugroupManager);
+        $ugroupBinding->ugroupManager = $ugroupManager;
         $this->expectException(new RuntimeException());
         $ugroupBinding->resetUgroup($ugroup_id);
     }
@@ -71,8 +71,8 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroupUserDao = new MockUGroupUserDao();
         $ugroupManager->setReturnValue('isUpdateUsersAllowed', true);
         $ugroupUserDao->setReturnValue('resetUgroupUserList', false);
-        $ugroupBinding->setReturnValue('getUGroupManager', $ugroupManager);
-        $ugroupBinding->setReturnValue('getUGroupUserDao', $ugroupUserDao);
+        $ugroupBinding->ugroupManager = $ugroupManager;
+        $ugroupBinding->ugroupUserDao = $ugroupUserDao;
         $this->expectException(new LogicException());
         $ugroupBinding->resetUgroup($ugroup_id);
     }
@@ -83,7 +83,7 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroupBinding = new UGroupBindingTestVersion();
         $ugroupManager = new MockUGroupManager();
         $ugroupManager->setReturnValue('isUpdateUsersAllowed', false);
-        $ugroupBinding->setReturnValue('getUGroupManager', $ugroupManager);
+        $ugroupBinding->ugroupManager = $ugroupManager;
         $this->expectException(new RuntimeException());
         $ugroupBinding->cloneUgroup($source_id, $ugroup_id);
     }
@@ -96,8 +96,8 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroupUserDao = new MockUGroupUserDao();
         $ugroupManager->setReturnValue('isUpdateUsersAllowed', true);
         $ugroupUserDao->setReturnValue('cloneUgroup', false);
-        $ugroupBinding->setReturnValue('getUGroupManager', $ugroupManager);
-        $ugroupBinding->setReturnValue('getUGroupUserDao', $ugroupUserDao);
+        $ugroupBinding->ugroupManager = $ugroupManager;
+        $ugroupBinding->ugroupUserDao = $ugroupUserDao;
         $this->expectException(new LogicException());
         $ugroupBinding->cloneUgroup($source_id, $ugroup_id);
     }
@@ -108,7 +108,7 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroupBinding = new UGroupBindingTestVersion();
         $ugroupDao     = new MockUGroupDao();
         $ugroupDao->setReturnValue('updateUgroupBinding', false);
-        $ugroupBinding->setReturnValue('getUGroupDao', $ugroupDao);
+        $ugroupBinding->ugroupdao = $ugroupDao;
         $this->expectException(new Exception('Unable to store ugroup binding'));
         $ugroupBinding->updateUgroupBinding($ugroup_id, $source_id);
     }
@@ -119,7 +119,7 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroupBinding = new UGroupBindingTestVersion();
         $ugroupBinding->setReturnValue('getUGroupsByBindingSource', $bindedUgroups);
         $ugroupDao     = new MockUGroupDao();
-        $ugroupBinding->setReturnValue('getUGroupDao', $ugroupDao);
+        $ugroupBinding->ugroupdao = $ugroupDao;
 
         $ugroupDao->expectCallCount('updateUgroupBinding', 4);
         $ugroupDao->setReturnValueAt(0, 'updateUgroupBinding', true);
