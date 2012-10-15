@@ -127,6 +127,19 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             $this->assertEqual($e->getStdErr(), 'command someFailingCommand not found\nOn host '.$this->host);
         }
     }
+    
+    public function itRemovesTemporaryFiles() {
+        $nb_files_b4 = count(scandir('/tmp'));
+        $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand();
+        try {
+            $ssh_command->execute($this->config, 'someFailingCommand');
+        } catch (RemoteSSHCommandFailure $e) {
+            
+        }
+
+        $nb_files_after = count(scandir('/tmp'));
+        $this->assertEqual($nb_files_b4, $nb_files_after, "expected number of files in /tmp to be the same before ($nb_files_b4) and after ($nb_files_after) the test");
+    }
         //ssh connexion permission denied
 
 }
