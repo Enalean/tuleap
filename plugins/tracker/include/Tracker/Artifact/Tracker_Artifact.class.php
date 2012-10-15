@@ -87,6 +87,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->use_artifact_permissions = $use_artifact_permissions;
 
     }
+    /**
+     * Obtain event manager instance
+     *
+     * @return EventManager
+     */
+    private function _getEventManager() {
+        return EventManager::instance();
+    }
+
 
     /**
      * Return true if given given artifact refer to the same DB object (basically same id).
@@ -405,7 +414,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($from_aid != null) {
             $redirect->query_parameters['from_aid'] = $from_aid;
         }
-        EventManager::instance()->processEvent(
+        $this->_getEventmanager()->processEvent(
             TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
             array(
                 'request'  => $request,
@@ -979,7 +988,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
                         //Store the comment
-                        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
+                        $commentAdded = $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
+                        if ($commentAdded) {
+                            $this->_getEventmanager()->processEvent('tracker_report_followup_event_add', array());
+                        }
 
                         //extract references from the comment
                         $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupID(), $submitter->getId(), $this->getTracker()->getItemName());
@@ -1521,7 +1533,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Codendi_Request $request The request
      */
     public function summonArtifactRedirectors(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
-        EventManager::instance()->processEvent(
+        $this->_getEventmanager()->processEvent(
             TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
             array(
                 'request'  => $request,
@@ -1532,7 +1544,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     private function summonArtifactAssociators(Codendi_Request $request, User $current_user, $linked_artifact_id) {
-        EventManager::instance()->processEvent(
+        $this->_getEventmanager()->processEvent(
             TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED,
             array(
                 'artifact'             => $this,

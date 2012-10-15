@@ -42,6 +42,8 @@ class fulltextsearchPlugin extends Plugin {
         // tracker
         $this->_addHook('tracker_report_followup_search', 'tracker_report_followup_search', false);
         $this->_addHook('tracker_report_followup_search_process', 'tracker_report_followup_search_process', false);
+        $this->_addHook('tracker_report_followup_event_add', 'tracker_report_followup_event_add', false);
+        $this->_addHook('tracker_report_followup_event_update', 'tracker_report_followup_event_update', false);
 
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
@@ -200,6 +202,28 @@ class fulltextsearchPlugin extends Plugin {
         if ($params['request']->get('func') == 'followup_search') {
             //@TODO: process search
         }
+    }
+
+    /**
+     * Index added followup comment
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_report_followup_event_add($params) {
+        // @TODO: add index
+    }
+
+    /**
+     * Index updated followup comment
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_report_followup_event_update($params) {
+        // @TODO: update index
     }
 
     private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
