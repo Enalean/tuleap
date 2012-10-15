@@ -26,17 +26,27 @@ require_once('common/project/UGroupBinding.class.php');
  */
 class UGroupBindingViewer {
 
+    /**
+     * @var UGroupBinding
+     */
     private $ugroupBinding;
+
+    /**
+     * @var ProjectManager
+     */
+    private $projectManager;
 
     /**
      * Constructor of the class
      *
-     * @param UGroupBinding $ugroupBinding Ugroup binding instance
+     * @param UGroupBinding  $ugroupBinding  Ugroup binding instance
+     * @param ProjectManager $projectManager ProjectManager instance
      *
      * @return Void
      */
-    public function __construct($ugroupBinding) {
-        $this->ugroupBinding = $ugroupBinding;
+    public function __construct(UGroupBinding $ugroupBinding, ProjectManager $projectManager) {
+        $this->ugroupBinding  = $ugroupBinding;
+        $this->projectManager = $projectManager;
     }
 
     /**
@@ -55,7 +65,7 @@ class UGroupBindingViewer {
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row            = $dar->getRow();
             $currentSource  = $this->ugroupBinding->getUGroupManager()->getById($row['source_id']);
-            $currentProject = $this->ugroupBinding->getProjectManager()->getProject($row['group_id']);
+            $currentProject = $this->projectManager->getProject($row['group_id']);
             if ($currentProject && $currentProject->userIsAdmin()) {
                 if (!$sourceProject) {
                     $sourceProject = $currentProject->getID();
@@ -114,7 +124,7 @@ class UGroupBindingViewer {
             $count      = 0;
             $i          = 0;
             foreach ($clones as $cloneId => $clone) {
-                $project = $this->ugroupBinding->getProjectManager()->getProject($clone['group_id']);
+                $project = $this->projectManager->getProject($clone['group_id']);
                 if ($project->userIsAdmin()) {
                     $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'"><td><a href="/projects/'.$project->getUnixName().'" >'.$project->getPublicName().'</a></td><td><a href="/project/admin/ugroup.php?group_id='.$project->getID().'" >'.$clone['cloneName'].'</a></td></tr>';
                 } else {
@@ -145,7 +155,7 @@ class UGroupBindingViewer {
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
             if ($groupId != $project['group_id']) {
-                $project = $this->ugroupBinding->getProjectManager()->getProject($project['group_id']);
+                $project = $this->projectManager->getProject($project['group_id']);
                 if ($project->userIsAdmin()) {
                     $ugroupList = $this->getUgroupList($project->getID());
                     if (!empty($ugroupList)) {

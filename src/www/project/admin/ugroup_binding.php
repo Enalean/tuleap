@@ -19,7 +19,6 @@
  */
 
 require_once('pre.php');
-require_once('common/project/UGroupBinding.class.php');
 require_once('common/project/UGroupBindingViewer.class.php');
 
 $groupId       = $request->getValidated('group_id', 'GroupId', 0);
@@ -38,7 +37,7 @@ project_admin_header(
                            'help'  => 'UserGroups.html')
                     );
 
-$bindingiewer = new UGroupBindingViewer($ugroupBinding);
+$bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
 echo $bindingiewer->getHTMLContent($groupId, $ugroupId, $sourceProject);
 
 project_admin_footer(array());

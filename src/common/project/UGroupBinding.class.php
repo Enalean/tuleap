@@ -311,15 +311,6 @@ class UGroupBinding {
         }
     }
 
-    /**
-     * Get ProjectManager instance
-     *
-     * @return ProjectManager
-     */
-     public function getProjectManager() {
-         return ProjectManager::instance();
-     }
-
 }
 
 ?>
