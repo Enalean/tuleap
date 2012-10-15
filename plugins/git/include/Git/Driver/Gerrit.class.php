@@ -24,7 +24,8 @@ require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServer.class.php';
 
 class Git_Driver_Gerrit {
 
-    const GERRIT_COMMAND = 'gerrit ';
+    const COMMAND = 'gerrit ';
+    const EXIT_CODE = 1;
 
     /**
      * @var Git_Driver_Gerrit_RemoteSSHCommand
@@ -39,9 +40,21 @@ class Git_Driver_Gerrit {
         $host    = Config::get('sys_default_domain');
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
-        $this->ssh->execute($server, self::GERRIT_COMMAND ."create-project $host-$project/$repo");
-        return "$host-$project/$repo";
+        try {
+            $this->ssh->execute($server, self::COMMAND . "create-project $host-$project/$repo");
+            return "$host-$project/$repo";
+        } catch (RemoteSSHCommandFailure $e) {
+            throw $this->computeException($e);
+        }
+
+    }
+
+    public function computeException(RemoteSSHCommandFailure $e) {
+        return $e->getExitCode() === self::EXIT_CODE ? new GerritDriverException($e->getStdErr()) : $e;
+        
     }
 }
+class GerritDriverException extends Exception {
 
+}
 ?>

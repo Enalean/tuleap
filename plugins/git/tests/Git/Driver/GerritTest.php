@@ -82,14 +82,26 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $p = stub('Project' )->getUnixName()->returns('LesBronzes');
         $r->setProject($p);
 
-        $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand('gerrit.tuleap.net', 29418, 'johan', '~/.ssh/id_rsa.pub'));
+        $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand());
         $driver->createProject($r);
     }
     
-    public function itRaisesAnErrorIfTheProjectAlreadyExist() {
+    public function itRaisesAGerritDriverException() {
+        $std_err = 'fatal: project "someproject" exists';
+        stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE,'',$std_err));
+        try {
+            $this->driver->createProject($this->gerrit_server, $this->repository);
+            $this->fail('An exception was expected');
+        } catch (GerritDriverException $e) {
+            $this->assertEqual($e->getMessage(), $std_err);
+        }
     }
     
-        //groups already exists
-
+    public function itDoesntTransformExcetpionsThatArentRelatedToGerrit() {
+        $std_err = 'some gerrit exception';
+        $this->expectException('RemoteSSHCommandFailure');
+        stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(255,'',$std_err));
+        $this->driver->createProject($this->gerrit_server, $this->repository);
+    }
 }
 ?>
