@@ -42,8 +42,8 @@ class fulltextsearchPlugin extends Plugin {
         // tracker
         $this->_addHook('tracker_report_followup_search', 'tracker_report_followup_search', false);
         $this->_addHook('tracker_report_followup_search_process', 'tracker_report_followup_search_process', false);
-        $this->_addHook('tracker_report_followup_event_add', 'tracker_report_followup_event_add', false);
-        $this->_addHook('tracker_report_followup_event_update', 'tracker_report_followup_event_update', false);
+        $this->_addHook('tracker_followup_event_add', 'tracker_followup_event_add', false);
+        $this->_addHook('tracker_followup_event_update', 'tracker_followup_event_update', false);
 
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
@@ -93,6 +93,8 @@ class fulltextsearchPlugin extends Plugin {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_DELETE';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE';
+        $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD';
+        $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE';
     }
 
     /**
@@ -133,7 +135,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_update($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA', SystemEvent::PRIORITY_MEDIUM, $params['item']);
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA', SystemEvent::PRIORITY_MEDIUM, $params['item']);
     }
 
     /**
@@ -142,7 +144,7 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_after_new_document($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_INDEX', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_INDEX', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
     }
 
     /**
@@ -151,14 +153,14 @@ class fulltextsearchPlugin extends Plugin {
      * @param array $params
      */
     public function plugin_docman_event_del($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_DELETE', SystemEvent::PRIORITY_HIGH, $params['item']);
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_DELETE', SystemEvent::PRIORITY_HIGH, $params['item']);
     }
 
     /**
      * Event triggered when the permissions on a document change
      */
     public function plugin_docman_event_perms_change($params) {
-        $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS', SystemEvent::PRIORITY_HIGH, $params['item']);
+        $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS', SystemEvent::PRIORITY_HIGH, $params['item']);
     }
 
     /**
@@ -168,7 +170,7 @@ class fulltextsearchPlugin extends Plugin {
         // will be done in plugin_docman_after_new_document since we
         // receive both event for a new document
         if ($params['version']->getNumber() > 1) {
-            $this->createSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
+            $this->createDocmanSystemEvent('FULLTEXTSEARCH_DOCMAN_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params['item'], $params['version']->getNumber());
         }
     }
 
@@ -211,8 +213,8 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return Void
      */
-    public function tracker_report_followup_event_add($params) {
-        // @TODO: add index
+    public function tracker_followup_event_add($params) {
+        $this->createTrackerSystemEvent('FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD', SystemEvent::PRIORITY_MEDIUM, $params);
     }
 
     /**
@@ -222,17 +224,43 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return Void
      */
-    public function tracker_report_followup_event_update($params) {
-        // @TODO: update index
+    public function tracker_followup_event_update($params) {
+        $this->createTrackerSystemEvent('FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params);
     }
 
-    private function createSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
+    /**
+     * Create system event for docman indexing operations
+     *
+     * @param String      $type              Type of the event
+     * @param String      $priority          Priority of the system event
+     * @param Docman_Item $item              Docman item
+     * @param Mixed       $additional_params Extra params
+     *
+     * @return Void
+     */
+    private function createDocmanSystemEvent($type, $priority, Docman_Item $item, $additional_params = '') {
         if ($this->isAllowed($item->getGroupId())) {
 
             $params = $item->getGroupId() . SystemEvent::PARAMETER_SEPARATOR . $item->getId();
             if ($additional_params) {
                 $params .= SystemEvent::PARAMETER_SEPARATOR . $additional_params;
             }
+            SystemEventManager::instance()->createEvent($type, $params, $priority);
+        }
+    }
+
+    /**
+     * Create system event for docman indexing operations
+     *
+     * @param String $type     Type of the event
+     * @param String $priority Priority of the system event
+     * @param Array  $params   Event params
+     *
+     * @return Void
+     */
+    private function createTrackerSystemEvent($type, $priority, $params) {
+        if ($this->isAllowed($params['group_id'])) {
+            $params = $params['comment_id'].SystemEvent::PARAMETER_SEPARATOR.$params['text'];
             SystemEventManager::instance()->createEvent($type, $params, $priority);
         }
     }
