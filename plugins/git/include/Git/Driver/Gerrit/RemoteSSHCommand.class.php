@@ -47,7 +47,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         $stderr = file_get_contents($filename);
         unlink($filename);
         return array('exit_code' => $exit_code,
-                     'std_out'   => $output, 
+                     'std_out'   => implode(PHP_EOL, $output), 
                      'std_err'   => $stderr);
     }
 }
@@ -66,15 +66,24 @@ class RemoteSSHCommandFailure extends Exception {
     }
 
     
+    /**
+     * @return int
+     */
     public function getExitCode() {
         return $this->exit_code;
     }
 
+    /**
+     * @return string with PHP_EOL as line terminators
+     */
     public function getStdErr() {
         return $this->std_err;
         
     }
 
+    /**
+     * @return string with PHP_EOL as line terminators
+     */
     public function getStdOut() {
         return $this->std_out;
     }

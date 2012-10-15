@@ -99,7 +99,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             $ssh_command->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
         } catch (RemoteSSHCommandFailure $e) {
-            $this->assertArrayNotEmpty($e->getStdErr(), "As the command didn't succeed we something on standard error");
+            $this->assertNotEmpty($e->getStdErr(), "As the command didn't succeed we something on standard error");
         }
     }
     
@@ -112,7 +112,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             $this->ssh->execute($this->config, 'ls -aR *');
             $this->fail('expected exception');
         } catch (RemoteSSHCommandFailure $e) {
-            $this->assertArrayNotEmpty($e->getStdOut(), "ls always produces some output on standard out");
+            $this->assertNotEmpty($e->getStdOut(), "ls always produces some output on standard out");
         }
     }
     
