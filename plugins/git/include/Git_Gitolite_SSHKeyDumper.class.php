@@ -25,10 +25,12 @@ class Git_Gitolite_SSHKeyDumper {
     
     protected $admin_path;
     protected $git_exec;
+    protected $user_manager;
     
-    public function __construct($admin_path, Git_Exec $git_exec) {
-        $this->admin_path = $admin_path;
-        $this->git_exec   = $git_exec;
+    public function __construct($admin_path, Git_Exec $git_exec, UserManager $user_manager) {
+        $this->admin_path   = $admin_path;
+        $this->git_exec     = $git_exec;
+        $this->user_manager = $user_manager;
     }
 
     
@@ -43,8 +45,8 @@ class Git_Gitolite_SSHKeyDumper {
                 $this->initUserKeys($user, $keydir);
                 $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
             } else {
-                $userdao = new UserDao();
-                foreach ($userdao->searchSSHKeys() as $row) {
+                var_dump('coin');
+                foreach ($this->user_manager->getUsersWithSshKey() as $row) {
                     $user = new User($row);
                     $this->initUserKeys($user, $keydir);
                 }

@@ -59,7 +59,11 @@ class Git_GitoliteTestCase extends TuleapTestCase {
         $this->permissions_manager = PermissionsManager::instance();
         $this->gitExec = partial_mock('Git_Exec', array('push'), array($this->_glAdmDir));
         stub($this->gitExec)->push()->returns(true);
-        $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec);
+        
+        $user_manager = mock('UserManager');
+        $this->dumper = new Git_Gitolite_SSHKeyDumper($this->_glAdmDir, $this->gitExec, $user_manager);
+        
+        $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec, $this->dumper);
     }
     
     public function tearDown() {

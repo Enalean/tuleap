@@ -341,6 +341,14 @@ class UserManager {
     }
     
     /**
+     * @return Lists of user having a valid SSH key
+     */
+    
+    public function getUsersWithSshKey() {
+        return $this->getDao()->searchSSHKeys();
+    }
+    
+    /**
      * Logout the current user
      * - remove the cookie
      * - clear the session hash
