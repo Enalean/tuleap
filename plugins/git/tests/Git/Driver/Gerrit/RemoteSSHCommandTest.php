@@ -142,5 +142,14 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
         //ssh connexion permission denied
 
+    public function itReturnsStdout(){
+        stub($this->ssh)->sshExec()->returns(array('exit_code' => 0, 'std_out' => 'Some successful output'));
+        try {
+            $result = $this->ssh->execute($this->config, 'Some successful command');
+        } catch (RemoteSSHCommandFailure $e) {
+            $this->fail('unexpected exception');
+        }
+        $this->assertEqual($result, 'Some successful output');
+    }
 }
 ?>

@@ -31,10 +31,12 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         $identity_file = $config->getIdentityFile();
         $result = $this->sshExec("-p $port -i $identity_file $login@$host $cmd");
         $exit_code = $result['exit_code'];
-        $std_err = $result['std_err'];
         $std_out = $result['std_out'];
         if ($exit_code != self::SUCCESS) {
+            $std_err = $result['std_err'];
             throw new RemoteSSHCommandFailure($exit_code, $std_out, $std_err);
+        } else {
+            return $std_out;
         }
         
     }
