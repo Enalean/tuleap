@@ -23,6 +23,7 @@ require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
 require_once 'common/project/UGroupManager.class.php';
 require_once 'common/project/UGroupLiteralizer.class.php';
+require_once 'Git_Gitolite_SSHKeyDumper.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'PathJoinUtil.php';
@@ -156,83 +157,11 @@ class Git_GitoliteDriver {
      * Dump ssh keys into gitolite conf
      */
     public function dumpSSHKeys(User $user = null) {
-        if (is_dir($this->getAdminPath())) {
-            $keydir = 'keydir';
-            $this->createKeydir($keydir);
-            if ($user) {
-                $this->initUserKeys($user, $keydir);
-                $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
-            } else {
-                $userdao = new UserDao();
-                foreach ($userdao->searchSSHKeys() as $row) {
-                    $user = new User($row);
-                    $this->initUserKeys($user, $keydir);
-                }
-                $commit_msg = 'SystemEvent update all user keys';
-            }
-            if (is_dir($this->getAdminPath().'/keydir')) {
-                $this->gitExec->add('keydir');
-            }
-            $this->gitExec->commit($commit_msg);
+        $dumper = new Git_Gitolite_SSHKeyDumper($this->adminPath, $this->gitExec);
+        if ($dumper->dumpSSHKeys($user)) {
             return $this->push();
         }
         return false;
-    }
-
-    private function initUserKeys(User $user, $keydir) {
-        $this->dumpKeys($user, $keydir);
-    }
-
-    private function createKeydir($keydir) {
-        clearstatcache();
-        if (!is_dir($keydir)) {
-            if (!mkdir($keydir)) {
-                throw new Exception('Unable to create "keydir" directory in '.getcwd());
-            }
-        }
-    }
-
-    private function dumpKeys(User $user, $keydir) {
-        $i = 0;
-        foreach ($user->getAuthorizedKeysArray() as $key) {
-            $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            $this->writeKeyIfChanged($filePath, $key);
-            $i++;
-        }
-        $this->removeUserExistingKeys($user, $i);
-    }
-
-    private function writeKeyIfChanged($filePath, $key) {
-        $changed = true;
-        if (is_file($filePath)) {
-            $stored_key = file_get_contents($filePath);
-            if ($stored_key == $key) {
-                $changed = false;
-            }
-        }
-        if ($changed) {
-            file_put_contents($filePath, $key);
-        }
-    }
-
-    /**
-     * Remove all pub SSH keys previously associated to a user
-     *
-     * @param User $user
-     */
-    private function removeUserExistingKeys($user, $last_key_id) {
-        $keydir = 'keydir';
-        if (is_dir($keydir)) {
-            $userbase = $user->getUserName().'@';
-            foreach (glob("$keydir/$userbase*.pub") as $file) {
-                $matches = array();
-                if (preg_match('%^'.$keydir.'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
-                    if ($matches[1] >= $last_key_id) {
-                        $this->gitExec->rm($file);
-                    }
-                }
-            }
-        }
     }
 
     /**
