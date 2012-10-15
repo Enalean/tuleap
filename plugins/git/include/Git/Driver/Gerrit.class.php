@@ -54,6 +54,7 @@ class Git_Driver_Gerrit {
         
     }
 }
+
 class GerritDriverException extends Exception {
 
 }

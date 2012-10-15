@@ -22,7 +22,7 @@
 require_once dirname(__FILE__) .'/../../include/constants.php';
 require_once GIT_BASE_DIR .'/events/SystemEvent_GIT_GERRIT_MIGRATION.class.php';
 
-class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
+abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
 
     /**
      * @var SystemEvent_GIT_GERRIT_MIGRATION
@@ -86,9 +86,15 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
     public function itInformsAboutPermissionsConfiguration() {
     }
     
-    public function itInformsAboutAnyDriverFailure() {
+    public function itInformsAboutAnyGenericFailure() {
         stub($this->driver)->createProject()->throws(new Exception("failure detail"));
         expect($this->event)->error("failure detail")->once();
+        $this->event->process();
+    }
+    
+    public function itInformsAboutAnyGerritRelatedFailureByAddingAPrefix() {
+        stub($this->driver)->createProject()->throws(new GerritDriverException("failure detail"));
+        expect($this->event)->error("gerrit: failure detail")->once();
         $this->event->process();
     }
     

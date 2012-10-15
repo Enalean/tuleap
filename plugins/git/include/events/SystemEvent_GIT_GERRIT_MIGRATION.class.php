@@ -48,12 +48,13 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         try {
             $server = $this->server_factory->getServer($repository);
             $gerrit_project = $this->driver->createProject($server, $repository);
-        } catch (Exception $e) {
+            $this->done("Created project $gerrit_project on ". $server->getHost());
+            return true;
+        } catch (GerritDriverException $e) {
+            $this->error("gerrit: ".$e->getMessage());
+        } catch (Exception $e) {            
             $this->error($e->getMessage());
-            return;
         }
-        $this->done("Created project $gerrit_project on ". $server->getHost());
-        return true;
     }
 
     /**
