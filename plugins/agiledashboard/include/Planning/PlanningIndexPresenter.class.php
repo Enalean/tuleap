@@ -20,8 +20,14 @@
 
 class Planning_IndexPresenter {
 
-    public function __construct(array $short_access) {
-        $this->short_access = $short_access;
+    /**
+     * @var string
+     */
+    public $plugin_theme_path;
+
+    public function __construct(array $short_access, $plugin_theme_path) {
+        $this->short_access      = $short_access;
+        $this->plugin_theme_path = $plugin_theme_path;
     }
 
     public function getShortAccess() {

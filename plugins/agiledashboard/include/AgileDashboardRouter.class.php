@@ -190,7 +190,7 @@ class AgileDashboardRouter {
     protected function buildController(Codendi_Request $request) {
         $planning_factory = PlanningFactory::build();
         
-        return new Planning_Controller($request, $planning_factory, $this->milestone_factory);
+        return new Planning_Controller($request, $planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
     }
 
     /**
