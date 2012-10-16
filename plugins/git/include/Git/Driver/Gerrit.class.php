@@ -40,22 +40,31 @@ class Git_Driver_Gerrit {
         $host    = Config::get('sys_default_domain');
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
+        $command = "create-project $host-$project/$repo";
         try {
-            $this->ssh->execute($server, self::COMMAND . "create-project $host-$project/$repo");
+            $this->ssh->execute($server, self::COMMAND . $command);
             return "$host-$project/$repo";
         } catch (RemoteSSHCommandFailure $e) {
-            throw $this->computeException($e);
+            throw $this->computeException($e, self::COMMAND . $command);
         }
 
     }
 
-    public function computeException(RemoteSSHCommandFailure $e) {
-        return $e->getExitCode() === self::EXIT_CODE ? new GerritDriverException($e->getStdErr()) : $e;
+    private function computeException(RemoteSSHCommandFailure $e, $command) {
+        return $this->isGerritFailure($e) ? $this->gerritDriverException($e, $command) : $e;
         
+    }
+
+    private function isGerritFailure($e) {
+        return $e->getExitCode() === self::EXIT_CODE;
+    }
+
+    private function gerritDriverException($e, $command) {
+        return new GerritDriverException("Command: $command".PHP_EOL."Error: ".$e->getStdErr());
     }
 }
 
 class GerritDriverException extends Exception {
-
+    
 }
 ?>

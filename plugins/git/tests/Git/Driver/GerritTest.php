@@ -88,12 +88,13 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
     
     public function itRaisesAGerritDriverException() {
         $std_err = 'fatal: project "someproject" exists';
+        $command = "gerrit create-project tuleap.example.com-firefox/jean-claude/dusse";
         stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE,'',$std_err));
         try {
             $this->driver->createProject($this->gerrit_server, $this->repository);
             $this->fail('An exception was expected');
         } catch (GerritDriverException $e) {
-            $this->assertEqual($e->getMessage(), $std_err);
+            $this->assertEqual($e->getMessage(),"Command: $command".PHP_EOL."Error: $std_err");
         }
     }
     
