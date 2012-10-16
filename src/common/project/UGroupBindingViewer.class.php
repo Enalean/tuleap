@@ -61,7 +61,7 @@ class UGroupBindingViewer {
     public function getHTMLContent($groupId, $ugroupId, $sourceProject = null) {
         $currentProject = null;
         $currentSource  = null;
-        $dar = $this->ugroupBinding->ugroupdao->getUgroupBindingSource($ugroupId);
+        $dar = $this->ugroupBinding->ugroupManager->getDao()->getUgroupBindingSource($ugroupId);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row            = $dar->getRow();
             $currentSource  = $this->ugroupBinding->ugroupManager->getById($row['source_id']);

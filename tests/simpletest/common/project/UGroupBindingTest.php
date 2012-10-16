@@ -46,9 +46,11 @@ class UGroupBindingTest extends UnitTestCase {
     function testRemoveUgroupBinding() {
         $ugroup_id     = 200;
         $ugroupBinding = new UGroupBindingTestVersion();
+        $ugroupManager = new MockUGroupManager();
         $ugroupDao     = new MockUGroupDao();
         $ugroupDao->setReturnValue('updateUgroupBinding', true);
-        $ugroupBinding->ugroupdao = $ugroupDao;
+        $ugroupManager->setReturnValue('getDao', $ugroupDao);
+        $ugroupBinding->ugroupManager = $ugroupManager;
         $GLOBALS['Language']->expectOnce('getText', array('project_ugroup_binding','binding_removed'));
         $GLOBALS['Response']->expectOnce('addFeedback');
         $this->assertTrue($ugroupBinding->removeBinding($ugroup_id));
@@ -106,9 +108,11 @@ class UGroupBindingTest extends UnitTestCase {
         $ugroup_id     = 200;
         $source_id     = 300;
         $ugroupBinding = new UGroupBindingTestVersion();
+        $ugroupManager = new MockUGroupManager();
         $ugroupDao     = new MockUGroupDao();
         $ugroupDao->setReturnValue('updateUgroupBinding', false);
-        $ugroupBinding->ugroupdao = $ugroupDao;
+        $ugroupManager->setReturnValue('getDao', $ugroupDao);
+        $ugroupBinding->ugroupManager = $ugroupManager;
         $this->expectException(new Exception('Unable to store ugroup binding'));
         $ugroupBinding->updateUgroupBinding($ugroup_id, $source_id);
     }
@@ -118,8 +122,10 @@ class UGroupBindingTest extends UnitTestCase {
         $bindedUgroups = array(300, 400, 500, 600);
         $ugroupBinding = new UGroupBindingTestVersion();
         $ugroupBinding->setReturnValue('getUGroupsByBindingSource', $bindedUgroups);
+        $ugroupManager = new MockUGroupManager();
         $ugroupDao     = new MockUGroupDao();
-        $ugroupBinding->ugroupdao = $ugroupDao;
+        $ugroupManager->setReturnValue('getDao', $ugroupDao);
+        $ugroupBinding->ugroupManager = $ugroupManager;
 
         $ugroupDao->expectCallCount('updateUgroupBinding', 4);
         $ugroupDao->setReturnValueAt(0, 'updateUgroupBinding', true);

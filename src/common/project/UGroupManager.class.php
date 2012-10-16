@@ -104,7 +104,7 @@ class UGroupManager {
      *
      * @return UGroupDao
      */
-    private function getDao() {
+    public function getDao() {
         if (!$this->dao) {
             $this->dao = new UGroupDao();
         }
