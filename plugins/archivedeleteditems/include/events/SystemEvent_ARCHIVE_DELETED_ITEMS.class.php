@@ -32,12 +32,7 @@ class SystemEvent_ARCHIVE_DELETED_ITEMS extends SystemEvent {
         $parameters   = $this->getParametersAsArray();
 
         if (!empty($parameters[0])) {
-            if(file_exists($parameters[0])) {
-                $sourcePath = $parameters[0];
-            } else {
-            $this->error('Non-existing source path');
-            return false;
-            }
+            $sourcePath = $parameters[0];
         } else {
             $this->error('Missing argument source path');
             return false;

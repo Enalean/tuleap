@@ -589,7 +589,7 @@ class FRSFileFactory extends Error {
     }
 
     /**
-     * Invoque ''archive deleted item' hook in order to make a backup of a given file.
+     * Invoque 'archive deleted item' hook in order to make a backup of a given file.
      * This method should be used whithin the FRS purge process
      *
      * @param FRSFile $file File to archive
@@ -597,10 +597,10 @@ class FRSFileFactory extends Error {
      * @return void
      */
     public function archiveBeforePurge($file) {
-        $release  = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
-        $sub_dir  = $this->getUploadSubDirectory($release);
-        $prefix   = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
-        $params   = array('source_path'    => $this->getStagingPath($file),
+        $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
+        $sub_dir = $this->getUploadSubDirectory($release);
+        $prefix  = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
+        $params  = array('source_path'    => $this->getStagingPath($file),
                           'archive_prefix' => $prefix);
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
     }
@@ -614,10 +614,9 @@ class FRSFileFactory extends Error {
      * @return Boolean
      */
     public function purgeFile($file, $backend) {
-        $this->archiveBeforePurge($file);
-
         $dao = $this->_getFRSFileDao();
         if (file_exists($this->getStagingPath($file))) {
+            $this->archiveBeforePurge($file);
             if (unlink($this->getStagingPath($file))) {
                 if (!$dao->setPurgeDate($file->getFileID(), time())) {
                     $backend->log("File ".$this->getStagingPath($file)." not purged, Set purge date in DB fail", Backend::LOG_ERROR);
