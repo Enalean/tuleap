@@ -74,7 +74,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         $this->assertTrue($this->event->process());
     }
     
-    public function itInformsAboutCreationSuccess() {
+    public function itInformsAboutMigrationSuccess() {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
         $gerrit_host  = 'gerrit.instance.net';
@@ -84,6 +84,13 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         $this->event->process();
     }
     
+    public function itInformsAboutProjectInitialization() {
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        $remote_project = 'tuleap.net-Firefox/mobile';
+        stub($this->driver)->createProject()->returns($remote_project);
+        expect($this->logger)->info("Gerrit: Project $remote_project successfully created")->once();
+        $this->event->process();
+    }
     public function itInformsAboutGroupCreation() {
     }
     public function itInformsAboutPermissionsConfiguration() {

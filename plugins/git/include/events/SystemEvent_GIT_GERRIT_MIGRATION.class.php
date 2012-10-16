@@ -40,6 +40,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var Git_RemoteServer_GerritServerFactory */
     private $server_factory;
     
+    /** @var Logger */
+    private $logger;
+    
     public function process() {
         $repo_id           = (int)$this->getParameter(0);
         $remote_server_id  = (int)$this->getParameter(1);
@@ -49,6 +52,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         try {
             $server = $this->server_factory->getServer($repository);
             $gerrit_project = $this->driver->createProject($server, $repository);
+            $this->logger->info("Gerrit: Project $gerrit_project successfully created");
+            
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
         } catch (GerritDriverException $e) {
