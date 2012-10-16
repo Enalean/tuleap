@@ -21,23 +21,36 @@
 require_once 'common/backend/BackendLogger.class.php';
 require_once 'common/include/Config.class.php';
 class BackendLoggerTest extends TuleapTestCase {
-    
+
     private $log_file;
+    /** @var BackendLogger */
+    private $logger;
     
     public function setUp() {
         parent::setUp();
         $this->old_value_for_codendi_log = $GLOBALS['codendi_log'];
         $GLOBALS['codendi_log'] = '/tmp';
-        
+
         $this->log_file = tempnam($GLOBALS['codendi_log'], 'codendi_syslog');
-        
+
         $this->logger=new BackendLogger($this->log_file);
     }
-    
-    public function itLogsToTheSyslog2() {        
+
+    public function itLogsToTheSyslog() {
         $this->logger->log('toto tata');
-        
+
         $this->assertPattern('/toto tata/', file_get_contents($this->log_file));
+    }
+
+    public function itAddsTheLevelToTheLogMessage() {
+        $this->logger->info('toto tata');
+        $this->assertPattern('/\[info\] toto tata/', file_get_contents($this->log_file));
+        $this->logger->debug('hej min van');
+        $this->assertPattern('/\[debug\] hej min van/', file_get_contents($this->log_file));
+        $this->logger->warn('au dodo');
+        $this->assertPattern('/\[warning\] au dodo/', file_get_contents($this->log_file));
+        $this->logger->error('arrete!');
+        $this->assertPattern('/\[error\] arrete!/', file_get_contents($this->log_file));
     }
     
     public function testErrorAppendsStackTraceIfGivenAnError() {
@@ -48,7 +61,7 @@ class BackendLoggerTest extends TuleapTestCase {
         $this->assertLogContainsStackTrace($exception);
         $this->assertLogContainsErrorMessage($exception, $message);
     }
-    
+
     public function testWarnAppendsStackTraceIfGivenAnError() {
         $message = 'an error occured';
         $exception = $this->generateException('some error');
@@ -57,8 +70,8 @@ class BackendLoggerTest extends TuleapTestCase {
         $this->assertLogContainsStackTrace($exception);
         $this->assertLogContainsErrorMessage($exception, $message);
     }
-    
-    
+
+
     public function tearDown() {
         parent::tearDown();
         $GLOBALS['codendi_log'] = $this->old_value_for_codendi_log;
@@ -74,7 +87,7 @@ class BackendLoggerTest extends TuleapTestCase {
         $error_message = $exception->getMessage();
         $start_of_trace = substr($exception->getTraceAsString(), 0, 20);
         $this->assertPattern("%$message: $error_message:\n$start_of_trace%m", file_get_contents($this->log_file));
-        
+
     }
 
     private function generateException($error_message) {
@@ -84,7 +97,7 @@ class BackendLoggerTest extends TuleapTestCase {
             return $exception;
         }
     }
-    
-    
+
+
 }
 ?>

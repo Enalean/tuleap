@@ -48,17 +48,24 @@ class BackendLogger implements Logger {
     }
     
     public function error($message, Exception $e = null) {
-        $error_message = $e->getMessage();
-        $stack_trace   = $e->getTraceAsString();
-        $this->log("$message: $error_message:\n$stack_trace", 'error');
+        $this->log($this->generateLogWithException($message, $e), 'error');
     }
 
     public function warn($message, Exception $e = null) {
-        $error_message = $e->getMessage();
-        $stack_trace   = $e->getTraceAsString();
-        $this->log("$message: $error_message:\n$stack_trace", 'warning');
+        $this->log($this->generateLogWithException($message, $e), 'warning');
+        
+    }
+
+    public function generateLogWithException($message, Exception $e = null) {
+        $log_string = $message;
+        if (!empty($e)) {
+            $error_message  = $e->getMessage();
+            $stack_trace    = $e->getTraceAsString();
+            $log_string    .= ": $error_message:\n$stack_trace";
+        } 
+        return $log_string;
+
     }
 
 }
-
 ?>
