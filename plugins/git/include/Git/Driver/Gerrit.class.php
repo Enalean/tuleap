@@ -60,11 +60,11 @@ class Git_Driver_Gerrit {
     }
 
     private function gerritDriverException($e, $command) {
-        return new GerritDriverException("Command: $command".PHP_EOL."Error: ".$e->getStdErr());
+        return new Git_Driver_Gerrit_Exception("Command: $command".PHP_EOL."Error: ".$e->getStdErr());
     }
 }
 
-class GerritDriverException extends Exception {
+class Git_Driver_Gerrit_Exception extends Exception {
     
 }
 ?>

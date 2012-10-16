@@ -56,7 +56,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
-        } catch (GerritDriverException $e) {
+        } catch (Git_Driver_Gerrit_Exception $e) {
             $this->logError("gerrit: ", "Gerrit failure: ", $e);
         } catch (Exception $e) {
             $this->logError("", "An error occured while processing event: ", $e);

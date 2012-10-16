@@ -93,7 +93,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         try {
             $this->driver->createProject($this->gerrit_server, $this->repository);
             $this->fail('An exception was expected');
-        } catch (GerritDriverException $e) {
+        } catch (Git_Driver_Gerrit_Exception $e) {
             $this->assertEqual($e->getMessage(),"Command: $command".PHP_EOL."Error: $std_err");
         }
     }

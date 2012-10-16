@@ -105,7 +105,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
     }
     
     public function itInformsAboutAnyGerritRelatedFailureByAddingAPrefix() {
-        $e = new GerritDriverException("failure detail");
+        $e = new Git_Driver_Gerrit_Exception("failure detail");
         stub($this->driver)->createProject()->throws($e);
         expect($this->event)->error("gerrit: failure detail")->once();
         expect($this->logger)->error("Gerrit failure: ".$this->event->verbalizeParameters(null), $e)->once();
