@@ -61,10 +61,10 @@ class UGroupBindingViewer {
     public function getHTMLContent($groupId, $ugroupId, $sourceProject = null) {
         $currentProject = null;
         $currentSource  = null;
-        $dar = $this->ugroupBinding->ugroupManager->getDao()->getUgroupBindingSource($ugroupId);
+        $dar = $this->ugroupBinding->getUGroupManager()->getDao()->getUgroupBindingSource($ugroupId);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row            = $dar->getRow();
-            $currentSource  = $this->ugroupBinding->ugroupManager->getById($row['source_id']);
+            $currentSource  = $this->ugroupBinding->getUGroupManager()->getById($row['source_id']);
             $currentProject = $this->projectManager->getProject($row['group_id']);
             if ($currentProject && $currentProject->userIsAdmin()) {
                 if (!$sourceProject) {
