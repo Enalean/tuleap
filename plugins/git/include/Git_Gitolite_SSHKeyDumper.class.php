@@ -71,9 +71,11 @@ class Git_Gitolite_SSHKeyDumper {
     private function purgeNotDumpedUsers(array $dumped_users) {
         foreach (glob($this->keydir.'/*.pub') as $file) {
             $file_name = basename($file);
-            $user_name = substr($file_name, 0, strpos($file_name, '@'));
-            if (!isset($dumped_users[$user_name])) {
-                $this->git_exec->rm($file);
+            if ($file_name != 'id_rsa_gl-adm.pub') {
+                $user_name = substr($file_name, 0, strpos($file_name, '@'));
+                if (!isset($dumped_users[$user_name])) {
+                    $this->git_exec->rm($file);
+                }
             }
         }
     }
