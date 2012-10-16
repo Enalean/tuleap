@@ -121,9 +121,9 @@ if (($func=='edit')||($func=='do_create')) {
     echo '</table>';
     echo '</form>';
 
-    $uGroupMgr = new UGroupManager();
-    $uGroup    = new UGroup();
-    $ugroupUpdateUsersAllowed = !$uGroup->isBound($ugroup_id);
+    $uGroupMgr                = new UGroupManager();
+    $uGroup                   = new UGroup(array('ugroup_id' => $ugroup_id));
+    $ugroupUpdateUsersAllowed = !$uGroup->isBound();
     $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
 
     echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup', 'group_members').'</b></p>';

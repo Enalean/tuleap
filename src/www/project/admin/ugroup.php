@@ -124,11 +124,11 @@ if ($group_id != 100) {
     $ugroupUserDao = new UGroupUserDao();
     $ugroupManager = new UGroupManager(new UGroupDao());
     $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-    $uGroup        = new UGroup();
     while ($row = db_fetch_array($result)) {
         $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']).'</a>';
         $bindingContent = '<a href="/project/admin/ugroup_binding.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'" >'.$uGroupBinding->getLinkTitle($row['ugroup_id']).'</a>';
-        if (!$uGroup->isBound($row['ugroup_id'])) {
+        $uGroup         = new UGroup(array('ugroup_id' => $row['ugroup_id']));
+        if (!$uGroup->isBound()) {
             $em->processEvent('ugroup_table_row', array('row' => $row, 'html' => &$bindingContent));
         }
         $ugroupRow[200] = array('value' => $bindingContent, 'html_attrs' => 'align="center"');

@@ -372,8 +372,8 @@ class UGroup {
      *
      * @return Boolean
      */
-    public function isBound($ugroupId) {
-        $dar = $this->getUGroupDao()->getUgroupBindingSource($ugroupId);
+    public function isBound() {
+        $dar = $this->getUGroupDao()->getUgroupBindingSource($this->id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             return  true;
         } else {
