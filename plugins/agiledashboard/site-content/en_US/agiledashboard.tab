@@ -5,7 +5,7 @@ plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Agile Dashboard
 
 plugin_agiledashboard	Admin	Agile Dashboard Administration
-plugin_agiledashboard	planning_destination_help	Drag'n drop content from backlog on the left on this area to add new items to current release.
+plugin_agiledashboard	planning_destination_help	Move content from backlog on the left to this area to add new items to current milestone.
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Create a new planning
 plugin_agiledashboard	planning_edit	Edit
