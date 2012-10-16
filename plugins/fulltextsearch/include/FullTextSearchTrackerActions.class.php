@@ -45,6 +45,8 @@ class FullTextSearchTrackerActions {
      * @param Integer $artifactId  Id of the artifact
      * @param Integer $changesetId Id of the changeset
      * @param String  $text        Body of the followup comment
+     *
+     * @return Void
      */
     public function indexNewFollowup($groupId, $artifactId, $changesetId, $text) {
         $indexedData = $this->getIndexedData($groupId, $artifactId, $changesetId, $text);
@@ -58,6 +60,8 @@ class FullTextSearchTrackerActions {
      * @param Integer $artifactId  Id of the artifact
      * @param Integer $changesetId Id of the changeset
      * @param String  $text        Body of the followup comment
+     *
+     * @return Void
      */
     public function indexUpdatedFollowup($groupId, $artifactId, $changesetId, $text) {
         // @TODO: If no index start first by indexing the followup comment.
@@ -69,7 +73,10 @@ class FullTextSearchTrackerActions {
     /**
      * Format data to be indexed
      *
-     * @param 
+     * @param Integer $groupId     Id of the project
+     * @param Integer $artifactId  Id of the artifact
+     * @param Integer $changesetId Id of the changeset
+     * @param String  $text        Body of the followup comment
      *
      * @return Array
      */
