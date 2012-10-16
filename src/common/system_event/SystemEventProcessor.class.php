@@ -73,7 +73,7 @@ class SystemEventProcessor {
     }
 
     /**
-     * Process stored events. Should this be moved to a new class?
+     * Process stored events.
      */
     public function process() {
         while (($dar=$this->dao->checkOutNextEvent()) != null) {
