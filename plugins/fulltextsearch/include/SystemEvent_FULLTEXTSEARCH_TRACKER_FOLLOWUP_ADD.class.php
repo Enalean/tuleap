@@ -20,7 +20,20 @@
 
 class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD extends SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP {
 
-
+    /**
+     * Execute action
+     *
+     * @param Integer $groupId     Project Id
+     * @param Integer $artifactId  Artifact Id
+     * @param Integer $changesetId Changeset Id
+     * @param String  $text        Comment body
+     *
+     * @return Boolean
+     */
+    protected function action($groupId, $artifactId, $changesetId, $text) {
+        $this->actions->indexNewFollowup($groupId, $artifactId, $changesetId, $text);
+        return true;
+    }
 
 }
 

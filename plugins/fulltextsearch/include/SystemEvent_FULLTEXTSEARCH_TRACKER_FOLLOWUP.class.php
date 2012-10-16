@@ -23,19 +23,69 @@ require_once 'common/system_event/SystemEvent.class.php';
 abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
 
     /**
+     * @var FullTextSearchTrackerActions
+     */
+    protected $actions;
+
+    /**
+     * Inject dependencies
+     *
+     * @param FullTextSearchTrackerActions $actions Dependency
+     *
+     * @return Void
+     */
+    public function injectDependencies(FullTextSearchTrackerActions $actions) {
+        parent::injectDependencies();
+        $this->setFullTextSearchTrackerActions($actions);
+    }
+
+    /**
+     * Set dependency
+     *
+     * @param FullTextSearchTrackerActions $actions Dependency
+     *
+     * @return SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP
+     */
+    public function setFullTextSearchTrackerActions(FullTextSearchTrackerActions $actions) {
+        $this->actions = $actions;
+        return $this;
+    }
+
+    /**
      * Process the system event
      *
      * @return Boolean
      */
     public function process() {
-        $groupId     = (int)$this->getRequiredParameter(0);
-        $artifactId  = (int)$this->getRequiredParameter(1);
-        $changesetId = (int)$this->getRequiredParameter(2);
-        $text        = $this->getRequiredParameter(3);
-        
-        $this->done();
-        return true;
+        try {
+            $groupId     = (int)$this->getRequiredParameter(0);
+            $artifactId  = (int)$this->getRequiredParameter(1);
+            $changesetId = (int)$this->getRequiredParameter(2);
+            $text        = $this->getRequiredParameter(3);
+
+            if ($this->action($groupId, $artifactId, $changesetId, $text)) {
+                $this->done();
+                return true;
+            } else {
+                $this->error('Error while performing action');
+            }
+        } catch (Exception $e) {
+            $this->error($e->getMessage());
+        }
+        return false;
     }
+
+    /**
+     * Execute action
+     *
+     * @param Integer $groupId     Project Id
+     * @param Integer $artifactId  Artifact Id
+     * @param Integer $changesetId Changeset Id
+     * @param String  $text        Comment body
+     *
+     * @return Boolean
+     */
+    protected abstract function action($groupId, $artifactId, $changesetId, $text);
 
     /**
      * Verbalize parameters

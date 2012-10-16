@@ -26,6 +26,7 @@ class fulltextsearchPlugin extends Plugin {
     const SEARCH_TYPE = 'fulltext';
 
     private $actions;
+    private $trackerActions;
 
     public function __construct($id) {
         parent::__construct($id);
@@ -101,9 +102,14 @@ class fulltextsearchPlugin extends Plugin {
      * This callback make SystemEvent manager knows about fulltext plugin System Events
      */
     public function get_system_event_class($params) {
-        if (strpos($params['type'], 'FULLTEXTSEARCH_') !== false) {
+        if (strpos($params['type'], 'FULLTEXTSEARCH_DOCMAN') !== false) {
             $params['class']        = 'SystemEvent_'. $params['type'];
             $params['dependencies'] = array($this->getActions(), new Docman_ItemFactory(), new Docman_VersionFactory());
+            require_once $params['class'] .'.class.php';
+        }
+        if (strpos($params['type'], 'FULLTEXTSEARCH_TRACKER') !== false) {
+            $params['class']        = 'SystemEvent_'. $params['type'];
+            $params['dependencies'] = array($this->getTrackerActions());
             require_once $params['class'] .'.class.php';
         }
     }
@@ -127,6 +133,13 @@ class fulltextsearchPlugin extends Plugin {
             $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
         }
         return $this->actions;
+    }
+
+    private function getTrackerActions() {
+        if (!isset($this->trackerActions) && ($search_client = $this->getIndexClient())) {
+            $this->trackerActions = new FullTextSearchTrackerActions($search_client);
+        }
+        return $this->trackerActions;
     }
 
     /**
