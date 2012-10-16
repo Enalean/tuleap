@@ -49,7 +49,6 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
         $artifactId  = (int)$this->getRequiredParameter(1);
         $changesetId = (int)$this->getRequiredParameter(2);
         $text        = $this->getRequiredParameter(3);
-        // @TODO: verbalize artifact id & changeset id would look like /plugins/tracker/?aid=$artifactId#followup_$changesetId
         return 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$this->verbalizeArtifactId($artifactId, $changesetId, $withLink).', Text: '.$text;
     }
 
