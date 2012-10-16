@@ -40,7 +40,7 @@ class Planning_IndexPresenter {
     
     public function getLatestLeafMilestone() {
         $latest_short_access = end($this->short_access);
-        return end($latest_short_access->getLastTenOpenArtifacts());
+        return end($latest_short_access->getLastFiveOpenMilestones());
     }
 }
 

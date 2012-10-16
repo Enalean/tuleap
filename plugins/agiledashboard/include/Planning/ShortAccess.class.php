@@ -42,9 +42,9 @@ class Planning_ShortAccess {
         $this->planning_factory  = $planning_factory;
     }
 
-    public function getLastTenOpenArtifacts() {
+    public function getLastFiveOpenMilestones() {
         $presenters = array();
-        $milestones = $this->milestone_factory->getLastTenOpenMilestones($this->user, $this->planning);
+        $milestones = $this->milestone_factory->getLastFiveOpenMilestones($this->user, $this->planning);
         foreach ($milestones as $milestone) {
             $presenters[] = new Planning_MilestoneLinkPresenter($milestone, $this->user);
         }
