@@ -1,3 +1,6 @@
+Version 2.7.12 - Tuleap 5.5.4
+    * Overall rewrite of SSH key dump to reduce the frequency of dumps and validate keys
+
 Version 2.7.11 - Tuleap 5.5.3
     * Disable dump of repository description for Gitolite backend as it seems to make trouble in some configuration.
 

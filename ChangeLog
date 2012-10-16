@@ -1,3 +1,11 @@
+Version 5.5.4 (Tuesday, Octobre 16th 2012)
+   * Fix backend warnings about chgrp on ssh key dump
+   * Validate user ssh key on upload (and clean existing ones)
+
+   == Plugins ==
+   * git: 2.7.12
+   * tracker: 5.22
+
 Version 5.5.3 (Thursday, Octobre 3rd 2012)
     == Bug fix ==
     * Fix bug on cross reference extraction when parameters are not clean.
