@@ -665,24 +665,24 @@ class UserManager {
      * Update db entry of 'user' table with values in object
      * @param User $user
      */
-    function updateDb($user) {
-    	if (!$user->isAnonymous()) {
-    		$userRow = $user->toRow();
-    		if ($user->getPassword() != '') {
+    public function updateDb($user) {
+        if (!$user->isAnonymous()) {
+            $userRow = $user->toRow();
+            if ($user->getPassword() != '') {
                 if (md5($user->getPassword()) != $user->getUserPw()) {
-        			// Update password
-        			$userRow['password'] = $user->getPassword(); 
+                    // Update password
+                    $userRow['password'] = $user->getPassword();
                 }
-    		}
-    		$result = $this->getDao()->updateByRow($userRow);
-    		if ($result && ($user->isSuspended() || $user->isDeleted())) {
-    		    $this->getDao()->deleteAllUserSessions($user->getId());
-    		}
-    		return $result;
-    	}
-    	return false;
+            }
+            $result = $this->getDao()->updateByRow($userRow);
+            if ($result && ($user->isSuspended() || $user->isDeleted())) {
+                $this->getDao()->deleteAllUserSessions($user->getId());
+            }
+            return $result;
+        }
+        return false;
     }
-    
+
     /**
      * Assign to given user the next available unix_uid
      * 
