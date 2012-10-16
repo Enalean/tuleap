@@ -30,12 +30,8 @@ class User_SSHKeyValidatorTest extends TuleapTestCase {
         $this->key1 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAxo4yIDI6bkSUVgXMZYmBZNDl3ttYUIxaThIX1hjp+Oxjo1yeI+vytb1UvESnu1fAhNB40KpPwL7md+UwfHyo2Jah9PMq6bfrSupAE6NOJQ4xG5W7hP70ih5UZtA9YuZfzDc7JsCpwlF7Fvhc+1u4uRYxuKQ+4SpzxCNkmMAMD9BzjXq0Jt/6MsEz+Txt6xoo+HAZXUnUq/XgqMh1A71zAjz6E1ADsd1vLYekQruy9uzhnq9Q7bi+evS1bvi7/O+csAqpIvN/stBqIzALpoAGY1Ek/YMKxjzNurnRTtwEuvqciaPk4aZGg5UvWL1B+yo7HuG/Je0KSz/+u+1efqLUxw== user@shunt';
         $this->key2 = 'ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAo2Z2ru57hk2p9wMkM66IxYV1HFKEJvWjWi7Otug/G14LWwO1VU5wNBJgJEfaAoL7ccRpWYpRKLAZdAPYq8nOVFsTU0X4z4mtIo8L1mlw+qXZ3KW77/QJ7sNbCZe6vpNcKg0+DX0e4n0h6R+lXIwi/ISM6wXPQU3uUKVRbcykC9YwEnQokFXXHRqeBzPjyRFval4SRMHAdcs2pjZtu5Et0pObR+Lrs532NE1tvDUrPbU1Oy+9w7bbcvbfjKeYX7FgdXmlYDYLcAfZG4wCHBBYbp5HNXTxhwv4wHq7Z20tEN4qqBnehCGPOpBIgbfBTdN9NftloRYrVPNAxKXhPd/VRQ== user@crampons';
 
-        $this->event_manager = mock('EventManager');
-        $this->user_manager  = partial_mock('UserManager', array('updateDb', '_getEventManager'));
-        stub($this->user_manager)->_getEventManager()->returns($this->event_manager);
-        
-        $this->user = aUser()->build();
-        $this->validator = $this->user_manager;
+        $this->user      = aUser()->build();
+        $this->validator = new User_SSHKeyValidator();
     }
 }
 
@@ -43,63 +39,58 @@ class User_SSHKeyValidator_KeyValidationTest extends User_SSHKeyValidatorTest {
 
     public function itDoesntRaiseAnErrorWhenTheKeyIsValid() {
         stub($GLOBALS['Response'])->addFeedback()->never();
-        $this->validator->updateUserKeys($this->user, $this->key1);
+        $this->assertEqual(array($this->key1), $this->validator->filterValidKeys($this->key1));
     }
 
     public function itDoesntRaiseAnErrorWhenAllTheKeysAreValid() {
         stub($GLOBALS['Response'])->addFeedback()->never();
-        $this->validator->updateUserKeys($this->user, $this->key1."\n".$this->key2);
+        $this->assertEqual(array($this->key1, $this->key2), $this->validator->filterValidKeys($this->key1."\n".$this->key2));
     }
 
     public function itRaisesAWarningWhenTheKeyIsInvalid() {
         $keys = "bla";
         stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
-        $this->validator->updateUserKeys($this->user, $keys);
+        $this->assertCount($this->validator->filterValidKeys($keys), 0);
     }
 
     public function itRaisesAWarningWhenTheKeyIsInvalidAmongValidKeys() {
         $keys = $this->key1."\nbla\n".$this->key2;
         stub($GLOBALS['Response'])->addFeedback('warning', '*')->once();
-        $this->validator->updateUserKeys($this->user, $keys);
+        $this->assertEqual(array($this->key1, $this->key2), $this->validator->filterValidKeys($keys));
     }
 }
 
 class User_SSHKeyValidator_InputManagementTest extends User_SSHKeyValidatorTest {
 
     public function itUpdatesWithOneKey() {
-        $this->validator->updateUserKeys($this->user, $this->key1);
-        $keys = $this->user->getAuthorizedKeysArray();
+        $keys = $this->validator->filterValidKeys($this->key1);
         $this->assertCount($keys, 1);
         $this->assertEqual($this->key1, $keys[0]);
     }
 
     public function itUpdatesWithTwoKeysAndUnixSeparator() {
-        $this->validator->updateUserKeys($this->user, $this->key1."\n".$this->key2);
-        $keys = $this->user->getAuthorizedKeysArray();
+        $keys = $this->validator->filterValidKeys($this->key1."\n".$this->key2);
         $this->assertCount($keys, 2);
         $this->assertEqual($this->key1, $keys[0]);
         $this->assertEqual($this->key2, $keys[1]);
     }
 
     public function itUpdatesWithTwoKeysAndWindowsSeparator() {
-        $this->validator->updateUserKeys($this->user, $this->key1."\r\n".$this->key2);
-        $keys = $this->user->getAuthorizedKeysArray();
+        $keys = $this->validator->filterValidKeys($this->key1."\r\n".$this->key2);
         $this->assertCount($keys, 2);
         $this->assertEqual($this->key1, $keys[0]);
         $this->assertEqual($this->key2, $keys[1]);
     }
 
     public function itUpdatesWithAnExtraSpaceAfterFirstKey() {
-        $this->validator->updateUserKeys($this->user, $this->key1." \n".$this->key2);
-        $keys = $this->user->getAuthorizedKeysArray();
+        $keys = $this->validator->filterValidKeys($this->key1." \n".$this->key2);
         $this->assertCount($keys, 2);
         $this->assertEqual($this->key1, $keys[0]);
         $this->assertEqual($this->key2, $keys[1]);
     }
 
     public function itUpdatesWithAnEmptyKey() {
-        $this->validator->updateUserKeys($this->user, $this->key1."\n\n".$this->key2);
-        $keys = $this->user->getAuthorizedKeysArray();
+        $keys = $this->validator->filterValidKeys($this->key1."\n\n".$this->key2);
         $this->assertCount($keys, 2);
         $this->assertEqual($this->key1, $keys[0]);
         $this->assertEqual($this->key2, $keys[1]);
