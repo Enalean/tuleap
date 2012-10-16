@@ -22,6 +22,7 @@
 require_once GIT_BASE_DIR .'/GitDao.class.php';
 require_once GIT_BASE_DIR .'/Git/Driver/Gerrit.class.php';
 require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
+require_once 'common/backend/BackendLogger.class.php';
 
 class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
@@ -51,10 +52,15 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
         } catch (GerritDriverException $e) {
-            $this->error("gerrit: ".$e->getMessage());
-        } catch (Exception $e) {            
-            $this->error($e->getMessage());
+            $this->logError("gerrit: ", "Gerrit failure: ", $e);
+        } catch (Exception $e) {
+            $this->logError("", "An error occured while processing event: ", $e);
         }
+    }
+    
+    private function logError($sysevent_prefix, $log_prefix, Exception $e) {
+        $this->error($sysevent_prefix . $e->getMessage());
+        $this->logger->error($log_prefix . $this->verbalizeParameters(null), $e);
     }
 
     /**
@@ -93,12 +99,14 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         GitDao $dao,
         Git_Driver_Gerrit $driver,
         GitRepositoryFactory $repository_factory,
-        Git_RemoteServer_GerritServerFactory  $server_factory
+        Git_RemoteServer_GerritServerFactory  $server_factory,
+        Logger  $logger
     ) {
         $this->dao                = $dao;
         $this->driver             = $driver;
         $this->repository_factory = $repository_factory;
         $this->server_factory     = $server_factory;
+        $this->logger             = $logger;
     }
 
     public function setServerFactory($server_factory) {

@@ -21,6 +21,7 @@
 
 require_once dirname(__FILE__) .'/../../include/constants.php';
 require_once GIT_BASE_DIR .'/events/SystemEvent_GIT_GERRIT_MIGRATION.class.php';
+require_once 'common/log/Logger.class.php';
 
 abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase {
 
@@ -54,10 +55,12 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
         $this->event = TestHelper::getPartialMock('SystemEvent_GIT_GERRIT_MIGRATION', array('done', 'error'), 
                                                   array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log));
         $this->event->setParameters("$this->repository_id::$this->remote_server_id");
-        $this->event->injectDependencies($this->dao, $this->driver, $factory, $this->server_factory);
+        $this->logger = mock('Logger');
+        $this->event->injectDependencies($this->dao, $this->driver, $factory, $this->server_factory, $this->logger);
         
     }
 }
+
 class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRIT_MIGRATION_BaseTest  {
     
     public function itSwitchesTheBackendToGerrit() {
@@ -87,20 +90,26 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
     }
     
     public function itInformsAboutAnyGenericFailure() {
-        stub($this->driver)->createProject()->throws(new Exception("failure detail"));
+        $e = new Exception("failure detail");
+        stub($this->driver)->createProject()->throws($e);
         expect($this->event)->error("failure detail")->once();
+        expect($this->logger)->error("An error occured while processing event: ".$this->event->verbalizeParameters(null), $e)->once();
         $this->event->process();
     }
     
     public function itInformsAboutAnyGerritRelatedFailureByAddingAPrefix() {
-        stub($this->driver)->createProject()->throws(new GerritDriverException("failure detail"));
+        $e = new GerritDriverException("failure detail");
+        stub($this->driver)->createProject()->throws($e);
         expect($this->event)->error("gerrit: failure detail")->once();
+        expect($this->logger)->error("Gerrit failure: ".$this->event->verbalizeParameters(null), $e)->once();
         $this->event->process();
     }
     
     public function itInformsAboutAnyServerFactoryFailure() {
-        stub($this->server_factory)->getServer()->throws(new Exception("failure detail"));
+        $e = new Exception("failure detail");
+        stub($this->server_factory)->getServer()->throws($e);
         expect($this->event)->error("failure detail")->once();
+        expect($this->logger)->error("An error occured while processing event: ".$this->event->verbalizeParameters(null), $e)->once();
         $this->event->process();
     }
     
