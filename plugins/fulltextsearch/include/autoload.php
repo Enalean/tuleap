@@ -39,9 +39,7 @@ function autoload34e5cad2d8cb67c1c361505bdc291d70($class) {
             'systemevent_fulltextsearch_docman_update_metadata' => '/SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA.class.php',
             'systemevent_fulltextsearch_docman_update_permissions' => '/SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php',
             'systemevent_fulltextsearch_docman_update_permissions' => '/SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONS.class.php',
-            'systemevent_fulltextsearch_tracker_followup' => '/SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP.class.php',
-            'systemevent_fulltextsearch_tracker_followup_add' => '/SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD.class.php',
-            'systemevent_fulltextsearch_tracker_followup_update' => '/SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE.class.php'
+            'systemevent_fulltextsearch_tracker_followup' => '/SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP.class.php'
         );
     }
     $cn = strtolower($class);

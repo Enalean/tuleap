@@ -20,7 +20,7 @@
 
 require_once 'common/system_event/SystemEvent.class.php';
 
-abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
+class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
 
     /**
      * @var FullTextSearchTrackerActions
@@ -63,29 +63,14 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
             $changesetId = (int)$this->getRequiredParameter(2);
             $text        = $this->getRequiredParameter(3);
 
-            if ($this->action($groupId, $artifactId, $changesetId, $text)) {
-                $this->done();
-                return true;
-            } else {
-                $this->error('Error while performing action');
-            }
+            $this->actions->indexFollowup($groupId, $artifactId, $changesetId, $text);
+            $this->done();
+            return true;
         } catch (Exception $e) {
             $this->error($e->getMessage());
         }
         return false;
     }
-
-    /**
-     * Execute action
-     *
-     * @param Integer $groupId     Project Id
-     * @param Integer $artifactId  Artifact Id
-     * @param Integer $changesetId Changeset Id
-     * @param String  $text        Comment body
-     *
-     * @return Boolean
-     */
-    protected abstract function action($groupId, $artifactId, $changesetId, $text);
 
     /**
      * Verbalize parameters
