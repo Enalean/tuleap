@@ -21,11 +21,15 @@
 require_once 'Git_GitoliteTestCase.class.php';
 
 class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase {
+    protected $key1;
+    protected $key2;
 
     public function setUp() {
         parent::setUp();
         $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
+        chdir($this->_glAdmDir);
+
     }
 }
 
@@ -34,7 +38,7 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     public function testAddUserKey() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
 
-        $this->driver->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user);
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
@@ -45,7 +49,7 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     public function testAddUserWithSeveralKeys() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
 
-        $this->driver->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user);
 
         $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
@@ -58,14 +62,11 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     public function testRemoveUserKey() {
         // User has 2 keys
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->driver->dumpSSHKeys($user);
-
-        // internal push reset the pwd
-        $this->driver->setAdminPath($this->_glAdmDir);
+        $this->dumper->dumpSSHKeys($user);
 
         // Now back with only one
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1))->build();
-        $this->driver->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user);
 
         // Ensure second key was deleted
         $this->assertFalse(is_file($this->_glAdmDir.'/keydir/john_do@1.pub'), "Second key should be deleted");
@@ -75,13 +76,10 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
 
     public function itDeletesAllTheKeys() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->driver->dumpSSHKeys($user);
-
-        // internal push reset the pwd
-        $this->driver->setAdminPath($this->_glAdmDir);
+        $this->dumper->dumpSSHKeys($user);
 
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array())->build();
-        $this->driver->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user);
         $this->assertCount(glob($this->_glAdmDir.'/keydir/*.pub'), 0);
 
         $this->assertEmptyGitStatus();
@@ -89,13 +87,10 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
 
     public function itFlipsTheKeys() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->driver->dumpSSHKeys($user);
-
-        // internal push reset the pwd
-        $this->driver->setAdminPath($this->_glAdmDir);
+        $this->dumper->dumpSSHKeys($user);
 
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key2, $this->key1))->build();
-        $this->driver->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user);
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key2);
         $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@1.pub'), $this->key1);
 
@@ -104,11 +99,9 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
 
     public function itDoesntGenerateAnyErrorsWhenThereAreNoChangesOnKeys() {
         $user = aUser()->withUserName('john_do')->withAuthorizedKeysArray(array($this->key1, $this->key2))->build();
-        $this->driver->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user);
 
-        // After push directory change, so we need to re-changedir
-        $this->driver->setAdminPath($this->_glAdmDir);
-        $this->driver->dumpSSHKeys($user);
+        $this->dumper->dumpSSHKeys($user);
     }
 
     public function itRemovesTheKeysWhenUserNoLongerHaveOneDuringSystemCheck() {
@@ -121,14 +114,36 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
     public function itDumpsSshKeysForOneUser() {
         stub($this->user_manager)->getUsersWithSshKey()->returnsDar(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'));
 
-        $this->driver->dumpSSHKeys();
+        $this->dumper->dumpSSHKeys();
 
-        $this->assertTrue(is_file($this->_glAdmDir.'/keydir/john_do@0.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir.'/keydir/john_do@0.pub'), $this->key1);
+        $this->assertTrue(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
+        $this->assertEqual(file_get_contents($this->_glAdmDir . '/keydir/john_do@0.pub'), $this->key1);
+
+        $this->assertEmptyGitStatus();
+    }
+
+    public function itRemovesSshKeyFileWhenUserDeletedAllHisKeys() {
+        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')));
+        $this->dumper->dumpSSHKeys();
+
+        $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::emptyDar());
+        $this->dumper->dumpSSHKeys();
+
+        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
+    }
+
+    public function itRemovesOnlySshFilesForUsersWithoutKeys() {
+        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'), array('authorized_keys' => $this->key2, 'user_name' => 'do_john')));
+        $this->dumper->dumpSSHKeys();
+
+        $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::arrayToDar(array('authorized_keys' => $this->key2, 'user_name' => 'do_john')));
+        $this->dumper->dumpSSHKeys();
+
+        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
+        $this->assertTrue(is_file($this->_glAdmDir . '/keydir/do_john@0.pub'));
 
         $this->assertEmptyGitStatus();
     }
 }
-
 
 ?>
