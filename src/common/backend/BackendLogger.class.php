@@ -28,6 +28,8 @@ class BackendLogger implements Logger {
     }
     
     /**
+     * @deprecated use explicit methods info, debug, ...
+     * 
      * Log message in codendi_syslog
      *
      * @param string $message The error message that should be logged.
