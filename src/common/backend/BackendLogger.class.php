@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -21,17 +20,23 @@
 
 require_once 'common/log/Logger.class.php';
 
-class BackendLogger implements Logger{
+class BackendLogger implements Logger {
+    
+    public function __construct($filename = null) {
+        
+        $this->filename = empty($filename) ? $GLOBALS['codendi_log'].'/codendi_syslog' : $filename;
+    }
+    
     /**
      * Log message in codendi_syslog
      *
      * @param string $message The error message that should be logged.
-     * @param string $level   The level of the message "info", "warn", ...
+     * @param string $level   The level of the message "info", "warning", ...
      * 
      * @return boolean true on success or false on failure
      */
     public function log($message, $level = 'info') {
-        return error_log(date('c')." [$level] $message\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
+        return error_log(date('c')." [$level] $message\n", 3, $this->filename);
     }
 
     public function debug($message) {
@@ -43,15 +48,15 @@ class BackendLogger implements Logger{
     }
     
     public function error($message, Exception $e = null) {
-        $this->log($message, 'error');
-    }
-
-    public function fatal($message, Exception $e = null) {
-        $this->log($message, 'fatal');
+        $error_message = $e->getMessage();
+        $stack_trace   = $e->getTraceAsString();
+        $this->log("$message: $error_message:\n$stack_trace", 'error');
     }
 
     public function warn($message, Exception $e = null) {
-        $this->log($message, 'warning');
+        $error_message = $e->getMessage();
+        $stack_trace   = $e->getTraceAsString();
+        $this->log("$message: $error_message:\n$stack_trace", 'warning');
     }
 
 }
