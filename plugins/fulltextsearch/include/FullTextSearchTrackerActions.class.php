@@ -47,8 +47,8 @@ class FullTextSearchTrackerActions {
      * @param String  $text        Body of the followup comment
      */
     public function indexNewFollowup($groupId, $artifactId, $changesetId, $text) {
-        $indexed_data = $this->getIndexedData($artifactId, $changesetId, $text);
-        $this->client->index($indexed_data, $artifactId);
+        $indexedData = $this->getIndexedData($groupId, $artifactId, $changesetId, $text);
+        $this->client->index($indexedData, $changesetId);
     }
 
     /**
@@ -60,9 +60,10 @@ class FullTextSearchTrackerActions {
      * @param String  $text        Body of the followup comment
      */
     public function indexUpdatedFollowup($groupId, $artifactId, $changesetId, $text) {
-        $update_data = $this->client->initializeSetterData();
-        $update_data = $this->client->appendSetterData($update_data, 'file', base64_encode($text));
-        $this->client->update($artifactId, $update_data);
+        // @TODO: If no index start first by indexing the followup comment.
+        $updateData = $this->client->initializeSetterData();
+        $updateData = $this->client->appendSetterData($updateData, 'file', base64_encode($text));
+        $this->client->update($changesetId, $updateData);
     }
 
     /**
@@ -75,7 +76,6 @@ class FullTextSearchTrackerActions {
     private function getIndexedData($groupId, $artifactId, $changesetId, $text) {
         return array(
             'id'           => $changesetId,
-            'type'         => 'tracker',
             'group_id'     => $groupId,
             'artifact_id'  => $artifactId,
             'changeset_id' => $changesetId,

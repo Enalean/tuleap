@@ -135,8 +135,14 @@ class fulltextsearchPlugin extends Plugin {
         return $this->actions;
     }
 
+    /**
+     * Get tracker actions
+     *
+     * @return FullTextSearchTrackerActions
+     */
     private function getTrackerActions() {
-        if (!isset($this->trackerActions) && ($search_client = $this->getIndexClient())) {
+        $type = 'tracker';
+        if (!isset($this->trackerActions) && ($search_client = $this->getIndexClient($type))) {
             $this->trackerActions = new FullTextSearchTrackerActions($search_client);
         }
         return $this->trackerActions;
@@ -312,14 +318,21 @@ class fulltextsearchPlugin extends Plugin {
             strpos($_SERVER['REQUEST_URI'], '/search/') === 0;
     }
 
-    private function getIndexClient() {
+    /**
+     * Obtain index client
+     *
+     * @param String $type Type of the index
+     *
+     * @return ElasticSearch_IndexClientFacade
+     */
+    private function getIndexClient($type = 'docman') {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
         $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password);
+        return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password, $type);
     }
 
     private function getSearchClient() {
