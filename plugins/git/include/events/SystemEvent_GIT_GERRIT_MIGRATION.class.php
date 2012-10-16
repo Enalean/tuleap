@@ -51,8 +51,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         $repository = $this->repository_factory->getRepositoryById($repo_id);
         try {
             $server = $this->server_factory->getServer($repository);
+            
             $gerrit_project = $this->driver->createProject($server, $repository);
-            $this->logger->info("Gerrit: Project $gerrit_project successfully created");
+            $this->logger->info("Gerrit: Project $gerrit_project successfully initialized");
             
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;

@@ -88,7 +88,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         $remote_project = 'tuleap.net-Firefox/mobile';
         stub($this->driver)->createProject()->returns($remote_project);
-        expect($this->logger)->info("Gerrit: Project $remote_project successfully created")->once();
+        expect($this->logger)->info("Gerrit: Project $remote_project successfully initialized")->once();
         $this->event->process();
     }
     public function itInformsAboutGroupCreation() {
