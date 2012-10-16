@@ -34,6 +34,7 @@ class Git_GitoliteTestCase extends TuleapTestCase {
     
     /** @var Git_GitoliteDriver */
     protected $driver;
+    protected $user_manager;
     
     public function setUp() {
         parent::setUp();
@@ -60,8 +61,8 @@ class Git_GitoliteTestCase extends TuleapTestCase {
         $this->gitExec = partial_mock('Git_Exec', array('push'), array($this->_glAdmDir));
         stub($this->gitExec)->push()->returns(true);
         
-        $user_manager = mock('UserManager');
-        $this->dumper = new Git_Gitolite_SSHKeyDumper($this->_glAdmDir, $this->gitExec, $user_manager);
+        $this->user_manager = mock('UserManager');
+        $this->dumper = new Git_Gitolite_SSHKeyDumper($this->_glAdmDir, $this->gitExec, $this->user_manager);
         
         $this->driver = new Git_GitoliteDriver($this->_glAdmDir, $this->gitExec, $this->dumper);
     }
