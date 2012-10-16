@@ -684,12 +684,21 @@ class UserManager {
         return false;
     }
 
-    public function updateUserKeys(User $user, $keys) {
+    /**
+     * Update ssh keys for a user
+     *
+     * Should probably be merged with updateDb but I don't know the impact of
+     * validating keys each time we update a user
+     *
+     * @param User $user
+     * @param String $keys
+     */
+    public function updateUserSSHKeys(User $user, $keys) {
         $ssh_validator = new User_SSHKeyValidator($this, $this->_getEventManager());
         $valid_keys = $ssh_validator->filterValidKeys($keys);
         $user->setAuthorizedKeys(implode('###', $valid_keys));
         if ($this->updateDb($user)) {
-            $GLOBALS['Response']->addFeedback('info', "User keys updated in database, will be propagated on filesystem in a few minutes, please be patient.");
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_editsshkeys', 'update_filesystem'));
             $this->_getEventManager()->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
         }
     }
