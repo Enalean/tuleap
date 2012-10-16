@@ -144,6 +144,21 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
 
         $this->assertEmptyGitStatus();
     }
+    
+        public function itRemovesSshFilesWhenKeysAreDeleted() {
+        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'), array('authorized_keys' => $this->key2.'###'.$this->key1, 'user_name' => 'do_john')));
+        $this->dumper->dumpSSHKeys();
+
+        $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::arrayToDar(array('authorized_keys' => $this->key1, 'user_name' => 'do_john')));
+        $this->dumper->dumpSSHKeys();
+
+        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
+        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/do_john@1.pub'));
+        $this->assertTrue(is_file($this->_glAdmDir . '/keydir/do_john@0.pub'));
+        $this->assertEqual(file_get_contents($this->_glAdmDir . '/keydir/do_john@0.pub'), $this->key1);
+        
+        $this->assertEmptyGitStatus();
+    }
 }
 
 ?>
