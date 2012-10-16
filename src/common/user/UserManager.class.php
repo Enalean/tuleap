@@ -26,6 +26,7 @@ require_once('UserNotExistException.class.php');
 require_once('UserNotAuthorizedException.class.php');
 require_once('UserNotActiveException.class.php');
 require_once('SessionNotCreatedException.class.php');
+require_once('User_SSHKeyValidator.class.php');
 
 class UserManager {
     
@@ -681,6 +682,11 @@ class UserManager {
             return $result;
         }
         return false;
+    }
+
+    public function updateUserSSHKeys(User $user, $keys) {
+        $ssh_validator = new User_SSHKeyValidator($this, $this->_getEventManager());
+        $ssh_validator->updateUserKeys($user, $keys);
     }
 
     /**

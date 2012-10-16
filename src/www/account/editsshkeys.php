@@ -8,7 +8,7 @@
 
 require_once 'pre.php';
 require_once 'account.php';
-require_once 'common/user/User_SSHKeyValidator.class.php';
+
 session_require(array('isloggedin'=>1));
 
 $user_manager = UserManager::instance();
@@ -20,8 +20,7 @@ if ($request->isPost()
     && $request->exist('Submit')
     && $request->exist('form_authorized_keys')) {
 
-    $ssh_validator = new User_SSHKeyValidator($user_manager, EventManager::instance());
-    $ssh_validator->updateUserKeys($user, $request->get('form_authorized_keys'));
+    $user_manager->updateUserSSHKeys($user, $request->get('form_authorized_keys'));
 
     $GLOBALS['Response']->redirect('/account');
 }
