@@ -325,10 +325,10 @@ class Tracker_Artifact_Changeset {
         if ($this->userCanEdit($user)) {
             $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $comment_format);
             if ($commentUpdated) {
-                // @TODO: get project id
-                $params = array('group_id'   => 0,
-                                'comment_id' => $this->getComment()->id,
-                                'text'       => $body);
+                $params = array('group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
+                                'artifact_id'  => $this->getArtifact()->getId(),
+                                'changeset_id' => $this->getId(),
+                                'text'         => $body);
                 EventManager::instance()->processEvent('tracker_followup_event_update', $params);
             }
         }

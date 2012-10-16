@@ -25,9 +25,14 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE extends SystemEvent {
     /**
      * Process the system event
      *
-     * @return bool
+     * @return Boolean
      */
     public function process() {
+        $groupId     = (int)$this->getRequiredParameter(0);
+        $artifactId  = (int)$this->getRequiredParameter(1);
+        $changesetId = (int)$this->getRequiredParameter(2);
+        $text        = $this->getRequiredParameter(3);
+        
         $this->done();
         return true;
     }
@@ -40,7 +45,12 @@ class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE extends SystemEvent {
      * @return String
      */
     public function verbalizeParameters($withLink) {
-        return '';
+        $groupId     = (int)$this->getRequiredParameter(0);
+        $artifactId  = (int)$this->getRequiredParameter(1);
+        $changesetId = (int)$this->getRequiredParameter(2);
+        $text        = $this->getRequiredParameter(3);
+        // @TODO: verbalize artifact id & changeset id would look like /plugins/tracker/?aid=$artifactId#followup_$changesetId
+        return 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$artifactId.', Changeset: '.$changesetId.', Text: '.$text;
     }
 
 }

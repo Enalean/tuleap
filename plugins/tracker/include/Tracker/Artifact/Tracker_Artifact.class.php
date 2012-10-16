@@ -990,11 +990,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         //Store the comment
                         $commentAdded = $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
                         if ($commentAdded) {
-                            // @TODO: get project id
-                            // @TODO: get comment id
-                            $params = array('group_id'   => 0,
-                                            'comment_id' => 0,
-                                            'text'       => $comment);
+                            $params = array('group_id'     => $this->getTracker()->getGroupId(),
+                                            'artifact_id'  => $this->getId(),
+                                            'changeset_id' => $changeset_id,
+                                            'text'         => $comment);
                             $this->_getEventmanager()->processEvent('tracker_followup_event_add', $params);
                         }
 

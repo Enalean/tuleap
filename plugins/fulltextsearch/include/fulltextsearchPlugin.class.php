@@ -260,7 +260,7 @@ class fulltextsearchPlugin extends Plugin {
      */
     private function createTrackerSystemEvent($type, $priority, $params) {
         if ($this->isAllowed($params['group_id'])) {
-            $params = $params['comment_id'].SystemEvent::PARAMETER_SEPARATOR.$params['text'];
+            $params = $params['group_id'].SystemEvent::PARAMETER_SEPARATOR.$params['artifact_id'].SystemEvent::PARAMETER_SEPARATOR.$params['changeset_id'].SystemEvent::PARAMETER_SEPARATOR.$params['text'];
             SystemEventManager::instance()->createEvent($type, $params, $priority);
         }
     }
