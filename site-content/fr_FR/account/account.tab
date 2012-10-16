@@ -147,7 +147,7 @@ account_deleted	message	Votre compte utilisateur a été détruit. Si vous avez 
 account_editsshkeys	title	Modification des clés SSH partagées
 account_editsshkeys	message	Pour éviter d'avoir à taper votre mot de passe à chaque ouverture d'une session shell, vous pouvez enregistrer une ou plusieurs de vos clés publiques SSH qui seront stockées dans votre fichier '~/.ssh/authorized_keys'.<P>Pour générer une clé publique SSH, vous devez utiliser le programme 'ssh-keygen' (ou ssh-keygen1) sur votre station de travail. Ensuite, ouvrez le fichier '~/.ssh/identity.pub' où se trouve la clé publique générée. Consultez la documentation de ssh pour plus d'information sur le partage de clés.
 account_editsshkeys	keys	Clés partagées&nbsp;:<BR><I>Important&nbsp;: Assurez vous qu'il n'y ait aucun saut de ligne dans une clé mais uniquement entre chaque clé. Après avoir soumis vos clés vérifiez que le nombre de clés est bien celui que vous attendiez.</I>
-account_editsshkeys	invalid_key	Clé invalide ignorée&nbsp;: $1
+account_editsshkeys	invalid_key	Clé invalide ignorée : $1
 account_editsshkeys	update_filesystem	Le(s) clé(s) SSH ont été mise à jour dans la base de donnée. Elle seront propagées sur le système de fichiers dans quelques minutes.
 #
 #-----------------------------------------------
