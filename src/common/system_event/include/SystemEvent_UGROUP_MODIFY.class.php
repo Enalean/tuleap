@@ -110,7 +110,10 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
      * @return UGroupBinding
      */
     public function getUgroupBinding() {
-        return new UGroupBinding();
+        $ugroupUserDao = new UGroupUserDao();
+        $ugroupManager = new UGroupManager(new UGroupDao());
+        $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
+        return $uGroupBinding;
     }
 
 }

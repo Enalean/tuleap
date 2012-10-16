@@ -27,7 +27,9 @@ $sourceProject = $request->getValidated('source_project', 'GroupId', 0);
 
 session_require(array('group' => $groupId, 'admin_flags' => 'A'));
 
-$ugroupBinding = new UGroupBinding();
+$ugroupUserDao = new UGroupUserDao();
+$ugroupManager = new UGroupManager(new UGroupDao());
+$ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
 
 $ugroupBinding->processRequest($ugroupId, $request);
 

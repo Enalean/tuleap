@@ -121,7 +121,9 @@ while ($row = db_fetch_array($result)) {
 if ($group_id != 100) {
   $result = db_query("SELECT * FROM ugroup WHERE group_id=$group_id ORDER BY name");
   if (db_numrows($result) > 0) {
-    $uGroupBinding = new UGroupBinding();
+    $ugroupUserDao = new UGroupUserDao();
+    $ugroupManager = new UGroupManager(new UGroupDao());
+    $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
     $uGroup        = new UGroup();
     while ($row = db_fetch_array($result)) {
         $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']).'</a>';

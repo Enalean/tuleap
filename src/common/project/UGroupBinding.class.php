@@ -29,9 +29,9 @@ class UGroupBinding {
     private $ugroupUserDao;
     private $ugroupManager;
 
-    public function __construct() {
-        $this->ugroupUserDao = new UGroupUserDao();
-        $this->ugroupManager = new UGroupManager(new UGroupDao());
+    public function __construct($ugroup_user_dao, $ugroup_manager) {
+        $this->ugroupUserDao = $ugroup_user_dao;
+        $this->ugroupManager = $ugroup_manager;
     }
 
     /**

@@ -234,8 +234,10 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
      * @return Boolean
      */
     protected function cleanupProjectUgroupsBinding($groupId) {
-        $bindingManager = new UGroupBinding();
-        return $bindingManager->removeProjectUGroupsBinding($groupId);
+        $ugroupUserDao = new UGroupUserDao();
+        $ugroupManager = new UGroupManager(new UGroupDao());
+        $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
+        return $uGroupBinding->removeProjectUGroupsBinding($groupId);
     }
 }
 
