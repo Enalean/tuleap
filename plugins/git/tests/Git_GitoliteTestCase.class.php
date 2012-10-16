@@ -34,7 +34,10 @@ class Git_GitoliteTestCase extends TuleapTestCase {
     
     /** @var Git_GitoliteDriver */
     protected $driver;
+    /** @var UserManager */
     protected $user_manager;
+    /** @var Git_Exec */
+    protected $gitExec;
     
     public function setUp() {
         parent::setUp();
