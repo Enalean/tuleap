@@ -19,26 +19,20 @@
 require_once 'UserManager.class.php';
 
 /**
- * Ensure SSH key is valid an update the DB
+ * Ensure SSH key is valid
  */
 class User_SSHKeyValidator {
-    private $user_manager;
-    private $event_manager;
 
-    public function __construct(UserManager $user_manager, EventManager $event_manager) {
-        $this->user_manager  = $user_manager;
-        $this->event_manager = $event_manager;
-    }
-
-    public function updateUserKeys(User $user, $keys) {
+    /**
+     * Ensure keys submitted by user through web interface are valid SSH keys
+     *
+     * @param String $keys
+     *
+     * @return Array of String
+     */
+    public function filterValidKeys($keys) {
         $all_keys   = array_map('trim', array_filter(preg_split("%(\r\n|\n)%", $keys)));
-        $valid_keys = $this->validateAllKeys($all_keys);
-
-        $user->setAuthorizedKeys(implode('###', $valid_keys));
-        if ($this->user_manager->updateDb($user)) {
-            $GLOBALS['Response']->addFeedback('info', "User keys updated in database, will be propagated on filesystem in a few minutes, please be patient.");
-            $this->event_manager->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
-        }
+        return $this->validateAllKeys($all_keys);
     }
 
     private function validateAllKeys(array $all_keys) {

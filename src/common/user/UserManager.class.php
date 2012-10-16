@@ -686,7 +686,12 @@ class UserManager {
 
     public function updateUserKeys(User $user, $keys) {
         $ssh_validator = new User_SSHKeyValidator($this, $this->_getEventManager());
-        $ssh_validator->updateUserKeys($user, $keys);
+        $valid_keys = $ssh_validator->filterValidKeys($keys);
+        $user->setAuthorizedKeys(implode('###', $valid_keys));
+        if ($this->updateDb($user)) {
+            $GLOBALS['Response']->addFeedback('info', "User keys updated in database, will be propagated on filesystem in a few minutes, please be patient.");
+            $this->_getEventManager()->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
+        }
     }
 
     /**
