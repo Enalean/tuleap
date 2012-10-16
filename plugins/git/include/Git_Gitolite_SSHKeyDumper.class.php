@@ -23,14 +23,16 @@ require_once 'Git_Exec.class.php';
 
 class Git_Gitolite_SSHKeyDumper {
 
-    protected $admin_path;
-    protected $git_exec;
-    protected $user_manager;
+    private $admin_path;
+    private $git_exec;
+    private $user_manager;
+    private $keydir;
 
     public function __construct($admin_path, Git_Exec $git_exec, UserManager $user_manager) {
         $this->admin_path   = $admin_path;
         $this->git_exec     = $git_exec;
         $this->user_manager = $user_manager;
+        $this->keydir       = 'keydir';
     }
 
 
@@ -39,16 +41,12 @@ class Git_Gitolite_SSHKeyDumper {
      */
     public function dumpSSHKeys(User $user = null) {
         if (is_dir($this->admin_path)) {
-            $keydir = 'keydir';
-            $this->createKeydir($keydir);
+            $this->createKeydir();
             if ($user) {
-                $this->initUserKeys($user, $keydir);
+                $this->initUserKeys($user);
                 $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
             } else {
-                foreach ($this->user_manager->getUsersWithSshKey() as $row) {
-                    $user = new User($row);
-                    $this->initUserKeys($user, $keydir);
-                }
+                $this->dumpAllKeys();
                 $commit_msg = 'SystemEvent update all user keys';
             }
             if (is_dir($this->admin_path.'/keydir')) {
@@ -60,23 +58,43 @@ class Git_Gitolite_SSHKeyDumper {
         return false;
     }
 
-    private function initUserKeys(User $user, $keydir) {
-        $this->dumpKeys($user, $keydir);
+    private function dumpAllKeys() {
+        $dumped_users = array();
+        foreach ($this->user_manager->getUsersWithSshKey() as $row) {
+            $dumped_users[$row['user_name']] = true;
+            $user = new User($row);
+            $this->initUserKeys($user);
+        }
+        $this->purgeNotDumpedUsers($dumped_users);
     }
 
-    private function createKeydir($keydir) {
+    private function purgeNotDumpedUsers(array $dumped_users) {
+        foreach (glob($this->keydir.'/*.pub') as $file) {
+            $file_name = basename($file);
+            $user_name = substr($file_name, 0, strpos($file_name, '@'));
+            if (!isset($dumped_users[$user_name])) {
+                $this->git_exec->rm($file);
+            }
+        }
+    }
+
+    private function initUserKeys(User $user) {
+        $this->dumpKeys($user);
+    }
+
+    private function createKeydir() {
         clearstatcache();
-        if (!is_dir($keydir)) {
-            if (!mkdir($keydir)) {
+        if (!is_dir($this->keydir)) {
+            if (!mkdir($this->keydir)) {
                 throw new Exception('Unable to create "keydir" directory in '.getcwd());
             }
         }
     }
 
-    private function dumpKeys(User $user, $keydir) {
+    private function dumpKeys(User $user) {
         $i = 0;
         foreach ($user->getAuthorizedKeysArray() as $key) {
-            $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
+            $filePath = $this->keydir.'/'.$user->getUserName().'@'.$i.'.pub';
             $this->writeKeyIfChanged($filePath, $key);
             $i++;
         }
@@ -102,12 +120,11 @@ class Git_Gitolite_SSHKeyDumper {
      * @param User $user
      */
     private function removeUserExistingKeys($user, $last_key_id) {
-        $keydir = 'keydir';
-        if (is_dir($keydir)) {
+        if (is_dir($this->keydir)) {
             $userbase = $user->getUserName().'@';
-            foreach (glob("$keydir/$userbase*.pub") as $file) {
+            foreach (glob("$this->keydir/$userbase*.pub") as $file) {
                 $matches = array();
-                if (preg_match('%^'.$keydir.'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
+                if (preg_match('%^'.$this->keydir.'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
                     if ($matches[1] >= $last_key_id) {
                         $this->git_exec->rm($file);
                     }
