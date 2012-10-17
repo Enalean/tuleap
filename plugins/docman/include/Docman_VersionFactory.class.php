@@ -152,7 +152,7 @@ class Docman_VersionFactory {
      *
      * @param Docman_Version $version Deleted docman item version
      *
-     * @return void
+     * @return Void
      */
     public function archiveBeforePurge($version) {
         $item     = $this->_getItemFactory()->getItemFromDb($version->getItemId());

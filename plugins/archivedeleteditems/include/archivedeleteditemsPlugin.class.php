@@ -17,8 +17,6 @@
  */
 
 require_once('common/plugin/Plugin.class.php');
-require_once('common/system_event/SystemEvent.class.php');
-require_once(dirname(__FILE__).'/events/SystemEvent_ARCHIVE_DELETED_ITEMS.class.php');
 
 /**
  * Archive
@@ -35,8 +33,6 @@ class ArchivedeleteditemsPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-        $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'systemEventGetTypes', false);
-        $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'getSystemEventClass', false);
 
         $this->_addHook('archive_deleted_item', 'archive', false);
     }
@@ -66,39 +62,47 @@ class ArchivedeleteditemsPlugin extends Plugin {
     }
 
     /**
-     * Get types of system events
-     *
-     * @param Array $params Hook params
-     *
-     * @return Void
-     */
-    public function systemEventGetTypes($params) {
-        $params['types'][] = 'ARCHIVE_DELETED_ITEMS';
-    }
-
-    /**
-     * This callback make SystemEvent manager knows about plugin System Events
-     *
-     * @param Array $params Hook params
-     *
-     * @return Void
-     */
-    public function getSystemEventClass($params) {
-        if ($params['type'] == 'ARCHIVE_DELETED_ITEMS') {
-            $params['class'] = 'SystemEvent_ARCHIVE_DELETED_ITEMS';
-        }
-    }
-
-    /**
      * Copy files to the archiving directory
      *
      * @param Array $params Hook parameters
      *
-     * @return Void
+     * @return Boolean
      */
     public function archive($params) {
+        $params['status'] = false;
+        if (!empty($params['source_path'])) {
+            $sourcePath = $params['source_path'];
+        } else {
+            $params['error'] = 'Missing argument source path';
+            return false;
+        }
+
         $archivePath = $this->getConfigurationParameter('archive_path');
-        SystemEventManager::instance()->createEvent('ARCHIVE_DELETED_ITEMS', $params['source_path'].SystemEvent::PARAMETER_SEPARATOR.$archivePath.SystemEvent::PARAMETER_SEPARATOR.$params['archive_prefix'], SystemEvent::PRIORITY_MEDIUM);
+        if (!empty($archivePath)) {
+            if(!is_dir($archivePath)) {
+                $params['error'] = 'Non-existing archive path';
+                return false;
+            }
+        } else {
+            $params['error'] = 'Missing argument archive path';
+            return false;
+        }
+
+        if (!empty($params['archive_prefix'])) {
+            $archivePrefix = $params['archive_prefix'];
+        } else {
+            $params['error'] = 'Missing argument archive prefix';
+            return false;
+        }
+
+        $destinationPath = $archivePath.$archivePrefix.'_'.basename($sourcePath);
+        if (copy($sourcePath, $destinationPath)) {
+            $params['status'] = true;
+            return true;
+        } else {
+            $params['error'] = 'Archiving of "'.$sourcePath.'" in "'.$destinationPath.'" failed';
+            return false;
+        }
     }
 
 }

@@ -593,30 +593,38 @@ class FRSFileFactory extends Error {
      * This method should be used whithin the FRS purge process
      *
      * @param FRSFile $file File to archive
+     * @param Backend $backend Backend
      *
-     * @return void
+     * @return Boolean
      */
-    public function archiveBeforePurge($file) {
+    public function archiveBeforePurge($file, $backend) {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
         $sub_dir = $this->getUploadSubDirectory($release);
         $prefix  = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
-        $params  = array('source_path'    => $this->getStagingPath($file),
-                          'archive_prefix' => $prefix);
+        $params  = array('status'         => true,
+                         'source_path'    => $this->getStagingPath($file),
+                         'archive_prefix' => $prefix);
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
+        if ($params['status']) {
+            return true;
+        } else {
+            $backend->log($params['error'], Backend::LOG_ERROR);
+            return false;
+        }
     }
 
     /**
      * Erase from the file system one file
      *
-     * @param FRSFile $file File to delete
-     * @param Backend $backend
+     * @param FRSFile $file    File to delete
+     * @param Backend $backend Backend
      *
      * @return Boolean
      */
     public function purgeFile($file, $backend) {
         $dao = $this->_getFRSFileDao();
         if (file_exists($this->getStagingPath($file))) {
-            $this->archiveBeforePurge($file);
+            $this->archiveBeforePurge($file, $backend);
             if (unlink($this->getStagingPath($file))) {
                 if (!$dao->setPurgeDate($file->getFileID(), time())) {
                     $backend->log("File ".$this->getStagingPath($file)." not purged, Set purge date in DB fail", Backend::LOG_ERROR);
