@@ -6,14 +6,25 @@
 -->
 <?php
 
+$auto_approval_conf = Config::get('sys_automatic_project_approval') == 1;
 $content = "
-<H2>Enregistrement terminé !</H2>
-	<P>Votre projet a été soumis aux administrateurs de ".$GLOBALS['sys_name'].". 
-	Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.
-	<P>
-	Merci d'utiliser ".$GLOBALS['sys_name'].".
-	<P>";
+<H2>Enregistrement terminé !</H2>";
 
+if ($auto_approval_conf) {
+    $content = $content . "
+    <P>Votre projet a été soumis et validé sur ".$GLOBALS['sys_name'].". 
+    Vous pouvez dès à présent utiliser et gérer votre projet.
+    <P>
+    Merci d'utiliser ".$GLOBALS['sys_name'].".
+    <P>";
+} else {
+    $content = $content . "
+    <P>Votre projet a été soumis aux administrateurs de ".$GLOBALS['sys_name'].". 
+    Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.
+    <P>
+    Merci d'utiliser ".$GLOBALS['sys_name'].".
+    <P>";
+}
 // Do not touch this URL, to and From unless you know what you are doing
 $href_approval = get_server_url().'/admin/approve-pending.php';
 $to = $GLOBALS['sys_email_admin'];
@@ -24,10 +35,11 @@ $hdrs = 'From: '.$from."\n";
 // subject and body can be customized to your liking
 $subject = "Nouveau projet enregistré : ".$data['project']['form_full_name'];
 $body = "Un nouveau projet vient juste d'être enregistré sur ".$GLOBALS['sys_name']."\n\n".
-"Nom du projet : ".$data['project']['form_full_name']."\n\n".
-"Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
-$href_approval."\n";
-
+"Nom du projet : ".$data['project']['form_full_name']."\n\n";
+if (!$auto_approval_conf) {
+    $body = $body . "Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
+    $href_approval."\n";
+}
 // Send a notification message to the Site administrator
 require_once('common/mail/Mail.class.php');
 $mail =& new Mail();
