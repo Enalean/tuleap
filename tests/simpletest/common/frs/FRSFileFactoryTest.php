@@ -387,11 +387,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('setPurgeDate', array(12, '*'));
         $dao->setReturnValue('setPurgeDate', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
-        $ff->expectOnce('archiveBeforePurge', array($file));
 
         $backend = new MockBackendSystem();
         $backend->expectNever('log', array('File p1_r1/foobar.xls(12) not purged, Set purge date in DB fail', 'error'));
         $this->assertTrue($ff->purgeFile($file, $backend));
+        $ff->expectOnce('archiveBeforePurge', array($file, $backend));
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
 
@@ -412,7 +412,6 @@ class FRSFileFactoryTest extends UnitTestCase {
         $file->setReturnValue('getFileID', 12);
         $file->setReturnValue('getFileName', 'p1_r1/foobar.xls');
         $file->setReturnValue('getFileLocation', $GLOBALS['ftp_frs_dir_prefix'].'/prj/p1_r1/foobar.xls');
-        $ff->expectOnce('archiveBeforePurge', array($file));
 
         $dao = new MockFRSFileDao($this);
         $dao->expectOnce('setPurgeDate', array(12, '*'));
@@ -422,6 +421,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem();
         $backend->expectOnce('log', array('File '.$filepath.' not purged, Set purge date in DB fail', 'error'));
         $this->assertFalse($ff->purgeFile($file, $backend));
+        $ff->expectOnce('archiveBeforePurge', array($file, $backend));
 
         $this->assertFalse(is_file($filepath), "File should be deleted");
 
@@ -445,11 +445,11 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->expectOnce('setPurgeDate', array(12, '*'));
         $dao->setReturnValue('setPurgeDate', true);
         $ff->setReturnValue('_getFRSFileDao', $dao);
-        $ff->expectOnce('archiveBeforePurge', array($file));
 
         $backend = new MockBackendSystem();
         $backend->expectOnce('log', array('File '.$filepath.' not found on file system, automatically marked as purged', 'warn'));
         $this->assertTrue($ff->purgeFile($file, $backend));
+        $ff->expectNever('archiveBeforePurge', array($file, $backend));
     }
 
     function testRemoveStagingEmptyDirectories() {
