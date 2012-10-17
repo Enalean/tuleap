@@ -331,6 +331,11 @@ $sys_allow_anon = 1;
 // Project default privacy status (1 is public, 0 is private) 
 $sys_is_project_public = 1;
 
+// If set to 1 (one) new projects are
+// automaticaly approved. If 0, an administrator
+// need to approve pending projects in the admin panel
+$sys_automatic_project_approval = 0;
+
 // Enable restricted users on this server
 // (restricted users only have access to the projects they belong to)
 // (0 no restricted users, 1 restricted users allowed)
