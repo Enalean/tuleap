@@ -60,7 +60,6 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $server = $this->server_factory->getServer($repository);
             
             $gerrit_project = $this->driver->createProject($server, $repository);
-            $this->logger->info("Gerrit: Project $gerrit_project successfully initialized");
             
             foreach ($this->gerrit_groups as $group_name => $permission_level) {
                 $user_list = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $repo_id);

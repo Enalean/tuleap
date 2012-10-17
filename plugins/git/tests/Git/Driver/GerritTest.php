@@ -35,6 +35,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
     /** @var Git_RemoteServer_GerritServer */
     protected $gerrit_server;
 
+    
     /**
      * @var RemoteSshCommand
      */
@@ -56,7 +57,8 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
         
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
-        $this->driver = new Git_Driver_Gerrit($this->ssh);
+        $this->logger = mock('BackendLogger');
+        $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
     }
 
     public function tearDown() {
@@ -82,7 +84,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $p = stub('Project' )->getUnixName()->returns('LesBronzes');
         $r->setProject($p);
 
-        $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand());
+        $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand(), new BackendLogger());
         $driver->createProject($r);
     }
     
@@ -104,5 +106,24 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(255,'',$std_err));
         $this->driver->createProject($this->gerrit_server, $this->repository);
     }
+    
+    
+    public function itInformsAboutProjectInitialization() {
+        $remote_project = $this->host."-firefox/jean-claude/dusse";
+        expect($this->logger)->info("Gerrit: Project $remote_project successfully initialized")->once();
+        $this->driver->createProject($this->gerrit_server, $this->repository);
+        
+    }
+    public function itInformsAboutGroupCreation() {
+//        $group_name   = 'contributors';
+//        $user_list    = array();
+//        $gerrit_group = "$this->host.-firefox/jean-claude/dusse-$group_name";
+//        expect($this->logger)->info("Gerrit: Group $gerrit_group successfully created")->once();
+//        $this->driver->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list);
+    }
+    public function itInformsAboutPermissionsConfiguration() {
+    }
+    
 }
+
 ?>

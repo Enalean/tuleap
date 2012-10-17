@@ -423,7 +423,8 @@ class GitPlugin extends Plugin {
     private function getGerritDriver() {
         require_once 'Git/Driver/Gerrit.class.php';
         return new Git_Driver_Gerrit(
-            new Git_Driver_Gerrit_RemoteSSHCommand()
+            new Git_Driver_Gerrit_RemoteSSHCommand(),
+            new BackendLogger()
         );
     }
 

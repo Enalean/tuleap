@@ -21,6 +21,7 @@
 
 require_once dirname(__FILE__) .'/Gerrit/RemoteSSHCommand.class.php';
 require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServer.class.php';
+require_once 'common/backend/BackendLogger.class.php';
 
 class Git_Driver_Gerrit {
 
@@ -31,9 +32,13 @@ class Git_Driver_Gerrit {
      * @var Git_Driver_Gerrit_RemoteSSHCommand
      */
     private $ssh;
+    
+    /** @var Logger */
+    private $logger;
 
-    public function __construct(Git_Driver_Gerrit_RemoteSSHCommand $ssh) {
+    public function __construct(Git_Driver_Gerrit_RemoteSSHCommand $ssh, Logger $logger) {
         $this->ssh = $ssh;
+        $this->logger = $logger;
     }
 
     public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
@@ -43,7 +48,9 @@ class Git_Driver_Gerrit {
         $command = "create-project $host-$project/$repo";
         try {
             $this->ssh->execute($server, self::COMMAND . $command);
-            return "$host-$project/$repo";
+            $project_name = "$host-$project/$repo";
+            $this->logger->info("Gerrit: Project $project_name successfully initialized");
+            return $project_name;
         } catch (RemoteSSHCommandFailure $e) {
             throw $this->computeException($e, self::COMMAND . $command);
         }
@@ -51,6 +58,7 @@ class Git_Driver_Gerrit {
     }
     
     public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
+//        $this->logger->info("Gerrit: Project $project_name successfully initialized");
         // TODO implementation
     }
 
