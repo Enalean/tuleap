@@ -34,6 +34,7 @@ package('php-pecl-json') { only_if { node['tuleap']['php_base'] == 'php' } }
 ## Install and set up Tuleap
 package 'tuleap-all'
 
+## Reinitialize the mysql root password (it may have been set up during a previous install)
 script "UPDATE mysql.user SET password=PASSWORD('') WHERE user='root'" do
   user        'root'
   interpreter 'bash'
@@ -51,6 +52,7 @@ script "UPDATE mysql.user SET password=PASSWORD('') WHERE user='root'" do
               SHELL
 end
 
+## Set up Tuleap
 script '/usr/share/tuleap-install/setup.sh' do
   user        'root'
   interpreter 'bash'

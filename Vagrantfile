@@ -6,7 +6,7 @@ Vagrant::Config.run do |config|
   # Set up a CentOS 5 box.
   # TODO: Move box to tuleap.net
   config.vm.box = 'centos-5.8-x86_64-chef'
-  config.vm.box_url = 'http://192.168.1.222/~sebn/centos-5.8-x86_64-chef.box'
+  config.vm.box_url = 'https://tuleap.net/file/download.php/101/39/p18_r37/centos-5.8-x86_64-chef.box'
 
   # Assign this VM to a host-only network IP, allowing you to access it
   # via the IP. Host-only networks can talk to the host machine as well as
