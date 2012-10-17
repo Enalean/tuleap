@@ -604,7 +604,7 @@ class FRSFileFactory extends Error {
         $params  = array('status'         => true,
                          'source_path'    => $this->getStagingPath($file),
                          'archive_prefix' => $prefix);
-        $this->_getEventManager()->processEvent('archive_deleted_item', $params);
+        $this->_getEventManager()->processEvent('archive_deleted_item', &$params);
         if ($params['status']) {
             return true;
         } else {

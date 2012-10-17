@@ -68,7 +68,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
      *
      * @return Boolean
      */
-    public function archive($params) {
+    public function archive(&$params) {
         $params['status'] = false;
         if (!empty($params['source_path'])) {
             $sourcePath = $params['source_path'];
