@@ -164,13 +164,4 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT
     }
 
 }
-
-class UserFinder {
-
-    public function getUsersForWhichTheHighestPermissionIs($permission_level, $object_idm){
-        
-    }
-    
-
-}
 ?>
