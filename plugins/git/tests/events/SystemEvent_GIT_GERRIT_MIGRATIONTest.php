@@ -56,7 +56,8 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
                                                   array($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log));
         $this->event->setParameters("$this->repository_id::$this->remote_server_id");
         $this->logger = mock('Logger');
-        $this->event->injectDependencies($this->dao, $this->driver, $factory, $this->server_factory, $this->logger);
+        $this->userfinder = mock('UserFinder');
+        $this->event->injectDependencies($this->dao, $this->driver, $factory, $this->server_factory, $this->logger, $this->userfinder);
         
     }
 }
@@ -131,7 +132,19 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT
         $this->event->process();
     }
     
-    public function itCreatesContributorsGroup() {   }
+    public function itCreatesContributorsGroup() {
+        $group_name = 'contributors';
+        $user_list = array(aUser()->withUserName('goyotm')->build(),  aUser()->withUserName('martissonj')->build());
+        stub($this->userfinder)->getUsers(Git::PERM_READ, $this->repository_id)->returns($user_list);
+
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        expect($this->driver)->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list)->once();
+        
+        $this->event->process();
+    }
+    
+    //do not get members if dynamic group is registered or all users
+    //what if Userfinder returns read OR write users when I ask for write
     
     public function itCreatesIntegratorsGroup() {    }
     
@@ -139,6 +152,18 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT
     
     public function itFeedbacksIfUsersNotAddedToGroup() {
         //the following users couldn't be added to their corresponding groups, because they don't exist in Gerrit.
+    }
+
+}
+
+class UserFinder {
+
+    function __construct() {
+        
+    }
+    
+    public function getUsers($permission_level, $object_id){
+        
     }
 
 }

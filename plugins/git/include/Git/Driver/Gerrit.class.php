@@ -49,6 +49,10 @@ class Git_Driver_Gerrit {
         }
 
     }
+    
+    public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
+        // TODO implementation
+    }
 
     private function computeException(RemoteSSHCommandFailure $e, $command) {
         return $this->isGerritFailure($e) ? $this->gerritDriverException($e, $command) : $e;

@@ -43,6 +43,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var Logger */
     private $logger;
     
+    /** @var UserFinder */
+    private $user_finder;
+    
     public function process() {
         $repo_id           = (int)$this->getParameter(0);
         $remote_server_id  = (int)$this->getParameter(1);
@@ -54,6 +57,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             
             $gerrit_project = $this->driver->createProject($server, $repository);
             $this->logger->info("Gerrit: Project $gerrit_project successfully initialized");
+            
+            $user_list = $this->user_finder->getUsers(Git::PERM_READ, $repo_id);
+            $this->driver->createGroup($server, $repository, 'contributors', $user_list);
             
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
@@ -106,13 +112,15 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         Git_Driver_Gerrit $driver,
         GitRepositoryFactory $repository_factory,
         Git_RemoteServer_GerritServerFactory  $server_factory,
-        Logger  $logger
+        Logger  $logger,
+        UserFinder $user_finder
     ) {
         $this->dao                = $dao;
         $this->driver             = $driver;
         $this->repository_factory = $repository_factory;
         $this->server_factory     = $server_factory;
         $this->logger             = $logger;
+        $this->user_finder        = $user_finder;
     }
 
     public function setServerFactory($server_factory) {
