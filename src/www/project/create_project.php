@@ -43,7 +43,7 @@ function create_project($data, $do_not_exit = false) {
     }
     
     //Verify if the approbation of the new project is automatic or not
-    $auto_approval = isset($GLOBALS['sys_automatic_project_approval']) ? 'A' : 'P' ;
+    $auto_approval = (isset($GLOBALS['sys_automatic_project_approval']) && $GLOBALS['sys_automatic_project_approval'] == 1) ? 'A' : 'P' ;
     
     // make group entry
     $insert_data = array(
