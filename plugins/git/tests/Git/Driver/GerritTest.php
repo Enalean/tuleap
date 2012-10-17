@@ -88,7 +88,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $driver->createProject($r);
     }
     
-    public function itRaisesAGerritDriverException() {
+    public function itRaisesAGerritDriverExceptionOnProjectCreation() {
         $std_err = 'fatal: project "someproject" exists';
         $command = "gerrit create-project tuleap.example.com-firefox/jean-claude/dusse";
         stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE,'',$std_err));
@@ -130,12 +130,28 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
         $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', $user_list);
     }
+    
     public function itInformsAboutGroupCreation() {
         $group_name   = 'contributors';
         $user_list    = array ();
         $gerrit_group = "$this->host-firefox/jean-claude/dusse-$group_name";
         expect($this->logger)->info("Gerrit: Group $gerrit_group successfully created")->once();
         $this->driver->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list);
+    }
+    
+    public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
+        $std_err = 'fatal: group "somegroup" already exists';
+        $command = "gerrit create-group tuleap.example.com-firefox/jean-claude/dusse-contributors --member johan";
+        $user_list = array(aUser()->withUserName('johan')->build());
+        
+        stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
+        
+        try {
+            $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', $user_list);
+            $this->fail('An exception was expected');
+        } catch (Git_Driver_Gerrit_Exception $e) {
+            $this->assertEqual($e->getMessage(), "Command: $command" . PHP_EOL . "Error: $std_err");
+        }
     }
     public function itInformsAboutPermissionsConfiguration() {
     }

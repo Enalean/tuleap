@@ -62,7 +62,12 @@ class Git_Driver_Gerrit {
             $command[] = "--member ".$user->getUsername();
         }
         $command_line = implode(' ',$command);
-        $this->ssh->execute($server, $command_line);
+        try {
+            $this->ssh->execute($server, $command_line);
+        } catch (RemoteSSHCommandFailure $e) {
+            throw $this->computeException($e, $command_line);
+        }
+
         $this->logger->info("Gerrit: Group $gerrit_group successfully created");
     }
 
