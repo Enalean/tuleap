@@ -94,7 +94,8 @@ class fulltextsearchPlugin extends Plugin {
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE_METADATA';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_DELETE';
         $params['types'][] = 'FULLTEXTSEARCH_DOCMAN_UPDATE';
-        $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP';
+        $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD';
+        $params['types'][] = 'FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE';
     }
 
     /**
@@ -232,7 +233,7 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_followup_event_add($params) {
-        $this->createTrackerSystemEvent('FULLTEXTSEARCH_TRACKER_FOLLOWUP', SystemEvent::PRIORITY_MEDIUM, $params);
+        $this->createTrackerSystemEvent('FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD', SystemEvent::PRIORITY_MEDIUM, $params);
     }
 
     /**
@@ -243,7 +244,7 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_followup_event_update($params) {
-        $this->createTrackerSystemEvent('FULLTEXTSEARCH_TRACKER_FOLLOWUP', SystemEvent::PRIORITY_MEDIUM, $params);
+        $this->createTrackerSystemEvent('FULLTEXTSEARCH_TRACKER_FOLLOWUP_UPDATE', SystemEvent::PRIORITY_MEDIUM, $params);
     }
 
     /**

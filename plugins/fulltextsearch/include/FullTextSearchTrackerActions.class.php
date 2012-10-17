@@ -39,7 +39,7 @@ class FullTextSearchTrackerActions {
     }
 
     /**
-     * Index a followup comment
+     * Index a new followup comment
      *
      * @param Integer $groupId     Id of the project
      * @param Integer $artifactId  Id of the artifact
@@ -48,9 +48,26 @@ class FullTextSearchTrackerActions {
      *
      * @return Void
      */
-    public function indexFollowup($groupId, $artifactId, $changesetId, $text) {
+    public function indexNewFollowup($groupId, $artifactId, $changesetId, $text) {
         $indexedData = $this->getIndexedData($groupId, $artifactId, $changesetId, $text);
         $this->client->index($indexedData, $changesetId);
+    }
+
+    /**
+     * Index an updated followup comment
+     *
+     * @param Integer $groupId     Id of the project
+     * @param Integer $artifactId  Id of the artifact
+     * @param Integer $changesetId Id of the changeset
+     * @param String  $text        Body of the followup comment
+     *
+     * @return Void
+     */
+    public function indexUpdatedFollowup($groupId, $artifactId, $changesetId, $text) {
+        // @TODO: If no index start first by indexing the followup comment.
+        $updateData = $this->client->initializeSetterData();
+        $updateData = $this->client->appendSetterData($updateData, 'file', base64_encode($text));
+        $this->client->update($changesetId, $updateData);
     }
 
     /**
