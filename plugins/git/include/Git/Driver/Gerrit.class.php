@@ -25,7 +25,7 @@ require_once 'common/backend/BackendLogger.class.php';
 
 class Git_Driver_Gerrit {
 
-    const COMMAND = 'gerrit ';
+    const COMMAND = 'gerrit';
     const EXIT_CODE = 1;
 
     /**
@@ -43,26 +43,26 @@ class Git_Driver_Gerrit {
 
     public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
         $gerrit_project = $this->getGerritProjectName($repository);
-        $command = "create-project ".$gerrit_project;
+        $command = implode(' ',array(self::COMMAND, 'create-project', $gerrit_project));
         try {
-            $this->ssh->execute($server, self::COMMAND . $command);
+            $this->ssh->execute($server, $command);
             $project_name = $this->getGerritProjectName($repository);
             $this->logger->info("Gerrit: Project $project_name successfully initialized");
             return $project_name;
         } catch (RemoteSSHCommandFailure $e) {
-            throw $this->computeException($e, self::COMMAND . $command);
+            throw $this->computeException($e, $command);
         }
 
     }
     
     public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
         $gerrit_group = $this->getGerritProjectName($repository)."-$group_name";
-        $gerrit_command = array(trim(self::COMMAND), "create-group", $gerrit_group);
+        $command = array(self::COMMAND, "create-group", $gerrit_group);
         foreach ($user_list as $user) {
-            $gerrit_command[] = "--member ".$user->getUsername();
+            $command[] = "--member ".$user->getUsername();
         }
-        
-        $this->ssh->execute($server, implode(' ', $gerrit_command));
+        $command_line = implode(' ',$command);
+        $this->ssh->execute($server, $command_line);
         $this->logger->info("Gerrit: Group $gerrit_group successfully created");
     }
 
