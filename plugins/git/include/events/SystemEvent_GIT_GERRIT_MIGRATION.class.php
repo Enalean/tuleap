@@ -30,6 +30,10 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
     /** @var GitDao */
     private $dao;
+    
+    private $gerrit_groups = array('contributors' => Git::PERM_READ,
+                                   'integrators'  => Git::PERM_WRITE,
+                                   'supermen'     => Git::PERM_WPLUS);
 
     /** @var Git_Driver_Gerrit */
     private $driver;
@@ -58,8 +62,10 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $gerrit_project = $this->driver->createProject($server, $repository);
             $this->logger->info("Gerrit: Project $gerrit_project successfully initialized");
             
-            $user_list = $this->user_finder->getUsers(Git::PERM_READ, $repo_id);
-            $this->driver->createGroup($server, $repository, 'contributors', $user_list);
+            foreach ($this->gerrit_groups as $group_name => $permission_level) {
+                $user_list = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $repo_id);
+                $this->driver->createGroup($server, $repository, $group_name, $user_list);
+            }
             
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;

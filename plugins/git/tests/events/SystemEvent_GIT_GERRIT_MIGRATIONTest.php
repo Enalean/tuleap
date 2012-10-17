@@ -134,37 +134,55 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT
     
     public function itCreatesContributorsGroup() {
         $group_name = 'contributors';
-        $user_list = array(aUser()->withUserName('goyotm')->build(),  aUser()->withUserName('martissonj')->build());
-        stub($this->userfinder)->getUsers(Git::PERM_READ, $this->repository_id)->returns($user_list);
-
-        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
-        expect($this->driver)->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list)->once();
+        $permissions_level = Git::PERM_READ;
+        $call_order = 0;
         
-        $this->event->process();
+        $this->expectGroupCreation($group_name, $permissions_level, $call_order);
     }
     
     //do not get members if dynamic group is registered or all users
     //what if Userfinder returns read OR write users when I ask for write
     
-    public function itCreatesIntegratorsGroup() {    }
+    public function itCreatesIntegratorsGroup() {
+        $group_name        = 'integrators';
+        $permissions_level = Git::PERM_WRITE;
+        $call_order        = 1;
     
-    public function itCreatesSupermenGroup() {    }
+        $this->expectGroupCreation($group_name, $permissions_level, $call_order);
+    }
+    
+    public function itCreatesSupermenGroup() {
+        $group_name        = 'supermen';
+        $permissions_level = Git::PERM_WPLUS;
+        $call_order        = 2;
+    
+        $this->expectGroupCreation($group_name, $permissions_level, $call_order);
+    }
     
     public function itFeedbacksIfUsersNotAddedToGroup() {
         //the following users couldn't be added to their corresponding groups, because they don't exist in Gerrit.
+    }
+
+    public function expectGroupCreation($group_name, $permissions_level, $call_order) {
+        $user_list = array(aUser()->withUserName('goyotm')->build(),  aUser()->withUserName('martissonj')->build());
+        stub($this->userfinder)->getUsersForWhichTheHighestPermissionIs($permissions_level, $this->repository_id)->returns($user_list);
+
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        expect($this->driver)->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list)->at($call_order);
+        $this->driver->expectCallCount('createGroup', 3);
+        
+        $this->event->process();
+        
     }
 
 }
 
 class UserFinder {
 
-    function __construct() {
+    public function getUsersForWhichTheHighestPermissionIs($permission_level, $object_idm){
         
     }
     
-    public function getUsers($permission_level, $object_id){
-        
-    }
 
 }
 ?>
