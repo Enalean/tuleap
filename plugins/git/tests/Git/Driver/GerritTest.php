@@ -100,13 +100,12 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         }
     }
     
-    public function itDoesntTransformExcetpionsThatArentRelatedToGerrit() {
+    public function itDoesntTransformExceptionsThatArentRelatedToGerrit() {
         $std_err = 'some gerrit exception';
         $this->expectException('RemoteSSHCommandFailure');
         stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(255,'',$std_err));
         $this->driver->createProject($this->gerrit_server, $this->repository);
     }
-    
     
     public function itInformsAboutProjectInitialization() {
         $remote_project = $this->host."-firefox/jean-claude/dusse";
@@ -114,12 +113,29 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $this->driver->createProject($this->gerrit_server, $this->repository);
         
     }
+    
+    public function itCreatesGroups() {
+        $project_name = $this->host."-firefox/jean-claude/dusse";
+        $group_name = $project_name."-contributors";
+        $create_group_command = "gerrit create-group $group_name";
+        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
+        $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', array());
+    }
+    
+    public function itCreatesGroupsWithMembers() {
+        $project_name = $this->host."-firefox/jean-claude/dusse";
+        $group_name = $project_name."-contributors";
+        $create_group_command = "gerrit create-group $group_name --member johan --member goyotm";
+        $user_list = array(aUser()->withUserName('johan')->build(), aUser()->withUserName('goyotm')->build());
+        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
+        $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', $user_list);
+    }
     public function itInformsAboutGroupCreation() {
-//        $group_name   = 'contributors';
-//        $user_list    = array();
-//        $gerrit_group = "$this->host.-firefox/jean-claude/dusse-$group_name";
-//        expect($this->logger)->info("Gerrit: Group $gerrit_group successfully created")->once();
-//        $this->driver->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list);
+        $group_name   = 'contributors';
+        $user_list    = array ();
+        $gerrit_group = "$this->host-firefox/jean-claude/dusse-$group_name";
+        expect($this->logger)->info("Gerrit: Group $gerrit_group successfully created")->once();
+        $this->driver->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list);
     }
     public function itInformsAboutPermissionsConfiguration() {
     }

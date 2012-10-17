@@ -42,13 +42,11 @@ class Git_Driver_Gerrit {
     }
 
     public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
-        $host    = Config::get('sys_default_domain');
-        $project = $repository->getProject()->getUnixName();
-        $repo    = $repository->getFullName();
-        $command = "create-project $host-$project/$repo";
+        $gerrit_project = $this->getGerritProjectName($repository);
+        $command = "create-project ".$gerrit_project;
         try {
             $this->ssh->execute($server, self::COMMAND . $command);
-            $project_name = "$host-$project/$repo";
+            $project_name = $this->getGerritProjectName($repository);
             $this->logger->info("Gerrit: Project $project_name successfully initialized");
             return $project_name;
         } catch (RemoteSSHCommandFailure $e) {
@@ -58,8 +56,14 @@ class Git_Driver_Gerrit {
     }
     
     public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
-//        $this->logger->info("Gerrit: Project $project_name successfully initialized");
-        // TODO implementation
+        $gerrit_group = $this->getGerritProjectName($repository)."-$group_name";
+        $gerrit_command = array(trim(self::COMMAND), "create-group", $gerrit_group);
+        foreach ($user_list as $user) {
+            $gerrit_command[] = "--member ".$user->getUsername();
+        }
+        
+        $this->ssh->execute($server, implode(' ', $gerrit_command));
+        $this->logger->info("Gerrit: Group $gerrit_group successfully created");
     }
 
     private function computeException(RemoteSSHCommandFailure $e, $command) {
@@ -73,6 +77,13 @@ class Git_Driver_Gerrit {
 
     private function gerritDriverException($e, $command) {
         return new Git_Driver_Gerrit_Exception("Command: $command".PHP_EOL."Error: ".$e->getStdErr());
+    }
+
+    public function getGerritProjectName(GitRepository $repository) {
+        $host    = Config::get('sys_default_domain');
+        $project = $repository->getProject()->getUnixName();
+        $repo    = $repository->getFullName();
+        return "$host-$project/$repo";
     }
 }
 
