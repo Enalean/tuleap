@@ -155,9 +155,9 @@ class Docman_VersionFactory {
      * @return Void
      */
     public function archiveBeforePurge($version) {
-        $item     = $this->_getItemFactory()->getItemFromDb($version->getItemId());
-        $prefix   = $item->getGroupId().'_i'.$version->getItemId().'_v'.$version->getNumber();
-        $params   = array('source_path'    => $version->getPath(),
+        $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
+        $prefix  = $item->getGroupId().'_i'.$version->getItemId().'_v'.$version->getNumber();
+        $params  = array('source_path'    => $version->getPath(),
                           'archive_prefix' => $prefix);
         $this->_getEventManager()->processEvent('archive_deleted_item', $params);
     }
