@@ -165,7 +165,7 @@ class UGroupManager {
      *
      * @param Integer $ugroupId Id of the user goup
      *
-     * @return boolean
+     * @return DataAccessResult
      */
     public function searchUGroupByBindingSource($ugroupId) {
         return $this->getDao()->searchUGroupByBindingSource($ugroupId);
