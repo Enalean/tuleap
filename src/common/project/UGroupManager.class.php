@@ -149,6 +149,29 @@ class UGroupManager {
     }
 
     /**
+     * Wrapper for dao method that checks if the user group is valid
+     *
+     * @param Integer $groupId  Id of the project
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return boolean
+     */
+    public function checkUGroupValidityByGroupId($groupId, $ugroupId) {
+        return $this->getDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
+    }
+
+    /**
+     * Wrapper for dao method that retrieves all Ugroups bound to a given Ugroup
+     *
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return boolean
+     */
+    public function searchUGroupByBindingSource($ugroupId) {
+        return $this->getDao()->searchUGroupByBindingSource($ugroupId);
+    }
+
+    /**
      * Return name and id of all ugroups belonging to a specific project
      *
      * @param Integer $groupId    Id of the project

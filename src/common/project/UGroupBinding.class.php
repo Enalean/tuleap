@@ -61,7 +61,7 @@ class UGroupBinding {
      * @return Boolean
      */
     public function checkUGroupValidity($groupId, $ugroupId) {
-        return $this->getUGroupManager()->getDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
+        return $this->getUGroupManager()->checkUGroupValidityByGroupId($groupId, $ugroupId);
     }
 
     /**
@@ -72,7 +72,7 @@ class UGroupBinding {
      * @return Array
      */
     public function getUGroupsByBindingSource($ugroupId) {
-        $dar     = $this->getUGroupManager()->getDao()->searchUGroupByBindingSource($ugroupId);
+        $dar     = $this->getUGroupManager()->searchUGroupByBindingSource($ugroupId);
         $ugroups = array();
         if ($dar && !$dar->isError()) {
             foreach ($dar as $row) {
