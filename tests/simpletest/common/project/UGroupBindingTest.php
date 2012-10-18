@@ -32,10 +32,20 @@ require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
 class UGroupBindingTest extends UnitTestCase {
+    private $ugroup_id = 200;
+    private $source_id = 300;
+    private $ugroupDao;
+    private $ugroupManager;
+    private $ugroupUserDao;
+    private $ugroupBinding;
 
     public function setUp() {
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
+        $this->ugroupDao     = new MockUGroupDao();
+        $this->ugroupManager = new MockUGroupManager();
+        $this->ugroupUserDao = new MockUGroupUserDao();
+        $this->ugroupBinding = new UGroupBinding($this->ugroupUserDao, $this->ugroupManager);
     }
 
     function tearDown() {
@@ -44,90 +54,57 @@ class UGroupBindingTest extends UnitTestCase {
     }
 
     function testRemoveUgroupBinding() {
-        $ugroup_id     = 200;
-        $ugroupManager = new MockUGroupManager();
-        $ugroupDao     = new MockUGroupDao();
-        $ugroupUserDao = new MockUGroupUserDao();
-        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-        $ugroupDao->setReturnValue('updateUgroupBinding', true);
-        $ugroupManager->setReturnValue('getDao', $ugroupDao);
+        $this->ugroupDao->setReturnValue('updateUgroupBinding', true);
+        $this->ugroupManager->setReturnValue('getDao', $this->ugroupDao);
         $GLOBALS['Language']->expectOnce('getText', array('project_ugroup_binding','binding_removed'));
         $GLOBALS['Response']->expectOnce('addFeedback');
-        $this->assertTrue($ugroupBinding->removeBinding($ugroup_id));
+        $this->assertTrue($this->ugroupBinding->removeBinding($this->ugroup_id));
     }
 
     function testResetUgroupFailureUpdateUGroupNotAllowed() {
-        $ugroup_id     = 200;
-        $ugroupManager = new MockUGroupManager();
-        $ugroupDao     = new MockUGroupDao();
-        $ugroupUserDao = new MockUGroupUserDao();
-        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-        $ugroupManager->setReturnValue('isUpdateUsersAllowed', false);
+        $this->ugroupManager->setReturnValue('isUpdateUsersAllowed', false);
         $this->expectException(new RuntimeException());
-        $ugroupBinding->resetUgroup($ugroup_id);
+        $this->ugroupBinding->resetUgroup($this->ugroup_id);
     }
 
     function testResetUgroupDaoFailure() {
-        $ugroup_id     = 200;
-        $ugroupManager = new MockUGroupManager();
-        $ugroupUserDao = new MockUGroupUserDao();
-        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-        $ugroupManager->setReturnValue('isUpdateUsersAllowed', true);
-        $ugroupUserDao->setReturnValue('resetUgroupUserList', false);
+        $this->ugroupManager->setReturnValue('isUpdateUsersAllowed', true);
+        $this->ugroupUserDao->setReturnValue('resetUgroupUserList', false);
         $this->expectException(new LogicException());
-        $ugroupBinding->resetUgroup($ugroup_id);
+        $this->ugroupBinding->resetUgroup($this->ugroup_id);
     }
 
     function testCloneUgroupFailureUpdateUGroupNotAllowed() {
-        $ugroup_id     = 200;
-        $source_id     = 300;
-        $ugroupManager = new MockUGroupManager();
-        $ugroupUserDao = new MockUGroupUserDao();
-        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-        $ugroupManager->setReturnValue('isUpdateUsersAllowed', false);
+        $this->ugroupManager->setReturnValue('isUpdateUsersAllowed', false);
         $this->expectException(new RuntimeException());
-        $ugroupBinding->cloneUgroup($source_id, $ugroup_id);
+        $this->ugroupBinding->cloneUgroup($this->source_id, $this->ugroup_id);
     }
 
     function testCloneUgroupDaoFailure() {
-        $ugroup_id     = 200;
-        $source_id     = 300;
-        $ugroupManager = new MockUGroupManager();
-        $ugroupUserDao = new MockUGroupUserDao();
-        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-        $ugroupManager->setReturnValue('isUpdateUsersAllowed', true);
-        $ugroupUserDao->setReturnValue('cloneUgroup', false);
+        $this->ugroupManager->setReturnValue('isUpdateUsersAllowed', true);
+        $this->ugroupUserDao->setReturnValue('cloneUgroup', false);
         $this->expectException(new LogicException());
-        $ugroupBinding->cloneUgroup($source_id, $ugroup_id);
+        $this->ugroupBinding->cloneUgroup($this->source_id, $this->ugroup_id);
     }
 
     function testUpdateUgroupBindingFailure() {
-        $ugroup_id     = 200;
-        $source_id     = 300;
-        $ugroupManager = new MockUGroupManager();
-        $ugroupDao     = new MockUGroupDao();
-        $ugroupUserDao = new MockUGroupUserDao();
-        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-        $ugroupDao->setReturnValue('updateUgroupBinding', false);
-        $ugroupManager->setReturnValue('getDao', $ugroupDao);
+        $this->ugroupDao->setReturnValue('updateUgroupBinding', false);
+        $this->ugroupManager->setReturnValue('getDao', $this->ugroupDao);
         $this->expectException(new Exception('Unable to store ugroup binding'));
-        $ugroupBinding->updateUgroupBinding($ugroup_id, $source_id);
+        $this->ugroupBinding->updateUgroupBinding($this->ugroup_id, $this->source_id);
     }
 
     function testRemoveAllUGroupsBinding() {
-        $ugroup_id     = 200;
         $bindedUgroups = array(300, 400, 500, 600);
         $ugroupBinding = new UGroupBindingTestVersion();
         $ugroupBinding->setReturnValue('getUGroupsByBindingSource', $bindedUgroups);
-        $ugroupManager = new MockUGroupManager();
-        $ugroupDao     = new MockUGroupDao();
-        $ugroupManager->setReturnValue('getDao', $ugroupDao);
-        $ugroupBinding->setReturnValue('getUGroupManager', $ugroupManager);
+        $this->ugroupManager->setReturnValue('getDao', $this->ugroupDao);
+        $ugroupBinding->setReturnValue('getUGroupManager', $this->ugroupManager);
 
-        $ugroupDao->expectCallCount('updateUgroupBinding', 4);
-        $ugroupDao->setReturnValueAt(0, 'updateUgroupBinding', true);
-        $ugroupDao->setReturnValueAt(2, 'updateUgroupBinding', false);
-        $this->assertFalse($ugroupBinding->removeAllUGroupsBinding($ugroup_id));
+        $this->ugroupDao->expectCallCount('updateUgroupBinding', 4);
+        $this->ugroupDao->setReturnValueAt(0, 'updateUgroupBinding', true);
+        $this->ugroupDao->setReturnValueAt(2, 'updateUgroupBinding', false);
+        $this->assertFalse($ugroupBinding->removeAllUGroupsBinding($this->ugroup_id));
     }
 
 }
