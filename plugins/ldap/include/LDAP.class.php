@@ -396,7 +396,7 @@ class LDAP {
             // We only care about Common name and Login (lower the amount of data
             // to fetch speed up the request.
             if (isset($this->ldapParams['tooltip_search_attrs'])) {
-                $attrs = split(';', $this->ldapParams['tooltip_search_attrs']);
+                $attrs = explode(';', $this->ldapParams['tooltip_search_attrs']);
             } else {
                 $attrs  = array($this->ldapParams['cn'], $this->ldapParams['uid']);
             }
