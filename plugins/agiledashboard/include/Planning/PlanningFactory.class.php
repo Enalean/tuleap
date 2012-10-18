@@ -119,11 +119,11 @@ class PlanningFactory {
      *
      * @return array of Planning_ShortAccess
      */
-    public function getPlanningsShortAccess(User $user, $group_id, Planning_MilestoneFactory $milestone_factory, PlanningFactory $planning_factory) {
+    public function getPlanningsShortAccess(User $user, $group_id, Planning_MilestoneFactory $milestone_factory) {
         $plannings    = $this->getPlannings($user, $group_id);
         $short_access = array();
         foreach ($plannings as $planning) {
-            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $planning_factory);
+            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory);
         }
         end($short_access)->setIsLatest(true);
         return $short_access;
@@ -268,7 +268,7 @@ class PlanningFactory {
     /**
      * @return Tracker
      */
-    public function getPlanningTracker(Planning $planning) {
+    private function getPlanningTracker(Planning $planning) {
         return $this->tracker_factory->getTrackerById($planning->getPlanningTrackerId());
     }
 

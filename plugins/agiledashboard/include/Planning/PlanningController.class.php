@@ -56,7 +56,7 @@ class Planning_Controller extends MVC2_Controller {
     }
     
     public function index() {
-        $plannings = $this->planning_factory->getPlanningsShortAccess($this->getCurrentUser(), $this->group_id, $this->milestone_factory, $this->planning_factory);
+        $plannings = $this->planning_factory->getPlanningsShortAccess($this->getCurrentUser(), $this->group_id, $this->milestone_factory);
         $presenter = new Planning_IndexPresenter($plannings, $this->plugin_theme_path);
         $this->render('index', $presenter);
     }
