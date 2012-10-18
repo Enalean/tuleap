@@ -613,19 +613,40 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
     /** @var SystemEventManager */
     private $em;
 
+    /** @var int */
+    private $unexsting_server_id = 666;
+
+    /** @var int */
+    private $server_id = 888;
+
     public function setUp() {
         parent::setUp();
-        $this->manager = mock('GitRepositoryManager');
-        $this->em      = mock('SystemEventManager');
+        $this->manager        = mock('GitRepositoryManager');
+        $this->em             = mock('SystemEventManager');
+        $this->gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
+        $server               = mock('Git_RemoteServer_GerritServer');
+
+        stub($this->gerrit_factory)->getServerById($this->server_id)->returns($server);
+        $this->gerrit_factory->throwOn(
+            'getServerById',
+            new GerritServerNotFoundException($this->unexsting_server_id),
+            array($this->unexsting_server_id)
+        );
+
         $this->actions = new GitActions(
             mock('Git'),
             $this->em,
             mock('GitRepositoryFactory'),
             $this->manager,
-            mock('Git_RemoteServer_GerritServerFactory')
+            $this->gerrit_factory
         );
     }
-    
+
+    public function itDoesNothingWhenGivenServerDoesNotExist() {
+        $repo = stub('GitRepository')->isMigratableToGerrit()->returns(true);
+        $this->actions->migrateToGerrit($repo, $this->unexsting_server_id);
+    }
+
     //not if already gerrit
     //not if gitshell
     //happy path
@@ -637,13 +658,11 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
 
     public function itCreatesASystemEvent() {
         $repo = stub('GitRepository')->isMigratableToGerrit()->returns(true);
-        $server_id = 888;
+        $server_id = $this->server_id;
         $repo_id   = 456;
         stub($repo)->getId()->returns($repo_id);
         $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, "$repo_id::$server_id", SystemEvent::PRIORITY_HIGH));
         $this->actions->migrateToGerrit($repo, $server_id);
     }
-    
-    
 }
 ?>
