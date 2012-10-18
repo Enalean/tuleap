@@ -313,6 +313,67 @@ $GLOBALS['server']->wsdl->addComplexType(
     'xsd:int'
 );
 
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemanticTitle',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'type'  => array('name'=>'id', 'type' => 'xsd:String'),
+        //'field' => array('name'=>'field', 'type' => 'tns:TrackerField')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemanticStatus',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'type'  => array('name'=>'id', 'type' => 'xsd:String'),
+        //'field' => array('name'=>'field', 'type' => 'tns:TrackerField')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemanticContributor',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'type'  => array('name'=>'id', 'type' => 'xsd:String'),
+        //'field' => array('name'=>'field', 'type' => 'tns:TrackerField')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemanticTooltip',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'type'  => array('name'=>'id', 'type' => 'xsd:String'),
+        //'field' => array('name'=>'field', 'type' => 'tns:TrackerField')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemantic',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'title'        => array('name'=>'title', 'type' => 'tns:TrackerSemanticTitle'),
+        'status'       => array('name'=>'status', 'type' => 'tns:TrackerSemanticStatus'),
+        'contributor'  => array('name'=>'contributor', 'type' => 'tns:TrackerSemanticContributor'),
+        'tooltip'      => array('name'=>'tooltip', 'type' => 'tns:TrackerSemanticTooltip')
+    )
+);
 //
 // Function definition
 //
@@ -420,6 +481,20 @@ $GLOBALS['server']->register(
     'Returns the artifact (Artifact) identified by the id artifact_id
      Returns a soap fault if the group_id is not a valid one, if the tracker_id is not a valid one,
      or if the artifact_id is not a valid one.'
+);
+
+$GLOBALS['server']->register(
+    'getTrackerSemantic',
+    array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'tracker_id'=>'xsd:int',
+    ),
+    array('return'=>'tns:TrackerSemantic'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getTrackerSemantic',
+    'rpc',
+    'encoded',
+    'Returns the tracker semantic.'
 );
 
 /*$GLOBALS['server']->register(

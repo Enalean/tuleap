@@ -80,7 +80,7 @@ class Tracker_SOAPServer {
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
-
+    
     public function __construct(
             SOAP_UserManager $soap_user_manager,
             ProjectManager $project_manager,
@@ -89,13 +89,13 @@ class Tracker_SOAPServer {
             Tracker_ReportDao $dao,
             Tracker_FormElementFactory $formelement_factory,
             Tracker_ArtifactFactory $artifact_factory) {
-        $this->soap_user_manager   = $soap_user_manager;
-        $this->project_manager     = $project_manager;
-        $this->tracker_factory     = $tracker_factory;
-        $this->permissions_manager = $permissions_manager;
-        $this->report_dao          = $dao;
-        $this->formelement_factory = $formelement_factory;
-        $this->artifact_factory    = $artifact_factory;
+        $this->soap_user_manager        = $soap_user_manager;
+        $this->project_manager          = $project_manager;
+        $this->tracker_factory          = $tracker_factory;
+        $this->permissions_manager      = $permissions_manager;
+        $this->report_dao               = $dao;
+        $this->formelement_factory      = $formelement_factory;
+        $this->artifact_factory         = $artifact_factory;
     }
 
     /**
@@ -456,7 +456,36 @@ class Tracker_SOAPServer {
             return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
         }
     }
+    
+    /**
+     * getSemanticTitle - returns the tracker field TrackerField of the tracker $tracker_id of the project $group_id
+     */
+    
+    public function getTrackerSemantic($session_key, $group_id, $tracker_id) {
+        $user = $this->soap_user_manager->continueSession($session_key);
+        $this->getProjectById($group_id, 'getTrackerSemantic');
+        $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
+        $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
+        
+        //TODO : check perms - only tracker admins can access the semantic
+        $semantics = $tracker_semantic_manager->getSemantics();
+        var_dump($semantics);
+        return $this->semantic_to_soap($semantics);
+        
+        
+    }
 
+    private function semantic_to_soap($semantics) {
+        $return = array();
+        $type = array('title', 'status', 'contributor', 'tooltip');
+        $i = 0;
+        foreach ($semantics as $key => $s) {
+            $return[$type[$i]] = array('type' => $key);
+            $i++;
+        } 
+        return $return;
+    }
+    
     /**
      * getArtifactHistory - returns the array of ArtifactHistory of the artifact $artifact_id in the tracker $tracker_id of the project $group_id
      *
