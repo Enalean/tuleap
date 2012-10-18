@@ -275,7 +275,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     }
     
     private function getMilestoneLinkPresenter(Planning_Milestone $milestone) {
-        return new Planning_MilestoneLinkPresenter($milestone, $this->current_user);
+        return new Planning_MilestoneLinkPresenter($milestone);
     }
     
     /**

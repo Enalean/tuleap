@@ -22,7 +22,7 @@
  * Presents everything needed to render a link to the planning view of a
  * milestone.
  */
-class Planning_MilestoneLinkPresenter{
+class Planning_MilestoneLinkPresenter {
     
     /**
      * @var Planning_Milestone
@@ -49,10 +49,6 @@ class Planning_MilestoneLinkPresenter{
      */
     public function getXref() {
         return $this->milestone->getXref();
-    }
-    
-    public function getBacklogTrackerId() {
-        return $this->milestone->getTrackerId();
     }
 
     /**

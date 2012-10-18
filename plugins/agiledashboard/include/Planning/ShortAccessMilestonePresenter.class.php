@@ -53,6 +53,9 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
         return $this->additional_panes;
     }
 
+    public function getBacklogTrackerId() {
+        return $this->milestone->getTrackerId();
+    }
 
     public function setIsLatest($is_latest) {
         $this->is_latest = $is_latest;
