@@ -69,20 +69,31 @@ class Planning_MilestoneFactory {
         return new Planning_NoMilestone($project, $planning);
     }
 
+    /**
+     * @return array of Planning_Milestone (the last $number_to_fetch open ones for the given $planning)
+     */
     public function getLastOpenMilestones(User $user, Planning $planning, $number_to_fetch) {
-        $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
-        ksort($artifacts);
-        $artifacts = array_slice($artifacts, - $number_to_fetch);
-        $milestones = array();
-        $planned_artifacts = null;
-        $i = count($artifacts);
+        $artifacts           = $this->getLastOpenArtifacts($user, $planning, $number_to_fetch);
+        $number_of_artifacts = count($artifacts);
+        $current_index       = 0;
+        $milestones          = array();
         foreach ($artifacts as $artifact) {
-            if (! --$i) {
-                $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
-            }
+            $planned_artifacts = $this->getPlannedArtifactsForLatestMilestone($user, $artifact, ++$current_index, $number_of_artifacts);
             $milestones[] = $this->getMilestoneFromArtifact($artifact, $planned_artifacts);
         }
         return $milestones;
+    }
+
+    private function getLastOpenArtifacts(User $user, Planning $planning, $number_to_fetch) {
+        $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        ksort($artifacts);
+        return array_slice($artifacts, - $number_to_fetch);
+    }
+
+    private function getPlannedArtifactsForLatestMilestone(User $user, Tracker_Artifact $artifact, $current_index, $number_of_artifacts) {
+        if ($current_index >= $number_of_artifacts) {
+            return $this->getPlannedArtifacts($user, $artifact);
+        }
     }
 
     /**
