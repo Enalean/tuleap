@@ -32,22 +32,16 @@ class PlanningFactory {
      */
     private $tracker_factory;
 
-    /**
-     * @var Tracker_HierarchyFactory
-     */
-    private $hierarchy_factory;
-
-    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory, Tracker_HierarchyFactory $hierarchy_factory) {
-        $this->dao               = $dao;
-        $this->tracker_factory   = $tracker_factory;
-        $this->hierarchy_factory = $hierarchy_factory;
+    public function __construct(PlanningDao $dao, TrackerFactory $tracker_factory) {
+        $this->dao             = $dao;
+        $this->tracker_factory = $tracker_factory;
     }
 
     /**
      * @return PlanningFactory
      */
     public static function build() {
-        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance(), Tracker_HierarchyFactory::instance());
+        return new PlanningFactory(new PlanningDao(), TrackerFactory::instance());
     }
 
     /**
@@ -131,7 +125,7 @@ class PlanningFactory {
 
     private function sortPlanningsAccordinglyToHierarchy(array &$plannings) {
         $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
-        $hierarchy   = $this->hierarchy_factory->getHierarchy($tracker_ids);
+        $hierarchy   = $this->tracker_factory->getHierarchy($tracker_ids);
         $this->tmp_tracker_ids_to_sort_plannings = $hierarchy->sortTrackerIds($tracker_ids);
         usort($plannings, array($this, 'cmpPlanningTrackerIds'));
     }

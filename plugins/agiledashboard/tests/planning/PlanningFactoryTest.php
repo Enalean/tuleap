@@ -21,7 +21,7 @@
 require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
 require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
 require_once dirname(__FILE__).'/../builders/aPlanningFactory.php';
-require_once TRACKER_BASE_DIR.'/../tests/builders/aTracker.php';
+require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
 
 Mock::generate('Planning');
 Mock::generate('PlanningDao');
@@ -205,20 +205,29 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
 
     public function setUp() {
         parent::setUp();
-        $tracker_factory   = mock('TrackerFactory');
+        $tracker_factory   = TrackerFactory::instance();
         $hierarchy_dao     = mock('Tracker_Hierarchy_Dao');
         $hierarchy_factory = new Tracker_HierarchyFactory($hierarchy_dao, $tracker_factory, mock('Tracker_ArtifactFactory'));
 
+        $tracker_factory->setHierarchyFactory($hierarchy_factory);
+
         $this->setUpTrackers($tracker_factory, $hierarchy_dao);
-        $this->setUpPlannings($tracker_factory, $hierarchy_factory);
+        $this->setUpPlannings($tracker_factory);
+    }
+
+    public function tearDown() {
+        TrackerFactory::clearInstance();
+        parent::tearDown();
     }
 
     private function setUpTrackers(TrackerFactory $tracker_factory, Tracker_Hierarchy_Dao $hierarchy_dao) {
         $this->epic_tracker  = aMockTracker()->withId(104)->build();
         $this->story_tracker = aMockTracker()->withId(103)->build();
 
-        stub($tracker_factory)->getTrackerById($this->epic_tracker->getId())->returns($this->epic_tracker);
-        stub($tracker_factory)->getTrackerById($this->story_tracker->getId())->returns($this->story_tracker);
+        $tracker_factory->setCachedInstances(array(
+            104 => $this->epic_tracker,
+            103 => $this->story_tracker,
+        ));
 
         stub($hierarchy_dao)->searchTrackerHierarchy(array(103, 104))->returnsDar(
             array('parent_id' => '104', 'child_id' => '103')
@@ -226,7 +235,7 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         stub($hierarchy_dao)->searchTrackerHierarchy()->returnsEmptyDar();
     }
 
-    private function setUpPlannings(TrackerFactory $tracker_factory, Tracker_HierarchyFactory $hierarchy_factory) {
+    private function setUpPlannings(TrackerFactory $tracker_factory) {
         $dao = mock('PlanningDao');
         stub($dao)->searchPlannings($this->project_id)->returnsDar(
             array(
@@ -251,7 +260,6 @@ class PlanningFactoryTest_getPlanningsTest extends PlanningFactoryTest {
         $this->factory = aPlanningFactory()
             ->withDao($dao)
             ->withTrackerFactory($tracker_factory)
-            ->withHierarchyFactory($hierarchy_factory)
             ->build();
 
         $this->release_planning = new Planning(2, 'Release Planning', 123, 'Product Backlog', 'Release Plan', null, $this->epic_tracker->getId());

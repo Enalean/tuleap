@@ -817,7 +817,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
         if (class_exists('PlanningFactory')) {
             $tracker_factory = $this->getTrackerFactory();
-            $planning_factory = new PlanningFactory(new PlanningDao(), $tracker_factory, $tracker_factory->getHierarchyFactory());
+            $planning_factory = new PlanningFactory(new PlanningDao(), $tracker_factory);
             $trackers = $planning_factory->getPlanningTrackers($group_id, $user);
         }
         return $trackers;

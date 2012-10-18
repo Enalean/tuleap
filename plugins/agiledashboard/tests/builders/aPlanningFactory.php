@@ -40,12 +40,10 @@ class TestPlanningFactoryBuilder {
     
     public $dao;
     public $tracker_factory;
-    public $hierarchy_factory;
     
     public function __construct() {
         $this->dao             = new MockPlanningDao();
         $this->tracker_factory = new MockTrackerFactory();
-        $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
     }
     
     public function withDao(DataAccessObject $dao) {
@@ -58,13 +56,8 @@ class TestPlanningFactoryBuilder {
         return $this;
     }
     
-    public function withHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
-        $this->hierarchy_factory = $hierarchy_factory;
-        return $this;
-    }
-    
     public function build() {
-        return new PlanningFactory($this->dao, $this->tracker_factory, $this->hierarchy_factory);
+        return new PlanningFactory($this->dao, $this->tracker_factory);
     }
 }
 

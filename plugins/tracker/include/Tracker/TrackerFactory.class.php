@@ -26,7 +26,12 @@ require_once dirname(__FILE__).'/../constants.php';
 
 class TrackerFactory {
 
+    /** @var array of Tracker */
     protected $trackers;
+
+    /** @var Tracker_HierarchyFactory */
+    private $hierarchy_factory;
+
     /**
      * A protected constructor; prevents direct creation of object
      */
@@ -125,8 +130,8 @@ class TrackerFactory {
     }
 
     protected $dao;
-
-   /**
+    
+    /**
      * @return TrackerDao
      */
     protected function getDao() {
@@ -147,6 +152,13 @@ class TrackerFactory {
             $this->trackers[$tracker_id] = $this->getInstanceFromRow($row);
         }
         return $this->trackers[$tracker_id];
+    }
+
+    /**
+     * /!\ Only for tests
+     */
+    public function setCachedInstances($trackers) {
+        $this->trackers = $trackers;
     }
 
     /**
@@ -591,10 +603,27 @@ class TrackerFactory {
     }
     
     /**
+     * /!\ Only for tests
+     */
+    public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
+        $this->hierarchy_factory = $hierarchy_factory;
+    }
+    
+    /**
      * @return Tracker_HierarchyFactory 
      */
     public function getHierarchyFactory() {
-        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this, Tracker_ArtifactFactory::instance());
+        if (!$this->hierarchy_factory) {
+            $this->hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this, Tracker_ArtifactFactory::instance());
+        }
+        return $this->hierarchy_factory;
+    }
+    
+    /**
+     * @return Hierarchy
+     */
+    public function getHierarchy(array $tracker_ids) {
+        return $this->getHierarchyFactory()->getHierarchy($tracker_ids);
     }
     
     /**
