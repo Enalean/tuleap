@@ -320,8 +320,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'type'  => array('name'=>'id', 'type' => 'xsd:String'),
-        //'field' => array('name'=>'field', 'type' => 'tns:TrackerField')
+        'field_name' => array('name'=>'field_name', 'type' => 'xsd:string')
     )
 );
 
@@ -332,8 +331,8 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'type'  => array('name'=>'id', 'type' => 'xsd:String'),
-        //'field' => array('name'=>'field', 'type' => 'tns:TrackerField')
+        'field_name' => array('name'=>'field_name', 'type' => 'xsd:string'),
+        'values' => array('name'=>'values', 'type' => 'xsd:int[]')
     )
 );
 
@@ -344,8 +343,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'type'  => array('name'=>'id', 'type' => 'xsd:String'),
-        //'field' => array('name'=>'field', 'type' => 'tns:TrackerField')
+       'field_name' => array('name'=>'field_name', 'type' => 'xsd:string')
     )
 );
 
@@ -356,8 +354,6 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'type'  => array('name'=>'id', 'type' => 'xsd:String'),
-        //'field' => array('name'=>'field', 'type' => 'tns:TrackerField')
     )
 );
 
@@ -371,7 +367,6 @@ $GLOBALS['server']->wsdl->addComplexType(
         'title'        => array('name'=>'title', 'type' => 'tns:TrackerSemanticTitle'),
         'status'       => array('name'=>'status', 'type' => 'tns:TrackerSemanticStatus'),
         'contributor'  => array('name'=>'contributor', 'type' => 'tns:TrackerSemanticContributor'),
-        'tooltip'      => array('name'=>'tooltip', 'type' => 'tns:TrackerSemanticTooltip')
     )
 );
 //

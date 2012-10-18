@@ -469,23 +469,34 @@ class Tracker_SOAPServer {
         
         //TODO : check perms - only tracker admins can access the semantic
         $semantics = $tracker_semantic_manager->getSemantics();
-        var_dump($semantics);
-        return $this->semantic_to_soap($semantics);
-        
-        
+//        $file = fopen("test" , "a+");
+//        fwrite($file,(var_export($semantics, 1)));
+//        fwrite($file,"1");
+//        fwrite($file,"223323233232232");
+//        fclose($file);    
+        return $this->semantic_to_soap($semantics);   
     }
 
     private function semantic_to_soap($semantics) {
         $return = array();
-        $type = array('title', 'status', 'contributor', 'tooltip');
+        $content = array('title', 'status', 'contributor');
         $i = 0;
-        foreach ($semantics as $key => $s) {
-            $return[$type[$i]] = array('type' => $key);
-            $i++;
+        foreach ($semantics as $tracker_semantic) {
+            //TODO : Made name in array correctly !
+            if (method_exists($tracker_semantic, 'getField')) {
+                $return[$content[$i]] = array('field_name' => $tracker_semantic->getField()->getName());
+                if (method_exists($tracker_semantic, 'getOpenValues')) {
+                    $return[$content[$i]]['values'] = $tracker_semantic->getOpenValues();
+                }
+            }
+           $i++;
         } 
+        $file = fopen("test" , "a+");
+        fwrite($file,(var_export($return, 1)));
+        fclose($file); 
         return $return;
     }
-    
+ 
     /**
      * getArtifactHistory - returns the array of ArtifactHistory of the artifact $artifact_id in the tracker $tracker_id of the project $group_id
      *
