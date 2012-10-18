@@ -33,9 +33,9 @@ class Codendi_Request_TestBuilder {
     private $user;
 
     /**
-     * @var Project
+     * @var ProjectManager
      */
-    private $project;
+    private $project_manager;
 
     public function with($param_name, $param_value) {
         $this->params[$param_name] = $param_value;
@@ -57,9 +57,9 @@ class Codendi_Request_TestBuilder {
         return $this;
     }
 
-    public function withProject(Project $project) {
-        $this->project = $project;
-        return $this->with('group_id', $project->getID());
+    public function withProjectManager(ProjectManager $project_manager) {
+        $this->project_manager = $project_manager;
+        return $this;
     }
 
     private function buildUser() {
@@ -68,11 +68,8 @@ class Codendi_Request_TestBuilder {
     }
 
     public function build() {
-        $request = new Codendi_Request($this->params);
+        $request = new Codendi_Request($this->params, $this->project_manager);
         $request->setCurrentUser($this->buildUser());
-        if ($this->project) {
-            $request->setProject($this->project);
-        }
         return $request;
     }
 

@@ -46,13 +46,17 @@ class Codendi_Request {
      */
     protected $project;
 
+    /** @var ProjectManager */
+    private $project_manager;
+
     /**
      * Constructor
      */
-    public function __construct($params) {
+    public function __construct($params, ProjectManager $project_manager = null) {
         $this->params                = $params;
         $this->_validated_input      = array();
         $this->_last_access_to_input = array();
+        $this->project_manager       = $project_manager ? $project_manager : ProjectManager::instance();
     }
 
     public function registerShutdownFunction() {
@@ -304,19 +308,7 @@ class Codendi_Request {
      * @return Project
      */
     public function getProject() {
-        if (!$this->project) {
-            $this->project = ProjectManager::instance()->getProject($this->get('group_id'));
-        }
-        return $this->project;
-    }
-
-    /**
-     * Set the project (should be used only for tests)
-     *
-     * @param Project $project
-     */
-    public function setProject(Project $project) {
-        $this->project = $project;
+        return $this->project_manager->getProject((int)$this->get('group_id'));
     }
 
     /**
