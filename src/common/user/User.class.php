@@ -1333,6 +1333,10 @@ class User {
     public function setLanguageFactory(BaseLanguageFactory $languageFactory) {
         $this->languageFactory = $languageFactory;
     }
+    
+    public function __toString() {
+        return "User #". $this->getId();
+    }
 }
 
 ?>
