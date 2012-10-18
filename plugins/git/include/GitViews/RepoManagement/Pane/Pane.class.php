@@ -40,6 +40,13 @@ abstract class GitViews_RepoManagement_Pane {
     }
 
     /**
+     * @return bool true if the pane can be displayed
+     */
+    public function canBeDisplayed() {
+        return true;
+    }
+
+    /**
      * @return string eg: 'perms'
      */
     public abstract function getIdentifier();

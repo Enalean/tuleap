@@ -69,7 +69,9 @@ class GitViews_RepoManagement {
         );
         $indexed_panes = array();
         foreach ($panes as $pane) {
-            $indexed_panes[$pane->getIdentifier()] = $pane;
+            if ($pane->canBeDisplayed()) {
+                $indexed_panes[$pane->getIdentifier()] = $pane;
+            }
         }
         return $indexed_panes;
     }

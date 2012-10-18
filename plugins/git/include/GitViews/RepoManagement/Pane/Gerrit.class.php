@@ -31,6 +31,13 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     }
 
     /**
+     * @return bool true if the pane can be displayed
+     */
+    public function canBeDisplayed() {
+        return count($this->gerrit_servers) > 0;
+    }
+
+    /**
      * @see GitViews_RepoManagement_Pane::getIdentifier()
      */
     public function getIdentifier() {
