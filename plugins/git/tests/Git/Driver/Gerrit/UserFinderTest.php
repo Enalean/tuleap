@@ -44,7 +44,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $object_id = 5;
 
         stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->returns(array());
-        $this->assertArrayEmpty($this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id));
+        $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $object_id));
     }
     
     public function itReturnsNothingWhenNoneOfTheGroupsHaveAnyMembers() {
@@ -57,7 +57,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->returns($ugroup_id_list);
         stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns($group1);
         stub($group1)->getMembers()->returns(array());
-        $this->assertArrayEmpty($this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id));
+        $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $object_id));
     }
     
     public function itReturnsMembersOfAGroup() {
@@ -72,7 +72,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         
         $the_simpsons = array(aUser()->withId(2345)->withUserName('Bart')->build(), aUser()->withId(6789)->withUserName('Homer')->build());
         stub($group1)->getMembers()->returns($the_simpsons);
-        $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
+        $users = $this->user_finder->getUsersForPermission($permission_level, $object_id);
         $this->assertEqual($users, $the_simpsons);
     }
     
@@ -90,7 +90,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         stub($this->ugroup_manager)->getById(150)->returns($group1);
         stub($this->ugroup_manager)->getById(152)->returns($group2);
         
-        $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
+        $users = $this->user_finder->getUsersForPermission($permission_level, $object_id);
         $this->assertEqual($users, array_merge($the_mousqueteers, $the_simpsons));
     }
     
@@ -109,7 +109,26 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         stub($this->ugroup_manager)->getById(150)->returns($group1);
         stub($this->ugroup_manager)->getById(Ugroup::REGISTERED)->returns($group2);
         
-        $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
+        $users = $this->user_finder->getUsersForPermission($permission_level, $object_id);
+        $this->assertEqual($users, $the_simpsons);
+    }
+    
+    public function itExcludesMembersOfAnonymousUsers_ToAvoidFloodingTheGerritConfig() {
+        $permission_level = Git::PERM_WPLUS;
+        $object_id = 5;
+        
+        $ugroup_id_list     = array(150, Ugroup::ANONYMOUS);
+        $the_simpsons       = array(aUser()->withId(2345)->withUserName('Bart')->build(), aUser()->withId(6789)->withUserName('Homer')->build());
+        $anonymous_users    = array(aUser()->withId(2345)->withUserName('Bart')->build(), aUser()->withId(6789)->withUserName('Homer')->build(), 
+                                    aUser()->withId(4444)->withUserName('Athos')->build(), aUser()->withId(5555)->withUserName('Aramis')->build());
+        $group1             = stub('Ugroup')->getMembers()->returns($the_simpsons);
+        $group2             = stub('Ugroup')->getMembers()->returns($anonymous_users);
+        
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->once()->returns($ugroup_id_list);
+        stub($this->ugroup_manager)->getById(150)->returns($group1);
+        stub($this->ugroup_manager)->getById(Ugroup::ANONYMOUS)->returns($group2);
+        
+        $users = $this->user_finder->getUsersForPermission($permission_level, $object_id);
         $this->assertEqual($users, $the_simpsons);
     }
     
@@ -128,7 +147,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         stub($this->ugroup_manager)->getById(150)->returns($group1);
         stub($this->ugroup_manager)->getById(152)->returns($group2);
         
-        $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
+        $users = $this->user_finder->getUsersForPermission($permission_level, $object_id);
         $this->assertEqual($users, $comics_characters);
     }
     
@@ -140,7 +159,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         
         stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->returns($ugroup_id_list);
         stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns(null);
-        $this->assertArrayEmpty($this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id));        
+        $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $object_id));        
     }
     
     //change the method name now that we dont care about duplicating a little bit

@@ -20,43 +20,53 @@
 
 require_once GIT_BASE_DIR .'/Git.class.php';
 class Git_Driver_Gerrit_UserFinder {
-    
+
     /** @var UGroupManager */
     private $ugroup_manager;
-    
+
     /** @var PermissionsManager */
     private $permissions_manager;
-    
+
     public function __construct(PermissionsManager $permissions_manager, UGroupManager $ugroup_manager) {
         $this->permissions_manager = $permissions_manager;
         $this->ugroup_manager      = $ugroup_manager;
     }
-    
-    public function getUsersForWhichTheHighestPermissionIs($permission_type, $object_id){
-        $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type);
-        $ugroup_ids = array_filter($ugroup_ids, array($this, 'notTooBigGroup'));
+
+    /**
+     * 
+     * @param string $permission_type
+     * @param int    $object_id
+     * 
+     * @return array of User
+     */
+    public function getUsersForPermission($permission_type, $object_id){
         $ugroups_members = array();
-        foreach ($ugroup_ids as $ugroup_id) {
+        foreach ($this->getUgroups($object_id, $permission_type) as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getById($ugroup_id);
             if ($ugroup) {
                 $ugroups_members = array_merge($ugroup->getMembers(), $ugroups_members);
             }
         }
-        
+
         return $this->uniqueUsers($ugroups_members);
-    }   
-    
-    private function notTooBigGroup($ugroup_id) {
-        return $ugroup_id !== Ugroup::REGISTERED;
     }
 
-    public function uniqueUsers($ugroups_members) {
+    private function getUgroups($object_id, $permission_type) {
+        $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type);
+        return array_filter($ugroup_ids, array($this, 'notTooBigGroup'));
+    }
+
+    private function notTooBigGroup($ugroup_id) {
+        return ! in_array($ugroup_id, array(Ugroup::REGISTERED, UGroup::ANONYMOUS));
+    }
+
+    private function uniqueUsers($ugroups_members) {
         $ret = array();
         foreach ($ugroups_members as $member) {
-            $ret[$member->getId()] = $member; 
+            $ret[$member->getId()] = $member;
         }
         return array_values($ret);
-        
+
     }
 }
 
