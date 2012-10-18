@@ -367,7 +367,9 @@ class GitActions extends PluginActions {
             $repository->save();
             if ( !empty($repoAccess) ) {
                 if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-                    $repository->getBackend()->savePermissions($repository, $repoAccess);
+                    if (! $repository->getRemoteServerId()) {
+                        $repository->getBackend()->savePermissions($repository, $repoAccess);
+                    }
                 } else {
                     if ($repository->getAccess() != $repoAccess) {
                         $this->systemEventManager->createEvent(
