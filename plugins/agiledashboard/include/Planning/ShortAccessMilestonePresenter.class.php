@@ -32,10 +32,14 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var array of AgileDashboard_Pane */
     private $additional_panes;
 
+    /** @var string */
+    public $access_to_planning;
+
     public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, User $user) {
         parent::__construct($milestone);
-        $this->short_access = $short_access;
-        $this->user         = $user;
+        $this->short_access       = $short_access;
+        $this->user               = $user;
+        $this->access_to_planning = $GLOBALS['Language']->getText('plugin_agiledashboard', 'access_to_planning');
     }
 
     public function additionalPanes() {

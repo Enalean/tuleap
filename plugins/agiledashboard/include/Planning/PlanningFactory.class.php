@@ -131,7 +131,7 @@ class PlanningFactory {
 
     private function sortPlanningsAccordinglyToHierarchy(array &$plannings) {
         $tracker_ids = array_map(array($this, 'getPlanningTrackerId'), $plannings);
-        $hierarchy = $this->hierarchy_factory->getHierarchy($tracker_ids);
+        $hierarchy   = $this->hierarchy_factory->getHierarchy($tracker_ids);
         $this->tmp_tracker_ids_to_sort_plannings = $hierarchy->sortTrackerIds($tracker_ids);
         usort($plannings, array($this, 'cmpPlanningTrackerIds'));
     }
