@@ -132,10 +132,18 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $this->assertEqual($users, $comics_characters);
     }
     
-    
+    public function itDoesNotFailIfTheUGroupDoesNotExist() {
+        $permission_level = Git::PERM_WPLUS;
+        $object_id = 5;
+        
+        $ugroup_id_list = array(99);
+        
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->returns($ugroup_id_list);
+        stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns(null);
+        $this->assertArrayEmpty($this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id));        
+    }
     
     //change the method name now that we dont care about duplicating a little bit
-    //non existing ugroup
     //remove anonymous group
     
     

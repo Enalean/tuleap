@@ -37,7 +37,10 @@ class Git_Driver_Gerrit_UserFinder {
         $ugroup_ids = array_filter($ugroup_ids, array($this, 'notTooBigGroup'));
         $ugroups_members = array();
         foreach ($ugroup_ids as $ugroup_id) {
-            $ugroups_members = array_merge($this->ugroup_manager->getById($ugroup_id)->getMembers(), $ugroups_members);
+            $ugroup = $this->ugroup_manager->getById($ugroup_id);
+            if ($ugroup) {
+                $ugroups_members = array_merge($ugroup->getMembers(), $ugroups_members);
+            }
         }
         
         return $this->uniqueUsers($ugroups_members);
