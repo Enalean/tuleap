@@ -34,14 +34,13 @@
     {{/getShortAccess}}
 </ul>
 
-    {{#getLatestLeafMilestone}}
-            {{#additionalPanes}}
-                <div>
-                    {{{getMinimalContent}}}
-                </div>
-            {{/additionalPanes}}
- 
-    {{/getLatestLeafMilestone}}
+{{#getLatestLeafMilestone}}
+    {{#additionalPanes}}
+        <div>
+            {{{getMinimalContent}}}
+        </div>
+    {{/additionalPanes}}
+{{/getLatestLeafMilestone}}
 
 {{/hasShortAccess}}
 {{^hasShortAccess}}

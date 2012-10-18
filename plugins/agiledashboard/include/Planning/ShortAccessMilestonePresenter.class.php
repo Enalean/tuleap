@@ -29,6 +29,9 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var Planning_ShortAccess */
     private $short_access;
 
+    /** @var array of AgileDashboard_Pane */
+    private $additional_panes;
+
     public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, User $user) {
         parent::__construct($milestone);
         $this->short_access = $short_access;
@@ -36,16 +39,18 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     }
 
     public function additionalPanes() {
-        $additional_panes = array();
-        EventManager::instance()->processEvent(
-            AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
-            array(
-                'milestone' => $this->milestone,
-                'panes'     => &$additional_panes,
-                'user'      => $this->user,
-            )
-        );
-        return $additional_panes;
+        if (!$this->additional_panes) {
+            $this->additional_panes = array();
+            EventManager::instance()->processEvent(
+                AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
+                array(
+                    'milestone' => $this->milestone,
+                    'panes'     => &$this->additional_panes,
+                    'user'      => $this->user,
+                )
+            );
+        }
+        return $this->additional_panes;
     }
 
 
@@ -58,7 +63,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     }
 
     public function is_active() {
-        return $this->isLatest() && $this->short_access->isLatest();
+        return $this->isLatest() && $this->short_access->isLatest() && count($this->additionalPanes());
     }
 }
 ?>
