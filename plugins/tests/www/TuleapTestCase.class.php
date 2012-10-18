@@ -137,6 +137,9 @@ abstract class TuleapTestCase extends UnitTestCase {
         $this->assertFalse(count($a) == 0, "expected array not to be empty, but it contains 0 elements");
     }
    
+    protected function assertArrayEmpty($a) {
+        return $this->assertTrue(is_array($a) && empty($a));
+    }
 
     protected function assertNotBlank($string) {
         // What about trim() ?
@@ -195,5 +198,6 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertCount($array, $expected_count) {
         return $this->assertEqual(count($array), $expected_count);
     }
+
 }
 ?>
