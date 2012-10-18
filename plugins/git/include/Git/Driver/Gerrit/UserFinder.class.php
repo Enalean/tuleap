@@ -21,9 +21,29 @@
 require_once GIT_BASE_DIR .'/Git.class.php';
 class Git_Driver_Gerrit_UserFinder {
     
+    /** @var UGroupManager */
+    private $ugroup_manager;
     
-    public function getUsersForWhichTheHighestPermissionIs($permission_level, $object_idm){
-        return array();
+    /** @var PermissionsManager */
+    private $permissions_manager;
+    
+    public function __construct(PermissionsManager $permissions_manager, UGroupManager $ugroup_manager) {
+        $this->permissions_manager = $permissions_manager;
+        $this->ugroup_manager      = $ugroup_manager;
+    }
+    
+    public function getUsersForWhichTheHighestPermissionIs($permission_type, $object_id){
+        $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type);
+        $ugroup = null;
+        foreach ($ugroup_ids as $ugroup_id) {
+            $ugroup = $this->ugroup_manager->getById($ugroup_id);
+            
+        }
+        if ($ugroup == null) {
+            return array();
+        }
+        return $ugroup->getMembers() ;
+//        return array();
     }   
 }
 

@@ -34,15 +34,16 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->user_finder = new Git_Driver_Gerrit_UserFinder();
         $this->permissions_manager = mock('PermissionsManager');
         $this->ugroup_manager      = mock('UGroupManager');
+        $this->user_finder = new Git_Driver_Gerrit_UserFinder($this->permissions_manager, $this->ugroup_manager);
     }
     
     public function itReturnsNothingWhenNoGroupsHaveTheGivenPermission() {
         $permission_level = Git::PERM_WPLUS;
         $object_id = 5;
-        //TODO better assert
+
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->returns(array());
         $this->assertArrayEmpty($this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id));
     }
     
@@ -52,16 +53,26 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         
         $ugroup_id_list = array(99);
         $group1         = mock('Ugroup');
-        $user_groups    = array($group1);
         
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($permission_level, $object_id)->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns($user_groups);
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->returns($ugroup_id_list);
+        stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns($group1);
         stub($group1)->getMembers()->returns(array());
         $this->assertArrayEmpty($this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id));
     }
     
     public function itReturnsMembersOfStaticGroups() {
-//        $this->assert
+        $permission_level = Git::PERM_WPLUS;
+        $object_id = 5;
+        
+        $ugroup_id_list = array(150);
+        $group1         = mock('Ugroup');
+        
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->once()->returns($ugroup_id_list);
+        stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns($group1);
+        stub($group1)->getMembers()->returns(array(aUser()->withUserName('Bart')->build()));
+        $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
+        $this->assertArrayNotEmpty($users);
+        //has user bart
     }
     
     
