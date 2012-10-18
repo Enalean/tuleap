@@ -52,10 +52,6 @@ plugin_statistics	scm_cvs_total_commit	Nombre total des commits CVS
 plugin_statistics	scm_cvs_commit_project	Nombre total de projets avec des commits CVS
 plugin_statistics	scm_cvs_commit_user	Nombre total d'utilisateurs avec des commits CVS
 plugin_statistics	scm_repo_total	Nombre total des dépôts contenant au moins un commit
-plugin_statistics	scm_git_total_pushes	Nombre total des push git
-plugin_statistics	scm_git_total_commits	Nombre total des commits git
-plugin_statistics	scm_git_users	Nombre total des utilisateurs git
-plugin_statistics	scm_git_repositories	Nombre total des dépôts git
 plugin_statistics	scm_repo_evolution	Nombre de dépôts contenant au moins un commit
 
 plugin_statistics	quota_title	Quota par projet

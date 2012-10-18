@@ -200,3 +200,12 @@ plugin_git	widget_project_pushes_error	There is no logged pushes in the last $1 
 
 plugin_git	logsdaily_field	Repository name
 plugin_git	logsdaily_title	Git pushes
+
+plugin_git	scm_git_total_pushes	Total number of git pushes
+plugin_git	scm_git_total_commits	Total number of git commits
+plugin_git	scm_git_users	Total number of users
+plugin_git	scm_git_repositories	Total number of repositorires
+plugin_git	scm_gitshell_created	Git shell created repositories
+plugin_git	scm_gitshell_created_active	Git shell created repositories (still active)
+plugin_git	scm_gitolite_created	Gitolite created repositories
+plugin_git	scm_gitolite_created_active	Gitolite created repositories (still active)

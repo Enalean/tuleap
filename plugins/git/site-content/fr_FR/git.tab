@@ -197,3 +197,12 @@ plugin_git	widget_project_pushes_error	Pas de push pour la/les dernière(s) $1 s
 
 plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git push
+
+plugin_git	scm_git_total_pushes	Nombre total des push git
+plugin_git	scm_git_total_commits	Nombre total des commits git
+plugin_git	scm_git_users	Nombre total des utilisateurs git
+plugin_git	scm_git_repositories	Nombre total des dépôts git
+plugin_git	scm_gitshell_created	Dépôts crées en Gitshell
+plugin_git	scm_gitshell_created_active	Dépôts crées en Gitshell (encore actifs)
+plugin_git	scm_gitolite_created	Dépôts crées en Gitolite
+plugin_git	scm_gitolite_created_active	Dépôts crées en Gitolite (encore actifs)

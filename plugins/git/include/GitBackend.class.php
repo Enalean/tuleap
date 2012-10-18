@@ -355,13 +355,13 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $formatter->addEmptyLine();
         $formatter->addHeader('Git');
         $gitShellIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitShell[]            = "Git shell created repositories";
+        $gitShell[]            = $GLOBALS['Language']->getText('plugin_git', 'scm_gitshell_created');
         $gitShellActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitShellActive[]      = "Git shell created repositories (still active)";
+        $gitShellActive[]      = $GLOBALS['Language']->getText('plugin_git', 'scm_gitshell_created_active');
         $gitoliteIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitolite[]            = "Gitolite created repositories";
+        $gitolite[]            = $GLOBALS['Language']->getText('plugin_git', 'scm_gitolite_created');
         $gitoliteActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitoliteActive[]      = "Gitolite created repositories (still active)";
+        $gitoliteActive[]      = $GLOBALS['Language']->getText('plugin_git', 'scm_gitolite_created_active');
         $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellIndex,       $gitShell,       false);
         $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellActiveIndex, $gitShellActive, true);
         $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex,       $gitolite,       false);
@@ -406,10 +406,10 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      */
     private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitPushes[]  = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_pushes');
-        $gitCommits[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_total_commits');
-        $gitUsers[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_users');
-        $gitRepo[]    = $GLOBALS['Language']->getText('plugin_statistics', 'scm_git_repositories');
+        $gitPushes[]  = $GLOBALS['Language']->getText('plugin_git', 'scm_git_total_pushes');
+        $gitCommits[] = $GLOBALS['Language']->getText('plugin_git', 'scm_git_total_commits');
+        $gitUsers[]   = $GLOBALS['Language']->getText('plugin_git', 'scm_git_users');
+        $gitRepo[]    = $GLOBALS['Language']->getText('plugin_git', 'scm_git_repositories');
 
         $gitLogDao = new Git_LogDao();
         $dar       = $gitLogDao->totalPushes($formatter->startDate, $formatter->endDate, $formatter->groupId);
