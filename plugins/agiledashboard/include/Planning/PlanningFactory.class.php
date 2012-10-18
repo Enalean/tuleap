@@ -125,6 +125,7 @@ class PlanningFactory {
         foreach ($plannings as $planning) {
             $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $planning_factory);
         }
+        end($short_access)->setIsLatest(true);
         return $short_access;
     }
 

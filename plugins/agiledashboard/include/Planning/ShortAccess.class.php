@@ -22,6 +22,9 @@ class Planning_ShortAccess {
 
     const NUMBER_TO_DISPLAY = 5;
 
+    /** @var bool */
+    private $is_latest = false;
+
     /**
      * @var User
      */
@@ -60,8 +63,9 @@ class Planning_ShortAccess {
             $this->presenters = array();
             $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, self::NUMBER_TO_DISPLAY + 1);
             foreach ($milestones as $milestone) {
-                $this->presenters[] = new Planning_MilestoneLinkPresenter($milestone, $this->user);
+                $this->presenters[] = new Planning_ShortAccessMilestonePresenter($this, $milestone, $this->user);
             }
+            end($this->presenters)->setIsLatest(true);
             $this->presenters = array_reverse($this->presenters);
         }
         return $this->presenters;
@@ -73,6 +77,14 @@ class Planning_ShortAccess {
 
     public function planningRedirectToNew() {
         return 'planning['. $this->planning->getId() .']=-1';
+    }
+
+    public function setIsLatest($is_latest) {
+        $this->is_latest = $is_latest;
+    }
+
+    public function isLatest() {
+        return $this->is_latest;
     }
 
     //TODO: use the one in MilestonePresenter???

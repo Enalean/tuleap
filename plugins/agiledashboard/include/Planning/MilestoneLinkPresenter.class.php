@@ -27,11 +27,10 @@ class Planning_MilestoneLinkPresenter{
     /**
      * @var Planning_Milestone
      */
-    private $milestone;
+    protected $milestone;
     
-    public function __construct(Planning_Milestone $milestone, User $user) {
-        $this->milestone    = $milestone;
-        $this->user = $user;
+    public function __construct(Planning_Milestone $milestone) {
+        $this->milestone = $milestone;
     }
     
     /**
@@ -62,19 +61,5 @@ class Planning_MilestoneLinkPresenter{
     public function getTitle() {
         return $this->milestone->getArtifactTitle();
     }
-
-    public function additionalPanes() {
-        $additional_panes = array();
-        EventManager::instance()->processEvent(
-            AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
-            array(
-                'milestone' => $this->milestone,
-                'panes'     => &$additional_panes,
-                'user'      => $this->user,
-            )
-        );
-        return $additional_panes;
-    }
-
 }
 ?>
