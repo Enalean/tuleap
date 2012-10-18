@@ -69,10 +69,10 @@ class Planning_MilestoneFactory {
         return new Planning_NoMilestone($project, $planning);
     }
 
-    public function getLastFiveOpenMilestones(User $user, Planning $planning) {
+    public function getLastOpenMilestones(User $user, Planning $planning, $number_to_fetch) {
         $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         ksort($artifacts);
-        $artifacts = array_slice($artifacts, -5);
+        $artifacts = array_slice($artifacts, - $number_to_fetch);
         $milestones = array();
         $planned_artifacts = null;
         $i = count($artifacts);

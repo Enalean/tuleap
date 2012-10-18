@@ -37,10 +37,10 @@ class Planning_IndexPresenter {
     public function hasShortAccess() {
         return count($this->short_access);
     }
-    
+
     public function getLatestLeafMilestone() {
         $latest_short_access = end($this->short_access);
-        return current($latest_short_access->getLastFiveOpenMilestones());
+        return current($latest_short_access->getLastOpenMilestones());
     }
 }
 

@@ -20,6 +20,8 @@
 
 class Planning_ShortAccess {
 
+    const NUMBER_TO_DISPLAY = 5;
+
     /**
      * @var User
      */
@@ -35,6 +37,9 @@ class Planning_ShortAccess {
      */
     protected $milestone_factory;
 
+    /** @var array of Planning_MilestoneLinkPresenter */
+    private $presenters;
+
     public function __construct(Planning $planning, User $user, Planning_MilestoneFactory $milestone_factory, PlanningFactory $planning_factory) {
         $this->user              = $user;
         $this->planning          = $planning;
@@ -42,19 +47,30 @@ class Planning_ShortAccess {
         $this->planning_factory  = $planning_factory;
     }
 
-    public function getLastFiveOpenMilestones() {
-        $presenters = array();
-        $milestones = $this->milestone_factory->getLastFiveOpenMilestones($this->user, $this->planning);
-        foreach ($milestones as $milestone) {
-            $presenters[] = new Planning_MilestoneLinkPresenter($milestone, $this->user);
-        }
-        return array_reverse($presenters);
+    public function getLastOpenMilestones() {
+        return array_slice($this->getMilestoneLinkPresenters(), 0, self::NUMBER_TO_DISPLAY);
     }
-    
+
+    public function hasMoreMilestone() {
+        return count($this->getMilestoneLinkPresenters()) > self::NUMBER_TO_DISPLAY;
+    }
+
+    private function getMilestoneLinkPresenters() {
+        if (!$this->presenters) {
+            $this->presenters = array();
+            $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, self::NUMBER_TO_DISPLAY + 1);
+            foreach ($milestones as $milestone) {
+                $this->presenters[] = new Planning_MilestoneLinkPresenter($milestone, $this->user);
+            }
+            $this->presenters = array_reverse($this->presenters);
+        }
+        return $this->presenters;
+    }
+
     public function planningTrackerId() {
         return $this->planning->getPlanningTrackerId();
     }
-    
+
     //TODO: use the one in MilestonePresenter???
     public function createNewItemToPlan() {
         $tracker = $this->planning_factory->getPlanningTracker($this->planning);
