@@ -23,7 +23,7 @@ class Git_Driver_Gerrit_UserFinder {
     
     
     public function getUsersForWhichTheHighestPermissionIs($permission_level, $object_idm){
-        
+        return array();
     }   
 }
 
