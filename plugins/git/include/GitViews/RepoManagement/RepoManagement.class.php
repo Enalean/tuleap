@@ -62,10 +62,10 @@ class GitViews_RepoManagement {
     private function buildPanes(GitRepository $repository) {
         $panes = array(
             new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request),
+            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->gerrit_servers),
             new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request),
             new GitViews_RepoManagement_Pane_Notification($repository, $this->request),
             new GitViews_RepoManagement_Pane_Delete($repository, $this->request),
-            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->gerrit_servers),
         );
         $indexed_panes = array();
         foreach ($panes as $pane) {
