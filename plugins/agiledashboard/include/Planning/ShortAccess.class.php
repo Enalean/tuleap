@@ -48,7 +48,7 @@ class Planning_ShortAccess {
         foreach ($milestones as $milestone) {
             $presenters[] = new Planning_MilestoneLinkPresenter($milestone, $this->user);
         }
-        return $presenters;
+        return array_reverse($presenters);
     }
     
     public function planningTrackerId() {
