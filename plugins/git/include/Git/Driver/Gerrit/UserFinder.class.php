@@ -34,17 +34,27 @@ class Git_Driver_Gerrit_UserFinder {
     
     public function getUsersForWhichTheHighestPermissionIs($permission_type, $object_id){
         $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type);
-        $ugroup = null;
+        $ugroup_ids = array_filter($ugroup_ids, array($this, 'notTooBigGroup'));
+        $ugroups_members = array();
         foreach ($ugroup_ids as $ugroup_id) {
-            $ugroup = $this->ugroup_manager->getById($ugroup_id);
-            
+            $ugroups_members = array_merge($this->ugroup_manager->getById($ugroup_id)->getMembers(), $ugroups_members);
         }
-        if ($ugroup == null) {
-            return array();
-        }
-        return $ugroup->getMembers() ;
-//        return array();
+        
+        return $this->uniqueUsers($ugroups_members);
     }   
+    
+    private function notTooBigGroup($ugroup_id) {
+        return $ugroup_id !== Ugroup::REGISTERED;
+    }
+
+    public function uniqueUsers($ugroups_members) {
+        $ret = array();
+        foreach ($ugroups_members as $member) {
+            $ret[$member->getId()] = $member; 
+        }
+        return array_values($ret);
+        
+    }
 }
 
 ?>

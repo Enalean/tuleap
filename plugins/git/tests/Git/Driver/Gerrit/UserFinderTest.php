@@ -60,7 +60,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $this->assertArrayEmpty($this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id));
     }
     
-    public function itReturnsMembersOfStaticGroups() {
+    public function itReturnsMembersOfAGroup() {
         $permission_level = Git::PERM_WPLUS;
         $object_id = 5;
         
@@ -69,11 +69,75 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         
         stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->once()->returns($ugroup_id_list);
         stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns($group1);
-        stub($group1)->getMembers()->returns(array(aUser()->withUserName('Bart')->build()));
+        
+        $the_simpsons = array(aUser()->withId(2345)->withUserName('Bart')->build(), aUser()->withId(6789)->withUserName('Homer')->build());
+        stub($group1)->getMembers()->returns($the_simpsons);
         $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
-        $this->assertArrayNotEmpty($users);
-        //has user bart
+        $this->assertEqual($users, $the_simpsons);
     }
+    
+    public function itReturnsMembersOfAllGroups() {
+        $permission_level = Git::PERM_WPLUS;
+        $object_id = 5;
+        
+        $ugroup_id_list     = array(150, 152);
+        $the_simpsons       = array(aUser()->withId(2345)->withUserName('Bart')->build(), aUser()->withId(5678)->withUserName('Homer')->build());
+        $the_mousqueteers   = array(aUser()->withId(4444)->withUserName('Athos')->build(), aUser()->withId(5555)->withUserName('Aramis')->build());
+        $group1             = stub('Ugroup')->getMembers()->returns($the_simpsons);
+        $group2             = stub('Ugroup')->getMembers()->returns($the_mousqueteers);
+        
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->once()->returns($ugroup_id_list);
+        stub($this->ugroup_manager)->getById(150)->returns($group1);
+        stub($this->ugroup_manager)->getById(152)->returns($group2);
+        
+        $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
+        $this->assertEqual($users, array_merge($the_mousqueteers, $the_simpsons));
+    }
+    
+    public function itExcludesMembersOfRegisteredUsers_ToAvoidFloodingTheGerritConfig() {
+        $permission_level = Git::PERM_WPLUS;
+        $object_id = 5;
+        
+        $ugroup_id_list     = array(150, Ugroup::REGISTERED);
+        $the_simpsons       = array(aUser()->withId(2345)->withUserName('Bart')->build(), aUser()->withId(6789)->withUserName('Homer')->build());
+        $registered_users   = array(aUser()->withId(2345)->withUserName('Bart')->build(), aUser()->withId(6789)->withUserName('Homer')->build(), 
+                                    aUser()->withId(4444)->withUserName('Athos')->build(), aUser()->withId(5555)->withUserName('Aramis')->build());
+        $group1             = stub('Ugroup')->getMembers()->returns($the_simpsons);
+        $group2             = stub('Ugroup')->getMembers()->returns($registered_users);
+        
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->once()->returns($ugroup_id_list);
+        stub($this->ugroup_manager)->getById(150)->returns($group1);
+        stub($this->ugroup_manager)->getById(Ugroup::REGISTERED)->returns($group2);
+        
+        $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
+        $this->assertEqual($users, $the_simpsons);
+    }
+    
+    public function itReturnsAUserOnlyOnceEvenIfHeExistInSeveralGroups() {
+        $permission_level = Git::PERM_WPLUS;
+        $object_id = 5;
+        
+        $ugroup_id_list     = array(150, 152);
+        $superman           = array(aUser()->withId(2345)->withUserName('ClarkKent')->build());
+        $comics_characters  = array(aUser()->withId(2345)->withUserName('ClarkKent')->build(), 
+                                    aUser()->withId(6789)->withUserName('PeterParker')->build());
+        $group1             = stub('Ugroup')->getMembers()->returns($superman);
+        $group2             = stub('Ugroup')->getMembers()->returns($comics_characters);
+        
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_level)->once()->returns($ugroup_id_list);
+        stub($this->ugroup_manager)->getById(150)->returns($group1);
+        stub($this->ugroup_manager)->getById(152)->returns($group2);
+        
+        $users = $this->user_finder->getUsersForWhichTheHighestPermissionIs($permission_level, $object_id);
+        $this->assertEqual($users, $comics_characters);
+    }
+    
+    
+    
+    //change the method name now that we dont care about duplicating a little bit
+    //non existing ugroup
+    //remove anonymous group
+    
     
     
     
