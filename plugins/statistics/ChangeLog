@@ -1,3 +1,6 @@
+Version 0.21 - Tuleap 5.6
+    * Fix custom quota search
+
 Version 0.20 - Tuleap 5.5
     * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
 

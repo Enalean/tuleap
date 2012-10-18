@@ -5,6 +5,7 @@ Version 5.6 (Not Released Yet)
    == Plugins ==
 	* tracker: 5.26
 	* tests: 5.6
+	* statistics: 0.21
 
 Version 5.5.4 (Tuesday, Octobre 16th 2012)
    * Fix backend warnings about chgrp on ssh key dump
