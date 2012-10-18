@@ -23,7 +23,6 @@ require_once 'common/project/UGroupBinding.class.php';
 Mock::generate('UGroupBinding');
 Mock::generatePartial('UGroupBinding', 'UGroupBindingTestVersion', array('getUGroupsByBindingSource', 'getUGroupManager', 'getUGroupUserDao'));
 Mock::generate('UGroup');
-Mock::generate('UGroupDao');
 Mock::generate('UGroupUserDao');
 Mock::generate('UGroupManager');
 require_once('common/language/BaseLanguage.class.php');
@@ -34,7 +33,6 @@ Mock::generate('Response');
 class UGroupBindingTest extends UnitTestCase {
     private $ugroup_id = 200;
     private $source_id = 300;
-    private $ugroupDao;
     private $ugroupManager;
     private $ugroupUserDao;
     private $ugroupBinding;
@@ -42,7 +40,6 @@ class UGroupBindingTest extends UnitTestCase {
     public function setUp() {
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
-        $this->ugroupDao     = new MockUGroupDao();
         $this->ugroupManager = new MockUGroupManager();
         $this->ugroupUserDao = new MockUGroupUserDao();
         $this->ugroupBinding = new UGroupBinding($this->ugroupUserDao, $this->ugroupManager);
@@ -54,8 +51,7 @@ class UGroupBindingTest extends UnitTestCase {
     }
 
     function testRemoveUgroupBinding() {
-        $this->ugroupDao->setReturnValue('updateUgroupBinding', true);
-        $this->ugroupManager->setReturnValue('getDao', $this->ugroupDao);
+        $this->ugroupManager->setReturnValue('updateUgroupBinding', true);
         $GLOBALS['Language']->expectOnce('getText', array('project_ugroup_binding','binding_removed'));
         $GLOBALS['Response']->expectOnce('addFeedback');
         $this->assertTrue($this->ugroupBinding->removeBinding($this->ugroup_id));
@@ -88,8 +84,7 @@ class UGroupBindingTest extends UnitTestCase {
     }
 
     function testUpdateUgroupBindingFailure() {
-        $this->ugroupDao->setReturnValue('updateUgroupBinding', false);
-        $this->ugroupManager->setReturnValue('getDao', $this->ugroupDao);
+        $this->ugroupManager->setReturnValue('updateUgroupBinding', false);
         $this->expectException(new Exception('Unable to store ugroup binding'));
         $this->ugroupBinding->updateUgroupBinding($this->ugroup_id, $this->source_id);
     }
@@ -98,12 +93,11 @@ class UGroupBindingTest extends UnitTestCase {
         $bindedUgroups = array(300, 400, 500, 600);
         $ugroupBinding = new UGroupBindingTestVersion();
         $ugroupBinding->setReturnValue('getUGroupsByBindingSource', $bindedUgroups);
-        $this->ugroupManager->setReturnValue('getDao', $this->ugroupDao);
         $ugroupBinding->setReturnValue('getUGroupManager', $this->ugroupManager);
 
-        $this->ugroupDao->expectCallCount('updateUgroupBinding', 4);
-        $this->ugroupDao->setReturnValueAt(0, 'updateUgroupBinding', true);
-        $this->ugroupDao->setReturnValueAt(2, 'updateUgroupBinding', false);
+        $this->ugroupManager->expectCallCount('updateUgroupBinding', 4);
+        $this->ugroupManager->setReturnValueAt(0, 'updateUgroupBinding', true);
+        $this->ugroupManager->setReturnValueAt(2, 'updateUgroupBinding', false);
         $this->assertFalse($ugroupBinding->removeAllUGroupsBinding($this->ugroup_id));
     }
 

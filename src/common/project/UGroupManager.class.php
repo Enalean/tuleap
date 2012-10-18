@@ -172,6 +172,28 @@ class UGroupManager {
     }
 
     /**
+     * Wrapper for dao method that updates binding option for a given UGroup
+     *
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return Boolean
+     */
+    public function updateUgroupBinding($ugroupId, $sourceId = null) {
+        return $this->getDao()->updateUgroupBinding($ugroupId, $sourceId);
+    }
+
+    /**
+     * Wrapper to retrieve the source user group from a given bound ugroup id
+     *
+     * @param Integer $ugroupId The source ugroup id
+     *
+     * @return DataAccessResult
+     */
+    public function getUgroupBindingSource($ugroupId) {
+        return $this->getDao()->getUgroupBindingSource($ugroupId);
+    }
+
+    /**
      * Return name and id of all ugroups belonging to a specific project
      *
      * @param Integer $groupId    Id of the project
