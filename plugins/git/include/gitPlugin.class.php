@@ -150,7 +150,9 @@ class GitPlugin extends Plugin {
                     $this->getGitDao(),
                     $this->getGerritDriver(),
                     $this->getRepositoryFactory(),
-                    $this->getGerritServerFactory()
+                    $this->getGerritServerFactory(),
+                    new BackendLogger(),
+                    $this->getUserFinder(),
                 );
                 break;
             default:
@@ -601,6 +603,10 @@ class GitPlugin extends Plugin {
                 $params['codendi_widgets'][] = 'plugin_git_project_pushes';
             }
         }
+    }
+
+    private function getUserFinder() {
+        return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
     }
 }
 

@@ -161,13 +161,5 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns(null);
         $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $object_id));        
     }
-    
-    //change the method name now that we dont care about duplicating a little bit
-    //remove anonymous group
-    
-    
-    
-    
-    
 }
 ?>
