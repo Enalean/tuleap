@@ -57,23 +57,29 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     public function getContent() {
         $html  = '';
         $html .= '<h3>'. $this->getTitle() .'</h3>';
-        $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
-        $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
-        $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
-        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
+        if ($this->repository->getRemoteServerId()) {
+            $html .= 'This repository is on the following remote server: <code>';
+            $html .= $this->gerrit_servers[$this->repository->getRemoteServerId()]->getHost();
+            $html .= '</code>';
+        } else {
+            $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
+            $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
+            $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
+            $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
 
-        $html .= '<p>';
-        $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
-        $html .= '<select name="remote_server_id" id="gerrit_url">';
-        $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
-        foreach ($this->gerrit_servers as $server) {
-            $html .= '<option value="'. (int)$server->getId() .'">'. $this->hp->purify($server->getHost()) .'</option>';
+            $html .= '<p>';
+            $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
+            $html .= '<select name="remote_server_id" id="gerrit_url">';
+            $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+            foreach ($this->gerrit_servers as $server) {
+                $html .= '<option value="'. (int)$server->getId() .'">'. $this->hp->purify($server->getHost()) .'</option>';
+            }
+            $html .= '</select>';
+            $html .= '</p>';
+
+            $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
+            $html .= '</form>';
         }
-        $html .= '</select>';
-        $html .= '</p>';
-
-        $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
-        $html .= '</form>';
         return $html;
     }
 }
