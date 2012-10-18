@@ -19,7 +19,7 @@
  */
 
 class FullTextSearch_Presenter_Index {
-    public $template = 'index';
+    public $template;
     
     private $index_status;
     private $terms;
@@ -40,6 +40,10 @@ class FullTextSearch_Presenter_Index {
     
     public function terms() {
         return $this->terms;
+    }
+    
+    public function setTemplate() {
+        $this->template = 'index';
     }
 }
 

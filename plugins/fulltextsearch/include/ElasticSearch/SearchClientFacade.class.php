@@ -53,7 +53,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         // content of the request (can be directly injected in a curl request)
         //var_dump(json_encode($query));
         $search = $this->client->search($query);
-        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager);
+        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager, $this->type);
     }
 
     /**

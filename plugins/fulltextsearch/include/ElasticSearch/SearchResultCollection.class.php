@@ -17,15 +17,17 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+include 'SearchResult_docman.class.php';
 
 class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResultCollection {
     private $nb_documents_found = 0;
     private $query_time         = 0;
     private $results            = array();
     private $facets             = array();
+    public  $type;
     
-    public function __construct(array $result, array $submitted_facets, ProjectManager $project_manager) {
+    public function __construct(array $result, array $submitted_facets, ProjectManager $project_manager, $type) {
+        $this->type = $type;
         if (isset($result['hits']['total'])) {
             $this->nb_documents_found = $result['hits']['total'];
         }
@@ -38,7 +40,10 @@ class ElasticSearch_SearchResultCollection implements FullTextSearch_SearchResul
                 if ($project->isError()) {
                     $this->nb_documents_found--;
                 } else {
-                    $this->results[] = new ElasticSearch_SearchResult($hit, $project);
+                    $class = 'ElasticSearch_SearchResult_'.$type;  
+                    if(class_exists($class)) { 
+                        $this->results[] = new $class($hit, $project);
+                    }
                 }
             }
         }

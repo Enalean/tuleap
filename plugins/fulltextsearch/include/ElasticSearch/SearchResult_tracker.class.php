@@ -18,20 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResult {
-    public $display_permissions;
-    public $permissions;
-    public $project_name;
-    public $highlight;
+class ElasticSearch_SearchResult_tracker extends ElasticSearch_SearchResult {
+    public $artifact_title;
+    public $url;
         
     public function __construct(array $hit, Project $project) {
-        $this->project_name  = $project->getPublicName();
-        $this->highlight     = isset($hit['highlight']['file']) ? array_shift($hit['highlight']['file']) : '';
-        $this->has_highlight = !empty($this->highlight);
-        $this->display_permissions = isset($hit['fields']['permissions']);
-        if ($this->display_permissions) {
-            $this->permissions = implode(', ', $hit['fields']['permissions']);
-        }
+        //TODO
+        $this->artifact_title    = '';//$hit['fields']['title'];
+        $this->url           = '/plugins/tracker/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
+        parent::__construct($hit, $project);
     }
 }
 ?>
