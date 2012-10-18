@@ -71,6 +71,10 @@ class Planning_ShortAccess {
         return $this->planning->getPlanningTrackerId();
     }
 
+    public function planningRedirectToNew() {
+        return 'planning['. $this->planning->getId() .']=-1';
+    }
+
     //TODO: use the one in MilestonePresenter???
     public function createNewItemToPlan() {
         $tracker = $this->planning_factory->getPlanningTracker($this->planning);

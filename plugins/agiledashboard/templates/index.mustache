@@ -7,8 +7,11 @@
                 <h2>{{#planning}}{{getName}}{{/planning}} <b class="caret"></b></h2>
             </a>
             <ul class="dropdown-menu">
-                <!-- TODO: do not hard code url? -->
-                <li><a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1">{{createNewItemToPlan}}</a></li>
+                <li>
+                    <a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1&{{planningRedirectToNew}}">
+                        {{createNewItemToPlan}}
+                    </a>
+                </li>
             </ul>
         </div>
         <ul>
@@ -20,7 +23,6 @@
                         <a href="{{getUri}}&pane={{getIdentifier}}"><img title="{{getIconTitle}}" src ="{{getIcon}}"></a>
                     {{/additionalPanes}}
                 </div>
-                <!-- TODO: add direct link to artifact + return to AD homepage -->
                 {{getTitle}}{{^getTitle}}{{getXRef}}{{/getTitle}}
             </li>
             {{/getLastOpenMilestones}}
@@ -34,7 +36,7 @@
 
     {{#getLatestLeafMilestone}}
             {{#additionalPanes}}
-                <h2> {{getTitle}} </h2>
+                <h2>{{getTitle}}</h2>
                 <div>
                     {{{getMinimalContent}}}
                 </div>
