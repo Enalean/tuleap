@@ -90,7 +90,7 @@ class LDAP_UserSync {
         $modified = false;
 
         if (($lr->getCommonName() !== null) && ($user->getRealName() != substr($lr->getCommonName(), 0, 32))) {
-            $user->setRealName($lr->getCommonName());
+            $user->setRealName($this->getCommonName($lr));
             $modified = true;
         }
 
@@ -101,6 +101,11 @@ class LDAP_UserSync {
 
         return $modified;
     }
+
+    public function getCommonName(LDAPResult $lr) {
+        return $lr->getCommonName();;
+    }
+
 }
 
 ?>
