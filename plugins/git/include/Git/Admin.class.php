@@ -51,6 +51,9 @@ class Git_Admin {
         $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
         $html  = '';
         $html .= '<h1>'. $title .'</h1>';
+        $html .= '<div class="alert-message block-message warning">';
+        $html .= 'This feature is not finished yet. Use it only if you know what you are doing!';
+        $html .= '</div>';
         $html .= '<form method="POST" action="">';
         $html .= $this->csrf->fetchHTMLInput();
         $html .= '<h2>'. 'Admin gerrit servers' .'</h2>';
