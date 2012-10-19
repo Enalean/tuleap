@@ -61,8 +61,8 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
         return $this->milestone->getTrackerId();
     }
 
-    public function setIsLatest($is_latest) {
-        $this->is_latest = $is_latest;
+    public function setIsLatest() {
+        $this->is_latest = true;
     }
 
     public function isLatest() {

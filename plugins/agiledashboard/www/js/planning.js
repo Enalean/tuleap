@@ -371,7 +371,9 @@ tuleap.agiledashboard.Planning = Class.create({
     }
 });
 
-tuleap.agiledashboard.fix_short_access_height = function() {
+// inline-blocks may have different heights (depends on the content)
+// so align them to have sexy homepage
+tuleap.agiledashboard.align_short_access_heights = function() {
     $$('.ad_index_plannings').each(function (block) {
         var max_height = block.childElements().inject(0, function(m, v) {
             return Math.max(m, v.getHeight());

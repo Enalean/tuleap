@@ -65,7 +65,7 @@ class Planning_ShortAccess {
                 $this->presenters[] = new Planning_ShortAccessMilestonePresenter($this, $milestone, $this->user);
             }
             if (!empty($this->presenters)) {
-                end($this->presenters)->setIsLatest(true);
+                end($this->presenters)->setIsLatest();
             }
             $this->presenters = array_reverse($this->presenters);
         }
@@ -80,8 +80,8 @@ class Planning_ShortAccess {
         return 'planning['. $this->planning->getId() .']=-1';
     }
 
-    public function setIsLatest($is_latest) {
-        $this->is_latest = $is_latest;
+    public function setIsLatest() {
+        $this->is_latest = true;
     }
 
     public function isLatest() {

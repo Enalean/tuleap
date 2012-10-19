@@ -76,8 +76,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getTitle()
      */
     public function getTitle() {
-        $title = $this->milestone->getArtifact()->getTitle();
-        return $title . ' Cardwall';
+        return 'Card Wall';
     }
     
     /**

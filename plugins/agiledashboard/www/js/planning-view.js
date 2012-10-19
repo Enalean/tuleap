@@ -23,5 +23,5 @@ document.observe('dom:loaded', function () {
         new tuleap.agiledashboard.Planning(planner);
     }
     
-    tuleap.agiledashboard.fix_short_access_height.defer();
+    tuleap.agiledashboard.align_short_access_heights.defer();
 });

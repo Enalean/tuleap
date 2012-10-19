@@ -120,7 +120,7 @@ class PlanningFactory {
             $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory);
         }
         if (!empty($short_access)) {
-            end($short_access)->setIsLatest(true);
+            end($short_access)->setIsLatest();
         }
         return $short_access;
     }

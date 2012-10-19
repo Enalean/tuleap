@@ -614,7 +614,7 @@ class TrackerFactory {
      */
     public function getHierarchyFactory() {
         if (!$this->hierarchy_factory) {
-            $this->hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this, Tracker_ArtifactFactory::instance());
+            $this->hierarchy_factory = Tracker_HierarchyFactory::instance();
         }
         return $this->hierarchy_factory;
     }
