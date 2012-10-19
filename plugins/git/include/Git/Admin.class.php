@@ -84,10 +84,13 @@ class Git_Admin {
         $html .= '<dt><h3>'. $title .'</h3></dt>';
         $html .= '<dd>';
         $html .= '<table><tbody>';
-        $html .= '<td><label>'. 'Host:' .'<br /><input type="text" name="gerrit_servers['. $id .'][host]" value="'. $hp->purify($server->getHost()) .'" /></label></td>';
-        $html .= '<td><label>'. 'Port:' .'<br /><input type="text" name="gerrit_servers['. $id .'][port]" value="'. $hp->purify($server->getPort()) .'" /></label></td>';
-        $html .= '<td><label>'. 'Login:' .'<br /><input type="text" name="gerrit_servers['. $id .'][login]" value="'. $hp->purify($server->getLogin()) .'" /></label></td>';
-        $html .= '<td><label>'. 'Identity File:' .'<br /><input type="text" name="gerrit_servers['. $id .'][identity_file]" value="'. $hp->purify($server->getIdentityFile()) .'" /></label></td>';
+        $fields = array(array('Host:',          'host',          $server->getHost()), 
+                        array('Port:',          'port',          $server->getPort()),
+                        array('Login:',         'login',         $server->getLogin()),
+                        array('Identity File:', 'identity_file', $server->getIdentityFile()));
+        foreach ($fields as $field) {
+            $html .= '<td><label>'. $field[0].'<br /><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></label></td>';
+        }
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
             $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
         }
