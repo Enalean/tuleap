@@ -75,7 +75,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
         $artifact_link_columns_select = $this->getArtifactLinkSelects($artifact_link_field_ids_for_column_display);
         $artifact_link_columns_join   = $this->getArtifactLinkColumns($artifact_link_field_ids_for_column_display, $is_super_user, $quoted_ugroups);
         
-        $artifact_permissions = $report_dao->getSqlFragmentForArtifactPermissions($user->isSuperUser(), $user->getUgroups($group_id, array()));
+        $artifact_permissions = $report_dao->getSqlFragmentForArtifactPermissions($is_super_user, $user->getUgroups($group_id, array()));
         $artifact_permissions_join  = $artifact_permissions['from'];
         $artifact_permissions_where = $artifact_permissions['where'];
         
@@ -128,7 +128,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
             // }}}
             $sqls = array_merge(
                 $sqls, 
-                $report_dao->getSqlFragmentsAccordinglyToTrackerPermissions($user->isSuperUser(), $from, $subwhere, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)
+                $report_dao->getSqlFragmentsAccordinglyToTrackerPermissions($is_super_user, $from, $subwhere, $group_id, $tracker_id, $permissions, $ugroups, $static_ugroups, $dynamic_ugroups, $contributor_field_id)
             );
         }
         array_filter($sqls);
@@ -184,6 +184,7 @@ class Tracker_CrossSearch_SearchDao extends DataAccessObject {
                 GROUP BY artifact.id
                 ORDER BY tracker_artifact_priority.rank
             ";
+            //echo "<pre>".$sql."</pre>";
             $results = $this->retrieve($sql);
         }
         $nb_matching = count($results);
