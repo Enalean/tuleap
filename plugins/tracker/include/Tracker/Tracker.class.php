@@ -3016,6 +3016,10 @@ EOS;
             return null;
         }
     }
+
+    public function getArtifactLinkField(User $user) {
+        return $this->getFormElementFactory()->getAnArtifactLinkField($user, $this);
+    }
     
     /**
      *	existUser - check if a user is already in the project permissions

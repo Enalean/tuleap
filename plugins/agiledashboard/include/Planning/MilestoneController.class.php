@@ -139,7 +139,7 @@ class Planning_MilestoneController extends MVC2_Controller {
         Project              $project = null
     ) {
         
-        $already_planned_artifact_ids = $this->getAlreadyPlannedArtifactsIds();
+        $already_planned_artifact_ids = $this->milestone_factory->getAllBacklogItemsIds($this->getCurrentUser(), $planning);
         $cross_search_query           = $this->getCrossSearchQuery();
         $backlog_tracker_ids          = $this->hierarchy_factory->getHierarchy(array($planning->getBacklogTrackerId()))->flatten();
         $backlog_actions_presenter    = new Planning_BacklogActionsPresenter($planning->getBacklogTracker(), $this->milestone, $this->getPlanningRedirectToSelf());
@@ -184,27 +184,6 @@ class Planning_MilestoneController extends MVC2_Controller {
         return $preselected_criteria;
     }
 
-    private function getAlreadyPlannedArtifactsIds() {
-        return array_map(array($this, 'getArtifactId'), $this->getAlreadyPlannedArtifacts());
-    }
-
-    private function getArtifactId(Tracker_Artifact $artifact) {
-        return $artifact->getId();
-    }
-
-    /**
-     * @param array of Planning_Milestone $available_milestones
-     * 
-     * @return array of Tracker_Artifact
-     */
-    private function getAlreadyPlannedArtifacts() {
-        $linked_items = array();
-        foreach ($this->getAllMilestonesOfCurrentPlanning() as $milestone) {
-            $linked_items = array_merge($linked_items, $milestone->getLinkedArtifacts($this->getCurrentUser()));
-        }
-        return $linked_items;
-    }
- 
     /**
      * @return BreadCrumb_BreadCrumbGenerator
      */

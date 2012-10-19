@@ -284,10 +284,9 @@ class Planning_MilestoneFactory {
     public function getAllMilestones(User $user, Planning $planning) {
         $project = $planning->getPlanningTracker()->getProject();
         $milestones = array();
-        $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
+        $artifacts = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
-            $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
-            $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
+            $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact);
         }
         return $milestones;
     }
@@ -378,6 +377,21 @@ class Planning_MilestoneFactory {
             return $this->getMilestoneFromArtifact(array_shift($artifacts));
         }
         return new Planning_NoMilestone($planning->getPlanningTracker()->getProject(), $planning);
+    }
+
+    public function getAllBacklogItemsIds(User $user, Planning $planning) {
+        $milestone_artifact_ids = array();
+        foreach ($this->getAllMilestones($user, $planning) as $milestone) {
+            $milestone_artifact_ids[] = $milestone->getArtifact()->getId();
+        }
+        $artifact_link_field = $planning->getPlanningTracker()->getArtifactLinkField($user);
+        $dao = new Planning_MilestoneDao();
+        $dar = $dao->searchBacklogItemsInMilestones($artifact_link_field->getId(), $planning->getBacklogTrackerId(), $milestone_artifact_ids);
+        $already_planned_ids = array();
+        foreach ($dar as $row) {
+            $already_planned_ids[] = $row['artifact_id'];
+        }
+        return $already_planned_ids;
     }
 }
 ?>
