@@ -158,7 +158,7 @@ class AgileDashboardRouter {
         if ($this->userIsAdmin($request)) {
             $toolbar[] = array(
                 'title' => $GLOBALS['Language']->getText('global', 'Admin'),
-                'url'   => '/plugins/agiledashboard/?'. http_build_query(array(
+                'url'   => AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
                     'group_id' => $request->get('group_id'),
                     'action'   => 'admin',
                 ))
