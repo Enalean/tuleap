@@ -1,6 +1,6 @@
 Version 5.6 (Not Released Yet)
    == Enhancements ==
-        * Enhance FRS monitoring (Contrib StMicroelectronics)
+    * Enhance FRS monitoring (Contrib StMicroelectronics)
 
    == Plugins ==
 	* tracker: 5.26
@@ -8,6 +8,11 @@ Version 5.6 (Not Released Yet)
 	* statistics: 0.22
 	* git: 2.7.13
 	* ldap: 3.20
+
+   == Development ==
+	* Initialize a Vagrant box to ease the build of Tuleap. See ./Vagrantfile
+	and http://vagrantup.com/ for details. This will also help newcomers to
+	install a Tuleap development environment.
 
 Version 5.5.4 (Tuesday, Octobre 16th 2012)
    * Fix backend warnings about chgrp on ssh key dump
