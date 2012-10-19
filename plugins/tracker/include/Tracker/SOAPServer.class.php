@@ -44,6 +44,7 @@ define('delete_artifact_followup_fault','3023');
 
 define('get_tracker_factory_fault','3024');
 define('get_tracker_fault','3025');
+define('user_is_not_tracker_admin','3026');
 
 class Tracker_SOAPServer {
     /**
@@ -465,36 +466,41 @@ class Tracker_SOAPServer {
         $user = $this->soap_user_manager->continueSession($session_key);
         $this->getProjectById($group_id, 'getTrackerSemantic');
         $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
-        $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
-        
-        //TODO : check perms - only tracker admins can access the semantic
-        $semantics = $tracker_semantic_manager->getSemantics();
-//        $file = fopen("test" , "a+");
-//        fwrite($file,(var_export($semantics, 1)));
-//        fwrite($file,"1");
-//        fwrite($file,"223323233232232");
-//        fclose($file);    
-        return $this->semantic_to_soap($semantics);   
+        if ($tracker->userIsAdmin($user)) {
+            //TODO : Add constant for types to exclude
+            $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
+            $semantics = $this->getSOAPSemantics($tracker_semantic_manager, array('tooltip'));
+    //        $file = fopen("test" , "a+");
+    //        fwrite($file,(var_export($semantics, 1)));
+    //        fclose($file);    
+          return $this->semantic_to_soap($semantics);   
+          // return $semantics; 
+        } else {
+            return new SoapFault(user_is_not_tracker_admin,'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
+        }
     }
 
     private function semantic_to_soap($semantics) {
         $return = array();
-        $content = array('title', 'status', 'contributor');
-        $i = 0;
         foreach ($semantics as $tracker_semantic) {
             //TODO : Made name in array correctly !
-            if (method_exists($tracker_semantic, 'getField')) {
-                $return[$content[$i]] = array('field_name' => $tracker_semantic->getField()->getName());
-                if (method_exists($tracker_semantic, 'getOpenValues')) {
-                    $return[$content[$i]]['values'] = $tracker_semantic->getOpenValues();
-                }
+            $return[$tracker_semantic->getShortName()] = array('field_name' => $tracker_semantic->getField()->getName());
+            if ($tracker_semantic->getShortName() == 'status') {
+                $return[$tracker_semantic->getShortName()]['values'] = $tracker_semantic->getOpenValues();
             }
-           $i++;
         } 
         $file = fopen("test" , "a+");
         fwrite($file,(var_export($return, 1)));
         fclose($file); 
         return $return;
+    }
+    
+    public function getSOAPSemantics ($tracker_semantic_manager, array $exclude) {
+        $semantics = $tracker_semantic_manager->getSemantics();
+        foreach ($exclude as $type) {
+            unset($semantics[$type]);
+        }
+        return $semantics;
     }
  
     /**

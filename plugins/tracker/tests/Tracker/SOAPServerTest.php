@@ -357,4 +357,27 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 }
 
+class Tracker_SOAPServer_getTracker_Test extends Tracker_SOAPServer_BaseTest {
+    
+    private $semantic1;
+    private $semantic2;
+    private $semantics;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->semantic1                = mock('Tracker_Semantic');
+        $this->semantic2                = mock('Tracker_Semantic');
+        $this->tracker_semantic_manager = mock('Tracker_SemanticManager');
+        
+        stub($this->tracker_semantic_manager)->getSemantics()->returns(array('title'  => $this->semantic1, 'toDelete' => $this->semantic2));
+    }
+    
+    public function itReturnsOnlyTheRightSemanticTypes() {
+        $exclude = array('toDelete');
+        $this->semantics = $this->server->getSOAPSemantics($this->tracker_semantic_manager, $exclude);
+        $this->assertTrue(isset( $this->semantics['title']));
+        $this->assertFalse(isset( $this->semantics['toDelete']));
+    }
+}
+
 ?>
