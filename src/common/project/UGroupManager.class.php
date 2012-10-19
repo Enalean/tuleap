@@ -205,9 +205,8 @@ class UGroupManager {
         $dar = $this->getDao()->getExistingUgroups($groupId, $predefined);
         if ($dar && !$dar->isError()) {
             return $dar;
-        } else {
-            return array();
         }
+        return array();
     }
 
 }

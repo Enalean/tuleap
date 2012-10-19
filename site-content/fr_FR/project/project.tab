@@ -980,7 +980,7 @@ project_ugroup_binding	duplicate_binding_warning	Le groupe d'utilisateurs ayant 
 project_ugroup_binding	binding_removed	Liaison avec le groupe d'utilisateurs faite avec succés
 project_ugroup_binding	remove_error	La liaison avec le groupe d'utilisateurs n'a pas été enlevée
 project_ugroup_binding	current_binding	Liaison actuelle
-project_ugroup_binding	binding_sources	Groupes d'utilisateurs liés a celui ci
+project_ugroup_binding	binding_sources	Groupes d'utilisateurs liés à celui ci
 project_ugroup_binding	edit_binding	Modifier la liaison
 project_ugroup_binding	source_project	Projet source
 project_ugroup_binding	source_ugroup	groupe d'utilisateurs source
