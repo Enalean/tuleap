@@ -354,28 +354,18 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         $formatter->clearContent();
         $formatter->addEmptyLine();
         $formatter->addHeader('Git');
-        $gitShellIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitShell[]      = "Git shell";
-        $gitoliteIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
-        $gitolite[]      = "Gitolite";
-        $dar             = $dao->getBackendStatistics('gitshell', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitShellIndex[] = $row['month']." ".$row['year'];
-                $gitShell[]      = intval($row['count']);
-            }
-            $formatter->addLine($gitShellIndex);
-            $formatter->addLine($gitShell);
-        }
-        $dar = $dao->getBackendStatistics('gitolite', $formatter->startDate, $formatter->endDate, $formatter->groupId);
-        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
-            foreach ($dar as $row) {
-                $gitoliteIndex[] = $row['month']." ".$row['year'];
-                $gitolite[]      = intval($row['count']);
-            }
-            $formatter->addLine($gitoliteIndex);
-            $formatter->addLine($gitolite);
-        }
+        $gitShellIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShell[]            = "Git shell created repositories";
+        $gitShellActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitShellActive[]      = "Git shell created repositories (still active)";
+        $gitoliteIndex[]       = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitolite[]            = "Gitolite created repositories";
+        $gitoliteActiveIndex[] = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
+        $gitoliteActive[]      = "Gitolite created repositories (still active)";
+        $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellIndex,       $gitShell,       false);
+        $this->fillBackendStatisticsByType($formatter, 'gitshell', $gitShellActiveIndex, $gitShellActive, true);
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteIndex,       $gitolite,       false);
+        $this->fillBackendStatisticsByType($formatter, 'gitolite', $gitoliteActiveIndex, $gitoliteActive, true);
         $this->retrieveLoggedPushesStatistics($formatter);
         $content = $formatter->getCsvContent();
         $formatter->clearContent();
@@ -383,11 +373,36 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     }
 
     /**
+     * Fill statistics by Backend type
+     *
+     * @param Statistics_Formatter $formatter   instance of statistics formatter class
+     * @param String               $type        backend type
+     * @param Array                $typeIndex   backend type index
+     * @param Array                $typeArray   backend type array
+     * @param Boolean              $keepedAlive keep only reposirtories that still active
+     *
+     * @return Void
+     */
+    private function fillBackendStatisticsByType(Statistics_Formatter $formatter, $type, $typeIndex, $typeArray, $keepedAlive) {
+        $dao = $this->getDao();
+        $dar = $dao->getBackendStatistics($type, $formatter->startDate, $formatter->endDate, $formatter->groupId, $keepedAlive);
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            foreach ($dar as $row) {
+                $typeIndex[] = $row['month']." ".$row['year'];
+                $typeArray[]      = intval($row['count']);
+            }
+            $formatter->addLine($typeIndex);
+            $formatter->addLine($typeArray);
+            $formatter->addEmptyLine();
+        }
+    }
+
+    /**
      * Retrieve logged pushes statistics for CSV export
      *
      * @param Statistics_Formatter $formatter instance of statistics formatter class
      *
-     * @return void
+     * @return Void
      */
     private function retrieveLoggedPushesStatistics(Statistics_Formatter $formatter) {
         $gitIndex[]   = $GLOBALS['Language']->getText('plugin_statistics', 'scm_month');
@@ -414,8 +429,15 @@ class GitBackend extends Backend implements Git_Backend_Interface {
         }
     }
 
+    /**
+     * Do nothing :)
+     *
+     * @param GitRepository $repository Useless param :p
+     *
+     * @return Void
+     */
     public function commitTransaction(GitRepository $repository) {
-        // this action is not necessary for thhis type of backend
+        // this action is not necessary for this type of backend
     }
 }
 
