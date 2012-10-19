@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,10 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class BreadCrumb_AgileDashboard implements BreadCrumb_BreadCrumbGenerator {
+class Planning_IndexPresenter {
 
-    public function getCrumbs() {
-        return array();
+    /**
+     * @var string
+     */
+    public $plugin_theme_path;
+
+    public function __construct(array $short_access, $plugin_theme_path) {
+        $this->short_access      = $short_access;
+        $this->plugin_theme_path = $plugin_theme_path;
+    }
+
+    public function getShortAccess() {
+        return $this->short_access;
+    }
+
+    public function hasShortAccess() {
+        return count($this->short_access);
+    }
+
+    public function getLatestLeafMilestone() {
+        $latest_short_access = end($this->short_access);
+        return current($latest_short_access->getLastOpenMilestones());
     }
 }
+
 ?>

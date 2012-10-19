@@ -44,5 +44,9 @@ class Cardwall_PaneContentPresenter extends Cardwall_BoardPresenter {
         $this->configure_url       = $configure_url;
         $this->configure_label     = $GLOBALS['Language']->getText('plugin_cardwall', 'configure_cardwall_label');
     }
+    
+    public function canConfigure() {
+        return $this->configure_url;
+    }
 }
 ?>

@@ -1,24 +1,50 @@
-<h2>{{planningsTitle}}</h2>
-<p>
-    <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;action=new" id="planning_create">
-        <img border="0" alt="add" src="/themes/Tuleap/images/ic/add.png" style="vertical-align:middle"> 
-        {{createPlanning}}
-    </a>
-</p>
-{{#hasPlannings}}
-<ul>
-    {{#getPlannings}}
-    <li>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=show">
-            {{getName}}
-        </a>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=edit">
-            <img src="{{getEditIconPath}}" alt="{{getEditActionLabel}}" />
-        </a>
-        <a href="/plugins/agiledashboard/?group_id={{group_id}}&amp;planning_id={{getId}}&amp;action=delete">
-            <img src="{{getDeleteImagePath}}" alt="delete" />
-        </a>
+{{#hasShortAccess}}
+<ul class="ad_index_plannings">
+    {{#getShortAccess}}
+    <li class="ad_index_planning">
+        <div class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <h2>{{#planning}}{{getName}}{{/planning}} <b class="caret"></b></h2>
+            </a>
+            <ul class="dropdown-menu">
+                <li>
+                    <a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id=0&immediate=1&{{planningRedirectToNew}}">
+                        {{createNewItemToPlan}}
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <ul>
+            {{#getLastOpenMilestones}}
+            <li class="{{#is_active}}active{{/is_active}}">
+                <div class="ad_index_planning_icons">
+                    <a href="{{getUri}}"><img title="{{access_to_planning}}" src="{{plugin_theme_path}}/images/sticky-notes-stack.png"></a>
+                    {{#additionalPanes}}
+                        <a href="{{getUri}}&pane={{getIdentifier}}"><img title="{{getIconTitle}}" src="{{getIcon}}"></a>
+                    {{/additionalPanes}}
+                </div>
+                {{getTitle}}{{^getTitle}}{{getXRef}}{{/getTitle}}
+            </li>
+            {{/getLastOpenMilestones}}
+            {{#hasMoreMilestone}}
+            <li>...</li>
+            {{/hasMoreMilestone}}
+        </ul>
     </li>
-    {{/getPlannings}}
+    {{/getShortAccess}}
 </ul>
-{{/hasPlannings}}
+
+{{#getLatestLeafMilestone}}
+    {{#additionalPanes}}
+        <div>
+            {{{getMinimalContent}}}
+        </div>
+    {{/additionalPanes}}
+{{/getLatestLeafMilestone}}
+
+{{/hasShortAccess}}
+{{^hasShortAccess}}
+<p>
+    <em>Nothing has been setup yet. Please come again later!</em>
+</p>
+{{/hasShortAccess}}

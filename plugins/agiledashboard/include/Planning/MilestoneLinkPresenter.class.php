@@ -27,7 +27,7 @@ class Planning_MilestoneLinkPresenter {
     /**
      * @var Planning_Milestone
      */
-    private $milestone;
+    protected $milestone;
     
     public function __construct(Planning_Milestone $milestone) {
         $this->milestone = $milestone;
@@ -50,7 +50,7 @@ class Planning_MilestoneLinkPresenter {
     public function getXref() {
         return $this->milestone->getXref();
     }
-    
+
     /**
      * @return string The milestone title (i.e. the artifact's one).
      */
