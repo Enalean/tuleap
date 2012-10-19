@@ -119,7 +119,7 @@ class PlanningFactory {
         foreach ($plannings as $planning) {
             $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory);
         }
-        if(!empty($short_access)){
+        if (!empty($short_access)) {
             end($short_access)->setIsLatest(true);
         }
         return $short_access;

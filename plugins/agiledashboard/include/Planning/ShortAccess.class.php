@@ -64,7 +64,7 @@ class Planning_ShortAccess {
             foreach ($milestones as $milestone) {
                 $this->presenters[] = new Planning_ShortAccessMilestonePresenter($this, $milestone, $this->user);
             }
-            if(!empty($this->presenters)){
+            if (!empty($this->presenters)) {
                 end($this->presenters)->setIsLatest(true);
             }
             $this->presenters = array_reverse($this->presenters);
