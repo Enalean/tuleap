@@ -3,11 +3,13 @@ Version 5.6 (Not Released Yet)
     * Enhance FRS monitoring (Contrib StMicroelectronics)
 
    == Plugins ==
-	* tracker: 5.26
+	* tracker: 5.27
 	* tests: 5.6
 	* statistics: 0.22
 	* git: 2.7.13
 	* ldap: 3.20
+	* agiledashboard: 0.55
+	* cardwall: 0.9.7
 
    == Development ==
 	* Initialize a Vagrant box to ease the build of Tuleap. See ./Vagrantfile
