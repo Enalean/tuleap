@@ -28,12 +28,9 @@ class BackendLoggerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->old_value_for_codendi_log = $GLOBALS['codendi_log'];
         $GLOBALS['codendi_log'] = '/tmp';
-
-        $this->log_file = tempnam($GLOBALS['codendi_log'], 'codendi_syslog');
-
-        $this->logger=new BackendLogger($this->log_file);
+        $this->log_file         = tempnam($GLOBALS['codendi_log'], 'codendi_syslog');
+        $this->logger           = new BackendLogger($this->log_file);
     }
 
     public function itLogsToTheSyslog() {
@@ -55,7 +52,7 @@ class BackendLoggerTest extends TuleapTestCase {
     
     public function testErrorAppendsStackTraceIfGivenAnError() {
         $message = 'an error occured';
-        $exception = $this->generateException('some error');
+        $exception = new Exception('some error');
         $this->logger->error($message, $exception);
 
         $this->assertLogContainsStackTrace($exception);
@@ -64,17 +61,11 @@ class BackendLoggerTest extends TuleapTestCase {
 
     public function testWarnAppendsStackTraceIfGivenAnError() {
         $message = 'an error occured';
-        $exception = $this->generateException('some error');
-        $this->logger->warn($message, $exception);
+        $exception = new Exception('some error');
+        $this->logger->error($message, $exception);
 
         $this->assertLogContainsStackTrace($exception);
         $this->assertLogContainsErrorMessage($exception, $message);
-    }
-
-
-    public function tearDown() {
-        parent::tearDown();
-        $GLOBALS['codendi_log'] = $this->old_value_for_codendi_log;
     }
 
     private function assertLogContainsStackTrace($exception) {
@@ -87,17 +78,6 @@ class BackendLoggerTest extends TuleapTestCase {
         $error_message = $exception->getMessage();
         $start_of_trace = substr($exception->getTraceAsString(), 0, 20);
         $this->assertPattern("%$message: $error_message:\n$start_of_trace%m", file_get_contents($this->log_file));
-
     }
-
-    private function generateException($error_message) {
-        try {
-            throw new Exception($error_message);
-        } catch (Exception $exception) {
-            return $exception;
-        }
-    }
-
-
 }
 ?>
