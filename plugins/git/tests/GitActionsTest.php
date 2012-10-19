@@ -647,9 +647,6 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         $this->actions->migrateToGerrit($repo, $this->unexsting_server_id);
     }
 
-    //not if already gerrit
-    //not if gitshell
-    //happy path
     public function itDoesNothingWhenItIsntMigratable() {
         $repo = stub('GitRepository')->isMigratableToGerrit()->returns(false);
         $this->em->expectNever('createEvent');

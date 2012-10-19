@@ -250,7 +250,8 @@ class GitRepositoryTest extends TuleapTestCase {
     
     public function itIsNotMigratableIfAlreadyAGerritRepo() {
         $repo = new GitRepository();
-        $repo->setBackendType(GitDao::BACKEND_GITSHELL);
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteServerId(34);
         $this->assertFalse($repo->isMigratableToGerrit());
     }
 }

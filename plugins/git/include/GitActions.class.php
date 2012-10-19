@@ -499,7 +499,7 @@ class GitActions extends PluginActions {
                     SystemEvent::PRIORITY_HIGH
                 );
             } catch (GerritServerNotFoundException $e) {
-                // do nothing
+                // TODO log error to the syslog
             }
         }
     }

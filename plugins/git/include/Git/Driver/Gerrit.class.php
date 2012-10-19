@@ -57,11 +57,9 @@ class Git_Driver_Gerrit {
     
     public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
         $gerrit_group = $this->getGerritProjectName($repository)."-$group_name";
-        $command = array(self::COMMAND, "create-group", $gerrit_group);
-        foreach ($user_list as $user) {
-            $command[] = "--member ".$user->getUsername();
-        }
-        $command_line = implode(' ',$command);
+        $base_command = array(self::COMMAND, "create-group", $gerrit_group);
+        $members      = $this->compileMemberCommands($user_list);
+        $command_line = implode(' ',array_merge($base_command, $members));
         try {
             $this->ssh->execute($server, $command_line);
         } catch (RemoteSSHCommandFailure $e) {
@@ -89,6 +87,14 @@ class Git_Driver_Gerrit {
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
         return "$host-$project/$repo";
+    }
+
+    public function compileMemberCommands($user_list) {
+        $members = array();
+        foreach ($user_list as $user) {
+            $members[] = "--member ".$user->getUsername();
+        }
+        return $members;
     }
 }
 
