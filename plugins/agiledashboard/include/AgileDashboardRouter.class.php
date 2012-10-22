@@ -98,8 +98,10 @@ class AgileDashboardRouter {
             case 'admin':
                 if ($this->userIsAdmin($request)) {
                     $this->renderAction($controller, 'admin', $request);
+                } else {
+                    $this->renderAction($controller, 'index', $request);
                 }
-                /* no break; */
+                break;
             case 'index':
             default:
                 $this->renderAction($controller, 'index', $request);
