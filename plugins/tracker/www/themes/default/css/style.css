@@ -1222,6 +1222,11 @@ td.first-column {
    text-decoration: line-through;
 }
 
+.help {
+    color: #999;
+    margin-top: 0;
+}
+
 /* {{{ */
 .tracker_confirm_delete {
     width: 50%;
