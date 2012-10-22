@@ -52,11 +52,17 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $user;
 
-    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user) {
+    /**
+     * @var string
+     */
+    private $plugin_theme_path;
+
+    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user, $plugin_theme_path) {
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
         $this->user           = $user;
+        $this->plugin_theme_path = $plugin_theme_path;
     }
 
     /**
@@ -72,14 +78,39 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     public function getTitle() {
         return 'Card Wall';
     }
+    
+    /**
+     * @see AgileDashboard_Pane::getIcon()
+     */
+    public function getIcon() {
+        return $this->plugin_theme_path .'/images/ic/sticky-note-pin.png';
+    }
+    
+    /**
+     * @see AgileDashboard_Pane::getIconTitle()
+     */
+    public function getIconTitle() {
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'access_cardwall');
+    }
+    
+    /**
+     * @see AgileDashboard_Pane::getFullContent()
+     */
+    public function getFullContent() {
+        return $this->getPaneContent('agiledashboard-fullpane');
+    }
 
     /**
-     * @see AgileDashboard_Pane::getContent()
+     * @see AgileDashboard_Pane::getMinimalContent()
      */
-    public function getContent() {
+    public function getMinimalContent() {
+        return $this->getPaneContent('agiledashboard-minimalpane');
+    }
+
+    private function getPaneContent($template) {
         $columns = $this->config->getDashboardColumns();
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../templates');
-        return $renderer->renderToString('agiledashboard-pane', $this->getPresenterUsingMappedFields($columns));
+        return $renderer->renderToString($template, $this->getPresenterUsingMappedFields($columns));
         // TODO what if no semantic status and no mapping????
     }
 
@@ -96,11 +127,19 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $board              = $board_factory->getBoard($field_retriever, $columns, $planned_artifacts, $this->config, $this->user);
         $backlog_title      = $this->milestone->getPlanning()->getBacklogTracker()->getName();
         $redirect_parameter = 'cardwall[agile]['. $this->milestone->getPlanning()->getId() .']='. $this->milestone->getArtifactId();
-        $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
 
-        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $configure_url);
+        return new Cardwall_PaneContentPresenter($board, $this->getQrCode(), $redirect_parameter, $backlog_title, $this->canConfigure());
     }
-
+    
+    private function canConfigure() {        
+        $project = $this->milestone->getProject();
+        if ($project->userIsAdmin($this->user)){
+            $configure_url      = TRACKER_BASE_URL .'/?tracker='. $this->milestone->getTrackerId() .'&func=admin-cardwall';
+            return $configure_url;
+        }
+        return false;
+    }
+    
     /**
      * @return Cardwall_QrCode
      */

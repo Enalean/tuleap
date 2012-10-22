@@ -6,12 +6,13 @@
 //
 // 
 
-require_once('pre.php');    
-require_once('account.php');
+require_once 'pre.php';
+require_once 'account.php';
+
 session_require(array('isloggedin'=>1));
 
-$um   = UserManager::instance();
-$user = $um->getCurrentUser();
+$user_manager = UserManager::instance();
+$user         = $user_manager->getCurrentUser();
 
 $request = HTTPRequest::instance();
 
@@ -19,14 +20,7 @@ if ($request->isPost()
     && $request->exist('Submit')
     && $request->exist('form_authorized_keys')) {
 
-    $form_authorized_keys = trim($request->get('form_authorized_keys'));
-    $form_authorized_keys = ereg_replace("(\r\n)|(\n)","###", $form_authorized_keys);
-    $user->setAuthorizedKeys($form_authorized_keys);
-
-    $um->updateDb($user);
-
-    $em = EventManager::instance();
-    $em->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
+    $user_manager->updateUserSSHKeys($user, $request->get('form_authorized_keys'));
 
     $GLOBALS['Response']->redirect('/account');
 }

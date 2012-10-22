@@ -1,8 +1,17 @@
+Version 5.27 - Tuleap 5.6
+    * Make agile dashboard home page more user friendly
+
+Version 5.26 - Tuleap 5.6
+    * Fix unit test includes
+
+Version 5.25 - Tuleap 5.6
+    * Add new type of field in trackers: checkbox (Contrib JTEKT)
+
 Version 5.24 - Tuleap 5.6
     * SOAP: getArtifacts now returns filtered results
 
 Version 5.23 - Tuleap 5.6
-    * 
+    *
 
 Version 5.22 - Tuleap 5.6
     * SOAP: Add missing info on getArtifact: submitted_on, submitted_by, last_update_date

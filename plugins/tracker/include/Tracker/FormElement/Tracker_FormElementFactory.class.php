@@ -48,6 +48,7 @@ require_once('Tracker_FormElement_Container_Column.class.php');
 require_once('Tracker_FormElement_StaticField_LineBreak.class.php');
 require_once('Tracker_FormElement_StaticField_Separator.class.php');
 require_once('Tracker_FormElement_StaticField_RichText.class.php');
+require_once('Tracker_FormElement_Field_Checkbox.class.php');
 
 require_once('common/widget/Widget_Static.class.php');
 
@@ -74,6 +75,7 @@ class Tracker_FormElementFactory {
         'text'     => 'Tracker_FormElement_Field_Text',
         'sb'       => 'Tracker_FormElement_Field_Selectbox',
         'msb'      => 'Tracker_FormElement_Field_MultiSelectbox',
+        'cb'       => 'Tracker_FormElement_Field_Checkbox',
         'date'     => 'Tracker_FormElement_Field_Date',
         'file'     => 'Tracker_FormElement_Field_File',
         'int'      => 'Tracker_FormElement_Field_Integer',
@@ -407,7 +409,7 @@ class Tracker_FormElementFactory {
      * @return array All (multi) selectboxes formElements used by the tracker
      */
     public function getUsedListFields($tracker) {
-        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'tbl'));
+        return $this->getUsedFormElementsByType($tracker, array('sb', 'msb', 'tbl', 'cb'));
     }
     
     /**
@@ -476,7 +478,7 @@ class Tracker_FormElementFactory {
     }
     
     public function getUsedListFieldById($tracker, $field_id) {
-        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('sb', 'msb', 'tbl'));
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('sb', 'msb', 'tbl', 'cb'));
     }
     
     public function getUsedSbFields($tracker) {

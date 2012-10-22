@@ -1,7 +1,28 @@
 Version 5.6 (Not Released Yet)
+   == Enhancements ==
+    * Enhance FRS monitoring (Contrib StMicroelectronics)
+
    == Plugins ==
-	* tracker: 5.24
+	* tracker: 5.27
 	* tests: 5.6
+	* statistics: 0.22
+	* git: 2.7.13
+	* ldap: 3.20
+	* agiledashboard: 0.55
+	* cardwall: 0.9.7
+
+   == Development ==
+	* Initialize a Vagrant box to ease the build of Tuleap. See ./Vagrantfile
+	and http://vagrantup.com/ for details. This will also help newcomers to
+	install a Tuleap development environment.
+
+Version 5.5.4 (Tuesday, Octobre 16th 2012)
+   * Fix backend warnings about chgrp on ssh key dump
+   * Validate user ssh key on upload (and clean existing ones)
+
+   == Plugins ==
+   * git: 2.7.12
+   * tracker: 5.22
 
 Version 5.5.3 (Thursday, Octobre 3rd 2012)
     == Bug fix ==

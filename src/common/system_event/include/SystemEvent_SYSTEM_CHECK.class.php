@@ -97,9 +97,6 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 $backendSystem->userHomeSanityCheck($user);
             }
         }
-
-        // dump SSH authorized_keys into all users homedirs
-        $backendSystem->dumpSSHKeys();
         
         $project_manager = ProjectManager::instance();
         foreach($project_manager->getProjectsByStatus(Project::STATUS_ACTIVE) as $project) {

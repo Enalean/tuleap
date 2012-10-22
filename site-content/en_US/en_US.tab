@@ -36,6 +36,8 @@ global	btn_close	Close
 global	btn_reset	Reset
 global	reset	reset
 global	delete	Delete
+global	add	Add
+global	total	Total
 global	warning!	Warning!
 global	yes	Yes
 global	no	No
@@ -62,6 +64,7 @@ global	activate	activate
 global	deactivate	deactivate
 global	Project	Project
 global	System	System
+global	Admin	Admin
 global	Personal	Personal
 global	default	Default
 global	no_mail_for_account	No email address for this account.

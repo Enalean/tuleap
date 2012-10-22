@@ -454,6 +454,9 @@ project_admin_utils	to	Jusqu'a
 project_admin_utils	status	Statut modifié
 project_admin_utils	ugroup_add_binding	Liaison avec groupe d'utilisateurs ajoutée
 project_admin_utils	ugroup_remove_binding	Liaison avec groupe d'utilisateurs enlevée
+project_admin_utils	frs_self_add_monitor_package	Auto ajout du suivi de paquet
+project_admin_utils	frs_add_monitor_package	Ajout du suivi de paquet
+project_admin_utils	frs_stop_monitor_package	Arrêt du suivi de paquet
 #... end of values
 #
 #-----------------------------------------------

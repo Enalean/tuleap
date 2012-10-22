@@ -100,7 +100,7 @@ class Widget_MyMonitoredFp extends Widget {
                             '<TD WIDTH="99%">&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;<A HREF="/file/showfiles.php?group_id='.$group_id.'">'.
                             db_result($result2,$i,'name').'</A></TD>'.
                             '<TD><A HREF="/file/filemodule_monitor.php?filemodule_id='.
-                            db_result($result2,$i,'filemodule_id').
+                            db_result($result2,$i,'filemodule_id').'&group_id='.$group_id.
                             '" onClick="return confirm(\''.$GLOBALS['Language']->getText('my_index', 'stop_file').'\')">'.
                             '<IMG SRC="'.util_get_image_theme("ic/trash.png").'" HEIGHT="16" WIDTH="16" '.
                             'BORDER=0" ALT="'.$GLOBALS['Language']->getText('my_index', 'stop_monitor').'"></A></TD></TR>';

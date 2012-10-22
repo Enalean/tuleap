@@ -111,5 +111,8 @@ var ProjectAutoCompleter = Class.create(AutoCompleter, {
     initialize: function($super, elementId, imgPath, multiple, options) {
         $super(elementId, imgPath, multiple, options);
         this.url = '/project/autocomplete.php';
+        if(this.options.private == 1) {
+            this.url += '?private=1';
+        }
     }
 });

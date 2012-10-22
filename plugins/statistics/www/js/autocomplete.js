@@ -21,7 +21,9 @@
 
 document.observe('dom:loaded', function () {
     if ($('plugin_statistics')) {
-        var prjAutocomplete  = new ProjectAutoCompleter('project', codendi.imgroot);
+        options              = Array();
+        options['private']   = 1;
+        var prjAutocomplete  = new ProjectAutoCompleter('project', codendi.imgroot, false, options);
         var userAutocomplete = new UserAutoCompleter('requester', codendi.imgroot);
         prjAutocomplete.registerOnLoad();
         userAutocomplete.registerOnLoad();

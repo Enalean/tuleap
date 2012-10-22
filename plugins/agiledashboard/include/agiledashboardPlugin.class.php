@@ -58,7 +58,7 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function cardwall_event_get_swimline_tracker($params) {
-        $planning_factory = new PlanningFactory(new PlanningDao(), $params['tracker_factory']);
+        $planning_factory = $this->getPlanningFactory();
         if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {
             $params['tracker'] = $planning->getBacklogTracker();
         }
@@ -188,7 +188,7 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function process(Codendi_Request $request) {
-        $router = new AgileDashboardRouter($this, $this->getMilestoneFactory(), $this->getPlanningFactory(), $this->getHierarchyFactory());
+        $router = new AgileDashboardRouter($this, $this->getMilestoneFactory(), $this->getPlanningFactory(), $this->getHierarchyFactory(), $this->getThemePath());
         $router->route($request);
     }
 
@@ -198,9 +198,7 @@ class AgileDashboardPlugin extends Plugin {
      * @return PlanningFactory
      */
     protected function getPlanningFactory() {
-        return new PlanningFactory(new PlanningDao(),
-                                   TrackerFactory::instance());
-
+        return PlanningFactory::build();
     }
 
     /**
