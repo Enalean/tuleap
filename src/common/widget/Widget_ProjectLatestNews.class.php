@@ -76,13 +76,7 @@ class Widget_ProjectLatestNews extends Widget {
      * @return Boolean
      */
     public function hasRss() {
-        $pm      = $this->_getProjectManager();
-        $request = $this->_getHTTPRequest();
-        $project = $pm->getProject($request->get('group_id'));
-        if ($project && $project->isPublic()) {
-            return true;
-        }
-        return false;
+        return true;
     }
 
     /**
