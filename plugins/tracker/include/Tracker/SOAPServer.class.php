@@ -469,12 +469,9 @@ class Tracker_SOAPServer {
         if ($tracker->userIsAdmin($user)) {
             //TODO : Add constant for types to exclude
             $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
-            $semantics = $this->getSOAPSemantics($tracker_semantic_manager, array('tooltip'));
-    //        $file = fopen("test" , "a+");
-    //        fwrite($file,(var_export($semantics, 1)));
-    //        fclose($file);    
+            $exclude = array('tooltip');
+            $semantics = $this->getSOAPSemantics($tracker_semantic_manager, $exclude);
           return $this->semantic_to_soap($semantics);   
-          // return $semantics; 
         } else {
             return new SoapFault(user_is_not_tracker_admin,'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
         }
@@ -483,15 +480,11 @@ class Tracker_SOAPServer {
     private function semantic_to_soap($semantics) {
         $return = array();
         foreach ($semantics as $tracker_semantic) {
-            //TODO : Made name in array correctly !
             $return[$tracker_semantic->getShortName()] = array('field_name' => $tracker_semantic->getField()->getName());
             if ($tracker_semantic->getShortName() == 'status') {
                 $return[$tracker_semantic->getShortName()]['values'] = $tracker_semantic->getOpenValues();
             }
-        } 
-        $file = fopen("test" , "a+");
-        fwrite($file,(var_export($return, 1)));
-        fclose($file); 
+        }
         return $return;
     }
     
