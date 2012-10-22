@@ -90,7 +90,6 @@ class LdapPlugin extends Plugin {
         $this->_addHook('usergroup_update', 'updateLdapID', false);
 
         // Project admin
-        $this->_addHook('ugroup_table_title',               'ugroup_table_title',          false);
         $this->_addHook('ugroup_table_row',                 'ugroup_table_row',            false);
         $this->_addHook('project_admin_add_user_form',      'project_admin_add_user_form', false);
         $this->_addHook(Event::UGROUP_UPDATE_USERS_ALLOWED, 'ugroup_update_users_allowed', false);
@@ -713,17 +712,6 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * Hook in ugroup edition.
-     *
-     * @param array $params
-     */
-    function ugroup_table_title($params) {
-        if($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPGroupsUsageEnabled()) {
-            $params['html_array'][150] = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_ldap_title');
-        }
-    }
-
-    /**
      * Hook in upgroup edition
      * $params['row'] A row from ugroup table
      *
@@ -732,9 +720,7 @@ class LdapPlugin extends Plugin {
     function ugroup_table_row($params) {
         if($GLOBALS['sys_auth_type'] == 'ldap' && $this->isLDAPGroupsUsageEnabled()) {
             // No ldap for project 100
-            if($params['row']['group_id'] == 100) {
-                $params['html_array'][150] = array('value' => '-', 'html_attrs' => 'align="center"');
-            } else {
+            if($params['row']['group_id'] != 100) {
                 $hp = Codendi_HTMLPurifier::instance();
                 $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
                 
@@ -757,9 +743,7 @@ class LdapPlugin extends Plugin {
                 $urlBind = $this->getPluginPath().'/ugroup_edit.php?ugroup_id='.$params['row']['ugroup_id'].'&func=bind_with_group';
                 $linkBind = '<a href="'.$urlBind.'">- '.$title.'</a>';
                 
-                $link = $linkAdd.$linkBind;
-                
-                $params['html_array'][150] = array('value' => $link, 'html_attrs' => 'align="center"');
+                $params['html'] .= '<br />'.$linkAdd.$linkBind;
             }
         }
     }

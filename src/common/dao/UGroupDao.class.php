@@ -26,15 +26,33 @@ require_once('include/DataAccessObject.class.php');
 class UGroupDao extends DataAccessObject {
 
     /**
-    * Searches static UGroup by GroupId 
-    * return all static ugroups
-    * @return DataAccessResult
-    */
+     * Searches static UGroup by GroupId
+     * return all static ugroups
+     *
+     * @param Integer $group_id Id of the project
+     *
+     * @return DataAccessResult
+     */
     function searchByGroupId($group_id) {
         $group_id = $this->da->escapeInt($group_id);
         $sql = "SELECT * 
                 FROM ugroup 
                 WHERE group_id = $group_id ORDER BY name";
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Searches by ugroup id
+     *
+     * @param Integer $ugroup_id Id of the ugroup
+     *
+     * @return DataAccessResult
+     */
+    function searchByUGroupId($ugroup_id) {
+        $ugroup_id = $this->da->escapeInt($ugroup_id);
+        $sql = "SELECT * 
+                FROM ugroup 
+                WHERE ugroup_id = $ugroup_id ORDER BY name";
         return $this->retrieve($sql);
     }
 
@@ -44,14 +62,6 @@ class UGroupDao extends DataAccessObject {
                 FROM ugroup 
                 WHERE group_id = $group_id OR (group_id = 100 and ugroup_id <= 100)
                 ORDER BY ugroup_id";
-        return $this->retrieve($sql);
-    }
-
-    function searchByUGroupId($ugroup_id) {
-        $ugroup_id = $this->da->escapeInt($ugroup_id);
-        $sql = "SELECT * 
-                FROM ugroup 
-                WHERE ugroup_id = $ugroup_id ORDER BY name";
         return $this->retrieve($sql);
     }
 
@@ -74,11 +84,13 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-    * Searches group that user belongs to one of its static ugroup
-    * return all groups 
-    * @param Integer $userId
-    * @return DataAccessResult
-    */
+     * Searches group that user belongs to one of its static ugroup
+     * return all groups
+     *
+     * @param Integer $userId Id of the user
+     *
+     * @return DataAccessResult
+     */
     function searchGroupByUserId($userId) {
         $sql = 'SELECT group_id FROM ugroup 
                 JOIN ugroup_user USING (ugroup_id) 
@@ -102,13 +114,13 @@ class UGroupDao extends DataAccessObject {
     }
 
     /**
-    * Checks UGroup  validity by GroupId 
-    *
-    * @param Integer $groupId the group id
-    * @param Integer $ugroupId the ugroup id
-    *
-    * @return boolean
-    */
+     * Checks UGroup  validity by GroupId
+     *
+     * @param Integer $groupId  The group id
+     * @param Integer $ugroupId The ugroup id
+     *
+     * @return Boolean
+     */
     function checkUGroupValidityByGroupId($groupId, $ugroupId) {
         $groupId = $this->da->escapeInt($groupId);
         $ugroupId = $this->da->escapeInt($ugroupId);
@@ -117,11 +129,62 @@ class UGroupDao extends DataAccessObject {
                 FROM ugroup 
                 WHERE group_id = '. $groupId .' AND ugroup_id = '. $ugroupId;
         $res = $this->retrieve($sql);
-        if($res && !$res->isError() && $res->rowCount() == 1) {
+        if ($res && !$res->isError() && $res->rowCount() == 1) {
             return true;
         } else {
             return false;
         }
     }
+
+    /**
+     * Update binding option for a given UGroup
+     *
+     * @param Integer $ugroupId The bound ugroup id
+     * @param Integer $sourceId The ugroup id we want to clone
+     *
+     * @return Boolean
+     */
+    function updateUgroupBinding($ugroupId, $sourceId = null) {
+        $ugroupId = $this->da->escapeInt($ugroupId);
+        if (isset($sourceId)) {
+            $sourceId      = $this->da->escapeInt($sourceId);
+            $bindingclause = " SET source_id = ".$sourceId;
+        } else {
+            $bindingclause = " SET source_id = NULL";
+        }
+        $sql = "UPDATE ugroup ".$bindingclause." WHERE ugroup_id = ".$ugroupId;
+         return $this->update($sql);
+    }
+
+    /**
+     * Retrieve all bound UGroups of a given UGroup
+     *
+     * @param Integer $sourceId The source ugroup id
+     *
+     * @return DataAccessResult
+     */
+    function searchUGroupByBindingSource($sourceId) {
+        $ugroupId = $this->da->escapeInt($sourceId);
+        $sql      = "SELECT * FROM ugroup WHERE source_id = ".$sourceId;
+        return $this->retrieve($sql);
+    }
+
+    /**
+     * Retrieve the source user group from a given bound ugroup id
+     *
+     * @param Integer $ugroupId The source ugroup id
+     *
+     * @return DataAccessResult
+     */
+    function getUgroupBindingSource($ugroupId) {
+        $ugroupId = $this->da->escapeInt($ugroupId);
+        $sql      = "SELECT u.source_id, v.group_id
+                     FROM ugroup u, ugroup v
+                     WHERE u.ugroup_id = ".$ugroupId."
+                       AND v.ugroup_id = u.source_id";
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>

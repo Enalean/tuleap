@@ -23,7 +23,7 @@ if (user_isloggedin()) {
     // Make sure this page is not cached because
     // it uses the exact same URL for all user's
     // personal page
-    header("Cache-Control: no-cache, must-revalidate"); // for HTTP 1.1
+    header("Cache-Control: no-cache, no-store, must-revalidate"); // for HTTP 1.1
     header("Pragma: no-cache");  // for HTTP 1.0
     
     if (browser_is_netscape4()) {

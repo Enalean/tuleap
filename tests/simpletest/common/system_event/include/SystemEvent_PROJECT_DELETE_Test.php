@@ -18,6 +18,7 @@
  */
 
 require_once('common/system_event/include/SystemEvent_PROJECT_DELETE.class.php');
+require_once('common/backend/BackendSystem.class.php');
 Mock::generatePartial('SystemEvent_PROJECT_DELETE',
                       'SystemEvent_PROJECT_DELETE_TestVersion',
                       array('getProject',
@@ -31,11 +32,11 @@ Mock::generatePartial('SystemEvent_PROJECT_DELETE',
                             'getWikiAttachment',
                             'deleteMembershipRequestNotificationEntries',
                             'deleteProjectMailingLists',
-                            'getEventManager'));
+                            'getEventManager',
+                            'cleanupProjectUgroupsBinding'));
 
-
-Mock::generate('Project');
 Mock::generate('BackendSystem');
+Mock::generate('Project');
 Mock::generate('BackendSVN');
 Mock::generate('BackendCVS');
 Mock::generate('BackendMailingList');
@@ -44,8 +45,16 @@ Mock::generate('ArtifactTypeFactory');
 Mock::generate('EventManager');
 Mock::generate('WikiAttachment');
 
+/**
+ * Test for project delete system event
+ */
 class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
 
+    /**
+     * Project delete Users fail
+     *
+     * @return Void
+     */
     public function testProjectDeleteUsersFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -57,9 +66,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',false);
+        $evt->setReturnValue('removeProjectMembers', false);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -118,6 +130,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
+    /**
+     * Project delete embership request
+     *
+     * @return Void
+     */
     public function testProjectDeleteMembershipRequestNotificationUGroupFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -132,6 +149,9 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', false);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -190,7 +210,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
-
+    /**
+     * Project delete FRS fail
+     *
+     * @return Void
+     */
     public function testProjectDeleteFRSFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -202,9 +226,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', false);
@@ -263,6 +290,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
+    /**
+     * Project delete Trackers fail
+     *
+     * @return Void
+     */
     public function testProjectDeleteTrackersFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -274,9 +306,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -335,6 +370,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
+    /**
+     * Project delete Home fail
+     *
+     * @return Void
+     */
     public function testProjectDeleteProjectHomeFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -346,9 +386,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -407,6 +450,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
+    /**
+     * Project delete Public FTP fail
+     *
+     * @return Void
+     */
     public function testProjectDeletePublicFtpFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -418,9 +466,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -479,6 +530,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
+    /**
+     * Project delete Wiki attacments fail
+     *
+     * @return Void
+     */
     public function testProjectDeleteWikiAttacmentsFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -490,9 +546,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -551,6 +610,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
+    /**
+     * Project delete CVS fail
+     *
+     * @return Void
+     */
     public function testProjectDeleteCVSFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -562,9 +626,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -623,6 +690,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
+    /**
+     * Project delete SVN fail
+     *
+     * @return Void
+     */
     public function testProjectDeleteSVNFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -634,9 +706,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -695,6 +770,11 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $this->assertFalse($evt->process());
     }
 
+    /**
+     * Project delete Mailing list fail
+     *
+     * @return Void
+     */
     public function testProjectDeleteMailingListFail() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
         $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
@@ -706,9 +786,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -768,7 +851,89 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
     }
 
     /**
+     * Project delete Ugroup binding fail
+     *
+     * @return Void
+     */
+    public function testProjectDeleteUgroupBindingFail() {
+        $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_DELETE, '142', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+
+        // The project
+        $project = new MockProject();
+        $project->setReturnValue('usesCVS', true);
+        $project->setReturnValue('usesSVN', true);
+        $evt->setReturnValue('getProject', $project, array('142'));
+
+        //Remove users from project
+        $evt->setReturnValue('removeProjectMembers', true);
+
+        $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', false);
+
+        //Cleanup FRS
+        $evt->setReturnValue('cleanupProjectFRS', true);
+
+        //Delete all trackers
+        $atf = new  MockArtifactTypeFactory();
+        $atf->setReturnValue('preDeleteAllProjectArtifactTypes', true);
+        $evt->setReturnValue('getArtifactTypeFactory', $atf, array($project));
+
+        // System
+        $backendSystem = new MockBackendSystem();
+        $backendSystem->setReturnValue('projectHomeExists', true);
+        $backendSystem->setReturnValue('archiveProjectHome', true);
+        $backendSystem->setReturnValue('archiveProjectFtp', true);
+        $backendSystem->expectOnce('setNeedRefreshGroupCache');
+        $evt->setReturnValue('getBackend', $backendSystem, array('System'));
+
+        // Wiki attachments
+        $wa = new MockWikiAttachment();
+        $wa->setReturnValue('deleteProjectAttachments', true);
+        $wa->expectOnce('deleteProjectAttachments');
+        $evt->setReturnValue('getWikiAttachment', $wa);
+
+        // CVS
+        $backendCVS = new MockBackendCVS();
+        $backendCVS->setReturnValue('repositoryExists', true);
+        $backendCVS->setReturnValue('archiveProjectCVS', true);
+        $backendCVS->expectOnce('setCVSRootListNeedUpdate');
+        $evt->setReturnValue('getBackend', $backendCVS, array('CVS'));
+
+        // SVN
+        $backendSVN = new MockBackendSVN();
+        $backendSVN->setReturnValue('repositoryExists', true);
+        $backendSVN->setReturnValue('archiveProjectSVN', true);
+        $backendSVN->expectOnce('setSVNApacheConfNeedUpdate');
+        $evt->setReturnValue('getBackend', $backendSVN, array('SVN'));
+
+        // MailingList
+        $backendMailingList = new MockBackendMailingList();
+        $backendMailingList->setReturnValue('deleteProjectMailingLists', true);
+        $backendMailingList->expectOnce('deleteProjectMailingLists');
+        $evt->setReturnValue('getBackend', $backendMailingList, array('MailingList'));
+
+        // Aliases
+        $backendAliases = new MockBackendAliases();
+        $backendAliases->expectOnce('setNeedUpdateMailAliases');
+        $evt->setReturnValue('getBackend', $backendAliases, array('Aliases'));
+
+        $evt->expectNever('done');
+        $evt->expectOnce('error', array("Could not remove ugroups binding"));
+
+        $em = new MockEventManager();
+        $evt->setReturnValue('getEventManager', $em);
+
+        // Launch the event
+        $this->assertFalse($evt->process());
+    }
+
+    /**
      * Project delete Succeed
+     *
+     * @return Void
      */
     public function testProjectDeleteSucceed() {
         $evt = new SystemEvent_PROJECT_DELETE_TestVersion();
@@ -781,9 +946,12 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
         $evt->setReturnValue('getProject', $project, array('142'));
 
         //Remove users from project
-        $evt->setReturnValue('removeProjectMembers',true);
+        $evt->setReturnValue('removeProjectMembers', true);
 
         $evt->setReturnValue('deleteMembershipRequestNotificationEntries', true);
+
+        //Cleanup Ugroup binding
+        $evt->setReturnValue('cleanupProjectUgroupsBinding', true);
 
         //Cleanup FRS
         $evt->setReturnValue('cleanupProjectFRS', true);
@@ -844,4 +1012,5 @@ class SystemEvent_PROJECT_DELETE_Test extends UnitTestCase {
     }
 
 }
+
 ?>

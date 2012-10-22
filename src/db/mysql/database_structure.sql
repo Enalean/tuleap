@@ -2929,6 +2929,7 @@ CREATE TABLE ugroup (
   ugroup_id int(11) NOT NULL auto_increment,
   name text NOT NULL,
   description text NOT NULL,
+  source_id INT(11) DEFAULT NULL,
   group_id int(11) NOT NULL,
   PRIMARY KEY  (ugroup_id)
 );
