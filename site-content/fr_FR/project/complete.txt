@@ -10,15 +10,15 @@ $content = "
 <H2>Enregistrement terminé !</H2>";
 
 if ($auto_approval == 'A') {
-    $content = $content . "
+    $content .= "
     <P>Votre projet a été soumis et validé sur ".$GLOBALS['sys_name'].".
     Vous pouvez dès à présent utiliser et gérer votre projet.";
 } else {
-    $content = $content . "
+    $content .= "
     <P>Votre projet a été soumis aux administrateurs de ".$GLOBALS['sys_name'].".
     Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.";
 }
-$content = $content . "
+$content .= "
     <P>
     Merci d'utiliser ".$GLOBALS['sys_name'].".
     <P>";
@@ -36,10 +36,10 @@ $subject = "Nouveau projet enregistré : ".$data['project']['form_full_name'];
 $body = "Un nouveau projet vient juste d'être enregistré sur ".$GLOBALS['sys_name']."\n\n".
 "Nom du projet : ".$data['project']['form_full_name']."\n\n";
 if ($auto_approval == 'P') {
-    $body = $body . "Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
+    $body .= "Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
     $href_approval."\n";
 }else {
-    $body = $body . "Veuillez cliquer sur le lien ci-dessous pour gérer ce nouveau projet sur le panneau d'administration du site-admin :\n".
+    $body .= "Veuillez cliquer sur le lien ci-dessous pour gérer ce nouveau projet sur le panneau d'administration du site-admin :\n".
     $href_siteadmin_project."\n";
 }
 

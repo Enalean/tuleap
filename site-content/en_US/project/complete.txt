@@ -12,17 +12,17 @@
 $content = "
 <H1>Registration Complete!</H1>";
 if ($auto_approval == 'A') {
-    $content = $content . "
+    $content .= "
     <P>Your project has been submitted and approved on ".$GLOBALS['sys_name'].".
     You can now manage and use your project.";
 
 } else {
-    $content = $content . "
+    $content .= "
     <P>Your project has been submitted to the ".$GLOBALS['sys_name']." Administrators.
     Within 24 hours, you will receive decision notification and further 
     instructions.";
 }
-$content = $content."
+$content .= "
     <P>
     Thank you for using ".$GLOBALS['sys_name'].".
     <P>";
@@ -40,10 +40,10 @@ $subject = "New Project Registered: ".$data['project']['form_full_name'];
 $body = "A new project has just been registered on ".$GLOBALS['sys_name']."\n\n".
 "Project Name: ".$data['project']['form_full_name']."\n\n";
 if ($auto_approval == 'P') {
-    $body = $body . "Please click on the following URL to approve the registration:\n".
+    $body .= "Please click on the following URL to approve the registration:\n".
     $href_approval."\n";
 } else {
-    $body = $body . "Please click on the following URL to manage this new project on the site-admin panel :\n".
+    $body .= "Please click on the following URL to manage this new project on the site-admin panel :\n".
     $href_siteadmin_project."\n";
 }
 
