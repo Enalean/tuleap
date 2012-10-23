@@ -62,7 +62,7 @@ class BackendLoggerTest extends TuleapTestCase {
     public function testWarnAppendsStackTraceIfGivenAnError() {
         $message = 'an error occured';
         $exception = new Exception('some error');
-        $this->logger->error($message, $exception);
+        $this->logger->warn($message, $exception);
 
         $this->assertLogContainsStackTrace($exception);
         $this->assertLogContainsErrorMessage($exception, $message);
@@ -70,6 +70,7 @@ class BackendLoggerTest extends TuleapTestCase {
 
     private function assertLogContainsStackTrace($exception) {
         $trace = $exception->getTraceAsString();
+        $this->assertNotEmpty($trace);
         $quoted_trace = preg_quote("$trace");
         $this->assertPattern("%$quoted_trace%m", file_get_contents($this->log_file));
     }
@@ -78,6 +79,8 @@ class BackendLoggerTest extends TuleapTestCase {
         $error_message = $exception->getMessage();
         $start_of_trace = substr($exception->getTraceAsString(), 0, 20);
         $this->assertPattern("%$message: $error_message:\n$start_of_trace%m", file_get_contents($this->log_file));
+
     }
+
 }
 ?>
