@@ -58,7 +58,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html  = '';
         $html .= '<h3>'. $this->getTitle() .'</h3>';
         if ($this->repository->getRemoteServerId()) {
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server') .' <code>';
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_is_on') .' <code>';
             $html .= $this->gerrit_servers[$this->repository->getRemoteServerId()]->getHost();
             $html .= '</code>';
         } else {
