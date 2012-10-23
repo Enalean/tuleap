@@ -20,6 +20,9 @@
 
 require_once GIT_BASE_DIR .'/Git.class.php';
 
+/**
+ * Encapsulate the orchestration between PermissionsManager and UgroupManager
+ */
 class Git_Driver_Gerrit_UserFinder {
 
     /** @var UGroupManager */
@@ -34,6 +37,8 @@ class Git_Driver_Gerrit_UserFinder {
     }
 
     /**
+     *
+     * Get a unique list of users with the given permission
      *
      * @param string $permission_type
      * @param int    $repository_id

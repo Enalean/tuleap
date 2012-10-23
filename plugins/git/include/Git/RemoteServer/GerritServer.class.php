@@ -20,6 +20,9 @@
 
 require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
 
+/**
+ * @see Git_Driver_Gerrit_RemoteSSHConfig
+ */
 class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
     private $id;
