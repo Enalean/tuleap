@@ -34,8 +34,8 @@ class Widget_ProjectLatestNews extends Widget {
      */
     function Widget_ProjectLatestNews() {
         $this->Widget('projectlatestnews');
-        $request = $this->_getHTTPRequest();
-        $pm      = $this->_getProjectManager();
+        $request = $this->getHTTPRequest();
+        $pm      = $this->getProjectManager();
         $project = $pm->getProject($request->get('group_id'));
         if ($project && $this->canBeUsedByProject($project)) {
             require_once('www/news/news_utils.php');
@@ -86,7 +86,7 @@ class Widget_ProjectLatestNews extends Widget {
      */
     function displayRss() {
         global $Language;
-        $request  = $this->_getHTTPRequest();
+        $request  = $this->getHTTPRequest();
         $group_id = $request->get('group_id');
         include('www/export/rss_sfnews.php');
     }
@@ -116,7 +116,7 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return HTTPRequest
      */
-    private function _getHTTPRequest() {
+    private function getHTTPRequest() {
         return HTTPRequest::instance();
     }
 
@@ -125,7 +125,7 @@ class Widget_ProjectLatestNews extends Widget {
      *
      * @return ProjectManager
      */
-    private function _getProjectManager() {
+    private function getProjectManager() {
         return ProjectManager::instance();
     }
 
