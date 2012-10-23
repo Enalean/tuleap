@@ -28,8 +28,8 @@ class BackendLoggerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $GLOBALS['codendi_log'] = '/tmp';
-        $this->log_file         = tempnam($GLOBALS['codendi_log'], 'codendi_syslog');
+        Config::set('codendi_log', '/tmp');
+        $this->log_file         = tempnam(Config::get('codendi_log'), 'codendi_syslog');
         $this->logger           = new BackendLogger($this->log_file);
     }
 

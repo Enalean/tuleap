@@ -24,7 +24,7 @@ class BackendLogger implements Logger {
 
     public function __construct($filename = null) {
 
-        $this->filename = empty($filename) ? $GLOBALS['codendi_log'].'/codendi_syslog' : $filename;
+        $this->filename = empty($filename) ? Config::get('codendi_log').'/codendi_syslog' : $filename;
     }
 
     /**

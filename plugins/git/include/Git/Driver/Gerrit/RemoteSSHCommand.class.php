@@ -43,7 +43,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     }
 
     protected function sshExec($cmd) {
-        $filename = tempnam(Config::get('codendi_tmp_dir'), 'stderr_');
+        $filename = tempnam(Config::get('tmp_dir'), 'stderr_');
         exec("ssh $cmd 2>$filename", $output, $exit_code);
         $stderr = file_get_contents($filename);
         unlink($filename);
