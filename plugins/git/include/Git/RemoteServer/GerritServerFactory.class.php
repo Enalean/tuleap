@@ -21,7 +21,6 @@
 
 require_once 'GerritServer.class.php';
 require_once 'NotFoundException.class.php';
-require_once 'IdentityFileNotFoundException.class.php';
 require_once 'Dao.class.php';
 require_once GIT_BASE_DIR .'/GitRepository.class.php';
 
