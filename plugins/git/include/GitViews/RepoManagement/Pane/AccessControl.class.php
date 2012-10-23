@@ -94,7 +94,7 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
         $disabled = $this->repository->getRemoteServerId() ? true : false;
         if ($disabled) {
             $html .= '<div class="alert-message block-message warning">';
-            $html .= 'You cannot change permissions since this repository is on a remote server';
+            $html .=  $GLOBALS['Language']->getText('plugin_git', 'permisssions_on_remote_server');
             $html .= '</div>';
         }
 

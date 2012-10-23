@@ -49,6 +49,8 @@ plugin_git	admin_settings	General settings
 plugin_git	gerrit_settings	Gerrit
 plugin_git	gerrit_url	Url of the gerrit server
 plugin_git	gerrit_migrate_to	Migrate repo to Gerrit
+plugin_git	gerrit_server_is_on	This repository is on the following remote server:
+plugin_git      permisssions_on_remote_server   You cannot change permissions since this repository is on a remote server
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 
