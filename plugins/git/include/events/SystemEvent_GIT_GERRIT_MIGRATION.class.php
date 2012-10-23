@@ -31,7 +31,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
     /** @var GitDao */
     private $dao;
-    
+
     private $gerrit_groups = array('contributors' => Git::PERM_READ,
                                    'integrators'  => Git::PERM_WRITE,
                                    'supermen'     => Git::PERM_WPLUS);
@@ -44,13 +44,13 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
     /** @var Git_RemoteServer_GerritServerFactory */
     private $server_factory;
-    
+
     /** @var Logger */
     private $logger;
-    
+
     /** @var UserFinder */
     private $user_finder;
-    
+
     public function process() {
         $repo_id           = (int)$this->getParameter(0);
         $remote_server_id  = (int)$this->getParameter(1);
@@ -59,14 +59,14 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
         $repository = $this->repository_factory->getRepositoryById($repo_id);
         try {
             $server = $this->server_factory->getServer($repository);
-            
+
             $gerrit_project = $this->driver->createProject($server, $repository);
-            
+
             foreach ($this->gerrit_groups as $group_name => $permission_level) {
                 $user_list = $this->user_finder->getUsersForPermission($permission_level, $repo_id);
                 $this->driver->createGroup($server, $repository, $group_name, $user_list);
             }
-            
+
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
         } catch (Git_Driver_Gerrit_Exception $e) {
@@ -75,7 +75,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $this->logError("", "An error occured while processing event: ", $e);
         }
     }
-    
+
     private function logError($sysevent_prefix, $log_prefix, Exception $e) {
         $this->error($sysevent_prefix . $e->getMessage());
         $this->logger->error($log_prefix . $this->verbalizeParameters(null), $e);

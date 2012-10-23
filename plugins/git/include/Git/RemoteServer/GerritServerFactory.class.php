@@ -20,6 +20,8 @@
  */
 
 require_once 'GerritServer.class.php';
+require_once 'NotFoundException.class.php';
+require_once 'IdentityFileNotFoundException.class.php';
 require_once 'Dao.class.php';
 require_once GIT_BASE_DIR .'/GitRepository.class.php';
 
@@ -46,7 +48,7 @@ class Git_RemoteServer_GerritServerFactory {
         if ($row) {
             return $this->instantiateFromRow($row);
         }
-        throw new GerritServerNotFoundException($id);
+        throw new Git_RemoteServer_NotFoundException($id);
     }
 
     /**
@@ -84,18 +86,5 @@ class Git_RemoteServer_GerritServerFactory {
         return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['port'], $row['login'], $row['identity_file']);
     }
 
-}
-
-class GerritServerNotFoundException extends Exception {
-    public function __construct($id) {
-        parent::__construct("No server found with the id: $id");
-    }
-}
-class IdentityFileNotFoundException extends Exception {
-
-    function __construct($file) {
-        parent::__construct("The identity file $file doesn't exist");
-    }
-    
 }
 ?>

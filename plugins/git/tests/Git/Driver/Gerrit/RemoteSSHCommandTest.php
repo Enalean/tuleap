@@ -61,7 +61,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         try {
             $this->ssh->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             $this->assertEqual($e->getExitCode(), 125);
         }
     }
@@ -71,7 +71,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             $this->assertTrue($e->getExitCode() > 0, "As the command didn't succeed we expect an error code > 0");
         }
     }
@@ -81,7 +81,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             $this->assertNotEmpty($e->getStdErr(), "As the command didn't succeed we something on standard error");
         }
     }
@@ -94,7 +94,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         try {
             $this->ssh->execute($this->config, 'ls -aR *');
             $this->fail('expected exception');
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             $this->assertNotEmpty($e->getStdOut(), "ls always produces some output on standard out");
         }
     }
@@ -107,7 +107,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         try {
             $this->ssh->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             $this->assertEqual($e->getStdErr(), 'command someFailingCommand not found\nOn host '.$this->host);
         }
     }
@@ -117,7 +117,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand();
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             
         }
 
@@ -130,7 +130,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         stub($this->ssh)->sshExec()->returns(array('exit_code' => 0, 'std_out' => 'Some successful output'));
         try {
             $result = $this->ssh->execute($this->config, 'Some successful command');
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             $this->fail('unexpected exception');
         }
         $this->assertEqual($result, 'Some successful output');
@@ -144,7 +144,7 @@ class RemoteSSHCommandFailureTest extends TuleapTestCase {
         $exit_code = 133;
         $std_err   = 'some error';
         $std_out   = 'output for the people';
-        $e         = new RemoteSSHCommandFailure($exit_code, $std_out, $std_err);
+        $e         = new Git_Driver_Gerrit_RemoteSSHCommandFailure($exit_code, $std_out, $std_err);
         $this->assertStringContains($e->getMessage(), "exit_code: $exit_code");
         $this->assertStringContains($e->getMessage(), "std_out: $std_out");
         $this->assertStringContains($e->getMessage(), "std_err: $std_err");

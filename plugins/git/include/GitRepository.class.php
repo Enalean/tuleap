@@ -826,7 +826,7 @@ class GitRepository implements DVCSRepository {
         return $this->getScope() == self::REPO_SCOPE_INDIVIDUAL && $this->getCreatorId() == $user->getId();
     }
     
-    public function isMigratableToGerrit() {
+    public function canMigrateToGerrit() {
         return $this->getBackendType() == GitDao::BACKEND_GITOLITE && 
                $this->getRemoteServerId() == false;
     }

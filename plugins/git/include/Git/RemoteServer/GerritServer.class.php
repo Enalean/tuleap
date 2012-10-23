@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -20,6 +19,7 @@
  */
 
 require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
+
 class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
     private $id;
@@ -27,7 +27,7 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $port;
     private $login;
     private $identity_file;
-    
+
     public function __construct($id, $host, $port, $login, $identity_file) {
         $this->id            = $id;
         $this->host          = $host;
@@ -75,7 +75,5 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $this->port = $port;
         return $this;
     }
-
 }
-
 ?>

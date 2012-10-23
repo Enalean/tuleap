@@ -31,11 +31,11 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
      * @var GitRepository
      */
     protected $repository;
-    
+
     /** @var Git_RemoteServer_GerritServer */
     protected $gerrit_server;
 
-    
+
     /**
      * @var RemoteSshCommand
      */
@@ -55,7 +55,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
             ->build();
 
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
-        
+
         $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
         $this->logger = mock('BackendLogger');
         $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
@@ -70,12 +70,12 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project tuleap.example.com-firefox/jean-claude/dusse")->once();
         $this->driver->createProject($this->gerrit_server, $this->repository);
     }
-    
+
     public function itReturnsTheNameOfTheCreatedProject() {
         $project_name = $this->driver->createProject($this->gerrit_server, $this->repository);
         $this->assertEqual($project_name, $this->host."-firefox/jean-claude/dusse");
     }
-    
+
     public function _itCallsTheRealThing() {
         $r = new GitRepository();
         $r->setName('dusse');
@@ -87,11 +87,11 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand(), new BackendLogger());
         $driver->createProject($r);
     }
-    
+
     public function itRaisesAGerritDriverExceptionOnProjectCreation() {
         $std_err = 'fatal: project "someproject" exists';
         $command = "gerrit create-project tuleap.example.com-firefox/jean-claude/dusse";
-        stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE,'',$std_err));
+        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
         try {
             $this->driver->createProject($this->gerrit_server, $this->repository);
             $this->fail('An exception was expected');
@@ -99,21 +99,21 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
             $this->assertEqual($e->getMessage(),"Command: $command".PHP_EOL."Error: $std_err");
         }
     }
-    
+
     public function itDoesntTransformExceptionsThatArentRelatedToGerrit() {
         $std_err = 'some gerrit exception';
-        $this->expectException('RemoteSSHCommandFailure');
-        stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(255,'',$std_err));
+        $this->expectException('Git_Driver_Gerrit_RemoteSSHCommandFailure');
+        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(255,'',$std_err));
         $this->driver->createProject($this->gerrit_server, $this->repository);
     }
-    
+
     public function itInformsAboutProjectInitialization() {
         $remote_project = $this->host."-firefox/jean-claude/dusse";
         expect($this->logger)->info("Gerrit: Project $remote_project successfully initialized")->once();
         $this->driver->createProject($this->gerrit_server, $this->repository);
-        
+
     }
-    
+
     public function itCreatesGroups() {
         $project_name = $this->host."-firefox/jean-claude/dusse";
         $group_name = $project_name."-contributors";
@@ -121,7 +121,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
         $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', array());
     }
-    
+
     public function itCreatesGroupsWithMembers() {
         $project_name = $this->host."-firefox/jean-claude/dusse";
         $group_name = $project_name."-contributors";
@@ -130,7 +130,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
         $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', $user_list);
     }
-    
+
     public function itInformsAboutGroupCreation() {
         $group_name   = 'contributors';
         $user_list    = array ();
@@ -138,14 +138,14 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         expect($this->logger)->info("Gerrit: Group $gerrit_group successfully created")->once();
         $this->driver->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list);
     }
-    
+
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
         $std_err = 'fatal: group "somegroup" already exists';
         $command = "gerrit create-group tuleap.example.com-firefox/jean-claude/dusse-contributors --member johan";
         $user_list = array(aUser()->withUserName('johan')->build());
-        
-        stub($this->ssh)->execute()->throws(new RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
-        
+
+        stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
+
         try {
             $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', $user_list);
             $this->fail('An exception was expected');
@@ -155,7 +155,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
     }
     public function itInformsAboutPermissionsConfiguration() {
     }
-    
+
 }
 
 ?>

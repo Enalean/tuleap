@@ -21,20 +21,20 @@
 require_once 'common/log/Logger.class.php';
 
 class BackendLogger implements Logger {
-    
+
     public function __construct($filename = null) {
-        
+
         $this->filename = empty($filename) ? $GLOBALS['codendi_log'].'/codendi_syslog' : $filename;
     }
-    
+
     /**
      * @deprecated use explicit methods info, debug, ...
-     * 
+     *
      * Log message in codendi_syslog
      *
      * @param string $message The error message that should be logged.
      * @param string $level   The level of the message "info", "warning", ...
-     * 
+     *
      * @return boolean true on success or false on failure
      */
     public function log($message, $level = 'info') {
@@ -48,14 +48,14 @@ class BackendLogger implements Logger {
     public function info($message) {
         $this->log($message, 'info');
     }
-    
+
     public function error($message, Exception $e = null) {
         $this->log($this->generateLogWithException($message, $e), 'error');
     }
 
     public function warn($message, Exception $e = null) {
         $this->log($this->generateLogWithException($message, $e), 'warning');
-        
+
     }
 
     public function generateLogWithException($message, Exception $e = null) {
@@ -64,10 +64,9 @@ class BackendLogger implements Logger {
             $error_message  = $e->getMessage();
             $stack_trace    = $e->getTraceAsString();
             $log_string    .= ": $error_message:\n$stack_trace";
-        } 
+        }
         return $log_string;
 
     }
-
 }
 ?>

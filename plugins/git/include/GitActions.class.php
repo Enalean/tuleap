@@ -490,7 +490,7 @@ class GitActions extends PluginActions {
      * @param int $remote_server_id the id of the server to which we want to migrate
      */
     public function migrateToGerrit(GitRepository $repository, $remote_server_id) {
-        if ($repository->isMigratableToGerrit()) {
+        if ($repository->canMigrateToGerrit()) {
             try {
                 $this->gerrit_server_factory->getServerById($remote_server_id);
                 $this->systemEventManager->createEvent(
@@ -498,7 +498,7 @@ class GitActions extends PluginActions {
                     $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id,
                     SystemEvent::PRIORITY_HIGH
                 );
-            } catch (GerritServerNotFoundException $e) {
+            } catch (Git_RemoteServer_NotFoundException $e) {
                 // TODO log error to the syslog
             }
         }

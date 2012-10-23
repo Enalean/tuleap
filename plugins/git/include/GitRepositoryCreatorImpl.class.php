@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -43,9 +42,5 @@ abstract class GitRepositoryCreatorImpl implements GitRepositoryCreator {
         //alphanums, underscores, slashes and dash
         return 'a-zA-Z0-9/_.-';
     }
-    
-    
-    
 }
-
 ?>

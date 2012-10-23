@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -23,7 +22,7 @@ class Git_RemoteServer_Dao extends DataAccessObject {
 
     public function searchById($id) {
         $id = $this->da->escapeInt($id);
-        $sql = "SELECT * 
+        $sql = "SELECT *
                 FROM plugin_git_remote_servers
                 WHERE id = $id";
         return $this->retrieve($sql);
@@ -47,10 +46,9 @@ class Git_RemoteServer_Dao extends DataAccessObject {
 
     public function delete($id) {
         $id  = $this->da->escapeInt($id);
-        $sql = "DELETE FROM plugin_git_remote_servers 
+        $sql = "DELETE FROM plugin_git_remote_servers
                 where ID = $id";
         return $this->update($sql);
     }
 }
-
 ?>

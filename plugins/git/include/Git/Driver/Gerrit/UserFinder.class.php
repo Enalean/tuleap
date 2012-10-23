@@ -19,6 +19,7 @@
  */
 
 require_once GIT_BASE_DIR .'/Git.class.php';
+
 class Git_Driver_Gerrit_UserFinder {
 
     /** @var UGroupManager */
@@ -33,30 +34,29 @@ class Git_Driver_Gerrit_UserFinder {
     }
 
     /**
-     * 
+     *
      * @param string $permission_type
-     * @param int    $object_id
-     * 
+     * @param int    $repository_id
+     *
      * @return array of User
      */
-    public function getUsersForPermission($permission_type, $object_id){
+    public function getUsersForPermission($permission_type, $repository_id){
         $ugroups_members = array();
-        foreach ($this->getUgroups($object_id, $permission_type) as $ugroup_id) {
+        foreach ($this->getUgroups($repository_id, $permission_type) as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getById($ugroup_id);
             if ($ugroup) {
                 $ugroups_members = array_merge($ugroup->getMembers(), $ugroups_members);
             }
         }
-
         return $this->uniqueUsers($ugroups_members);
     }
 
-    private function getUgroups($object_id, $permission_type) {
-        $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type);
-        return array_filter($ugroup_ids, array($this, 'notTooBigGroup'));
+    private function getUgroups($repository_id, $permission_type) {
+        $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($repository_id, $permission_type);
+        return array_filter($ugroup_ids, array($this, 'removeRegisteredAndAnonymous'));
     }
 
-    private function notTooBigGroup($ugroup_id) {
+    private function removeRegisteredAndAnonymous($ugroup_id) {
         return ! in_array($ugroup_id, array(Ugroup::REGISTERED, UGroup::ANONYMOUS));
     }
 
@@ -66,8 +66,6 @@ class Git_Driver_Gerrit_UserFinder {
             $ret[$member->getId()] = $member;
         }
         return array_values($ret);
-
     }
 }
-
 ?>

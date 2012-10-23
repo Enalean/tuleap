@@ -82,7 +82,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         try {
             $this->factory->getServer($repo);
             $this->fail('Should have thrown GerritServerNotFoundException');
-        } catch (GerritServerNotFoundException $e) {
+        } catch (Git_RemoteServer_NotFoundException $e) {
             $this->assertEqual($e->getMessage(), "No server found with the id: $unexisting_server_id");
         }
     }

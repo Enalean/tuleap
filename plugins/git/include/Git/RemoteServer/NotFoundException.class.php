@@ -18,31 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-interface Logger {
+class Git_RemoteServer_NotFoundException extends Exception {
 
-    function debug($message);
-
-    function info($message);
-
-    /**
-     * Logs a warning into the log file.
-     *
-     * @param String    $message the message to log.
-     * @param Exception $e       the exception to log.
-     */
-    function warn($message, Exception $e = null);
-
-    /**
-     * Logs a warning into the log file.
-     *
-     * @param String    $message the message to log.
-     * @param Exception $e       the exception to log.
-     */
-    function error($message, Exception $e = null);
-
-    /**
-     * @deprecated use explicit methods
-     */
-    function log($message, $level = null);
+    public function __construct($id) {
+        parent::__construct("No server found with the id: $id");
+    }
 }
 ?>

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,7 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/Gerrit/RemoteSSHCommand.class.php';
+require_once 'Gerrit/RemoteSSHCommand.class.php';
+require_once 'Gerrit/Exception.class.php';
 require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServer.class.php';
 require_once 'common/backend/BackendLogger.class.php';
 
@@ -32,7 +32,7 @@ class Git_Driver_Gerrit {
      * @var Git_Driver_Gerrit_RemoteSSHCommand
      */
     private $ssh;
-    
+
     /** @var Logger */
     private $logger;
 
@@ -49,12 +49,12 @@ class Git_Driver_Gerrit {
             $project_name = $this->getGerritProjectName($repository);
             $this->logger->info("Gerrit: Project $project_name successfully initialized");
             return $project_name;
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             throw $this->computeException($e, $command);
         }
 
     }
-    
+
     public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
         $gerrit_group = $this->getGerritProjectName($repository)."-$group_name";
         $base_command = array(self::COMMAND, "create-group", $gerrit_group);
@@ -62,16 +62,16 @@ class Git_Driver_Gerrit {
         $command_line = implode(' ',array_merge($base_command, $members));
         try {
             $this->ssh->execute($server, $command_line);
-        } catch (RemoteSSHCommandFailure $e) {
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             throw $this->computeException($e, $command_line);
         }
 
         $this->logger->info("Gerrit: Group $gerrit_group successfully created");
     }
 
-    private function computeException(RemoteSSHCommandFailure $e, $command) {
+    private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command) {
         return $this->isGerritFailure($e) ? $this->gerritDriverException($e, $command) : $e;
-        
+
     }
 
     private function isGerritFailure($e) {
@@ -96,9 +96,5 @@ class Git_Driver_Gerrit {
         }
         return $members;
     }
-}
-
-class Git_Driver_Gerrit_Exception extends Exception {
-    
 }
 ?>

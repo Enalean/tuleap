@@ -19,11 +19,12 @@
  */
 
 require_once 'RemoteSSHConfig.class.php';
+require_once 'RemoteSSHCommandFailure.class.php';
 
 class Git_Driver_Gerrit_RemoteSSHCommand {
 
     const SUCCESS = 0;
-    
+
     public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd) {
         $port          = $config->getPort();
         $host          = $config->getHost();
@@ -34,60 +35,22 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         $std_out = $result['std_out'];
         if ($exit_code != self::SUCCESS) {
             $std_err = $result['std_err'];
-            throw new RemoteSSHCommandFailure($exit_code, $std_out, $std_err);
+            throw new Git_Driver_Gerrit_RemoteSSHCommandFailure($exit_code, $std_out, $std_err);
         } else {
             return $std_out;
         }
-        
     }
-    
+
     protected function sshExec($cmd) {
-        $output;
-        $exit_code;
         $filename = tempnam('/tmp', 'stderr_');
         exec("ssh $cmd 2>$filename", $output, $exit_code);
         $stderr = file_get_contents($filename);
         unlink($filename);
-        return array('exit_code' => $exit_code,
-                     'std_out'   => implode(PHP_EOL, $output), 
-                     'std_err'   => $stderr);
+        return array(
+            'exit_code' => $exit_code,
+            'std_out'   => implode(PHP_EOL, $output),
+            'std_err'   => $stderr
+        );
     }
 }
-
-class RemoteSSHCommandFailure extends Exception {
-
-    private $exit_code;
-    private $std_out;
-    private $std_err;
-    
-    function __construct($exit_code, $std_out, $std_err) {
-        parent::__construct(implode(PHP_EOL, array("exit_code: $exit_code", "std_err: $std_err", "std_out: $std_out")));
-        $this->exit_code = $exit_code;
-        $this->std_out = $std_out;
-        $this->std_err = $std_err;
-    }
-
-    
-    /**
-     * @return int
-     */
-    public function getExitCode() {
-        return $this->exit_code;
-    }
-
-    /**
-     * @return string with PHP_EOL as line terminators
-     */
-    public function getStdErr() {
-        return $this->std_err;
-    }
-
-    /**
-     * @return string with PHP_EOL as line terminators
-     */
-    public function getStdOut() {
-        return $this->std_out;
-    }
-}
-
 ?>
