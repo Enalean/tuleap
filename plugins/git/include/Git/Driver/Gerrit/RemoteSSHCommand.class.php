@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http:__www.gnu.org_licenses_>.
  */
 
+require_once 'common/include/Config.class.php';
 require_once 'RemoteSSHConfig.class.php';
 require_once 'RemoteSSHCommandFailure.class.php';
 
@@ -42,7 +43,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     }
 
     protected function sshExec($cmd) {
-        $filename = tempnam('/tmp', 'stderr_');
+        $filename = tempnam(Config::get('codendi_tmp_dir'), 'stderr_');
         exec("ssh $cmd 2>$filename", $output, $exit_code);
         $stderr = file_get_contents($filename);
         unlink($filename);

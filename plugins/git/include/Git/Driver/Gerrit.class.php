@@ -23,6 +23,10 @@ require_once 'Gerrit/Exception.class.php';
 require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServer.class.php';
 require_once 'common/backend/BackendLogger.class.php';
 
+
+/**
+ * I know how to speak to a Gerrit remote server
+ */
 class Git_Driver_Gerrit {
 
     const COMMAND = 'gerrit';
@@ -82,14 +86,14 @@ class Git_Driver_Gerrit {
         return new Git_Driver_Gerrit_Exception("Command: $command".PHP_EOL."Error: ".$e->getStdErr());
     }
 
-    public function getGerritProjectName(GitRepository $repository) {
+    private function getGerritProjectName(GitRepository $repository) {
         $host    = Config::get('sys_default_domain');
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
         return "$host-$project/$repo";
     }
 
-    public function compileMemberCommands($user_list) {
+    private function compileMemberCommands($user_list) {
         $members = array();
         foreach ($user_list as $user) {
             $members[] = "--member ".$user->getUsername();

@@ -19,11 +19,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Provides the information necessary to connect to a distant machine using ssh.
+ */
 interface Git_Driver_Gerrit_RemoteSSHConfig {
-    public function getPort();
-    public function getHost();
-    public function getLogin();
-    public function getIdentityFile();
+    function getPort();
+    function getHost();
+    function getLogin();
+    function getIdentityFile();
 }
 
 ?>
