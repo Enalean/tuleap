@@ -4,7 +4,7 @@ Version 5.6 (Not Released Yet)
 	* Adding new option for automatic validation of new projects
 
    == Plugins ==
-	* tracker: 5.28
+	* tracker: 5.29
 	* tests: 5.6
 	* statistics: 0.22
 	* git: 2.7.13

@@ -1,3 +1,6 @@
+Version 5.29 - Tuleap 5.6
+    * Add symlink to index.php for backward compability
+
 Version 5.28 - Tuleap 5.6
     * Add help messages on agile dashboard
 
