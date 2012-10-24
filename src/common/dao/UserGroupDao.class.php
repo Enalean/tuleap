@@ -111,6 +111,29 @@ class UserGroupDao extends DataAccessObject {
                   AND user_id = $user_id";
         return $this->update($sql);
     }
+
+    /**
+     * Return name and id of all ugroups belonging to a specific project
+     *
+     * @param Integer $groupId    Id of the project
+     * @param Array   $predefined List of predefined ugroup id
+     *
+     * @return DataAccessResult
+     */
+    public function getExistingUgroups($groupId, $predefined = null) {
+        $extra = '';
+        if ($predefined !== null && is_array($predefined)) {
+            $predefined = implode(',', $predefined);
+            $extra = ' OR ugroup_id IN ('.$this->da->quoteSmart($predefined).')';
+        }
+        $sql="SELECT ugroup_id, name
+              FROM ugroup
+              WHERE group_id=".$this->da->escapeInt($groupId)."
+                ".$extra."
+              ORDER BY name";
+        return $this->retrieve($sql);
+    }
+
 }
 
 ?>

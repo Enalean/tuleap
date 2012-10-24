@@ -370,3 +370,14 @@ tuleap.agiledashboard.Planning = Class.create({
         return parseInt(card.id.match(/art-(\d+)/)[1]);
     }
 });
+
+// inline-blocks may have different heights (depends on the content)
+// so align them to have sexy homepage
+tuleap.agiledashboard.align_short_access_heights = function() {
+    $$('.ad_index_plannings').each(function (block) {
+        var max_height = block.childElements().inject(0, function(m, v) {
+            return Math.max(m, v.getHeight());
+        });
+        block.childElements().invoke('setStyle', {height: max_height+'px'});
+    });
+}
