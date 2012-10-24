@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_Title.class.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
@@ -26,29 +27,48 @@ Mock::generate('Tracker_FormElement_Field_Text');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class Tracker_Semantic_TitleTest extends UnitTestCase {
+class Tracker_Semantic_TitleTest extends TuleapTestCase {
+
+    public function setUp(){
+        parent::setUp();
+        $this->tracker = new MockTracker();
+        $this->field_text = new MockTracker_FormElement_Field_Text();
+
+        $this->field_text->setReturnValue('getId', 102);
+        $this->field_text->setReturnValue('getName', 'some_title');
+
+        $this->tracker_semantic_title = new Tracker_Semantic_Title($this->tracker, $this->field_text);
+    }
 
     public function testExport() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText','Title',array('plugin_tracker_admin_semantic','title_label'));
         $GLOBALS['Language']->setReturnValue('getText','Define the title of an artifact',array('plugin_tracker_admin_semantic','title_description'));
-        
+
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTitleTest.xml');
-        
-        $tracker = new MockTracker();
-        $f = new MockTracker_FormElement_Field_Text();
-        $f->setReturnValue('getId', 102);
-        $tst = new Tracker_Semantic_Title($tracker, $f);
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
         $array_mapping = array('F13' => '102');
-        $tst->exportToXML($root, $array_mapping);
-        
+        $this->tracker_semantic_title->exportToXML($root, $array_mapping);
+
         $this->assertEqual((string)$xml->shortname, (string)$root->semantic->shortname);
         $this->assertEqual((string)$xml->label, (string)$root->semantic->label);
         $this->assertEqual((string)$xml->description, (string)$root->semantic->description);
         $this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
     }
-    
-}
 
+    public function itReturnsTheSemanticInSOAPFormat() {
+        $soap_result = $this->tracker_semantic_title->exportToSoap();
+
+        $this->assertEqual(array('title' => array('field_name' => 'some_title')),$soap_result);
+    }
+
+    public function itReturnsAnEmptySOAPArray() {
+        $tracker = new MockTracker();
+        $tracker_semantic_title = new Tracker_Semantic_Title($tracker);
+        $soap_result = $tracker_semantic_title->exportToSoap();
+
+        $this->assertEqual($soap_result, array('title' => array('field_name' => "")));
+    }
+
+}
 ?>
