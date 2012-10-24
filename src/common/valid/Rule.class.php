@@ -816,15 +816,15 @@ extends Rule {
 
 class Rule_RealName extends Rule {
 
-    function isValid($val){
-        if ($this->containsBackslashCharacter($val) || $this->containsNonPrintingCharacter($val)) {
+    function isValid($string){
+        if ($this->containsBackslashCharacter($string) || $this->containsNonPrintingCharacter($string)) {
             return false;
         }
         return true;
     }
 
-    private function containsBackslashCharacter($val){
-        return strpos($val, "\\") !== false;
+    private function containsBackslashCharacter($string){
+        return strpos($string, "\\") !== false;
     }
 
     private function containsNonPrintingCharacter($string){
