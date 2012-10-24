@@ -30,6 +30,17 @@ require_once('Tracker_SemanticTest.php');
 
 class Tracker_Semantic_TitleTest extends Tracker_SemanticTest {
 
+    public function newField() {
+        $field_text = new MockTracker_FormElement_Field_Text();
+        $field_text->setReturnValue('getId', 102);
+        $field_text->setReturnValue('getName', 'some_title');
+        return $field_text;
+    }
+
+    public function newTrackerSemantic($tracker, $field = null) {
+        return new Tracker_Semantic_Title($tracker, $field);
+    }
+    
     public function testExport() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText','Title',array('plugin_tracker_admin_semantic','title_label'));
@@ -45,17 +56,5 @@ class Tracker_Semantic_TitleTest extends Tracker_SemanticTest {
         $this->assertEqual((string)$xml->description, (string)$root->semantic->description);
         $this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
     }
-
-    public function newField() {
-        $field_text = new MockTracker_FormElement_Field_Text();
-        $field_text->setReturnValue('getId', 102);
-        $field_text->setReturnValue('getName', 'some_title');
-        return $field_text;
-    }
-
-    public function newTrackerSemantic($tracker, $field = null) {
-        return new Tracker_Semantic_Title($tracker, $field);
-    }
-
 }
 ?>

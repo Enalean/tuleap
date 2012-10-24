@@ -42,6 +42,7 @@ abstract class Tracker_SemanticTest extends TuleapTestCase {
 
         $this->assertEqual($soap_result, array($short_name => array('field_name' => "")));
     }
+
     public abstract function newField();
 
     public abstract function newTrackerSemantic($tracker, $field=null);
