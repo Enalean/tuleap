@@ -53,6 +53,9 @@ class User_SSHKeyDumper {
      */
     public function writeSSHKeys(User $user) {
         try {
+            if ($user->getUnixStatus() != 'A') {
+                return false;
+            }
             $ssh_dir  = $user->getUnixHomeDir().'/.ssh';
 
             // Subtlety: between the 2 process owner change, there is no way to

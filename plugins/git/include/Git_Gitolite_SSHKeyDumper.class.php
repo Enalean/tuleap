@@ -60,9 +60,8 @@ class Git_Gitolite_SSHKeyDumper {
 
     private function dumpAllKeys() {
         $dumped_users = array();
-        foreach ($this->user_manager->getUsersWithSshKey() as $row) {
-            $dumped_users[$row['user_name']] = true;
-            $user = new User($row);
+        foreach ($this->user_manager->getUsersWithSshKey() as $user) {
+            $dumped_users[$user->getUserName()] = true;
             $this->initUserKeys($user);
         }
         $this->purgeNotDumpedUsers($dumped_users);

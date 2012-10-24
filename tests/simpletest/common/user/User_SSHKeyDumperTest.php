@@ -69,6 +69,12 @@ class User_SSHKeyDumperTest extends TuleapTestCase {
         rmdir($this->foobar_home);
     }
 
+    public function itDoesntWriteTheKeyWhenUserAsNotAValidUnixAccount() {
+        stub($this->backend)->log()->never();
+        $this->user->setUnixStatus('S');
+        $this->assertFalse($this->sshkey_dumper->writeSSHKeys($this->user));
+    }
+
     public function itWriteTheKeyInTheAutorizedKeyFile() {
         stub($this->backend)->log(new PatternExpectation('/Authorized_keys for '.$this->toto_name.' written/'), 'info')->once();
 
