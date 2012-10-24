@@ -1,4 +1,7 @@
 Version 5.6 (Not Released Yet)
+   == Bug Fix ==
+    * Fix bug #1663: Validate user realname on account creation
+
    == Enhancements ==
     * Enhance FRS monitoring (Contrib StMicroelectronics)
 	* Adding new option for automatic validation of new projects
