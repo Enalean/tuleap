@@ -27,17 +27,17 @@ function register_valid($confirm_hash)	{
 
     $request =& HTTPRequest::instance();
 
-    // Validating real name
-    $vRealName = new Valid_String('form_realname');
-    $vRealName->required();
-    if (!$request->valid($vRealName)) {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_realname'));
-        return 0;
-    }
 
     $vLoginName = new Valid_UserNameFormat('form_loginname');
     $vLoginName->required();
     if (!$request->valid($vLoginName)) {
+        return 0;
+    }
+
+    $vRealName = new Valid_RealNameFormat('form_realname');
+    $vRealName->required();
+    if (!$request->valid($vRealName)) {
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('account_register', 'err_realname'));
         return 0;
     }
 
