@@ -30,10 +30,6 @@ require_once('Tracker_SemanticTest.php');
 
 class Tracker_Semantic_TitleTest extends Tracker_SemanticTest {
 
-    public function setUp(){
-        parent::setUp();
-    }
-
     public function testExport() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText','Title',array('plugin_tracker_admin_semantic','title_label'));

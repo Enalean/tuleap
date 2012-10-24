@@ -245,17 +245,5 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
     public function isUsedInSemantics($field) {
         return $this->getFieldId() == $field->getId();
     }
-
-    /**
-     * Export the semantic to SOAP format
-     * @return array the SOAPification of the semantic
-     */
-    public function exportToSoap(){
-        $field_name = "";
-        if ($field = $this->getField()) {
-            $field_name = $field->getName();
-        }
-        return array($this->getShortName() => array('field_name' => $field_name));
-    }
 }
 ?>
