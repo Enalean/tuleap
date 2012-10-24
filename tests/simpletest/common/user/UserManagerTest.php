@@ -758,4 +758,30 @@ class UserManagerTest extends UnitTestCase {
     }
 }
 
+class UserManager_GetUserWithSSHKeyTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user_name = 'toto';
+
+        $data_access = mock('DataAccess');
+        $data_array  = array('user_name' => $this->user_name);
+        stub($data_access)->fetch()->returns($data_array);
+        stub($data_access)->numRows()->returns(1);
+        $result = new stdClass();
+        $this->dar = new DataAccessResult($data_access, $result);
+    }
+
+    public function itReturnsTheListOfUsers() {
+        $dao = stub('UserDao')->searchSSHKeys()->returns($this->dar);
+
+        $user_manager = partial_mock('UserManager', array('getDao'));
+        stub($user_manager)->getDao()->returns($dao);
+
+        $users = $user_manager->getUsersWithSshKey();
+        $this->assertEqual($users->getRow()->getUserName(), $this->user_name);
+    }
+}
+
 ?>

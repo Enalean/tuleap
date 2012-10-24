@@ -1,3 +1,6 @@
+Version 2.7.14 - Tuleap 5.6
+    * Gitolite should dump ssh keys of unix_status <> A users too
+
 Version 2.7.13 - Tuleap 5.6
     * Fix git statistics
 
