@@ -26,18 +26,12 @@ require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElem
 Mock::generate('Tracker_FormElement_Field_Text');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
+require_once('Tracker_SemanticTest.php');
 
-class Tracker_Semantic_TitleTest extends TuleapTestCase {
+class Tracker_Semantic_TitleTest extends Tracker_SemanticTest {
 
     public function setUp(){
         parent::setUp();
-        $this->tracker = new MockTracker();
-        $this->field_text = new MockTracker_FormElement_Field_Text();
-
-        $this->field_text->setReturnValue('getId', 102);
-        $this->field_text->setReturnValue('getName', 'some_title');
-
-        $this->tracker_semantic_title = new Tracker_Semantic_Title($this->tracker, $this->field_text);
     }
 
     public function testExport() {
@@ -48,7 +42,7 @@ class Tracker_Semantic_TitleTest extends TuleapTestCase {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTitleTest.xml');
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
         $array_mapping = array('F13' => '102');
-        $this->tracker_semantic_title->exportToXML($root, $array_mapping);
+        $this->tracker_semantic->exportToXML($root, $array_mapping);
 
         $this->assertEqual((string)$xml->shortname, (string)$root->semantic->shortname);
         $this->assertEqual((string)$xml->label, (string)$root->semantic->label);
@@ -56,18 +50,15 @@ class Tracker_Semantic_TitleTest extends TuleapTestCase {
         $this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
     }
 
-    public function itReturnsTheSemanticInSOAPFormat() {
-        $soap_result = $this->tracker_semantic_title->exportToSoap();
-
-        $this->assertEqual(array('title' => array('field_name' => 'some_title')),$soap_result);
+    public function newField() {
+        $field_text = new MockTracker_FormElement_Field_Text();
+        $field_text->setReturnValue('getId', 102);
+        $field_text->setReturnValue('getName', 'some_title');
+        return $field_text;
     }
 
-    public function itReturnsAnEmptySOAPArray() {
-        $tracker = new MockTracker();
-        $tracker_semantic_title = new Tracker_Semantic_Title($tracker);
-        $soap_result = $tracker_semantic_title->exportToSoap();
-
-        $this->assertEqual($soap_result, array('title' => array('field_name' => "")));
+    public function newTrackerSemantic($tracker, $field = null) {
+        return new Tracker_Semantic_Title($tracker, $field);
     }
 
 }
