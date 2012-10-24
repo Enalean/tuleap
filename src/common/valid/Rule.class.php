@@ -814,4 +814,21 @@ extends Rule {
     }
 }
 
+class Rule_RealName extends Rule {
+
+    function isValid($val){
+        if (strpos($val, "\\") !== false) {
+            return false;
+        }
+
+        for($i = 0; $i < strlen($val); $i++) {
+            $char = $val[$i];
+            if (hexdec(bin2hex($char)) < 32) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
 ?>
