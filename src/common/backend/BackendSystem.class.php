@@ -459,10 +459,9 @@ class BackendSystem extends Backend {
      */
     public function dumpSSHKeys() {
         $sshkey_dumper = new User_SSHKeyDumper($this);
-        $user_dao      = new UserDao();
         $user_manager  = $this->getUserManager();
-        foreach($user_dao->searchSSHKeys() as $row) {
-            $sshkey_dumper->writeSSHKeys($user_manager->getUserInstanceFromRow($row));
+        foreach($user_manager->getUsersWithSshKey() as $user) {
+            $sshkey_dumper->writeSSHKeys($user);
         }
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, null);
         return true;
@@ -477,10 +476,7 @@ class BackendSystem extends Backend {
      */
     public function dumpSSHKeysForUser(User $user) {
         $sshkey_dumper = new User_SSHKeyDumper($this);
-        $write_status  = true;
-        if ($user->getUnixStatus() == 'A') {
-            $write_status = $sshkey_dumper->writeSSHKeys($user);
-        }
+        $write_status = $sshkey_dumper->writeSSHKeys($user);
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array('user' => $user));
         return $write_status;
     }

@@ -37,6 +37,7 @@ class DataAccessResult implements IProvideDataAccessResult {
 
     protected $_current;
     protected $_row;
+    private $instance_callback = null;
     
     public function __construct($da, $result) {
         $this->da     = $da;
@@ -46,6 +47,18 @@ class DataAccessResult implements IProvideDataAccessResult {
             $this->_row     = false;
             $this->rewind();
         }
+    }
+
+    /**
+     * Allow to create an object instead of an array when iterating over results
+     *
+     * @param callback $instance_callback The callback to use to create object
+     *
+     * @return \DataAccessResult
+     */
+    public function instanciateWith($instance_callback) {
+        $this->instance_callback = $instance_callback;
+        return $this;
     }
 
     /**
@@ -84,7 +97,11 @@ class DataAccessResult implements IProvideDataAccessResult {
      * @return array Return the current element
      */
     public function current() {
-        return $this->_row;
+        if ($this->instance_callback) {
+            return call_user_func_array($this->instance_callback, array($this->_row));
+        } else {
+            return $this->_row;
+        }
     }
     
     /**
