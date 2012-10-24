@@ -47,6 +47,13 @@ class Planning_BacklogActionsPresenter {
     public function current_milestone_id() {
         return $this->current_milestone->getArtifactId();
     }
+    
+    /**
+     * @return string
+     */
+    public function backlogHelp() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'backlog_destination_help');
+    }
 }
 
 ?>

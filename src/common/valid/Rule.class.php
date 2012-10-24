@@ -814,4 +814,31 @@ extends Rule {
     }
 }
 
+class Rule_RealName extends Rule {
+
+    public function isValid($string) {
+        if ($this->containsBackslashCharacter($string) || $this->containsNonPrintingCharacter($string)) {
+            return false;
+        }
+        return true;
+    }
+
+    private function containsBackslashCharacter($string) {
+        return strpos($string, "\\") !== false;
+    }
+
+    private function containsNonPrintingCharacter($string) {
+        for ($i = 0; $i < strlen($string); $i++) {
+            if ($this->isNonPrintingCharacter($string[$i])) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function isNonPrintingCharacter($char) {
+        return hexdec(bin2hex($char)) < 32;
+    }
+}
+
 ?>
