@@ -817,17 +817,27 @@ extends Rule {
 class Rule_RealName extends Rule {
 
     function isValid($val){
-        if (strpos($val, "\\") !== false) {
+        if ($this->containsBackslashCharacter($val) || $this->containsNonPrintingCharacter($val)) {
             return false;
         }
+        return true;
+    }
 
-        for($i = 0; $i < strlen($val); $i++) {
-            $char = $val[$i];
-            if (hexdec(bin2hex($char)) < 32) {
-                return false;
+    private function containsBackslashCharacter($val){
+        return strpos($val, "\\") !== false;
+    }
+
+    private function containsNonPrintingCharacter($string){
+        for($i = 0; $i < strlen($string); $i++) {
+            if ($this->isNonPrintingCharacter($string[$i])) {
+                return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    private function isNonPrintingCharacter($char) {
+        return hexdec(bin2hex($char)) < 32;
     }
 }
 
