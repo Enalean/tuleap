@@ -21,7 +21,11 @@
 class Tracker_Migration_V3_Dao extends DataAccessObject {
 
     public function create($project_id, $name, $description, $itemname, $tv3_id) {
+        $tv3_id     = $this->da->escapeInt($tv3_id);
         $tracker_id = $this->createTracker($project_id, $name, $description, $itemname, $tv3_id);
+        $this->duplicateTrackerPerms($tv3_id, $tracker_id);
+        $this->duplicateFieldsets($tv3_id, $tracker_id);
+        $this->nowFieldsetsAreStoredAsField($tracker_id);
         return $tracker_id;
     }
 
@@ -30,7 +34,6 @@ class Tracker_Migration_V3_Dao extends DataAccessObject {
         $name        = $this->da->quoteSmart($name);
         $description = $this->da->quoteSmart($description);
         $itemname    = $this->da->quoteSmart($itemname);
-        $tv3_id      = $this->da->escapeInt($tv3_id);
         $sql = "INSERT INTO tracker ( group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions,
                                       status, deletion_date, instantiate_for_new_projects, stop_notification)
                 SELECT $project_id, $name, $description, $itemname, allow_copy, submit_instructions, browse_instructions,
@@ -38,6 +41,110 @@ class Tracker_Migration_V3_Dao extends DataAccessObject {
                 FROM artifact_group_list
                 WHERE group_artifact_id = $tv3_id";
         return $this->updateAndGetLastId($sql);
+    }
+
+    private function duplicateTrackerPerms($tv3_id, $tv5_id) {
+        $sql = "INSERT INTO tracker_perm(tracker_id, user_id, perm_level)
+                SELECT $tv5_id, user_id, perm_level
+                FROM artifact_perm
+                WHERE group_artifact_id = $tv3_id";
+        $this->update($sql);
+    }
+
+    private function duplicateFieldsets($tv3_id, $tv5_id) {
+        $sql = "CREATE TABLE tracker_fieldset(
+                    id INT( 11 ) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                    tracker_id INT( 11 ) UNSIGNED NOT NULL default '0',
+                    name TEXT NOT NULL ,
+                    description TEXT NOT NULL ,
+                    rank INT( 11 ) UNSIGNED NOT NULL default '0',
+                    INDEX idx_fk_tracker_id( tracker_id )
+                )";
+        $this->update($sql);
+
+        $sql = "INSERT INTO tracker_fieldset(id, tracker_id, name, description, rank)
+                SELECT field_set_id,
+                    $tv5_id,
+                    REPLACE(REPLACE(name, '&gt;', '>'), '&lt;', '<'),
+                    REPLACE(REPLACE(description, '&gt;', '>'), '&lt;', '<'),
+                    rank
+                FROM artifact_field_set
+                WHERE group_artifact_id = $tv3_id";
+        $this->update($sql);
+
+        // Add cc fieldset
+        $sql = "INSERT INTO tracker_fieldset(tracker_id, name, description, rank)
+                SELECT DISTINCT T1.id, 'CC List', 'Dependency links from an artifact to one or several other artifacts', max(rank)+1
+                FROM tracker AS T1
+                     INNER JOIN (SELECT max(rank)+1 as rank, tracker_id FROM tracker_fieldset GROUP BY tracker_id) AS S1 ON (T1.id = S1.tracker_id)";
+        $this->update($sql);
+
+        // Add attachments fieldset
+        $sql = "INSERT INTO tracker_fieldset(tracker_id, name, description, rank)
+                SELECT DISTINCT T1.id, 'Attachments', 'Attach virtually any piece of information to an artifact in the form of a file', S1.rank
+                FROM tracker AS T1
+                     INNER JOIN (SELECT max(rank)+1 as rank, tracker_id FROM tracker_fieldset GROUP BY tracker_id) AS S1 ON (T1.id = S1.tracker_id)";
+        $this->update($sql);
+
+        // Add dependencies fieldset
+        $sql = "INSERT INTO tracker_fieldset(tracker_id, name, description, rank)
+                SELECT DISTINCT T1.id, 'Dependencies', 'Establish a dependency link from an artifact to one or several other artifacts belonging to any of the tracker of any project', S1.rank
+                FROM tracker AS T1
+                     INNER JOIN (SELECT max(rank)+1 as rank, tracker_id FROM tracker_fieldset GROUP BY tracker_id) AS S1 ON (T1.id = S1.tracker_id)";
+        $this->update($sql);
+
+        // Add references fieldset
+        $sql = "INSERT INTO tracker_fieldset(tracker_id, name, description, rank)
+                SELECT DISTINCT T1.id, 'References', 'Cross-reference any artifact, or any other object', S1.rank
+                FROM tracker AS T1
+                     INNER JOIN (SELECT max(rank)+1 as rank, tracker_id FROM tracker_fieldset GROUP BY tracker_id) AS S1 ON (T1.id = S1.tracker_id)";
+        $this->update($sql);
+
+        // Add permissions fieldset
+        $sql = "INSERT INTO tracker_fieldset(tracker_id, name, description, rank)
+                SELECT DISTINCT T1.id, 'Permissions', 'Restrict access to artifact', S1.rank
+                FROM tracker AS T1
+                     INNER JOIN (SELECT max(rank)+1 as rank, tracker_id FROM tracker_fieldset GROUP BY tracker_id) AS S1 ON (T1.id = S1.tracker_id)";
+        $this->update($sql);
+
+        //  Reorder Fieldsets for prepareRanking usage
+        $this->update("SET @counter = 0");
+        $this->update("SET @previous = NULL");
+        $sql = "UPDATE tracker_fieldset
+                        INNER JOIN (SELECT @counter := IF(@previous = tracker_id, @counter + 1, 1) AS new_rank,
+                                           @previous := tracker_id,
+                                           tracker_fieldset.*
+                                    FROM tracker_fieldset
+                                    ORDER BY tracker_id, rank, id
+                        ) as R1 USING(tracker_id,id)
+                SET tracker_fieldset.rank = R1.new_rank";
+        $this->update($sql);
+    }
+
+    private function nowFieldsetsAreStoredAsField($tv5_id) {
+        $sql = "INSERT INTO tracker_field(old_id, tracker_id, parent_id, formElement_type, name, label, description, use_it, rank, scope, required)
+                SELECT id, tracker_id, 0, 'fieldset', CONCAT('fieldset_', rank), name, description, 1, rank, 'P', 1
+                FROM tracker_fieldset";
+        $this->update($sql);
+
+        $sql = "UPDATE tracker_field AS f1
+                    INNER JOIN tracker_field AS f2
+                        ON (f1.parent_id = f2.old_id
+                            AND f2.formElement_type = 'fieldset'
+                            AND f2.tracker_id       = $tv5_id)
+                SET f1.parent_id  = f2.id
+                AND f1.tracker_id = $tv5_id";
+        $this->update($sql);
+
+        //$sql = "UPDATE tracker_field AS f1
+        //           INNER JOIN tracker_field AS f2
+        //              ON (f1.parent_id = f2.id AND f1.tracker_id = 0)
+        //        SET f1.tracker_id = f2.tracker_id
+        //        WHERE tracker_id  = $tv5_id";
+        //$this->update($sql);
+
+        $sql = "DROP TABLE tracker_fieldset";
+        $this->update($sql);
     }
 }
 ?>
