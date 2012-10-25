@@ -44,6 +44,7 @@ require_once dirname(__FILE__).'/../include/simpletest/expectation.php';
 require_once dirname(__FILE__).'/../include/simpletest/collector.php';
 require_once dirname(__FILE__).'/../include/TestHelper.class.php';
 require_once 'TuleapTestCase.class.php';
+require_once 'TuleapDbTestCase.class.php';
 require_once 'MockBuilder.php';
 
 ?>

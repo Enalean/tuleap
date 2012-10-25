@@ -18,37 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+
 require_once 'common/project/ProjectCreator.class.php';
-require_once 'common/dao/CodendiDataAccess.class.php';
 require_once 'database.php';
 require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
 
-class ProjectCreationTest extends TuleapTestCase {
+class ProjectCreationTest extends TuleapDbTestCase {
 
-    // GRANT ALL PRIVILEGES on integration_test.* to 'integration_test'@'localhost' identified by 'welcome0';
     public function setUp() {
         parent::setUp();
+        $this->initDb();
 
-        $GLOBALS['sys_dbhost']   = 'localhost';
-        $GLOBALS['sys_dbuser']   = 'integration_test';
-        $GLOBALS['sys_dbpasswd'] = 'welcome0';
-        $GLOBALS['sys_dbname']   = 'integration_test';
-        
-        mysql_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd']);
-        mysql_query("DROP DATABASE IF EXISTS integration_test;");
-        mysql_query("CREATE DATABASE integration_test;");
-
-        $mysql_cmd = 'mysql -u'.$GLOBALS['sys_dbuser'].' -p'.$GLOBALS['sys_dbpasswd'].' '.$GLOBALS['sys_dbname'];
-        
-        $cmd = $mysql_cmd.' < src/db/mysql/database_structure.sql';
-        system($cmd);
-        $cmd = $mysql_cmd.' < src/db/mysql/database_initvalues.sql';
-        system($cmd);
-        
-        $GLOBALS['feedback'] = '';
         db_connect();
+        $GLOBALS['feedback'] = '';
     }
 
     public function itCreatesAProject() {
@@ -64,7 +48,7 @@ class ProjectCreationTest extends TuleapTestCase {
                 'built_from_template'    => 100,
             )
         ));
-        
+
         $res = db_query('SELECT * FROM groups WHERE unix_group_name="short-name"');
         $row = db_fetch_array($res);
         $this->assertEqual($row['group_name'], 'Long name');
