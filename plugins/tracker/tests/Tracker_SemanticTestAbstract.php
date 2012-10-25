@@ -19,7 +19,7 @@
  */
 
 
-abstract class Tracker_SemanticTest extends TuleapTestCase {
+abstract class Tracker_SemanticTestAbstract extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->tracker = new MockTracker();
@@ -29,7 +29,7 @@ abstract class Tracker_SemanticTest extends TuleapTestCase {
     }
 
     public function itReturnsTheSemanticInSOAPFormat() {
-        $soap_result = $this->tracker_semantic->exportToSoap();
+        $soap_result = $this->tracker_semantic->exportToSOAP();
         $short_name = $this->tracker_semantic->getShortName();
         $field_name = $this->tracker_semantic->getField()->getName();
 
@@ -37,7 +37,7 @@ abstract class Tracker_SemanticTest extends TuleapTestCase {
     }
 
     public function itReturnsAnEmptySOAPArray() {
-        $soap_result = $this->not_defined_tracker_semantic->exportToSoap();
+        $soap_result = $this->not_defined_tracker_semantic->exportToSOAP();
         $short_name = $this->not_defined_tracker_semantic->getShortName();
 
         $this->assertEqual($soap_result, array($short_name => array('field_name' => "")));

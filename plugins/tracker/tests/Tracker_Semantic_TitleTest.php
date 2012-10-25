@@ -26,9 +26,9 @@ require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElem
 Mock::generate('Tracker_FormElement_Field_Text');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
-require_once('Tracker_SemanticTest.php');
+require_once('Tracker_SemanticTestAbstract.php');
 
-class Tracker_Semantic_TitleTest extends Tracker_SemanticTest {
+class Tracker_Semantic_TitleTest extends Tracker_SemanticTestAbstract {
 
     public function newField() {
         $field_text = new MockTracker_FormElement_Field_Text();

@@ -26,9 +26,9 @@ require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElem
 Mock::generate('Tracker_FormElement_Field_List');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
-require_once('Tracker_SemanticTest.php');
+require_once('Tracker_SemanticTestAbstract.php');
 
-class Tracker_Semantic_StatusTest extends Tracker_SemanticTest {
+class Tracker_Semantic_StatusTest extends Tracker_SemanticTestAbstract {
     
     public function newTrackerSemantic($tracker, $field = null) {
         return new Tracker_Semantic_Status($tracker, $field);
@@ -71,7 +71,7 @@ class Tracker_Semantic_StatusTest extends Tracker_SemanticTest {
     }
     
      public function itReturnsTheSemanticInSOAPFormat() {
-        $soap_result = $this->tracker_semantic->exportToSoap();
+        $soap_result = $this->tracker_semantic->exportToSOAP();
         $short_name = $this->tracker_semantic->getShortName();
         $field_name = $this->tracker_semantic->getField()->getName();
         $values = $this->tracker_semantic->getOpenValues();
@@ -80,7 +80,7 @@ class Tracker_Semantic_StatusTest extends Tracker_SemanticTest {
     }
     
     public function itReturnsAnEmptySOAPArray() {
-        $soap_result = $this->not_defined_tracker_semantic->exportToSoap();
+        $soap_result = $this->not_defined_tracker_semantic->exportToSOAP();
         $short_name = $this->not_defined_tracker_semantic->getShortName();
 
         $this->assertEqual($soap_result, array($short_name => array('field_name' => "", 'values' => array())));

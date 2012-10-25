@@ -25,7 +25,7 @@ require_once('dao/Tracker_TooltipDao.class.php');
 class Tracker_Tooltip extends Tracker_Semantic {
     
     public $fields = array();
-    
+  
     public function setFields($fields) {
         $this->fields = $fields;
     }
@@ -227,6 +227,15 @@ class Tracker_Tooltip extends Tracker_Semantic {
         }
         return false;
     }
-
+    
+   /**
+    * Export the semantic to SOAP format
+    * In this case, we don't want the tooltip in 
+    * the SOAP export
+    * @return null
+    */
+    public function exportToSOAP() {
+        return;
+    }
 }
 ?>

@@ -138,5 +138,23 @@ class Tracker_SemanticManager {
             $semantic->exportToXML($root, $xmlMapping);
         }
     }
+    
+   /**
+    * Export the semantic to SOAP format
+    * @return array the SOAPification of the semantic
+    */
+    public function exportToSOAP() {
+        $semantics   = $this->getSemantics();
+        $soap_result = array();
+        
+        foreach ($semantics as $short_name => $value) {
+            $soap_value = $value->exportToSOAP();
+            if ($soap_value[$short_name]) {
+                $soap_result[$short_name] = $soap_value[$short_name];            
+            }
+        }
+        
+        return $soap_result;
+    }
 }
 ?>

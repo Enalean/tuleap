@@ -149,7 +149,7 @@ abstract class Tracker_Semantic {
     * Export the semantic to SOAP format
     * @return array the SOAPification of the semantic
     */
-    public function exportToSoap() {
+    public function exportToSOAP() {
         $field_name = "";
         if ($field = $this->getField()) {
             $field_name = $field->getName();
