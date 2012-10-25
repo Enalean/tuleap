@@ -17,32 +17,32 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require_once('WorkflowFactory.class.php');
 
 class Workflow {
-    
+
     public $workflow_id;
     public $tracker_id;
     public $field_id;
     public $transitions;
     public $is_used;
-    
+
     /**
      * @var Tracker_Artifact
      */
     protected $artifact = null;
-    
+
     /**
      * @var Tracker_FormElement_Field
      */
     protected $field = null;
-    
+
     /**
      * @var Array of Tracker_FormElement_Field_List_Value
      */
     protected $field_values = null;
-    
+
     public function __construct($workflow_id, $tracker_id, $field_id, $is_used, $transitions = null) {
         $this->workflow_id      = $workflow_id;
         $this->tracker_id = $tracker_id;
@@ -50,7 +50,7 @@ class Workflow {
         $this->is_used = $is_used;
         $this->transitions   = $transitions;
     }
-    
+
     /**
      * Set artifact
      *
@@ -59,7 +59,7 @@ class Workflow {
     public function setArtifact(Tracker_Artifact $artifact) {
         $this->artifact = $artifact;
     }
-    
+
     /**
      * Set field
      *
@@ -69,28 +69,28 @@ class Workflow {
         $this->field    = $field;
         $this->field_id = $field->getId();
     }
-    
+
     /**
      * @return string
      */
     public function getId() {
         return $this->workflow_id;
     }
-    
+
     /**
      * @return string
      */
     public function getTrackerId() {
         return $this->tracker_id;
     }
-    
+
     /**
      * @return string
      */
     public function getFieldId() {
         return $this->field_id;
     }
-    
+
     /**
      * @return Tracker_FormElement_Field
      */
@@ -100,7 +100,7 @@ class Workflow {
         }
         return $this->field;
     }
-    
+
     /**
      * Return all values of the field associated to workflow
      *
@@ -112,7 +112,7 @@ class Workflow {
         }
         return $this->field_values;
     }
-    
+
     /**
      * Return the tracker of this workflow
      *
@@ -121,7 +121,7 @@ class Workflow {
     public function getTracker() {
         return TrackerFactory::instance()->getTrackerByid($this->tracker_id);
     }
-    
+
     /**
      * @return array of Transition
      */
@@ -131,13 +131,13 @@ class Workflow {
         }
         return $this->transitions;
     }
-    
+
     /**
      * Return transition corresponding to parameters
      *
      * @param Integer $field_value_id_from
      * @param Integer $field_value_id_to
-     * 
+     *
      * @return Transition or null if no transition match
      */
     public function getTransition($field_value_id_from, $field_value_id_to) {
@@ -150,34 +150,34 @@ class Workflow {
             }
         }
     }
-    
+
      /**
      * @return string
      */
     public function getIsUsed() {
         return $this->is_used;
     }
-    
+
     /**
      * Test if there is a transition defined between the two list values
      *
      * @param Tracker_FormElement_Field_List_Value $field_value_from
      * @param Tracker_FormElement_Field_List_Value $field_value_to
-     * 
+     *
      * @return Boolean
      */
     public function isTransitionExist($field_value_from, $field_value_to) {
         if ($field_value_from != $field_value_to) {
             $transitions = $this->getTransitions();
-            
+
             if ($transitions != null) {
                 foreach ($transitions as $transition) {
-                    
+
                     if ($transition->equals(new Transition(0, $this->workflow_id, $field_value_from, $field_value_to))) {
                          return true;
                     }
                 }
-                
+
                 return false;
             } else {
                 return false;
@@ -187,13 +187,13 @@ class Workflow {
             return true;
         }
     }
-    
+
     public function getTransitionIdFromTo($field_value_from, $field_value_to) {
-        $res = WorkflowFactory::instance()->getTransitionIdFromTo($this->workflow_id, $field_value_from, $field_value_to);    
+        $res = WorkflowFactory::instance()->getTransitionIdFromTo($this->workflow_id, $field_value_from, $field_value_to);
         $row = $res->getRow();
         return $row['transition_id'];
     }
-    
+
     public function hasTransitions() {
          if ($this->getTransitions() === array()) {
              return false;
@@ -201,7 +201,7 @@ class Workflow {
              return true;
          }
     }
-    
+
     /**
      * Set the tracker of this workflow
      *
@@ -212,7 +212,7 @@ class Workflow {
     public function setTracker($tracker) {
         $this->tracker_id = $tracker;
     }
-    
+
     /**
      * Export workflow to XML
      *
@@ -230,13 +230,28 @@ class Workflow {
                $transition->exportToXml($child, $xmlMapping);
            }
     }
-    
+
+    public function exportToSOAP() {
+        $soap_result = array();
+        $soap_result['field_id']    = $this->getFieldId();
+        $soap_result['is_used']     = $this->getIsUsed();
+        $soap_result['transitions'] = array();
+        if ($this->hasTransitions()) {
+             foreach ($this->getTransitions() as $transition) {
+                 $transition_infos             = $transition->exportToSOAP();
+                 $soap_result['transitions'][] = $transition_infos;
+             }
+
+        }
+        return $soap_result;
+    }
+
     /**
      * Execute actions before transition happens (if there is one)
-     * 
+     *
      * @param Array $fields_data  Request field data (array[field_id] => data)
      * @param User  $current_user The user who are performing the update
-     * 
+     *
      * @return void
      */
     public function before(array &$fields_data, User $current_user) {
@@ -257,7 +272,7 @@ class Workflow {
             }
         }
     }
-    
+
    /**
     * Indicates if permissions on a field can be bypassed
     *
