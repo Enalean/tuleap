@@ -51,7 +51,7 @@ class Planning_RequestValidator {
      * @return bool
      */
     public function isValid(Codendi_Request $request) {
-        $group_id            = $request->get('group_id');
+        $group_id            = (int)$request->get('group_id');
         $planning_id         = $request->get('planning_id');
         $planning_parameters = $request->get('planning');
         

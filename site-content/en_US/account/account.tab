@@ -235,6 +235,7 @@ account_pending	btn_resend	Resend Confirmation Email
 # Script: SF/www/account/register.php
 #
 account_register	err_exist	That username already exists.
+account_register	err_realname	Real name contains illegal characters.
 account_register	err_nouser	You must supply a username.
 account_register	err_nopasswd	You must supply a password.
 account_register	err_passwd	Passwords do not match.

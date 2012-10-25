@@ -54,7 +54,11 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
+    /**
+     * @var Git_Gitolite_SSHKeyDumper
+     */
     protected $dumper;
+
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',

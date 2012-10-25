@@ -74,15 +74,32 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
 
         $tracker_factory = mock('TrackerFactory');
         $this->setUpTrackers($tracker_factory);
+        
+        $soap_user_manager = mock('SOAP_UserManager');
+        stub($soap_user_manager)->continueSession($this->session_key)->returns($current_user);
+
+        $exclude = array('toDelete');
 
         $this->server = new Tracker_SOAPServer(
-            new SOAP_UserManager($user_manager),
+            $soap_user_manager,
             $project_manager,
             $tracker_factory,
             $permissions_manager,
             $dao,
             $formelement_factory,
-            $artifact_factory
+            $artifact_factory,
+            $exclude
+        );
+        
+        $this->serverTracker = new Tracker_SAOPServerTestSubClass(
+            $soap_user_manager,
+            $project_manager,
+            $tracker_factory,
+            $permissions_manager,
+            $dao,
+            $formelement_factory,
+            $artifact_factory,
+            $exclude
         );
     }
 
@@ -110,9 +127,10 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function setUpTrackers(TrackerFactory $tracker_factory) {
-        $tracker            = aMockTracker()->withId($this->tracker_id)->build();
+        $tracker      = aMockTracker()->withId($this->tracker_id)->build();
         $unreadable_tracker = aMockTracker()->withId($this->unreadable_tracker_id)->build();
         stub($tracker)->userCanView()->returns(true);
+        stub($tracker)->userIsAdmin()->returns(true);
         stub($unreadable_tracker)->userCanView()->returns(false);
         stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($tracker);
         stub($tracker_factory)->getTrackerById($this->unreadable_tracker_id)->returns($unreadable_tracker);
@@ -357,26 +375,101 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
     }
 }
 
+class Tracker_SAOPServerTestSubClass extends Tracker_SOAPServer {
+    
+     public function __construct(
+            SOAP_UserManager $soap_user_manager,
+            ProjectManager $project_manager,
+            TrackerFactory $tracker_factory,
+            PermissionsManager $permissions_manager,
+            Tracker_ReportDao $dao,
+            Tracker_FormElementFactory $formelement_factory,
+            Tracker_ArtifactFactory $artifact_factory,
+            array $exclude = null) {
+         
+                parent::__construct($soap_user_manager, $project_manager, $tracker_factory, $permissions_manager, $dao, $formelement_factory, $artifact_factory, $exclude);
+     }
+    
+    public function getSOAPSemantics(Tracker_SemanticManager $tracker_semantic_manager) {
+        return parent::getSOAPSemantics($tracker_semantic_manager);
+    }
+    
+    public function semantic_to_soap(array $semantics) {
+        return parent::semantic_to_soap($semantics);
+    }
+}
+
 class Tracker_SOAPServer_getTracker_Test extends Tracker_SOAPServer_BaseTest {
     
     private $semantic1;
     private $semantic2;
     private $semantics;
+    protected $group_id;
     
     public function setUp() {
         parent::setUp();
-        $this->semantic1                = mock('Tracker_Semantic');
-        $this->semantic2                = mock('Tracker_Semantic');
-        $this->tracker_semantic_manager = mock('Tracker_SemanticManager');
-        
-        stub($this->tracker_semantic_manager)->getSemantics()->returns(array('title'  => $this->semantic1, 'toDelete' => $this->semantic2));
+        $this->semantic1                = mock('Tracker_Semantic_Title');
+        $this->semantic2                = mock('Tracker_Semantic_Status');
+        $this->semantic3                = mock('Tracker_Semantic_Contributor');
+        $this->tracker_semantic_manager = mock('Tracker_SemanticManager');   
     }
     
     public function itReturnsOnlyTheRightSemanticTypes() {
-        $exclude = array('toDelete');
-        $this->semantics = $this->server->getSOAPSemantics($this->tracker_semantic_manager, $exclude);
+        stub($this->tracker_semantic_manager)->getSemantics()->returns(array('title'  => $this->semantic1, 'toDelete' => $this->semantic2)); 
+        
+        $this->semantics = $this->serverTracker->getSOAPSemantics($this->tracker_semantic_manager);
         $this->assertTrue(isset( $this->semantics['title']));
         $this->assertFalse(isset( $this->semantics['toDelete']));
+    }
+
+    public function itReturnsAnEmptyElement() {
+        stub($this->semantic1)->getField()->returns(null);
+        stub($this->semantic1)->getShortName()->returns('title');
+        $tracker_semantics = array('title'  => $this->semantic1);
+
+        $this->semantics = $this->serverTracker->semantic_to_soap($tracker_semantics);
+        $this->assertTrue($this->semantics['title']['field_name'] === "");
+    }
+    
+        public function itReturnsTheGoodResultForTitle() {
+            
+        $field = mock('Tracker_FormElement_Field_Text');
+        stub($this->semantic1)->getField()->returns($field);
+        stub($field)->getName()->returns('TITRE');
+        stub($this->semantic1)->getShortName()->returns('title');
+        
+        $tracker_semantics = array('1234'  => $this->semantic1);
+        
+        $this->semantics = $this->serverTracker->semantic_to_soap($tracker_semantics);
+        $this->assertTrue($this->semantics['title']['field_name'] === 'TITRE');
+    }
+    
+    public function itReturnsTheGoodResultForContributor() {
+            
+        $field = mock('Tracker_FormElement_Field_Text');
+        stub($this->semantic3)->getField()->returns($field);
+        stub($field)->getName()->returns('CONTRIB');
+        stub($this->semantic3)->getShortName()->returns('contributor');
+        
+        $tracker_semantics = array('1234'  => $this->semantic3);
+        
+        $this->semantics = $this->serverTracker->semantic_to_soap($tracker_semantics);
+        $this->assertTrue($this->semantics['contributor']['field_name'] === 'CONTRIB');
+    }
+    
+    public function itReturnsTheGoodResultForStatus() {
+            
+        $field = mock('Tracker_FormElement_Field_List');
+        stub($this->semantic2)->getField()->returns($field);
+        stub($field)->getName()->returns('STATUS');
+        stub($this->semantic2)->getShortName()->returns('status');
+        stub($this->semantic2)->getOpenValues()->returns(array(10,15,30));
+        
+        $tracker_semantics = array('1234'  => $this->semantic2);
+        
+        $this->semantics = $this->serverTracker->semantic_to_soap($tracker_semantics);
+        $this->assertTrue($this->semantics['status']['field_name'] === 'STATUS');
+        $this->assertTrue($this->semantics['status']['values'] === array(10,15,30));
     }
 }
 

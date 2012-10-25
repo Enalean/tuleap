@@ -340,15 +340,14 @@ class UserManager {
         }
         return $this->_currentuser;
     }
-    
+
     /**
-     * @return Lists of user having a valid SSH key
+     * @return Array of User
      */
-    
     public function getUsersWithSshKey() {
-        return $this->getDao()->searchSSHKeys();
+        return $this->getDao()->searchSSHKeys()->instanciateWith(array($this, 'getUserInstanceFromRow'));
     }
-    
+
     /**
      * Logout the current user
      * - remove the cookie

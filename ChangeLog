@@ -1,11 +1,24 @@
 Version 5.6 (Not Released Yet)
+   == Bug Fix ==
+    * Fix bug #1663: Validate user realname on account creation
+
    == Enhancements ==
-        * Enhance FRS monitoring (Contrib StMicroelectronics)
+    * Enhance FRS monitoring (Contrib StMicroelectronics)
+	* Adding new option for automatic validation of new projects
 
    == Plugins ==
-	* tracker: 5.26
+	* tracker: 5.29
 	* tests: 5.6
-	* statistics: 0.21
+	* statistics: 0.22
+	* git: 2.7.14
+	* ldap: 3.21
+	* agiledashboard: 0.56
+	* cardwall: 0.9.7
+
+   == Development ==
+	* Initialize a Vagrant box to ease the build of Tuleap. See ./Vagrantfile
+	and http://vagrantup.com/ for details. This will also help newcomers to
+	install a Tuleap development environment.
 
 Version 5.5.4 (Tuesday, Octobre 16th 2012)
    * Fix backend warnings about chgrp on ssh key dump

@@ -7,7 +7,7 @@
 // 
 
 header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
-header("Cache-Control: no-cache");
+header("Cache-Control: no-cache, no-store");
 header("Cache-Control: must-revalidate");
 
 require_once('pre.php');

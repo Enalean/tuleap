@@ -1,51 +1,51 @@
 <?php
+/**
+ * Copyright (c) Enalean, 2012. All Rights Reserved.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
 
-///////////////////////////////////////
-// Configuration part
-$_SERVER['SERVER_ADDR'] = 'sonde.cro.enalean.com';
-$test_server = 'http://' .$_SERVER['SERVER_ADDR'] /*.':'. $_SERVER['SERVER_PORT']*/;
+if ($argc < 2) {
+    die("Usage: ".$argv[0]." group_id tracker_id \n");
+}
 
-$login = 'admin';
-$password = 'siteadmin';
+$serverUrl = 'http://sonde.cro.enalean.com';
 
-$group_id   = 117;
-$tracker_id = 8;
+// Establish connexion to the server
+$soapLogin = new SoapClient($serverUrl.'/soap/?wsdl',
+                            array('cache_wsdl' => WSDL_CACHE_NONE));
+
+
+$requesterSessionHash = $soapLogin->login('admin', 'siteadmin')->session_hash;
+
+$group_id   = $argv[1];
+$tracker_id = $argv[2];
     
-$client_tracker_v5 = new SoapClient($test_server.'/plugins/tracker/soap/?wsdl',
-                            array(//'trace' => true,
-                                  'trace'      => 1,
-                                  'exceptions' => 0,
-                                  'soap_version' => SOAP_1_1,
-                                  'cache_wsdl' => 0,
-                                  //'proxy_host' => 'localhost',
-                                  //'proxy_port' => 8008
-                            ));
-
-$client = new SoapClient($test_server.'/soap/codendi.wsdl.php?wsdl',
-                            array(//'trace' => true,
-                                  'trace'      => 1,
-                                  'exceptions' => 0,
-                                  'soap_version' => SOAP_1_1,
-                                  'cache_wsdl' => 0, 
-                                  //'proxy_host' => 'localhost', 
-                                  //'proxy_port' => 8008
-                            ));
-
-$session =  $client->login($login, $password);
-
-$session_hash = (string)$session->session_hash;
-$user_id = $session->user_id;
-
-echo 'User ' . $login . ' (user_id=' . $user_id . ') is logged with session hash = ' .$session_hash . '<br>';
+$client_tracker_v5 = new SoapClient($serverUrl.'/plugins/tracker/soap/?wsdl',
+                                    array('cache_wsdl' => WSDL_CACHE_NONE));
 
 echo '<h1>Get semantic of tracker ' . $tracker_id . '</h1>';
 echo '<h3>function getTrackerSemantic</h3>';
+
 try {
-    $trackerlist = $client_tracker_v5->getTrackerSemantic($session_hash, $group_id, $tracker_id);
+    $trackerlist = $client_tracker_v5->getTrackerSemantic($requesterSessionHash, $group_id, $tracker_id);
     var_dump($trackerlist);
     
 } catch (SoapFault $fault) {
-   //var_dump($fault->getMessage());
+   var_dump($fault->getMessage());
 }
 
+$soapLogin->logout($requesterSessionHash);
 ?>

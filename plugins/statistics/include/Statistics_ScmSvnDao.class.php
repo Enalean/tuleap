@@ -55,7 +55,8 @@ class Statistics_ScmSvnDao extends DataAccessObject {
                 FROM group_svn_full_history
                 WHERE day BETWEEN DATE_FORMAT(".$this->da->quoteSmart($startDate).", '%Y%m%d') AND DATE_FORMAT(".$this->da->quoteSmart($endDate).", '%Y%m%d')
                   ".$this->groupFilter."
-                GROUP BY YEAR(day), MONTH(day)";
+                GROUP BY YEAR(day), MONTH(day)
+                ORDER BY YEAR(day), MONTH(day)";
 
         return $this->retrieve($sql);
     }
@@ -77,7 +78,8 @@ class Statistics_ScmSvnDao extends DataAccessObject {
                 FROM svn_commits
                 WHERE date BETWEEN UNIX_TIMESTAMP(".$this->da->quoteSmart($startDate).") AND UNIX_TIMESTAMP(".$this->da->quoteSmart($endDate).")
                   ".$this->groupFilter."
-                GROUP BY year, month";
+                GROUP BY year, month
+                ORDER BY year, STR_TO_DATE(month, '%M')";
 
         return $this->retrieve($sql);
     }
