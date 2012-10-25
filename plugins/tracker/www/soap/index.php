@@ -53,8 +53,6 @@ if ($request->exist('wsdl')) {
     $server = new SoapServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
 
-    $exclude = array('tooltip');
-
     $server->setClass(
         'Tracker_SOAPServer',
         new SOAP_UserManager(UserManager::instance()),
@@ -63,8 +61,7 @@ if ($request->exist('wsdl')) {
         PermissionsManager::instance(),
         new Tracker_ReportDao(),
         Tracker_FormElementFactory::instance(),
-        Tracker_ArtifactFactory::instance(),
-        $exclude
+        Tracker_ArtifactFactory::instance()
     );
     $server->handle();
 }

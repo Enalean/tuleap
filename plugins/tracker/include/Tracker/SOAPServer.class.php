@@ -81,8 +81,6 @@ class Tracker_SOAPServer {
      * @var Tracker_ArtifactFactory
      */
     private $artifact_factory;
-    
-    private $excluded_elems;
 
     public function __construct(
             SOAP_UserManager $soap_user_manager,
@@ -91,8 +89,8 @@ class Tracker_SOAPServer {
             PermissionsManager $permissions_manager,
             Tracker_ReportDao $dao,
             Tracker_FormElementFactory $formelement_factory,
-            Tracker_ArtifactFactory $artifact_factory,
-            array $exclude = null) {
+            Tracker_ArtifactFactory $artifact_factory
+    ) {
         $this->soap_user_manager        = $soap_user_manager;
         $this->project_manager          = $project_manager;
         $this->tracker_factory          = $tracker_factory;
@@ -100,7 +98,6 @@ class Tracker_SOAPServer {
         $this->report_dao               = $dao;
         $this->formelement_factory      = $formelement_factory;
         $this->artifact_factory         = $artifact_factory;
-        $this->excluded_elems           = $exclude;
     }
 
     /**
@@ -463,43 +460,22 @@ class Tracker_SOAPServer {
     }
     
     /**
-     * getSemanticTitle - returns the tracker field TrackerField of the tracker $tracker_id of the project $group_id
+     * getTrackerSemantic - returns the semantic of a tracker specified by $tracker_id in soap format.
+     * @param type $session_key the session hash associated with the session opened by the person who calls the service
+     * @param type $group_id the ID of the group we want to retrieve the semantic
+     * @param type $tracker_id the ID of the tracker we want to retrieve the semantic
+     * @return array{SOAPTrackerSemantic} the array of the semantic.
+     * @throws SoapFault in case of failure.
      */
-    
     public function getTrackerSemantic($session_key, $group_id, $tracker_id) {
         $user = $this->soap_user_manager->continueSession($session_key);
         $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
         if ($tracker->userIsAdmin($user)) {
             $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
-            $semantics = $this->getSOAPSemantics($tracker_semantic_manager);
-            return $this->semantic_to_soap($semantics);   
+            return $tracker_semantic_manager->exportToSOAP();   
         } else {
             throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
         }
-    }
-
-    protected function semantic_to_soap(array $semantics) {
-        $return = array();
-        foreach ($semantics as $tracker_semantic) {
-            $return[$tracker_semantic->getShortName()] = array('field_name' => '');
-            if ($tracker_semantic->getField()) {
-                 $return[$tracker_semantic->getShortName()]['field_name'] = $tracker_semantic->getField()->getName();
-            }
-            if ($tracker_semantic->getShortName() == 'status') {
-                $return[$tracker_semantic->getShortName()]['values'] = $tracker_semantic->getOpenValues();
-            }
-        }
-        return $return;
-    }
-    
-    protected function getSOAPSemantics (Tracker_SemanticManager $tracker_semantic_manager) {
-        $semantics = $tracker_semantic_manager->getSemantics();
-        if (isset($this->excluded_elems)) {
-            foreach ($this->excluded_elems as $type) {
-                unset($semantics[$type]);
-            }
-        }
-        return $semantics;
     }
     
     /**
