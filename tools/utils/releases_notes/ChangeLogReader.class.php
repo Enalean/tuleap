@@ -25,8 +25,8 @@ class ChangeLogReader {
 
     private $tuleap_version;
 
-    public function __construct() {
-        $this->tuleap_version = trim(file_get_contents('VERSION'));
+    public function __construct($version = null) {
+        $this->tuleap_version = $version ? $version : trim(file_get_contents('VERSION'));
     }
 
     /**
