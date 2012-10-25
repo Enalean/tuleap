@@ -5,7 +5,7 @@ plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Agile Dashboard
 
 plugin_agiledashboard	Admin	Agile Dashboard Administration
-plugin_agiledashboard	planning_destination_help	Usse left arrow on item to move it on backlog or bottom/up arrow to rank items.
+plugin_agiledashboard	planning_destination_help	Use left arrow on item to move it on backlog or bottom/up arrow to rank items.
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Create a new planning
 plugin_agiledashboard	planning_edit	Edit
