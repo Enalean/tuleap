@@ -18,15 +18,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/dao/CodendiDataAccess.class.php';
+require_once 'database.php';
+
 // GRANT ALL PRIVILEGES on integration_test.* to 'integration_test'@'localhost' identified by 'welcome0';
 abstract class TuleapDbTestCase extends TuleapTestCase {
 
+    protected $db_initialized = false;
+
     public function setUp() {
+        Config::set('DEBUG_MODE', true);
         parent::setUp();
         $GLOBALS['sys_dbhost']   = 'localhost';
         $GLOBALS['sys_dbuser']   = 'integration_test';
         $GLOBALS['sys_dbpasswd'] = 'welcome0';
         $GLOBALS['sys_dbname']   = 'integration_test';
+        if ($this->db_initialized == false) {
+            $this->initDb();
+            $this->db_initialized = true;
+            db_connect();
+        }
     }
 
     public function tearDown() {
