@@ -240,6 +240,28 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             if ($request->validFile($vFile)) {
                 $new_tracker = $this->importTracker($project, $name, $description, $itemname, $_FILES["tracker_new_xml_file"]["tmp_name"]);
             }
+        } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'tv3') {
+            require_once 'Migration/V3.class.php'; //we don't want to load all trackers v3 for each requests
+            require_once 'common/tracker/ArtifactType.class.php';
+            $atid = $request->get('tracker_new_tv3');
+            $tv3  = new ArtifactType($project, $atid);
+            if (!$tv3 || !is_object($tv3)) {
+                exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
+            }
+            if ($tv3->isError()) {
+                exit_error($Language->getText('global','error'),$tv3->getErrorMessage());
+            }
+            // Check if this tracker is valid (not deleted)
+            if ( !$tv3->isValid() ) {
+                exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
+            }
+            //Check if the user can view the artifact
+            if (!$tv3->userCanView()) {
+                exit_permission_denied();
+            }
+
+            $migration_v3 = new Tracker_Migration_V3($this->getTrackerFactory());
+            $new_tracker = $migration_v3->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
         } else {
             // Otherwise tries duplicate
             $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);
@@ -292,23 +314,25 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
           
         echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
 
-        $this->displayCreateTrackerFromTemplate($project, $tracker_template);
-        $this->displayCreateTrackerFromXML($project);
+        $create_mode = $request->get('create_mode');
+        $this->displayCreateTrackerFromTemplate($create_mode, $project, $tracker_template);
+        $this->displayCreateTrackerFromXML($create_mode, $project);
+        $this->displayCreateTrackerFromTV3($create_mode, $project, $request->get('tracker_new_tv3'));
 
         echo '</td><td style="padding-left:2em;">';
 
         echo '<p>'. $Language->getText('plugin_tracker_include_type','create_tracker_fill_name') .'</p>
           <p>
               <label for="newtracker_name"><b>'. $Language->getText('plugin_tracker_include_artifact','name').'</b>: <font color="red">*</font></label><br />
-              <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'">
+              <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'" required />
           </p>
           <p>
               <label for="newtracker_description"><b>'.$Language->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font><br />
-              <textarea id="newtracker_description" name="description" rows="3" cols="50">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
+              <textarea id="newtracker_description" name="description" rows="3" cols="50" required>'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
           </p>
           <p>
               <label for="newtracker_itemname"><b>'.$Language->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></label><br />
-              <input type="text" id="newtracker_itemname" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'"><br />
+              <input type="text" id="newtracker_itemname" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'" required/><br />
               <span style="color:#999;">'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</span>
           </p>';
         
@@ -323,7 +347,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * 
      *
      */
-    function displayCreateTrackerFromTemplate(Project $project, Tracker $tracker_template = null) {
+    function displayCreateTrackerFromTemplate($requested_create_mode, Project $project, Tracker $tracker_template = null) {
         $hp = Codendi_HTMLPurifier::instance();
 
         $GLOBALS['Response']->includeFooterJavascriptFile(TRACKER_BASE_URL.'/scripts/TrackerTemplateSelector.js');
@@ -337,7 +361,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         
         $gf = new GroupFactory();
-        $radio = '<input type="radio" name="create_mode" value="gallery" checked="checked">';
+        $radio = $this->getCreateTrackerRadio('gallery', $requested_create_mode);
         echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_tmpl').'</label></h3>';
 
         //
@@ -419,8 +443,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
     /**
      * 
      */
-    function displayCreateTrackerFromXML(Project $project) {
-        $radio = '<input type="radio" name="create_mode" value="xml">';
+    function displayCreateTrackerFromXML($requested_create_mode, Project $project) {
+        $radio = $this->getCreateTrackerRadio('xml', $requested_create_mode);
         echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml').'</label></h3>
               <div class="tracker_create_mode">
                 <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml_desc', TRACKER_BASE_URL.'/resources/templates/').'</p>
@@ -428,7 +452,48 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 
               </div>';
     }
-    
+
+    private function displayCreateTrackerFromTV3($requested_create_mode, Project $project, $requested_template_id) {
+        $hp   = Codendi_HTMLPurifier::instance();
+        $html = '';
+        if ($project->usesService('tracker')) {
+            require_once 'common/tracker/ArtifactTypeFactory.class.php';
+            $atf         = new ArtifactTypeFactory($project);
+            $trackers_v3 = $atf->getArtifactTypes();
+            if ($trackers_v3) {
+                $radio = $this->getCreateTrackerRadio('tv3', $requested_create_mode);
+                $html .= '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_tv3').'</label></h3>';
+                $html .= '<div class="tracker_create_mode">';
+                $checked = $requested_template_id ? '' : 'checked="checked"';
+                foreach ($trackers_v3 as $tracker_v3) {
+                    $html .= '<p>';
+                    $html .= '<label>';
+                    if ($requested_template_id == $tracker_v3->getID()) {
+                        $checked = 'checked="checked"';
+                    }
+                    $html .= '<input type="radio" name="tracker_new_tv3" value="'. $tracker_v3->getID() .'" '. $checked .' />';
+                    $html .= $hp->purify(SimpleSanitizer::unsanitize($tracker_v3->getName()), CODENDI_PURIFIER_CONVERT_HTML);
+                    $html .= '</label>';
+                    $html .= '</p>';
+                    $checked = '';
+                }
+                $html .= '</div>';
+            }
+        }
+        echo $html;
+    }
+
+    public function getCreateTrackerRadio($create_mode, $requested_create_mode) {
+        $checked = '';
+        if (! $requested_create_mode) {
+            $requested_create_mode = 'gallery';
+        }
+        if ($create_mode == $requested_create_mode) {
+            $checked = 'checked="checked"';
+        }
+        return '<input type="radio" name="create_mode" value="'. $create_mode .'" '. $checked .' />';
+    }
+
     public function displayTrackerHomeNav(Project $project) {
         $presenter = new Tracker_HomeNavPresenter($project);
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
