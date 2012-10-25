@@ -21,7 +21,7 @@ if ($argc < 2) {
     die("Usage: ".$argv[0]." group_id tracker_id \n");
 }
 
-$serverUrl = 'http://sonde.cro.enalean.com';
+$serverUrl = 'http://chaussette.cro.enalean.com';
 
 // Establish connexion to the server
 $soapLogin = new SoapClient($serverUrl.'/soap/?wsdl',
@@ -32,20 +32,15 @@ $requesterSessionHash = $soapLogin->login('admin', 'siteadmin')->session_hash;
 
 $group_id   = $argv[1];
 $tracker_id = $argv[2];
-    
-$client_tracker_v5 = new SoapClient($serverUrl.'/plugins/tracker/soap/?wsdl',
+
+// Connecting to the soap's tracker client
+$soapTracker = new SoapClient($serverUrl.'/plugins/tracker/soap/?wsdl',
                                     array('cache_wsdl' => WSDL_CACHE_NONE));
 
-echo '<h1>Get semantic of tracker ' . $tracker_id . '</h1>';
-echo '<h3>function getTrackerSemantic</h3>';
-
-try {
-    $trackerlist = $client_tracker_v5->getTrackerSemantic($requesterSessionHash, $group_id, $tracker_id);
-    var_dump($trackerlist);
-    
-} catch (SoapFault $fault) {
-   var_dump($fault->getMessage());
-}
+//Executing method getTrackerSemantic
+$response = $soapTracker->getTrackerSemantic($requesterSessionHash, $group_id, $tracker_id);
+var_dump($response);
 
 $soapLogin->logout($requesterSessionHash);
+
 ?>
