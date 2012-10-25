@@ -1250,3 +1250,7 @@ td.first-column {
     margin: 1em auto;
 }
 /* }}} */
+
+.tracker_create_mode {
+    padding-left: 1em;
+}

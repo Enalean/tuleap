@@ -292,11 +292,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
           
         echo '<p>'.$Language->getText('plugin_tracker_include_type','choose_creation').'</p>';
 
-        if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'xml') {
-            $this->displayCreateTrackerFromXML($project);
-        } else {
-            $this->displayCreateTrackerFromTemplate($project, $tracker_template);
-        }
+        $this->displayCreateTrackerFromTemplate($project, $tracker_template);
+        $this->displayCreateTrackerFromXML($project);
 
         echo '</td><td style="padding-left:2em;">';
 
@@ -340,12 +337,13 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $GLOBALS['Response']->includeFooterJavascriptSnippet($js);
         
         $gf = new GroupFactory();
-        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_tmpl').'</h3>';
+        $radio = '<input type="radio" name="create_mode" value="gallery" checked="checked">';
+        echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_tmpl').'</label></h3>';
+
         //
-        echo '<div>';
+        echo '<div class="tracker_create_mode">';
         echo '<noscript>Project Id: <input type="text" name="group_id_template" value=""><br/>Tracker Id: <input type="text" name="atid_template" value=""></noscript>';
-        echo '<input type="hidden" name="create_mode" value="gallery">';
-        
+
         echo '<table>';
 
         echo '<tr>';
@@ -415,8 +413,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         echo '</tr>';
         echo '</table>';
 
-        echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'create_mode_xml', array('?'.http_build_query(array('group_id' => $project->getID(), 'func' => 'create', 'create_mode' => 'xml')))).'</p>';
-
         echo '</div>';
     }
     
@@ -424,13 +420,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * 
      */
     function displayCreateTrackerFromXML(Project $project) {
-        echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml').'</h3>
-              <div>
+        $radio = '<input type="radio" name="create_mode" value="xml">';
+        echo '<h3><label>'. $radio . $GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml').'</label></h3>
+              <div class="tracker_create_mode">
                 <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type','from_xml_desc', TRACKER_BASE_URL.'/resources/templates/').'</p>
-                <input type="hidden" name="create_mode" value="xml">
                 <input type="file" name="tracker_new_xml_file" id="tracker_new_xml_file" />
                 
-                <p>'.$GLOBALS['Language']->getText('plugin_tracker_include_type', 'create_mode_gallery', array('?'.http_build_query(array('group_id' => $project->getID(), 'func' => 'create', 'create_mode' => 'gallery')))).'</p>
               </div>';
     }
     
