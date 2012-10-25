@@ -310,5 +310,16 @@ class Transition {
         }
         return false;
     }
+    
+    /**
+     * Creates   the soap format of the transition
+     * @return array the soap format of the transition
+     */
+    public function exportToSOAP() {
+        return array($this->getTransitionId() => array('from_id' => $this->getFieldValueFrom()->getId(),
+                                                       'to_id'   => $this->getFieldValueTo()->getId()
+                                                      )
+                    );
+    }
 }
 ?>

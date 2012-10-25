@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
+require_once(dirname(__FILE__).'/../../include/constants.php');
 require_once(dirname(__FILE__).'/../../include/workflow/Workflow.class.php');
 require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
 Mock::generate('Transition');
@@ -40,7 +40,7 @@ Mock::generate('User');
 require_once('common/permission/PermissionsManager.class.php');
 Mock::generate('PermissionsManager');
 
-class WorkflowTest extends UnitTestCase {
+class WorkflowTest extends TuleapTestCase {
     
     public function testEmptyWorkflow() {
         $workflow = new WorkflowTestVersion(1, 2, 3, 1);

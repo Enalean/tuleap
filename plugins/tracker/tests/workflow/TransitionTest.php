@@ -18,13 +18,15 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../../include/constants.php');
+require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
+require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
-
 Mock::generate('Tracker_FormElement_Field_List_Value');
 Mock::generate('Transition_PostAction');
 Mock::generate('User');
 
-class TransitionTest extends UnitTestCase {
+class TransitionTest extends TuleapTestCase {
     
     public function testEquals() {
         
@@ -105,6 +107,28 @@ class TransitionTest extends UnitTestCase {
         $a2->expectOnce('before', array($fields_data, $current_user));
         
         $t1->before($fields_data, $current_user);
+    }
+    
+    public function itReturnsSOAPFormatOfTheTransition() {
+        $transition_id = 2;
+        $workflow_id   = 758;
+        $from_id       = 45;
+        $to_id         = 12;
+        
+        $from = new mockTracker_FormElement_Field_List_Value();
+        $from->setReturnValue('getId', $from_id);
+        
+        $to = new mockTracker_FormElement_Field_List_Value();
+        $to->setReturnValue('getId', $to_id);
+        
+        $transition = new Transition($transition_id, $workflow_id, $from, $to);
+        $result     = $transition->exportToSOAP();
+        $expected   = array($transition_id => array('from_id' => $from_id, 
+                                                    'to_id'   => $to_id
+                                                   )
+                           );
+        
+        $this->assertEqual($result, $expected);
     }
 }
 ?>
