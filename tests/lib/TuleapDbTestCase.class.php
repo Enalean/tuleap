@@ -18,10 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TuleapTestCase.class.php';
-
-//require_once 'common/dao/CodendiDataAccess.class.php';
-
 // GRANT ALL PRIVILEGES on integration_test.* to 'integration_test'@'localhost' identified by 'welcome0';
 abstract class TuleapDbTestCase extends TuleapTestCase {
 
