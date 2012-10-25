@@ -18,6 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_MigrationDao extends DataAccessObject {
+class Tracker_Migration{
     
 }
