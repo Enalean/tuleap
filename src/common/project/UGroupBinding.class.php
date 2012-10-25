@@ -134,7 +134,7 @@ class UGroupBinding {
         if (!empty($bindedUgroups)) {
             foreach ($bindedUgroups as $ugroupKey => $ugroupData) {
                 try {
-                    $this->reloadUgroupBinding($ugroupId, $ugroupKey);
+                    $this->reloadUgroupBinding($ugroupKey, $ugroupId);
                 } catch (Exception $e) {
                     return false;
                 }
