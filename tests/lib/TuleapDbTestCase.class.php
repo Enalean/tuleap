@@ -40,7 +40,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         parent::setUp();
         Config::set('DEBUG_MODE', true);
         if (self::$db_initialized == false) {
-            self::$db_initialized = $this->initDb();
+            self::$db_initialized = true;
+            $this->initDb();
         }
         $this->mysqli->select_db('integration_test');
         db_connect();
