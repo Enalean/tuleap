@@ -18,15 +18,16 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(dirname(__FILE__) . '/../include/constants.php');
+require_once(dirname(__FILE__) . '/builders/all.php');
 require_once(dirname(__FILE__) . '/../include/Tracker/Semantic/Tracker_SemanticManager.class.php');
 require_once(dirname(__FILE__) . '/../include/Tracker/Semantic/Tracker_Semantic_Title.class.php');
 require_once(dirname(__FILE__) . '/../include/Tracker/Semantic/Tracker_Semantic_Status.class.php');
 require_once(dirname(__FILE__) . '/../include/Tracker/Semantic/Tracker_Semantic_Contributor.class.php');
-require_once(dirname(__FILE__) . '/builders/aMockTracker.php');
 require_once(dirname(__FILE__) . '/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
 
 class Tracker_SemanticManagerTest extends TuleapTestCase {
+    
+    private $semantic_title;
     
     public function setUp() {
         $this->tracker_semantic_title       = mock('Tracker_Semantic_Title');
@@ -48,8 +49,40 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
         );
         
         $this->tracker_semanticManager->setReturnValue('getSemantics', $semantics_return);
+        
+        $tracker = mock('Tracker');
+        $summary_field = aTextField()->withName('summary')->build();
+        $this->semantic_title             = new Tracker_Semantic_Title($tracker, $summary_field);
+        $this->not_defined_semantic_title = new Tracker_Semantic_Title($tracker);
+        $this->semantic_manager = partial_mock('Tracker_SemanticManager', array('getSemantics'), array($tracker));
+        
     }
     
+    public function itReturnsTheFieldNameOfTheTitleSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'title' => $this->semantic_title
+        ));
+        $result = $this->semantic_manager->exportToSOAP();
+        $this->assertEqual($result['title']['field_name'], 'summary');
+    }
+
+    public function itReturnsEmptyIfNoTitleSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'title' => $this->not_defined_semantic_title
+        ));
+        $result = $this->semantic_manager->exportToSOAP();
+        $this->assertEqual($result['title']['field_name'], '');
+    }
+    
+    public function _itReturnsSemanticInTheRightOrder() {
+        $result_keys = array_keys($result);
+        $this->assertEqual($result_keys, array('title', 'status', 'contributor'));
+    }
+    
+    public function _itDoesNotExportTooltipSemantic() {
+        $this->assertFalse(isset($result['tooltip']));
+    }
+
     public function itReturnsAnEmptySOAPArray() {
         $title_field_name       = '';
         $status_field_name      = '';

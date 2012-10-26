@@ -58,8 +58,9 @@ function aSelectBoxField() {
 }
 
 class Test_Tracker_FormElement_Builder {
-    private $name;
+    private $klass;
     private $id;
+    private $name;
     private $tracker;
     private $trackerId;
     private $originalField;
@@ -67,7 +68,12 @@ class Test_Tracker_FormElement_Builder {
     private $bind;
 
     public function __construct($klass) {
-        $this->name = $klass;
+        $this->klass = $klass;
+    }
+    
+    public function withName($name) {
+        $this->name = $name;
+        return $this;
     }
     
     public function withId($id) {
@@ -102,8 +108,8 @@ class Test_Tracker_FormElement_Builder {
      * @return Tracker_FormElement
      */
     public function build() {
-        $klass  = $this->name;
-        $object = new $klass($this->id, $this->trackerId, null, null, null, null, $this->use_it, null, null, null, null, $this->originalField);
+        $klass  = $this->klass;
+        $object = new $klass($this->id, $this->trackerId, null, $this->name, null, null, $this->use_it, null, null, null, null, $this->originalField);
         if ($this->tracker) {
             $object->setTracker($this->tracker);
         }
