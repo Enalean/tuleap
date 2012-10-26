@@ -348,16 +348,6 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
-    'TrackerSemanticTooltip',
-    'complexType',
-    'struct',
-    'sequence',
-    '',
-    array(
-    )
-);
-
-$GLOBALS['server']->wsdl->addComplexType(
     'TrackerSemantic',
     'complexType',
     'struct',

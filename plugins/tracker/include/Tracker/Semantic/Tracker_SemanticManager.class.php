@@ -144,16 +144,16 @@ class Tracker_SemanticManager {
      * @return array the SOAPification of the semantic
      */
     public function exportToSOAP() {
-        $semantics   = $this->getSemantics();
-        $soap_result = array();
+        $semantic_order = array('title', 'status', 'contributor');
+        $semantics      = $this->getSemantics();
+        $soap_result    = array();
 
-        foreach ($semantics as $short_name => $value) {
-            $soap_value = $value->exportToSOAP();
-            if ($soap_value[$short_name]) {
-                $new_soap_element = array( $short_name => $soap_value[$short_name]);
-                $soap_result = array_merge($soap_result, $new_soap_element);
+        foreach ($semantic_order as $semantic_key) {
+            if (isset($semantics[$semantic_key])){
+                $soap_result[$semantic_key] = $semantics[$semantic_key]->exportToSOAP();
             }
         }
+
         return $soap_result;
     }
 }

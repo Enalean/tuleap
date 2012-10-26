@@ -346,7 +346,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
      */
     public function exportToSOAP() {
         $SOAP_array = parent::exportToSoap();
-        $SOAP_array[$this->getShortName()]['values'] = $this->getOpenValues();
+        $SOAP_array['values'] = $this->getOpenValues();
         return $SOAP_array;
     }
 

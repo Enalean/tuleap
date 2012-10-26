@@ -78,8 +78,6 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $soap_user_manager = mock('SOAP_UserManager');
         stub($soap_user_manager)->continueSession($this->session_key)->returns($current_user);
 
-        $exclude = array('toDelete');
-
         $this->server = new Tracker_SOAPServer(
             $soap_user_manager,
             $project_manager,
@@ -87,8 +85,7 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
             $permissions_manager,
             $dao,
             $formelement_factory,
-            $artifact_factory,
-            $exclude
+            $artifact_factory
         );
     }
 

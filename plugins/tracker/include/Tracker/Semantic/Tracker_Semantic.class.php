@@ -151,10 +151,12 @@ abstract class Tracker_Semantic {
     */
     public function exportToSOAP() {
         $field_name = "";
-        if ($field = $this->getField()) {
+        $field      = $this->getField();
+        if ($field) {
             $field_name = $field->getName();
         }
-        return array($this->getShortName() => array('field_name' => $field_name));
+
+        return array('field_name' => $field_name);
     }
 
 }
