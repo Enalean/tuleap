@@ -35,10 +35,11 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $GLOBALS['sys_dbpasswd'] = Config::get('sys_dbpasswd');
         $GLOBALS['sys_dbname']   = Config::get('sys_dbname');
         if (self::$db_initialized == false) {
-            $this->initDb();
-            self::$db_initialized = true;
+            self::$db_initialized = $this->initDb();
         }
-        db_connect();
+        if (self::$db_initialized == true) {
+            db_connect();
+        }
     }
 
     public function tearDown() {
@@ -54,6 +55,12 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
      */
     protected function resetDatabase() {
         self::$db_initialized = false;
+    }
+
+    public function skip() {
+        parent::skip();
+        echo "== Y U NO CONFIGURE DATABASE? ==\n";
+        $this->skipIf(true, '== Y U NO CONFIGURE DATABASE? ==');
     }
 
     /**
@@ -80,20 +87,24 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     private function dropDatabase() {
         $mysqli = mysqli_init();
         if (!$mysqli->real_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd'])) {
-             $this->skipIf(true, '== Y U NO CONFIGURE DATABASE? ==');
+            return false;
         } else {
             $mysqli->query("DROP DATABASE IF EXISTS integration_test");
             $mysqli->query("CREATE DATABASE integration_test");
             $mysqli->close();
+            return true;
         }
     }
 
     private function initDb() {
-        $this->dropDatabase();
-        $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
-        $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
-        $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
-        $this->mysqlLoadFile('plugins/tracker/db/install.sql');
+        if ($this->dropDatabase()) {
+            $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
+            $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
+            $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
+            $this->mysqlLoadFile('plugins/tracker/db/install.sql');
+            return true;
+        }
+        return false;
     }
 }
 

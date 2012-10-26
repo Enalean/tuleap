@@ -75,6 +75,11 @@ class ArtifactImportTest extends TuleapTestCase {
         db_connect();
     }
 
+    public function tearDown() {
+        parent::tearDown();
+        CodendiDataAccess::clearInstance();
+    }
+
     function testALL() {
 
       $GLOBALS['Language'] = new MockBaseLanguage($this);
