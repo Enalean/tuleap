@@ -30,30 +30,20 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
     private $semantic_title;
 
     public function setUp() {
-        $this->tracker_semantic_title       = mock('Tracker_Semantic_Title');
-        $this->tracker_semantic_status      = mock('Tracker_Semantic_Status');
-        $this->tracker_semantic_contributor = mock('Tracker_Semantic_Contributor');
-        $this->tracker_tooltip              = mock('Tracker_Tooltip');
+        $tracker           = mock('Tracker');
+        $summary_field     = aTextField()->withName('summary')->build();
+        $assigned_to_field = aSelectBoxField()->withName('assigned_to')->build();
+        $values_field      = aSelectBoxField()->withName('status')->build();
+        $open_values       = array(803,2354,2943);
 
-        $this->tracker_semantic_title->setReturnValue('getShortName', 'title');
-        $this->tracker_semantic_status->setReturnValue('getShortName', 'status');
-        $this->tracker_semantic_contributor->setReturnValue('getShortName', 'contributor');
-        $this->tracker_tooltip->setReturnValue('getShortName', 'tooltip');
+        $this->semantic_title                   = new Tracker_Semantic_Title($tracker, $summary_field);
+        $this->semantic_contributor             = new Tracker_Semantic_Contributor($tracker, $assigned_to_field);
+        $this->semantic_status                  = new Tracker_Semantic_Status($tracker, $values_field, $open_values);
+        $this->not_defined_semantic_title       = new Tracker_Semantic_Title($tracker);
+        $this->not_defined_semantic_status      = new Tracker_Semantic_Status($tracker);
+        $this->not_defined_semantic_contributor = new Tracker_Semantic_Contributor($tracker);
+        $this->not_defined_semantic_tooltip     = new Tracker_Tooltip($tracker);
 
-        $this->tracker_semanticManager = partial_mock('Tracker_SemanticManager', array('getSemantics'));
-        $semantics_return = array(
-            $this->tracker_semantic_title->getShortName()       => $this->tracker_semantic_title,
-            $this->tracker_semantic_status->getShortName()      => $this->tracker_semantic_status,
-            $this->tracker_semantic_contributor->getShortName() => $this->tracker_semantic_contributor,
-            $this->tracker_tooltip->getShortName()              => $this->tracker_tooltip
-        );
-
-        $this->tracker_semanticManager->setReturnValue('getSemantics', $semantics_return);
-
-        $tracker = mock('Tracker');
-        $summary_field = aTextField()->withName('summary')->build();
-        $this->semantic_title             = new Tracker_Semantic_Title($tracker, $summary_field);
-        $this->not_defined_semantic_title = new Tracker_Semantic_Title($tracker);
         $this->semantic_manager = partial_mock('Tracker_SemanticManager', array('getSemantics'), array($tracker));
 
     }
@@ -74,77 +64,59 @@ class Tracker_SemanticManagerTest extends TuleapTestCase {
         $this->assertEqual($result['title']['field_name'], '');
     }
 
-    public function _itReturnsSemanticInTheRightOrder() {
+    public function itReturnsTheFieldNameOfTheContributorSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'contributor' => $this->semantic_contributor
+        ));
+        $result = $this->semantic_manager->exportToSOAP();
+        $this->assertEqual($result['contributor']['field_name'], 'assigned_to');
+    }
+
+    public function itReturnsEmptyIfNoContributorSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'contributor' => $this->not_defined_semantic_contributor
+        ));
+        $result = $this->semantic_manager->exportToSOAP();
+        $this->assertEqual($result['contributor']['field_name'], '');
+    }
+    public function itReturnsTheFieldNameAndValuesOfTheStatusSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'status' => $this->semantic_status
+        ));
+        $result = $this->semantic_manager->exportToSOAP();
+        $this->assertEqual($result['status']['field_name'], 'status');
+        $this->assertEqual($result['status']['values'], array(803,2354,2943));
+    }
+
+    public function itReturnsEmptyIfNoStatusSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'status' => $this->not_defined_semantic_status
+        ));
+        $result = $this->semantic_manager->exportToSOAP();
+        $this->assertEqual($result['status']['field_name'], '');
+        $this->assertEqual($result['status']['values'], array());
+    }
+
+    public function itReturnsSemanticInTheRightOrder() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'title'       => $this->not_defined_semantic_title,
+            'status'      => $this->not_defined_semantic_status,
+            'contributor' => $this->not_defined_semantic_contributor
+        ));
+
+        $result = $this->semantic_manager->exportToSOAP();
         $result_keys = array_keys($result);
         $this->assertEqual($result_keys, array('title', 'status', 'contributor'));
     }
 
-    public function _itDoesNotExportTooltipSemantic() {
+    public function itDoesNotExportTooltipSemantic() {
+        stub($this->semantic_manager)->getSemantics()->returns(array(
+            'tooltip' => $this->not_defined_semantic_tooltip
+        ));
+
+        $result = $this->semantic_manager->exportToSOAP();
         $this->assertFalse(isset($result['tooltip']));
     }
-
-    public function itReturnsAnEmptySOAPArray() {
-        $title_field_name       = '';
-        $status_field_name      = '';
-        $contributor_field_name = '';
-
-        $this->tracker_semantic_title->setReturnValue('exportToSOAP', array(
-             $this->tracker_semantic_title->getShortName() => array('field_name' => $title_field_name)
-        ));
-        $this->tracker_semantic_status->setReturnValue('exportToSOAP', array(
-             $this->tracker_semantic_status->getShortName() => array(
-                 'field_name' => $status_field_name,
-                 'values'     => array()
-             )
-        ));
-        $this->tracker_semantic_contributor->setReturnValue('exportToSOAP', array(
-             $this->tracker_semantic_contributor->getShortName() => array('field_name' => $contributor_field_name)
-        ));
-        $this->tracker_tooltip->setReturnValue('exportToSOAP', array(
-             $this->tracker_tooltip->getShortName() => null
-        ));
-
-        $expected = array(
-            $this->tracker_semantic_title->getShortName()       => array('field_name' => $title_field_name),
-            $this->tracker_semantic_status->getShortName()      => array('field_name' => $status_field_name, 'values' => array()),
-            $this->tracker_semantic_contributor->getShortName() => array('field_name' => $contributor_field_name)
-        );
-
-        $result = $this->tracker_semanticManager->exportToSOAP();
-        $this->assertEqual($result, $expected);
-    }
-
-    public function itReturnsTheSemanticInSOAPFormat() {
-        $title_field_name       = 'some_title';
-        $status_field_name      = 'some_status';
-        $contributor_field_name = 'some_contributor';
-
-        $this->tracker_semantic_title->setReturnValue('exportToSOAP', array(
-            $this->tracker_semantic_title->getShortName() => array('field_name' => $title_field_name)
-        ));
-        $this->tracker_semantic_status->setReturnValue('exportToSOAP', array(
-            $this->tracker_semantic_status->getShortName() => array(
-                'field_name' => $status_field_name,
-                'values' => array(1,2,3)
-            )
-        ));
-        $this->tracker_semantic_contributor->setReturnValue('exportToSOAP', array(
-            $this->tracker_semantic_contributor->getShortName() => array('field_name' => $contributor_field_name)
-        ));
-        $this->tracker_tooltip->setReturnValue('exportToSOAP', array(
-            $this->tracker_tooltip->getShortName() => null
-        ));
-
-        $expected = array(
-            $this->tracker_semantic_title->getShortName()       => array('field_name' => $title_field_name),
-            $this->tracker_semantic_status->getShortName()      => array('field_name' => $status_field_name, 'values' => array(1,2,3)),
-            $this->tracker_semantic_contributor->getShortName() => array('field_name' => $contributor_field_name)
-        );
-
-        $result = $this->tracker_semanticManager->exportToSOAP();
-        $this->assertEqual($result, $expected);
-    }
-
 }
 
 ?>
