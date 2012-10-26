@@ -21,7 +21,7 @@ if ($argc < 2) {
     die("Usage: ".$argv[0]." group_id tracker_id \n");
 }
 
-$serverUrl = 'http://recco.cro.enalean.com';
+$serverUrl = 'http://sonde.cro.enalean.com';
 
 // Establish connexion to the server
 $soapLogin = new SoapClient($serverUrl.'/soap/?wsdl',

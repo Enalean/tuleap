@@ -74,7 +74,7 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
 
         $tracker_factory = mock('TrackerFactory');
         $this->setUpTrackers($tracker_factory);
-        
+
         $soap_user_manager = mock('SOAP_UserManager');
         stub($soap_user_manager)->continueSession($this->session_key)->returns($current_user);
 

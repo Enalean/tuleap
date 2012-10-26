@@ -458,7 +458,7 @@ class Tracker_SOAPServer {
             return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
         }
     }
-    
+
     /**
      * getTrackerSemantic - returns the semantic of a tracker specified by $tracker_id in soap format.
      * @param type $session_key the session hash associated with the session opened by the person who calls the service
@@ -472,12 +472,12 @@ class Tracker_SOAPServer {
         $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
         if ($tracker->userIsAdmin($user)) {
             $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
-            return $tracker_semantic_manager->exportToSOAP();   
+            return $tracker_semantic_manager->exportToSOAP();
         } else {
             throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
         }
     }
-    
+
     /**
      * getArtifactHistory - returns the array of ArtifactHistory of the artifact $artifact_id in the tracker $tracker_id of the project $group_id
      *

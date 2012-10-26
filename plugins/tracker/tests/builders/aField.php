@@ -70,32 +70,32 @@ class Test_Tracker_FormElement_Builder {
     public function __construct($klass) {
         $this->klass = $klass;
     }
-    
+
     public function withName($name) {
         $this->name = $name;
         return $this;
     }
-    
+
     public function withId($id) {
         $this->id = $id;
         return $this;
     }
-    
+
     public function withTracker($tracker) {
         $this->tracker   = $tracker;
         return $this;
     }
-    
+
     public function withTrackerId($trackerId) {
         $this->trackerId = $trackerId;
         return $this;
     }
-    
+
     public function isUsed() {
         $this->use_it = true;
         return $this;
     }
-    
+
     /**
      * @only for Tracker_FormElement_Field_List
      */
@@ -103,7 +103,7 @@ class Test_Tracker_FormElement_Builder {
         $this->bind = $bind;
         return $this;
     }
-    
+
     /**
      * @return Tracker_FormElement
      */

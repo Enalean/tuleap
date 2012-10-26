@@ -23,13 +23,13 @@ require_once('Tracker_Semantic_Status.class.php');
 require_once('Tracker_Semantic_Contributor.class.php');
 
 class Tracker_SemanticManager {
-    
+
     protected $tracker;
-    
+
     public function __construct($tracker) {
         $this->tracker = $tracker;
     }
-    
+
     public function process(TrackerManager $tracker_manager, $request, $current_user) {
         if ($request->existAndNonEmpty('semantic')) {
             $semantics = $this->getSemantics();
@@ -39,15 +39,15 @@ class Tracker_SemanticManager {
         }
         $this->displayAdminSemantic($tracker_manager, $request, $current_user);
     }
-    
+
     public function displayAdminSemantic(TrackerManager $tracker_manager, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($tracker_manager, 'editsemantic');
-        
+
         echo '<p>';
         echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','semantic_intro');
         echo '</p>';
-        
+
         foreach($this->getSemantics() as $key => $s) {
             echo '<h3>'. $s->getLabel() .' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                 'tracker'  => $this->tracker->getId(),
@@ -58,14 +58,14 @@ class Tracker_SemanticManager {
             echo '</a></h3>';
             $s->display();
         }
-        
+
         $this->tracker->displayFooter($tracker_manager);
     }
-    
+
     public function displaySemanticHeader(Tracker_Semantic $semantic, TrackerManager $tracker_manager) {
         $this->tracker->displayAdminItemHeader(
-            $tracker_manager, 
-            'editsemantic', 
+            $tracker_manager,
+            'editsemantic',
             array(
                 array(
                     'url'         => TRACKER_BASE_URL.'/?'. http_build_query(array(
@@ -80,12 +80,12 @@ class Tracker_SemanticManager {
             $semantic->getLabel()
         );
     }
-    
+
     public function displaySemanticFooter(Tracker_Semantic $semantic, TrackerManager $tracker_manager) {
         $this->tracker->displayFooter($tracker_manager);
         die();
     }
-    
+
     /**
      * Is the field used in semantics?
      *
@@ -102,28 +102,28 @@ class Tracker_SemanticManager {
         }
         return false;
     }
-    
+
     /**
      * @return array of Tracker_Semantic
      */
     public function getSemantics() {
         $semantics = array();
-        
+
         $t = Tracker_Semantic_Title::load($this->tracker);
         $semantics[$t->getShortName()] = $t;
-        
+
         $t = Tracker_Semantic_Status::load($this->tracker);
         $semantics[$t->getShortName()] = $t;
-        
+
         $t = Tracker_Semantic_Contributor::load($this->tracker);
         $semantics[$t->getShortName()] = $t;
-        
+
         $t = $this->tracker->getTooltip();
         $semantics[$t->getShortName()] = $t;
-        
+
         return $semantics;
     }
-    
+
     /**
      * Export semantic to XML
      *
@@ -138,22 +138,22 @@ class Tracker_SemanticManager {
             $semantic->exportToXML($root, $xmlMapping);
         }
     }
-    
-   /**
-    * Export the semantic to SOAP format
-    * @return array the SOAPification of the semantic
-    */
+
+    /**
+     * Export the semantic to SOAP format
+     * @return array the SOAPification of the semantic
+     */
     public function exportToSOAP() {
         $semantics   = $this->getSemantics();
         $soap_result = array();
-        
+
         foreach ($semantics as $short_name => $value) {
             $soap_value = $value->exportToSOAP();
             if ($soap_value[$short_name]) {
-                $soap_result[$short_name] = $soap_value[$short_name];            
+                $new_soap_element = array( $short_name => $soap_value[$short_name]);
+                $soap_result = array_merge($soap_result, $new_soap_element);
             }
         }
-        
         return $soap_result;
     }
 }
