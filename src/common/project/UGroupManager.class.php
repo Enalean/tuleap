@@ -194,6 +194,15 @@ class UGroupManager {
     }
 
     /**
+     * Wrapper for UserGroupDao
+     *
+     * @return UserGroupDao
+     */
+    public function getUserGroupDao() {
+        return new UserGroupDao();
+    }
+
+    /**
      * Return name and id of all ugroups belonging to a specific project
      *
      * @param Integer $groupId    Id of the project
@@ -202,7 +211,7 @@ class UGroupManager {
      * @return DataAccessResult
      */
     public function getExistingUgroups($groupId, $predefined = null) {
-        $dar = $this->getDao()->getExistingUgroups($groupId, $predefined);
+        $dar = $this->getUserGroupDao()->getExistingUgroups($groupId, $predefined);
         if ($dar && !$dar->isError()) {
             return $dar;
         }
