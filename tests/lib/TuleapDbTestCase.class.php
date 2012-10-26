@@ -24,7 +24,7 @@ require_once 'database.php';
 // GRANT ALL PRIVILEGES on integration_test.* to 'integration_test'@'localhost' identified by 'welcome0';
 abstract class TuleapDbTestCase extends TuleapTestCase {
 
-    protected $db_initialized = false;
+    protected static $db_initialized = false;
 
     public function setUp() {
         parent::setUp();
@@ -33,9 +33,9 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $GLOBALS['sys_dbuser']   = 'integration_test';
         $GLOBALS['sys_dbpasswd'] = 'welcome0';
         $GLOBALS['sys_dbname']   = 'integration_test';
-        if ($this->db_initialized == false) {
+        if (self::$db_initialized == false) {
             $this->initDb();
-            $this->db_initialized = true;
+            self::$db_initialized = true;
         }
         db_connect();
     }
@@ -48,13 +48,20 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         unset($GLOBALS['sys_dbname']);
     }
 
+    /**
+     * Use this method if you need to drop the database after a test
+     */
+    protected function resetDatabase() {
+        self::$db_initialized = false;
+    }
+
     protected function mysqlLoadFile($file) {
         $mysql_cmd = 'mysql -u'.$GLOBALS['sys_dbuser'].' -p'.$GLOBALS['sys_dbpasswd'].' '.$GLOBALS['sys_dbname'];
         $cmd = $mysql_cmd.' < '.$file;
         system($cmd);
     }
 
-    protected function resetDb() {
+    protected function dropDatabase() {
         $mysqli = mysqli_init();
         $mysqli->real_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd']);
         $mysqli->query("DROP DATABASE IF EXISTS integration_test");
@@ -63,7 +70,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     }
 
     protected function initDb() {
-        $this->resetDb();
+        $this->dropDatabase();
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
         $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
@@ -75,7 +82,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     }
 
     protected function loadDbDump() {
-        $this->resetDb();
+        $this->dropDatabase();
         $this->mysqlLoadFile('empty_db.sql');
     }
 }
