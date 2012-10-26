@@ -24,11 +24,7 @@ substitute() {
 ##
 ## Default values
 ##
-sys_default_domain="tuleap.net";
 local_module_directory="codendi-src";
-port="80";
-sys_org_name="Tuleap";
-sys_long_org_name="Tuleap";
 
 ##
 ## Parse options
@@ -60,16 +56,10 @@ set -x
 cd "$codendi_src"
 
 # Create /var/tmp/codendi_cache dir
-mkdir -p ../var/
-mkdir -p ../var/tmp/
 mkdir -p ../var/tmp/codendi_cache/
 
 # Create /etc/codendi/conf and /etc/codendi/plugins/IM/etc dir
-mkdir -p ../etc/
-mkdir -p ../etc/codendi/
 mkdir -p ../etc/codendi/conf/
-mkdir -p ../etc/codendi/plugins/
-mkdir -p ../etc/codendi/plugins/IM/
 mkdir -p ../etc/codendi/plugins/IM/etc/
 
 # Copy dist files to etc dir
@@ -78,11 +68,11 @@ cp plugins/IM/include/jabbex_api/installation/resources/jabbex_conf.tpl.xml ../e
 cp src/etc/local.inc.dist ../etc/codendi/conf/local.inc
 
 # Substitute dist values by correct ones
-substitute '../etc/codendi/conf/local.inc' '%sys_default_domain%' "$sys_default_domain:$port" 
+substitute '../etc/codendi/conf/local.inc' '%sys_default_domain%' "localhost" 
 substitute '../etc/codendi/conf/local.inc' '%sys_ldap_server%' " " 
-substitute '../etc/codendi/conf/local.inc' '%sys_org_name%' "Xerox" 
-substitute '../etc/codendi/conf/local.inc' '%sys_long_org_name%' "Xerox Corp" 
-substitute '../etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_default_domain" 
+substitute '../etc/codendi/conf/local.inc' '%sys_org_name%' "Tuleap" 
+substitute '../etc/codendi/conf/local.inc' '%sys_long_org_name%' "Tuleap" 
+substitute '../etc/codendi/conf/local.inc' '%sys_fullname%' "localhost" 
 substitute '../etc/codendi/conf/local.inc' '%sys_win_domain%' " " 
 substitute '../etc/codendi/conf/local.inc' '\/usr\/share\/codendi' "$WORKSPACE/$local_module_directory"
 substitute '../etc/codendi/conf/local.inc' '\/var\/lib\/codendi' "$WORKSPACE/var/lib/codendi"
