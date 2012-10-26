@@ -24,7 +24,7 @@ require_once 'database.php';
 // GRANT ALL PRIVILEGES on integration_test.* to 'integration_test'@'localhost' identified by 'welcome0';
 abstract class TuleapDbTestCase extends TuleapTestCase {
 
-    private static $db_initialized = false;
+    protected static $db_initialized = false;
 
     public function setUp() {
         parent::setUp();
@@ -92,6 +92,7 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
         $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
+        $this->mysqlLoadFile('plugins/tracker/db/install.sql');
     }
 }
 
