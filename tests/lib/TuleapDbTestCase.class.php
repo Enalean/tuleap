@@ -24,15 +24,16 @@ require_once 'database.php';
 // GRANT ALL PRIVILEGES on integration_test.* to 'integration_test'@'localhost' identified by 'welcome0';
 abstract class TuleapDbTestCase extends TuleapTestCase {
 
-    protected static $db_initialized = false;
+    private static $db_initialized = false;
 
     public function setUp() {
         parent::setUp();
+        $this->loadConfiguration();
         Config::set('DEBUG_MODE', true);
-        $GLOBALS['sys_dbhost']   = 'localhost';
-        $GLOBALS['sys_dbuser']   = 'integration_test';
-        $GLOBALS['sys_dbpasswd'] = 'welcome0';
-        $GLOBALS['sys_dbname']   = 'integration_test';
+        $GLOBALS['sys_dbhost']   = Config::get('sys_dbhost');
+        $GLOBALS['sys_dbuser']   = Config::get('sys_dbuser');
+        $GLOBALS['sys_dbpasswd'] = Config::get('sys_dbpasswd');
+        $GLOBALS['sys_dbname']   = Config::get('sys_dbname');
         if (self::$db_initialized == false) {
             $this->initDb();
             self::$db_initialized = true;
@@ -55,35 +56,42 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         self::$db_initialized = false;
     }
 
+    /**
+     * Execute all statements of given file (bulk imports)
+     *
+     * @param String $file
+     */
     protected function mysqlLoadFile($file) {
         $mysql_cmd = 'mysql -u'.$GLOBALS['sys_dbuser'].' -p'.$GLOBALS['sys_dbpasswd'].' '.$GLOBALS['sys_dbname'];
         $cmd = $mysql_cmd.' < '.$file;
         system($cmd);
     }
 
-    protected function dropDatabase() {
+    private function loadConfiguration() {
+        $config_file = 'tests.inc';
+        Config::load(dirname(__FILE__)."/../../src/etc/$config_file.dist");
+        Config::load(dirname($this->getLocalIncPath())."/$config_file");
+    }
+
+    private function getLocalIncPath() {
+        return getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/codendi/conf/local.inc';
+    }
+
+    private function dropDatabase() {
         $mysqli = mysqli_init();
-        $mysqli->real_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd']);
+        if (!$mysqli->real_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd'])) {
+             die('== Y U NO CONFIGURE DATABASE? ==');
+        }
         $mysqli->query("DROP DATABASE IF EXISTS integration_test");
         $mysqli->query("CREATE DATABASE integration_test");
         $mysqli->close();
     }
 
-    protected function initDb() {
+    private function initDb() {
         $this->dropDatabase();
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
         $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
-    }
-
-    protected function dumpDb() {
-        $cmd = 'mysqldump --opt -u'.$GLOBALS['sys_dbuser'].' -p'.$GLOBALS['sys_dbpasswd'].' '.$GLOBALS['sys_dbname'].' > empty_db.sql';
-        system($cmd);
-    }
-
-    protected function loadDbDump() {
-        $this->dropDatabase();
-        $this->mysqlLoadFile('empty_db.sql');
     }
 }
 
