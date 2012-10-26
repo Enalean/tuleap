@@ -208,3 +208,4 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $this->update($sql);
     }
 }
+?>
