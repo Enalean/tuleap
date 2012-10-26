@@ -27,8 +27,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     protected $db_initialized = false;
 
     public function setUp() {
-        Config::set('DEBUG_MODE', true);
         parent::setUp();
+        Config::set('DEBUG_MODE', true);
         $GLOBALS['sys_dbhost']   = 'localhost';
         $GLOBALS['sys_dbuser']   = 'integration_test';
         $GLOBALS['sys_dbpasswd'] = 'welcome0';
@@ -36,8 +36,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         if ($this->db_initialized == false) {
             $this->initDb();
             $this->db_initialized = true;
-            db_connect();
         }
+        db_connect();
     }
 
     public function tearDown() {
@@ -55,9 +55,11 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     }
 
     protected function resetDb() {
-        mysql_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd']);
-        mysql_query("DROP DATABASE IF EXISTS integration_test");
-        mysql_query("CREATE DATABASE integration_test");
+        $mysqli = mysqli_init();
+        $mysqli->real_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd']);
+        $mysqli->query("DROP DATABASE IF EXISTS integration_test");
+        $mysqli->query("CREATE DATABASE integration_test");
+        $mysqli->close();
     }
 
     protected function initDb() {
@@ -76,7 +78,6 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $this->resetDb();
         $this->mysqlLoadFile('empty_db.sql');
     }
-
 }
 
 ?>

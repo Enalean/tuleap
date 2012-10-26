@@ -20,7 +20,6 @@
  */
 
 require_once 'common/project/ProjectCreator.class.php';
-require_once 'database.php';
 require_once 'exit.php';
 require_once 'html.php';
 require_once 'user.php';
@@ -29,9 +28,6 @@ class ProjectCreationTest extends TuleapDbTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->initDb();
-
-        db_connect();
         $GLOBALS['feedback'] = '';
     }
 
