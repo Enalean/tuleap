@@ -32,6 +32,7 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject {
         $this->insertIntoFieldListBindDecorators($tv3_id, $tv5_id);
         $this->insertBindType($tv5_id);
         $this->insertBindTypeUsers($tv5_id);
+        $this->updateFielset($tv5_id);
     }
     
     private function duplicateFields($tv3_id, $tv5_id) {
@@ -197,7 +198,6 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject {
     }
     
     private function insertBindTypeUsers($tv5_id) {
-    
         $sql = "INSERT INTO tracker_field_list_bind_users(field_id, value_function)
                     SELECT id, 'artifact_submitters'
                     FROM tracker_field 
@@ -205,6 +205,14 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject {
        $this->update($sql);
     }
     
-    
+    //TODO (to check): differs from original migration scripts
+    private function updateFielset($tv5_id) {
+        $sql = "UPDATE tracker_field AS f, tracker_field AS f2
+                SET f.parent_id = f2.id
+                WHERE f.parent_id = f2.old_id
+                 AND f.tracker_id = $tv5_id AND f2.tracker_id = $tv5_id
+                 AND f.use_it = 1";
+       $this->update($sql);
+    }
 }
 ?>
