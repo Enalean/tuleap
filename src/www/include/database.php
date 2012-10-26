@@ -85,7 +85,7 @@ function db_fetch_array($qhandle = 0) {
 		return $conn->fetch($qhandle);
 	} else {
 		if ($GLOBALS['db_qhandle']) {
-			return $conn->fetch($GLOBALS['db_qhandle']);
+			return $conn->fetchArray($GLOBALS['db_qhandle']);
 		} else {
 			return (array());
 		}
