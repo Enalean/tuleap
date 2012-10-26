@@ -21,4 +21,5 @@
 class Tracker_Migration {
 
 }
+
 ?>
