@@ -32,6 +32,8 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
        $this->insertDefaultValuesIsNoneForSbFields($tv3_id, $tv5_id);
        $this->insertDefautSingleValueForListBindStaticOnMsbFields($tv3_id, $tv5_id);
        $this->insertDefautSingleValueForListBindUsersOnMsbFields($tv3_id, $tv5_id);
+       $this->insertMultipleDefaultValuesForStaticMsbFields($tv3_id, $tv5_id);
+       $this->insertMultipleDefaultValuesForUsersMsbFields($tv3_id, $tv5_id);
     }
     
     private function insertDefaultValuesForMsb($tv3_id, $tv5_id) {
@@ -206,6 +208,52 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
                         f.formElement_type = 'msb' AND 
                         old.default_value = 100)";
         $this->update($sql);
+    }
+    
+    private function insertMultipleDefaultValuesForStaticMsbFields($tv3_id, $tv5_id) {
+        $sql = "SELECT f.id, old.default_value
+                FROM tracker_field AS f
+                INNER JOIN artifact_field AS old ON (
+                    f.old_id = old.field_id AND 
+                    f.tracker_id = $tv5_id AND old.group_artifact_id = $tv3_id AND 
+                    f.formElement_type = 'msb' AND 
+                    (old.value_function IS NULL OR old.value_function = '') AND 
+                    POSITION(',' IN old.default_value) <> 0)";
+        $res   = $this->retrieve($sql);
+        
+        if ($res) {
+            while($row = $res->getRow()) {
+                $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
+                             SELECT " . $row['id'] . ", new.id 
+                             FROM tracker_field_list_bind_static_value AS new 
+                             WHERE new.field_id = " . $row['id'] . " AND
+                                   new.old_id IN (" . $row['default_value'] . ")";
+                $this->update($sql);
+            }
+        }
+    }
+    
+    private function insertMultipleDefaultValuesForUsersMsbFields($tv3_id, $tv5_id) {
+        $sql = "SELECT f.id, old.default_value 
+                FROM tracker_field AS f
+                    INNER JOIN artifact_field AS old ON (
+                        f.old_id = old.field_id AND 
+                        f.tracker_id = $tv5_id AND old.group_artifact_id = $tv3_id AND 
+                        f.formElement_type = 'msb' AND 
+                        (old.value_function IS NOT NULL AND old.value_function <> '') AND 
+                        POSITION(',' IN old.default_value) <> 0)";
+        $res   = $this->retrieve($sql);
+        
+        if ($res) {
+            while($row = $res->getRow()) {
+                $sql = "INSERT INTO tracker_field_list_bind_defaultvalue (field_id, value_id)
+                     SELECT " . $row['id'] . ", user_id 
+                     FROM user 
+                     WHERE user_id IN (" . $row['default_value'] . ") AND 
+                           user_id <> 100";
+                $this->update($sql);
+            }
+        }
     }
 }
 ?>
