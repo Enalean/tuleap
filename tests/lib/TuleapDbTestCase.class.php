@@ -101,8 +101,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     }
 
     private function dropDatabase() {
-        $this->mysqli->query("DROP DATABASE IF EXISTS integration_test");
-        $this->mysqli->query("CREATE DATABASE integration_test");
+        $this->mysqli->query("DROP DATABASE IF EXISTS ".$GLOBALS['sys_dbname']);
+        $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']);
     }
 
     private function initDb() {
