@@ -80,11 +80,12 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     private function dropDatabase() {
         $mysqli = mysqli_init();
         if (!$mysqli->real_connect($GLOBALS['sys_dbhost'], $GLOBALS['sys_dbuser'], $GLOBALS['sys_dbpasswd'])) {
-             die('== Y U NO CONFIGURE DATABASE? ==');
+             $this->skipIf(true, '== Y U NO CONFIGURE DATABASE? ==');
+        } else {
+            $mysqli->query("DROP DATABASE IF EXISTS integration_test");
+            $mysqli->query("CREATE DATABASE integration_test");
+            $mysqli->close();
         }
-        $mysqli->query("DROP DATABASE IF EXISTS integration_test");
-        $mysqli->query("CREATE DATABASE integration_test");
-        $mysqli->close();
     }
 
     private function initDb() {
