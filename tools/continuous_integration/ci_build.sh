@@ -49,11 +49,11 @@ do
     esac
 done
 # Options post treatment
-codendi_src="$WORKSPACE/$local_module_directory"
+src_dir="$WORKSPACE/$local_module_directory"
 
 # Go!
 set -x
-cd "$codendi_src"
+cd "$src_dir"
 
 # Create /var/tmp/codendi_cache dir
 mkdir -p ../var/tmp/codendi_cache/
@@ -87,8 +87,15 @@ substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$WORKSPACE/var/tmp"
 # Set environment var CODENDI_LOCAL_INC
 export CODENDI_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
 
+# Write test config file
+cat >$WORKSPACE/etc/codendi/conf/tests.inc <<EOF
+<?php
+\$sys_dbname = "$JOB_NAME";
+?>
+EOF
+
 pushd .
-cd "$codendi_src"
+cd "$src_dir"
 
 # Execute the Tests
 # This will produce a "JUnit like" test result file named codendi_unit_tests_report.xml that Hudson can use to produce test results.
@@ -96,7 +103,7 @@ php -d include_path="src/www/include:src:/usr/share/pear:." -d memory_limit=196M
 
 # Checkstyle
 files=$(git diff --name-only stable/master... | grep ".php" | grep -v "plugins/git/gitphp-0.1.0\|plugins/webdav/include/lib\|src/db/mysql/updates\|tools/examples\|cli" || true)
-php -d memory_limit=256M /usr/bin/phpcs --standard="$codendi_src/tools/utils/phpcs/Codendi" "$codendi_src/src/common/chart" "$codendi_src/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
+php -d memory_limit=256M /usr/bin/phpcs --standard="$src_dir/tools/utils/phpcs/Codendi" "$src_dir/src/common/chart" "$src_dir/src/common/backend" --report=checkstyle -n --ignore=*/phpwiki/* --ignore="*/webdav/lib/*" $files > $WORKSPACE/var/tmp/checkstyle.xml || true
 popd
 
 exit 0
