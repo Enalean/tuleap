@@ -369,6 +369,17 @@ $GLOBALS['server']->wsdl->addComplexType(
         'contributor'  => array('name'=>'contributor', 'type' => 'tns:TrackerSemanticContributor'),
     )
 );
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerStructure',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+       'semantic' => array('name'=>'semantic', 'type' => 'tns:TrackerSemantic')
+    )
+);
 //
 // Function definition
 //
@@ -479,17 +490,17 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
-    'getTrackerSemantic',
+    'getTrackerStructure',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
           'tracker_id'=>'xsd:int',
     ),
-    array('return'=>'tns:TrackerSemantic'),
+    array('return'=>'tns:TrackerStructure'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getTrackerSemantic',
+    $GLOBALS['uri'].'#getTrackerStructure',
     'rpc',
     'encoded',
-    'Returns the tracker semantic.'
+    'Returns the tracker structure.'
 );
 
 /*$GLOBALS['server']->register(

@@ -38,7 +38,7 @@ $soapTracker = new SoapClient($serverUrl.'/plugins/tracker/soap/?wsdl',
                                     array('cache_wsdl' => WSDL_CACHE_NONE));
 
 //Executing method getTrackerSemantic
-$response = $soapTracker->getTrackerSemantic($requesterSessionHash, $group_id, $tracker_id);
+$response = $soapTracker->getTrackerStructure($requesterSessionHash, $group_id, $tracker_id);
 var_dump($response);
 
 $soapLogin->logout($requesterSessionHash);
