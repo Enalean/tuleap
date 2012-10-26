@@ -23,7 +23,12 @@ require_once dirname(__FILE__).'/../include/Tracker/Artifact/dao/PriorityDao.cla
 class PriorityDaoTest extends TuleapDbTestCase {
     public function __construct() {
         parent::__construct();
-        self::$db_initialized = false;
+        //self::$db_initialized = true;
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        $this->truncateTable('tracker_artifact_priority');
     }
     
     public function itInsertArtifactsWithPriority() {
@@ -33,6 +38,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 "Table is empty
 .
 ");
+
          $this->dao->update("INSERT INTO tracker_artifact_priority VALUES (NULL, 1, 0), (1, NULL, 1)");
          $this->assertEqual($this->dump_priorities("Table contains one element"),
 "Table contains one element
