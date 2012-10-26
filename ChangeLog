@@ -1,3 +1,8 @@
+Version 5.7 (Not Released Yet)
+
+   == Plugins ==
+    * tracker: 5.30
+
 Version 5.6 (Friday, October 26th 2012)
    == Bug Fix ==
     * Fix bug #1663: Validate user realname on account creation
