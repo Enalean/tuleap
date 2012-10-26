@@ -19,6 +19,7 @@
  */
 
 require_once 'V3/Dao.class.php';
+require_once 'V3/FieldsetDao.class.php';
 
 /**
  * This migrate trackers v3 into tracker v5
@@ -38,6 +39,8 @@ class Tracker_Migration_V3 {
     public function createTV5FromTV3(Project $project, $name, $description, $itemname, ArtifactType $tv3) {
         $dao = new Tracker_Migration_V3_Dao();
         if ($id = $dao->create($project->getId(), $name, $description, $itemname, $tv3->getID())) {
+            $fieldset_dao = new Tracker_Migration_V3_FieldsetDao();
+            $fieldset_dao->create($tv3->getID(), $id);
             return $this->tracker_factory->getTrackerById($id);
         }
     }
