@@ -71,7 +71,6 @@ class Tracker_Migration_V3_FieldsDao extends DataAccessObject {
     }
     
     private function duplicateFieldUsageAndRanking($tv3_id, $tv5_id) {
-        //TODO: do not use old_id???
         $sql = "UPDATE tracker_field AS f, artifact_field_usage AS u
                     SET f.use_it = u.use_it, f.rank = u.place, f.parent_id = If(u.use_it, f.parent_id, 0)
                     WHERE f.old_id = u.field_id
