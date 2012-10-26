@@ -22,6 +22,7 @@ require_once dirname(__FILE__).'/../include/Tracker/Artifact/dao/PriorityDao.cla
 
 class PriorityDaoTest extends TuleapDbTestCase {
     public function __construct() {
+        parent::__construct();
         self::$db_initialized = false;
     }
     
