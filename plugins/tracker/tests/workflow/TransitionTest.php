@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../../include/constants.php');
+require_once(dirname(__FILE__).'/../builders/all.php');
 require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
 require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
@@ -27,9 +27,9 @@ Mock::generate('Transition_PostAction');
 Mock::generate('User');
 
 class TransitionTest extends TuleapTestCase {
-    
+
     public function testEquals() {
-        
+
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);
         //'old_id' => null,
@@ -38,7 +38,7 @@ class TransitionTest extends TuleapTestCase {
         //'description' => 'The bug has been submitted',
         //'rank' => '10');
 
-        
+
         $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
         $field_value_analyzed->setReturnValue('getId', 2067);
         //'old_id' => null,
@@ -46,7 +46,7 @@ class TransitionTest extends TuleapTestCase {
         //'value' => 'Analyzed',
         //'description' => 'The bug is analyzed',
         //'rank' => '20');
-        
+
         $field_value_accepted = new MockTracker_FormElement_Field_List_Value();
         $field_value_accepted->setReturnValue('getId', 2068);
         //'old_id' => null,
@@ -54,29 +54,29 @@ class TransitionTest extends TuleapTestCase {
         //'value' => 'Accepted',
         //'description' => 'The bug is accepted',
         //'rank' => '30');
-        
+
         $t1  = new Transition(1, 2, $field_value_new, $field_value_analyzed);
         $t2  = new Transition(1, 2, $field_value_analyzed, $field_value_accepted);
         $t3  = new Transition(1, 2, $field_value_analyzed, $field_value_new);
         $t4  = new Transition(1, 2, $field_value_new, $field_value_analyzed); // equals $t1
         $t5  = new Transition(1, 2, null, $field_value_analyzed);
         $t6  = new Transition(1, 2, null, $field_value_analyzed);
-        
+
         $this->assertTrue($t1->equals($t1));
         $this->assertTrue($t2->equals($t2));
         $this->assertTrue($t3->equals($t3));
         $this->assertTrue($t4->equals($t1));
         $this->assertTrue($t5->equals($t6));
-        
+
         $this->assertFalse($t1->equals($t2));
         $this->assertFalse($t2->equals($t1));
         $this->assertFalse($t2->equals($t3));
         $this->assertFalse($t4->equals($t5));
     }
-    
+
     function testBeforeShouldTriggerActions() {
         $current_user = new MockUser();
-        
+
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);
         //'old_id' => null,
@@ -85,7 +85,7 @@ class TransitionTest extends TuleapTestCase {
         //'description' => 'The bug has been submitted',
         //'rank' => '10');
 
-        
+
         $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
         $field_value_analyzed->setReturnValue('getId', 2067);
         //'old_id' => null,
@@ -93,42 +93,48 @@ class TransitionTest extends TuleapTestCase {
         //'value' => 'Analyzed',
         //'description' => 'The bug is analyzed',
         //'rank' => '20');
-        
+
         $fields_data = array('field_id' => 'value');
-        
+
         $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
-        
+
         $a1 = new MockTransition_PostAction();
         $a2 = new MockTransition_PostAction();
-        
+
         $t1->setPostActions(array($a1, $a2));
-        
+
         $a1->expectOnce('before', array($fields_data, $current_user));
         $a2->expectOnce('before', array($fields_data, $current_user));
-        
+
         $t1->before($fields_data, $current_user);
     }
-    
-    public function itReturnsSOAPFormatOfTheTransition() {
-        $transition_id = 2;
-        $workflow_id   = 758;
-        $from_id       = 45;
-        $to_id         = 12;
-        
-        $from = new mockTracker_FormElement_Field_List_Value();
-        $from->setReturnValue('getId', $from_id);
-        
-        $to = new mockTracker_FormElement_Field_List_Value();
-        $to->setReturnValue('getId', $to_id);
-        
-        $transition = new Transition($transition_id, $workflow_id, $from, $to);
-        $result     = $transition->exportToSOAP();
-        $expected   = array($transition_id => array('from_id' => $from_id, 
-                                                    'to_id'   => $to_id
-                                                   )
-                           );
-        
-        $this->assertEqual($result, $expected);
+}
+
+class Transition_exportToSOAPTest extends TuleapTestCase {
+
+    private $id          = 1;
+    private $workflow_id = 2;
+    private $from;
+    private $to;
+
+    public function setUp() {
+        $this->from = aFieldListStaticValue()->withId(123)->build();
+        $this->to   = aFieldListStaticValue()->withId(456)->build();
+    }
+
+    public function itExportsTheFromAndToAttributes() {
+        $transition = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
+        $this->assertEqual($transition->exportToSOAP(), array('from_id' => 123, 'to_id' => 456));
+    }
+
+    public function itExportsEmptyStringWhenFromIsNull() {
+        $transition = new Transition($this->id, $this->workflow_id, null, $this->to);
+        $this->assertEqual($transition->exportToSOAP(), array('from_id' => '', 'to_id' => 456));
+    }
+
+    public function itExportsEmptyStringWhenToIsNull() {
+        $transition = new Transition($this->id, $this->workflow_id, $this->from, null);
+        $this->assertEqual($transition->exportToSOAP(), array('from_id' => 123, 'to_id' => ''));
     }
 }
 ?>
