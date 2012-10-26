@@ -45,9 +45,9 @@ class ProjectCreationTest extends TuleapDbTestCase {
             )
         ));
 
-        $res = db_query('SELECT * FROM groups WHERE unix_group_name="short-name"');
-        $row = db_fetch_array($res);
-        $this->assertEqual($row['group_name'], 'Long name');
+        ProjectManager::clearInstance();
+        $project = ProjectManager::instance()->getProjectByUnixName('short-name');
+        $this->assertEqual($project->getPublicName(), 'Long name');
     }
 }
 ?>
