@@ -75,8 +75,11 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $tracker_factory = mock('TrackerFactory');
         $this->setUpTrackers($tracker_factory);
 
+        $soap_user_manager = mock('SOAP_UserManager');
+        stub($soap_user_manager)->continueSession($this->session_key)->returns($current_user);
+
         $this->server = new Tracker_SOAPServer(
-            new SOAP_UserManager($user_manager),
+            $soap_user_manager,
             $project_manager,
             $tracker_factory,
             $permissions_manager,
@@ -110,9 +113,10 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function setUpTrackers(TrackerFactory $tracker_factory) {
-        $tracker            = aMockTracker()->withId($this->tracker_id)->build();
+        $tracker      = aMockTracker()->withId($this->tracker_id)->build();
         $unreadable_tracker = aMockTracker()->withId($this->unreadable_tracker_id)->build();
         stub($tracker)->userCanView()->returns(true);
+        stub($tracker)->userIsAdmin()->returns(true);
         stub($unreadable_tracker)->userCanView()->returns(false);
         stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($tracker);
         stub($tracker_factory)->getTrackerById($this->unreadable_tracker_id)->returns($unreadable_tracker);
@@ -356,5 +360,4 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
         ));
     }
 }
-
 ?>

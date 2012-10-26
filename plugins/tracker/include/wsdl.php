@@ -313,6 +313,63 @@ $GLOBALS['server']->wsdl->addComplexType(
     'xsd:int'
 );
 
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemanticTitle',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'field_name' => array('name'=>'field_name', 'type' => 'xsd:string')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemanticStatus',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'field_name' => array('name'=>'field_name', 'type' => 'xsd:string'),
+        'values' => array('name'=>'values', 'type' => 'xsd:int[]')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemanticContributor',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+       'field_name' => array('name'=>'field_name', 'type' => 'xsd:string')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerSemantic',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'title'        => array('name'=>'title', 'type' => 'tns:TrackerSemanticTitle'),
+        'status'       => array('name'=>'status', 'type' => 'tns:TrackerSemanticStatus'),
+        'contributor'  => array('name'=>'contributor', 'type' => 'tns:TrackerSemanticContributor'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerStructure',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+       'semantic' => array('name'=>'semantic', 'type' => 'tns:TrackerSemantic')
+    )
+);
 //
 // Function definition
 //
@@ -420,6 +477,20 @@ $GLOBALS['server']->register(
     'Returns the artifact (Artifact) identified by the id artifact_id
      Returns a soap fault if the group_id is not a valid one, if the tracker_id is not a valid one,
      or if the artifact_id is not a valid one.'
+);
+
+$GLOBALS['server']->register(
+    'getTrackerStructure',
+    array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'tracker_id'=>'xsd:int',
+    ),
+    array('return'=>'tns:TrackerStructure'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getTrackerStructure',
+    'rpc',
+    'encoded',
+    'Returns the tracker structure.'
 );
 
 /*$GLOBALS['server']->register(

@@ -32,9 +32,9 @@ class Tracker_Semantic_StatusTest extends UnitTestCase {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText','Status', array('plugin_tracker_admin_semantic','status_label'));
         $GLOBALS['Language']->setReturnValue('getText','Define the status of an artifact', array('plugin_tracker_admin_semantic','status_description'));
-        
+
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticStatusTest.xml');
-        
+
         $tracker = new MockTracker();
         $f = new MockTracker_FormElement_Field_List();
         $f->setReturnValue('getId', 103);
@@ -48,14 +48,14 @@ class Tracker_Semantic_StatusTest extends UnitTestCase {
                                        'F14-V69' => 809,
                                    ));
         $tst->exportToXML($root, $array_xml_mapping);
-        
+
         $this->assertEqual((string)$xml->shortname, (string)$root->semantic->shortname);
         $this->assertEqual((string)$xml->label, (string)$root->semantic->label);
         $this->assertEqual((string)$xml->description, (string)$root->semantic->description);
         $this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
         $this->assertEqual(count($xml->open_values), count($root->semantic->open_values));
     }
-    
+
 }
 
 ?>
