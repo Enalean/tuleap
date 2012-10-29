@@ -241,27 +241,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 $new_tracker = $this->importTracker($project, $name, $description, $itemname, $_FILES["tracker_new_xml_file"]["tmp_name"]);
             }
         } else if ($request->existAndNonEmpty('create_mode') && $request->get('create_mode') == 'tv3') {
-            require_once 'Migration/V3.class.php'; //we don't want to load all trackers v3 for each requests
-            require_once 'common/tracker/ArtifactType.class.php';
             $atid = $request->get('tracker_new_tv3');
-            $tv3  = new ArtifactType($project, $atid);
-            if (!$tv3 || !is_object($tv3)) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
-            }
-            if ($tv3->isError()) {
-                exit_error($Language->getText('global','error'),$tv3->getErrorMessage());
-            }
-            // Check if this tracker is valid (not deleted)
-            if ( !$tv3->isValid() ) {
-                exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
-            }
-            //Check if the user can view the artifact
-            if (!$tv3->userCanView()) {
-                exit_permission_denied();
-            }
-
-            $migration_v3 = new Tracker_Migration_V3($this->getTrackerFactory());
-            $new_tracker = $migration_v3->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+            $new_tracker = $this->getTrackerFactory()->createFromTV3($atid, $project, $name, $description, $itemname);
         } else {
             // Otherwise tries duplicate
             $duplicate = $this->getTrackerFactory()->create($project->getId(), -1, $atid_template, $name, $description, $itemname);

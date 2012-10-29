@@ -18,8 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Migration {
+class Git_RemoteServer_NotFoundException extends Exception {
 
+    public function __construct($id) {
+        parent::__construct("No server found with the id: $id");
+    }
 }
-
 ?>

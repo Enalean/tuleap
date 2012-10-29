@@ -22,6 +22,7 @@ require_once('GitDao.class.php');
 require_once('Git_LogDao.class.php');
 require_once('GitDriver.class.php');
 require_once('Git_Backend_Interface.php');
+require_once('GitRepositoryCreator.class.php');
 require_once('GitRepository.class.php');
 require_once('exceptions/GitBackendException.class.php');
 
@@ -30,7 +31,7 @@ require_once('exceptions/GitBackendException.class.php');
  *
  * @author Guillaume Storchi
  */
-class GitBackend extends Backend implements Git_Backend_Interface {
+class GitBackend extends Backend implements Git_Backend_Interface, GitRepositoryCreator {
     
     private $driver;    
     private $packagesFile;
@@ -333,16 +334,6 @@ class GitBackend extends Backend implements Git_Backend_Interface {
     }
     
     /**
-     * Get the regexp pattern to use for name repository validation
-     *
-     * @return string
-     */
-    public function getAllowedCharsInNamePattern() {
-        //alphanums, underscores and dash
-        return 'a-zA-Z0-9_.-';
-    }
-
-    /**
      * Obtain statistics about backend format for CSV export
      *
      * @param Statistics_Formatter $formatter instance of statistics formatter class
@@ -437,7 +428,16 @@ class GitBackend extends Backend implements Git_Backend_Interface {
      * @return Void
      */
     public function commitTransaction(GitRepository $repository) {
-        // this action is not necessary for this type of backend
+        // this action is not necessary for thhis type of backend
+        // well actually it might recieve the code from save.
+    }
+
+    public function getAllowedCharsInNamePattern() {
+        throw new Exception('not implemented');
+    }
+
+    public function isNameValid($name) {
+        throw new Exception('not implemented');
     }
 }
 

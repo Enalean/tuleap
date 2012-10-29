@@ -106,6 +106,11 @@ plugin_git	reference_commit_desc_key	Commit Git
 plugin_git	admin_repo_management	Gestion du dépôt GIT
 
 plugin_git	admin_settings	Options générales
+plugin_git	gerrit_settings	Gerrit
+plugin_git	gerrit_url	Url du serveur gerrit
+plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
+plugin_git	gerrit_server_is_on	Ce dépot est hébergé sur le serveur suivant :
+plugin_git	permissions_on_remote_server	Vous ne pouvez pas modifier les permissions, car elles sont gérés sur un serveur distant
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification
@@ -136,7 +141,6 @@ plugin_git	set_private_confirm	Etes-vous certain(e) de vouloir changer l'accés 
 plugin_git	set_private_mails	Liste des adresses mail a ne plus notifier
 
 plugin_git	feedback_event_create	Un événement est en attente pour la création du dépôt $1. Il sera traité dans une minute ou deux. Merci de votre patience.
-plugin_git	feedback_event_fork	Un événement est en attente pour le fork ($1) d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_delete	Un événement est en attente pour la suppression du dépôt '$1'. Il sera traité dans une minute ou deux. Merci de votre patience.
 plugin_git	feedback_event_access	Un événement est en attente pour le changement de permissions d'un dépôt. Il sera traité dans une minute ou deux. Merci de votre patience.
 
@@ -197,3 +201,4 @@ plugin_git	widget_project_pushes_error	Pas de push pour la/les dernière(s) $1 s
 
 plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git push
+
