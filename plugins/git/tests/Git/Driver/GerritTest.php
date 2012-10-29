@@ -126,7 +126,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $project_name = $this->host."-firefox/jean-claude/dusse";
         $group_name = $project_name."-contributors";
         $create_group_command = "gerrit create-group $group_name --member johan --member goyotm";
-        $user_list = array(aUser()->withUserName('johan')->build(), aUser()->withUserName('goyotm')->build());
+        $user_list = array('johan', 'goyotm');
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
         $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', $user_list);
     }
@@ -142,7 +142,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
         $std_err = 'fatal: group "somegroup" already exists';
         $command = "gerrit create-group tuleap.example.com-firefox/jean-claude/dusse-contributors --member johan";
-        $user_list = array(aUser()->withUserName('johan')->build());
+        $user_list = array('johan');
 
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
 

@@ -96,7 +96,7 @@ class Git_Driver_Gerrit {
     private function compileMemberCommands($user_list) {
         $members = array();
         foreach ($user_list as $user) {
-            $members[] = "--member ".$user->getUsername();
+            $members[] = "--member $user";
         }
         return $members;
     }

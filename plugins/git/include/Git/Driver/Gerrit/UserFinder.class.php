@@ -38,7 +38,7 @@ class Git_Driver_Gerrit_UserFinder {
 
     /**
      *
-     * Get a unique list of users with the given permission
+     * Get a unique list of user names with the given permission
      *
      * @param string $permission_type
      * @param int    $repository_id
@@ -50,10 +50,10 @@ class Git_Driver_Gerrit_UserFinder {
         foreach ($this->getUgroups($repository_id, $permission_type) as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getById($ugroup_id);
             if ($ugroup) {
-                $ugroups_members = array_merge($ugroup->getMembers(), $ugroups_members);
+                $ugroups_members = array_merge($ugroup->getMembersUserName(), $ugroups_members);
             }
         }
-        return $this->uniqueUsers($ugroups_members);
+        return array_unique($ugroups_members);
     }
 
     private function getUgroups($repository_id, $permission_type) {
@@ -65,12 +65,5 @@ class Git_Driver_Gerrit_UserFinder {
         return ! in_array($ugroup_id, array(Ugroup::REGISTERED, UGroup::ANONYMOUS));
     }
 
-    private function uniqueUsers($ugroups_members) {
-        $ret = array();
-        foreach ($ugroups_members as $member) {
-            $ret[$member->getId()] = $member;
-        }
-        return array_values($ret);
-    }
 }
 ?>
