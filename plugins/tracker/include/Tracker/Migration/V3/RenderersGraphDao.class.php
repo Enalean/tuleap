@@ -18,8 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
- class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
+class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
     public function create($tv3_id, $tv5_id) {
+        if (! $this->pluginIsInstalled()) {
+            return;
+        }
         $this->insertRendererTable($tv3_id, $tv5_id);
         $this->createReportForGraphWithoutReport($tv3_id, $tv5_id);
         $this->createReportCriteriaForGraphWithoutReport($tv3_id, $tv5_id);
@@ -32,7 +35,12 @@
         $this->createGanttCharts($tv5_id);
         $this->updateChartsWithFieldId();
     }
-    
+
+    private function pluginIsInstalled() {
+        $sql = "SHOW TABLES LIKE 'plugin_graphontrackersv5_chart'";
+        return count($this->retrieve($sql)) > 0;
+    }
+
     private function insertRendererTable($tv3_id, $tv5_id) {
         $tv3_id = $this->da->escapeInt($tv3_id);
         $tv5_id = $this->da->escapeInt($tv5_id);
