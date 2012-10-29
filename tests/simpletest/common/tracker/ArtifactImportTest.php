@@ -517,7 +517,7 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 
     function testCheckCommentExistInLegacyFormat() {
         stub($this->da)->numRows()->returns(1);
-        stub($this->da)->fetch()->returns(array ('new_value' => '<pre> testing issue </pre>'));
+        stub($this->da)->fetchArray()->returns(array ('new_value' => '<pre> testing issue </pre>'));
         stub($this->dar)->getResult()->returns(true);
         $artImp = new ArtifactImportTestVersion($this);
         $artId = 12237;
