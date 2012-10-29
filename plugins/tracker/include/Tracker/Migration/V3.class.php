@@ -28,6 +28,7 @@ require_once 'V3/PermissionsOnArtifactFieldDao.class.php';
 require_once 'V3/AttachmentFieldDao.class.php';
 require_once 'V3/ReferenceFieldDao.class.php';
 require_once 'V3/SemanticDao.class.php';
+require_once 'V3/CannedDao.class.php';
 
 /**
  * This migrate trackers v3 into tracker v5
@@ -83,6 +84,10 @@ class Tracker_Migration_V3 {
             // 220
             $semantic_dao = new Tracker_Migration_V3_SemanticDao();
             $semantic_dao->create($id);
+
+            // 250
+            $canned_dao = new Tracker_Migration_V3_CannedDao();
+            $canned_dao->create($tv3->getID(), $id);
 
             // 260
             $fieldset_dao->nowFieldsetsAreStoredAsField($id);
