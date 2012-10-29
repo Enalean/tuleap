@@ -206,6 +206,18 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     }
 }
 
+class UGroup_getMembersTest extends TuleapTestCase {
+    public function itReturnsTheMembersOfStaticGroups() {
+        $id       = 33;
+        $row      = array('ugroup_id' =>$id);
+        $ugroup   = new UGroup($row);
+        $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar(array($garfield)));
+        $this->assertArrayNotEmpty($ugroup->getMembers());
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName());
+    }
+}
+
 class UGroup_DynamicGroupTest extends TuleapTestCase {
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForAdd() {

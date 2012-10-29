@@ -96,6 +96,10 @@ class UGroup {
         }
         return $this->_ugroupuserdao;
     }
+    
+    public function setUGroupUserDao(UGroupUserDao $dao) {
+        $this->_ugroupuserdao = $dao;
+    }
 
     /**
      * Get instance of UserGroupDao
