@@ -433,7 +433,6 @@ class FileModuleMonitorFactory {
      * @return String
      */
     public function processSelfMonitoringAction($request, $currentUser, $groupId, $fileModuleId) {
-        $historyDao    = new ProjectHistoryDao();
         $anonymous     = true;
         $performAction = false;
         if ($request->get('action') == 'monitor_package') {
@@ -493,6 +492,7 @@ class FileModuleMonitorFactory {
             $performAction = true;
         } elseif (!$anonymous && !$this->isMonitoring($fileModuleId, $currentUser, !$anonymous)) {
             $performAction = true;
+            $historyDao    = new ProjectHistoryDao();
             $historyDao->groupAddHistory("frs_self_add_monitor_package", $fileModuleId, $groupId);
         }
         if ($performAction) {
