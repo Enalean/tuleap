@@ -27,12 +27,9 @@ require_once 'V3/RenderersTableDao.class.php';
 require_once 'V3/PermissionsOnArtifactFieldDao.class.php';
 require_once 'V3/AttachmentFieldDao.class.php';
 require_once 'V3/ReferenceFieldDao.class.php';
-<<<<<<< HEAD
 require_once 'V3/SemanticDao.class.php';
 require_once 'V3/CannedDao.class.php';
-=======
 require_once 'V3/CcFieldDao.class.php';
->>>>>>> Migrate CC field
 
 /**
  * This migrate trackers v3 into tracker v5
