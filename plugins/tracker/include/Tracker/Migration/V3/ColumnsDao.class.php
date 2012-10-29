@@ -20,14 +20,12 @@
 
 class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
 
-    private $temporary_table = 'temp_tracker_field';
-
     public function create($tv5_id) {
         $tv5_id = $this->da->escapeInt($tv5_id);
-        $this->createTemporaryTable();
+        $this->createTemporaryTable($tv5_id);
         $this->sayIfAFieldNeedTwoColumnsOrIsOnTheLeftOrOnTheRight($tv5_id);
         $this->moveFieldsInTheirColumns($tv5_id);
-        $this->dropTemporaryTable();
+        $this->dropTemporaryTable($tv5_id);
     }
 
     private function sayIfAFieldNeedTwoColumnsOrIsOnTheLeftOrOnTheRight($tv5_id) {
@@ -35,7 +33,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
         $this->update("SET @previous = NULL");
         $this->update("SET @two_cols = 0");
         $this->update("SET @gcounter = 0");
-        $sql = "INSERT INTO $this->temporary_table(id, parent_id, pos, global_rank)
+        $sql = "INSERT INTO temp_tracker_field_$tv5_id (id, parent_id, pos, global_rank)
                 SELECT R1.id, R1.parent_id, IF(R1.need_two_cols, '2', IF(R1.position % 2, 'L', 'R')) as pos, R1.global_rank
                 FROM (
                     SELECT F.id,
@@ -63,7 +61,7 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
     private function moveFieldsInTheirColumns($tv5_id) {
         $parent_id = $left = $right = $left_rank = $right_rank = $rank = null;
         $sql = "SELECT *
-                FROM $this->temporary_table
+                FROM temp_tracker_field_$tv5_id
                 ORDER BY parent_id, global_rank";
         foreach ($this->retrieve($sql) as $data) {
             if ($parent_id !== $data['parent_id']) {
@@ -126,18 +124,18 @@ class Tracker_Migration_V3_ColumnsDao extends DataAccessObject {
         return $id;
     }
 
-    private function createTemporaryTable() {
-        $sql = "CREATE TABLE $this->temporary_table(
+    private function createTemporaryTable($tv5_id) {
+        $sql = "CREATE TABLE temp_tracker_field_$tv5_id (
                     id  INT(11) UNSIGNED NOT NULL PRIMARY KEY,
                     parent_id INT(11) UNSIGNED NOT NULL,
                     pos VARCHAR(1),
                     global_rank INT(11) UNSIGNED
-                )";
+                ) ENGINE=InnoDB";
         $this->update($sql);
     }
 
-    private function dropTemporaryTable() {
-        $this->update("DROP TABLE $this->temporary_table");
+    private function dropTemporaryTable($tv5_id) {
+        $this->update("DROP TABLE temp_tracker_field_$tv5_id");
     }
 }
 ?>

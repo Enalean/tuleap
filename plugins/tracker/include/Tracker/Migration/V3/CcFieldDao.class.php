@@ -24,7 +24,7 @@ class Tracker_Migration_V3_CcFieldDao extends DataAccessObject {
         $tv5_id = $this->da->escapeInt($tv5_id);
         $sql = "INSERT INTO tracker_field(tracker_id, parent_id, formElement_type, name, label, description, use_it, rank, scope, required, notifications)
               SELECT $tv5_id, S1.id, 'tbl', 'cc', 'CC', '', 1, 1, 'P', 0, 1
-              FROM tracker_fieldset AS S1
+              FROM tracker_fieldset_$tv5_id AS S1
                 WHERE $tv5_id = S1.tracker_id
                   AND S1.name = 'CC List'";
         $field_id = $this->updateAndGetLastId($sql);
