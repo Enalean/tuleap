@@ -1,3 +1,6 @@
+Version 5.30 - Tuleap 5.7
+    * SOAP API Enhancement: export semantic definition in the tracker structure
+
 Version 5.29 - Tuleap 5.6
     * Add symlink to index.php for backward compability
 

@@ -23,13 +23,6 @@ interface Git_Backend_Interface {
     const GIT_ROOT_PATH = '/var/lib/codendi/gitroot/';
 
     /**
-     * Initialize a new reference repository
-     * 
-     * @param GitRepository $repository
-     */
-    public function createReference($repository);
-
-    /**
      * Verify if the repository as already some content within
      *
      * @see    plugins/git/include/Git_Backend_Interface::isInitialized()
@@ -55,7 +48,7 @@ interface Git_Backend_Interface {
 
     /**
      * Verify if given name is not already reserved on filesystem
-     *
+     * 
      * @return bool
      */
     public function isNameAvailable($newName);
@@ -96,13 +89,6 @@ interface Git_Backend_Interface {
      * @return Boolean
      */
     public function changeRepositoryMailPrefix($repository);
-
-    /**
-     * Get the regexp pattern to use for name repository validation
-     *
-     * @return string eg: 'a-zA-Z0-9_-'
-     */
-    public function getAllowedCharsInNamePattern();
 
     /**
      * Rename a project

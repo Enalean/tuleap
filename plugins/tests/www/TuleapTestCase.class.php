@@ -129,13 +129,18 @@ abstract class TuleapTestCase extends UnitTestCase {
     }
     
     protected function assertNotEmpty($string) {
+        $this->assertTrue(is_string($string));
         return $this->assertNotNull($string) && $this->assertNotEqual($string, '');
     }
 
-    protected function assertArrayNotEmpty($all_artifact_nodes) {
-        $this->assertFalse(count($all_artifact_nodes) == 0, "expected array not to be empty, but it contains 0 elements");
+    protected function assertArrayNotEmpty($a) {
+        $this->assertFalse(count($a) == 0, "expected array not to be empty, but it contains 0 elements");
     }
    
+    protected function assertArrayEmpty($a) {
+        return $this->assertTrue(is_array($a), "expected an array, but '$a' is not an array") &&
+               $this->assertTrue(empty($a), "expected array to be empty, but it contains ". count($a). " elements");
+    }
 
     protected function assertNotBlank($string) {
         // What about trim() ?
@@ -194,5 +199,6 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertCount($array, $expected_count) {
         return $this->assertEqual(count($array), $expected_count);
     }
+
 }
 ?>

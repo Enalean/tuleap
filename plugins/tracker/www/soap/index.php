@@ -52,6 +52,7 @@ if ($request->exist('wsdl')) {
 
     $server = new SoapServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
+
     $server->setClass(
         'Tracker_SOAPServer',
         new SOAP_UserManager(UserManager::instance()),

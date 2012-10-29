@@ -44,6 +44,7 @@ define('delete_artifact_followup_fault','3023');
 
 define('get_tracker_factory_fault','3024');
 define('get_tracker_fault','3025');
+define('user_is_not_tracker_admin','3026');
 
 class Tracker_SOAPServer {
     /**
@@ -88,14 +89,15 @@ class Tracker_SOAPServer {
             PermissionsManager $permissions_manager,
             Tracker_ReportDao $dao,
             Tracker_FormElementFactory $formelement_factory,
-            Tracker_ArtifactFactory $artifact_factory) {
-        $this->soap_user_manager   = $soap_user_manager;
-        $this->project_manager     = $project_manager;
-        $this->tracker_factory     = $tracker_factory;
-        $this->permissions_manager = $permissions_manager;
-        $this->report_dao          = $dao;
-        $this->formelement_factory = $formelement_factory;
-        $this->artifact_factory    = $artifact_factory;
+            Tracker_ArtifactFactory $artifact_factory
+    ) {
+        $this->soap_user_manager        = $soap_user_manager;
+        $this->project_manager          = $project_manager;
+        $this->tracker_factory          = $tracker_factory;
+        $this->permissions_manager      = $permissions_manager;
+        $this->report_dao               = $dao;
+        $this->formelement_factory      = $formelement_factory;
+        $this->artifact_factory         = $artifact_factory;
     }
 
     /**
@@ -455,6 +457,32 @@ class Tracker_SOAPServer {
         } else {
             return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
         }
+    }
+
+    /**
+     * getTrackerStructure - returns the structure of a tracker specified by $tracker_id in soap format.
+     * @param type $session_key the session hash associated with the session opened by the person who calls the service
+     * @param type $group_id the ID of the group we want to retrieve the semantic
+     * @param type $tracker_id the ID of the tracker we want to retrieve the semantic
+     * @return array{SOAPTrackerSemantic} the array of the semantic.
+     * @throws SoapFault in case of failure.
+     */
+    public function getTrackerStructure($session_key, $group_id, $tracker_id) {
+        $user      = $this->soap_user_manager->continueSession($session_key);
+        $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
+        $structure = array();
+        if ($tracker->userIsAdmin($user)) {
+            $structure['semantic'] = $this->getTrackerSemantic($tracker);
+
+            return $structure;
+        } else {
+            throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
+        }
+    }
+
+    private function getTrackerSemantic(Tracker $tracker) {
+        $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
+        return $tracker_semantic_manager->exportToSOAP();
     }
 
     /**
