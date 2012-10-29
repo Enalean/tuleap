@@ -154,7 +154,7 @@ class Docman_VersionFactory {
      *
      * @return Void
      */
-    private function archiveBeforePurge($version) {
+    public function archiveBeforePurge($version) {
         $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
         $prefix  = $item->getGroupId().'_i'.$version->getItemId().'_v'.$version->getNumber();
         $params  = array('source_path'    => $version->getPath(),
