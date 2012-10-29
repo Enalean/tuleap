@@ -969,7 +969,7 @@ plugin_tracker	submit_new_artifact	Submit new artifact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration
 plugin_tracker	help	Help
-plugin_tracker	linked_to	Cet artefact (de $2) sera lié à $1
+plugin_tracker	linked_to	This artifact (of $2) will be linked to $1
 plugin_tracker	tracker_switcher	Please select a tracker
 
 plugin_tracker_artifact	set_to	set to

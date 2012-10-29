@@ -71,12 +71,18 @@ class Git extends PluginController {
      */
     private $plugin;
 
-    public function __construct(GitPlugin $plugin) {
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $gerrit_server_factory;
+
+    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory) {
         parent::__construct();
         
-        $this->userManager    = UserManager::instance();
-        $this->projectManager = ProjectManager::instance();
-        $this->factory        = new GitRepositoryFactory(new GitDao(), $this->projectManager);
+        $this->userManager           = UserManager::instance();
+        $this->projectManager        = ProjectManager::instance();
+        $this->factory               = new GitRepositoryFactory(new GitDao(), $this->projectManager);
+        $this->gerrit_server_factory = $gerrit_server_factory;
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -170,7 +176,7 @@ class Git extends PluginController {
     }
 
     protected function definePermittedActions($repoId, $user) {
-        if ( $this->user->isMember($this->groupId, 'A') === true ) {
+        if ( $user->isMember($this->groupId, 'A') === true ) {
             $this->permittedActions = array('index',
                                             'view' ,
                                             'edit',
@@ -188,6 +194,7 @@ class Git extends PluginController {
                                             'fork_repositories',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
+                                            'migrate_to_gerrit',
             );
         } else {
             $this->addPermittedAction('index');
@@ -385,6 +392,17 @@ class Git extends PluginController {
                 $imageRenderer = new Git_LastPushesGraph($groupId, $weeksNumber);
                 $imageRenderer->display();
                 break;
+            case 'migrate_to_gerrit':
+                $repo = $this->factory->getRepositoryById($repoId);
+                $remote_server_id = $this->request->getValidated('remote_server_id', 'uint');
+                if (empty($repo) || empty($remote_server_id)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                } else {
+                    $this->addAction('migrateToGerrit', array($repo, $remote_server_id));
+                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                }
+                break;
             #LIST
             default:
                 
@@ -451,17 +469,13 @@ class Git extends PluginController {
 
     protected function _informAboutPendingEvents($repoId) {
         $sem = SystemEventManager::instance();
-        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_CLONE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         foreach ($dar as $row) {
             $p = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
             $repository = $this->factory->getDeletedRepository($p[1]);
             switch($row['type']) {
             case 'GIT_REPO_CREATE':
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
-                break;
-
-            case 'GIT_REPO_CLONE':
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_fork', array($p[1])));
                 break;
 
             case 'GIT_REPO_DELETE':
@@ -491,7 +505,7 @@ class Git extends PluginController {
     protected function instantiateAction($action) {
         $system_event_manager   = SystemEventManager::instance();
         $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
-        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager);
+        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {

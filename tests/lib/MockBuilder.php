@@ -46,6 +46,10 @@ function stub($classname_or_simpletest_mock) {
     return new OngoingIntelligentStub($mock);
 }
 
+function expect($classname_or_simpletest_mock) {
+    return stub($classname_or_simpletest_mock);
+}
+
 /**
  * mock('SomeClass');
  *
@@ -171,6 +175,15 @@ class OngoingIntelligentStub {
      */
     public function returnsDarWithErrors() {
         return $this->returns(TestHelper::errorDar());
+    }
+    
+    public function throws(Exception $e) {
+        if (empty($this->arguments)) {
+            $this->mock->throwOn($this->method, $e);
+        } else {
+            $this->mock->throwOn($this->method, $e, $this->arguments);
+        }
+        return $this->mock;
     }
 }
 ?>

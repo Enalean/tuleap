@@ -50,6 +50,7 @@ class GitDao extends DataAccessObject {
 
     const BACKEND_GITSHELL = 'gitshell';
     const BACKEND_GITOLITE = 'gitolite';
+    const REMOTE_SERVER_ID = 'remote_server_id';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -450,6 +451,7 @@ class GitDao extends DataAccessObject {
         $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
         $repository->setNamespace($result[self::REPOSITORY_NAMESPACE]);
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
+        $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->loadNotifiedMails();
     }
 
@@ -492,6 +494,34 @@ class GitDao extends DataAccessObject {
                 WHERE repository_path = $path
                   AND project_id = $project_id
                   AND ".self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
+    }
+    
+    /**
+     * 
+     * @param int $repository_id
+     * @param int $remote_server_id
+     * 
+     * @return Boolean
+     */
+    public function switchToGerrit($repository_id, $remote_server_id) {
+        $repository_id    = $this->da->escapeInt($repository_id);
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $sql = "UPDATE plugin_git
+                SET remote_server_id = $remote_server_id
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+    
+    /**
+     * @return bool
+     */
+    public function isRemoteServerUsed($remote_server_id) {
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE remote_server_id = $remote_server_id
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
     }
