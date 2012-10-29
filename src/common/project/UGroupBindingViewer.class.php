@@ -52,13 +52,13 @@ class UGroupBindingViewer {
     /**
      * The form that will be displayed to add/edit user group binding
      *
-     * @param Integer $groupId       Id of the current project
-     * @param Integer $ugroupId      Id of the user group
-     * @param Integer $sourceProject Id of the project from which the source ugroup may be taken
+     * @param Integer $groupId         Id of the current project
+     * @param Integer $ugroupId        Id of the user group
+     * @param Integer $sourceProjectId Id of the project from which the source ugroup may be taken
      *
      * @return String
      */
-    public function getHTMLContent($groupId, $ugroupId, $sourceProject = null) {
+    public function getHTMLContent($groupId, $ugroupId, $sourceProjectId = null) {
         $currentProject = null;
         $currentSource  = null;
         $dar = $this->ugroupBinding->getUGroupManager()->getUgroupBindingSource($ugroupId);
@@ -67,8 +67,8 @@ class UGroupBindingViewer {
             $currentSource  = $this->ugroupBinding->getUGroupManager()->getById($row['source_id']);
             $currentProject = $this->projectManager->getProject($row['group_id']);
             if ($currentProject && $currentProject->userIsAdmin()) {
-                if (!$sourceProject) {
-                    $sourceProject = $currentProject->getID();
+                if (!$sourceProjectId) {
+                    $sourceProjectId = $currentProject->getID();
                 }
             }
         }
@@ -79,13 +79,15 @@ class UGroupBindingViewer {
         $html .= $this->getClonesHTML($clones);
         $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'</h3>';
         $html .= '<table>';
-        $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_project').'</td><td><form action="" method="post">'.$this->getProjectsSelect($groupId, $sourceProject).'</td>';
+        $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_project').'</td><td><form action="" method="post">'.$this->getProjectsSelect($groupId, $sourceProjectId).'</td>';
         $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
-        if ($sourceProject) {
+
+        $sourceProject = $this->projectManager->getProject($sourceProjectId);
+        if ($sourceProjectId && $sourceProject->userIsAdmin()) {
             $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_ugroup').'</td>';
             $html .= '<td><form action="" method="post">';
-            $html .= '<input type="hidden" name="source_project" value="'.$sourceProject.'" />';
-            $html .= '<input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($sourceProject, $currentSource).'</td>';
+            $html .= '<input type="hidden" name="source_project" value="'.$sourceProjectId.'" />';
+            $html .= '<input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($sourceProjectId, $currentSource).'</td>';
             $html .= '<td><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'"/></form></td></tr>';
         }
         $html .= '</table>';
@@ -209,7 +211,6 @@ class UGroupBindingViewer {
      */
     private function getUgroupSelect($sourceProject, UGroup $currentSource = null) {
         $ugroupList = $this->getUgroupList($sourceProject, $currentSource);
-
         $ugroupSelect  = '<select name="source_ugroup" >';
         $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($ugroupList as $ugroup) {
