@@ -34,7 +34,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
 
-        $this->_addHook('archive_deleted_item', 'archive', false);
+        $this->_addHook('archive_deleted_item', 'archive_deleted_item', false);
     }
 
     /**
@@ -68,7 +68,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
      *
      * @return Boolean
      */
-    public function archive(&$params) {
+    public function archive_deleted_item($params) {
         $params['status'] = false;
         if (!empty($params['source_path'])) {
             $sourcePath = $params['source_path'];

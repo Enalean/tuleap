@@ -601,10 +601,11 @@ class FRSFileFactory extends Error {
         $release = $this->_getFRSReleaseFactory()->getFRSReleaseFromDb($file->getReleaseId(), null, null, true);
         $sub_dir = $this->getUploadSubDirectory($release);
         $prefix  = $file->getGroup()->getGroupId().'_'.$sub_dir.'_'.$file->getFileID();
-        $params  = array('status'         => true,
+        $status  = true;
+        $params  = array('status'         => &$status,
                          'source_path'    => $this->getStagingPath($file),
                          'archive_prefix' => $prefix);
-        $this->_getEventManager()->processEvent('archive_deleted_item', &$params);
+        $this->_getEventManager()->processEvent('archive_deleted_item', $params);
         if ($params['status']) {
             return true;
         } else {
