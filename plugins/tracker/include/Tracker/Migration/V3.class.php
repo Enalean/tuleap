@@ -52,28 +52,29 @@ class Tracker_Migration_V3 {
      */
     public function createTV5FromTV3(Project $project, $name, $description, $itemname, ArtifactType $tv3) {
         $dao = new Tracker_Migration_V3_Dao();
+        // 010 & 020
         if ($id = $dao->create($project->getId(), $name, $description, $itemname, $tv3->getID())) {
-            //Fieldset
+            // 030 Fieldset
             $fieldset_dao = new Tracker_Migration_V3_FieldsetsDao();
             $fieldset_dao->create($tv3->getID(), $id);
 
-            //Fields
+            // 040 Fields
             $field_dao = new Tracker_Migration_V3_FieldsDao();
             $field_dao->create($tv3->getID(), $id);
 
-            //Fields Default Values
+            // 045 & 046 Fields Default Values
             $fields_default_values_dao = new Tracker_Migration_V3_FieldsDefaultValuesDao();
             $fields_default_values_dao->create($tv3->getID(), $id);
 
-            //Reports
+            // 050 Reports
             $reports_dao = new Tracker_Migration_V3_ReportsDao();
             $reports_dao->create($tv3->getID(), $id, $project->getId());
 
-            //RenderersTable
+            // 060 RenderersTable
             $renderers_table_dao = new Tracker_Migration_V3_RenderersTableDao();
             $renderers_table_dao->create($tv3->getID(), $id);
             
-            //RenderersGraph
+            // 070 RenderersGraph
             $renderers_graph_dao = new Tracker_Migration_V3_RenderersGraphDao();
             $renderers_graph_dao->create($tv3->getID(), $id);
 
