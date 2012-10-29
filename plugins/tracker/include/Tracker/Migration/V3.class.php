@@ -24,6 +24,7 @@ require_once 'V3/FieldsDao.class.php';
 require_once 'V3/FieldsDefaultValuesDao.class.php';
 require_once 'V3/ReportsDao.class.php';
 require_once 'V3/RenderersTableDao.class.php';
+require_once 'V3/RenderersGraphDao.class.php';
 require_once 'V3/PermissionsOnArtifactFieldDao.class.php';
 require_once 'V3/AttachmentFieldDao.class.php';
 
@@ -65,6 +66,9 @@ class Tracker_Migration_V3 {
             $renderers_table_dao = new Tracker_Migration_V3_RenderersTableDao();
             $renderers_table_dao->create($tv3->getID(), $id);
             
+            //RenderersGraph
+            $renderers_graph_dao = new Tracker_Migration_V3_RenderersGraphDao();
+            $renderers_graph_dao->create($tv3->getID(), $id);
 
             // 075
             $perms_on_artifact_dao = new Tracker_Migration_V3_PermissionsOnArtifactFieldDao();
