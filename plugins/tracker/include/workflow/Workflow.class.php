@@ -235,17 +235,14 @@ class Workflow {
         $soap_result = array();
         $soap_result = array_merge($soap_result, array('field_id' => $this->getFieldId()));
         $soap_result = array_merge($soap_result, array('is_used' => $this->getIsUsed()));
+        $soap_result = array_merge($soap_result, array('transitions' => array()));
         if ($this->hasTransitions()) {
-             $soap_result = array_merge($soap_result, array('transitions' => array()));
              foreach ($this->getTransitions() as $transition) {
                  $transition_infos = $transition->exportToSOAP();
                  $soap_result['transitions'][] = $transition_infos;
              }
 
-        } else {
-             $soap_result = array_merge($soap_result, array('transitions' => null));
         }
-        var_dump($soap_result);
         return $soap_result;
     }
 

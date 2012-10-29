@@ -361,7 +361,7 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
     }
 
     public function itContainsTransitions() {
-        $this->assertTrue(isset($this->result['transitions']));
+        $this->assertFalse(empty($this->result['transitions']));
     }
 
     public function itExportsAllTheTransitions() {
@@ -377,7 +377,7 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
     public function itDosntContainsTransitions() {
         $workflow = new Workflow(1,1,1,1, array());
         $result = $workflow->exportToSOAP();
-        $this->assertFalse(isset($result['transitions']));
+        $this->assertTrue(empty($result['transitions']));
     }
 }
 ?>
