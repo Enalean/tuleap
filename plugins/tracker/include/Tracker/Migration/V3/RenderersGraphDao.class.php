@@ -105,13 +105,6 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
     
-    private function alter() {
-        $sql = "ALTER TABLE plugin_graphontrackersv5_chart 
-                    ADD old_report_graphic_id INT NULL AFTER report_graphic_id,
-                    ADD old_id INT NULL AFTER id";
-        $this->update($sql);
-    }
-    
     private function reorderRenderer() {
         $this->update("SET @counter = 0");
         $this->update("SET @previous = NULL");
@@ -133,12 +126,11 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                     INNER JOIN (SELECT tracker_id, MIN(id) AS min_report_id FROM tracker_report WHERE tracker_id = $tv5_id GROUP BY tracker_id) AS M 
                         ON (M.min_report_id = R.report_id AND R.renderer_type='plugin_graphontrackersv5')
                     INNER JOIN plugin_graphontrackersv5_chart AS C ON (R.old_id = C.report_graphic_id)
-                SET C.old_report_graphic_id = C.report_graphic_id, 
-                    C.report_graphic_id = R.id";
+                SET C.report_graphic_id = R.id";
        $this->update($sql);
        
-       $sql = "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, old_report_graphic_id, old_id, rank, chart_type, title,description, width, height)
-               SELECT Re.id, Re.old_id, C.id, C.rank, C.chart_type, C.title, C.description, C.width, C.height
+       $sql = "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, old_id, rank, chart_type, title,description, width, height)
+               SELECT Re.id, C.id, C.rank, C.chart_type, C.title, C.description, C.width, C.height
                FROM (SELECT tracker_id, MIN(id) AS min_report_id FROM tracker_report WHERE tracker_id = $tv5_id GROUP BY tracker_id) AS M
                    INNER JOIN tracker_report AS R ON (M.tracker_id = R.tracker_id AND R.tracker_id = $tv5_id)
                    INNER JOIN tracker_report_renderer AS Re ON (R.id = Re.report_id AND M.min_report_id < Re.report_id AND Re.renderer_type='plugin_graphontrackersv5')
@@ -255,7 +247,5 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                 SET A.summary = F.id";
         $this->update($sql);
     }
-    
-    //TODO : remove columns
  }
  ?>
