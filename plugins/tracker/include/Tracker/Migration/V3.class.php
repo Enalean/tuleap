@@ -32,6 +32,7 @@ require_once 'V3/CannedDao.class.php';
 require_once 'V3/CcFieldDao.class.php';
 require_once 'V3/ColumnsDao.class.php';
 require_once 'V3/FieldPermsDao.class.php';
+require_once 'V3/FieldDependenciesDao.class.php';
 
 /**
  * This migrate trackers v3 into tracker v5
@@ -103,9 +104,16 @@ class Tracker_Migration_V3 {
             $columns_dao = new Tracker_Migration_V3_ColumnsDao();
             $columns_dao->create($id);
 
+            // 300
+            // useless because transitions already have default permissions
+
             // 310
             $field_perms_dao = new Tracker_Migration_V3_FieldPermsDao();
             $field_perms_dao->create($tv3->getID(), $id);
+
+            // 320
+            $field_dependencies_dao = new Tracker_Migration_V3_FieldDependenciesDao();
+            $field_dependencies_dao->addDependencies();
 
             return $this->tracker_factory->getTrackerById($id);
         }
