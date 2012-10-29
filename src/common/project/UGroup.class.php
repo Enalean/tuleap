@@ -145,7 +145,12 @@ class UGroup {
         if (! $this->members) {
             $this->members = array();
             $this->members_name = array();
-            $dar           = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+            
+            if ($this->is_dynamic) {
+                $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $this->group_id);
+            } else {
+                $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+            }
             foreach ($dar as $row) {
                 $currentUser          = new User($row);
                 $this->members[]      = $currentUser;

@@ -208,7 +208,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
 
 class UGroup_getMembersTest extends TuleapTestCase {
     public function itIsEmptyWhenTheGroupIsEmpty() {
-        $id       = 33;
+        $id       = 333;
         $row      = array('ugroup_id' =>$id);
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar());
@@ -216,12 +216,27 @@ class UGroup_getMembersTest extends TuleapTestCase {
         $this->assertArrayEmpty($ugroup->getMembersUserName());
     }
     public function itReturnsTheMembersOfStaticGroups() {
-        $id       = 33;
+        $id       = 333;
         $row      = array('ugroup_id' =>$id);
         $ugroup   = new UGroup($row);
         $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
         $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($garfield, $goofy));
+        $this->assertArrayNotEmpty($ugroup->getMembers());
+        $this->assertEqual(count($ugroup->getMembers()), 2);
+        
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName());
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $goofy));
+    }
+    
+    public function itReturnsTheMembersOfDynamicGroups() {
+        $id       = 1;
+        $group_id = 555;
+        $row      = array('ugroup_id' =>$id , 'group_id' => $group_id);
+        $ugroup   = new UGroup($row);
+        $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
+        $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($garfield, $goofy));
         $this->assertArrayNotEmpty($ugroup->getMembers());
         $this->assertEqual(count($ugroup->getMembers()), 2);
         
