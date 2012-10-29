@@ -71,12 +71,12 @@ class GitRepositoryManager {
      * @param  GitRepository $repository
      * @throws Exception
      */
-    public function create(GitRepository $repository) {
-        if (!$repository->isNameValid($repository->getName())) {
-            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
+    public function create(GitRepository $repository, GitRepositoryCreator $creator) {
+        if (!$creator->isNameValid($repository->getName())) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
         }
         $this->assertRepositoryNameNotAlreadyUsed($repository);
-        $repository->getBackend()->createReference($repository);
+        $creator->createReference($repository);
     }
 
     /**
@@ -100,6 +100,7 @@ class GitRepositoryManager {
         $clone->setScope($scope);
 
         $this->assertRepositoryNameNotAlreadyUsed($clone);
+        //TODO use creator
         $repository->getBackend()->fork($repository, $clone);
     }
 
@@ -134,7 +135,8 @@ class GitRepositoryManager {
         if ($namespace) {
             $ns_chunk = explode('/', $namespace);
             foreach ($ns_chunk as $chunk) {
-                if (!$repository->isNameValid($chunk)) {
+                //TODO use creator
+                if (!$repository->getBackend()->isNameValid($chunk)) {
                     throw new Exception($GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
                 }
             }
@@ -203,6 +205,8 @@ class GitRepositoryManager {
     private function stripFinalDotGit($path) {
         return substr($path, 0, strrpos($path, '.git'));
     }
+
+
 }
 
 ?>

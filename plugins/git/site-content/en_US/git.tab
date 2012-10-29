@@ -46,6 +46,11 @@ plugin_git	admin_save_submit	Save
 plugin_git	admin_mail	Notifications
 
 plugin_git	admin_settings	General settings
+plugin_git	gerrit_settings	Gerrit
+plugin_git	gerrit_url	Url of the gerrit server
+plugin_git	gerrit_migrate_to	Migrate repo to Gerrit
+plugin_git	gerrit_server_is_on	This repository is on the following remote server:
+plugin_git	permissions_on_remote_server	You cannot change permissions since this repository is on a remote server
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 
@@ -139,7 +144,6 @@ plugin_git	set_private_confirm	Do you confirm change of repository access to pri
 plugin_git	set_private_mails	List of mails to remove from notification
 
 plugin_git	feedback_event_create	There is an event in queue for a repository creation ($1), it will be processed in one minute or two. Please be patient!
-plugin_git	feedback_event_fork	There is an event in queue for a repository fork ($1), it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_delete	There is an event in queue for repository '$1' deletion, it will be processed in one minute or two. Please be patient!
 plugin_git	feedback_event_access	There is an event in queue for a repository permissions change, it will be processed in one minute or two. Please be patient!
 

@@ -20,9 +20,9 @@
   */
 require_once('mvc/PluginActions.class.php');
 require_once('events/SystemEvent_GIT_REPO_CREATE.class.php');
-require_once('events/SystemEvent_GIT_REPO_CLONE.class.php');
 require_once('events/SystemEvent_GIT_REPO_DELETE.class.php');
 require_once('events/SystemEvent_GIT_REPO_ACCESS.class.php');
+require_once('events/SystemEvent_GIT_GERRIT_MIGRATION.class.php');
 require_once('common/system_event/SystemEventManager.class.php');
 require_once('GitBackend.class.php');
 require_once('GitRepository.class.php');
@@ -32,6 +32,8 @@ require_once('Git_Backend_Gitolite.class.php');
 require_once('GitRepositoryFactory.class.php');
 require_once('GitRepositoryManager.class.php');
 require_once('common/layout/Layout.class.php');
+
+require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
 
 /**
  * GitActions
@@ -56,6 +58,11 @@ class GitActions extends PluginActions {
     private $manager;
 
     /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $gerrit_server_factory;
+
+    /**
      * Constructor
      *
      * @param Git                  $controller         The controller
@@ -67,12 +74,14 @@ class GitActions extends PluginActions {
         Git                $controller,
         SystemEventManager $systemEventManager,
         GitRepositoryFactory $factory,
-        GitRepositoryManager $manager
+        GitRepositoryManager $manager,
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
     ) {
         parent::__construct($controller);
-        $this->systemEventManager = $systemEventManager;
-        $this->factory            = $factory;
-        $this->manager            = $manager;
+        $this->systemEventManager    = $systemEventManager;
+        $this->factory               = $factory;
+        $this->manager               = $manager;
+        $this->gerrit_server_factory = $gerrit_server_factory;
 
     }
 
@@ -137,64 +146,20 @@ class GitActions extends PluginActions {
         $projectId = intval( $projectId );
 
         try {
+            $backend    = new Git_Backend_Gitolite(new Git_GitoliteDriver());
             $repository = new GitRepository();
-            $repository->setBackend(new Git_Backend_Gitolite(new Git_GitoliteDriver()));
+            $repository->setBackend($backend);
             $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
             $repository->setCreator(UserManager::instance()->getCurrentUser());
             $repository->setProject(ProjectManager::instance()->getProject($projectId));
             $repository->setName($repositoryName);
 
-            $this->manager->create($repository);
+            $this->manager->create($repository, $backend);
         } catch (Exception $exception) {
             $c->addError($exception->getMessage());
         }
 
         $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-        return;
-    }
-
-    public function cloneRepository( $projectId, $forkName, $parentId) {
-        
-        $c         = $this->getController();
-        $projectId = intval($projectId);
-        $parentId  = intval($parentId);
-        if ( empty($projectId) || empty($forkName) || empty($parentId) ) {
-            $this->addError('actions_params_error');
-            return false;
-        }
-        
-        $parentRepo = $this->factory->getRepositoryById($parentId);
-        if ($parentRepo) {
-            
-            // Disable possibility to delete gitolite repositories
-            if ($parentRepo->getBackend() instanceof Git_Backend_Gitolite) {
-                $this->addError('disable_fork_gitolite');
-                $this->redirectToRepo($projectId, $parentId);
-            }
-
-            if ($parentRepo->isNameValid($forkName) === false) {
-                $c->addError( $this->getText('actions_input_format_error', array($parentRepo->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
-                $this->redirectToRepo($projectId, $parentId);
-                return false;
-            }
-
-            if ( !$parentRepo->isInitialized() ) {
-                $this->addError('repo_not_initialized');
-                $this->redirectToRepo($projectId, $parentId);
-                return false;
-            }
-        } else {
-            $this->addError( 'actions_repo_not_found' );
-            $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
-            return false;
-        }
-        $this->systemEventManager->createEvent(
-            'GIT_REPO_CLONE',
-            $projectId.SystemEvent::PARAMETER_SEPARATOR.$forkName.SystemEvent::PARAMETER_SEPARATOR.$parentId.SystemEvent::PARAMETER_SEPARATOR.$this->user->getId(),
-            SystemEvent::PRIORITY_MEDIUM
-        );
-        $c->addInfo( $this->getText('actions_create_repo_process') );
-        $this->redirectToRepo($projectId, $parentId);
         return;
     }
 
@@ -246,6 +211,7 @@ class GitActions extends PluginActions {
             return false;
         }
         $this->_loadRepository($projectId, $repositoryId);
+        $this->addData(array('gerrit_servers' => $this->gerrit_server_factory->getServers()));
         return true;
     }
 
@@ -400,8 +366,12 @@ class GitActions extends PluginActions {
         try {
             $repository->save();
             if ( !empty($repoAccess) ) {
+                //TODO use Polymorphism to handle this
                 if ($repository->getBackend() instanceof Git_Backend_Gitolite) {
-                    $repository->getBackend()->savePermissions($repository, $repoAccess);
+                    //TODO use Polymorphism to handle this
+                    if (! $repository->getRemoteServerId()) {
+                        $repository->getBackend()->savePermissions($repository, $repoAccess);
+                    }
                 } else {
                     if ($repository->getAccess() != $repoAccess) {
                         $this->systemEventManager->createEvent(
@@ -516,6 +486,26 @@ class GitActions extends PluginActions {
         }
     }
     
+    /**
+     * 
+     * @param GitRepository $repository
+     * @param int $remote_server_id the id of the server to which we want to migrate
+     */
+    public function migrateToGerrit(GitRepository $repository, $remote_server_id) {
+        if ($repository->canMigrateToGerrit()) {
+            try {
+                $this->gerrit_server_factory->getServerById($remote_server_id);
+                $this->systemEventManager->createEvent(
+                    SystemEvent_GIT_GERRIT_MIGRATION::TYPE,
+                    $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id,
+                    SystemEvent::PRIORITY_HIGH
+                );
+            } catch (Git_RemoteServer_NotFoundException $e) {
+                // TODO log error to the syslog
+            }
+        }
+    }
+    
     private function redirectToRepo($projectId, $repoId) {
         $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
     }
@@ -523,6 +513,8 @@ class GitActions extends PluginActions {
     private function addError($error_key) {
         $this->getController()->addError($this->getText($error_key));
     }
+    
+    
 }
 
 ?>
