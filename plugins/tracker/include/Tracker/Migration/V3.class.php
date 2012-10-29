@@ -27,6 +27,13 @@ require_once 'V3/RenderersTableDao.class.php';
 require_once 'V3/RenderersGraphDao.class.php';
 require_once 'V3/PermissionsOnArtifactFieldDao.class.php';
 require_once 'V3/AttachmentFieldDao.class.php';
+require_once 'V3/ReferenceFieldDao.class.php';
+require_once 'V3/SemanticDao.class.php';
+require_once 'V3/CannedDao.class.php';
+require_once 'V3/CcFieldDao.class.php';
+require_once 'V3/ColumnsDao.class.php';
+require_once 'V3/FieldPermsDao.class.php';
+require_once 'V3/FieldDependenciesDao.class.php';
 
 /**
  * This migrate trackers v3 into tracker v5
@@ -57,11 +64,11 @@ class Tracker_Migration_V3 {
             //Fields Default Values
             $fields_default_values_dao = new Tracker_Migration_V3_FieldsDefaultValuesDao();
             $fields_default_values_dao->create($tv3->getID(), $id);
-            
+
             //Reports
             $reports_dao = new Tracker_Migration_V3_ReportsDao();
             $reports_dao->create($tv3->getID(), $id, $project->getId());
-            
+
             //RenderersTable
             $renderers_table_dao = new Tracker_Migration_V3_RenderersTableDao();
             $renderers_table_dao->create($tv3->getID(), $id);
@@ -78,8 +85,39 @@ class Tracker_Migration_V3 {
             $attachment_field_dao = new Tracker_Migration_V3_AttachmentFieldDao();
             $attachment_field_dao->addAttachmentField($id);
 
+            // 085
+            $reference_dao = new Tracker_Migration_V3_ReferenceFieldDao();
+            $reference_dao->addReferenceField($id);
+
+            // 090
+            $cc_dao = new Tracker_Migration_V3_CcFieldDao();
+            $cc_dao->addCCField($id);
+
+            // 220
+            $semantic_dao = new Tracker_Migration_V3_SemanticDao();
+            $semantic_dao->create($id);
+
+            // 250
+            $canned_dao = new Tracker_Migration_V3_CannedDao();
+            $canned_dao->create($tv3->getID(), $id);
+
             // 260
             $fieldset_dao->nowFieldsetsAreStoredAsField($id);
+
+            // 270 & 280
+            $columns_dao = new Tracker_Migration_V3_ColumnsDao();
+            $columns_dao->create($id);
+
+            // 300
+            // useless because transitions already have default permissions
+
+            // 310
+            $field_perms_dao = new Tracker_Migration_V3_FieldPermsDao();
+            $field_perms_dao->create($tv3->getID(), $id);
+
+            // 320
+            $field_dependencies_dao = new Tracker_Migration_V3_FieldDependenciesDao();
+            $field_dependencies_dao->addDependencies($tv3->getID(), $id);
 
             return $this->tracker_factory->getTrackerById($id);
         }

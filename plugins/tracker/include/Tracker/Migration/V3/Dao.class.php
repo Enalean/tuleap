@@ -17,24 +17,29 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once 'common/dao/TrackerIdSharingDao.class.php';
 
 class Tracker_Migration_V3_Dao extends DataAccessObject {
 
     public function create($project_id, $name, $description, $itemname, $tv3_id) {
-        $tv3_id     = $this->da->escapeInt($tv3_id);
-        $tracker_id = $this->createTracker($project_id, $name, $description, $itemname, $tv3_id);
-        $this->duplicateTrackerPerms($tv3_id, $tracker_id);
-        return $tracker_id;
+        $id_sharing = new TrackerIdSharingDao();
+        if ($tv5_id = $id_sharing->generateTrackerId()) {
+            $tv3_id     = $this->da->escapeInt($tv3_id);
+            $tracker_id = $this->createTracker($tv5_id, $project_id, $name, $description, $itemname, $tv3_id);
+            $this->duplicateTrackerPerms($tv3_id, $tracker_id);
+            return $tracker_id;
+        }
+        return false;
     }
 
-    private function createTracker($project_id, $name, $description, $itemname, $tv3_id) {
+    private function createTracker($id, $project_id, $name, $description, $itemname, $tv3_id) {
         $project_id  = $this->da->escapeInt($project_id);
         $name        = $this->da->quoteSmart($name);
         $description = $this->da->quoteSmart($description);
         $itemname    = $this->da->quoteSmart($itemname);
-        $sql = "INSERT INTO tracker ( group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions,
+        $sql = "INSERT INTO tracker ( id, group_id, name, description, item_name, allow_copy, submit_instructions, browse_instructions,
                                       status, deletion_date, instantiate_for_new_projects, stop_notification)
-                SELECT $project_id, $name, $description, $itemname, allow_copy, submit_instructions, browse_instructions,
+                SELECT $id, $project_id, $name, $description, $itemname, allow_copy, submit_instructions, browse_instructions,
                        status, deletion_date, instantiate_for_new_projects, stop_notification
                 FROM artifact_group_list
                 WHERE group_artifact_id = $tv3_id";
