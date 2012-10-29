@@ -233,19 +233,16 @@ class Workflow {
 
     public function exportToSOAP() {
         $soap_result = array();
-        $soap_result = array_merge($soap_result, array('field_id' => $this->getFieldId()));
-        $soap_result = array_merge($soap_result, array('is_used' => $this->getIsUsed()));
-        $soap_result = array_merge($soap_result, array('transitions' => array()));
+        $soap_result['field_id']    = $this->getFieldId();
+        $soap_result['is_used']     = $this->getIsUsed();
+        $soap_result['transitions'] = array();
         if ($this->hasTransitions()) {
              foreach ($this->getTransitions() as $transition) {
-                 $transition_infos = $transition->exportToSOAP();
+                 $transition_infos             = $transition->exportToSOAP();
                  $soap_result['transitions'][] = $transition_infos;
              }
 
         }
-                    $file = fopen('/mnt/yannis/dev/plugins/tracker/include/Tracker/test', 'a+');
-            fwrite($file, var_export($soap_result,1));
-            fclose($file);
         return $soap_result;
     }
 

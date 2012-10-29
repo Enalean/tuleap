@@ -324,22 +324,22 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $transition_field1 = Mock('Tracker_FormElement_Field_List_Value');
+        $transition_field1 = mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field1)->getId()->returns(10);
 
-        $transition_field2 = Mock('Tracker_FormElement_Field_List_Value');
+        $transition_field2 = mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field2)->getId()->returns(11);
 
-        $transition_field3 = Mock('Tracker_FormElement_Field_List_Value');
+        $transition_field3 = mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field3)->getId()->returns(4);
 
-        $transition_field4 = Mock('Tracker_FormElement_Field_List_Value');
+        $transition_field4 = mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field4)->getId()->returns(5);
 
-        $transition_field5 = Mock('Tracker_FormElement_Field_List_Value');
+        $transition_field5 = mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field5)->getId()->returns(6);
 
-        $transition_field6 = Mock('Tracker_FormElement_Field_List_Value');
+        $transition_field6 = mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field6)->getId()->returns(89);
 
         $transition1 = new Transition(0,1, $transition_field1, $transition_field2);
@@ -347,7 +347,7 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
         $transition3 = new Transition(0,1, $transition_field5, $transition_field6);
 
         $this->workflow = new Workflow(1,1,1,1, array($transition1, $transition2, $transition3));
-        $this->result = $this->workflow->exportToSOAP();
+        $this->result   = $this->workflow->exportToSOAP();
     }
 
     public function itExportsTheFieldId() {
@@ -376,7 +376,7 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
 
     public function itDosntContainsTransitions() {
         $workflow = new Workflow(1,1,1,1, array());
-        $result = $workflow->exportToSOAP();
+        $result   = $workflow->exportToSOAP();
         $this->assertTrue(empty($result['transitions']));
     }
 }
