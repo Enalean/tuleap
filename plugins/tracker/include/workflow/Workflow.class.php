@@ -243,6 +243,9 @@ class Workflow {
              }
 
         }
+                    $file = fopen('/mnt/yannis/dev/plugins/tracker/include/Tracker/test', 'a+');
+            fwrite($file, var_export($soap_result,1));
+            fclose($file);
         return $soap_result;
     }
 

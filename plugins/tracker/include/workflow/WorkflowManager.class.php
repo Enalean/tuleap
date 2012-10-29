@@ -335,7 +335,17 @@ class WorkflowManager {
 
     public function exportToSOAP() {
         $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
-        return $workflow->exportToSOAP();
+        //If a wrokflow exists
+        if (isset($workflow)){
+            return $workflow->exportToSOAP();
+        } else {
+            $empty_workflow = array(
+              "field_id"    => null,
+              "is_used"     => null,
+              "transitions" => array()
+            );
+            return $empty_workflow;
+        }
     }
 
 }
