@@ -299,7 +299,8 @@ class UGroupBinding {
                     $projectSourceId   = $request->getValidated('source_project', 'GroupId');
                     $sourceId          = $request->get('source_ugroup');
                     $validSourceUgroup = $this->checkUGroupValidity($projectSourceId, $sourceId);
-                    if ($validSourceUgroup) {
+                    $projectSource     = ProjectManager::instance()->getProject($projectSourceId);
+                    if ($validSourceUgroup && $projectSource->userIsAdmin()) {
                         if ($this->addBinding($ugroupId, $sourceId)) {
                             $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
                         }
