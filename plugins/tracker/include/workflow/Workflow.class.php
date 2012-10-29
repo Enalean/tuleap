@@ -231,6 +231,22 @@ class Workflow {
            }
     }
     
+    public function exportToSOAP() {
+        $soap_result = array();
+        $soap_result = array_merge($soap_result, array('field_id' => $this->getFieldId()));
+        $soap_result = array_merge($soap_result, array('is_used' => $this->getIsUsed()));
+        if ($this->hasTransitions()) {
+             $soap_result = array_merge($soap_result, array('transitions' => array()));
+             foreach ($this->getTransitions() as $transition) {
+                 $transition_infos = array('from_id' => $transition->getFieldValueFrom()->getId() , 'to_id' => $transition->getFieldValueTo()->getId());
+                //$soap_result = array_merge($soap_result['transition'], $transition_infos);
+             }
+        } else {
+             $soap_result = array_merge($soap_result, array('transitions' => null));
+        }
+        return $soap_result;
+    }
+    
     /**
      * Execute actions before transition happens (if there is one)
      * 
