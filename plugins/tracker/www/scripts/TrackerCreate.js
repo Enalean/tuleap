@@ -35,7 +35,7 @@ document.observe('dom:loaded', function () {
         if (mode.checked) {
             displayMode(mode);
         }
-        mode.observe('change', function (evt) {
+        mode.observe('click', function (evt) {
             hideAllModes();
             displayMode(mode);
         });
