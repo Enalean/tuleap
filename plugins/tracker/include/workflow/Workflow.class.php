@@ -238,7 +238,7 @@ class Workflow {
         if ($this->hasTransitions()) {
              $soap_result = array_merge($soap_result, array('transitions' => array()));
              foreach ($this->getTransitions() as $transition) {
-                 $transition_infos = array('from_id' => $transition->getFieldValueFrom()->getId() , 'to_id' => $transition->getFieldValueTo()->getId());
+                 $transition_infos = $transition->exportToSOAP();
                  $soap_result['transitions'][] = $transition_infos;
              }
 

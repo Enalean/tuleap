@@ -333,6 +333,11 @@ class WorkflowManager {
         }
     }
     
+    public function exportToSOAP() {
+        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
+        return $workflow->exportToSOAP();
+    }
+    
        
 }
 ?>
