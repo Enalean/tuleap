@@ -137,38 +137,41 @@ class UGroup {
 
     /**
      * Return array of all ugroup members as User objects
-     * WARNING: this does not work currently with dynamic ugroups
      *
      * @return Array
      */
     public function getMembers() {
         if (! $this->members) {
-            $this->members = array();
-            $this->members_name = array();
-            
-            if ($this->is_dynamic) {
-                $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $this->group_id);
-            } else {
-                $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
-            }
-            foreach ($dar as $row) {
-                $currentUser          = new User($row);
-                $this->members[]      = $currentUser;
-                $this->members_name[] = $currentUser->getUserName();
-            }
+            $this->initMemberCache();
         }
         return $this->members;
     }
 
     /**
      * Return array containing the user_name of all ugroup members
-     * WARNING: this does not work currently with dynamic ugroups
      *
      * @return Array
      */
     public function getMembersUserName() {
-        $this->getMembers();
-        return $this->members_name;
+        $names = array();
+        foreach ($this->getMembers() as $member) {
+            $names[] = $member->getUserName();
+        }
+        return $names;
+    }
+
+    private function initMemberCache() {
+        $this->members = array();
+
+        if ($this->is_dynamic) {
+            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $this->group_id);
+        } else {
+            $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+        }
+        
+        foreach ($dar as $row) {
+            $this->members[] = new User($row);
+        }
     }
 
     /**
@@ -389,6 +392,7 @@ class UGroup {
             return false;
         }
     }
+
 
 }
 
