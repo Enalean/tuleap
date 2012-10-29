@@ -60,7 +60,7 @@ class Tracker_Migration_V3 {
         $logger->info("$log_prefix Start migration of tracker v3: ".$tv3->getID());
         // 010 & 020
         if ($id = $dao->create($project->getId(), $name, $description, $itemname, $tv3->getID())) {
-            $logger->info("$log_prefix Tracker v5: ".$id));
+            $logger->info("$log_prefix Tracker v5: ".$id);
 
             $logger->info("$log_prefix 030 Fieldset");
             $fieldset_dao = new Tracker_Migration_V3_FieldsetsDao();
