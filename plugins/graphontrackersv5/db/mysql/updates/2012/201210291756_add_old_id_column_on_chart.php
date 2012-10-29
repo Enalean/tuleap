@@ -19,9 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-/**
- *
- */
+
 class b201210291756_add_old_id_column_on_chart extends ForgeUpgrade_Bucket {
 
     public function description() {
@@ -43,7 +41,6 @@ EOT;
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding column old_id to plugin_graphontrackersv5_chart table: '.implode(', ', $this->db->dbh->errorInfo()));
             }
         }
-        
     }
     
     public function postUp() {
