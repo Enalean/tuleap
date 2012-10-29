@@ -24,6 +24,9 @@ require_once 'V3/FieldsDao.class.php';
 require_once 'V3/FieldsDefaultValuesDao.class.php';
 require_once 'V3/ReportsDao.class.php';
 require_once 'V3/RenderersTableDao.class.php';
+require_once 'V3/PermissionsOnArtifactFieldDao.class.php';
+require_once 'V3/AttachmentFieldDao.class.php';
+
 /**
  * This migrate trackers v3 into tracker v5
  */
@@ -45,11 +48,11 @@ class Tracker_Migration_V3 {
             //Fieldset
             $fieldset_dao = new Tracker_Migration_V3_FieldsetsDao();
             $fieldset_dao->create($tv3->getID(), $id);
-            
+
             //Fields
             $field_dao = new Tracker_Migration_V3_FieldsDao();
             $field_dao->create($tv3->getID(), $id);
-            
+
             //Fields Default Values
             $fields_default_values_dao = new Tracker_Migration_V3_FieldsDefaultValuesDao();
             $fields_default_values_dao->create($tv3->getID(), $id);
@@ -62,6 +65,18 @@ class Tracker_Migration_V3 {
             $renderers_table_dao = new Tracker_Migration_V3_RenderersTableDao();
             $renderers_table_dao->create($tv3->getID(), $id);
             
+
+            // 075
+            $perms_on_artifact_dao = new Tracker_Migration_V3_PermissionsOnArtifactFieldDao();
+            $perms_on_artifact_dao->addPermissionsOnArtifactField($id);
+
+            // 080
+            $attachment_field_dao = new Tracker_Migration_V3_AttachmentFieldDao();
+            $attachment_field_dao->addAttachmentField($id);
+
+            // 260
+            $fieldset_dao->nowFieldsetsAreStoredAsField($id);
+
             return $this->tracker_factory->getTrackerById($id);
         }
     }

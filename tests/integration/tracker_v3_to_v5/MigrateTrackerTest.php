@@ -26,7 +26,6 @@ class MigrateTrackerTest extends TuleapDbTestCase {
 
         $this->assertEqual($row['item_name'], 'bug');
         $trackerv3_id = $row['group_artifact_id'];
-
     }
 
     public function itCreatesAllFieldsOfv3Intov5() {

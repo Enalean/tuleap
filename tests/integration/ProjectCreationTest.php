@@ -26,9 +26,19 @@ require_once 'user.php';
 
 class ProjectCreationTest extends TuleapDbTestCase {
 
+    public function __construct() {
+        parent::__construct();
+        //self::$db_initialized = true;
+    }
+
     public function setUp() {
         parent::setUp();
         $GLOBALS['feedback'] = '';
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        $this->mysqli->query('DELETE FROM groups WHERE unix_group_name = "short-name"');
     }
 
     public function itCreatesAProject() {

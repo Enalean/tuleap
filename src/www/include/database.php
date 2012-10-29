@@ -82,10 +82,10 @@ function db_affected_rows($qhandle) {
 function db_fetch_array($qhandle = 0) {
     global $conn;
 	if ($qhandle) {
-		return $conn->fetch($qhandle);
+		return $conn->fetchArray($qhandle);
 	} else {
 		if ($GLOBALS['db_qhandle']) {
-			return $conn->fetchArray($GLOBALS['db_qhandle']);
+			return @$conn->fetchArray($GLOBALS['db_qhandle']);
 		} else {
 			return (array());
 		}

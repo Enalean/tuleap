@@ -40,9 +40,19 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         parent::setUp();
         Config::set('DEBUG_MODE', true);
         if (self::$db_initialized == false) {
-            self::$db_initialized = $this->initDb();
+            self::$db_initialized = true;
+            $this->initDb();
         }
+        $this->mysqli->select_db('integration_test');
         db_connect();
+    }
+
+    public function skip() {
+        parent::skip();
+        if (!$this->mysqli) {
+            echo "== Y U NO CONFIGURE DATABASE? ==\n";
+        }
+        $this->skipUnless($this->mysqli, '== Y U NO CONFIGURE DATABASE? ==');
     }
 
     public function tearDown() {
@@ -60,12 +70,9 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         self::$db_initialized = false;
     }
 
-    public function skip() {
-        parent::skip();
-        if (!$this->mysqli) {
-            echo "== Y U NO CONFIGURE DATABASE? ==\n";
-        }
-        $this->skipUnless($this->mysqli, '== Y U NO CONFIGURE DATABASE? ==');
+
+    protected function truncateTable($table) {
+        $this->mysqli->query("TRUNCATE TABLE $table");
     }
 
     /**
@@ -94,9 +101,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     }
 
     private function dropDatabase() {
-        $this->mysqli->query("DROP DATABASE IF EXISTS integration_test");
-        $this->mysqli->query("CREATE DATABASE integration_test");
-        $this->mysqli->close();
+        $this->mysqli->query("DROP DATABASE IF EXISTS ".$GLOBALS['sys_dbname']);
+        $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']);
     }
 
     private function initDb() {
