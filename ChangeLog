@@ -1,5 +1,8 @@
 Version 5.7 (Not Released Yet)
 
+   == Bug fix ==
+	* Fix fatal error when user start monitoring a file package
+
    == Plugins ==
 	* tracker: 5.30
 	* git: 2.7.15
