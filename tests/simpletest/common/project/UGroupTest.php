@@ -212,8 +212,8 @@ class UGroup_getMembersTest extends TuleapTestCase {
         $row      = array('ugroup_id' =>$id);
         $ugroup   = new UGroup($row);
         $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
-        $this->assertArrayEmpty($ugroup->getMembers());
-        $this->assertArrayEmpty($ugroup->getMembersUserName());
+        $this->assertTrue(count($ugroup->getMembers()) == 0);
+        $this->assertTrue(count($ugroup->getMembersUserName()) == 0);
     }
     public function itReturnsTheMembersOfStaticGroups() {
         $id       = 333;

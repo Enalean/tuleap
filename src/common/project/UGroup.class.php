@@ -161,17 +161,17 @@ class UGroup {
     }
 
     private function initMemberCache() {
-        $this->members = array();
-
         if ($this->is_dynamic) {
             $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $this->group_id);
         } else {
             $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
         }
         
-        foreach ($dar as $row) {
-            $this->members[] = new User($row);
-        }
+        $this->members = $dar->instanciateWith(array($this, 'newUser'));
+    }
+    
+    public function newUser($row) {
+        return new User($row);
     }
 
     /**
