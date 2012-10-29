@@ -113,7 +113,7 @@ class Tracker_Migration_V3 {
 
             // 320
             $field_dependencies_dao = new Tracker_Migration_V3_FieldDependenciesDao();
-            $field_dependencies_dao->addDependencies();
+            $field_dependencies_dao->addDependencies($tv3->getID(), $id);
 
             return $this->tracker_factory->getTrackerById($id);
         }

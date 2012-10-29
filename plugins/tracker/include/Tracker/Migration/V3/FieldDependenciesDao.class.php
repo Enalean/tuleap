@@ -20,51 +20,59 @@
 
 class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
     
-    public function addDependencies() {
-        /*$this->sourceAndTargetAreStatic();
-        $this->sourceIsUserAndTargetIsStatic();
-        $this->sourceIsStaticAndTargetIsUser();
-        $this->sourceAndTargetAreUser();*/
+    public function addDependencies($tv3_id, $tv5_id) {
+        $this->sourceAndTargetAreStatic($tv3_id, $tv5_id);
+        $this->sourceIsUserAndTargetIsStatic($tv3_id, $tv5_id);
+        $this->sourceIsStaticAndTargetIsUser($tv3_id, $tv5_id);
+        $this->sourceAndTargetAreUser($tv3_id, $tv5_id);
     }
 
-    private function sourceAndTargetAreStatic() {
+    private function sourceAndTargetAreStatic($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_rule(id, tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id)
-                SELECT r.id, r.group_artifact_id, sf.id, sbv.id, tf.id, r.rule_type, tbv.id
+                SELECT NULL, $tv5_id, sf.id, sbv.id, tf.id, r.rule_type, tbv.id
                 FROM artifact_rule AS r
-                    INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND r.group_artifact_id = sf.tracker_id)
+                    INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_static_value AS sbv ON(sbv.field_id = sf.id AND r.source_value_id = sbv.old_id)
-                    INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND r.group_artifact_id = tf.tracker_id)
-                    INNER JOIN tracker_field_list_bind_static_value AS tbv ON(tbv.field_id = tf.id AND r.target_value_id = tbv.old_id)";
+                    INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND tf.tracker_id = $tv5_id)
+                    INNER JOIN tracker_field_list_bind_static_value AS tbv ON(tbv.field_id = tf.id AND r.target_value_id = tbv.old_id)
+                WHERE r.group_artifact_id = $tv3_id";
+        return $this->update($sql);
     }
 
-    private function sourceIsUserAndTargetIsStatic() {
+    private function sourceIsUserAndTargetIsStatic($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_rule(id, tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id)
-                SELECT r.id, r.group_artifact_id, sf.id, r.source_value_id, tf.id, r.rule_type, tbv.id
+                SELECT NULL, $tv5_id, sf.id, r.source_value_id, tf.id, r.rule_type, tbv.id
                 FROM artifact_rule AS r
-                    INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND r.group_artifact_id = sf.tracker_id)
+                    INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_users AS sfu ON(sf.id = sfu.field_id)
-                    INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND r.group_artifact_id = tf.tracker_id)
-                    INNER JOIN tracker_field_list_bind_static_value AS tbv ON(tbv.field_id = tf.id AND r.target_value_id = tbv.old_id)";
+                    INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND tf.tracker_id = $tv5_id)
+                    INNER JOIN tracker_field_list_bind_static_value AS tbv ON(tbv.field_id = tf.id AND r.target_value_id = tbv.old_id)
+                WHERE r.group_artifact_id = $tv3_id";
+        return $this->update($sql);
     }
 
-    private function sourceIsStaticAndTargetIsUser() {
+    private function sourceIsStaticAndTargetIsUser($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_rule(id, tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id)
-                SELECT r.id, r.group_artifact_id, sf.id, sbv.id, tf.id, r.rule_type, r.target_value_id
+                SELECT NULL, $tv5_id, sf.id, sbv.id, tf.id, r.rule_type, r.target_value_id
                 FROM artifact_rule AS r
-                    INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND r.group_artifact_id = sf.tracker_id)
+                    INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_static_value AS sbv ON(sbv.field_id = sf.id AND r.source_value_id = sbv.old_id)
-                    INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND r.group_artifact_id = tf.tracker_id)
-                    INNER JOIN tracker_field_list_bind_users AS tfu ON(tf.id = tfu.field_id)";
+                    INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND tf.tracker_id = $tv5_id)
+                    INNER JOIN tracker_field_list_bind_users AS tfu ON(tf.id = tfu.field_id)
+                WHERE r.group_artifact_id = $tv3_id";
+        return $this->update($sql);
     }
 
-    private function sourceAndTargetAreUser() {
+    private function sourceAndTargetAreUser($tv3_id, $tv5_id) {
         $sql = "INSERT INTO tracker_rule(id, tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id)
-                SELECT r.id, r.group_artifact_id, sf.id, r.source_value_id, tf.id, r.rule_type, r.target_value_id
+                SELECT NULL, $tv5_id, sf.id, r.source_value_id, tf.id, r.rule_type, r.target_value_id
                 FROM artifact_rule AS r
-                    INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND r.group_artifact_id = sf.tracker_id)
+                    INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_users AS sfu ON(sf.id = sfu.field_id)
-                    INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND r.group_artifact_id = tf.tracker_id)
-                    INNER JOIN tracker_field_list_bind_users AS tfu ON(tf.id = tfu.field_id)";
+                    INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND tf.tracker_id = $tv5_id)
+                    INNER JOIN tracker_field_list_bind_users AS tfu ON(tf.id = tfu.field_id)
+                WHERE r.group_artifact_id = $tv3_id";
+        return $this->update($sql);
     }
 }
 
