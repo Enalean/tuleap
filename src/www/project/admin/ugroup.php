@@ -126,13 +126,11 @@ if ($group_id != 100) {
     $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
     while ($row = db_fetch_array($result)) {
         $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']).'</a>';
-        /*$bindingContent = '<a href="/project/admin/ugroup_binding.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'" >'.$uGroupBinding->getLinkTitle($row['ugroup_id']).'</a>';
+        $bindingContent = '<a href="/project/admin/ugroup_binding.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'" >'.$uGroupBinding->getLinkTitle($row['ugroup_id']).'</a>';
         $uGroup         = new UGroup(array('ugroup_id' => $row['ugroup_id']));
         if (!$uGroup->isBound()) {
             $em->processEvent('ugroup_table_row', array('row' => $row, 'html' => &$bindingContent));
-        }*/
-        $bindingContent = '';
-        $em->processEvent('ugroup_table_row', array('row' => $row, 'html' => &$bindingContent));
+        }
         $ugroupRow[200] = array('value' => $bindingContent, 'html_attrs' => 'align="center"');
         $ugroupRow[300] = util_translate_desc_ugroup($row['description']);
         $res2=db_query("SELECT count(*) FROM ugroup_user WHERE ugroup_id=".$row['ugroup_id']);
