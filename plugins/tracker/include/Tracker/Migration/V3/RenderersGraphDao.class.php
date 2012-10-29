@@ -24,8 +24,13 @@
         $this->createReportForGraphWithoutReport($tv3_id, $tv5_id);
         $this->createReportCriteriaForGraphWithoutReport($tv3_id, $tv5_id);
         $this->insertRendererGraph($tv3_id, $tv5_id);
+        //$this->alter();
         $this->reorderRenderer();
-        $this->updateGraphChartsWithFirstReport();
+        $this->updateGraphChartsWithFirstReport($tv5_id);
+        $this->createPieCharts($tv5_id);
+        $this->createBarCharts($tv5_id);
+        $this->createGanttCharts($tv5_id);
+        $this->updateChartsWithFieldId();
     }
     
     private function insertRendererTable($tv3_id, $tv5_id) {
@@ -93,6 +98,10 @@
     }
     
     private function alter() {
+        $sql = "ALTER TABLE plugin_graphontrackersv5_chart 
+                    ADD old_report_graphic_id INT NULL AFTER report_graphic_id,
+                    ADD old_id INT NULL AFTER id";
+        $this->update($sql);
     }
     
     private function reorderRenderer() {
@@ -110,24 +119,135 @@
         $this->update($sql);
     }
     
-    private function updateGraphChartsWithFirstReport() {
+    private function updateGraphChartsWithFirstReport($tv5_id) {
+        $tv5_id = $this->da->escapeInt($tv5_id);
         $sql = "UPDATE tracker_report_renderer AS R
-                    INNER JOIN (SELECT tracker_id, MIN(id) AS min_report_id FROM tracker_report GROUP BY tracker_id) AS M 
+                    INNER JOIN (SELECT tracker_id, MIN(id) AS min_report_id FROM tracker_report WHERE tracker_id = $tv5_id GROUP BY tracker_id) AS M 
                         ON (M.min_report_id = R.report_id AND R.renderer_type='plugin_graphontrackersv5')
-                    INNER JOIN plugin_graphontrackers_chart AS C ON (R.old_id = C.report_graphic_id)
+                    INNER JOIN plugin_graphontrackersv5_chart AS C ON (R.old_id = C.report_graphic_id)
                 SET C.old_report_graphic_id = C.report_graphic_id, 
                     C.report_graphic_id = R.id";
        $this->update($sql);
        
        $sql = "INSERT INTO plugin_graphontrackersv5_chart(report_graphic_id, old_report_graphic_id, old_id, rank, chart_type, title,description, width, height)
                SELECT Re.id, Re.old_id, C.id, C.rank, C.chart_type, C.title, C.description, C.width, C.height
-               FROM (SELECT tracker_id, MIN(id) AS min_report_id FROM tracker_report GROUP BY tracker_id) AS M
-                   INNER JOIN tracker_report AS R ON (M.tracker_id = R.tracker_id)
+               FROM (SELECT tracker_id, MIN(id) AS min_report_id FROM tracker_report WHERE tracker_id = $tv5_id GROUP BY tracker_id) AS M
+                   INNER JOIN tracker_report AS R ON (M.tracker_id = R.tracker_id AND R.tracker_id = $tv5_id)
                    INNER JOIN tracker_report_renderer AS Re ON (R.id = Re.report_id AND M.min_report_id < Re.report_id AND Re.renderer_type='plugin_graphontrackersv5')
-                   INNER JOIN plugin_graphontrackers_chart AS C ON (Re.old_id = C.old_report_graphic_id)";
+                   INNER JOIN plugin_graphontrackers_chart AS C ON (Re.old_id = C.report_graphic_id)";
        $this->update($sql);
-                   
     }
     
+    private function createPieCharts($tv5_id) {
+        $tv5_id = $this->da->escapeInt($tv5_id);
+        $sql = "INSERT INTO plugin_graphontrackersv5_pie_chart(id, field_base)
+                SELECT C.id, P.field_base
+                FROM plugin_graphontrackers_pie_chart AS P
+                INNER JOIN plugin_graphontrackersv5_chart AS C 
+                    ON (C.chart_type='pie' AND C.old_id = P.id)
+                INNER JOIN tracker_report_renderer AS RR ON (C.report_graphic_id = RR.id)
+                INNER JOIN tracker_report AS R ON (R.tracker_id = $tv5_id AND R.id = RR.report_id)";
+        $this->update($sql);
+    }
+    
+    private function createBarCharts($tv5_id) {
+        $tv5_id = $this->da->escapeInt($tv5_id);
+        $sql = "INSERT INTO plugin_graphontrackersv5_bar_chart(id, field_base, field_group)
+                SELECT C.id, B.field_base, B.field_group
+                FROM plugin_graphontrackers_bar_chart AS B
+                INNER JOIN plugin_graphontrackersv5_chart AS C 
+                    ON (C.chart_type='bar' AND C.old_id = B.id)
+                INNER JOIN tracker_report_renderer AS RR ON (C.report_graphic_id = RR.id)
+                INNER JOIN tracker_report AS R ON (R.tracker_id = $tv5_id AND R.id = RR.report_id)";
+        $this->update($sql);
+    }
+    
+    private function createGanttCharts($tv5_id) {
+        $tv5_id = $this->da->escapeInt($tv5_id);
+        $sql = "INSERT INTO plugin_graphontrackersv5_gantt_chart(id, field_start, field_due, field_finish, field_percentage, field_righttext, scale, as_of_date, summary)
+                SELECT C.id, G.field_start, G.field_due, G.field_finish, G.field_percentage, G.field_righttext, G.scale, G.as_of_date, G.summary
+                FROM plugin_graphontrackers_gantt_chart AS G
+                INNER JOIN plugin_graphontrackersv5_chart AS C 
+                    ON (C.chart_type='gantt' AND C.old_id = G.id)
+                INNER JOIN tracker_report_renderer AS RR ON (C.report_graphic_id = RR.id)
+                INNER JOIN tracker_report AS R ON (R.tracker_id = $tv5_id AND R.id = RR.report_id)";
+        $this->update($sql);
+    }
+    
+    private function updateChartsWithFieldId() {
+        $sql = "UPDATE plugin_graphontrackersv5_pie_chart AS A 
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_base)
+                SET A.field_base = F.id";
+        $this->update($sql);
+        
+        $sql = "UPDATE plugin_graphontrackersv5_bar_chart AS A 
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_base)
+                SET A.field_base = F.id";
+        $this->update($sql);
+        
+        $sql = "UPDATE plugin_graphontrackersv5_bar_chart AS A 
+                       INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_group)
+                SET A.field_group = F.id";
+        $this->update($sql);
+        
+        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A 
+                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_start)
+                SET A.field_start = F.id";
+        $this->update($sql);
+                
+        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A 
+                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_due)
+                SET A.field_due = F.id";
+        $this->update($sql);
+                
+        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A 
+                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_finish)
+                SET A.field_finish = F.id";
+        $this->update($sql);
+
+        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A 
+                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_percentage)
+                SET A.field_percentage = F.id";
+        $this->update($sql);
+
+        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A 
+                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_righttext)
+                SET A.field_righttext = F.id";
+        $this->update($sql);
+                
+        $sql = "UPDATE plugin_graphontrackers_gantt_chart AS A 
+                       INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
+                       INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
+                       INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.summary)
+                SET A.summary = F.id";
+        $this->update($sql);
+    }
+    
+    //TODO : remove columns
  }
  ?>
