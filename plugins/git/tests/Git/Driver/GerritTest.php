@@ -84,7 +84,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $p = stub('Project' )->getUnixName()->returns('LesBronzes');
         $r->setProject($p);
 
-        $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand(), new BackendLogger());
+        $driver = new Git_Driver_Gerrit(new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()), new BackendLogger());
         $driver->createProject($r);
     }
 
