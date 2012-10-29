@@ -207,14 +207,26 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
 }
 
 class UGroup_getMembersTest extends TuleapTestCase {
+    public function itIsEmptyWhenTheGroupIsEmpty() {
+        $id       = 33;
+        $row      = array('ugroup_id' =>$id);
+        $ugroup   = new UGroup($row);
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar());
+        $this->assertArrayEmpty($ugroup->getMembers());
+        $this->assertArrayEmpty($ugroup->getMembersUserName());
+    }
     public function itReturnsTheMembersOfStaticGroups() {
         $id       = 33;
         $row      = array('ugroup_id' =>$id);
         $ugroup   = new UGroup($row);
         $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar(array($garfield)));
+        $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($garfield, $goofy));
         $this->assertArrayNotEmpty($ugroup->getMembers());
+        $this->assertEqual(count($ugroup->getMembers()), 2);
+        
         $this->assertArrayNotEmpty($ugroup->getMembersUserName());
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $goofy));
     }
 }
 
