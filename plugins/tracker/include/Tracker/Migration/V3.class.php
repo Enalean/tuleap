@@ -26,6 +26,7 @@ require_once 'V3/ReportsDao.class.php';
 require_once 'V3/RenderersTableDao.class.php';
 require_once 'V3/PermissionsOnArtifactFieldDao.class.php';
 require_once 'V3/AttachmentFieldDao.class.php';
+require_once 'V3/ReferenceFieldDao.class.php';
 
 /**
  * This migrate trackers v3 into tracker v5
@@ -73,6 +74,10 @@ class Tracker_Migration_V3 {
             // 080
             $attachment_field_dao = new Tracker_Migration_V3_AttachmentFieldDao();
             $attachment_field_dao->addAttachmentField($id);
+
+            // 085
+            $reference_dao = new Tracker_Migration_V3_ReferenceFieldDao();
+            $reference_dao->addReferenceField($id);
 
             // 260
             $fieldset_dao->nowFieldsetsAreStoredAsField($id);
