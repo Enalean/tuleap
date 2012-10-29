@@ -31,6 +31,12 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject {
                 WHERE tracker_id = $tv5_id";
         $this->update($sql);
         
+        $sql = "INSERT INTO tracker_report_renderer_table(renderer_id, chunksz, multisort)
+                SELECT RR.id, 15, 0
+                FROM tracker_report_renderer RR
+                    INNER JOIN tracker_report R ON (R.id = RR.report_id AND R.tracker_id = $tv5_id)";
+        $this->update($sql);
+        
         $sql = "INSERT INTO tracker_report_renderer_table_columns(renderer_id, field_id, rank, width)
                 SELECT TRR.id, TF.id, ARF.place_result, 0
                 FROM artifact_report_field AS ARF
@@ -52,7 +58,7 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject {
                             FROM tracker_report_renderer_table_columns 
                             ORDER BY renderer_id, rank, field_id
                 ) as R1 USING(renderer_id,field_id)
-        SET tracker_report_renderer_table_columns.rank = R1.new_rank";
+                SET tracker_report_renderer_table_columns.rank = R1.new_rank";
         $this->update($sql);        
     }
 }
