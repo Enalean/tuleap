@@ -211,7 +211,7 @@ class UGroup_getMembersTest extends TuleapTestCase {
         $id       = 333;
         $row      = array('ugroup_id' =>$id);
         $ugroup   = new UGroup($row);
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar());
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
         $this->assertArrayEmpty($ugroup->getMembers());
         $this->assertArrayEmpty($ugroup->getMembersUserName());
     }

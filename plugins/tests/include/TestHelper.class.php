@@ -76,7 +76,34 @@ class TestHelper {
     }
 }
 
-class FakeDataAccessResult implements IProvideDataAccessResult {
+class FakeDataAccessResult extends DataAccessResult {
+    private $data;
+
+    public function __construct(array $data) {
+        $this->data = $data;
+        $this->_current = -1;
+        $this->rewind(); // in case getRow is called explicitly
+    }
+
+    protected function daFetch() {
+        return isset($this->data[$this->_current]) ? $this->data[$this->_current] : false;
+    }
+    
+    protected function daSeek() {
+        $this->_current = -1;
+    }
+    
+    protected function daIsError() {
+        return false;
+    }
+    
+    public function rowCount() {
+        return count($this->data);
+    }
+    
+}
+
+class FakeDataAccessResult_old implements IProvideDataAccessResult {
     private $index = 0;
     private $data;
 
