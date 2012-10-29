@@ -320,32 +320,32 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
 
     private $workflow;
     private $result;
-    
+
     public function setUp() {
         parent::setUp();
-        
+
         $transition_field1 = Mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field1)->getId()->returns(10);
-        
+
         $transition_field2 = Mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field2)->getId()->returns(11);
-        
+
         $transition_field3 = Mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field3)->getId()->returns(4);
-        
+
         $transition_field4 = Mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field4)->getId()->returns(5);
-        
+
         $transition_field5 = Mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field5)->getId()->returns(6);
-        
+
         $transition_field6 = Mock('Tracker_FormElement_Field_List_Value');
         stub($transition_field6)->getId()->returns(89);
-        
+
         $transition1 = new Transition(0,1, $transition_field1, $transition_field2);
         $transition2 = new Transition(0,1, $transition_field3, $transition_field4);
         $transition3 = new Transition(0,1, $transition_field5, $transition_field6);
-        
+
         $this->workflow = new Workflow(1,1,1,1, array($transition1, $transition2, $transition3));
         $this->result = $this->workflow->exportToSOAP();
     }
@@ -359,21 +359,21 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
         $expected_is_used = 1;
         $this->assertEqual($this->result['is_used'], $expected_is_used);
     }
-    
+
     public function itContainsTransitions() {
         $this->assertTrue(isset($this->result['transitions']));
     }
-    
+
     public function itExportsAllTheTransitions() {
         $expected_transisitions = array(
             '0' => array ('from_id' => 10, 'to_id'=> 11),
             '1' => array ('from_id' => 4, 'to_id'=> 5),
             '2' => array ('from_id' => 6, 'to_id'=> 89)
         );
-        
+
         $this->assertEqual($this->result['transitions'], $expected_transisitions);
     }
-    
+
     public function itDosntContainsTransitions() {
         $workflow = new Workflow(1,1,1,1, array());
         $result = $workflow->exportToSOAP();
