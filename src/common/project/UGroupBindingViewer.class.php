@@ -83,7 +83,9 @@ class UGroupBindingViewer {
         $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
         if ($sourceProject) {
             $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_ugroup').'</td>';
-            $html .= '<td><form action="" method="post"><input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($sourceProject, $currentSource).'</td>';
+            $html .= '<td><form action="" method="post">';
+            $html .= '<input type="hidden" name="source_project" value="'.$sourceProject.'" />';
+            $html .= '<input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($sourceProject, $currentSource).'</td>';
             $html .= '<td><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'"/></form></td></tr>';
         }
         $html .= '</table>';
@@ -207,6 +209,7 @@ class UGroupBindingViewer {
      */
     private function getUgroupSelect($sourceProject, UGroup $currentSource = null) {
         $ugroupList = $this->getUgroupList($sourceProject, $currentSource);
+
         $ugroupSelect  = '<select name="source_ugroup" >';
         $ugroupSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($ugroupList as $ugroup) {
