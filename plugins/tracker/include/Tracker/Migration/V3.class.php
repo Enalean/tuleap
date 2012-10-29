@@ -22,6 +22,8 @@ require_once 'V3/Dao.class.php';
 require_once 'V3/FieldsetsDao.class.php';
 require_once 'V3/FieldsDao.class.php';
 require_once 'V3/FieldsDefaultValuesDao.class.php';
+require_once 'V3/ReportsDao.class.php';
+
 /**
  * This migrate trackers v3 into tracker v5
  */
@@ -51,6 +53,10 @@ class Tracker_Migration_V3 {
             //Fields Default Values
             $fields_default_values_dao = new Tracker_Migration_V3_FieldsDefaultValuesDao();
             $fields_default_values_dao->create($tv3->getID(), $id);
+            
+            //Reports
+            $reports_dao = new Tracker_Migration_V3_ReportsDao();
+            $reports_dao->create($tv3->getID(), $id, $project->getId());
             
             return $this->tracker_factory->getTrackerById($id);
         }
