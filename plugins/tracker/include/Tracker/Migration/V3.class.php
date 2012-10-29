@@ -27,8 +27,12 @@ require_once 'V3/RenderersTableDao.class.php';
 require_once 'V3/PermissionsOnArtifactFieldDao.class.php';
 require_once 'V3/AttachmentFieldDao.class.php';
 require_once 'V3/ReferenceFieldDao.class.php';
+<<<<<<< HEAD
 require_once 'V3/SemanticDao.class.php';
 require_once 'V3/CannedDao.class.php';
+=======
+require_once 'V3/CcFieldDao.class.php';
+>>>>>>> Migrate CC field
 
 /**
  * This migrate trackers v3 into tracker v5
@@ -80,6 +84,10 @@ class Tracker_Migration_V3 {
             // 085
             $reference_dao = new Tracker_Migration_V3_ReferenceFieldDao();
             $reference_dao->addReferenceField($id);
+
+            // 090
+            $cc_dao = new Tracker_Migration_V3_CcFieldDao();
+            $cc_dao->addCCField($id);
 
             // 220
             $semantic_dao = new Tracker_Migration_V3_SemanticDao();
