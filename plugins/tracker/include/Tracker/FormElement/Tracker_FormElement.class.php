@@ -1121,20 +1121,20 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         return format_date("Y-m-d", (float)$date, '');
     }
 
-    public function exportToSOAP(User $user = null) {
+    public function exportCurrentUserPermissionsToSOAP(User $user) {
 
         $permissions = array();
 
         if ($this->userCanRead($user)) {
-            array_push($permissions, 'read');
+            $permissions[] = 'read';
         }
 
         if ($this->userCanUpdate($user)) {
-            array_push($permissions, 'update');
+            $permissions[] = 'update';
         }
 
         if ($this->userCanSubmit($user)) {
-            array_push($permissions, 'submit');
+            $permissions[] = 'submit';
         }
         return $permissions;
     }

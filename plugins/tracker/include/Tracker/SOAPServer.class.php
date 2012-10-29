@@ -241,7 +241,7 @@ class Tracker_SOAPServer {
                     'label'       => $tracker_field->getLabel(),
                     'type'        => $this->formelement_factory->getType($tracker_field),
                     'values'      => $tracker_field->getSoapAvailableValues(),
-                    'permissions' => $tracker_field->exportToSOAP($user)
+                    'permissions' => $tracker_field->exportCurrentUserPermissionsToSOAP($user)
                 );
             }
         }

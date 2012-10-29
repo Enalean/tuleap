@@ -95,22 +95,19 @@ class Tracker_FormElement_exportToSOAPTest extends Tracker_FormElementTest {
 
     public function setUp() {
         parent::setUp();
-        $original = new MockTracker_FormElement_Field_Selectbox();
-
         $to_stub_methods       = array('userCanRead', 'userCanUpdate', 'userCanSubmit');
-        $constructor_arguments = array(23, null, null, null, null, null, null, null, null, null, null, $original);
-        $this->form_element    = partial_mock('Tracker_FormElement_StaticField_Separator', $to_stub_methods, $constructor_arguments);
+        $this->form_element    = partial_mock('Tracker_FormElement_StaticField_Separator', $to_stub_methods);
 
         stub($this->form_element)->userCanRead()->returns(True);
 
-        $this->user = aUser()->withUserName('Manuel')->build();
+        $this->user = aUser()->build();
     }
 
     public function itExportsTheRightPermissionsWhenUserHasJustReadPermission() {
         stub($this->form_element)->userCanUpdate()->returns(False);
         stub($this->form_element)->userCanSubmit()->returns(False);
 
-        $result               = $this->form_element->exportToSOAP($this->user);
+        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
         $expected_permissions = array('read');
 
         $this->assertEqual($result, $expected_permissions);
@@ -120,7 +117,7 @@ class Tracker_FormElement_exportToSOAPTest extends Tracker_FormElementTest {
         stub($this->form_element)->userCanUpdate()->returns(True);
         stub($this->form_element)->userCanSubmit()->returns(False);
 
-        $result               = $this->form_element->exportToSOAP($this->user);
+        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
         $expected_permissions = array('read', 'update');
 
         $this->assertEqual($result, $expected_permissions);
@@ -131,7 +128,7 @@ class Tracker_FormElement_exportToSOAPTest extends Tracker_FormElementTest {
         stub($this->form_element)->userCanSubmit()->returns(True);
 
         $expected_permissions = array('read', 'submit');
-        $result               = $this->form_element->exportToSOAP($this->user);
+        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
 
         $this->assertEqual($result, $expected_permissions);
     }
@@ -140,7 +137,7 @@ class Tracker_FormElement_exportToSOAPTest extends Tracker_FormElementTest {
         stub($this->form_element)->userCanUpdate()->returns(True);
         stub($this->form_element)->userCanSubmit()->returns(True);
 
-        $result               = $this->form_element->exportToSOAP($this->user);
+        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
         $expected_permissions = array('read', 'update', 'submit');
 
         $this->assertEqual($result, $expected_permissions);
