@@ -49,7 +49,6 @@ class Tracker_Migration_V3_ReportsDao extends DataAccessObject {
                 SELECT R.id, F.id, place_query, 0
                 FROM tracker_report AS R
                      INNER JOIN artifact_report_field AS RF ON (R.old_id = RF.report_id)
-                     INNER JOIN artifact_report AS AR ON (AR.group_artifact_id = $tv3_id)
                      INNER JOIN tracker_field AS F ON(F.name = RF.field_name AND F.tracker_id = $tv5_id)                     
                 WHERE show_on_query = 1
                 ORDER BY R.id, place_query";
