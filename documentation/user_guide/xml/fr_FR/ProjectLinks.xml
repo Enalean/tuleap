@@ -8,24 +8,21 @@
 <chapter id="ProjectLinks">
     <title>Liens inter-projet</title>
 
-    <para>Les liens inter-projet superposent une structure dans des espaces de travail Tuleap, rendant visible les relations entre les projets, tout en  simplifiant la recherche des projets connexes. Les applications comprennent:</para>
+    <para>Les liens inter-projet structurent les projets Tuleap, rendant visible leurs relations sur la page d'accueil du projet. Ces relations sont de plusieurs types :</para>
     <itemizedlist mark="bullet" spacing="compact">
-        <listitem>Familles de projet de sorte qu'un espace de travail d'un projet parent puisse accéder facilement à ses projets enfants (par exemple pour la gestion du programme).</listitem>
-        <listitem>Anneaux d'intérêt, où plusieurs projets peuvent décider qu'ils ont suffisamment en commun qu'ils souhaitent être liées (par exemple les projets qui utilisent la même technologie), mais aucun d'entre eux est strictement un maître, et chacun est libre d'adhérer ou de quitter l'anneau.</listitem>
-        <listitem>Liaison d'un espace de travail liée au produit d'un projet d'appui qui couvre un certain nombre de produits - c'est à dire un lien facile entre le produit et son soutien et de l'appui généralisé à un produit spécifique (à noter que c'est un projet simplifié de la famille, à chaque projet montrant d'autres comme une relation).</listitem>
+        <listitem> Des familles de projet : un projet parent peut accéder facilement à ses projets enfants.</listitem>
+        <listitem> Des relations autour d'un point/cercle d'intérêts : plusieurs projets peuvent décider qu'ils ont suffisamment en commun pour souhaiter être liés (par exemple les projets qui utilisent la même technologie), sans relation hiérarchique, où chacun est libre d'adhérer ou de quitter le point d'intérêt.</listitem>
     </itemizedlist>
 
-    <para>Pour créer une relation, un projet définit d'abord un type de lien et puis l'assigne à autant des projets qu'il le souhaite. Le type de lien peut être noommé de n'importe quelle façon (à condition qu'il soit unique dans le projet), par exemple "sous-projets", "projets connexes", "Division", "Team", "C + + Projets". Ce nom est sert de rubrique pour lister les projets liés.</para>
+    <para>Pour créer une relation, un projet définit d'abord un type de lien puis se lie à autant de projets qu'il le souhaite. Le nom donné au type de lien doit être unique dans le projet, par exemple "sous-projets", "projets connexes", "Division", "Team", "Projects Java". Ce nom sert de rubrique pour lister les projets liés.</para>
 
-    <para>Lorsque vous référencez un lien de parenté, le projet qui administre le lien est le propriétaire et le projet référencé par le lien est la cible du lien. Un type de lien spécifie également un nom d'inversion, qui est utilisé quand un projet répertorie les projets dont il est la cible. Par exemple, "enfants" peut être le nom d'un type de lien et "Parent" le nom du lien inverse pour ce même type de lien. Les projets liés de cette façon seront inscrit sous la rubrique «enfants» dans le projet propriétaire, et pourront voir la relation (inverse) en tant que «parent».</para>
+    <para>Lorsque vous référencez un lien de parenté, le projet qui administre le lien en est le propriétaire et le projet référencé par le lien est la cible du lien. Un type de lien spécifie également un nom inverse, qui est utilisé quand un projet répertorie les projets dont il est la cible. Par exemple, "enfants" peut être le nom d'un type de lien et "Parent" le nom du lien inverse pour ce même type de lien. Les projets liés de cette façon seront inscrits sous la rubrique «enfants» dans le projet propriétaire, et pourront voir la relation (inverse) du «parent».</para>
 
-    <para>Pour créer un "cercle d'intérêts», quelqu'un doit prendre la responsabilité de créer (et gérer) un projet administarteur de l'anneau (qui se comporte comme un projet parent dans une famille du projet mais sa seule fonction (aujourd'hui) est d'être le propriètaire des liens du projet) - l'administrateur de l'anneau doit prendre la responsabilité d'être l'animateur. Pour se joindre à un anneau d'intérêt, un projet doit demander à l'animateur de l'anneau de créer un lien avec lui dans son projet.</para>
+    <para>Pour créer un "cercle d'intérêts", quelqu'un doit prendre la responsabilité de créer (et gérer) un projet qui l'administre (celui-ci se comporte comme un projet parent dans une famille de projet mais sa seule fonction est d'être le propriétaire de ce lien) - l'administrateur de ce lien doit prendre la responsabilité de l'animer. Pour rejoindre un cercle d'intérêt, un projet doit demander au projet administrateur de créer un lien avec lui dans son projet.</para>
 
-    <para>Quand un nouveau projet est créé à partir d'un modèle de projet il hérite une copie de tous les liens de projet (et les types de lien). En outre, tout projet qui fait référence à un modèle en tant que cible aura un lien vers le nouveau projet. Ainsi, un projet de master peut garder un œil sur tous les projets créés à partir d'un modèle. Il existe également un mécanisme qui permet aux projets de resynchroniser les types de lien avec leur modèle. Les liens nouveauxsont mis en évidence avec une étoile jaune pâle - principalement pour mettre en évidence les liens créés à partir des modèles.</para>
+    <para>Quand un nouveau projet est créé à partir d'un modèle de projet, il hérite d'une copie de tous les liens de projet. De plus, tout projet qui fait référence à un modèle en tant que cible aura un lien vers le nouveau projet. Ainsi, un projet peut garder un œil sur tous les projets créés à partir d'un modèle. Il existe également un mécanisme qui permet aux projets de resynchroniser les types de lien avec leur modèle. Les nouveaux liens sont mis en évidence avec une étoile jaune - principalement pour mettre en avant les liens créés à partir des modèles.</para>
 
-    <para>Le projet liste les liens inverses (les projets pour lesquels il est la cible d'un lien) sur sa page de résumé.</para>
-
-    <para>Dans l'avenir, un projet peut avoir des vues qui regroupent des données et des documents de ses projets connexes; c'est ce qu'on appelle l'agrégation des données. L'agrégation de données n'est pas complétée par ici, c'est un ensemble de fonctionnalités qui seront construits sur la structure des projets relatifs.</para>
+    <para>Le projet liste les liens inverses (les projets pour lesquels il est la cible d'un lien) sur sa page d'accueil.</para>
 
 </chapter>
 <!--
