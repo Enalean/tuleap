@@ -58,7 +58,8 @@ $GLOBALS['server']->wsdl->addComplexType(
         'short_name' => array('name'=>'short_name', 'type' => 'xsd:string'),
         'label' => array('name'=>'label', 'type' => 'xsd:string'),
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
-        'values' => array('name'=>'type', 'type' => 'tns:ArrayOfTrackerFieldBindValue')
+        'values' => array('name'=>'type', 'type' => 'tns:ArrayOfTrackerFieldBindValue'),
+        'permissions' => array('name' => 'permissions', 'type' => 'xsd:string[]')
     )
 );
 
@@ -311,6 +312,17 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'xsd:int[]')),
     'xsd:int'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfString',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'xsd:string[]')),
+    'xsd:string'
 );
 
 $GLOBALS['server']->wsdl->addComplexType(

@@ -235,12 +235,13 @@ class Tracker_SOAPServer {
         foreach ($tracker_fields as $tracker_field) {
             if ($tracker_field->userCanRead($user)) {
                 $return[] = array(
-                    'tracker_id' => $tracker->getId(),
-                    'field_id'   => $tracker_field->getId(),
-                    'short_name' => $tracker_field->getName(),
-                    'label'      => $tracker_field->getLabel(),
-                    'type'       => $this->formelement_factory->getType($tracker_field),
-                    'values'     => $tracker_field->getSoapAvailableValues(),
+                    'tracker_id'  => $tracker->getId(),
+                    'field_id'    => $tracker_field->getId(),
+                    'short_name'  => $tracker_field->getName(),
+                    'label'       => $tracker_field->getLabel(),
+                    'type'        => $this->formelement_factory->getType($tracker_field),
+                    'values'      => $tracker_field->getSoapAvailableValues(),
+                    'permissions' => $tracker_field->exportCurrentUserPermissionsToSOAP($user)
                 );
             }
         }
