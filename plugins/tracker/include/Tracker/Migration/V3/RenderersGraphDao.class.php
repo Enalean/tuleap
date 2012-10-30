@@ -37,8 +37,9 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
     }
 
     private function pluginIsInstalled() {
-        $sql = "SHOW TABLES LIKE 'plugin_graphontrackersv5_chart'";
-        return count($this->retrieve($sql)) > 0;
+        $sql_v5 = "SHOW TABLES LIKE 'plugin_graphontrackersv5_chart'";
+        $sql_v3 = "SHOW TABLES LIKE 'plugin_graphontrackers_chart'";
+        return count($this->retrieve($sql_v5)) > 0 && count($this->retrieve($sql_v3)) > 0;
     }
 
     private function insertRendererTable($tv3_id, $tv5_id) {
