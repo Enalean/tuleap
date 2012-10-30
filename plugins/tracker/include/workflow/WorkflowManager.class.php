@@ -335,16 +335,10 @@ class WorkflowManager {
 
     public function exportToSOAP() {
         $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
-        if (isset($workflow)){
-            return $workflow->exportToSOAP();
-        } else {
-            return $this->exportEmptySOAPObject();
+        if (! $workflow) {
+            $workflow = new Workflow();
         }
-    }
-
-    private function exportEmptySOAPObject() {
-        $empty_workflow = new Workflow();
-        return $empty_workflow->exportToSOAP();
+        return $workflow->exportToSOAP();
     }
 
 }

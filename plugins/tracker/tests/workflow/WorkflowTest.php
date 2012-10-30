@@ -17,6 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once(dirname(__FILE__).'/../builders/all.php');
 require_once(dirname(__FILE__).'/../../include/constants.php');
 require_once(dirname(__FILE__).'/../../include/workflow/Workflow.class.php');
 require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
@@ -40,7 +41,7 @@ Mock::generate('User');
 require_once('common/permission/PermissionsManager.class.php');
 Mock::generate('PermissionsManager');
 
-class WorkflowTest extends TuleapTestCase {
+class WorkflowTest extends UnitTestCase {
 
     public function testEmptyWorkflow() {
         $workflow = new WorkflowTestVersion(1, 2, 3, 1);
@@ -324,27 +325,16 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $transition_field1 = mock('Tracker_FormElement_Field_List_Value');
-        stub($transition_field1)->getId()->returns(10);
+        $field_list_value1 = aFieldListStaticValue()->withId(0)->build();
+        $field_list_value2 = aFieldListStaticValue()->withId(11)->build();
+        $field_list_value3 = aFieldListStaticValue()->withId(4)->build();
+        $field_list_value4 = aFieldListStaticValue()->withId(5)->build();
+        $field_list_value5 = aFieldListStaticValue()->withId(6)->build();
+        $field_list_value6 = aFieldListStaticValue()->withId(89)->build();
 
-        $transition_field2 = mock('Tracker_FormElement_Field_List_Value');
-        stub($transition_field2)->getId()->returns(11);
-
-        $transition_field3 = mock('Tracker_FormElement_Field_List_Value');
-        stub($transition_field3)->getId()->returns(4);
-
-        $transition_field4 = mock('Tracker_FormElement_Field_List_Value');
-        stub($transition_field4)->getId()->returns(5);
-
-        $transition_field5 = mock('Tracker_FormElement_Field_List_Value');
-        stub($transition_field5)->getId()->returns(6);
-
-        $transition_field6 = mock('Tracker_FormElement_Field_List_Value');
-        stub($transition_field6)->getId()->returns(89);
-
-        $transition1 = new Transition(0,1, $transition_field1, $transition_field2);
-        $transition2 = new Transition(0,1, $transition_field3, $transition_field4);
-        $transition3 = new Transition(0,1, $transition_field5, $transition_field6);
+        $transition1 = new Transition(0,1, $field_list_value1, $field_list_value2);
+        $transition2 = new Transition(0,1, $field_list_value3, $field_list_value4);
+        $transition3 = new Transition(0,1, $field_list_value5, $field_list_value6);
 
         $this->workflow = new Workflow(1,1,1,1, array($transition1, $transition2, $transition3));
         $this->result   = $this->workflow->exportToSOAP();
@@ -360,13 +350,9 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
         $this->assertEqual($this->result['is_used'], $expected_is_used);
     }
 
-    public function itContainsTransitions() {
-        $this->assertFalse(empty($this->result['transitions']));
-    }
-
     public function itExportsAllTheTransitions() {
         $expected_transisitions = array(
-            '0' => array ('from_id' => 10, 'to_id'=> 11),
+            '0' => array ('from_id' => 0, 'to_id'=> 11),
             '1' => array ('from_id' => 4, 'to_id'=> 5),
             '2' => array ('from_id' => 6, 'to_id'=> 89)
         );
@@ -374,7 +360,7 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
         $this->assertEqual($this->result['transitions'], $expected_transisitions);
     }
 
-    public function itDosntContainsTransitions() {
+    public function itExportsEmptyTransitionWhenWorkflowDoesntHaveTransition() {
         $workflow = new Workflow(1,1,1,1, array());
         $result   = $workflow->exportToSOAP();
         $this->assertTrue(empty($result['transitions']));
