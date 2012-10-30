@@ -1308,6 +1308,8 @@ function util_translate_desc_ugroup($desc) {
 }
 
 function util_make_return_to_url($url) {
+    $request = HTTPRequest::instance();
+
     $urlToken = parse_url($url);
 
     $finaleUrl = '';
@@ -1336,8 +1338,8 @@ function util_make_return_to_url($url) {
         $finaleUrl .= $urlToken['path'];
     }
     
-    if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to']) {
-        $rt = 'return_to='.urlencode($_REQUEST['return_to']);
+    if($request->existAndNonEmpty('return_to')) {
+        $rt = 'return_to='.urlencode($request->get('return_to'));
     
         if(array_key_exists('query', $urlToken) && $urlToken['query']) {
             $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$rt;

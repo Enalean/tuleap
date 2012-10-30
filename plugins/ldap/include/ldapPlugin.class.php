@@ -340,19 +340,18 @@ class LdapPlugin extends Plugin {
      * account was automatically created and user must complete his
      * registeration.
      */
-    function account_redirect_after_login() {
+    function account_redirect_after_login($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
             $ldapUserDao = new LDAP_UserDao(CodendiDataAccess::instance());
             if(!$ldapUserDao->alreadyLoggedInOnce(user_getid())) {
                 $return_to_arg = "";
-                $request = HTTPRequest::instance();
-                if($request->existAndNonEmpty('return_to')) {
-                    $return_to_arg ='?return_to='.urlencode($request->get('return_to'));
+                if($params['request']->existAndNonEmpty('return_to')) {
+                    $return_to_arg ='?return_to='.urlencode($params['request']->get('return_to'));
                     if (isset($pv) && $pv == 2) $return_to_arg .= '&pv='.$pv;
                 } else {
                     if (isset($pv) && $pv == 2) $return_to_arg .= '?pv='.$pv;
                 }
-                $request->set('return_to', '/plugins/ldap/welcome.php'.$return_to_arg);
+                $params['request']->set('return_to', '/plugins/ldap/welcome.php'.$return_to_arg);
             }
         }
     }
