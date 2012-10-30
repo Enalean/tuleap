@@ -373,13 +373,50 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
+    'TrackerWorkflowTransition',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'from_id' => array('name'=>'title', 'type'  => 'xsd:int'),
+        'to_id'   => array('name'=>'status', 'type' => 'xsd:int')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerWorkflowTransitionArray',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerWorkflowTransition[]')),
+    'tns:TrackerWorkflowTransition'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerWorkflow',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'field_id'    => array('name'=>'field_id', 'type' => 'xsd:int'),
+        'is_used'     => array('name'=>'is_used', 'type' => 'xsd:int'),
+        'transitions' => array('name'=>'transitions', 'type' => 'tns:TrackerWorkflowTransitionArray'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
     'TrackerStructure',
     'complexType',
     'struct',
     'sequence',
     '',
     array(
-       'semantic' => array('name'=>'semantic', 'type' => 'tns:TrackerSemantic')
+       'semantic' => array('name'=>'semantic', 'type' => 'tns:TrackerSemantic'),
+       'workflow' => array('name'=>'workflow', 'type' => 'tns:TrackerWorkflow')
     )
 );
 //

@@ -548,7 +548,9 @@ class Tracker implements Tracker_Dispatchable_Interface {
             case 'admin-export':
                 if ($this->userIsAdmin($current_user)) {
                     // TODO: change directory
-                    $this->sendXML($this->exportToXML());
+                    $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                                         <tracker xmlns="http://codendi.org/tracker"/>');
+                    $this->sendXML($this->exportToXML($xml_element));
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin', 'access_denied'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
@@ -2256,11 +2258,7 @@ EOS;
      *
      * @return void
      */
-    public function exportToXML() {
-        // create a SimpleXMLElement corresponding to this tracker
-        // sets encoding to UTF-8
-        $xmlElem = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
-                                         <tracker xmlns="http://codendi.org/tracker" />');
+    public function exportToXML(SimpleXMLElement $xmlElem, &$xmlFieldId = 0) {
         // if old ids are important, modify code here
         if (false) {
             $xmlElem->addAttribute('id', $this->id);
@@ -2308,12 +2306,11 @@ EOS;
         $child = $xmlElem->addChild('formElements');
         // association between ids in database and ids in xml
         $xmlMapping = array();
-        $i = 0;        
         if ($formelements = $this->getAllFormElements()) {
             foreach ($formelements as $formElement) {
                 $grandchild = $child->addChild('formElement');
-                $i++;
-                $formElement->exportToXML($grandchild, $xmlMapping, $i);
+                $xmlFieldId++;
+                $formElement->exportToXML($grandchild, $xmlMapping, $xmlFieldId);
             }
         }
 
@@ -2373,6 +2370,7 @@ EOS;
                 }
             }
         }
+
         return $xmlElem;
     }
 

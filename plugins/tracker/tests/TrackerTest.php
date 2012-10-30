@@ -1460,7 +1460,9 @@ class TrackerTest extends TuleapTestCase {
         $this->tracker->setReturnValue('getAllFormElements', array($f1, $f2));
         $this->formelement_factory->setReturnValue('getAllFormElementsForTracker', array($f1, $f2));
 
-        $xml = $this->tracker->exportToXML();
+        $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                     <tracker xmlns="http://codendi.org/tracker"/>');
+        $xml = $this->tracker->exportToXML($xml);
         
         $this->assertTrue(isset($xml->permissions));        
         $this->assertEqual((string)$xml->permissions->permission[0]['scope'], 'tracker');

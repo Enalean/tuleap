@@ -474,7 +474,7 @@ class Tracker_SOAPServer {
         $structure = array();
         if ($tracker->userIsAdmin($user)) {
             $structure['semantic'] = $this->getTrackerSemantic($tracker);
-
+            $structure['workflow'] = $this->getTrackerWorkflow($tracker);
             return $structure;
         } else {
             throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
@@ -484,6 +484,10 @@ class Tracker_SOAPServer {
     private function getTrackerSemantic(Tracker $tracker) {
         $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
         return $tracker_semantic_manager->exportToSOAP();
+    }
+
+    private function getTrackerWorkflow (Tracker $tracker) {
+        return $tracker->getWorkflowManager()->exportToSOAP();
     }
 
     /**

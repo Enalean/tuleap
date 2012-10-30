@@ -1,3 +1,9 @@
+Version 5.32 - Tuleap 5.7
+    * XML Import/Export all trackers at once
+
+Version 5.31 - Tuleap 5.7
+    * SOAP API Enhancement: export workflow in the tracker structure
+
 Version 5.30 - Tuleap 5.7
     * SOAP API Enhancement: export semantic definition in the tracker structure
 
