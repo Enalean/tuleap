@@ -118,7 +118,7 @@ class Tracker_FormElement_exportToSOAPTest extends Tracker_FormElementTest {
         stub($this->form_element)->userCanSubmit()->returns(False);
 
         $expected_permissions = array();
-        $result              = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
+        $result               = $this->form_element->exportCurrentUserPermissionsToSOAP($this->user);
 
         $this->assertEqual($result, $expected_permissions);
     }
