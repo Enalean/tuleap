@@ -206,7 +206,51 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     }
 }
 
+class UGroup_getUsersTest extends TuleapTestCase {
+    
+    public function itIsEmptyWhenTheGroupIsEmpty() {
+        $id       = 333;
+        $row      = array('ugroup_id' =>$id);
+        $ugroup   = new UGroup($row);
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
+        $this->assertEqual($ugroup->getUsers($id)->reify(), array());
+    }
+
+    public function itReturnsTheMembersOfStaticGroups() {
+        $id       = 333;
+        $row      = array('ugroup_id' =>$id);
+        $ugroup   = new UGroup($row);
+        $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
+        $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($garfield, $goofy));
+        
+        $users = array(new User($garfield), new User($goofy));
+        $this->assertEqual($ugroup->getUsers($id)->reify(), $users);
+    }
+    
+    public function itReturnsTheMembersOfDynamicGroups() {
+        $id       = 1;
+        $group_id = 555;
+        $row      = array('ugroup_id' =>$id , 'group_id' => 100); // this is how UgroupManager instantiates dynamic ugroups
+        $ugroup   = new UGroup($row);
+        $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
+        $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($garfield, $goofy));
+
+        $users = array(new User($garfield), new User($goofy));
+        $this->assertEqual($ugroup->getUsers($group_id)->reify(), $users);
+    }
+}
+    
+class Users_Test extends TuleapTestCase {
+    public function itProvidesTheBareDAR() {
+        $dar = TestHelper::arrayToDar('hej', 'hopp', 'trallalalala');
+        $users = new Users($dar);
+        $this->assertEqual($users->getDar(), $dar);
+    }
+}
 class UGroup_getMembersTest extends TuleapTestCase {
+    
     public function itIsEmptyWhenTheGroupIsEmpty() {
         $id       = 333;
         $row      = array('ugroup_id' =>$id);

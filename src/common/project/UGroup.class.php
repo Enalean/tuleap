@@ -136,17 +136,29 @@ class UGroup {
     }
 
     /**
-     * Return array of all ugroup members as User objects
+     * @deprecated user getUsers($group_id)
+     * Return DAR of all ugroup members as User objects
      *
-     * @return Array
+     * @return DataAccessResult
      */
     public function getMembers() {
         if (! $this->members) {
-            $this->initMemberCache();
+            $this->members = $this->getStaticOrDynamicMembers($this->group_id);
         }
         return $this->members;
     }
 
+    /**
+     *  
+     * @param int $group_id the group id of the static or dynamic group.
+     * You have to supply this argument as $this->group_id is 100 in the case of a dynamic group
+     *
+     * @return Users
+     */
+    public function getUsers($group_id) {
+        return new Users($this->getStaticOrDynamicMembers($group_id));
+    }
+    
     /**
      * Return array containing the user_name of all ugroup members
      *
@@ -160,14 +172,14 @@ class UGroup {
         return $names;
     }
 
-    private function initMemberCache() {
+    private function getStaticOrDynamicMembers($group_id) {
         if ($this->is_dynamic) {
-            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $this->group_id);
+            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $group_id);
         } else {
             $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
         }
         
-        $this->members = $dar->instanciateWith(array($this, 'newUser'));
+        return $dar->instanciateWith(array($this, 'newUser'));
     }
     
     public function newUser($row) {
@@ -394,6 +406,31 @@ class UGroup {
     }
 
 
+
+}
+
+class Users {
+    
+    /** @var DataAccessResult */
+    private $dar;
+    
+    public function __construct(DataAccessResult $dar = null) {
+        $this->dar = $dar;
+    }
+    
+    public function getDar() {
+        return $this->dar;
+    }
+
+    
+    public function reify() {
+        $result = array();
+        foreach ($this->dar as $row) {
+            $result[] = $row;
+        }
+        return $result;
+    }
+    
 }
 
 ?>
