@@ -106,7 +106,7 @@ class UGroupBindingViewer {
         if ($currentSource) {
             $currentBindHTML = '';
             if ($currentSource && $currentProject->userIsAdmin()) {
-                $currentBindHTML .= $GLOBALS['Language']->getText('project_ugroup_binding', 'current_binded', array('<a href="/project/admin/editugroup.php?group_id='.$currentProject->getID().'&ugroup_id='.$currentSource->getId().'&func=edit" ><b>'.$currentSource->getName().'</b></a>', '<b>'.$currentProject->getPublicName().'</b>'));
+                $currentBindHTML .= $GLOBALS['Language']->getText('project_ugroup_binding', 'current_binded', array('<a href="/project/admin/editugroup.php?group_id='.$currentProject->getID().'&ugroup_id='.$currentSource->getId().'&func=edit" ><b>'.$currentSource->getName().'</b></a>', '<a href="/projects/'.$currentProject->getUnixName().'" ><b>'.$currentProject->getPublicName().'</b></a>'));
             }
             $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'remove_binding').'"/></form>';
         } else {
