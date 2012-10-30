@@ -101,7 +101,7 @@ class Tracker_FormElement_exportToSOAPTest extends Tracker_FormElementTest {
         $this->user = aUser()->build();
     }
 
-    public function itExportsTheCorrectPermissionsWhenUserHasJustReadPermission() {
+    public function itExportsReadPermissionsWhenUserHasJustReadPermission() {
         stub($this->form_element)->userCanRead()->returns(True);
         stub($this->form_element)->userCanUpdate()->returns(False);
         stub($this->form_element)->userCanSubmit()->returns(False);
@@ -112,7 +112,7 @@ class Tracker_FormElement_exportToSOAPTest extends Tracker_FormElementTest {
         $this->assertEqual($result, $expected_permissions);
     }
 
-    public function itExportsTheCorrectPermissionsWhenUserHasNone() {
+    public function itExportsNoPermissionsWhenUserHasNone() {
         stub($this->form_element)->userCanRead()->returns(False);
         stub($this->form_element)->userCanUpdate()->returns(False);
         stub($this->form_element)->userCanSubmit()->returns(False);
