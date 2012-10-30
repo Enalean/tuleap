@@ -247,7 +247,15 @@ class Users_Test extends TuleapTestCase {
         $dar = TestHelper::arrayToDar('hej', 'hopp', 'trallalalala');
         $users = new Users($dar);
         $this->assertEqual($users->getDar(), $dar);
+        $this->assertEqual($users->reify(), array('hej', 'hopp', 'trallalalala'));
     }
+    
+    public function itProvidesTheUserNames() {
+        $dar = TestHelper::arrayToDar(aUser()->withUserName('Nicolas')->build(), aUser()->withUserName('Johan')->build());
+        $users = new Users($dar);
+        $this->assertEqual($users->getNames(), array('Nicolas', 'Johan'));
+    }
+    
 }
 class UGroup_getMembersTest extends TuleapTestCase {
     

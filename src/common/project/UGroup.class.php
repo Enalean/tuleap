@@ -431,6 +431,13 @@ class Users {
         return $result;
     }
     
+    public function getNames() {
+        $result = array();
+        foreach ($this->dar as $user) {
+            $result[] = $user->getUserName();
+        }
+        return $result;
+    }
 }
 
 ?>
