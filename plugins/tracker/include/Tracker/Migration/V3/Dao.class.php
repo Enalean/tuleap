@@ -52,6 +52,13 @@ class Tracker_Migration_V3_Dao extends DataAccessObject {
                 FROM artifact_perm
                 WHERE group_artifact_id = $tv3_id";
         $this->update($sql);
+
+        $sql = "INSERT INTO permissions(object_id, permission_type, ugroup_id)
+                SELECT $tv5_id, CONCAT('PLUGIN_', permission_type), ugroup_id
+                FROM permissions
+                WHERE object_id = $tv3_id
+                  AND permission_type LIKE 'TRACKER_ACCESS_%'";
+        $this->update($sql);
     }
 }
 ?>
