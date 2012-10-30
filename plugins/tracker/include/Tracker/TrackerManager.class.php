@@ -644,7 +644,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      */
     protected function importTracker($project, $name, $description, $itemname, $filename) {
         //TODO: add restrictions for the file
-        return $this->getTrackerFactory()->createFromXML($filename, $project->group_id, $name, $description, $itemname, $this);
+        if (($xml_element = simplexml_load_file($filename)) !== false) {
+            return $this->getTrackerFactory()->createFromXML($xml_element, $project->group_id, $name, $description, $itemname, $this);
+        }
     }
     
     /**
@@ -861,6 +863,17 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             $dateReminderManager = new Tracker_DateReminderManager($tracker);
             $dateReminderManager->process();
         }
+    }
+
+    public function exportToXml($group_id) {
+        $xml_element = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
+                                             <trackers />');
+        $xml_field_id = 0;
+        foreach (TrackerFactory::instance()->getTrackersByGroupId($group_id) as $tracker) {
+            $child = $xml_element->addChild('tracker', null, "http://codendi.org/tracker");
+            $tracker->exportToXML($child, $xml_field_id);
+        }
+        return $xml_element;
     }
 }
 

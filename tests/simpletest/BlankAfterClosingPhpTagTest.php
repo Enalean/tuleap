@@ -20,8 +20,7 @@
 
 class BlankAfterClosingPhpTagTest extends UnitTestCase {
     
-    function BlankAfterClosingPhpTagTest($name = 'Blank after closing php tag test') {
-        $this->UnitTestCase($name);
+    function __construct() {
         $this->NONE   = 0;
         $this->START  = 1;
         $this->END    = 2;
@@ -47,6 +46,8 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/IM/www/webmuc/groupchat.php',
             'plugins/docman/bin/DocmanImport/FSDocmanUploader.class.php',
             'post_merge_actions.php',
+            'import_all_xml.php',
+            'export_all_xml.php',
         );
         
         //Those files are allowed to contain something after closing tag
