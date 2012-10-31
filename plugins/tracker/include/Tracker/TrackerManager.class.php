@@ -305,15 +305,15 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         echo '<p>'. $Language->getText('plugin_tracker_include_type','create_tracker_fill_name') .'</p>
           <p>
               <label for="newtracker_name"><b>'. $Language->getText('plugin_tracker_include_artifact','name').'</b>: <font color="red">*</font></label><br />
-              <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'" required />
+              <input type="text" name="name" id="newtracker_name" value="'. $hp->purify($name, CODENDI_PURIFIER_CONVERT_HTML) .'" required="required" />
           </p>
           <p>
               <label for="newtracker_description"><b>'.$Language->getText('plugin_tracker_include_artifact','desc').'</b>: <font color="red">*</font><br />
-              <textarea id="newtracker_description" name="description" rows="3" cols="50" required>'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
+              <textarea id="newtracker_description" name="description" rows="3" cols="50" required="required">'. $hp->purify($description, CODENDI_PURIFIER_CONVERT_HTML) .'</textarea>
           </p>
           <p>
               <label for="newtracker_itemname"><b>'.$Language->getText('plugin_tracker_include_type','short_name').'</b>: <font color="red">*</font></label><br />
-              <input type="text" id="newtracker_itemname" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'" required/><br />
+              <input type="text" id="newtracker_itemname" name="itemname" value="'. $hp->purify($itemname, CODENDI_PURIFIER_CONVERT_HTML) .'" required="required" /><br />
               <span style="color:#999;">'.$Language->getText('plugin_tracker_include_type','avoid_spaces').'</span>
           </p>';
         
