@@ -619,10 +619,10 @@ class Tracker_RulesManager {
             $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->id);
             foreach ($rules as $rule) {
                 $child = $root->addChild('rule');
-                $child->addChild('source-field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
-                $child->addChild('target-field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
-                $child->addChild('source-value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
-                $child->addChild('target-value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
+                $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
+                $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
+                $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
+                $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
             }
     }
 }
