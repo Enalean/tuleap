@@ -29,25 +29,25 @@ require_once('Tracker_Rule_Value.class.php');
 * Base class to create, retrieve, update or delete rules
 */
 class Tracker_RuleFactory {
-    
+
     var $rules_dao;
     var $rules;
-    
+
     var $RULETYPE_HIDDEN;
     var $RULETYPE_DISABLED;
     var $RULETYPE_MANDATORY;
     var $RULETYPE_VALUE;
-    
+
     function Tracker_RuleFactory(&$rules_dao) {
         $this->rules_dao         =& $rules_dao;
         $this->rules = array();
-        
+
         $this->RULETYPE_HIDDEN    = 1;
         $this->RULETYPE_DISABLED  = 2;
         $this->RULETYPE_MANDATORY = 3;
         $this->RULETYPE_VALUE     = 4;
     }
-    
+
     /**
     * Tracker_RuleFactory is a singleton
     */
@@ -72,7 +72,7 @@ class Tracker_RuleFactory {
         }
         return $this->rules[$id];
     }
-    
+
     function getAllRulesByTrackerWithOrder($tracker_id) {
         $dar = $this->rules_dao->searchByTrackerIdWithOrder($tracker_id);
         $rules = array();
@@ -85,7 +85,7 @@ class Tracker_RuleFactory {
         }
         return $rules;
     }
-    
+
     /**
     * @return Tracker_Rule
     */
@@ -107,11 +107,11 @@ class Tracker_RuleFactory {
         }
         return $rule;
     }
-    
+
     function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
         $this->rules_dao->create($tracker_id, $source, $source_value, $target, $this->RULETYPE_VALUE, $target_value);
     }
-    
+
     function _saveRuleState($tracker_id, $source, $source_value, $target, $rule_type) {
         $this->rules_dao->deleteRuleState($tracker_id, $source, $source_value, $target, array($this->RULETYPE_HIDDEN, $this->RULETYPE_DISABLED, $this->RULETYPE_MANDATORY));
         $this->rules_dao->create($tracker_id, $source, $source_value, $target, $rule_type);
@@ -119,15 +119,15 @@ class Tracker_RuleFactory {
     function saveRuleHidden($tracker_id, $source, $source_value, $target) {
         $this->_saveRuleState($tracker_id, $source, $source_value, $target, $this->RULETYPE_HIDDEN);
     }
-    
+
     function saveRuleDisabled($tracker_id, $source, $source_value, $target) {
         $this->_saveRuleState($tracker_id, $source, $source_value, $target, $this->RULETYPE_DISABLED);
     }
-    
+
     function saveRuleMandatory($tracker_id, $source, $source_value, $target) {
         $this->_saveRuleState($tracker_id, $source, $source_value, $target, $this->RULETYPE_MANDATORY);
     }
-    
+
     function deleteRule($rule_id) {
         $deleted = $this->rules_dao->deleteByRuleId($rule_id);
         return $deleted;
@@ -141,7 +141,7 @@ class Tracker_RuleFactory {
         $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($tracker_id, $source, $target, $target_value, $this->RULETYPE_VALUE);
         return $deleted;
     }
-    
+
     /**
     * Delete all rules for a tracker
     */
@@ -163,7 +163,7 @@ class Tracker_RuleFactory {
         $deleted = $this->rules_dao->deleteByFieldValue($tracker_id, $field_id, $value_id);
         return $deleted;
     }
-    
+
     /**
     * Delete all rules by source field id and target field id
     *
@@ -177,7 +177,7 @@ class Tracker_RuleFactory {
         $deleted = $this->rules_dao->deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
         return $deleted;
     }
-    
+
    /**
     * Duplicate the rules from tracker source to tracker target
     *
@@ -189,7 +189,7 @@ class Tracker_RuleFactory {
     */
     public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
         $dar = $this->rules_dao->searchByTrackerId($from_tracker_id);
-        
+
         // Retrieve rules of tracker from
         while ($row = $dar->getRow()) {
             // if we already have the status field, just jump to open values
@@ -202,13 +202,13 @@ class Tracker_RuleFactory {
             foreach ($field_mapping as $mapping) {
                 if ($mapping['from'] == $source_field_id) {
                     $duplicate_source_field_id = $mapping['to'];
-                    
+
                     $mapping_values = $mapping['values'];
                     $duplicate_source_value_id = $mapping_values[$source_value_id];
                 }
                 if ($mapping['from'] == $target_field_id) {
                     $duplicate_target_field_id = $mapping['to'];
-                    
+
                     $mapping_values = $mapping['values'];
                     $duplicate_target_value_id = $mapping_values[$target_value_id];
                 }
@@ -216,21 +216,36 @@ class Tracker_RuleFactory {
             $this->rules_dao->create($to_tracker_id, $duplicate_source_field_id, $duplicate_source_value_id, $duplicate_target_field_id, $rule_type, $duplicate_target_value_id);
         }
     }
-    
+
     /**
      * Creates a Tracker_Semantic Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported semantic
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the rule is attached
-     * 
+     *
      * @return Tracker_Rule_Value The rule object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
-        //return new Tracker_Rule_Value(0, );
-        return null;
+        $rules = array();
+        foreach ($xml->rule as $xml_rule) {
+            $xml_source_field_attributes = $xml_rule->source_field->attributes();
+            $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
+
+            $xml_target_field_attributes = $xml_rule->target_field->attributes();
+            $target_field = $xmlMapping[(string)$xml_target_field_attributes['REF']];
+
+            $xml_source_value_attributes = $xml_rule->source_value->attributes();
+            $source_value = $xmlMapping['values'][(string)$xml_source_value_attributes['REF']];
+
+            $xml_target_value_attributes = $xml_rule->target_value->attributes();
+            $target_value = $xmlMapping['values'][(string)$xml_target_value_attributes['REF']];
+
+            $rules[] = new Tracker_Rule_Value(0, $tracker->getId(), $source_field, $source_value, $target_field, $target_value);
+        }
+        return $rules;
     }
-    
+
     /**
      * Get dependency rules of a Source and Target
      *
@@ -247,11 +262,11 @@ class Tracker_RuleFactory {
         }
         return $dependencies;
     }
-    
+
     function getInvolvedFieldsByTrackerId($tracker_id) {
         return $this->rules_dao->searchInvolvedFieldsByTrackerId($tracker_id);
     }
-    
+
     function getInstanceFromRow($row) {
         $instance = new Tracker_Rule_Value(
                         $row['id'],

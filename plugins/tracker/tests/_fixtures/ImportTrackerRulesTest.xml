@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dependencies>
     <rule>
-        <source-field REF="F28"/>
-        <target-field REF="F25"/>
-        <source-value REF="F28-V1"/>
-        <target-value REF="F25-V3"/>
+        <source_field REF="F28"/>
+        <target_field REF="F25"/>
+        <source_value REF="F28-V1"/>
+        <target_value REF="F25-V3"/>
     </rule>
     <rule>
-        <source-field REF="F28"/>
-        <target-field REF="F25"/>
-        <source-value REF="F28-V1"/>
-        <target-value REF="F25-V4"/>
+        <source_field REF="F28"/>
+        <target_field REF="F25"/>
+        <source_value REF="F28-V1"/>
+        <target_value REF="F25-V4"/>
     </rule>
 </dependencies>
