@@ -40,9 +40,11 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $this->permissions_manager = mock('PermissionsManager');
         $this->ugroup_manager      = mock('UGroupManager');
         $this->user_finder = new Git_Driver_Gerrit_UserFinder($this->permissions_manager, $this->ugroup_manager);
+        $this->project_id = 666;
         $this->repository = mock('GitRepository');
         stub($this->repository)->getId()->returns(5);
-        stub($this->repository)->getProjectId()->returns(123);
+        stub($this->repository)->getProjectId()->returns($this->project_id);
+
     }
 
     public function itReturnsNothingWhenNoGroupsHaveTheGivenPermission() {
@@ -61,7 +63,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $group1         = mock('Ugroup');
 
         stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->repository->getId(), $permission_level)->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns($group1);
+        stub($this->ugroup_manager)->getById(99)->returns($group1);
         stub($group1)->getUserNames()->returns(array());
         $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $this->repository));
     }
@@ -70,14 +72,15 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $permission_level = Git::PERM_WPLUS;
         
 
-        $ugroup_id_list = array(150);
+        $ugroup_id_dar = $this->ugroupIdDar(150);
         $group1         = mock('Ugroup');
 
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns($group1);
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_dar);
+        stub($this->ugroup_manager)->getById(150)->returns($group1);
 
         $the_simpsons = array('Bart', 'Homer');
-        stub($group1)->getUserNames()->returns($the_simpsons);
+        stub($group1)->getUserNames($this->project_id)->returns($the_simpsons);
+
         $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
         $this->assertEqual($users, $the_simpsons);
     }
@@ -86,7 +89,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $permission_level = Git::PERM_WPLUS;
         
 
-        $ugroup_id_list     = array(150, 152);
+        $ugroup_id_list     = $this->ugroupIdDar(150, 152);
         $the_simpsons       = array('Bart', 'Homer');
         $the_mousqueteers   = array('Athos', 'Aramis');
         $group1             = stub('Ugroup')->getUserNames()->returns($the_simpsons);
@@ -104,7 +107,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $permission_level = Git::PERM_WPLUS;
         
 
-        $ugroup_id_list     = array(150, Ugroup::REGISTERED);
+        $ugroup_id_list     = $this->ugroupIdDar(150, Ugroup::REGISTERED);
         $the_simpsons       = array('Bart', 'Homer');
         $registered_users   = array('Bart', 'Homer',
                                     'Athos', 'Aramis');
@@ -123,7 +126,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $permission_level = Git::PERM_WPLUS;
         
 
-        $ugroup_id_list     = array(150, Ugroup::ANONYMOUS);
+        $ugroup_id_list     = $this->ugroupIdDar(150, Ugroup::ANONYMOUS);
         $the_simpsons       = array('Bart', 'Homer');
         $anonymous_users    = array('Bart', 'Homer',
                                     'Athos', 'Aramis');
@@ -142,7 +145,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $permission_level = Git::PERM_WPLUS;
         
 
-        $ugroup_id_list     = array(150, 152);
+        $ugroup_id_list     = $this->ugroupIdDar(150, 152);
         $superman           = array('ClarkKent');
         $comics_characters  = array('ClarkKent',
                                     'PeterParker');
@@ -161,11 +164,21 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $permission_level = Git::PERM_WPLUS;
         
 
-        $ugroup_id_list = array(99);
+        $ugroup_id_list = $this->ugroupIdDar(99);
 
         stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->repository->getId(), $permission_level)->returns($ugroup_id_list);
-        stub($this->ugroup_manager)->getById($ugroup_id_list[0])->returns(null);
+        stub($this->ugroup_manager)->getById(99)->returns(null);
         $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $this->repository));
+    }
+    
+    private function ugroupIdDar() {
+        $ugroup_id_list = func_get_args();
+        $result = array();
+        foreach ($ugroup_id_list as $id) {
+            $result[] = array('ugroup_id' => $id);
+        }
+        return TestHelper::argListToDar($result);
+
     }
 }
 ?>
