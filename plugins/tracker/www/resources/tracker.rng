@@ -308,6 +308,7 @@
             <value>sb</value>
             <value>msb</value>
             <value>tbl</value>
+            <value>cb</value>
           </choice>
         </attribute>
         <ref name="bindContent"/>
@@ -330,6 +331,9 @@
         </group>
         <attribute name="type">
           <value>users</value>
+        </attribute>
+        <attribute name="type">
+          <value>ugroups</value>
         </attribute>
       </choice>
       <optional>

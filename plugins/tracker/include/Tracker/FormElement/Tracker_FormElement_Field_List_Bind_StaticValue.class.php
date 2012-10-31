@@ -25,17 +25,15 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
     protected $label;
     protected $description;
     protected $rank;
-    protected $is_hidden;
     
     public function __construct($id, $label, $description, $rank, $is_hidden) {
-        parent::__construct($id);
+        parent::__construct($id, $is_hidden);
         $this->label       = $label;
         $this->description = $description;
         $this->rank        = $rank;
-        $this->is_hidden   = $is_hidden;
     }
     
-    public function __toString() {      
+    public function __toString() {
         return $this->label ? $this->label : '';
     }
     
@@ -53,10 +51,6 @@ class Tracker_FormElement_Field_List_Bind_StaticValue extends Tracker_FormElemen
     
     public function getRank() {
         return $this->rank;
-    }
-    
-    public function isHidden() {
-        return $this->is_hidden;
     }
 }
 ?>

@@ -81,7 +81,7 @@ class Backend {
      *
      * @return Backend
      */
-    public static final function instance($type = self::BACKEND, $base = null, $setup = null) {
+    public static function instance($type = self::BACKEND, $base = null, $setup = null) {
         if (!isset(self::$backend_instances[$type])) {
             $backend = null;
             
@@ -171,6 +171,22 @@ class Backend {
      */
     public function chown($path, $uid) {
         return chown($path, $uid);
+    }
+
+    /**
+     * Set file's owner, group and mode
+     *
+     * @param String  $file
+     * @param String  $user
+     * @param String  $group
+     * @param Integer $mode
+     *
+     * @return void
+     */
+    public function changeOwnerGroupMode($file, $user, $group, $mode) {
+        $this->chown($file, $user);
+        $this->chgrp($file, $group);
+        $this->chmod($file, $mode);
     }
 
     /** 

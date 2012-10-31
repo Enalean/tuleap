@@ -71,12 +71,18 @@ class Git extends PluginController {
      */
     private $plugin;
 
-    public function __construct(GitPlugin $plugin) {
+    /**
+     * @var Git_RemoteServer_GerritServerFactory
+     */
+    private $gerrit_server_factory;
+
+    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory) {
         parent::__construct();
         
-        $this->userManager    = UserManager::instance();
-        $this->projectManager = ProjectManager::instance();
-        $this->factory        = new GitRepositoryFactory(new GitDao(), $this->projectManager);
+        $this->userManager           = UserManager::instance();
+        $this->projectManager        = ProjectManager::instance();
+        $this->factory               = new GitRepositoryFactory(new GitDao(), $this->projectManager);
+        $this->gerrit_server_factory = $gerrit_server_factory;
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -170,7 +176,7 @@ class Git extends PluginController {
     }
 
     protected function definePermittedActions($repoId, $user) {
-        if ( $this->user->isMember($this->groupId, 'A') === true ) {
+        if ( $user->isMember($this->groupId, 'A') === true ) {
             $this->permittedActions = array('index',
                                             'view' ,
                                             'edit',
@@ -181,36 +187,30 @@ class Git extends PluginController {
                                             'confirm_deletion',
                                             'save',
                                             'repo_management',
-                                            'mail_prefix',
-                                            'add_mail',
-                                            'remove_mail',
+                                            'mail',
                                             'fork',
                                             'set_private',
                                             'confirm_private',
                                             'fork_repositories',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
+                                            'migrate_to_gerrit',
             );
         } else {
             $this->addPermittedAction('index');
             $this->addPermittedAction('view_last_git_pushes');
-            if ($this->user->isMember($this->groupId)) {
-                $this->addPermittedAction('fork_repositories');
-                $this->addPermittedAction('do_fork_repositories');
-            }
-            
+            $this->addPermittedAction('fork_repositories');
+            $this->addPermittedAction('do_fork_repositories');
+
             if ($repoId !== 0) {
-                $repo = new GitRepository();
-                $repo->setId($repoId);
-                if ($repo->exists() && $repo->userCanRead($user)) {
+                $repo = $this->factory->getRepositoryById($repoId);
+                if ($repo && $repo->userCanRead($user)) {
                     $this->addPermittedAction('view');
                     $this->addPermittedAction('edit');
                     $this->addPermittedAction('clone');
                     if ($repo->belongsTo($user)) {
                         $this->addPermittedAction('repo_management');
-                        $this->addPermittedAction('mail_prefix');
-                        $this->addPermittedAction('add_mail');
-                        $this->addPermittedAction('remove_mail');
+                        $this->addPermittedAction('mail');
                         $this->addPermittedAction('del');
                         $this->addPermittedAction('confirm_deletion');
                         $this->addPermittedAction('save');
@@ -253,6 +253,7 @@ class Git extends PluginController {
     }
     
     public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
+        $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
             case 'create':
@@ -275,7 +276,13 @@ class Git extends PluginController {
                 $this->addView('index');
                 break;
             #EDIT
-            case 'edit':                
+            case 'edit':
+                $repository = $this->factory->getRepositoryById($repoId);
+                if (empty($repository)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?action=index&group_id='. $this->groupId);
+                    return false;
+                }
                 if ( $this->isAPermittedAction('clone') && $this->request->get('clone') ) {
                     $valid = new Valid_UInt('parent_id');
                     $valid->required();
@@ -285,24 +292,23 @@ class Git extends PluginController {
                     $this->addAction( 'cloneRepository', array($this->groupId, $repositoryName, $parentId) );
                     $this->addAction( 'getRepositoryDetails', array($this->groupId, $parentId) );
                     $this->addView('view');
-                }
-                else if ( $this->isAPermittedAction('confirm_deletion') && $this->request->get('confirm_deletion') ) {
-                    $repository = $this->factory->getRepositoryById($repoId);
-                    $this->addAction('confirmDeletion', array($this->groupId, $repository));
-                    $this->addView('confirm_deletion', array( 0=>array('repo_id'=>$repoId) ) );
-                }
-                else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {                    
-                    $valid = new Valid_Text('repo_desc');
-                    $valid->required();
-                    if($this->request->valid($valid)) {
-                        $repoDesc = $this->request->get('repo_desc');
+                } else if ( $this->isAPermittedAction('save') && $this->request->get('save') ) {
+                    $repoDesc = null;
+                    if ($this->request->exist('repo_desc')) {
+                        $repoDesc = GitRepository::DEFAULT_DESCRIPTION;
+                        $valid = new Valid_Text('repo_desc');
+                        $valid->required();
+                        if($this->request->valid($valid)) {
+                            $repoDesc = $this->request->get('repo_desc');
+                        }
                     }
+                    $repoAccess = null;
                     $valid = new Valid_String('repo_access');
                     $valid->required();
                     if($this->request->valid($valid) || is_array($this->request->get('repo_access'))) {
                         $repoAccess = $this->request->get('repo_access');
                     }
-                    $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc) );
+                    $this->addAction('save', array($this->groupId, $repoId, $repoAccess, $repoDesc, $pane) );
                     $this->addView('view');
                 } else {
                     $this->addError( $this->getText('controller_access_denied') );
@@ -314,59 +320,8 @@ class Git extends PluginController {
                 $this->addAction('repoManagement', array($this->groupId, $repoId));
                 $this->addView('repoManagement');
                 break;
-            #mail prefix
-            case 'mail_prefix':
-                $valid = new Valid_String('mail_prefix');
-                $valid->required();
-                if($this->request->valid($valid)) {
-                    $mailPrefix = $this->request->get('mail_prefix');
-                } else {
-                    $mailPrefix = '';
-                }
-                $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix));
-                $this->addView('repoManagement');
-                break;
-            #add mail
-            case 'add_mail':
-                $validMails = array();
-                $mails      = array_map('trim', preg_split('/[,;]/', $this->request->get('add_mail')));
-                $rule       = new Rule_Email();
-                $um         = UserManager::instance();
-                foreach ($mails as $mail) {
-                    if ($rule->isValid($mail)) {
-                        $validMails[] = $mail;
-                    } else {
-                        $user = $um->findUser($mail);
-                        if ($user) {
-                            $mail = $user->getEmail();
-                            if ($mail) {
-                                $validMails[] = $mail;
-                            } else {
-                                $this->addError($this->getText('no_user_mail', array($mail)));
-                            }
-                        } else {
-                            $this->addError($this->getText('no_user', array($mail)));
-                        }
-                    }
-                }
-                $this->addAction('notificationAddMail', array($this->groupId, $repoId, $validMails));
-                $this->addView('repoManagement');
-                break;
-            #remove mail
-            case 'remove_mail':
-                $mails = array();
-                $valid = new Valid_Email('mail');
-                $valid->required();
-                if($this->request->validArray($valid)) {
-                    $mails = $this->request->get('mail');
-                }
-                if (count($mails) > 0) {
-                    $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails));
-                    $this->addView('repoManagement');
-                } else {
-                    $this->addAction('repoManagement', array($this->groupId, $repoId));
-                    $this->addView('repoManagement');
-                }
+            case 'mail':
+                $this->processRepoManagementNotifications($pane, $repoId, $repositoryName, $user);
                 break;
             #fork
             case 'fork':
@@ -407,7 +362,11 @@ class Git extends PluginController {
             case 'do_fork_repositories':
                 try {
                     if ($this->request->get('choose_destination') == 'personal') {
-                        $this->_doDispatchForkRepositories($this->request, $user);
+                        if ($this->user->isMember($this->groupId)) {
+                            $this->_doDispatchForkRepositories($this->request, $user);
+                        } else {
+                            $this->addError($this->getText('controller_access_denied'));
+                        }
                     } else {
                         $this->_doDispatchForkCrossProject($this->request, $user);
                     }
@@ -433,6 +392,17 @@ class Git extends PluginController {
                 $imageRenderer = new Git_LastPushesGraph($groupId, $weeksNumber);
                 $imageRenderer->display();
                 break;
+            case 'migrate_to_gerrit':
+                $repo = $this->factory->getRepositoryById($repoId);
+                $remote_server_id = $this->request->getValidated('remote_server_id', 'uint');
+                if (empty($repo) || empty($remote_server_id)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                } else {
+                    $this->addAction('migrateToGerrit', array($repo, $remote_server_id));
+                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                }
+                break;
             #LIST
             default:
                 
@@ -449,19 +419,63 @@ class Git extends PluginController {
         }
     }
 
+    private function processRepoManagementNotifications($pane, $repoId, $repositoryName, $user) {
+        $this->addView('repoManagement');
+        if ($this->request->exist('mail_prefix')) {
+            $valid = new Valid_String('mail_prefix');
+            $valid->required();
+            $mailPrefix = $this->request->getValidated('mail_prefix', $valid, '');
+            $this->addAction('notificationUpdatePrefix', array($this->groupId, $repoId, $mailPrefix, $pane));
+        }
+        $add_mail = $this->request->getValidated('add_mail');
+        if ($add_mail) {
+            $validMails = array();
+            $mails      = array_map('trim', preg_split('/[,;]/', $add_mail));
+            $rule       = new Rule_Email();
+            $um         = UserManager::instance();
+            foreach ($mails as $mail) {
+                if ($rule->isValid($mail)) {
+                    $validMails[] = $mail;
+                } else {
+                    $user = $um->findUser($mail);
+                    if ($user) {
+                        $mail = $user->getEmail();
+                        if ($mail) {
+                            $validMails[] = $mail;
+                        } else {
+                            $this->addError($this->getText('no_user_mail', array($mail)));
+                        }
+                    } else {
+                        $this->addError($this->getText('no_user', array($mail)));
+                    }
+                }
+            }
+            $this->addAction('notificationAddMail', array($this->groupId, $repoId, $validMails, $pane));
+        }
+        $remove_mail = $this->request->get('remove_mail');
+        if (is_array($remove_mail)) {
+            $mails = array();
+            $valid = new Valid_Email('remove_mail');
+            $valid->required();
+            if($this->request->validArray($valid)) {
+                $mails = $this->request->get('remove_mail');
+            }
+            if (count($mails) > 0) {
+                $this->addAction('notificationRemoveMail', array($this->groupId, $repoId, $mails, $pane));
+            }
+        }
+        $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+    }
+
     protected function _informAboutPendingEvents($repoId) {
         $sem = SystemEventManager::instance();
-        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_CLONE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
+        $dar = $sem->_getDao()->searchWithParam('head', $this->groupId, array('GIT_REPO_CREATE', 'GIT_REPO_DELETE'), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
         foreach ($dar as $row) {
             $p = explode(SystemEvent::PARAMETER_SEPARATOR, $row['parameters']);
             $repository = $this->factory->getDeletedRepository($p[1]);
             switch($row['type']) {
             case 'GIT_REPO_CREATE':
                 $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_create', array($p[1])));
-                break;
-
-            case 'GIT_REPO_CLONE':
-                $GLOBALS['Response']->addFeedback('info', $this->getText('feedback_event_fork', array($p[1])));
                 break;
 
             case 'GIT_REPO_DELETE':
@@ -491,7 +505,7 @@ class Git extends PluginController {
     protected function instantiateAction($action) {
         $system_event_manager   = SystemEventManager::instance();
         $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
-        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager);
+        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {

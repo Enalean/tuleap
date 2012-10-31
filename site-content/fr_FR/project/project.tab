@@ -452,6 +452,11 @@ project_admin_utils	verify_dates	La date de début doit être inférieure à la 
 project_admin_utils	from	Depuis
 project_admin_utils	to	Jusqu'a
 project_admin_utils	status	Statut modifié
+project_admin_utils	ugroup_add_binding	Liaison avec groupe d'utilisateurs ajoutée
+project_admin_utils	ugroup_remove_binding	Liaison avec groupe d'utilisateurs enlevée
+project_admin_utils	frs_self_add_monitor_package	Auto ajout du suivi de paquet
+project_admin_utils	frs_add_monitor_package	Ajout du suivi de paquet
+project_admin_utils	frs_stop_monitor_package	Arrêt du suivi de paquet
 #... end of values
 #
 #-----------------------------------------------
@@ -964,4 +969,28 @@ project_privacy	tooltip_public_wo_anon	<p>Le niveau de confidentialité du proje
 
 project_service	service_not_used	Le service $1 n'est pas activé
 project	does_not_exist	Le projet n'existe pas
-
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup_binding.php
+#
+project_ugroup_binding	ugroup	Groupe d'utilisateurs
+project_ugroup_binding	binding	Liaisons
+project_ugroup_binding	edit_binding_title	Editer la liaison avec le groupe d'utilisateurs
+project_ugroup_binding	update_binding	Mettre à jour la liaison
+project_ugroup_binding	add_binding	Ajouter une liaison
+project_ugroup_binding	binding_added	Liaison ajoutée
+project_ugroup_binding	add_error	Une erreur est survenue lors de l'ajout de liaison avec le groupe d'utilisateurs
+project_ugroup_binding	duplicate_binding_warning	Le groupe d'utilisateurs ayant l'id $1 est déjà défini comme source de liaison.
+project_ugroup_binding	binding_removed	Liaison avec le groupe d'utilisateurs faite avec succés
+project_ugroup_binding	remove_error	La liaison avec le groupe d'utilisateurs n'a pas été enlevée
+project_ugroup_binding	current_binding	Liaison actuelle
+project_ugroup_binding	binding_sources	Groupes d'utilisateurs liés à celui ci
+project_ugroup_binding	edit_binding	Modifier la liaison
+project_ugroup_binding	source_project	Projet source
+project_ugroup_binding	source_ugroup	groupe d'utilisateurs source
+project_ugroup_binding	no_binding	Ce groupe d'utilisateurs n'est lié a aucun autre groupe
+project_ugroup_binding	remove_binding	Enlever la liaison actuelle
+project_ugroup_binding	current_binded	Ce groupe d'utilisateurs est lié au groupe $1 dans le projet $2
+project_ugroup_binding	not_source	Ce groupe d'utilisateurs n'est la source d'aucun autre groupe d'utilisateurs
+project_ugroup_binding	update_user_not_allowed	La mise à jour d'utilisateurs n'est pas autorisée pour le groupe d'utilisateurs $1
+project_ugroup_binding	reset_error	Impossible de réinitialiser le groupe d'utilisateurs $1
+project_ugroup_binding	clone_error	Impossible de cloner le groupe d'utilisateurs $1

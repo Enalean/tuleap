@@ -117,7 +117,7 @@ class Tracker_Artifact_PriorityDao extends DataAccessObject {
     /**
      * Remove an item from the linked list
      */
-    private function remove($id) {
+    public function remove($id) {
         $id = $this->da->escapeInt($id);
 
         // Change the successor pointer of the actual parent

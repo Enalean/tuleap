@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/Git.class.php';
 
 Mock::generate('User');
@@ -38,6 +39,10 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
 
         $factory = new MockGitRepositoryFactory();
         $git->setFactory($factory);
+
+        $user = new MockUser();
+        $user->setReturnValue('isMember', true);
+        $git->user = $user;
 
         $git->_dispatchActionAndView('do_fork_repositories', null, null, null);
     }

@@ -1,3 +1,11 @@
+Version 5.7 - Tuleap 5.7
+    * add expect helper: expect($mock)->aMethod()->once();
+    * add assertArrayEmpty()
+    * add throws() in stubs: stub($mock)->aMethod()->throws($exception);
+
+Version 5.6 - Tuleap 5.6
+    * 
+
 Version 5.5 - Tuleap 5.4
     * First step toward autoloading in order to increase performances
 

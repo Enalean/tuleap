@@ -22,11 +22,8 @@
 // In wsdl.php script there is WSDL generation thanks to NuSOAP
 //    and nice display thanks to wsdl view
 
-require_once('pre.php');
-
-//define('TULEAP_WS_API_VERSION', '4.1');
-
-define('LOG_SOAP_REQUESTS', false);
+require_once 'pre.php';
+require_once dirname(__FILE__).'/../../include/constants.php';
 
 // Check if we the server is in secure mode or not.
 if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_force_ssl'] == 1) {
@@ -35,41 +32,38 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
     $protocol = "http";
 }
 
-$uri = $protocol.'://'.$sys_default_domain;
+$uri = $protocol.'://'.$GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/soap';
+
 
 if ($request->exist('wsdl')) {
-    $GLOBALS['Response']->redirect('/plugins/tracker/soap/wsdl?wsdl');
-}
+    require_once 'nusoap.php';
+    require_once 'utils_soap.php';
 
-try {
-    $server = new SoapServer($uri.'/plugins/tracker/soap/wsdl?wsdl',
-                                   array('trace'        => 1, 
-                                         'soap_version' => SOAP_1_1,
-                                         'cache_wsdl'   => WSDL_CACHE_NONE,
-                                   )
-                  );
-    require_once(dirname(__FILE__).'/../../include/soap.php');
-} catch (Exception $e) {
-    echo $e;
-}
+    $server = new soap_server();
+    $server->configureWSDL('TuleapTrackerV5API',$uri,false,'rpc','http://schemas.xmlsoap.org/soap/http',$uri);
 
+    require_once TRACKER_BASE_DIR.'/wsdl.php';
 
-// if POST was used to send this request, we handle it
-// else, we display a list of available methods
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (LOG_SOAP_REQUESTS) {
-        error_log('SOAP Request :');
-        error_log($HTTP_RAW_POST_DATA);
-    }
-    $server->handle();
+    // Call the service method to initiate the transaction and send the response
+    $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
+    $server->service($HTTP_RAW_POST_DATA);
 } else {
-    echo '<strong>This SOAP server can handle following functions : </strong>';
-    echo '<ul>';
-    foreach($server->getFunctions() as $func) {
-        echo '<li>' , $func , '</li>';
-    }
-    echo '</ul>';
-    echo '<p><a href="/plugins/tracker/soap/wsdl?wsdl">You can access the raw WSDL</a> or <a href="/plugins/tracker/soap/view-wsdl">a human readable version of it</a></p>';
+    require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
+
+    $server = new SoapServer($uri.'/?wsdl',
+                             array('cache_wsdl' => WSDL_CACHE_NONE));
+
+    $server->setClass(
+        'Tracker_SOAPServer',
+        new SOAP_UserManager(UserManager::instance()),
+        ProjectManager::instance(),
+        TrackerFactory::instance(),
+        PermissionsManager::instance(),
+        new Tracker_ReportDao(),
+        Tracker_FormElementFactory::instance(),
+        Tracker_ArtifactFactory::instance()
+    );
+    $server->handle();
 }
 
 ?>

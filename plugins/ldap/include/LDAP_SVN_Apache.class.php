@@ -51,6 +51,10 @@ class LDAP_SVN_Apache extends SVN_Apache {
         $conf .= '    AuthName "LDAP Subversion Authorization (' . $this->escapeStringForApacheConf($row['group_name']) . ')"' . PHP_EOL;
         $conf .= '    AuthLDAPUrl "' . $this->getLDAPServersUrl() . '"' . PHP_EOL;
         $conf .= '    Require valid-user' . PHP_EOL;
+        if ($this->ldap->getLDAPParam('bind_dn')) {
+            $conf .= '    AuthLDAPBindDN "' .$this->ldap->getLDAPParam('bind_dn'). '"' . PHP_EOL;
+            $conf .= '    AuthLDAPBindPassword "' .$this->ldap->getLDAPParam('bind_passwd'). '"' . PHP_EOL;
+        }
         return $conf;
     }
     

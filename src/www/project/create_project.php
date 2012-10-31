@@ -42,7 +42,8 @@ function create_project($data, $do_not_exit = false) {
       $http_domain=$data['project']['form_unix_name'].'.'.$GLOBALS['sys_default_domain'];
     }
     
-    
+    //Verify if the approbation of the new project is automatic or not
+    $auto_approval = Config::get('sys_project_approval', 1) ? 'P' : 'A' ;
     
     // make group entry
     $insert_data = array(
@@ -50,7 +51,7 @@ function create_project($data, $do_not_exit = false) {
         'is_public'           => $GLOBALS['sys_is_project_public'],
         'unix_group_name'     => "'". $data['project']['form_unix_name'] ."'",
         'http_domain'         => "'". $http_domain ."'",
-        'status'              => "'P'",
+        'status'              => "'". $auto_approval ."'",
         'unix_box'            => "'shell1'",
         'cvs_box'             => "'cvs1'",
         'license'             => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_license'])) ."'",

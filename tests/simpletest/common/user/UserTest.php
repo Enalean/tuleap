@@ -55,7 +55,7 @@ class UserTestVersion_MockPreferences extends UserTestVersion {
  *
  * Tests the class User
  */
-class UserTest extends UnitTestCase {
+class UserTest extends TuleapTestCase {
 
     function testStatus() {
         $u1 = new UserTestVersion($this);
@@ -441,6 +441,10 @@ class UserTest extends UnitTestCase {
         $user = new User(array('language_id' => 'fr_BE'));
         $user->setLanguageFactory($langFactory);
         $user->getLanguage();
+    }
+    
+    public function itStringifiesTheUser() {
+        $this->assertEqual("User #123", aUser()->withId(123)->build()->__toString());
     }
 }
 ?>

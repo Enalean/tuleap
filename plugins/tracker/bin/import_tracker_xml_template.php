@@ -21,6 +21,7 @@ $user_pwd    =  !empty($argv[7]) ? $argv[7] : 'siteadmin';
 
 $GLOBALS['Response'] = new Response();
 $user = UserManager::instance()->forceLogin($user_name, $user_pwd);
+
 if ($user->isAnonymous()) {
     die("Unable to authenticate the user, cannot import the template".PHP_EOL);
 }
@@ -55,9 +56,14 @@ if ( empty($item_name) ) {
 $output = '';
 ob_start();
 $tf      = TrackerFactory::instance();
-$tracker = $tf->createFromXML( $xmlFile, $group_id, $name, $description, $item_name, null );
-$output = ob_get_contents();
-ob_end_flush();
+if (($xml_element = simplexml_load_file($xmlFile)) !== false) {
+    $tracker = $tf->createFromXML($xml_element, $group_id, $name, $description, $item_name, null );
+    $output = ob_get_contents();
+    ob_end_flush();
+} else {
+    echo 'Invalid File'.PHP_EOL;
+    exit(1);
+}
 
 #WARN AND ERRORS PARSING
 $matches = array();

@@ -27,6 +27,10 @@ require_once('common/include/CookieManager.class.php');
  */
 class Response {
     
+    /**
+     *
+     * @var Feedback
+     */
     var $_feedback;
     
     /**
@@ -34,8 +38,8 @@ class Response {
     */
     function Response() {
         if (session_hash()) {
-            $dao =& $this->_getFeedbackDao();
-            $dar =& $dao->search(session_hash());
+            $dao = $this->getFeedbackDao();
+            $dar = $dao->search(session_hash());
             if ($dar && $dar->valid()) {
                 $row = $dar->current();
                 $this->_feedback = unserialize($row['feedback']);
@@ -43,7 +47,7 @@ class Response {
             }
         }
         if (!$this->_feedback) {
-            $this->_feedback = new Feedback();
+            $this->clearFeedback();
         }
     }
     function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) {
@@ -58,15 +62,20 @@ class Response {
     function feedbackHasErrors() {
         return $this->_feedback->hasErrors();
     }
+
     function getRawFeedback() {
         return $this->_feedback->fetchAsPlainText();
     }
-    function &_getFeedbackDao() {
-        $f = new FeedbackDao(CodendiDataAccess::instance());
-        return $f;
+
+    public function clearFeedback() {
+        $this->_feedback = new Feedback();
+    }
+
+    private function getFeedbackDao() {
+        return new FeedbackDao();
     }
     function _serializeFeedback() {
-        $dao =& $this->_getFeedbackDao();
+        $dao = $this->getFeedbackDao();
         $dao->create(session_hash(), serialize($this->_feedback));
     }
     function setCookie($name, $value, $expire = 0) {

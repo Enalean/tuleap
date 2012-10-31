@@ -966,7 +966,7 @@ plugin_tracker	submit_new_artifact	Soumettre un nouvel artefact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration
 plugin_tracker	help	Aide
-plugin_tracker	linked_to	This artifact (of $2) will be linked to $1
+plugin_tracker	linked_to	Cet artefact (de $2) sera lié à $1
 plugin_tracker	tracker_switcher	Sélectionnez un outil de suivi
 
 plugin_tracker_artifact	set_to	à 
@@ -1067,6 +1067,7 @@ plugin_tracker_formelement_admin	open_list_description	Un champ texte contenant 
 plugin_tracker_formelement_admin	values	Valeurs
 plugin_tracker_formelement_admin	choose_values	Choisir les valeurs
 plugin_tracker_formelement_admin	bind_to_users	Associer à un groupe d'utilisateurs
+plugin_tracker_formelement_admin	bind_to_ugroups	Associer à des groupes d'utilisateurs
 plugin_tracker_formelement_admin	alphabetically_sort	par ordre alphabétique
 plugin_tracker_formelement_admin	add_row	Ajouter une valeur par ligne
 plugin_tracker_formelement_admin	type_search_term	Saisir un élément de recherche
@@ -1082,10 +1083,13 @@ plugin_tracker_formelement_admin	select_default_value	Sélectionner la valeur pa
 plugin_tracker_formelement_admin	static_values	Valeurs statiques
 plugin_tracker_formelement_admin	switch_msb	Transformer en boîte de sélections multiples
 plugin_tracker_formelement_admin	switch_sb	Transformer en boîte de sélection simple
+plugin_tracker_formelement_admin	switch_cb	Transformer en ensemble de case à cocher
 plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloir changer le type de ce champ ?
 plugin_tracker_formelement_admin	delete_field_impossible	Impossible de supprimer ce champ (utilisé en sémantique, pour le workflow ou sur une dépendance entre champs)
 plugin_tracker_formelement_admin	hide_value_impossible	Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans la sémantique 'status', dans le workflow ou sur une dépendance entre champs
 plugin_tracker_formelement_admin	hide_value	Afficher/cacher cette valeur
+plugin_tracker_formelement_admin	checkbox	Case à cocher
+plugin_tracker_formelement_admin	checkbox_desc	Case à cocher
 plugin_tracker_formelement_admin	alpha_ranking_updated	Ordre alphabétique mis à jour
 
 plugin_tracker_formelement_property	hint	Indication
@@ -1134,6 +1138,17 @@ plugin_tracker_admin	manage_dependencies_desc	Définir comment les valeurs d'un 
 
 plugin_tracker_admin	tracker_not_duplicated	L'outil de suivi $1 n'a pas été copié
 plugin_tracker_admin	successfully_updated	Outil de suivi mis à jour avec succès.
+
+plugin_tracker_admin	clean	Suppression d'artefact
+plugin_tracker_admin	clean_desc	Efface de manière permanente un artifact de ce tracker
+plugin_tracker_admin	clean_info	Cette opération efface de manière irréversible un artefact de la base. Attention : <strong>il n'y a aucune possibilité de restaurer les données</strong>. Cette opération doit rester exceptionnelle.
+plugin_tracker_admin	clean_id	Id de l'artefact à supprimer: 
+plugin_tracker_admin	clean_error_noart	L'artefact $1 n'existe pas ou n'appartient pas à ce tracker
+plugin_tracker_admin	clean_info_deleted	L'artefact $1 a été supprimé
+plugin_tracker_admin	clean_confirm	Confirmer
+plugin_tracker_admin	clean_cancel	Annuler
+plugin_tracker_admin	clean_confirm_text	<h3>Vous êtes sur le point de supprimer définitivement "$1".</h3><p><strong>Cette opération est irréversible, il n'y a aucun moyen de restauration des données supprimées.</strong></p>
+plugin_tracker_admin	clean_cancel_deleted	Suppression annulée
 
 plugin_tracker_admin_notification	successfully_updated	Notifications mises à jour avec succès.
 

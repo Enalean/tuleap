@@ -1,0 +1,173 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+//
+// Copyright (c) STMicroelectrionics, Tuleap 2012.
+// This file is licensed under the GNU General Public License version 2. See the file COPYING.
+-->
+
+<chapter id="ProjectLinks">
+    <title>Project Links</title>
+
+    <para>Project Links superimpose a structure onto Tuleap project workspaces making easily visible the relationships between projects, and they can simplify finding related project. Applications include:</para>
+    <itemizedlist mark="bullet" spacing="compact">
+        <listitem>Project families so that a parent project workspace can gain easy access to its child projects (for example for programme management).</listitem>
+        <listitem>Rings of interest, where several projects may decide they have sufficient in common that they wish to be related (e.g. projects that use the same technology), but none of them is strictly a master, and each is free to join or leave the ring.</listitem>
+        <listitem>Linking a product-related workspace with a support project that covers a number of products - i.e. an easy linkage from the product to its support and from generalised support to a specific product (note that this is a simplified project family, with each project showing the other as a relation).</listitem>
+    </itemizedlist>
+
+    <para>To create a project relationship, a project first defines a link type and then assigns that link type to as many projects as it wishes. The link type is named in any way (except it must be unique within the project), for example "Sub-projects", "Related projects", "Division", "Team", "C++ Projects". The main use of the name is as a heading when the linked projects are listed.</para>
+
+    <para>When referring to a relationship link, the project that administers the link is the owner and the project referenced by the link is the target of the link. A link type also specifies a reverse name, which is used when a project lists those of which it is the target. For example "Children" may be the name of a link type and "Parent" the reverse link name for that same link type. Projects linked this way would be listed under "Children" in the owner project, but those projects would see the (reverse) relationship as "Parent".</para>
+
+    <para>To create a "ring of interest", someone must take responsibility to create (and administer) a ringmaster project (which behaves just as a parent project in a project family but its only function is to be the owner project links) - the ring administrator would normally take responsibility to be the ring animator (the one who makes the ring works well). To join a ring of interest, a project must request the ring animator to create a relationship with it in the ringmaster project.</para>
+
+    <para>When a new project is created from a template project it inherits a copy of all the project links (and link types) from the template. Additionally, any project that references a template as a target will gain a link to the new project (it means that the project wants all projects created from the template to be linked as the template is). Thus a master project may keep tabs on all projects created from a template, and a ring may automatically expand. There is also a mechanism that allows projects to resynchronise link types with their template. Newly created links are highlighted with a faint yellow star - mainly to highlight those created from template links.</para>
+
+    <para>A project shows reverse linkages (those projects for which it is the link target) on the summary page.</para>
+
+    <section id="TermsAndDefinitions">
+        <title>Terms and Definitions</title>
+
+        <table frame="all">
+            <title>Project links terms and definitions</title>
+            <tgroup cols="2">
+            <colspec colname="c1" colwidth="200pt" />
+            <colspec colname="c2" colwidth="250pt"  />
+
+            <thead>
+                <row>
+                    <entry>Term</entry>
+                    <entry>Definition</entry>
+                </row>
+            </thead>
+
+            <tbody>
+                <row>
+                    <entry><emphasis role="bold">Data Aggregation</emphasis></entry>
+                    <entry>The process of collecting data from related projects for display in a collated form.</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Link Administrator</emphasis></entry>
+                    <entry>The users who are allowed to create link types and to modify project linkages - project administrators are automatically link administrators.</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Link Type</emphasis></entry>
+                    <entry>The data item that defines the properties of a project linkage and gives it a name. They are defined within a project, and are inherited from a template.</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Owner</emphasis></entry>
+                    <entry>The project that is responsible for creating and administering a link.</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Project Family</emphasis></entry>
+                    <entry>A strict hierarchy where there is a parent project with one or more child (or sub-) projects.</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Project Link / Relationship Link</emphasis></entry>
+                    <entry>The data item that joins one project with another to create related projects - an instance of a project link type</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Related Projects</emphasis></entry>
+                    <entry>Two projects for which there is a link entry in at least one of them pointing to the other.</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Reverse name/linkage</emphasis></entry>
+                    <entry>The name (defined in the owner project) to be used to describe the relationship within its target projects' context (e.g. parent and children).</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Ring of interest</emphasis></entry>
+                    <entry>A group of projects that have declared themselves as having something in common and are linked together to share information.</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Ringmaster</emphasis></entry>
+                    <entry>A project that exists (only) so that other projects may reference it to become members of a ring.</entry>
+              </row>
+              <row>
+                    <entry><emphasis role="bold">Target</emphasis></entry>
+                    <entry>The project that is the subject of a link from another project.</entry>
+              </row>
+
+            </tbody>
+            </tgroup>
+        </table>
+
+    </section>
+
+    <section id="CreatingLinks">
+        <title>Creating links</title>
+
+        <para>A project administrator may add new related projects by using the following procedure:</para>
+        <para>On the 'Project Links Configuration' page of your master project, first set up at least one link type (if none already exists) by clicking 'Add a project link type'.</para>
+        <para>Then tick the "Create Project links from this project" box and follow this process:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>go and find a project you want to link by any means you like (via My Personal page, project tree, browsing, favorites, ...)</listitem>
+            <listitem>click on the "link to this project" button/icon on the summary page</listitem>
+            <listitem>this takes you back to the context of the master project, there you select the link type (from the presented list) and "add" the link</listitem>
+            <listitem>either go and find another project you want to link to (repeating the above steps), or uncheck "link to this project"</listitem>
+        </itemizedlist>
+
+        <para>Note that "link to this project" is a personal setting, not a project one, so you can leave it checked all the time if you wish, which leaves visible in all projects visited the "link to this project" button/icon on the summary page. Checking it in another project just makes that one the future master, there's no need to uncheck it first.</para>
+
+    </section>
+
+    <section id="LinkAdministration">
+        <title>Link Administration</title>
+
+        <para>Administration of the linkage belongs to the link owner project, the project to which the link points is called the target project (the link target).</para>
+        <para>Project administrator users are automatically link administrators.</para>
+        <para>On the (link) administration page, the project's link administrator user may:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>Add new link types.</listitem>
+            <listitem>Modify (including change the link type of) existing relationships with target project.</listitem>
+            <listitem>Delete individual project relationships (i.e. remove them from the list of related projects).</listitem>
+            <listitem>Delete relationship types - all referenced projects with that relationship are disconnected (i.e. the whole relationship is deleted).</listitem>
+            <listitem>Refresh link types from the project's template (if it has one, see details below)</listitem>
+            <listitem>Clone link type: creates an exact copy of a link type (with a different name)</listitem>
+            <listitem>Modify link types (all attributes)</listitem>
+        </itemizedlist>
+
+        <para>Note that a project relationship linkage has an explicit direction (owner project and target project); only the owner project link administrator can establish and remove project links.</para>
+
+    </section>
+
+    <section id="RingAdministration">
+        <title>Ring Administration</title>
+
+        <para>A ringmaster project is a special type of project that just displays the list of projects linked to it using a ring-type link.</para>
+
+    </section>
+
+    <section id="TemplateProjects">
+        <title>Template Projects</title>
+
+        <para>The following are inherited from a template project at project creation:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>Project link types</listitem>
+            <listitem>Related project</listitem>
+        </itemizedlist>
+
+        <para>If a template project is the target of a relationship, the new project is (automatically) added to that linkage at project creation.</para>
+        <para>When a project is refreshed from its template, the following actions are proposed to the user for individual confirmation:</para>
+
+        <itemizedlist mark="bullet" spacing="compact">
+            <listitem>Link types defined in the template and not present in the target project are added (thus types recently added to the template can be adopted into the project).</listitem>
+            <listitem>Link types sharing a name with the template project are replaced with the template ones (i.e. types with the same name in the template and project are assumed to be the same; and it is assumed that the template is the master, so they are copied from the template overwriting the project's version, if confirmed)</listitem>
+            <listitem>Linked projects in the template that are not linked to by the project are added.</listitem>
+            <listitem>Projects that specify the template as target but do not link to the project are identified for information only (i.e. if the project were being newly created, it would be added automatically to the master project's links, but when refreshing we can't be certain that it has not been deleted by that project, nor that it is really wanted as a link).</listitem>
+            <listitem>Ringmaster projects referenced by the template are offered to join the ring.</listitem>
+        </itemizedlist>
+
+        <para>Note: link types that are defined in the target project but not in the template project are neither modified nor deleted - no proposal is made to the user; they are listed for information only.</para>
+        <para>No mechanism is proposed for a template project to force an update upon its offspring; the template administrator user must ask the project administrators to do the refresh themselves.</para>
+
+    </section>
+
+</chapter>
+<!--
+Local Variables:
+sgml-parent-document: ("User_Guide.xml" "book" "chapter")
+End:
+-->

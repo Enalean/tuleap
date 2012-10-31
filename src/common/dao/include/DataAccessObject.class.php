@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'DataAccess.class.php';
 require_once 'DataAccessResult.class.php';
 require_once 'DataAccessResultEmpty.class.php';
 
@@ -44,7 +45,15 @@ class DataAccessObject {
     public function DataAccessObject($da = null) {
         $this->__construct($da);
     }
-    
+
+    public function startTransaction() {
+        $this->da->startTransaction();
+    }
+
+    public function commit() {
+        $this->da->commit();
+    }
+
     /**
      * For SELECT queries
      *

@@ -4,7 +4,8 @@ plugin_agiledashboard	descriptor_name	Agile Dashboard
 plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Agile Dashboard
 
-plugin_agiledashboard	planning_destination_help	Drag'n drop content from backlog on the left on this area to add new items to current release.
+plugin_agiledashboard	Admin	Agile Dashboard Administration
+plugin_agiledashboard	planning_destination_help	Use left arrow on item to move it on backlog or bottom/up arrow to rank items.
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Create a new planning
 plugin_agiledashboard	planning_edit	Edit
@@ -23,6 +24,9 @@ plugin_agiledashboard	edit_item	Edit
 plugin_agiledashboard	add_subitem	Add new $1
 plugin_agiledashboard	backlog_add	Add
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
+plugin_agiledashboard	access_to_planning	Access to planning
+plugin_agiledashboard	backlog_destination_help	Use right arrow on item to move it to current milestone or bottom/up arrow to rank items.
 
 plugin_agiledashboard	capacity	Capacity:
 plugin_agiledashboard	available	Available $1
+

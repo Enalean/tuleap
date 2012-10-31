@@ -24,6 +24,10 @@ class Tracker_FormElement_Container_Column_Group {
         return $this->fetchGroup($columns, 'fetchArtifactInGroup', array($artifact, $submitted_values));
     }
     
+    public function fetchArtifactReadOnly($columns, Tracker_Artifact $artifact) {
+        return $this->fetchGroup($columns, 'fetchArtifactReadOnlyInGroup', array($artifact));
+    }
+
     public function fetchSubmit($columns, $submitted_values = array()) {
         return $this->fetchGroup($columns, 'fetchSubmitInGroup', array($submitted_values));
     }

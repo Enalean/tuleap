@@ -18,24 +18,30 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Hierarchy_MoreThanOneParentException extends Exception {
+class Planning_IndexPresenter {
 
-    public function __construct(Tracker_Artifact $child, array $parents) {
-        parent::__construct($this->getTranslatedMessage(array($this->getParentTitle($child), $this->getParentsList($parents))));
+    /**
+     * @var string
+     */
+    public $plugin_theme_path;
+
+    public function __construct(array $short_access, $plugin_theme_path) {
+        $this->short_access      = $short_access;
+        $this->plugin_theme_path = $plugin_theme_path;
     }
 
-    private function getTranslatedMessage(array $arguments) {
-        return $GLOBALS['Language']->getText('plugin_tracker_hierarchy', 'error_more_than_one_parent', $arguments);
+    public function getShortAccess() {
+        return $this->short_access;
     }
 
-    private function getParentsList(array $parents) {
-        return implode(', ', array_map(array($this, 'getParentTitle'), $parents));
+    public function hasShortAccess() {
+        return count($this->short_access);
     }
 
-    private function getParentTitle(Tracker_Artifact $artifact) {
-        return '"'.$artifact->getTitle().' ('.$artifact->fetchXRefLink().')"';
+    public function getLatestLeafMilestone() {
+        $latest_short_access = end($this->short_access);
+        return current($latest_short_access->getLastOpenMilestones());
     }
-
 }
 
 ?>

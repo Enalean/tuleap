@@ -20,7 +20,6 @@
 
 require_once 'Hierarchy.class.php';
 require_once 'Dao.class.php';
-require_once 'MoreThanOneParentException.class.php';
 
 class Tracker_HierarchyFactory {
 
@@ -144,27 +143,39 @@ class Tracker_HierarchyFactory {
      * @param User $user
      * @param Tracker_Artifact $child
      *
-     * @throws Tracker_Hierarchy_MoreThanOneParentException
-     *
      * @return null| Tracker_Artifact
      */
     public function getParentArtifact(User $user, Tracker_Artifact $child) {
         $dar = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
         if ($dar && !$dar->isError()) {
-            switch ($dar->rowCount()) {
-                case 0:
-                    return null;
-                case 1:
-                    return $this->artifact_factory->getInstanceFromRow($dar->getRow());
-                default:
-                    $parents = array();
-                    foreach ($dar as $row) {
-                        $parents[] = $this->artifact_factory->getInstanceFromRow($row);
-                    }
-                    throw new Tracker_Hierarchy_MoreThanOneParentException($child, $parents);
+            $parents = array();
+            foreach ($dar as $row) {
+                $parents[] = $this->artifact_factory->getInstanceFromRow($row);
+            }
+            if (count($parents) > 1) {
+                $warning = $GLOBALS['Language']->getText(
+                    'plugin_tracker_hierarchy',
+                    'error_more_than_one_parent',
+                    array(
+                        $this->getParentTitle($child),
+                        $this->getParentsList($parents)
+                    )
+                );
+                $GLOBALS['Response']->addFeedback('warning', $warning, CODENDI_PURIFIER_LIGHT);
+            }
+            if ($parents) {
+                return $parents[0];
             }
         }
         return null;
+    }
+
+    private function getParentsList(array $parents) {
+        return implode(', ', array_map(array($this, 'getParentTitle'), $parents));
+    }
+
+    private function getParentTitle(Tracker_Artifact $artifact) {
+        return '"'. $artifact->getTitle() .' ('. $artifact->fetchXRefLink() .')"';
     }
 
     /**

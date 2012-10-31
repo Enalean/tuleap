@@ -41,6 +41,13 @@ class SystemEvent_ROOT_DAILY extends SystemEvent {
      * Process stored event
      */
     public function process() {
+        // Re-dumping ssh keys should be done only once a day as:
+        // - It's I/O intensive
+        // - It's stress gitolite backend
+        // - SSH keys should already be dumped via EDIT_SSH_KEY event
+        $backend_system = Backend::instance('System');
+        $backend_system->dumpSSHKeys();
+
         $this->_getEventManager()->processEvent('root_daily_start', array());
         $this->done();
         return true;

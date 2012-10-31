@@ -23,7 +23,7 @@
 require_once('common/backend/Backend.class.php');
 require_once('common/dao/UserDao.class.php');
 require_once('common/wiki/lib/WikiAttachment.class.php');
-
+require_once('common/user/User_SSHKeyDumper.class.php');
 
 class BackendSystem extends Backend {
 
@@ -458,10 +458,10 @@ class BackendSystem extends Backend {
      * @return boolean always true
      */
     public function dumpSSHKeys() {
-        $user_dao     = new UserDao();
-        $user_manager = $this->getUserManager();
-        foreach($user_dao->searchSSHKeys() as $row) {
-            $this->writeSSHKeys($user_manager->getUserInstanceFromRow($row));
+        $sshkey_dumper = new User_SSHKeyDumper($this);
+        $user_manager  = $this->getUserManager();
+        foreach($user_manager->getUsersWithSshKey() as $user) {
+            $sshkey_dumper->writeSSHKeys($user);
         }
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, null);
         return true;
@@ -475,80 +475,10 @@ class BackendSystem extends Backend {
      * @return boolean if the ssh key was written
      */
     public function dumpSSHKeysForUser(User $user) {
-        $write_status = true;
-        if ($user->getUnixStatus() == 'A') {
-            $write_status = $this->writeSSHKeys($user);
-        }
+        $sshkey_dumper = new User_SSHKeyDumper($this);
+        $write_status = $sshkey_dumper->writeSSHKeys($user);
         EventManager::instance()->processEvent(Event::DUMP_SSH_KEYS, array('user' => $user));
         return $write_status;
-    }
-
-    /**
-     * Write SSH authorized_keys into a user homedir
-     *
-     * /!\ Be careful, this method change current process UID/GID to write keys
-     *
-     * @param User $user
-     *
-     * @return Boolean
-     */
-    protected function writeSSHKeys(User $user) {
-        try {
-            $ssh_dir  = $user->getUnixHomeDir().'/.ssh';
-
-            $this->changeProcessUidGidToUser($user);
-            $this->createSSHDirForUser($user, $ssh_dir);
-            $this->writeSSHFile($user, $ssh_dir);
-            $this->restoreRootUidGid();
-
-            $this->log("Authorized_keys for ".$user->getUserName()." written.", Backend::LOG_INFO);
-            return true;
-        } catch (Exception $exception) {
-            $this->restoreRootUidGid();
-            $this->log($exception->getMessage(), Backend::LOG_ERROR);
-            return false;
-        }
-    }
-
-    private function changeProcessUidGidToUser(User $user) {
-        $user_unix_info = posix_getpwnam($user->getUserName());
-        if (empty($user_unix_info['uid']) || empty($user_unix_info['gid'])) {
-            throw new RuntimeException("User ".$user->getUserName()." has no uid/gid");
-        }
-        if (!(posix_setegid($user_unix_info['gid']) && posix_seteuid($user_unix_info['uid']))) {
-            throw new RuntimeException("Cannot change current process uid/gid for ".$user->getUserName());
-        }
-    }
-
-    private function restoreRootUidGid() {
-        posix_setegid(0);
-        posix_seteuid(0);
-    }
-
-    private function createSSHDirForUser(User $user, $ssh_dir) {
-        if (!is_dir($ssh_dir)) {
-            if (mkdir($ssh_dir)) {
-                $this->chmod($ssh_dir, 0700);
-                $this->chown($ssh_dir, $user->getUserName());
-                $this->chgrp($ssh_dir, $user->getUserName());
-            } else {
-                throw new RuntimeException("Unable to create user home ssh directory for ".$user->getUserName());
-            }
-        }
-    }
-
-    private function writeSSHFile(User $user, $ssh_dir) {
-        $ssh_keys = implode("\n", $user->getAuthorizedKeysArray());
-        if (file_put_contents("$ssh_dir/authorized_keys_new", $ssh_keys) === false) {
-            throw new RuntimeException("Unable to write authorized_keys_new file for ".$user->getUserName());
-        }
-        if (rename("$ssh_dir/authorized_keys_new", "$ssh_dir/authorized_keys") === false) {
-            throw new RuntimeException("Unable to rename authorized_keys_new file for ".$user->getUserName());
-        }
-
-        $this->chmod("$ssh_dir/authorized_keys", 0600);
-        $this->chown("$ssh_dir/authorized_keys", $user->getUserName());
-        $this->chgrp("$ssh_dir/authorized_keys", $user->getUserName());
     }
 
     /**

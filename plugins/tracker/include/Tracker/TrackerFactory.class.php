@@ -26,7 +26,12 @@ require_once dirname(__FILE__).'/../constants.php';
 
 class TrackerFactory {
 
+    /** @var array of Tracker */
     protected $trackers;
+
+    /** @var Tracker_HierarchyFactory */
+    private $hierarchy_factory;
+
     /**
      * A protected constructor; prevents direct creation of object
      */
@@ -125,8 +130,8 @@ class TrackerFactory {
     }
 
     protected $dao;
-
-   /**
+    
+    /**
      * @return TrackerDao
      */
     protected function getDao() {
@@ -147,6 +152,13 @@ class TrackerFactory {
             $this->trackers[$tracker_id] = $this->getInstanceFromRow($row);
         }
         return $this->trackers[$tracker_id];
+    }
+
+    /**
+     * /!\ Only for tests
+     */
+    public function setCachedInstances($trackers) {
+        $this->trackers = $trackers;
     }
 
     /**
@@ -216,7 +228,7 @@ class TrackerFactory {
         // association between ids in XML and php objects
         $xmlMapping = array();
         foreach ($xml->formElements->formElement as $index => $elem) {
-            $tracker->formElements[] = $this->getFormElementFactory()->getInstanceFromXML($elem, $xmlMapping);
+            $tracker->formElements[] = $this->getFormElementFactory()->getInstanceFromXML($tracker, $elem, $xmlMapping);
         }
 
         // set semantics
@@ -605,17 +617,48 @@ class TrackerFactory {
     }
     
     /**
+     * /!\ Only for tests
+     */
+    public function setHierarchyFactory(Tracker_HierarchyFactory $hierarchy_factory) {
+        $this->hierarchy_factory = $hierarchy_factory;
+    }
+    
+    /**
      * @return Tracker_HierarchyFactory 
      */
     public function getHierarchyFactory() {
-        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this, Tracker_ArtifactFactory::instance());
+        if (!$this->hierarchy_factory) {
+            $this->hierarchy_factory = Tracker_HierarchyFactory::instance();
+        }
+        return $this->hierarchy_factory;
     }
     
+    /**
+     * @return Hierarchy
+     */
+    public function getHierarchy(array $tracker_ids) {
+        return $this->getHierarchyFactory()->getHierarchy($tracker_ids);
+    }
+
+    /**
+     * Create a dom document based on a SimpleXMLElement
+     *
+     * @param SimpleXMLElement $xml_element
+     *
+     * @return \DOMDocument
+     */
+    private function simpleXmlElementToDomDocument(SimpleXMLElement $xml_element) {
+        $dom = new DOMDocument("1.0", "UTF-8");
+        $dom_element = $dom->importNode(dom_import_simplexml($xml_element), true);
+        $dom->appendChild($dom_element);
+        return $dom;
+    }
+
     /**
      * First, creates a new Tracker Object by importing its structure from an XML file,
      * then, imports it into the Database, before verifying the consistency
      *
-     * @param string         $xmlFile        the location of the imported file
+     * @param string         $xml_element        the location of the imported file
      * @param int            $groupId        the Id of the project to create the tracker
      * @param string         $name           the name of the tracker (label)
      * @param string         $description    the description of the tracker
@@ -624,20 +667,21 @@ class TrackerFactory {
      *
      * @return the new Tracker, or null if error
      */
-    public function createFromXML($xmlFile, $groupId, $name, $description, $itemname, $trackermanager) {
+    public function createFromXML(SimpleXMLElement $xml_element, $groupId, $name, $description, $itemname, $trackermanager = null) {
         $tracker = null;        
         if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $groupId)) {
             // XML validation before creating a new tracker
-            $dom = new DOMDocument;
-            $dom->load($xmlFile);
+            $dom = $this->simpleXmlElementToDomDocument($xml_element);
             $rng = realpath(dirname(__FILE__).'/../../www/resources/tracker.rng');
             if(!@$dom->relaxNGValidate($rng)) { //hide warning since we will extract the errors below
                 //try to be more verbose for the end user (RelaxNG notices are hidden)
-                $hp = Codendi_HTMLPurifier::instance();
-                $indent = $GLOBALS['codendi_utils_prefix'] .'/xml/indent.xsl';
-                $jing   = $GLOBALS['codendi_utils_prefix'] .'/xml/jing.jar';
-                $temp   = tempnam($GLOBALS['tmp_dir'], 'xml');
-                $cmd_indent = "xsltproc -o $temp $indent $xmlFile";
+                $hp       = Codendi_HTMLPurifier::instance();
+                $indent   = $GLOBALS['codendi_utils_prefix'] .'/xml/indent.xsl';
+                $jing     = $GLOBALS['codendi_utils_prefix'] .'/xml/jing.jar';
+                $temp     = tempnam($GLOBALS['tmp_dir'], 'xml');
+                $xml_file = tempnam($GLOBALS['tmp_dir'], 'xml_src_');
+                file_put_contents($xml_file, $dom->saveXML());
+                $cmd_indent = "xsltproc -o $temp $indent $xml_file";
                 `$cmd_indent`;
 
                 $output = array();
@@ -711,9 +755,7 @@ class TrackerFactory {
                     echo PHP_EOL;
                 }
             } else {
-                //create the tracker as a SimpleXMLElement
-                $trackerXML = simplexml_load_file($xmlFile);
-                $tracker = $this->getInstanceFromXML($trackerXML, $groupId, $name, $description, $itemname);
+                $tracker = $this->getInstanceFromXML($xml_element, $groupId, $name, $description, $itemname);
                 //Testing consistency of the imported tracker before updating database
                 if ($tracker->testImport()) {
                     if ($tracker_id = $this->saveObject($tracker)) {
@@ -756,6 +798,7 @@ class TrackerFactory {
      */
     public function saveObject($tracker) {
         // create tracker
+        $this->getDao()->startTransaction();
         $tracker_id = $this->getDao()->create(
                 $tracker->group_id,
                 $tracker->name,
@@ -809,6 +852,7 @@ class TrackerFactory {
             
             $this->postCreateActions($trackerDB);
         }
+        $this->getDao()->commit();
         return $tracker_id;
     }
 }

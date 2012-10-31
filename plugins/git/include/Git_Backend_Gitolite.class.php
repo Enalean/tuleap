@@ -20,10 +20,11 @@
  */
 
 require_once 'Git_Backend_Interface.php';
+require_once 'GitRepositoryCreatorImpl.class.php';
 require_once 'Git.class.php';
 require_once 'exceptions/GitRepositoryAlreadyExistsException.class.php';
 
-class Git_Backend_Gitolite implements Git_Backend_Interface {
+class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
     /**
      * @var Git_GitoliteDriver
      */
@@ -38,6 +39,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @var PermissionsManager
      */
     protected $permissionsManager;
+
+    /**
+     * @var gitPlugin
+     */
+    protected $gitPlugin;
 
     /**
      * Constructor
@@ -63,7 +69,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         $this->driver->dumpProjectRepoConf($repository->getProject());
         return $this->driver->push();
     }
-
+    
     /**
      * Verify if the repository as already some content within
      *
@@ -87,9 +93,28 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
      * @param  GitRepository $repository
      * @return String
      */
-    public function getAccessUrl(GitRepository $repository) {
+    public function getAccessURL(GitRepository $repository) {
+        $transports = array('ssh' => $this->getSSHAccessURL($repository));
+        $http_transport = $this->getHTTPAccessURL($repository);
+        if ($http_transport) {
+            $transports['http'] = $http_transport;
+        }
+        return $transports;
+    }
+
+    private function getSSHAccessURL(GitRepository $repository) {
         $serverName = $_SERVER['SERVER_NAME'];
         return  'gitolite@'.$serverName.':'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+    }
+
+    public function getHTTPAccessURL(GitRepository $repository) {
+        $git_plugin = $this->getGitPlugin();
+        if ($git_plugin) {
+            $http_url = $git_plugin->getConfigurationParameter('git_http_url');
+            if ($http_url) {
+                return  $http_url.'/'.$repository->getProject()->getUnixName().'/'.$repository->getFullName().'.git';
+            }
+        }
     }
 
     /**
@@ -155,8 +180,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             }
         }
         
-        $this->updateRepoConf($repository);
-
         foreach ($msgs as $msg) {
             $GLOBALS['Response']->addFeedback($ok ? 'info' : 'error', $msg);
         }
@@ -234,16 +257,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return $this->changeRepositoryMailingList($repository);
     }
 
-    /**
-     * Get the regexp pattern to use for name repository validation
-     *
-     * @return string
-     */
-    public function getAllowedCharsInNamePattern() {
-        //alphanums, underscores, slashes and dash
-        return 'a-zA-Z0-9/_.-';
-    }
-    
     /**
      * Rename a project
      *
@@ -406,6 +419,26 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
         return $this->driver;
     }
 
+    protected function getGitPlugin() {
+        if (!$this->gitPlugin) {
+            $plugin_manager  = PluginManager::instance();
+            $this->gitPlugin = $plugin_manager->getPluginByName('git');
+        }
+        return $this->gitPlugin;
+    }
+
+    /**
+     * Setter for tests
+     *
+     * @param GitPlugin $gitPlugin
+     */
+    public function setGitPlugin(GitPlugin $gitPlugin) {
+        $this->gitPlugin = $gitPlugin;
+    }
+
+    public function commitTransaction(GitRepository $repository) {
+        $this->updateRepoConf($repository);
+    }
 }
 
 ?>

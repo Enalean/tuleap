@@ -1,13 +1,13 @@
 <?php
 
-// LDAP server(s) to query for more information on CodeX users and 
+// LDAP server(s) to query for more information on Tuleap users and 
 // for authentication.
 // You may use a comma-separated list if there are several servers available
 // (leave blank to disable LDAP lookup). 
 // To specify secure LDAP servers, use 'ldaps://servername' 
 $sys_ldap_server = '%sys_ldap_server%';
 
-// To enable LDAP information on CodeX users, also define the DN 
+// To enable LDAP information on Tuleap users, also define the DN 
 // (distinguised name) to use in LDAP queries.
 // The ldap filter is the filter to use to query the LDAP directory
 // (%name% are substituted with the value from the user table)
@@ -15,13 +15,13 @@ $sys_ldap_dn     = 'dc=tuleap,dc=net';
 
 // For LDAP systems that do not accept anonymous binding, define here
 // a valid DN and password:
-//$sys_ldap_bind_dn = "eduid=1234,ou=people,dc=codendi,dc=com";
+//$sys_ldap_bind_dn = "eduid=1234,ou=people,dc=tuleap,dc=com";
 //$sys_ldap_bind_passwd = "xxxxxxxxx";
 
 // LDAP authentication:
-// Codendi only supports authentication with a attempt to bind with LDAP server
+// Tuleap only supports authentication with a attempt to bind with LDAP server
 // with a DN and a password.
-// As the DN is usually long (eduid=1234,ou=people,dc=codendi,dc=com) people 
+// As the DN is usually long (eduid=1234,ou=people,dc=tuleap,dc=com) people 
 // usually authenticate themself with a login. So we need to first look 
 // for the DN that correspond to the given login and once found attempt to bind
 // with the given password. 
@@ -51,6 +51,14 @@ $sys_ldap_people_dn     = 'ou=people,dc=tuleap,dc=net';
 // fields because it's aim to find a user whatever it's given (email, name,
 // login, etc).
 $sys_ldap_search_user='(|(uid=%words%)(cn=%words%)(mail=%words%))';
+
+// By default tooltip search is using ($sys_ldap_cn=%words%*) search filter (Hardcoded)
+// You can change for a more sophisticated search 
+// $sys_ldap_tooltip_search_user='(&(|(sn=%words%*)(givenName=%words%*)(uid=%words%*))(!(givenName=BoiteVocale))(uid=*))';
+
+// By default tooltip search attrs are $sys_ldap_cn and $sys_ldap_uid (Hardcoded)
+// You can choose the attributes the search will retrieve
+// $sys_ldap_tooltip_search_attrs='uid;sn;givenName';
 
 // On account creation, what it the default user status (A, R, ...)
 $sys_ldap_default_user_status = 'A';

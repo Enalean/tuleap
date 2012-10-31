@@ -124,7 +124,11 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
             )
         );
         
-        $f = $tf->getInstanceFromXML($xml, $mapping);
+        $tracker = aTracker()->build();
+        
+        stub($a_formelement)->setTracker($tracker)->once();
+        
+        $f = $tf->getInstanceFromXML($tracker, $xml, $mapping);
         
         $this->assertReference($f, $a_formelement);
         $this->assertReference($mapping['F0'], $a_formelement);

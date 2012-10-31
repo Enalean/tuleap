@@ -44,6 +44,7 @@ class GitRepository implements DVCSRepository {
     const DEFAULT_MAIL_PREFIX = '[SCM]';
     const REPO_SCOPE_PROJECT  = 'P';
     const REPO_SCOPE_INDIVIDUAL = 'I';
+    const DEFAULT_DESCRIPTION = "-- Default description --";
     
     private $id;
     private $parentId;
@@ -71,6 +72,7 @@ class GitRepository implements DVCSRepository {
     private $dao;
     private $namespace;
     private $scope;
+    private $remote_server_id;
     
     protected $backendType;
 
@@ -268,21 +270,8 @@ class GitRepository implements DVCSRepository {
      */
     public function getParent() {
         if ( empty($this->parent) ) {
-            $this->load();            
-            $parent = new GitRepository();
-            $parent->setId($this->parentId);
-            try {
-                if ( !$this->getDao()->getProjectRepositoryById($parent) ) {
-                    //no parent or error
-                    $parent = null;
-                } else {
-                    //there is a parent
-                    $this->parentId = $parent->getId();//not very useful
-                }
-            } catch (GitDaoException $e) {
-                $parent = null;
-            }
-            $this->parent = $parent;
+            $factory = new GitRepositoryFactory($this->getDao(), $this->_getProjectManager());
+            $this->parent = $factory->getRepositoryById($this->getParentId());
         }
         return $this->parent;
     }
@@ -643,40 +632,10 @@ class GitRepository implements DVCSRepository {
     public function getAccessURL() {
         return $this->getBackend()->getAccessURL($this);
     }
-
-    /**
-     * Clone a repository, it inherits access
-     * @param String forkName
-     */
-    public function forkShell($forkName) {
-        $clone = new GitRepository();
-        $clone->setName($forkName);
-        $clone->setProject( $this->getProject() );
-        $clone->setParent( $this );               
-        $clone->setCreationDate( date('Y-m-d H:i:s') );
-        $clone->setCreator( $this->getCreator() );
-        $clone->setAccess( $this->getAccess() );
-        $clone->setIsInitialized(1);
-        $clone->setDescription('-- Default description --');
-        $this->getBackend()->createFork($clone);
-    }
-    
-    public function fork($user, $namespace, $scope, Project $project) {
-        $clone = clone $this;
-        $clone->setProject($project);
-        $clone->setCreator($user);
-        $clone->setParent($this);
-        $clone->setNamespace($namespace);
-        $clone->setId(null);
-        $path = unixPathJoin(array($project->getUnixName(), $namespace, $this->getName())).'.git';
-        $clone->setPath($path);
-        $clone->setScope($scope);
-        $this->getBackend()->fork($this, $clone);
-    }
     
     /**
      * Create a reference repository
-     * @deprecated
+     * @deprecated to be removed when we purge gitshell creation from the code  (SystemEvent_GIT_REPO_CREATE)
      * @see GitRepositoryManager::create
      */
     public function create() {        
@@ -817,24 +776,6 @@ class GitRepository implements DVCSRepository {
     }
     
     /**
-     * Validate the name for a repository
-     *
-     * @param string $name The name to validate
-     *
-     * @return bool true if valid, false otherwise
-     */
-    public function isNameValid($name) {
-        $len = strlen($name);
-        return 1 <= $len && $len < GitDao::REPO_NAME_MAX_LENGTH &&
-               !preg_match('`[^'. $this->getBackend()->getAllowedCharsInNamePattern() .']`', $name) &&
-               !preg_match('`(?:^|/)\.`', $name) && //do not allow dot at the begining of a world
-               !preg_match('%/$|^/%', $name) && //do not allow a slash at the beginning nor the end
-               !preg_match('`\.\.`', $name) && //do not allow double dots (prevent path collisions)
-               !preg_match('/\.git$/', $name) && //do not allow ".git" at the end since Tuleap will automatically add it, to avoid repository names like "repository.git.git"
-               !preg_match('%^u/%', $name);
-    }
-    
-    /**
      * Check if path is a subpath of referencepath
      *
      * @param String $referencePath The path the repository is supposed to belong to
@@ -884,6 +825,18 @@ class GitRepository implements DVCSRepository {
     public function belongsTo(User $user) {
         return $this->getScope() == self::REPO_SCOPE_INDIVIDUAL && $this->getCreatorId() == $user->getId();
     }
-}
+    
+    public function canMigrateToGerrit() {
+        return $this->getBackendType() == GitDao::BACKEND_GITOLITE && 
+               $this->getRemoteServerId() == false;
+    }
 
+    public function setRemoteServerId($id) {
+        $this->remote_server_id = $id;
+    }
+
+    public function getRemoteServerId() {
+        return $this->remote_server_id;
+    }
+}
 ?>

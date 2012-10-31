@@ -23,6 +23,7 @@
 require_once 'common/project/Project.class.php';
 require_once 'common/system_event/SystemEvent.class.php';
 require_once 'common/tracker/ArtifactTypeFactory.class.php';
+require_once('common/project/UGroupBinding.class.php');
 
 /**
 * System Event classes
@@ -45,8 +46,10 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
         return $txt;
     }
     
-    /** 
+    /**
      * Process stored event
+     *
+     * @return Boolean
      */
     function process() {
         // Check parameters
@@ -63,6 +66,11 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
 
             if (!$this->deleteMembershipRequestNotificationEntries($groupId)) {
                 $this->error("Could not remove membership request notification ugroups or message");
+                $deleteState = false;
+            }
+
+            if (!$this->cleanupProjectUgroupsBinding($groupId)) {
+                $this->error("Could not remove ugroups binding");
                 $deleteState = false;
             }
 
@@ -143,7 +151,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
      /**
      * Remove all users from a given project.
      *
-     * @param Project $project
+     * @param Project $project Project to be deleted
      *
      * @return Boolean
      */
@@ -156,7 +164,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
      * Deletes ugroups assigned to recieve membership request notification 
      * And the message set from a given project.
      *
-     * @param Integer $groupId
+     * @param Integer $groupId Id of the project to be deleted
      *
      * @return Boolean
      */
@@ -169,7 +177,7 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
     /**
      * Remove Files, releases and packages for a given project.
      *
-     * @param Integer $groupId
+     * @param Integer $groupId Id of the project to be deleted
      *
      * @return Boolean
      */
@@ -180,6 +188,8 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
 
     /**
      * Returns a ArtifactTypeFactory
+     *
+     * @param Project $project Project to be deleted
      *
      * @return ArtifactTypeFactory
      */
@@ -216,6 +226,19 @@ class SystemEvent_PROJECT_DELETE extends SystemEvent {
         return ProjectManager::instance();
     }
 
+    /**
+     * Remove all binding to user groups from a the given user group.
+     *
+     * @param Integer $groupId Id of the deleted project
+     *
+     * @return Boolean
+     */
+    protected function cleanupProjectUgroupsBinding($groupId) {
+        $ugroupUserDao = new UGroupUserDao();
+        $ugroupManager = new UGroupManager(new UGroupDao());
+        $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
+        return $uGroupBinding->removeProjectUGroupsBinding($groupId);
+    }
 }
 
 ?>

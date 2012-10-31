@@ -562,6 +562,11 @@ ul.tracker-form-element-artifactlink-list {
     padding-left: 0.5em;
     margin-top: 0;
 }
+ul.tracker-form-element-checkbox {
+    list-style-type:none;
+    padding-left:0.5em; 
+    margin-top: 0px;
+}
 .tracker_alltrackers dd {
     margin-left:1.5em;
     margin-bottom:1.5em;
@@ -1221,3 +1226,27 @@ td.first-column {
 .tracker_artifact_attachment_deleted {
    text-decoration: line-through;
 }
+
+.help {
+    color: #999;
+    margin-top: 0;
+}
+
+/* {{{ */
+.tracker_confirm_delete {
+    width: 50%;
+    margin: auto;
+    border:medium solid red;
+    background:#FFC;
+    padding:4px 10px;
+}
+.tracker_confirm_delete_buttons {
+    text-align:center;
+}
+.tracker_confirm_delete_preview {
+    border: medium inset lightgray;
+    background: #eee;
+    padding: 0.5em 1em;
+    margin: 1em auto;
+}
+/* }}} */

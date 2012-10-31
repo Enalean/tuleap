@@ -36,7 +36,11 @@ grammar {
         element semantics {
             element semantic { semanticContent }*
         }?,
-        
+
+        element dependencies {
+            element rule { ruleContent }*
+        },
+
         element reports { 
             element report { reportContent }* 
         }?,
@@ -108,7 +112,7 @@ grammar {
             )
         |
             (
-                attribute type { "sb" | "msb" | "tbl" },
+                attribute type { "sb" | "msb" | "tbl" | "cb" },
                 bindContent
             )
         )
@@ -123,6 +127,10 @@ grammar {
             | 
                 (
                     attribute type { "users" }
+                )
+            |
+                (
+                    attribute type { "ugroups" }
                 )
             ),
             element items { 
@@ -181,7 +189,21 @@ grammar {
             }*
         }*
         
-        
+    ruleContent =
+        (
+            element source_field {
+                attribute REF { xsd:IDREF }
+            },
+            element target_field {
+                attribute REF { xsd:IDREF }
+            },
+            element source_value {
+                attribute REF { xsd:IDREF }
+            },
+            element target_value {
+                attribute REF { xsd:IDREF }
+            }
+        )
     semanticContent = 
         (
             (

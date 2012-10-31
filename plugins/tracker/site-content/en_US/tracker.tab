@@ -968,7 +968,7 @@ plugin_tracker	submit_new_artifact	Submit new artifact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration
 plugin_tracker	help	Help
-plugin_tracker	linked_to	Cet artefact (de $2) sera lié à $1
+plugin_tracker	linked_to	This artifact (of $2) will be linked to $1
 plugin_tracker	tracker_switcher	Please select a tracker
 
 plugin_tracker_artifact	set_to	set to
@@ -1069,6 +1069,7 @@ plugin_tracker_formelement_admin	open_list_description	Provides a textbox contai
 plugin_tracker_formelement_admin	values	Values
 plugin_tracker_formelement_admin	choose_values	Choose values
 plugin_tracker_formelement_admin	bind_to_users	Bind to users
+plugin_tracker_formelement_admin	bind_to_ugroups	Bind to user groups
 plugin_tracker_formelement_admin	alphabetically_sort	alphabetically sort values
 plugin_tracker_formelement_admin	add_row	Add one value per row
 plugin_tracker_formelement_admin	type_search_term	Type in a search term
@@ -1084,11 +1085,15 @@ plugin_tracker_formelement_admin	select_default_value	Select default value
 plugin_tracker_formelement_admin	static_values	Static values
 plugin_tracker_formelement_admin	switch_msb	Switch to Multi Select Box
 plugin_tracker_formelement_admin	switch_sb	Switch to Select Box
+plugin_tracker_formelement_admin	switch_cb	Switch to CheckBox
 plugin_tracker_formelement_admin	switch_type_confirm	Are you sure you want to change the type of thie field?
 plugin_tracker_formelement_admin	delete_field_impossible	Impossible to delete this field (used in semantics, workflow or field dependency)
 plugin_tracker_formelement_admin	hide_value_impossible	You can't hide this value since it is used in status semantic, in workflow or in  field dependency
 plugin_tracker_formelement_admin	hide_value	Show/hide this value
+plugin_tracker_formelement_admin	checkbox	Checkbox
+plugin_tracker_formelement_admin	checkbox_desc	Checkbox
 plugin_tracker_formelement_admin	alpha_ranking_updated	Alpha Ranking updated
+
 
 plugin_tracker_formelement_property	hint	Hint
 plugin_tracker_formelement_property	default_value_type	Default value type
@@ -1136,6 +1141,17 @@ plugin_tracker_admin	manage_dependencies_desc	Define how values in one field dep
 
 plugin_tracker_admin	tracker_not_duplicated	Tracker $1 not duplicated
 plugin_tracker_admin	successfully_updated	Tracker successfully updated.
+
+plugin_tracker_admin	clean	Delete artifacts
+plugin_tracker_admin	clean_desc	Permanently purge an artifact from the tracker
+plugin_tracker_admin	clean_info	Allow to permanently delete an artifact. Warning: <strong>There is no way to restore the artifact</strong>. This operation should be an exception.
+plugin_tracker_admin	clean_id	Id of the artifact to delete: 
+plugin_tracker_admin	clean_error_noart	Artifact $1 doesn't exist or doesn't belong to current tracker
+plugin_tracker_admin	clean_info_deleted	Artifact $1 successfully deleted
+plugin_tracker_admin	clean_confirm	Confirm
+plugin_tracker_admin	clean_cancel	Cancel
+plugin_tracker_admin	clean_confirm_text	<h3>You are about to delete permanently the artifact "$1".</h3><p><strong>There is no way to restore the artifact.</strong></p>
+plugin_tracker_admin	clean_cancel_deleted	Delete canceled
 
 plugin_tracker_admin_notification	successfully_updated	Notifications successfully updated.
 

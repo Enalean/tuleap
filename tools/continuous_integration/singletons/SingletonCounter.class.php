@@ -44,16 +44,20 @@ class SingletonCounter {
         return $result;
     }
    
-    public function replaceCurrentSingletonCountWithActualCount() {
-        $this->replaceCurrentSingletonCountWith($this->countSingletonLookupsInProject());
+    public function replaceExpectedSingletonCountWithActualCount() {
+        $this->replaceExpectedSingletonCountWith($this->countSingletonLookupsInProject());
     }
 
-    public function replaceCurrentSingletonCountWith($count) {
+    public function replaceExpectedSingletonCountWith($count) {
         file_put_contents(SINGLETON_COUNT_FILE, $count);
     }
 
-    public function contentsOfCountFile() {
+    public function expectedSingletonCount() {
         return file_get_contents(SINGLETON_COUNT_FILE);        
+    }
+    
+    public function getSingletoncountFilename() {
+        return SINGLETON_COUNT_FILE;
     }
 
 }

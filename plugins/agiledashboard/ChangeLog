@@ -1,3 +1,18 @@
+Version 0.57 - Tuleap 5.6
+    * Fix: typo
+
+Version 0.56 - Tuleap 5.6
+    * Add help messages on agile dashboard
+
+Version 0.55 - Tuleap 5.6
+    * Make agile dashboard home page more user friendly
+
+Version 0.54 - Tuleap 5.5
+    * Fix sla #1444: artifacts with two parents throw an exception
+
+Version 0.53 - Tuleap 5.5
+    * Fix sla #1444 - Tracker page don't display when cardwall is activated
+
 Version 0.52 - Tuleap 5.5
     * Fix fatal error when no planning on parent
 

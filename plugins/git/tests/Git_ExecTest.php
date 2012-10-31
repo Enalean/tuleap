@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/Git_Exec.class.php';
 
 class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
@@ -84,6 +85,11 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
         $this->git_exec->commit("add stuff");
         file_put_contents("$this->fixture_dir/toto", "stuff");
         $this->assertFalse($this->git_exec->isThereAnythingToCommit());
+    }
+
+    public function itDoesntRaiseAnErrorWhenTryingToRemoveAnUntrackedFile() {
+        file_put_contents("$this->fixture_dir/toto", "stuff");
+        $this->git_exec->rm("$this->fixture_dir/toto");
     }
 }
 

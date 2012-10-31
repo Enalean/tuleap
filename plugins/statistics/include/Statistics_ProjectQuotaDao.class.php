@@ -139,4 +139,5 @@ class Statistics_ProjectQuotaDao extends DataAccessObject {
     }
 
 }
+
 ?>

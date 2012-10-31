@@ -28,12 +28,13 @@ require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
 require_once('dao/PriorityDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
+require_once('common/reference/CrossReferenceManager.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
-
-    const REFERENCE_NATURE = 'plugin_tracker_artifact';
+    const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
+    const REFERENCE_NATURE  = 'plugin_tracker_artifact';
 
     public $id;
     public $tracker_id;
@@ -376,9 +377,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return void
      */
     public function display(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
-        $hp = Codendi_HTMLPurifier::instance();
-        $tracker = $this->getTracker();
-        $title = $hp->purify($tracker->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
+        // the following statement needs to be called before displayHeader
+        // in order to get the feedback, if any
+        $hierarchy = $this->getAllAncestors($current_user);
+
+        $hp          = Codendi_HTMLPurifier::instance();
+        $tracker     = $this->getTracker();
+        $title       = $hp->purify($tracker->item_name, CODENDI_PURIFIER_CONVERT_HTML)  .' #'. $this->id;
         $breadcrumbs = array(
             array('title' => $title,
                   'url'   => TRACKER_BASE_URL.'/?aid='. $this->id)
@@ -413,7 +418,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
 
-        $html .= $this->fetchTitleInHierarchy($current_user);
+        $html .= $this->fetchTitleInHierarchy($hierarchy);
 
         $html .= $this->fetchFields($request->get('artifact'));
 
@@ -433,11 +438,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         exit();
     }
 
-    private function fetchTitleInHierarchy(User $current_user) {
-        $html = '';
-        $hp = Codendi_HTMLPurifier::instance();
+    private function fetchTitleInHierarchy(array $hierarchy) {
+        $hp    = Codendi_HTMLPurifier::instance();
+        $html  = '';
         $html .= $this->fetchHiddenTrackerId();
-        $hierarchy = $this->getAllAncestors($current_user);
         if ($hierarchy) {
             array_unshift($hierarchy, $this);
             $html .= $this->fetchParentsTitle($hp, $hierarchy);
@@ -675,17 +679,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return String The valid followup comment format
      */
     private function validateCommentFormat($request, $comment_format_field_name) {
-        $default_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT;
-        $formats = array(
-            Tracker_Artifact_Changeset_Comment::TEXT_COMMENT,
-            Tracker_Artifact_Changeset_Comment::HTML_COMMENT
-        );
-        $comment_format = $request->getValidated(
-            $comment_format_field_name,
-            new Valid_WhiteList($comment_format_field_name, $formats),
-            $default_format
-        );
-        return $comment_format;
+        $comment_format = $request->get($comment_format_field_name);
+        return Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
     }
 
     /**
@@ -802,6 +797,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function fetchDirectLinkToArtifactWithTitle() {
         $hp = Codendi_HTMLPurifier::instance();
         return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $hp->purify($this->getXRefAndTitle()) . '</a>';
+    }
+
+    /**
+     * @return string html
+     */
+    public function fetchDirectLinkToArtifactWithoutXRef() {
+        $hp = Codendi_HTMLPurifier::instance();
+        return '<a class="direct-link-to-artifact" href="'. $this->getUri() . '">' . $hp->purify($this->getTitle()) . '</a>';
     }
 
     /**
@@ -974,6 +977,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if ($this->validateFields($fields_data, false)) {
                 $comment = trim($comment);
                 $last_changeset = $this->getLastChangeset();
+                $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
                 if ($comment || $last_changeset->hasChanges($fields_data)) {
                     //There is a comment or some change in fields: create a changeset
 
@@ -1546,6 +1550,31 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 'form_element_factory' => $this->getFormElementFactory(),
             )
         );
+    }
+
+    public function delete(User $user) {
+        $this->getDao()->startTransaction();
+        foreach($this->getChangesets() as $changeset) {
+            $changeset->delete($user);
+        }
+        $this->getPermissionsManager()->clearPermission(self::PERMISSION_ACCESS, $this->getId());
+        $this->getCrossReferenceManager()->deleteEntity($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+        $this->getDao()->deleteArtifactLinkReference($this->getId());
+        $this->getDao()->deletePriority($this->getId());
+        $this->getDao()->delete($this->getId());
+        $this->getDao()->commit();
+    }
+
+    protected function getDao() {
+        return new Tracker_ArtifactDao();
+    }
+
+    protected function getPermissionsManager() {
+        return PermissionsManager::instance();
+    }
+
+    protected function getCrossReferenceManager() {
+        return new CrossReferenceManager();
     }
 
 }

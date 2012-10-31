@@ -23,6 +23,7 @@ require_once 'common/project/Project.class.php';
 require_once 'common/user/User.class.php';
 require_once 'common/project/UGroupManager.class.php';
 require_once 'common/project/UGroupLiteralizer.class.php';
+require_once 'Git_Gitolite_SSHKeyDumper.class.php';
 require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'PathJoinUtil.php';
@@ -44,6 +45,7 @@ require_once 'Git_Exec.class.php';
  *
  */
 class Git_GitoliteDriver {
+
     /**
      * @var Git_Exec
      */
@@ -52,6 +54,11 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
+    /**
+     * @var Git_Gitolite_SSHKeyDumper
+     */
+    protected $dumper;
+
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
         Git::PERM_WRITE => ' RW ',
@@ -64,12 +71,14 @@ class Git_GitoliteDriver {
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null, Git_Exec $gitExec = null) {
+    public function __construct($adminPath = null, Git_Exec $gitExec = null, Git_Gitolite_SSHKeyDumper $dumper = null) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
+        
+        $this->dumper = $dumper ? $dumper : new Git_Gitolite_SSHKeyDumper($this->adminPath, $this->gitExec, UserManager::instance());
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
@@ -155,66 +164,10 @@ class Git_GitoliteDriver {
      * Dump ssh keys into gitolite conf
      */
     public function dumpSSHKeys(User $user = null) {
-        if (is_dir($this->getAdminPath())) {
-            if ($user) {
-                $this->initUserKeys($user);
-                $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
-            } else {
-                $userdao = new UserDao();
-                foreach ($userdao->searchSSHKeys() as $row) {
-                    $user = new User($row);
-                    $this->initUserKeys($user);
-                }
-                $commit_msg = 'SystemEvent update all user keys';
-            }
-            $this->gitExec->add('keydir');
-            $this->gitExec->commit($commit_msg);
+        if ($this->dumper->dumpSSHKeys($user)) {
             return $this->push();
         }
         return false;
-    }
-
-    /**
-     * @param User $user
-     */
-    private function initUserKeys($user) {
-        // First remove existing keys
-        $this->removeUserExistingKeys($user);
-
-        // Create path if need
-        clearstatcache();
-        $keydir = 'keydir';
-        if (!is_dir($keydir)) {
-            if (!mkdir($keydir)) {
-                throw new Exception('Unable to create "keydir" directory in '.getcwd());
-            }
-        }
-
-        // Dump keys
-        $i    = 0;
-        foreach ($user->getAuthorizedKeys(true) as $key) {
-            $filePath = $keydir.'/'.$user->getUserName().'@'.$i.'.pub';
-            file_put_contents($filePath, $key);
-            $i++;
-        }
-    }
-
-    /**
-     * Remove all pub SSH keys previously associated to a user
-     *
-     * @param User $user
-     */
-    protected function removeUserExistingKeys($user) {
-        $keydir = 'keydir';
-        if (is_dir($keydir)) {
-            $dir = new DirectoryIterator($keydir);
-            foreach ($dir as $file) {
-                $userbase = $user->getUserName().'@';
-                if (preg_match('/^'.$userbase.'[0-9]+.pub$/', $file)) {
-                     $this->gitExec->rm($file->getPathname());
-                }
-            }
-        }
     }
 
     /**
@@ -251,18 +204,29 @@ class Git_GitoliteDriver {
         }
         $notified_mails = $notification_manager->getNotificationMailsByRepositoryId($repository_id);
         $repository->setNotifiedMails($notified_mails);
+        $repository->setDescription($row[GitDao::REPOSITORY_DESCRIPTION]);
         $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
         $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
         return $repository;
     }
     
-    protected function fetchReposConfig($project, $repository) {
-        $repo_config  = 'repo '. $this->repoFullName($repository, $project->getUnixName()) . PHP_EOL;
+    protected function fetchReposConfig(Project $project, $repository) {
+        $repo_full_name   = $this->repoFullName($repository, $project->getUnixName());
+        $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
-        return $repo_config . PHP_EOL;
+        
+        // Do not dump repository description as it seems to produce wiered effect @ST
+        // 
+        // More informations about the feature:
+        // @see https://github.com/sitaramc/gitolite/blob/v1.5.9.1/doc/2-admin.mkd#specifying-gitweb-and-daemon-access
+        // 
+        // $description = preg_replace( "% *\n *%", ' ', $repository->getDescription());
+        // $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
+        
+        return $repo_config. PHP_EOL;
     }
     
     /**
@@ -369,6 +333,7 @@ class Git_GitoliteDriver {
                 $orig = file_get_contents('conf/projects/'. $newName .'.conf');
                 $dest = preg_replace('`(^|\n)repo '. preg_quote($oldName) .'/`', '$1repo '. $newName .'/', $orig);
                 $dest = str_replace('@'. $oldName .'_project_', '@'. $newName .'_project_', $dest);
+                $dest = preg_replace("%$oldName/(.*) = \"%", "$newName/$1 = \"", $dest);
                 file_put_contents('conf/projects/'. $newName .'.conf', $dest);
                 $this->gitExec->add('conf/projects/'. $newName .'.conf');
                 
@@ -428,32 +393,5 @@ class Git_GitoliteDriver {
         }
     }
 
-    /**
-     * Save repository description in the filesystem
-     *
-     * @param String $repoPath    Path of the git repository
-     * @param String $description Description of the git repository
-     *
-     * @return Boolean
-     */
-    /*public function setDescription($repoPath, $description) {
-        // TODO: set the description in gitolite way
-        // be careful not to use file_put_contents() like in gitshell
-        return true;
-    }*/
-
-    /**
-     * Obtain the repository description from the filesystem
-     *
-     * @param String $repoPath Path of the git repository
-     *
-     * @return String
-     */
-    /*public function getDescription($repoPath) {
-        // TODO: Uncomment this when GIT_GitoliteDriver::setDescription() is ready
-        return file_get_contents($repoPath.'/description');
-    }*/
-
 }
-
 ?>

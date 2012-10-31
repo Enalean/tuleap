@@ -61,7 +61,9 @@ function display_user_result_table($res) {
 
 $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
 if ($ugroup_id) {
-    $ugroupUpdateUsersAllowed = true;
+    $uGroupMgr = new UGroupManager();
+    $uGroup    = new UGroup(array('ugroup_id' => $ugroup_id));
+    $ugroupUpdateUsersAllowed = !$uGroup->isBound();
     $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
     if ($ugroupUpdateUsersAllowed) {
         $res = ugroup_db_get_ugroup($ugroup_id);
@@ -140,7 +142,6 @@ if ($ugroup_id) {
             
             //Display existing members
             echo '<fieldset><legend>'. $Language->getText('project_admin_editugroup','members').'</legend>';
-            $uGroupMgr = new UGroupManager();
             $uGroup    = $uGroupMgr->getById($request->get('ugroup_id'));
             $members   = $uGroup->getMembers();
             if (count($members) > 0) {
