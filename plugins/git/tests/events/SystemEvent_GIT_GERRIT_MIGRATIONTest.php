@@ -153,7 +153,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION_CallsToGerritTest extends SystemEvent_GIT
 
     public function expectGroupCreation($group_name, $permissions_level, $call_order) {
         $user_list = array(aUser()->withUserName('goyotm')->build(),  aUser()->withUserName('martissonj')->build());
-        stub($this->userfinder)->getUsersForPermission($permissions_level, $this->repository_id)->returns($user_list);
+        stub($this->userfinder)->getUsersForPermission($permissions_level, $this->repository)->returns($user_list);
 
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         expect($this->driver)->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list)->at($call_order);

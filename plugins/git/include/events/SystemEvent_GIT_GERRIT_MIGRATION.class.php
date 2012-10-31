@@ -48,7 +48,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var Logger */
     private $logger;
 
-    /** @var UserFinder */
+    /** @var Git_Driver_Gerrit_UserFinder */
     private $user_finder;
 
     public function process() {
@@ -63,7 +63,7 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
             $gerrit_project = $this->driver->createProject($server, $repository);
 
             foreach ($this->gerrit_groups as $group_name => $permission_level) {
-                $user_list = $this->user_finder->getUsersForPermission($permission_level, $repo_id);
+                $user_list = $this->user_finder->getUsersForPermission($permission_level, $repository);
                 $this->driver->createGroup($server, $repository, $group_name, $user_list);
             }
 
