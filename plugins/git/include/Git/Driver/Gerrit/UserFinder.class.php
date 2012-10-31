@@ -59,10 +59,16 @@ class Git_Driver_Gerrit_UserFinder {
 
     private function getUgroups($repository_id, $permission_type) {
         $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($repository_id, $permission_type);
-        return array_filter($ugroup_ids, array($this, 'removeRegisteredAndAnonymous'));
+        $result = array();
+        foreach ($ugroup_ids as $row) {
+            $id = $row['ugroup_id'];
+            if ($this->isNeitherRegisteredNorAnonymous($id))
+                $result[] = $id;
+        }
+        return $result;
     }
 
-    private function removeRegisteredAndAnonymous($ugroup_id) {
+    private function isNeitherRegisteredNorAnonymous($ugroup_id) {
         return ! in_array($ugroup_id, array(Ugroup::REGISTERED, UGroup::ANONYMOUS));
     }
 
