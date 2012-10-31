@@ -23,6 +23,8 @@ require_once('common/plugin/Plugin.class.php');
  */
 class ArchivedeleteditemsPlugin extends Plugin {
 
+    private $archiveScript;
+
     /**
      * Constructor of the class
      *
@@ -33,7 +35,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
-
+        $this->archiveScript = $GLOBALS['codendi_bin_prefix'] . "/archive-deleted-items";
         $this->_addHook('archive_deleted_item', 'archive_deleted_item', false);
     }
 
@@ -95,8 +97,14 @@ class ArchivedeleteditemsPlugin extends Plugin {
             return false;
         }
 
+        $ret_val         = null;
+        $exec_res        = null;
         $destinationPath = $archivePath.$archivePrefix.'_'.basename($sourcePath);
-        if (copy($sourcePath, $destinationPath)) {
+        $cmd             = $this->archiveScript." ".$sourcePath." " .$destinationPath;
+        exec($cmd, $exec_res, $ret_val);
+
+        //if (copy($sourcePath, $destinationPath)) {
+        if ($ret_val == 0) {
             $params['status'] = true;
             return true;
         } else {

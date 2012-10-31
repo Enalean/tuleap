@@ -1,0 +1,18 @@
+#!/usr/bin/perl -UT
+
+#
+# archive-deleted-items source_path destination_path
+#
+
+# Set default path (required by taint mode)
+$ENV{'PATH'} = '/usr/bin:/bin';
+
+use warnings;
+use strict;
+use File::Copy;
+
+if (!copy($ARGV[0], $ARGV[1])) {
+    die("FAILURE: cannot move file ($!)\n");
+}
+
+print "OK\n";
