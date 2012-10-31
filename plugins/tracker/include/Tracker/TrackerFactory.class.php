@@ -240,7 +240,7 @@ class TrackerFactory {
         
         //set field dependencies
         if (isset($xml->dependencies)) {
-            foreach ($xml->dependencies->rule as $rule) {
+            foreach ($xml->dependencies as $rule) {
                 $tracker->dependencies[] = $this->getRuleFactory()->getInstanceFromXML($rule, $xmlMapping, $tracker);
             }
         }
