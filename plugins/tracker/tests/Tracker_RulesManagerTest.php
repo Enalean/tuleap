@@ -1,5 +1,7 @@
 <?php
 
+require_once(dirname(__FILE__).'/../include/constants.php');
+require_once(dirname(__FILE__).'/builders/all.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', '_getSelectedValuesForField'));
 
@@ -21,6 +23,11 @@ Mock::generate('Tracker_FormElement_Field_Selectbox');
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Static.class.php');
 Mock::generate('Tracker_FormElement_Field_List_Bind_Static');
 
+require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
+Mock::generate('Tracker');
+
+require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
+Mock::generate('Tracker_FormElement_Field_List');
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -422,15 +429,16 @@ class Tracker_RulesManagerTest extends UnitTestCase {
     function testExport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerRulesTest.xml');
         
-        $tracker = new MockTracker();
+        $tracker = aTracker()->withId(666)->build();
+        
         $f1 = new MockTracker_FormElement_Field_List();
         $f1->setReturnValue('getId', 102);
         
         $f2 = new MockTracker_FormElement_Field_List();
         $f2->setReturnValue('getId', 103);
         
-        $r1 = new Tracker_Rule(1, 101, 103, 806, 102);
-        $r2 = new Tracker_Rule(1, 101, 103, 806, 102);
+        $r1 = new Tracker_Rule_Value(1, 101, 103, 806, 102, 803);
+        $r2 = new Tracker_Rule_Value(1, 101, 103, 806, 102, 804);
         
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
         $array_xml_mapping = array('F25' => 102,
@@ -445,12 +453,11 @@ class Tracker_RulesManagerTest extends UnitTestCase {
                                        'F28-V3' => 808,
                                        'F28-V4' => 809,
                                    ));
-        $trm = new Tracker_RulesManagerTestVersion($this);
+        
+        $trm = partial_mock('Tracker_RulesManager', array('getAllRulesByTrackerWithOrder'), array($tracker));
         $trm->setReturnValue('getAllRulesByTrackerWithOrder', array($r1, $r2));
         
         $trm->exportToXML($root, $array_xml_mapping);
-        //var_dump($root);
-        //$this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
         $this->assertEqual(count($xml->dependencies->rule), count($root->dependencies->rule));
     }
 }
