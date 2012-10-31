@@ -159,6 +159,9 @@ class UGroup {
         return new Users($this->getStaticOrDynamicMembers($group_id));
     }
     
+    public function getUserNames($group_id) {
+        return $this->getUsers($group_id)->getNames();
+    }
     /**
      * Return array containing the user_name of all ugroup members
      *
