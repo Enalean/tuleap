@@ -237,7 +237,14 @@ class TrackerFactory {
                 $tracker->semantics[] = $this->getSemanticFactory()->getInstanceFromXML($semantic, $xmlMapping, $tracker);
             }
         }
-
+        
+        //set field dependencies
+        if (isset($xml->dependencies)) {
+            foreach ($xml->dependencies->rule as $rule) {
+                $tracker->dependencies[] = $this->getRuleFactory()->getInstanceFromXML($rule, $xmlMapping, $tracker);
+            }
+        }
+        
         // set report
         if (isset($xml->reports)) {
             foreach ($xml->reports->report as $report) {
@@ -301,7 +308,14 @@ class TrackerFactory {
     protected function getSemanticFactory() {
         return Tracker_SemanticFactory::instance();
     }
-
+    
+    /**
+     * @return Tracker_RuleFactory
+     */
+    protected function getRuleFactory() {
+        return Tracker_RuleFactory::instance();
+    }
+    
     /**
      * @return Tracker_ReportFactory
      */

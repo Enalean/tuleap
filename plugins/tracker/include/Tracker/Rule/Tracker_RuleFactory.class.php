@@ -218,6 +218,20 @@ class Tracker_RuleFactory {
     }
     
     /**
+     * Creates a Tracker_Semantic Object
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported semantic
+     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param Tracker          $tracker     to which the rule is attached
+     * 
+     * @return Tracker_Rule_Value The rule object, or null if error
+     */
+    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
+        //return new Tracker_Rule_Value(0, );
+        return null;
+    }
+    
+    /**
      * Get dependency rules of a Source and Target
      *
      * @param $tracker_id, the id of the tracker

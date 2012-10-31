@@ -606,6 +606,25 @@ class Tracker_RulesManager {
         }
         return false;
     }
+    
+    /**
+     * Export workflow to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the workflow is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public function exportToXml(&$root, $xmlMapping) {
+            $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->id);
+            foreach ($rules as $rule) {
+                $child = $root->addChild('rule');
+                $child->addChild('source-field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
+                $child->addChild('target-field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
+                $child->addChild('source-value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
+                $child->addChild('target-value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
+            }
+    }
 }
 
 ?>

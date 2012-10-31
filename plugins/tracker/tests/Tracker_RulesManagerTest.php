@@ -418,5 +418,40 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         $this->assertFalse($arm->valueHasTarget(1, 'B', 2, 'A'));
         
     }
+    
+    function testExport() {
+        $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerRulesTest.xml');
+        
+        $tracker = new MockTracker();
+        $f1 = new MockTracker_FormElement_Field_List();
+        $f1->setReturnValue('getId', 102);
+        
+        $f2 = new MockTracker_FormElement_Field_List();
+        $f2->setReturnValue('getId', 103);
+        
+        $r1 = new Tracker_Rule(1, 101, 103, 806, 102);
+        $r2 = new Tracker_Rule(1, 101, 103, 806, 102);
+        
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $array_xml_mapping = array('F25' => 102,
+                                   'F28' => 103,                                   
+                                   'values' => array(
+                                       'F25-V1' => 801,
+                                       'F25-V2' => 802,
+                                       'F25-V3' => 803,
+                                       'F25-V4' => 804,
+                                       'F28-V1' => 806,
+                                       'F28-V2' => 807,
+                                       'F28-V3' => 808,
+                                       'F28-V4' => 809,
+                                   ));
+        $trm = new Tracker_RulesManagerTestVersion($this);
+        $trm->setReturnValue('getAllRulesByTrackerWithOrder', array($r1, $r2));
+        
+        $trm->exportToXML($root, $array_xml_mapping);
+        //var_dump($root);
+        //$this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
+        $this->assertEqual(count($xml->dependencies->rule), count($root->dependencies->rule));
+    }
 }
 ?>
