@@ -103,7 +103,6 @@ class ArchivedeleteditemsPlugin extends Plugin {
         $cmd             = $this->archiveScript." ".$sourcePath." " .$destinationPath;
         exec($cmd, $exec_res, $ret_val);
 
-        //if (copy($sourcePath, $destinationPath)) {
         if ($ret_val == 0) {
             $params['status'] = true;
             return true;
