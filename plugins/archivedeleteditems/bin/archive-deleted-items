@@ -7,9 +7,17 @@ use warnings;
 use strict;
 use File::Copy;
 
+my $destination_path = '';
+
 # Treat arguments
 if ($#ARGV ne 1) {
     die("Usage: $0 source_path destination_path\n");
+}
+
+if ($ARGV[1] =~ /^(.*)(\/(.*))$/) {
+    $destination_path = $2;
+} else {
+    die("Invalid destination path\n");
 }
 
 if (!copy($ARGV[0], $ARGV[1])) {
