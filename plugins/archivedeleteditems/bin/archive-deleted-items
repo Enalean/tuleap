@@ -7,7 +7,10 @@ use warnings;
 use strict;
 use File::Copy;
 
-
+# Treat arguments
+if ($#ARGV ne 1) {
+    die("Usage: $0 source_path destination_path\n");
+}
 
 if (!copy($ARGV[0], $ARGV[1])) {
     die("FAILURE: cannot move file ($!)\n");
