@@ -66,7 +66,7 @@ class FullTextSearchTrackerActions {
     public function indexUpdatedFollowup($groupId, $artifactId, $changesetId, $text) {
         // @TODO: If no index start first by indexing the followup comment.
         $updateData = $this->client->initializeSetterData();
-        $updateData = $this->client->appendSetterData($updateData, 'file', base64_encode($text));
+        $updateData = $this->client->appendSetterData($updateData, 'followup', $text);
         $this->client->update($changesetId, $updateData);
     }
 
@@ -86,7 +86,7 @@ class FullTextSearchTrackerActions {
             'group_id'     => $groupId,
             'artifact_id'  => $artifactId,
             'changeset_id' => $changesetId,
-            'file'         => base64_encode($text)
+            'followup'     => $text
         );
     }
 

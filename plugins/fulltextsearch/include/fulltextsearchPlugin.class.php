@@ -336,7 +336,7 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return ElasticSearch_IndexClientFacade
      */
-    private function getIndexClient($type = 'docman') {
+    private function getIndexClient($type = 'tracker') {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');

@@ -35,8 +35,8 @@ class ElasticSearch_ClientFactory {
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type = 'docman') {
-        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type = 'docman');
+    public function buildIndexClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type) {
+        $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
         return new ElasticSearch_IndexClientFacade($client);
     }
 
