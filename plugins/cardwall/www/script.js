@@ -71,15 +71,21 @@ document.observe('dom:loaded', function () {
                             value_id = $F('cardwall_column_mapping_' + value_id + '_' + field_id);
                         }
                         parameters['artifact[' + field_id + ']'] = value_id;
-                        console.log('-----------------------------------------------');
-                        console.log(field_id);
-                        console.log(value_id);
-                        console.log(parameters);
+                        /*console.log('-----------------------------------------------');*/
+                        /*console.log(field_id);*/
+                        /*console.log(value_id);*/
+                        /*console.log(parameters);*/
                         var req = new Ajax.Request(codendi.tracker.base_url, {
                             method: 'POST',
                             parameters: parameters,
                             onComplete: function (response) {
-
+                                console.log('coucou');
+                                for (var key in response.responseJSON) {
+                                    if (element = this.document.getElementsByClassName('valueOf_' + key)) {
+                                        remaining_effort = response.responseJSON[key];
+                                        element[0].innerHTML = remaining_effort;
+                                    }
+                                }
                                 console.log(response);
                                 //TODO handle errors (perms, workflow, ...)
                                 // eg: change color of the post it

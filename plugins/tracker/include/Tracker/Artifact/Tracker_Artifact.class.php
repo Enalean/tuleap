@@ -487,7 +487,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param string $prefix The prefix to display before the title of the artifact. Default is blank.
      *
-     * @return string The HTML code for artifact title
+    * @return string The HTML code for artifact title
      */
     public function fetchTitle($prefix = '') {
         $html = '';
@@ -744,10 +744,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         //echo('toto');
                         $tracker_id = $this->getTracker()->getId();
                         $field_name = 'remaining_effort';
+                        $form_element_factory = $this->getFormElementFactory();
 
-                        $remaning_effort_field = $this->form_element_factory->getComputableFieldByNameForUser($tracker_id, $field_name, $current_user);
-                        $remaining_effort_changeset = $this->getValue($remaning_effort_field);
-                        $remaining_effort = $remaining_effort_changeset->getValue();
+                        $remaining_effort_field = $form_element_factory->getComputableFieldByNameForUser($tracker_id, $field_name, $current_user);
+                        $remaining_effort = $remaining_effort_field->fetchCardValue($this);
 
                         header('Content-type: application/json');
                         echo json_encode(array('remaining_effort' => $remaining_effort));
