@@ -662,7 +662,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         if (!$this->fieldHasEnableWorkflow()) {
             $none_value = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
-            $this->fetchFieldValue($none_value, $name, $none_is_selected);
+            $html .= $this->fetchFieldValue($none_value, $name, $none_is_selected);
         }
         
         if (($submitted_values) && !is_array($submitted_values)) {
@@ -704,8 +704,12 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
-        $id       = $value->getId();
-        $label    = $this->getBind()->formatArtifactValue($id);
+        $id = $value->getId();
+        if ($id == 100) {
+            $label = $value->getLabel();
+        } else {
+            $label = $this->getBind()->formatArtifactValue($id);
+        }
         $style    = $this->getBind()->getSelectOptionInlineStyle($id);
         $selected = $is_selected ? 'selected="selected"' : '';
         return '<option value="'. $id .'" '. $selected .' style="'. $style .'">'. $label .'</option>';
