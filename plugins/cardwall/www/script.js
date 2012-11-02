@@ -71,10 +71,16 @@ document.observe('dom:loaded', function () {
                             value_id = $F('cardwall_column_mapping_' + value_id + '_' + field_id);
                         }
                         parameters['artifact[' + field_id + ']'] = value_id;
+                        console.log('-----------------------------------------------');
+                        console.log(field_id);
+                        console.log(value_id);
+                        console.log(parameters);
                         var req = new Ajax.Request(codendi.tracker.base_url, {
                             method: 'POST',
                             parameters: parameters,
-                            onComplete: function () {
+                            onComplete: function (response) {
+
+                                console.log(response);
                                 //TODO handle errors (perms, workflow, ...)
                                 // eg: change color of the post it
                             }

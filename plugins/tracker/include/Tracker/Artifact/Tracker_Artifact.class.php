@@ -729,7 +729,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->redirect('?aid='. $this->id);
                 break;
             case 'artifact-update':
-
                 //TODO : check permissions on this action?
                 $fields_data   = $request->get('artifact');
                 $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
@@ -741,7 +740,20 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
-                    $GLOBALS['Response']->redirect($redirect->toUrl());
+                    if ($request->isAjax()) {
+                        //echo('toto');
+                        $tracker_id = $this->getTracker()->getId();
+                        $field_name = 'remaining_effort';
+
+                        $remaning_effort_field = $this->form_element_factory->getComputableFieldByNameForUser($tracker_id, $field_name, $current_user);
+                        $remaining_effort_changeset = $this->getValue($remaning_effort_field);
+                        $remaining_effort = $remaining_effort_changeset->getValue();
+
+                        header('Content-type: application/json');
+                        echo json_encode(array('remaining_effort' => $remaining_effort));
+                    } else {
+                        $GLOBALS['Response']->redirect($redirect->toUrl());
+                    }
                     //die();
                 } else {
                     $this->display($layout, $request, $current_user);
