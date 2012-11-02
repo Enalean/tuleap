@@ -737,7 +737,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
                 }
-                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
+                $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
@@ -748,7 +748,28 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
         }
     }
-    
+
+    /**
+     * Join search results from plugins with matching id's
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return array
+     */
+    public function joinResults($request) {
+        $result          = array();
+        $searchPerformed = false;
+        $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed);
+        EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
+        $matchingIds = $this->getMatchingIds($request, false);
+        if ($searchPerformed) {
+            foreach ($params['result'] as $changesetId) {
+                // @TODO: Get artifact from $changesetId then Join results
+            }
+        }
+        return $matchingIds;
+    }
+
     public function getRenderers() {
         return Tracker_Report_RendererFactory::instance()->getReportRenderersByReport($this);
     }    
@@ -1185,8 +1206,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     $criteria_values = $request->get('criteria');
                     $this->updateCriteriaValues($criteria_values);
                 }
-                $params = array('request' => $request);
-                EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
                 $this->display($layout, $request, $current_user);
                 break;
         }
