@@ -10,6 +10,11 @@ Version 5.7 (Not Released Yet)
 	* ldap: 3.22
 	* projectlinks: 2.2
 
+Version 5.6.1 (Friday, November 2th 2012)
+
+  == Plugins ==
+    * tracker: 5.29.1
+
 Version 5.6 (Friday, October 26th 2012)
    == Bug Fix ==
     * Fix bug #1663: Validate user realname on account creation
