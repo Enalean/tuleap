@@ -1,3 +1,6 @@
+Version 5.29.1 - Tuleap 5.7
+    * Fix defect #1703: If no value for type select box is specified, the first value in the list is saved for the artifact
+
 Version 5.29 - Tuleap 5.6
     * Add symlink to index.php for backward compability
 
