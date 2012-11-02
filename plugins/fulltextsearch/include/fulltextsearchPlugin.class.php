@@ -224,10 +224,9 @@ class fulltextsearchPlugin extends Plugin {
         if ($params['request']->get('func') == 'followup_search') {
             //@TODO: process search
             $query = array('query' => array('query_string' => array('query' => $params['request']->get('search_followups'))));
-            $searchResult = $this->getSearchClient()->client->search($query);
-            foreach ($searchResult['hits']['hits'] as $hit) {
-                var_dump($hit['_source']['id']);
-            }
+            //$controller   = $this->getSearchController();
+            //$controller->search();
+            $searchResult = $this->getSearchClient()->searchFollowups($query);
         }
     }
 
