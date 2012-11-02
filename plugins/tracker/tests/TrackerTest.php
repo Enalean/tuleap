@@ -45,6 +45,7 @@ Mock::generatePartial('Tracker',
                           'getPermissions',
                           'getFormELements',
                           'getId',
+                          'getTrackerRulesManager',
                           'sendXML',
                           'isUsed',
                           'getAllFormElements',
@@ -154,6 +155,8 @@ Mock::generate('Tracker_Artifact');
 
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
 Mock::generate('Tracker_SharedFormElementFactory');
+
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
 
 require_once dirname(__FILE__).'/builders/aTracker.php';
 require_once dirname(__FILE__).'/builders/anArtifact.php';
@@ -1459,6 +1462,10 @@ class TrackerTest extends TuleapTestCase {
 
         $this->tracker->setReturnValue('getAllFormElements', array($f1, $f2));
         $this->formelement_factory->setReturnValue('getAllFormElementsForTracker', array($f1, $f2));
+        
+        $rules_manager = mock('Tracker_RulesManager');
+        
+        $this->tracker->setReturnValue('getTrackerRulesManager', $rules_manager);
 
         $xml = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?>
                                      <tracker xmlns="http://codendi.org/tracker"/>');
@@ -1536,6 +1543,9 @@ class TrackerTest extends TuleapTestCase {
         
         
         $af->setReturnReference('getInstanceFromRow', $artifact);
+        
+        $this->rules_manager = mock('Tracker_RulesManager');
+        stub($this->tracker)->getTrackerRulesManager()->returns($this->rules_manager);
         
         $GLOBALS['Response']->expectNever('addFeedback');
         $this->assertFalse($this->tracker->hasError($header, $lines));
