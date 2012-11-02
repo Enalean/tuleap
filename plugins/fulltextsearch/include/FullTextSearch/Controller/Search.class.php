@@ -54,6 +54,14 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
         $this->render($presenter->template, $presenter);
     }
 
+    public function searchFollowups($request) {
+        try {
+            $search_result = $this->client->searchFollowups($request);
+        } catch (ElasticSearchTransportHTTPException $e) {
+            echo $e->getMessage();
+        }
+    }
+
     protected function getSearchPresenter($terms, $search_result) {
         return new FullTextSearch_Presenter_Search(null, $terms, $search_result);
     }

@@ -47,7 +47,8 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchFollowups($query) {
+    public function searchFollowups($request) {
+        $query        = array('query' => array('query_string' => array('query' => $request->get('search_followups'))));
         $searchResult = $this->client->search($query);
         foreach ($searchResult['hits']['hits'] as $hit) {
             var_dump($hit['_source']['id']);
