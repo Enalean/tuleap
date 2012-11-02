@@ -49,7 +49,7 @@ class Tracker_RuleFactory {
     }
 
     /**
-    * Tracker_RuleFactory is a singleton
+    * @return Tracker_RuleFactory is a singleton
     */
     function instance() {
         static $_artifactrulefactory_instance;
@@ -106,6 +106,12 @@ class Tracker_RuleFactory {
                 break;
         }
         return $rule;
+    }
+
+    public function saveObject(array $rules, Tracker $tracker) {
+        foreach ($rules as $rule) {
+            $this->saveRuleValue($tracker->id, $rule->source_field->getId(), $rule->source_value->getId(), $rule->target_field->getId(), $rule->target_value->getId());
+        }
     }
 
     function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
@@ -236,10 +242,10 @@ class Tracker_RuleFactory {
             $target_field = $xmlMapping[(string)$xml_target_field_attributes['REF']];
 
             $xml_source_value_attributes = $xml_rule->source_value->attributes();
-            $source_value = $xmlMapping['values'][(string)$xml_source_value_attributes['REF']];
+            $source_value = $xmlMapping[(string)$xml_source_value_attributes['REF']];
 
             $xml_target_value_attributes = $xml_rule->target_value->attributes();
-            $target_value = $xmlMapping['values'][(string)$xml_target_value_attributes['REF']];
+            $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
 
             $rules[] = new Tracker_Rule_Value(0, $tracker->getId(), $source_field, $source_value, $target_field, $target_value);
         }

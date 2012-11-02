@@ -1,4 +1,4 @@
-getTrackerRulesManager<?php
+<?php
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
@@ -240,9 +240,7 @@ class TrackerFactory {
 
         //set field dependencies
         if (isset($xml->dependencies)) {
-            foreach ($xml->dependencies as $rule) {
-                $tracker->dependencies[] = $this->getRuleFactory()->getInstanceFromXML($rule, $xmlMapping, $tracker);
-            }
+            $tracker->dependencies = $this->getRuleFactory()->getInstanceFromXML($xml->dependencies, $xmlMapping, $tracker);
         }
 
         // set report
@@ -832,6 +830,10 @@ class TrackerFactory {
                 foreach ($tracker->semantics as $semantic) {
                     Tracker_SemanticFactory::instance()->saveObject($semantic, $trackerDB);
                 }
+            }
+            //create dependencies
+            if (isset($tracker->dependencies)) {
+                Tracker_RuleFactory::instance()->saveObject($tracker->dependencies, $trackerDB);
             }
             //create workflow
             if (isset($tracker->workflow)) {
