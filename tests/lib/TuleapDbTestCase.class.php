@@ -50,17 +50,17 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     public function skip() {
         parent::skip();
         if (!$this->mysqli) {
-            echo "== Y U NO CONFIGURE DATABASE? ==\n";
+            echo "== (屮ಠ益ಠ)屮 Y U NO CONFIGURE DATABASE? ==\n";
         }
-        $this->skipUnless($this->mysqli, '== Y U NO CONFIGURE DATABASE? ==');
+        $this->skipUnless($this->mysqli, '== (屮ಠ益ಠ)屮 Y U NO CONFIGURE DATABASE? ==');
     }
 
     public function tearDown() {
-        parent::tearDown();
         unset($GLOBALS['sys_dbhost']);
         unset($GLOBALS['sys_dbuser']);
         unset($GLOBALS['sys_dbpasswd']);
         unset($GLOBALS['sys_dbname']);
+        parent::tearDown();
     }
 
     /**

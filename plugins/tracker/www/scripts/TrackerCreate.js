@@ -17,9 +17,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-var tuleap = tuleap || { };
-tuleap.tracker = tuleap.tracker || { };
-
 document.observe('dom:loaded', function () {
 
     function displayMode(mode) {
