@@ -670,7 +670,7 @@ CREATE TABLE forum_group_list (
   PRIMARY KEY  (group_forum_id),
   FULLTEXT (description),
   KEY idx_forum_group_list_group_id (group_id)
-);
+) ENGINE=MyISAM;
 
 #
 # Table structure for table 'forum_monitored_forums'
@@ -2420,7 +2420,7 @@ CREATE TABLE svn_commits (
   KEY idx_search (group_id, whoid, id),
   KEY idx_repositoryid_date (repositoryid, date),
   FULLTEXT (description)
-);
+) ENGINe=MyISAM;
 
 CREATE TABLE svn_dirs (
   id int(11) NOT NULL auto_increment,
