@@ -617,12 +617,22 @@ class Tracker_RulesManager {
      */
     public function exportToXml(&$root, $xmlMapping) {
             $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->id);
+            $form_element_factory = Tracker_FormElementFactory::instance();
+            
             foreach ($rules as $rule) {
-                $child = $root->addChild('rule');
-                $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
-                $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
-                $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
-                $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
+                                
+                $source_field = $form_element_factory->getFormElementById($rule->source_field);
+                $target_field = $form_element_factory->getFormElementById($rule->target_field);
+              
+                $bf = new Tracker_FormElement_Field_List_BindFactory();
+                //TODO: handle sb/msb bind to users and remove condition
+                if ($bf->getType($source_field->getBind()) == 'static' &&  $bf->getType($target_field->getBind()) == 'static') {
+                    $child = $root->addChild('rule');
+                    $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
+                    $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
+                    $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
+                    $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
+                }
             }
     }
 }
