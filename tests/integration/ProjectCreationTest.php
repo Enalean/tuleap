@@ -28,6 +28,8 @@ class ProjectCreationTest extends TuleapDbTestCase {
 
     public function __construct() {
         parent::__construct();
+
+        // Uncomment this during development to avoid aweful 50" setUp
         //self::$db_initialized = true;
     }
 
