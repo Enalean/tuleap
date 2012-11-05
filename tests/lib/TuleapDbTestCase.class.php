@@ -100,13 +100,13 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         return getenv('CODENDI_LOCAL_INC') ? getenv('CODENDI_LOCAL_INC') : '/etc/codendi/conf/local.inc';
     }
 
-    private function dropDatabase() {
+    private function foraceCreateDatabase() {
         $this->mysqli->query("DROP DATABASE IF EXISTS ".$GLOBALS['sys_dbname']);
         $this->mysqli->query("CREATE DATABASE ".$GLOBALS['sys_dbname']);
     }
 
     private function initDb() {
-        $this->dropDatabase();
+        $this->foraceCreateDatabase();
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
         $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
