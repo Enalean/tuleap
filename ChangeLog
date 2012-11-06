@@ -4,7 +4,7 @@ Version 5.7 (Not Released Yet)
 	* Fix fatal error when user start monitoring a file package
 
    == Plugins ==
-	* tracker: 5.34
+	* tracker: 5.35
 	* git: 2.7.15
 	* tests: 5.8
 	* ldap: 3.22
