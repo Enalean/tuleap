@@ -52,8 +52,7 @@ class ElasticSearch_ClientFactory {
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager) {
-        $type   = 'docman';
+    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager, $type = 'docman') {
         $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
         return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
     }

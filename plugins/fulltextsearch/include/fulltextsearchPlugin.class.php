@@ -223,7 +223,7 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function tracker_report_followup_search_process($params) {
         if ($params['request']->get('func') == 'followup_search') {
-            $controller = $this->getSearchController();
+            $controller = $this->getSearchController('tracker');
             $controller->searchFollowups($params['request']);
 
             $params['search_performed'] = true;
@@ -340,14 +340,14 @@ class fulltextsearchPlugin extends Plugin {
         return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password, $type);
     }
 
-    private function getSearchClient() {
+    private function getSearchClient($type = NULL) {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
         $server_port     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_port');
         $server_user     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_user');
         $server_password = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_password');
-        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager());
+        return $factory->buildSearchClient($client_path, $server_host, $server_port, $server_user, $server_password, $this->getProjectManager(), $type);
     }
 
     private function getSearchAdminClient() {
@@ -371,8 +371,8 @@ class fulltextsearchPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    private function getSearchController() {
-        return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient());
+    private function getSearchController($type = NULL) {
+        return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient($type));
     }
 
     private function getAdminController() {
