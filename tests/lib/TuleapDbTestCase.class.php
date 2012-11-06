@@ -27,6 +27,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
 
     protected static $db_initialized = false;
 
+    private $development_on_going = false;
+
     public function __construct() {
         parent::__construct();
         $this->loadConfiguration();
@@ -61,6 +63,15 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         unset($GLOBALS['sys_dbpasswd']);
         unset($GLOBALS['sys_dbname']);
         parent::tearDown();
+    }
+
+    protected function thisTestIsUnderDevelopment() {
+        self::$db_initialized       = true;
+        $this->development_on_going = true;
+    }
+
+    protected function thisTestIsNotUnderDevelopment() {
+        return !$this->development_on_going;
     }
 
     /**
