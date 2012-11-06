@@ -53,7 +53,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         $results = array();
         if (!empty($searchResult['hits']['total'])) {
             foreach ($searchResult['hits']['hits'] as $hit) {
-                $results[] = $hit['fields']['artifact_id'];
+                $results[$hit['fields']['artifact_id']] = $hit['fields']['changeset_id'];
             }
         }
         return $results;

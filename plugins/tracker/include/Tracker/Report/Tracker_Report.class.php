@@ -813,7 +813,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
             }
         }
-        var_dump($params['result']);
         return $this->scrambleMatchingIds($matchingIds);
     }
 
