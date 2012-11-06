@@ -364,17 +364,17 @@ class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest
 class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest {
 
     public function itCreatedTrackerV5WithDefaultParameters() {
-        $this->assertEqual($this->request_tracker->getName(), 'Request');
-        $this->assertEqual($this->request_tracker->getDescription(), 'request tracker');
-        $this->assertEqual($this->request_tracker->getItemName(), 'requst');
+        $this->assertEqual($this->request_tracker->getName(), 'Requests');
+        $this->assertEqual($this->request_tracker->getDescription(), 'requests tracker');
+        $this->assertEqual($this->request_tracker->getItemName(), 'request');
         $this->assertEqual($this->request_tracker->getGroupId(), 100);
     }
 
-    public function _itHasNoParent() {
+    public function itHasNoParent() {
         $this->assertNull($this->request_tracker->getParent());
     }
 
-    public function _itGivesFullAccessToAllUsers() {
+    public function itGivesFullAccessToAllUsers() {
         $this->assertEqual($this->request_tracker->getPermissions(), array(
             UGroup::ANONYMOUS => array(
                 Tracker::PERMISSION_FULL
