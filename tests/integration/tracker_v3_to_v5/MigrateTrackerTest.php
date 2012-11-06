@@ -28,13 +28,13 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
 
     protected $admin_user_id      = 1;
     protected $defect_tracker_id  = 1;
-    protected $request_tracker_id = 2;
+    protected $task_tracker_id = 2;
 
 
     /** @var Tracker */
     protected $defect_tracker;
     /** @var Tracker */
-    protected $request_tracker;
+    protected $task_tracker;
 
     /** @var Tracker_FormElementFactory */
     protected $form_element_factory;
@@ -62,7 +62,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
         $this->tracker_factory      = TrackerFactory::instance();
 
         $this->defect_tracker = $this->tracker_factory->getTrackerById($this->defect_tracker_id);
-        $this->request_tracker = $this->tracker_factory->getTrackerById($this->request_tracker_id);
+        $this->task_tracker = $this->tracker_factory->getTrackerById($this->task_tracker_id);
     }
 
     public function tearDown() {
@@ -75,7 +75,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
 
     protected function convertTrackers() {
         $this->convertBugTracker();
-        $this->convertSRTracker();
+        $this->convertTaskTracker();
         TrackerFactory::clearInstance();
         self::$defect_tracker_converted = true;
     }
@@ -96,20 +96,20 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
         $this->defect_tracker_id = $defect_tracker->getId();
     }
 
-    protected function convertSRTracker() {
-        $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "sr"');
+    protected function convertTaskTracker() {
+        $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "task"');
         $row = db_fetch_array($res);
 
-        $sr_trackerv3_id = $row['group_artifact_id'];
+        $trackerv3_id = $row['group_artifact_id'];
         $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
         $project = ProjectManager::instance()->getProject(100);
-        $name = 'Requests';
-        $description = "requests tracker";
-        $itemname = "request";
-        $tv3 = new ArtifactType($project, $sr_trackerv3_id);
+        $name = 'Tasks';
+        $description = "tasks tracker";
+        $itemname = "tsk";
+        $tv3 = new ArtifactType($project, $trackerv3_id);
 
-        $request_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
-        $this->request_tracker_id = $request_tracker->getId();
+        $task_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+        $this->task_tracker_id = $task_tracker->getId();
     }
 }
 
@@ -364,18 +364,18 @@ class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest
 class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest {
 
     public function itCreatedTrackerV5WithDefaultParameters() {
-        $this->assertEqual($this->request_tracker->getName(), 'Requests');
-        $this->assertEqual($this->request_tracker->getDescription(), 'requests tracker');
-        $this->assertEqual($this->request_tracker->getItemName(), 'request');
-        $this->assertEqual($this->request_tracker->getGroupId(), 100);
+        $this->assertEqual($this->task_tracker->getName(), 'Tasks');
+        $this->assertEqual($this->task_tracker->getDescription(), 'tasks tracker');
+        $this->assertEqual($this->task_tracker->getItemName(), 'tsk');
+        $this->assertEqual($this->task_tracker->getGroupId(), 100);
     }
 
     public function itHasNoParent() {
-        $this->assertNull($this->request_tracker->getParent());
+        $this->assertNull($this->task_tracker->getParent());
     }
 
     public function itGivesFullAccessToAllUsers() {
-        $this->assertEqual($this->request_tracker->getPermissions(), array(
+        $this->assertEqual($this->task_tracker->getPermissions(), array(
             UGroup::ANONYMOUS => array(
                 Tracker::PERMISSION_FULL
             )
@@ -383,7 +383,7 @@ class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest
     }
 
     public function _itHasATitleSemantic() {
-        $field = $this->request_tracker->getTitleField();
+        $field = $this->task_tracker->getTitleField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_String');
         $this->assertEqual($field->getName(), "summary");
         $this->assertEqual($field->getLabel(), "Summary");
@@ -403,7 +403,7 @@ class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest
     }
 
     public function _itHasAStatusSemantic() {
-        $field = $this->request_tracker->getStatusField();
+        $field = $this->task_tracker->getStatusField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "status_id");
         $this->assertEqual($field->getLabel(), "Status");
@@ -420,7 +420,7 @@ class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest
     }
 
     public function _itHasOnlyOneOpenValueForStatusSemantic() {
-        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->request_tracker);
+        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->task_tracker);
         $open_values     = $semantic_status->getOpenValues();
         $this->assertCount($open_values, 1);
         $open_value = $semantic_status->getField()->getListValueById($open_values[0]);
@@ -428,7 +428,7 @@ class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest
     }
 
     public function _itHasAnAssignedToSemantic() {
-        $field = $this->request_tracker->getContributorField();
+        $field = $this->task_tracker->getContributorField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "assigned_to");
         $this->assertEqual($field->getLabel(), "Assigned to");
