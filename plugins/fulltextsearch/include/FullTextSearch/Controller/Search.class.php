@@ -62,6 +62,7 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
         } catch (ElasticSearchTransportHTTPException $e) {
             echo $e->getMessage();
         }
+        return $search_result;
     }
 
     protected function getSearchPresenter($terms, $search_result) {

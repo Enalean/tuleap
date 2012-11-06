@@ -226,7 +226,7 @@ class fulltextsearchPlugin extends Plugin {
             $controller = $this->getSearchController('tracker');
             $controller->searchFollowups($params['request']);
 
-            $params['search_performed'] = true;
+            //$params['search_performed'] = true;
         }
     }
 
