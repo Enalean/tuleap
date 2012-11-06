@@ -129,7 +129,8 @@ class fulltextsearchPlugin extends Plugin {
     }
 
     private function getActions() {
-        if (!isset($this->actions) && ($search_client = $this->getIndexClient())) {
+        $type = 'docman';
+        if (!isset($this->actions) && ($search_client = $this->getIndexClient($type))) {
             $this->actions = new FullTextSearchActions($search_client, new Docman_PermissionsItemManager());
         }
         return $this->actions;
@@ -329,7 +330,7 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return ElasticSearch_IndexClientFacade
      */
-    private function getIndexClient($type = 'tracker') {
+    private function getIndexClient($type) {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
