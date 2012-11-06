@@ -95,6 +95,17 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         $this->assertEqual($field->getLabel(), "Summary");
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::REGISTERED => array(
+                Tracker_FormElement::PERMISSION_SUBMIT
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
     }
 
     public function itHasAStatusSemantic() {
@@ -104,6 +115,14 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         $this->assertEqual($field->getLabel(), "Status");
         $this->assertTrue($field->isRequired());
         $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
     }
 
     public function itHasAnAssignedToSemantic() {
@@ -113,6 +132,17 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         $this->assertEqual($field->getLabel(), "Assigned to");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::REGISTERED => array(
+                Tracker_FormElement::PERMISSION_SUBMIT
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
     }
 
     public function itHasSubmittedBy() {
@@ -122,6 +152,11 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         $this->assertEqual($field->getLabel(), "Submitted by");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+        ));
     }
 
     public function itHasATextFieldDescription() {
@@ -131,6 +166,17 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         $this->assertEqual($field->getLabel(), "Original Submission");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::REGISTERED => array(
+                Tracker_FormElement::PERMISSION_SUBMIT
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
     }
 
     public function itHasAnUnusedDateFieldCloseDate() {
@@ -140,6 +186,14 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         $this->assertEqual($field->getLabel(), "Close Date");
         $this->assertFalse($field->isRequired());
         $this->assertFalse($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
     }
 
     public function itHasAnUnusedField() {
@@ -149,6 +203,28 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         $this->assertEqual($field->getLabel(), "Originator Name");
         $this->assertFalse($field->isUsed());
     }
+
+    public function itHasAListFieldResolutionWithValues() {
+        $field = $this->form_element_factory->getFormElementByName($this->tracker_id, 'resolution_id');
+        $this->assertIsA($field, 'Tracker_FormElement_Field_List');
+        $this->assertEqual($field->getName(), "resolution_id");
+        $this->assertEqual($field->getLabel(), "Resolution");
+        $this->assertFalse($field->isRequired());
+        $this->assertTrue($field->isUsed());
+        
+        $this->compareValuesToLabel($field->getAllValues(), array('Fixed', 'Invalid', 'Wont Fix', 'Later', 'Remind', 'Works for me', 'Duplicate'));
+    }
+    
+    protected function compareValuesToLabel(array $values, array $labels) {
+        $this->assertCount($values, count($labels));
+        $i = 0;
+        while($value = array_shift($values)) {
+            $this->assertIsA($value, 'Tracker_FormElement_Field_List_Bind_StaticValue');
+            $this->assertEqual($value->getLabel(), $labels[$i++]);
+            $this->assertFalse($value->isHidden());
+        }
+    }
+
 }
 
 ?>
