@@ -51,12 +51,13 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         $query        = array('query' => array('query_string' => array('query' => $request->get('search_followups'))),
                               'fields' => array('id','group_id','artifact_id','changeset_id'));
         $searchResult = $this->client->search($query);
+        $results = array();
         if (!empty($searchResult['hits']['total'])) {
-            $results = array();
             foreach ($searchResult['hits']['hits'] as $hit) {
                 $results[] = $hit['fields']['artifact_id'];
             }
         }
+        return $results;
     }
 
     /**
