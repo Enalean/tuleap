@@ -48,8 +48,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      * @return ElasticSearch_SearchResultCollection
      */
     public function searchFollowups($request, array $facets, $offset, User $user) {
-        $query        = array('query' => array('query_string' => array('query' => $request->get('search_followups'))),
-                              'fields' => array('id','group_id','artifact_id','changeset_id'));
+        $query        = $this->getSearchFollowupsQuery($request->get('search_followups'), $facets, $offset, $user);
         $searchResult = $this->client->search($query);
         $results = array();
         if (!empty($searchResult['hits']['total'])) {
@@ -72,6 +71,28 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         //var_dump(json_encode($query));
         $search = $this->client->search($query);
         return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager, $this->type);
+    }
+
+    /**
+     * @return array to be used for querying ES
+     */
+    protected function getSearchFollowupsQuery($terms, array $facets, $offset, User $user) {
+        $query = array(
+            'query' => array(
+                'query_string' => array(
+                    'query' => $terms
+                )
+            ),
+            'fields' => array(
+                'id',
+                'group_id',
+                'artifact_id',
+                'changeset_id'
+            )
+        );
+        //$this->filterWithGivenFacets($query, $facets);
+        //$this->filterQueryWithPermissions($query, $user);
+        return $query;
     }
 
     /**
