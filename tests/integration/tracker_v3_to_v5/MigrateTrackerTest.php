@@ -23,23 +23,19 @@ require_once dirname(__FILE__).'/../../../plugins/tracker/include/constants.php'
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Migration/V3.class.php';
 
-class MigrateTrackerTest extends TuleapDbTestCase {
-    private $tracker_id = 1;
-    /**
-     * @var Tracker
-     */
-    private $tracker;
-
-    /**
-     * @var Tracker_FormElementFactory
-     */
-    private $form_element_factory;
+abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
+    protected $admin_user_id = 1;
+    protected $tracker_id   = 1;
+    /** @var Tracker */
+    protected $tracker;
+    /** @var Tracker_FormElementFactory */
+    protected $form_element_factory;
 
     public function __construct() {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        //self::$db_initialized = true;
+        self::$db_initialized = true;
     }
 
     public function setUp() {
@@ -47,7 +43,7 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         Config::store();
         Config::set('codendi_log', dirname(__FILE__));
 
-        $this->convertTracker();
+        //$this->convertTracker();
         
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory = TrackerFactory::instance();
@@ -55,7 +51,7 @@ class MigrateTrackerTest extends TuleapDbTestCase {
     }
 
     public function tearDown() {
-        unlink(Config::get('codendi_log').'/tv3_to_tv5.log');
+        //unlink(Config::get('codendi_log').'/tv3_to_tv5.log');
         Config::restore();
         parent::tearDown();
     }
@@ -79,6 +75,10 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         TrackerFactory::clearInstance();
     }
 
+}
+
+class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
+
     public function itCreatedTrackerV5WithDefaultParameters() {
         $this->assertEqual($this->tracker->getName(), 'Defect');
         $this->assertEqual($this->tracker->getDescription(), 'defect tracker');
@@ -90,6 +90,14 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         $this->assertNull($this->tracker->getParent());
     }
 
+    public function itGivesFullAccessToAllUsers() {
+        $this->assertEqual($this->tracker->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker::PERMISSION_FULL
+            )
+        ));
+    }
+    
     public function itHasATitleSemantic() {
         $field = $this->tracker->getTitleField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_String');
@@ -146,7 +154,9 @@ class MigrateTrackerTest extends TuleapDbTestCase {
             ),
         ));
     }
+}
 
+class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
     public function itHasSubmittedBy() {
         $field = $this->form_element_factory->getFormElementByName($this->tracker_id, 'submitted_by');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
@@ -226,7 +236,55 @@ class MigrateTrackerTest extends TuleapDbTestCase {
             $this->assertFalse($value->isHidden());
         }
     }
+}
 
+class MigrateTracker_TrackerReportsTest extends MigrateDefaultBugTrackerTest {
+    /** @var Tracker_ReportFactory */
+    private $report_factory;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->report_factory = Tracker_ReportFactory::instance();
+    }
+    
+    public function itHasTwoReports() {
+        $this->assertCount($this->report_factory->getReportsByTrackerId($this->tracker_id, null), 2);
+    }
+
+    protected function getReportByName($name) {
+        foreach ($this->report_factory->getReportsByTrackerId($this->tracker_id, null) as $report) {
+            if ($report->name == $name) {
+                return $report;
+            }
+        }
+    }
+    
+    public function itHasAReportNamedBugs() {
+        $report = $this->getReportByName('Bugs');
+        $this->assertEqual($report->name, 'Bugs');
+    }
+    
+    public function itHasFourCriteria() {
+        $report   = $this->getReportByName('Bugs');
+        $criteria = $report->getCriteria();
+        $this->thereAreCriteriaForFields($criteria, array('Category', 'Group', 'Assigned to', 'Status'));
+    }
+    
+    protected function thereAreCriteriaForFields(array $criteria, array $field_labels) {
+        $this->assertCount($criteria, count($field_labels));
+        foreach ($field_labels as $label) {
+            $this->assertTrue($this->criteriaContainsCriterionForField($criteria, $label));
+        }
+    }
+    
+    protected function criteriaContainsCriterionForField(array $criteria, $field_label) {
+        foreach ($criteria as $criterion) {
+            if ($criterion->field->getLabel() == $field_label) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 ?>
