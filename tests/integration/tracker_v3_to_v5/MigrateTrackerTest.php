@@ -24,20 +24,29 @@ require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Migration/V3.class.php';
 
 abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
-    protected $admin_user_id = 1;
-    protected $tracker_id   = 1;
+    private static $defect_tracker_converted = false;
+
+    protected $admin_user_id      = 1;
+    protected $defect_tracker_id  = 1;
+    protected $request_tracker_id = 2;
+
+
     /** @var Tracker */
-    protected $tracker;
+    protected $defect_tracker;
+    /** @var Tracker */
+    protected $request_tracker;
+
     /** @var Tracker_FormElementFactory */
     protected $form_element_factory;
+    /** @var Tracker_Factory */
+    protected $tracker_factory;
 
-    private static $tracker_converted = false;
-    
+
     public function __construct() {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        $this->thisTestIsUnderDevelopment();
+        //$this->thisTestIsUnderDevelopment();
     }
 
     public function setUp() {
@@ -45,13 +54,15 @@ abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
         Config::store();
         Config::set('codendi_log', dirname(__FILE__));
 
-        if (!self::$tracker_converted && $this->thisTestIsNotUnderDevelopment()) {
-            $this->convertTracker();
+        if (!self::$defect_tracker_converted && $this->thisTestIsNotUnderDevelopment()) {
+            $this->convertTrackers();
         }
-        
+
         $this->form_element_factory = Tracker_FormElementFactory::instance();
-        $this->tracker_factory = TrackerFactory::instance();
-        $this->tracker = $this->tracker_factory->getTrackerById($this->tracker_id);
+        $this->tracker_factory      = TrackerFactory::instance();
+
+        $this->defect_tracker = $this->tracker_factory->getTrackerById($this->defect_tracker_id);
+        $this->request_tracker = $this->tracker_factory->getTrackerById($this->request_tracker_id);
     }
 
     public function tearDown() {
@@ -62,43 +73,61 @@ abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
         parent::tearDown();
     }
 
-    protected function convertTracker() {
+    protected function convertTrackers() {
+        $this->convertBugTracker();
+        $this->convertSRTracker();
+        TrackerFactory::clearInstance();
+        self::$defect_tracker_converted = true;
+    }
+
+    protected function convertBugTracker() {
         $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "bug"');
         $row = db_fetch_array($res);
 
-        $this->assertEqual($row['item_name'], 'bug');
-        $trackerv3_id = $row['group_artifact_id'];
+        $defect_trackerv3_id = $row['group_artifact_id'];
         $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
         $project = ProjectManager::instance()->getProject(100);
         $name = 'Defect';
         $description = "defect tracker";
         $itemname = "defect";
-        $tv3 = new ArtifactType($project, $trackerv3_id);
+        $tv3 = new ArtifactType($project, $defect_trackerv3_id);
 
-
-        $tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
-        $this->tracker_id = $tracker->getId();
-        TrackerFactory::clearInstance();
-        self::$tracker_converted = true;
+        $defect_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+        $this->defect_tracker_id = $defect_tracker->getId();
     }
 
+    protected function convertSRTracker() {
+        $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "sr"');
+        $row = db_fetch_array($res);
+
+        $sr_trackerv3_id = $row['group_artifact_id'];
+        $v3_migration = new Tracker_Migration_V3(TrackerFactory::instance());
+        $project = ProjectManager::instance()->getProject(100);
+        $name = 'Requests';
+        $description = "requests tracker";
+        $itemname = "request";
+        $tv3 = new ArtifactType($project, $sr_trackerv3_id);
+
+        $request_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+        $this->request_tracker_id = $request_tracker->getId();
+    }
 }
 
 class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
 
     public function itCreatedTrackerV5WithDefaultParameters() {
-        $this->assertEqual($this->tracker->getName(), 'Defect');
-        $this->assertEqual($this->tracker->getDescription(), 'defect tracker');
-        $this->assertEqual($this->tracker->getItemName(), 'defect');
-        $this->assertEqual($this->tracker->getGroupId(), 100);
+        $this->assertEqual($this->defect_tracker->getName(), 'Defect');
+        $this->assertEqual($this->defect_tracker->getDescription(), 'defect tracker');
+        $this->assertEqual($this->defect_tracker->getItemName(), 'defect');
+        $this->assertEqual($this->defect_tracker->getGroupId(), 100);
     }
 
     public function itHasNoParent() {
-        $this->assertNull($this->tracker->getParent());
+        $this->assertNull($this->defect_tracker->getParent());
     }
 
     public function itGivesFullAccessToAllUsers() {
-        $this->assertEqual($this->tracker->getPermissions(), array(
+        $this->assertEqual($this->defect_tracker->getPermissions(), array(
             UGroup::ANONYMOUS => array(
                 Tracker::PERMISSION_FULL
             )
@@ -106,7 +135,7 @@ class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
     }
 
     public function itHasATitleSemantic() {
-        $field = $this->tracker->getTitleField();
+        $field = $this->defect_tracker->getTitleField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_String');
         $this->assertEqual($field->getName(), "summary");
         $this->assertEqual($field->getLabel(), "Summary");
@@ -126,7 +155,7 @@ class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
     }
 
     public function itHasAStatusSemantic() {
-        $field = $this->tracker->getStatusField();
+        $field = $this->defect_tracker->getStatusField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "status_id");
         $this->assertEqual($field->getLabel(), "Status");
@@ -141,9 +170,9 @@ class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
             ),
         ));
     }
-    
+
     public function itHasOnlyOneOpenValueForStatusSemantic() {
-        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->tracker);
+        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->defect_tracker);
         $open_values     = $semantic_status->getOpenValues();
         $this->assertCount($open_values, 1);
         $open_value = $semantic_status->getField()->getListValueById($open_values[0]);
@@ -151,7 +180,7 @@ class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
     }
 
     public function itHasAnAssignedToSemantic() {
-        $field = $this->tracker->getContributorField();
+        $field = $this->defect_tracker->getContributorField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "assigned_to");
         $this->assertEqual($field->getLabel(), "Assigned to");
@@ -173,7 +202,7 @@ class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
 
 class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
     public function itHasSubmittedBy() {
-        $field = $this->form_element_factory->getFormElementByName($this->tracker_id, 'submitted_by');
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'submitted_by');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "submitted_by");
         $this->assertEqual($field->getLabel(), "Submitted by");
@@ -187,7 +216,7 @@ class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
     }
 
     public function itHasATextFieldDescription() {
-        $field = $this->form_element_factory->getFormElementByName($this->tracker_id, 'details');
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'details');
         $this->assertIsA($field, 'Tracker_FormElement_Field_Text');
         $this->assertEqual($field->getName(), "details");
         $this->assertEqual($field->getLabel(), "Original Submission");
@@ -207,7 +236,7 @@ class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
     }
 
     public function itHasAnUnusedDateFieldCloseDate() {
-        $field = $this->form_element_factory->getFormElementByName($this->tracker_id, 'close_date');
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'close_date');
         $this->assertIsA($field, 'Tracker_FormElement_Field_Date');
         $this->assertEqual($field->getName(), "close_date");
         $this->assertEqual($field->getLabel(), "Close Date");
@@ -224,7 +253,7 @@ class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
     }
 
     public function itHasAnUnusedField() {
-        $field = $this->form_element_factory->getFormElementByName($this->tracker_id, 'originator_name');
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'originator_name');
         $this->assertIsA($field, 'Tracker_FormElement_Field_String');
         $this->assertEqual($field->getName(), "originator_name");
         $this->assertEqual($field->getLabel(), "Originator Name");
@@ -232,7 +261,7 @@ class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
     }
 
     public function itHasAListFieldResolutionWithValues() {
-        $field = $this->form_element_factory->getFormElementByName($this->tracker_id, 'resolution_id');
+        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'resolution_id');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "resolution_id");
         $this->assertEqual($field->getLabel(), "Resolution");
@@ -266,7 +295,7 @@ class MigrateTracker_TrackerReportsTest extends MigrateDefaultBugTrackerTest {
     }
 
     protected function getReportByName($name) {
-        foreach ($this->report_factory->getReportsByTrackerId($this->tracker_id, null) as $report) {
+        foreach ($this->report_factory->getReportsByTrackerId($this->defect_tracker_id, null) as $report) {
             if ($report->name == $name) {
                 return $report;
             }
@@ -274,7 +303,7 @@ class MigrateTracker_TrackerReportsTest extends MigrateDefaultBugTrackerTest {
     }
 
     public function itHasTwoReports() {
-        $this->assertCount($this->report_factory->getReportsByTrackerId($this->tracker_id, null), 2);
+        $this->assertCount($this->report_factory->getReportsByTrackerId($this->defect_tracker_id, null), 2);
     }
 
 
