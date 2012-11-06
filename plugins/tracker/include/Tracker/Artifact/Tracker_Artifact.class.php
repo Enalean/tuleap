@@ -428,8 +428,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         //$html .= $this->_fetchHistory();
 
         $html .= '</form>';
-
-        $trm = new Tracker_RulesManager($tracker);
+        $trm = new Tracker_RulesManager($tracker, $this->getFormElementFactory());
         $html .= $trm->displayRulesAsJavascript();
 
         echo $html;

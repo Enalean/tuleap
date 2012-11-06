@@ -925,7 +925,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         
         $html .= '</form>';
         
-        $trm = new Tracker_RulesManager($this);
+        $trm = $this->getRulesManager();
         $html .= $trm->displayRulesAsJavascript();
         
         $html .= '</div></div>';
@@ -2008,13 +2008,6 @@ EOS;
     }
     
     /**
-     * @return Tracker_RulesManager
-     */
-    public function getTrackerRulesManager() {
-        return new Tracker_RulesManager($this);
-    }
-    
-    /**
      * @return Tracker_Tooltip
      */
     public function getTooltip() {
@@ -2060,7 +2053,7 @@ EOS;
      * @return Tracker_RulesManager
      */
     public function getRulesManager() {
-        return new Tracker_RulesManager($this);
+        return new Tracker_RulesManager($this, $this->getFormElementFactory());
     }
     /**
      * Determine if the user can view this tracker.
@@ -2327,7 +2320,7 @@ EOS;
         $tsm->exportToXML($child, $xmlMapping);
         
         //field dependencies
-        $trm = $this->getTrackerRulesManager();
+        $trm = $this->getRulesManager();
         $child = $xmlElem->addChild('dependencies');
         $trm->exportToXML($child, $xmlMapping);
         

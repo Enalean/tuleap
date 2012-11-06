@@ -235,7 +235,6 @@ class Tracker_RuleFactory {
     public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
         $rules = array();
         foreach ($xml->rule as $xml_rule) {
-
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
             $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
 

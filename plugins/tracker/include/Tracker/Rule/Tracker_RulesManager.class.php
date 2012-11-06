@@ -31,8 +31,12 @@ class Tracker_RulesManager {
     
     protected $tracker;
     
-    public function __construct($tracker) {
-        $this->tracker = $tracker;
+    /** @var Tracker_FormElementFactory */
+    protected $form_element_factory;
+    
+    public function __construct($tracker, Tracker_FormElementFactory $form_element_factory) {
+        $this->tracker              = $tracker;
+        $this->form_element_factory = $form_element_factory;
     }
     
     protected $rules_by_tracker_id;
@@ -309,10 +313,8 @@ class Tracker_RulesManager {
     }*/
     
     function getAllSourceFields($target_id) {
-        $sources = array();
-        $ff = Tracker_FormElementFactory::instance();
-        $used_fields = $ff->getUsedSbFields($this->tracker);
-        
+        $sources     = array();
+        $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
         foreach($used_fields as $field) {
             if (!$target_id || !$this->fieldIsAForbiddenSource($this->tracker->id, $field->getId(), $target_id)) {
                 $sources[$field->getId()] = $field;
@@ -322,10 +324,8 @@ class Tracker_RulesManager {
     }
     
     function getAllTargetFields($source_id) {
-        $targets = array();
-       
-        $ff = Tracker_FormElementFactory::instance();
-        $used_fields = $ff->getUsedSbFields($this->tracker);
+        $targets     = array();
+        $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
         foreach($used_fields as $field) {
             if (!$source_id || !$this->fieldIsAForbiddenTarget($this->tracker->id, $field->getId(), $source_id)) {
                 $targets[$field->getId()] = $field;
@@ -390,10 +390,10 @@ class Tracker_RulesManager {
                 $this->deleteRulesBySourceTarget($this->tracker->id, $request->get('source_field'), $request->get('target_field'));
                 
                 //Add dependencies in db
-                $field_source = Tracker_FormElementFactory::instance()->getFormElementById($request->get('source_field'));
+                $field_source = $this->form_element_factory->getFormElementById($request->get('source_field'));
                 $field_source_values = $field_source->getBind()->getAllValues();
                 
-                $field_target = Tracker_FormElementFactory::instance()->getFormElementById($request->get('target_field'));
+                $field_target = $this->form_element_factory->getFormElementById($request->get('target_field'));
                 $field_target_values = $field_target->getBind()->getAllValues();
                 
                 $currMatrix=array();
@@ -417,7 +417,6 @@ class Tracker_RulesManager {
     
     
     function displayChooseSourceAndTarget($engine, $request, $current_user, $source_field_id) {
-        $ff = Tracker_FormElementFactory::instance();
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'dependencies');
         echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','inline_help') .'</p>';
@@ -427,7 +426,7 @@ class Tracker_RulesManager {
         echo '<input type="hidden" name="func" value="admin-dependencies" />';
         
         //source
-        $source_field = $ff->getFormElementById($source_field_id);
+        $source_field = $this->form_element_factory->getFormElementById($source_field_id);
         if (!$source_field) {
             echo '<select name="source_field" onchange="this.form.submit()">';
             echo '<option value="0">'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','choose_source_field') .'</option>';
@@ -470,8 +469,8 @@ class Tracker_RulesManager {
         if (count($sources_targets)) {
             $dependencies = array();
             foreach ($sources_targets as $row) {
-                if ($source = $ff->getFormElementById($row['source_field_id'])) {
-                    if ($target = $ff->getFormElementById($row['target_field_id'])) {
+                if ($source = $this->form_element_factory->getFormElementById($row['source_field_id'])) {
+                    if ($target = $this->form_element_factory->getFormElementById($row['target_field_id'])) {
                         $d = '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
                             array(
                                 'tracker'      => (int)$this->tracker->id, 
@@ -501,9 +500,8 @@ class Tracker_RulesManager {
     function displayDefineDependencies($engine, $request, $current_user, $source_field_id, $target_field_id) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'dependencies');        
-        $ff = Tracker_FormElementFactory::instance();
-        $source_field = $ff->getFieldById($source_field_id);
-        $target_field = $ff->getFieldById($target_field_id);
+        $source_field = $this->form_element_factory->getFieldById($source_field_id);
+        $target_field = $this->form_element_factory->getFieldById($target_field_id);
         //Display creation form
         echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_matrix_title').'</h3>';
         echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_matrix_help', array($source_field->getlabel(), $target_field->getlabel())) .'</p>';
@@ -617,13 +615,9 @@ class Tracker_RulesManager {
      */
     public function exportToXml(&$root, $xmlMapping) {
             $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->id);
-            $form_element_factory = Tracker_FormElementFactory::instance();
-            
             foreach ($rules as $rule) {
-                                
-                $source_field = $form_element_factory->getFormElementById($rule->source_field);
-                $target_field = $form_element_factory->getFormElementById($rule->target_field);
-              
+                $source_field = $this->form_element_factory->getFormElementById($rule->source_field);
+                $target_field = $this->form_element_factory->getFormElementById($rule->target_field);
                 $bf = new Tracker_FormElement_Field_List_BindFactory();
                 //TODO: handle sb/msb bind to users and remove condition
                 if ($bf->getType($source_field->getBind()) == 'static' &&  $bf->getType($target_field->getBind()) == 'static') {
