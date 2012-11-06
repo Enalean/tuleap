@@ -841,5 +841,44 @@ class TrackerFactory {
         $this->getDao()->commit();
         return $tracker_id;
     }
+
+    /**
+     * Create a tracker v5 from a tracker v3
+     *
+     * @param int            $atid           the id of the tracker v3
+     * @param Project        $project        the Id of the project to create the tracker
+     * @param string         $name           the name of the tracker (label)
+     * @param string         $description    the description of the tracker
+     * @param string         $itemname       the short name of the tracker
+     *
+     * @return Tracker
+     */
+    public function createFromTV3($atid, Project $project, $name, $description, $itemname) {
+        require_once 'Migration/V3.class.php'; //we don't want to load all trackers v3 for each requests
+        require_once 'common/tracker/ArtifactType.class.php';
+        $tv3 = new ArtifactType($project, $atid);
+        if (!$tv3 || !is_object($tv3)) {
+            exit_error($Language->getText('global','error'),$Language->getText('tracker_index','not_create_at'));
+        }
+        if ($tv3->isError()) {
+            exit_error($Language->getText('global','error'),$tv3->getErrorMessage());
+        }
+        // Check if this tracker is valid (not deleted)
+        if ( !$tv3->isValid() ) {
+            exit_error($Language->getText('global','error'),$Language->getText('tracker_add','invalid'));
+        }
+        //Check if the user can view the artifact
+        if (!$tv3->userCanView()) {
+            exit_permission_denied();
+        }
+
+        $tracker = null;
+        if ($this->validMandatoryInfoOnCreate($name, $description, $itemname, $project->getId())) {
+            $migration_v3 = new Tracker_Migration_V3($this);
+            $tracker = $migration_v3->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
+            $this->postCreateActions($tracker);
+        }
+        return $tracker;
+    }
 }
 ?>

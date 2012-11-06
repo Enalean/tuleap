@@ -106,6 +106,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerAdminFields.js',
                 '/plugins/tracker/scripts/TrackerArtifact.js',
                 '/plugins/tracker/scripts/TrackerArtifactLink.js',
+                '/plugins/tracker/scripts/TrackerCreate.js',
                 '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
                 '/plugins/tracker/scripts/TrackerDateReminderForms.js',
             )

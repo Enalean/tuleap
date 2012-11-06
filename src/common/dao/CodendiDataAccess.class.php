@@ -40,7 +40,17 @@ class CodendiDataAccess extends DataAccess {
         }
         return self::$_instance;
     }
-}
 
+    /**
+     * @param DataAccess $instance
+     */
+    public static function setInstance(DataAccess $instance) {
+        self::$_instance = $instance;
+    }
+
+    public static function clearInstance() {
+        self::$_instance = null;
+    }
+}
 
 ?>
