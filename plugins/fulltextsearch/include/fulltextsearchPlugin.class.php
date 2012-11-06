@@ -222,17 +222,10 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function tracker_report_followup_search_process($params) {
         if ($params['request']->get('func') == 'followup_search') {
-            //@TODO: process search
-
             $controller = $this->getSearchController();
             $controller->searchFollowups($params['request']);
 
             $params['search_performed'] = true;
-            $query = array('query' => array('query_string' => array('query' => $params['request']->get('search_followups'))));
-            $searchResult = $this->getSearchClient()->client->search($query);
-            foreach ($searchResult['hits']['hits'] as $hit) {
-                $params['result'][] = $hit['_source']['id'];
-            }
         }
     }
 
