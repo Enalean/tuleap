@@ -39,7 +39,7 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        self::$db_initialized = true;
+        //self::$db_initialized = true;
     }
 
     public function setUp() {
@@ -47,18 +47,20 @@ class MigrateTrackerTest extends TuleapDbTestCase {
         Config::store();
         Config::set('codendi_log', dirname(__FILE__));
 
+        $this->convertTracker();
+        
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory = TrackerFactory::instance();
         $this->tracker = $this->tracker_factory->getTrackerById($this->tracker_id);
     }
 
     public function tearDown() {
-        //unlink(Config::get('codendi_log').'/tv3_to_tv5.log');
+        unlink(Config::get('codendi_log').'/tv3_to_tv5.log');
         Config::restore();
         parent::tearDown();
     }
 
-    public function _itCreatesTheTracker() {
+    protected function convertTracker() {
         $res = db_query('SELECT * FROM artifact_group_list WHERE item_name = "bug"');
         $row = db_fetch_array($res);
 
