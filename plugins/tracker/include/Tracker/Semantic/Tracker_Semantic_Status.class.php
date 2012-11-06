@@ -292,7 +292,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             $dao = new Tracker_Semantic_StatusDao();
             foreach ($dao->searchByTrackerId($tracker->getId()) as $row) {
                 $field_id      = $row['field_id'];
-                $open_values[] = $row['open_value_id'];
+                $open_values[] = (int)$row['open_value_id'];
             }
             if (!$open_values) {
                 $open_values[] = 100;
