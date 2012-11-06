@@ -48,17 +48,15 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      * @return ElasticSearch_SearchResultCollection
      */
     public function searchFollowups($request, array $facets, $offset, User $user) {
-        $query        = array('query' => array('query_string' => array('query' => $request->get('search_followups'))));
+        $query        = array('query' => array('query_string' => array('query' => $request->get('search_followups'))),
+                              'fields' => array('id','group_id','artifact_id','changeset_id'));
         $searchResult = $this->client->search($query);
-        foreach ($searchResult['hits']['hits'] as $hit) {
-            var_dump($hit['_source']['id']);
+        if (!empty($searchResult['hits']['total'])) {
+            $results = array();
+            foreach ($searchResult['hits']['hits'] as $hit) {
+                $results[] = $hit['fields']['artifact_id'];
+            }
         }
-
-        //draft stuff
-        $cleanQuery = $this->getSearchDocumentsQuery($request->get('search_followups'), $facets, $offset, $user);
-        //var_dump(json_encode($cleanQuery));
-        $search = $this->client->search($cleanQuery);
-        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager, $this->type);
     }
 
     /**
