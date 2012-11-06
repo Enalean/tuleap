@@ -361,4 +361,91 @@ class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest
 
 }
 
+class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest {
+
+    public function itCreatedTrackerV5WithDefaultParameters() {
+        $this->assertEqual($this->request_tracker->getName(), 'Request');
+        $this->assertEqual($this->request_tracker->getDescription(), 'request tracker');
+        $this->assertEqual($this->request_tracker->getItemName(), 'requst');
+        $this->assertEqual($this->request_tracker->getGroupId(), 100);
+    }
+
+    public function _itHasNoParent() {
+        $this->assertNull($this->request_tracker->getParent());
+    }
+
+    public function _itGivesFullAccessToAllUsers() {
+        $this->assertEqual($this->request_tracker->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker::PERMISSION_FULL
+            )
+        ));
+    }
+
+    public function _itHasATitleSemantic() {
+        $field = $this->request_tracker->getTitleField();
+        $this->assertIsA($field, 'Tracker_FormElement_Field_String');
+        $this->assertEqual($field->getName(), "summary");
+        $this->assertEqual($field->getLabel(), "Summary");
+        $this->assertTrue($field->isRequired());
+        $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::REGISTERED => array(
+                Tracker_FormElement::PERMISSION_SUBMIT
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
+    }
+
+    public function _itHasAStatusSemantic() {
+        $field = $this->request_tracker->getStatusField();
+        $this->assertIsA($field, 'Tracker_FormElement_Field_List');
+        $this->assertEqual($field->getName(), "status_id");
+        $this->assertEqual($field->getLabel(), "Status");
+        $this->assertTrue($field->isRequired());
+        $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
+    }
+
+    public function _itHasOnlyOneOpenValueForStatusSemantic() {
+        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->request_tracker);
+        $open_values     = $semantic_status->getOpenValues();
+        $this->assertCount($open_values, 1);
+        $open_value = $semantic_status->getField()->getListValueById($open_values[0]);
+        $this->assertEqual($open_value->getLabel(), 'Open');
+    }
+
+    public function _itHasAnAssignedToSemantic() {
+        $field = $this->request_tracker->getContributorField();
+        $this->assertIsA($field, 'Tracker_FormElement_Field_List');
+        $this->assertEqual($field->getName(), "assigned_to");
+        $this->assertEqual($field->getLabel(), "Assigned to");
+        $this->assertFalse($field->isRequired());
+        $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::REGISTERED => array(
+                Tracker_FormElement::PERMISSION_SUBMIT
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
+    }
+}
+
 ?>
