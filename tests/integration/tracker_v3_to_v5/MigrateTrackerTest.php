@@ -31,6 +31,8 @@ abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
     /** @var Tracker_FormElementFactory */
     protected $form_element_factory;
 
+    private static $tracker_converted = false;
+    
     public function __construct() {
         parent::__construct();
 
@@ -43,17 +45,17 @@ abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
         Config::store();
         Config::set('codendi_log', dirname(__FILE__));
 
-        if ($this->thisTestIsNotUnderDevelopment()) {
+        if (!self::$tracker_converted && $this->thisTestIsNotUnderDevelopment()) {
             $this->convertTracker();
         }
-
+        
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory = TrackerFactory::instance();
         $this->tracker = $this->tracker_factory->getTrackerById($this->tracker_id);
     }
 
     public function tearDown() {
-        if ($this->thisTestIsNotUnderDevelopment()) {
+        if (is_file(Config::get('codendi_log').'/tv3_to_tv5.log')) {
             unlink(Config::get('codendi_log').'/tv3_to_tv5.log');
         }
         Config::restore();
@@ -77,6 +79,7 @@ abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
         $tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
         $this->tracker_id = $tracker->getId();
         TrackerFactory::clearInstance();
+        self::$tracker_converted = true;
     }
 
 }
@@ -137,6 +140,14 @@ class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
+    }
+    
+    public function itHasOnlyOneOpenValueForStatusSemantic() {
+        $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->tracker);
+        $open_values     = $semantic_status->getOpenValues();
+        $this->assertCount($open_values, 1);
+        $open_value = $semantic_status->getField()->getListValueById($open_values[0]);
+        $this->assertEqual($open_value->getLabel(), 'Open');
     }
 
     public function itHasAnAssignedToSemantic() {
