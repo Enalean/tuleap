@@ -4,11 +4,12 @@ Version 5.7 (Not Released Yet)
 	* Fix fatal error when user start monitoring a file package
 
    == Plugins ==
-	* tracker: 5.33
+	* tracker: 5.34
 	* git: 2.7.15
-	* tests: 5.7
+	* tests: 5.8
 	* ldap: 3.22
 	* projectlinks: 2.2
+	* graphontrackersv5: 5.0.5
 
 Version 5.6.1 (Friday, November 2th 2012)
 
