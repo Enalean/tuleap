@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../../../plugins/tracker/include/constants.php'
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Migration/V3.class.php';
 
-abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
+abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     private static $defect_tracker_converted = false;
 
     protected $admin_user_id      = 1;
@@ -46,7 +46,7 @@ abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        //$this->thisTestIsUnderDevelopment();
+        $this->thisTestIsUnderDevelopment();
     }
 
     public function setUp() {
@@ -113,7 +113,7 @@ abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
     }
 }
 
-class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
+class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest {
 
     public function itCreatedTrackerV5WithDefaultParameters() {
         $this->assertEqual($this->defect_tracker->getName(), 'Defect');
@@ -200,7 +200,7 @@ class MigrateTracker_TrackerConfigTest extends MigrateDefaultBugTrackerTest {
     }
 }
 
-class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
+class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest {
     public function itHasSubmittedBy() {
         $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'submitted_by');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
@@ -282,7 +282,7 @@ class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
     }
 }
 
-class MigrateTracker_TrackerReportsTest extends MigrateDefaultBugTrackerTest {
+class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest {
     /** @var Tracker_ReportFactory */
     private $report_factory;
     /** @var Tracker_Report */
