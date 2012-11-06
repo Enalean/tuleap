@@ -78,6 +78,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      */
     protected function getSearchFollowupsQuery($terms, array $facets, $offset, User $user) {
         $query = array(
+            'from' => (int)$offset,
             'query' => array(
                 'query_string' => array(
                     'query' => $terms
