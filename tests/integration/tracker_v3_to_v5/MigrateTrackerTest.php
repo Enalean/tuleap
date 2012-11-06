@@ -35,7 +35,7 @@ abstract class MigrateDefaultBugTrackerTest extends TuleapDbTestCase {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        //$this->thisTestIsUnderDevelopment();
+        $this->thisTestIsUnderDevelopment();
     }
 
     public function setUp() {
@@ -245,14 +245,13 @@ class MigrateTracker_TrackerFieldsTest extends MigrateDefaultBugTrackerTest {
 class MigrateTracker_TrackerReportsTest extends MigrateDefaultBugTrackerTest {
     /** @var Tracker_ReportFactory */
     private $report_factory;
+    /** @var Tracker_Report */
+    private $bugs_report;
 
     public function setUp() {
         parent::setUp();
         $this->report_factory = Tracker_ReportFactory::instance();
-    }
-
-    public function itHasTwoReports() {
-        $this->assertCount($this->report_factory->getReportsByTrackerId($this->tracker_id, null), 2);
+        $this->bugs_report    = $this->getReportByName('Bugs');
     }
 
     protected function getReportByName($name) {
@@ -263,25 +262,28 @@ class MigrateTracker_TrackerReportsTest extends MigrateDefaultBugTrackerTest {
         }
     }
 
+    public function itHasTwoReports() {
+        $this->assertCount($this->report_factory->getReportsByTrackerId($this->tracker_id, null), 2);
+    }
+
+
     public function itHasAReportNamedBugs() {
-        $report = $this->getReportByName('Bugs');
-        $this->assertEqual($report->name, 'Bugs');
+        $this->assertEqual($this->bugs_report->name, 'Bugs');
     }
 
     public function itHasFourCriteria() {
-        $report   = $this->getReportByName('Bugs');
-        $criteria = $report->getCriteria();
+        $criteria = $this->bugs_report->getCriteria();
         $this->thereAreCriteriaForFields($criteria, array('Category', 'Group', 'Assigned to', 'Status'));
     }
 
     protected function thereAreCriteriaForFields(array $criteria, array $field_labels) {
         $this->assertCount($criteria, count($field_labels));
         foreach ($field_labels as $label) {
-            $this->assertTrue($this->criteriaContainsCriterionForField($criteria, $label));
+            $this->assertTrue($this->criteriaContainOneCriterionForField($criteria, $label));
         }
     }
 
-    protected function criteriaContainsCriterionForField(array $criteria, $field_label) {
+    protected function criteriaContainOneCriterionForField(array $criteria, $field_label) {
         foreach ($criteria as $criterion) {
             if ($criterion->field->getLabel() == $field_label) {
                 return true;
@@ -289,6 +291,34 @@ class MigrateTracker_TrackerReportsTest extends MigrateDefaultBugTrackerTest {
         }
         return false;
     }
+
+    public function itHasATableRenderer() {
+        $renderers = $this->bugs_report->getRenderers();
+        $this->assertCount($renderers, 1);
+
+        $renderer = array_shift($renderers);
+        $this->assertIsA($renderer, 'Tracker_Report_Renderer_Table');
+
+        $columns = $renderer->getTableColumns(false, true, false);
+        $this->thereAreColumnsForFields($columns, array('Submitted by', 'Submitted on', 'Artifact ID', 'Summary', 'Assigned to'));
+    }
+
+    public function thereAreColumnsForFields($columns, $field_labels) {
+        $this->assertCount($columns, count($field_labels));
+        foreach ($field_labels as $label) {
+            $this->assertTrue($this->columnsContainOneColumnForField($columns, $label));
+        }
+    }
+
+    public function columnsContainOneColumnForField($columns, $field_label) {
+        foreach ($columns as $column) {
+            if ($column['field']->getLabel() == $field_label) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
 
 ?>
