@@ -216,7 +216,51 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
        }
        return $this->matching_ids;
     }
-    
+
+    /**
+     * Convert the fucked-up output of getMatchingIds() to a format that could be used
+     *
+     * @param HTTPRequest $request       Ask the dumbshit that didn't write the function comment of getMatchingIds()
+     * @param Boolean     $useDataFromDb Ask the dumbshit that didn't write the function comment of getMatchingIds()
+     *
+     * @return Array
+     */
+    public function formatMatchingIds($request = null, $useDataFromDb = false) {
+        // @TODO: Execute the person that imagined that the format returned by getMatchingIds() has a meaning
+        $fuckedUpMatchingIds = $this->getMatchingIds($request, $useDataFromDb);
+        $artifactIds         = explode(',', $fuckedUpMatchingIds['id']);
+        $lastChangesetIds    = explode(',', $fuckedUpMatchingIds['last_changeset_id']);
+        $matchingIds         = array();
+        foreach ($artifactIds as $key => $artifactId) {
+            $matchingIds[$artifactId] = $lastChangesetIds[$key];
+        }
+        return $matchingIds;
+    }
+
+    /**
+     * Convert a useful format to the fucked-up type of output of getMatchingIds()
+     *
+     * @param Array $matchingIds Matching Id's that will get converted in that shitty format
+     *
+     * @return Array
+     */
+    public function scrambleMatchingIds($matchingIds) {
+        // @TODO: Execute the person that imagined that the format returned by getMatchingIds() has a meaning
+        $fuckedUpMatchingIds['id']                = '';
+        $fuckedUpMatchingIds['last_changeset_id'] = '';
+        foreach ($matchingIds as $artifactId => $lastChangesetId) {
+            $fuckedUpMatchingIds['id']                .= $artifactId.',';
+            $fuckedUpMatchingIds['last_changeset_id'] .= $lastChangesetId.',';
+        }
+        if (substr($fuckedUpMatchingIds['id'], -1) === ',') {
+            $fuckedUpMatchingIds['id'] = substr($fuckedUpMatchingIds['id'], 0, -1);
+        }
+        if (substr($fuckedUpMatchingIds['last_changeset_id'], -1) === ',') {
+            $fuckedUpMatchingIds['last_changeset_id'] = substr($fuckedUpMatchingIds['last_changeset_id'], 0, -1);
+        }
+        return $fuckedUpMatchingIds;
+    }
+
     protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
         $dump_criteria = array();
         foreach ($criteria as $c) {
@@ -761,13 +805,15 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $searchPerformed = false;
         $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed);
         EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
-        $matchingIds = $this->getMatchingIds($request, false);
-        if ($searchPerformed) {
-            foreach ($params['result'] as $changesetId) {
-                // @TODO: Get artifact from $changesetId then Join results
+        $matchingIds = $this->formatMatchingIds($request, false);
+        if ($searchPerformed && is_array($params['result']) && !empty($params['result'])) {
+            foreach ($matchingIds as $artifactId => $lastChangesetId) {
+                if (!array_key_exists($artifactId, $params['result'])) {
+                    unset($matchingIds[$artifactId]);
+                }
             }
         }
-        return $matchingIds;
+        return $this->scrambleMatchingIds($matchingIds);
     }
 
     public function getRenderers() {
