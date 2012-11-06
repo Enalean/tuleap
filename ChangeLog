@@ -1,4 +1,8 @@
-Version 5.6.1 (Friday, November 2th 2012)
+Version 5.6.2 (Tuesday, November 6th 2012)
+   == Enhancements ==
+   * A project administrator can import a user group from another project (contrib STMicroeletronics).
+
+Version 5.6.1 (Friday, November 2nd 2012)
 
   == Plugins ==
     * tracker: 5.29.1
