@@ -1,3 +1,6 @@
+Version 5.36 - Tuleap 5.7
+    * Fix SOAP API issue: Fix namespace usage
+
 Version 5.35 - Tuleap 5.7
     * Fix SOAP API issue: Export int instead of string when the wsdl asks for int & replace int[]/string[] by ArrayOfInt/ArrayOfString
 
