@@ -61,11 +61,8 @@ class Tracker_RuleFactoryTest extends UnitTestCase {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerRulesTest.xml');
         $tracker = aTracker()->withId(666)->build();
 
-        $f1 = new MockTracker_FormElement_Field_List();
-        $f1->setReturnValue('getId', 102);
-
-        $f2 = new MockTracker_FormElement_Field_List();
-        $f2->setReturnValue('getId', 103);
+        $f1 = stub('Tracker_FormElement_Field_List')->getId()->returns(102);
+        $f2 = stub('Tracker_FormElement_Field_List')->getId()->returns(103);
 
         $array_xml_mapping = array('F25' => 102,
                                    'F28' => 103,
