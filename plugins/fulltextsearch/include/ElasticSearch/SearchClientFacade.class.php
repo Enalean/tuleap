@@ -48,12 +48,15 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      * @return ElasticSearch_SearchResultCollection
      */
     public function searchFollowups($request, array $facets, $offset, User $user) {
-        $query        = $this->getSearchFollowupsQuery($request->get('search_followups'), $facets, $offset, $user);
-        $searchResult = $this->client->search($query);
+        $terms   = trim($request->getValidated('search_followups', 'string', ''));
         $results = array();
-        if (!empty($searchResult['hits']['total'])) {
-            foreach ($searchResult['hits']['hits'] as $hit) {
-                $results[$hit['fields']['artifact_id']] = $hit['fields']['changeset_id'];
+        if ($terms) {
+            $query        = $this->getSearchFollowupsQuery($terms, $facets, $offset, $user);
+            $searchResult = $this->client->search($query);
+            if (!empty($searchResult['hits']['total'])) {
+                foreach ($searchResult['hits']['hits'] as $hit) {
+                    $results[$hit['fields']['artifact_id']] = $hit['fields']['changeset_id'];
+                }
             }
         }
         return $results;
