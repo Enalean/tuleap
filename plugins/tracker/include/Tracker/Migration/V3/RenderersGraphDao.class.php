@@ -28,12 +28,12 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->createReportCriteriaForGraphWithoutReport($tv3_id, $tv5_id);
         $this->insertRendererGraph($tv3_id, $tv5_id);
         //$this->alter();
-        $this->reorderRenderer();
+        $this->reorderRenderer($tv5_id);
         $this->updateGraphChartsWithFirstReport($tv5_id);
         $this->createPieCharts($tv5_id);
         $this->createBarCharts($tv5_id);
         $this->createGanttCharts($tv5_id);
-        $this->updateChartsWithFieldId();
+        $this->updateChartsWithFieldId($tv5_id);
     }
 
     private function pluginIsInstalled() {
@@ -106,7 +106,7 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function reorderRenderer() {
+    private function reorderRenderer($tv5_id) {
         $this->update("SET @counter = 0");
         $this->update("SET @previous = NULL");
 
@@ -117,6 +117,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                                 FROM tracker_report_renderer
                                 ORDER BY report_id, rank, id
                     ) as R1 USING(report_id, id)
+                INNER JOIN tracker_report ON (tracker_report_renderer.report_id = tracker_report.id
+                                              AND tracker_report.tracker_id = $tv5_id)
                 SET tracker_report_renderer.rank = R1.new_rank";
         $this->update($sql);
     }
@@ -169,12 +171,13 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
         $this->update($sql);
     }
 
-    private function updateChartsWithFieldId() {
+    private function updateChartsWithFieldId($tv5_id) {
         $sql = "UPDATE plugin_graphontrackersv5_pie_chart AS A
                        INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_base)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_base
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.field_base = F.id";
         $this->update($sql);
 
@@ -182,7 +185,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                        INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_base)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_base
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.field_base = F.id";
         $this->update($sql);
 
@@ -190,7 +194,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                        INNER JOIN plugin_graphontrackersv5_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_group)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_group
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.field_group = F.id";
         $this->update($sql);
 
@@ -198,7 +203,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                        INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_start)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_start
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.field_start = F.id";
         $this->update($sql);
 
@@ -206,7 +212,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                        INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_due)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_due
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.field_due = F.id";
         $this->update($sql);
 
@@ -214,7 +221,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                        INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_finish)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_finish
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.field_finish = F.id";
         $this->update($sql);
 
@@ -222,7 +230,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                        INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_percentage)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_percentage
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.field_percentage = F.id";
         $this->update($sql);
 
@@ -230,7 +239,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                        INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_righttext)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.field_righttext
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.field_righttext = F.id";
         $this->update($sql);
 
@@ -238,7 +248,8 @@ class Tracker_Migration_V3_RenderersGraphDao extends DataAccessObject {
                        INNER JOIN plugin_graphontrackers_chart AS C ON(A.id = C.id)
                        INNER JOIN tracker_report_renderer AS Re ON ( Re.id = C.report_graphic_id )
                        INNER JOIN tracker_report AS R ON(R.id = Re.report_id)
-                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.summary)
+                       INNER JOIN tracker_field AS F ON(F.tracker_id = R.tracker_id AND F.name = A.summary
+                                                                                    AND F.tracker_id = $tv5_id)
                 SET A.summary = F.id";
         $this->update($sql);
     }
