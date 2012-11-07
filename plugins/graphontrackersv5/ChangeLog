@@ -1,3 +1,6 @@
+Version 5.0.5 - Tuleap 5.7
+    * Convert tracker v3 structure to a tracker v5
+
 Version 5.0.4 - Tuleap 5.5
     * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
 

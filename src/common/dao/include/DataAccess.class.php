@@ -287,7 +287,19 @@ class DataAccess {
     public function fetch($result) {
         return mysql_fetch_assoc($result);
     }
-    
+
+    /**
+     * Backward compatibility with database.php
+     *
+     * @deprecated since version 4.0
+     * @param type $result
+     *
+     * @return type
+     */
+    public function fetchArray($result) {
+        return mysql_fetch_array($result);
+    }
+
     /**
      * Move internal result pointer
      *

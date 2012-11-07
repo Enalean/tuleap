@@ -1,3 +1,12 @@
+Version 5.36 - Tuleap 5.7
+    * Fix SOAP API issue: Fix namespace usage
+
+Version 5.35 - Tuleap 5.7
+    * Fix SOAP API issue: Export int instead of string when the wsdl asks for int & replace int[]/string[] by ArrayOfInt/ArrayOfString
+
+Version 5.34 - Tuleap 5.7
+    * Convert tracker v3 structure to a tracker v5
+
 Version 5.33 - Tuleap 5.7
     * Include permissions into Tracker SOAP API
 
@@ -9,6 +18,9 @@ Version 5.31 - Tuleap 5.7
 
 Version 5.30 - Tuleap 5.7
     * SOAP API Enhancement: export semantic definition in the tracker structure
+
+Version 5.29.1 - Tuleap 5.7
+    * Fix defect #1703: If no value for type select box is specified, the first value in the list is saved for the artifact
 
 Version 5.29 - Tuleap 5.6
     * Add symlink to index.php for backward compability
