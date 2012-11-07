@@ -39,14 +39,14 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     /** @var Tracker_FormElementFactory */
     protected $form_element_factory;
     /** @var Tracker_Factory */
-    protected $tracker_factory;
+    protected $tracker_factory; 
 
 
     public function __construct() {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        //$this->thisTestIsUnderDevelopment();
+        $this->thisTestIsUnderDevelopment();
     }
 
     public function setUp() {
@@ -186,6 +186,7 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
         $this->assertEqual($field->getLabel(), "Assigned to");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
+        $this->assertFalse($field->isMultiple());
         $this->assertEqual($field->getPermissions(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
@@ -361,7 +362,7 @@ class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest
 
 }
 
-class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest {
+class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
 
     public function itCreatedTrackerV5WithDefaultParameters() {
         $this->assertEqual($this->task_tracker->getName(), 'Tasks');
@@ -382,7 +383,7 @@ class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest
         ));
     }
 
-    public function _itHasATitleSemantic() {
+    public function itHasATitleSemantic() {
         $field = $this->task_tracker->getTitleField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_String');
         $this->assertEqual($field->getName(), "summary");
@@ -393,16 +394,14 @@ class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::REGISTERED => array(
-                Tracker_FormElement::PERMISSION_SUBMIT
-            ),
             UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
     }
 
-    public function _itHasAStatusSemantic() {
+    public function itHasAStatusSemantic() {
         $field = $this->task_tracker->getStatusField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "status_id");
@@ -419,7 +418,7 @@ class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest
         ));
     }
 
-    public function _itHasOnlyOneOpenValueForStatusSemantic() {
+    public function itHasOnlyOneOpenValueForStatusSemantic() {
         $semantic_status = Tracker_SemanticFactory::instance()->getSemanticStatusFactory()->getByTracker($this->task_tracker);
         $open_values     = $semantic_status->getOpenValues();
         $this->assertCount($open_values, 1);
@@ -427,25 +426,108 @@ class MigrateTracker_RequestTrackerConfigTest extends MigrateDefaultTrackersTest
         $this->assertEqual($open_value->getLabel(), 'Open');
     }
 
-    public function _itHasAnAssignedToSemantic() {
+    public function itHasAnAssignedToSemantic() {
         $field = $this->task_tracker->getContributorField();
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
-        $this->assertEqual($field->getName(), "assigned_to");
-        $this->assertEqual($field->getLabel(), "Assigned to");
+        $this->assertEqual($field->getName(), "multi_assigned_to");
+        $this->assertEqual($field->getLabel(), "Assigned to (multiple)");
+        $this->assertFalse($field->isRequired());
+        $this->assertTrue($field->isUsed());
+        $this->assertTrue($field->isMultiple());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_SUBMIT,
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
+    }
+}
+
+class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
+
+    public function itHasSubmittedBy() {
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'submitted_by');
+        $this->assertIsA($field, 'Tracker_FormElement_Field_List');
+        $this->assertEqual($field->getName(), "submitted_by");
+        $this->assertEqual($field->getLabel(), "Submitted by");
         $this->assertFalse($field->isRequired());
         $this->assertTrue($field->isUsed());
         $this->assertEqual($field->getPermissions(), array(
             UGroup::ANONYMOUS => array(
                 Tracker_FormElement::PERMISSION_READ
             ),
-            UGroup::REGISTERED => array(
-                Tracker_FormElement::PERMISSION_SUBMIT
+        ));
+    }
+
+    public function itHasATextFieldDescription() {
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'details');
+        $this->assertIsA($field, 'Tracker_FormElement_Field_Text');
+        $this->assertEqual($field->getName(), "details");
+        $this->assertEqual($field->getLabel(), "Original Submission");
+        $this->assertFalse($field->isRequired());
+        $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
             ),
             UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_SUBMIT,
                 Tracker_FormElement::PERMISSION_UPDATE
             ),
         ));
     }
+
+    public function itHasADateFieldStartDate() {
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'start_date');
+        $this->assertIsA($field, 'Tracker_FormElement_Field_Date');
+        $this->assertEqual($field->getName(), "start_date");
+        $this->assertEqual($field->getLabel(), "Start Date");
+        $this->assertFalse($field->isRequired());
+        $this->assertTrue($field->isUsed());
+        $this->assertEqual($field->getPermissions(), array(
+            UGroup::ANONYMOUS => array(
+                Tracker_FormElement::PERMISSION_READ
+            ),
+            UGroup::PROJECT_MEMBERS => array(
+                Tracker_FormElement::PERMISSION_SUBMIT,
+                Tracker_FormElement::PERMISSION_UPDATE
+            ),
+        ));
+    }
+
+    public function itHasAnUnusedField() {
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'stage');
+        $this->assertIsA($field, 'Tracker_FormElement_Field_List');
+        $this->assertEqual($field->getName(), "stage");
+        $this->assertEqual($field->getLabel(), "Stage");
+        $this->assertFalse($field->isUsed());
+    }
+
+    public function itHasAListFieldResolutionWithValues() {
+        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'severity');
+        $this->assertIsA($field, 'Tracker_FormElement_Field_List');
+        $this->assertEqual($field->getName(), "severity");
+        $this->assertEqual($field->getLabel(), "Priority");
+        $this->assertTrue($field->isRequired());
+        $this->assertTrue($field->isUsed());
+
+        $this->compareValuesToLabel($field->getAllValues(), array('1 - Lowest', '2', '3', '4', '5 - Medium', '6', '7', '8', '9 - Highest'));
+    }
+
+    protected function compareValuesToLabel(array $values, array $labels) {
+        $this->assertCount($values, count($labels));
+        $i = 0;
+        while($value = array_shift($values)) {
+            $this->assertIsA($value, 'Tracker_FormElement_Field_List_Bind_StaticValue');
+            $this->assertEqual($value->getLabel(), $labels[$i++]);
+            $this->assertFalse($value->isHidden());
+        }
+    }
 }
+
+
 
 ?>
