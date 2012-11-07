@@ -65,7 +65,12 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         parent::tearDown();
     }
 
-    protected function thisTestIsUnderDevelopment() {
+    /**
+     * Use this method to flag your test as 'under development'
+     * This will prevent drop of the database before tests and avoid become crasy
+     * waiting for 50" test execution.
+     */
+    protected function markThisTestUnderDevelopment() {
         self::$db_initialized       = true;
         $this->development_on_going = true;
     }
