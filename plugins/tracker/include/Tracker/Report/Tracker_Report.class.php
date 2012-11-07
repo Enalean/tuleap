@@ -806,7 +806,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed);
         EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
         $matchingIds = $this->formatMatchingIds($request, false);
-        if ($searchPerformed && is_array($params['result']) && !empty($params['result'])) {
+        if ($searchPerformed && is_array($params['result'])) {
             foreach ($matchingIds as $artifactId => $lastChangesetId) {
                 if (!array_key_exists($artifactId, $params['result'])) {
                     unset($matchingIds[$artifactId]);
