@@ -46,7 +46,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        $this->thisTestIsUnderDevelopment();
+        //$this->thisTestIsUnderDevelopment();
     }
 
     public function setUp() {
@@ -528,6 +528,83 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
     }
 }
 
+class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest {
+    /** @var Tracker_ReportFactory */
+    private $report_factory;
+    /** @var Tracker_Report */
+    private $tasks_report;
 
+    public function setUp() {
+        parent::setUp();
+        $this->report_factory = Tracker_ReportFactory::instance();
+        $this->tasks_report    = $this->getReportByName('Tasks');
+    }
+
+    protected function getReportByName($name) {
+        foreach ($this->report_factory->getReportsByTrackerId($this->task_tracker_id, null) as $report) {
+            if ($report->name == $name) {
+                return $report;
+            }
+        }
+    }
+
+    public function itHasTwoReports() {
+        $this->assertCount($this->report_factory->getReportsByTrackerId($this->task_tracker_id, null), 2);
+    }
+
+
+    public function itHasAReportNamedBugs() {
+        $this->assertEqual($this->tasks_report->name, 'Tasks');
+    }
+
+    public function itHasThreeCriteria() {
+        $criteria = $this->tasks_report->getCriteria();
+        $this->thereAreCriteriaForFields($criteria, array('Subproject', 'Assigned to (multiple)', 'Status'));
+    }
+
+    protected function thereAreCriteriaForFields(array $criteria, array $field_labels) {
+        $this->assertCount($criteria, count($field_labels));
+        foreach ($field_labels as $label) {
+            $this->assertTrue($this->criteriaContainOneCriterionForField($criteria, $label));
+        }
+    }
+
+    protected function criteriaContainOneCriterionForField(array $criteria, $field_label) {
+        foreach ($criteria as $criterion) {
+            if ($criterion->field->getLabel() == $field_label) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function itHasATableRenderer() {
+        $renderers = $this->tasks_report->getRenderers();
+        $this->assertCount($renderers, 1);
+
+        $renderer = array_shift($renderers);
+        $this->assertIsA($renderer, 'Tracker_Report_Renderer_Table');
+
+        $columns = $renderer->getTableColumns(false, true, false);
+        $this->thereAreColumnsForFields($columns, array('Artifact ID', 'Assigned to (multiple)', 'Subproject', 'Effort', 'Status', 'Start Date', 'Summary'));
+    }
+
+    public function thereAreColumnsForFields($columns, $field_labels) {
+        $this->assertCount($columns, count($field_labels));
+        foreach ($field_labels as $label) {
+            $this->assertTrue($this->columnsContainOneColumnForField($columns, $label));
+        }
+    }
+
+    public function columnsContainOneColumnForField($columns, $field_label) {
+        foreach ($columns as $column) {
+            if ($column['field']->getLabel() == $field_label) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+}
 
 ?>
