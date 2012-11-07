@@ -833,7 +833,7 @@ class TrackerFactory {
             }
             //create dependencies
             if (isset($tracker->dependencies)) {
-                Tracker_RuleFactory::instance()->saveObject($tracker->dependencies, $trackerDB);
+                $this->getRuleFactory()->saveObject($tracker->dependencies, $trackerDB);
             }
             //create workflow
             if (isset($tracker->workflow)) {
