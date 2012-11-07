@@ -208,7 +208,7 @@ class fulltextsearchPlugin extends Plugin {
             $hp     = Codendi_HTMLPurifier::instance();
             $filter = $hp->purify($params['request']->getValidated('search_followups', 'string', ''));
         }
-        $params['html'] .= '<div class="tracker_report_query">';
+        $params['html'] .= '<div class="tracker_report_query_followup_search">';
         $params['html'] .= '<h3 class="' . Toggler::getClassname('followups_search') . '" id="followups_search" >'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search').'</h3>';
         $params['html'] .= '<form>';
         $params['html'] .= '<input type="hidden" value="'.$params['report_id'].'" name="report">';

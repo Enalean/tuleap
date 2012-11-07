@@ -143,11 +143,25 @@ input[name=tracker_query_submit] {
     z-index:100;
     position:relative;
 }
+.tracker_report_query_followup_search {
+    border-left:1px solid #CCC;
+    border-top:1px solid #CCC;
+    border-right:1px solid #CCC;
+    padding:0 1em;
+    background:#f5f7f7 url(../images/tracker_report_query_bg.png) top left repeat-x;
+    position:relative;
+}
 .tracker_report_query form {
     margin:0px;
     position:relative;
 }
 .tracker_report_query h3 {
+    padding-top: 0;
+    margin-top: 0;
+    text-shadow: 1px 1px white;
+}
+
+.tracker_report_query_followup_search h3 {
     padding-top: 0;
     margin-top: 0;
     text-shadow: 1px 1px white;
