@@ -21,12 +21,7 @@
 /**
  * Class responsible to send requests to an indexation server
  */
-class FullTextSearchTrackerActions {
-
-    /**
-     * @var FullTextSearch_IIndexDocuments
-     */
-    protected $client;
+class FullTextSearchTrackerActions extends FullTextSearchActions {
 
     /** Constructor
      *
@@ -35,7 +30,7 @@ class FullTextSearchTrackerActions {
      * @return Void
      */
     public function __construct(FullTextSearch_IIndexDocuments $client) {
-        $this->client = $client;
+        parent::__construct($client);
     }
 
     /**
@@ -48,7 +43,7 @@ class FullTextSearchTrackerActions {
      *
      * @return Void
      */
-    public function indexNewFollowup($groupId, $artifactId, $changesetId, $text) {
+    public function indexNewDocument($groupId, $artifactId, $changesetId, $text) {
         $indexedData = $this->getIndexedData($groupId, $artifactId, $changesetId, $text);
         $this->client->index($indexedData, $changesetId);
     }
@@ -63,7 +58,7 @@ class FullTextSearchTrackerActions {
      *
      * @return Void
      */
-    public function indexUpdatedFollowup($groupId, $artifactId, $changesetId, $text) {
+    public function indexNewVersion($groupId, $artifactId, $changesetId, $text) {
         // @TODO: If no index start first by indexing the followup comment.
         $updateData = $this->client->initializeSetterData();
         $updateData = $this->client->appendSetterData($updateData, 'followup', $text);

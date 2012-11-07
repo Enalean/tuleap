@@ -28,6 +28,7 @@ function autoload34e5cad2d8cb67c1c361505bdc291d70($class) {
             'fulltextsearch_presenter_searchonlyresults' => '/FullTextSearch/Presenter/SearchOnlyResults.class.php',
             'fulltextsearch_searchresultcollection' => '/FullTextSearch/SearchResultCollection.class.php',
             'fulltextsearchactions' => '/FullTextSearchActions.class.php',
+            'fulltextsearchdocmanactions' => '/FullTextSearchDocmanActions.class.php',
             'fulltextsearchtrackeractions' => '/FullTextSearchTrackerActions.class.php',
             'fulltextsearchplugin' => '/fulltextsearchPlugin.class.php',
             'fulltextsearchplugindescriptor' => '/FulltextsearchPluginDescriptor.class.php',
