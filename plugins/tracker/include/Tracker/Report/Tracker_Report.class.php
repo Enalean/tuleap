@@ -489,7 +489,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null) {
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null, $request = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
@@ -517,9 +517,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
         $html .= '</form>';
         $html .= '</div>';
-        $params = array('html' => '', 'report_id' => $this->id);
-        EventManager::instance()->processEvent('tracker_report_followup_search', &$params);
-        $html .= $params['html'];
+        $followupSearchForm = '';
+        $params = array('html' => &$followupSearchForm, 'report_id' => $this->id, 'request' => $request);
+        EventManager::instance()->processEvent('tracker_report_followup_search', $params);
+        $html .= $followupSearchForm;
         return $html;
     }
 
@@ -594,7 +595,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
             }
-            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user);
+            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user, $request);
             
             //Display Renderers
             $html .= '<div>';
