@@ -46,7 +46,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        $this->markThisTestUnderDevelopment();
+        //$this->markThisTestUnderDevelopment();
     }
 
     public function setUp() {
