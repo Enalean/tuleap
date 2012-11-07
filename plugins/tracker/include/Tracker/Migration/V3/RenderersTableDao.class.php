@@ -59,6 +59,8 @@ class Tracker_Migration_V3_RenderersTableDao extends DataAccessObject {
                             FROM tracker_report_renderer_table_columns 
                             ORDER BY renderer_id, rank, field_id
                 ) as R1 USING(renderer_id,field_id)
+                INNER JOIN tracker_report_renderer ON (tracker_report_renderer.id = tracker_report_renderer_table_columns.renderer_id)
+                INNER JOIN tracker_report ON (tracker_report_renderer.report_id = tracker_report.id AND tracker_report.tracker_id = $tv5_id)
                 SET tracker_report_renderer_table_columns.rank = R1.new_rank";
         $this->update($sql);
     }

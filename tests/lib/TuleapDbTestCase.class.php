@@ -27,6 +27,8 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
 
     protected static $db_initialized = false;
 
+    private $development_on_going = false;
+
     public function __construct() {
         parent::__construct();
         $this->loadConfiguration();
@@ -50,17 +52,31 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
     public function skip() {
         parent::skip();
         if (!$this->mysqli) {
-            echo "== Y U NO CONFIGURE DATABASE? ==\n";
+            echo "== (屮ಠ益ಠ)屮 Y U NO CONFIGURE DATABASE? ==\n";
         }
-        $this->skipUnless($this->mysqli, '== Y U NO CONFIGURE DATABASE? ==');
+        $this->skipUnless($this->mysqli, '== (屮ಠ益ಠ)屮 Y U NO CONFIGURE DATABASE? ==');
     }
 
     public function tearDown() {
-        parent::tearDown();
         unset($GLOBALS['sys_dbhost']);
         unset($GLOBALS['sys_dbuser']);
         unset($GLOBALS['sys_dbpasswd']);
         unset($GLOBALS['sys_dbname']);
+        parent::tearDown();
+    }
+
+    /**
+     * Use this method to flag your test as 'under development'
+     * This will prevent drop of the database before tests and avoid become crasy
+     * waiting for 50" test execution.
+     */
+    protected function markThisTestUnderDevelopment() {
+        self::$db_initialized       = true;
+        $this->development_on_going = true;
+    }
+
+    protected function thisTestIsNotUnderDevelopment() {
+        return !$this->development_on_going;
     }
 
     /**
@@ -110,7 +126,10 @@ abstract class TuleapDbTestCase extends TuleapTestCase {
         $this->mysqlLoadFile('src/db/mysql/database_structure.sql');
         $this->mysqlLoadFile('src/db/mysql/database_initvalues.sql');
         $this->mysqlLoadFile('src/db/mysql/trackerv3values.sql');
+        $this->mysqlLoadFile('plugins/graphontrackers/db/install.sql');
+        $this->mysqlLoadFile('plugins/graphontrackers/db/initvalues.sql');
         $this->mysqlLoadFile('plugins/tracker/db/install.sql');
+        $this->mysqlLoadFile('plugins/graphontrackersv5/db/install.sql');
     }
 }
 

@@ -96,21 +96,6 @@ class Tracker_Migration_V3_FieldsetsDao extends DataAccessObject {
                 FROM tracker_fieldset_$tv5_id";
         $this->update($sql);
 
-//        $sql = "UPDATE tracker_field AS f1
-//                    INNER JOIN tracker_field AS f2
-//                        ON (f1.parent_id = f2.old_id
-//                            AND f2.formElement_type = 'fieldset'
-//                            AND f2.tracker_id       = $tv5_id)
-//                SET f1.parent_id  = f2.id
-//                AND f1.tracker_id = $tv5_id";
-//        $this->update($sql);
-//
-//        $sql = "UPDATE tracker_field AS f1
-//                INNER JOIN tracker_field AS f2
-//                    ON (f1.parent_id = f2.id AND f1.tracker_id = 0)
-//                SET f1.tracker_id = f2.tracker_id
-//                WHERE tracker_id  = $tv5_id";
-//        $this->update($sql);
         $sql = "UPDATE tracker_field AS f, tracker_field AS f2
                 SET f.parent_id = f2.id
                 WHERE f.parent_id = f2.old_id

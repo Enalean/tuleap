@@ -43,7 +43,7 @@ class Tracker_Migration_V3_SemanticDao extends DataAccessObject {
                 SELECT tracker_id, f.id, v.id
                 FROM tracker_field AS f INNER JOIN tracker_field_list_bind_static_value as v ON (f.id = v.field_id)
                 WHERE name = 'status_id'
-                  AND v.old_id = 1 OR v.label = 'Open' OR v.label = 'Ouvert'
+                  AND (v.old_id = 1 OR v.label = 'Open' OR v.label = 'Ouvert')
                   AND f.tracker_id = $tv5_id";
         return $this->update($sql);
     }

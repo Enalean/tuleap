@@ -30,7 +30,7 @@ class ProjectCreationTest extends TuleapDbTestCase {
         parent::__construct();
 
         // Uncomment this during development to avoid aweful 50" setUp
-        //self::$db_initialized = true;
+        // $this->markThisTestUnderDevelopment()
     }
 
     public function setUp() {
@@ -39,8 +39,8 @@ class ProjectCreationTest extends TuleapDbTestCase {
     }
 
     public function tearDown() {
-        parent::tearDown();
         $this->mysqli->query('DELETE FROM groups WHERE unix_group_name = "short-name"');
+        parent::tearDown();
     }
 
     public function itCreatesAProject() {
