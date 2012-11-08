@@ -49,10 +49,11 @@ class ElasticSearch_ClientFactory {
      * @param string         $server_user                  the user of the search server (Basic Auth)
      * @param string         $server_password              the pass of the search server (Basic Auth)
      * @param ProjectManager $project_manager              The project manager
+     * @param string         $type                         The type of the index
      *
      * @return ElasticSearch_ClientFacade
      */
-    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager, $type = 'docman') {
+    public function buildSearchClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, ProjectManager $project_manager, $type) {
         $client = $this->getClient($path_to_elasticsearch_client, $server_host, $server_port, $server_user, $server_password, $type);
         return new ElasticSearch_SearchClientFacade($client, $type, $project_manager);
     }
