@@ -23,7 +23,9 @@ require_once 'autoload.php';
 
 class fulltextsearchPlugin extends Plugin {
 
-    const SEARCH_TYPE = 'fulltext';
+    const SEARCH_TYPE         = 'fulltext';
+    const SEARCH_DOCMAN_TYPE  = 'docman';
+    const SEARCH_TRACKER_TYPE = 'tracker';
 
     private $actions;
     private $trackerActions;
@@ -143,7 +145,7 @@ class fulltextsearchPlugin extends Plugin {
      */
     //TO BE removed
     private function getTrackerActions() {
-        $type = 'tracker';
+        $type = self::SEARCH_TRACKER_TYPE;
         if (!isset($this->trackerActions) && ($search_client = $this->getIndexClient($type))) {
             $this->trackerActions = new FullTextSearchTrackerActions($search_client);
         }
@@ -344,7 +346,14 @@ class fulltextsearchPlugin extends Plugin {
         return $factory->buildIndexClient($client_path, $server_host, $server_port, $server_user, $server_password, $type);
     }
 
-    private function getSearchClient($type = NULL) {
+    /**
+     * Obtain search client
+     *
+     * @param String $type Type of the index
+     *
+     * @return ElasticSearch_SearchClientFacade
+     */
+    private function getSearchClient($type) {
         $factory         = $this->getClientFactory();
         $client_path     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_path');
         $server_host     = $this->getPluginInfo()->getPropertyValueForName('fulltextsearch_host');
@@ -375,7 +384,7 @@ class fulltextsearchPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    private function getSearchController($type = NULL) {
+    private function getSearchController($type = self::SEARCH_DOCMAN_TYPE) {
         return new FullTextSearch_Controller_Search($this->getRequest(), $this->getSearchClient($type));
     }
 
