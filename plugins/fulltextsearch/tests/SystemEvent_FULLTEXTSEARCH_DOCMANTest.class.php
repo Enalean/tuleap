@@ -26,7 +26,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_DOCMANTest extends TuleapTestCase {
         parent::setUp();
         $this->item    = mock('Docman_Item');
         $this->version = mock('Docman_Version');
-        $this->actions = mock('FullTextSearchActions');
+        $this->actions = mock('FullTextSearchDocmanActions');
 
         $this->item_factory = mock('Docman_ItemFactory');
         stub($this->item_factory)->getItemFromDb(103, '*')->returns($this->item);
