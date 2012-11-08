@@ -218,47 +218,45 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     /**
-     * Convert the fucked-up output of getMatchingIds() to a format that could be used
+     * Convert the output of getMatchingIds() to a format that could be used
      *
-     * @param HTTPRequest $request       Ask the dumbshit that didn't write the function comment of getMatchingIds()
-     * @param Boolean     $useDataFromDb Ask the dumbshit that didn't write the function comment of getMatchingIds()
+     * @param HTTPRequest $request       @see getMatchingIds()
+     * @param Boolean     $useDataFromDb @see getMatchingIds()
      *
      * @return Array
      */
     public function formatMatchingIds($request = null, $useDataFromDb = false) {
-        // @TODO: Execute the person that imagined that the format returned by getMatchingIds() has a meaning
-        $fuckedUpMatchingIds = $this->getMatchingIds($request, $useDataFromDb);
-        $artifactIds         = explode(',', $fuckedUpMatchingIds['id']);
-        $lastChangesetIds    = explode(',', $fuckedUpMatchingIds['last_changeset_id']);
-        $matchingIds         = array();
+        $matchingIds          = $this->getMatchingIds($request, $useDataFromDb);
+        $artifactIds          = explode(',', $matchingIds['id']);
+        $lastChangesetIds     = explode(',', $matchingIds['last_changeset_id']);
+        $formattedMatchingIds = array();
         foreach ($artifactIds as $key => $artifactId) {
-            $matchingIds[$artifactId] = $lastChangesetIds[$key];
+            $formattedMatchingIds[$artifactId] = $lastChangesetIds[$key];
         }
-        return $matchingIds;
+        return $formattedMatchingIds;
     }
 
     /**
-     * Convert a useful format to the fucked-up type of output of getMatchingIds()
+     * Convert a useful format to the type of output of getMatchingIds()
      *
-     * @param Array $matchingIds Matching Id's that will get converted in that shitty format
+     * @param Array $formattedMatchingIds Matching Id's that will get converted in that format
      *
      * @return Array
      */
-    public function scrambleMatchingIds($matchingIds) {
-        // @TODO: Execute the person that imagined that the format returned by getMatchingIds() has a meaning
-        $fuckedUpMatchingIds['id']                = '';
-        $fuckedUpMatchingIds['last_changeset_id'] = '';
-        foreach ($matchingIds as $artifactId => $lastChangesetId) {
-            $fuckedUpMatchingIds['id']                .= $artifactId.',';
-            $fuckedUpMatchingIds['last_changeset_id'] .= $lastChangesetId.',';
+    public function scrambleMatchingIds($formattedMatchingIds) {
+        $matchingIds['id']                = '';
+        $matchingIds['last_changeset_id'] = '';
+        foreach ($formattedMatchingIds as $artifactId => $lastChangesetId) {
+            $matchingIds['id']                .= $artifactId.',';
+            $matchingIds['last_changeset_id'] .= $lastChangesetId.',';
         }
-        if (substr($fuckedUpMatchingIds['id'], -1) === ',') {
-            $fuckedUpMatchingIds['id'] = substr($fuckedUpMatchingIds['id'], 0, -1);
+        if (substr($matchingIds['id'], -1) === ',') {
+            $matchingIds['id'] = substr($matchingIds['id'], 0, -1);
         }
-        if (substr($fuckedUpMatchingIds['last_changeset_id'], -1) === ',') {
-            $fuckedUpMatchingIds['last_changeset_id'] = substr($fuckedUpMatchingIds['last_changeset_id'], 0, -1);
+        if (substr($matchingIds['last_changeset_id'], -1) === ',') {
+            $matchingIds['last_changeset_id'] = substr($matchingIds['last_changeset_id'], 0, -1);
         }
-        return $fuckedUpMatchingIds;
+        return $matchingIds;
     }
 
     protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
