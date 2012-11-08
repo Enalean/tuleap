@@ -83,7 +83,7 @@ class FullTextSearchActions {
      * @param string $file_name
      * @return string
      */
-    private function fileContentEncode($file_name) {
+    protected function fileContentEncode($file_name) {
         if (is_file($file_name)) {
             return base64_encode(file_get_contents($file_name));
         }
