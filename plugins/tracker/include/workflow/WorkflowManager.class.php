@@ -219,7 +219,7 @@ class WorkflowManager {
         echo '<table><tr><td>';
 
         $section_conditions = new Widget_Static($GLOBALS['Language']->getText('workflow_admin','under_the_following_condition'));
-        $section_conditions->setContent($this->fetchWorkflowPermissions($transition));
+        $section_conditions->setContent($transition->fetchConditions());
         $section_conditions->display();
 
         $tpaf = $this->getPostActionFactory();
@@ -243,26 +243,6 @@ class WorkflowManager {
      */
     public function getPostActionFactory() {
         return new Transition_PostActionFactory();
-    }
-
-    /**
-     * Return permission form for the transition
-     *
-     * @param Transition $transition The transition
-     *
-     * @return string html
-     */
-    protected function fetchWorkflowPermissions($transition) {
-        $html = '';
-        $html .= '<ul class="workflow_conditions">';
-        $html .= '<li class="workflow_conditions_perms">';
-        $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
-        $html .= '<br />';
-        $html .= '<p>';
-        $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id);
-        $html .= '</p>';
-        $html .= '</li></ul>';
-        return $html;
     }
 
     protected function displayAdminWorkflow(TrackerManager $engine, Codendi_Request $request, User $current_user, Workflow $workflow) {

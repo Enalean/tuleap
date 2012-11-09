@@ -226,6 +226,23 @@ class Transition {
     }
 
     /**
+     * @return string html permission form for the transition
+     */
+    public function fetchConditions() {
+        $html = '';
+        $html .= '<ul class="workflow_conditions">';
+        $html .= '<li class="workflow_conditions_perms">';
+        $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
+        $html .= '<br />';
+        $html .= '<p>';
+        $group_id = $this->getWorkflow()->getTracker()->getGroupId();
+        $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $this->getTransitionId(), $group_id);
+        $html .= '</p>';
+        $html .= '</li></ul>';
+        return $html;
+    }
+
+    /**
      * Set the permissions for the ugroup_id
      * Use during the two-step xml import
      *
