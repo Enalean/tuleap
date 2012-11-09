@@ -27,6 +27,7 @@ class FullTextSearchActions {
      * @var FullTextSearch_IIndexDocuments
      */
     protected $client;
+    protected $permissions;
 
     public function __construct(FullTextSearch_IIndexDocuments $client) {
         $this->client              = $client;
@@ -35,8 +36,6 @@ class FullTextSearchActions {
     /**
      * Index a new document with permissions
      *
-     * @param Docman_Item    $item    The docman item
-     * @param Docman_Version $version The version to index
      */
     public function indexNewDocument() {
     }
@@ -44,24 +43,24 @@ class FullTextSearchActions {
     /**
      * Index a new document with permissions
      *
-     * @param Docman_Item    $item    The docman item
-     * @param Docman_Version $version The version to index
      */
     public function indexNewVersion() {
     }
 
     /**
-     * Index the new permissions of a document
+     * Index the new permissions of a followup
      *
-     * @param Docman_Item $item The docman item
+     * @param 
      */
-    public function updatePermissions() {
+    public function updatePermissions($id) {
+        $update_data = $this->client->initializeSetterData();
+        $update_data = $this->client->appendSetterData($update_data, 'permissions', $this->permissions);
+        $this->client->update($id, $update_data);
     }
 
     /**
      * Update title and description of a document
      *
-     * @param Docman_Item $item The item
      */
     public function updateDocument() {
     }
@@ -69,12 +68,23 @@ class FullTextSearchActions {
     /**
      * Remove an indexed document
      *
-     * @param Docman_Item $item The item to delete
      */
     public function delete() {
     }
 
+    /**
+     * Return Indexed data
+     * 
+     */
     private function getIndexedData() {
+    }
+
+    /**
+     *  Set permission for the given object
+     * 
+     */
+    protected function setPermission($permissions) {
+        $this->permissions = $permissions;
     }
 
     /**
@@ -89,6 +99,5 @@ class FullTextSearchActions {
         }
         return '';
     }
-
 }
 ?>

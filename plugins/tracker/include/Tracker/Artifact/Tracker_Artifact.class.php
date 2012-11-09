@@ -31,6 +31,8 @@ require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('common/reference/CrossReferenceManager.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
+require_once 'common/project/UGroupLiteralizer.class.php';
+require_once 'common/project/ProjectManager.class.php';
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
@@ -85,8 +87,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->submitted_by             = $submitted_by;
         $this->submitted_on             = $submitted_on;
         $this->use_artifact_permissions = $use_artifact_permissions;
-
     }
+
     /**
      * Obtain event manager instance
      *
@@ -95,7 +97,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function _getEventManager() {
         return EventManager::instance();
     }
-
 
     /**
      * Return true if given given artifact refer to the same DB object (basically same id).
@@ -1573,6 +1574,53 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->getDao()->commit();
     }
 
+    /**
+     * Return the authorised ugroups to see the artifact
+     *
+     * @return Array
+     */
+    public function getAuthorisedUgroups () {
+        $ugroups = array();
+        //Individual artifact permission
+        if ($this->useArtifactPermissions()) {
+            $rows = $this->permission_db_authorized_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS');
+            if ( $rows !== false ) {
+                foreach ($rows as $row) {
+                    $ugroups[] = $row['ugroup_id'];
+                }
+            }
+        } else {
+            $permissions = $this->getTracker()->getPermissionsAuthorizedUgroups();
+            foreach ($permissions  as $permission => $ugroups) {
+                switch($permission) {
+                    // Full access
+                    case 'PLUGIN_TRACKER_ACCESS_FULL':
+                    // 'submitter' access
+                    case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
+                    // 'assignee' access
+                    case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+                        foreach ($ugroups as $ugroup) {
+                            $ugroups[] = $ugroup['ugroup_id'];
+                        }
+                    break;
+                }
+            }
+        }
+        return $ugroups;
+    }
+
+    /**
+     * Returns ugroups of an artifact in a human readable format
+     *
+     * @return array
+     */
+    public function exportPermissions() {
+        $project     = ProjectManager::instance()->getProject($this->getTracker()->getGroupId());
+        $literalizer = new UGroupLiteralizer();
+        $ugroupsId     = $this->getAuthorisedUgroups();
+        return $literalizer->ugroupIdsToString($ugroupsId, $project);
+    }
+
     protected function getDao() {
         return new Tracker_ArtifactDao();
     }
@@ -1584,7 +1632,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getCrossReferenceManager() {
         return new CrossReferenceManager();
     }
-
 }
 
 ?>

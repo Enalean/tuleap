@@ -27,7 +27,7 @@ class SystemEvent_FULLTEXTSEARCH_DOCMAN_UPDATE_PERMISSIONSTest extends SystemEve
 
     public function itDelegatesIndexingToFullTextSearchActions() {
         $event = $this->aSystemEventWithParameter('101::103');
-        stub($this->actions)->updatePermissions($this->item)->once();
+        stub($this->actions)->updatePermissions($this->item->getId())->once();
         $this->assertTrue($event->process());
         $this->assertEqual($event->getLog(), 'OK');
         $this->assertEqual($event->getStatus(), SystemEvent::STATUS_DONE);

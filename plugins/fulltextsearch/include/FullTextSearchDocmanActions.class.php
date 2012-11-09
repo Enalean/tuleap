@@ -55,18 +55,6 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
     }
 
     /**
-     * Index the new permissions of a document
-     *
-     * @param Docman_Item $item The docman item
-     */
-    public function updatePermissions(Docman_Item $item) {
-        $update_data = $this->client->initializeSetterData();
-        $permissions = $this->permissions_manager->exportPermissions($item);
-        $update_data = $this->client->appendSetterData($update_data, 'permissions', $permissions);
-        $this->client->update($item->getid(), $update_data);
-    }
-
-    /**
      * Update title and description of a document
      *
      * @param Docman_Item $item The item
@@ -96,6 +84,15 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
             'permissions' => $this->permissions_manager->exportPermissions($item),
             'file'        => $this->fileContentEncode($version->getPath())
         );
+    }
+
+    /**
+     *  Set permission for the given document
+     * 
+     * @param Docman_Item $item The item to update permission
+     */
+    protected function setPermissions($item) {
+        $this->permissions = $this->permissions_manager->exportPermissions($item);
     }
 }
 ?>
