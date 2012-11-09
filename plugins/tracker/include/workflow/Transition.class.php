@@ -309,27 +309,14 @@ class Transition {
             }
         }
 
-        $pm = $this->getPermissionsManager();
-        $transition_ugroups = $pm->getAuthorizedUgroups($this->getTransitionId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION');
-
-        if ($transition_ugroups) {
-            $grand_child = $child->addChild('permissions');
-
-            foreach ($transition_ugroups as $transition_ugroup) {
-                if (($ugroup = array_search($transition_ugroup['ugroup_id'], $GLOBALS['UGROUPS'])) !== false && $transition_ugroup['ugroup_id'] < 100) {
-                    $grand_child->addChild('permission')->addAttribute('ugroup', $ugroup);
-                }
+        $conditions = $this->getConditions();
+        if ($conditions) {
+            $grand_child = $child->addChild('conditions');
+            foreach ($conditions as $condition) {
+                $condition_child = $grand_child->addChild('condition');
+                $condition->exportToXML($condition_child, $xmlMapping);
             }
         }
-    }
-
-   /**
-    * Wrapper for PermissionsManager
-    *
-    * @return PermissionsManager
-    */
-    public function getPermissionsManager() {
-        return PermissionsManager::instance();
     }
 
    /**

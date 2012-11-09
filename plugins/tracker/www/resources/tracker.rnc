@@ -182,13 +182,29 @@ grammar {
                     attribute REF { xsd:IDREF }
                 }
             }*
-        }*,
+        }?,
+        (
+            (
+                conditionPermissionsContent
+            )
+        |
+            (
+                element conditions {
+                    element condition {
+                        attribute type { "perms" }
+                        conditionPermissionsContent
+                    }?
+                }?
+            )
+        )
+    
+    conditionPermissionsContent =
         element permissions {
             element permission {
                 attribute ugroup { xsd:string }
             }*
-        }*
-        
+        }
+
     ruleContent =
         (
             element source_field {
