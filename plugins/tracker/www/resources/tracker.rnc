@@ -39,7 +39,7 @@ grammar {
 
         element dependencies {
             element rule { ruleContent }*
-        },
+        }?,
 
         element reports { 
             element report { reportContent }* 
@@ -51,7 +51,7 @@ grammar {
             }?,
             element is_used {xsd:int}?,
             element transitions { 
-                element transition { transitionContent }*                
+                element transition { transitionContent }*
             }?
         }*,
 

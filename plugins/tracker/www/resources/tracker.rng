@@ -99,13 +99,15 @@
           </zeroOrMore>
         </element>
       </optional>
-      <element name="dependencies">
-        <zeroOrMore>
-          <element name="rule">
-            <ref name="ruleContent"/>
-          </element>
-        </zeroOrMore>
-      </element>
+      <optional>
+        <element name="dependencies">
+          <zeroOrMore>
+            <element name="rule">
+              <ref name="ruleContent"/>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
       <optional>
         <element name="reports">
           <zeroOrMore>
