@@ -48,9 +48,9 @@ class FullTextSearchActions {
     }
 
     /**
-     * Index the new permissions of a followup
+     * Index the new permissions of a document
      *
-     * @param 
+     * @param Integer the object Id
      */
     public function updatePermissions($id) {
         $update_data = $this->client->initializeSetterData();
