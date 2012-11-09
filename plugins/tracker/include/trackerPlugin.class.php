@@ -146,12 +146,17 @@ class trackerPlugin extends Plugin {
     
     public function agiledashboard_event_additional_panes_on_milestone($params) {
         $artifact = $params['milestone']->getArtifact();
+        $user     = $params['user'];
         require_once 'Tracker/Artifact/Burndown/Pane.class.php';
-        $params['panes'][] = new Tracker_Artifact_Burndown_Pane(
-                $artifact,
-                $params['user'],
-                $this->getThemePath()
-            );
+        $burndown_field = $artifact->getABurndownField($user);
+        if ($burndown_field) {
+            $params['panes'][] = new Tracker_Artifact_Burndown_Pane(
+                    $artifact,
+                    $burndown_field,
+                    $params['user'],
+                    $this->getThemePath()
+                );
+        }
     }
     
    /**

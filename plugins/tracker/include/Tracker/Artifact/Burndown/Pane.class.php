@@ -38,6 +38,11 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
     private $artifact;
     
     /**
+     * @var Tracker_FormElement_Field_Burndown
+     */
+    private $field;
+    
+    /**
      * @var User
      */
     private $user;
@@ -47,8 +52,9 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
      */
     private $plugin_theme_path;
 
-    public function __construct(Tracker_Artifact $artifact, User $user, $plugin_theme_path) {
+    public function __construct(Tracker_Artifact $artifact, Tracker_FormElement_Field_Burndown $field, User $user, $plugin_theme_path) {
         $this->artifact          = $artifact;
+        $this->field             = $field;
         $this->user              = $user;
         $this->plugin_theme_path = $plugin_theme_path;
     }
@@ -98,8 +104,7 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
     }
 
     private function getPaneContent() {
-        $burndown_field = $this->artifact->getABurndownField($this->user);
-        return $burndown_field->fetchArtifactValueReadOnly($this->artifact);
+        return $this->field->fetchArtifactValueReadOnly($this->artifact);
     }
 }
 ?>
