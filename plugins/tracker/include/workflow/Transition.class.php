@@ -18,7 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('PostAction/Transition_PostAction.class.php');
+require_once 'PostAction/Transition_PostAction.class.php';
+require_once 'Transition/Condition/Permissions.class.php';
 
 class Transition {
     public $transition_id;
@@ -119,9 +120,16 @@ class Transition {
     /**
      * Get the transition id
      *
+     * @deprecated since Tuleap 5.7
+     * @see getId()
+     *
      * @return int
      */
     public function getTransitionId() {
+        return $this->transition_id;
+    }
+
+    public function getId() {
         return $this->transition_id;
     }
 
@@ -151,6 +159,12 @@ class Transition {
     public function displayTransitionDetails() {
     }
 
+    /**
+     * @return int
+     */
+    public function getGroupId() {
+        return $this->getWorkflow()->getTracker()->getGroupId();
+    }
 
     /**
      * Execute actions before transition happens
@@ -229,17 +243,24 @@ class Transition {
      * @return string html permission form for the transition
      */
     public function fetchConditions() {
-        $html = '';
+        $html  = '';
         $html .= '<ul class="workflow_conditions">';
-        $html .= '<li class="workflow_conditions_perms">';
-        $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
-        $html .= '<br />';
-        $html .= '<p>';
-        $group_id = $this->getWorkflow()->getTracker()->getGroupId();
-        $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $this->getTransitionId(), $group_id);
-        $html .= '</p>';
-        $html .= '</li></ul>';
+        foreach ($this->getConditions() as $condition) {
+            $html .= '<li class="workflow_conditions_perms">';
+            $html .= $condition->fetch();
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
         return $html;
+    }
+
+    /**
+     * @return array
+     */
+    private function getConditions() {
+        return array(
+            new Workflow_Transition_Condition_Permissions($this)
+        );
     }
 
     /**
