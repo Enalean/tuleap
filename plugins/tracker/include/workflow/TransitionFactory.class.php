@@ -219,14 +219,14 @@ class TransitionFactory {
         return $transitions;
     }
     
-   /**
-    * Creates transition in the database
-    * 
-    * @param int $workflow_id The workflow_id of the transitions to save
-    * @param Transition          $transition The transition
-    * 
-    * @return void
-    */
+    /**
+     * Creates transition in the database
+     *
+     * @param int $workflow_id The workflow_id of the transitions to save
+     * @param Transition          $transition The transition
+     *
+     * @return void
+     */
     public function saveObject($workflow_id, $transition) {
         
         $dao = $this->getDao();
@@ -247,9 +247,11 @@ class TransitionFactory {
             $tpaf->saveObject($postaction);
         }
         
-        //Save permissions
-        $permissions = $transition->getPermissions();
-        $this->addPermissions($permissions, $transition->getTransitionId());
+        //Save conditions
+        $conditions = $transition->getConditions();
+        foreach ($conditions as $condition) {
+            $condition->saveObject();
+        }
     }
     
    /**

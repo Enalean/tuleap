@@ -260,9 +260,9 @@ class Transition {
     }
 
     /**
-     * @return array
+     * @return array of Workflow_Transition_Condition
      */
-    private function getConditions() {
+    public function getConditions() {
         if (! $this->conditions) {
             $this->conditions = array(
                 new Workflow_Transition_Condition_Permissions($this)

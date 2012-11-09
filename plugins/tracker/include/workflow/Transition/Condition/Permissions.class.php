@@ -18,10 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_Transition_Condition_Permissions {
-
-    const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
-    const CONDITION_TYPE        = 'perms';
+abstract class Workflow_Transition_Condition {
 
     /** @var Transition */
     protected $transition;
@@ -31,9 +28,43 @@ class Workflow_Transition_Condition_Permissions {
     }
 
     /**
+     * Save the condition object in database
+     */
+    public abstract function saveObject();
+
+    /**
+     * Export postactions date to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public abstract function exportToXml(&$root, $xmlMapping);
+
+    /**
      * Get the html code needed to display the condition in workflow admin
      *
      * @return string html
+     */
+    public abstract function fetch();
+}
+
+class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition {
+
+    const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
+    const CONDITION_TYPE        = 'perms';
+
+    /** @var PermissionsManager */
+    private $permission_manager;
+
+    public function __construct(Transition $transition) {
+        parent::__construct($transition);
+        $this->permission_manager = PermissionsManager::instance();
+    }
+
+    /**
+     * @see Workflow_Transition_Condition::fetch()
      */
     public function fetch() {
         $html  = '';
@@ -50,17 +81,12 @@ class Workflow_Transition_Condition_Permissions {
     }
 
     /**
-     * Export postactions date to XML
-     *
-     * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
-     * @param array            $xmlMapping correspondance between real ids and xml IDs
-     *
-     * @return void
+     * @see Workflow_Transition_Condition::exportToXml()
      */
     public function exportToXml(&$root, $xmlMapping) {
         $root->addAttribute('type', self::CONDITION_TYPE);
 
-        $transition_ugroups = PermissionsManager::instance()->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
+        $transition_ugroups = $this->permission_manager->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
         $child = $root->addChild('permissions');
         foreach ($transition_ugroups as $transition_ugroup) {
             $ugroup_keyname = $this->getExportableUGroupKeyname($transition_ugroup['ugroup_id']);
@@ -68,6 +94,30 @@ class Workflow_Transition_Condition_Permissions {
                 $child->addChild('permission')->addAttribute('ugroup', $ugroup_keyname);
             }
         }
+    }
+
+    /**
+     * @see Workflow_Transition_Condition::saveObject()
+     */
+    public function saveObject() {
+        $permissions = $this->transition->getPermissions();
+        $this->addPermissions($permissions);
+    }
+
+    /**
+     * Adds permissions in the database
+     *
+     * @param array $ugroups The list of ugroups
+     *
+     * @return boolean
+     */
+    private function addPermissions($ugroups) {
+        foreach ($ugroups as $ugroup) {
+            if (! $this->permission_manager->addPermission(self::PERMISSION_TRANSITION, (int)$this->transition->getId(), $ugroup)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
