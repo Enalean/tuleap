@@ -24,6 +24,7 @@ require_once('Workflow_Dao.class.php');
 require_once('Workflow_TransitionDao.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('PostAction/Transition_PostActionFactory.class.php');
+require_once 'Transition/ConditionFactory.class.php';
 
 class TransitionFactory {
     
@@ -172,17 +173,11 @@ class TransitionFactory {
         }
         $transition->setPostActions($postactions);
         
-        //Permissions on transition
-        if ($xml->permissions) {
-            $permissions = array();
-            foreach ($xml->permissions->permission as $perm) {
-                $ugroup = (string) $perm['ugroup'];
-                if (isset($GLOBALS['UGROUPS'][$ugroup])) {
-                    $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
-                }
-                $transition->setPermissions($permissions);
-            }
-        }
+        // Conditions on transition
+        $condition_factory = new Workflow_Transition_ConditionFactory();
+        $transition->setConditions(
+            $condition_factory->getAllInstancesFromXML($xml, $xmlMapping, $transition)
+        );
         
         return $transition;
     }

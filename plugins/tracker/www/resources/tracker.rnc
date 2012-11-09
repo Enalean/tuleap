@@ -191,7 +191,7 @@ grammar {
             (
                 element conditions {
                     element condition {
-                        attribute type { "perms" }
+                        attribute type { "perms" },
                         conditionPermissionsContent
                     }?
                 }?

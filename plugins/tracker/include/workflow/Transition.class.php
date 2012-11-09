@@ -41,6 +41,11 @@ class Transition {
     protected $post_actions = array();
 
     /**
+     * @var Array of Workflow_Transition_Condition
+     */
+    private $conditions = array();
+
+    /**
      * @var Array of permissions
      */
     protected $cache_permissions = array();
@@ -258,9 +263,16 @@ class Transition {
      * @return array
      */
     private function getConditions() {
-        return array(
-            new Workflow_Transition_Condition_Permissions($this)
-        );
+        if (! $this->conditions) {
+            $this->conditions = array(
+                new Workflow_Transition_Condition_Permissions($this)
+            );
+        }
+        return $this->conditions;
+    }
+
+    public function setConditions(array $conditions) {
+        $this->conditions = $conditions;
     }
 
     /**
