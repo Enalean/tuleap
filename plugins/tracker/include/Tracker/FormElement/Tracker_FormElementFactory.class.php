@@ -419,7 +419,7 @@ class Tracker_FormElementFactory {
     public function getUsedArtifactLinkFields($tracker) {
         return $this->getUsedFormElementsByType($tracker, array('art_link'));
     }
-
+    
     /**
      * Return the first (and only one) ArtifactLink field (if any)
      *
@@ -429,6 +429,27 @@ class Tracker_FormElementFactory {
         $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
         if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {
             return $artifact_link_fields[0];
+        }
+        return null;
+    }
+    
+    /**
+     * @param Tracker $tracker
+     * @return array of Tracker_FormElement_Field_Burndown
+     */
+    public function getUsedBurndownFields($tracker) {
+        return $this->getUsedFormElementsByType($tracker, array('burndown'));
+    }
+    
+    /**
+     * Return the first (and only one) ArtifactLink field (if any)
+     *
+     * @return Tracker_FormElement_Field_ArtifactLink
+     */
+    public function getABurndownField(User $user, Tracker $tracker) {
+        $burndown_fields = $this->getUsedBurndownFields($tracker);
+        if (count($burndown_fields) > 0 && $burndown_fields[0]->userCanRead($user)) {
+            return $burndown_fields[0];
         }
         return null;
     }
