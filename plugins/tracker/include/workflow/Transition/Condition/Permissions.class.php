@@ -60,26 +60,23 @@ class Workflow_Transition_Condition_Permissions {
     public function exportToXml(&$root, $xmlMapping) {
         $root->addAttribute('type', self::CONDITION_TYPE);
 
-        $pm = $this->getPermissionsManager();
-        $transition_ugroups = $pm->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
-
-        if ($transition_ugroups) {
-            $child = $root->addChild('permissions');
-            foreach ($transition_ugroups as $transition_ugroup) {
-                if (($ugroup = array_search($transition_ugroup['ugroup_id'], $GLOBALS['UGROUPS'])) !== false && $transition_ugroup['ugroup_id'] < 100) {
-                    $child->addChild('permission')->addAttribute('ugroup', $ugroup);
-                }
+        $transition_ugroups = PermissionsManager::instance()->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
+        $child = $root->addChild('permissions');
+        foreach ($transition_ugroups as $transition_ugroup) {
+            $ugroup_keyname = $this->getExportableUGroupKeyname($transition_ugroup['ugroup_id']);
+            if ($ugroup_keyname) {
+                $child->addChild('permission')->addAttribute('ugroup', $ugroup_keyname);
             }
         }
     }
 
     /**
-     * Wrapper for PermissionsManager
-     *
-     * @return PermissionsManager
+     * @return string or false if not exportable
      */
-    public function getPermissionsManager() {
-        return PermissionsManager::instance();
+    private function getExportableUGroupKeyname($ugroup_id) {
+        if ($ugroup_id < 100) {
+            return array_search($ugroup_id, $GLOBALS['UGROUPS']);
+        }
     }
 }
 ?>
