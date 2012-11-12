@@ -34,10 +34,23 @@ class Workflow_Transition_ConditionFactory {
      */
     public function getConditions(Transition $transition) {
         $this->collection->add(new Workflow_Transition_Condition_Permissions($transition));
-        $this->collection->add(new Workflow_Transition_Condition_FieldNotEmpty($transition));
+        $this->collection->add($this->getFieldNotEmpty($transition));
         return $this->collection;
     }
     
+    private function getFieldNotEmpty($transition){
+        
+        $field = new Workflow_Transition_Condition_FieldNotEmpty($transition);
+        
+        $condition = $this->getDao()->searchByTransitionId($transition->getId());
+        
+        if($condition){
+            $row = $condition->getRow();
+            $field->setFieldId($row['field_id']) ;
+        }
+        
+        return $field;
+    }
     /**
      * Saves a new condition.
      * @param Transition $transition
@@ -71,16 +84,14 @@ class Workflow_Transition_ConditionFactory {
         return $conditions;
     }
     
-    private function getCollection(){
-        return $this->collection;   
+    private function getCollection() {
+        return $this->collection;
     }
     
-    private function setCollection(Workflow_Transition_ConditionsCollection $collection){
+    private function setCollection(Workflow_Transition_ConditionsCollection $collection) {
         $this->collection = $collection;
-        return $this;   
+        return $this;
     }
-    
-    
 
     /**
      * Creates a transition Object

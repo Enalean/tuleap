@@ -24,6 +24,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
 
     const CONDITION_TYPE        = 'notempty';
     
+    private $field_id = null;
+    
     public function __construct(Transition $transition) {
         parent::__construct($transition);
         $this->formElementFactory = Tracker_FormElementFactory::instance();
@@ -39,10 +41,18 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         $html .= '<br />';
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
         $html .= '<select name="add_notempty_condition">';
-        $html .= '<option value="0">' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+        $html .= '<option value="0" '. 
+            ($this->field_id === null) ? 'selected="selected"' : ''
+            .'>' . $GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
 
         foreach($this->getFields() as $field){
-            $html .= '<option value=' . $field->getId() .'>';
+            $html .= '<option value="' . $field->getId() . '"';
+            
+            if($this->field_id !== null && $this->field_id === $field->getId()){ 
+                $html .=  'selected="selected"';
+            }
+            
+            $html .= '>';
             $html .= $field->getLabel();   
             $html .= '</option>';
         }
@@ -65,6 +75,11 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      */
     public function saveObject() {
 
+    }
+    
+    public function setFieldId($field_id) {
+        $this->field_id = $field_id;
+        return $this;
     }
     
     /**
