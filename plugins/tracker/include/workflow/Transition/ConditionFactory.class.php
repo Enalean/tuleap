@@ -52,12 +52,13 @@ class Workflow_Transition_ConditionFactory {
         return $field;
     }
     /**
-     * Saves a new condition.
+     * Deletes all exiting conditions then saves the new condition.
      * @param Transition $transition
      * @param int $field_id
      * @return int The ID of the newly created condition
      */
     public function addCondition($transition, $field_id) {
+        $this->getDao()->deleteByTransitionId($transition->getId());
         return $this->getDao()->create($transition->getId(), $field_id);
     }
     

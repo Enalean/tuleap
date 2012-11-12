@@ -63,6 +63,15 @@ class Transition_Condition_FieldNotEmptyDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
     
+    public function deleteByTransitionId($transition_id) {
+        $transition_id = $this->da->escapeInt($transition_id);
+        $sql = "DELETE 
+                FROM $this->table_name
+                WHERE transition_id = $transition_id";
+        
+       return $this->update($sql);
+    }
+    
 
 }
 ?>
