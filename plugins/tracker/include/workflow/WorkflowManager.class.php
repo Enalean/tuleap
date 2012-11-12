@@ -25,6 +25,7 @@ require_once('WorkflowFactory.class.php');
 require_once('PostAction/Field/Transition_PostAction_Field_Date.class.php');
 require_once('PostAction/Transition_PostActionFactory.class.php');
 require_once('PostAction/Transition_PostActionManager.class.php');
+require_once('Transition/ConditionManager.class.php');
 
 class WorkflowManager {
     protected $tracker;
@@ -152,10 +153,14 @@ class WorkflowManager {
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
             }
-
+            //Conditions
+            $condition_manager = new Transition_ConditionManager();
+            $condition_manager->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
+            
             // Post actions
             $tpam = new Transition_PostActionManager();
             $tpam->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
+            
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(
                 array(
                     'tracker'         => (int)$this->tracker->id,

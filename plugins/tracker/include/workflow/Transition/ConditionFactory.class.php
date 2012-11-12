@@ -19,18 +19,39 @@
  */
 
 require_once 'ConditionsCollection.class.php';
+require_once dirname(__FILE__) . '/Condition/dao/FieldNotEmptyDao.class.php';
 
 class Workflow_Transition_ConditionFactory {
+    
+    private $collection;
 
+    public function __construct() {
+        $this->setCollection( new Workflow_Transition_ConditionsCollection());
+    }
+    
     /**
      * @return Workflow_Transition_ConditionsCollection
      */
     public function getConditions(Transition $transition) {
-        $conditions = new Workflow_Transition_ConditionsCollection();
-        $conditions->add(new Workflow_Transition_Condition_Permissions($transition));
-        return $conditions;
+        $this->collection->add(new Workflow_Transition_Condition_Permissions($transition));
+        $this->collection->add(new Workflow_Transition_Condition_FieldNotEmpty($transition));
+        return $this->collection;
     }
-
+    
+    /**
+     * Saves a new condition.
+     * @param Transition $transition
+     * @param int $field_id
+     * @return int The ID of the newly created condition
+     */
+    public function addCondition($transition, $field_id) {
+        return $this->getDao()->create($transition->getId(), $field_id);
+    }
+    
+    public function getDao() {
+        return new Transition_Condition_FieldNotEmptyDao();
+    }
+    
     /**
      * Create all conditions on a transition from a XML
      *
@@ -49,6 +70,17 @@ class Workflow_Transition_ConditionFactory {
         }
         return $conditions;
     }
+    
+    private function getCollection(){
+        return $this->collection;   
+    }
+    
+    private function setCollection(Workflow_Transition_ConditionsCollection $collection){
+        $this->collection = $collection;
+        return $this;   
+    }
+    
+    
 
     /**
      * Creates a transition Object

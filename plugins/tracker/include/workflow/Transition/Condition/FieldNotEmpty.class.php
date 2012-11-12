@@ -22,23 +22,23 @@ require_once(dirname(__FILE__) . '/../Condition.class.php');
 
 class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Condition {
 
-   // const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
-    const CONDITION_TYPE        = 'required';
+    const CONDITION_TYPE        = 'notempty';
     
-        public function __construct(Transition $transition) {
+    public function __construct(Transition $transition) {
         parent::__construct($transition);
         $this->formElementFactory = Tracker_FormElementFactory::instance();
     }
     
     /**
      * @see Workflow_Transition_Condition::fetch()
+     * @return string The field wrapped in Html 
      */
     public function fetch() {
         $html  = '';
         $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_required_field');
         $html .= '<br />';
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
-        $html .= '<select>';
+        $html .= '<select name="add_notempty_condition">';
         $html .= '<option value="0">' .$GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
 
         foreach($this->getFields() as $field){
@@ -67,17 +67,12 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
 
     }
     
+    /**
+     * @return 
+     */
     private function getFields(){
         $tracker = $this->transition->getWorkflow()->getTracker();
         return $this->formElementFactory->getUsedFields($tracker);
-    }
-
-    /**
-     * Adds req field to the database
-     *
-     */
-    private function addRequiredField() {
-
     }
     
     
