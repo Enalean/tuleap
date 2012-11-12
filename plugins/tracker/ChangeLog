@@ -1,3 +1,6 @@
+Version 5.39 - Tuleap 5.7
+    * Add a pane in agiledashboard that displays the sprint burndown.
+
 Version 5.38 - Tuleap 5.7
     * Add integration tests for tv3 -> tv5 migration
 
