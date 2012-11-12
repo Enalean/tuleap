@@ -104,5 +104,10 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
             return array_search($ugroup_id, $GLOBALS['UGROUPS']);
         }
     }
+    
+    public function validate($fields_data) {
+        return true;
+    }
+
 }
 ?>

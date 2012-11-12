@@ -268,11 +268,15 @@ class Workflow {
             $to         = (int)$fields_data[$this->getFieldId()];
             $transition = $this->getTransition($from, $to);
             if ($transition) {
-                $transition->before($fields_data, $current_user);
+                try {
+                    $transition->before($fields_data, $current_user);
+                } catch (Workflow_Transition_Condition_InvalidTransitionException $e){
+                    throw $e;
+                }
             }
         }
     }
-
+    
    /**
     * Indicates if permissions on a field can be bypassed
     *

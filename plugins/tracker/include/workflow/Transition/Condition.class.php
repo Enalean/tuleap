@@ -48,5 +48,12 @@ abstract class Workflow_Transition_Condition {
      * @return string html
      */
     public abstract function fetch();
+    
+    /**
+     * Validate the condition
+     *
+     * @return boolean
+     */    
+    public abstract function validate($fields_data);
 }
 

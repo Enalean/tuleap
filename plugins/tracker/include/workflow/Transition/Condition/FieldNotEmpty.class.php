@@ -91,5 +91,9 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     }
     
     
+    public function validate($fields_data) {
+        return false;
+    }    
+    
 }
 ?>

@@ -34,6 +34,15 @@ class Workflow_Transition_ConditionsCollection {
             $this->conditions[] = $condition;
         }
     }
+    
+    /**
+     * Get the conditions
+     * 
+     * @return array
+     */
+    public function getConditions() {
+        return $this->conditions;
+    }
 
     /**
      * Creates new conditions in the database
