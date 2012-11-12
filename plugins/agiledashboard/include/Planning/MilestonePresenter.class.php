@@ -148,9 +148,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
                         'user'      => $this->current_user,
                     )
                 );
-
                 $requested_pane   = $this->request->get('pane');
                 foreach($this->additional_panes as $pane) {
+                    if($a_pane_is_active){
+                        break;
+                    }
                     $pane->setActive($requested_pane === $pane->getIdentifier());
                     $a_pane_is_active = $pane->isActive();
                 }

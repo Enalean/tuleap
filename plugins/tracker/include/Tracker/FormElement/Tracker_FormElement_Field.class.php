@@ -711,7 +711,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return boolean returns true if the field is used in field dependency, false otherwise
      */
     public function isUsedInFieldDependency() {
-        $rm = new Tracker_RulesManager($this->getTracker());
+        $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance());
         return $rm->isUsedInFieldDependency($this);
     }
     

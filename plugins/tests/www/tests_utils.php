@@ -9,10 +9,10 @@ require_once('../include/simpletest/unit_tester.php');
 require_once('../include/simpletest/mock_objects.php');
 require_once('../include/simpletest/web_tester.php');
 require_once('../include/simpletest/expectation.php');
-require_once('../include/TestHelper.class.php');
+//require_once('../include/TestHelper.class.php');
 
 require_once('CodendiReporter.class.php');
-require_once('TuleapTestCase.class.php');
+//require_once('TuleapTestCase.class.php');
 
 
 $GLOBALS['config']['plugins_root'] = $GLOBALS['sys_pluginsroot'];

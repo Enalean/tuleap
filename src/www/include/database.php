@@ -42,7 +42,7 @@ function db_query($sql,$print=0) {
 function db_query_params($sql, $params) {
     global $conn;
 	$dar = $conn->query($sql, $params);
-    $GLOBALS['db_qhandle'] = $dar->result;
+    $GLOBALS['db_qhandle'] = $dar->getResult();
     if (db_numrows($GLOBALS['db_qhandle'])) {
         db_reset_result($GLOBALS['db_qhandle']);
     }
@@ -50,9 +50,10 @@ function db_query_params($sql, $params) {
 }
 
 function db_numrows($qhandle) {
+    global $conn;
 	// return only if qhandle exists, otherwise 0
 	if ($qhandle) {
-		return @mysql_num_rows($qhandle);
+                return @$conn->numRows($qhandle);
 	} else {
 		return 0;
 	}
@@ -79,11 +80,12 @@ function db_affected_rows($qhandle) {
 }
 	
 function db_fetch_array($qhandle = 0) {
+    global $conn;
 	if ($qhandle) {
-		return @mysql_fetch_array($qhandle);
+		return @$conn->fetchArray($qhandle);
 	} else {
 		if ($GLOBALS['db_qhandle']) {
-			return @mysql_fetch_array($GLOBALS['db_qhandle']);
+			return @$conn->fetchArray($GLOBALS['db_qhandle']);
 		} else {
 			return (array());
 		}
@@ -121,7 +123,8 @@ function db_error() {
  *  @param		int		Row number
  */
 function db_reset_result($qhandle,$row=0) {
-	return mysql_data_seek($qhandle,$row);
+    global $conn;
+    return $conn->dataSeek($qhandle,$row);
 }
 
 function db_escape_string($string,$qhandle=false) {

@@ -40,6 +40,11 @@ require_once 'Action/CreateArtifact.class.php';
 require_once('json.php');
 
 class Tracker implements Tracker_Dispatchable_Interface {
+    const PERMISSION_ADMIN     = 'PLUGIN_TRACKER_ADMIN';
+    const PERMISSION_FULL      = 'PLUGIN_TRACKER_ACCESS_FULL';
+    const PERMISSION_ASSIGNEE  = 'PLUGIN_TRACKER_ACCESS_ASSIGNEE';
+    const PERMISSION_SUBMITTER = 'PLUGIN_TRACKER_ACCESS_SUBMITTER';
+    const PERMISSION_NONE      = 'PLUGIN_TRACKER_NONE';
 
     public $id;
     public $group_id;
@@ -925,7 +930,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
         
         $html .= '</form>';
         
-        $trm = new Tracker_RulesManager($this);
+        $trm = $this->getRulesManager();
         $html .= $trm->displayRulesAsJavascript();
         
         $html .= '</div></div>';
@@ -2006,7 +2011,7 @@ EOS;
     public function getTrackerSemanticManager() {
         return new Tracker_SemanticManager($this);
     }
-
+    
     /**
      * @return Tracker_Tooltip
      */
@@ -2053,7 +2058,7 @@ EOS;
      * @return Tracker_RulesManager
      */
     public function getRulesManager() {
-        return new Tracker_RulesManager($this);
+        return new Tracker_RulesManager($this, $this->getFormElementFactory());
     }
     /**
      * Determine if the user can view this tracker.
@@ -2318,7 +2323,12 @@ EOS;
         $tsm = $this->getTrackerSemanticManager();
         $child = $xmlElem->addChild('semantics');
         $tsm->exportToXML($child, $xmlMapping);
-
+        
+        //field dependencies
+        $trm = $this->getRulesManager();
+        $child = $xmlElem->addChild('dependencies');
+        $trm->exportToXML($child, $xmlMapping);
+        
         // only the reports with project scope are exported
         $reports = $this->getReportFactory()->getReportsByTrackerId($this->id, null);
         if ($reports) {

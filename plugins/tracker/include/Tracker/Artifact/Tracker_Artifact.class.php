@@ -428,8 +428,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         //$html .= $this->_fetchHistory();
 
         $html .= '</form>';
-
-        $trm = new Tracker_RulesManager($tracker);
+        $trm = new Tracker_RulesManager($tracker, $this->getFormElementFactory());
         $html .= $trm->displayRulesAsJavascript();
 
         echo $html;
@@ -1494,6 +1493,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->getFormElementFactory()->getAnArtifactLinkField($user, $this->getTracker());
     }
 
+    /**
+     * Return the first BurndownField (if any)
+     *
+     * @return Tracker_FormElement_Field_Burndown
+     */
+    public function getABurndownField(User $user) {
+        return $this->getFormElementFactory()->getABurndownField($user, $this->getTracker());
+    }
+    
     private function unlinkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
         $comment       = '';
         $email         = '';

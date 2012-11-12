@@ -99,6 +99,13 @@
           </zeroOrMore>
         </element>
       </optional>
+      <element name="dependencies">
+        <zeroOrMore>
+          <element name="rule">
+            <ref name="ruleContent"/>
+          </element>
+        </zeroOrMore>
+      </element>
       <optional>
         <element name="reports">
           <zeroOrMore>
@@ -460,6 +467,28 @@
         </zeroOrMore>
       </element>
     </zeroOrMore>
+  </define>
+  <define name="ruleContent">
+    <element name="source_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="source_value">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_value">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
   </define>
   <define name="semanticContent">
     <choice>

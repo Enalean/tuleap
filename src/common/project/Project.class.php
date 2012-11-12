@@ -99,8 +99,6 @@ class Project extends Group {
                 and set up services arrays
     */
     function Project($param) {
-        global $Language;
-        
         $this->Group($param);
         
         //for right now, just point our prefs array at Group's data array
@@ -129,17 +127,17 @@ class Project extends Group {
             // needed for localisation
             $matches = array();
             if ($res_row['description'] == "service_" . $short_name . "_desc_key") {
-                $res_row['description'] = $Language->getText('project_admin_editservice', $res_row['description']);
+                $res_row['description'] = $GLOBALS['Language']->getText('project_admin_editservice', $res_row['description']);
             } elseif (preg_match('/(.*):(.*)/', $res_row['description'], $matches)) {
-                if ($Language->hasText($matches[1], $matches[2])) {
-                    $res_row['description'] = $Language->getText($matches[1], $matches[2]);
+                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                    $res_row['description'] = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
             }
             if ($res_row['label'] == "service_" . $short_name . "_lbl_key") {
-                $res_row['label'] = $Language->getText('project_admin_editservice', $res_row['label']);
+                $res_row['label'] = $GLOBALS['Language']->getText('project_admin_editservice', $res_row['label']);
             } elseif (preg_match('/(.*):(.*)/', $res_row['label'], $matches)) {
-                if ($Language->hasText($matches[1], $matches[2])) {
-                    $res_row['label'] = $Language->getText($matches[1], $matches[2]);
+                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                    $res_row['label'] = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
             }
             
@@ -368,7 +366,6 @@ class Project extends Group {
     	$descfieldsvalue=$this->getProjectsDescFieldsValue();
     	$descfields = getProjectsDescFieldsInfos();
     	$hp = Codendi_HTMLPurifier::instance();
-    	global $Language;
     	
     	for($i=0;$i<sizeof($descfields);$i++){
 	
@@ -382,15 +379,15 @@ class Project extends Group {
 			}
 			
 			$descname=$displayfieldname[$i];
-			if(preg_match('/(.*):(.*)/', $descname, $matches)) {		
-        		if ($Language->hasText($matches[1], $matches[2])) {
-            		$descname = $Language->getText($matches[1], $matches[2]);
-        		}
-    		}
+                        if (preg_match('/(.*):(.*)/', $descname, $matches)) {
+                            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                                $descname = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+                            }
+                        }
 			
 			echo "<h3>".$hp->purify($descname,CODENDI_PURIFIER_LIGHT,$this->getGroupId())."</h3>";
 			echo "<p>";
-			echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT,$this->getGroupId())  ;
+			echo ($displayfieldvalue[$i] == '') ? $GLOBALS['Language']->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT,$this->getGroupId())  ;
 			echo "</p>";
 			
 		}
