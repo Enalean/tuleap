@@ -23,6 +23,15 @@ require_once 'ConditionsCollection.class.php';
 class Workflow_Transition_ConditionFactory {
 
     /**
+     * @return Workflow_Transition_ConditionsCollection
+     */
+    public function getConditions(Transition $transition) {
+        $conditions = new Workflow_Transition_ConditionsCollection();
+        $conditions->add(new Workflow_Transition_Condition_Permissions($transition));
+        return $conditions;
+    }
+
+    /**
      * Create all conditions on a transition from a XML
      *
      * @return Workflow_Transition_ConditionsCollection
@@ -99,15 +108,16 @@ class Workflow_Transition_ConditionFactory {
      * @return Workflow_Transition_Condition_Permissions
      */
     private function createConditionPermissionsFromXML($xml, Transition $transition) {
-        $permissions = array();
+        $authorized_ugroups_keyname = array();
         foreach ($xml->permissions->permission as $perm) {
             $ugroup = (string)$perm['ugroup'];
             if (isset($GLOBALS['UGROUPS'][$ugroup])) {
-                $permissions[] = $GLOBALS['UGROUPS'][$ugroup];
+                $authorized_ugroups_keyname[] = $GLOBALS['UGROUPS'][$ugroup];
             }
         }
-        $transition->setPermissions($permissions);
-        return new Workflow_Transition_Condition_Permissions($transition);
+        $condition = new Workflow_Transition_Condition_Permissions($transition);
+        $condition->setAuthorizedUgroupsKeyname($authorized_ugroups_keyname);
+        return $condition;
     }
 }
 ?>

@@ -28,6 +28,9 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /** @var PermissionsManager */
     private $permission_manager;
 
+    /** @var array */
+    private $authorized_ugroups_keyname = array();
+
     public function __construct(Transition $transition) {
         parent::__construct($transition);
         $this->permission_manager = PermissionsManager::instance();
@@ -66,12 +69,15 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
     }
 
+    public function setAuthorizedUgroupsKeyname($authorized_ugroups_keyname) {
+        $this->authorized_ugroups_keyname = $authorized_ugroups_keyname;
+    }
+
     /**
      * @see Workflow_Transition_Condition::saveObject()
      */
     public function saveObject() {
-        $permissions = $this->transition->getPermissions();
-        $this->addPermissions($permissions);
+        $this->addPermissions($this->authorized_ugroups_keyname);
     }
 
     /**
