@@ -20,7 +20,7 @@
 
 require_once(dirname(__FILE__) . '/../Condition.class.php');
 
-class Workflow_Transition_Condition_RequiredField extends Workflow_Transition_Condition {
+class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Condition {
 
    // const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
     const CONDITION_TYPE        = 'required';
