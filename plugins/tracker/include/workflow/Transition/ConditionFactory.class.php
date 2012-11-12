@@ -23,14 +23,11 @@ require_once 'Condition/FieldNotEmpty/Factory.class.php';
 
 class Workflow_Transition_ConditionFactory {
 
-    private $collection;
-
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
     private $fieldnotempty_factory;
 
     public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory) {
         $this->fieldnotempty_factory = $fieldnotempty_factory;
-        $this->setCollection(new Workflow_Transition_ConditionsCollection());
     }
 
     /**
@@ -46,9 +43,10 @@ class Workflow_Transition_ConditionFactory {
      * @return Workflow_Transition_ConditionsCollection
      */
     public function getConditions(Transition $transition) {
-        $this->collection->add(new Workflow_Transition_Condition_Permissions($transition));
-        $this->collection->add($this->getFieldNotEmpty($transition));
-        return $this->collection;
+        $collection = new Workflow_Transition_ConditionsCollection();
+        $collection->add(new Workflow_Transition_Condition_Permissions($transition));
+        $collection->add($this->getFieldNotEmpty($transition));
+        return $collection;
     }
 
     private function getFieldNotEmpty(Transition $transition){
@@ -87,15 +85,6 @@ class Workflow_Transition_ConditionFactory {
             }
         }
         return $conditions;
-    }
-
-    private function getCollection() {
-        return $this->collection;
-    }
-
-    private function setCollection(Workflow_Transition_ConditionsCollection $collection) {
-        $this->collection = $collection;
-        return $this;
     }
 
     /**
