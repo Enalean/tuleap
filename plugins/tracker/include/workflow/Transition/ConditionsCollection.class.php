@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_Transition_ConditionsCollection implements Iterator {
+class Workflow_Transition_ConditionsCollection {
 
     /** @var array of Workflow_Transition_Condition */
     private $conditions = array();
@@ -26,60 +26,54 @@ class Workflow_Transition_ConditionsCollection implements Iterator {
     /** @var int */
     private $current;
 
-    // {{{ Iterator
     /**
-     * @return array Return the current element
+     * Add a condition to the collection
      */
-    public function current() {
-        return $this->conditions[$this->current];
-    }
-
-    /**
-     * Move forward to next element.
-     *
-     * @return void
-     */
-    public function next() {
-        $this->current++;
-    }
-
-    /**
-     * Check if there is a current element after calls to rewind() or next().
-     *
-     * @return boolean
-     */
-    public function valid() {
-        return isset($this->conditions[$this->current]);
-    }
-
-    /**
-     * Rewind the Iterator to the first element.
-     *
-     * @return void
-     */
-    public function rewind() {
-        $this->current = 0;
-    }
-
-    /**
-     * Return the key of the current element.
-     *
-     * @return mixed
-     */
-    public function key() {
-        return $this->current;
-    }
-    // }}}
-
     public function add(Workflow_Transition_Condition $condition = null) {
         if ($condition) { //pattern null object?
             $this->conditions[] = $condition;
         }
     }
 
+    /**
+     * Creates new conditions in the database
+     */
     public function saveObject() {
         foreach ($this->conditions as $condition) {
             $condition->saveObject();
+        }
+    }
+
+    /**
+     * @return string html permission form for the transition
+     */
+    public function fetch() {
+        $html  = '';
+        $html .= '<ul class="workflow_conditions">';
+        foreach ($this->conditions as $condition) {
+            $html .= '<li class="workflow_conditions_perms">';
+            $html .= $condition->fetch();
+            $html .= '</li>';
+        }
+        $html .= '</ul>';
+        return $html;
+    }
+
+    /**
+     * Export conditions to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the conditions is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public function exportToXml(&$root, $xmlMapping) {
+        if ($this->conditions) {
+            $child = $root->addChild('conditions');
+            foreach ($this->conditions as $condition) {
+                $condition_child = $child->addChild('condition');
+                $condition->exportToXML($condition_child, $xmlMapping);
+            }
         }
     }
 }
