@@ -1314,6 +1314,7 @@ workflow_admin	workflow_disabled	Le workflow est désactivé.
 workflow_admin	delete_workflow	Etes-vous sûr de vouloir supprimer le workflow?
 workflow_admin	title_define_transition_details	Définir  les règles à appliquer sur une transition : de $1 à $2
 workflow_admin	label_define_transition_permissions	Groupes autorisés à effectuer la transition :
+workflow_admin	label_define_transition_required_field	Champ qui doit être rempli :
 workflow_admin	permissions_not_updated	Les mises à jour n'ont pas été prises en compte.
 workflow_admin	permissions_updated	Les mises à jour ont été prises en compte.
 workflow_admin	permissions_transition	Peut effectuer la transition
@@ -1324,6 +1325,8 @@ workflow_admin	change_value_float_field_to	Le champ flottant $1 prend pour valeu
 workflow_admin	post_action_change_value_date_field	Mettre à jour la valeur d'un champ date
 workflow_admin	post_action_change_value_int_field	Mettre à jour la valeur d'un champ de type entier
 workflow_admin	post_action_change_value_float_field	Mettre à jour la valeur d'un champ de type flottant
+workflow_admin	the_field	Le champ
+workflow_admin	field_not_empty	doit être rempli
 
 workflow_admin	under_the_following_condition	Sous les conditions suivantes :
 workflow_admin	following_action_performed	Les actions ci-dessous seront executées :

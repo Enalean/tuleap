@@ -20,6 +20,7 @@
 
 require_once 'PostAction/Transition_PostAction.class.php';
 require_once 'Transition/Condition/Permissions.class.php';
+require_once 'Transition/Condition/RequiredField.class.php';
 
 class Transition {
     public $transition_id;
@@ -266,6 +267,7 @@ class Transition {
         if (! $this->conditions) {
             $this->conditions = new Workflow_Transition_ConditionsCollection();
             $this->conditions->add(new Workflow_Transition_Condition_Permissions($this));
+            $this->conditions->add(new Workflow_Transition_Condition_RequiredField($this));
         }
         return $this->conditions;
     }

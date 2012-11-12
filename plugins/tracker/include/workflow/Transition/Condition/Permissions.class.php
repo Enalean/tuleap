@@ -17,38 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-abstract class Workflow_Transition_Condition {
-
-    /** @var Transition */
-    protected $transition;
-
-    public function __construct(Transition $transition) {
-        $this->transition = $transition;
-    }
-
-    /**
-     * Save the condition object in database
-     */
-    public abstract function saveObject();
-
-    /**
-     * Export postactions date to XML
-     *
-     * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
-     * @param array            $xmlMapping correspondance between real ids and xml IDs
-     *
-     * @return void
-     */
-    public abstract function exportToXml(&$root, $xmlMapping);
-
-    /**
-     * Get the html code needed to display the condition in workflow admin
-     *
-     * @return string html
-     */
-    public abstract function fetch();
-}
+ 
+require_once(dirname(__FILE__) . '/../Condition.class.php');
 
 class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition {
 
