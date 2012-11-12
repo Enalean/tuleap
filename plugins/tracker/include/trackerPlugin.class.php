@@ -57,6 +57,13 @@ class trackerPlugin extends Plugin {
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
     }
     
+    public function getHooksAndCallbacks() {
+        if (defined('AGILEDASHBOARD_BASE_DIR')) {
+            $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
+        }
+        return parent::getHooksAndCallbacks();
+    }
+    
     public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'trackerPluginInfo')) {
             include_once('trackerPluginInfo.class.php');
@@ -134,6 +141,21 @@ class trackerPlugin extends Plugin {
                 $report_factory->save($report);
             }
             $params['done'] = true;
+        }
+    }
+    
+    public function agiledashboard_event_additional_panes_on_milestone($params) {
+        $artifact = $params['milestone']->getArtifact();
+        $user     = $params['user'];
+        require_once 'Tracker/Artifact/Burndown/Pane.class.php';
+        $burndown_field = $artifact->getABurndownField($user);
+        if ($burndown_field) {
+            $params['panes'][] = new Tracker_Artifact_Burndown_Pane(
+                    $artifact,
+                    $burndown_field,
+                    $params['user'],
+                    $this->getThemePath()
+                );
         }
     }
     
