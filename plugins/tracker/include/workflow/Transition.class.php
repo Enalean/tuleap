@@ -275,14 +275,20 @@ class Transition {
      */
     public function getConditions() {
         if (! $this->conditions) {
-            $factory = new Workflow_Transition_ConditionFactory();
-            $this->conditions = $factory->getConditions($this);
+            $this->conditions = $this->getConditionFactory()->getConditions($this);
         }
         return $this->conditions;
     }
 
     public function setConditions(Workflow_Transition_ConditionsCollection $conditions) {
         $this->conditions = $conditions;
+    }
+
+    /**
+     * @return Workflow_Transition_ConditionFactory
+     */
+    private function getConditionFactory() {
+        return Workflow_Transition_ConditionFactory::build();
     }
 
     /**

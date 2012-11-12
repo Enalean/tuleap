@@ -21,7 +21,7 @@
 /**
  * Class for field condition DAOs.
  */
-class Transition_Condition_FieldNotEmptyDao extends DataAccessObject {
+class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
     
     public function __construct() {
         parent::__construct();

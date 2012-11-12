@@ -19,16 +19,29 @@
  */
 
 require_once 'ConditionsCollection.class.php';
-require_once dirname(__FILE__) . '/Condition/dao/FieldNotEmptyDao.class.php';
+require_once 'Condition/FieldNotEmpty/Factory.class.php';
 
 class Workflow_Transition_ConditionFactory {
-    
+
     private $collection;
 
-    public function __construct() {
-        $this->setCollection( new Workflow_Transition_ConditionsCollection());
+    /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
+    private $fieldnotempty_factory;
+
+    public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory) {
+        $this->fieldnotempty_factory = $fieldnotempty_factory;
+        $this->setCollection(new Workflow_Transition_ConditionsCollection());
     }
-    
+
+    /**
+     * @return Workflow_Transition_ConditionFactory
+     */
+    public static function build() {
+        return new Workflow_Transition_ConditionFactory(
+            new Workflow_Transition_Condition_FieldNotEmpty_Factory(new Workflow_Transition_Condition_FieldNotEmpty_Dao())
+        );
+    }
+
     /**
      * @return Workflow_Transition_ConditionsCollection
      */
@@ -37,20 +50,11 @@ class Workflow_Transition_ConditionFactory {
         $this->collection->add($this->getFieldNotEmpty($transition));
         return $this->collection;
     }
-    
-    private function getFieldNotEmpty($transition){
-        
-        $field = new Workflow_Transition_Condition_FieldNotEmpty($transition);
-        
-        $condition = $this->getDao()->searchByTransitionId($transition->getId());
-        
-        if($condition){
-            $row = $condition->getRow();
-            $field->setFieldId($row['field_id']) ;
-        }
-        
-        return $field;
+
+    private function getFieldNotEmpty(Transition $transition){
+        return $this->fieldnotempty_factory->getFieldNotEmpty($transition);
     }
+
     /**
      * Deletes all exiting conditions then saves the new condition.
      * @param Transition $transition
@@ -58,14 +62,14 @@ class Workflow_Transition_ConditionFactory {
      * @return int The ID of the newly created condition
      */
     public function addCondition($transition, $field_id) {
-        $this->getDao()->deleteByTransitionId($transition->getId());
-        return $this->getDao()->create($transition->getId(), $field_id);
+        $this->getFieldNotEmptyDao()->deleteByTransitionId($transition->getId());
+        return $this->getFieldNotEmptyDao()->create($transition->getId(), $field_id);
     }
-    
-    public function getDao() {
-        return new Transition_Condition_FieldNotEmptyDao();
+
+    private function getFieldNotEmptyDao() {
+        return new Workflow_Transition_Condition_FieldNotEmpty_Dao();
     }
-    
+
     /**
      * Create all conditions on a transition from a XML
      *
@@ -84,11 +88,11 @@ class Workflow_Transition_ConditionFactory {
         }
         return $conditions;
     }
-    
+
     private function getCollection() {
         return $this->collection;
     }
-    
+
     private function setCollection(Workflow_Transition_ConditionsCollection $collection) {
         $this->collection = $collection;
         return $this;
