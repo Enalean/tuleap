@@ -256,35 +256,14 @@ class Transition {
      */
     public function getConditions() {
         if (! $this->conditions) {
-            $this->conditions = new Workflow_Transition_ConditionsCollection();
-            $this->conditions->add(new Workflow_Transition_Condition_Permissions($this));
+            $factory = new Workflow_Transition_ConditionFactory();
+            $this->conditions = $factory->getConditions($this);
         }
         return $this->conditions;
     }
 
     public function setConditions(Workflow_Transition_ConditionsCollection $conditions) {
         $this->conditions = $conditions;
-    }
-
-    /**
-     * Set the permissions for the ugroup_id
-     * Use during the two-step xml import
-     *
-     * @param Array    $ugroup_ids An array of ugroup id
-     *
-     * @return void
-     */
-    public function setPermissions($ugroup_ids) {
-        $this->cache_permissions = $ugroup_ids;
-    }
-
-    /**
-     * Get the permissions for this transition
-     *
-     * @return array
-     */
-    public function getPermissions() {
-        return $this->cache_permissions;
     }
 
     /**
