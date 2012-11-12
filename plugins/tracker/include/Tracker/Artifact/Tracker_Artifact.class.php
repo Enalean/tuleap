@@ -749,7 +749,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $remaining_effort = $remaining_effort_field->fetchCardValue($this);
 
                         header('Content-type: application/json');
-                        echo json_encode(array('remaining_effort' => $remaining_effort));
+                        echo json_encode(array($this->id => array('remaining_effort' => $remaining_effort)));
                     } else {
                         $GLOBALS['Response']->redirect($redirect->toUrl());
                     }

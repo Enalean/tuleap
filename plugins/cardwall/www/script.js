@@ -80,13 +80,23 @@ document.observe('dom:loaded', function () {
                             parameters: parameters,
                             onComplete: function (response) {
                                 console.log('coucou');
-                                for (var key in response.responseJSON) {
-                                    if (element = this.document.getElementsByClassName('valueOf_' + key)) {
-                                        remaining_effort = response.responseJSON[key];
-                                        element[0].innerHTML = remaining_effort;
-                                    }
-                                }
                                 console.log(response);
+                                for (var card_id in response.responseJSON) {
+                                      if (card = this.document.getElementById('cardwall_board_postit-' + card_id)) {
+                                          for (var field_id in response.responseJSON[card_id]) {
+                                              if (field = card.getElementsByClassName('valueOf_' + field_id)) {
+                                                  field_value = response.responseJSON[card_id][field_id];
+                                                  field[0].innerHTML = field_value;
+                                              }
+                                          }
+                                              
+                                      }
+                                    
+//                                    if (element = this.document.getElementsByClassName('valueOf_' + key)) {
+//                                        remaining_effort = response.responseJSON[key];
+//                                        element[0].innerHTML = remaining_effort;
+//                                    }
+                                }
                                 //TODO handle errors (perms, workflow, ...)
                                 // eg: change color of the post it
                             }
