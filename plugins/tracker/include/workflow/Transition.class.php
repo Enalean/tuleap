@@ -260,18 +260,17 @@ class Transition {
     }
 
     /**
-     * @return array of Workflow_Transition_Condition
+     * @return Workflow_Transition_ConditionsCollection
      */
     public function getConditions() {
         if (! $this->conditions) {
-            $this->conditions = array(
-                new Workflow_Transition_Condition_Permissions($this)
-            );
+            $this->conditions = new Workflow_Transition_ConditionsCollection();
+            $this->conditions->add(new Workflow_Transition_Condition_Permissions($this));
         }
         return $this->conditions;
     }
 
-    public function setConditions(array $conditions) {
+    public function setConditions(Workflow_Transition_ConditionsCollection $conditions) {
         $this->conditions = $conditions;
     }
 

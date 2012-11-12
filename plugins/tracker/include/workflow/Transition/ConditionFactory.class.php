@@ -18,25 +18,27 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'ConditionsCollection.class.php';
+
 class Workflow_Transition_ConditionFactory {
 
     /**
      * Create all conditions on a transition from a XML
      *
-     * @return array of Workflow_Transition_Condition
+     * @return Workflow_Transition_ConditionsCollection
      */
     public function getAllInstancesFromXML($xml, &$xmlMapping, Transition $transition) {
-        $conditions = array();
+        $conditions = new Workflow_Transition_ConditionsCollection();
         if ($this->isLegacyXML($xml)) {
             if ($xml->permissions) {
-                $conditions[] = $this->createConditionPermissionsFromXML($xml, $transition);
+                $conditions->add($this->createConditionPermissionsFromXML($xml, $transition));
             }
         } else if ($xml->conditions) {
             foreach ($xml->conditions->condition as $xml_condition) {
-                $conditions[] = $this->getInstanceFromXML($xml_condition, $xmlMapping, $transition);
+                $conditions->add($this->getInstanceFromXML($xml_condition, $xmlMapping, $transition));
             }
         }
-        return array_filter($conditions);
+        return $conditions;
     }
 
     /**

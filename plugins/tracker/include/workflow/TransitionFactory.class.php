@@ -172,13 +172,11 @@ class TransitionFactory {
             }
         }
         $transition->setPostActions($postactions);
-        
+
         // Conditions on transition
         $condition_factory = new Workflow_Transition_ConditionFactory();
-        $transition->setConditions(
-            $condition_factory->getAllInstancesFromXML($xml, $xmlMapping, $transition)
-        );
-        
+        $transition->setConditions($condition_factory->getAllInstancesFromXML($xml, $xmlMapping, $transition));
+
         return $transition;
     }
     
@@ -248,10 +246,7 @@ class TransitionFactory {
         }
         
         //Save conditions
-        $conditions = $transition->getConditions();
-        foreach ($conditions as $condition) {
-            $condition->saveObject();
-        }
+        $transition->getConditions()->saveObject();
     }
     
    /**
