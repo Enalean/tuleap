@@ -249,15 +249,7 @@ class Transition {
      * @return string html permission form for the transition
      */
     public function fetchConditions() {
-        $html  = '';
-        $html .= '<ul class="workflow_conditions">';
-        foreach ($this->getConditions() as $condition) {
-            $html .= '<li class="workflow_conditions_perms">';
-            $html .= $condition->fetch();
-            $html .= '</li>';
-        }
-        $html .= '</ul>';
-        return $html;
+        return $this->getConditions()->fetch();
     }
 
     /**
@@ -322,14 +314,7 @@ class Transition {
             }
         }
 
-        $conditions = $this->getConditions();
-        if ($conditions) {
-            $grand_child = $child->addChild('conditions');
-            foreach ($conditions as $condition) {
-                $condition_child = $grand_child->addChild('condition');
-                $condition->exportToXML($condition_child, $xmlMapping);
-            }
-        }
+        $this->getConditions()->exportToXML($child, $xmlMapping);
     }
 
    /**
