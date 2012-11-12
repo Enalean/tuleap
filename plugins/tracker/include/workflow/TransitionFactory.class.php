@@ -27,8 +27,12 @@ require_once('PostAction/Transition_PostActionFactory.class.php');
 require_once 'Transition/ConditionFactory.class.php';
 
 class TransitionFactory {
-    
-    protected function __construct() {
+
+    /** @var Workflow_Transition_ConditionFactory */
+    private $condition_factory;
+
+    protected function __construct(Workflow_Transition_ConditionFactory $condition_factory) {
+        $this->condition_factory = $condition_factory;
     }
     
     /**
@@ -44,7 +48,7 @@ class TransitionFactory {
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$_instance = new $c(Workflow_Transition_ConditionFactory::build());
         }
         return self::$_instance;
     }
@@ -174,8 +178,7 @@ class TransitionFactory {
         $transition->setPostActions($postactions);
 
         // Conditions on transition
-        $condition_factory = new Workflow_Transition_ConditionFactory();
-        $transition->setConditions($condition_factory->getAllInstancesFromXML($xml, $xmlMapping, $transition));
+        $transition->setConditions($this->condition_factory->getAllInstancesFromXML($xml, $xmlMapping, $transition));
 
         return $transition;
     }
