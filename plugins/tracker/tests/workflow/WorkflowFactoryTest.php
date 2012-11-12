@@ -28,7 +28,17 @@ Mock::generate('TransitionFactory');
 require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 
-class WorkflowFactoryTest extends UnitTestCase {
+class WorkflowFactoryTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        PermissionsManager::setInstance(mock('PermissionsManager'));
+    }
+
+    public function tearDown() {
+        PermissionsManager::clearInstance();
+        parent::tearDown();
+    }
 
      public function testImport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/importWorkflow.xml');
@@ -58,9 +68,9 @@ class WorkflowFactoryTest extends UnitTestCase {
         $this->assertEqual($postactions[0]->getField(), 110);
         $this->assertEqual($postactions[0]->getValueType(), 1);
         
-        //Test permissions
-        $permissions = $transitions[2]->getPermissions();
-        $this->assertEqual($permissions[0], 3);
+        //TODO: test conditions
+        $conditions = $transitions[2]->getConditions();
+        $this->assertCount($conditions, 1);
         
     }
     

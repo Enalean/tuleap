@@ -26,7 +26,17 @@ Mock::generate('Tracker_FormElement_Field_List_Value');
 Mock::generate('Transition_PostAction');
 Mock::generate('User');
 
-class TransitionTest extends UnitTestCase {
+class TransitionTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        PermissionsManager::setInstance(mock('PermissionsManager'));
+    }
+
+    public function tearDown() {
+        PermissionsManager::clearInstance();
+        parent::tearDown();
+    }
 
     public function testEquals() {
 
