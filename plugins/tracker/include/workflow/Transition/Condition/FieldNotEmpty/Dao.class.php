@@ -18,10 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/dao/include/DataAccessObject.class.php';
+
 /**
  * Class for field condition DAOs.
  */
-class Transition_Condition_FieldNotEmptyDao extends DataAccessObject {
+class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
     
     public function __construct() {
         parent::__construct();

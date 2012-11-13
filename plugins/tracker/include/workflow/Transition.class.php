@@ -182,28 +182,14 @@ class Transition {
      * @return void
      */
     public function before(&$fields_data, User $current_user) {
-        if (! $this->checkConditions($fields_data)){
-            throw new Workflow_Transition_Condition_InvalidTransitionException('Invalid Transition');   
+        if (! $this->getConditions()->validate($fields_data)){
+            throw new Workflow_Transition_Condition_InvalidTransitionException('Invalid Transition');
         }
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->before($fields_data, $current_user);
         }
     }
-    
-    /**
-     *
-     */
-     public function checkConditions($fields_data) {
-         $condition_collection = $this->getConditions();
-         $conditions = $condition_collection->getConditions();
-         foreach ($conditions as $condition) {
-             if (! $condition->validate($fields_data)) {
-                 return false;
-             }
-         }
-         return true;
-     }
 
     /**
      * Set Post Actions for the transition
@@ -275,14 +261,20 @@ class Transition {
      */
     public function getConditions() {
         if (! $this->conditions) {
-            $factory = new Workflow_Transition_ConditionFactory();
-            $this->conditions = $factory->getConditions($this);
+            $this->conditions = $this->getConditionFactory()->getConditions($this);
         }
         return $this->conditions;
     }
 
     public function setConditions(Workflow_Transition_ConditionsCollection $conditions) {
         $this->conditions = $conditions;
+    }
+
+    /**
+     * @return Workflow_Transition_ConditionFactory
+     */
+    private function getConditionFactory() {
+        return Workflow_Transition_ConditionFactory::build();
     }
 
     /**

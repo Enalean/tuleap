@@ -26,7 +26,17 @@ Mock::generate('Tracker_FormElement_Field_List_Value');
 Mock::generate('Transition_PostAction');
 Mock::generate('User');
 
-class TransitionTest extends UnitTestCase {
+class TransitionTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        PermissionsManager::setInstance(mock('PermissionsManager'));
+    }
+
+    public function tearDown() {
+        PermissionsManager::clearInstance();
+        parent::tearDown();
+    }
 
     public function testEquals() {
 
@@ -97,6 +107,7 @@ class TransitionTest extends UnitTestCase {
         $fields_data = array('field_id' => 'value');
 
         $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
+        $t1->setConditions(new Workflow_Transition_ConditionsCollection());
 
         $a1 = new MockTransition_PostAction();
         $a2 = new MockTransition_PostAction();

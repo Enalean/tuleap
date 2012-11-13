@@ -18,13 +18,32 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Workflow_Transition_ConditionsCollection {
+class Workflow_Transition_ConditionsCollection implements ArrayAccess {
 
     /** @var array of Workflow_Transition_Condition */
     private $conditions = array();
 
     /** @var int */
     private $current;
+
+    // {{{ ArrayAccess
+    public function offsetSet($offset, $value) {
+        if (is_null($offset)) {
+            $this->conditions[] = $value;
+        } else {
+            $this->conditions[$offset] = $value;
+        }
+    }
+    public function offsetExists($offset) {
+        return isset($this->conditions[$offset]);
+    }
+    public function offsetUnset($offset) {
+        unset($this->conditions[$offset]);
+    }
+    public function offsetGet($offset) {
+        return isset($this->conditions[$offset]) ? $this->conditions[$offset] : null;
+    }
+    // }}}
 
     /**
      * Add a condition to the collection
@@ -34,10 +53,10 @@ class Workflow_Transition_ConditionsCollection {
             $this->conditions[] = $condition;
         }
     }
-    
+
     /**
      * Get the conditions
-     * 
+     *
      * @return array
      */
     public function getConditions() {
@@ -84,6 +103,20 @@ class Workflow_Transition_ConditionsCollection {
                 $condition->exportToXML($condition_child, $xmlMapping);
             }
         }
+    }
+
+    /**
+     * Validates all conditions in the collections
+     *
+     * @return true if all conditions are satisfied
+     */
+    public function validate() {
+        foreach ($this->getConditions() as $condition) {
+            if (! $condition->validate($fields_data)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ?>

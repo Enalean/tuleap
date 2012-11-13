@@ -33,9 +33,9 @@ abstract class Workflow_Transition_Condition {
     public abstract function saveObject();
 
     /**
-     * Export postactions date to XML
+     * Export condition to XML
      *
-     * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
+     * @param SimpleXMLElement &$root     the node to which the condition is attached (passed by reference)
      * @param array            $xmlMapping correspondance between real ids and xml IDs
      *
      * @return void
@@ -48,12 +48,13 @@ abstract class Workflow_Transition_Condition {
      * @return string html
      */
     public abstract function fetch();
-    
+
     /**
      * Validate the condition
      *
      * @return boolean
-     */    
+     */
     public abstract function validate($fields_data);
 }
 
+?>
