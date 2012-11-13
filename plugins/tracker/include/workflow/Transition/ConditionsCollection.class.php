@@ -104,5 +104,19 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess {
             }
         }
     }
+
+    /**
+     * Validates all conditions in the collections
+     *
+     * @return true if all conditions are satisfied
+     */
+    public function validate() {
+        foreach ($this->getConditions() as $condition) {
+            if (! $condition->validate($fields_data)) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 ?>
