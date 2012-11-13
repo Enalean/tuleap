@@ -740,14 +740,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
                     if ($request->isAjax()) {
-                        
+                        //Getting assigned_to related stuff
+                        $form_element_factory = $this->getFormElementFactory();
+                        $tracker_id = $this->getTracker()->getId();
+
+                        $field_name = 'assigned_to';
+
+                        $assigned_to_field = $form_element_factory->getFormElementByName($tracker_id, $field_name);
+                        $assigned_to = $assigned_to_field->fetchCardValue($this);
+                        //var_dump($assigned_to);
+
                         $parent = $this->getParent($current_user);
-//                        $file = fopen('/mnt/yannis/dev/plugins/tracker/include/Tracker/Artifact/test', 'a+');
-//                        fwrite($file, var_export($parent, true));
-//                        //fwrite($file, 'test');
-//                        fclose($file);
                         
-                        var_dump($parent);
+                        //var_dump($parent);
                         //echo('toto');
                         $tracker_id = $this->getTracker()->getId();
                         $field_name = 'remaining_effort';
@@ -760,7 +765,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         $remaining_effort_parent        = $remaining_effort_parent_field->fetchCardValue($parent);
 
                         header('Content-type: application/json');
-                        echo json_encode(array($this->id => array('remaining_effort' => $remaining_effort), $parent->getId() => array('remaining_effort' => $remaining_effort_parent)));
+                        echo json_encode(array($this->id => array('remaining_effort' => $remaining_effort, 'assigned_to' => $assigned_to), $parent->getId() => array('remaining_effort' => $remaining_effort_parent)));
                     } else {
                         $GLOBALS['Response']->redirect($redirect->toUrl());
                     }
