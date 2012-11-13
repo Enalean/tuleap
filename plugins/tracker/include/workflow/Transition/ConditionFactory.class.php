@@ -26,6 +26,11 @@ class Workflow_Transition_ConditionFactory {
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
     private $fieldnotempty_factory;
 
+    /**
+     * Should use the build() method
+     *
+     * @param Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory
+     */
     public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory) {
         $this->fieldnotempty_factory = $fieldnotempty_factory;
     }

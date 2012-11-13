@@ -107,6 +107,7 @@ class TransitionTest extends TuleapTestCase {
         $fields_data = array('field_id' => 'value');
 
         $t1 = new Transition(1, 2, $field_value_new, $field_value_analyzed);
+        $t1->setConditions(new Workflow_Transition_ConditionsCollection());
 
         $a1 = new MockTransition_PostAction();
         $a2 = new MockTransition_PostAction();

@@ -22,12 +22,20 @@ require_once('Workflow.class.php');
 require_once('Transition.class.php');
 require_once('Workflow_Dao.class.php');
 require_once('Workflow_TransitionDao.class.php');
-require_once('common/permission/PermissionsManager.class.php');
 
 
 class WorkflowFactory {
-    
-    protected function __construct() {
+
+    /** @var TransitionFactory */
+    private $transition_factory;
+
+    /**
+     * Should use the singleton instance()
+     *
+     * @param TransitionFactory $transition_factory
+     */
+    public function __construct(TransitionFactory $transition_factory) {
+        $this->transition_factory = $transition_factory;
     }
     
     /**
@@ -43,7 +51,7 @@ class WorkflowFactory {
     public static function instance() {
         if (!isset(self::$_instance)) {
             $c = __CLASS__;
-            self::$_instance = new $c;
+            self::$_instance = new $c(TransitionFactory::instance());
         }
         return self::$_instance;
     } 
@@ -110,7 +118,7 @@ class WorkflowFactory {
      */
     public function deleteWorkflow($workflow_id) {
         $workflow = $this->getWorkflow($workflow_id);
-        if ($this->getTransitionFactory()->deleteWorkflow($workflow)) {
+        if ($this->transition_factory->deleteWorkflow($workflow)) {
             return $this->delete($workflow_id);
         }
     }
@@ -198,7 +206,7 @@ class WorkflowFactory {
      * @return bool
      */
     public function isFieldUsedInWorkflow(Tracker_FormElement_Field $field) {
-        return $this->isWorkflowField($field) || $this->getTransitionFactory()->isFieldUsedInTransitions($field);
+        return $this->isWorkflowField($field) || $this->transition_factory->isFieldUsedInTransitions($field);
     }
     
     /**
@@ -228,15 +236,6 @@ class WorkflowFactory {
     }    
     
     /**
-     * Wrapper for TransitionFactory
-     *
-     * @return TransitionFactory
-     */
-    protected function getTransitionFactory() {
-        return TransitionFactory::instance();
-    }
-    
-    /**
      * Duplicate the workflow
      * 
      * @param $from_tracker_id the template tracker id
@@ -257,7 +256,7 @@ class WorkflowFactory {
             if ($id = $this->getDao()->duplicate($to_tracker_id, $from_id, $to_id, $values, $is_used)) {
                 $transitions = $workflow->getTransitions();
                 //Duplicate transitions
-                $this->getTransitionFactory()->duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type);
+                $this->transition_factory->duplicate($values, $id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type);
             }
          }
      }
@@ -279,7 +278,7 @@ class WorkflowFactory {
 
         $transitions = array();
         foreach($xml->transitions->transition as $t) {
-            $tf = $this->getTransitionFactory();
+            $tf = $this->transition_factory;
             $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping);
         }
         
@@ -303,7 +302,7 @@ class WorkflowFactory {
         
         //Save transitions        
         foreach($workflow->getTransitions() as $transition) {
-            $tf = $this->getTransitionFactory();
+            $tf = $this->transition_factory;
             $tf->saveObject($workflow_id, $transition);
         }
     }

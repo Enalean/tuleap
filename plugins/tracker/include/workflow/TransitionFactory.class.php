@@ -31,7 +31,12 @@ class TransitionFactory {
     /** @var Workflow_Transition_ConditionFactory */
     private $condition_factory;
 
-    protected function __construct(Workflow_Transition_ConditionFactory $condition_factory) {
+    /**
+     * Should use the singleton instance()
+     *
+     * @param Workflow_Transition_ConditionFactory $condition_factory
+     */
+    public function __construct(Workflow_Transition_ConditionFactory $condition_factory) {
         $this->condition_factory = $condition_factory;
     }
     

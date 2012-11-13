@@ -52,7 +52,12 @@ class WorkflowFactoryTest extends TuleapTestCase {
                     'F32-V1' => 802
                   );
         
-        $workflow = WorkflowFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);        
+        $condition_factory  = mock('Workflow_Transition_ConditionFactory');
+        stub($condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
+        $transition_factory = new TransitionFactory($condition_factory);
+        $workflow_factory   = new WorkflowFactory($transition_factory);
+
+        $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker);
         $this->assertEqual($workflow->getIsUsed(), 1);
         $this->assertEqual($workflow->getFieldId(), 111);
         $this->assertEqual(count($workflow->getTransitions()), 3);
@@ -94,13 +99,12 @@ class WorkflowFactoryTest extends TuleapTestCase {
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('getFieldId', $field_status->getId());
         
-        $tf = new MockTransitionFactory();
-        $tf->setReturnValue('isFieldUsedInTransitions', false, array($field_start_date));
-        $tf->setReturnValue('isFieldUsedInTransitions', true,  array($field_close_date));
-        $tf->expectCallCount('isFieldUsedInTransitions', 2);
+        $transition_factory = new MockTransitionFactory();
+        $transition_factory->setReturnValue('isFieldUsedInTransitions', false, array($field_start_date));
+        $transition_factory->setReturnValue('isFieldUsedInTransitions', true,  array($field_close_date));
+        $transition_factory->expectCallCount('isFieldUsedInTransitions', 2);
         
-        $wf = TestHelper::getPartialMock('WorkflowFactory', array('getWorkflowByTrackerId', 'getTransitionFactory'));
-        $wf->setReturnReference('getTransitionFactory', $tf);
+        $wf = partial_mock('WorkflowFactory', array('getWorkflowByTrackerId'), array($transition_factory));
         $wf->setReturnReference('getWorkflowByTrackerId', $workflow, array($tracker->getId()));
         
         $this->assertTrue($wf->isFieldUsedInWorkflow($field_status));

@@ -95,6 +95,9 @@ class TransitionFactoryTest extends UnitTestCase {
 }
 
 class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
+
+    /** @var TransitionFactory */
+    private $factory;
     
     public function setUp() {
         parent::setUp();
@@ -104,9 +107,10 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
         $this->xml_mapping = array('F1'     => $this->field,
                                    'F32-V1' => $this->from_value,
                                    'F32-V0' => $this->to_value);
-        
-        $this->factory     = TestHelper::getPartialMock('TransitionFactory', array());
-        
+
+        $condition_factory = mock('Workflow_Transition_ConditionFactory');
+        stub($condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
+        $this->factory     = new TransitionFactory($condition_factory);
     }
     
     public function itReconstitutesDatePostActions() {
