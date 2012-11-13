@@ -265,7 +265,7 @@ class Workflow {
     
     public function validate($fields_data) {
         $transition = $this->getCurrentTransition($fields_data);
-        $transition->validate($fields_data);
+        return $transition->validate($fields_data);
     }
     
     private function getCurrentTransition($fields_data) {

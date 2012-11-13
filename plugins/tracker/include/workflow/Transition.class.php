@@ -191,9 +191,9 @@ class Transition {
     
     public function validate($fields_data) {
         if (! $this->getConditions()->validate($fields_data)){
-            $GLOBALS['Response']->addFeedback('error', 'invalid condition');
             return false;
         }
+        return true;
     }
 
     /**

@@ -783,6 +783,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return !$this->has_errors;
     }
     
+    public function isEmpty($value) {
+        return ($value === null || $value === '');
+    }
+    
     /**
      * @return boolean true if the field has errors. Default is false
      * @see isValid

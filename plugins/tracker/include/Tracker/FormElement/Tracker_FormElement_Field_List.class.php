@@ -1125,6 +1125,10 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return !$this->has_errors;
     }
     
+    public function isEmpty($value) {
+        return $this->isNone($value);
+    }
+    
     /**
      * @see Tracker_FormElement_Field_Shareable
      */

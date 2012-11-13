@@ -90,9 +90,19 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $this->formElementFactory->getUsedFields($tracker);
     }
     
-    
+    /**
+     * @return 
+     */
     public function validate($fields_data) {
-        return false;
+        $field = $this->formElementFactory->getUsedFormElementById($this->field_id);
+        $value = $fields_data[$this->field_id];
+        $is_valid = ! $field->isEmpty($value);
+        
+        if (! $is_valid) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_condition', 'invalid_condition', $field->getLabel(). ' ('. $field->getName() .')'));
+
+        }
+        return $is_valid;
     }
 }
 ?>
