@@ -98,6 +98,9 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
 
     /** @var TransitionFactory */
     private $factory;
+
+    /** @var Workflow_Transition_ConditionFactory */
+    private $condition_factory;
     
     public function setUp() {
         parent::setUp();
@@ -108,9 +111,9 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
                                    'F32-V1' => $this->from_value,
                                    'F32-V0' => $this->to_value);
 
-        $condition_factory = mock('Workflow_Transition_ConditionFactory');
-        stub($condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
-        $this->factory     = new TransitionFactory($condition_factory);
+        $this->condition_factory = mock('Workflow_Transition_ConditionFactory');
+        stub($this->condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
+        $this->factory     = new TransitionFactory($this->condition_factory);
     }
     
     public function itReconstitutesDatePostActions() {
@@ -174,6 +177,24 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
         
         $this->assertCount($post_actions, 1);
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Float');
+    }
+
+    public function itReconsititutesPermissions() {
+        $xml = new SimpleXMLElement('
+            <transition>
+                <from_id REF="F32-V1"/>
+                <to_id REF="F32-V0"/>
+                <permissions>
+                    <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                    <permission ugroup="UGROUP_PROJECT_ADMIN"/>
+                </permissions>
+            </transition>
+        ');
+
+        expect($this->condition_factory)->getAllInstancesFromXML()->once();
+        $transition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
+
+        $this->assertIsA($transition->getConditions(), 'Workflow_Transition_ConditionsCollection');
     }
 }
 

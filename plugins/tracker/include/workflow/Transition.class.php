@@ -197,12 +197,12 @@ class Transition {
      public function checkConditions($fields_data) {
          $condition_collection = $this->getConditions();
          $conditions = $condition_collection->getConditions();
-         foreach ($conditions as $condition) {
-             if (! $condition->validate($fields_data)) {
-                 return false;
-             }
-         }
-         return true;
+         foreach ($conditions as $condition) {                    // 
+             if (! $condition->validate($fields_data)) {          // 
+                 return false;                                    // TODO: move this in the Collection class
+             }                                                    // 
+         }                                                        // 
+         return true;                                             // 
      }
 
     /**

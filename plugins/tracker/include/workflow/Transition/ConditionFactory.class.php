@@ -20,6 +20,7 @@
 
 require_once 'ConditionsCollection.class.php';
 require_once 'Condition/FieldNotEmpty/Factory.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/Transition.class.php';
 
 class Workflow_Transition_ConditionFactory {
 

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
- 
+
 require_once dirname(__FILE__) . '/../Condition.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 
@@ -105,10 +105,9 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
             return array_search($ugroup_id, $GLOBALS['UGROUPS']);
         }
     }
-    
+
     public function validate($fields_data) {
         return true;
     }
-
 }
 ?>
