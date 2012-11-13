@@ -740,16 +740,27 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
                     if ($request->isAjax()) {
+                        
+                        $parent = $this->getParent($current_user);
+//                        $file = fopen('/mnt/yannis/dev/plugins/tracker/include/Tracker/Artifact/test', 'a+');
+//                        fwrite($file, var_export($parent, true));
+//                        //fwrite($file, 'test');
+//                        fclose($file);
+                        
+                        var_dump($parent);
                         //echo('toto');
                         $tracker_id = $this->getTracker()->getId();
                         $field_name = 'remaining_effort';
                         $form_element_factory = $this->getFormElementFactory();
-
-                        $remaining_effort_field = $form_element_factory->getComputableFieldByNameForUser($tracker_id, $field_name, $current_user);
-                        $remaining_effort = $remaining_effort_field->fetchCardValue($this);
+ 
+                        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser($tracker_id, $field_name, $current_user);
+                        $remaining_effort        = $remaining_effort_field->fetchCardValue($this);
+                        
+                        $remaining_effort_parent_field  = $form_element_factory->getComputableFieldByNameForUser($parent->getTrackerId(), $field_name, $current_user);
+                        $remaining_effort_parent        = $remaining_effort_parent_field->fetchCardValue($parent);
 
                         header('Content-type: application/json');
-                        echo json_encode(array($this->id => array('remaining_effort' => $remaining_effort)));
+                        echo json_encode(array($this->id => array('remaining_effort' => $remaining_effort), $parent->getId() => array('remaining_effort' => $remaining_effort_parent)));
                     } else {
                         $GLOBALS['Response']->redirect($redirect->toUrl());
                     }
