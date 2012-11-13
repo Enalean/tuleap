@@ -24,12 +24,12 @@ require_once 'common/dao/include/DataAccessObject.class.php';
  * Class for field condition DAOs.
  */
 class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
-    
+
     public function __construct() {
         parent::__construct();
         $this->table_name = 'tracker_workflow_transition_condition_field_notempty';
     }
-    
+
     /**
      * Create a new entry
      *
@@ -40,40 +40,40 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
     public function create($transition_id, $field_id) {
         $transition_id = $this->da->escapeInt($transition_id);
         $field_id = $this->da->escapeInt($field_id);
-        
-        $sql = "INSERT INTO $this->table_name (`transition_id`, `field_id`) 
+
+        $sql = "INSERT INTO $this->table_name (`transition_id`, `field_id`)
                 VALUES ($transition_id, $field_id)";
-        
+
         return $this->updateAndGetLastId($sql);
     }
-    
+
     /**
      * Search all fieldnotempty conditions belonging to a transition
      *
-     * @param int $transition_id The id of the transition 
+     * @param int $transition_id The id of the transition
      *
      * @return DataAccessResult
      */
     public function searchByTransitionId($transition_id) {
         $transition_id = $this->da->escapeInt($transition_id);
-        
-        $sql = "SELECT * 
+
+        $sql = "SELECT *
                 FROM $this->table_name
                 WHERE transition_id = $transition_id
                 ORDER BY id";
-        
+
         return $this->retrieve($sql);
     }
-    
+
     public function deleteByTransitionId($transition_id) {
         $transition_id = $this->da->escapeInt($transition_id);
-        $sql = "DELETE 
+        $sql = "DELETE
                 FROM $this->table_name
                 WHERE transition_id = $transition_id";
-        
+
        return $this->update($sql);
     }
-    
+
 
 }
 ?>

@@ -262,17 +262,17 @@ class Workflow {
             }
         }
     }
-    
+
     public function validate($fields_data) {
         $transition = $this->getCurrentTransition($fields_data);
         return $transition->validate($fields_data);
     }
-    
+
     private function getCurrentTransition($fields_data) {
         $oldValues = false;
         if($this->artifact->getLastChangeset()) {
             $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
-        } 
+        }
         $from      = null;
         if ($oldValues) {
             if ($v = $oldValues->getValue()) {
@@ -283,10 +283,10 @@ class Workflow {
         }
         $to         = (int)$fields_data[$this->getFieldId()];
         $transition = $this->getTransition($from, $to);
-        
+
         return $transition;
     }
-    
+
    /**
     * Indicates if permissions on a field can be bypassed
     *

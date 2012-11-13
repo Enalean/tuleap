@@ -21,9 +21,9 @@
 require_once 'Dao.class.php';
 
 class Workflow_Transition_Condition_FieldNotEmpty_Factory {
-    
+
     private $dao;
-    
+
     public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Dao $dao) {
         $this->dao = $dao;
     }
