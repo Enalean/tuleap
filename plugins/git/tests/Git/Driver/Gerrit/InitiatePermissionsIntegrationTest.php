@@ -41,40 +41,69 @@ class IntitiatePermissionsIntegrationTest extends TuleapTestCase {
         
     }
     
-    public function itPushesTheUpdatedConfigToTheServer() {
+    public function itClonesTheDistantRepo() {
 
-        var_dump($this->current_dir, $this->dir, $this->tmpdir);
-        `mkdir $this->tmpdir/firefox; cd $this->tmpdir/firefox`;
-        `cd $this->tmpdir/firefox; git init`;
-        `cd $this->tmpdir/firefox; git pull $this->tmpdir/firefox.git refs/meta/config`;
-        `cd $this->tmpdir/firefox; git checkout FETCH_HEAD`;
-        /*
-         * cd update-project-config
+        $initiator = new InitiatePermissions();
+        $initiator->cloneGerritProjectConfig($this->tmpdir);
 
-#pull
-git init
-git pull $gerritserverurl refs/meta/config
-
-         */
         $groups_file = "$this->tmpdir/firefox/groups";
         $config_file = "$this->tmpdir/firefox/project.config";
         $this->assertTrue(is_file($groups_file));
         $this->assertTrue(is_file($config_file));
-//        $group_file_contents = file_get_contents("$somedir/groups");
-//
-//        $contributors_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
-//        $contributors_name = 'tuleap-localhost-mozilla/firefox-contributor';
-//        $this->assertPattern("%$contributors_uuid\t$contributors_name%", $group_file_contents);
-//
-//        $integrators_uuid = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
-//        $integrators_name = 'tuleap-localhost-mozilla/firefox-integrators';
-//        $this->assertPattern("%$integrators_uuid\t$integrators_name%", $group_file_contents);
-//        
-//        $supermen_uuid = '8a7e856ce3c55f555c228bd90045412f95ff348';
-//        $supermen_name = 'tuleap-localhost-mozilla/firefox-supermen';
-//        $this->assertPattern("%$supermen_uuid\t$supermen_name%", $group_file_contents);
-//        
-//        $this->assertEverythingIsPushedToTheServer();
+    }
+    public function itPushesTheUpdatedConfigToTheServer() {
+        $initiator = new InitiatePermissions();
+        $initiator->cloneGerritProjectConfig($this->tmpdir);
+
+        $initiator->initiatePermissison();
+        
+        $this->assertGroupsFileHasEverything();
+        $this->assertPermissionsFileHasEverything();
+        
+        $this->assertEverythingIsPushedToTheServer();
+    }
+    
+    private function assertEverythingIsPushedToTheServer() {
+        
+    }
+    
+    private function assertPermissionsFileHasEverything() {
+        $config_file = "$this->tmpdir/firefox/project.config";
+        
+        
+    }
+    
+    private function assertGroupsFileHasEverything() {
+        $groups_file = "$this->tmpdir/firefox/groups";
+        $group_file_contents = file_get_contents($groups_file);
+
+        $contributors_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
+        $contributors_name = 'tuleap-localhost-mozilla/firefox-contributor';
+        $this->assertPattern("%$contributors_uuid\t$contributors_name%", $group_file_contents);
+
+        $integrators_uuid = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
+        $integrators_name = 'tuleap-localhost-mozilla/firefox-integrators';
+        $this->assertPattern("%$integrators_uuid\t$integrators_name%", $group_file_contents);
+        
+        $supermen_uuid = '8a7e856ce3c55f555c228bd90045412f95ff348';
+        $supermen_name = 'tuleap-localhost-mozilla/firefox-supermen';
+        $this->assertPattern("%$supermen_uuid\t$supermen_name%", $group_file_contents);
+
+    }
+    
+}
+
+class InitiatePermissions {
+
+    public function cloneGerritProjectConfig($dir) {
+        `mkdir $dir/firefox; cd $dir/firefox`;
+        `cd $dir/firefox; git init`;
+        `cd $dir/firefox; git pull $dir/firefox.git refs/meta/config`;
+        `cd $dir/firefox; git checkout FETCH_HEAD`;
+    }
+
+    public function initiatePermissison() {
+        
     }
 }
 ?>
