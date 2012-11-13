@@ -59,5 +59,24 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
 
         $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
     }
+
+    public function itReconstitutesPermissions() {
+        $xml = new SimpleXMLElement('
+            <transition>
+                <conditions>
+                    <condition type="perms">
+                        <permissions>
+                            <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
+                            <permission ugroup="UGROUP_PROJECT_ADMIN"/>
+                        </permissions>
+                    </condition>
+                </conditions>
+            </transition>
+        ');
+
+        $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
+
+        $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
+    }
 }
 ?>
