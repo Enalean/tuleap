@@ -256,25 +256,35 @@ class Workflow {
      */
     public function before(array &$fields_data, User $current_user) {
         if (isset($fields_data[$this->getFieldId()])) {
-            $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
-            $from      = null;
-            if ($oldValues) {
-                if ($v = $oldValues->getValue()) {
-                    // Todo: what about multiple values in the changeset?
-                    list(,$from) = each($v);
-                    $from = (int)$from;
-                }
-            }
-            $to         = (int)$fields_data[$this->getFieldId()];
-            $transition = $this->getTransition($from, $to);
+            $transition = $this->getCurrentTransition($fields_data);
             if ($transition) {
-                try {
-                    $transition->before($fields_data, $current_user);
-                } catch (Workflow_Transition_Condition_InvalidTransitionException $e){
-                    throw $e;
-                }
+                $transition->before($fields_data, $current_user);
             }
         }
+    }
+    
+    public function validate($fields_data) {
+        $transition = $this->getCurrentTransition($fields_data);
+        $transition->validate($fields_data);
+    }
+    
+    private function getCurrentTransition($fields_data) {
+        $oldValues = false;
+        if($this->artifact->getLastChangeset()) {
+            $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
+        } 
+        $from      = null;
+        if ($oldValues) {
+            if ($v = $oldValues->getValue()) {
+                // Todo: what about multiple values in the changeset?
+                list(,$from) = each($v);
+                $from = (int)$from;
+            }
+        }
+        $to         = (int)$fields_data[$this->getFieldId()];
+        $transition = $this->getTransition($from, $to);
+        
+        return $transition;
     }
     
    /**
