@@ -486,7 +486,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param string $prefix The prefix to display before the title of the artifact. Default is blank.
      *
-    * @return string The HTML code for artifact title
+     * @return string The HTML code for artifact title
      */
     public function fetchTitle($prefix = '') {
         $html = '';
@@ -801,7 +801,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $card_info               = array();
         $tracker_id              = $artifact->getTracker()->getId();
         $form_element_factory    = $this->getFormElementFactory();
-        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser($tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $current_user);
+        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser(
+            $tracker_id,
+            Tracker::REMAINING_EFFORT_FIELD_NAME,
+            $current_user
+        );
         
         if ($remaining_effort_field) {
             $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
@@ -1613,8 +1617,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getCrossReferenceManager() {
         return new CrossReferenceManager();
     }
-    
-   
 
 }
 
