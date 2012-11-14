@@ -109,7 +109,7 @@ class TrackerDao extends DataAccessObject {
         $item_name     = $this->da->quoteSmart($item_name);
 
         $id_sharing = new TrackerIdSharingDao();
-        if ($id == $id_sharing->generateTrackerId()) {
+        if ($id = $id_sharing->generateTrackerId()) {
             $sql = "INSERT INTO $this->table_name
                        (id,
                         group_id,
@@ -162,7 +162,7 @@ class TrackerDao extends DataAccessObject {
         $stop_notification            = $this->da->escapeInt($stop_notification);
 
         $id_sharing = new TrackerIdSharingDao();
-        if ($id == $id_sharing->generateTrackerId()) {
+        if ($id = $id_sharing->generateTrackerId()) {
 
             $sql = "INSERT INTO $this->table_name
                     (id,
