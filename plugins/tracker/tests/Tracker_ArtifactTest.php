@@ -553,9 +553,13 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $field3->setReturnValue('isValid', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
 
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
+        $artifact->setReturnReference('getWorkflow', $workflow);
 
         $fields_data = array(
             102 => '123',
@@ -1552,9 +1556,9 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
         $changeset_2->expectOnce('delete', array($this->user));
         $changeset_3 = mock('Tracker_Artifact_Changeset');
         $changeset_3->expectOnce('delete', array($this->user));
-        
+
         stub($this->artifact)->getChangesets()->returns(array($changeset_1, $changeset_2, $changeset_3));
-        
+
         $dao = mock('Tracker_ArtifactDao');
         $dao->expectOnce('delete', array($this->artifact_id));
         $dao->expectOnce('deleteArtifactLinkReference', array($this->artifact_id));
