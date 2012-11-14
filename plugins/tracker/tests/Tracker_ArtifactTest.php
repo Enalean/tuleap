@@ -235,10 +235,13 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $field3->setReturnValue('isValid', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
 
-
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+        
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
+        $artifact->setReturnReference('getWorkflow', $workflow);
 
         $fields_data = array();
         $this->assertTrue($artifact->validateFields($fields_data));
@@ -553,13 +556,10 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $field3->setReturnValue('isValid', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
 
-        $workflow = new MockWorkflow();
-        $workflow->setReturnValue('validate', true);
-
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
-        $artifact->setReturnReference('getWorkflow', $workflow);
+
 
         $fields_data = array(
             102 => '123',
