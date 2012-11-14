@@ -24,14 +24,18 @@ require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 
 class Git_Gerrit_Driver_ProjectCreator {
     
-    /** @var Git_Gerrit_Driver_Gerrit */
+    /** @var Git_Driver_Gerrit */
     private $driver;
+    
+    /** @var Git_Driver_Gerrit_RemoteSSHConfig */
+    private $gerrit_server;
     
     private $working_dir;
     
-    public function __construct($dir, Git_Gerrit_Driver_Gerrit $driver) {
-        $this->driver       = $driver;
-        $this->working_dir  = $dir;
+    public function __construct($dir, Git_Gerrit_Driver_Gerrit $driver, Git_Driver_Gerrit_RemoteSSHConfig $server) {
+        $this->driver        = $driver;
+        $this->gerrit_server = $server; 
+        $this->working_dir   = $dir;
     }
     
     public function cloneGerritProjectConfig($gerrit_project_url) {
@@ -42,18 +46,18 @@ class Git_Gerrit_Driver_ProjectCreator {
         `cd $dir/firefox; git checkout FETCH_HEAD`;
     }
 
-    public function initiatePermissison($gerrit_project_url) {
+    public function initiatePermissison($gerrit_project_url, $groups) {
         $this->cloneGerritProjectConfig($gerrit_project_url);
-        $this->addGroupsToGroupFile();
+        $this->addGroupsToGroupFile($groups);
         $this->addPermissionsToProjectConf();
         $this->pushToServer();
         
     }
     
-    private function addGroupsToGroupFile() {
-        $groups = array('contributors', 'integrators', 'supermen');
-        foreach ($groups as $group) {
-//            $group_uuid = $this->driver-$dir/firefox.git>getGroupId()
+    private function addGroupsToGroupFile($groups) {
+        foreach ($groups as $group => $groupname) {
+            $group_uuid = $this->driver->getGroupUUID($this->gerrit_server, $group);
+            file_put_contents("$this->working_dir/firefox/groups", "$group_uuid\t$groupname");
         }
         
     }

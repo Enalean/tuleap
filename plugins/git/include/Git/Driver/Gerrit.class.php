@@ -72,6 +72,12 @@ class Git_Driver_Gerrit {
 
         $this->logger->info("Gerrit: Group $gerrit_group successfully created");
     }
+    
+    public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
+        $command = self::COMMAND.' gsql -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\'$groupname\'"';
+        $command_result = $this->ssh->execute($server, $command);
+        return $command_result;
+    }
 
     private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command) {
         return $this->isGerritFailure($e) ? $this->gerritDriverException($e, $command) : $e;

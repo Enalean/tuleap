@@ -32,6 +32,13 @@ class IntitiatePermissionsIntegrationTest extends TuleapTestCase {
         $this->dir = Config::get('tmp_dir');
         $this->tmpdir = uniqid("$this->dir/");
         `unzip $this->current_dir/firefox.zip -d $this->tmpdir`;
+
+        $this->contributors_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
+        $this->contributors_name = 'tuleap-localhost-mozilla/firefox-contributor';
+        $this->integrators_uuid = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
+        $this->integrators_name = 'tuleap-localhost-mozilla/firefox-integrators';
+        $this->supermen_uuid = '8a7e856ce3c55f555c228bd90045412f95ff348';
+        $this->supermen_name = 'tuleap-localhost-mozilla/firefox-supermen';
         
     }
     
@@ -56,15 +63,21 @@ class IntitiatePermissionsIntegrationTest extends TuleapTestCase {
     }
     public function itPushesTheUpdatedConfigToTheServer() {
         $remote_ssh = mock('Git_Driver_Gerrit_RemoteSSHCommand');
-        $remote_ssh->setReturnValueAt(3, 'execute', $this->contributors_uuid);
-        $remote_ssh->setReturnValueAt(4, 'execute', $this->integrators_uuid);
-        $remote_ssh->setReturnValueAt(3, 'execute', $this->supermen_uuid);
+        $remote_ssh->setReturnValueAt(0, 'execute', $this->contributors_uuid);
+        $remote_ssh->setReturnValueAt(1, 'execute', $this->integrators_uuid);
+        $remote_ssh->setReturnValueAt(2, 'execute', $this->supermen_uuid);
         $driver = new Git_Driver_Gerrit($remote_ssh, mock('Logger'));
         
-        $initiator = new Git_Gerrit_Driver_ProjectCreator($this->tmpdir, $driver);
+        $id = $host = $port = $login = $identity_file = 0;
+        $server = new Git_RemoteServer_GerritServer($id, $host, $port, $login, $identity_file);
+        $initiator = new Git_Gerrit_Driver_ProjectCreator($this->tmpdir, $driver, $server);
         $initiator->cloneGerritProjectConfig();
 
-        $initiator->initiatePermissison("$this->tmpdir/firefox.git");
+        $basename = "tuleap-localhost-mozilla/firefox";
+        $groups = array('contributors' => "$basename-contributors",
+                        'integrators'  => "$basename-integrators",
+                        'supermen'     => "$basename-supermen");
+        $initiator->initiatePermissison("$this->tmpdir/firefox.git", $groups);
         
         $this->assertGroupsFileHasEverything();
         $this->assertPermissionsFileHasEverything();
@@ -107,16 +120,10 @@ EOF;
         $groups_file = "$this->tmpdir/firefox/groups";
         $group_file_contents = file_get_contents($groups_file);
 
-        $this->contributors_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
-        $this->contributors_name = 'tuleap-localhost-mozilla/firefox-contributor';
         $this->assertPattern("%$this->contributors_uuid\t$this->contributors_name%", $group_file_contents);
 
-        $this->integrators_uuid = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
-        $this->integrators_name = 'tuleap-localhost-mozilla/firefox-integrators';
         $this->assertPattern("%$this->integrators_uuid\t$this->integrators_name%", $group_file_contents);
         
-        $this->supermen_uuid = '8a7e856ce3c55f555c228bd90045412f95ff348';
-        $this->supermen_name = 'tuleap-localhost-mozilla/firefox-supermen';
         $this->assertPattern("%$this->supermen_uuid\t$this->supermen_name%", $group_file_contents);
 
     }

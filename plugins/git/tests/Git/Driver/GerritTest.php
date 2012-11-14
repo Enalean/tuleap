@@ -23,7 +23,7 @@ require_once dirname(__FILE__).'/../../../include/constants.php';
 require_once dirname(__FILE__).'/../../builders/aGitRepository.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 require_once 'common/include/Config.class.php';
-class Git_Driver_Gerrit_createTest extends TuleapTestCase {
+abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
 
     protected $host = 'tuleap.example.com';
 
@@ -46,6 +46,7 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         Config::store();
         Config::set('sys_default_domain', $this->host);
 
+
         $project = stub('Project')->getUnixName()->returns('firefox');
 
         $this->repository = aGitRepository()
@@ -65,6 +66,25 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         parent::tearDown();
         Config::restore();
     }
+}
+class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
+
+    protected $host = 'tuleap.example.com';
+
+    /**
+     * @var GitRepository
+     */
+    protected $repository;
+
+    /** @var Git_RemoteServer_GerritServer */
+    protected $gerrit_server;
+
+
+    /**
+     * @var RemoteSshCommand
+     */
+    protected $ssh;
+
 
     public function itExecutesTheCreateCommandOnTheGerritServer() {
         expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project tuleap.example.com-firefox/jean-claude/dusse")->once();
@@ -113,6 +133,9 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
         $this->driver->createProject($this->gerrit_server, $this->repository);
 
     }
+}
+
+class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
 
     public function itCreatesGroups() {
         $project_name = $this->host."-firefox/jean-claude/dusse";
@@ -153,9 +176,18 @@ class Git_Driver_Gerrit_createTest extends TuleapTestCase {
             $this->assertEqual($e->getMessage(), "Command: $command" . PHP_EOL . "Error: $std_err");
         }
     }
-    public function itInformsAboutPermissionsConfiguration() {
-    }
 
+}
+
+class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
+    
+    public function itAsksGerritForTheGroupUUID() {
+        $groupname = 'host-project/repo-contributors';
+        $uuid      = 'lsalkj4jlk2jj3452lkj23kj421465';
+        $uuid_as_json = '{"type":"row","columns":{"group_uuid":"'.$uuid.'"}}\n{"type":"query-stats","rowCount":1,"runTimeMilliseconds":1}';
+        stub($this->ssh)->execute($this->gerrit_server, 'gerrit gsql -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\'$groupname\'"')->once()->returns($uuid_as_json);
+        $this->assertEqual($uuid, $this->driver->getGroupUUID($this->gerrit_server, $groupname));
+    }
 }
 
 ?>
