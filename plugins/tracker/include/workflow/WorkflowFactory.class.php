@@ -248,7 +248,7 @@ class WorkflowFactory {
      *
      * @return void
      */
-     public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping, $duplicate_type) {
+     public function duplicate($from_tracker_id, $to_tracker_id, $from_id, $to_id, $values, $field_mapping, $ugroup_mapping, $duplicate_type) {    
          if ($workflow = $this->getWorkflowByTrackerId($from_tracker_id)) {
             $is_used = $workflow->getIsUsed();
             

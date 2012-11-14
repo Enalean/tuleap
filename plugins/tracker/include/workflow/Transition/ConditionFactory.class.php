@@ -21,6 +21,7 @@
 require_once 'ConditionsCollection.class.php';
 require_once 'Condition/FieldNotEmpty/Factory.class.php';
 require_once TRACKER_BASE_DIR .'/workflow/Transition.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/Transition/Condition/FieldNotEmpty/Dao.class.php';
 
 class Workflow_Transition_ConditionFactory {
 
@@ -161,6 +162,42 @@ class Workflow_Transition_ConditionFactory {
         $condition = new Workflow_Transition_Condition_Permissions($transition);
         $condition->setAuthorizedUgroupsKeyname($authorized_ugroups_keyname);
         return $condition;
+    }
+    
+    public function duplicate($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type, $field_mapping) {
+        $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
+        $this->duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping);
+    }
+    
+    /**
+    * Duplicate the transitions permissions
+    * 
+    * @param int $from_transition_id the old transition id
+    * @param int $transition_id the new transition id
+    * @param Array $ugroup_mapping the ugroup mapping
+    *
+    * @return void
+    */
+    private function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type) {
+        $pm = PermissionsManager::instance();        
+        $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
+        //Duplicate tracker permissions
+        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $ugroup_mapping, $duplicate_type);
+    }
+    
+        /**
+    * Duplicate the transitions permissions
+    * 
+    * @param int $from_transition_id the old transition id
+    * @param int $transition_id the new transition id
+    * @param Array $ugroup_mapping the ugroup mapping
+    *
+    * @return void
+    */
+    private function duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping) {
+        $dao = new Workflow_Transition_Condition_FieldNotEmpty_Dao();        
+        //Duplicate
+        $dao->duplicate($from_transition_id, $transition_id, $field_mapping);
     }
 }
 ?>
