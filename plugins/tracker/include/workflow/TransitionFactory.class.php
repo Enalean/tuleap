@@ -289,7 +289,6 @@ class TransitionFactory {
     * @return void
     */
     public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping = false, $duplicate_type) {
-        
         if ($transitions != null) {
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {
@@ -318,7 +317,7 @@ class TransitionFactory {
                 
                 // Duplicate permissions
                 $from_transition_id = $transition->getTransitionId();
-                $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
+                $this->duplicateConditions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type, $field_mapping);
                 
                 // Duplicate postactions
                 $postactions = $transition->getPostActions();
@@ -341,20 +340,9 @@ class TransitionFactory {
         return $this->getDao()->addTransition($workflow_id, $from_id, $to_id);
     }
     
-   /**
-    * Duplicate the transitions permissions
-    * 
-    * @param int $from_transition_id the old transition id
-    * @param int $transition_id the new transition id
-    * @param Array $ugroup_mapping the ugroup mapping
-    *
-    * @return void
-    */
-    public function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type) {
-        $pm = PermissionsManager::instance();        
-        $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
-        //Duplicate tracker permissions
-        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $ugroup_mapping, $duplicate_type);
-    }
+    public function duplicateConditions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type, $field_mapping) {
+        $condition_factory = Workflow_Transition_ConditionFactory::build();
+        $condition_factory->duplicate($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type, $field_mapping);
+    }   
 }
 ?>
