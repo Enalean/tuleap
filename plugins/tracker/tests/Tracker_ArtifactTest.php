@@ -1652,7 +1652,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
 
 class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends Tracker_Artifact_SendCardInfoOnUpdate_BaseTest {
     
-    public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefined() {
+    public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefinedOnTask() {
         $this->task->setAllAncestors(array());
         
         $json = $this->processAndCaptureJSONOutput();
@@ -1668,6 +1668,23 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
         $user_story_id = $this->user_story->getId();
         $this->assertEqual($json[$user_story_id]['remaining_effort'], 23);
     }
+    
+    public function itDoesNotSendParentWhenParentHasNoRemainingEffortField() {
+        $tracker_user_story_id = 110;
+        $tracker_user_story    = aMockTracker()->withId($tracker_user_story_id)->build();
+        $user_story_id         = 111;
+        $user_story            = mock('Tracker_Artifact');
+        
+        stub($user_story)->getTracker()->returns($tracker_user_story);
+        stub($user_story)->getId()->returns($user_story_id); 
+        $this->task->setAllAncestors(array($user_story));
+        
+        $json = $this->processAndCaptureJSONOutput();
+ 
+        $user_story_id = $this->user_story->getId();
+        $this->assertFalse(isset($json[$user_story_id]));
+    }
+
 }
 
 class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Tracker_Artifact_SendCardInfoOnUpdate_BaseTest {
