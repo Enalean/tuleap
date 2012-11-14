@@ -792,11 +792,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($parent) {
             $cards_info = $cards_info + $this->getCardUpdateInfo($parent, $current_user);
         }
-        
+
         $GLOBALS['Response']->setContentType('application/json');
         echo json_encode($cards_info);
     }
-    
+
     private function getCardUpdateInfo(Tracker_Artifact $artifact, $current_user) {
         $card_info               = array();
         $tracker_id              = $artifact->getTracker()->getId();
@@ -806,7 +806,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             Tracker::REMAINING_EFFORT_FIELD_NAME,
             $current_user
         );
-        
+
         if ($remaining_effort_field) {
             $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
             $card_info[$artifact->getId()] = array(
