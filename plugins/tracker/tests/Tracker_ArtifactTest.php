@@ -140,7 +140,9 @@ require_once dirname(__FILE__).'/builders/anArtifact.php';
 require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');
 
+require_once(dirname(__FILE__).'/../include/workflow/Workflow.class.php');
 Mock::generate('Workflow');
+
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
     function before(&$fields_data, $submitter) {
         $fields_data[102] = '456';
@@ -170,9 +172,15 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $this->artifact->setReturnReference('getTracker', $tracker);
         $this->artifact->setReturnValue('getLastChangeset', false); // no changeset => artifact submission
 
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
+        $this->artifact->setReturnReference('getWorkflow', $workflow);
+
         $this->artifact_update = new Tracker_ArtifactTestVersion();
         $this->artifact_update->setReturnReference('getFormElementFactory', $factory);
         $this->artifact_update->setReturnReference('getTracker', $tracker);
+        $this->artifact_update->setReturnReference('getWorkflow', $workflow);
         $this->changeset = new MockTracker_Artifact_Changeset();
         $this->changeset_value = new MockTracker_Artifact_ChangesetValue();
         $this->changeset->setReturnReference('getValue', $this->changeset_value, array($this->field));
@@ -237,7 +245,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
-        
+
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
@@ -392,6 +400,10 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getLastChangeset', false); // changeset => artifact submission
 
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
+        $artifact->setReturnReference('getWorkflow', $workflow);
         // field 101 and 102 are missing
         // 101 has a default value
         // 102 has no default value
@@ -442,6 +454,11 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getLastChangeset', $changeset); // changeset => artifact update
 
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
+        $artifact->setReturnReference('getWorkflow', $workflow);
+
         // field 102 is missing
         $fields_data = array('101' => 'foo',
                              '103' => 'bar');
@@ -486,6 +503,11 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getLastChangeset', $changeset); // changeset => artifact update
 
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
+        $artifact->setReturnReference('getWorkflow', $workflow);
+
         // field 102 is missing
         $fields_data = array('101' => 'foo',
                              '103' => 'bar');
@@ -522,6 +544,11 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
+
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
+        $artifact->setReturnReference('getWorkflow', $workflow);
 
         $fields_data = array();
         $this->assertFalse($artifact->validateFields($fields_data));
@@ -560,6 +587,10 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
 
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
+        $artifact->setReturnReference('getWorkflow', $workflow);
 
         $fields_data = array(
             102 => '123',
@@ -622,6 +653,11 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
+
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
+        $artifact->setReturnReference('getWorkflow', $workflow);
 
         $art_factory->expectOnce('save');
 
@@ -743,6 +779,11 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
 
+        $workflow = new MockWorkflow();
+        $workflow->setReturnValue('validate', true);
+
+        $artifact->setReturnReference('getWorkflow', $workflow);
+
         $art_factory->expectOnce('save');
         $this->response->expectNever('addFeedback');
 
@@ -775,6 +816,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact = new Tracker_ArtifactTestVersion();
         $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
         $workflow->expectOnce('before');
+        $workflow->setReturnValue('validate', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         $field1  = new MockTracker_FormElement_Field();
@@ -841,6 +883,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $artifact = new Tracker_ArtifactTestVersion();
         $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
         $workflow->expectOnce('before');
+        $workflow->setReturnValue('validate', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         $field1  = new MockTracker_FormElement_Field();
@@ -983,6 +1026,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->expectOnce('before');
+        $workflow->setReturnValue('validate', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         // Valid
@@ -1083,6 +1127,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->expectOnce('before');
+        $workflow->setReturnValue('validate', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         // Valid
@@ -1155,6 +1200,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
 
         $workflow = new MockWorkflow();
         $workflow->expectNever('before');
+        $workflow->setReturnValue('validate', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
 
         $email   = null; //not annonymous user
