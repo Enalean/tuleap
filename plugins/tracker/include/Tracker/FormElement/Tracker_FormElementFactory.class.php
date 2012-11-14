@@ -365,6 +365,16 @@ class Tracker_FormElementFactory {
     
     /**
      * @param Tracker $tracker
+     * @return array of Tracker_FormElement - All non dynamic fields used by the tracker
+     */
+    public function getUsedNonDynamicFields($tracker) {
+        $field_classnames = array_merge($this->classnames);
+        EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
+        return $this->getUsedFormElementsByType($tracker, array_keys($field_classnames));
+    }
+    
+    /**
+     * @param Tracker $tracker
      * @return array of Tracker_FormElement - All fields used and  unused by the tracker
      */
     public function getFields($tracker) {
