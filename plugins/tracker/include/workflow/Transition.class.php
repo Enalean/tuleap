@@ -182,13 +182,18 @@ class Transition {
      * @return void
      */
     public function before(&$fields_data, User $current_user) {
-        if (! $this->getConditions()->validate($fields_data)){
-            throw new Workflow_Transition_Condition_InvalidTransitionException('Invalid Transition');
-        }
+        
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->before($fields_data, $current_user);
         }
+    }
+    
+    public function validate($fields_data) {
+        if (! $this->getConditions()->validate($fields_data)){
+            return false;
+        }
+        return true;
     }
 
     /**

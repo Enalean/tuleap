@@ -25,7 +25,7 @@
 require_once 'ConditionFactory.class.php';
 
 class Transition_ConditionManager {
-    
+
     /**
      * Process the artifact functions
      *
@@ -37,18 +37,18 @@ class Transition_ConditionManager {
      */
     public function process(Transition $transition, Codendi_Request $request, User $current_user) {
         $transition_condition_factory = $this->getConditionFactory();
-        
+
         // Create new condition
         if ($request->existAndNonEmpty('add_notempty_condition')) {
             $transition_condition_factory->addCondition($transition, $request->get('add_notempty_condition'));
         }
-        
+
         // Loop over defined actions and update them if relevant
         foreach ($transition->getConditions() as $condition) {
             $condition->process($request);
         }
     }
-    
+
     /**
      * Wrapper for Transition_PostActionFactory
      *
