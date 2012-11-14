@@ -90,5 +90,8 @@ class Response {
         header("HTTP/1.0 $code");
         echo $this->getRawFeedback();
     }
+    public function setContentType($content_type) {
+        header('Content-type: ' . $content_type);
+    }
 }
 ?>

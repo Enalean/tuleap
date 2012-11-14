@@ -82,7 +82,8 @@ document.observe('dom:loaded', function () {
                                 console.log('coucou');
                                 console.log(response);
                                 for (var card_id in response.responseJSON) {
-                                      if (card = this.document.getElementById('cardwall_board_postit-' + card_id)) {
+                                      card = this.document.getElementById('cardwall_board_postit-' + card_id);
+                                      if (card != undefined) {
                                           for (var field_id in response.responseJSON[card_id]) {
                                               field = card.getElementsByClassName('valueOf_' + field_id)
                                               if (field != undefined) {

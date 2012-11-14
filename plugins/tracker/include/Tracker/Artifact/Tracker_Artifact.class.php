@@ -740,32 +740,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
                     if ($request->isAjax()) {
-                        //Getting assigned_to related stuff
-                        $form_element_factory = $this->getFormElementFactory();
-                        $tracker_id = $this->getTracker()->getId();
-
-                        $field_name = 'assigned_to';
-
-                        $assigned_to_field = $form_element_factory->getFormElementByName($tracker_id, $field_name);
-                        $assigned_to = $assigned_to_field->fetchCardValue($this);
-                        //var_dump($assigned_to);
-
-                        $parent = $this->getParent($current_user);
-                        
-                        //var_dump($parent);
-                        //echo('toto');
-                        $tracker_id = $this->getTracker()->getId();
-                        $field_name = 'remaining_effort';
-                        $form_element_factory = $this->getFormElementFactory();
- 
-                        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser($tracker_id, $field_name, $current_user);
-                        $remaining_effort        = $remaining_effort_field->fetchCardValue($this);
-                        
-                        $remaining_effort_parent_field  = $form_element_factory->getComputableFieldByNameForUser($parent->getTrackerId(), $field_name, $current_user);
-                        $remaining_effort_parent        = $remaining_effort_parent_field->fetchCardValue($parent);
-
-                        header('Content-type: application/json');
-                        echo json_encode(array($this->id => array('remaining_effort' => $remaining_effort, 'assigned_to' => $assigned_to), $parent->getId() => array('remaining_effort' => $remaining_effort_parent)));
+                        $this->sendAjaxCardsUpdateInfo($current_user);
                     } else {
                         $GLOBALS['Response']->redirect($redirect->toUrl());
                     }
@@ -809,6 +784,50 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
         }
+    }
+
+    private function sendAjaxCardsUpdateInfo($current_user) {
+
+        $cards_info = $this->getCardUpdateInfo($current_user);
+        $parent_card_info = $this->getParentsCardUpdateInfo($current_user);
+        
+        $cards_info = $cards_info + $parent_card_info;
+        
+        
+        
+        $GLOBALS['Response']->setContentType('application/json');
+        echo json_encode($cards_info);
+    }
+    
+    private function getCardUpdateInfo($current_user) {
+        $tracker_id = $this->getTracker()->getId();
+        $form_element_factory = $this->getFormElementFactory();
+
+        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser($tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $current_user);
+        $remaining_effort        = $remaining_effort_field->fetchCardValue($this);
+
+        $card_info = array(
+            $this->id => array(
+                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
+            )
+        );
+        
+        return $card_info;
+    }
+    
+    private function getParentsCardUpdateInfo($current_user) {
+        $parent = $this->getParent($current_user);
+        $form_element_factory = $this->getFormElementFactory();
+        $card_info = array();
+        if ($parent) {
+            $remaining_effort_parent_field  = $form_element_factory->getComputableFieldByNameForUser($parent->getTrackerId(), Tracker::REMAINING_EFFORT_FIELD_NAME, $current_user);
+            $remaining_effort_parent        = $remaining_effort_parent_field->fetchCardValue($parent);
+            $card_info[$parent->getId()]   = array(
+                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort_parent
+            );
+        }
+        
+        return $card_info;
     }
 
     /**
@@ -1612,6 +1631,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getCrossReferenceManager() {
         return new CrossReferenceManager();
     }
+    
+   
 
 }
 
