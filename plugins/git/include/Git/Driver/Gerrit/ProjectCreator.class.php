@@ -23,49 +23,53 @@ require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RemoteSSHCommand.class.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 
 class Git_Gerrit_Driver_ProjectCreator {
-    
+
     /** @var Git_Driver_Gerrit */
     private $driver;
-    
-    /** @var Git_Driver_Gerrit_RemoteSSHConfig */
+
+    /** @var Git_RemoteServer_GerritServer */
     private $gerrit_server;
-    
-    private $working_dir;
-    
-    public function __construct($dir, Git_Gerrit_Driver_Gerrit $driver, Git_Driver_Gerrit_RemoteSSHConfig $server) {
+
+    /** @var string */
+    private $dir;
+
+    public function __construct($dir, Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServer $server) {
+        $this->dir           = $dir;
         $this->driver        = $driver;
-        $this->gerrit_server = $server; 
-        $this->working_dir   = $dir;
-    }
-    
-    public function cloneGerritProjectConfig($gerrit_project_url) {
-        $dir = $this->working_dir;
-        `mkdir $dir/firefox; cd $dir/firefox`;
-        `cd $dir/firefox; git init`;
-        `cd $dir/firefox; git pull $gerrit_project_url refs/meta/config`;
-        `cd $dir/firefox; git checkout FETCH_HEAD`;
+        $this->gerrit_server = $server;
     }
 
-    public function initiatePermissison($gerrit_project_url, $groups) {
+    public function cloneGerritProjectConfig($gerrit_project_url) {
+        `mkdir $this->dir/firefox; cd $this->dir/firefox`;
+        `cd $this->dir/firefox; git init`;
+        `cd $this->dir/firefox; git pull $gerrit_project_url refs/meta/config`;
+        `cd $this->dir/firefox; git checkout FETCH_HEAD`;
+    }
+
+    public function initiatePermissions($gerrit_project_url, $contributors, $integrators, $supermen) {
         $this->cloneGerritProjectConfig($gerrit_project_url);
-        $this->addGroupsToGroupFile($groups);
-        $this->addPermissionsToProjectConf();
+        $this->addGroupToGroupFile($contributors);
+        $this->addGroupToGroupFile($integrators);
+        $this->addGroupToGroupFile($supermen);
+        $this->addPermissionsToProjectConf($contributors, $integrators, $supermen);
         $this->pushToServer();
-        
+
     }
-    
-    private function addGroupsToGroupFile($groups) {
-        foreach ($groups as $group => $groupname) {
-            $group_uuid = $this->driver->getGroupUUID($this->gerrit_server, $group);
-            file_put_contents("$this->working_dir/firefox/groups", "$group_uuid\t$groupname");
-        }
-        
+
+    private function addGroupToGroupFile($group) {
+        $group_uuid = $this->driver->getGroupUUID($this->gerrit_server, $group);
+        file_put_contents("$this->dir/firefox/groups", "$group_uuid\t$group", FILE_APPEND);
     }
-    private function addPermissionsToProjectConf() {
-        
+
+    private function addPermissionsToProjectConf($contributors, $integrators, $supermen) {
+        `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.Read 'group Registered Users'`;
+        `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.Read 'group $contributors'`;
+        `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.create 'group $integrators'`;
     }
+
     private function pushToServer() {
-        
+        `cd $this->dir/firefox; git add project.config groups`;
+        `cd $this->dir/firefox; git commit -m 'Updated project config'`;
     }
 }
 
