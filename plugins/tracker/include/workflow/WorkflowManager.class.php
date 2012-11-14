@@ -156,11 +156,11 @@ class WorkflowManager {
             //Conditions
             $condition_manager = new Transition_ConditionManager();
             $condition_manager->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
-            
+
             // Post actions
             $tpam = new Transition_PostActionManager();
             $tpam->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
-            
+
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(
                 array(
                     'tracker'         => (int)$this->tracker->id,

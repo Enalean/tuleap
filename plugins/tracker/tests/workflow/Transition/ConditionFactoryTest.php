@@ -24,10 +24,10 @@ require_once TRACKER_BASE_DIR .'/workflow/Transition/ConditionFactory.class.php'
 class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends TuleapTestCase {
 
     private $xml_mapping = array();
-    
+
     /** @var Workflow_Transition_ConditionFactory */
     private $condition_factory;
-    
+
     /** @var Transition */
     private $transition;
 
