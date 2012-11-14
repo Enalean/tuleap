@@ -1578,10 +1578,13 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
     
     /** @var Tracker_Artifact */
     protected $task;
+
     /** @var Tracker_Artifact */
     protected $user_story;
+
     /** @var int */
     protected $artifact_id = 123;
+
     /** @var int */
     protected $tracker_id = 101;
     
@@ -1593,8 +1596,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->old_request_with           = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
-        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPREQUEST';
+        $this->setUpAjaxRequestHeaders();
         
         $tracker_user_story_id     = 103;
         $user_story_id             = 107;
@@ -1609,8 +1611,10 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
         $this->computed_field      = mock('Tracker_FormElement_Field_Computed');
         $this->us_computed_field   = mock('Tracker_FormElement_Field_Computed');
         $this->user_story          = mock('Tracker_Artifact');
+        $tracker_user_story        = aMockTracker()->withId($tracker_user_story_id)->build();
         
         stub($this->user_story)->getTrackerId()->returns($tracker_user_story_id);
+        stub($this->user_story)->getTracker()->returns($tracker_user_story);
         stub($this->user_story)->getId()->returns($user_story_id);        
         
         $this->task = partial_mock(
@@ -1631,6 +1635,19 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = $this->old_request_with;
         parent::tearDown();
     }
+
+    protected function processAndCaptureJSONOutput() {
+        ob_start();
+        $this->task->process($this->layout, $this->request, $this->user);
+        $content = ob_get_clean();
+        
+        return json_decode($content, true);
+    }
+
+    private function setUpAjaxRequestHeaders() {
+        $this->old_request_with           = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
+        $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPREQUEST';
+    }
 }
 
 class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends Tracker_Artifact_SendCardInfoOnUpdate_BaseTest {
@@ -1638,22 +1655,16 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
     public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefined() {
         $this->task->setAllAncestors(array());
         
-        ob_start();
-        $this->task->process($this->layout, $this->request, $this->user);
-        $content = ob_get_clean();
-        
-        $json = json_decode($content, true);
+        $json = $this->processAndCaptureJSONOutput();
+
         $this->assertEqual($json, array());
     }
     
     public function itSendsParentsRemainingEffortEvenIfTaskDontHaveOne() {
         $this->task->setAllAncestors(array($this->user_story));
         
-        ob_start();
-        $this->task->process($this->layout, $this->request, $this->user);
-        $content = ob_get_clean();
-        
-        $json = json_decode($content, true);
+        $json = $this->processAndCaptureJSONOutput();
+
         $user_story_id = $this->user_story->getId();
         $this->assertEqual($json[$user_story_id]['remaining_effort'], 23);
     }
@@ -1669,22 +1680,17 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
     public function itSendsTheRemainingEffort() {
         $this->task->setAllAncestors(array($this->user_story));
         
-        ob_start();
-        $this->task->process($this->layout, $this->request, $this->user);
-        $content = ob_get_clean();
-        
-        $json = json_decode($content, true);
+        $json = $this->processAndCaptureJSONOutput();
+
         $this->assertEqual($json[$this->artifact_id]['remaining_effort'], 42);
     }
+    
 
     public function itSendsParentsRemainingEffort() {
         $this->task->setAllAncestors(array($this->user_story));
         
-        ob_start();
-        $this->task->process($this->layout, $this->request, $this->user);
-        $content = ob_get_clean();
-        
-        $json = json_decode($content, true);
+        $json = $this->processAndCaptureJSONOutput();
+
         $user_story_id = $this->user_story->getId();
         $this->assertEqual($json[$user_story_id]['remaining_effort'], 23);
     }
@@ -1692,31 +1698,26 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
     public function itDoesNotSendParentsRemainingEffortWhenThereIsNoParent() {
         $this->task->setAllAncestors(array());
         
-        ob_start();
-        $this->task->process($this->layout, $this->request, $this->user);
-        $content = ob_get_clean();
-        
-        $json = json_decode($content, true);
+        $json = $this->processAndCaptureJSONOutput();
+
         $user_story_id = $this->user_story->getId();
         $this->assertFalse(isset($json[$user_story_id]));
     }
     
     public function itDoesNotSendParentWhenParentHasNoRemainingEffortField() {
         $tracker_user_story_id = 110;
-        $user_story_id = 111;
-        $user_story = mock('Tracker_Artifact');
-        stub($user_story)->getTrackerId()->returns($tracker_user_story_id);
+        $tracker_user_story    = aMockTracker()->withId($tracker_user_story_id)->build();
+        $user_story_id         = 111;
+        $user_story            = mock('Tracker_Artifact');
+        
+        stub($user_story)->getTracker()->returns($tracker_user_story);
         stub($user_story)->getId()->returns($user_story_id); 
         $this->task->setAllAncestors(array($user_story));
         
-        ob_start();
-        $this->task->process($this->layout, $this->request, $this->user);
-        $content = ob_get_clean();
-        
-        $json = json_decode($content, true);
+        $json = $this->processAndCaptureJSONOutput();
+
         $user_story_id = $this->user_story->getId();
         $this->assertFalse(isset($json[$user_story_id]));
-        
     }
 }
 ?>

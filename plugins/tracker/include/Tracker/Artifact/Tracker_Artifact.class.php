@@ -787,50 +787,28 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     private function sendAjaxCardsUpdateInfo($current_user) {
-
-        $cards_info = $this->getCardUpdateInfo($current_user);
-        $parent_card_info = $this->getParentsCardUpdateInfo($current_user);
-        
-        $cards_info = $cards_info + $parent_card_info;
+        $cards_info = $this->getCardUpdateInfo($this, $current_user);
+        $parent = $this->getParent($current_user);
+        if ($parent) {
+            $cards_info = $cards_info + $this->getCardUpdateInfo($parent, $current_user);
+        }
         
         $GLOBALS['Response']->setContentType('application/json');
         echo json_encode($cards_info);
     }
     
-    private function getCardUpdateInfo($current_user) {
+    private function getCardUpdateInfo(Tracker_Artifact $artifact, $current_user) {
         $card_info               = array();
-        $tracker_id              = $this->getTracker()->getId();
+        $tracker_id              = $artifact->getTracker()->getId();
         $form_element_factory    = $this->getFormElementFactory();
         $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser($tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $current_user);
         
         if ($remaining_effort_field) {
-            $remaining_effort        = $remaining_effort_field->fetchCardValue($this);
-            
-            $card_info = array(
-                $this->id => array(
-                    Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
-                )
+            $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
+            $card_info[$artifact->getId()] = array(
+                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
             );
         }
-
-        
-        return $card_info;
-    }
-    
-    private function getParentsCardUpdateInfo($current_user) {
-        $parent = $this->getParent($current_user);
-        $form_element_factory = $this->getFormElementFactory();
-        $card_info = array();
-        if ($parent) {
-            $remaining_effort_parent_field  = $form_element_factory->getComputableFieldByNameForUser($parent->getTrackerId(), Tracker::REMAINING_EFFORT_FIELD_NAME, $current_user);
-            if ($remaining_effort_parent_field) {
-                $remaining_effort_parent = $remaining_effort_parent_field->fetchCardValue($parent);
-                $card_info[$parent->getId()]   = array(
-                    Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort_parent
-                );
-            }
-        }
-        
         return $card_info;
     }
 
