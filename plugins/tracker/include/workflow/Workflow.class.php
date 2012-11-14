@@ -265,11 +265,14 @@ class Workflow {
 
     public function validate($fields_data) {
         $transition = $this->getCurrentTransition($fields_data);
-        return $transition->validate($fields_data);
+        if (isset($transition)) {
+            return $transition->validate($fields_data);
+        }
+        return true;
     }
 
     private function getCurrentTransition($fields_data) {
-        $oldValues = false;
+        $oldValues = null;
         if($this->artifact->getLastChangeset()) {
             $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
         }
@@ -283,7 +286,6 @@ class Workflow {
         }
         $to         = (int)$fields_data[$this->getFieldId()];
         $transition = $this->getTransition($from, $to);
-
         return $transition;
     }
 
