@@ -100,7 +100,7 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
      * @see AgileDashboard_Pane::getMinimalContent()
      */
     public function getMinimalContent() {
-        return $this->getPaneContent();
+        return '';
     }
 
     private function getPaneContent() {

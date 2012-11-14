@@ -5,7 +5,7 @@ Version 5.7 (Not Released Yet)
 	* Avoid double posting when body contain special characters. (Contrib STMicroelectronics)
 
    == Plugins ==
-	* tracker: 5.39
+	* tracker: 5.40
 	* git: 2.7.15
 	* tests: 5.8
 	* ldap: 3.22
