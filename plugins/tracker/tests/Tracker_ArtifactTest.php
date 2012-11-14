@@ -1574,43 +1574,40 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
     }
 }
 
-class Tracker_Artifact_SendCardInfoOnUpdateTest extends TuleapTestCase {
+class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
     
     /** @var Tracker_Artifact */
-    private $task;
+    protected $task;
     /** @var Tracker_Artifact */
-    private $user_story;
+    protected $user_story;
     /** @var int */
-    private $artifact_id = 123;
+    protected $artifact_id = 123;
+    /** @var int */
+    protected $tracker_id = 101;
     
     /** @var Tracker_FormElement_Field_Computed */
-    private $computed_field;
+    protected $computed_field;
     
     /** @var Tracker_FormElement_Field_Computed */
-    private $us_computed_field;
-    
-    /** @var Tracker_FormElement_Field_List */
-    private $assignedto_field;
+    protected $us_computed_field;
     
     public function setUp() {
         parent::setUp();
         $this->old_request_with           = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPREQUEST';
         
-        $tracker_id                = 101;
         $tracker_user_story_id     = 103;
         $user_story_id             = 107;
         $submitted_by              = 102;
         $submitted_on              = 1234567890;
         $use_artifact_permissions  = false;
-        $tracker                   = aMockTracker()->withId($tracker_id)->build();
+        $tracker                   = aMockTracker()->withId($this->tracker_id)->build();
         $this->layout              = mock('Tracker_IDisplayTrackerLayout');
         $this->request             = aRequest()->with('func', 'artifact-update')->build();
         $this->user                = mock('User');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->computed_field      = mock('Tracker_FormElement_Field_Computed');
         $this->us_computed_field   = mock('Tracker_FormElement_Field_Computed');
-        $this->assignedto_field    = mock('Tracker_FormElement_Field_Selectbox');
         $this->user_story          = mock('Tracker_Artifact');
         
         stub($this->user_story)->getTrackerId()->returns($tracker_user_story_id);
@@ -1619,14 +1616,12 @@ class Tracker_Artifact_SendCardInfoOnUpdateTest extends TuleapTestCase {
         $this->task = partial_mock(
             'Tracker_Artifact',
             array('createNewChangeset'),
-            array($this->artifact_id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
+            array($this->artifact_id, $this->tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
         );
         $this->task->setTracker($tracker);
         $this->task->setFormElementFactory($this->formelement_factory);
         stub($this->task)->createNewChangeset()->returns(true);
-        stub($this->formelement_factory)->getComputableFieldByNameForUser($tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($this->computed_field);
         stub($this->formelement_factory)->getComputableFieldByNameForUser($tracker_user_story_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($this->us_computed_field);
-        stub($this->formelement_factory)->getFormElementByName($tracker_id, Tracker::ASSIGNED_TO_FIELD_NAME)->returns($this->assignedto_field);
         
         stub($this->computed_field)->fetchCardValue($this->task)->returns(42);
         stub($this->us_computed_field)->fetchCardValue($this->user_story)->returns(23);
@@ -1636,7 +1631,41 @@ class Tracker_Artifact_SendCardInfoOnUpdateTest extends TuleapTestCase {
         $_SERVER['HTTP_X_REQUESTED_WITH'] = $this->old_request_with;
         parent::tearDown();
     }
+}
 
+class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends Tracker_Artifact_SendCardInfoOnUpdate_BaseTest {
+    
+    public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefined() {
+        $this->task->setAllAncestors(array());
+        
+        ob_start();
+        $this->task->process($this->layout, $this->request, $this->user);
+        $content = ob_get_clean();
+        
+        $json = json_decode($content, true);
+        $this->assertEqual($json, array());
+    }
+    
+    public function itSendsParentsRemainingEffortEvenIfTaskDontHaveOne() {
+        $this->task->setAllAncestors(array($this->user_story));
+        
+        ob_start();
+        $this->task->process($this->layout, $this->request, $this->user);
+        $content = ob_get_clean();
+        
+        $json = json_decode($content, true);
+        $user_story_id = $this->user_story->getId();
+        $this->assertEqual($json[$user_story_id]['remaining_effort'], 23);
+    }
+}
+
+class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Tracker_Artifact_SendCardInfoOnUpdate_BaseTest {
+    
+    public function setUp() {
+        parent::setUp();
+        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($this->computed_field);
+    }
+    
     public function itSendsTheRemainingEffort() {
         $this->task->setAllAncestors(array($this->user_story));
         
@@ -1670,6 +1699,24 @@ class Tracker_Artifact_SendCardInfoOnUpdateTest extends TuleapTestCase {
         $json = json_decode($content, true);
         $user_story_id = $this->user_story->getId();
         $this->assertFalse(isset($json[$user_story_id]));
+    }
+    
+    public function itDoesNotSendParentWhenParentHasNoRemainingEffortField() {
+        $tracker_user_story_id = 110;
+        $user_story_id = 111;
+        $user_story = mock('Tracker_Artifact');
+        stub($user_story)->getTrackerId()->returns($tracker_user_story_id);
+        stub($user_story)->getId()->returns($user_story_id); 
+        $this->task->setAllAncestors(array($user_story));
+        
+        ob_start();
+        $this->task->process($this->layout, $this->request, $this->user);
+        $content = ob_get_clean();
+        
+        $json = json_decode($content, true);
+        $user_story_id = $this->user_story->getId();
+        $this->assertFalse(isset($json[$user_story_id]));
+        
     }
 }
 ?>
