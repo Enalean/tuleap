@@ -30,7 +30,8 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
 
     public function setUp() {
         parent::setUp();
-        PermissionsManager::setInstance(mock('PermissionsManager'));
+        $this->permissions_manager = mock('PermissionsManager');
+        PermissionsManager::setInstance($this->permissions_manager);
 
         $this->transition          = mock('Transition');
         $this->permissions_factory = new Workflow_Transition_Condition_Permissions_Factory();
@@ -67,6 +68,24 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition);
 
         $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
+    }
+
+    public function itDelegatesDuplicateToPermissionsManager() {
+        $from_transition_id = 1;
+        $transition_id      = 2;
+        $field_mapping      = array('some fields mapping');
+        $ugroup_mapping     = array('some ugroups mapping');
+        $duplicate_type     = PermissionsDao::DUPLICATE_NEW_PROJECT;
+
+        expect($this->permissions_manager)
+            ->duplicatePermissions(
+                $from_transition_id,
+                $transition_id,
+                Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION,
+                $ugroup_mapping,
+                $duplicate_type
+            )->once();
+        $this->permissions_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
 ?>

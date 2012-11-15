@@ -37,7 +37,13 @@ class Workflow_Transition_Condition_Permissions_Factory {
     }
 
     public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
-        die('todo');
+        PermissionsManager::instance()->duplicatePermissions(
+            $from_transition_id,
+            $transition_id,
+            Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION,
+            $ugroup_mapping,
+            $duplicate_type
+        );
     }
 }
 ?>

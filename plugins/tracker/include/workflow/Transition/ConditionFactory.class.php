@@ -168,29 +168,12 @@ class Workflow_Transition_ConditionFactory {
     public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
         $this->permissions_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
         $this->fieldnotempty_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
-        //$this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
         //$transition = $this->getTransition($from_transition_id);
         //$transition_field = $this->getFieldNotEmpty($transition);
         //if ($transition_field->getFieldId()) {
         //    echo ($from_transition_id);
         //    $this->duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping);
         //}
-    }
-
-    /**
-    * Duplicate the transitions permissions
-    *
-    * @param int $from_transition_id the old transition id
-    * @param int $transition_id the new transition id
-    * @param Array $ugroup_mapping the ugroup mapping
-    *
-    * @return void
-    */
-    private function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type) {
-        $pm = PermissionsManager::instance();
-        $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
-        //Duplicate tracker permissions
-        $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $ugroup_mapping, $duplicate_type);
     }
 
         /**
