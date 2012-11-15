@@ -165,30 +165,12 @@ class Workflow_Transition_ConditionFactory {
         return isset($xml->permissions);
     }
 
-    public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
-        $this->permissions_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
-        $this->fieldnotempty_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
-        //$transition = $this->getTransition($from_transition_id);
-        //$transition_field = $this->getFieldNotEmpty($transition);
-        //if ($transition_field->getFieldId()) {
-        //    echo ($from_transition_id);
-        //    $this->duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping);
-        //}
-    }
-
-        /**
-    * Duplicate the transitions permissions
-    *
-    * @param int $from_transition_id the old transition id
-    * @param int $transition_id the new transition id
-    * @param Array $ugroup_mapping the ugroup mapping
-    *
-    * @return void
-    */
-    private function duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping) {
-        $dao = new Workflow_Transition_Condition_FieldNotEmpty_Dao();
-        //Duplicate
-        $dao->duplicate($from_transition_id, $transition_id, $field_mapping);
+    /**
+     * Duplicate the conditions
+     */
+    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
+        $this->permissions_factory->duplicate($from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+        $this->fieldnotempty_factory->duplicate($from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
 ?>

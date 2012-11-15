@@ -22,7 +22,7 @@ require_once dirname(__FILE__) .'/../../../../../include/constants.php';
 require_once TRACKER_BASE_DIR .'/workflow/Transition/Condition/FieldNotEmpty/Factory.class.php';
 
 class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
         Tracker_FormElementFactory::setInstance(mock('Tracker_FormElementFactory'));
@@ -32,7 +32,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         $field_string      = stub('Tracker_FormElement_Field_String')->getId()->returns(123);
         $this->xml_mapping = array('F14' => $field_string);
     }
-    
+
     public function tearDown() {
         Tracker_FormElementFactory::clearInstance();
         parent::tearDown();
@@ -59,6 +59,16 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
 
         $condition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition);
         $this->assertNull($condition);
+    }
+
+    public function itDuplicateConditionInDatabase() {
+        $new_transition_id = 2;
+        $field_mapping     = array('some fields mapping');
+        $ugroup_mapping    = array('some ugroups mapping');
+        $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
+
+        expect($this->dao)->duplicate($this->transition->getId(), $new_transition_id, $field_mapping)->once();
+        $this->factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
 ?>

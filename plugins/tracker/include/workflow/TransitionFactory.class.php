@@ -313,16 +313,16 @@ class TransitionFactory {
                     }
                 }
 
-                $transition_id = $this->addTransition($workflow_id, $from_id, $to_id);
+                $new_transition_id = $this->addTransition($workflow_id, $from_id, $to_id);
 
                 // Duplicate permissions
-                $from_transition_id = $transition->getTransitionId();
-                $this->condition_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+                $this->condition_factory->duplicate($transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
 
                 // Duplicate postactions
+                $from_transition_id = $transition->getTransitionId();
                 $postactions = $transition->getPostActions();
                 $tpaf = $this->getPostActionFactory();
-                $tpaf->duplicate($from_transition_id, $transition_id, $postactions, $field_mapping);
+                $tpaf->duplicate($from_transition_id, $new_transition_id, $postactions, $field_mapping);
             }
         }
     }

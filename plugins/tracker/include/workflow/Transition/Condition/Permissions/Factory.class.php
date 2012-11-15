@@ -36,10 +36,13 @@ class Workflow_Transition_Condition_Permissions_Factory {
         return $condition;
     }
 
-    public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
+    /**
+     * Duplicate the conditions
+     */
+    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
         PermissionsManager::instance()->duplicatePermissions(
-            $from_transition_id,
-            $transition_id,
+            $from_transition->getId(),
+            $new_transition_id,
             Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION,
             $ugroup_mapping,
             $duplicate_type

@@ -33,7 +33,7 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $this->permissions_manager = mock('PermissionsManager');
         PermissionsManager::setInstance($this->permissions_manager);
 
-        $this->transition          = mock('Transition');
+        $this->transition          = stub('Transition')->getId()->returns(123);
         $this->permissions_factory = new Workflow_Transition_Condition_Permissions_Factory();
     }
 
@@ -71,21 +71,20 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
     }
 
     public function itDelegatesDuplicateToPermissionsManager() {
-        $from_transition_id = 1;
-        $transition_id      = 2;
-        $field_mapping      = array('some fields mapping');
-        $ugroup_mapping     = array('some ugroups mapping');
-        $duplicate_type     = PermissionsDao::DUPLICATE_NEW_PROJECT;
+        $new_transition_id = 2;
+        $field_mapping     = array('some fields mapping');
+        $ugroup_mapping    = array('some ugroups mapping');
+        $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
 
         expect($this->permissions_manager)
             ->duplicatePermissions(
-                $from_transition_id,
-                $transition_id,
+                $this->transition->getId(),
+                $new_transition_id,
                 Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION,
                 $ugroup_mapping,
                 $duplicate_type
             )->once();
-        $this->permissions_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+        $this->permissions_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
 ?>

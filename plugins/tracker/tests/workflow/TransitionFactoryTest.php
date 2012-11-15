@@ -98,9 +98,9 @@ class TransitionFactoryTest extends TransitionFactory_BaseTest {
         $tf->setReturnValueAt(2, 'addTransition', 103);
         
         expect($this->condition_factory)->duplicate()->count(3);
-        expect($this->condition_factory)->duplicate(1, 101, array(), false, false)->at(0);
-        expect($this->condition_factory)->duplicate(2, 102, array(), false, false)->at(1);
-        expect($this->condition_factory)->duplicate(3, 103, array(), false, false)->at(2);
+        expect($this->condition_factory)->duplicate($t1, 101, array(), false, false)->at(0);
+        expect($this->condition_factory)->duplicate($t2, 102, array(), false, false)->at(1);
+        expect($this->condition_factory)->duplicate($t3, 103, array(), false, false)->at(2);
         
         $tpaf = new MockTransition_PostActionFactory();
         $tpaf->expectCallCount('duplicate', 3, 'Method duplicate should be called 3 times.');
