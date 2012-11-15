@@ -166,13 +166,15 @@ class Workflow_Transition_ConditionFactory {
     }
 
     public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
-        $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
-        $transition = $this->getTransition($from_transition_id);
-        $transition_field = $this->getFieldNotEmpty($transition);
-        if ($transition_field->getFieldId()) {
-            echo ($from_transition_id);
-            $this->duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping);
-        }
+        $this->permissions_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+        $this->fieldnotempty_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+        //$this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
+        //$transition = $this->getTransition($from_transition_id);
+        //$transition_field = $this->getFieldNotEmpty($transition);
+        //if ($transition_field->getFieldId()) {
+        //    echo ($from_transition_id);
+        //    $this->duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping);
+        //}
     }
 
     /**

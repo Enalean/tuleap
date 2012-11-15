@@ -30,14 +30,11 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
         $this->dao = $dao;
     }
 
-
-
     public function getFieldNotEmpty(Transition $transition){
         $field = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
 
         $condition = $this->dao->searchByTransitionId($transition->getId());
-
-        if($condition){
+        if ($condition) {
             $row = $condition->getRow();
             $field->setFieldId($row['field_id']) ;
         }
@@ -46,17 +43,20 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
     }
 
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
-
-        $field_not_empty = null;
+        $condition = null;
         if (isset($xml->field)) {
             $xml_field            = $xml->field;
             $xml_field_attributes = $xml_field->attributes();
             $field_id             = $xmlMapping[(string)$xml_field_attributes['REF']]->getId();
 
-            $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
-            $field_not_empty->setFieldId($field_id);
+            $condition = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
+            $condition->setFieldId($field_id);
         }
-        return $field_not_empty;
+        return $condition;
+    }
+
+    public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
+        die('todo');
     }
 }
 ?>

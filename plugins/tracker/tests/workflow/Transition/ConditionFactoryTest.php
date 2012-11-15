@@ -129,5 +129,17 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
 
         $this->assertEqual($conditions, new Workflow_Transition_ConditionsCollection());
     }
+
+    public function itDelegatesTheDuplicateToSubFactories() {
+        $from_transition_id = 1;
+        $transition_id      = 2;
+        $field_mapping      = array('some fields mapping');
+        $ugroup_mapping     = array('some ugroups mapping');
+        $duplicate_type     = PermissionsDao::DUPLICATE_NEW_PROJECT;
+
+        expect($this->permissions_factory)->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)->once();
+        expect($this->fieldnotempty_factory)->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)->once();
+        $this->condition_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+    }
 }
 ?>

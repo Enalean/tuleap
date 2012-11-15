@@ -35,5 +35,9 @@ class Workflow_Transition_Condition_Permissions_Factory {
         $condition->setAuthorizedUgroupsKeyname($authorized_ugroups_keyname);
         return $condition;
     }
+
+    public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
+        die('todo');
+    }
 }
 ?>
