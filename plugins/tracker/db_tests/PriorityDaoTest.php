@@ -24,6 +24,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function __construct() {
         parent::__construct();
+        $this->markThisTestUnderDevelopment();
     }
 
     public function tearDown() {
@@ -33,6 +34,8 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function itInsertArtifactsWithPriority() {
         $this->dao = new Tracker_Artifact_PriorityDao();
+
+        $this->truncateTable('tracker_artifact_priority');
 
         $this->assertEqual($this->dump_priorities("Table is empty"),
 "Table is empty
