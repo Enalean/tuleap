@@ -303,7 +303,10 @@ class Transition {
 
         $conditions = $this->getConditions();
         if ($conditions) {
-
+            $grand_child = $child->addChild('conditions');
+            foreach ($conditions as $conditions) {
+                $conditions->exportToXML($grand_child, $xmlMapping);
+            }
         }
 
         $postactions = $this->getPostActions();
