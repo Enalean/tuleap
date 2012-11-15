@@ -73,10 +73,11 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @see Workflow_Transition_Condition::exportToXml()
      */
     public function exportToXml(&$root, $xmlMapping) {
-        $root->addAttribute('type', self::CONDITION_TYPE);
         if (isset($this->field_id)) {
-            $child = $root->addChild('field');
-            $child->addAttribute('REF', array_search($this->field_id, $xmlMapping));
+            $child = $root->addChild('condition');
+            $child->addAttribute('type', self::CONDITION_TYPE);
+            $grand_child = $child->addChild('field');
+            $grand_child->addAttribute('REF', array_search($this->field_id, $xmlMapping));
         }
     }
 

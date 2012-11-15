@@ -494,13 +494,11 @@
     </element>
   </define>
   <define name="conditionFieldNotEmptyContent">
-    <optional>
-      <element name="field">
-        <attribute name="REF">
-          <data type="IDREF"/>
-        </attribute>
-      </element>
-    </optional>
+    <element name="field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
   </define>
   <define name="ruleContent">
     <element name="source_field">

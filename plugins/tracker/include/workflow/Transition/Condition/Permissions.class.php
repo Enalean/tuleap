@@ -58,14 +58,15 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
      * @see Workflow_Transition_Condition::exportToXml()
      */
     public function exportToXml(&$root, $xmlMapping) {
-        $root->addAttribute('type', self::CONDITION_TYPE);
+        $child = $root->addChild('condition');
+        $child->addAttribute('type', self::CONDITION_TYPE);
 
         $transition_ugroups = $this->permission_manager->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
-        $child = $root->addChild('permissions');
+        $grand_child = $child->addChild('permissions');
         foreach ($transition_ugroups as $transition_ugroup) {
             $ugroup_keyname = $this->getExportableUGroupKeyname($transition_ugroup['ugroup_id']);
             if ($ugroup_keyname) {
-                $child->addChild('permission')->addAttribute('ugroup', $ugroup_keyname);
+                $grand_child->addChild('permission')->addAttribute('ugroup', $ugroup_keyname);
             }
         }
     }
