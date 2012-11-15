@@ -1,3 +1,6 @@
+Version 5.41 - Tuleap 5.7
+    * Fix bugs #1738: On fresh install cross tracker search (and agile dashboard) show no results
+
 Version 5.40 - Tuleap 5.7
     * Burndown no longer displayed on agiledashboard homepage
 
