@@ -60,6 +60,11 @@ class Workflow_Transition_ConditionFactory {
         return $this->fieldnotempty_factory->getFieldNotEmpty($transition);
     }
 
+    private function getTransition($transition_id) {
+        $transition_factory = TransitionFactory::instance();
+        return $transition_factory->getTransition($transition_id);
+    }
+
     /**
      * Deletes all exiting conditions then saves the new condition.
      * @param Transition $transition
@@ -68,7 +73,9 @@ class Workflow_Transition_ConditionFactory {
      */
     public function addCondition($transition, $field_id) {
         $this->getFieldNotEmptyDao()->deleteByTransitionId($transition->getId());
-        return $this->getFieldNotEmptyDao()->create($transition->getId(), $field_id);
+        if ($field_id) {
+            return $this->getFieldNotEmptyDao()->create($transition->getId(), $field_id);
+        }
     }
 
     private function getFieldNotEmptyDao() {
@@ -166,7 +173,12 @@ class Workflow_Transition_ConditionFactory {
 
     public function duplicate($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type, $field_mapping) {
         $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
-        $this->duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping);
+        $transition = $this->getTransition($from_transition_id);
+        $transition_field = $this->getFieldNotEmpty($transition);
+        if ($transition_field->getFieldId()) {
+            echo ($from_transition_id);
+            $this->duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping);
+        }
     }
 
     /**

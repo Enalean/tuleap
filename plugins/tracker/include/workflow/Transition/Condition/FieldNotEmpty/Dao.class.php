@@ -103,19 +103,16 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
 
         $row = $this->retrieveFirstRow($sql);
         $old_field_id = $row['field_id'];
-        var_dump($old_field_id);
+        $new_field_id = null;
 
         foreach ($field_mapping as $field) {
             if ($field['from'] == $old_field_id) {
-                 $new_field_id = $field['to'];
-                 break;
+                $new_field_id = $field['to'];
             }
         }
 
-        $sql = 'INSERT INTO tracker_workflow_transition_condition_field_notempty (transition_id, field_id)
-                    VALUES ('.$to.', '.$new_field_id.')';
-
-        $this->update($sql);
+        $sql = "INSERT INTO tracker_workflow_transition_condition_field_notempty (transition_id, field_id)
+                    VALUES (" . $to . ", " . $new_field_id . ")";
 
         return $this->update($sql);
     }

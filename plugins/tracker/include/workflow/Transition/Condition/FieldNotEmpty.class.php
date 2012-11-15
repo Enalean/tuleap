@@ -84,6 +84,10 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $this;
     }
 
+    public function getFieldId() {
+        return $this->field_id;
+    }
+
     /**
      * Get all non dynamic fields where the condition may occur
      *
