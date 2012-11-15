@@ -288,7 +288,7 @@ class TransitionFactory {
     *
     * @return void
     */
-    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping = false, $duplicate_type) {
+    public function duplicate($values, $workflow_id, $transitions, $field_mapping, $ugroup_mapping, $duplicate_type) {
         if ($transitions != null) {
             foreach ($transitions as $transition) {
                 if ($transition->getFieldValueFrom() == null) {

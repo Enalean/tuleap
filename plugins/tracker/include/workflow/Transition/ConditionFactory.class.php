@@ -19,21 +19,27 @@
  */
 
 require_once 'ConditionsCollection.class.php';
+require_once 'Condition/Permissions/Factory.class.php';
 require_once 'Condition/FieldNotEmpty/Factory.class.php';
 require_once TRACKER_BASE_DIR .'/workflow/Transition.class.php';
 require_once TRACKER_BASE_DIR .'/workflow/Transition/Condition/FieldNotEmpty/Dao.class.php';
 
 class Workflow_Transition_ConditionFactory {
 
+    /** @var Workflow_Transition_Condition_Permissions_Factory */
+    private $permissions_factory;
+
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
     private $fieldnotempty_factory;
 
     /**
      * Should use the build() method
-     *
-     * @param Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory
      */
-    public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory) {
+    public function __construct(
+        Workflow_Transition_Condition_Permissions_Factory $permissions_factory,
+        Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory
+    ) {
+        $this->permissions_factory   = $permissions_factory;
         $this->fieldnotempty_factory = $fieldnotempty_factory;
     }
 
@@ -42,6 +48,7 @@ class Workflow_Transition_ConditionFactory {
      */
     public static function build() {
         return new Workflow_Transition_ConditionFactory(
+            new Workflow_Transition_Condition_Permissions_Factory(),
             new Workflow_Transition_Condition_FieldNotEmpty_Factory(new Workflow_Transition_Condition_FieldNotEmpty_Dao())
         );
     }
@@ -91,7 +98,7 @@ class Workflow_Transition_ConditionFactory {
         $conditions = new Workflow_Transition_ConditionsCollection();
         if ($this->isLegacyXML($xml)) {
             if ($xml->permissions) {
-                $conditions->add($this->createConditionPermissionsFromXML($xml, $transition));
+                $conditions->add($this->permissions_factory->getInstanceFromXML($xml->permissions, $xmlMapping, $transition));
             }
         } else if ($xml->conditions) {
             foreach ($xml->conditions->condition as $xml_condition) {
@@ -115,7 +122,7 @@ class Workflow_Transition_ConditionFactory {
         switch ($type) {
             case 'perms':
                 if ($xml->permissions) {
-                    $condition = $this->createConditionPermissionsFromXML($xml, $transition);
+                    $condition = $this->permissions_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
                 }
                 break;
             case 'notempty':
@@ -158,23 +165,7 @@ class Workflow_Transition_ConditionFactory {
         return isset($xml->permissions);
     }
 
-    /**
-     * @return Workflow_Transition_Condition_Permissions
-     */
-    private function createConditionPermissionsFromXML($xml, Transition $transition) {
-        $authorized_ugroups_keyname = array();
-        foreach ($xml->permissions->permission as $perm) {
-            $ugroup = (string)$perm['ugroup'];
-            if (isset($GLOBALS['UGROUPS'][$ugroup])) {
-                $authorized_ugroups_keyname[] = $GLOBALS['UGROUPS'][$ugroup];
-            }
-        }
-        $condition = new Workflow_Transition_Condition_Permissions($transition);
-        $condition->setAuthorizedUgroupsKeyname($authorized_ugroups_keyname);
-        return $condition;
-    }
-
-    public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping = false, $duplicate_type) {
+    public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
         $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
         $transition = $this->getTransition($from_transition_id);
         $transition_field = $this->getFieldNotEmpty($transition);
@@ -193,7 +184,7 @@ class Workflow_Transition_ConditionFactory {
     *
     * @return void
     */
-    private function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type) {
+    private function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type) {
         $pm = PermissionsManager::instance();
         $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
         //Duplicate tracker permissions
