@@ -76,42 +76,53 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
 
 /**
     * Duplicate permissions
-    * 
+    *
     * Manage the 3 types of duplications:
     * - On project creation: there is a ugroup_mapping so we should a straight copy the dynamics groups and a translated copy of the static groups
     * - On copy within the same project: no need to translate, we just do a straight copy of the existing permissions (both static and dynamic groups)
     * - On copy from another project: there is no ugroup_mapping so we can only straight copy dynamic groups. Static groups are left).
-    * 
+    *
     * @param int    $from
     * @param int    $to
-    * @param Array $permission_type    
+    * @param Array $permission_type
     * @param int    $duplicate_type
     * @param Array  $ugroup_mapping, an array of static ugroups
     *
     * @return Boolean
     */
     function duplicate($from, $to, $field_mapping) {
-        var_dump($from, $to);
+        //var_dump($from, $to, $field_mapping);
         $from = $this->da->escapeInt($from);
         $to = $this->da->escapeInt($to);
 
         //@TODO Cut SQL in 3 steps : SELECT old field ==> map with $field_maping to have the new field id ==> insert in database
-        
+
+        $sql = 'SELECT field_id
+                FROM tracker_workflow_transition_condition_field_notempty
+                WHERE transition_id = '.$from;
+
+        $row = $this->retrieveFirstRow($sql);
+        $old_field_id = $row['field_id'];
+        var_dump($old_field_id);
+
+        foreach ($field_mapping as $field) {
+            if ($field['from'] == $old_field_id) {
+                 $new_field_id = $field['to'];
+                 break;
+            }
+        }
+
         $sql = 'INSERT INTO tracker_workflow_transition_condition_field_notempty (transition_id, field_id)
-                    SELECT '.$to.', field_id
-                    FROM tracker_field 
-                    WHERE old_id = 
-                        SELECT field_id
-                        FROM tracker_workflow_transition_condition_field_notempty
-                        WHERE transition_id = '.$from;
+                    VALUES ('.$to.', '.$new_field_id.')';
+
         $this->update($sql);
-        
+
         return $this->update($sql);
     }
-    
+
     function addPermission($permission_type, $object_id, $ugroup_id) {
         $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
-                     " VALUES ('%s', '%s', '%s')", 
+                     " VALUES ('%s', '%s', '%s')",
                      $object_id, $permission_type, $ugroup_id);
         return $this->update($sql);
     }

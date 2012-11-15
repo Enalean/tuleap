@@ -163,15 +163,15 @@ class Workflow_Transition_ConditionFactory {
         $condition->setAuthorizedUgroupsKeyname($authorized_ugroups_keyname);
         return $condition;
     }
-    
+
     public function duplicate($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type, $field_mapping) {
         $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
         $this->duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping);
     }
-    
+
     /**
     * Duplicate the transitions permissions
-    * 
+    *
     * @param int $from_transition_id the old transition id
     * @param int $transition_id the new transition id
     * @param Array $ugroup_mapping the ugroup mapping
@@ -179,15 +179,15 @@ class Workflow_Transition_ConditionFactory {
     * @return void
     */
     private function duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type) {
-        $pm = PermissionsManager::instance();        
+        $pm = PermissionsManager::instance();
         $permission_type = array('PLUGIN_TRACKER_WORKFLOW_TRANSITION');
         //Duplicate tracker permissions
         $pm->duplicatePermissions($from_transition_id, $transition_id, $permission_type, $ugroup_mapping, $duplicate_type);
     }
-    
+
         /**
     * Duplicate the transitions permissions
-    * 
+    *
     * @param int $from_transition_id the old transition id
     * @param int $transition_id the new transition id
     * @param Array $ugroup_mapping the ugroup mapping
@@ -195,7 +195,7 @@ class Workflow_Transition_ConditionFactory {
     * @return void
     */
     private function duplicateFieldNotEmpty($from_transition_id, $transition_id, $field_mapping) {
-        $dao = new Workflow_Transition_Condition_FieldNotEmpty_Dao();        
+        $dao = new Workflow_Transition_Condition_FieldNotEmpty_Dao();
         //Duplicate
         $dao->duplicate($from_transition_id, $transition_id, $field_mapping);
     }

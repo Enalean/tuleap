@@ -27,7 +27,7 @@ require_once 'ConditionFactory.class.php';
 class Transition_ConditionManager {
 
     private static $_condition_manager_instance;
-    
+
 
     /**
      * The manager is a singleton
@@ -40,15 +40,15 @@ class Transition_ConditionManager {
         }
         return self::$_condition_manager_instance;
     }
-    
+
     public static function setInstance($instance) {
         self::$_condition_manager_instance = $instance;
     }
-    
+
     public static function clearInstance() {
         self::$_condition_manager_instance = null;
     }
-    
+
     /**
      * Process the artifact functions
      *
@@ -80,7 +80,7 @@ class Transition_ConditionManager {
     public function getConditionFactory() {
         return Workflow_Transition_ConditionFactory::build();
     }
-    
-    
+
+
 }
 ?>
