@@ -59,12 +59,8 @@ class Workflow_Transition_ConditionFactory {
     public function getConditions(Transition $transition) {
         $collection = new Workflow_Transition_ConditionsCollection();
         $collection->add(new Workflow_Transition_Condition_Permissions($transition));
-        $collection->add($this->getFieldNotEmpty($transition));
+        $collection->add($this->fieldnotempty_factory->getFieldNotEmpty($transition));
         return $collection;
-    }
-
-    private function getFieldNotEmpty(Transition $transition){
-        return $this->fieldnotempty_factory->getFieldNotEmpty($transition);
     }
 
     private function getTransition($transition_id) {
