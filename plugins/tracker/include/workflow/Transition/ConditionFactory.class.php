@@ -118,6 +118,9 @@ class Workflow_Transition_ConditionFactory {
                     $condition = $this->createConditionPermissionsFromXML($xml, $transition);
                 }
                 break;
+            case 'notempty':
+                $condition = $this->fieldnotempty_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
+                break;
         }
         return $condition;
     }

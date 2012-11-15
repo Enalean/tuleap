@@ -19,6 +19,8 @@
  */
 
 require_once 'Dao.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/Transition.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 
 class Workflow_Transition_Condition_FieldNotEmpty_Factory {
 
@@ -27,6 +29,8 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
     public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Dao $dao) {
         $this->dao = $dao;
     }
+
+
 
     public function getFieldNotEmpty(Transition $transition){
         $field = new Workflow_Transition_Condition_FieldNotEmpty($transition);
@@ -39,6 +43,20 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
         }
 
         return $field;
+    }
+
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+
+        $field_not_empty = null;
+        if (isset($xml->field)) {
+            $xml_field            = $xml->field;
+            $xml_field_attributes = $xml_field->attributes();
+            $field_id             = $xmlMapping[(string)$xml_field_attributes['REF']];
+
+            $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition);
+            $field_not_empty->setFieldId($field_id);
+        }
+        return $field_not_empty;
     }
 }
 ?>

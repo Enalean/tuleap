@@ -28,6 +28,9 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
     /** @var Workflow_Transition_ConditionFactory */
     private $condition_factory;
 
+    /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
+    private $fieldnotempty_factory;
+
     /** @var Transition */
     private $transition;
 
@@ -35,9 +38,9 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
         parent::setUp();
         PermissionsManager::setInstance(mock('PermissionsManager'));
 
-        $this->transition      = mock('Transition');
-        $fieldnotempty_factory = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
-        $this->condition_factory = new Workflow_Transition_ConditionFactory($fieldnotempty_factory);
+        $this->transition            = mock('Transition');
+        $this->fieldnotempty_factory = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
+        $this->condition_factory     = new Workflow_Transition_ConditionFactory($this->fieldnotempty_factory);
     }
 
     public function tearDown() {
@@ -77,6 +80,41 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
         $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
 
         $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
+    }
+
+    public function itReconstituesFieldNotEmpty() {
+        $xml = new SimpleXMLElement('
+            <transition>
+                <conditions>
+                    <condition type="notempty">
+                        <field REF="F14"/>
+                    </condition>
+                </conditions>
+            </transition>
+        ');
+
+        $condition = mock('Workflow_Transition_Condition_FieldNotEmpty');
+        stub($this->fieldnotempty_factory)->getInstanceFromXML($xml->conditions->condition, '*', '*')->returns($condition);
+
+        $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
+
+        $this->assertEqual($conditions[0], $condition);
+    }
+
+    public function itIgnoresNullConditions() {
+        $xml = new SimpleXMLElement('
+            <transition>
+                <conditions>
+                    <condition type="notempty" />
+                </conditions>
+            </transition>
+        ');
+
+        stub($this->fieldnotempty_factory)->getInstanceFromXML()->returns(null);
+
+        $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
+
+        $this->assertEqual($conditions, new Workflow_Transition_ConditionsCollection());
     }
 }
 ?>

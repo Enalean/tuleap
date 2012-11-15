@@ -299,16 +299,6 @@ class Transition {
         }
         $child->addChild('to_id')->addAttribute('REF', array_search($this->getFieldValueTo()->getId(), $xmlMapping['values']));
 
-        //Conditions
-
-        $conditions = $this->getConditions();
-        if ($conditions) {
-            $grand_child = $child->addChild('conditions');
-            foreach ($conditions as $conditions) {
-                $conditions->exportToXML($grand_child, $xmlMapping);
-            }
-        }
-
         $postactions = $this->getPostActions();
         if ($postactions) {
             $grand_child = $child->addChild('postactions');
