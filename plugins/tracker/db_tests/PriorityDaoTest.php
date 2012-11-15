@@ -24,13 +24,18 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function __construct() {
         parent::__construct();
-        $this->dao = new Tracker_Artifact_PriorityDao();
     }
 
     public function __destruct() {
         $this->truncateTable('tracker_artifact_priority');
         $this->mysqli->query('INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank) VALUES (NULL, NULL, 0)');
     }
+
+    public function setUp() {
+        parent::setUp();
+        $this->dao = new Tracker_Artifact_PriorityDao();
+    }
+
 
     public function itStartsWithEmptyTable() {
         $this->assertEqual($this->getPriorities(), array(
