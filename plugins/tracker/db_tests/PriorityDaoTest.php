@@ -40,25 +40,25 @@ class PriorityDaoTest extends TuleapDbTestCase {
     public function itInsertArtifactsWithPriority() {
         $this->dao = new Tracker_Artifact_PriorityDao();
 
-        $this->truncateTable('tracker_artifact_priority');
+        $this->assertEqual($this->getPriorities("Table is empty"), array(
+            array(null, null, 0)
+        ));
 
-        $this->assertEqual($this->dump_priorities("Table is empty"), array());
-
-        $this->dao->update("INSERT INTO tracker_artifact_priority VALUES (NULL, 1, 0), (1, NULL, 1)");
-        $this->assertEqual($this->dump_priorities("Table contains one element"), array(
+        $this->dao->putArtifactAtTheEnd(1);
+        $this->assertEqual($this->getPriorities("Table contains one element"), array(
             array(null, 1,    0),
             array(1,    null, 1),
         ));
 
         $this->dao->putArtifactAtTheEnd(42);
-        $this->assertEqual($this->dump_priorities("An element is inserted at the end"), array(
+        $this->assertEqual($this->getPriorities("An element is inserted at the end"), array(
             array(null, 1,    0),
             array(1,    42,   1),
             array(42,   null, 2),
         ));
 
         $this->dao->moveArtifactBefore(42,1);
-        $this->assertEqual($this->dump_priorities("42 is > than 1"), array(
+        $this->assertEqual($this->getPriorities("42 is > than 1"), array(
              array(null, 42,   0),
              array(42,   1,    1),
              array(1,    null, 2),
@@ -67,7 +67,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
         $this->dao->putArtifactAtTheEnd(66);
         $this->dao->putArtifactAtTheEnd(123);
         $this->dao->putArtifactAtTheEnd(101);
-        $this->assertEqual($this->dump_priorities("Three more elements are added at the end"), array(
+        $this->assertEqual($this->getPriorities("Three more elements are added at the end"), array(
              array(null, 42,   0),
              array(42,   1,    1),
              array(1,    66,   2),
@@ -77,7 +77,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
         ));
 
         $this->dao->moveArtifactBefore(1,101);
-        $this->assertEqual($this->dump_priorities("1 is > than 101"), array(
+        $this->assertEqual($this->getPriorities("1 is > than 101"), array(
              array(null, 42,   0),
              array(42,   66,   1),
              array(66,   123,  2),
@@ -87,7 +87,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
         ));
 
         $this->dao->moveArtifactAfter(42, 1);
-        $this->assertEqual($this->dump_priorities("42 is < than 1"), array(
+        $this->assertEqual($this->getPriorities("42 is < than 1"), array(
              array(null, 66,   0),
              array(66,   123,  1),
              array(123,  1,    2),
@@ -97,7 +97,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
         ));
 
         $this->dao->moveArtifactBefore(42,101);
-        $this->assertEqual($this->dump_priorities("42 is > than 101 (nothing changed)"), array(
+        $this->assertEqual($this->getPriorities("42 is > than 101 (nothing changed)"), array(
              array(null, 66,   0),
              array(66,   123,  1),
              array(123,  1,    2),
@@ -107,7 +107,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
         ));
 
         $this->dao->moveArtifactAfter(1,123);
-        $this->assertEqual($this->dump_priorities("1 is < than 123 (nothing changed)"), array(
+        $this->assertEqual($this->getPriorities("1 is < than 123 (nothing changed)"), array(
              array(null, 66,   0),
              array(66,   123,  1),
              array(123,  1,    2),
@@ -117,7 +117,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
         ));
 
         $this->dao->remove(123);
-        $this->assertEqual($this->dump_priorities("123 was deleted"), array(
+        $this->assertEqual($this->getPriorities("123 was deleted"), array(
              array(null, 66,   0),
              array(66,   1,    1),
              array(1,    42,   2),
@@ -126,7 +126,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
         ));
     }
 
-    function dump_priorities($msg) {
+    private function getPriorities() {
         $msg = array();
         $dar = $this->dao->retrieve("SELECT * FROM tracker_artifact_priority ORDER BY rank");
         foreach ($dar as $row) {
