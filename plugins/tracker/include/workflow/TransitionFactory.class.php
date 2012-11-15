@@ -317,7 +317,7 @@ class TransitionFactory {
 
                 // Duplicate permissions
                 $from_transition_id = $transition->getTransitionId();
-                $this->duplicateConditions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type, $field_mapping);
+                $this->condition_factory->duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
 
                 // Duplicate postactions
                 $postactions = $transition->getPostActions();
@@ -338,11 +338,6 @@ class TransitionFactory {
     */
     public function addTransition($workflow_id, $from_id, $to_id) {
         return $this->getDao()->addTransition($workflow_id, $from_id, $to_id);
-    }
-
-    public function duplicateConditions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type, $field_mapping) {
-        $condition_factory = Workflow_Transition_ConditionFactory::build();
-        $condition_factory->duplicate($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type, $field_mapping);
     }
 }
 ?>

@@ -28,7 +28,22 @@ require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormE
 Mock::generate('Tracker_FormElement_Field_List_Value');
 
 
-class TransitionFactoryTest extends UnitTestCase {
+
+class TransitionFactory_BaseTest extends TuleapTestCase {
+
+    /** @var TransitionFactory */
+    protected $factory;
+
+    /** @var Workflow_Transition_ConditionFactory */
+    protected $condition_factory;
+    
+    public function setUp() {
+        parent::setUp();
+        $this->condition_factory = mock('Workflow_Transition_ConditionFactory');
+        $this->factory           = new TransitionFactory($this->condition_factory);
+    }
+}
+class TransitionFactoryTest extends TransitionFactory_BaseTest {
     
     public function testIsFieldUsedInTransitions() {
         
@@ -42,7 +57,7 @@ class TransitionFactoryTest extends UnitTestCase {
         $tpaf->setReturnValue('isFieldUsedInPostActions', false, array($field_start_date));
         $tpaf->setReturnValue('isFieldUsedInPostActions', true,  array($field_close_date));
         
-        $tf = TestHelper::getPartialMock('TransitionFactory', array('getPostActionFactory'));
+        $tf = partial_mock('TransitionFactory', array('getPostActionFactory'), array($this->condition_factory));
         $tf->setReturnReference('getPostActionFactory', $tpaf);
         
         $this->assertFalse($tf->isFieldUsedInTransitions($field_start_date));
@@ -62,8 +77,12 @@ class TransitionFactoryTest extends UnitTestCase {
         $t3  = new Transition(3, 1, $field_value_analyzed, $field_value_new);
         $transitions = array($t1, $t2, $t3);
         
-        $tf = TestHelper::getPartialMock('TransitionFactory', array('addTransition', 'getPostActionFactory', 'duplicatePermissions'));
-       
+        $tf = partial_mock(
+            'TransitionFactory',
+            array('addTransition', 'getPostActionFactory', 'duplicatePermissions'),
+            array($this->condition_factory)
+        );
+
         $values = array(
             2066  => 3066,
             2067  => 3067,
@@ -78,10 +97,10 @@ class TransitionFactoryTest extends UnitTestCase {
         $tf->setReturnValueAt(1, 'addTransition', 102);
         $tf->setReturnValueAt(2, 'addTransition', 103);
         
-        $tf->expectCallCount('duplicatePermissions', 3, 'Method duplicatePermissions should be called 3 times.');
-        $tf->expectAt(0, 'duplicatePermissions', array(1, 101, false, false));
-        $tf->expectAt(1, 'duplicatePermissions', array(2, 102, false, false));
-        $tf->expectAt(2, 'duplicatePermissions', array(3, 103, false, false));
+        expect($this->condition_factory)->duplicate()->count(3);
+        expect($this->condition_factory)->duplicate(1, 101, array(), false, false)->at(0);
+        expect($this->condition_factory)->duplicate(2, 102, array(), false, false)->at(1);
+        expect($this->condition_factory)->duplicate(3, 103, array(), false, false)->at(2);
         
         $tpaf = new MockTransition_PostActionFactory();
         $tpaf->expectCallCount('duplicate', 3, 'Method duplicate should be called 3 times.');
@@ -94,13 +113,7 @@ class TransitionFactoryTest extends UnitTestCase {
     }
 }
 
-class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
-
-    /** @var TransitionFactory */
-    private $factory;
-
-    /** @var Workflow_Transition_ConditionFactory */
-    private $condition_factory;
+class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTest {
     
     public function setUp() {
         parent::setUp();
@@ -111,9 +124,7 @@ class TransitionFactory_GetInstanceFromXmlTest extends TuleapTestCase {
                                    'F32-V1' => $this->from_value,
                                    'F32-V0' => $this->to_value);
 
-        $this->condition_factory = mock('Workflow_Transition_ConditionFactory');
         stub($this->condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
-        $this->factory     = new TransitionFactory($this->condition_factory);
     }
     
     public function itReconstitutesDatePostActions() {

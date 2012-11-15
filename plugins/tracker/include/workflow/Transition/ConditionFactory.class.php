@@ -174,7 +174,7 @@ class Workflow_Transition_ConditionFactory {
         return $condition;
     }
 
-    public function duplicate($from_transition_id, $transition_id, $ugroup_mapping = false, $duplicate_type, $field_mapping) {
+    public function duplicate($from_transition_id, $transition_id, $field_mapping, $ugroup_mapping = false, $duplicate_type) {
         $this->duplicatePermissions($from_transition_id, $transition_id, $ugroup_mapping, $duplicate_type);
         $transition = $this->getTransition($from_transition_id);
         $transition_field = $this->getFieldNotEmpty($transition);
