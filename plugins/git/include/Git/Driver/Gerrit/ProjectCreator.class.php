@@ -39,7 +39,7 @@ class Git_Gerrit_Driver_ProjectCreator {
         $this->gerrit_server = $server;
     }
 
-    public function cloneGerritProjectConfig($gerrit_project_url) {
+    private function cloneGerritProjectConfig($gerrit_project_url) {
         `mkdir $this->dir/firefox; cd $this->dir/firefox`;
         `cd $this->dir/firefox; git init`;
         `cd $this->dir/firefox; git pull $gerrit_project_url refs/meta/config`;
