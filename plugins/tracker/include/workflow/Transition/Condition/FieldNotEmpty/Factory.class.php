@@ -33,7 +33,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
 
 
     public function getFieldNotEmpty(Transition $transition){
-        $field = new Workflow_Transition_Condition_FieldNotEmpty($transition);
+        $field = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
 
         $condition = $this->dao->searchByTransitionId($transition->getId());
 
@@ -51,9 +51,9 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
         if (isset($xml->field)) {
             $xml_field            = $xml->field;
             $xml_field_attributes = $xml_field->attributes();
-            $field_id             = $xmlMapping[(string)$xml_field_attributes['REF']];
+            $field_id             = $xmlMapping[(string)$xml_field_attributes['REF']]->getId();
 
-            $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition);
+            $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
             $field_not_empty->setFieldId($field_id);
         }
         return $field_not_empty;

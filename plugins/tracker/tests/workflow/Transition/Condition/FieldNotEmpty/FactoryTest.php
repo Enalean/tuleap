@@ -26,10 +26,11 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
     public function setUp() {
         parent::setUp();
         Tracker_FormElementFactory::setInstance(mock('Tracker_FormElementFactory'));
-        $dao               = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
-        $this->factory     = new Workflow_Transition_Condition_FieldNotEmpty_Factory($dao);
-        $this->transition  = mock('Transition');
-        $this->xml_mapping = array('F14' => 123);
+        $this->dao         = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
+        $this->factory     = new Workflow_Transition_Condition_FieldNotEmpty_Factory($this->dao);
+        $this->transition  = stub('Transition')->getId()->returns(42);
+        $field_string      = stub('Tracker_FormElement_Field_String')->getId()->returns(123);
+        $this->xml_mapping = array('F14' => $field_string);
     }
     
     public function tearDown() {
@@ -44,7 +45,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
             </condition>
         ');
 
-        $expected  = new Workflow_Transition_Condition_FieldNotEmpty($this->transition);
+        $expected  = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
         $expected->setFieldId(123);
 
         $condition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition);

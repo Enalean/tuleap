@@ -27,11 +27,17 @@ require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.
 
 class FieldNotEmptyTests extends TuleapTestCase {
 
+    public function setUp() {
+        parent::setUp();
+        $this->dao         = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
+
+    }
+
     public function testValidateReturnsTrueWhenNoField() {
 
         $transition = mock('Transition');
 
-        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition);
+        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
 
         $fields_data = array();
 
@@ -43,7 +49,7 @@ class FieldNotEmptyTests extends TuleapTestCase {
 
         $transition = mock('Transition');
 
-        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition);
+        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
 
         $fields_data = array(1 => 'test');
 
@@ -63,7 +69,7 @@ class FieldNotEmptyTests extends TuleapTestCase {
 
         $transition = mock('Transition');
 
-        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition);
+        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
         $field_not_empty->setFieldId(1);
 
         $fields_data = array(1 => 'test');
@@ -73,6 +79,15 @@ class FieldNotEmptyTests extends TuleapTestCase {
         $this->assertTrue($return);
     }
 
+    public function itSavesTheNewFieldNotEmpty() {
+        $this->transition = stub('Transition')->getId()->returns(42);
+
+        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
+        $field_not_empty->setFieldId(123);
+        expect($this->dao)->create(42, 123)->once();
+        $field_not_empty->saveObject();
+
+    }
 }
 
 ?>

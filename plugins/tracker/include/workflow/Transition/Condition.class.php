@@ -55,6 +55,10 @@ abstract class Workflow_Transition_Condition {
      * @return boolean
      */
     public abstract function validate($fields_data);
+
+    public function getTransition() {
+        return $this->transition;
+    }
 }
 
 ?>

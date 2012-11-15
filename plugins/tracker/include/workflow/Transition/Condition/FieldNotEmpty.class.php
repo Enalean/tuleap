@@ -26,8 +26,12 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
 
     private $field_id = null;
 
-    public function __construct(Transition $transition) {
+    /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */
+    private $dao;
+
+    public function __construct(Transition $transition, Workflow_Transition_Condition_FieldNotEmpty_Dao $dao) {
         parent::__construct($transition);
+        $this->dao                = $dao;
         $this->formElementFactory = Tracker_FormElementFactory::instance();
     }
 
@@ -80,7 +84,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @see Workflow_Transition_Condition::saveObject()
      */
     public function saveObject() {
-
+        $this->dao->create($this->getTransition()->getId() , $this->getFieldId());
     }
 
     public function setFieldId($field_id) {
