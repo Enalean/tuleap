@@ -24,7 +24,7 @@ class PriorityDaoTest extends TuleapDbTestCase {
 
     public function __construct() {
         parent::__construct();
-        $this->markThisTestUnderDevelopment();
+        $this->dao = new Tracker_Artifact_PriorityDao();
     }
 
     public function __destruct() {
@@ -32,37 +32,43 @@ class PriorityDaoTest extends TuleapDbTestCase {
         $this->mysqli->query('INSERT INTO tracker_artifact_priority (curr_id, succ_id, rank) VALUES (NULL, NULL, 0)');
     }
 
-    public function itInsertArtifactsWithPriority() {
-        $this->dao = new Tracker_Artifact_PriorityDao();
-
-        $this->assertEqual($this->getPriorities("Table is empty"), array(
+    public function itStartsWithEmptyTable() {
+        $this->assertEqual($this->getPriorities(), array(
             array(null, null, 0)
         ));
+    }
 
+    public function itInsertOneElement() {
         $this->dao->putArtifactAtTheEnd(1);
-        $this->assertEqual($this->getPriorities("Table contains one element"), array(
+        $this->assertEqual($this->getPriorities(), array(
             array(null, 1,    0),
             array(1,    null, 1),
         ));
+    }
 
+    public function itInsertAnElementAtTheEnd() {
         $this->dao->putArtifactAtTheEnd(42);
-        $this->assertEqual($this->getPriorities("An element is inserted at the end"), array(
+        $this->assertEqual($this->getPriorities(), array(
             array(null, 1,    0),
             array(1,    42,   1),
             array(42,   null, 2),
         ));
+    }
 
+    public function test42HasAnHigherPriorityThan1() {
         $this->dao->moveArtifactBefore(42,1);
-        $this->assertEqual($this->getPriorities("42 is > than 1"), array(
+        $this->assertEqual($this->getPriorities(), array(
              array(null, 42,   0),
              array(42,   1,    1),
              array(1,    null, 2),
         ));
+    }
 
+    public function itHasThreeMoreElementsAddedAtTheEnd() {
         $this->dao->putArtifactAtTheEnd(66);
         $this->dao->putArtifactAtTheEnd(123);
         $this->dao->putArtifactAtTheEnd(101);
-        $this->assertEqual($this->getPriorities("Three more elements are added at the end"), array(
+        $this->assertEqual($this->getPriorities(), array(
              array(null, 42,   0),
              array(42,   1,    1),
              array(1,    66,   2),
@@ -70,9 +76,11 @@ class PriorityDaoTest extends TuleapDbTestCase {
              array(123,  101,  4),
              array(101,  null, 5),
         ));
+    }
 
+    public function test1HasAGreaterPriorityThan101() {
         $this->dao->moveArtifactBefore(1,101);
-        $this->assertEqual($this->getPriorities("1 is > than 101"), array(
+        $this->assertEqual($this->getPriorities(), array(
              array(null, 42,   0),
              array(42,   66,   1),
              array(66,   123,  2),
@@ -80,9 +88,11 @@ class PriorityDaoTest extends TuleapDbTestCase {
              array(1,    101,  4),
              array(101,  null, 5),
         ));
+    }
 
+    public function test42HasALowerPriorityThan1() {
         $this->dao->moveArtifactAfter(42, 1);
-        $this->assertEqual($this->getPriorities("42 is < than 1"), array(
+        $this->assertEqual($this->getPriorities(), array(
              array(null, 66,   0),
              array(66,   123,  1),
              array(123,  1,    2),
@@ -90,9 +100,11 @@ class PriorityDaoTest extends TuleapDbTestCase {
              array(42,   101,  4),
              array(101,  null, 5),
         ));
+    }
 
+    public function test42HasAnHigherPriorityThan101() {
         $this->dao->moveArtifactBefore(42,101);
-        $this->assertEqual($this->getPriorities("42 is > than 101 (nothing changed)"), array(
+        $this->assertEqual($this->getPriorities(), array(
              array(null, 66,   0),
              array(66,   123,  1),
              array(123,  1,    2),
@@ -100,9 +112,11 @@ class PriorityDaoTest extends TuleapDbTestCase {
              array(42,   101,  4),
              array(101,  null, 5),
         ));
+    }
 
+    public function test1HasAnHigherPriorityThan123() {
         $this->dao->moveArtifactAfter(1,123);
-        $this->assertEqual($this->getPriorities("1 is < than 123 (nothing changed)"), array(
+        $this->assertEqual($this->getPriorities(), array(
              array(null, 66,   0),
              array(66,   123,  1),
              array(123,  1,    2),
@@ -110,9 +124,11 @@ class PriorityDaoTest extends TuleapDbTestCase {
              array(42,   101,  4),
              array(101,  null, 5),
         ));
+    }
 
+    public function itDeletes123() {
         $this->dao->remove(123);
-        $this->assertEqual($this->getPriorities("123 was deleted"), array(
+        $this->assertEqual($this->getPriorities(), array(
              array(null, 66,   0),
              array(66,   1,    1),
              array(1,    42,   2),
