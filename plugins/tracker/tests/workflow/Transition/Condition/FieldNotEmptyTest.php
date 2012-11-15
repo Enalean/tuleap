@@ -27,67 +27,59 @@ require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.
 
 class FieldNotEmptyTests extends TuleapTestCase {
 
+    private $condition;
+    private $empty_data = '';
+    private $not_empty_data = 'coin';
+
     public function setUp() {
         parent::setUp();
-        $this->dao         = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
+        $factory = mock('Tracker_FormElementFactory');
 
+        $field   = mock('Tracker_FormElement_Field_Selectbox');
+        stub($field)->isEmpty($this->not_empty_data)->returns(false);
+        stub($field)->isEmpty($this->empty_data)->returns(true);
+        stub($factory)->getUsedFormElementById(1)->returns($field);
+
+        Tracker_FormElementFactory::setInstance($factory);
+        $this->dao        = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
+        $this->transition = stub('Transition')->getId()->returns(42);
+        $this->condition = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
+    }
+
+    public function tearDown() {
+        Tracker_FormElementFactory::clearInstance();
+        parent::tearDown();
     }
 
     public function testValidateReturnsTrueWhenNoField() {
-
-        $transition = mock('Transition');
-
-        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
-
         $fields_data = array();
-
-        $return = $field_not_empty->validate($fields_data);
-
-        $this->assertTrue($return);
+        $is_valid    = $this->condition->validate($fields_data);
+        $this->assertTrue($is_valid);
     }
     public function testValidateReturnsTrueWhenNoFieldId() {
-
-        $transition = mock('Transition');
-
-        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
-
-        $fields_data = array(1 => 'test');
-
-        $return = $field_not_empty->validate($fields_data);
-
-        $this->assertTrue($return);
+        $fields_data = array(1 => $this->not_empty_data);
+        $is_valid    = $this->condition->validate($fields_data);
+        $this->assertTrue($is_valid);
     }
 
     public function testValidateReturnsTrueWhenFieldNotEmpty() {
-        $field = mock('Tracker_FormElement_Field_Selectbox');
-        stub($field)->isEmpty()->returns(false);
+        $this->condition->setFieldId(1);
+        $fields_data = array(1 => $this->not_empty_data);
+        $is_valid    = $this->condition->validate($fields_data);
+        $this->assertTrue($is_valid);
+    }
 
-        $factory = mock('Tracker_FormElementFactory');
-        stub($factory)->getUsedFormElementById()->returns($field);
-
-        Tracker_FormElementFactory::setInstance($factory);
-
-        $transition = mock('Transition');
-
-        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
-        $field_not_empty->setFieldId(1);
-
-        $fields_data = array(1 => 'test');
-
-        $return = $field_not_empty->validate($fields_data);
-
-        $this->assertTrue($return);
+    public function itReturnsFalseWhenTheFieldIsEmpty() {
+        $this->condition->setFieldId(1);
+        $fields_data = array(1 => $this->empty_data);
+        $is_valid    = $this->condition->validate($fields_data);
+        $this->assertFalse($is_valid);
     }
 
     public function itSavesTheNewFieldNotEmpty() {
-        $this->transition = stub('Transition')->getId()->returns(42);
-
-        $field_not_empty = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
-        $field_not_empty->setFieldId(123);
+        $this->condition->setFieldId(123);
         expect($this->dao)->create(42, 123)->once();
-        $field_not_empty->saveObject();
-
+        $this->condition->saveObject();
     }
 }
-
 ?>
