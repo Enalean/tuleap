@@ -1,3 +1,6 @@
+Version 5.42 - Tuleap 5.7
+    * Fix art #1188 - Refresh issue on Card Wall when moving task to done
+
 Version 5.41 - Tuleap 5.7
     * Fix bugs #1738: On fresh install cross tracker search (and agile dashboard) show no results
 
