@@ -28,6 +28,12 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
     /** @var Workflow_Transition_ConditionFactory */
     private $condition_factory;
 
+    /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
+    private $fieldnotempty_factory;
+
+    /** @var Workflow_Transition_Condition_Permissions_Factory */
+    private $permissions_factory;
+
     /** @var Transition */
     private $transition;
 
@@ -35,18 +41,15 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
         parent::setUp();
         PermissionsManager::setInstance(mock('PermissionsManager'));
 
-        $this->transition      = mock('Transition');
-        $fieldnotempty_factory = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
-        $this->condition_factory = new Workflow_Transition_ConditionFactory($fieldnotempty_factory);
-    }
+        $this->transition            = mock('Transition');
+        $this->permissions_factory   = mock('Workflow_Transition_Condition_Permissions_Factory');
+        $this->fieldnotempty_factory = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
+        $this->condition_factory     = new Workflow_Transition_ConditionFactory(
+            $this->permissions_factory,
+            $this->fieldnotempty_factory
+        );
 
-    public function tearDown() {
-        PermissionsManager::clearInstance();
-        parent::tearDown();
-    }
-
-    public function itReconstitutesLegacyPermissions() {
-        $xml = new SimpleXMLElement('
+        $this->legacy_permissions_xml = new SimpleXMLElement('
             <transition>
                 <permissions>
                     <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
@@ -54,14 +57,11 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
                 </permissions>
             </transition>
         ');
+        stub($this->permissions_factory)
+            ->getInstanceFromXML($this->legacy_permissions_xml->permissions, $this->xml_mapping, $this->transition)
+            ->returns(mock('Workflow_Transition_Condition_Permissions'));
 
-        $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
-
-        $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
-    }
-
-    public function itReconstitutesPermissions() {
-        $xml = new SimpleXMLElement('
+        $this->from_5_7_permissions_xml = new SimpleXMLElement('
             <transition>
                 <conditions>
                     <condition type="perms">
@@ -73,10 +73,72 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
                 </conditions>
             </transition>
         ');
+        stub($this->permissions_factory)
+            ->getInstanceFromXML($this->from_5_7_permissions_xml->conditions->condition, $this->xml_mapping, $this->transition)
+            ->returns(mock('Workflow_Transition_Condition_Permissions'));
+    }
+
+    public function tearDown() {
+        PermissionsManager::clearInstance();
+        parent::tearDown();
+    }
+
+    public function itReconstitutesLegacyPermissions() {
+        $conditions = $this->condition_factory->getAllInstancesFromXML($this->legacy_permissions_xml, $this->xml_mapping, $this->transition);
+
+        $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
+    }
+
+    public function itReconstitutesPermissions() {
+        $conditions = $this->condition_factory->getAllInstancesFromXML($this->from_5_7_permissions_xml, $this->xml_mapping, $this->transition);
+
+        $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
+    }
+
+    public function itReconstituesFieldNotEmpty() {
+        $xml = new SimpleXMLElement('
+            <transition>
+                <conditions>
+                    <condition type="notempty">
+                        <field REF="F14"/>
+                    </condition>
+                </conditions>
+            </transition>
+        ');
+
+        $condition = mock('Workflow_Transition_Condition_FieldNotEmpty');
+        stub($this->fieldnotempty_factory)->getInstanceFromXML($xml->conditions->condition, '*', '*')->returns($condition);
 
         $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
 
-        $this->assertIsA($conditions[0], 'Workflow_Transition_Condition_Permissions');
+        $this->assertEqual($conditions[0], $condition);
+    }
+
+    public function itIgnoresNullConditions() {
+        $xml = new SimpleXMLElement('
+            <transition>
+                <conditions>
+                    <condition type="notempty" />
+                </conditions>
+            </transition>
+        ');
+
+        stub($this->fieldnotempty_factory)->getInstanceFromXML()->returns(null);
+
+        $conditions = $this->condition_factory->getAllInstancesFromXML($xml, $this->xml_mapping, $this->transition);
+
+        $this->assertEqual($conditions, new Workflow_Transition_ConditionsCollection());
+    }
+
+    public function itDelegatesTheDuplicateToSubFactories() {
+        $new_transition_id = 2;
+        $field_mapping     = array('some fields mapping');
+        $ugroup_mapping    = array('some ugroups mapping');
+        $duplicate_type    = PermissionsDao::DUPLICATE_NEW_PROJECT;
+
+        expect($this->permissions_factory)->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)->once();
+        expect($this->fieldnotempty_factory)->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type)->once();
+        $this->condition_factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
 ?>

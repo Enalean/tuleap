@@ -193,6 +193,10 @@ grammar {
                     element condition {
                         attribute type { "perms" },
                         conditionPermissionsContent
+                    }?,
+                    element condition {
+                        attribute type { "notempty" },
+                        conditionFieldNotEmptyContent
                     }?
                 }?
             )
@@ -203,6 +207,11 @@ grammar {
             element permission {
                 attribute ugroup { xsd:string }
             }*
+        }
+
+    conditionFieldNotEmptyContent =
+        element field {
+            attribute REF { xsd:IDREF }
         }
 
     ruleContent =

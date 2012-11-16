@@ -74,6 +74,40 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
        return $this->update($sql);
     }
 
+    /**
+     * Duplicate condition
+     */
+    function duplicate($from_transition_id, $to_transition_id, $field_mapping) {
+        $from_transition_id = $this->da->escapeInt($from_transition_id);
+        $to_transition_id   = $this->da->escapeInt($to_transition_id);
+
+        $case           = array();
+        $from_field_ids = array();
+        foreach($field_mapping as $mapping) {
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
+
+            $case[]           = "WHEN $from THEN $to";
+            $from_field_ids[] = $from;
+        }
+        if (count($case)) {
+            $from_field_ids = implode(', ', $from_field_ids);
+            $new_field_id   = 'CASE field_id '. implode(' ', $case) .' END';
+            $sql = "INSERT INTO tracker_workflow_transition_condition_field_notempty (transition_id, field_id)
+                    SELECT $to_transition_id, $new_field_id
+                    FROM tracker_workflow_transition_condition_field_notempty
+                    WHERE transition_id = $from_transition_id
+                      AND field_id IN ($from_field_ids)";
+            return $this->update($sql);
+        }
+    }
+
+    function addPermission($permission_type, $object_id, $ugroup_id) {
+        $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
+                     " VALUES ('%s', '%s', '%s')",
+                     $object_id, $permission_type, $ugroup_id);
+        return $this->update($sql);
+    }
 
 }
 ?>

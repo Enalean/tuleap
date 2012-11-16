@@ -470,6 +470,14 @@
               <ref name="conditionPermissionsContent"/>
             </element>
           </optional>
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>notempty</value>
+              </attribute>
+              <ref name="conditionFieldNotEmptyContent"/>
+            </element>
+          </optional>
         </element>
       </optional>
     </choice>
@@ -483,6 +491,13 @@
           </attribute>
         </element>
       </zeroOrMore>
+    </element>
+  </define>
+  <define name="conditionFieldNotEmptyContent">
+    <element name="field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
     </element>
   </define>
   <define name="ruleContent">
@@ -611,7 +626,7 @@
     <optional>
       <!--
         defaout is true
-        these ids are initial ids of the exported report 
+        these ids are initial ids of the exported report
       -->
       <attribute name="id">
         <data type="int"/>

@@ -26,8 +26,12 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
 
     private $field_id = null;
 
-    public function __construct(Transition $transition) {
+    /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */
+    private $dao;
+
+    public function __construct(Transition $transition, Workflow_Transition_Condition_FieldNotEmpty_Dao $dao) {
         parent::__construct($transition);
+        $this->dao                = $dao;
         $this->formElementFactory = Tracker_FormElementFactory::instance();
     }
 
@@ -41,9 +45,9 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         $html .= '<br />';
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
         $html .= '<select name="add_notempty_condition">';
-        $html .= '<option value="0" '.
-            (($this->field_id === null) ? 'selected="selected"' : '')
-            . '>' . $GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+
+        $html .= '<option value="0" '. 'selected="selected"'
+              . '>' . $GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
 
         foreach($this->getFields() as $field){
             $html .= '<option value="' . $field->getId() . '"';
@@ -67,19 +71,28 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @see Workflow_Transition_Condition::exportToXml()
      */
     public function exportToXml(&$root, $xmlMapping) {
-        $root->addAttribute('type', self::CONDITION_TYPE);
+        if (isset($this->field_id)) {
+            $child = $root->addChild('condition');
+            $child->addAttribute('type', self::CONDITION_TYPE);
+            $grand_child = $child->addChild('field');
+            $grand_child->addAttribute('REF', array_search($this->field_id, $xmlMapping));
+        }
     }
 
     /**
      * @see Workflow_Transition_Condition::saveObject()
      */
     public function saveObject() {
-
+        $this->dao->create($this->getTransition()->getId() , $this->getFieldId());
     }
 
     public function setFieldId($field_id) {
         $this->field_id = $field_id;
         return $this;
+    }
+
+    public function getFieldId() {
+        return $this->field_id;
     }
 
     /**

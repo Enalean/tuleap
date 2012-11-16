@@ -19,6 +19,8 @@
  */
 
 require_once 'Dao.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/Transition.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 
 class Workflow_Transition_Condition_FieldNotEmpty_Factory {
 
@@ -29,16 +31,35 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
     }
 
     public function getFieldNotEmpty(Transition $transition){
-        $field = new Workflow_Transition_Condition_FieldNotEmpty($transition);
+        $field = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
 
         $condition = $this->dao->searchByTransitionId($transition->getId());
-
-        if($condition){
+        if ($condition) {
             $row = $condition->getRow();
             $field->setFieldId($row['field_id']) ;
         }
 
         return $field;
+    }
+
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+        $condition = null;
+        if (isset($xml->field)) {
+            $xml_field            = $xml->field;
+            $xml_field_attributes = $xml_field->attributes();
+            $field_id             = $xmlMapping[(string)$xml_field_attributes['REF']]->getId();
+
+            $condition = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
+            $condition->setFieldId($field_id);
+        }
+        return $condition;
+    }
+
+    /**
+     * Duplicate the conditions
+     */
+    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
+        $this->dao->duplicate($from_transition->getId(), $new_transition_id, $field_mapping);
     }
 }
 ?>

@@ -19,20 +19,27 @@
  */
 
 require_once 'ConditionsCollection.class.php';
+require_once 'Condition/Permissions/Factory.class.php';
 require_once 'Condition/FieldNotEmpty/Factory.class.php';
 require_once TRACKER_BASE_DIR .'/workflow/Transition.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/Transition/Condition/FieldNotEmpty/Dao.class.php';
 
 class Workflow_Transition_ConditionFactory {
+
+    /** @var Workflow_Transition_Condition_Permissions_Factory */
+    private $permissions_factory;
 
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
     private $fieldnotempty_factory;
 
     /**
      * Should use the build() method
-     *
-     * @param Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory
      */
-    public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory) {
+    public function __construct(
+        Workflow_Transition_Condition_Permissions_Factory $permissions_factory,
+        Workflow_Transition_Condition_FieldNotEmpty_Factory $fieldnotempty_factory
+    ) {
+        $this->permissions_factory   = $permissions_factory;
         $this->fieldnotempty_factory = $fieldnotempty_factory;
     }
 
@@ -41,6 +48,7 @@ class Workflow_Transition_ConditionFactory {
      */
     public static function build() {
         return new Workflow_Transition_ConditionFactory(
+            new Workflow_Transition_Condition_Permissions_Factory(),
             new Workflow_Transition_Condition_FieldNotEmpty_Factory(new Workflow_Transition_Condition_FieldNotEmpty_Dao())
         );
     }
@@ -51,12 +59,13 @@ class Workflow_Transition_ConditionFactory {
     public function getConditions(Transition $transition) {
         $collection = new Workflow_Transition_ConditionsCollection();
         $collection->add(new Workflow_Transition_Condition_Permissions($transition));
-        $collection->add($this->getFieldNotEmpty($transition));
+        $collection->add($this->fieldnotempty_factory->getFieldNotEmpty($transition));
         return $collection;
     }
 
-    private function getFieldNotEmpty(Transition $transition){
-        return $this->fieldnotempty_factory->getFieldNotEmpty($transition);
+    private function getTransition($transition_id) {
+        $transition_factory = TransitionFactory::instance();
+        return $transition_factory->getTransition($transition_id);
     }
 
     /**
@@ -67,7 +76,9 @@ class Workflow_Transition_ConditionFactory {
      */
     public function addCondition($transition, $field_id) {
         $this->getFieldNotEmptyDao()->deleteByTransitionId($transition->getId());
-        return $this->getFieldNotEmptyDao()->create($transition->getId(), $field_id);
+        if ($field_id) {
+            return $this->getFieldNotEmptyDao()->create($transition->getId(), $field_id);
+        }
     }
 
     private function getFieldNotEmptyDao() {
@@ -83,7 +94,7 @@ class Workflow_Transition_ConditionFactory {
         $conditions = new Workflow_Transition_ConditionsCollection();
         if ($this->isLegacyXML($xml)) {
             if ($xml->permissions) {
-                $conditions->add($this->createConditionPermissionsFromXML($xml, $transition));
+                $conditions->add($this->permissions_factory->getInstanceFromXML($xml->permissions, $xmlMapping, $transition));
             }
         } else if ($xml->conditions) {
             foreach ($xml->conditions->condition as $xml_condition) {
@@ -107,8 +118,11 @@ class Workflow_Transition_ConditionFactory {
         switch ($type) {
             case 'perms':
                 if ($xml->permissions) {
-                    $condition = $this->createConditionPermissionsFromXML($xml, $transition);
+                    $condition = $this->permissions_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
                 }
+                break;
+            case 'notempty':
+                $condition = $this->fieldnotempty_factory->getInstanceFromXML($xml, $xmlMapping, $transition);
                 break;
         }
         return $condition;
@@ -148,19 +162,11 @@ class Workflow_Transition_ConditionFactory {
     }
 
     /**
-     * @return Workflow_Transition_Condition_Permissions
+     * Duplicate the conditions
      */
-    private function createConditionPermissionsFromXML($xml, Transition $transition) {
-        $authorized_ugroups_keyname = array();
-        foreach ($xml->permissions->permission as $perm) {
-            $ugroup = (string)$perm['ugroup'];
-            if (isset($GLOBALS['UGROUPS'][$ugroup])) {
-                $authorized_ugroups_keyname[] = $GLOBALS['UGROUPS'][$ugroup];
-            }
-        }
-        $condition = new Workflow_Transition_Condition_Permissions($transition);
-        $condition->setAuthorizedUgroupsKeyname($authorized_ugroups_keyname);
-        return $condition;
+    public function duplicate(Transition $from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type) {
+        $this->permissions_factory->duplicate($from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
+        $this->fieldnotempty_factory->duplicate($from_transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
 }
 ?>
