@@ -793,15 +793,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $cards_info = $cards_info + $this->getCardUpdateInfo($parent, $current_user);
         }
 
-        $this->sendJSON($cards_info);
+        $GLOBALS['Response']->sendJSON($cards_info);
     }
 
-    private function sendJSON($content) {
-        $GLOBALS['Response']->setContentType('application/json');
-        echo json_encode($content);
-    }
-
-    private function getCardUpdateInfo(Tracker_Artifact $artifact, $current_user) {
+    private function getCardUpdateInfo(Tracker_Artifact $artifact, User $current_user) {
         $card_info               = array();
         $tracker_id              = $artifact->getTracker()->getId();
         $form_element_factory    = $this->getFormElementFactory();

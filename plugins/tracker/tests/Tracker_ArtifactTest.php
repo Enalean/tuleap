@@ -1636,14 +1636,6 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-    protected function processAndCaptureJSONOutput() {
-        ob_start();
-        $this->task->process($this->layout, $this->request, $this->user);
-        $content = ob_get_clean();
-
-        return json_decode($content, true);
-    }
-
     private function setUpAjaxRequestHeaders() {
         $this->old_request_with           = isset($_SERVER['HTTP_X_REQUESTED_WITH']) ? $_SERVER['HTTP_X_REQUESTED_WITH'] : null;
         $_SERVER['HTTP_X_REQUESTED_WITH'] = 'XMLHTTPREQUEST';
@@ -1655,18 +1647,20 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
     public function itDoesNotSendAnythingIfNoRemainingEffortFieldIsDefinedOnTask() {
         $this->task->setAllAncestors(array());
 
-        $json = $this->processAndCaptureJSONOutput();
+        $expected = array();
+        expect($GLOBALS['Response'])->sendJSON($expected)->once();
 
-        $this->assertEqual($json, array());
+        $this->task->process($this->layout, $this->request, $this->user);
     }
 
     public function itSendsParentsRemainingEffortEvenIfTaskDontHaveOne() {
         $this->task->setAllAncestors(array($this->user_story));
 
-        $json = $this->processAndCaptureJSONOutput();
-
         $user_story_id = $this->user_story->getId();
-        $this->assertEqual($json[$user_story_id]['remaining_effort'], 23);
+        $expected = array($user_story_id => array('remaining_effort' => 23));
+        expect($GLOBALS['Response'])->sendJSON($expected)->once();
+
+        $this->task->process($this->layout, $this->request, $this->user);
     }
 
     public function itDoesNotSendParentWhenParentHasNoRemainingEffortField() {
@@ -1679,10 +1673,11 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithoutRemainingEffortTest extends T
         stub($user_story)->getId()->returns($user_story_id);
         $this->task->setAllAncestors(array($user_story));
 
-        $json = $this->processAndCaptureJSONOutput();
-
         $user_story_id = $this->user_story->getId();
-        $this->assertFalse(isset($json[$user_story_id]));
+        $expected      = array();
+        expect($GLOBALS['Response'])->sendJSON($expected)->once();
+
+        $this->task->process($this->layout, $this->request, $this->user);
     }
 
 }
@@ -1694,31 +1689,28 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         stub($this->formelement_factory)->getComputableFieldByNameForUser($this->tracker_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($this->computed_field);
     }
 
-    public function itSendsTheRemainingEffort() {
+    public function itSendsTheRemainingEffortOfTheArtifactAndItsParent() {
         $this->task->setAllAncestors(array($this->user_story));
-
-        $json = $this->processAndCaptureJSONOutput();
-
-        $this->assertEqual($json[$this->artifact_id]['remaining_effort'], 42);
-    }
-
-
-    public function itSendsParentsRemainingEffort() {
-        $this->task->setAllAncestors(array($this->user_story));
-
-        $json = $this->processAndCaptureJSONOutput();
 
         $user_story_id = $this->user_story->getId();
-        $this->assertEqual($json[$user_story_id]['remaining_effort'], 23);
+        $expected      = array(
+            $this->artifact_id => array('remaining_effort' => 42),
+            $user_story_id     => array('remaining_effort' => 23)
+        );
+        expect($GLOBALS['Response'])->sendJSON($expected)->once();
+
+        $this->task->process($this->layout, $this->request, $this->user);
     }
 
     public function itDoesNotSendParentsRemainingEffortWhenThereIsNoParent() {
         $this->task->setAllAncestors(array());
 
-        $json = $this->processAndCaptureJSONOutput();
+        $expected = array(
+            $this->artifact_id => array('remaining_effort' => 42),
+        );
+        expect($GLOBALS['Response'])->sendJSON($expected)->once();
 
-        $user_story_id = $this->user_story->getId();
-        $this->assertFalse(isset($json[$user_story_id]));
+        $this->task->process($this->layout, $this->request, $this->user);
     }
 
     public function itDoesNotSendParentWhenParentHasNoRemainingEffortField() {
@@ -1731,10 +1723,12 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         stub($user_story)->getId()->returns($user_story_id);
         $this->task->setAllAncestors(array($user_story));
 
-        $json = $this->processAndCaptureJSONOutput();
+        $expected = array(
+            $this->artifact_id => array('remaining_effort' => 42),
+        );
+        expect($GLOBALS['Response'])->sendJSON($expected)->once();
 
-        $user_story_id = $this->user_story->getId();
-        $this->assertFalse(isset($json[$user_story_id]));
+        $this->task->process($this->layout, $this->request, $this->user);
     }
 }
 ?>

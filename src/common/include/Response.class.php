@@ -93,5 +93,9 @@ class Response {
     public function setContentType($content_type) {
         header('Content-type: ' . $content_type);
     }
+    public function sendJSON($content) {
+        $this->setContentType('application/json');
+        echo json_encode($content);
+    }
 }
 ?>
