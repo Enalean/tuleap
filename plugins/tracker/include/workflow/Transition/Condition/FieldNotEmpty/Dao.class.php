@@ -74,47 +74,32 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
        return $this->update($sql);
     }
 
-/**
-    * Duplicate permissions
-    *
-    * Manage the 3 types of duplications:
-    * - On project creation: there is a ugroup_mapping so we should a straight copy the dynamics groups and a translated copy of the static groups
-    * - On copy within the same project: no need to translate, we just do a straight copy of the existing permissions (both static and dynamic groups)
-    * - On copy from another project: there is no ugroup_mapping so we can only straight copy dynamic groups. Static groups are left).
-    *
-    * @param int    $from
-    * @param int    $to
-    * @param Array $permission_type
-    * @param int    $duplicate_type
-    * @param Array  $ugroup_mapping, an array of static ugroups
-    *
-    * @return Boolean
-    */
-    function duplicate($from, $to, $field_mapping) {
-        //var_dump($from, $to, $field_mapping);
-        $from = $this->da->escapeInt($from);
-        $to = $this->da->escapeInt($to);
+    /**
+     * Duplicate condition
+     */
+    function duplicate($from_transition_id, $to_transition_id, $field_mapping) {
+        $from_transition_id = $this->da->escapeInt($from_transition_id);
+        $to_transition_id   = $this->da->escapeInt($to_transition_id);
 
-        //@TODO Cut SQL in 3 steps : SELECT old field ==> map with $field_maping to have the new field id ==> insert in database
+        $case           = array();
+        $from_field_ids = array();
+        foreach($field_mapping as $mapping) {
+            $from = $this->da->escapeInt($mapping['from']);
+            $to   = $this->da->escapeInt($mapping['to']);
 
-        $sql = 'SELECT field_id
-                FROM tracker_workflow_transition_condition_field_notempty
-                WHERE transition_id = '.$from;
-
-        $row = $this->retrieveFirstRow($sql);
-        $old_field_id = $row['field_id'];
-        $new_field_id = null;
-
-        foreach ($field_mapping as $field) {
-            if ($field['from'] == $old_field_id) {
-                $new_field_id = $field['to'];
-            }
+            $case[]           = "WHEN $from THEN $to";
+            $from_field_ids[] = $from;
         }
-
-        $sql = "INSERT INTO tracker_workflow_transition_condition_field_notempty (transition_id, field_id)
-                    VALUES (" . $to . ", " . $new_field_id . ")";
-
-        return $this->update($sql);
+        if (count($case)) {
+            $from_field_ids = implode(', ', $from_field_ids);
+            $new_field_id   = 'CASE field_id '. implode(' ', $case) .' END';
+            $sql = "INSERT INTO tracker_workflow_transition_condition_field_notempty (transition_id, field_id)
+                    SELECT $to_transition_id, $new_field_id
+                    FROM tracker_workflow_transition_condition_field_notempty
+                    WHERE transition_id = $from_transition_id
+                      AND field_id IN ($from_field_ids)";
+            return $this->update($sql);
+        }
     }
 
     function addPermission($permission_type, $object_id, $ugroup_id) {
