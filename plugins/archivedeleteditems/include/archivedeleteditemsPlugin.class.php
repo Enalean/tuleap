@@ -34,7 +34,7 @@ class ArchivedeleteditemsPlugin extends Plugin {
      */
     public function __construct($id) {
         parent::__construct($id);
-        $this->setScope(Plugin::SCOPE_PROJECT);
+        $this->setScope(Plugin::SCOPE_SYSTEM);
         $this->archiveScript = $GLOBALS['codendi_bin_prefix'] . "/archive-deleted-items";
         $this->_addHook('archive_deleted_item', 'archive_deleted_item', false);
     }
