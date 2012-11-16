@@ -94,8 +94,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function formatChangesetValue($value) {
         // Should receive only valid value object but keep it as is for compatibility reasons
-        if (is_array($value) && isset($this->values[$value['id']])) {
-            $value = $this->values[$value['id']];
+        if (is_array($value)) {
+            if (isset($this->values[$value['id']])) {
+                $value = $this->values[$value['id']];
+            } elseif ($value['id'] == 100) {
+                $value = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+            }
         }
         if ($value) {
             return $this->formatChangesetValueObject($value);
