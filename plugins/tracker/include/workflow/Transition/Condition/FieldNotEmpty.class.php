@@ -46,10 +46,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
         $html .= '<select name="add_notempty_condition">';
 
-        if ($this->field_id === null) {
-            $html .= '<option value="0" '. 'selected="selected"'
-                . '>' . $GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
-        }
+        $html .= '<option value="0" '. 'selected="selected"'
+              . '>' . $GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
 
         foreach($this->getFields() as $field){
             $html .= '<option value="' . $field->getId() . '"';
