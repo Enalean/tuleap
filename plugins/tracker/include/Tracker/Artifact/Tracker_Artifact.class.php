@@ -800,7 +800,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $GLOBALS['Response']->setContentType('application/json');
         echo json_encode($content);
     }
-    
+
     private function getCardUpdateInfo(Tracker_Artifact $artifact, $current_user) {
         $card_info               = array();
         $tracker_id              = $artifact->getTracker()->getId();
@@ -819,7 +819,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $card_info;
     }
-    
+
 
     /**
      * @return string html
