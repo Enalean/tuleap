@@ -80,7 +80,7 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
             ->duplicatePermissions(
                 $this->transition->getId(),
                 $new_transition_id,
-                Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION,
+                array(Workflow_Transition_Condition_Permissions::PERMISSION_TRANSITION),
                 $ugroup_mapping,
                 $duplicate_type
             )->once();
