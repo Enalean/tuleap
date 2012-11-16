@@ -263,10 +263,10 @@ class Workflow {
         }
     }
 
-    public function validate($fields_data) {
+    public function validate($fields_data, Tracker_Artifact $artifact) {
         $transition = $this->getCurrentTransition($fields_data);
         if (isset($transition)) {
-            return $transition->validate($fields_data);
+            return $transition->validate($fields_data, $artifact);
         }
         return true;
     }
