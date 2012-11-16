@@ -786,17 +786,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
-    private function sendAjaxCardsUpdateInfo($current_user) {
+    private function sendAjaxCardsUpdateInfo(User $current_user) {
         $cards_info = $this->getCardUpdateInfo($this, $current_user);
         $parent = $this->getParent($current_user);
         if ($parent) {
             $cards_info = $cards_info + $this->getCardUpdateInfo($parent, $current_user);
         }
 
-        $GLOBALS['Response']->setContentType('application/json');
-        echo json_encode($cards_info);
+        $this->sendJSON($cards_info);
     }
 
+    private function sendJSON($content) {
+        $GLOBALS['Response']->setContentType('application/json');
+        echo json_encode($content);
+    }
+    
     private function getCardUpdateInfo(Tracker_Artifact $artifact, $current_user) {
         $card_info               = array();
         $tracker_id              = $artifact->getTracker()->getId();
@@ -815,6 +819,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $card_info;
     }
+    
 
     /**
      * @return string html
