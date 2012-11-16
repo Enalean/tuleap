@@ -728,7 +728,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->redirect('?aid='. $this->id);
                 break;
             case 'artifact-update':
-
                 //TODO : check permissions on this action?
                 $fields_data   = $request->get('artifact');
                 $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
@@ -740,7 +739,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
-                    $GLOBALS['Response']->redirect($redirect->toUrl());
+                    if ($request->isAjax()) {
+                        $this->sendAjaxCardsUpdateInfo($current_user);
+                    } else {
+                        $GLOBALS['Response']->redirect($redirect->toUrl());
+                    }
                     //die();
                 } else {
                     $this->display($layout, $request, $current_user);
@@ -782,6 +785,36 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
         }
     }
+
+    private function sendAjaxCardsUpdateInfo(User $current_user) {
+        $cards_info = $this->getCardUpdateInfo($this, $current_user);
+        $parent = $this->getParent($current_user);
+        if ($parent) {
+            $cards_info = $cards_info + $this->getCardUpdateInfo($parent, $current_user);
+        }
+
+        $GLOBALS['Response']->sendJSON($cards_info);
+    }
+
+    private function getCardUpdateInfo(Tracker_Artifact $artifact, User $current_user) {
+        $card_info               = array();
+        $tracker_id              = $artifact->getTracker()->getId();
+        $form_element_factory    = $this->getFormElementFactory();
+        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser(
+            $tracker_id,
+            Tracker::REMAINING_EFFORT_FIELD_NAME,
+            $current_user
+        );
+
+        if ($remaining_effort_field) {
+            $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
+            $card_info[$artifact->getId()] = array(
+                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
+            );
+        }
+        return $card_info;
+    }
+
 
     /**
      * @return string html
