@@ -188,7 +188,14 @@ class Transition {
             $post_action->before($fields_data, $current_user);
         }
     }
-
+    
+    /**
+     * Validate that transition can occur
+     *
+     * @param Array $fields_data Request field data (array[field_id] => data)
+     *
+     * @return bool, true if the transition can occur, false otherwise
+     */
     public function validate($fields_data) {
         if (! $this->getConditions()->validate($fields_data)){
             return false;

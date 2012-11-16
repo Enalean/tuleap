@@ -20,7 +20,7 @@
  */
 
 /**
- * Manager for PostActions
+ * Manager for Condition
  */
 require_once 'ConditionFactory.class.php';
 
