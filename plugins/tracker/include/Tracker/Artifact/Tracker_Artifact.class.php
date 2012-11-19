@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../../constants.php');
 require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Redirect.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Tracker_History.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
@@ -942,7 +943,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         if($is_valid) {
-            //validate workflow            
+            //validate workflow
              $workflow = $this->getWorkflow();
              if ($workflow) {
                  $is_valid = $workflow->validate($fields_data, $this);

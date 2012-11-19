@@ -107,7 +107,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
         }
     }
 
-    public function validate($fields_data) {
+    public function validate($fields_data, Tracker_Artifact $artifact) {
         return true;
     }
 }

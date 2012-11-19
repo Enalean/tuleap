@@ -188,7 +188,7 @@ class Transition {
             $post_action->before($fields_data, $current_user);
         }
     }
-    
+
     /**
      * Validate that transition can occur
      *

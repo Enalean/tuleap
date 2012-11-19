@@ -43,7 +43,8 @@ class FieldNotEmptyTests extends TuleapTestCase {
         Tracker_FormElementFactory::setInstance($factory);
         $this->dao        = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
         $this->transition = stub('Transition')->getId()->returns(42);
-        $this->condition = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
+        $this->condition  = new Workflow_Transition_Condition_FieldNotEmpty($this->transition, $this->dao);
+        $this->artifact   = mock('Tracker_Artifact');
     }
 
     public function tearDown() {
@@ -53,26 +54,26 @@ class FieldNotEmptyTests extends TuleapTestCase {
 
     public function testValidateReturnsTrueWhenNoField() {
         $fields_data = array();
-        $is_valid    = $this->condition->validate($fields_data);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
         $this->assertTrue($is_valid);
     }
     public function testValidateReturnsTrueWhenNoFieldId() {
         $fields_data = array(1 => $this->not_empty_data);
-        $is_valid    = $this->condition->validate($fields_data);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
         $this->assertTrue($is_valid);
     }
 
     public function testValidateReturnsTrueWhenFieldNotEmpty() {
         $this->condition->setFieldId(1);
         $fields_data = array(1 => $this->not_empty_data);
-        $is_valid    = $this->condition->validate($fields_data);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
         $this->assertTrue($is_valid);
     }
 
     public function itReturnsFalseWhenTheFieldIsEmpty() {
         $this->condition->setFieldId(1);
         $fields_data = array(1 => $this->empty_data);
-        $is_valid    = $this->condition->validate($fields_data);
+        $is_valid    = $this->condition->validate($fields_data, $this->artifact);
         $this->assertFalse($is_valid);
     }
 

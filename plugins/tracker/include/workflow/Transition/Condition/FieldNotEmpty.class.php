@@ -109,14 +109,20 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      *
      * @return bool
      */
-    public function validate($fields_data) {
-        //$this->artifact->getLastChangeset($this->field_id)
-        if(! isset($this->field_id) || ! isset($fields_data[$this->field_id])) {
+    public function validate($fields_data, Tracker_Artifact $artifact) {
+        if(! isset($this->field_id)) {
             return true;
         }
 
         $field = $this->formElementFactory->getUsedFormElementById($this->field_id);
-        $value = $fields_data[$this->field_id];
+
+        if (! isset($fields_data[$this->field_id])) {
+            $changeset = $artifact->getLastChangeset();
+            $field_value = $changeset->getValue($field);
+            $value = $field_value->getValue();
+        } else {
+            $value = $fields_data[$this->field_id];
+        }
         $is_valid = ! $field->isEmpty($value);
 
         if (! $is_valid) {

@@ -36,7 +36,7 @@ class TransitionFactory_BaseTest extends TuleapTestCase {
 
     /** @var Workflow_Transition_ConditionFactory */
     protected $condition_factory;
-    
+
     public function setUp() {
         parent::setUp();
         $this->condition_factory = mock('Workflow_Transition_ConditionFactory');
@@ -44,26 +44,26 @@ class TransitionFactory_BaseTest extends TuleapTestCase {
     }
 }
 class TransitionFactoryTest extends TransitionFactory_BaseTest {
-    
+
     public function testIsFieldUsedInTransitions() {
-        
+
         $field_start_date = new MockTracker_FormElement_Field_Date($this);
         $field_start_date->setReturnValue('getId', 1002);
-        
+
         $field_close_date = new MockTracker_FormElement_Field_Date($this);
         $field_close_date->setReturnValue('getId', 1003);
-        
+
         $tpaf = new MockTransition_PostActionFactory();
         $tpaf->setReturnValue('isFieldUsedInPostActions', false, array($field_start_date));
         $tpaf->setReturnValue('isFieldUsedInPostActions', true,  array($field_close_date));
-        
+
         $tf = partial_mock('TransitionFactory', array('getPostActionFactory'), array($this->condition_factory));
         $tf->setReturnReference('getPostActionFactory', $tpaf);
-        
+
         $this->assertFalse($tf->isFieldUsedInTransitions($field_start_date));
         $this->assertTrue($tf->isFieldUsedInTransitions($field_close_date));
     }
-    
+
     public function testDuplicate() {
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);
@@ -71,12 +71,12 @@ class TransitionFactoryTest extends TransitionFactory_BaseTest {
         $field_value_analyzed->setReturnValue('getId', 2067);
         $field_value_accepted = new MockTracker_FormElement_Field_List_Value();
         $field_value_accepted->setReturnValue('getId', 2068);
-        
+
         $t1  = new Transition(1, 1, $field_value_new, $field_value_analyzed);
         $t2  = new Transition(2, 1, $field_value_analyzed, $field_value_accepted);
         $t3  = new Transition(3, 1, $field_value_analyzed, $field_value_new);
         $transitions = array($t1, $t2, $t3);
-        
+
         $tf = partial_mock(
             'TransitionFactory',
             array('addTransition', 'getPostActionFactory', 'duplicatePermissions'),
@@ -88,7 +88,7 @@ class TransitionFactoryTest extends TransitionFactory_BaseTest {
             2067  => 3067,
             2068  => 3068
         );
-        
+
         $tf->expectCallCount('addTransition', 3, 'Method addTransition should be called 3 times.');
         $tf->expectAt(0, 'addTransition', array(1, 3066, 3067));
         $tf->expectAt(1, 'addTransition', array(1, 3067, 3068));
@@ -96,25 +96,25 @@ class TransitionFactoryTest extends TransitionFactory_BaseTest {
         $tf->setReturnValueAt(0, 'addTransition', 101);
         $tf->setReturnValueAt(1, 'addTransition', 102);
         $tf->setReturnValueAt(2, 'addTransition', 103);
-        
+
         expect($this->condition_factory)->duplicate()->count(3);
         expect($this->condition_factory)->duplicate($t1, 101, array(), false, false)->at(0);
         expect($this->condition_factory)->duplicate($t2, 102, array(), false, false)->at(1);
         expect($this->condition_factory)->duplicate($t3, 103, array(), false, false)->at(2);
-        
+
         $tpaf = new MockTransition_PostActionFactory();
         $tpaf->expectCallCount('duplicate', 3, 'Method duplicate should be called 3 times.');
         $tpaf->expectAt(0, 'duplicate', array(1, 101, array(), array()));
         $tpaf->expectAt(1, 'duplicate', array(2, 102, array(), array()));
         $tpaf->expectAt(2, 'duplicate', array(3, 103, array(), array()));
         $tf->setReturnValue('getPostActionFactory', $tpaf);
-        
+
         $tf->duplicate($values, 1, $transitions, array(), false, false);
     }
 }
 
 class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTest {
-    
+
     public function setUp() {
         parent::setUp();
         $this->field = aMockField()->build();
@@ -126,9 +126,9 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
 
         stub($this->condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
     }
-    
+
     public function itReconstitutesDatePostActions() {
-        
+
         $xml = new SimpleXMLElement('
             <transition>
                 <from_id REF="F32-V1"/>
@@ -140,16 +140,16 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
                 </postactions>
             </transition>
         ');
-        
+
         $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
         $post_actions = $transition->getPostActions();
-        
+
         $this->assertCount($post_actions, 1);
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Date');
     }
-    
+
     public function itReconstitutesIntPostActions() {
-        
+
         $xml = new SimpleXMLElement('
             <transition>
                 <from_id REF="F32-V1"/>
@@ -161,16 +161,16 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
                 </postactions>
             </transition>
         ');
-        
+
         $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
         $post_actions = $transition->getPostActions();
-        
+
         $this->assertCount($post_actions, 1);
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Int');
     }
-    
+
     public function itReconstitutesFloatPostActions() {
-        
+
         $xml = new SimpleXMLElement('
             <transition>
                 <from_id REF="F32-V1"/>
@@ -182,10 +182,10 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
                 </postactions>
             </transition>
         ');
-        
+
         $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
         $post_actions = $transition->getPostActions();
-        
+
         $this->assertCount($post_actions, 1);
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Float');
     }
