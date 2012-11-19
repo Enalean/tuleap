@@ -79,7 +79,7 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess {
         $html  = '';
         $html .= '<ul class="workflow_conditions">';
         foreach ($this->conditions as $condition) {
-            $html .= '<li class="workflow_conditions_perms">';
+            $html .= '<li class="workflow_conditions_'. $condition->identifier .'">';
             $html .= $condition->fetch();
             $html .= '</li>';
         }

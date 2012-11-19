@@ -23,8 +23,10 @@ require_once 'common/permission/PermissionsManager.class.php';
 
 class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition {
 
+    /** @var string */
+    public $identifier = 'perms';
+
     const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
-    const CONDITION_TYPE        = 'perms';
 
     /** @var PermissionsManager */
     private $permission_manager;
@@ -59,7 +61,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
      */
     public function exportToXml(&$root, $xmlMapping) {
         $child = $root->addChild('condition');
-        $child->addAttribute('type', self::CONDITION_TYPE);
+        $child->addAttribute('type', $this->identifier);
 
         $transition_ugroups = $this->permission_manager->getAuthorizedUgroups($this->transition->getId(), self::PERMISSION_TRANSITION);
         $grand_child = $child->addChild('permissions');

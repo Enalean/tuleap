@@ -22,7 +22,8 @@ require_once(dirname(__FILE__) . '/../Condition.class.php');
 
 class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Condition {
 
-    const CONDITION_TYPE        = 'notempty';
+    /** @var string */
+    public $identifier = 'notempty';
 
     private $field_id = null;
 
@@ -73,7 +74,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     public function exportToXml(&$root, $xmlMapping) {
         if (isset($this->field_id)) {
             $child = $root->addChild('condition');
-            $child->addAttribute('type', self::CONDITION_TYPE);
+            $child->addAttribute('type', $this->identifier);
             $grand_child = $child->addChild('field');
             $grand_child->addAttribute('REF', array_search($this->field_id, $xmlMapping));
         }

@@ -20,6 +20,9 @@
 
 abstract class Workflow_Transition_Condition {
 
+    /** @var string */
+    public $identifier = 'generic_condition';
+
     /** @var Transition */
     protected $transition;
 
