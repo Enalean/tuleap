@@ -84,12 +84,20 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @see Workflow_Transition_Condition::saveObject()
      */
     public function saveObject() {
-        $this->dao->create($this->getTransition()->getId() , $this->getFieldId());
+        $this->dao->create($this->getTransition()->getId() , $this->getField()->getId());
     }
 
     public function setFieldId($field_id) {
         $this->field_id = $field_id;
         return $this;
+    }
+
+    public function setField(Tracker_FormElement_Field $field) {
+        $this->field = $field;
+    }
+
+    public function getField() {
+        return $this->field;
     }
 
     public function getFieldId() {

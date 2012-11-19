@@ -77,8 +77,9 @@ class FieldNotEmptyTests extends TuleapTestCase {
         $this->assertFalse($is_valid);
     }
 
-    public function itSavesTheNewFieldNotEmpty() {
-        $this->condition->setFieldId(123);
+    public function itSavesUsingTheRealFieldObject() {
+        $field = stub('Tracker_FormElement_Field_String')->getId()->returns(123);
+        $this->condition->setField($field);
         expect($this->dao)->create(42, 123)->once();
         $this->condition->saveObject();
     }
