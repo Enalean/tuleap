@@ -525,10 +525,8 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function fetchCard(Tracker_Artifact $artifact) {
         $html  = null;
         $value = $this->fetchCardValue($artifact);
-        if ($value) {
-            $html .= '<tr><td>'. $this->getLabel().':</td>';
-            $html .= '<td class="valueOf_'. $this->getName() .'">'. $value .'</td></tr>';
-        }
+        $html .= '<tr><td>'. $this->getLabel().':</td>';
+        $html .= '<td class="valueOf_'. $this->getName() .'">'. $value .'</td></tr>';
         return $html;
     }
 
