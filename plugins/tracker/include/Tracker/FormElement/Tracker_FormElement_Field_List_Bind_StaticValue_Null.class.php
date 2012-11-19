@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_List_BindValue.class.php');
+require_once('Tracker_FormElement_Field_List_Bind_StaticValue.class.php');
 
 class Tracker_FormElement_Field_List_Bind_StaticValue_Null extends Tracker_FormElement_Field_List_Bind_StaticValue {
     const VALUE = 100;
