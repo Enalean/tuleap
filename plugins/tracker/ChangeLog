@@ -1,3 +1,7 @@
+Version 5.44 - Tuleap 5.7
+    * Fix bugs #1100: Display of plan part broken on firefox.
+Fix bugs #1780: fix arrow location on cardwall item
+
 Version 5.43 - Tuleap 5.7
     * Always display remaining effort on card
 

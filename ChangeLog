@@ -5,13 +5,13 @@ Version 5.7 (Not Released Yet)
 	* Avoid double posting when body contain special characters. (Contrib STMicroelectronics)
 
    == Plugins ==
-	* tracker: 5.43
+	* tracker: 5.44
 	* git: 2.7.15
 	* tests: 5.8
 	* ldap: 3.22
 	* projectlinks: 2.2
 	* graphontrackersv5: 5.0.5
-	* agiledashboard: 0.58
+	* agiledashboard: 0.59
 	* cardwall: 0.9.8
 
 Version 5.6.2 (Tuesday, November 6th 2012)
