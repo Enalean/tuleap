@@ -21,7 +21,7 @@
 require_once('Tracker_FormElement_Field_List_Bind_StaticValue.class.php');
 
 class Tracker_FormElement_Field_List_Bind_StaticValue_Null extends Tracker_FormElement_Field_List_Bind_StaticValue {
-    const VALUE = 100;
+    const VALUE_ID = 100;
 
     /**
      * 
@@ -31,14 +31,12 @@ class Tracker_FormElement_Field_List_Bind_StaticValue_Null extends Tracker_FormE
      * @param int $rank
      * @param bool $is_hidden
      */
-    public function __construct($id = 100, $label = null, $description = '', $rank = 0, $is_hidden = false) {
-        if($label === null){
-            $label = $GLOBALS['Language']->getText('global','none');
-        }
-        
-        $this->label       = $label;
-        $this->description = $description;
-        $this->rank        = $rank;
+    public function __construct() {
+        $id = self::VALUE_ID;
+        $label = $GLOBALS['Language']->getText('global','none');
+        $description = '';
+        $rank = 0;
+        $is_hidden = false;
         
         parent::__construct($id, $label, $description, $rank, $is_hidden);
     }

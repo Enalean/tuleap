@@ -98,7 +98,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if (is_array($value)) {
             if (isset($this->values[$value['id']])) {
                 $value = $this->values[$value['id']];
-            } elseif ($value['id'] == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE) {
+            } elseif ($value['id'] == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE_ID) {
                 $value = new Tracker_FormElement_Field_List_Bind_StaticValue_Null();
             }
         }
