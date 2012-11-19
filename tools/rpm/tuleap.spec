@@ -869,9 +869,6 @@ fi
 %attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/git-ci.pl
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/gitolite-suexec-wrapper.sh
 
-%files plugin-archivedeleteditems
-%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/archive-deleted-items.pl
-
 %files plugin-docmanwatermark
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/docmanwatermark
@@ -922,6 +919,7 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/archivedeleteditems
 %attr(00755,%{APP_USER},%{APP_USER}) %{APP_CACHE_DIR}/plugins/archivedeleteditems
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/archive-deleted-items.pl
 
 #
 # Themes
