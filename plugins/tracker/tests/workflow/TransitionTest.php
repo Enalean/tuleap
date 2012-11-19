@@ -26,10 +26,17 @@ Mock::generate('Tracker_FormElement_Field_List_Value');
 Mock::generate('Transition_PostAction');
 Mock::generate('User');
 
-class TransitionTest extends TuleapTestCase {
+class Transition_baseTest extends TuleapTestCase {
+
+    protected $id          = 1;
+    protected $workflow_id = 2;
+    protected $from;
+    protected $to;
 
     public function setUp() {
         parent::setUp();
+        $this->from = aFieldListStaticValue()->withId(123)->build();
+        $this->to   = aFieldListStaticValue()->withId(456)->build();
         PermissionsManager::setInstance(mock('PermissionsManager'));
     }
 
@@ -37,6 +44,9 @@ class TransitionTest extends TuleapTestCase {
         PermissionsManager::clearInstance();
         parent::tearDown();
     }
+}
+
+class Transition_equalsTest extends Transition_baseTest {
 
     public function testEquals() {
 
@@ -83,6 +93,9 @@ class TransitionTest extends TuleapTestCase {
         $this->assertFalse($t2->equals($t3));
         $this->assertFalse($t4->equals($t5));
     }
+}
+
+class Transition_beforeTest extends Transition_baseTest {
 
     function testBeforeShouldTriggerActions() {
         $current_user = new MockUser();
@@ -121,17 +134,7 @@ class TransitionTest extends TuleapTestCase {
     }
 }
 
-class Transition_exportToSOAPTest extends TuleapTestCase {
-
-    private $id          = 1;
-    private $workflow_id = 2;
-    private $from;
-    private $to;
-
-    public function setUp() {
-        $this->from = aFieldListStaticValue()->withId(123)->build();
-        $this->to   = aFieldListStaticValue()->withId(456)->build();
-    }
+class Transition_exportToSOAPTest extends Transition_baseTest {
 
     public function itExportsTheFromAndToAttributes() {
         $transition = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
@@ -146,6 +149,27 @@ class Transition_exportToSOAPTest extends TuleapTestCase {
     public function itExportsEmptyStringWhenToIsNull() {
         $transition = new Transition($this->id, $this->workflow_id, $this->from, null);
         $this->assertEqual($transition->exportToSOAP(), array('from_id' => 123, 'to_id' => ''));
+    }
+}
+
+class Transition_validateTest extends Transition_baseTest {
+
+    public function itReturnsTrueWhenConditionsAreValid() {
+        $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
+        $fields_data = array();
+        $artifact    = mock('Tracker_Artifact');
+        $conditions  = stub('Workflow_Transition_ConditionsCollection')->validate()->returns(true);
+        $transition->setConditions($conditions);
+        $this->assertTrue($transition->validate($fields_data, $artifact));
+    }
+
+    public function itReturnsFalseWhenConditionsAreNotValid() {
+        $transition  = new Transition($this->id, $this->workflow_id, $this->from, $this->to);
+        $fields_data = array();
+        $artifact    = mock('Tracker_Artifact');
+        $conditions  = stub('Workflow_Transition_ConditionsCollection')->validate()->returns(false);
+        $transition->setConditions($conditions);
+        $this->assertFalse($transition->validate($fields_data, $artifact));
     }
 }
 ?>
