@@ -52,7 +52,7 @@ class WorkflowManager {
             }
         } else if ($request->get('edit_transition')) {
             $workflow   = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
-            $transition = TransitionFactory::instance()->getTransition($request->get('edit_transition'));
+            $transition = $this->getTransitionFactory()->getTransition($request->get('edit_transition'));
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
         } else if ($request->get('delete')) {
              if (WorkflowFactory::instance()->deleteWorkflow($request->get('delete'))) {
@@ -148,18 +148,18 @@ class WorkflowManager {
             // Permissions
             $ugroups = $request->get('ugroups');
             permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false);
-            if (TransitionFactory::instance()->addPermissions($ugroups, $transition)) {
+            if ($this->getTransitionFactory()->addPermissions($ugroups, $transition)) {
                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','permissions_updated'));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
             }
             //Conditions
             $condition_manager = new Transition_ConditionManager();
-            $condition_manager->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
+            $condition_manager->process($this->getTransitionFactory()->getTransition($transition), $request, $current_user);
 
             // Post actions
             $tpam = new Transition_PostActionManager();
-            $tpam->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
+            $tpam->process($this->getTransitionFactory()->getTransition($transition), $request, $current_user);
 
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(
                 array(
@@ -248,6 +248,13 @@ class WorkflowManager {
      */
     public function getPostActionFactory() {
         return new Transition_PostActionFactory();
+    }
+
+    /**
+     * @return TransitionFactory
+     */
+    public function getTransitionFactory() {
+        return TransitionFactory::instance();
     }
 
     protected function displayAdminWorkflow(TrackerManager $engine, Codendi_Request $request, User $current_user, Workflow $workflow) {

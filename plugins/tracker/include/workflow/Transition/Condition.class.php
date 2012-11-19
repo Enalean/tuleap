@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Condition on a transition
+ */
 abstract class Workflow_Transition_Condition {
 
     /** @var string */
