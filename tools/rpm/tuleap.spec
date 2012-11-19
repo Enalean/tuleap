@@ -336,6 +336,20 @@ Requires: %{php_base}-elasticsearch
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 
+%package plugin-archivedeleteditems
+Summary: Archiving plugin
+Group: Development/Tools
+Version: @@PLUGIN_ARCHIVEDELETEDITEMS_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-archivedeleteditems = %{version}
+%else
+Provides: tuleap-plugin-archivedeleteditems = %{version}
+%endif
+%description plugin-archivedeleteditems
+Archive deleted items before purging them from filesystem
+
 #
 ## Themes
 #
@@ -497,6 +511,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/bin/git-log.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/git-ci.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+
+# Plugin archivedeleteditems
+%{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
@@ -897,6 +914,11 @@ fi
 %files plugin-fulltextsearch
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/fulltextsearch
+
+%files plugin-archivedeleteditems
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/archivedeleteditems
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/archive-deleted-items.pl
 
 #
 # Themes
