@@ -49,7 +49,10 @@ class Workflow_Transition_ConditionFactory {
     public static function build() {
         return new Workflow_Transition_ConditionFactory(
             new Workflow_Transition_Condition_Permissions_Factory(),
-            new Workflow_Transition_Condition_FieldNotEmpty_Factory(new Workflow_Transition_Condition_FieldNotEmpty_Dao())
+            new Workflow_Transition_Condition_FieldNotEmpty_Factory(
+                new Workflow_Transition_Condition_FieldNotEmpty_Dao(),
+                Tracker_FormElementFactory::instance()
+            )
         );
     }
 

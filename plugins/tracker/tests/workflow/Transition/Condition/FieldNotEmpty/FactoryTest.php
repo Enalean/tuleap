@@ -25,9 +25,12 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
 
     public function setUp() {
         parent::setUp();
-        Tracker_FormElementFactory::setInstance(mock('Tracker_FormElementFactory'));
+        $this->field        = stub('Tracker_FormElement_Field_String')->getId()->returns(3);
+        $element_factory    = mock('Tracker_FormElementFactory');
+        stub($element_factory)->getFormElementById(3)->returns($this->field);
+        Tracker_FormElementFactory::setInstance($element_factory);
         $this->dao          = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
-        $this->factory      = new Workflow_Transition_Condition_FieldNotEmpty_Factory($this->dao);
+        $this->factory      = new Workflow_Transition_Condition_FieldNotEmpty_Factory($this->dao, $element_factory);
         $this->transition   = stub('Transition')->getId()->returns(42);
         $this->field_string = stub('Tracker_FormElement_Field_String')->getId()->returns(0);
         $this->xml_mapping  = array('F14' => $this->field_string);
@@ -75,14 +78,14 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         stub($this->dao)->searchByTransitionId()->returnsEmptyDar();
         $condition = $this->factory->getFieldNotEmpty($this->transition);
         $this->assertIsA($condition, 'Workflow_Transition_Condition_FieldNotEmpty');
-        $this->assertNull($condition->getFieldId());
+        $this->assertNull($condition->getField());
     }
 
     public function itInstantiateADefinedConditionFromTheDatabase() {
         stub($this->dao)->searchByTransitionId()->returnsDar(array('id' => 1, 'transition_id' => 2, 'field_id' => 3));
         $condition = $this->factory->getFieldNotEmpty($this->transition);
         $this->assertIsA($condition, 'Workflow_Transition_Condition_FieldNotEmpty');
-        $this->assertEqual($condition->getFieldId(), 3);
+        $this->assertEqual($condition->getField(), $this->field);
     }
 }
 ?>

@@ -35,10 +35,11 @@ class FieldNotEmptyTests extends TuleapTestCase {
         parent::setUp();
         $factory = mock('Tracker_FormElementFactory');
 
-        $field   = mock('Tracker_FormElement_Field_Selectbox');
-        stub($field)->isEmpty($this->not_empty_data)->returns(false);
-        stub($field)->isEmpty($this->empty_data)->returns(true);
-        stub($factory)->getUsedFormElementById(1)->returns($field);
+        $this->field   = mock('Tracker_FormElement_Field_Selectbox');
+        stub($this->field)->getId()->returns(123);
+        stub($this->field)->isEmpty($this->not_empty_data)->returns(false);
+        stub($this->field)->isEmpty($this->empty_data)->returns(true);
+        stub($factory)->getUsedFormElementById(123)->returns($this->field);
 
         Tracker_FormElementFactory::setInstance($factory);
         $this->dao        = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
@@ -64,22 +65,21 @@ class FieldNotEmptyTests extends TuleapTestCase {
     }
 
     public function testValidateReturnsTrueWhenFieldNotEmpty() {
-        $this->condition->setFieldId(1);
-        $fields_data = array(1 => $this->not_empty_data);
+        $this->condition->setField($this->field);
+        $fields_data = array(123 => $this->not_empty_data);
         $is_valid    = $this->condition->validate($fields_data, $this->artifact);
         $this->assertTrue($is_valid);
     }
 
     public function itReturnsFalseWhenTheFieldIsEmpty() {
-        $this->condition->setFieldId(1);
-        $fields_data = array(1 => $this->empty_data);
+        $this->condition->setField($this->field);
+        $fields_data = array(123 => $this->empty_data);
         $is_valid    = $this->condition->validate($fields_data, $this->artifact);
         $this->assertFalse($is_valid);
     }
 
     public function itSavesUsingTheRealFieldObject() {
-        $field = stub('Tracker_FormElement_Field_String')->getId()->returns(123);
-        $this->condition->setField($field);
+        $this->condition->setField($this->field);
         expect($this->dao)->create(42, 123)->once();
         $this->condition->saveObject();
     }

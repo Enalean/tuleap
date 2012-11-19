@@ -25,7 +25,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /** @var string */
     public $identifier = 'notempty';
 
-    private $field_id = null;
+    /** @var Tracker_FormElement_Field */
+    private $field;
 
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Dao */
     private $dao;
@@ -47,22 +48,25 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'the_field') . ' ';
         $html .= '<select name="add_notempty_condition">';
 
-        $html .= '<option value="0" '. 'selected="selected"'
-              . '>' . $GLOBALS['Language']->getText('global', 'please_choose_dashed'). '</option>';
+        $selected = '';
+        if (! $this->getField()) {
+            $selected = 'selected="selected"';
+        }
+        $html .= '<option value="0" '. $selected .'>';
+        $html .= $GLOBALS['Language']->getText('global', 'please_choose_dashed');
+        $html .= '</option>';
 
-        foreach($this->getFields() as $field){
-            $html .= '<option value="' . $field->getId() . '"';
-
-            if($this->field_id !== null && $this->field_id === $field->getId()){
-                $html .=  'selected="selected"';
+        foreach ($this->getFields() as $field) {
+            $selected = '';
+            if ($this->getFieldId() == $field->getId()) {
+                $selected .= 'selected="selected"';
             }
 
-            $html .= '>';
+            $html .= '<option value="' . $field->getId() . '" '. $selected .'>';
             $html .= $field->getLabel();
             $html .= '</option>';
         }
         $html .= '</select>';
-
         $html .= ' ' . $GLOBALS['Language']->getText('workflow_admin', 'field_not_empty');
 
         return $html;
@@ -72,11 +76,11 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @see Workflow_Transition_Condition::exportToXml()
      */
     public function exportToXml(&$root, $xmlMapping) {
-        if (isset($this->field_id)) {
+        if ($this->getField()) {
             $child = $root->addChild('condition');
             $child->addAttribute('type', $this->identifier);
             $grand_child = $child->addChild('field');
-            $grand_child->addAttribute('REF', array_search($this->field_id, $xmlMapping));
+            $grand_child->addAttribute('REF', array_search($this->getField()->getId(), $xmlMapping));
         }
     }
 
@@ -84,12 +88,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @see Workflow_Transition_Condition::saveObject()
      */
     public function saveObject() {
-        $this->dao->create($this->getTransition()->getId() , $this->getField()->getId());
-    }
-
-    public function setFieldId($field_id) {
-        $this->field_id = $field_id;
-        return $this;
+        $this->dao->create($this->getTransition()->getId() , $this->getFieldId());
     }
 
     public function setField(Tracker_FormElement_Field $field) {
@@ -100,8 +99,12 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         return $this->field;
     }
 
-    public function getFieldId() {
-        return $this->field_id;
+    private function getFieldId() {
+        $field = $this->getField();
+        if (! $field) {
+            return null;
+        }
+        return $field->getId();
     }
 
     /**
@@ -119,18 +122,19 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
      * @return bool
      */
     public function validate($fields_data, Tracker_Artifact $artifact) {
-        if(! isset($this->field_id)) {
+        $field = $this->getField();
+        if (! $field) {
             return true;
         }
 
-        $field = $this->formElementFactory->getUsedFormElementById($this->field_id);
+        $field_id = $this->getField()->getId();
 
-        if (! isset($fields_data[$this->field_id])) {
+        if (! isset($fields_data[$field_id])) {
             $changeset = $artifact->getLastChangeset();
             $field_value = $changeset->getValue($field);
             $value = $field_value->getValue();
         } else {
-            $value = $fields_data[$this->field_id];
+            $value = $fields_data[$field_id];
         }
         $is_valid = ! $field->isEmpty($value);
 

@@ -25,9 +25,11 @@ require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.
 class Workflow_Transition_Condition_FieldNotEmpty_Factory {
 
     private $dao;
+    private $element_factory;
 
-    public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Dao $dao) {
-        $this->dao = $dao;
+    public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, Tracker_FormElementFactory $element_factory) {
+        $this->dao             = $dao;
+        $this->element_factory = $element_factory;
     }
 
     public function getFieldNotEmpty(Transition $transition){
@@ -35,7 +37,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
 
         $row = $this->dao->searchByTransitionId($transition->getId())->getRow();
         if ($row) {
-            $condition->setFieldId($row['field_id']);
+            $condition->setField($this->element_factory->getFormElementById($row['field_id']));
         }
 
         return $condition;
