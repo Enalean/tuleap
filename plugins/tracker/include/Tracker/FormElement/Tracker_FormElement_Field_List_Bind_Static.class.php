@@ -21,6 +21,7 @@
 require_once('Tracker_FormElement_Field_List_Bind.class.php');
 require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
+require_once('Tracker_FormElement_Field_List_Bind_StaticValue_Null.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind {
 
@@ -97,8 +98,8 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         if (is_array($value)) {
             if (isset($this->values[$value['id']])) {
                 $value = $this->values[$value['id']];
-            } elseif ($value['id'] == 100) {
-                $value = new Tracker_FormElement_Field_List_Bind_StaticValue(100, $GLOBALS['Language']->getText('global','none'), '', 0, false);
+            } elseif ($value['id'] == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE) {
+                $value = new Tracker_FormElement_Field_List_Bind_StaticValue_Null();
             }
         }
         if ($value) {
