@@ -31,15 +31,14 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
     }
 
     public function getFieldNotEmpty(Transition $transition){
-        $field = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
+        $condition = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
 
-        $condition = $this->dao->searchByTransitionId($transition->getId());
-        if ($condition) {
-            $row = $condition->getRow();
-            $field->setFieldId($row['field_id']) ;
+        $row = $this->dao->searchByTransitionId($transition->getId())->getRow();
+        if ($row) {
+            $condition->setFieldId($row['field_id']);
         }
 
-        return $field;
+        return $condition;
     }
 
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {

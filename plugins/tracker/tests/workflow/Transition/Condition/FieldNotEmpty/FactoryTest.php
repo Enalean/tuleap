@@ -70,5 +70,19 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         expect($this->dao)->duplicate($this->transition->getId(), $new_transition_id, $field_mapping)->once();
         $this->factory->duplicate($this->transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
     }
+
+    public function itInstantiateANotDefinedConditionFromTheDatabase() {
+        stub($this->dao)->searchByTransitionId()->returnsEmptyDar();
+        $condition = $this->factory->getFieldNotEmpty($this->transition);
+        $this->assertIsA($condition, 'Workflow_Transition_Condition_FieldNotEmpty');
+        $this->assertNull($condition->getFieldId());
+    }
+
+    public function itInstantiateADefinedConditionFromTheDatabase() {
+        stub($this->dao)->searchByTransitionId()->returnsDar(array('id' => 1, 'transition_id' => 2, 'field_id' => 3));
+        $condition = $this->factory->getFieldNotEmpty($this->transition);
+        $this->assertIsA($condition, 'Workflow_Transition_Condition_FieldNotEmpty');
+        $this->assertEqual($condition->getFieldId(), 3);
+    }
 }
 ?>
