@@ -34,12 +34,15 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess {
             $this->conditions[$offset] = $value;
         }
     }
+
     public function offsetExists($offset) {
         return isset($this->conditions[$offset]);
     }
+
     public function offsetUnset($offset) {
         unset($this->conditions[$offset]);
     }
+
     public function offsetGet($offset) {
         return isset($this->conditions[$offset]) ? $this->conditions[$offset] : null;
     }

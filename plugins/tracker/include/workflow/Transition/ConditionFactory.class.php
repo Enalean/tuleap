@@ -74,7 +74,7 @@ class Workflow_Transition_ConditionFactory {
      * @param int $field_id
      * @return int The ID of the newly created condition
      */
-    public function addCondition($transition, $field_id) {
+    public function addCondition(Transition $transition, $field_id) {
         $this->getFieldNotEmptyDao()->deleteByTransitionId($transition->getId());
         if ($field_id) {
             return $this->getFieldNotEmptyDao()->create($transition->getId(), $field_id);
@@ -157,7 +157,7 @@ class Workflow_Transition_ConditionFactory {
      *
      * @return bool
      */
-    private function isLegacyXML($xml) {
+    private function isLegacyXML(SimpleXMLElement $xml) {
         return isset($xml->permissions);
     }
 

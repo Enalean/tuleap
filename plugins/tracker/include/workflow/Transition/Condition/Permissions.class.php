@@ -28,6 +28,8 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
 
     const PERMISSION_TRANSITION = 'PLUGIN_TRACKER_WORKFLOW_TRANSITION';
 
+    const NONE = 100;
+
     /** @var PermissionsManager */
     private $permission_manager;
 
@@ -104,7 +106,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
      * @return string or false if not exportable
      */
     private function getExportableUGroupKeyname($ugroup_id) {
-        if ($ugroup_id < 100) {
+        if ($ugroup_id < self::NONE) {
             return array_search($ugroup_id, $GLOBALS['UGROUPS']);
         }
     }
