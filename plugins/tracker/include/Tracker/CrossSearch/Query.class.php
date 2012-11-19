@@ -199,7 +199,7 @@ class Tracker_CrossSearch_Query {
     }
 
     private function isSemanticStatusEmpty() {
-        return ($this->semantic_criteria['status'] == '' || $this->semantic_criteria['status'] == 'any');
+        return isset($this->semantic_criteria['status']) && ($this->semantic_criteria['status'] == '' || $this->semantic_criteria['status'] == 'any');
     }
 }
 ?>

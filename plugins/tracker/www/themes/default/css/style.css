@@ -1163,6 +1163,7 @@ td.first-column {
     padding-left: 5px;
     color: #333;
     position:relative;
+    min-height: 50px;
 }
 .card-container {
     background: #ffe;

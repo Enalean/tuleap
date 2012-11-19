@@ -19,7 +19,16 @@
  */
 
 abstract class Tracker_FormElement_Field_List_Value {
+    /**
+     *
+     * @var int 
+     */
     protected $id;
+    
+    /**
+     *
+     * @var bool 
+     */
     protected $is_hidden = false;
     
     public function __construct($id, $is_hidden) {
