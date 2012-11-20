@@ -495,25 +495,21 @@ class GitViews extends PluginViews {
         echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$purifier->purify($params['namespace']).'" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
 
-        //@todo clean up, handle fork on the same project
+        //@todo clean up
         $repositoryId = $params['repos'][0];
-
         if ($params['scope'] == 'project') {
             $groupId = $params['group_id'];
-
-            $dao         = new GitDao();
-            $request     = new Codendi_Request($params);
-            $repoFactory = new GitRepositoryFactory($dao, ProjectManager::instance());
-            $repository  = $repoFactory->getRepositoryById($repositoryId);
+        } else {
+            $groupId = (int)$this->groupId;
+        }
+        $dao         = new GitDao();
+        $request     = new Codendi_Request($params);
+        $repoFactory = new GitRepositoryFactory($dao, ProjectManager::instance());
+        $repository  = $repoFactory->getRepositoryById($repositoryId);
+        if (!empty($repository)) {
             $accessControl = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
             echo $accessControl->getHeadlessAccessControl($groupId);
-        } else {
-            $groupId = $this->groupId;
         }
-
-
-
-
 
         echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
         echo '</form>';
