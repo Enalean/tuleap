@@ -1,3 +1,6 @@
+Version 5.45 - Tuleap 5.7
+    * Enhancement: add conditions on transition (check that a field is not empty)
+
 Version 5.44 - Tuleap 5.7
     * Fix bugs #1100: Display of plan part broken on firefox.
 Fix bugs #1780: fix arrow location on cardwall item
