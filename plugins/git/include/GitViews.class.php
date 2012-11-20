@@ -494,6 +494,17 @@ class GitViews extends PluginViews {
         echo '<input id="to_project" type="hidden" name="to_project" value="'.$purifier->purify($params['group_id']).'" />';
         echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$purifier->purify($params['namespace']).'" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
+
+        //@todo clean up
+        $repositoryId = $params['repos'];
+        $dao          = new GitDao();
+        $repoFactory  = new GitRepositoryFactory($dao, ProjectManager::instance());
+        $repository   = $repoFactory->getRepositoryById($repositoryId);
+
+        $request       = new Codendi_Request($params);
+        $accessControl = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
+        echo $accessControl->getHeadlessAccessControl($params['group_id']);
+
         echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
         echo '</form>';
     }
