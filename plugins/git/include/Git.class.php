@@ -535,7 +535,7 @@ class Git extends PluginController {
 
     public function _doDispatchForkCrossProject($request, $user) {
         $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
-        $validators = array(new Valid_UInt('to_project'));
+        $validators = array(new Valid_UInt('to_project'), new Valid_String('repos'));
 
         foreach ($validators as $validator) {
             $validator->required();
@@ -579,7 +579,7 @@ class Git extends PluginController {
         }
         $path = userRepoPath($user->getUserName(), $path);
 
-        $valid = new Valid_UInt('repos');
+        $valid = new Valid_String('repos');
         $valid->required();
         $repos_ids = explode(',', $request->get('repos'));
         $to_project   = $this->projectManager->getProject($this->groupId);
