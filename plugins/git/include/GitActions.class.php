@@ -485,7 +485,14 @@ class GitActions extends PluginActions {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
     }
-    
+
+    public function forkRepositoriesPermissions($repos, $project, $namespace, $scope) {
+        $this->addData(array('repos'     => join(',', $repos),
+                             'group_id'  => $project,
+                             'namespace' => $namespace,
+                             'scope'     => $scope));
+    }
+
     /**
      * 
      * @param GitRepository $repository

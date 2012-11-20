@@ -192,6 +192,7 @@ class Git extends PluginController {
                                             'set_private',
                                             'confirm_private',
                                             'fork_repositories',
+                                            'fork_repositories_permissions',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
                                             'migrate_to_gerrit',
@@ -200,6 +201,7 @@ class Git extends PluginController {
             $this->addPermittedAction('index');
             $this->addPermittedAction('view_last_git_pushes');
             $this->addPermittedAction('fork_repositories');
+            $this->addPermittedAction('fork_repositories_permissions');
             $this->addPermittedAction('do_fork_repositories');
 
             if ($repoId !== 0) {
@@ -359,6 +361,15 @@ class Git extends PluginController {
                 $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
                 break;
+            case 'fork_repositories_permissions':
+                // @TODO: validate input
+                $repos     = $this->request->get('repos');
+                $toProject = $this->request->get('to_project');
+                $path      = $this->request->get('path');
+                $scope     = $this->request->get('choose_destination');
+                $this->addAction('forkRepositoriesPermissions', array($repos, $toProject, $path, $scope));
+                $this->addView('forkRepositoriesPermissions');
+                break;
             case 'do_fork_repositories':
                 try {
                     if ($this->request->get('choose_destination') == 'personal') {
@@ -510,7 +521,7 @@ class Git extends PluginController {
 
     public function _doDispatchForkCrossProject($request, $user) {
         $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
-        $validators = array(new Valid_UInt('to_project'), new Valid_Array('repos'));
+        $validators = array(new Valid_UInt('to_project'));
 
         foreach ($validators as $validator) {
             $validator->required();
@@ -523,7 +534,7 @@ class Git extends PluginController {
         $to_project_id = $request->get('to_project');
         if ($user->isMember($to_project_id, 'A')) {
             $to_project    = $this->projectManager->getProject($to_project_id);
-            $repos_ids     = $request->get('repos');
+            $repos_ids     = explode(',', $request->get('repos'));
             $repos         = $this->getRepositoriesFromIds($repos_ids);
             $namespace     = '';
             $scope         = GitRepository::REPO_SCOPE_PROJECT;
@@ -556,9 +567,7 @@ class Git extends PluginController {
 
         $valid = new Valid_UInt('repos');
         $valid->required();
-        if($request->validArray($valid)) {
-            $repos_ids = $request->get('repos');
-        }
+        $repos_ids = explode(',', $request->get('repos'));
         $to_project   = $this->projectManager->getProject($this->groupId);
         $repos        = $this->getRepositoriesFromIds($repos_ids);
         $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;

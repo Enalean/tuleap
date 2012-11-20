@@ -422,7 +422,7 @@ class GitViews extends PluginViews {
         if ( !empty($params['repository_list']) ) {
             echo '<form action="" method="POST">';
             echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
-            echo '<input type="hidden" name="action" value="do_fork_repositories" />';
+            echo '<input type="hidden" name="action" value="fork_repositories_permissions" />';
             $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
             echo $token->fetchHTMLInput();
 
@@ -478,7 +478,27 @@ class GitViews extends PluginViews {
         }
         echo '<br />';
     }
-    
+
+    protected function forkRepositoriesPermissions() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+        echo '<h2>'.$this->getText('fork_repositories').'</h2>';
+        echo '<form action="" method="POST">';
+        echo '<input type="hidden" name="group_id" value="'.(int)$this->groupId.'" />';
+        echo '<input type="hidden" name="action" value="do_fork_repositories" />';
+        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='.(int)$this->groupId.'&action=fork_repositories');
+        echo $token->fetchHTMLInput();
+        echo '<input id="fork_repositories_repo" type="hidden" name="repos" value="'.$params['repos'].'" />';
+        if (true) {
+            echo '<input id="choose_personal" type="hidden" name="choose_destination" value="'.$params['scope'].'" />';
+        }
+        echo '<input id="to_project" type="hidden" name="to_project" value="'.$params['group_id'].'" />';
+        echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$params['namespace'].'" />';
+        echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
+        echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
+        echo '</form>';
+    }
+
     private function fetchCopyToAnotherProject() {
         $html = '';
         $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
