@@ -495,8 +495,8 @@ class GitViews extends PluginViews {
         echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$purifier->purify($params['namespace']).'" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
 
-        //@todo clean up
-        $repositoryId = $params['repos'];
+        //@todo clean up, handle fork on the same project
+        $repositoryId = $params['repos'][0];
         $dao          = new GitDao();
         $repoFactory  = new GitRepositoryFactory($dao, ProjectManager::instance());
         $repository   = $repoFactory->getRepositoryById($repositoryId);
