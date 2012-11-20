@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../../constants.php');
 require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Redirect.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Tracker_History.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
@@ -912,7 +913,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                 $workflow = $this->getWorkflow();
                 if ($workflow) {
-                    $workflow->before($fields_data, $submitter);
+                    $workflow->before($fields_data, $submitter, $this);
                 }
                 if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
 
@@ -973,6 +974,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
             $is_valid = $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data, $this->getFormElementFactory()) && $is_valid;
         }
+
+        if($is_valid) {
+            //validate workflow
+             $workflow = $this->getWorkflow();
+             if ($workflow) {
+                 $is_valid = $workflow->validate($fields_data, $this);
+             }
+        }
+
         return $is_valid;
     }
 
@@ -1015,7 +1025,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                     $workflow = $this->getWorkflow();
                     if ($workflow) {
-                        $workflow->before($fields_data, $submitter);
+                        $workflow->before($fields_data, $submitter, $this);
                     }
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
                         //Store the comment
@@ -1385,12 +1395,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $artifact_links;
     }
-    
+
     /**
      * Get artifacts linked to the current artifact if they belongs to the hierarchy
-     * 
+     *
      * @param User $user The user who should see the artifacts
-     * 
+     *
      * @return Array of Tracker_Artifact
      */
     public function getHierarchyLinkedArtifacts(User $user) {
@@ -1403,14 +1413,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $artifact_links;
     }
-    
+
     /**
      * @return array of Tracker
      */
     public function getAllowedChildrenTypes() {
         return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
     }
-    
+
     /**
      * Get artifacts linked to the current artifact if
      * they are not in children.
@@ -1428,7 +1438,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         array_filter($grandchild_artifacts);
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
-    
+
     public function __toString() {
         return __CLASS__." #$this->id";
     }
@@ -1446,7 +1456,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $this->ancestors;
     }
-    
+
     public function setAllAncestors(array $ancestors) {
         $this->ancestors = $ancestors;
     }
@@ -1455,7 +1465,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Return the parent artifact of current artifact if any
      *
      * @param User $user
-     * 
+     *
      * @return Tracker_Artifact
      */
     public function getParent(User $user) {
@@ -1464,7 +1474,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /**
      * Get artifacts
-     * 
+     *
      * @param User $user
      *
      * @return Array of Tracker_Artifact

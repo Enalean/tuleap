@@ -28,7 +28,17 @@ Mock::generate('TransitionFactory');
 require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 
-class WorkflowFactoryTest extends UnitTestCase {
+class WorkflowFactoryTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        PermissionsManager::setInstance(mock('PermissionsManager'));
+    }
+
+    public function tearDown() {
+        PermissionsManager::clearInstance();
+        parent::tearDown();
+    }
 
      public function testImport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/importWorkflow.xml');
@@ -42,7 +52,12 @@ class WorkflowFactoryTest extends UnitTestCase {
                     'F32-V1' => 802
                   );
         
-        $workflow = WorkflowFactory::instance()->getInstanceFromXML($xml, $mapping, $tracker);        
+        $condition_factory  = mock('Workflow_Transition_ConditionFactory');
+        stub($condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
+        $transition_factory = new TransitionFactory($condition_factory);
+        $workflow_factory   = new WorkflowFactory($transition_factory);
+
+        $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker);
         $this->assertEqual($workflow->getIsUsed(), 1);
         $this->assertEqual($workflow->getFieldId(), 111);
         $this->assertEqual(count($workflow->getTransitions()), 3);
@@ -58,9 +73,9 @@ class WorkflowFactoryTest extends UnitTestCase {
         $this->assertEqual($postactions[0]->getField(), 110);
         $this->assertEqual($postactions[0]->getValueType(), 1);
         
-        //Test permissions
-        $permissions = $transitions[2]->getPermissions();
-        $this->assertEqual($permissions[0], 3);
+        //TODO: test conditions
+        $conditions = $transitions[2]->getConditions();
+        $this->assertCount($conditions, 1);
         
     }
     
@@ -84,13 +99,12 @@ class WorkflowFactoryTest extends UnitTestCase {
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('getFieldId', $field_status->getId());
         
-        $tf = new MockTransitionFactory();
-        $tf->setReturnValue('isFieldUsedInTransitions', false, array($field_start_date));
-        $tf->setReturnValue('isFieldUsedInTransitions', true,  array($field_close_date));
-        $tf->expectCallCount('isFieldUsedInTransitions', 2);
+        $transition_factory = new MockTransitionFactory();
+        $transition_factory->setReturnValue('isFieldUsedInTransitions', false, array($field_start_date));
+        $transition_factory->setReturnValue('isFieldUsedInTransitions', true,  array($field_close_date));
+        $transition_factory->expectCallCount('isFieldUsedInTransitions', 2);
         
-        $wf = TestHelper::getPartialMock('WorkflowFactory', array('getWorkflowByTrackerId', 'getTransitionFactory'));
-        $wf->setReturnReference('getTransitionFactory', $tf);
+        $wf = partial_mock('WorkflowFactory', array('getWorkflowByTrackerId'), array($transition_factory));
         $wf->setReturnReference('getWorkflowByTrackerId', $workflow, array($tracker->getId()));
         
         $this->assertTrue($wf->isFieldUsedInWorkflow($field_status));

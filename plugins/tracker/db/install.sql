@@ -23,6 +23,13 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition (
   INDEX idx_wf_workflow_id( workflow_id )
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_workflow_transition_condition_field_notempty;
+CREATE TABLE  tracker_workflow_transition_condition_field_notempty(
+    id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    transition_id INT(11) NOT NULL,
+    field_id INT(11) NOT NULL
+) ENGINE=InnoDB;
+
 --  
 --  Table structure for workflow_transition_postactions_field_date
 -- 

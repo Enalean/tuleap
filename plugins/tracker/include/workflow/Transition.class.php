@@ -18,7 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('PostAction/Transition_PostAction.class.php');
+require_once 'PostAction/Transition_PostAction.class.php';
+require_once 'Transition/Condition/Permissions.class.php';
+require_once 'Transition/Condition/FieldNotEmpty.class.php';
 
 class Transition {
     public $transition_id;
@@ -38,6 +40,11 @@ class Transition {
      * @var Array of Transition_PostAction
      */
     protected $post_actions = array();
+
+    /**
+     * @var Array of Workflow_Transition_Condition
+     */
+    private $conditions = array();
 
     /**
      * @var Array of permissions
@@ -119,9 +126,16 @@ class Transition {
     /**
      * Get the transition id
      *
+     * @deprecated since Tuleap 5.7
+     * @see getId()
+     *
      * @return int
      */
     public function getTransitionId() {
+        return $this->transition_id;
+    }
+
+    public function getId() {
         return $this->transition_id;
     }
 
@@ -151,6 +165,12 @@ class Transition {
     public function displayTransitionDetails() {
     }
 
+    /**
+     * @return int
+     */
+    public function getGroupId() {
+        return $this->getWorkflow()->getTracker()->getGroupId();
+    }
 
     /**
      * Execute actions before transition happens
@@ -161,10 +181,22 @@ class Transition {
      * @return void
      */
     public function before(&$fields_data, User $current_user) {
+
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->before($fields_data, $current_user);
         }
+    }
+
+    /**
+     * Validate that transition can occur
+     *
+     * @param Array $fields_data Request field data (array[field_id] => data)
+     *
+     * @return bool, true if the transition can occur, false otherwise
+     */
+    public function validate($fields_data, Tracker_Artifact $artifact) {
+        return $this->getConditions()->validate($fields_data, $artifact);
     }
 
     /**
@@ -226,24 +258,31 @@ class Transition {
     }
 
     /**
-     * Set the permissions for the ugroup_id
-     * Use during the two-step xml import
-     *
-     * @param Array    $ugroup_ids An array of ugroup id
-     *
-     * @return void
+     * @return string html permission form for the transition
      */
-    public function setPermissions($ugroup_ids) {
-        $this->cache_permissions = $ugroup_ids;
+    public function fetchConditions() {
+        return $this->getConditions()->fetch();
     }
 
     /**
-     * Get the permissions for this transition
-     *
-     * @return array
+     * @return Workflow_Transition_ConditionsCollection
      */
-    public function getPermissions() {
-        return $this->cache_permissions;
+    public function getConditions() {
+        if (! $this->conditions) {
+            $this->conditions = $this->getConditionFactory()->getConditions($this);
+        }
+        return $this->conditions;
+    }
+
+    public function setConditions(Workflow_Transition_ConditionsCollection $conditions) {
+        $this->conditions = $conditions;
+    }
+
+    /**
+     * @return Workflow_Transition_ConditionFactory
+     */
+    private function getConditionFactory() {
+        return Workflow_Transition_ConditionFactory::build();
     }
 
     /**
@@ -271,27 +310,7 @@ class Transition {
             }
         }
 
-        $pm = $this->getPermissionsManager();
-        $transition_ugroups = $pm->getAuthorizedUgroups($this->getTransitionId(), 'PLUGIN_TRACKER_WORKFLOW_TRANSITION');
-
-        if ($transition_ugroups) {
-            $grand_child = $child->addChild('permissions');
-
-            foreach ($transition_ugroups as $transition_ugroup) {
-                if (($ugroup = array_search($transition_ugroup['ugroup_id'], $GLOBALS['UGROUPS'])) !== false && $transition_ugroup['ugroup_id'] < 100) {
-                    $grand_child->addChild('permission')->addAttribute('ugroup', $ugroup);
-                }
-            }
-        }
-    }
-
-   /**
-    * Wrapper for PermissionsManager
-    *
-    * @return PermissionsManager
-    */
-    public function getPermissionsManager() {
-        return PermissionsManager::instance();
+        $this->getConditions()->exportToXML($child, $xmlMapping);
     }
 
    /**

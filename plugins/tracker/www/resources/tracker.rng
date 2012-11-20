@@ -99,13 +99,15 @@
           </zeroOrMore>
         </element>
       </optional>
-      <element name="dependencies">
-        <zeroOrMore>
-          <element name="rule">
-            <ref name="ruleContent"/>
-          </element>
-        </zeroOrMore>
-      </element>
+      <optional>
+        <element name="dependencies">
+          <zeroOrMore>
+            <element name="rule">
+              <ref name="ruleContent"/>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
       <optional>
         <element name="reports">
           <zeroOrMore>
@@ -416,7 +418,7 @@
         <data type="string"/>
       </attribute>
     </element>
-    <zeroOrMore>
+    <optional>
       <element name="postactions">
         <zeroOrMore>
           <element name="postaction_field_date">
@@ -455,18 +457,48 @@
           </element>
         </zeroOrMore>
       </element>
-    </zeroOrMore>
-    <zeroOrMore>
-      <element name="permissions">
-        <zeroOrMore>
-          <element name="permission">
-            <attribute name="ugroup">
-              <data type="string"/>
-            </attribute>
-          </element>
-        </zeroOrMore>
-      </element>
-    </zeroOrMore>
+    </optional>
+    <choice>
+      <ref name="conditionPermissionsContent"/>
+      <optional>
+        <element name="conditions">
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>perms</value>
+              </attribute>
+              <ref name="conditionPermissionsContent"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>notempty</value>
+              </attribute>
+              <ref name="conditionFieldNotEmptyContent"/>
+            </element>
+          </optional>
+        </element>
+      </optional>
+    </choice>
+  </define>
+  <define name="conditionPermissionsContent">
+    <element name="permissions">
+      <zeroOrMore>
+        <element name="permission">
+          <attribute name="ugroup">
+            <data type="string"/>
+          </attribute>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="conditionFieldNotEmptyContent">
+    <element name="field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
   </define>
   <define name="ruleContent">
     <element name="source_field">
@@ -594,7 +626,7 @@
     <optional>
       <!--
         defaout is true
-        these ids are initial ids of the exported report 
+        these ids are initial ids of the exported report
       -->
       <attribute name="id">
         <data type="int"/>

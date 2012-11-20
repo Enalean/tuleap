@@ -25,6 +25,7 @@ require_once('WorkflowFactory.class.php');
 require_once('PostAction/Field/Transition_PostAction_Field_Date.class.php');
 require_once('PostAction/Transition_PostActionFactory.class.php');
 require_once('PostAction/Transition_PostActionManager.class.php');
+require_once('Transition/ConditionManager.class.php');
 
 class WorkflowManager {
     protected $tracker;
@@ -51,7 +52,7 @@ class WorkflowManager {
             }
         } else if ($request->get('edit_transition')) {
             $workflow   = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
-            $transition = TransitionFactory::instance()->getTransition($request->get('edit_transition'));
+            $transition = $this->getTransitionFactory()->getTransition($request->get('edit_transition'));
             $this->displayTransitionDetails($engine, $request, $current_user, $transition);
         } else if ($request->get('delete')) {
              if (WorkflowFactory::instance()->deleteWorkflow($request->get('delete'))) {
@@ -147,15 +148,19 @@ class WorkflowManager {
             // Permissions
             $ugroups = $request->get('ugroups');
             permission_clear_all($this->tracker->group_id, 'PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition, false);
-            if (TransitionFactory::instance()->addPermissions($ugroups, $transition)) {
+            if ($this->getTransitionFactory()->addPermissions($ugroups, $transition)) {
                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','permissions_updated'));
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_admin','permissions_not_updated'));
             }
+            //Conditions
+            $condition_manager = new Transition_ConditionManager();
+            $condition_manager->process($this->getTransitionFactory()->getTransition($transition), $request, $current_user);
 
             // Post actions
             $tpam = new Transition_PostActionManager();
-            $tpam->process(TransitionFactory::instance()->getTransition($transition), $request, $current_user);
+            $tpam->process($this->getTransitionFactory()->getTransition($transition), $request, $current_user);
+
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(
                 array(
                     'tracker'         => (int)$this->tracker->id,
@@ -219,7 +224,7 @@ class WorkflowManager {
         echo '<table><tr><td>';
 
         $section_conditions = new Widget_Static($GLOBALS['Language']->getText('workflow_admin','under_the_following_condition'));
-        $section_conditions->setContent($this->fetchWorkflowPermissions($transition));
+        $section_conditions->setContent($transition->fetchConditions());
         $section_conditions->display();
 
         $tpaf = $this->getPostActionFactory();
@@ -246,23 +251,10 @@ class WorkflowManager {
     }
 
     /**
-     * Return permission form for the transition
-     *
-     * @param Transition $transition The transition
-     *
-     * @return string html
+     * @return TransitionFactory
      */
-    protected function fetchWorkflowPermissions($transition) {
-        $html = '';
-        $html .= '<ul class="workflow_conditions">';
-        $html .= '<li class="workflow_conditions_perms">';
-        $html .= $GLOBALS['Language']->getText('workflow_admin','label_define_transition_permissions');
-        $html .= '<br />';
-        $html .= '<p>';
-        $html .= plugin_tracker_permission_fetch_selection_field('PLUGIN_TRACKER_WORKFLOW_TRANSITION', $transition->getTransitionId(), $this->tracker->group_id);
-        $html .= '</p>';
-        $html .= '</li></ul>';
-        return $html;
+    public function getTransitionFactory() {
+        return TransitionFactory::instance();
     }
 
     protected function displayAdminWorkflow(TrackerManager $engine, Codendi_Request $request, User $current_user, Workflow $workflow) {
