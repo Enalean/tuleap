@@ -199,8 +199,7 @@ class WorkflowManager {
     protected function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, User $current_user, Transition $transition) {
 
         $hp = Codendi_HTMLPurifier::instance();
-        $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
-        echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title').'</h3>';
+        $this->displayHeader($engine);
 
         if($transition->getFieldValueFrom()) {
             $from_label = $transition->getFieldValueFrom()->getLabel();
@@ -240,7 +239,7 @@ class WorkflowManager {
         echo '</td></tr></table>';
         echo '</form>';
 
-        $this->tracker->displayFooter($engine);
+        $this->displayFooter($engine);
     }
 
     /**
@@ -289,18 +288,16 @@ class WorkflowManager {
           echo '<input type="submit" name="enable_workflow" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
           echo '</FORM>';
           $this->displayTransitionsMatrix($workflow, $engine, $request, $current_user);
-          $this->tracker->displayFooter($engine);
     }
 
     protected function displayAdminDefineWorkflow($engine, $request, $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
-        echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title').'</h3>';
         $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
+        $this->displayHeader($engine);
 
-        if(count($workflow)) {
+        if (count($workflow)) {
             $this->displayAdminWorkflow($engine, $request, $current_user, $workflow);
-        }else {
+        } else {
             //Display creation form
             echo '<p>';
             echo $GLOBALS['Language']->getText('workflow_admin','choose_field');
@@ -321,8 +318,23 @@ class WorkflowManager {
             echo '<input type="submit" name="create" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
             echo '</from>';
 
-            $this->tracker->displayFooter($engine);
         }
+        $this->displayFooter($engine);
+    }
+
+    private function displayHeader($engine) {
+        $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
+        echo '<div class="tabbable tabs-left">';
+        echo '<ul class="nav nav-tabs">';
+        echo '<li class="active"><a href="#">Transitions</a></li>'; //TODO: i18n
+        echo '</ul>';
+        echo '<div class="tab-content">';
+    }
+
+    private function displayFooter($engine) {
+        echo '</div>';
+        echo '</div>';
+        $this->tracker->displayFooter($engine);
     }
 
     public function exportToSOAP() {
