@@ -880,7 +880,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                 $workflow = $this->getWorkflow();
                 if ($workflow) {
-                    $workflow->before($fields_data, $submitter);
+                    $workflow->before($fields_data, $submitter, $this);
                 }
                 if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
 
@@ -992,7 +992,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                     $workflow = $this->getWorkflow();
                     if ($workflow) {
-                        $workflow->before($fields_data, $submitter);
+                        $workflow->before($fields_data, $submitter, $this);
                     }
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
                         //Store the comment

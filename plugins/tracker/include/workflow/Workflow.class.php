@@ -254,9 +254,9 @@ class Workflow {
      *
      * @return void
      */
-    public function before(array &$fields_data, User $current_user) {
+    public function before(array &$fields_data, User $current_user, Tracker_Artifact $artifact) {
         if (isset($fields_data[$this->getFieldId()])) {
-            $transition = $this->getCurrentTransition($fields_data);
+            $transition = $this->getCurrentTransition($fields_data, $artifact);
             if ($transition) {
                 $transition->before($fields_data, $current_user);
             }
@@ -264,17 +264,21 @@ class Workflow {
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {
-        $transition = $this->getCurrentTransition($fields_data);
+        if (! $this->is_used) {
+            return true;
+        }
+
+        $transition = $this->getCurrentTransition($fields_data, $artifact);
         if (isset($transition)) {
             return $transition->validate($fields_data, $artifact);
         }
         return true;
     }
 
-    private function getCurrentTransition($fields_data) {
+    private function getCurrentTransition($fields_data, Tracker_Artifact $artifact) {
         $oldValues = null;
-        if($this->artifact->getLastChangeset()) {
-            $oldValues = $this->artifact->getLastChangeset()->getValue($this->getField());
+        if($artifact->getLastChangeset()) {
+            $oldValues = $artifact->getLastChangeset()->getValue($this->getField());
         }
         $from      = null;
         if ($oldValues) {

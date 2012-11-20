@@ -144,9 +144,9 @@ require_once(dirname(__FILE__).'/../include/workflow/Workflow.class.php');
 Mock::generate('Workflow');
 
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
-    function before(&$fields_data, $submitter) {
+    function before(&$fields_data, $submitter, $artifact) {
         $fields_data[102] = '456';
-        return parent::before($fields_data, $submitter);
+        return parent::before($fields_data, $submitter, $artifact);
     }
 }
 

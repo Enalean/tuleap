@@ -262,14 +262,13 @@ class WorkflowTest extends UnitTestCase {
         $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
 
         $workflow->setField($f);
-        $workflow->setArtifact($a);
 
         $fields_data = array(
             '103' => '802',
         );
         $t1->expectNever('before');
         $t2->expectOnce('before', array($fields_data, $current_user));
-        $workflow->before($fields_data, $current_user);
+        $workflow->before($fields_data, $current_user, $a);
     }
 
     function testBeforeShouldTriggerTransitionActionsForNewArtifact() {
@@ -305,14 +304,13 @@ class WorkflowTest extends UnitTestCase {
         $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
 
         $workflow->setField($f);
-        $workflow->setArtifact($a);
 
-        $fields_data = array(
+       $fields_data = array(
             '103' => '801',
         );
         $t1->expectOnce('before');
         $t2->expectNever('before', array($fields_data, $current_user));
-        $workflow->before($fields_data, $current_user);
+        $workflow->before($fields_data, $current_user, $a);
     }
 
 }
@@ -364,6 +362,34 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
         $workflow = new Workflow(1,1,1,1, array());
         $result   = $workflow->exportToSOAP();
         $this->assertTrue(empty($result['transitions']));
+    }
+}
+
+class Workflow_validateTest extends TuleapTestCase {
+
+    public function itReturnsTrueIfWorkflowIsNotEnabled() {
+        $is_used     = 0;
+        $workflow    = new Workflow(1,1,1,$is_used, array());
+        $fields_data = array();
+        $artifact    = mock('Tracker_Artifact');
+
+        $this->assertTrue($workflow->validate($fields_data, $artifact));
+    }
+
+    public function itReturnsFalseIfWorkflowIsEnabledAndTransitionNotValid() {
+        $value_from  = null;
+        $value_to    = stub('Tracker_FormElement_Field_List_Value')->getId()->returns(66);
+        $transition  = mock('Transition');
+        stub($transition)->getFieldValueFrom()->returns($value_from);
+        stub($transition)->getFieldValueTo()->returns($value_to);
+        $is_used     = 1;
+        $field_id    = 42;
+        $workflow    = new Workflow(1, 1, $field_id, $is_used, array($transition));
+        $fields_data = array($field_id => 66);
+        $artifact    = mock('Tracker_Artifact');
+
+        expect($transition)->validate()->once()->returns(false);
+        $this->assertFalse($workflow->validate($fields_data, $artifact));
     }
 }
 ?>
