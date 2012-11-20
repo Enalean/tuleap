@@ -362,11 +362,25 @@ class Git extends PluginController {
                 $this->addView('forkRepositories');
                 break;
             case 'fork_repositories_permissions':
-                // @TODO: validate input
-                $repos     = $this->request->get('repos');
-                $toProject = $this->request->get('to_project');
-                $path      = $this->request->get('path');
-                $scope     = $this->request->get('choose_destination');
+                $valid = new Valid_UInt('repos');
+                $valid->required();
+                if($this->request->validArray($valid)) {
+                    $repos = $this->request->get('repos');
+                }
+                $valid = new Valid_UInt('to_project');
+                if ($this->request->valid($valid)) {
+                    $toProject = $this->request->get('to_project');
+                }
+                $valid = new Valid_String('path');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $path = $this->request->get('path');
+                }
+                $valid = new Valid_String('choose_destination');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $scope = $this->request->get('choose_destination');
+                }
                 $this->addAction('forkRepositoriesPermissions', array($repos, $toProject, $path, $scope));
                 $this->addView('forkRepositoriesPermissions');
                 break;
