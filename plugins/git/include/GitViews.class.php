@@ -497,13 +497,23 @@ class GitViews extends PluginViews {
 
         //@todo clean up, handle fork on the same project
         $repositoryId = $params['repos'][0];
-        $dao          = new GitDao();
-        $repoFactory  = new GitRepositoryFactory($dao, ProjectManager::instance());
-        $repository   = $repoFactory->getRepositoryById($repositoryId);
 
-        $request       = new Codendi_Request($params);
-        $accessControl = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
-        echo $accessControl->getHeadlessAccessControl($params['group_id']);
+        if ($params['scope'] == 'project') {
+            $groupId = $params['group_id'];
+
+            $dao         = new GitDao();
+            $request     = new Codendi_Request($params);
+            $repoFactory = new GitRepositoryFactory($dao, ProjectManager::instance());
+            $repository  = $repoFactory->getRepositoryById($repositoryId);
+            $accessControl = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
+            echo $accessControl->getHeadlessAccessControl($groupId);
+        } else {
+            $groupId = $this->groupId;
+        }
+
+
+
+
 
         echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
         echo '</form>';
