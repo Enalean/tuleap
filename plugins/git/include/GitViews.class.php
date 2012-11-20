@@ -480,7 +480,8 @@ class GitViews extends PluginViews {
     }
 
     protected function forkRepositoriesPermissions() {
-        $params = $this->getData();
+        $purifier = Codendi_HTMLPurifier::instance();
+        $params   = $this->getData();
         $this->_getBreadCrumb();
         echo '<h2>'.$this->getText('fork_repositories').'</h2>';
         echo '<form action="" method="POST">';
@@ -488,12 +489,10 @@ class GitViews extends PluginViews {
         echo '<input type="hidden" name="action" value="do_fork_repositories" />';
         $token = new CSRFSynchronizerToken('/plugins/git/?group_id='.(int)$this->groupId.'&action=fork_repositories');
         echo $token->fetchHTMLInput();
-        echo '<input id="fork_repositories_repo" type="hidden" name="repos" value="'.$params['repos'].'" />';
-        if (true) {
-            echo '<input id="choose_personal" type="hidden" name="choose_destination" value="'.$params['scope'].'" />';
-        }
-        echo '<input id="to_project" type="hidden" name="to_project" value="'.$params['group_id'].'" />';
-        echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$params['namespace'].'" />';
+        echo '<input id="fork_repositories_repo" type="hidden" name="repos" value="'.$purifier->purify($params['repos']).'" />';
+        echo '<input id="choose_personal" type="hidden" name="choose_destination" value="'.$purifier->purify($params['scope']).'" />';
+        echo '<input id="to_project" type="hidden" name="to_project" value="'.$purifier->purify($params['group_id']).'" />';
+        echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$purifier->purify($params['namespace']).'" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
         echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
         echo '</form>';
