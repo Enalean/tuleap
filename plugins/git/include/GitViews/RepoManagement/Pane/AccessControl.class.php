@@ -92,6 +92,7 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
      * @return void
      */
     public function getHeadlessAccessControl($projectId) {
+        //@todo factorize
         $html  = '';
         if ($this->repository->getBackend() instanceof Git_Backend_Gitolite) {
             $disabled = $this->repository->getRemoteServerId() ? true : false;
