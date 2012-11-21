@@ -148,11 +148,10 @@ class GitPlugin extends Plugin {
                 $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
                 $params['dependencies'] = array(
                     $this->getGitDao(),
-                    $this->getGerritDriver(),
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
                     new BackendLogger(),
-                    $this->getUserFinder(),
+                    $this->getProjectCreator(),
                 );
                 break;
             default:
@@ -605,8 +604,10 @@ class GitPlugin extends Plugin {
         }
     }
 
-    private function getUserFinder() {
-        return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
+    private function getProjectCreator() {
+        $user_finder = new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
+        //$dir, Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_UserFinder $user_finder
+        return new Git_Driver_Gerrit_ProjectCreator(Config::get('tmp_dir'), $this->getGerritDriver(), $user_finder);
     }
 }
 

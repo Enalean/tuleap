@@ -22,21 +22,26 @@
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RemoteSSHCommand.class.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 
-class Git_Gerrit_Driver_ProjectCreator {
+class Git_Driver_Gerrit_ProjectCreator {
 
     /** @var Git_Driver_Gerrit */
     private $driver;
 
-    /** @var Git_RemoteServer_GerritServer */
-    private $gerrit_server;
-
     /** @var string */
     private $dir;
 
-    public function __construct($dir, Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServer $server) {
+    /** @var Git_Driver_Gerrit_UserFinder */
+    private $user_finder;
+
+    private $gerrit_groups = array('contributors' => Git::PERM_READ,
+                                   'integrators'  => Git::PERM_WRITE,
+                                   'supermen'     => Git::PERM_WPLUS);
+
+    
+    public function __construct($dir, Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder) {
         $this->dir           = $dir;
         $this->driver        = $driver;
-        $this->gerrit_server = $server;
+        $this->user_finder   = $user_finder;
     }
 
     private function cloneGerritProjectConfig($gerrit_project_url) {
@@ -46,18 +51,27 @@ class Git_Gerrit_Driver_ProjectCreator {
         `cd $this->dir/firefox; git pull $gerrit_project_url refs/meta/config`;
         `cd $this->dir/firefox; git checkout FETCH_HEAD`;
     }
+    
+    public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+        $gerrit_project = $this->driver->createProject($gerrit_server, $repository);
 
-    public function initiatePermissions($gerrit_project_url, $contributors, $integrators, $supermen) {
+        foreach ($this->gerrit_groups as $group_name => $permission_level) {
+            $user_list = $this->user_finder->getUsersForPermission($permission_level, $repository);
+            $this->driver->createGroup($gerrit_server, $repository, $group_name, $user_list);
+        }
+    }
+
+    public function initiatePermissions(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen) {
         $this->cloneGerritProjectConfig($gerrit_project_url);
-        $this->addGroupToGroupFile($contributors);
-        $this->addGroupToGroupFile($integrators);
-        $this->addGroupToGroupFile($supermen);
+        $this->addGroupToGroupFile($gerrit_server, $contributors);
+        $this->addGroupToGroupFile($gerrit_server, $integrators);
+        $this->addGroupToGroupFile($gerrit_server, $supermen);
         $this->addPermissionsToProjectConf($contributors, $integrators, $supermen);
         $this->pushToServer();
     }
 
-    private function addGroupToGroupFile($group) {
-        $group_uuid = $this->driver->getGroupUUID($this->gerrit_server, $group);
+    private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
+        $group_uuid = $this->driver->getGroupUUID($gerrit_server, $group);
         file_put_contents("$this->dir/firefox/groups", "$group_uuid\t$group", FILE_APPEND);
     }
 
