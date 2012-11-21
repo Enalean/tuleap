@@ -42,13 +42,15 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $this->current_dir = dirname(__FILE__);
         $this->tmpdir      = Config::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
         `unzip $this->current_dir/firefox.zip -d $this->tmpdir`;
-        $this->gerrit_project_url = "$this->tmpdir/firefox.git";
 
-
-        $id = $host = $port = $login = $identity_file = 0;
+        $host = $this->tmpdir;
+        $id = $port = $login = $identity_file = 0;
         $this->server = new Git_RemoteServer_GerritServer($id, $host, $port, $login, $identity_file);
 
+        $this->repository = mock('GitRepository');
         $this->driver = mock('Git_Driver_Gerrit');
+        stub($this->driver)->createProject($this->server, $this->repository)->returns('tuleap-localhost-mozilla/firefox');
+
         stub($this->driver)->getGroupUUID($this->server, $this->contributors)->returns($this->contributors_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->integrators)->returns($this->integrators_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->supermen)->returns($this->supermen_uuid);
@@ -56,7 +58,6 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $this->userfinder = mock('Git_Driver_Gerrit_UserFinder');
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator($this->tmpdir, $this->driver, $this->userfinder);
 
-        $this->repository = mock('GitRepository');
     }
 
     public function tearDown() {
@@ -70,8 +71,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
 
     public function itPushesTheUpdatedConfigToTheServer() {
-        //$this->project_creator->createProject($this->server, $this->repository);
-        $this->project_creator->initiatePermissions($this->server, $this->gerrit_project_url, $this->contributors, $this->integrators, $this->supermen);
+        $this->project_creator->createProject($this->server, $this->repository);
 
         $this->assertItClonesTheDistantRepo();
         $this->assertGroupsFileHasEverything();
@@ -125,9 +125,9 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
     public function itCreatesAProject() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        expect($this->driver)->createProject($this->server, $this->repository)->once()->returns('host-project/name');
+        expect($this->driver)->createProject($this->server, $this->repository)->once()->returns('tuleap-localhost-mozilla/firefox');
         $project_name = $this->project_creator->createProject($this->server, $this->repository);
-        $this->assertEqual('host-project/name', $project_name);
+        $this->assertEqual('tuleap-localhost-mozilla/firefox', $project_name);
     }
 
     public function itCreatesContributorsGroup() {
