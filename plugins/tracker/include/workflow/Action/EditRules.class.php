@@ -18,12 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'Abstract.class.php';
+
 require_once dirname(__FILE__).'/../../../tests/builders/aField.php';
 
-class Tracker_Workflow_Action_EditRules {
-
-    /** @var Tracker */
-    protected $tracker;
+class Tracker_Workflow_Action_EditRules extends Tracker_Workflow_Action_Abstract {
     
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
@@ -40,7 +39,7 @@ class Tracker_Workflow_Action_EditRules {
     );
 
     public function __construct(Tracker $tracker) {
-        $this->tracker = $tracker;
+        parent::__construct($tracker);
         $this->form_element_factory = Tracker_FormElementFactory::instance();
     }
 
@@ -106,37 +105,6 @@ class Tracker_Workflow_Action_EditRules {
         echo '</form>';
     }
 
-
-    protected function displayHeader($engine) {
-        $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
-
-        $transitions_link = TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker' =>  (int)$this->tracker->id,
-                'func'    =>  'admin-workflow'
-            )
-        );
-
-        $workflow_link = TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker' =>  (int)$this->tracker->id,
-                'func'    =>  'admin-workflow-rules'
-            )
-        );
-        echo '<div class="tabbable tabs-left">';
-        echo '<ul class="nav nav-tabs">';
-        echo '<li class="active"><a href="'. $workflow_link .'">Workflow Rules</a></li>'; //TODO: i18n
-        echo '<li><a href="'. $transitions_link .'">Transitions</a></li>'; //TODO: i18n
-        echo '</ul>';
-        echo '<div class="tab-content">';
-    }
-
-    protected function displayFooter($engine) {
-        echo '</div>';
-        echo '</div>';
-        $this->tracker->displayFooter($engine);
-    }
-    
     private function getDateFields() {
         $form_elements = $this->form_element_factory->getFormElementsByType($this->tracker, 'date');
         $values = array(
