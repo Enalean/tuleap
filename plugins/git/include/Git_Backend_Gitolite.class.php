@@ -337,7 +337,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     /**
      * @throws GitRepositoryAlreadyExistsException 
      */
-    public function fork(GitRepository $old, GitRepository $new) {
+    public function fork(GitRepository $old, GitRepository $new, array $forkPermissions) {
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
         $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
@@ -351,7 +351,11 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
             if ($forkSucceeded) {
                 $id = $this->getDao()->save($new);
                 $new->setId($id);
-                $this->clonePermissions($old, $new);
+                if (empty($forkPermissions)) {
+                    $this->clonePermissions($old, $new);
+                } else {
+                    $this->savePermissions($new, $forkPermissions);
+                }
                 $this->updateRepoConf($new);
             }
         }

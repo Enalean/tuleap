@@ -88,7 +88,7 @@ class GitRepositoryManager {
      * @param String        $namespace  The namespace to put the repo in (might be emtpy)
      * @param String        $scope      Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
      */
-    public function fork(GitRepository $repository, Project $to_project, User $user, $namespace, $scope) {
+    public function fork(GitRepository $repository, Project $to_project, User $user, $namespace, $scope, array $forkPermissions) {
         $clone = clone $repository;
         $clone->setProject($to_project);
         $clone->setCreator($user);
@@ -101,7 +101,7 @@ class GitRepositoryManager {
 
         $this->assertRepositoryNameNotAlreadyUsed($clone);
         //TODO use creator
-        $repository->getBackend()->fork($repository, $clone);
+        $repository->getBackend()->fork($repository, $clone, $forkPermissions);
     }
 
     private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {
@@ -150,8 +150,7 @@ class GitRepositoryManager {
         foreach ($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
-                    $this->fork($repo, $project, $user, $namespace, $scope);
-                    $repo->getBackend()->savePermissions($repo, $forkPermissions);
+                    $this->fork($repo, $project, $user, $namespace, $scope, $forkPermissions);
                     $forked = true;
                 }
             } catch (GitRepositoryAlreadyExistsException $e) {
