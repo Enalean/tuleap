@@ -1690,4 +1690,30 @@ class TrackerTest extends TuleapTestCase {
     }
 }
 
+class Tracker_WorkflowTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id = 12;
+        $this->tracker = partial_mock('Tracker', array('getWorkflowFactory'));
+        $this->tracker->setId($this->tracker_id);
+
+        $this->workflow_factory = mock('WorkflowFactory');
+        stub($this->tracker)->getWorkflowFactory()->returns($this->workflow_factory);
+    }
+
+    public function itHasADefaultWorkflow() {
+        stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
+        $workflow   = $this->tracker->getWorkflow();
+        $this->assertIsA($workflow, 'Workflow');
+        $this->assertEqual($workflow->getTrackerId(), $this->tracker_id);
+    }
+
+    public function itHasAWorkflowFromTheFactoryWhenThereAreTransitions() {
+        $workflow = new Workflow(1, $this->tracker_id, 34, true);
+        stub($this->workflow_factory)->getWorkflowByTrackerId($this->tracker_id)->returns($workflow);
+        $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
+    }
+}
+
 ?>

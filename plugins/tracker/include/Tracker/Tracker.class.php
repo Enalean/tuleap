@@ -3167,6 +3167,21 @@ EOS;
         }
         return null;
     }
-}
 
+    /**
+     * Return workflow of the current tracker (there is always a workflow).
+     *
+     * @return Workflow
+     */
+    public function getWorkflow() {
+        $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
+        if (! $workflow) {
+            $workflow_id = 0;
+            $field_id    = 0;
+            $is_used     = false;
+            $workflow    = new Workflow($workflow_id, $this->getId(), $field_id, $is_used);
+        }
+        return $workflow;
+    }
+}
 ?>
