@@ -22,17 +22,64 @@ class Tracker_Workflow_Action_EditRules {
 
     /** @var Tracker */
     protected $tracker;
+    
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+    
+    private $default_value = 'default_value';
+
+    private $operators = array(
+        'lower_than'       => '<',
+        'lower_or_equal'   => '<=',
+        'equal'            => '=',
+        'greater_or_equal' => '>=',
+        'greater_than'     => '>',
+        'different'        => '!='
+    );
 
     public function __construct(Tracker $tracker) {
         $this->tracker = $tracker;
+        $this->form_element_factory = Tracker_FormElementFactory::instance();
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
-        $this->displayHeader($layout);
-        echo 'oh oh oh';
-        $this->displayFooter($layout);
+        if ($request->existAndNonEmpty('add')) {
+            // Do the create stuff
+            $workflow_rules_url = TRACKER_BASE_URL.'/?'. http_build_query(
+                array(
+                    'tracker' =>  (int)$this->tracker->id,
+                    'func'    =>  'admin-workflow-rules',
+                )
+            );
+            $GLOBALS['Response']->redirect($workflow_rules_url);
+        } else {
+            $this->displayHeader($layout);
+            $this->displayAdd();
+            $this->displayFooter($layout);
+        }
+        
     }
     
+    private function displayAdd() {
+        echo 'No rules defined';
+        echo '<br />';
+        $values = $this->getDateFields();
+        $checked_val = $this->default_value;
+        $add_form_url  = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' =>  (int)$this->tracker->id,
+                'func'    =>  'admin-workflow-rules',
+            )
+        );
+        echo '<form name="" method="post" action="'.$add_form_url.'">';
+        echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
+        echo html_build_select_box_from_array($this->operators, 'operator');
+        echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
+        echo '<input type="submit" name="add" value="'.$GLOBALS['Language']->getText('global', 'add').'" />';
+        echo '</form>';
+    }
+
+
     protected function displayHeader($engine) {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
 
@@ -61,6 +108,19 @@ class Tracker_Workflow_Action_EditRules {
         echo '</div>';
         echo '</div>';
         $this->tracker->displayFooter($engine);
+    }
+    
+    private function getDateFields() {
+        $form_elements = $this->form_element_factory->getFormElementsByType($this->tracker, 'date');
+        $values = array(
+            $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed')
+        );
+        
+        foreach ($form_elements as $form_element) {
+            $values[$form_element->getId()] = $form_element->getLabel();
+        }
+        
+        return $values;
     }
 }
 
