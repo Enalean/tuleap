@@ -40,6 +40,7 @@ class Git_Gerrit_Driver_ProjectCreator {
     }
 
     private function cloneGerritProjectConfig($gerrit_project_url) {
+        // TODO: remove this hard-coded 'firefox'
         `mkdir $this->dir/firefox; cd $this->dir/firefox`;
         `cd $this->dir/firefox; git init`;
         `cd $this->dir/firefox; git pull $gerrit_project_url refs/meta/config`;
@@ -53,7 +54,6 @@ class Git_Gerrit_Driver_ProjectCreator {
         $this->addGroupToGroupFile($supermen);
         $this->addPermissionsToProjectConf($contributors, $integrators, $supermen);
         $this->pushToServer();
-
     }
 
     private function addGroupToGroupFile($group) {
@@ -62,9 +62,12 @@ class Git_Gerrit_Driver_ProjectCreator {
     }
 
     private function addPermissionsToProjectConf($contributors, $integrators, $supermen) {
+        // TODO: if (it is a public project && RegisteredUsers = Read) {
         `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.Read 'group Registered Users'`;
+        // }
         `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.Read 'group $contributors'`;
         `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.create 'group $integrators'`;
+        // TODO: complete this list of access rights
     }
 
     private function pushToServer() {
