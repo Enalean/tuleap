@@ -48,29 +48,22 @@ class WorkflowManager {
     public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
         if ($request->get('func') == 'admin-workflow-rules') {
             $action = new Tracker_Workflow_Action_EditRules($this->tracker);
-            $action->process($engine, $request, $current_user);
         } else if ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Create($this->tracker);
-            $action->process($engine, $request, $current_user);
         } else if ($request->get('edit_transition')) {
             $action = new Tracker_Workflow_Action_EditTransition($this->tracker, $this->getTransitionFactory(), $this->getPostActionFactory());
-            $action->process($engine, $request, $current_user);
         } else if ($request->get('delete')) {
             $action = new Tracker_Workflow_Action_Delete($this->tracker);
-            $action->process($engine, $request, $current_user);
         } else if ($request->get('create_matrix')) {
             $action = new Tracker_Workflow_Action_CreateMatrix($this->tracker);
-            $action->process($engine, $request, $current_user);
         } else if ($request->get('enable_workflow')) {
             $action = new Tracker_Workflow_Action_EnableWorkflow($this->tracker);
-            $action->process($engine, $request, $current_user);
         } else if ($request->get('workflow_details')) {
             $action = new Tracker_Workflow_Action_Details($this->tracker, $this->getTransitionFactory());
-            $action->process($engine, $request, $current_user);
         } else {
             $action = new Tracker_Workflow_Action_DefineWorkflow($this->tracker);
-            $action->process($engine, $request, $current_user);
         }
+        $action->process($engine, $request, $current_user);
     }
 
     /**
