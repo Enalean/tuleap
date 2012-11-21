@@ -83,8 +83,8 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $field = $this->form_element_factory->getFormElementById($workflow->field_id);
         $hp = Codendi_HTMLPurifier::instance();
         echo '<p>';
-        echo '<label>'. $GLOBALS['Language']->getText('workflow_admin','field') .'</label>: ';
-        echo $hp->purify($field->label);
+        echo '<label>'. $GLOBALS['Language']->getText('workflow_admin','field') .'</label> ';
+        echo '<strong>'. $hp->purify($field->label) .'</strong>';
         $delete_title = $GLOBALS['Language']->getText('workflow_admin','delete');
         $delete_url = TRACKER_BASE_URL.'/?'. http_build_query(
             array(

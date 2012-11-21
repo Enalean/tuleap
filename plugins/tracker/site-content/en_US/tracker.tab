@@ -1305,17 +1305,17 @@ plugin_tracker_search_index	artifact_title	Artifact Title
 #
 workflow_admin	title	Workflow Administration
 workflow_admin	title_define_transitions	Define the transitions
-workflow_admin	field	Field
-workflow_admin	enabled	Enabled
-workflow_admin	delete	Delete
+workflow_admin	field	Field on which the transitions will be based:
+workflow_admin	enabled	Check/apply transitions on each artifact update/create
+workflow_admin	delete	Delete all transitions
 workflow_admin	choose_field	Choose the field on which applies the workflow:
 workflow_admin	updated	Updated
 workflow_admin	not_updated	Nothing to update
 workflow_admin	created	Created
 workflow_admin	deleted	Deleted
-workflow_admin	workflow_enabled	The workflow has been enabled.
-workflow_admin	workflow_disabled	The workflow has been disabled.
-workflow_admin	delete_workflow	Are you sure you want to delete that workflow?
+workflow_admin	workflow_enabled	Transitions <strong>will be</strong> applied.
+workflow_admin	workflow_disabled	Transitions will <strong>not</strong> be applied.
+workflow_admin	delete_workflow	Are you sure you want to delete all transitions?
 workflow_admin	title_define_transition_details	Define rules on transition : from $1 to $2
 workflow_admin	label_define_transition_permissions	Groups that may make the transition:
 workflow_admin	label_define_transition_required_field	Field that must not be empty

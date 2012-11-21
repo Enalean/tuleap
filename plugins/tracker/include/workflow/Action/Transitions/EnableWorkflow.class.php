@@ -42,8 +42,15 @@ class Tracker_Workflow_Action_Transitions_EnableWorkflow extends Tracker_Workflo
         }
 
        if ($this->workflow_factory->updateActivation((int)$workflow->workflow_id, $is_used)) {
-           $GLOBALS['Response']->addFeedback('info', $feedback);
-           $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
+           $GLOBALS['Response']->addFeedback('info', $feedback, CODENDI_PURIFIER_DISABLED);
+           $GLOBALS['Response']->redirect(
+               TRACKER_BASE_URL.'/?'. http_build_query(
+                   array(
+                       'tracker' => (int)$this->tracker->id,
+                       'func'    => 'admin-workflow'
+                   )
+               )
+           );
        }
     }
 }
