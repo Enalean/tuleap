@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'Abstract.class.php';
 
-class Tracker_Workflow_Action_DefineWorkflow  extends Tracker_Workflow_Action_Abstract {
+require_once TRACKER_BASE_DIR .'/workflow/Action/Transitions.class.php';
+
+class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workflow_Action_Transitions {
     /** @var WorkflowFactory */
     private $workflow_factory;
 
@@ -62,7 +63,7 @@ class Tracker_Workflow_Action_DefineWorkflow  extends Tracker_Workflow_Action_Ab
         }
         $this->displayFooter($layout);
     }
-    
+
      private function displayAdminWorkflow(TrackerManager $layout, Codendi_Request $request, User $current_user, Workflow $workflow) {
         echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
@@ -109,7 +110,7 @@ class Tracker_Workflow_Action_DefineWorkflow  extends Tracker_Workflow_Action_Ab
         echo $GLOBALS['Language']->getText('workflow_admin', 'enabled') .'</label>';
         echo '</p>';
     }
-    
+
     protected function displayTransitionsMatrix($workflow, $layout, $request, $current_user) {
 
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);

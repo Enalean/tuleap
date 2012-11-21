@@ -18,14 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class Tracker_Workflow_Action_Abstract {
+/**
+ * Base class to manage action that can be done on a workflow
+ */
+abstract class Tracker_Workflow_Action {
+
+    const PANE_RULES       = 'rules';
+    const PANE_TRANSITIONS = 'transitions';
+
     /** @var Tracker */
     protected $tracker;
-    
+
     public function __construct(Tracker $tracker) {
         $this->tracker = $tracker;
     }
-    
+
     protected function displayHeader($engine) {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
 
@@ -44,10 +51,34 @@ abstract class Tracker_Workflow_Action_Abstract {
         );
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
-        echo '<li class="active"><a href="'. $workflow_link .'">Workflow Rules</a></li>'; //TODO: i18n
-        echo '<li><a href="'. $transitions_link .'">Transitions</a></li>'; //TODO: i18n
+        foreach ($this->getPanes() as $identifier => $pane) {
+            $active = '';
+            if ($this->getPaneIdentifier() == $identifier) {
+                $active = 'active';
+            }
+            $link = TRACKER_BASE_URL.'/?'. http_build_query(
+                array(
+                    'tracker' =>  (int)$this->tracker->id,
+                    'func'    =>  $pane['func'],
+                )
+            );
+            echo '<li class="'. $active .'"><a href="'. $link .'">'. $pane['title'] .'</a></li>';
+        }
         echo '</ul>';
         echo '<div class="tab-content">';
+    }
+
+    private function getPanes() {
+        return array(
+            self::PANE_RULES => array(
+                'func'  => 'admin-workflow-rules',
+                'title' => 'Global Rules',     //TODO: i18n
+            ),
+            self::PANE_TRANSITIONS => array(
+                'func'  => 'admin-workflow',
+                'title' => 'Transitions',      //TODO: i18n
+            ),
+        );
     }
 
     protected function displayFooter($engine) {
@@ -56,6 +87,14 @@ abstract class Tracker_Workflow_Action_Abstract {
         $this->tracker->displayFooter($engine);
     }
 
-}
+    /**
+     * @return string eg: rules, transitions
+     */
+    protected abstract function getPaneIdentifier();
 
+    /**
+     * Process the request
+     */
+    public abstract function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user);
+}
 ?>

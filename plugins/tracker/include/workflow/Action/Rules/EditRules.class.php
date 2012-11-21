@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Abstract.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/Action/Rules.class.php';
 
-require_once dirname(__FILE__).'/../../../tests/builders/aField.php';
+require_once dirname(__FILE__).'/../../../../tests/builders/aField.php';
 
-class Tracker_Workflow_Action_EditRules extends Tracker_Workflow_Action_Abstract {
+class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules {
 
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;

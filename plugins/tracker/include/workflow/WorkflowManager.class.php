@@ -26,14 +26,14 @@ require_once('PostAction/Field/Transition_PostAction_Field_Date.class.php');
 require_once('PostAction/Transition_PostActionFactory.class.php');
 require_once('PostAction/Transition_PostActionManager.class.php');
 require_once('Transition/ConditionManager.class.php');
-require_once('Action/EditRules.class.php');
-require_once('Action/Create.class.php');
-require_once('Action/EditTransition.class.php');
-require_once('Action/Delete.class.php');
-require_once('Action/CreateMatrix.class.php');
-require_once('Action/EnableWorkflow.class.php');
-require_once('Action/Details.class.php');
-require_once('Action/DefineWorkflow.class.php');
+require_once('Action/Rules/EditRules.class.php');
+require_once('Action/Transitions/Create.class.php');
+require_once('Action/Transitions/EditTransition.class.php');
+require_once('Action/Transitions/Delete.class.php');
+require_once('Action/Transitions/CreateMatrix.class.php');
+require_once('Action/Transitions/EnableWorkflow.class.php');
+require_once('Action/Transitions/Details.class.php');
+require_once('Action/Transitions/DefineWorkflow.class.php');
 
 class WorkflowManager {
     protected $tracker;
@@ -43,21 +43,21 @@ class WorkflowManager {
 
     public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
         if ($request->get('func') == 'admin-workflow-rules') {
-            $action = new Tracker_Workflow_Action_EditRules($this->tracker, Tracker_FormElementFactory::instance());
+            $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, Tracker_FormElementFactory::instance());
         } else if ($request->get('create')) {
-            $action = new Tracker_Workflow_Action_Create($this->tracker, WorkflowFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('edit_transition')) {
-            $action = new Tracker_Workflow_Action_EditTransition($this->tracker, TransitionFactory::instance(), new Transition_PostActionFactory());
+            $action = new Tracker_Workflow_Action_Transitions_EditTransition($this->tracker, TransitionFactory::instance(), new Transition_PostActionFactory());
         } else if ($request->get('delete')) {
-            $action = new Tracker_Workflow_Action_Delete($this->tracker, WorkflowFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_Delete($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('create_matrix')) {
-            $action = new Tracker_Workflow_Action_CreateMatrix($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_CreateMatrix($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         } else if ($request->get('enable_workflow')) {
-            $action = new Tracker_Workflow_Action_EnableWorkflow($this->tracker, WorkflowFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_EnableWorkflow($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('workflow_details')) {
-            $action = new Tracker_Workflow_Action_Details($this->tracker, TransitionFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_Details($this->tracker, TransitionFactory::instance());
         } else {
-            $action = new Tracker_Workflow_Action_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
+            $action = new Tracker_Workflow_Action_Transitions_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         }
         $action->process($engine, $request, $current_user);
     }

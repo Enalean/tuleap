@@ -17,9 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'Abstract.class.php';
 
-class Tracker_Workflow_Action_EditTransition extends Tracker_Workflow_Action_Abstract {
+require_once TRACKER_BASE_DIR .'/workflow/Action/Transitions.class.php';
+
+class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflow_Action_Transitions {
     /** @var TransitionFactory */
     private $transition_factory;
 
