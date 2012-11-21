@@ -201,6 +201,14 @@ class WorkflowManager {
         $hp = Codendi_HTMLPurifier::instance();
         $this->displayHeader($engine);
 
+        $back_to_transitions_link = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' => (int)$this->tracker->id,
+                'func'    => 'admin-workflow'
+            )
+        );
+        echo '<a href="'. $back_to_transitions_link .'">← Back to transitions</a>'; //TODO: i18n
+
         if($transition->getFieldValueFrom()) {
             $from_label = $transition->getFieldValueFrom()->getLabel();
         } else {
