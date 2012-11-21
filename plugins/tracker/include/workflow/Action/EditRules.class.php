@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../../../tests/builders/aField.php';
+
 class Tracker_Workflow_Action_EditRules {
 
     /** @var Tracker */
@@ -30,11 +32,11 @@ class Tracker_Workflow_Action_EditRules {
 
     private $operators = array(
         'lower_than'       => '<',
-        'lower_or_equal'   => '<=',
+        'lower_or_equal'   => '≤',
         'equal'            => '=',
-        'greater_or_equal' => '>=',
+        'greater_or_equal' => '≥',
         'greater_than'     => '>',
-        'different'        => '!='
+        'different'        => '≠'
     );
 
     public function __construct(Tracker $tracker) {
@@ -55,9 +57,34 @@ class Tracker_Workflow_Action_EditRules {
         } else {
             $this->displayHeader($layout);
             $this->displayAdd();
+            $this->displayRules();
             $this->displayFooter($layout);
         }
         
+    }
+    
+    private function displayRules() {
+        $rules = $this->getRules();
+        
+        echo '<ul>';
+        
+        foreach ($rules as $rule) {
+            echo '<li>';
+            echo $rule['source_field']->getLabel();
+            echo ' ';
+            echo $this->operators[$rule['operator']];
+            echo ' ';
+            echo $rule['target_field']->getLabel();
+            echo '</li>';
+        }
+    }
+    
+    private function getRules() {
+        $fake_result = array(
+            array('source_field' => aDateField()->withLabel('Planned end date')->build(),  'operator' => 'greater_than',     'target_field' => aDateField()->withLabel('Planned start date')->build()),
+            array('source_field' => aDateField()->withLabel('Actual start date')->build(), 'operator' => 'greater_or_equal', 'target_field' => aDateField()->withLabel('Planned start date')->build()),
+        );
+        return $fake_result;
     }
     
     private function displayAdd() {
