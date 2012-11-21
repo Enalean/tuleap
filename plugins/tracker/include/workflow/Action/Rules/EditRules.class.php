@@ -55,6 +55,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
             $GLOBALS['Response']->redirect($workflow_rules_url);
         } else {
             $this->displayHeader($layout);
+            echo '<h3>'. 'Define global rules' .'</h3>'; //TODO: i18n
+            echo '<p class="help">'. 'Those rules will be applied on each creation/update of artifacts.' .'</p>'; //TODO: i18n
             $this->displayAdd();
             $this->displayRules();
             $this->displayFooter($layout);
