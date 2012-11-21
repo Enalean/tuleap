@@ -607,7 +607,8 @@ class GitPlugin extends Plugin {
     private function getProjectCreator() {
         $user_finder = new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
         //$dir, Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_UserFinder $user_finder
-        return new Git_Driver_Gerrit_ProjectCreator(Config::get('tmp_dir'), $this->getGerritDriver(), $user_finder);
+        $tmp_dir = Config::get('tmp_dir') .'/'. uniqid();
+        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $user_finder);
     }
 }
 
