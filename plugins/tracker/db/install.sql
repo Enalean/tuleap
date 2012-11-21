@@ -612,12 +612,18 @@ DROP TABLE IF EXISTS tracker_rule;
 CREATE TABLE IF NOT EXISTS tracker_rule(
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
   tracker_id int(11) unsigned NOT NULL default '0',
+  rule_type tinyint(4) unsigned NOT NULL default '0',
+  KEY tracker_id (tracker_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_rule_list;
+CREATE TABLE IF NOT EXISTS tracker_rule_list(
+  tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
   source_field_id int(11) unsigned NOT NULL default '0',
   source_value_id int(11) unsigned NOT NULL default '0',
   target_field_id int(11) unsigned NOT NULL default '0',
-  rule_type tinyint(4) unsigned NOT NULL default '0',
   target_value_id int(11) unsigned default NULL,
-  KEY tracker_id (tracker_id)
+  KEY tracker_rule_id (tracker_rule_id)
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_hierarchy;

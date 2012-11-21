@@ -21,39 +21,69 @@
 class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
     
     public function addDependencies($tv3_id, $tv5_id) {
-        $this->sourceAndTargetAreStatic($tv3_id, $tv5_id);
-        $this->sourceIsUserAndTargetIsStatic($tv3_id, $tv5_id);
-        $this->sourceIsStaticAndTargetIsUser($tv3_id, $tv5_id);
-        $this->sourceAndTargetAreUser($tv3_id, $tv5_id);
+        $this->startTransaction();
+        try {
+//            $this->sourceAndTargetAreStatic($tv3_id, $tv5_id);
+            $this->sourceIsUserAndTargetIsStatic($tv3_id, $tv5_id);
+//            $this->sourceIsStaticAndTargetIsUser($tv3_id, $tv5_id);
+//            $this->sourceAndTargetAreUser($tv3_id, $tv5_id);
+        } catch (Exception $e) {
+            $this->rollBack();
+            throw $e;
+        }
+
+        $this->commit();
+        die();
     }
 
     private function sourceAndTargetAreStatic($tv3_id, $tv5_id) {
-        $sql = "INSERT INTO tracker_rule(id, tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id)
-                SELECT NULL, $tv5_id, sf.id, sbv.id, tf.id, r.rule_type, tbv.id
+        $sql = "INSERT INTO tracker_rule_list(tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+                SELECT sf.id, sbv.id, tf.id, tbv.id
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_static_value AS sbv ON(sbv.field_id = sf.id AND r.source_value_id = sbv.old_id)
                     INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND tf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_static_value AS tbv ON(tbv.field_id = tf.id AND r.target_value_id = tbv.old_id)
-                WHERE r.group_artifact_id = $tv3_id";
+                WHERE r.group_artifact_id = $tv3_id;";
         return $this->update($sql);
     }
 
     private function sourceIsUserAndTargetIsStatic($tv3_id, $tv5_id) {
-        $sql = "INSERT INTO tracker_rule(id, tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id)
-                SELECT NULL, $tv5_id, sf.id, r.source_value_id, tf.id, r.rule_type, tbv.id
+        
+        $sql = "SELECT sf.id AS SOURCE_FIELD_ID, r.source_value_id AS SOURCE_VALUE_ID, tf.id AS TARGET_FIELD_ID, tbv.id AS TARGET_VALUE_ID, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_users AS sfu ON(sf.id = sfu.field_id)
                     INNER JOIN tracker_field AS tf ON(r.target_field_id = tf.old_id AND tf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_static_value AS tbv ON(tbv.field_id = tf.id AND r.target_value_id = tbv.old_id)
                 WHERE r.group_artifact_id = $tv3_id";
-        return $this->update($sql);
+        
+        $old_rules = $this->retrieve($sql);
+        
+        foreach ($old_rules as $old_rule) {
+            $tracker_rule_insert = "INSERT INTO tracker_rule(tracker_id, rule_type)
+                    VALUES ($tv5_id, " . $old_rule['rule_type'] . ")";
+            $this->update($tracker_rule_insert);
+
+            $tracker_rule_id = $this->da->lastInsertId();
+                
+            $tracker_rule_list_insert = "INSERT INTO tracker_rule_list 
+                (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+                VALUES (
+                    $tracker_rule_id," .
+                    $old_rule['SOURCE_FIELD_ID'] . "," .
+                    $old_rule['SOURCE_VALUE_ID'] . "," .
+                    $old_rule['TARGET_FIELD_ID'] . "," .
+                    $old_rule['TARGET_VALUE_ID'] . 
+                ");" ;
+            $this->update($tracker_rule_list_insert);
+        }
+        
     }
 
     private function sourceIsStaticAndTargetIsUser($tv3_id, $tv5_id) {
-        $sql = "INSERT INTO tracker_rule(id, tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id)
-                SELECT NULL, $tv5_id, sf.id, sbv.id, tf.id, r.rule_type, r.target_value_id
+        $sql = "INSERT INTO tracker_rule_list(tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+                SELECT sf.id, sbv.id, tf.id, r.target_value_id
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_static_value AS sbv ON(sbv.field_id = sf.id AND r.source_value_id = sbv.old_id)
@@ -64,8 +94,8 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
     }
 
     private function sourceAndTargetAreUser($tv3_id, $tv5_id) {
-        $sql = "INSERT INTO tracker_rule(id, tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id)
-                SELECT NULL, $tv5_id, sf.id, r.source_value_id, tf.id, r.rule_type, r.target_value_id
+        $sql = "INSERT INTO tracker_rule_list(tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+                SELECT sf.id, r.source_value_id, tf.id, r.target_value_id
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_users AS sfu ON(sf.id = sfu.field_id)
