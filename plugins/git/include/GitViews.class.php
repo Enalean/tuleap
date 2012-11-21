@@ -481,9 +481,41 @@ class GitViews extends PluginViews {
 
     protected function forkRepositoriesPermissions() {
         $purifier = Codendi_HTMLPurifier::instance();
+        $pm       = ProjectManager::instance();
         $params   = $this->getData();
+
+        //@todo clean up
+        if ($params['scope'] == 'project') {
+            $groupId = $params['group_id'];
+            $project = $pm->getProject($groupId);
+            // @TODO: i18n
+            $destinationHTML = 'Into project <b>'.$project->getPublicName().'</b>';
+        } else {
+            $groupId = (int)$this->groupId;
+            // @TODO: i18n
+            $destinationHTML = 'As personal fork';
+        }
+        $dao         = new GitDao();
+        $request     = new Codendi_Request($params);
+        $repoFactory = new GitRepositoryFactory($dao, $pm);
+
+        $sourceReposHTML = '';
+        $repositories = explode(',', $params['repos']);
+        foreach ($repositories as $repositoryId) {
+            $repository  = $repoFactory->getRepositoryById($repositoryId);
+            $sourceReposHTML .= '"'.$repository->getFullName().'" ';
+        }
+        if (!empty($repository)) {
+            $accessControl     = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
+            $accessControlForm = $accessControl->getHeadlessAccessControl($groupId);
+        }
+
         $this->_getBreadCrumb();
         echo '<h2>'.$this->getText('fork_repositories').'</h2>';
+        // @TODO: i18n
+        echo 'You are going to fork repository: '.$sourceReposHTML;
+        echo $destinationHTML;
+        echo '<h3>Set permissions for the repository to be created</h3>';
         echo '<form action="" method="POST">';
         echo '<input type="hidden" name="group_id" value="'.(int)$this->groupId.'" />';
         echo '<input type="hidden" name="action" value="do_fork_repositories" />';
@@ -494,23 +526,7 @@ class GitViews extends PluginViews {
         echo '<input id="to_project" type="hidden" name="to_project" value="'.$purifier->purify($params['group_id']).'" />';
         echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$purifier->purify($params['namespace']).'" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
-
-        //@todo clean up
-        $repositoryId = $params['repos'][0];
-        if ($params['scope'] == 'project') {
-            $groupId = $params['group_id'];
-        } else {
-            $groupId = (int)$this->groupId;
-        }
-        $dao         = new GitDao();
-        $request     = new Codendi_Request($params);
-        $repoFactory = new GitRepositoryFactory($dao, ProjectManager::instance());
-        $repository  = $repoFactory->getRepositoryById($repositoryId);
-        if (!empty($repository)) {
-            $accessControl = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
-            echo $accessControl->getHeadlessAccessControl($groupId);
-        }
-
+        echo $accessControlForm;
         echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
         echo '</form>';
     }
