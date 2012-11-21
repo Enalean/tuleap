@@ -148,21 +148,19 @@ function html_build_select_box_from_array ($vals,$select_name,$checked_val='xzxz
 	$return = '
 		<SELECT NAME="'.$select_name.'" id="'.$select_name.'">';
 
-	$rows=count($vals);
-
-	for ($i=0; $i<$rows; $i++) {
+        foreach ($vals as $value => $label) {
 		if ( $samevals ) {
-			$return .= "\n\t\t<OPTION VALUE=\"" . $vals[$i] . "\"";
-			if ($vals[$i] == $checked_val) {
+			$return .= "\n\t\t<OPTION VALUE=\"" . $label . "\"";
+			if ($label == $checked_val) {
 				$return .= ' SELECTED';
 			}
 		} else {
-			$return .= "\n\t\t<OPTION VALUE=\"" . $i .'"';
-			if ($i == $checked_val) {
+			$return .= "\n\t\t<OPTION VALUE=\"" . $value .'"';
+			if ($value == $checked_val) {
 				$return .= ' SELECTED';
 			}
 		}
-		$return .= '>'.$vals[$i].'</OPTION>';
+		$return .= '>'.$label.'</OPTION>';
 	}
 	$return .= '
 		</SELECT>';
