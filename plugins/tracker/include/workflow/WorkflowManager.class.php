@@ -31,7 +31,6 @@ require_once('Action/Transitions/Create.class.php');
 require_once('Action/Transitions/EditTransition.class.php');
 require_once('Action/Transitions/Delete.class.php');
 require_once('Action/Transitions/CreateMatrix.class.php');
-require_once('Action/Transitions/EnableWorkflow.class.php');
 require_once('Action/Transitions/Details.class.php');
 require_once('Action/Transitions/DefineWorkflow.class.php');
 
@@ -50,10 +49,8 @@ class WorkflowManager {
             $action = new Tracker_Workflow_Action_Transitions_EditTransition($this->tracker, TransitionFactory::instance(), new Transition_PostActionFactory());
         } else if ($request->get('delete')) {
             $action = new Tracker_Workflow_Action_Transitions_Delete($this->tracker, WorkflowFactory::instance());
-        } else if ($request->get('create_matrix')) {
+        } else if ($request->get('transitions')) {
             $action = new Tracker_Workflow_Action_Transitions_CreateMatrix($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
-        } else if ($request->get('enable_workflow')) {
-            $action = new Tracker_Workflow_Action_Transitions_EnableWorkflow($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('workflow_details')) {
             $action = new Tracker_Workflow_Action_Transitions_Details($this->tracker, TransitionFactory::instance());
         } else {

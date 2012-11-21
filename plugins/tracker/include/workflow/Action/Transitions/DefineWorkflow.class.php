@@ -37,6 +37,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $hp = Codendi_HTMLPurifier::instance();
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $this->displayHeader($layout);
+        echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
 
         if (count($workflow)) {
             $this->displayAdminWorkflow($layout, $request, $current_user, $workflow);
@@ -74,10 +75,10 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $this->displayField($workflow);
         $this->displayEnabled($workflow);
 
-        echo '<input type="submit" name="enable_workflow" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        echo '</FORM>';
         $this->displayTransitionsMatrix($workflow, $layout, $request, $current_user);
-    }
+        echo '<input type="submit" name="transitions" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        echo '</form>';
+     }
 
     private function displayField(Workflow $workflow) {
         $field = $this->form_element_factory->getFormElementById($workflow->field_id);
@@ -112,18 +113,14 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
     }
 
     protected function displayTransitionsMatrix($workflow, $layout, $request, $current_user) {
-
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
-        echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
-        $field =$this->form_element_factory->getFormElementById($workflow->field_id);
+        $field = $this->form_element_factory->getFormElementById($workflow->field_id);
         if ($workflow->hasTransitions()) {
             $transitions = $workflow->getTransitions($workflow->workflow_id) ;
             $field->displayTransitionsMatrix($transitions);
-        }else {
-             $field->displayTransitionsMatrix();
+        } else {
+            $field->displayTransitionsMatrix();
         }
     }
-
 }
-
 ?>

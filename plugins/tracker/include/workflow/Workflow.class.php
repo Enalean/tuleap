@@ -151,10 +151,20 @@ class Workflow {
         }
     }
 
-     /**
-     * @return string
+    /**
+     * @deprecated since Tuleap 5.8.
+     * @see isUsed()
+     *
+     * @return bool
      */
     public function getIsUsed() {
+        return $this->isUsed();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsed() {
         return $this->is_used;
     }
 

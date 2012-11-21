@@ -33,9 +33,35 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
         $this->form_element_factory = $form_element_factory;
     }
 
+    private function processEnabled(Workflow $workflow, $switch_to_is_used) {
+        if ($switch_to_is_used == 'on') {
+            if (! $workflow->isUsed()) {
+                if ($this->workflow_factory->updateActivation((int)$workflow->workflow_id, 1)) {
+                    $GLOBALS['Response']->addFeedback(
+                        'info',
+                        $GLOBALS['Language']->getText('workflow_admin','workflow_enabled'),
+                        CODENDI_PURIFIER_DISABLED
+                    );
+                }
+            }
+        } else {
+            if ($workflow->isUsed()) {
+                if ($this->workflow_factory->updateActivation((int)$workflow->workflow_id, 0)) {
+                    $GLOBALS['Response']->addFeedback(
+                        'info',
+                        $GLOBALS['Language']->getText('workflow_admin','workflow_disabled'),
+                        CODENDI_PURIFIER_DISABLED
+                    );
+                }
+            }
+        }
+    }
+
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
-        $k=0;
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
+        $this->processEnabled($workflow, $request->get('is_used'));
+
+        $k=0;
 
         $field=$this->form_element_factory->getFormElementById($workflow->field_id);
         $field_values = $field->getBind()->getAllValues();
@@ -51,9 +77,9 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
                $currMatrix[]=array('', $field_value_id_to);
                $k+=$this->addTransition($workflow, $transition, $field_value_from, $field_value_to);
            }
-       }
+        }
 
-       //Add a transition
+        //Add a transition
         foreach($field_values as $field_value_id_from=>$field_value_from) {
            foreach($field_values as $field_value_id_to=>$field_value_to) {
                $transition = $field_value_id_from.'_'.$field_value_id_to;
@@ -87,11 +113,15 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
 
         if ($k>0) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','updated'));
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
-        } else {
-            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','not_updated'));
-            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
         }
+        $GLOBALS['Response']->redirect(
+            TRACKER_BASE_URL.'/?'. http_build_query(
+                array(
+                    'tracker' => (int)$this->tracker->id,
+                    'func'    => 'admin-workflow'
+                )
+            )
+        );
     }
 
     private function addTransition(Workflow $workflow, $transition, $field_value_from, $field_value_to) {

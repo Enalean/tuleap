@@ -57,9 +57,9 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         }
         $to_label = $transition->getFieldValueTo()->getLabel();
 
-        echo '<p>';
+        echo '<h3>';
         echo $GLOBALS['Language']->getText('workflow_admin','title_define_transition_details', array($from_label, $to_label));
-        echo '</p>';
+        echo '</h3>';
 
         $form_action = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
