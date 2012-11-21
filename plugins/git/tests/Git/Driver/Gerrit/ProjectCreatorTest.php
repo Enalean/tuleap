@@ -68,6 +68,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 }
 
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
+
     public function itPushesTheUpdatedConfigToTheServer() {
         $this->project_creator->initiatePermissions($this->server, $this->gerrit_project_url, $this->contributors, $this->integrators, $this->supermen);
 
@@ -152,10 +153,6 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         $call_order        = 2;
 
         $this->expectGroupCreation($group_name, $permissions_level, $call_order);
-    }
-
-    public function itFeedbacksIfUsersNotAddedToGroup() {
-        //the following users couldn't be added to their corresponding groups, because they don't exist in Gerrit.
     }
 
     public function expectGroupCreation($group_name, $permissions_level, $call_order) {
