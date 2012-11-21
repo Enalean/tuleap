@@ -34,26 +34,14 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
     }
 
     private function processEnabled(Workflow $workflow, $switch_to_is_used) {
-        if ($switch_to_is_used == 'on') {
-            if (! $workflow->isUsed()) {
-                if ($this->workflow_factory->updateActivation((int)$workflow->workflow_id, 1)) {
-                    $GLOBALS['Response']->addFeedback(
-                        'info',
-                        $GLOBALS['Language']->getText('workflow_admin','workflow_enabled'),
-                        CODENDI_PURIFIER_DISABLED
-                    );
-                }
-            }
-        } else {
-            if ($workflow->isUsed()) {
-                if ($this->workflow_factory->updateActivation((int)$workflow->workflow_id, 0)) {
-                    $GLOBALS['Response']->addFeedback(
-                        'info',
-                        $GLOBALS['Language']->getText('workflow_admin','workflow_disabled'),
-                        CODENDI_PURIFIER_DISABLED
-                    );
-                }
-            }
+        $should_change_activation = (bool)$switch_to_is_used != (bool)$workflow->isUsed();
+        if ($should_change_activation && $this->workflow_factory->updateActivation((int)$workflow->workflow_id, $switch_to_is_used)) {
+            $feedback_key = 'workflow_'. ($switch_to_is_used ? 'enabled' : 'disabled');
+            $GLOBALS['Response']->addFeedback(
+                'info',
+                $GLOBALS['Language']->getText('workflow_admin', $feedback_key),
+                CODENDI_PURIFIER_DISABLED
+            );
         }
     }
 

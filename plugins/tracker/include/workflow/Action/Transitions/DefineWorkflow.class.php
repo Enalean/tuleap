@@ -107,7 +107,8 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
             $checked = 'checked="checked"';
         }
         echo '<p>';
-        echo '<label><input type="checkbox" name="is_used" '. $checked .'> ';
+        echo '<input type="hidden" name="is_used" value="0" />';
+        echo '<label><input type="checkbox" name="is_used" value="1" '. $checked .'> ';
         echo $GLOBALS['Language']->getText('workflow_admin', 'enabled') .'</label>';
         echo '</p>';
     }
