@@ -31,7 +31,7 @@ class DataAccessObject {
      * $da stores data access object
      * @var DataAccess
      */
-    var $da;
+    protected $da;
 
     //! A constructor
     /**
@@ -52,6 +52,18 @@ class DataAccessObject {
 
     public function commit() {
         $this->da->commit();
+    }
+    
+    public function rollBack() {
+        $this->da->rollback();
+    }
+    
+    /**
+     * 
+     * @return DataAccess
+     */
+    public function getDa() {
+        return $this->da;
     }
 
     /**

@@ -163,8 +163,16 @@ class Tracker_FormElement_Field_List_Bind_Static_ValueDao extends DataAccessObje
                 FROM $this->table_name AS v
                     INNER JOIN tracker_rule AS tr
                     ON ( v.id = $value_id 
-                        AND (tr.source_field_id = v.field_id OR tr.target_field_id = v.field_id)
-                        AND ((tr.source_field_id = $field_id AND tr.source_value_id = $value_id) OR (tr.target_field_id = $field_id AND tr.target_value_id = $value_id)))
+                        AND (
+                            tr.source_field_id = v.field_id 
+                            OR 
+                            tr.target_field_id = v.field_id)
+                        AND (
+                                (tr.source_field_id = $field_id AND tr.source_value_id = $value_id) 
+                                OR 
+                                (tr.target_field_id = $field_id AND tr.target_value_id = $value_id)
+                            )
+                        )
                 UNION
                 SELECT null
                 FROM tracker_field AS original
