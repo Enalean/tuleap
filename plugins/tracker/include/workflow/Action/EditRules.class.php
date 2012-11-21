@@ -24,10 +24,10 @@ class Tracker_Workflow_Action_EditRules {
 
     /** @var Tracker */
     protected $tracker;
-    
+
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
-    
+
     private $default_value = 'default_value';
 
     private $operators = array(
@@ -60,14 +60,14 @@ class Tracker_Workflow_Action_EditRules {
             $this->displayRules();
             $this->displayFooter($layout);
         }
-        
+
     }
-    
+
     private function displayRules() {
         $rules = $this->getRules();
-        
+
         echo '<ul>';
-        
+
         foreach ($rules as $rule) {
             echo '<li>';
             echo $rule['source_field']->getLabel();
@@ -78,7 +78,7 @@ class Tracker_Workflow_Action_EditRules {
             echo '</li>';
         }
     }
-    
+
     private function getRules() {
         $fake_result = array(
             array('source_field' => aDateField()->withLabel('Planned end date')->build(),  'operator' => 'greater_than',     'target_field' => aDateField()->withLabel('Planned start date')->build()),
@@ -86,7 +86,7 @@ class Tracker_Workflow_Action_EditRules {
         );
         return $fake_result;
     }
-    
+
     private function displayAdd() {
         echo 'No rules defined';
         echo '<br />';
@@ -136,17 +136,17 @@ class Tracker_Workflow_Action_EditRules {
         echo '</div>';
         $this->tracker->displayFooter($engine);
     }
-    
+
     private function getDateFields() {
         $form_elements = $this->form_element_factory->getFormElementsByType($this->tracker, 'date');
         $values = array(
             $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed')
         );
-        
+
         foreach ($form_elements as $form_element) {
             $values[$form_element->getId()] = $form_element->getLabel();
         }
-        
+
         return $values;
     }
 }
