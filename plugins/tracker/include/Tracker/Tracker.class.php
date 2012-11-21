@@ -522,6 +522,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'admin-workflow':
+            case 'admin-workflow-rules':
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {

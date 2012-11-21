@@ -26,6 +26,7 @@ require_once('PostAction/Field/Transition_PostAction_Field_Date.class.php');
 require_once('PostAction/Transition_PostActionFactory.class.php');
 require_once('PostAction/Transition_PostActionManager.class.php');
 require_once('Transition/ConditionManager.class.php');
+require_once('Action/EditRules.class.php');
 
 class WorkflowManager {
     protected $tracker;
@@ -39,7 +40,10 @@ class WorkflowManager {
 
     public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
 
-        if ($request->get('create')) {
+        if ($request->get('func') == 'admin-workflow-rules') {
+            $action = new Tracker_Workflow_Action_EditRules($this->tracker);
+            $action->process($engine, $request, $current_user);
+        } else if ($request->get('create')) {
 
             if ($request->existAndNonEmpty('field_id')) {
 
@@ -345,6 +349,7 @@ class WorkflowManager {
 
     private function displayHeader($engine) {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
+
         $transitions_link = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' =>  (int)$this->tracker->id,
@@ -352,9 +357,15 @@ class WorkflowManager {
             )
         );
 
+        $workflow_link = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' =>  (int)$this->tracker->id,
+                'func'    =>  'admin-workflow-rules'
+            )
+        );
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
-        echo '<li><a href="#">Workflow Rules</a></li>'; //TODO: i18n
+        echo '<li><a href="'. $workflow_link .'">Workflow Rules</a></li>'; //TODO: i18n
         echo '<li class="active"><a href="'. $transitions_link .'">Transitions</a></li>'; //TODO: i18n
         echo '</ul>';
         echo '<div class="tab-content">';
