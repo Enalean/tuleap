@@ -59,6 +59,7 @@ class Git_Driver_Gerrit_ProjectCreator {
             $user_list = $this->user_finder->getUsersForPermission($permission_level, $repository);
             $this->driver->createGroup($gerrit_server, $repository, $group_name, $user_list);
         }
+        return $gerrit_project;
     }
 
     public function initiatePermissions(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen) {

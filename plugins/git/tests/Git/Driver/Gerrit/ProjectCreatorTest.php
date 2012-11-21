@@ -70,6 +70,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
 
     public function itPushesTheUpdatedConfigToTheServer() {
+        //$this->project_creator->createProject($this->server, $this->repository);
         $this->project_creator->initiatePermissions($this->server, $this->gerrit_project_url, $this->contributors, $this->integrators, $this->supermen);
 
         $this->assertItClonesTheDistantRepo();
@@ -124,8 +125,9 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
     public function itCreatesAProject() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        expect($this->driver)->createProject($this->server, $this->repository)->once();
-        $this->project_creator->createProject($this->server, $this->repository);
+        expect($this->driver)->createProject($this->server, $this->repository)->once()->returns('host-project/name');
+        $project_name = $this->project_creator->createProject($this->server, $this->repository);
+        $this->assertEqual('host-project/name', $project_name);
     }
 
     public function itCreatesContributorsGroup() {
