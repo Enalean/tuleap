@@ -257,37 +257,50 @@ class WorkflowManager {
     }
 
     protected function displayAdminWorkflow(TrackerManager $engine, Codendi_Request $request, User $current_user, Workflow $workflow) {
+        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' => (int)$this->tracker->id,
+                'func'    => 'admin-workflow')
+            ) .'" method="POST">';
 
-        $field =Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
+        $this->displayField($workflow);
+        $this->displayEnabled($workflow);
 
-        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')) .'" method="POST">';
-        echo "<table>";
-        echo "<tr class='boxtitle'>\n";
-        echo "<td>".$GLOBALS['Language']->getText('workflow_admin','field')."</td>";
-        echo "<td>".$GLOBALS['Language']->getText('workflow_admin','enabled')."</td>";
-        echo "<td>".$GLOBALS['Language']->getText('workflow_admin','delete')."</td>";
-        echo "</tr>";
+        echo '<input type="submit" name="enable_workflow" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        echo '</FORM>';
+        $this->displayTransitionsMatrix($workflow, $engine, $request, $current_user);
+    }
 
-        echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
-        echo '<td>'.$field->label.'</td>';
-        if($workflow->is_used) {
-              echo '<td align="center"><input type="checkbox" name="is_used" checked="checked"></td>';
-        }else {
-              echo '<td align="center"><input type="checkbox" name="is_used" ></td>';
+    private function displayField(Workflow $workflow) {
+        $field = Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
+        $hp = Codendi_HTMLPurifier::instance();
+        echo '<p>';
+        echo '<label>'. $GLOBALS['Language']->getText('workflow_admin','field') .'</label>: ';
+        echo $hp->purify($field->label);
+        $delete_title = $GLOBALS['Language']->getText('workflow_admin','delete');
+        $delete_url = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' => (int)$this->tracker->id,
+                'func'    => 'admin-workflow',
+                'delete'  => (int)$workflow->workflow_id
+            )
+        );
+        $onclick = 'return confirm(\''.addslashes($GLOBALS['Language']->getText('workflow_admin','delete_workflow')).'\')';
+        echo ' <a href="'. $delete_url .'" onClick="'. $onclick .'" title="'. $delete_title .'">';
+        echo $GLOBALS['HTML']->getImage('ic/cross.png', array('style' => 'vertical-align:middle;'));
+        echo '</a>';
+        echo '</p>';
+    }
+
+    private function displayEnabled(Workflow $workflow) {
+        $checked = '';
+        if ($workflow->is_used) {
+            $checked = 'checked="checked"';
         }
-
-         echo '<td align="center"><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
-                                                        'tracker' => (int)$this->tracker->id,
-                                                        'func'    => 'admin-workflow',
-                                                        'delete'  => (int)$workflow->workflow_id)) .'"
-                             onClick="return confirm(\''.addslashes($GLOBALS['Language']->getText('workflow_admin','delete_workflow')).'\')">';
-          echo $GLOBALS['HTML']->getImage('ic/cross.png');
-          echo '</a></td></tr>';
-          echo "</tr>";
-          echo '</table>';
-          echo '<input type="submit" name="enable_workflow" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-          echo '</FORM>';
-          $this->displayTransitionsMatrix($workflow, $engine, $request, $current_user);
+        echo '<p>';
+        echo '<label><input type="checkbox" name="is_used" '. $checked .'> ';
+        echo $GLOBALS['Language']->getText('workflow_admin', 'enabled') .'</label>';
+        echo '</p>';
     }
 
     protected function displayAdminDefineWorkflow($engine, $request, $current_user) {
@@ -326,6 +339,7 @@ class WorkflowManager {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
+        echo '<li><a href="#">Workflow Rules</a></li>'; //TODO: i18n
         echo '<li class="active"><a href="#">Transitions</a></li>'; //TODO: i18n
         echo '</ul>';
         echo '<div class="tab-content">';
