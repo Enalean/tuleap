@@ -345,10 +345,17 @@ class WorkflowManager {
 
     private function displayHeader($engine) {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
+        $transitions_link = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' =>  (int)$this->tracker->id,
+                'func'    =>  'admin-workflow'
+            )
+        );
+
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
         echo '<li><a href="#">Workflow Rules</a></li>'; //TODO: i18n
-        echo '<li class="active"><a href="#">Transitions</a></li>'; //TODO: i18n
+        echo '<li class="active"><a href="'. $transitions_link .'">Transitions</a></li>'; //TODO: i18n
         echo '</ul>';
         echo '<div class="tab-content">';
     }
