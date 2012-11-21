@@ -80,23 +80,23 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     private function assertItClonesTheDistantRepo() {
-        $groups_file = "$this->tmpdir/firefox/groups";
-        $config_file = "$this->tmpdir/firefox/project.config";
+        $groups_file = "$this->tmpdir/groups";
+        $config_file = "$this->tmpdir/project.config";
         $this->assertTrue(is_file($groups_file));
         $this->assertTrue(is_file($config_file));
     }
 
     private function assertEverythingIsPushedToTheServer() {
         $cwd = getcwd();
-        chdir("$this->tmpdir/firefox");
+        chdir("$this->tmpdir");
         exec('git status --porcelain', $output, $ret_val);
         chdir($cwd);
-        $this->assertEqual($output, array());
+        $this->assertEqual($output, array('?? tuleap-localhost-mozilla/'));
         $this->assertEqual($ret_val, 0);
     }
 
     private function assertPermissionsFileHasEverything() {
-        $config_file_contents = file_get_contents("$this->tmpdir/firefox/project.config");
+        $config_file_contents = file_get_contents("$this->tmpdir/project.config");
         $expected_contents    = <<<EOF
 [access]
 	inheritFrom = tuleap-localhost-AlmAcl
@@ -108,16 +108,28 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 	create = group tuleap-localhost-mozilla/firefox-integrators
 
 EOF;
+        // TODO: To be completed, use a map
+
         $this->assertEqual($config_file_contents, $expected_contents);
     }
 
     private function assertGroupsFileHasEverything() {
-        $groups_file = "$this->tmpdir/firefox/groups";
+        $groups_file = "$this->tmpdir/groups";
         $group_file_contents = file_get_contents($groups_file);
 
         $this->assertPattern("%$this->contributors_uuid\t$this->contributors%", $group_file_contents);
         $this->assertPattern("%$this->integrators_uuid\t$this->integrators%",   $group_file_contents);
         $this->assertPattern("%$this->supermen_uuid\t$this->supermen%",         $group_file_contents);
+    }
+
+    private function itThrowsAnExceptionWhenSomethingGoneBad() {
+        // remote git repo doesn't exist
+        // add permissions doesn't work
+        // cannot commit
+        // ...
+    }
+
+    private function itLogsEachMethodsCall() {
     }
 }
 

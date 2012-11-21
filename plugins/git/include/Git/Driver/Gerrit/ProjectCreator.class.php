@@ -45,11 +45,10 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function cloneGerritProjectConfig($gerrit_project_url) {
-        // TODO: remove this hard-coded 'firefox'
-        `mkdir $this->dir/firefox; cd $this->dir/firefox`;
-        `cd $this->dir/firefox; git init`;
-        `cd $this->dir/firefox; git pull $gerrit_project_url refs/meta/config`;
-        `cd $this->dir/firefox; git checkout FETCH_HEAD`;
+        `mkdir $this->dir`;
+        `cd $this->dir; git init`;
+        `cd $this->dir; git pull $gerrit_project_url refs/meta/config`;
+        `cd $this->dir; git checkout FETCH_HEAD`;
     }
 
     public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
@@ -74,21 +73,21 @@ class Git_Driver_Gerrit_ProjectCreator {
 
     private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
         $group_uuid = $this->driver->getGroupUUID($gerrit_server, $group);
-        file_put_contents("$this->dir/firefox/groups", "$group_uuid\t$group", FILE_APPEND);
+        file_put_contents("$this->dir/groups", "$group_uuid\t$group", FILE_APPEND);
     }
 
     private function addPermissionsToProjectConf($contributors, $integrators, $supermen) {
         // TODO: if (it is a public project && RegisteredUsers = Read) {
-        `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.Read 'group Registered Users'`;
+        `cd $this->dir; git config -f project.config --add access.refs/heads/*.Read 'group Registered Users'`;
         // }
-        `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.Read 'group $contributors'`;
-        `cd $this->dir/firefox; git config -f project.config --add access.refs/heads/*.create 'group $integrators'`;
+        `cd $this->dir; git config -f project.config --add access.refs/heads/*.Read 'group $contributors'`;
+        `cd $this->dir; git config -f project.config --add access.refs/heads/*.create 'group $integrators'`;
         // TODO: complete this list of access rights
     }
 
     private function pushToServer() {
-        `cd $this->dir/firefox; git add project.config groups`;
-        `cd $this->dir/firefox; git commit -m 'Updated project config'`;
+        `cd $this->dir; git add project.config groups`;
+        `cd $this->dir; git commit -m 'Updated project config'`;
     }
 }
 
