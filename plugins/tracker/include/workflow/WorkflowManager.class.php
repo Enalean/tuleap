@@ -61,14 +61,5 @@ class WorkflowManager {
         }
         $action->process($engine, $request, $current_user);
     }
-
-    public function exportToSOAP() {
-        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
-        if (! $workflow) {
-            $workflow = new Workflow();
-        }
-        return $workflow->exportToSOAP();
-    }
-
 }
 ?>
