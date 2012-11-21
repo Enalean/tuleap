@@ -22,10 +22,10 @@ require_once 'Abstract.class.php';
 class Tracker_Workflow_Action_EditTransition extends Tracker_Workflow_Action_Abstract {
     /** @var TransitionFactory */
     private $transition_factory;
-    
+
     /** @var Transition_PostActionFactory */
     private $post_action_factory;
-    
+
     public function __construct(Tracker $tracker, TransitionFactory $transition_factory, Transition_PostActionFactory $post_action_factory) {
         parent::__construct($tracker);
         $this->transition_factory  = $transition_factory;
@@ -33,13 +33,11 @@ class Tracker_Workflow_Action_EditTransition extends Tracker_Workflow_Action_Abs
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
-        //$workflow   = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
         $transition = $this->transition_factory->getTransition($request->get('edit_transition'));
         $this->displayTransitionDetails($layout, $request, $current_user, $transition);
     }
-    
-    private function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, User $current_user, Transition $transition) {
 
+    private function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, User $current_user, Transition $transition) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->displayHeader($engine);
 

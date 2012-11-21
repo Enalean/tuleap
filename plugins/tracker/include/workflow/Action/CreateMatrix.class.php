@@ -20,12 +20,23 @@
 require_once 'Abstract.class.php';
 
 class Tracker_Workflow_Action_CreateMatrix extends Tracker_Workflow_Action_Abstract {
-    
+    /** @var WorkflowFactory */
+    private $workflow_factory;
+
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+
+    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory, Tracker_FormElementFactory $form_element_factory) {
+        parent::__construct($tracker);
+        $this->workflow_factory     = $workflow_factory;
+        $this->form_element_factory = $form_element_factory;
+    }
+
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
         $k=0;
-        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
+        $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
 
-        $field=Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
+        $field=$this->form_element_factory->getFormElementById($workflow->field_id);
         $field_values = $field->getBind()->getAllValues();
 
         $currMatrix=array();
@@ -68,7 +79,7 @@ class Tracker_Workflow_Action_CreateMatrix extends Tracker_Workflow_Action_Abstr
             }
 
             if(!in_array($value_to_search, $currMatrix)){
-                WorkflowFactory::instance()->deleteTransition($workflow->workflow_id,  $field_value_from, $field_value_to);
+                $this->workflow_factory->deleteTransition($workflow->workflow_id,  $field_value_from, $field_value_to);
                 $k++;
             }
         }
@@ -85,7 +96,7 @@ class Tracker_Workflow_Action_CreateMatrix extends Tracker_Workflow_Action_Abstr
     private function addTransition(Workflow $workflow, $transition, $field_value_from, $field_value_to) {
         $i=0;
         if ( ! $workflow->isTransitionExist($field_value_from, $field_value_to)) {
-            if (WorkflowFactory::instance()-> addTransition((int)$workflow->workflow_id, $transition)) {
+            if ($this->workflow_factory->addTransition((int)$workflow->workflow_id, $transition)) {
                 $i++;
             }
          }

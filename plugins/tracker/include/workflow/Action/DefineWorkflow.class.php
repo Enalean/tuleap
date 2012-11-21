@@ -20,10 +20,21 @@
 require_once 'Abstract.class.php';
 
 class Tracker_Workflow_Action_DefineWorkflow  extends Tracker_Workflow_Action_Abstract {
-    
+    /** @var WorkflowFactory */
+    private $workflow_factory;
+
+    /** @var Tracker_FormElementFactory */
+    private $form_element_factory;
+
+    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory, Tracker_FormElementFactory $form_element_factory) {
+        parent::__construct($tracker);
+        $this->workflow_factory     = $workflow_factory;
+        $this->form_element_factory = $form_element_factory;
+    }
+
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
-        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
+        $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $this->displayHeader($layout);
 
         if (count($workflow)) {
@@ -33,12 +44,11 @@ class Tracker_Workflow_Action_DefineWorkflow  extends Tracker_Workflow_Action_Ab
             echo '<p>';
             echo $GLOBALS['Language']->getText('workflow_admin','choose_field');
             echo '<p>';
-            $aff =Tracker_FormElementFactory::instance();
 
             echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')).'" method="POST">';
             echo '<SELECT name="field_id">';
             //We display only the 'sb' static type field
-            foreach ($aff->getUsedFormElementsByType($this->tracker, 'sb') as $field) {
+            foreach ($this->form_element_factory->getUsedFormElementsByType($this->tracker, 'sb') as $field) {
                 $bf = new Tracker_FormElement_Field_List_BindFactory();
                 if ($bf->getType($field->getBind())=='static') {
                     echo '<OPTION value='.$field->id.'>'.$field->label.'</OPTION>';
@@ -69,7 +79,7 @@ class Tracker_Workflow_Action_DefineWorkflow  extends Tracker_Workflow_Action_Ab
     }
 
     private function displayField(Workflow $workflow) {
-        $field = Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
+        $field = $this->form_element_factory->getFormElementById($workflow->field_id);
         $hp = Codendi_HTMLPurifier::instance();
         echo '<p>';
         echo '<label>'. $GLOBALS['Language']->getText('workflow_admin','field') .'</label>: ';
@@ -102,9 +112,9 @@ class Tracker_Workflow_Action_DefineWorkflow  extends Tracker_Workflow_Action_Ab
     
     protected function displayTransitionsMatrix($workflow, $layout, $request, $current_user) {
 
-        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
+        $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
-        $field =Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
+        $field =$this->form_element_factory->getFormElementById($workflow->field_id);
         if ($workflow->hasTransitions()) {
             $transitions = $workflow->getTransitions($workflow->workflow_id) ;
             $field->displayTransitionsMatrix($transitions);

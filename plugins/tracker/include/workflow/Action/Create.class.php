@@ -20,10 +20,17 @@
 require_once 'Abstract.class.php';
 
 class Tracker_Workflow_Action_Create extends Tracker_Workflow_Action_Abstract {
+    /** @var WorkflowFactory */
+    private $workflow_factory;
+
+    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory) {
+        parent::__construct($tracker);
+        $this->workflow_factory = $workflow_factory;
+    }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
         if ($request->existAndNonEmpty('field_id')) {
-            if (WorkflowFactory::instance()->create((int)$this->tracker->id, $request->get('field_id'))) {
+            if ($this->workflow_factory->create((int)$this->tracker->id, $request->get('field_id'))) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','created'));
                 $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                     'tracker' => (int)$this->tracker->id,

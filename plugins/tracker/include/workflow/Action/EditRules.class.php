@@ -38,9 +38,9 @@ class Tracker_Workflow_Action_EditRules extends Tracker_Workflow_Action_Abstract
         'different'        => '≠'
     );
 
-    public function __construct(Tracker $tracker) {
+    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory) {
         parent::__construct($tracker);
-        $this->form_element_factory = Tracker_FormElementFactory::instance();
+        $this->form_element_factory = $form_element_factory;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {

@@ -20,9 +20,16 @@
 require_once 'Abstract.class.php';
 
 class Tracker_Workflow_Action_EnableWorkflow extends Tracker_Workflow_Action_Abstract {
-    
+    /** @var WorkflowFactory */
+    private $workflow_factory;
+
+    public function __construct(Tracker $tracker, WorkflowFactory $workflow_factory) {
+        parent::__construct($tracker);
+        $this->workflow_factory = $workflow_factory;
+    }
+
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
-        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->tracker->id);
+        $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $is_used = $request->get('is_used');
         //TODO : use $request
         if (/*$request->existAndNonEmpty($is_used)*/$is_used=='on') {
@@ -33,7 +40,7 @@ class Tracker_Workflow_Action_EnableWorkflow extends Tracker_Workflow_Action_Abs
             $feedback = $GLOBALS['Language']->getText('workflow_admin','workflow_disabled');
         }
 
-       if (WorkflowFactory::instance()->updateActivation((int)$workflow->workflow_id, $is_used)) {
+       if ($this->workflow_factory->updateActivation((int)$workflow->workflow_id, $is_used)) {
            $GLOBALS['Response']->addFeedback('info', $feedback);
            $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')));
        }

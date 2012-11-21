@@ -25,7 +25,7 @@ class Tracker_Workflow_Action_Details extends Tracker_Workflow_Action_Abstract {
     
     public function __construct(Tracker $tracker, TransitionFactory $transition_factory) {
         parent::__construct($tracker);
-        $this->transition_factory  = $transition_factory;
+        $this->transition_factory = $transition_factory;
     }
     
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {

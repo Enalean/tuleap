@@ -41,43 +41,25 @@ class WorkflowManager {
         $this->tracker = $tracker;
     }
 
-    public function getTracker(){
-        return $tracker;
-    }
-
     public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
         if ($request->get('func') == 'admin-workflow-rules') {
-            $action = new Tracker_Workflow_Action_EditRules($this->tracker);
+            $action = new Tracker_Workflow_Action_EditRules($this->tracker, Tracker_FormElementFactory::instance());
         } else if ($request->get('create')) {
-            $action = new Tracker_Workflow_Action_Create($this->tracker);
+            $action = new Tracker_Workflow_Action_Create($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('edit_transition')) {
-            $action = new Tracker_Workflow_Action_EditTransition($this->tracker, $this->getTransitionFactory(), $this->getPostActionFactory());
+            $action = new Tracker_Workflow_Action_EditTransition($this->tracker, TransitionFactory::instance(), new Transition_PostActionFactory());
         } else if ($request->get('delete')) {
-            $action = new Tracker_Workflow_Action_Delete($this->tracker);
+            $action = new Tracker_Workflow_Action_Delete($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('create_matrix')) {
-            $action = new Tracker_Workflow_Action_CreateMatrix($this->tracker);
+            $action = new Tracker_Workflow_Action_CreateMatrix($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         } else if ($request->get('enable_workflow')) {
-            $action = new Tracker_Workflow_Action_EnableWorkflow($this->tracker);
+            $action = new Tracker_Workflow_Action_EnableWorkflow($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('workflow_details')) {
-            $action = new Tracker_Workflow_Action_Details($this->tracker, $this->getTransitionFactory());
+            $action = new Tracker_Workflow_Action_Details($this->tracker, TransitionFactory::instance());
         } else {
-            $action = new Tracker_Workflow_Action_DefineWorkflow($this->tracker);
+            $action = new Tracker_Workflow_Action_DefineWorkflow($this->tracker, WorkflowFactory::instance(), Tracker_FormElementFactory::instance());
         }
         $action->process($engine, $request, $current_user);
-    }
-
-    /**
-     * @return Transition_PostActionFactory
-     */
-    public function getPostActionFactory() {
-        return new Transition_PostActionFactory();
-    }
-
-    /**
-     * @return TransitionFactory
-     */
-    public function getTransitionFactory() {
-        return TransitionFactory::instance();
     }
 
     public function exportToSOAP() {
