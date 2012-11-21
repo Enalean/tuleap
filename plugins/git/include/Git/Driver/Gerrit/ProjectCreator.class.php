@@ -51,7 +51,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         `cd $this->dir/firefox; git pull $gerrit_project_url refs/meta/config`;
         `cd $this->dir/firefox; git checkout FETCH_HEAD`;
     }
-    
+
     public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
         $gerrit_project = $this->driver->createProject($gerrit_server, $repository);
 
@@ -63,7 +63,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         return $gerrit_project;
     }
 
-    public function initiatePermissions(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen) {
+    private function initiatePermissions(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen) {
         $this->cloneGerritProjectConfig($gerrit_project_url);
         $this->addGroupToGroupFile($gerrit_server, $contributors);
         $this->addGroupToGroupFile($gerrit_server, $integrators);
