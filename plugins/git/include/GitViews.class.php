@@ -500,7 +500,7 @@ class GitViews extends PluginViews {
         $repoFactory = new GitRepositoryFactory($dao, $pm);
 
         $sourceReposHTML = '';
-        $repositories = explode(',', $params['repos']);
+        $repositories    = explode(',', $params['repos']);
         foreach ($repositories as $repositoryId) {
             $repository  = $repoFactory->getRepositoryById($repositoryId);
             $sourceReposHTML .= '"'.$repository->getFullName().'" ';
