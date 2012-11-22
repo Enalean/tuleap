@@ -34,18 +34,6 @@ class Tracker_Rule_Date_Factory {
      * @var Tracker_Rule_Date_Dao 
      */
     protected $dao;
-    
-    /**
-     *
-     * @var TrackerFactory 
-     */
-    protected $tracker_factory = null;
-    
-    /**
-     *
-     * @var Tracker_FormElementFactory 
-     */
-    protected $tracker_form_element_factory = null;
 
     /**
      * 
@@ -62,8 +50,8 @@ class Tracker_Rule_Date_Factory {
      * @param Tracker_FormElement_Field_Date $target_field
      * @return \Tracker_Rule_Date
      */
-    public function create(Tracker $tracker, Tracker_FormElement_Field $source_field, Tracker_FormElement_Field $target_field, Tracker $tracker, $comparator) {
-        return $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker, $comparator);
+    public function create(Tracker $tracker, $source_field_id, $target_field_id, $tracker_id, $comparator) {
+        return $this->populate(new Tracker_Rule_Date(), $source_field_id, $target_field_id, $tracker_id, $comparator);
     }
     
     /**
@@ -94,16 +82,9 @@ class Tracker_Rule_Date_Factory {
         if(!is_array($rule) || count($rule) !== 1) {
             //do something bad
         }
-        
-        $source_field = $this->getTrackerFormElementFactory()
-                ->getFieldById($rule['source_field_id']);
-        $target_field = $this->getTrackerFormElementFactory()
-                ->getFieldById($rule['target_field_id']);
-        $tracker = $this->getTrackerFactory()
-                ->getTrackerById($rule['tracker_id']);
         $comparator = $rule['comparator'];
         
-        return $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker, $comparator);
+        return $this->populate(new Tracker_Rule_Date(), $rule['source_field_id'], $rule['target_field_id'], $rule['tracker_id'], $comparator);
     }
     
     /**
@@ -121,15 +102,8 @@ class Tracker_Rule_Date_Factory {
         $rules_array = array();
         
         foreach ($rules as $rule) {
-            $source_field = $this->getTrackerFormElementFactory()
-                    ->getFieldById($rule['source_field_id']);
-            $target_field = $this->getTrackerFormElementFactory()
-                    ->getFieldById($rule['target_field_id']);
-            $tracker = $this->getTrackerFactory()
-                    ->getTrackerById($rule['tracker_id']);
             $comparartor = $rule['comparator'];
-
-            $date_rule = $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker, $comparartor);
+            $date_rule = $this->populate(new Tracker_Rule_Date(), $rule['source_field_id'], $rule['target_field_id'], $rule['tracker_id'], $comparartor);
             $rules_array[] = $date_rule;
         }
         
@@ -138,62 +112,18 @@ class Tracker_Rule_Date_Factory {
     
     /**
      * 
-     * @return TrackerFactory
-     */
-    public function getTrackerFactory() {
-        if($this->tracker_factory === null) {
-            $this->tracker_factory = new TrackerFactory();
-        }
-        
-        return $this->tracker_factory;
-    }
-    
-    /**
-     * 
-     * @param TrackerFactory $factory
-     * @return \Tracker_Rule_Date_Factory
-     */
-    public function setTrackerFactory(TrackerFactory $factory) {
-        $this->tracker_factory = $factory;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @return Tracker_FormElementFactory
-     */
-    public function getTrackerFormElementFactory() {
-        if($this->tracker_form_element_factory === null) {
-            $this->tracker_factory = new Tracker_FormElementFactory();
-        }
-        
-        return $this->tracker_form_element_factory;
-    }
-    
-    /**
-     * 
-     * @param Tracker_FormElementFactory $factory
-     * @return \Tracker_Rule_Date_Factory
-     */
-    public function setTrackerFormElementFactory(Tracker_FormElementFactory $factory) {
-        $this->tracker_form_element_factory = $factory;
-        return $this;
-    }
-
-    /**
-     * 
      * @param Tracker_Rule_Date $date_rule
      * @param Tracker $tracker
-     * @param Tracker_FormElement_Field $source_field
-     * @param Tracker_FormElement_Field $target_field
+     * @param Tracker_FormElement_Field $source_field_id
+     * @param Tracker_FormElement_Field $target_field_id
      * @param string $comparator
      * @return \Tracker_Rule_Date
      */
-    protected function populate(Tracker_Rule_Date $date_rule, Tracker $tracker, Tracker_FormElement_Field $source_field, Tracker_FormElement_Field $target_field, $comparator) {
+    protected function populate(Tracker_Rule_Date $date_rule, $tracker_id, $source_field_id, $target_field_id, $comparator) {
         
-        $date_rule->setTracker($tracker)
-                ->setSourceField($source_field)
-                ->setTargetField($target_field)
+        $date_rule->setTrackerId($tracker_id)
+                ->setSourceFieldId($source_field_id)
+                ->setTargetFieldId($target_field_id)
                 ->setTracker($tracker)
                 ->setComparator($comparator);
         

@@ -17,15 +17,15 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Rule.class.php');
+require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
 
 /**
-* Date Rule  between two dynamic fields
-*
-* For a tracker, if a source field is selected to a specific value,
-* then target field will be constrained to another value.
-*
-*/
+ * Date Rule between two dynamic fields
+ *
+ * For a tracker, if a source field is selected to a specific value,
+ * then target field will be constrained to another value.
+ *
+ */
 class Tracker_Rule_Date extends Tracker_Rule {
     const COMPARATOR_EQUALS = '=';
     const COMPARATOR_NOT_EQUALS = '!=';
@@ -33,7 +33,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
     const COMPARATOR_LESS_THAN_OR_EQUALS = '<=';
     const COMPARATOR_GREATER_THAN = '>';
     const COMPARATOR_GREATER_THAN_OR_EQUALS = '>=';
-    
+
     protected $_allowed_comparators = array(
         self::COMPARATOR_EQUALS,
         self::COMPARATOR_GREATER_THAN,
@@ -45,66 +45,64 @@ class Tracker_Rule_Date extends Tracker_Rule {
 
     /**
      *
-     * @var Tracker_FormElement_Field 
+     * @var int
      */
-    protected $_source_field;
-    
+    protected $source_field_id;
+
     /**
      *
-     * @var Tracker_FormElement_Field 
+     * @var int
      */
-    protected $_target_field;
-    
+    protected $target_field_id;
+
     /**
      *
-     * @var string 
+     * @var string
      */
-    protected $_comparator;
-    
-    /**
-     *
-     * @var Tracker 
-     */
-    protected $_tracker;
-    
-    /**
-     * 
-     * @return Tracker_FormElement_Field
-     */
-    public function getSourceField() {
-        return $this->_source_field;
+    protected $comparator;
+
+    public function __construct() {
+
     }
-    
+
     /**
-     * 
-     * @param Tracker_FormElement_Field $field
+     *
+     * @return int
+     */
+    public function getSourceFieldId() {
+        return $this->source_field_id;
+    }
+
+    /**
+     *
+     * @param int $field_id
      * @return \Tracker_Rule_Date
      */
-    public function setSourceField(Tracker_FormElement_Field $field) {
-        $this->_source_field = $field;
+    public function setSourceFieldId($field_id) {
+        $this->source_field_id = $field_id;
         return $this;
     }
-    
+
     /**
-     * 
-     * @return Tracker_FormElement_Field
+     *
+     * @return int
      */
-    public function getTargetField() {
-        return $this->_target_field;
+    public function getTargetFieldId() {
+        return $this->target_field_id;
     }
-    
+
     /**
-     * 
-     * @param Tracker_FormElement_Field $field
+     *
+     * @param int $field_id
      * @return \Tracker_Rule_Date
      */
-    public function setTargetField(Tracker_FormElement_Field $field) {
-        $this->_target_field = $field;
+    public function setTargetFieldId($field_id) {
+        $this->target_field_id = (int) $field_id;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param string $comparator
      * @throws Exception
      */
@@ -112,35 +110,35 @@ class Tracker_Rule_Date extends Tracker_Rule {
         if(! in_array($comparator, $this->_allowed_comparators)) {
             throw new Exception('Invalid comparator');
         }
-        
-        $this->_comparator = $comparator;
+
+        $this->comparator = $comparator;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getComparator() {
-        return $this->_comparator;
+        return $this->comparator;
     }
-    
+
     /**
-     * 
-     * @param Tracker $tracker
+     *
+     * @param int $tracker
      * @return \Tracker_Rule_Date
      */
-    public function setTracker(Tracker $tracker) {
-        $this->_tracker = $tracker;
+    public function setTrackerId($tracker_id) {
+        $this->tracker_id = $tracker_id;
         return $this;
     }
-    
+
     /**
-     * 
-     * @return Tracker
+     *
+     * @return int
      */
-    public function getTracker() {
-        return $this->_tracker;
+    public function getTrackerId() {
+        return $this->tracker_id;
     }
 }
 ?>

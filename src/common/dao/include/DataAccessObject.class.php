@@ -31,7 +31,7 @@ class DataAccessObject {
      * $da stores data access object
      * @var DataAccess
      */
-    protected $da;
+    var $da;
 
     //! A constructor
     /**
