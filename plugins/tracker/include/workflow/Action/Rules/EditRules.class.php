@@ -55,13 +55,24 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
             $GLOBALS['Response']->redirect($workflow_rules_url);
         } else {
             $this->displayHeader($layout);
-            echo '<h3>'. 'Define global rules' .'</h3>'; //TODO: i18n
-            echo '<p class="help">'. 'Those rules will be applied on each creation/update of artifacts.' .'</p>'; //TODO: i18n
             $this->displayAdd();
             $this->displayRules();
+            echo '</div>' ;
             $this->displayFooter($layout);
         }
 
+    }
+
+    protected function displayHeader($layout) {
+        parent::displayHeader($layout);
+        echo '<div class="workflow_rules">';
+        echo '<h3>'. 'Define global rules' .'</h3>'; //TODO: i18n
+        echo '<p class="help">'. 'Those rules will be applied on each creation/update of artifacts.' .'</p>'; //TODO: i18n
+    }
+
+    protected function displayFooter($layout) {
+        parent::displayFooter($layout);
+        echo '</div>' ;
     }
 
     private function displayRules() {
@@ -76,7 +87,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
             echo $this->operators[$rule['operator']];
             echo ' ';
             echo $rule['target_field']->getLabel();
-            echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">';
+            echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
             echo '<input type="checkbox" name="remove_rule['. $rule['id'] .']" value="1" ></input>';
             echo '</label>';
             echo '</li>';

@@ -780,11 +780,24 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_actions .pc_check_checked {
     background-image: url(/themes/common/images/ic/bin.png);
 }
+.workflow_rules {
+    display: inline-block;
+}
+.workflow_rules li {
+    clear: both;
+}
+.workflow_rules_actions {
+    background-color: #E5E5E5;
+    border-radius: 0.5em;
+    border: 1px solid #CCC;
+}
 .workflow_rules_actions .pc_check_unchecked {
     background-image: url(/themes/common/images/ic/bin_closed.png);
+    float: right;
 }
 .workflow_rules_actions .pc_check_checked {
     background-image: url(/themes/common/images/ic/bin.png);
+    float: right;
 }
 .workflow_action_deleted {
     text-decoration: line-through;
