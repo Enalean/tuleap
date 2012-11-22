@@ -158,27 +158,6 @@ class Tracker_RuleDao extends DataAccessObject {
         $this->retrieve($sql);
     }
     
-    public function saveRule(Tracker_Rule $rule) {
-        switch (true) {
-            case $rule instanceof Tracker_Rule_Date:
-                $this->saveDateRule($rule);
-                break;
-            default:
-                throw new Exception('Invalid Rule type provided');
-        }
-    }
-
-
-    public function saveDateRule(Tracker_Rule_Date $date_rule) {
-        
-        $this->create($date_rule->getTracker()->getId(), 
-                $date_rule->getSourceField()->getId(),
-                $source_value_id, 
-                $date_rule->getTargetField()->getId(),
-                Tracker_Rule::RULETYPE_DATE, 
-                $target_value_id);
-    }
-    
     public function searchDateRulesById($rule_id) {
         
     }

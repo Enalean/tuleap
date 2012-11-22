@@ -17,12 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('../dao/Tracker_RuleDao.class.php');
+require_once('Dao.class.php');
 require_once('Date.class.php');
 require_once('../../FormElement/Tracker_FormElementFactory.class.php');
 require_once('../../TrackerFactory.class.php');
-
 
 /**
 * Factory of rules
@@ -33,9 +31,9 @@ class Tracker_Rule_Date_Factory {
 
     /**
      *
-     * @var Tracker_RuleDao 
+     * @var Tracker_Rule_Date_Dao 
      */
-    protected $rules_dao;
+    protected $dao;
     
     /**
      *
@@ -53,8 +51,8 @@ class Tracker_Rule_Date_Factory {
      * 
      * @param DataAccessObject $dao
      */
-    function __construct(&$dao) {
-        $this->dao =& $dao;
+    function __construct() {
+        $this->dao = new Tracker_Rule_Date_Dao();
     }
  
     /**
@@ -64,8 +62,8 @@ class Tracker_Rule_Date_Factory {
      * @param Tracker_FormElement_Field_Date $target_field
      * @return \Tracker_Rule_Date
      */
-    public function create(Tracker $tracker, Tracker_FormElement_Field $source_field, Tracker_FormElement_Field $target_field, Tracker $tracker) {
-        return $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker);
+    public function create(Tracker $tracker, Tracker_FormElement_Field $source_field, Tracker_FormElement_Field $target_field, Tracker $tracker, $comparator) {
+        return $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker, $comparator);
     }
     
     /**
@@ -74,7 +72,7 @@ class Tracker_Rule_Date_Factory {
      * @return bool
      */
     public function save(Tracker_Rule_Date $date_rule) {
-        return $this->rules_dao->createDateRule($date_rule);
+        return $this->dao->saveRule($date_rule);
     }
 
     /**
@@ -83,7 +81,7 @@ class Tracker_Rule_Date_Factory {
      * @return bool
      */
     public function delete(Tracker_Rule_Date $date_rule) {
-        return $this->rules_dao->delete($date_rule);
+        return $this->dao->delete($date_rule);
     }
     
     /**
@@ -92,7 +90,7 @@ class Tracker_Rule_Date_Factory {
      * @return Tracker_Rule_Date
      */
     public function searchById($rule_id) {
-        $rule = $this->rules_dao->searchDateRulesById($rule_id);
+        $rule = $this->dao->searchById($rule_id);
         if(!is_array($rule) || count($rule) !== 1) {
             //do something bad
         }
@@ -103,8 +101,9 @@ class Tracker_Rule_Date_Factory {
                 ->getFieldById($rule['target_field_id']);
         $tracker = $this->getTrackerFactory()
                 ->getTrackerById($rule['tracker_id']);
+        $comparator = $rule['comparator'];
         
-        return $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker);
+        return $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker, $comparator);
     }
     
     /**
@@ -113,7 +112,7 @@ class Tracker_Rule_Date_Factory {
      * @return array An array of Tracker_Rule_Date objects
      */
     public function searchByTrackerId($tracker_id) {
-        $rules = $this->rules_dao->searchDateRulesByTrackerId($tracker_id);
+        $rules = $this->dao->searchByTrackerId($tracker_id);
         
         if(!is_array($rules) || count($rules) < 1) {
             return array();
@@ -128,8 +127,9 @@ class Tracker_Rule_Date_Factory {
                     ->getFieldById($rule['target_field_id']);
             $tracker = $this->getTrackerFactory()
                     ->getTrackerById($rule['tracker_id']);
+            $comparartor = $rule['comparator'];
 
-            $date_rule = $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker);
+            $date_rule = $this->populate(new Tracker_Rule_Date(), $source_field, $target_field, $tracker, $comparartor);
             $rules_array[] = $date_rule;
         }
         
@@ -179,25 +179,25 @@ class Tracker_Rule_Date_Factory {
         $this->tracker_form_element_factory = $factory;
         return $this;
     }
-    
 
-
-    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
-    }
-
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
-    }
-
-    protected function populate(Tracker_Rule_Date $date_rule, Tracker $tracker, Tracker_FormElement_Field $source_field, Tracker_FormElement_Field $target_field) {
+    /**
+     * 
+     * @param Tracker_Rule_Date $date_rule
+     * @param Tracker $tracker
+     * @param Tracker_FormElement_Field $source_field
+     * @param Tracker_FormElement_Field $target_field
+     * @param string $comparator
+     * @return \Tracker_Rule_Date
+     */
+    protected function populate(Tracker_Rule_Date $date_rule, Tracker $tracker, Tracker_FormElement_Field $source_field, Tracker_FormElement_Field $target_field, $comparator) {
         
         $date_rule->setTracker($tracker)
                 ->setSourceField($source_field)
                 ->setTargetField($target_field)
-                ->setTracker($tracker);
+                ->setTracker($tracker)
+                ->setComparator($comparator);
         
         return $date_rule;
     }
-  
-
 }
 ?>
