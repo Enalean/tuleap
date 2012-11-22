@@ -42,14 +42,6 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         $hp = Codendi_HTMLPurifier::instance();
         $this->displayHeader($engine);
 
-        $back_to_transitions_link = TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker' => (int)$this->tracker->id,
-                'func'    => 'admin-workflow'
-            )
-        );
-        echo '<a href="'. $back_to_transitions_link .'">← Back to transitions</a>'; //TODO: i18n
-
         if($transition->getFieldValueFrom()) {
             $from_label = $transition->getFieldValueFrom()->getLabel();
         } else {
@@ -82,7 +74,18 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         $section_postactions->setContent($actions);
         $section_postactions->display();
 
-        echo '<p><input type="submit" name="workflow_details" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></p>';
+        $back_to_transitions_link = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' => (int)$this->tracker->id,
+                'func'    => 'admin-workflow'
+            )
+        );
+
+        echo '<p>';
+        echo '<a href="'. $back_to_transitions_link .'">←Cancel</a>'; //TODO: i18n
+        echo '&nbsp;';
+        echo '<input type="submit" name="workflow_details" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        echo '</p>';
         echo '</td></tr></table>';
         echo '</form>';
 
