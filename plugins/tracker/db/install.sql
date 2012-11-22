@@ -626,6 +626,15 @@ CREATE TABLE IF NOT EXISTS tracker_rule_list(
   KEY tracker_rule_id (tracker_rule_id)
 ) ENGINE=InnoDB;
 
+DROP TABLE IF EXISTS tracker_rule_date;
+CREATE TABLE IF NOT EXISTS tracker_rule_date(
+  tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
+  source_field_id int(11) unsigned NOT NULL,
+  target_field_id int(11) unsigned NOT NULL,
+  comparator varchar(2) NOT NULL,
+  KEY tracker_rule_id (tracker_rule_id)
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_hierarchy;
 CREATE TABLE IF NOT EXISTS tracker_hierarchy (
   parent_id int(11) NOT NULL,
