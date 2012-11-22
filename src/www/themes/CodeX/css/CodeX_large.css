@@ -47,11 +47,11 @@ img { border: none; }
 .newproject { background-color: #EEEEEE; }
 .top_up { color: #009900; }
 .top_down { color: #CC0000; }
-.command { font-family: courier,sans-serif; font-size: medium;}
+.command { font-family: "Courier New", courier,sans-serif; font-size: medium;}
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: #F7F7F7; }
 
-PRE,TT { font-family: courier,sans-serif; }
+PRE,TT { font-family: "Courier New", courier,sans-serif; }
 
 /* forum */
 .thread { background-color: #DDDDDD; }

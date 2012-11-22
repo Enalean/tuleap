@@ -34,11 +34,11 @@ body {
 .newproject { background-color: #EEEEEE; }
 .top_up { color: #009900; }
 .top_down { color: #CC0000; }
-.command { font-family: monospace,courier,sans-serif;}
+.command { font-family: monospace,"Courier New", courier,sans-serif;}
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: #F7F7F7; }
 
-PRE,TT { font-family: monospace,courier,sans-serif; }
+PRE,TT { font-family: monospace,"Courier New", courier,sans-serif; }
 
 /********   links    **********/
 a:link, a:visited { 
@@ -301,7 +301,7 @@ td.artifact_spacer { width: 5%; }
         background-image: url(../images/ic/info.png)
 }
 .feedback_debug {
-        font-family: monospace,courier,sans-serif;
+        font-family: monospace,"Courier New", courier,sans-serif;
         color:yellow;
         font-weight:normal;
         background-color:black;

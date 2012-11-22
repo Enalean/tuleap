@@ -51,11 +51,11 @@ td, th {
 .newproject { background-color: #EEEEEE; }
 .top_up { color: #009900; }
 .top_down { color: #CC0000; }
-.command { font-family: courier,sans-serif;}
+.command { font-family: "Courier New", courier,sans-serif;}
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: #F7F7F7; }
 
-PRE,TT { font-family: courier,sans-serif; }
+PRE,TT { font-family: "Courier New", courier,sans-serif; }
 
 /********   links    **********/
 a:link, a:visited, a:active { 
@@ -425,7 +425,7 @@ td.artifact_spacer { width: 5%; }
     min-height:33px;
     font-size:.9em;
     background: #DC4900 url(../images/tabs/level2_bg.png) top left;
-    font-family:"Lucida Grande", Verdana,Helvetica,Arial,sans-serif;
+    font-family:"Lucida Grande", Verdana,Arial,Helvetica,sans-serif;
     border:1px solid #000;
     margin:0;
     padding-left: 1em;

@@ -40,13 +40,13 @@ body {
 .newproject { background-color: #EEEEEE; }
 .top_up { color: #009900; }
 .top_down { color: #CC0000; }
-.command { font-family: courier,sans-serif;}
+.command { font-family: "Courier New", courier,sans-serif;}
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: #F7F7F7; }
 
 img { border: none; }
 
-PRE,TT { font-family: courier,sans-serif; }
+PRE,TT { font-family: "Courier New", courier,sans-serif; }
 
 /********   links    **********/
 a:link, a:visited { 
@@ -1446,7 +1446,7 @@ div.avatar > img {
 	#lbOuterContainer.blue { border: 3px solid #5F89D8; }
 	#lbOuterContainer.gold { border: 3px solid #B0B000; }
 
-#lbDetailsContainer {	font: 10px Verdana, Helvetica, sans-serif; background-color: #fff; width: 100%; line-height: 1.4em;	overflow: auto; margin: 0 auto; }
+#lbDetailsContainer {	font: 10px Verdana, Arial, Helvetica, sans-serif; background-color: #fff; width: 100%; line-height: 1.4em;	overflow: auto; margin: 0 auto; }
 	#lbDetailsContainer.grey { border: 3px solid #888888; border-top: none; }
 	#lbDetailsContainer.red { border: 3px solid #DD0000; border-top: none; }
 	#lbDetailsContainer.green { border: 3px solid #00B000; border-top: none; }
