@@ -29,6 +29,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private $default_value = 'default_value';
 
+    private $url_query;
+
     private $operators = array(
         'lower_than'       => '<',
         'lower_or_equal'   => '≤',
@@ -41,58 +43,64 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory) {
         parent::__construct($tracker);
         $this->form_element_factory = $form_element_factory;
+        $this->url_query            = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' => (int)$this->tracker->id,
+                'func'    => 'admin-workflow-rules',
+            )
+        );
+    }
+
+    private function shouldUpdateRules(Codendi_Request $request) {
+        $should_delete_rules = $request->get('remove_rule');
+        $exist_source_field  = $request->existAndNonEmpty('source_date_field');
+        $exist_target_field  = $request->existAndNonEmpty('target_date_field');
+        $should_add_rules    = $exist_source_field && $exist_target_field;
+
+        return $should_delete_rules || $should_add_rules;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
-        if ($request->existAndNonEmpty('add')) {
-            // Do the create stuff
-            $workflow_rules_url = TRACKER_BASE_URL.'/?'. http_build_query(
-                array(
-                    'tracker' =>  (int)$this->tracker->id,
-                    'func'    =>  'admin-workflow-rules',
-                )
-            );
-            $GLOBALS['Response']->redirect($workflow_rules_url);
+        if ($this->shouldUpdateRules($request)) {
+            $this->updateRules($request);
+            $GLOBALS['Response']->redirect($this->url_query);
         } else {
-            $this->displayHeader($layout);
-            $this->displayAdd();
-            $this->displayRules();
-            echo '</div>' ;
-            $this->displayFooter($layout);
+            $this->displayPane($layout);
         }
-
     }
 
-    protected function displayHeader($layout) {
-        parent::displayHeader($layout);
+    private function updateRules(Codendi_Request $request){
+    }
+
+    private function displayPane(Tracker_IDisplayTrackerLayout $layout) {
+        $this->displayHeader($layout);
         echo '<div class="workflow_rules">';
         echo '<h3>'. 'Define global rules' .'</h3>'; //TODO: i18n
         echo '<p class="help">'. 'Those rules will be applied on each creation/update of artifacts.' .'</p>'; //TODO: i18n
-    }
-
-    protected function displayFooter($layout) {
-        parent::displayFooter($layout);
+        echo '<form method="post" action="'. $this->url_query .'">';
+        $this->displayRules();
+        $this->displayAdd();
+        echo '<p><input type="submit" name="add" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
+        echo '</form>';
         echo '</div>' ;
+        $this->displayFooter($layout);
     }
 
     private function displayRules() {
         $rules = $this->getRules();
-
-        echo '<ul class="workflow_rules_actions">';
-
+        echo '<ul class="workflow_existing_rules">';
         foreach ($rules as $rule) {
-            echo '<li>';
+            echo '<li class="workflow_rule_action">';
             echo $rule['source_field']->getLabel();
-            echo ' ';
+            echo '&nbsp;&nbsp;';
             echo $this->operators[$rule['operator']];
-            echo ' ';
+            echo '&nbsp;&nbsp;';
             echo $rule['target_field']->getLabel();
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
-            echo '<input type="checkbox" name="remove_rule['. $rule['id'] .']" value="1" ></input>';
+            echo '<input type="checkbox" name="remove_rule[]" value="'.$rule['id'].'" ></input>';
             echo '</label>';
             echo '</li>';
         }
-
         echo '</ul>';
     }
 
@@ -105,22 +113,12 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function displayAdd() {
-        echo 'No rules defined';
-        echo '<br />';
         $values = $this->getDateFields();
         $checked_val = $this->default_value;
-        $add_form_url  = TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker' =>  (int)$this->tracker->id,
-                'func'    =>  'admin-workflow-rules',
-            )
-        );
-        echo '<form name="" method="post" action="'.$add_form_url.'">';
+        echo 'Add a new rule: ';//TODO: i18n
         echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
         echo html_build_select_box_from_array($this->operators, 'operator');
         echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
-        echo '<input type="submit" name="add" value="'.$GLOBALS['Language']->getText('global', 'add').'" />';
-        echo '</form>';
     }
 
     private function getDateFields() {
