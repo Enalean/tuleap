@@ -19,6 +19,8 @@
  */
 require_once('Dao.class.php');
 require_once('Date.class.php');
+require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 
 /**
 * Factory of rules

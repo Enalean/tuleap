@@ -19,7 +19,7 @@
  */
 
 require_once TRACKER_BASE_DIR .'/workflow/Action/Rules.class.php';
-
+require_once TRACKER_BASE_DIR .'/Tracker/Rule/Date/Factory.class.php';
 require_once dirname(__FILE__).'/../../../../tests/builders/aField.php';
 
 class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules {
@@ -28,6 +28,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private $form_element_factory;
 
     private $default_value = 'default_value';
+
+    /** @var Tracker_Rule_Date_Factory */
+    private $rule_date_factory;
 
     private $url_query;
 
@@ -40,9 +43,10 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         'different'        => '≠'
     );
 
-    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory) {
+    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, Tracker_Rule_Date_Factory $rule_date_factory) {
         parent::__construct($tracker);
         $this->form_element_factory = $form_element_factory;
+        $this->rule_date_factory    = $rule_date_factory;
         $this->url_query            = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
@@ -70,6 +74,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function updateRules(Codendi_Request $request){
+        $remove_rule = $request->get('remove_rule');
+        $rule = $this->rule_date_factory->searchById((int)$remove_rule[0]);
+        $this->rule_date_factory->delete($rule);
     }
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout) {

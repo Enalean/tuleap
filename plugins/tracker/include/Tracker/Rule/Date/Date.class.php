@@ -66,6 +66,10 @@ class Tracker_Rule_Date extends Tracker_Rule {
 
     }
 
+    public function setId($id) {
+        $this->id = $id;
+    }
+
     /**
      *
      * @return int
