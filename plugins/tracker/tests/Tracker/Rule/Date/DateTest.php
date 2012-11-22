@@ -20,7 +20,6 @@
 require_once dirname(__FILE__).'/../../../builders/all.php';
 require_once dirname(__FILE__).'/../../../../include/constants.php';
 require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/Date/Date.class.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php';
 
 class Tracker_Rule_Date_DateTest extends TuleapTestCase {
 
