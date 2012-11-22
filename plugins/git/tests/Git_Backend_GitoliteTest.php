@@ -33,13 +33,15 @@ Mock::generate('GitDao');
 Mock::generate('DataAccessResult');
 Mock::generate('Project');
 Mock::generate('PermissionsManager');
+Mock::generate('GitPlugin');
 
 class Git_Backend_GitoliteTest extends UnitTestCase {
     
     protected $fixturesPath;
 
     protected $unset_servername = false;
-    
+    private   $forkPermissions;
+
     public function setUp() {
         if (!isset($_SERVER['SERVER_NAME'])) {
             $this->unset_servername = true;
@@ -60,6 +62,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
             unlink($link);
         }
         symlink(dirname(__FILE__).'/_fixtures/perms', $link);
+        $this->forkPermissions = array();
     }
     
     public function tearDown() {
@@ -133,7 +136,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $driver->expectOnce('dumpProjectRepoConf', array($project));
         $driver->expectOnce('push');
 
-        $backend->fork($old_repo, $new_repo);
+        $backend->fork($old_repo, $new_repo, $this->forkPermissions);
     }
 
     public function testFork_clonesRepositoryFromOneProjectToAnotherSucceedAndPushesConf() {
@@ -170,7 +173,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $driver->expectOnce('dumpProjectRepoConf', array($new_project));
         $driver->expectOnce('push');
 
-        $backend->fork($old_repo, $new_repo);
+        $backend->fork($old_repo, $new_repo, $this->forkPermissions);
     }
     
     public function testForkWithTargetPathAlreadyExistingShouldNotFork() {
@@ -201,7 +204,7 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
         $driver->expectNever('dumpProjectRepoConf');
         $driver->expectNever('push');
 
-        $backend->fork($old_repo, $new_repo);
+        $backend->fork($old_repo, $new_repo, $this->forkPermissions);
     }
 
     
@@ -219,10 +222,10 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
 
     protected function _GivenABackendGitolite() {
-        $driver             = mock('Git_GitoliteDriver');
-        $dao                = mock('GitDao');
-        $permissionsManager = mock('PermissionsManager');
-        $gitPlugin          = mock('GitPlugin');
+        $driver             = new mockGit_GitoliteDriver();
+        $dao                = new mockGitDao();
+        $permissionsManager = new mockPermissionsManager();
+        $gitPlugin          = new mockGitPlugin();
         $backend = new Git_Backend_Gitolite($driver);
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
