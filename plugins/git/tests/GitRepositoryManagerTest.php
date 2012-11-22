@@ -195,6 +195,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     private $user;
     private $project;
     private $manager;
+    private $forkPermissions;
 
     public function setUp() {
         parent::setUp();
@@ -205,35 +206,34 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $this->user    = stub('User')->getId()->returns(123);
         $this->project = stub('Project')->getId()->returns(101);
         $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
+        $this->forkPermissions = array();
     }
 
     public function itThrowAnExceptionIfRepositoryNameCannotBeUsed() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(true);
 
         $this->expectException();
-        $this->manager->fork($this->repository, mock('Project'), mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL);
+        $this->manager->fork($this->repository, mock('Project'), mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
 
     public function itForkInRepositoryBackendIfEverythingIsClean() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
 
         $this->backend->expectOnce('fork');
-        $this->manager->fork($this->repository, mock('Project'), mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL);
+        $this->manager->fork($this->repository, mock('Project'), mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
 
     function testForkIndividualRepositories() {
         $path  = 'toto';
-
         $this->repository->setReturnValue('userCanRead', true, array($this->user));
         $this->backend->setReturnValue('isNameValid', true, array($path));
 
         $this->backend->expectOnce('fork');
-        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, $path, null);
+        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, $path, null, $this->forkPermissions);
     }
 
     function testClonesManyInternalRepositories() {
         $namespace  = 'toto';
-
         $repo_ids = array('1', '2', '3');
 
         $repos = array();
@@ -247,12 +247,11 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         }
 
         $this->backend->expectCallCount('fork', 3);
-        $this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null);
+        $this->manager->forkRepositories($repos, $this->project, $this->user, $namespace, null, $this->forkPermissions);
     }
 
     function testCloneManyCrossProjectRepositories() {
         $this->user->setReturnValue('isMember', true);
-
         $to_project = stub('Project')->getId()->returns(2);
 
         $repo_ids = array('1', '2', '3');
@@ -266,12 +265,12 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         }
 
         $this->backend->expectCallCount('fork', 3);
-        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null);
+        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
     function testWhenNoRepositorySelectedItAddsWarning() {
         $this->expectException();
-        $this->manager->forkRepositories(array(), $this->project, $this->user, '', null);
+        $this->manager->forkRepositories(array(), $this->project, $this->user, '', null, $this->forkPermissions);
     }
 
     function testClonesOneRepository() {
@@ -279,16 +278,15 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $this->repository->setReturnValue('userCanRead', true, array($this->user));
 
         $this->backend->expectOnce('fork');
-        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, '', null);
+        $this->manager->forkRepositories(array($this->repository), $this->project, $this->user, '', null, $this->forkPermissions);
     }
 
     function testDoesntCloneUnreadableRepos() {
         $repos = $this->getRepoCollectionUnreadableFor(array('1', '2', '3'), $this->user);
-
         $to_project = stub('Project')->getId()->returns(2);
 
         $this->backend->expectNever('fork');
-        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null);
+        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
     protected function getRepoCollectionUnreadableFor($repo_ids, $user) {
@@ -316,7 +314,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
 
         $repos = array($this->repository);
 
-        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null);
+        $this->manager->forkRepositories($repos, $to_project, $this->user, '', null, $this->forkPermissions);
     }
 
     function testForkShouldNotCloneAnyNonExistentRepositories() {
@@ -324,7 +322,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
 
         $repo = $this->GivenARepository(123);
 
-        $this->manager->forkRepositories(array($repo, null), $this->project, $this->user, null, null);
+        $this->manager->forkRepositories(array($repo, null), $this->project, $this->user, null, null, $this->forkPermissions);
     }
 
     function testForkShouldIgnoreAlreadyExistingRepository() {
@@ -388,7 +386,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
     }
 
     private function forkRepositories($repositories, $namespace=null) {
-        $this->manager->forkRepositories($repositories, $this->project, $this->user, $namespace, null);
+        $this->manager->forkRepositories($repositories, $this->project, $this->user, $namespace, null, $this->forkPermissions);
     }
 }
 
