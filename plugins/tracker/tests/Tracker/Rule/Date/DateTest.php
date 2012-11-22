@@ -75,10 +75,23 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->date_rule->setTrackerId(45);
         $this->assertEqual(45, $this->date_rule->getTrackerId());
     }
+    
+    /*
+     * Comparator Field tests
+     */
+    public function testSetComparatorReturnsModelObject() {
+        $set = $this->date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
+        $this->assertEqual($this->date_rule, $set);
+    }
 
-
-
-
-
+    public function testGetComparatorReturnsComparatorSet() {
+        $this->date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
+        $this->assertEqual(Tracker_Rule_Date::COMPARATOR_EQUALS, $this->date_rule->getComparator());
+    }
+    
+    public function testSetComparatorWillNotAllowRandomComparators() {
+        $this->expectException('Tracker_Rule_Date_Exception');
+        $this->date_rule->setComparator('not a comparator');
+    }
 }
 ?>

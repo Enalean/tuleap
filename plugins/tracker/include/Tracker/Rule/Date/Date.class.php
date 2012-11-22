@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
+require_once 'Exception.class.php';
 
 /**
  * Date Rule between two dynamic fields
@@ -104,11 +105,11 @@ class Tracker_Rule_Date extends Tracker_Rule {
     /**
      *
      * @param string $comparator
-     * @throws Exception
+     * @throws Tracker_Rule_Date_Exception
      */
     public function setComparator($comparator) {
         if(! in_array($comparator, $this->_allowed_comparators)) {
-            throw new Exception('Invalid comparator');
+            throw new Tracker_Rule_Date_Exception('Invalid comparator');
         }
 
         $this->comparator = $comparator;
