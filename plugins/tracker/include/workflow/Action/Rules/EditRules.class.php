@@ -55,45 +55,43 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
             $GLOBALS['Response']->redirect($workflow_rules_url);
         } else {
             $this->displayHeader($layout);
-            $this->displayAdd();
+            echo '<div class="workflow_rules">';
+            echo '<h3>'. 'Define global rules' .'</h3>'; //TODO: i18n
+            echo '<p class="help">'. 'Those rules will be applied on each creation/update of artifacts.' .'</p>'; //TODO: i18n
             $this->displayRules();
+            $this->displayAdd();
             echo '</div>' ;
             $this->displayFooter($layout);
         }
 
     }
 
-    protected function displayHeader($layout) {
-        parent::displayHeader($layout);
-        echo '<div class="workflow_rules">';
-        echo '<h3>'. 'Define global rules' .'</h3>'; //TODO: i18n
-        echo '<p class="help">'. 'Those rules will be applied on each creation/update of artifacts.' .'</p>'; //TODO: i18n
-    }
-
-    protected function displayFooter($layout) {
-        parent::displayFooter($layout);
-        echo '</div>' ;
-    }
-
     private function displayRules() {
         $rules = $this->getRules();
+        $delete_form_url = TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker' => (int)$this->tracker->id,
+                'func'    => 'admin-workflow-rules'
+            )
+        );
 
-        echo '<ul class="workflow_rules_actions">';
-
+        echo '<form name="delete_rule" method="post" action="'.$delete_form_url.'">';
+        echo '<ul class="workflow_existing_rules">';
         foreach ($rules as $rule) {
-            echo '<li>';
+            echo '<li class="workflow_rule_action">';
             echo $rule['source_field']->getLabel();
-            echo ' ';
+            echo '&nbsp;&nbsp;';
             echo $this->operators[$rule['operator']];
-            echo ' ';
+            echo '&nbsp;&nbsp;';
             echo $rule['target_field']->getLabel();
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
             echo '<input type="checkbox" name="remove_rule['. $rule['id'] .']" value="1" ></input>';
             echo '</label>';
             echo '</li>';
         }
-
         echo '</ul>';
+
+        echo '</form>';
     }
 
     private function getRules() {
@@ -105,8 +103,6 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function displayAdd() {
-        echo 'No rules defined';
-        echo '<br />';
         $values = $this->getDateFields();
         $checked_val = $this->default_value;
         $add_form_url  = TRACKER_BASE_URL.'/?'. http_build_query(
@@ -115,11 +111,11 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
                 'func'    =>  'admin-workflow-rules',
             )
         );
-        echo '<form name="" method="post" action="'.$add_form_url.'">';
+        echo '<form name="add_rule" method="post" action="'.$add_form_url.'">';
         echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
         echo html_build_select_box_from_array($this->operators, 'operator');
         echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
-        echo '<input type="submit" name="add" value="'.$GLOBALS['Language']->getText('global', 'add').'" />';
+        echo ' <input type="submit" name="add" value="'.$GLOBALS['Language']->getText('global', 'add').'" />';
         echo '</form>';
     }
 
