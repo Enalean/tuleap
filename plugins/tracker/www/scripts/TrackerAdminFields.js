@@ -317,6 +317,16 @@ document.observe('dom:loaded', function () {
             }
         });
     });
-    
+
+    $$("input[type=checkbox][name^=remove_rule]").each(function (elem) {
+        elem.observe('click', function (evt) {
+            if (elem.checked) {
+                elem.up('li').addClassName('workflow_rule_deleted');
+            } else {
+                elem.up('li').removeClassName('workflow_rule_deleted');
+            }
+        });
+    });
+
 });
 
