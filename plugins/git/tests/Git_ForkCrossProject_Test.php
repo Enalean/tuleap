@@ -28,17 +28,17 @@ Mock::generate('ProjectManager');
 Mock::generate('GitRepositoryFactory');
 
 class Git_ForkCrossProject_Test extends TuleapTestCase {
-    
+
     public function testExecutes_ForkCrossProject_ActionWithForkRepositoriesView() {
         $groupId = 101;
-        
+        $forkPermissions = array();
         $toProjectId = 100;
         $toProject = new MockProject();
         $toProject->setReturnValue('getId', $toProjectId);
         
         $repo  = new GitRepository();
         $repos = array($repo);
-        $repo_ids = array(200);
+        $repo_ids = '200';
         
         $user = new MockUser();
         $user->setReturnValue('isMember', true);
@@ -50,8 +50,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $projectManager->setReturnValue('getProject', $toProject, array($toProjectId));
         
         $repositoryFactory = new MockGitRepositoryFactory();
-        $repositoryFactory->setReturnValue('getRepositoryById', $repo, array($repo_ids[0]));
-        $forkPermissions = array();
+        $repositoryFactory->setReturnValue('getRepositoryById', $repo, array($repo_ids));
 
         $request = new Codendi_Request(array(
                                         'choose_destination' => 'project',
@@ -130,9 +129,9 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
             'repo_access' => array()
         ));
         
-        $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken', 'addError', 'addAction'));
+        $git = TestHelper::getPartialMock('Git', array('checkSynchronizerToken', 'addError', 'addAction', 'getText'));
         $git->setGroupId(123);
-        $git->expectOnce('addError', array($adminMsg));
+        $git->expectOnce('addError', array($git->getText($adminMsg)));
         $git->expectNever('addAction');
         
         $git->_doDispatchForkCrossProject($request, $user);
