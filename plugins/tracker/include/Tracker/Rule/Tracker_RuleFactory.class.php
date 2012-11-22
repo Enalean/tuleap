@@ -19,9 +19,8 @@
  */
 
 require_once('dao/Tracker_RuleDao.class.php');
-
 require_once('Tracker_Rule_Value.class.php');
-
+require_once('Tracker_Rule.class.php');
 
 /**
 * Factory of rules
@@ -33,19 +32,10 @@ class Tracker_RuleFactory {
     var $rules_dao;
     var $rules;
 
-    var $RULETYPE_HIDDEN;
-    var $RULETYPE_DISABLED;
-    var $RULETYPE_MANDATORY;
-    var $RULETYPE_VALUE;
 
     function Tracker_RuleFactory(&$rules_dao) {
-        $this->rules_dao         =& $rules_dao;
+        $this->rules_dao =& $rules_dao;
         $this->rules = array();
-
-        $this->RULETYPE_HIDDEN    = 1;
-        $this->RULETYPE_DISABLED  = 2;
-        $this->RULETYPE_MANDATORY = 3;
-        $this->RULETYPE_VALUE     = 4;
     }
 
     /**
@@ -92,13 +82,13 @@ class Tracker_RuleFactory {
     function &_buildRuleInstance($data) {
         //We create Rule
         switch ($data['rule_type']) {
-            case $this->RULETYPE_HIDDEN:
+            case Tracker_Rule::RULETYPE_HIDDEN:
                 $rule =& new Tracker_RuleHidden($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
                 break;
-            case $this->RULETYPE_DISABLED:
+            case Tracker_Rule::RULETYPE_DISABLED:
                 $rule =& new Tracker_RuleDisabled($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
                 break;
-            case $this->RULETYPE_MANDATORY:
+            case Tracker_Rule::RULETYPE_MANDATORY:
                 $rule =& new Tracker_RuleMandatory($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
                 break;
             default: //RULETYPE_VALUE
@@ -115,23 +105,23 @@ class Tracker_RuleFactory {
     }
 
     function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
-        $this->rules_dao->create($tracker_id, $source, $source_value, $target, $this->RULETYPE_VALUE, $target_value);
+        $this->rules_dao->create($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_VALUE, $target_value);
     }
 
     function _saveRuleState($tracker_id, $source, $source_value, $target, $rule_type) {
-        $this->rules_dao->deleteRuleState($tracker_id, $source, $source_value, $target, array($this->RULETYPE_HIDDEN, $this->RULETYPE_DISABLED, $this->RULETYPE_MANDATORY));
+        $this->rules_dao->deleteRuleState($tracker_id, $source, $source_value, $target, array(Tracker_Rule::RULETYPE_HIDDEN, Tracker_Rule::RULETYPE_DISABLED, Tracker_Rule::RULETYPE_MANDATORY));
         $this->rules_dao->create($tracker_id, $source, $source_value, $target, $rule_type);
     }
     function saveRuleHidden($tracker_id, $source, $source_value, $target) {
-        $this->_saveRuleState($tracker_id, $source, $source_value, $target, $this->RULETYPE_HIDDEN);
+        $this->_saveRuleState($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_HIDDEN);
     }
 
     function saveRuleDisabled($tracker_id, $source, $source_value, $target) {
-        $this->_saveRuleState($tracker_id, $source, $source_value, $target, $this->RULETYPE_DISABLED);
+        $this->_saveRuleState($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_DISABLED);
     }
 
     function saveRuleMandatory($tracker_id, $source, $source_value, $target) {
-        $this->_saveRuleState($tracker_id, $source, $source_value, $target, $this->RULETYPE_MANDATORY);
+        $this->_saveRuleState($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_MANDATORY);
     }
 
     function deleteRule($rule_id) {
@@ -140,11 +130,11 @@ class Tracker_RuleFactory {
     }
 
     function deleteRuleValueBySource($tracker_id, $source, $source_value, $target) {
-        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($tracker_id, $source, $source_value, $target, $this->RULETYPE_VALUE);
+        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_VALUE);
         return $deleted;
     }
     function deleteRuleValueByTarget($tracker_id, $source, $target, $target_value) {
-        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($tracker_id, $source, $target, $target_value, $this->RULETYPE_VALUE);
+        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($tracker_id, $source, $target, $target_value, Tracker_Rule::RULETYPE_VALUE);
         return $deleted;
     }
 

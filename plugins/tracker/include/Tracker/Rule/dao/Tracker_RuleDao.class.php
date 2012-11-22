@@ -114,15 +114,44 @@ class Tracker_RuleDao extends DataAccessObject {
     * @return true or id(auto_increment) if there is no error
     */
     function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $rule_type, $target_value_id) {
-		$sql = sprintf("INSERT INTO tracker_rule (tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) VALUES (%s, %s, %s, %s, %s, %s)",
-				$this->da->quoteSmart($tracker_id),
-				$this->da->quoteSmart($source_field_id),
-				$this->da->quoteSmart($source_value_id),
-				$this->da->quoteSmart($target_field_id),
-				$this->da->quoteSmart($rule_type),
-				$this->da->quoteSmart($target_value_id));        
-        //return $this->updateAndGetLastId($sql);
+        $sql = sprintf("INSERT INTO tracker_rule (tracker_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id) VALUES (%s, %s, %s, %s, %s, %s)",
+                        $this->da->quoteSmart($tracker_id),
+                        $this->da->quoteSmart($source_field_id),
+                        $this->da->quoteSmart($source_value_id),
+                        $this->da->quoteSmart($target_field_id),
+                        $this->da->quoteSmart($rule_type),
+                        $this->da->quoteSmart($target_value_id));        
         $this->retrieve($sql);
+    }
+    
+    public function saveRule(Tracker_Rule $rule) {
+        
+        switch (true) {
+            case $rule instanceof Tracker_Rule_Date:
+                $this->saveDateRule($rule);
+                break;
+            default:
+                throw new Exception('Invalid Rule type provided');
+        }
+    }
+
+
+    public function saveDateRule(Tracker_Rule_Date $date_rule) {
+        
+        $this->create($date_rule->getTracker()->getId(), 
+                $date_rule->getSourceField()->getId(),
+                $source_value_id, 
+                $date_rule->getTargetField()->getId(),
+                Tracker_Rule::RULETYPE_DATE, 
+                $target_value_id);
+    }
+    
+    public function searchDateRulesById($rule_id) {
+        
+    }
+    
+    public function searchDateRulesByTrackerId($tracker_id) {
+        
     }
 
     

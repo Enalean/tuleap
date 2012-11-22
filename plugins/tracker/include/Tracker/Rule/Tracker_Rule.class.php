@@ -27,12 +27,18 @@
 * @abstract
 */
 /* abstract */ class Tracker_Rule {
+    const RULETYPE_HIDDEN       = 1;
+    const RULETYPE_DISABLED     = 2;
+    const RULETYPE_MANDATORY    = 3;
+    const RULETYPE_VALUE        = 4;
+    const RULETYPE_DATE         = 5;
     
     var $id;
     var $tracker_id;
     var $source_field;
     var $target_field;
     var $source_value;
+    
     
     function Tracker_Rule($id, $tracker_id, $source_field, $source_value, $target_field) {
         $this->id                = $id;
