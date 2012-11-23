@@ -86,14 +86,19 @@ class Tracker_Rule_Date_Factory {
      * @return Tracker_Rule_Date
      */
     public function searchById($rule_id) {
-        $rule = $this->dao->searchById($rule_id);
-
-        if(! is_array($rule) || ! array_key_exists('comparator', $rule)) {
+        $rule = $this->dao->searchById($rule_id)->getRow();
+        if (!$rule) {
             return null;
         }
-        $comparator = $rule['comparator'];
 
-        return $this->populate(new Tracker_Rule_Date(), $rule['id'], $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparator);
+        return $this->populate(
+            new Tracker_Rule_Date(),
+            $rule['id'],
+            $rule['tracker_id'],
+            $rule['source_field_id'],
+            $rule['target_field_id'],
+            $rule['comparator']
+        );
     }
     
     /**

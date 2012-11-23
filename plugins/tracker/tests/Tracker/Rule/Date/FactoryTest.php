@@ -74,7 +74,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     }
     
     public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao() {
-        stub($this->date_rule_dao)->searchById()->returns(false);
+        stub($this->date_rule_dao)->searchById()->returnsEmptyDar();
         $date_rule = $this->date_rule_factory
                 ->searchById(20);
         
@@ -90,7 +90,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
             'tracker_id'        => 999,
         );
         
-        stub($this->date_rule_dao)->searchById()->returns($data);
+        stub($this->date_rule_dao)->searchById(20)->returnsDar($data);
         $date_rule = $this->date_rule_factory
                 ->searchById(20);
         
