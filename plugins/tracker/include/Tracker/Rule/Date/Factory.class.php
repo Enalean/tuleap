@@ -72,12 +72,10 @@ class Tracker_Rule_Date_Factory {
     }
 
     /**
-     * 
-     * @param Tracker_Rule_Date $date_rule
      * @return bool
      */
-    public function delete(Tracker_Rule_Date $date_rule) {
-        return $this->dao->delete($date_rule);
+    public function deleteById($tracker_id, $rule_id) {
+        return $this->dao->deleteById($tracker_id, $rule_id);
     }
     
     /**

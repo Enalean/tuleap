@@ -24,7 +24,7 @@ require_once TRACKER_BASE_DIR .'/workflow/Action/Rules/EditRules.class.php';
 class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase {
 
     protected $remove_parameter = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_REMOVE_RULES;
-    private $tracker_id         = 42;
+    protected $tracker_id       = 42;
 
     public function setUp() {
         parent::setUp();
@@ -57,26 +57,26 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
 
     public function itDeletesARule() {
         $request = aRequest()->with($this->remove_parameter, array('123'))->build();
-        expect($this->date_factory)->delete($this->rule_1)->once();
+        expect($this->date_factory)->deleteById($this->tracker_id, 123)->once();
         $this->action->process($this->layout, $request, $this->user);
     }
 
     public function itDeletesMultipleRules() {
         $request = aRequest()->with($this->remove_parameter, array('123','456'))->build();
-        expect($this->date_factory)->delete($this->rule_1)->at(0);
-        expect($this->date_factory)->delete($this->rule_2)->at(1);
+        expect($this->date_factory)->deleteById($this->tracker_id, 123)->at(0);
+        expect($this->date_factory)->deleteById($this->tracker_id, 456)->at(1);
         $this->action->process($this->layout, $request, $this->user);
     }
 
     public function itDoesNotFailIfRequestDoesNotContainAnArray() {
         $request = aRequest()->with($this->remove_parameter, '123')->build();
-        expect($this->date_factory)->delete()->never();
+        expect($this->date_factory)->deleteById()->never();
         $this->action->process($this->layout, $request, $this->user);
     }
 
     public function itDoesNotFailIfRequestContainsIrrevelantId() {
         $request = aRequest()->with($this->remove_parameter, array('invalid_id'))->build();
-        expect($this->date_factory)->delete()->never();
+        expect($this->date_factory)->deleteById($this->tracker_id, 0)->once();
         $this->action->process($this->layout, $request, $this->user);
     }
     
@@ -85,7 +85,7 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
             'source_date_field' => '21',
             'target_date_field' => '14'
         ))->build();
-        expect($this->date_factory)->delete()->never();
+        expect($this->date_factory)->deleteById()->never();
         $this->action->process($this->layout, $request, $this->user);
     }
 }

@@ -79,15 +79,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
         if (is_array($remove_rules)) {
             foreach ($remove_rules as $rule_id) {
-                $this->deleteRuleById((int)$rule_id);
+                $this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id);
             }
-        }
-    }
-
-    private function deleteRuleById($rule_id) {
-        $rule = $this->rule_date_factory->searchById($rule_id);
-        if ($rule) {
-            $this->rule_date_factory->delete($rule);
         }
     }
 

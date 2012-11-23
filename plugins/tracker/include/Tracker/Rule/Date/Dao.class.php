@@ -35,7 +35,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      */
     function searchById($id) {
         $sql = sprintf("SELECT *
-                        FROM $this->table_name 
+                        FROM $this->table_name
                             JOIN tracker_rule
                             ON (id = tracker_rule_id)
                         WHERE tracker_rule.id = %s",
@@ -49,7 +49,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      */
     function searchByTrackerId($tracker_id) {
         $sql = sprintf("SELECT *
-                        FROM tracker_rule 
+                        FROM tracker_rule
                             JOIN $this->table_name
                             ON (id = tracker_rule_id)
                         WHERE tracker_rule.tracker_id = %s",
@@ -58,7 +58,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
     }
 
     /**
-     * 
+     *
      * @param Tracker_Rule_Date $rule
      * @return int The ID of the saved tracker_rule
      */
@@ -85,10 +85,27 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
             $this->rollBack();
             throw $e;
         }
-        
+
         $this->commit();
 
         return $tracker_rule_id;
+    }
+
+    public function deleteById($tracker_id, $rule_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $rule_id    = $this->da->escapeInt($rule_id);
+        $sql = "DELETE tracker_rule_date.*
+                FROM tracker_rule
+                    INNER JOIN tracker_rule_date ON (id = tracker_rule_id)
+                WHERE id = $rule_id
+                  AND tracker_id = $tracker_id";
+        if ($this->update($sql)) {
+            $sql = "DELETE
+                    FROM tracker_rule
+                    WHERE id = $rule_id
+                      AND tracker_id = $tracker_id";
+            return $this->update($sql);
+        }
     }
 }
 ?>
