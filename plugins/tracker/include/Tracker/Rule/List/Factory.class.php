@@ -117,10 +117,11 @@ class Tracker_Rule_List_Factory {
     /**
      * 
      * @param Tracker_Rule_List $list_rule
-     * @param Tracker $tracker
-     * @param Tracker_FormElement_Field $source_field_id
-     * @param Tracker_FormElement_Field $target_field_id
-     * @param string $comparator
+     * @param int $tracker_id
+     * @param int $source_field_id
+     * @param int $target_field_id
+     * @param int $source_value
+     * @param int $target_value
      * @return \Tracker_Rule_List
      */
     protected function populate(Tracker_Rule_List $list_rule, $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value) {
