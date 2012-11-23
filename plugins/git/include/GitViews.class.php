@@ -484,16 +484,13 @@ class GitViews extends PluginViews {
         $pm       = ProjectManager::instance();
         $params   = $this->getData();
 
-        //@todo clean up
-        if ($params['scope'] == GitRepository::REPO_SCOPE_PROJECT) {
+        if ($params['scope'] == 'project') {
             $groupId = $params['group_id'];
             $project = $pm->getProject($groupId);
-            // @TODO: i18n
-            $destinationHTML = 'Into project <b>'.$project->getPublicName().'</b>';
+            $destinationHTML = $this->getText('fork_destination_project_message', array($project->getPublicName()));
         } else {
             $groupId = (int)$this->groupId;
-            // @TODO: i18n
-            $destinationHTML = 'As personal fork';
+            $destinationHTML = $this->getText('fork_destination_personal_message');
         }
         $dao         = new GitDao();
         $request     = new Codendi_Request($params);
@@ -512,8 +509,7 @@ class GitViews extends PluginViews {
 
         $this->_getBreadCrumb();
         echo '<h2>'.$this->getText('fork_repositories').'</h2>';
-        // @TODO: i18n
-        echo 'You are going to fork repository: '.$sourceReposHTML;
+        echo $this->getText('fork_repository_message', array($sourceReposHTML));
         echo $destinationHTML;
         echo '<h3>Set permissions for the repository to be created</h3>';
         echo '<form action="" method="POST">';
