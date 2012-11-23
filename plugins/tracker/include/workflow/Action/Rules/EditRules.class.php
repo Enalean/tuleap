@@ -78,10 +78,14 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function updateRules(Codendi_Request $request) {
         $remove_rules = $request->getValidated(self::PARAMETER_REMOVE_RULES, 'array', array());
         foreach ($remove_rules as $rule_id) {
-            $rule = $this->rule_date_factory->searchById((int)$rule_id);
-            if ($rule) {
-                $this->rule_date_factory->delete($rule);
-            }
+            $this->deleteRuleById((int)$rule_id);
+        }
+    }
+
+    private function deleteRuleById($rule_id) {
+        $rule = $this->rule_date_factory->searchById($rule_id);
+        if ($rule) {
+            $this->rule_date_factory->delete($rule);
         }
     }
 
