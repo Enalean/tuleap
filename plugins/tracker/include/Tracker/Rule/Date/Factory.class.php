@@ -50,7 +50,9 @@ class Tracker_Rule_Date_Factory {
      */
     public function create($source_field_id, $target_field_id, $tracker_id, $comparator) {
         $date_rule = $this->populate(new Tracker_Rule_Date(), $tracker_id, $source_field_id, $target_field_id, $comparator);
-        $this->save($date_rule);
+        $rule_id = $this->insert($date_rule);
+        
+        $date_rule->setId($rule_id);
         
         return $date_rule;
     }
@@ -58,10 +60,10 @@ class Tracker_Rule_Date_Factory {
     /**
      * 
      * @param Tracker_Rule_Date $date_rule
-     * @return bool
+     * @return int The ID of the tracker_Rule created
      */
-    public function save(Tracker_Rule_Date $date_rule) {
-        return $this->dao->save($date_rule);
+    public function insert(Tracker_Rule_Date $date_rule) {
+        return $this->dao->insert($date_rule);
     }
 
     /**

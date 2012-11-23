@@ -60,24 +60,34 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
     /**
      * 
      * @param Tracker_Rule_Date $rule
+     * @return int The ID of the saved tracker_rule
      */
-    public function save(Tracker_Rule_Date $rule) {
+    public function insert(Tracker_Rule_Date $rule) {
+        $this->startTransaction();
+        try{
+            $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
+                                VALUES (%s, %s)",
+                                $this->da->quoteSmart($rule->getTracker()->getId()),
+                                $this->da->quoteSmart(Tracker_Rule::RULETYPE_DATE)
+                               );
+
+            $this->update($sql_insert_rule);
+            $tracker_rule_id = $this->da->lastInsertId();
+
+            $sql = sprintf("INSERT INTO tracker_rule_date (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+                            VALUES (%s, %s, %s, %s, %s)",
+                            $tracker_rule_id,
+                            $this->da->quoteSmart($rule->getSourceField()->getId()),
+                            $this->da->quoteSmart($rule->getTargetField()->getId()));
+            $this->retrieve($sql);
+        } catch (Exception $e) {
+            $this->rollBack();
+            throw $e;
+        }
         
-        $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
-                            VALUES (%s, %s)",
-                            $this->da->quoteSmart($rule->getTracker()->getId()),
-                            $this->da->quoteSmart(Tracker_Rule::RULETYPE_DATE)
-                           );
+        $this->commit();
 
-        $this->update($sql_insert_rule);
-        $tracker_rule_id = $this->da->lastInsertId();
-
-        $sql = sprintf("INSERT INTO tracker_rule_date (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
-                        VALUES (%s, %s, %s, %s, %s)",
-                        $tracker_rule_id,
-                        $this->da->quoteSmart($rule->getSourceField()->getId()),
-                        $this->da->quoteSmart($rule->getTargetField()->getId()));
-        $this->retrieve($sql);
+        return $tracker_rule_id;
     }
 }
 ?>

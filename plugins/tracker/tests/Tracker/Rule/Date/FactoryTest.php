@@ -45,7 +45,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     }
 
     public function testCreateRuleDateGeneratesANewObjectThatContainsAllValuesPassed() {
-        stub($this->date_rule_dao)->save()->returns(true);
+        stub($this->date_rule_dao)->insert()->returns(true);
         
         $source_field_id = 10;
         $target_field_id = 11;

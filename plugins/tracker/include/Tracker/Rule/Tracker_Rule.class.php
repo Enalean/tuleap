@@ -33,6 +33,10 @@
     const RULETYPE_VALUE        = 4;
     const RULETYPE_DATE         = 5;
     
+    /**
+     *
+     * @var int 
+     */
     var $id;
     var $tracker_id;
     var $source_field;
@@ -46,6 +50,24 @@
         $this->source_field      = $source_field;
         $this->source_value      = $source_value;
         $this->target_field      = $target_field;
+    }
+    
+    /**
+     * 
+     * @return int
+     */
+    public function getId() {
+        return $this->id;
+    }
+    
+    /**
+     * 
+     * @param int $id
+     * @return \Tracker_Rule
+     */
+    public function setId($id) {
+        $this->id = (int) $id;
+        return $this;
     }
 }
 ?>
