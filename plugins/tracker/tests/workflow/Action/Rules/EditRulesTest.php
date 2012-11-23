@@ -79,6 +79,15 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
         expect($this->date_factory)->delete()->never();
         $this->action->process($this->layout, $request, $this->user);
     }
+    
+    public function itDoesNotFailIfRequestDoesNotContainRemoveParameter() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '21',
+            'target_date_field' => '14'
+        ))->build();
+        expect($this->date_factory)->delete()->never();
+        $this->action->process($this->layout, $request, $this->user);
+    }
 }
 
 class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
