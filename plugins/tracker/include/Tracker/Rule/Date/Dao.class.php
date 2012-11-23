@@ -37,7 +37,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
         $sql = sprintf("SELECT *
                         FROM $this->table_name 
                             JOIN tracker_rule
-                            ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
+                            ON (id = tracker_rule_id)
                         WHERE tracker_rule.id = %s",
 				$this->da->quoteSmart($id));
         return $this->retrieve($sql);
@@ -51,7 +51,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
         $sql = sprintf("SELECT *
                         FROM tracker_rule 
                             JOIN $this->table_name
-                            ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
+                            ON (id = tracker_rule_id)
                         WHERE tracker_rule.tracker_id = %s",
 				$this->da->quoteSmart($tracker_id));
         return $this->retrieve($sql);
