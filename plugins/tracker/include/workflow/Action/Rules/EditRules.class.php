@@ -108,13 +108,13 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         echo '<ul class="workflow_existing_rules">';
         foreach ($rules as $rule) {
             echo '<li class="workflow_rule_action">';
-            echo $rule['source_field']->getLabel();
+            echo $rule->getSourceField()->getLabel();
             echo '&nbsp;&nbsp;';
-            echo $this->operators[$rule['operator']];
+            echo $rule->getComparator();
             echo '&nbsp;&nbsp;';
-            echo $rule['target_field']->getLabel();
+            echo $rule->getTargetField()->getLabel();
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
-            echo '<input type="checkbox" name="remove_rule[]" value="'.$rule['id'].'" ></input>';
+            echo '<input type="checkbox" name="remove_rule[]" value="'.$rule->getId().'" ></input>';
             echo '</label>';
             echo '</li>';
         }
@@ -122,11 +122,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function getRules() {
-        $fake_result = array(
-            array('id' => 23, 'source_field' => aDateField()->withLabel('Planned end date')->build(),  'operator' => 'greater_than',     'target_field' => aDateField()->withLabel('Planned start date')->build()),
-            array('id' => 31, 'source_field' => aDateField()->withLabel('Actual start date')->build(), 'operator' => 'greater_or_equal', 'target_field' => aDateField()->withLabel('Planned start date')->build()),
-        );
-        return $fake_result;
+        return $this->rule_date_factory->searchByTrackerId($this->tracker->getId());
     }
 
     private function displayAdd() {

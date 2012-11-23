@@ -42,6 +42,11 @@
     var $source_field;
     var $target_field;
 
+    /** @var Tracker_FormElement_Field */
+    protected $source_field_obj;
+
+    /** @var Tracker_FormElement_Field */
+    protected $target_field_obj;
     
     /**
      * 
@@ -85,6 +90,30 @@
      */
     public function getSourceFieldId() {
         return $this->source_field;
+    }
+
+    /**
+     *
+     * @return int
+     */
+    public function getSourceField() {
+        return $this->source_field_obj;
+    }
+
+    public function setSourceField(Tracker_FormElement_Field $field) {
+        $this->source_field_obj = $field;
+    }
+
+    /**
+     *
+     * @return Tracker_FormElement_Field
+     */
+    public function getTargetField() {
+        return $this->target_field_obj;
+    }
+
+    public function setTargetField(Tracker_FormElement_Field $field) {
+        $this->target_field_obj = $field;
     }
 
     /**

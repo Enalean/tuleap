@@ -29,11 +29,11 @@ require_once 'Exception.class.php';
  */
 class Tracker_Rule_Date extends Tracker_Rule {
     const COMPARATOR_EQUALS = '=';
-    const COMPARATOR_NOT_EQUALS = '!=';
+    const COMPARATOR_NOT_EQUALS = '≠';
     const COMPARATOR_LESS_THAN = '<';
-    const COMPARATOR_LESS_THAN_OR_EQUALS = '<=';
+    const COMPARATOR_LESS_THAN_OR_EQUALS = '≤';
     const COMPARATOR_GREATER_THAN = '>';
-    const COMPARATOR_GREATER_THAN_OR_EQUALS = '>=';
+    const COMPARATOR_GREATER_THAN_OR_EQUALS = '≥';
 
     protected $_allowed_comparators = array(
         self::COMPARATOR_EQUALS,

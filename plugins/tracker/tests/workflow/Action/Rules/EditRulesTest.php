@@ -24,22 +24,36 @@ require_once TRACKER_BASE_DIR .'/workflow/Action/Rules/EditRules.class.php';
 class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase {
 
     protected $remove_parameter = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_REMOVE_RULES;
+    private $tracker_id         = 42;
 
     public function setUp() {
         parent::setUp();
-        $this->rule_1 = new Tracker_Rule_Date();
-        $this->rule_1->setId(123);
-        $this->rule_2 = new Tracker_Rule_Date();
-        $this->rule_2->setId(456);
-        $this->date_factory = mock('Tracker_Rule_Date_Factory');
-        $tracker = mock('Tracker');
-        $element_factory = mock('Tracker_FormElementFactory');
+        $this->rule_1 = $this->setUpRule(123, 'Planned Start Date', Tracker_Rule_Date::COMPARATOR_LESS_THAN, 'Planned End Date');
+        $this->rule_2 = $this->setUpRule(456, 'Actual Start Date', Tracker_Rule_Date::COMPARATOR_LESS_THAN, 'Actual End Date');
+        $tracker = stub('Tracker')->getId()->returns($this->tracker_id);
+        $element_factory = stub('Tracker_FormElementFactory')->getFormElementsByType()->returns(array());
         $this->layout = mock('Tracker_IDisplayTrackerLayout');
         $this->user = mock('User');
+        $this->date_factory = mock('Tracker_Rule_Date_Factory');
         stub($this->date_factory)->searchById(123)->returns($this->rule_1);
         stub($this->date_factory)->searchById(456)->returns($this->rule_2);
+        stub($this->date_factory)->searchByTrackerId($this->tracker_id)->returns(array($this->rule_1, $this->rule_2));
         $this->action = new Tracker_Workflow_Action_Rules_EditRules($tracker, $element_factory, $this->date_factory);
     }
+
+    public function setUpRule($id, $source_label, $comparator, $target_label) {
+        $planned_start_date = stub('Tracker_FormElement_Field_Date')->getLabel()->returns($source_label);
+        $planned_end_date   = stub('Tracker_FormElement_Field_Date')->getLabel()->returns($target_label);
+        $rule = new Tracker_Rule_Date();
+        $rule->setId($id);
+        $rule->setSourceField($planned_start_date);
+        $rule->setComparator($comparator);
+        $rule->setTargetField($planned_end_date);
+        return $rule;
+    }
+}
+
+class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
     public function itDeletesARule() {
         $request = aRequest()->with($this->remove_parameter, array('123'))->build();
@@ -64,6 +78,19 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $request = aRequest()->with($this->remove_parameter, array('invalid_id'))->build();
         expect($this->date_factory)->delete()->never();
         $this->action->process($this->layout, $request, $this->user);
+    }
+}
+
+class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+
+    public function itRetrieveRules() {
+        $request = aRequest()->build();
+        ob_start();
+        $this->action->process($this->layout, $request, $this->user);
+        $output = ob_get_clean();
+
+        $this->assertPattern('/Planned Start Date.*<.*Planned End Date/', $output);
+        $this->assertPattern('/Actual Start Date.*<.*Actual End Date/', $output);
     }
 }
 ?>
