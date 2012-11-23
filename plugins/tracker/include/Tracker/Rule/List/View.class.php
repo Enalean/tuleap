@@ -22,12 +22,12 @@
 * Basic view for a rule
 *
 */
-class Tracker_Rule_Value_View {
+class Tracker_Rule_List_View {
 
     var $rule;
     
 	/**
-	 *  Tracker_Rule_Value_View() - constructor
+	 *  Tracker_Rule_List_View() - constructor
 	 *
 	 *  @param $artifact_rule object
 	 */

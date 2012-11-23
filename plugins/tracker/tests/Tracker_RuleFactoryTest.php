@@ -44,7 +44,7 @@ class Tracker_RuleFactoryTest extends UnitTestCase {
 
         $r = $arf->getRuleById(123);
         $this->assertIsA($r, 'Tracker_Rule');
-        $this->assertIsA($r, 'Tracker_Rule_Value');
+        $this->assertIsA($r, 'Tracker_Rule_List');
         $this->assertEqual($r->id, 123);
         $this->assertEqual($r->tracker_id, 1);
         $this->assertEqual($r->source_field, 2);
@@ -79,8 +79,8 @@ class Tracker_RuleFactoryTest extends UnitTestCase {
         $rule_factory = new Tracker_RuleFactory($tracker_rule_dao);
         $rules = $rule_factory->getInstanceFromXML($xml, $array_xml_mapping, $tracker);
 
-        $target_value_expected  = new Tracker_Rule_Value(0,$tracker->id,$array_xml_mapping['F28'],$array_xml_mapping['F28-V1'],$array_xml_mapping['F25'],$array_xml_mapping['F25-V3']);
-        $target_value_expected2 = new Tracker_Rule_Value(0,$tracker->id,$array_xml_mapping['F28'],$array_xml_mapping['F28-V1'],$array_xml_mapping['F25'],$array_xml_mapping['F25-V4']);
+        $target_value_expected  = new Tracker_Rule_List(0,$tracker->id,$array_xml_mapping['F28'],$array_xml_mapping['F28-V1'],$array_xml_mapping['F25'],$array_xml_mapping['F25-V3']);
+        $target_value_expected2 = new Tracker_Rule_List(0,$tracker->id,$array_xml_mapping['F28'],$array_xml_mapping['F28-V1'],$array_xml_mapping['F25'],$array_xml_mapping['F25-V4']);
 
         $this->assertEqual(count($rules), 2);
         $this->assertEqual($rules[0], $target_value_expected);

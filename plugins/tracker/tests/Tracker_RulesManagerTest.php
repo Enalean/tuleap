@@ -5,8 +5,8 @@ require_once(dirname(__FILE__).'/builders/all.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', '_getSelectedValuesForField'));
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value.class.php');
-Mock::generate('Tracker_Rule_Value');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/List/List.class.php');
+Mock::generate('Tracker_Rule_List');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RuleFactory.class.php');
 Mock::generate('Tracker_RuleFactory');
@@ -66,13 +66,13 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         // S5 => A1, (B1, B3), C1, D1 should be valid
         // S6 => A1, (B1, B2), C1, D1 should *not* be valid (A1 or C1 cannot access to B2)
         
-        $r1 = new Tracker_Rule_Value(1, 1, 'F1', 'A1', 'F2', 'B1');
-        $r2 = new Tracker_Rule_Value(2, 1, 'F1', 'A1', 'F2', 'B3');
-        $r3 = new Tracker_Rule_Value(3, 1, 'F1', 'A2', 'F2', 'B2');
-        $r4 = new Tracker_Rule_Value(4, 1, 'F1', 'A2', 'F2', 'B3');
-        $r5 = new Tracker_Rule_Value(5, 1, 'F2', 'B1', 'F3', 'C1');
-        $r6 = new Tracker_Rule_Value(6, 1, 'F2', 'B2', 'F3', 'C2');
-        $r7 = new Tracker_Rule_Value(7, 1, 'F2', 'B3', 'F3', 'C1');
+        $r1 = new Tracker_Rule_List(1, 1, 'F1', 'A1', 'F2', 'B1');
+        $r2 = new Tracker_Rule_List(2, 1, 'F1', 'A1', 'F2', 'B3');
+        $r3 = new Tracker_Rule_List(3, 1, 'F1', 'A2', 'F2', 'B2');
+        $r4 = new Tracker_Rule_List(4, 1, 'F1', 'A2', 'F2', 'B3');
+        $r5 = new Tracker_Rule_List(5, 1, 'F2', 'B1', 'F3', 'C1');
+        $r6 = new Tracker_Rule_List(6, 1, 'F2', 'B2', 'F3', 'C2');
+        $r7 = new Tracker_Rule_List(7, 1, 'F2', 'B3', 'F3', 'C1');
         
         
         $arf = new MockTracker_RuleFactory($this);
@@ -244,9 +244,9 @@ class Tracker_RulesManagerTest extends UnitTestCase {
     }
     
     function testForbidden() {
-        $r1 = new Tracker_Rule_Value(1, 1, 'A', '1', 'B', '2');
-        $r2 = new Tracker_Rule_Value(2, 1, 'B', '3', 'C', '4');
-        $r3 = new Tracker_Rule_Value(3, 1, 'D', '5', 'E', '6');
+        $r1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
+        $r2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');
+        $r3 = new Tracker_Rule_List(3, 1, 'D', '5', 'E', '6');
         
         $arf = new MockTracker_RuleFactory($this);
         $arf->setReturnValue('getAllRulesByTrackerWithOrder', array($r1, $r2, $r3));
@@ -298,9 +298,9 @@ class Tracker_RulesManagerTest extends UnitTestCase {
     }
     
     function testFieldHasSourceTarget() {
-        $r1 = new Tracker_Rule_Value(1, 1, 'A', '1', 'B', '2');
-        $r2 = new Tracker_Rule_Value(2, 1, 'B', '3', 'C', '4');
-        $r3 = new Tracker_Rule_Value(3, 1, 'D', '5', 'E', '6');
+        $r1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
+        $r2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');
+        $r3 = new Tracker_Rule_List(3, 1, 'D', '5', 'E', '6');
         
         $arf = new MockTracker_RuleFactory($this);
         $arf->setReturnValue('getAllRulesByTrackerWithOrder', array($r1, $r2, $r3));
@@ -324,9 +324,9 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         
     }
     function testIsCyclic() {
-        $r1 = new Tracker_Rule_Value(1, 1, 'A', '1', 'B', '2');
-        $r2 = new Tracker_Rule_Value(2, 1, 'B', '3', 'C', '4');
-        $r3 = new Tracker_Rule_Value(3, 1, 'D', '5', 'E', '6');
+        $r1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
+        $r2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');
+        $r3 = new Tracker_Rule_List(3, 1, 'D', '5', 'E', '6');
         
         $arf = new MockTracker_RuleFactory($this);
         $arf->setReturnValue('getAllRulesByTrackerWithOrder', array($r1, $r2, $r3));
@@ -366,9 +366,9 @@ class Tracker_RulesManagerTest extends UnitTestCase {
     }
     
     function testRuleExists() {
-        $r1 = new Tracker_Rule_Value(1, 1, 'A', '1', 'B', '2');
-        $r2 = new Tracker_Rule_Value(2, 1, 'B', '3', 'C', '4');
-        $r3 = new Tracker_Rule_Value(3, 1, 'D', '5', 'E', '6');
+        $r1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
+        $r2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');
+        $r3 = new Tracker_Rule_List(3, 1, 'D', '5', 'E', '6');
         
         $arf = new MockTracker_RuleFactory($this);
         $arf->setReturnValue('getAllRulesByTrackerWithOrder', array($r1, $r2, $r3));
@@ -409,9 +409,9 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         
     }
     function testValueHasSourceTarget() {
-        $r1 = new Tracker_Rule_Value(1, 1, 'A', '1', 'B', '2');
-        $r2 = new Tracker_Rule_Value(2, 1, 'B', '3', 'C', '4');
-        $r3 = new Tracker_Rule_Value(3, 1, 'D', '5', 'E', '6');
+        $r1 = new Tracker_Rule_List(1, 1, 'A', '1', 'B', '2');
+        $r2 = new Tracker_Rule_List(2, 1, 'B', '3', 'C', '4');
+        $r3 = new Tracker_Rule_List(3, 1, 'D', '5', 'E', '6');
         
         $arf = new MockTracker_RuleFactory($this);
         $arf->setReturnValue('getAllRulesByTrackerWithOrder', array($r1, $r2, $r3));
@@ -466,8 +466,8 @@ class Tracker_RulesManagerTest extends UnitTestCase {
                                    ));
 
 
-        $r1 = new Tracker_Rule_Value(1, 101, 103, 806, 102, 803);
-        $r2 = new Tracker_Rule_Value(1, 101, 103, 806, 102, 804);
+        $r1 = new Tracker_Rule_List(1, 101, 103, 806, 102, 803);
+        $r2 = new Tracker_Rule_List(1, 101, 103, 806, 102, 804);
 
         $trm = partial_mock('Tracker_RulesManager', array('getAllRulesByTrackerWithOrder'), array($tracker, $form_element_factory));
         $trm->setReturnValue('getAllRulesByTrackerWithOrder', array($r1, $r2));

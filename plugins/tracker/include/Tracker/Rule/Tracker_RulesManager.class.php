@@ -19,7 +19,7 @@
  */
 
 require_once('Tracker_RuleFactory.class.php');
-require_once('Tracker_Rule_Value_View.class.php');
+require_once('List/View.class.php');
 
 /**
 * Manager of rules
@@ -105,7 +105,7 @@ class Tracker_RulesManager {
         // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
         $dependencies = array();
         foreach($this->getAllRulesByTrackerWithOrder($tracker_id) as $rule) {
-            if (is_a($rule, 'Tracker_Rule_Value')) {
+            if (is_a($rule, 'Tracker_Rule_List')) {
                 if (!isset($dependencies[$rule->source_field])) {
                     $dependencies[$rule->source_field] = array();
                 }
@@ -299,7 +299,7 @@ class Tracker_RulesManager {
         $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->getId());
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
-                $html = new Tracker_Rule_Value_View($rules[$key]);
+                $html = new Tracker_Rule_List_View($rules[$key]);
                 echo 'codendi.tracker.rules_definitions.push(';
                 $html->fetchJavascript();
                 echo ");\n";
@@ -348,7 +348,7 @@ class Tracker_RulesManager {
      * @param $field_source_id, the id of the source field
      * @param $field_target_id, the id of the target field
      *
-     * @return array of Tracker_Rule_Value
+     * @return array of Tracker_Rule_List
      */
     public function getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
         $fact = $this->_getTracker_RuleFactory();
@@ -581,7 +581,7 @@ class Tracker_RulesManager {
         $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->id);
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
-                $trvv = new Tracker_Rule_Value_View($rules[$key]);
+                $trvv = new Tracker_Rule_List_View($rules[$key]);
                 $html .= 'codendi.tracker.rules_definitions.push(';
                 $html .= $trvv->fetchJavascript();
                 $html .= ");\n";

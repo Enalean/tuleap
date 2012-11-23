@@ -83,7 +83,7 @@ class Tracker_RuleFactory {
         //We create Rule
         switch ($data['rule_type']) {
             default: //RULETYPE_VALUE
-                $rule =& new Tracker_Rule_Value($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id'], $data['target_value_id']);
+                $rule =& new Tracker_Rule_List($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id'], $data['target_value_id']);
                 break;
         }
         return $rule;
@@ -188,7 +188,7 @@ class Tracker_RuleFactory {
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the rule is attached
      *
-     * @return Tracker_Rule_Value The rule object, or null if error
+     * @return Tracker_Rule_List The rule object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
         $rules = array();
@@ -205,7 +205,7 @@ class Tracker_RuleFactory {
             $xml_target_value_attributes = $xml_rule->target_value->attributes();
             $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
 
-            $rules[] = new Tracker_Rule_Value(0, $tracker->getId(), $source_field, $source_value, $target_field, $target_value);
+            $rules[] = new Tracker_Rule_List(0, $tracker->getId(), $source_field, $source_value, $target_field, $target_value);
         }
         return $rules;
     }
@@ -217,7 +217,7 @@ class Tracker_RuleFactory {
      * @param $field_source_id, the id of the source field
      * @param $field_target_id, the id of the target field
      *
-     * @return array of Tracker_Rule_Value
+     * @return array of Tracker_Rule_List
      */
     function getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
         $dependencies = array();
@@ -232,7 +232,7 @@ class Tracker_RuleFactory {
     }
 
     function getInstanceFromRow($row) {
-        $instance = new Tracker_Rule_Value(
+        $instance = new Tracker_Rule_List(
                         $row['id'],
                         $row['tracker_id'],
                         $row['source_field_id'],

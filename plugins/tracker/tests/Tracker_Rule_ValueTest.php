@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/List/List.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -9,10 +9,10 @@ require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value.clas
  *
  * Tests the class Tracker_RuleValue
  */
-class Tracker_Rule_ValueTest extends UnitTestCase {
+class Tracker_Rule_ListTest extends UnitTestCase {
 
     function testApplyTo() {
-        $trv = new Tracker_Rule_Value('id', 'tracker_id', 'source_field', 'source_value', 'target_field', 'target_value');
+        $trv = new Tracker_Rule_List('id', 'tracker_id', 'source_field', 'source_value', 'target_field', 'target_value');
         
         $this->assertTrue( $trv->applyTo('tracker_id',       'source_field',        'source_value',       'target_field',       'target_value'      ));
         $this->assertFalse($trv->applyTo('tracker_id',       'source_field',        'source_value',       'target_field',       'false_target_value'));
@@ -27,7 +27,7 @@ class Tracker_Rule_ValueTest extends UnitTestCase {
     }
     
     function testCanApplyTo() {
-        $trv = new Tracker_Rule_Value('id', 'tracker_id', 'source_field', 'source_value', 'target_field', 'target_value');
+        $trv = new Tracker_Rule_List('id', 'tracker_id', 'source_field', 'source_value', 'target_field', 'target_value');
         
         $this->assertTrue( $trv->canApplyTo('tracker_id',       'source_field',        'source_value',       'target_field',       'target_value'      ));
         $this->assertTrue( $trv->canApplyTo('tracker_id',       'source_field',        'source_value',       'target_field',       'false_target_value'));
