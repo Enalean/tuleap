@@ -124,25 +124,6 @@ class Tracker_RuleDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function deleteRuleState($group_artifact_id, $source, $source_value, $target, $rule_types) {
-        $quoted_types = array();
-        foreach($rule_types as $type) {
-            $quoted_types[] = $this->da->quoteSmart($type);
-        }
-        $sql = sprintf('DELETE FROM tracker_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND source_field_id   = %s '.
-                       '   AND source_value_id   = %s '.
-                       '   AND target_field_id   = %s '.
-                       '   AND rule_type IN (%s) ',
-				$this->da->quoteSmart($group_artifact_id),
-				$this->da->quoteSmart($source),
-				$this->da->quoteSmart($source_value),
-				$this->da->quoteSmart($target),
-				implode(', ', $quoted_types));
-        return $this->retrieve($sql);
-    }
-
     function deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $rule_type) {
         $sql = sprintf('DELETE FROM tracker_rule '.
                        ' WHERE group_artifact_id = %s '.
