@@ -43,10 +43,11 @@ class Tracker_Rule_Date_Factory {
  
     /**
      * 
-     * @param Tracker $tracker
-     * @param Tracker_FormElement_Field_Date $source_field
-     * @param Tracker_FormElement_Field_Date $target_field
-     * @return \Tracker_Rule_Date
+     * @param int $source_field_id
+     * @param int $target_field_id
+     * @param int $tracker_id
+     * @param string $comparator
+     * @return Tracker_Rule_Date
      */
     public function create($source_field_id, $target_field_id, $tracker_id, $comparator) {
         $date_rule = $this->populate(new Tracker_Rule_Date(), $tracker_id, $source_field_id, $target_field_id, $comparator);
@@ -117,9 +118,9 @@ class Tracker_Rule_Date_Factory {
     /**
      * 
      * @param Tracker_Rule_Date $date_rule
-     * @param Tracker $tracker
-     * @param Tracker_FormElement_Field $source_field_id
-     * @param Tracker_FormElement_Field $target_field_id
+     * @param int $tracker_id
+     * @param int $source_field_id
+     * @param int $target_field_id
      * @param string $comparator
      * @return \Tracker_Rule_Date
      */
