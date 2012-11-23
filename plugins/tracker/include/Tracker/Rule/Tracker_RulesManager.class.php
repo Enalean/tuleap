@@ -71,11 +71,7 @@ class Tracker_RulesManager {
     function _getTracker_RuleFactory() {
         return Tracker_RuleFactory::instance();
     }
-    
-    function deleteRulesByArtifactTracker($tracker_id) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRulesByArtifactTracker($tracker_id);
-    }
+
     function deleteRulesByFieldId($tracker_id, $field_id) {
         $fact = $this->_getTracker_RuleFactory();
         return $fact->deleteRulesByFieldId($tracker_id, $field_id);
