@@ -92,46 +92,17 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
      * @return void
      */
     public function getHeadlessAccessControl($projectId) {
-        //@todo factorize
-        $html  = '';
-        if ($this->repository->getBackend() instanceof Git_Backend_Gitolite) {
-            $disabled = $this->repository->getRemoteServerId() ? true : false;
-            if ($disabled) {
-                $html .= '<div class="alert-message block-message warning">';
-                $html .=  $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
-                $html .= '</div>';
-            }
-            $html .= '<table>';
-            $html .= '<thead><tr>';
-            $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_R') .'</td>';
-            $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W') .'</td>';
-            $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W+') .'</td>';
-            $html .= '</tr></thead>';
-            $html .= '<tbody><tr>';
-            // R
-            $html .= '<td>';
-            $html .= permission_fetch_selection_field('PLUGIN_GIT_READ', $this->repository->getId(), $projectId, 'repo_access[read]', $disabled);
-            $html .= '</td>';
-            // W
-            $html .= '<td>';
-            $html .= permission_fetch_selection_field('PLUGIN_GIT_WRITE', $this->repository->getId(), $projectId, 'repo_access[write]', $disabled);
-            $html .= '</td>';
-            // W+
-            $html .= '<td>';
-            $html .= permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $this->repository->getId(), $projectId, 'repo_access[wplus]', $disabled);
-            $html .= '</td>';
-            $html .= '</tr></tbody>';
-            $html .= '</table>';
-        }
-        return $html;
+        return $this->accessControlGitolite($projectId);
     }
 
     /**
      * Display access control management for gitolite backend
      *
+     * @param $projectId Id of the fork destination project
+     *
      * @return void
      */
-    private function accessControlGitolite() {
+    private function accessControlGitolite($projectId = NULL) {
         $html  = '';
 
         $disabled = $this->repository->getRemoteServerId() ? true : false;
@@ -140,8 +111,10 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
             $html .=  $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
             $html .= '</div>';
         }
-
-        $html .= '<table>';
+        if (empty($projectId)) {
+            $projectId = $this->repository->getProjectId();
+        }
+        $html  = '<table>';
         $html .= '<thead><tr>';
         $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_R') .'</td>';
         $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W') .'</td>';
@@ -150,17 +123,16 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
         $html .= '<tbody><tr>';
         // R
         $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_READ', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[read]', $disabled);
+        $html .= permission_fetch_selection_field('PLUGIN_GIT_READ', $this->repository->getId(), $projectId, 'repo_access[read]', $disabled);
         $html .= '</td>';
         // W
         $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_WRITE', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[write]', $disabled);
+        $html .= permission_fetch_selection_field('PLUGIN_GIT_WRITE', $this->repository->getId(), $projectId, 'repo_access[write]', $disabled);
         $html .= '</td>';
         // W+
         $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[wplus]', $disabled);
+        $html .= permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $this->repository->getId(), $projectId, 'repo_access[wplus]', $disabled);
         $html .= '</td>';
-
         $html .= '</tr></tbody>';
         $html .= '</table>';
         return $html;
