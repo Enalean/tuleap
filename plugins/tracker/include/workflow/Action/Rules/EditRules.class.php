@@ -104,9 +104,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         foreach ($rules as $rule) {
             echo '<li class="workflow_rule_action">';
             echo $rule->getSourceField()->getLabel();
-            echo '&nbsp;&nbsp;';
+            echo ' <span class="workflow_rule_date_comparator">';
             echo $rule->getComparator();
-            echo '&nbsp;&nbsp;';
+            echo '</span> ';
             echo $rule->getTargetField()->getLabel();
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
             echo '<input type="checkbox" name="'. self::PARAMETER_REMOVE_RULES .'[]" value="'.$rule->getId().'" ></input>';

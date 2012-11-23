@@ -1281,3 +1281,7 @@ td.first-column {
 .tracker_create_mode {
     padding-left: 1em;
 }
+
+.workflow_rule_date_comparator {
+    margin: auto 0.5em;
+}
