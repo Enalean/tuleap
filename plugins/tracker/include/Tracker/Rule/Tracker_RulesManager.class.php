@@ -62,15 +62,6 @@ class Tracker_RulesManager {
         return Tracker_RuleFactory::instance();
     }
 
-    function deleteRulesByFieldId($tracker_id, $field_id) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRulesByFieldId($tracker_id, $field_id);
-    }
-    function deleteRulesByValueId($tracker_id, $field_id, $value_id) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRulesByValueId($tracker_id, $field_id, $value_id);
-    }
-    
     /**
      * Check if all the selected values of a submitted artefact are coherent regarding the dependencies
      *

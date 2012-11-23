@@ -92,21 +92,6 @@ class Tracker_RuleFactory {
     }
 
     /**
-    * Delete all rules related to a field
-    */
-    function deleteRulesByFieldId($tracker_id, $field_id) {
-        $deleted = $this->rules_dao->deleteByField($tracker_id, $field_id);
-        return $deleted;
-    }
-    /**
-    * Delete all rules related to a field value
-    */
-    function deleteRulesByValueId($tracker_id, $field_id, $value_id) {
-        $deleted = $this->rules_dao->deleteByFieldValue($tracker_id, $field_id, $value_id);
-        return $deleted;
-    }
-
-    /**
     * Delete all rules by source field id and target field id
     *
     * @param $tracker_id, the id of the tracker
