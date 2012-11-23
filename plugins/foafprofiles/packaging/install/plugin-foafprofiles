@@ -1,0 +1,3 @@
+plugins/foafprofiles/common/*                  usr/share/@OLDPACKAGE@/plugins/foafprofiles/common/
+plugins/foafprofiles/include/*                 usr/share/@OLDPACKAGE@/plugins/foafprofiles/include/
+plugins/foafprofiles/etc/foafprofiles.ini	             etc/@PACKAGE@/config.ini.d/

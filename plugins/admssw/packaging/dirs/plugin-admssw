@@ -1,0 +1,5 @@
+etc/gforge/httpd.d
+etc/gforge/plugins/admssw
+usr/share/gforge/plugins/admssw/cgi-bin
+usr/share/gforge/plugins/admssw/common
+usr/share/gforge/plugins/admssw/www
