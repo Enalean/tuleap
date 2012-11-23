@@ -41,19 +41,6 @@ class Tracker_RuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches Tracker_Rule by Id
-    * @return DataAccessResult
-    */
-    function searchById($id) {
-        $sql = sprintf("SELECT group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule.id = %s",
-				$this->da->quoteSmart($id));
-        return $this->retrieve($sql);
-    }
-
-    /**
     * Searches Tracker_Rule by TrackerId
     * @return DataAccessResult
     */
@@ -65,72 +52,6 @@ class Tracker_RuleDao extends DataAccessObject {
 				$this->da->quoteSmart($tracker_id));
         return $this->retrieve($sql);
     }
-
-    /**
-    * Searches Tracker_Rule by SourceFieldId
-    * @return DataAccessResult
-    */
-    function searchBySourceFieldId($sourceFieldId) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_value_id, target_field_id, rule_type, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule_list.source_field_id = %s",
-				$this->da->quoteSmart($sourceFieldId));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Tracker_Rule by SourceValueId
-    * @return DataAccessResult
-    */
-    function searchBySourceValueId($sourceValueId) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_field_id, target_field_id, rule_type, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule_list.source_value_id = %s",
-				$this->da->quoteSmart($sourceValueId));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Tracker_Rule by TargetFieldId
-    * @return DataAccessResult
-    */
-    function searchByTargetFieldId($targetFieldId) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, rule_type, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule_list.target_field_id = %s",
-				$this->da->quoteSmart($targetFieldId));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Tracker_Rule by RuleType
-    * @return DataAccessResult
-    */
-    function searchByRuleType($ruleType) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule.rule_type = %s",
-				$this->da->quoteSmart($ruleType));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Tracker_Rule by TargetValueId
-    * @return DataAccessResult
-    */
-    function searchByTargetValueId($targetValueId) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule_list.target_value_id = %s",
-				$this->da->quoteSmart($targetValueId));
-        return $this->retrieve($sql);
-    }
-
 
     /**
     * create a row in the table tracker_rule and in tracker_rule_list
@@ -200,91 +121,6 @@ class Tracker_RuleDao extends DataAccessObject {
 
         $sql = sprintf("DELETE FROM tracker_rule WHERE id = %s",
 				$this->da->quoteSmart($id));
-        return $this->update($sql);
-    }
-
-    function deleteRuleState($group_artifact_id, $source, $source_value, $target, $rule_types) {
-        $quoted_types = array();
-        foreach($rule_types as $type) {
-            $quoted_types[] = $this->da->quoteSmart($type);
-        }
-        $sql = sprintf('DELETE FROM tracker_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND source_field_id   = %s '.
-                       '   AND source_value_id   = %s '.
-                       '   AND target_field_id   = %s '.
-                       '   AND rule_type IN (%s) ',
-				$this->da->quoteSmart($group_artifact_id),
-				$this->da->quoteSmart($source),
-				$this->da->quoteSmart($source_value),
-				$this->da->quoteSmart($target),
-				implode(', ', $quoted_types));
-        return $this->retrieve($sql);
-    }
-
-    function deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($artifact_type, $source, $source_value, $target, $rule_type) {
-        $sql = sprintf('DELETE FROM tracker_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND source_field_id   = %s '.
-                       '   AND source_value_id   = %s '.
-                       '   AND target_field_id   = %s '.
-                       '   AND rule_type         = %s ',
-				$this->da->quoteSmart($artifact_type),
-				$this->da->quoteSmart($source),
-				$this->da->quoteSmart($source_value),
-				$this->da->quoteSmart($target),
-				$this->da->quoteSmart($rule_type));
-        return $this->update($sql);
-    }
-
-    function deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($artifact_type, $source, $target, $target_value, $rule_type) {
-        $sql = sprintf('DELETE FROM tracker_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND source_field_id   = %s '.
-                       '   AND target_field_id   = %s '.
-                       '   AND target_value_id   = %s '.
-                       '   AND rule_type         = %s ',
-				$this->da->quoteSmart($artifact_type),
-				$this->da->quoteSmart($source),
-				$this->da->quoteSmart($target),
-				$this->da->quoteSmart($target_value),
-				$this->da->quoteSmart($rule_type));
-        return $this->update($sql);
-    }
-
-    function deleteRulesByGroupArtifactId($artifact_type) {
-        $sql = sprintf('DELETE FROM tracker_rule '.
-                       ' WHERE group_artifact_id = %s ',
-				$this->da->quoteSmart($artifact_type));
-        return $this->update($sql);
-    }
-    function deleteByField($artifact_type, $field_id) {
-        $sql = sprintf('DELETE FROM tracker_rule '.
-                       ' WHERE group_artifact_id = %s '.
-                       '   AND (source_field_id  = %s '.
-                       '   OR target_field_id    = %s) ',
-				$this->da->quoteSmart($artifact_type),
-				$this->da->quoteSmart($field_id),
-				$this->da->quoteSmart($field_id));
-        return $this->update($sql);
-    }
-    function deleteByFieldValue($artifact_type, $field_id, $value_id) {
-        $sql = sprintf('DELETE FROM tracker_rule '.
-                       ' WHERE group_artifact_id   = %s '.
-                       '   AND ( '.
-                       '     ( source_field_id     = %s '.
-                       '       AND source_value_id = %s '.
-                       '     )  '.
-                       '     OR '.
-                       '     ( target_field_id     = %s '.
-                       '       AND target_value_id = %s '.
-                       '     ) '.
-                       '   ) ',
-				$this->da->quoteSmart($artifact_type),
-				$this->da->quoteSmart($field_id),
-				$this->da->quoteSmart($value_id),
-				$this->da->quoteSmart($field_id),
-				$this->da->quoteSmart($value_id));
         return $this->update($sql);
     }
 

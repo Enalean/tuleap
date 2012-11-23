@@ -33,8 +33,8 @@ class Tracker_RuleFactory {
     var $rules;
 
 
-    function Tracker_RuleFactory(&$rules_dao) {
-        $this->rules_dao =& $rules_dao;
+    function Tracker_RuleFactory($rules_dao) {
+        $this->rules_dao = $rules_dao;
         $this->rules = array();
     }
 
@@ -48,19 +48,6 @@ class Tracker_RuleFactory {
             $_artifactrulefactory_instance = new Tracker_RuleFactory($rules_dao);
         }
         return $_artifactrulefactory_instance;
-    }
-
-    function getRuleById($id) {
-        if (!isset($this->rules[$id])) {
-            $this->rules[$id] = null;
-            //We retrieve rule
-            $dar =& $this->rules_dao->searchById($id);
-            if ($dar && ($rule_row = $dar->getRow())) {
-                $rule_row['id'] = $id;
-                $this->rules[$id] =& $this->_buildRuleInstance($rule_row);
-            }
-        }
-        return $this->rules[$id];
     }
 
     function getAllRulesByTrackerWithOrder($tracker_id) {
@@ -101,30 +88,6 @@ class Tracker_RuleFactory {
 
     function deleteRule($rule_id) {
         $deleted = $this->rules_dao->deleteByRuleId($rule_id);
-        return $deleted;
-    }
-
-    function deleteRuleValueBySource($tracker_id, $source, $source_value, $target) {
-        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_VALUE);
-        return $deleted;
-    }
-    function deleteRuleValueByTarget($tracker_id, $source, $target, $target_value) {
-        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($tracker_id, $source, $target, $target_value, Tracker_Rule::RULETYPE_VALUE);
-        return $deleted;
-    }
-
-    /**
-    * Delete all rules related to a field
-    */
-    function deleteRulesByFieldId($tracker_id, $field_id) {
-        $deleted = $this->rules_dao->deleteByField($tracker_id, $field_id);
-        return $deleted;
-    }
-    /**
-    * Delete all rules related to a field value
-    */
-    function deleteRulesByValueId($tracker_id, $field_id, $value_id) {
-        $deleted = $this->rules_dao->deleteByFieldValue($tracker_id, $field_id, $value_id);
         return $deleted;
     }
 
