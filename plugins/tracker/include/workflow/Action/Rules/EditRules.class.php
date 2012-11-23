@@ -24,6 +24,8 @@ require_once dirname(__FILE__).'/../../../../tests/builders/aField.php';
 
 class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules {
 
+    const PARAMETER_REMOVE_RULES = 'remove_rules';
+
     /** @var Tracker_FormElementFactory */
     private $form_element_factory;
 
@@ -56,7 +58,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldUpdateRules(Codendi_Request $request) {
-        $should_delete_rules = $request->get('remove_rule');
+        $should_delete_rules = $request->get(self::PARAMETER_REMOVE_RULES);
         $exist_source_field  = $request->existAndNonEmpty('source_date_field');
         $exist_target_field  = $request->existAndNonEmpty('target_date_field');
         $should_add_rules    = $exist_source_field && $exist_target_field;
@@ -73,10 +75,14 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         }
     }
 
-    private function updateRules(Codendi_Request $request){
-        $remove_rule = $request->get('remove_rule');
-        $rule = $this->rule_date_factory->searchById((int)$remove_rule[0]);
-        $this->rule_date_factory->delete($rule);
+    private function updateRules(Codendi_Request $request) {
+        $remove_rules = $request->getValidated(self::PARAMETER_REMOVE_RULES, 'array', array());
+        foreach ($remove_rules as $rule_id) {
+            $rule = $this->rule_date_factory->searchById((int)$rule_id);
+            if ($rule) {
+                $this->rule_date_factory->delete($rule);
+            }
+        }
     }
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout) {
