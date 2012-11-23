@@ -70,7 +70,14 @@ class Tracker_RuleFactory {
         //We create Rule
         switch ($data['rule_type']) {
             default: //RULETYPE_VALUE
-                $rule =& new Tracker_Rule_List($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id'], $data['target_value_id']);
+                $rule_list = new Tracker_Rule_List();
+                $rule_list->setSourceValue($data['source_value_id'])
+                        ->setTargetValue($data['target_value_id'])
+                        ->setId($data['id'])
+                        ->setTrackerId($data['tracker_id'])
+                        ->setSourceFieldId($data['source_field_id'])
+                        ->setTargetFieldId($data['target_field_id']);
+                $rule =& $rule_list;
                 break;
         }
         return $rule;
@@ -167,8 +174,16 @@ class Tracker_RuleFactory {
 
             $xml_target_value_attributes = $xml_rule->target_value->attributes();
             $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
+            
+            $rule_list = new Tracker_Rule_List();
+            $rule_list->setSourceValue($source_value)
+                    ->setTargetValue($target_value)
+                    ->setId(0)
+                    ->setTrackerId($tracker->getId())
+                    ->setSourceFieldId($source_field)
+                    ->setTargetFieldId($target_field);
 
-            $rules[] = new Tracker_Rule_List(0, $tracker->getId(), $source_field, $source_value, $target_field, $target_value);
+            $rules[] = $rule_list;
         }
         return $rules;
     }
@@ -195,15 +210,15 @@ class Tracker_RuleFactory {
     }
 
     function getInstanceFromRow($row) {
-        $instance = new Tracker_Rule_List(
-                        $row['id'],
-                        $row['tracker_id'],
-                        $row['source_field_id'],
-                        $row['source_value_id'],
-                        $row['target_field_id'],
-                        $row['target_value_id']
-                    );
-        return $instance;
+        $rule_list = new Tracker_Rule_List();
+        $rule_list->setSourceValue($row['source_value_id'])
+                ->setTargetValue($row['target_value_id'])
+                ->setId($row['id'])
+                ->setTrackerId($row['tracker_id'])
+                ->setSourceFieldId($row['source_field_id'])
+                ->setTargetFieldId($row['target_field_id']);
+
+        return $rule_list;
     }
 }
 ?>
