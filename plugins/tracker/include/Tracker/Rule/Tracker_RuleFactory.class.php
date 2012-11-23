@@ -33,8 +33,8 @@ class Tracker_RuleFactory {
     var $rules;
 
 
-    function Tracker_RuleFactory(&$rules_dao) {
-        $this->rules_dao =& $rules_dao;
+    function Tracker_RuleFactory($rules_dao) {
+        $this->rules_dao = $rules_dao;
         $this->rules = array();
     }
 
@@ -48,19 +48,6 @@ class Tracker_RuleFactory {
             $_artifactrulefactory_instance = new Tracker_RuleFactory($rules_dao);
         }
         return $_artifactrulefactory_instance;
-    }
-
-    function getRuleById($id) {
-        if (!isset($this->rules[$id])) {
-            $this->rules[$id] = null;
-            //We retrieve rule
-            $dar =& $this->rules_dao->searchById($id);
-            if ($dar && ($rule_row = $dar->getRow())) {
-                $rule_row['id'] = $id;
-                $this->rules[$id] =& $this->_buildRuleInstance($rule_row);
-            }
-        }
-        return $this->rules[$id];
     }
 
     function getAllRulesByTrackerWithOrder($tracker_id) {

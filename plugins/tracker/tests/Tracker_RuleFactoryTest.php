@@ -24,39 +24,6 @@ Mock::generate('Tracker_FormElement_Field_List');
  */
 class Tracker_RuleFactoryTest extends UnitTestCase {
 
-
-    function testGetRuleById() {
-        $rules_dar             = new MockDataAccessResult();
-        $rules_dar->setReturnValue('getRow', array(
-            'id'                => 123,
-            'tracker_id'        => 1,
-            'source_field_id'   => 2,
-            'source_value_id'   => 10,
-            'target_field_id'   => 4,
-            'rule_type'         => 4, //RuleValue
-            'target_value_id'   => 100
-        ));
-
-        $rules_dao             = new MockTracker_RuleDao();
-        $rules_dao->setReturnReference('searchById', $rules_dar, array(123));
-
-        $arf = new Tracker_RuleFactory($rules_dao);
-
-        $r = $arf->getRuleById(123);
-        $this->assertIsA($r, 'Tracker_Rule');
-        $this->assertIsA($r, 'Tracker_Rule_List');
-        $this->assertEqual($r->id, 123);
-        $this->assertEqual($r->tracker_id, 1);
-        $this->assertEqual($r->source_field, 2);
-        $this->assertEqual($r->target_field, 4);
-        $this->assertEqual($r->source_value, 10);
-        $this->assertEqual($r->target_value, 100);
-
-        $this->assertFalse($arf->getRuleById(124), 'If id is inexistant, then return will be false');
-
-        $this->assertReference($arf->getRuleById(123), $r, 'We do not create two different instances for the same id');
-    }
-
     public function testImport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerRulesTest.xml');
         $tracker = aTracker()->withId(666)->build();

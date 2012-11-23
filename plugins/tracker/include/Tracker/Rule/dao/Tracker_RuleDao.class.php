@@ -41,19 +41,6 @@ class Tracker_RuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches Tracker_Rule by Id
-    * @return DataAccessResult
-    */
-    function searchById($id) {
-        $sql = sprintf("SELECT group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule.id = %s",
-				$this->da->quoteSmart($id));
-        return $this->retrieve($sql);
-    }
-
-    /**
     * Searches Tracker_Rule by TrackerId
     * @return DataAccessResult
     */
