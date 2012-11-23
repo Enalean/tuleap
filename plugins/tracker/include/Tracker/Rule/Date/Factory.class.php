@@ -53,8 +53,8 @@ class Tracker_Rule_Date_Factory {
      * @param string $comparator
      * @return Tracker_Rule_Date
      */
-    public function create($id, $source_field_id, $target_field_id, $tracker_id, $comparator) {
-        $date_rule = $this->populate(new Tracker_Rule_Date(), $id, $tracker_id, $source_field_id, $target_field_id, $comparator);
+    public function create($source_field_id, $target_field_id, $tracker_id, $comparator) {
+        $date_rule = $this->populate(new Tracker_Rule_Date(), 0, $tracker_id, $source_field_id, $target_field_id, $comparator);
         $rule_id = $this->insert($date_rule);
         
         $date_rule->setId($rule_id);

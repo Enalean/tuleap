@@ -64,7 +64,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $comparator      = Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
 
         $date_rule = $this->date_rule_factory
-                ->create($id, $source_field_id, $target_field_id, $tracker_id, $comparator);
+                ->create($source_field_id, $target_field_id, $tracker_id, $comparator);
 
         $this->assertIsA($date_rule, 'Tracker_Rule_Date');
         $this->assertEqual($date_rule->getTrackerId(), $tracker_id);

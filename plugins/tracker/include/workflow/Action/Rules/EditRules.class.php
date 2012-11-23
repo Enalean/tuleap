@@ -59,11 +59,14 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function shouldUpdateRules(Codendi_Request $request) {
         $should_delete_rules = $request->get(self::PARAMETER_REMOVE_RULES);
+
+        return $should_delete_rules || $this->shouldAddRule($request);
+    }
+
+    private function shouldAddRule(Codendi_Request $request) {
         $exist_source_field  = $request->existAndNonEmpty('source_date_field');
         $exist_target_field  = $request->existAndNonEmpty('target_date_field');
-        $should_add_rules    = $exist_source_field && $exist_target_field;
-
-        return $should_delete_rules || $should_add_rules;
+        return $exist_source_field && $exist_target_field;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
@@ -81,6 +84,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
             foreach ($remove_rules as $rule_id) {
                 $this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id);
             }
+        }
+        if ($this->shouldAddRule($request)) {
+            $this->rule_date_factory->create((int)$request->get('source_date_field'), (int)$request->get('target_date_field'), $this->tracker->getId(), $request->get('comparator'));
         }
     }
 
