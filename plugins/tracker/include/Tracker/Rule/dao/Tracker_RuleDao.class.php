@@ -297,7 +297,7 @@ class Tracker_RuleDao extends DataAccessObject {
 
         $sql_delete_list = "DELETE tracker_rule.*
                             FROM tracker_rule JOIN tracker_rule_list
-                            ON (tracker_rule.id = tracker_rule_list.tracker_rule_id
+                            ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
                             WHERE source_field_id   = $field_source_id
                                 AND target_field_id   = $field_target_id";
 

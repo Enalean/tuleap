@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('../Tracker_Rule.class.php');
+require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
 
 /**
 * RuleValue  between two dynamic fields

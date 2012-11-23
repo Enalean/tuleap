@@ -19,7 +19,7 @@
  */
 
 require_once('dao/Tracker_RuleDao.class.php');
-require_once('Tracker_Rule_Value.class.php');
+require_once('List/List.class.php');
 require_once('Tracker_Rule.class.php');
 
 /**
