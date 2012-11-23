@@ -54,45 +54,6 @@ class Tracker_RuleDao extends DataAccessObject {
     }
 
     /**
-    * Searches Tracker_Rule by SourceFieldId
-    * @return DataAccessResult
-    */
-    function searchBySourceFieldId($sourceFieldId) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_value_id, target_field_id, rule_type, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule_list.source_field_id = %s",
-				$this->da->quoteSmart($sourceFieldId));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Tracker_Rule by SourceValueId
-    * @return DataAccessResult
-    */
-    function searchBySourceValueId($sourceValueId) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_field_id, target_field_id, rule_type, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule_list.source_value_id = %s",
-				$this->da->quoteSmart($sourceValueId));
-        return $this->retrieve($sql);
-    }
-
-    /**
-    * Searches Tracker_Rule by TargetFieldId
-    * @return DataAccessResult
-    */
-    function searchByTargetFieldId($targetFieldId) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, rule_type, target_value_id
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule_list.target_field_id = %s",
-				$this->da->quoteSmart($targetFieldId));
-        return $this->retrieve($sql);
-    }
-
-    /**
     * Searches Tracker_Rule by RuleType
     * @return DataAccessResult
     */
@@ -104,20 +65,6 @@ class Tracker_RuleDao extends DataAccessObject {
 				$this->da->quoteSmart($ruleType));
         return $this->retrieve($sql);
     }
-
-    /**
-    * Searches Tracker_Rule by TargetValueId
-    * @return DataAccessResult
-    */
-    function searchByTargetValueId($targetValueId) {
-        $sql = sprintf("SELECT id, group_artifact_id, source_field_id, source_value_id, target_field_id, rule_type
-                        FROM tracker_rule JOIN tracker_rule_list
-                        ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule_list.target_value_id = %s",
-				$this->da->quoteSmart($targetValueId));
-        return $this->retrieve($sql);
-    }
-
 
     /**
     * create a row in the table tracker_rule and in tracker_rule_list
