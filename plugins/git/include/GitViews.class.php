@@ -485,7 +485,7 @@ class GitViews extends PluginViews {
         $params   = $this->getData();
 
         //@todo clean up
-        if ($params['scope'] == 'project') {
+        if ($params['scope'] == GitRepository::REPO_SCOPE_PROJECT) {
             $groupId = $params['group_id'];
             $project = $pm->getProject($groupId);
             // @TODO: i18n
