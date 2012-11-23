@@ -36,7 +36,7 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
 
-AutoReqProv: no
+AutoReqProv: no 
 #Prereq: /sbin/chkconfig, /sbin/service
 
 # Package cutting is still a bit a mess so do not force dependency on custmization package yet
@@ -378,7 +378,6 @@ Requires: %{PKG_NAME}, plugin-fusionforge_compat
 %description plugin-doaprdf
 This plugin provides DOAP RDF documents for projects on /projects URLs with
 content-negociation (application/rdf+xml).
->>>>>>> dev/1380_admssw
 
 #
 ## Themes
