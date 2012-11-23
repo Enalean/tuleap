@@ -91,15 +91,6 @@ class Tracker_RuleFactory {
         return $deleted;
     }
 
-    function deleteRuleValueBySource($tracker_id, $source, $source_value, $target) {
-        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndSourceValueAndTargetAndRuleType($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_VALUE);
-        return $deleted;
-    }
-    function deleteRuleValueByTarget($tracker_id, $source, $target, $target_value) {
-        $deleted = $this->rules_dao->deleteByGroupArtifactIdAndSourceAndTargetAndTargetValueAndRuleType($tracker_id, $source, $target, $target_value, Tracker_Rule::RULETYPE_VALUE);
-        return $deleted;
-    }
-
     /**
     * Delete all rules related to a field
     */

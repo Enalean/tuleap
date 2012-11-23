@@ -58,16 +58,6 @@ class Tracker_RulesManager {
         return $fact->deleteRule($rule_id);
     }
     
-    function deleteRuleValueBySource($tracker_id, $source, $source_value, $target) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRuleValueBySource($tracker_id, $source, $source_value, $target);
-    }
-    
-    function deleteRuleValueByTarget($tracker_id, $source, $target, $target_value) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRuleValueByTarget($tracker_id, $source, $target, $target_value);
-    }
-    
     function _getTracker_RuleFactory() {
         return Tracker_RuleFactory::instance();
     }
