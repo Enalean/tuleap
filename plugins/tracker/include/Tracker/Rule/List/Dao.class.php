@@ -22,11 +22,11 @@ require_once('common/dao/include/DataAccessObject.class.php');
 /**
  *  Data Access Object for Tracker_Rule
  */
-class Tracker_Rule_Date_Dao extends DataAccessObject {
+class Tracker_Rule_List_Dao extends DataAccessObject {
 
     public function __construct() {
         parent::__construct();
-        $this->table_name = 'tracker_rule_date';
+        $this->table_name = 'tracker_rule_list';
     }
 
     /**
@@ -35,7 +35,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      */
     function searchById($id) {
         $sql = sprintf("SELECT *
-                        FROM $this->table_name 
+                        FROM $this->table_name
                             JOIN tracker_rule
                             ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
                         WHERE tracker_rule.id = %s",
@@ -59,10 +59,10 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
 
     /**
      * 
-     * @param Tracker_Rule_Date $rule
+     * @param Tracker_Rule_List $rule
      * @return int The ID of the saved tracker_rule
      */
-    public function insert(Tracker_Rule_Date $rule) {
+    public function insert(Tracker_Rule_List $rule) {
         $this->startTransaction();
         try{
             $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
@@ -74,12 +74,14 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
             $this->update($sql_insert_rule);
             $tracker_rule_id = $this->da->lastInsertId();
 
-            $sql = sprintf("INSERT INTO $this->table_name (tracker_rule_id, source_field_id, target_field_id, comparator)
-                            VALUES (%s, %s, %s, %s)",
+            $sql = sprintf("INSERT INTO $this->table_name (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+                            VALUES (%s, %s, %s, %s, %s)",
                             $tracker_rule_id,
-                            $this->da->quoteSmart($rule->getSourceField()->getId()),
-                            $this->da->quoteSmart($rule->getTargetField()->getId()),
-                            $this->da->quoteSmart($rule->getComparator()));
+                            $this->da->quoteSmart($rule->getSourceFieldId()),
+                            $this->da->quoteSmart($rule->getSourceValue()),
+                            $this->da->quoteSmart($rule->getTargetFieldId()),
+                            $this->da->quoteSmart($rule->getTargetValue())
+                    );
             $this->retrieve($sql);
         } catch (Exception $e) {
             $this->rollBack();

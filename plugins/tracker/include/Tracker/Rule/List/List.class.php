@@ -30,10 +30,15 @@ require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
 class Tracker_Rule_List extends Tracker_Rule {
     
     var $target_value;
+    var $source_value;
     
-    function Tracker_Rule_List($id, $tracker_id, $source_field, $source_value, $target_field, $target_value) {
-        $this->Tracker_Rule($id, $tracker_id, $source_field, $source_value, $target_field);
-        $this->target_value = $target_value;
+    public function __construct($id = null, $tracker_id = null, $source_field = null, $source_value = null, $target_field = null, $target_value = null) {
+        $this->setId($id)
+                ->setTrackerId($tracker_id)
+                ->setSourceFieldId($source_field)
+                ->setTargetFieldId($target_field)
+                ->setSourceValue($source_value)
+                ->setTargetValue($target_value);
     }
     
     /**
@@ -61,14 +66,45 @@ class Tracker_Rule_List extends Tracker_Rule {
         return $match;
     }
     
-    function getTargetValueId() {
-        return $this->target_value;
-    }
-    
     function isUsedInRule($field_id) {
         return $this->source_field == $field_id || $this->target_field == $field_id;
      }
     
+            /**
+     *
+     * @return string
+     */
+    public function getSourceValue() {
+        return $this->source_value;
+    }
+
+    /**
+     *
+     * @param string $value
+     * @return \Tracker_Rule_Date
+     */
+    public function setSourceValue($value) {
+        $this->source_value = $value;
+        return $this;
+    }
+
+    /**
+     *
+     * @return string
+     */
+    public function getTargetValue() {
+        return $this->target_value;
+    }
+
+    /**
+     *
+     * @param string $value
+     * @return \Tracker_Rule_Date
+     */
+    public function setTargetValue($value) {
+        $this->target_value = $value;
+        return $this;
+    }
     
 }
 ?>

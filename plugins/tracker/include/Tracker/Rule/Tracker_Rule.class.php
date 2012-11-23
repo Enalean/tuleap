@@ -41,16 +41,7 @@
     var $tracker_id;
     var $source_field;
     var $target_field;
-    var $source_value;
-    
-    
-    function Tracker_Rule($id, $tracker_id, $source_field, $source_value, $target_field) {
-        $this->id                = $id;
-        $this->tracker_id        = $tracker_id;
-        $this->source_field      = $source_field;
-        $this->source_value      = $source_value;
-        $this->target_field      = $target_field;
-    }
+
     
     /**
      * 
@@ -67,6 +58,60 @@
      */
     public function setId($id) {
         $this->id = (int) $id;
+        return $this;
+    }
+    
+    /**
+     *
+     * @param int $tracker
+     * @return \Tracker_Rule_Date
+     */
+    public function setTrackerId($tracker_id) {
+        $this->tracker_id = $tracker_id;
+        return $this;
+    }
+
+    /**
+     *
+     * @return int
+     */
+    public function getTrackerId() {
+        return $this->tracker_id;
+    }
+    
+        /**
+     *
+     * @return int
+     */
+    public function getSourceFieldId() {
+        return $this->source_field;
+    }
+
+    /**
+     *
+     * @param int $field_id
+     * @return \Tracker_Rule_Date
+     */
+    public function setSourceFieldId($field_id) {
+        $this->source_field = $field_id;
+        return $this;
+    }
+
+    /**
+     *
+     * @return int
+     */
+    public function getTargetFieldId() {
+        return $this->target_field;
+    }
+
+    /**
+     *
+     * @param int $field_id
+     * @return \Tracker_Rule_Date
+     */
+    public function setTargetFieldId($field_id) {
+        $this->target_field = $field_id;
         return $this;
     }
 }

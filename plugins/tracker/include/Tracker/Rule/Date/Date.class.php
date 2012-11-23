@@ -66,46 +66,6 @@ class Tracker_Rule_Date extends Tracker_Rule {
 
     }
 
-    public function setId($id) {
-        $this->id = $id;
-    }
-
-    /**
-     *
-     * @return int
-     */
-    public function getSourceFieldId() {
-        return $this->source_field_id;
-    }
-
-    /**
-     *
-     * @param int $field_id
-     * @return \Tracker_Rule_Date
-     */
-    public function setSourceFieldId($field_id) {
-        $this->source_field_id = $field_id;
-        return $this;
-    }
-
-    /**
-     *
-     * @return int
-     */
-    public function getTargetFieldId() {
-        return $this->target_field_id;
-    }
-
-    /**
-     *
-     * @param int $field_id
-     * @return \Tracker_Rule_Date
-     */
-    public function setTargetFieldId($field_id) {
-        $this->target_field_id = (int) $field_id;
-        return $this;
-    }
-
     /**
      *
      * @param string $comparator
@@ -128,22 +88,6 @@ class Tracker_Rule_Date extends Tracker_Rule {
         return $this->comparator;
     }
 
-    /**
-     *
-     * @param int $tracker
-     * @return \Tracker_Rule_Date
-     */
-    public function setTrackerId($tracker_id) {
-        $this->tracker_id = $tracker_id;
-        return $this;
-    }
 
-    /**
-     *
-     * @return int
-     */
-    public function getTrackerId() {
-        return $this->tracker_id;
-    }
 }
 ?>
