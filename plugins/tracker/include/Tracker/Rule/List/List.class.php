@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_Rule.class.php');
+require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
 
 /**
 * RuleValue  between two dynamic fields
@@ -27,11 +27,11 @@ require_once('Tracker_Rule.class.php');
 * then target field will propose a value.
 *
 */
-class Tracker_Rule_Value extends Tracker_Rule {
+class Tracker_Rule_List extends Tracker_Rule {
     
     var $target_value;
     
-    function Tracker_Rule_Value($id, $tracker_id, $source_field, $source_value, $target_field, $target_value) {
+    function Tracker_Rule_List($id, $tracker_id, $source_field, $source_value, $target_field, $target_value) {
         $this->Tracker_Rule($id, $tracker_id, $source_field, $source_value, $target_field);
         $this->target_value = $target_value;
     }

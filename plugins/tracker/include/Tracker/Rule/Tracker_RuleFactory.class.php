@@ -19,7 +19,7 @@
  */
 
 require_once('dao/Tracker_RuleDao.class.php');
-require_once('Tracker_Rule_Value.class.php');
+require_once('List/List.class.php');
 require_once('Tracker_Rule.class.php');
 
 /**
@@ -82,17 +82,8 @@ class Tracker_RuleFactory {
     function &_buildRuleInstance($data) {
         //We create Rule
         switch ($data['rule_type']) {
-            case Tracker_Rule::RULETYPE_HIDDEN:
-                $rule =& new Tracker_RuleHidden($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
-                break;
-            case Tracker_Rule::RULETYPE_DISABLED:
-                $rule =& new Tracker_RuleDisabled($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
-                break;
-            case Tracker_Rule::RULETYPE_MANDATORY:
-                $rule =& new Tracker_RuleMandatory($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id']);
-                break;
             default: //RULETYPE_VALUE
-                $rule =& new Tracker_Rule_Value($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id'], $data['target_value_id']);
+                $rule =& new Tracker_Rule_List($data['id'], $data['tracker_id'], $data['source_field_id'], $data['source_value_id'], $data['target_field_id'], $data['target_value_id']);
                 break;
         }
         return $rule;
@@ -106,22 +97,6 @@ class Tracker_RuleFactory {
 
     function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
         $this->rules_dao->create($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_VALUE, $target_value);
-    }
-
-    function _saveRuleState($tracker_id, $source, $source_value, $target, $rule_type) {
-        $this->rules_dao->deleteRuleState($tracker_id, $source, $source_value, $target, array(Tracker_Rule::RULETYPE_HIDDEN, Tracker_Rule::RULETYPE_DISABLED, Tracker_Rule::RULETYPE_MANDATORY));
-        $this->rules_dao->create($tracker_id, $source, $source_value, $target, $rule_type);
-    }
-    function saveRuleHidden($tracker_id, $source, $source_value, $target) {
-        $this->_saveRuleState($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_HIDDEN);
-    }
-
-    function saveRuleDisabled($tracker_id, $source, $source_value, $target) {
-        $this->_saveRuleState($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_DISABLED);
-    }
-
-    function saveRuleMandatory($tracker_id, $source, $source_value, $target) {
-        $this->_saveRuleState($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_MANDATORY);
     }
 
     function deleteRule($rule_id) {
@@ -138,13 +113,6 @@ class Tracker_RuleFactory {
         return $deleted;
     }
 
-    /**
-    * Delete all rules for a tracker
-    */
-    function deleteRulesByArtifactTracker($tracker_id) {
-        $deleted = $this->rules_dao->deleteRulesByGroupArtifactId($tracker_id);
-        return $deleted;
-    }
     /**
     * Delete all rules related to a field
     */
@@ -220,7 +188,7 @@ class Tracker_RuleFactory {
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the rule is attached
      *
-     * @return Tracker_Rule_Value The rule object, or null if error
+     * @return Tracker_Rule_List The rule object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
         $rules = array();
@@ -237,7 +205,7 @@ class Tracker_RuleFactory {
             $xml_target_value_attributes = $xml_rule->target_value->attributes();
             $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
 
-            $rules[] = new Tracker_Rule_Value(0, $tracker->getId(), $source_field, $source_value, $target_field, $target_value);
+            $rules[] = new Tracker_Rule_List(0, $tracker->getId(), $source_field, $source_value, $target_field, $target_value);
         }
         return $rules;
     }
@@ -249,7 +217,7 @@ class Tracker_RuleFactory {
      * @param $field_source_id, the id of the source field
      * @param $field_target_id, the id of the target field
      *
-     * @return array of Tracker_Rule_Value
+     * @return array of Tracker_Rule_List
      */
     function getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
         $dependencies = array();
@@ -264,7 +232,7 @@ class Tracker_RuleFactory {
     }
 
     function getInstanceFromRow($row) {
-        $instance = new Tracker_Rule_Value(
+        $instance = new Tracker_Rule_List(
                         $row['id'],
                         $row['tracker_id'],
                         $row['source_field_id'],
