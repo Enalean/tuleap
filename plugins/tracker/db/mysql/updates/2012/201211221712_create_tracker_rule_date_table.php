@@ -37,7 +37,7 @@ class b201211221712_create_tracker_rule_date_table extends ForgeUpgrade_Bucket {
             KEY tracker_rule_id (tracker_rule_id)
           ) ENGINE=InnoDB;";
 
-        $this->createTable('tracker_rule_list', $sql);
+        $this->createTable('tracker_rule_date', $sql);
     }
 
     private function createTable($name, $sql) {
