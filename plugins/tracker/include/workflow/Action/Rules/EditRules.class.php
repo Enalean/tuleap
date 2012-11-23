@@ -116,7 +116,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
             echo '&nbsp;&nbsp;';
             echo $rule->getTargetField()->getLabel();
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
-            echo '<input type="checkbox" name="remove_rule[]" value="'.$rule->getId().'" ></input>';
+            echo '<input type="checkbox" name="'. self::PARAMETER_REMOVE_RULES .'[]" value="'.$rule->getId().'" ></input>';
             echo '</label>';
             echo '</li>';
         }

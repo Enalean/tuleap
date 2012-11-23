@@ -53,8 +53,8 @@ class Tracker_Rule_Date_Factory {
      * @param string $comparator
      * @return Tracker_Rule_Date
      */
-    public function create($source_field_id, $target_field_id, $tracker_id, $comparator) {
-        $date_rule = $this->populate(new Tracker_Rule_Date(), $tracker_id, $source_field_id, $target_field_id, $comparator);
+    public function create($id, $source_field_id, $target_field_id, $tracker_id, $comparator) {
+        $date_rule = $this->populate(new Tracker_Rule_Date(), $id, $tracker_id, $source_field_id, $target_field_id, $comparator);
         $rule_id = $this->insert($date_rule);
         
         $date_rule->setId($rule_id);
@@ -93,7 +93,7 @@ class Tracker_Rule_Date_Factory {
         }
         $comparator = $rule['comparator'];
 
-        return $this->populate(new Tracker_Rule_Date(), $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparator);
+        return $this->populate(new Tracker_Rule_Date(), $rule['id'], $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparator);
     }
     
     /**
@@ -112,7 +112,7 @@ class Tracker_Rule_Date_Factory {
 
         while ($rule = $rules->getRow()) {
             $comparartor = $rule['comparator'];
-            $date_rule = $this->populate(new Tracker_Rule_Date(), $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparartor);
+            $date_rule = $this->populate(new Tracker_Rule_Date(), $rule['id'], $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparartor);
             $rules_array[] = $date_rule;
         }
         
@@ -128,11 +128,12 @@ class Tracker_Rule_Date_Factory {
      * @param string $comparator
      * @return \Tracker_Rule_Date
      */
-    protected function populate(Tracker_Rule_Date $date_rule, $tracker_id, $source_field_id, $target_field_id, $comparator) {
+    protected function populate(Tracker_Rule_Date $date_rule, $id, $tracker_id, $source_field_id, $target_field_id, $comparator) {
         
         $source_field = $this->element_factory->getFormElementById($source_field_id);
         $target_field = $this->element_factory->getFormElementById($target_field_id);
         $date_rule->setTrackerId($tracker_id)
+                ->setId($id)
                 ->setSourceFieldId($source_field_id)
                 ->setSourceField($source_field)
                 ->setTargetFieldId($target_field_id)
