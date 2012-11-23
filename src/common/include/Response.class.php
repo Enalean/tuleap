@@ -74,28 +74,51 @@ class Response {
     private function getFeedbackDao() {
         return new FeedbackDao();
     }
+
     function _serializeFeedback() {
         $dao = $this->getFeedbackDao();
         $dao->create(session_hash(), serialize($this->_feedback));
     }
+
     function setCookie($name, $value, $expire = 0) {
         $cookie_manager = new CookieManager();
         $cookie_manager->setCookie($name, $value, $expire);
     }
+
     function removeCookie($name) {
         $cookie_manager = new CookieManager();
         $cookie_manager->removeCookie($name);
     }
+
     public function sendStatusCode($code) {
         header("HTTP/1.0 $code");
         echo $this->getRawFeedback();
     }
+
     public function setContentType($content_type) {
         header('Content-type: ' . $content_type);
     }
+
     public function sendJSON($content) {
         $this->setContentType('application/json');
         echo json_encode($content);
+    }
+
+    /**
+     * Send 401 Unauthorized and exit if the client asks for something else than text/html
+     *
+     * Please note that the negociation is hard coded with the script 'project_home'. 
+     * This variable may need to be passed in parameters for others urls with content 
+     * negotiation. Keep it as is for now.
+     */
+    public function send401UnauthorizedHeader() {
+        header('HTTP/1.0 401 Unauthorized', true, 401);
+        $default_content_type = 'text/html';
+        $script               = 'project_home';
+        $content_type         = util_negociate_alternate_content_types($script, $default_content_type);
+        if ($content_type != $default_content_type) {
+            exit;
+        }
     }
 }
 ?>
