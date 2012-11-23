@@ -58,29 +58,10 @@ class Tracker_RulesManager {
         return $fact->deleteRule($rule_id);
     }
     
-    function deleteRuleValueBySource($tracker_id, $source, $source_value, $target) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRuleValueBySource($tracker_id, $source, $source_value, $target);
-    }
-    
-    function deleteRuleValueByTarget($tracker_id, $source, $target, $target_value) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRuleValueByTarget($tracker_id, $source, $target, $target_value);
-    }
-    
     function _getTracker_RuleFactory() {
         return Tracker_RuleFactory::instance();
     }
 
-    function deleteRulesByFieldId($tracker_id, $field_id) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRulesByFieldId($tracker_id, $field_id);
-    }
-    function deleteRulesByValueId($tracker_id, $field_id, $value_id) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRulesByValueId($tracker_id, $field_id, $value_id);
-    }
-    
     /**
      * Check if all the selected values of a submitted artefact are coherent regarding the dependencies
      *

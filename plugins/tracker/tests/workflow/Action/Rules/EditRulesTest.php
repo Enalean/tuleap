@@ -23,6 +23,8 @@ require_once TRACKER_BASE_DIR .'/workflow/Action/Rules/EditRules.class.php';
 
 class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase {
 
+    protected $remove_parameter = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_REMOVE_RULES;
+
     public function setUp() {
         parent::setUp();
         $this->rule_1 = new Tracker_Rule_Date();
@@ -35,13 +37,32 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $this->layout = mock('Tracker_IDisplayTrackerLayout');
         $this->user = mock('User');
         stub($this->date_factory)->searchById(123)->returns($this->rule_1);
-        stub($this->date_factory)->searchById(456)->returns($this->rule_1);
+        stub($this->date_factory)->searchById(456)->returns($this->rule_2);
         $this->action = new Tracker_Workflow_Action_Rules_EditRules($tracker, $element_factory, $this->date_factory);
     }
 
-    public function itDeleteARule() {
-        $request = aRequest()->with('remove_rule', array('123'))->build();
+    public function itDeletesARule() {
+        $request = aRequest()->with($this->remove_parameter, array('123'))->build();
         expect($this->date_factory)->delete($this->rule_1)->once();
+        $this->action->process($this->layout, $request, $this->user);
+    }
+
+    public function itDeletesMultipleRules() {
+        $request = aRequest()->with($this->remove_parameter, array('123','456'))->build();
+        expect($this->date_factory)->delete($this->rule_1)->at(0);
+        expect($this->date_factory)->delete($this->rule_2)->at(1);
+        $this->action->process($this->layout, $request, $this->user);
+    }
+
+    public function itDoesNotFailIfRequestDoesNotContainAnArray() {
+        $request = aRequest()->with($this->remove_parameter, '123')->build();
+        expect($this->date_factory)->delete()->never();
+        $this->action->process($this->layout, $request, $this->user);
+    }
+
+    public function itDoesNotFailIfRequestContainsIrrevelantId() {
+        $request = aRequest()->with($this->remove_parameter, array('invalid_id'))->build();
+        expect($this->date_factory)->delete()->never();
         $this->action->process($this->layout, $request, $this->user);
     }
 }
