@@ -102,6 +102,7 @@
 
     public function setSourceField(Tracker_FormElement_Field $field) {
         $this->source_field_obj = $field;
+        return $this;
     }
 
     /**
@@ -114,6 +115,7 @@
 
     public function setTargetField(Tracker_FormElement_Field $field) {
         $this->target_field_obj = $field;
+        return $this;
     }
 
     /**

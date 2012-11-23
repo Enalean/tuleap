@@ -33,12 +33,16 @@ class Tracker_Rule_Date_Factory {
      */
     protected $dao;
 
+    /** @var Tracker_FormElementFactory */
+    private $element_factory;
+
     /**
      * 
      * @param DataAccessObject $dao
      */
-    function __construct(Tracker_Rule_Date_Dao $dao) {
+    function __construct(Tracker_Rule_Date_Dao $dao, Tracker_FormElementFactory $element_factory) {
         $this->dao = $dao;
+        $this->element_factory = $element_factory;
     }
  
     /**
@@ -89,7 +93,7 @@ class Tracker_Rule_Date_Factory {
         }
         $comparator = $rule['comparator'];
 
-        return $this->populate(new Tracker_Rule_Date(), $rule['source_field_id'], $rule['target_field_id'], $rule['tracker_id'], $comparator);
+        return $this->populate(new Tracker_Rule_Date(), $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparator);
     }
     
     /**
@@ -108,7 +112,7 @@ class Tracker_Rule_Date_Factory {
 
         while ($rule = $rules->getRow()) {
             $comparartor = $rule['comparator'];
-            $date_rule = $this->populate(new Tracker_Rule_Date(), $rule['source_field_id'], $rule['target_field_id'], $rule['tracker_id'], $comparartor);
+            $date_rule = $this->populate(new Tracker_Rule_Date(), $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparartor);
             $rules_array[] = $date_rule;
         }
         
@@ -126,9 +130,13 @@ class Tracker_Rule_Date_Factory {
      */
     protected function populate(Tracker_Rule_Date $date_rule, $tracker_id, $source_field_id, $target_field_id, $comparator) {
         
+        $source_field = $this->element_factory->getFormElementById($source_field_id);
+        $target_field = $this->element_factory->getFormElementById($target_field_id);
         $date_rule->setTrackerId($tracker_id)
                 ->setSourceFieldId($source_field_id)
+                ->setSourceField($source_field)
                 ->setTargetFieldId($target_field_id)
+                ->setTargetField($target_field)
                 ->setTrackerId($tracker_id)
                 ->setComparator($comparator);
         
