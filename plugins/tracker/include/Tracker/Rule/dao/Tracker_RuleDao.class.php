@@ -124,12 +124,6 @@ class Tracker_RuleDao extends DataAccessObject {
         return $this->update($sql);
     }
 
-    function deleteRulesByGroupArtifactId($artifact_type) {
-        $sql = sprintf('DELETE FROM tracker_rule '.
-                       ' WHERE group_artifact_id = %s ',
-				$this->da->quoteSmart($artifact_type));
-        return $this->update($sql);
-    }
     function deleteByField($artifact_type, $field_id) {
         $sql = sprintf('DELETE FROM tracker_rule '.
                        ' WHERE group_artifact_id = %s '.
