@@ -28,19 +28,20 @@ require_once 'Exception.class.php';
  *
  */
 class Tracker_Rule_Date extends Tracker_Rule {
-    const COMPARATOR_EQUALS = '=';
-    const COMPARATOR_NOT_EQUALS = '≠';
-    const COMPARATOR_LESS_THAN = '<';
-    const COMPARATOR_LESS_THAN_OR_EQUALS = '≤';
-    const COMPARATOR_GREATER_THAN = '>';
+
+    const COMPARATOR_EQUALS                 = '=';
+    const COMPARATOR_NOT_EQUALS             = '≠';
+    const COMPARATOR_LESS_THAN              = '<';
+    const COMPARATOR_LESS_THAN_OR_EQUALS    = '≤';
+    const COMPARATOR_GREATER_THAN           = '>';
     const COMPARATOR_GREATER_THAN_OR_EQUALS = '≥';
 
-    protected $_allowed_comparators = array(
-        self::COMPARATOR_EQUALS,
-        self::COMPARATOR_GREATER_THAN,
-        self::COMPARATOR_GREATER_THAN_OR_EQUALS,
+    public static $allowed_comparators = array(
         self::COMPARATOR_LESS_THAN,
         self::COMPARATOR_LESS_THAN_OR_EQUALS,
+        self::COMPARATOR_EQUALS,
+        self::COMPARATOR_GREATER_THAN_OR_EQUALS,
+        self::COMPARATOR_GREATER_THAN,
         self::COMPARATOR_NOT_EQUALS,
     );
 
@@ -72,7 +73,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
      * @throws Tracker_Rule_Date_Exception
      */
     public function setComparator($comparator) {
-        if(! in_array($comparator, $this->_allowed_comparators)) {
+        if(! in_array($comparator, self::$allowed_comparators)) {
             throw new Tracker_Rule_Date_Exception('Invalid comparator');
         }
 

@@ -125,7 +125,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     private $source_field_id = 44;
     private $target_field_id = 22;
 
-    public function itAddsARules() {
+    public function itAddsARule() {
         $request = aRequest()->withParams(array(
             'source_date_field' => '44',
             'target_date_field' => '22',
@@ -136,7 +136,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         $this->processRequestAndExpectRedirection($request);
     }
 
-    public function itDoesNotFailIfTheRequestDoesNotContainTheComparator() {
+    public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheComparator() {
         $request = aRequest()->withParams(array(
             'source_date_field' => '44',
             'target_date_field' => '22',
@@ -146,7 +146,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         $this->processRequestAndExpectFormOutput($request);
     }
 
-    public function itDoesNotFailIfTheRequestDoesNotContainTheSourceField() {
+    public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheSourceField() {
         $request = aRequest()->withParams(array(
             'target_date_field' => '22',
             'comparator'        => '>'
@@ -156,10 +156,21 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         $this->processRequestAndExpectFormOutput($request);
     }
 
-    public function itDoesNotFailIfTheRequestDoesNotContainTheTargetField() {
+    public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheTargetField() {
         $request = aRequest()->withParams(array(
             'source_date_field' => '44',
             'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainAValidComparator() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '22',
+            'comparator'        => '%invalid_comparator%',
         ))->build();
 
         expect($this->date_factory)->create()->never();

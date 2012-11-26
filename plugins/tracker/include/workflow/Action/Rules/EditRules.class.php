@@ -36,15 +36,6 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private $url_query;
 
-    private $operators = array(
-        'lower_than'       => '<',
-        'lower_or_equal'   => '≤',
-        'equal'            => '=',
-        'greater_or_equal' => '≥',
-        'greater_than'     => '>',
-        'different'        => '≠'
-    );
-
     public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, Tracker_Rule_Date_Factory $rule_date_factory) {
         parent::__construct($tracker);
         $this->form_element_factory = $form_element_factory;
@@ -66,7 +57,11 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function shouldAddRule(Codendi_Request $request) {
         $exist_source_field = $request->existAndNonEmpty('source_date_field');
         $exist_target_field = $request->existAndNonEmpty('target_date_field');
-        $exist_comparator   = $request->existAndNonEmpty('comparator');
+
+        $valid_comparator = new Valid_WhiteList('comparator', Tracker_Rule_Date::$allowed_comparators);
+        $valid_comparator->required();
+        $exist_comparator = $request->valid($valid_comparator);
+
         return $exist_source_field && $exist_target_field && $exist_comparator;
     }
 
@@ -145,7 +140,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $checked_val = $this->default_value;
         echo 'Add a new rule: ';//TODO: i18n
         echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
-        echo html_build_select_box_from_array($this->operators, 'operator');
+        echo html_build_select_box_from_array(Tracker_Rule_Date::$allowed_comparators, 'operator');
         echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
     }
 
