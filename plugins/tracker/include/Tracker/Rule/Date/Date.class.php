@@ -62,10 +62,6 @@ class Tracker_Rule_Date extends Tracker_Rule {
      */
     protected $comparator;
 
-    public function __construct() {
-
-    }
-
     /**
      *
      * @param string $comparator

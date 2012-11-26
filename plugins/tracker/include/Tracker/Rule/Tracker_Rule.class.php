@@ -94,12 +94,17 @@
 
     /**
      *
-     * @return int
+     * @return Tracker_FormElement_Field
      */
     public function getSourceField() {
         return $this->source_field_obj;
     }
 
+    /**
+     * 
+     * @param Tracker_FormElement_Field $field
+     * @return \Tracker_Rule
+     */
     public function setSourceField(Tracker_FormElement_Field $field) {
         $this->source_field_obj = $field;
         return $this;
