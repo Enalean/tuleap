@@ -34,7 +34,7 @@ class Tracker_Workflow_Action_Transitions_Delete extends Tracker_Workflow_Action
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','deleted'));
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array(
                                             'tracker' => (int)$this->tracker->id,
-                                            'func'    => 'admin-workflow')));
+                                            'func'    => Workflow::FUNC_ADMIN_TRANSITIONS)));
          }
     }
 }

@@ -48,7 +48,10 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
             echo $GLOBALS['Language']->getText('workflow_admin','choose_field');
             echo '<p>';
 
-            echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'func'    => 'admin-workflow')).'" method="POST">';
+            echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
+                'tracker' => (int)$this->tracker->id, 
+                'func'    => Workflow::FUNC_ADMIN_TRANSITIONS
+            )).'" method="POST">';
             echo '<SELECT name="field_id">';
             //We display only the 'sb' static type field
             foreach ($this->form_element_factory->getUsedFormElementsByType($this->tracker, 'sb') as $field) {
@@ -71,7 +74,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
-                'func'    => 'admin-workflow')
+                'func'    => Workflow::FUNC_ADMIN_TRANSITIONS)
             ) .'" method="POST">';
 
         $this->displayField($workflow);
@@ -92,7 +95,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $delete_url = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
-                'func'    => 'admin-workflow',
+                'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
                 'delete'  => (int)$workflow->workflow_id
             )
         );

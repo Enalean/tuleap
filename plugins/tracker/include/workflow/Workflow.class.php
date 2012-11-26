@@ -22,6 +22,9 @@ require_once('WorkflowFactory.class.php');
 
 class Workflow {
 
+    const FUNC_ADMIN_RULES       = 'admin-workflow';
+    const FUNC_ADMIN_TRANSITIONS = 'admin-workflow-transitions';
+
     public $workflow_id;
     public $tracker_id;
     public $field_id;

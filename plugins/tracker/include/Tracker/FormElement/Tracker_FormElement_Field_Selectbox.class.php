@@ -156,7 +156,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
           if ($check) {
               echo ' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker_id,
-                                                        'func'    => 'admin-workflow',
+                                                        'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
                                                         'edit_transition'  => $transition->getTransitionId())) .'">[Details]</a>';
           }
           echo '</td>';

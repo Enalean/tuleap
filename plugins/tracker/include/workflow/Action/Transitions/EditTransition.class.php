@@ -56,7 +56,7 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         $form_action = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker'    => (int)$this->tracker->id,
-                'func'       => 'admin-workflow',
+                'func'       => Workflow::FUNC_ADMIN_TRANSITIONS,
                 'transition' => $transition->getTransitionId()
             )
         );
@@ -77,7 +77,7 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         $back_to_transitions_link = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
-                'func'    => 'admin-workflow'
+                'func'    => Workflow::FUNC_ADMIN_TRANSITIONS
             )
         );
 

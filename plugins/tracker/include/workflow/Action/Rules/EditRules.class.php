@@ -53,7 +53,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $this->url_query            = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
-                'func'    => 'admin-workflow-rules',
+                'func'    => Workflow::FUNC_ADMIN_RULES,
             )
         );
     }
