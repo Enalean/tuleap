@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# @PLUGIN_PATH@
+# @SOURCE_PATH@
+# @DATA_PATH@
+
 scriptdir=`dirname $0`
 absolutedir=`cd $scriptdir;pwd`
 plugindir=`dirname $absolutedir`
