@@ -126,7 +126,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function displayPane(Tracker_IDisplayTrackerLayout $layout) {
         $this->displayHeader($layout);
         echo '<div class="workflow_rules">';
-        echo '<h3>'. 'Define global rules' .'</h3>'; //TODO: i18n
+        echo '<h3>'. 'Define global date rules' .'</h3>'; //TODO: i18n
         echo '<p class="help">'. 'Those rules will be applied on each creation/update of artifacts.' .'</p>'; //TODO: i18n
         echo '<form method="post" action="'. $this->url_query .'">';
         $this->displayRules();
