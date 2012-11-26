@@ -33,7 +33,6 @@ Mock::generate('GitDao');
 Mock::generate('DataAccessResult');
 Mock::generate('Project');
 Mock::generate('PermissionsManager');
-Mock::generate('GitPlugin');
 
 class Git_Backend_GitoliteTest extends UnitTestCase {
     
@@ -222,10 +221,10 @@ class Git_Backend_GitoliteTest extends UnitTestCase {
     }
 
     protected function _GivenABackendGitolite() {
-        $driver             = new mockGit_GitoliteDriver();
-        $dao                = new mockGitDao();
-        $permissionsManager = new mockPermissionsManager();
-        $gitPlugin          = new mockGitPlugin();
+        $driver             = mock('Git_GitoliteDriver');
+        $dao                = mock('GitDao');
+        $permissionsManager = mock('PermissionsManager');
+        $gitPlugin          = mock('GitPlugin');
         $backend = new Git_Backend_Gitolite($driver);
         $backend->setDao($dao);
         $backend->setPermissionsManager($permissionsManager);
