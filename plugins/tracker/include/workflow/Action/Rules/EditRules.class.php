@@ -65,14 +65,16 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldAddRule(Codendi_Request $request) {
-        $exist_source_field = $request->getValidated('source_date_field', 'uint');
-        $exist_target_field = $request->getValidated('target_date_field', 'uint');
+        $source_field = $request->getValidated('source_date_field', 'uint');
+        $target_field = $request->getValidated('target_date_field', 'uint');
+
+        $fields_exist_and_are_different = $source_field && $target_field && ($source_field != $target_field);
 
         $valid_comparator = new Valid_WhiteList('comparator', Tracker_Rule_Date::$allowed_comparators);
         $valid_comparator->required();
         $exist_comparator = $request->valid($valid_comparator);
 
-        return $exist_source_field && $exist_target_field && $exist_comparator;
+        return $fields_exist_and_are_different && $exist_comparator;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {

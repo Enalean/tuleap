@@ -242,5 +242,15 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         expect($this->date_factory)->create()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
+
+    public function itDoesNotCreateTheRuleIfTheTargetAndSourceFieldsAreTheSame() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '44',
+            'comparator'        => '>',
+        ))->build();
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
 }
 ?>
