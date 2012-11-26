@@ -1,0 +1,12 @@
+The FusionForge.php is built from MonoBook.php mediawiki file.
+2 things are done
+
+-Renaming monobook in fusionforge and MonoBook in FusionForge
+ and remove empty trailing lines
+-Apply a minimal patch on the renamed patch
+
+It is highly recommended to touch these files as few as possible
+so mediawiki upgrade doesn't require too much update.
+Please don't apply mediawiki related bugs, rather provide the 
+patch to mediawiki developpers
+
