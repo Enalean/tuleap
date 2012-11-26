@@ -427,5 +427,13 @@ $sys_lists_prefix = '';
 // The mailing list name suffix
 $sys_lists_suffix = '';
 
+// Mediawiki
+$master_path = "/var/lib/codendi/plugins/mediawiki/master" ;
+$mwdata_path = "/var/lib/codendi/plugins/mediawiki";
+$mw_dbtype = "mysql";
+$projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
+$config_path = "/etc/codendi";
+$src_path = "/usr/share/mediawiki115";
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
