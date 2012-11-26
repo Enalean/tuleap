@@ -98,9 +98,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function removeRules(Codendi_Request $request) {
         $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
+        $nb_deleted = 0;
         if (is_array($remove_rules)) {
             foreach ($remove_rules as $rule_id) {
-                $this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id);
+                if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id)) {
+                    ++$nb_deleted;
+                }
+            }
+            if ($nb_deleted) {
+                $GLOBALS['Response']->addFeedback('info', 'Rule(s) successfully deleted'); //TODO: i18n
             }
         }
     }
@@ -113,6 +119,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
                 $this->tracker->getId(),
                 $request->get('comparator')
             );
+            $GLOBALS['Response']->addFeedback('info', 'Rule successfully created'); //TODO: i18n
         }
     }
 
