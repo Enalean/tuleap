@@ -65,14 +65,21 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldAddRule(Codendi_Request $request) {
-        $exist_source_field = $request->getValidated('source_date_field', 'uint');
-        $exist_target_field = $request->getValidated('target_date_field', 'uint');
+        $source_field = $request->getValidated('source_date_field', 'uint');
+        $target_field = $request->getValidated('target_date_field', 'uint');
+
+        $fields_exist         = $source_field && $target_field;
+        $fields_are_different = $source_field != $target_field;
+
+        if ($fields_exist && ! $fields_are_different) {
+            $GLOBALS['Response']->addFeedback('error', 'The two fields must be different'); //TODO: i18n
+        }
 
         $valid_comparator = new Valid_WhiteList('comparator', Tracker_Rule_Date::$allowed_comparators);
         $valid_comparator->required();
         $exist_comparator = $request->valid($valid_comparator);
 
-        return $exist_source_field && $exist_target_field && $exist_comparator;
+        return $fields_exist && $fields_are_different && $exist_comparator;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
@@ -91,9 +98,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function removeRules(Codendi_Request $request) {
         $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
+        $nb_deleted = 0;
         if (is_array($remove_rules)) {
             foreach ($remove_rules as $rule_id) {
-                $this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id);
+                if ($this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id)) {
+                    ++$nb_deleted;
+                }
+            }
+            if ($nb_deleted) {
+                $GLOBALS['Response']->addFeedback('info', 'Rule(s) successfully deleted'); //TODO: i18n
             }
         }
     }
@@ -106,6 +119,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
                 $this->tracker->getId(),
                 $request->get('comparator')
             );
+            $GLOBALS['Response']->addFeedback('info', 'Rule successfully created'); //TODO: i18n
         }
     }
 

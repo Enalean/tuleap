@@ -68,9 +68,20 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $content = ob_get_clean();
         $this->assertNotEqual('', $content);
     }
+
+    public function itDoesNotDisplayErrorsIfNoActions() {
+        $request = aRequest()->build();
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
 }
 
 class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->date_factory)->deleteById()->returns(true);
+    }
 
     public function itDeletesARule() {
         $request = aRequest()->with($this->remove_parameter, array('123'))->build();
@@ -104,6 +115,36 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
         ))->build();
         expect($this->date_factory)->deleteById()->never();
         $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itProvidesFeedbackWhenDeletingARule() {
+        $request = aRequest()->with($this->remove_parameter, array('123'))->build();
+        expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotPrintMultipleTimesTheFeedbackWhenRemovingMoreThanOneRule() {
+        $request = aRequest()->with($this->remove_parameter, array('123', '456'))->build();
+        expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
+        $this->processRequestAndExpectRedirection($request);
+    }
+}
+
+class Tracker_Workflow_Action_Rules_EditRules_failedDeleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+
+    public function itDoesNotPrintSuccessfullFeebackIfTheDeleteFailed() {
+        $request = aRequest()->with($this->remove_parameter, array('123'))->build();
+        stub($this->date_factory)->deleteById()->returns(false);
+        expect($GLOBALS['Response'])->addFeedback('info', '*')->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotStopOnTheFirstFailedDelete() {
+        $request = aRequest()->with($this->remove_parameter, array('123', '456'))->build();
+        stub($this->date_factory)->deleteById($this->tracker_id, 123)->at(0)->returns(false);
+        stub($this->date_factory)->deleteById($this->tracker_id, 456)->at(1)->returns(true);
+        expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
+        $this->processRequestAndExpectRedirection($request);
     }
 }
 
@@ -143,6 +184,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         ))->build();
 
         expect($this->date_factory)->create()->never();
+        expect($GLOBALS['Response'])->addFeedback()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -241,6 +283,27 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
         expect($this->date_factory)->create()->never();
         $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheTargetAndSourceFieldsAreTheSame() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '44',
+            'comparator'        => '>',
+        ))->build();
+        expect($this->date_factory)->create()->never();
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itProvidesFeedbackIfRuleSuccessfullyCreated() {
+         $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+        expect($GLOBALS['Response'])->addFeedback('info','*')->once();
+        $this->processRequestAndExpectRedirection($request);
     }
 }
 ?>
