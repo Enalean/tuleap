@@ -58,7 +58,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldUpdateRules(Codendi_Request $request) {
-        $should_delete_rules = $request->get(self::PARAMETER_REMOVE_RULES);
+        $should_delete_rules = is_array($request->get(self::PARAMETER_REMOVE_RULES));
 
         return $should_delete_rules || $this->shouldAddRule($request);
     }
@@ -66,6 +66,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function shouldAddRule(Codendi_Request $request) {
         $exist_source_field  = $request->existAndNonEmpty('source_date_field');
         $exist_target_field  = $request->existAndNonEmpty('target_date_field');
+        $exist_target_field  = $request->existAndNonEmpty('comparator');
         return $exist_source_field && $exist_target_field;
     }
 

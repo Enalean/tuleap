@@ -52,6 +52,22 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $rule->setTargetField($planned_end_date);
         return $rule;
     }
+
+    protected function processRequestAndExpectRedirection($request) {
+        expect($GLOBALS['Response'])->redirect()->once();
+        ob_start();
+        $this->action->process($this->layout, $request, $this->user);
+        $content = ob_get_clean();
+        $this->assertEqual('', $content);
+    }
+
+    protected function processRequestAndExpectFormOutput($request) {
+        expect($GLOBALS['Response'])->redirect()->never();
+        ob_start();
+        $this->action->process($this->layout, $request, $this->user);
+        $content = ob_get_clean();
+        $this->assertNotEqual('', $content);
+    }
 }
 
 class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
@@ -59,26 +75,26 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
     public function itDeletesARule() {
         $request = aRequest()->with($this->remove_parameter, array('123'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 123)->once();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDeletesMultipleRules() {
         $request = aRequest()->with($this->remove_parameter, array('123','456'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 123)->at(0);
         expect($this->date_factory)->deleteById($this->tracker_id, 456)->at(1);
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotFailIfRequestDoesNotContainAnArray() {
         $request = aRequest()->with($this->remove_parameter, '123')->build();
         expect($this->date_factory)->deleteById()->never();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectFormOutput($request);
     }
 
     public function itDoesNotFailIfRequestContainsIrrevelantId() {
         $request = aRequest()->with($this->remove_parameter, array('invalid_id'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 0)->once();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotFailIfRequestDoesNotContainRemoveParameter() {
@@ -87,7 +103,7 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
             'target_date_field' => '14'
         ))->build();
         expect($this->date_factory)->deleteById()->never();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectFormOutput($request);
     }
 }
 
@@ -117,7 +133,17 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         ))->build();
 
         expect($this->date_factory)->create($this->source_field_id, $this->target_field_id, $this->tracker_id, '>')->once();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotFailIfTheRequestDoesNotContainTheComparator() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '22',
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
     }
 }
 ?>
