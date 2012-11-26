@@ -41,7 +41,7 @@ class WorkflowManager {
     }
 
     public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
-        if ($request->get('func') == 'admin-workflow-rules') {
+        if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
             $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, Tracker_FormElementFactory::instance(), new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance()));
         } else if ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());

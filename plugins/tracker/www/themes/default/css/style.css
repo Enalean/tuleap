@@ -780,9 +780,12 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_actions .pc_check_checked {
     background-image: url(/themes/common/images/ic/bin.png);
 }
+
+.workflow_transitions,
 .workflow_rules {
     display: inline-block;
 }
+
 .workflow_existing_rules {
     list-style: none;
     padding-left: 0;

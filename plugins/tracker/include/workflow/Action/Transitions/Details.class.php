@@ -53,7 +53,7 @@ class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Actio
         $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker'         => (int)$this->tracker->id,
-                'func'            => 'admin-workflow',
+                'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
                 'edit_transition' => $request->get('transition'),
             )
         ));

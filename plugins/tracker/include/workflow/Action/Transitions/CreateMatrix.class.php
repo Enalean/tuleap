@@ -106,7 +106,7 @@ class Tracker_Workflow_Action_Transitions_CreateMatrix extends Tracker_Workflow_
             TRACKER_BASE_URL.'/?'. http_build_query(
                 array(
                     'tracker' => (int)$this->tracker->id,
-                    'func'    => 'admin-workflow'
+                    'func'    => Workflow::FUNC_ADMIN_TRANSITIONS
                 )
             )
         );

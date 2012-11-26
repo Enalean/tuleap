@@ -36,19 +36,6 @@ abstract class Tracker_Workflow_Action {
     protected function displayHeader($engine) {
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
 
-        $transitions_link = TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker' =>  (int)$this->tracker->id,
-                'func'    =>  'admin-workflow'
-            )
-        );
-
-        $workflow_link = TRACKER_BASE_URL.'/?'. http_build_query(
-            array(
-                'tracker' =>  (int)$this->tracker->id,
-                'func'    =>  'admin-workflow-rules'
-            )
-        );
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
         foreach ($this->getPanes() as $identifier => $pane) {
@@ -71,11 +58,11 @@ abstract class Tracker_Workflow_Action {
     private function getPanes() {
         return array(
             self::PANE_RULES => array(
-                'func'  => 'admin-workflow-rules',
+                'func'  => Workflow::FUNC_ADMIN_RULES,
                 'title' => 'Global Rules',     //TODO: i18n
             ),
             self::PANE_TRANSITIONS => array(
-                'func'  => 'admin-workflow',
+                'func'  => Workflow::FUNC_ADMIN_TRANSITIONS,
                 'title' => 'Transitions',      //TODO: i18n
             ),
         );

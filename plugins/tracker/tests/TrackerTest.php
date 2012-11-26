@@ -1218,7 +1218,7 @@ class TrackerTest extends TuleapTestCase {
     //
     public function testPermsAdminWorkflowTrackerSiteAdmin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // site admin can access tracker admin part
         $this->tracker->expectOnce('getWorkflowManager');
@@ -1226,7 +1226,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerProjectAdmin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // project admin can access tracker admin part
         $this->tracker->expectOnce('getWorkflowManager');
@@ -1234,7 +1234,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerTrackerAdmin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // tracker admin can access tracker admin part
         $this->tracker1->expectOnce('getWorkflowManager');
@@ -1244,7 +1244,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerTracker1Admin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // tracker admin can access tracker admin part
         $this->tracker1->expectOnce('getWorkflowManager');
@@ -1254,7 +1254,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerTracker2Admin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // tracker admin can access tracker admin part
         $this->tracker1->expectNever('getWorkflowManager');
@@ -1264,7 +1264,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerProjectMember() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // project member can NOT access tracker admin part
         $this->tracker->expectNever('getWorkflowManager');
@@ -1272,7 +1272,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerRegisteredUser() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // registered user can NOT access tracker admin part
         $this->tracker->expectNever('getWorkflowManager');
