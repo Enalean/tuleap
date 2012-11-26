@@ -36,6 +36,16 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private $url_query;
 
+    /** @var array */
+    private $comparators = array(
+        Tracker_Rule_Date::COMPARATOR_LESS_THAN              => '<',
+        Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS    => '≤',
+        Tracker_Rule_Date::COMPARATOR_EQUALS                 => '=',
+        Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS => '≥',
+        Tracker_Rule_Date::COMPARATOR_GREATER_THAN           => '>',
+        Tracker_Rule_Date::COMPARATOR_NOT_EQUALS             => '≠',
+    );
+
     public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, Tracker_Rule_Date_Factory $rule_date_factory) {
         parent::__construct($tracker);
         $this->form_element_factory = $form_element_factory;
@@ -55,8 +65,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldAddRule(Codendi_Request $request) {
-        $exist_source_field = $request->existAndNonEmpty('source_date_field');
-        $exist_target_field = $request->existAndNonEmpty('target_date_field');
+        $exist_source_field = $request->getValidated('source_date_field', 'uint');
+        $exist_target_field = $request->getValidated('target_date_field', 'uint');
 
         $valid_comparator = new Valid_WhiteList('comparator', Tracker_Rule_Date::$allowed_comparators);
         $valid_comparator->required();
@@ -140,7 +150,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $checked_val = $this->default_value;
         echo 'Add a new rule: ';//TODO: i18n
         echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
-        echo html_build_select_box_from_array(Tracker_Rule_Date::$allowed_comparators, 'operator');
+        echo html_build_select_box_from_array($this->comparators, 'comparator');
         echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
     }
 

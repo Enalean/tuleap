@@ -156,9 +156,75 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         $this->processRequestAndExpectFormOutput($request);
     }
 
+    public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnInt() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '%invalid_id%',
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnGreaterThanZero() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '-1',
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotChoosen() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '0',
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheTargetField() {
         $request = aRequest()->withParams(array(
             'source_date_field' => '44',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnInt() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '%invalid_id%',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnGreaterThanZero() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '-1',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotChoosen() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '0',
             'comparator'        => '>'
         ))->build();
 

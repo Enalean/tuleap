@@ -62,45 +62,40 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      * @param Tracker_Rule_Date $rule
      * @return int The ID of the saved tracker_rule
      */
-    public function insert(Tracker_Rule_Date $rule) {
+    public function insert($tracker_id, $source_field_id, $target_field_id, $comparator) {
+        $tracker_id      = $this->da->escapeInt($tracker_id);
+        $source_field_id = $this->da->escapeInt($source_field_id);
+        $target_field_id = $this->da->escapeInt($target_field_id);
+        $comparator      = $this->da->quoteSmart($comparator);
+        $rule_type       = $this->da->escapeInt(Tracker_Rule::RULETYPE_DATE);
+
         $this->startTransaction();
         try{
-            $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
-                                VALUES (%s, %s)",
-                                $this->da->quoteSmart($rule->getTracker()->getId()),
-                                $this->da->quoteSmart(Tracker_Rule::RULETYPE_DATE)
-                               );
-
-            $this->update($sql_insert_rule);
-            $tracker_rule_id = $this->da->lastInsertId();
-
-            $sql = sprintf("INSERT INTO $this->table_name (tracker_rule_id, source_field_id, target_field_id, comparator)
-                            VALUES (%s, %s, %s, %s)",
-                            $tracker_rule_id,
-                            $this->da->quoteSmart($rule->getSourceField()->getId()),
-                            $this->da->quoteSmart($rule->getTargetField()->getId()),
-                            $this->da->quoteSmart($rule->getComparator()));
-            $this->retrieve($sql);
+            $sql = "INSERT INTO tracker_rule (tracker_id, rule_type)
+                    VALUES ($tracker_id, $rule_type)";
+            $id  = $this->updateAndGetLastId($sql);
+            $sql = "INSERT INTO tracker_rule_date (tracker_rule_id, source_field_id, target_field_id, comparator)
+                    VALUES ($id, $source_field_id, $target_field_id, $comparator)";
+            $this->update($sql);
         } catch (Exception $e) {
             $this->rollBack();
             throw $e;
         }
-
         $this->commit();
 
-        return $tracker_rule_id;
+        return $id;
     }
 
     public function deleteById($tracker_id, $rule_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $rule_id    = $this->da->escapeInt($rule_id);
-        $sql = "DELETE tracker_rule_date.*
+        echo $sql = "DELETE tracker_rule_date.*
                 FROM tracker_rule
                     INNER JOIN tracker_rule_date ON (id = tracker_rule_id)
                 WHERE id = $rule_id
-                  AND tracker_id = $tracker_id";
+                  AND tracker_id = $tracker_id;";
         if ($this->update($sql)) {
-            $sql = "DELETE
+            echo $sql = "DELETE
                     FROM tracker_rule
                     WHERE id = $rule_id
                       AND tracker_id = $tracker_id";
