@@ -118,7 +118,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         $request = aRequest()->withParams(array(
             'source_date_field' => '44',
             'target_date_field' => '22',
-            'comparator'   => '>'
+            'comparator'        => '>'
         ))->build();
 
         expect($this->date_factory)->create($source_field_id, $target_field_id, $this->tracker_id, '>')->once();

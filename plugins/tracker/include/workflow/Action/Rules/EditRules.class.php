@@ -79,14 +79,27 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function updateRules(Codendi_Request $request) {
+        $this->removeRules($request);
+        $this->addRule($request);
+    }
+
+    private function removeRules(Codendi_Request $request) {
         $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
         if (is_array($remove_rules)) {
             foreach ($remove_rules as $rule_id) {
                 $this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id);
             }
         }
+    }
+
+    private function addRule(Codendi_Request $request) {
         if ($this->shouldAddRule($request)) {
-            $this->rule_date_factory->create((int)$request->get('source_date_field'), (int)$request->get('target_date_field'), $this->tracker->getId(), $request->get('comparator'));
+            $this->rule_date_factory->create(
+                (int)$request->get('source_date_field'),
+                (int)$request->get('target_date_field'),
+                $this->tracker->getId(),
+                $request->get('comparator')
+            );
         }
     }
 
