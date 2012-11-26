@@ -408,7 +408,6 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         $selected_values = $value ? $value->getListValues() : array();
-        var_dump($submitted_values, $_REQUEST);
         return $this->_fetchField('tracker_field_'. $this->id, 
                 'artifact['. $this->id .']', 
                 $selected_values, $submitted_values[0][$this->id]);
