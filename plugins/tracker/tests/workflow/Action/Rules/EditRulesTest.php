@@ -68,6 +68,12 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $content = ob_get_clean();
         $this->assertNotEqual('', $content);
     }
+
+    public function itDoesNotDisplayErrorsIfNoActions() {
+        $request = aRequest()->build();
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
 }
 
 class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
@@ -143,6 +149,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         ))->build();
 
         expect($this->date_factory)->create()->never();
+        expect($GLOBALS['Response'])->addFeedback()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
 
@@ -250,6 +257,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
             'comparator'        => '>',
         ))->build();
         expect($this->date_factory)->create()->never();
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
         $this->processRequestAndExpectFormOutput($request);
     }
 }
