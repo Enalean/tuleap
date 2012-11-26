@@ -39,6 +39,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $this->displayHeader($layout);
         echo '<h3>'.$GLOBALS['Language']->getText('workflow_admin','title_define_transitions').'</h3>';
 
+        echo '<div class="workflow_transitions">';
         if (count($workflow)) {
             $this->displayAdminWorkflow($layout, $request, $current_user, $workflow);
         } else {
@@ -62,6 +63,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
             echo '</from>';
 
         }
+        echo '</div>';
         $this->displayFooter($layout);
     }
 
@@ -102,15 +104,23 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
     }
 
     private function displayEnabled(Workflow $workflow) {
-        $checked = '';
+        $checked    = '';
+        $classnames = '';
         if ($workflow->is_used) {
             $checked = 'checked="checked"';
+        } else {
+            $classnames = 'alert alert-warning';
+        }
+        echo '<div class="'. $classnames .'">';
+        if (! $workflow->is_used) {
+            echo '<h4>'. 'Transitions are not activated!' .'</h4>'; // TODO: i18n
         }
         echo '<p>';
         echo '<input type="hidden" name="is_used" value="0" />';
         echo '<label><input type="checkbox" name="is_used" value="1" '. $checked .'> ';
         echo $GLOBALS['Language']->getText('workflow_admin', 'enabled') .'</label>';
         echo '</p>';
+        echo '</div>';
     }
 
     protected function displayTransitionsMatrix($workflow, $layout, $request, $current_user) {
