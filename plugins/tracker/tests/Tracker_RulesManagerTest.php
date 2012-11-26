@@ -41,7 +41,7 @@ Mock::generate('Tracker_FormElement_Field_List_BindFactory');
  */
 class Tracker_RulesManagerTest extends UnitTestCase {
 
-    function testValidate() {
+    function _testValidate() {
         
         // Fields:
         // F1(A1, A2)
@@ -73,6 +73,10 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         $r5 = new Tracker_Rule_List(5, 1, 'F2', 'B1', 'F3', 'C1');
         $r6 = new Tracker_Rule_List(6, 1, 'F2', 'B2', 'F3', 'C2');
         $r7 = new Tracker_Rule_List(7, 1, 'F2', 'B3', 'F3', 'C1');
+        /*
+        $id = null, $tracker_id = null, $source_field = null, $source_value = null, 
+                $target_field = null, $target_value = null
+        */
         
         
         $arf = new MockTracker_RuleFactory($this);
