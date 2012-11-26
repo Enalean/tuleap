@@ -66,10 +66,10 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function shouldAddRule(Codendi_Request $request) {
         $source_field_id = (int)$request->getValidated('source_date_field', 'uint');
-        $target_field = $request->getValidated('target_date_field', 'uint');
+        $target_field_id = (int)$request->getValidated('target_date_field', 'uint');
 
-        $fields_exist         = $source_field_id && $target_field;
-        $fields_are_different = $source_field_id != $target_field;
+        $fields_exist         = $source_field_id && $target_field_id;
+        $fields_are_different = $source_field_id != $target_field_id;
 
         if ($fields_exist && ! $fields_are_different) {
             $GLOBALS['Response']->addFeedback('error', 'The two fields must be different'); //TODO: i18n
@@ -77,7 +77,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
         if ($fields_exist) {
             $source_field = $this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $source_field_id, 'date');
+            $target_field = $this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $target_field_id, 'date');
             $fields_have_good_type = (bool)$source_field;
+            $fields_have_good_type &= (bool)$target_field;
         }
 
         $valid_comparator = new Valid_WhiteList('comparator', Tracker_Rule_Date::$allowed_comparators);

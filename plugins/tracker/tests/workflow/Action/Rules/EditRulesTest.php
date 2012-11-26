@@ -329,5 +329,18 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         expect($this->date_factory)->create()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
+
+    public function itDoesNotAddDateRuleIfTheTargetFieldIsNotADateOne() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '666',
+            'comparator'        => '>'
+        ))->build();
+
+        stub($this->element_factory)->getUsedFieldByIdAndType($this->tracker, 666, 'date')->returns(null);
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
 }
 ?>
