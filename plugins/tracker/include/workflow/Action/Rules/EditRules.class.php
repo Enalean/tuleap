@@ -36,13 +36,14 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private $url_query;
 
-    private $operators = array(
-        'lower_than'       => '<',
-        'lower_or_equal'   => '≤',
-        'equal'            => '=',
-        'greater_or_equal' => '≥',
-        'greater_than'     => '>',
-        'different'        => '≠'
+    /** @var array */
+    private $comparators = array(
+        Tracker_Rule_Date::COMPARATOR_LESS_THAN              => '<',
+        Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS    => '≤',
+        Tracker_Rule_Date::COMPARATOR_EQUALS                 => '=',
+        Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS => '≥',
+        Tracker_Rule_Date::COMPARATOR_GREATER_THAN           => '>',
+        Tracker_Rule_Date::COMPARATOR_NOT_EQUALS             => '≠',
     );
 
     public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, Tracker_Rule_Date_Factory $rule_date_factory) {
@@ -58,15 +59,20 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldUpdateRules(Codendi_Request $request) {
-        $should_delete_rules = $request->get(self::PARAMETER_REMOVE_RULES);
+        $should_delete_rules = is_array($request->get(self::PARAMETER_REMOVE_RULES));
 
         return $should_delete_rules || $this->shouldAddRule($request);
     }
 
     private function shouldAddRule(Codendi_Request $request) {
-        $exist_source_field  = $request->existAndNonEmpty('source_date_field');
-        $exist_target_field  = $request->existAndNonEmpty('target_date_field');
-        return $exist_source_field && $exist_target_field;
+        $exist_source_field = $request->getValidated('source_date_field', 'uint');
+        $exist_target_field = $request->getValidated('target_date_field', 'uint');
+
+        $valid_comparator = new Valid_WhiteList('comparator', Tracker_Rule_Date::$allowed_comparators);
+        $valid_comparator->required();
+        $exist_comparator = $request->valid($valid_comparator);
+
+        return $exist_source_field && $exist_target_field && $exist_comparator;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
@@ -79,14 +85,27 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function updateRules(Codendi_Request $request) {
+        $this->removeRules($request);
+        $this->addRule($request);
+    }
+
+    private function removeRules(Codendi_Request $request) {
         $remove_rules = $request->get(self::PARAMETER_REMOVE_RULES);
         if (is_array($remove_rules)) {
             foreach ($remove_rules as $rule_id) {
                 $this->rule_date_factory->deleteById($this->tracker->getId(), (int)$rule_id);
             }
         }
+    }
+
+    private function addRule(Codendi_Request $request) {
         if ($this->shouldAddRule($request)) {
-            $this->rule_date_factory->create((int)$request->get('source_date_field'), (int)$request->get('target_date_field'), $this->tracker->getId(), $request->get('comparator'));
+            $this->rule_date_factory->create(
+                (int)$request->get('source_date_field'),
+                (int)$request->get('target_date_field'),
+                $this->tracker->getId(),
+                $request->get('comparator')
+            );
         }
     }
 
@@ -131,7 +150,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $checked_val = $this->default_value;
         echo 'Add a new rule: ';//TODO: i18n
         echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
-        echo html_build_select_box_from_array($this->operators, 'operator');
+        echo html_build_select_box_from_array($this->comparators, 'comparator');
         echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
     }
 

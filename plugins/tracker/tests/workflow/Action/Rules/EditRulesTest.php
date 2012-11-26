@@ -52,6 +52,22 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $rule->setTargetField($planned_end_date);
         return $rule;
     }
+
+    protected function processRequestAndExpectRedirection($request) {
+        expect($GLOBALS['Response'])->redirect()->once();
+        ob_start();
+        $this->action->process($this->layout, $request, $this->user);
+        $content = ob_get_clean();
+        $this->assertEqual('', $content);
+    }
+
+    protected function processRequestAndExpectFormOutput($request) {
+        expect($GLOBALS['Response'])->redirect()->never();
+        ob_start();
+        $this->action->process($this->layout, $request, $this->user);
+        $content = ob_get_clean();
+        $this->assertNotEqual('', $content);
+    }
 }
 
 class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
@@ -59,26 +75,26 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
     public function itDeletesARule() {
         $request = aRequest()->with($this->remove_parameter, array('123'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 123)->once();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDeletesMultipleRules() {
         $request = aRequest()->with($this->remove_parameter, array('123','456'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 123)->at(0);
         expect($this->date_factory)->deleteById($this->tracker_id, 456)->at(1);
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotFailIfRequestDoesNotContainAnArray() {
         $request = aRequest()->with($this->remove_parameter, '123')->build();
         expect($this->date_factory)->deleteById()->never();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectFormOutput($request);
     }
 
     public function itDoesNotFailIfRequestContainsIrrevelantId() {
         $request = aRequest()->with($this->remove_parameter, array('invalid_id'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 0)->once();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotFailIfRequestDoesNotContainRemoveParameter() {
@@ -87,7 +103,7 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
             'target_date_field' => '14'
         ))->build();
         expect($this->date_factory)->deleteById()->never();
-        $this->action->process($this->layout, $request, $this->user);
+        $this->processRequestAndExpectFormOutput($request);
     }
 }
 
@@ -106,23 +122,125 @@ class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workf
 
 class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
-    public function itAddsARules() {
-        $source_field_id = 44;
-        $target_field_id = 22;
-        $source_field = mock('Tracker_FormElement_Field_Date');
-        $target_field = mock('Tracker_FormElement_Field_Date');
+    private $source_field_id = 44;
+    private $target_field_id = 22;
 
-        stub($this->element_factory)->getFormElementById($source_field_id)->returns($source_field);
-        stub($this->element_factory)->getFormElementById($target_field_id)->returns($target_field);
-
+    public function itAddsARule() {
         $request = aRequest()->withParams(array(
             'source_date_field' => '44',
             'target_date_field' => '22',
-            'comparator'   => '>'
+            'comparator'        => '>'
         ))->build();
 
-        expect($this->date_factory)->create($source_field_id, $target_field_id, $this->tracker_id, '>')->once();
-        $this->action->process($this->layout, $request, $this->user);
+        expect($this->date_factory)->create($this->source_field_id, $this->target_field_id, $this->tracker_id, '>')->once();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheComparator() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '22',
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheSourceField() {
+        $request = aRequest()->withParams(array(
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnInt() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '%invalid_id%',
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnGreaterThanZero() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '-1',
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotChoosen() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '0',
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheTargetField() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnInt() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '%invalid_id%',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnGreaterThanZero() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '-1',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotChoosen() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '0',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainAValidComparator() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'target_date_field' => '22',
+            'comparator'        => '%invalid_comparator%',
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
     }
 }
 ?>

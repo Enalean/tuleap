@@ -55,9 +55,8 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     }
 
     public function testCreateRuleDateGeneratesANewObjectThatContainsAllValuesPassed() {
-        stub($this->date_rule_dao)->insert()->returns(true);
+        stub($this->date_rule_dao)->insert()->returns(20);
 
-        $id              = 20;
         $source_field_id = 46345;
         $target_field_id = 465;
         $tracker_id      = 999;
@@ -71,6 +70,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $this->assertEqual($date_rule->getTargetFieldId(), $target_field_id);
         $this->assertEqual($date_rule->getSourceFieldId(), $source_field_id);
         $this->assertEqual($date_rule->getComparator(), $comparator);
+        $this->assertEqual($date_rule->getId(), 20);
     }
 
     public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao() {

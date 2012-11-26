@@ -29,7 +29,7 @@ class Tracker_Rule_Date_Factory {
 
     /**
      *
-     * @var Tracker_Rule_Date_Dao 
+     * @var Tracker_Rule_Date_Dao
      */
     protected $dao;
 
@@ -37,16 +37,16 @@ class Tracker_Rule_Date_Factory {
     private $element_factory;
 
     /**
-     * 
+     *
      * @param DataAccessObject $dao
      */
     function __construct(Tracker_Rule_Date_Dao $dao, Tracker_FormElementFactory $element_factory) {
         $this->dao = $dao;
         $this->element_factory = $element_factory;
     }
- 
+
     /**
-     * 
+     *
      * @param int $source_field_id
      * @param int $target_field_id
      * @param int $tracker_id
@@ -54,21 +54,10 @@ class Tracker_Rule_Date_Factory {
      * @return Tracker_Rule_Date
      */
     public function create($source_field_id, $target_field_id, $tracker_id, $comparator) {
-        $date_rule = $this->populate(new Tracker_Rule_Date(), 0, $tracker_id, $source_field_id, $target_field_id, $comparator);
-        $rule_id = $this->insert($date_rule);
-        
-        $date_rule->setId($rule_id);
-        
+        $rule_id   = $this->dao->insert($tracker_id, $source_field_id, $target_field_id, $comparator);
+        $date_rule = $this->populate(new Tracker_Rule_Date(), $rule_id, $tracker_id, $source_field_id, $target_field_id, $comparator);
+
         return $date_rule;
-    }
-    
-    /**
-     * 
-     * @param Tracker_Rule_Date $date_rule
-     * @return int The ID of the tracker_Rule created
-     */
-    public function insert(Tracker_Rule_Date $date_rule) {
-        return $this->dao->insert($date_rule);
     }
 
     /**
@@ -77,9 +66,9 @@ class Tracker_Rule_Date_Factory {
     public function deleteById($tracker_id, $rule_id) {
         return $this->dao->deleteById($tracker_id, $rule_id);
     }
-    
+
     /**
-     * 
+     *
      * @param int $rule_id
      * @return Tracker_Rule_Date
      */
@@ -98,9 +87,9 @@ class Tracker_Rule_Date_Factory {
             $rule['comparator']
         );
     }
-    
+
     /**
-     * 
+     *
      * @param int $tracker_id
      * @return array An array of Tracker_Rule_Date objects
      */
@@ -118,12 +107,12 @@ class Tracker_Rule_Date_Factory {
             $date_rule = $this->populate(new Tracker_Rule_Date(), $rule['id'], $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparartor);
             $rules_array[] = $date_rule;
         }
-        
+
         return $rules_array;
     }
-    
+
     /**
-     * 
+     *
      * @param Tracker_Rule_Date $date_rule
      * @param int $tracker_id
      * @param int $source_field_id
@@ -132,7 +121,7 @@ class Tracker_Rule_Date_Factory {
      * @return \Tracker_Rule_Date
      */
     protected function populate(Tracker_Rule_Date $date_rule, $id, $tracker_id, $source_field_id, $target_field_id, $comparator) {
-        
+
         $source_field = $this->element_factory->getFormElementById($source_field_id);
         $target_field = $this->element_factory->getFormElementById($target_field_id);
         $date_rule->setTrackerId($tracker_id)
@@ -143,7 +132,7 @@ class Tracker_Rule_Date_Factory {
                 ->setTargetField($target_field)
                 ->setTrackerId($tracker_id)
                 ->setComparator($comparator);
-        
+
         return $date_rule;
     }
 }
