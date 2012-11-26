@@ -76,10 +76,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         }
 
         if ($fields_exist) {
-            $source_field = $this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $source_field_id, 'date');
-            $target_field = $this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $target_field_id, 'date');
-            $fields_have_good_type = (bool)$source_field;
-            $fields_have_good_type &= (bool)$target_field;
+            $fields_have_good_type = $this->fieldsAreDateOnes($source_field_id, $target_field_id);
         }
 
         $valid_comparator = new Valid_WhiteList('comparator', Tracker_Rule_Date::$allowed_comparators);
@@ -87,6 +84,13 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $exist_comparator = $request->valid($valid_comparator);
 
         return $fields_exist && $fields_are_different && $exist_comparator && $fields_have_good_type;
+    }
+
+    private function fieldsAreDateOnes($source_field_id, $target_field_id) {
+        $source_field_is_date = (bool)$this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $source_field_id, 'date');
+        $target_field_is_date = (bool)$this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $target_field_id, 'date');
+
+        return $source_field_is_date && $target_field_is_date;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
