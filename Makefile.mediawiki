@@ -1,0 +1,55 @@
+#
+DBPASS=$(shell grep sys_dbpasswd /etc/codendi/conf/database.inc 2>/dev/null |cut -d\" -f2)
+
+default: remotewikitheme hackedlocalsettings remotewikisql fixapache fixcron createlinks createwiki
+
+remotewikitheme:
+	# this scp should not exist, some incompat change where made in fusionforge
+	scp FusionForge.php root@$(HOST):/usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php
+	scp Makefile.mediawiki root@$(HOST):
+	ssh root@$(HOST) make -f Makefile.mediawiki wikitheme
+
+remotewikisql:
+	scp Makefile.mediawiki root@$(HOST):
+	scp mediawikiviews.sql root@$(HOST):
+	scp mediawikiactivate.sql root@$(HOST):
+	ssh root@$(HOST) make -f Makefile.mediawiki wikisql
+
+wikitheme: /usr/share/mediawiki115/skins/FusionForge.php /usr/share/mediawiki115/skins/fusionforge
+
+/usr/share/mediawiki115/skins/FusionForge.php:
+	[ -f $@ ] || ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php $@
+
+/usr/share/mediawiki115/skins/fusionforge:
+	[ -f $@ ] || ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/fusionforge $@
+
+wikisql:
+	# create view group_plugin as (select service.service_id group_plugin_id,service.group_id,plugin.id plugin_id,service.short_name from service,plugin where service.short_name=plugin.name and service.is_active=1 and service.is_used=1 and service.group_id != 100);
+	# create view plugins as (select id plugin_id, name plugin_name, name plugin_desc from plugin );
+	-mysql -u codendiadm codendi --password=$(DBPASS) < mediawikiviews.sql
+	-mysql -u codendiadm codendi --password=$(DBPASS) < mediawikiactivate.sql
+	-mysql -u codendiadm codendi --password=$(DBPASS) < pfo.sql
+
+hackedlocalsettings:
+	scp LocalSettings.php root@$(HOST):/usr/share/codendi/plugins/mediawiki/www/LocalSettings.php
+
+fixapache:
+	scp plugin-mediawiki.inc root@$(HOST):/usr/share/codendi/plugins/mediawiki/etc/plugin-mediawiki.inc
+	# TODO patch /etc/httpd/conf.d/codendi_aliases.conf
+	ssh root@$(HOST) perl -pi -e 's/127.0.1.1/\*/g' /etc/httpd/conf/httpd.conf
+	ssh root@$(HOST) service httpd restart
+
+fixcron:
+	scp cron_utils.php root@$(HOST):/usr/share/codendi/src/common/include/cron_utils.php
+
+createlinks:
+	ssh root@$(HOST) mkdir -p /usr/share/codendi/www/plugins
+	ssh root@$(HOST) mkdir -p /var/lib/codendi/plugins/mediawiki
+	ssh root@$(HOST) ln -s /usr/share/codendi/src/www /usr/share/codendi/www
+	ssh root@$(HOST) sh /usr/share/codendi/plugins/mediawiki/bin/create_links.sh
+
+createwiki:
+	ssh root@$(HOST) sh /usr/share/codendi/plugins/mediawiki/README.codendi
+
+fixmediawiki:
+	# comment line with page_time in /usr/share/mediawiki115/includes/LogEventsList.php
