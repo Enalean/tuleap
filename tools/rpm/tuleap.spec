@@ -36,7 +36,7 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
 
-AutoReqProv: no
+AutoReqProv: no 
 #Prereq: /sbin/chkconfig, /sbin/service
 
 # Package cutting is still a bit a mess so do not force dependency on custmization package yet
@@ -360,7 +360,7 @@ Requires: %{PKG_NAME}
 Allows some fusionforge plugins to be installed in a Tuleap instance.
 
 %package plugin-admssw
-Summary: Full-Text Search
+Summary: Adms.sw
 Group: Development/Tools
 Version: @@PLUGIN_ADMSSW_VERSION@@
 Release: 1%{?dist}
@@ -370,7 +370,7 @@ This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
 
 %package plugin-doaprdf
-Summary: Full-Text Search
+Summary: Doap
 Group: Development/Tools
 Version: @@PLUGIN_DOAPRDF_VERSION@@
 Release: 1%{?dist}
@@ -378,7 +378,15 @@ Requires: %{PKG_NAME}, plugin-fusionforge_compat
 %description plugin-doaprdf
 This plugin provides DOAP RDF documents for projects on /projects URLs with
 content-negociation (application/rdf+xml).
->>>>>>> dev/1380_admssw
+
+%package plugin-foafprofiles
+Summary: Foaf Profiles
+Group: Development/Tools
+Version: @@PLUGIN_FOAFPROFILES_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}, plugin-fusionforge_compat
+%description plugin-foafprofiles
+This plugin provides FOAFPROFILES for projects user (application/rdf+xml).
 
 #
 ## Themes
@@ -961,7 +969,10 @@ fi
 %files plugin-doaprdf
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/doaprdf
->>>>>>> dev/1380_admssw
+
+%files plugin-foafprofiles
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/foafprofiles
 
 #
 # Themes
