@@ -64,10 +64,10 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldAddRule(Codendi_Request $request) {
-        $exist_source_field  = $request->existAndNonEmpty('source_date_field');
-        $exist_target_field  = $request->existAndNonEmpty('target_date_field');
-        $exist_target_field  = $request->existAndNonEmpty('comparator');
-        return $exist_source_field && $exist_target_field;
+        $exist_source_field = $request->existAndNonEmpty('source_date_field');
+        $exist_target_field = $request->existAndNonEmpty('target_date_field');
+        $exist_comparator   = $request->existAndNonEmpty('comparator');
+        return $exist_source_field && $exist_target_field && $exist_comparator;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {

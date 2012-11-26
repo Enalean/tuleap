@@ -145,5 +145,25 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         expect($this->date_factory)->create()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
+
+    public function itDoesNotFailIfTheRequestDoesNotContainTheSourceField() {
+        $request = aRequest()->withParams(array(
+            'target_date_field' => '22',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
+
+    public function itDoesNotFailIfTheRequestDoesNotContainTheTargetField() {
+        $request = aRequest()->withParams(array(
+            'source_date_field' => '44',
+            'comparator'        => '>'
+        ))->build();
+
+        expect($this->date_factory)->create()->never();
+        $this->processRequestAndExpectFormOutput($request);
+    }
 }
 ?>
