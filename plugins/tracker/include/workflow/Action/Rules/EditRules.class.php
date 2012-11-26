@@ -65,21 +65,26 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldAddRule(Codendi_Request $request) {
-        $source_field = $request->getValidated('source_date_field', 'uint');
+        $source_field_id = (int)$request->getValidated('source_date_field', 'uint');
         $target_field = $request->getValidated('target_date_field', 'uint');
 
-        $fields_exist         = $source_field && $target_field;
-        $fields_are_different = $source_field != $target_field;
+        $fields_exist         = $source_field_id && $target_field;
+        $fields_are_different = $source_field_id != $target_field;
 
         if ($fields_exist && ! $fields_are_different) {
             $GLOBALS['Response']->addFeedback('error', 'The two fields must be different'); //TODO: i18n
+        }
+
+        if ($fields_exist) {
+            $source_field = $this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $source_field_id, 'date');
+            $fields_have_good_type = (bool)$source_field;
         }
 
         $valid_comparator = new Valid_WhiteList('comparator', Tracker_Rule_Date::$allowed_comparators);
         $valid_comparator->required();
         $exist_comparator = $request->valid($valid_comparator);
 
-        return $fields_exist && $fields_are_different && $exist_comparator;
+        return $fields_exist && $fields_are_different && $exist_comparator && $fields_have_good_type;
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
