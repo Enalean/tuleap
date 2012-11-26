@@ -34,6 +34,12 @@ class Tracker_RulesManager {
     /** @var Tracker_FormElementFactory */
     protected $form_element_factory;
     
+    /**
+     *
+     * @var Tracker_Rule_Date_Factory 
+     */
+    protected $rule_date_factory;
+    
     public function __construct($tracker, Tracker_FormElementFactory $form_element_factory) {
         $this->tracker              = $tracker;
         $this->form_element_factory = $form_element_factory;
@@ -54,6 +60,16 @@ class Tracker_RulesManager {
         return $this->rules_by_tracker_id[$tracker_id];
     }
     
+    /**
+     * 
+     * @param int $tracker_id
+     * @return array An array of Tracker_Rule_Date objects
+     */
+    public function getAllDateRulesByTrackerWithOrder($tracker_id) {
+        return $this->getTracker_RuleDateFactory()
+                    ->searchByTrackerId($tracker_id);
+    }
+    
     function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
         $fact = $this->_getTracker_RuleFactory();
         return $fact->saveRuleValue($tracker_id, $source, $source_value, $target, $target_value);
@@ -64,6 +80,32 @@ class Tracker_RulesManager {
         return $fact->deleteRule($rule_id);
     }
     
+    /**
+     * 
+     * @return Tracker_Rule_Date_Factory
+     */
+    public function getTracker_RuleDateFactory() {
+        if($this->rule_date_factory ==  null) {
+            $this->rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao());
+        }
+        
+        return $this->rule_date_factory;
+    }
+    
+    /**
+     * 
+     * @param Tracker_Rule_Date_Factory $factory
+     * @return \Tracker_RulesManager
+     */
+    public function setRuleDateFactory(Tracker_Rule_Date_Factory $factory) {
+        $this->rule_date_factory = $factory;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return Tracker_RuleFactory
+     */
     function _getTracker_RuleFactory() {
         return Tracker_RuleFactory::instance();
     }
@@ -79,8 +121,9 @@ class Tracker_RulesManager {
      */
     function validate($tracker_id, $value_field_list) {
         $valid_list_rules = $this->validateListRules($tracker_id, $value_field_list);
+        $valid_date_rules = $this->validateDateRules($tracker_id, $value_field_list);
         
-        if(! $valid_list_rules) {
+        if(! $valid_list_rules || ! $valid_date_rules) {
             return false;
         }
         
@@ -537,6 +580,30 @@ class Tracker_RulesManager {
                 }
             }
     }
+    
+    protected function validateDateRules($tracker_id, $value_field_list) {
+        $rules = $this->getAllDateRulesByTrackerWithOrder($tracker_id);
+        
+        foreach ($rules as $rule) {
+            /* @var $rule Tracker_Rule_Date */
+            if(! isset($value_field_list[$rule->getSourceFieldId()]) || 
+                    !isset($value_field_list[$rule->getTargetFieldId()])) {
+                        return false;
+            }
+            
+            $source_value = $value_field_list[$rule->getSourceFieldId()];
+            $target_value = $value_field_list[$rule->getTargetFieldId()];
+            
+            $is_valid = $rule->validate($source_value, $target_value);
+            
+            if (! $is_valid) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
     
     /**
      * Checks that the submitted values do not break field dependencies.

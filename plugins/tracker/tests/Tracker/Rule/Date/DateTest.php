@@ -92,5 +92,135 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
         $this->expectException('Tracker_Rule_Date_Exception');
         $this->date_rule->setComparator('not a comparator');
     }
+    
+    public function testValidateReturnsTrueForTwoEqualDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
+        
+        $source_value = '2012-11-15';
+        $target_value = '2012-11-15';
+        
+        $this->assertTrue($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsfalseForTwoEqualDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_EQUALS);
+        
+        $source_value = '2013-11-15';
+        $target_value = '2012-11-15';
+        
+        $this->assertFalse($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsTrueForTwoUnequalDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
+        
+        $source_value = '2012-11-15';
+        $target_value = '2018-11-15';
+        
+        $this->assertTrue($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsfalseForTwoUnequalDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS);
+        
+        $source_value = '2012-11-15';
+        $target_value = '2012-11-15';
+        
+        $this->assertFalse($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsTrueForGreaterDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
+        
+        $source_value = '2012-11-17';
+        $target_value = '2012-11-16';
+        
+        $this->assertTrue($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsFalseForGreaterDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN);
+        
+        $source_value = '2013-10-15';
+        $target_value = '2014-11-15';
+        
+        $this->assertFalse($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsTrueForGreaterOrEqualDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
+        
+        $source_value = '2012-11-19';
+        $target_value = '2012-11-16';
+        
+        $this->assertTrue($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsFalseForGreaterOrEqualDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS);
+        
+        $source_value = '2013-12-15';
+        $target_value = '2018-11-15';
+        
+        $this->assertFalse($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsTrueForLessDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
+        
+        $source_value = '2012-11-11';
+        $target_value = '2012-11-14';
+        
+        $this->assertTrue($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsFalseForLessDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN);
+        
+        $source_value = '2018-12-15';
+        $target_value = '2015-11-15';
+        
+        $this->assertFalse($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsTrueForLessOrEqualDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
+        
+        $source_value = '2012-11-15';
+        $target_value = '2012-11-19';
+        
+        $this->assertTrue($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateReturnsFalseForLessOrEqualDates() {
+        $date_rule = new Tracker_Rule_Date();
+        $date_rule->setComparator(Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS);
+        
+        $source_value = '2016-12-15';
+        $target_value = '2012-11-15';
+        
+        $this->assertFalse($date_rule->validate($source_value, $target_value));
+    }
+    
+    public function testValidateThrowsAnExceptionWhenNoComparatorIsSet() {
+        $this->expectException('Tracker_Rule_Date_Exception');
+        $date_rule = new Tracker_Rule_Date();
+
+        $source_value = '2015-12-15';
+        $target_value = '2012-11-15';
+        
+        $this->assertFalse($date_rule->validate($source_value, $target_value));
+    }
 }
 ?>

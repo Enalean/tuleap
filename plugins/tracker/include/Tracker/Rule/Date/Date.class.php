@@ -84,7 +84,47 @@ class Tracker_Rule_Date extends Tracker_Rule {
     public function getComparator() {
         return $this->comparator;
     }
-
-
+    
+    /**
+     * 
+     * Checks that two given values satisfy the rule 
+     * 
+     * @param int $source_value
+     * @param int $target_value
+     * @return boolean
+     */
+    public function validate($source_value, $target_value) {
+        
+        //if one of the value is empty then return true
+        if ($source_value === '' || $target_value === '') {
+            return true;
+        }
+        
+        $source_parts = explode('-', $source_value);
+        $target_parts = explode('-', $target_value);
+        
+        $source_date = mktime(0, 0, 0, $source_parts[1], $source_parts[2], $source_parts[0]);
+        $target_date = mktime(0, 0, 0, $target_parts[1], $target_parts[2], $target_parts[0]);
+        
+//        var_dump($source_value, $target_value, $source_date, $target_date, $this->getComparator());
+//        die();
+        
+        switch ($this->getComparator()) {
+            case self::COMPARATOR_EQUALS :
+                return $source_date == $target_date;
+            case self::COMPARATOR_NOT_EQUALS :
+                return $source_date != $target_date;
+            case self::COMPARATOR_GREATER_THAN :
+                return $source_date > $target_date;
+            case self::COMPARATOR_GREATER_THAN_OR_EQUALS :
+                return $source_date >= $target_date;
+            case self::COMPARATOR_LESS_THAN :
+                return $source_date < $target_date;
+            case self::COMPARATOR_LESS_THAN_OR_EQUALS :
+                return $source_date <= $target_date;
+            default :
+                throw new Tracker_Rule_Date_Exception('Missing comparator');
+        }
+    }
 }
 ?>

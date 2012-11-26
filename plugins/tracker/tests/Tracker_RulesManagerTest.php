@@ -479,5 +479,95 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         $trm->exportToXML($root, $array_xml_mapping);
         $this->assertEqual(count($xml->dependencies->rule), count($root->dependencies->rule));
     }
+    
+    public function testValidateReturnsTrueWhenThereAreNoRules() {
+        
+        $tracker = mock('Tracker');
+        stub($tracker)->getId()->returns(10);
+        
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        
+        $tracker_rules_manager = partial_mock('Tracker_RulesManager', array('getAllRulesByTrackerWithOrder', 'getAllDateRulesByTrackerWithOrder'), array($tracker, $form_element_factory));
+        $tracker_rules_manager->setReturnValue('getAllRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        
+        $value_field_list = array();
+
+        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
+        
+    }
+    
+    public function testValidateReturnsTrueWhenThereAreValidDateRules() {
+        
+        $tracker = mock('Tracker');
+        stub($tracker)->getId()->returns(10);
+        
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        
+        $tracker_rule_date  = mock('Tracker_Rule_Date');
+        $tracker_rule_date2 = mock('Tracker_Rule_Date');
+        
+        stub($tracker_rule_date)->validate()->returns(true);
+        stub($tracker_rule_date)->getSourceFieldId()->returns(10);
+        stub($tracker_rule_date)->getTargetFieldId()->returns(11);
+        
+        stub($tracker_rule_date2)->validate()->returns(true);
+        stub($tracker_rule_date2)->getSourceFieldId()->returns(12);
+        stub($tracker_rule_date2)->getTargetFieldId()->returns(13);
+        
+        $tracker_rules_manager = partial_mock('Tracker_RulesManager', array('getAllRulesByTrackerWithOrder', 'getAllDateRulesByTrackerWithOrder'), array($tracker, $form_element_factory));
+        $tracker_rules_manager->setReturnValue('getAllRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array($tracker_rule_date, $tracker_rule_date2));
+        
+        $value_field_list = array(
+            10 => '',
+            11 => '',
+            12 => '',
+            13 => '',
+            );
+
+        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
+        
+    }
+    
+    public function testValidateReturnsFalseWhenTheDataIsInvalid() {
+        
+        $value_field_list = array(
+            10 => '',
+            11 => '',
+            12 => '',
+            13 => '',
+            );
+  
+        $tracker = mock('Tracker');
+        stub($tracker)->getId()->returns(10);
+        
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        
+        $tracker_rule_date  = mock('Tracker_Rule_Date');
+        $tracker_rule_date2 = mock('Tracker_Rule_Date');
+        
+        stub($tracker_rule_date)->validate()->returns(true);
+        stub($tracker_rule_date)->getSourceFieldId()->returns(10);
+        stub($tracker_rule_date)->getTargetFieldId()->returns(11);
+        
+        stub($tracker_rule_date2)->validate()->returns(false);
+        stub($tracker_rule_date2)->getSourceFieldId()->returns(12);
+        stub($tracker_rule_date2)->getTargetFieldId()->returns(13);
+        
+        $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
+                array(
+                    'getAllRulesByTrackerWithOrder', 
+                    'getAllDateRulesByTrackerWithOrder',
+                    ), 
+                array($tracker, $form_element_factory));
+        
+        $tracker_rules_manager->setReturnValue('getAllRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',
+                array($tracker_rule_date, $tracker_rule_date2));
+        
+        $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
+        
+    }
 }
 ?>

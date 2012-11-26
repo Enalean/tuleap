@@ -56,11 +56,15 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
 				$this->da->quoteSmart($tracker_id));
         return $this->retrieve($sql);
     }
-
+    
     /**
-     *
-     * @param Tracker_Rule_Date $rule
+     * 
+     * @param int $tracker_id
+     * @param int $source_field_id
+     * @param int $target_field_id
+     * @param string $comparator
      * @return int The ID of the saved tracker_rule
+     * @throws Exception
      */
     public function insert($tracker_id, $source_field_id, $target_field_id, $comparator) {
         $tracker_id      = $this->da->escapeInt($tracker_id);
