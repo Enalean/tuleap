@@ -40,10 +40,16 @@ class Tracker_RulesManager {
     }
     
     protected $rules_by_tracker_id;
+    
+    /**
+     * 
+     * @param int $tracker_id
+     * @return array
+     */
     function getAllRulesByTrackerWithOrder($tracker_id) {
         if (!isset($this->rules_by_tracker_id[$tracker_id])) {
-            $fact = $this->_getTracker_RuleFactory();
-            $this->rules_by_tracker_id[$tracker_id] = $fact->getAllRulesByTrackerWithOrder($tracker_id);
+            $this->rules_by_tracker_id[$tracker_id] = $this->_getTracker_RuleFactory()
+                    ->getAllRulesByTrackerWithOrder($tracker_id);
         }
         return $this->rules_by_tracker_id[$tracker_id];
     }
@@ -71,89 +77,14 @@ class Tracker_RulesManager {
      *
      * @return boolean true if the submitted values are coherent regarding the dependencies, false otherwise
      */
-    function validate($tracker_id, $value_field_list, $ff) {
-        // construction of $values array : selected values in the form
-        // $values[$field_id]['field'] = artifactfield Object
-        // $values[$field_id]['values'][] = selected value
-        $values = array();
-        reset($value_field_list);
-        while (list($field_id,$value) = each($value_field_list)) {
-            if ($field = $ff->getFormElementById($field_id)) {
-                $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
-            }
-        }
-        // construction of $dependencies array : dependcies defined rules
-        // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
-        $dependencies = array();
-        foreach($this->getAllRulesByTrackerWithOrder($tracker_id) as $rule) {
-            if (is_a($rule, 'Tracker_Rule_List')) {
-                if (!isset($dependencies[$rule->source_field])) {
-                    $dependencies[$rule->source_field] = array();
-                }
-                if (!isset($dependencies[$rule->source_field][$rule->target_field])) {
-                    $dependencies[$rule->source_field][$rule->target_field] = array();
-                }
-                $dependencies[$rule->source_field][$rule->target_field][] = $rule;
-            }
+    function validate($tracker_id, $value_field_list) {
+        $valid_list_rules = $this->validateListRules($tracker_id, $value_field_list);
+        
+        if(! $valid_list_rules) {
+            return false;
         }
         
-        $error_occured = false;
-        reset($dependencies);
-        while(!$error_occured && (list($source,) = each($dependencies))) {
-            if (isset($values[$source])) {
-                reset($dependencies[$source]);
-                while(!$error_occured && (list($target,) = each($dependencies[$source]))) {
-                    if (isset($values[$target])) {
-                       
-                        reset($values[$target]['values']);
-                        while(!$error_occured && (list(,$target_value) = each($values[$target]['values']))) {
-                            //Foreach target values we look if there is at least one source value whith corresponding rule valid
-                            $valid = false;
-                            reset($values[$source]['values']);
-                            while(!$valid && (list(,$source_value) = each($values[$source]['values']))) {
-                                $applied = false;
-                                reset($dependencies[$source][$target]);
-                                while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
-                                    
-                                    if ($dependencies[$source][$target][$rule]->canApplyTo(
-                                        $tracker_id,
-                                        $source, 
-                                        $source_value, 
-                                        $target, 
-                                        $target_value))
-                                    {                                        
-                                        $applied = true;                                        
-                                        $valid = $dependencies[$source][$target][$rule]->applyTo(
-                                            $tracker_id, 
-                                            $source, 
-                                            $source_value, 
-                                            $target, 
-                                            $target_value);
-                                    }
-                                }
-                            }
-                            // when a dependence problem is detected, we detail the message error
-                            // to explain the fields that trigger the problem 
-                            if (! $valid) {
-                                $error_occured = true;
-                                // looking for the source field value which cause the dependence problem
-                                $source_field = $ff->getFormElementById($source);
-                                $pb_source_values = $this->_getSelectedValuesForField($source_field, $value_field_list[$source]);
-                                $source_field->setHasErrors(true);                                
-                                
-                                // looking for the target field value which cause the dependence problem
-                                $target_field = $ff->getFormElementById($target);
-                                $pb_target_values = $this->_getSelectedValuesForField($target_field, $target_value);
-                                $target_field->setHasErrors(true);
-                               // detailled error message
-                               $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return !$error_occured;
+        return true;
     }
     
     /**
@@ -605,6 +536,61 @@ class Tracker_RulesManager {
                     $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
                 }
             }
+    }
+    
+    /**
+     * Checks that the submitted values do not break field dependencies.
+     * 
+     * The logic is that if a rule from a source field to a target field exists
+     * AND the incoming source value corresponds to a source value of ONE of the rule source values
+     * then the incoming target value must be in one of the rules.
+     * I.e one rule must be satsified for a given (source_id, target_id, source_value) trio. 
+     * 
+     * @param int $tracker_id
+     * @param array $value_field_list
+     * @return boolean
+     */
+    protected function validateListRules($tracker_id, $value_field_list) {
+        $rules = $this->getAllRulesByTrackerWithOrder($tracker_id);
+        $rule_basket = array();
+        
+        foreach ($rules as $rule) {
+            /* @var $rule Tracker_Rule_List*/
+            
+            //check that the rule can be applied for the given fields
+            if (! isset($value_field_list[$rule->getSourceFieldId()]) ||
+                    ! isset($value_field_list[$rule->getTargetFieldId()]) ) {
+                continue;
+            }
+            
+            $source_id = (int) $value_field_list[$rule->getSourceFieldId()];
+            $target_id = (int) $value_field_list[$rule->getTargetFieldId()];
+            $source_value = (int) $value_field_list[$rule->getSourceFieldId()];
+            
+            //check that the rule can be applied for the given source value
+            if($source_value != $rule->getSourceValue()) {
+                continue;
+            }
+            
+            $key = $source_id . $target_id . $source_value;
+            
+            if(! isset($rule_basket[$key]) || $rule_basket[$key] === false) {
+                $is_valid = $rule->applyTo($tracker_id, 
+                    $rule->getSourceFieldId(), 
+                    $source_value, 
+                    $rule->getTargetFieldId(), 
+                    $target_id
+                    );
+                
+                $rule_basket[$key] = $is_valid;
+            }
+        }
+        
+        if(in_array(false, $rule_basket)) {
+            return false;
+        }
+        
+        return true;
     }
 }
 
