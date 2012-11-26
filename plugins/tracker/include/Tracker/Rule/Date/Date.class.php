@@ -18,7 +18,7 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
-require_once 'Exception.class.php';
+require_once 'InvalidComparatorException.class.php';
 
 /**
  * Date Rule between two dynamic fields
@@ -70,7 +70,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
      */
     public function setComparator($comparator) {
         if(! in_array($comparator, self::$allowed_comparators)) {
-            throw new Tracker_Rule_Date_Exception('Invalid comparator');
+            throw new Tracker_Rule_Date_InvalidComparatorException();
         }
 
         $this->comparator = $comparator;

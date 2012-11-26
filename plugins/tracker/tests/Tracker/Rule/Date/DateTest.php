@@ -89,7 +89,7 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
     }
     
     public function testSetComparatorWillNotAllowRandomComparators() {
-        $this->expectException('Tracker_Rule_Date_Exception');
+        $this->expectException('Tracker_Rule_Date_InvalidComparatorException');
         $this->date_rule->setComparator('not a comparator');
     }
     
