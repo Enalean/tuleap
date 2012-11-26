@@ -487,6 +487,16 @@ class GitActions extends PluginActions {
         }
     }
 
+    /**
+     * Prepare data for fork permissions action
+     *
+     * @param array  $repos     Repositories Ids we want to fork
+     * @param array  $project   The project Id where repositories would be forked
+     * @param string $namespace The namespace where the new repositories will live
+     * @param string $scope     The scope of the fork: personal or cross project.
+     *
+     * @return void
+     */
     public function forkRepositoriesPermissions($repos, $project, $namespace, $scope) {
         $this->addData(array('repos'     => join(',', $repos),
                              'group_id'  => $project,

@@ -479,6 +479,11 @@ class GitViews extends PluginViews {
         echo '<br />';
     }
 
+    /**
+     * Creates form to set permissions when fork repositories is performed
+     *
+     * @return void
+     */
     protected function forkRepositoriesPermissions() {
         $purifier = Codendi_HTMLPurifier::instance();
         $pm       = ProjectManager::instance();
