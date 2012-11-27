@@ -42,7 +42,13 @@ class WorkflowManager {
 
     public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
         if ($request->get('func') == Workflow::FUNC_ADMIN_RULES) {
-            $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, Tracker_FormElementFactory::instance(), new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance()));
+            $token = new CSRFSynchronizerToken(TRACKER_BASE_URL. '/?'. http_build_query(
+                array(
+                    'tracker' => (int)$this->tracker->id,
+                    'func'    => Workflow::FUNC_ADMIN_RULES,
+                    )
+            ));
+            $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, Tracker_FormElementFactory::instance(), new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance()), $token);
         } else if ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('edit_transition')) {
