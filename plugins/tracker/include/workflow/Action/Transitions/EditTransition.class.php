@@ -82,7 +82,7 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         );
 
         echo '<p>';
-        echo '<a href="'. $back_to_transitions_link .'">←Cancel</a>'; //TODO: i18n
+        echo '<a href="'. $back_to_transitions_link .'">←'. $GLOBALS['Language']->getText('plugin_tracker_admin', 'clean_cancel') .'</a>';
         echo '&nbsp;';
         echo '<input type="submit" name="workflow_details" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         echo '</p>';

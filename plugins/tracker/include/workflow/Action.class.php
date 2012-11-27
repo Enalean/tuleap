@@ -59,11 +59,11 @@ abstract class Tracker_Workflow_Action {
         return array(
             self::PANE_RULES => array(
                 'func'  => Workflow::FUNC_ADMIN_RULES,
-                'title' => 'Global Rules',     //TODO: i18n
+                'title' => $GLOBALS['Language']->getText('workflow_admin', 'tab_global_rules'),
             ),
             self::PANE_TRANSITIONS => array(
                 'func'  => Workflow::FUNC_ADMIN_TRANSITIONS,
-                'title' => 'Transitions',      //TODO: i18n
+                'title' => $GLOBALS['Language']->getText('workflow_admin', 'tab_transitions'),
             ),
         );
     }
