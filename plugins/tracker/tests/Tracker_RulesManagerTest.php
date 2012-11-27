@@ -547,7 +547,50 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
     }
     
-    
+    public function testValidateListRulesReturnsTrueWhenOneRuleOnlyIsValidForAGivenSetting() {
+        $value_field_list = array(
+            123     => 456,
+            789     => 586,
+        );
+        
+        $rule1 = new Tracker_Rule_List();
+        $rule1->setSourceValue(456)
+                ->setTargetValue(586)
+                ->setSourceFieldId(123)
+                ->setTargetFieldId(789)
+                ->setTrackerId(19)
+                ->setId(5);
+        
+        //same rule with different target value
+        $rule2 = new Tracker_Rule_List();
+        $rule2->setSourceValue(456)
+                ->setTargetValue(54654)
+                ->setSourceFieldId(123)
+                ->setTargetFieldId(789)
+                ->setTrackerId(19)
+                ->setId(11);
+        
+        $tracker = mock('Tracker');
+        stub($tracker)->getId()->returns(19);
+        
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        
+        $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
+                array(
+                    'getAllListRulesByTrackerWithOrder', 
+                    'getAllDateRulesByTrackerWithOrder',
+                    ), 
+                array($tracker, $form_element_factory)
+                );
+        
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue(
+                'getAllListRulesByTrackerWithOrder',
+                array($rule1, $rule2)
+                );
+        
+        $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
+    }
 }
 
 ?>
