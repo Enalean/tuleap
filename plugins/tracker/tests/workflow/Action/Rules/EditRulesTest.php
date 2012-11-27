@@ -27,6 +27,7 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
     protected $tracker_id       = 42;
     protected $element_factory;
     protected $tracker;
+    protected $token;
 
     protected $source_field_id        = 44;
     protected $target_field_id        = 22;
@@ -37,6 +38,7 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         parent::setUp();
         $this->element_factory    = stub('Tracker_FormElementFactory')->getUsedDateFields()->returns(array());
         $this->tracker            = stub('Tracker')->getId()->returns($this->tracker_id);
+        $this->token              = mock('CSRFSynchronizerToken');
         $planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
         $actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
         $planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
@@ -49,7 +51,7 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         stub($this->date_factory)->searchById(123)->returns($this->rule_1);
         stub($this->date_factory)->searchById(456)->returns($this->rule_2);
         stub($this->date_factory)->searchByTrackerId($this->tracker_id)->returns(array($this->rule_1, $this->rule_2));
-        $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->element_factory, $this->date_factory);
+        $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->element_factory, $this->date_factory, $this->token);
     }
 
     private function setUpField($id, $label) {

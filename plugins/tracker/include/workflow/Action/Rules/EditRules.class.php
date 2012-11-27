@@ -46,10 +46,11 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         Tracker_Rule_Date::COMPARATOR_NOT_EQUALS             => '≠',
     );
 
-    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, Tracker_Rule_Date_Factory $rule_date_factory) {
+    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, Tracker_Rule_Date_Factory $rule_date_factory, CSRFSynchronizerToken $token) {
         parent::__construct($tracker);
         $this->form_element_factory = $form_element_factory;
         $this->rule_date_factory    = $rule_date_factory;
+        $this->token                = $token;
         $this->url_query            = TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,
@@ -96,6 +97,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
         if ($this->shouldUpdateRules($request)) {
+
+            // Verify CSRF Protection
+            $this->token->check();
             $this->updateRules($request);
             $GLOBALS['Response']->redirect($this->url_query);
         } else {
@@ -143,6 +147,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         echo '<h3>'. $GLOBALS['Language']->getText('workflow_admin','title_define_global_date_rules') .'</h3>';
         echo '<p class="help">'. $GLOBALS['Language']->getText('workflow_admin','hint_date_rules_definition') .'</p>';
         echo '<form method="post" action="'. $this->url_query .'">';
+        // CSRF Protection
+        echo $this->token->fetchHTMLInput();
         $this->displayRules();
         $this->displayAdd();
         echo '<p><input type="submit" name="add" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
