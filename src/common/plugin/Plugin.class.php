@@ -25,7 +25,7 @@ require_once('PluginManager.class.php');
 /**
  * Plugin
  */
-class Plugin {
+class Plugin implements PFO_Plugin {
     
     var $id;
     var $pluginInfo;
@@ -54,7 +54,15 @@ class Plugin {
         
         $this->_scope = Plugin::SCOPE_SYSTEM;
     }
-    
+
+    /**
+     * Callback called when the plugin is loaded
+     *
+     * @return void
+     */
+    public function loaded() {
+    }
+
     public function isAllowed($group_id) {
         if(!isset($this->allowedForProject[$group_id])) {
             $this->allowedForProject[$group_id] = PluginManager::instance()->isPluginAllowedForProject($this, $group_id);
@@ -81,16 +89,24 @@ class Plugin {
         return $this->hooks->getValues();
     }
     
-    protected function _addHook($hook, $callback = 'CallHook', $recallHook = true) {
+    public function addHook($hook, $callback = null, $recallHook = false) {
         $value = array();
         $value['hook']       = $hook;
-        $value['callback']   = $callback;
+        $value['callback']   = $callback ? $callback : $hook;
         $value['recallHook'] = $recallHook;
-        $this->hooks->put( $hook, $value);
+        $this->hooks->put($hook, $value);
     }
     
-    protected function _removeHook($hook) {
-        $this->hooks->removeKey( $hook);
+    /**
+     * @deprecated
+     * @see addHook()
+     */
+    protected function _addHook($hook, $callback = null, $recallHook = false) {
+        return $this->addHook($hook, $callback, $recallHook);
+    }
+
+    public function removeHook($hook) {
+        $this->hooks->removeKey($hook);
     }
     
     public function CallHook($hook, $param) {

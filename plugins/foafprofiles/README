@@ -1,0 +1,7 @@
+The foafprofile plugin manages the generation of a FOAF profile for forge users.
+
+The /users/ URL will serve, through content negociation for RDF+XML, a RDF document containing a FOAF profile for the user.
+
+It is complemented with informations on the user's participation in projects, using the planetforge ontology (see : https://forge.projet-coclico.org/plugins/mediawiki/wiki/wp2/index.php/Forge_Ontology_Proposal).
+
+This project was implemented in the frame of the COCLICO project with financial support from the Paris Region community.

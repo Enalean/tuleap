@@ -58,12 +58,14 @@ class PluginManagerTest extends UnitTestCase {
         $plugin_1->expectCallCount('getHooksAndCallbacks', 1);
         $plugin_1->setReturnValue('getId', 123);
         $plugin_1->setReturnReference('getHooksAndCallbacks', $hooks_p1);
+        $plugin_1->expectOnce('loaded');
 
         //Another Plugin (available)  --listen only A
         $plugin_2       = new MockPlugin($this);
         $plugin_2->expectCallCount('getHooksAndCallbacks', 1);
         $plugin_2->setReturnValue('getId', 124);
         $plugin_2->setReturnReference('getHooksAndCallbacks', $hooks_p2);
+        $plugin_2->expectOnce('loaded');
 
         //The plugin factory
         $plugin_factory = new MockPluginFactory($this);
