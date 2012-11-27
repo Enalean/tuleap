@@ -313,12 +313,12 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
                 array(
                     'getAllListRulesByTrackerWithOrder', 
-                    'getAllDateRulesByTrackerWithOrder',
+                    'getAllDateRulesByTrackerId',
                     ), 
                 array($tracker, $form_element_factory));
         
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',
                 array($tracker_rule_date, $tracker_rule_date2));
         
         $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
@@ -343,9 +343,9 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker_rule_date2)->getSourceFieldId()->returns(12);
         stub($tracker_rule_date2)->getTargetFieldId()->returns(13);
         
-        $tracker_rules_manager = partial_mock('Tracker_RulesManager', array('getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerWithOrder'), array($tracker, $form_element_factory));
+        $tracker_rules_manager = partial_mock('Tracker_RulesManager', array('getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'), array($tracker, $form_element_factory));
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array($tracker_rule_date, $tracker_rule_date2));
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array($tracker_rule_date, $tracker_rule_date2));
         
         $value_field_list = array(
             10 => '',
@@ -365,9 +365,9 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         
         $form_element_factory = mock('Tracker_FormElementFactory');
         
-        $tracker_rules_manager = partial_mock('Tracker_RulesManager', array('getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerWithOrder'), array($tracker, $form_element_factory));
+        $tracker_rules_manager = partial_mock('Tracker_RulesManager', array('getAllListRulesByTrackerWithOrder', 'getAllDateRulesByTrackerId'), array($tracker, $form_element_factory));
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
         
         $value_field_list = array();
 
@@ -397,11 +397,11 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
                 array(
                     'getAllListRulesByTrackerWithOrder', 
-                    'getAllDateRulesByTrackerWithOrder',
+                    'getAllDateRulesByTrackerId',
                     ), 
                 array($tracker, $form_element_factory));
         
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array($rule));
         
         $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
@@ -429,11 +429,11 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
                 array(
                     'getAllListRulesByTrackerWithOrder', 
-                    'getAllDateRulesByTrackerWithOrder',
+                    'getAllDateRulesByTrackerId',
                     ), 
                 array($tracker, $form_element_factory));
         
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array($rule));
         
         $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
@@ -461,11 +461,11 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
                 array(
                     'getAllListRulesByTrackerWithOrder', 
-                    'getAllDateRulesByTrackerWithOrder',
+                    'getAllDateRulesByTrackerId',
                     ), 
                 array($tracker, $form_element_factory));
         
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array($rule));
         
         $this->assertTrue($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
@@ -493,11 +493,11 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
                 array(
                     'getAllListRulesByTrackerWithOrder', 
-                    'getAllDateRulesByTrackerWithOrder',
+                    'getAllDateRulesByTrackerId',
                     ), 
                 array($tracker, $form_element_factory));
         
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array($rule));
         
         $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
@@ -534,11 +534,11 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
                 array(
                     'getAllListRulesByTrackerWithOrder', 
-                    'getAllDateRulesByTrackerWithOrder',
+                    'getAllDateRulesByTrackerId',
                     ), 
                 array($tracker, $form_element_factory));
         
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
         $tracker_rules_manager->setReturnValue(
                 'getAllListRulesByTrackerWithOrder',
                 array($rule1, $rule2)
@@ -578,12 +578,12 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager = partial_mock('Tracker_RulesManager', 
                 array(
                     'getAllListRulesByTrackerWithOrder', 
-                    'getAllDateRulesByTrackerWithOrder',
+                    'getAllDateRulesByTrackerId',
                     ), 
                 array($tracker, $form_element_factory)
                 );
         
-        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerWithOrder',array());
+        $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',array());
         $tracker_rules_manager->setReturnValue(
                 'getAllListRulesByTrackerWithOrder',
                 array($rule1, $rule2)

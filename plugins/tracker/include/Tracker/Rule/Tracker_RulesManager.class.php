@@ -65,7 +65,7 @@ class Tracker_RulesManager {
      * @param int $tracker_id
      * @return array An array of Tracker_Rule_Date objects
      */
-    public function getAllDateRulesByTrackerWithOrder($tracker_id) {
+    public function getAllDateRulesByTrackerId($tracker_id) {
         return $this->getTracker_RuleDateFactory()
                     ->searchByTrackerId($tracker_id);
     }
@@ -582,7 +582,7 @@ class Tracker_RulesManager {
     }
     
     protected function validateDateRules($tracker_id, $value_field_list) {
-        $rules = $this->getAllDateRulesByTrackerWithOrder($tracker_id);
+        $rules = $this->getAllDateRulesByTrackerId($tracker_id);
         
         foreach ($rules as $rule) {
             /* @var $rule Tracker_Rule_Date */
