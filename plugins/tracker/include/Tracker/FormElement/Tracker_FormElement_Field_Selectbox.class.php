@@ -217,9 +217,80 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
                $j++;
            }
 
-            echo '</table>';
+        echo '</table>';
+        if ($transitions && UserManager::instance()->getCurrentUser()->useLabFeatures()) {
+            $this->displayTransitionsGraph($transitions);
+        }
     }
-    
+
+    public function displayTransitionsGraph(array $transitions) {
+        require_once 'Image/GraphViz.php';
+        $gv = new Image_GraphViz();
+        $gv->setAttributes(
+            array(
+                'spline' => 'ortho',
+            )
+        );
+        $common_attributes = array(
+            'fontname'  => 'arial',
+            'fontsize'  => 10,
+            'color'     => 'grey',
+        );
+        $edge_attributes = array_merge(
+            $common_attributes,
+            array(
+                'fontcolor' => '#0676B9',
+            )
+        );
+        $nodes_attributes = array_merge(
+            $common_attributes,
+            array(
+                'fillcolor' => 'grey96',
+                'fontcolor' => 'grey27',
+                'style'     => 'filled',
+                'shape'     => 'box',
+            )
+        );
+        $nil_attributes = array_merge(
+            $nodes_attributes,
+            array(
+                'shape'     => 'point',
+                'fillcolor' => 'grey',
+            )
+        );
+        foreach ($transitions as $transition) {
+            $from   = $transition->getFieldValueFrom();
+            $to     = $transition->getFieldValueTo();
+            $from_node = $from ? $from->getLabel() : '__nil__';
+            $to_node   = $to->getLabel();
+            $attr = $from ? $nodes_attributes : $nil_attributes;
+            $gv->addNode($from_node, $attr);
+            $gv->addNode($to_node, $nodes_attributes);
+            $url = TRACKER_BASE_URL.'/?'. http_build_query(
+                array(
+                    'tracker'         => (int)$this->tracker_id,
+                    'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
+                    'edit_transition' => $transition->getTransitionId()
+                )
+            );
+            $gv->addEdge(
+                array($from_node => $to_node),
+                array_merge(
+                    $edge_attributes,
+                    array(
+                        'label' => ($from ? $from_node : '') .' → '. $to_node,
+                        'href'  => $url,
+                    )
+                )
+            );
+        }
+        $xml_string = $gv->fetch();
+        echo '</div><div>'; //hack to get out of the inline-block defined in the caller
+        echo '<div class="workflow_transitions_graph">';
+        echo substr($xml_string, strpos($xml_string, '<svg'));
+        echo '</div>';
+    }
+
     /**
      * @return boolean true if the value corresponds to none
      */
