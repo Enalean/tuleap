@@ -180,7 +180,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function getDateFields() {
-        $form_elements = $this->form_element_factory->getFormElementsByType($this->tracker, 'date');
+        $form_elements = $this->form_element_factory->getUsedDateFields($this->tracker);
         $values = array(
             $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed')
         );
