@@ -647,13 +647,21 @@ class Tracker_RulesManager {
                     $target_id, 
                     $value_field_list[$target_id]
                     );
-                $rule_basket[$key] = $is_valid;
+                $rule_basket[$key] = array(
+                    'isValid'   => $is_valid,
+                    'rule'      => $rule
+                    );
+            }
+        }
+
+        foreach ($rule_basket as $error) {
+            if($error['isValid'] === false) {
+
+                //@todo add error message
+                return false;
             }
         }
         
-        if(in_array(false, $rule_basket)) {
-            return false;
-        }
         
         return true;
     }

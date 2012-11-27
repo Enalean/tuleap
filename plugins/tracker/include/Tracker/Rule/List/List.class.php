@@ -62,7 +62,6 @@ class Tracker_Rule_List extends Tracker_Rule {
             $source_field == $this->source_field && 
             $source_value == $this->source_value && 
             $target_field == $this->target_field;
-  
         return $match;
     }
     

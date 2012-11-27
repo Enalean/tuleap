@@ -503,7 +503,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
     }
     
-    public function _testValidateListRulesReturnsTrueOnMultipleValidData() {
+    public function testValidateListRulesReturnsTrueOnMultipleValidData() {
         $value_field_list = array(
             123     => 456,
             789     => 586,
@@ -520,14 +520,14 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         
         $rule2 = new Tracker_Rule_List();
         $rule2->setSourceValue(6)
-                ->setTargetValue(586)
+                ->setTargetValue(456)
                 ->setSourceFieldId(45)
                 ->setTargetFieldId(123)
                 ->setTrackerId(19)
                 ->setId(98);
         
         $tracker = mock('Tracker');
-        stub($tracker)->getId()->returns(10);
+        stub($tracker)->getId()->returns(19);
         
         $form_element_factory = mock('Tracker_FormElementFactory');
         
