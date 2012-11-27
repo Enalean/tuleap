@@ -116,7 +116,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         }
         echo '<div class="'. $classnames .'">';
         if (! $workflow->is_used) {
-            echo '<h4>'. 'Transitions are not activated!' .'</h4>'; // TODO: i18n
+            echo '<h4>'. 'Transitions\' rules don\'t apply yet' .'</h4>'; // TODO: i18n
         }
         echo '<p>';
         echo '<input type="hidden" name="is_used" value="0" />';

@@ -1306,7 +1306,7 @@ plugin_tracker_search_index	artifact_title	Artifact Title
 workflow_admin	title	Workflow Administration
 workflow_admin	title_define_transitions	Define the transitions
 workflow_admin	field	Field on which the transitions will be based:
-workflow_admin	enabled	Check/apply transitions on each artifact update/create
+workflow_admin	enabled	Enforce transitions' rules
 workflow_admin	delete	Delete all transitions
 workflow_admin	choose_field	Choose the field on which applies the workflow:
 workflow_admin	updated	Transitions updated
