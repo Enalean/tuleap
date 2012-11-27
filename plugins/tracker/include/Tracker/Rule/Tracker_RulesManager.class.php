@@ -579,10 +579,8 @@ class Tracker_RulesManager {
             $is_valid = $rule->validate($source_value, $target_value);
 
             if (! $is_valid) {
-
-                $tracker_list_factory = $this->getTrackerFormElementFactory();
-                $source_field         = $tracker_list_factory->getFormElementById($rule->getSourceFieldId());
-                $target_field         = $tracker_list_factory->getFormElementById($rule->getTargetFieldId());
+                $source_field         = $this->getField($rule->getSourceFieldId());
+                $target_field         = $this->getField($rule->getTargetFieldId());
 
                 $GLOBALS['Response']->addFeedback('error', 'Error on the date value : ' . $source_field->getLabel() . ' must be  '. $rule->getComparator(). ' to ' . $target_field->getLabel());
 
@@ -645,9 +643,8 @@ class Tracker_RulesManager {
 
         foreach ($rule_basket as $error) {
             if($error['isValid'] === false) {
-                $tracker_list_factory = $this->getTrackerFormElementFactory();
-                $source_field         = $tracker_list_factory->getFormElementById($rule->getSourceFieldId());
-                $target_field         = $tracker_list_factory->getFormElementById($rule->getTargetFieldId());
+                $source_field         = $this->getField($rule->getSourceFieldId());
+                $target_field         = $this->getField($rule->getTargetFieldId());
 
                 $GLOBALS['Response']->addFeedback('error', 'Error on the dependencie between the fields ' . $source_field->getLabel() . ' and ' . $target_field->getLabel());
                 return false;
@@ -655,6 +652,12 @@ class Tracker_RulesManager {
         }
 
         return true;
+    }
+
+    private function getField($field_id) {
+        $tracker_list_factory = $this->getTrackerFormElementFactory();
+        $field                = $tracker_list_factory->getFormElementById($field_id);
+        return $field;
     }
 }
 
