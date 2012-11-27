@@ -27,12 +27,14 @@
 if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 
-require_once dirname(__FILE__) . '/../../../www/env.inc.php';
-require_once $gfcommon.'include/pre.php';
-require_once $gfcommon.'include/RBACEngine.class.php';
+require_once 'pre.php';
+require_once dirname(__FILE__) . '/../../../src/www/env.inc.php';
+require_once dirname(__FILE__) . '/../../../src/www/include/plugins_utils.php';
+
+//require_once 'common/include/RBACEngine.class.php';
 sysdebug_lazymode(true);
 
-$IP = forge_get_config('master_path', 'mediawiki');
+$IP = forge_get_config('src_path', 'mediawiki');
 
 if (!isset ($fusionforgeproject)) {
 	$gr=new Group(1);
@@ -259,6 +261,7 @@ function SetupPermissionsFromRoles () {
 	// Setup rights for all roles referenced by project
 	$rids = $g->getRolesID() ;
 	$e = RBACEngine::getInstance();
+        
 	$grs = $e->getGlobalRoles();
 	foreach ($grs as $r) {
 		$rids[] = $r->getID();
