@@ -298,6 +298,15 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(10);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
+        $source_field         = mock('Tracker_FormElement_Field_List_OpenValue');
+        $target_field         = mock('Tracker_FormElement_Field_List_OpenValue');
+
+        stub($source_field)->getLabel()->returns('aaaaa');
+        stub($target_field)->getLabel()->returns('bbbbb');
+
+        stub($form_element_factory)->getFormElementById()->returns($source_field);
+        stub($form_element_factory)->getFormElementById(789)->returns($target_field);
+
 
         $tracker_rule_date  = mock('Tracker_Rule_Date');
         $tracker_rule_date2 = mock('Tracker_Rule_Date');
@@ -320,6 +329,8 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',
                 array($tracker_rule_date, $tracker_rule_date2));
+        $tracker_rules_manager->setTrackerFormElementFactory($form_element_factory);
+
 
         $this->assertFalse($tracker_rules_manager->validate($tracker->getId(), $value_field_list));
 

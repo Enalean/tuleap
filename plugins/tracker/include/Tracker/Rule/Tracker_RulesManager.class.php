@@ -579,6 +579,13 @@ class Tracker_RulesManager {
             $is_valid = $rule->validate($source_value, $target_value);
 
             if (! $is_valid) {
+
+                $tracker_list_factory = $this->getTrackerFormElementFactory();
+                $source_field         = $tracker_list_factory->getFormElementById($rule->getSourceFieldId());
+                $target_field         = $tracker_list_factory->getFormElementById($rule->getTargetFieldId());
+
+                $GLOBALS['Response']->addFeedback('error', 'Error on the date value : ' . $source_field->getLabel() . ' must be  '. $rule->getComparator(). ' to ' . $target_field->getLabel());
+
                 return false;
             }
         }
