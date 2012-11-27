@@ -981,7 +981,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
             //validate workflow
              $workflow = $this->getWorkflow();
-             if ($workflow) {
+             if ($workflow && $is_valid) {
                  $is_valid = $workflow->validate($fields_data, $this);
              }
         }
