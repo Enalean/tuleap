@@ -72,7 +72,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $fields_are_different = $source_field_id != $target_field_id;
 
         if ($fields_exist && ! $fields_are_different) {
-            $GLOBALS['Response']->addFeedback('error', 'The two fields must be different'); //TODO: i18n
+            $error_msg = $GLOBALS['Language']->getText('workflow_admin', 'same_field');
+            $GLOBALS['Response']->addFeedback('error', $error_msg);
         }
 
         if ($fields_exist) {
@@ -117,7 +118,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
                 }
             }
             if ($nb_deleted) {
-                $GLOBALS['Response']->addFeedback('info', 'Rule(s) successfully deleted'); //TODO: i18n
+                $delete_msg = $GLOBALS['Language']->getText('workflow_admin', 'deleted_rules');
+                $GLOBALS['Response']->addFeedback('info', $delete_msg);
             }
         }
     }
@@ -130,15 +132,16 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
                 $this->tracker->getId(),
                 $request->get('comparator')
             );
-            $GLOBALS['Response']->addFeedback('info', 'Rule successfully created'); //TODO: i18n
+            $create_msg = $GLOBALS['Language']->getText('workflow_admin', 'created_rule');
+            $GLOBALS['Response']->addFeedback('info', $create_msg);
         }
     }
 
     private function displayPane(Tracker_IDisplayTrackerLayout $layout) {
         $this->displayHeader($layout);
         echo '<div class="workflow_rules">';
-        echo '<h3>'. 'Define global date rules' .'</h3>'; //TODO: i18n
-        echo '<p class="help">'. 'Those rules will be applied on each creation/update of artifacts.' .'</p>'; //TODO: i18n
+        echo '<h3>'. $GLOBALS['Language']->getText('workflow_admin','title_define_global_date_rules') .'</h3>';
+        echo '<p class="help">'. $GLOBALS['Language']->getText('workflow_admin','hint_date_rules_definition') .'</p>';
         echo '<form method="post" action="'. $this->url_query .'">';
         $this->displayRules();
         $this->displayAdd();
@@ -173,7 +176,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function displayAdd() {
         $values = $this->getDateFields();
         $checked_val = $this->default_value;
-        echo 'Add a new rule: ';//TODO: i18n
+        echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
         echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
         echo html_build_select_box_from_array($this->comparators, 'comparator');
         echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
