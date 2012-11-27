@@ -26,5 +26,9 @@ class RBACEngine {
     function getAvailableRolesForUser($user_obj) {
         return array();
     }
+    
+    public function getGlobalRoles() {
+        return array();
+    }
 }
 
