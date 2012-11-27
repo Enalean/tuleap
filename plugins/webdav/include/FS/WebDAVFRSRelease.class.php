@@ -39,7 +39,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * Constuctor of the class
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Project $project
      * @param FRSPackage $package
      * @param FRSRelease $release
@@ -205,7 +205,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * Returns the user as an object instance of User
      *
-     * @return User
+     * @return PFUser
      */
     function getUser() {
 
@@ -305,7 +305,7 @@ class WebDAVFRSRelease extends Sabre_DAV_Directory {
     /**
      * Checks whether the user can read the release or not
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return Boolean
      */

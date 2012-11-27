@@ -472,10 +472,10 @@ class GitActions extends PluginActions {
      * @param int    $groupId   The project id
      * @param array  $repos_ids The array of id of repositories to fork
      * @param string $namespace The namespace where the new repositories will live
-     * @param User   $user      The owner of those new repositories
+     * @param PFUser   $user      The owner of those new repositories
      * @param Layout $response  The response object
      */
-    public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
+    public function fork(array $repos, Project $to_project, $namespace, $scope, PFUser $user, Layout $response, $redirect_url) {
         try {
             if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope)) {
                 $GLOBALS['Response']->addFeedback('info', $this->getText('successfully_forked'));

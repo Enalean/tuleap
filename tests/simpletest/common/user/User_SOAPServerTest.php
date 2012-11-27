@@ -20,7 +20,6 @@
 require_once 'common/user/User_SOAPServer.class.php';
 
 Mock::generate('UserManager');
-Mock::generate('User');
 
 class User_SOAPServerTest extends UnitTestCase {
     
@@ -51,7 +50,7 @@ class User_SOAPServerTest extends UnitTestCase {
      * @return Mock
      */
     private function GivenAUserManagerWithValidAdmin($admin_session_hash) {        
-        $adminUser = new MockUser();
+        $adminUser = mock('PFUser');
         $adminUser->setReturnValue('isLoggedIn', true);
         
         $um = new MockUserManager();
@@ -63,7 +62,7 @@ class User_SOAPServerTest extends UnitTestCase {
     public function testLoginAsReturnsASoapFaultIfUserNotLoggedIn() {
         $admin_session_hash = 'admin_session_hash';
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isLoggedIn', false);
         
         $um = new MockUserManager();
@@ -79,7 +78,7 @@ class User_SOAPServerTest extends UnitTestCase {
     }
     
     private function GivenAUserManagerThatIsProgrammedToThrow($exception) {
-        $adminUser = new MockUser();
+        $adminUser = mock('PFUser');
         $adminUser->setReturnValue('isLoggedIn', true);
         
         $um = new MockUserManager();

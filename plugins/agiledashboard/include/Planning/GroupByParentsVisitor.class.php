@@ -37,11 +37,11 @@
 class Planning_GroupByParentsVisitor {
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
-    public function __construct(User $user) {
+    public function __construct(PFUser $user) {
         $this->user = $user;
     }
 

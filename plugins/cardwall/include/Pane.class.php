@@ -48,7 +48,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     private $config;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
@@ -57,7 +57,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $plugin_theme_path;
 
-    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user, $plugin_theme_path) {
+    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, PFUser $user, $plugin_theme_path) {
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;

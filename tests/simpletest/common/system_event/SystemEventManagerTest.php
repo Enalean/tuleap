@@ -31,10 +31,6 @@ Mock::generate('DataAccessResult');
 
 class SystemEventManagerTest extends UnitTestCase {
     
-    public function __construct($name = 'SystemEventManager test') {
-        parent::__construct($name);
-    }
-    
     public function testConcatParameters() {
         $sem = new SystemEventManagerTestVersion($this);
         $params = array(
@@ -53,7 +49,7 @@ class SystemEventManagerTest extends UnitTestCase {
      * 'toto' can be renamed if he is not already scheduled for rename
      */
     public function testCanRenameUser() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 102);
 
         $seDao = new MockSystemEventDao($this);
@@ -70,7 +66,7 @@ class SystemEventManagerTest extends UnitTestCase {
     }
 
     public function testCanRenameUserWithUserAlreadyQueudedForRename() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 102);
 
         $seDao = new MockSystemEventDao($this);

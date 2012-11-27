@@ -73,7 +73,7 @@ class DocmanWatermark_ItemFactory {
      * Send a mail when PDF Watermarking is disabled.
      * 
      * @param Docman_Item $item
-     * @param User        $currentUser
+     * @param PFUser        $currentUser
      * 
      * @return void
      */

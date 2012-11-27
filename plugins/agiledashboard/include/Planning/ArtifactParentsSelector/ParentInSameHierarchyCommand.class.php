@@ -25,14 +25,14 @@ class Planning_ArtifactParentsSelector_ParentInSameHierarchyCommand extends Plan
      *
      * @return array of Tracker_Artifact
      */
-    public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, User $user) {
+    public function getPossibleParents(Tracker $parent_tracker, Tracker_Artifact $source_artifact, PFUser $user) {
         $parent_in_same_hierarchy = $this->getParentInSameHierarchy($parent_tracker, $source_artifact, $user);
         if ($parent_in_same_hierarchy) {
             return array($parent_in_same_hierarchy);
         }
     }
 
-    private function getParentInSameHierarchy(Tracker $expected_parent_tracker, Tracker_Artifact $source_artifact, User $user) {
+    private function getParentInSameHierarchy(Tracker $expected_parent_tracker, Tracker_Artifact $source_artifact, PFUser $user) {
         if ($source_artifact->getTracker() == $expected_parent_tracker) {
             return $source_artifact;
         } else {

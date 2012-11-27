@@ -198,7 +198,7 @@ class Docman_ApprovalTableReminder {
      *
      * @param Docman_ApprovalTable $table The approval The approval table that its reminder notification will be sent
      *
-     * @return User
+     * @return PFUser
      */
     private function getNotificationStyle(Docman_ApprovalTable $table) {
         $notifStyle = '';
@@ -219,7 +219,7 @@ class Docman_ApprovalTableReminder {
      * @param Docman_ApprovalTable $table  The approval table that its reminder notification will be sent
      * @param String               $format Message format
      *
-     * @return User
+     * @return PFUser
      */
     private function getTableDescriptionAsMessage(Docman_ApprovalTable $table, $format) {
         $comment     = '';
@@ -248,7 +248,7 @@ class Docman_ApprovalTableReminder {
      *
      * @param Docman_ApprovalTable $table The approval table we want to get its owner
      *
-     * @return User
+     * @return PFUser
      */
     private function getApprovalTableOwner(Docman_ApprovalTable $table) {
         $um    = UserManager::instance();

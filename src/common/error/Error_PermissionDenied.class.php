@@ -191,7 +191,7 @@ abstract class Error_PermissionDenied {
      * Send mail to administrators with the apropriate subject and body   
      * 
      * @param Project $project
-     * @param User    $user
+     * @param PFUser    $user
      * @param String  $urlData
      * @param String  $hrefApproval
      * @param String  $messageToAdmin

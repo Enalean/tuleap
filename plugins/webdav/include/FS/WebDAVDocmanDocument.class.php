@@ -35,7 +35,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * Constuctor of the class
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Project $project
      * @param Docman_Document $item
      *
@@ -127,7 +127,7 @@ class WebDAVDocmanDocument extends Sabre_DAV_File {
     /**
      * Returns the user
      *
-     * @return User
+     * @return PFUser
      */
     function getUser() {
         return $this->user;

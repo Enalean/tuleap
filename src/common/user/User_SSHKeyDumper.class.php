@@ -47,11 +47,11 @@ class User_SSHKeyDumper {
     /**
      * Write SSH authorized_keys into a user homedir
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return Boolean
      */
-    public function writeSSHKeys(User $user) {
+    public function writeSSHKeys(PFUser $user) {
         try {
             if ($user->getUnixStatus() != 'A') {
                 return false;
@@ -79,7 +79,7 @@ class User_SSHKeyDumper {
         }
     }
 
-    protected function changeProcessUidGidToUser(User $user) {
+    protected function changeProcessUidGidToUser(PFUser $user) {
         $user_unix_info = posix_getpwnam($user->getUserName());
         if (empty($user_unix_info['uid']) || empty($user_unix_info['gid'])) {
             throw new RuntimeException("User ".$user->getUserName()." has no uid/gid");
@@ -94,7 +94,7 @@ class User_SSHKeyDumper {
         posix_seteuid(0);
     }
 
-    private function createSSHDirForUser(User $user, $ssh_dir) {
+    private function createSSHDirForUser(PFUser $user, $ssh_dir) {
         if (is_link($ssh_dir)) {
             $link_path = readlink($ssh_dir);
             unlink($ssh_dir);
@@ -109,7 +109,7 @@ class User_SSHKeyDumper {
         }
     }
 
-    private function writeSSHFile(User $user, $ssh_dir) {
+    private function writeSSHFile(PFUser $user, $ssh_dir) {
         $authorized_keys_new = "$ssh_dir/authorized_keys_new";
         touch($authorized_keys_new);
         $this->backend->chmod($authorized_keys_new, 0600);

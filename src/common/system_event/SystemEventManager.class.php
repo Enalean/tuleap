@@ -495,7 +495,7 @@ class SystemEventManager {
     /**
      * Return true if there is no pending rename event of this user, otherwise false
      * 
-     * @param User $user 
+     * @param PFUser $user 
      * @return Boolean
      */
     public function canRenameUser($user) {
@@ -509,7 +509,7 @@ class SystemEventManager {
     /**
      * Return true if there is no pending rename event of this project, otherwise false
      * 
-     * @param User $user 
+     * @param PFUser $user 
      * @return Boolean
      */
     public function canRenameProject($project) {

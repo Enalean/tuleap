@@ -181,7 +181,7 @@ class GitRepositoryTest extends TuleapTestCase {
     }
     
     public function _newUser($name) {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName($name);
         return $user;
     }
@@ -202,7 +202,7 @@ class GitRepositoryTest extends TuleapTestCase {
     }
 
     public function testProjectRepositoryDosNotBelongToUser() {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName('sandra');
         
         $repo = new GitRepository();
@@ -213,7 +213,7 @@ class GitRepositoryTest extends TuleapTestCase {
     }
     
     public function testUserRepositoryBelongsToUser() {
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setUserName('sandra');
         
         $repo = new GitRepository();
@@ -223,10 +223,10 @@ class GitRepositoryTest extends TuleapTestCase {
         $this->assertTrue($repo->belongsTo($user));
     }
     public function testUserRepositoryDoesNotBelongToAnotherUser() {
-        $creator = new User(array('language_id' => 1));
+        $creator = new PFUser(array('language_id' => 1));
         $creator->setId(123);
         
-        $user = new User(array('language_id' => 1));
+        $user = new PFUser(array('language_id' => 1));
         $user->setId(456);
         
         $repo = new GitRepository();

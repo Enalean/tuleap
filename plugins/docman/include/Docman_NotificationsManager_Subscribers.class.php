@@ -68,7 +68,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     *
     * @param String $event  type of the listened action on the monitoring list.
     * @param Array  $params Array of params from which we can retrive docman item.
-    * @param User   $user   User we want to notify
+    * @param PFUser   $user   User we want to notify
     *
     * @return void
     */
@@ -98,7 +98,7 @@ class Docman_NotificationsManager_Subscribers extends Docman_NotificationsManage
     /**
     * Prepare notification message
     *
-    * @param User   $user         User we want to notify.
+    * @param PFUser   $user         User we want to notify.
     * @param String $message_type Nature of the operation on the monitoring list.
     * @param Array  $params       Array of params from which we can retrive docman item.
     *

@@ -162,7 +162,7 @@ class Docman_Version {
      * access event and would launch watermarking process.
      *
      * @param Docman_Item    $item
-     * @param User           $user
+     * @param PFUser           $user
      *
      * @return void
      */
@@ -185,7 +185,7 @@ class Docman_Version {
      * Logging a version deletion event
      *
      * @param Docman_Item    $item
-     * @param User           $user
+     * @param PFUser           $user
      *
      * @return void
      */

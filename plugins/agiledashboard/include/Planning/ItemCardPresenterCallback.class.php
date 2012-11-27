@@ -39,11 +39,11 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
     private $card_fields;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
-    public function __construct(Planning $planning, Tracker_CardFields $card_fields, User $user, $classname) {
+    public function __construct(Planning $planning, Tracker_CardFields $card_fields, PFUser $user, $classname) {
         $this->planning    = $planning;
         $this->card_fields = $card_fields;
         $this->classname   = $classname;

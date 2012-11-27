@@ -178,7 +178,7 @@ class UserHelper {
      * 
      * Get user name from Codendi login, according to the user prefs: Codendi login or Real name
      *
-     * @param User the user to display
+     * @param PFUser the user to display
      *
      * @return the display name of the user $user or null if $user is null
      *
@@ -267,11 +267,11 @@ class UserHelper {
     /**
      * Get a link on user profile with name according to user prefs.
      *
-     * @param User $user User object
+     * @param PFUser $user User object
      *
      * @return String
      */
-    public function getLinkOnUser(User $user) {
+    public function getLinkOnUser(PFUser $user) {
         $hp = Codendi_HTMLPurifier::instance();
         if($user && !$user->isNone()) {
             return '<a href="/users/'.urlencode($user->getName()).'">'.$hp->purify($this->getDisplayNameFromUser($user), CODENDI_PURIFIER_CONVERT_HTML).'</a>';

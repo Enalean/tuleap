@@ -85,7 +85,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $evt->setReturnValue('computeFRSMd5Sum', false);
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getEmail', 'mickey@codendi.org');
         $evt->setReturnValue('getUser', $user);
         $evt->setReturnValue('sendNotificationMail', false);
@@ -141,7 +141,7 @@ class SystemEvent_COMPUTE_MD5SUM_Test extends UnitTestCase {
         $evt->setReturnValue('compareMd5Checksums', false);
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getEmail', 'mickey@codendi.org');
         $evt->setReturnValue('getUser', $user);
         $evt->setReturnValue('sendNotificationMail', false);

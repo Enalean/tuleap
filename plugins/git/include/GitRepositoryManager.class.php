@@ -84,11 +84,11 @@ class GitRepositoryManager {
      *
      * @param GitRepository $repository The repo to fork
      * @param Project       $to_project The project to create the repo in
-     * @param User          $user       The user who does the fork (she will own the clone)
+     * @param PFUser          $user       The user who does the fork (she will own the clone)
      * @param String        $namespace  The namespace to put the repo in (might be emtpy)
      * @param String        $scope      Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
      */
-    public function fork(GitRepository $repository, Project $to_project, User $user, $namespace, $scope) {
+    public function fork(GitRepository $repository, Project $to_project, PFUser $user, $namespace, $scope) {
         $clone = clone $repository;
         $clone->setProject($to_project);
         $clone->setCreator($user);
@@ -115,7 +115,7 @@ class GitRepositoryManager {
      *
      * @param array         $repositories Array of GitRepositories to fork
      * @param Project       $to_project   The project to create the repo in
-     * @param User          $user         The user who does the fork (she will own the clone)
+     * @param PFUser          $user         The user who does the fork (she will own the clone)
      * @param String        $namespace    The namespace to put the repo in (might be emtpy)
      * @param String        $scope        Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
      *
@@ -123,7 +123,7 @@ class GitRepositoryManager {
      *
      * @throws Exception
      */
-    public function forkRepositories(array $repositories, Project $to_project, User $user, $namespace, $scope) {
+    public function forkRepositories(array $repositories, Project $to_project, PFUser $user, $namespace, $scope) {
         $repos = array_filter($repositories);
         if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
             return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project);
@@ -144,7 +144,7 @@ class GitRepositoryManager {
         return true;
     }
 
-    private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
+    private function forkAllRepositories(array $repos, PFUser $user, $namespace, $scope, Project $project) {
         $forked = false;
         foreach ($repos as $repo) {
             try {

@@ -59,7 +59,7 @@ class User_SOAPServer {
      * 
      * @param String $sessionKey
      * 
-     * @return User
+     * @return PFUser
      */
     private function continueSession($sessionKey) {
         $user = $this->userManager->getCurrentUser($sessionKey);

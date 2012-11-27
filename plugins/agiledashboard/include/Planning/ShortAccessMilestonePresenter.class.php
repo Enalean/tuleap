@@ -23,7 +23,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var bool */
     private $is_latest = false;
 
-    /** @var User */
+    /** @var PFUser */
     private $user;
 
     /** @var Planning_ShortAccess */
@@ -35,7 +35,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var string */
     public $access_to_planning;
 
-    public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, User $user) {
+    public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, PFUser $user) {
         parent::__construct($milestone);
         $this->short_access       = $short_access;
         $this->user               = $user;

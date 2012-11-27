@@ -329,7 +329,7 @@ require_once('common/widget/Widget_ProjectImageViewer.class.php');
     }
 
     /**
-     * @return User
+     * @return PFUser
      */
     function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();

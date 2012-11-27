@@ -87,12 +87,12 @@ class FileModuleMonitorFactory {
      * Is the user in the list of people monitoring this package.
      *
      * @param Integer $filemodule_id Id of the package
-     * @param User    $user          The user
+     * @param PFUser    $user          The user
      * @param Boolean $publicly      If true check if the user is monitoring publicly
      *
      * @return Boolean is_monitoring
      */
-    function isMonitoring($filemodule_id, User $user, $publicly) {
+    function isMonitoring($filemodule_id, PFUser $user, $publicly) {
         $_filemodule_id = (int) $filemodule_id;
         $dao            = $this->_getFileModuleMonitorDao();
         $dar            = $dao->searchMonitoringFileByUserAndPackageId($_filemodule_id, $user, $publicly);
@@ -120,12 +120,12 @@ class FileModuleMonitorFactory {
      * Set package monitoring
      *
      * @param Integer $filemodule_id Id of the package
-     * @param User    $user          The user
+     * @param PFUser    $user          The user
      * @param Boolean $anonymous     True if the user want to monitor the package anonymously
      *
      * @return DataAccessResult
      */
-    function setMonitor($filemodule_id, User $user, $anonymous = true) {
+    function setMonitor($filemodule_id, PFUser $user, $anonymous = true) {
         $dao = $this->_getFileModuleMonitorDao();
         $res = $dao->create($filemodule_id, $user, $anonymous);
         return $res;
@@ -134,7 +134,7 @@ class FileModuleMonitorFactory {
     /**
      * Add package monitoring for a user
      *
-     * @param User              $user         The user
+     * @param PFUser              $user         The user
      * @param Integer           $groupId      Id of the project
      * @param Integer           $fileModuleId Id of the package
      * @param FRSPackage        $package      Package
@@ -143,7 +143,7 @@ class FileModuleMonitorFactory {
      *
      * @return Void
      */
-    public function addUserMonitoring(User $user, $groupId, $fileModuleId, FRSPackage $package, FRSPackageFactory $frspf, UserHelper $userHelper) {
+    public function addUserMonitoring(PFUser $user, $groupId, $fileModuleId, FRSPackage $package, FRSPackageFactory $frspf, UserHelper $userHelper) {
         if ($user) {
             $publicly = true;
             if ($frspf->userCanRead($groupId, $fileModuleId, $user->getId())) {
@@ -173,12 +173,12 @@ class FileModuleMonitorFactory {
      * Stop the package monitoring
      *
      * @param Integer $filemodule_id Id of th package
-     * @param User    $user          The user
+     * @param PFUser    $user          The user
      * @param Boolean $onlyPublic    If true delete only user publicly monitoring the package
      *
      * @return Boolean
      */
-    function stopMonitor($filemodule_id, User $user, $onlyPublic = false) {
+    function stopMonitor($filemodule_id, PFUser $user, $onlyPublic = false) {
         $_id = (int) $filemodule_id;
         $dao = $this->_getFileModuleMonitorDao();
         return $dao->delete($_id, $user, $onlyPublic);
@@ -218,7 +218,7 @@ class FileModuleMonitorFactory {
      * Stop only the public package monitoring for a given user
      *
      * @param Integer    $fileModuleId Id of the package
-     * @param User       $user         User we want to stop its monitoring
+     * @param PFUser       $user         User we want to stop its monitoring
      * @param Integer    $groupId      Id of the project
      * @param FRSPackage $package      Package
      * @param UserHelper $userHelper   User helper
@@ -240,11 +240,11 @@ class FileModuleMonitorFactory {
      * Prepare mail
      *
      * @param FRSPackage $package Id of th package
-     * @param User       $user    The deleted user
+     * @param PFUser       $user    The deleted user
      *
      * @return Codendi_Mail
      */
-    function prepareMail(FRSPackage $package, User $user) {
+    function prepareMail(FRSPackage $package, PFUser $user) {
         $subject   = $GLOBALS['Language']->getText('file_filemodule_monitor', 'mail_subject', array($GLOBALS['sys_name'], $package->getName()));
         $mail      = new Codendi_Mail();
         $mail->getLookAndFeelTemplate()->set('title', $subject);
@@ -258,11 +258,11 @@ class FileModuleMonitorFactory {
      * Notify after adding monitoring for a user
      *
      * @param FRSPackage $package Id of th package
-     * @param User       $user    The added user
+     * @param PFUser       $user    The added user
      *
      * @return Boolean
      */
-    function notifyAfterAdd(FRSPackage $package, User $user) {
+    function notifyAfterAdd(FRSPackage $package, PFUser $user) {
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($user);
         $mail      = $this->prepareMail($package, $user);
@@ -284,11 +284,11 @@ class FileModuleMonitorFactory {
      * Notify after deleting monitoring for a user
      *
      * @param FRSPackage $package Id of th package
-     * @param User       $user    The deleted user
+     * @param PFUser       $user    The deleted user
      *
      * @return Boolean
      */
-    function notifyAfterDelete(FRSPackage $package, User $user) {
+    function notifyAfterDelete(FRSPackage $package, PFUser $user) {
         $mailMgr   = new MailManager();
         $mailPrefs = $mailMgr->getMailPreferencesByUser($user);
         $mail      = $this->prepareMail($package, $user);
@@ -363,7 +363,7 @@ class FileModuleMonitorFactory {
     /**
      * Display the form to manage user's self monitoring of the package
      *
-     * @param User    $currentUser  Current user
+     * @param PFUser    $currentUser  Current user
      * @param Integer $fileModuleId Id of the package
      *
      * @return String
@@ -402,7 +402,7 @@ class FileModuleMonitorFactory {
     /**
      * Display the HTML of the monitoring UI
      *
-     * @param User        $currentUser  Current user
+     * @param PFUser        $currentUser  Current user
      * @param Integer     $groupId      Id of the project
      * @param Integer     $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
@@ -426,7 +426,7 @@ class FileModuleMonitorFactory {
      * Process the self monitoring request
      *
      * @param HTTPRequest $request      HTTP request
-     * @param User        $currentUser  Current user
+     * @param PFUser        $currentUser  Current user
      * @param Integer     $groupId      Id of the project
      * @param Integer     $fileModuleId Id of the package
      *
@@ -460,7 +460,7 @@ class FileModuleMonitorFactory {
     /**
      * Listening to stop self monitoring action
      *
-     * @param User    $currentUser  Current user
+     * @param PFUser    $currentUser  Current user
      * @param Integer $fileModuleId Id of the package
      *
      * @return Boolean
@@ -479,7 +479,7 @@ class FileModuleMonitorFactory {
     /**
      * Listening to anonymous monitoring action
      *
-     * @param User    $currentUser  Current user
+     * @param PFUser    $currentUser  Current user
      * @param Integer $fileModuleId Id of the package
      * @param Boolean $anonymous    Anonymous monitoring flag
      * @param Integer $groupId      Id of the project
@@ -513,7 +513,7 @@ class FileModuleMonitorFactory {
      * Process the monitoring request
      *
      * @param HTTPRequest $request      HTTP request
-     * @param User        $currentUser  Current user
+     * @param PFUser        $currentUser  Current user
      * @param Integer     $groupId      Id of the project
      * @param Integer     $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance
@@ -553,7 +553,7 @@ class FileModuleMonitorFactory {
      * Process the monitoring request
      *
      * @param HTTPRequest $request      HTTP request
-     * @param User        $currentUser  Current user
+     * @param PFUser        $currentUser  Current user
      * @param Integer     $groupId      Id of the project
      * @param Integer     $fileModuleId Id of the package
      * @param UserManager $um           UserManager instance

@@ -47,7 +47,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
-    public function searchDocuments($terms, array $facets, $offset, User $user) {
+    public function searchDocuments($terms, array $facets, $offset, PFUser $user) {
         $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset, $user);
         // For debugging purpose, uncomment the statement below to see the
         // content of the request (can be directly injected in a curl request)
@@ -59,7 +59,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
     /**
      * @return array to be used for querying ES
      */
-    protected function getSearchDocumentsQuery($terms, array $facets, $offset, User $user) {
+    protected function getSearchDocumentsQuery($terms, array $facets, $offset, PFUser $user) {
         $query = array(
             'from' => (int)$offset,
             'query' => array(
@@ -92,7 +92,7 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
         return $query;
     }
 
-    protected function filterQueryWithPermissions(array &$query, User $user) {
+    protected function filterQueryWithPermissions(array &$query, PFUser $user) {
         $ugroup_literalizer = new UGroupLiteralizer();
         $filtered_query = array(
             'filtered' => array(

@@ -65,11 +65,11 @@ class SystemEvent_USER_CREATE extends SystemEvent {
     /**
      * Perform user creation on system
      * 
-     * @param User $user
+     * @param PFUser $user
      * 
      * @return Boolean
      */
-    private function createUser(User $user) {
+    private function createUser(PFUser $user) {
         Backend::instance('Aliases')->setNeedUpdateMailAliases();
         
         $system_backend = Backend::instance('System');

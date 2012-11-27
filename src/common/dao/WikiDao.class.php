@@ -143,7 +143,7 @@ class WikiDao extends DataAccessObject {
     
     /**
      * Update wiki page
-     * @param User   $user
+     * @param PFUser   $user
      * @param String $new_name
      * @return Boolean
      */

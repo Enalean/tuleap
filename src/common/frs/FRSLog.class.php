@@ -184,7 +184,7 @@ class FRSLog {
     /**
      * Obtain the current user
      *
-     * @return User
+     * @return PFUser
      */
     function _getCurrentUser() {
         $um = UserManager::instance();

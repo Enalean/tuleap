@@ -203,7 +203,7 @@ class ProjectManagerTest extends UnitTestCase {
         $GLOBALS['sys_allow_restricted_users'] = 1;
         $pm = new ProjectManagerTestVersion();
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $um->setReturnValue('getCurrentUser', $user);
         $pm->setReturnValue('_getUserManager', $um);
@@ -216,7 +216,7 @@ class ProjectManagerTest extends UnitTestCase {
         $GLOBALS['sys_allow_restricted_users'] = 1;
         $pm = new ProjectManagerTestVersion();
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $um->setReturnValue('getCurrentUser', $user);
         $pm->setReturnValue('_getUserManager', $um);
@@ -230,7 +230,7 @@ class ProjectManagerTest extends UnitTestCase {
         $GLOBALS['sys_allow_restricted_users'] = 1;
         $pm = new ProjectManagerTestVersion();
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $um->setReturnValue('getCurrentUser', $user);
         $pm->setReturnValue('_getUserManager', $um);

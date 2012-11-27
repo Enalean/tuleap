@@ -123,7 +123,7 @@ class WebDAVUtils {
     /**
      * Tests if the user is Superuser, project admin or File release admin
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Integer $groupId
      *
      * @return Boolean
@@ -139,7 +139,7 @@ class WebDAVUtils {
     /**
      * Tests if the user is Superuser, or File release admin
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Integer $groupId
      *
      * @return Boolean

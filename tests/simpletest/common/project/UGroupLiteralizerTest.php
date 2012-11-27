@@ -29,7 +29,7 @@ class UGroupLiteralizerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user   = mock('User');
+        $this->user   = mock('PFUser');
         $user_manager = mock('UserManager');
         stub($user_manager)->getUserByUserName()->returns($this->user);
         UserManager::setInstance($user_manager);

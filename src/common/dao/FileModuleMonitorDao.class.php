@@ -69,12 +69,12 @@ class FileModuleMonitorDao extends DataAccessObject {
      * Check user's monitoring of the given package.
      *
      * @param Integer $package_id Id of the package
-     * @param User    $user       The user
+     * @param PFUser    $user       The user
      * @param Boolean $publicly   If true check if the user is monitoring publicly
      *
      * @return DataAccessResult
      */
-    function searchMonitoringFileByUserAndPackageId($package_id, User $user, $publicly = false) {
+    function searchMonitoringFileByUserAndPackageId($package_id, PFUser $user, $publicly = false) {
         $option = "";
         if ($publicly) {
             $option = "AND anonymous = 0";
@@ -99,12 +99,12 @@ class FileModuleMonitorDao extends DataAccessObject {
      * Create a row in the table filemodule_monitor
      *
      * @param Integer $filemodule_id Id of the package
-     * @param User    $user          The user
+     * @param PFUser    $user          The user
      * @param Boolean $anonymous     True if the user i monitoring anonymously
      *
      * @return true or id(auto_increment) if there is no error
      */
-    function create($filemodule_id, User $user, $anonymous = true) {
+    function create($filemodule_id, PFUser $user, $anonymous = true) {
 
         $arg      = array();
         $values   = array();
@@ -129,12 +129,12 @@ class FileModuleMonitorDao extends DataAccessObject {
      * Delete entry that match $package_id and $user_id (current user) in filemodule_monitor
      *
      * @param Integer $filemodule_id Id of the package
-     * @param User    $user       The user
+     * @param PFUser    $user       The user
      * @param Boolean $onlyPublic If true delete only user publicly monitoring the package
      *
      * @return true if there is no error
      */
-    function delete($filemodule_id, User $user, $onlyPublic = false) {
+    function delete($filemodule_id, PFUser $user, $onlyPublic = false) {
         $option = "";
         if ($onlyPublic) {
             $option = "AND anonymous = 0";

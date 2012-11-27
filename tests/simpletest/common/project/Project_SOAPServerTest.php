@@ -113,7 +113,7 @@ class Project_SOAPServerTest extends UnitTestCase {
     private function GivenASOAPServerReadyToCreate() {
         $server = $this->GivenASOAPServer();
         
-        $another_user = new MockUser();
+        $another_user = mock('PFUser');
         $another_user->setReturnValue('isLoggedIn', true);
         
         $this->um->setReturnValue('getCurrentUser', $another_user, array('789'));
@@ -132,10 +132,10 @@ class Project_SOAPServerTest extends UnitTestCase {
     }
     
     private function GivenASOAPServer() {
-        $this->user = new MockUser();
+        $this->user = mock('PFUser');
         $this->user->setReturnValue('isLoggedIn', true);
         
-        $admin  = new MockUser();
+        $admin  = mock('PFUser');
         $admin->setReturnValue('isLoggedIn', true);
         $admin->setReturnValue('isSuperUser', true);
         

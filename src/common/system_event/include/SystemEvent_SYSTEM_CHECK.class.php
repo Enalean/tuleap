@@ -89,7 +89,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // (re-)create missing home directories
         $user_manager     = UserManager::instance();
         $userdao          = new UserDao();
-        $allowed_statuses = array(User::STATUS_ACTIVE, User::STATUS_RESTRICTED);
+        $allowed_statuses = array(PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED);
         $dar              = $userdao->searchByStatus($allowed_statuses);
         foreach($dar as $row) {
             $user = $user_manager->getUserInstanceFromRow($row);

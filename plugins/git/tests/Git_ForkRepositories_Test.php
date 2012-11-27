@@ -51,7 +51,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $groupId = 101;
         $repo = new GitRepository();
         $repos = array($repo);
-        $user = new User();
+        $user = new PFUser();
         $user->setId(42);
         $user->setUserName('Ben');
         $path = userRepoPath('Ben', 'toto');

@@ -143,7 +143,7 @@ class UGroup {
             $this->members_name = array();
             $dar           = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
             foreach ($dar as $row) {
-                $currentUser          = new User($row);
+                $currentUser          = new PFUser($row);
                 $this->members[]      = $currentUser;
                 $this->members_name[] = $currentUser->getUserName();
             }
@@ -190,13 +190,13 @@ class UGroup {
      * Add the given user to the group
      * This method can add to any group, either dynamic or static.
      *
-     * @param User $user User to add
+     * @param PFUser $user User to add
      *
      * @throws UGroup_Invalid_Exception
      *
      * @return Void
      */
-    public function addUser(User $user) {
+    public function addUser(PFUser $user) {
         $this->assertProjectUGroupAndUserValidity($user);
         if ($this->is_dynamic) {
             $this->addUserToDynamicGroup($user);
@@ -212,7 +212,7 @@ class UGroup {
     /**
      * Test the status of the ugroup & the user
      *
-     * @param User $user User to test
+     * @param PFUser $user User to test
      *
      * @return Void
      */
@@ -244,11 +244,11 @@ class UGroup {
     /**
      * Add user to a dynamic ugroup
      *
-     * @param User $user User to add
+     * @param PFUser $user User to add
      *
      * @return Void
      */
-    protected function addUserToDynamicGroup(User $user) {
+    protected function addUserToDynamicGroup(PFUser $user) {
         $dao  = $this->_getUserGroupDao();
         $flag = $this->getAddFlagForUGroupId($this->id);
         $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
@@ -288,13 +288,13 @@ class UGroup {
      * Remove given user from user group
      * This method can remove from any group, either dynamic or static.
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @throws UGroup_Invalid_Exception
      *
      * @return Void
      */
-    public function removeUser(User $user) {
+    public function removeUser(PFUser $user) {
         $this->assertProjectUGroupAndUserValidity($user);
         if ($this->is_dynamic) {
             $this->removeUserFromDynamicGroup($user);
@@ -323,11 +323,11 @@ class UGroup {
     /**
      * Remove user from dynamic ugroup
      *
-     * @param User $user User to remove
+     * @param PFUser $user User to remove
      *
      * @return Boolean
      */
-    protected function removeUserFromDynamicGroup(User $user) {
+    protected function removeUserFromDynamicGroup(PFUser $user) {
         $dao  = $this->_getUserGroupDao();
         if ($this->id == self::PROJECT_ADMIN && $dao->returnProjectAdminsByGroupId($this->group_id)->rowCount() <= 1) {
             throw new Exception('Impossible to remove last admin of the project');

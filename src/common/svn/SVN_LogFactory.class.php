@@ -47,11 +47,11 @@ class SVN_LogFactory {
      * Retrieves latests SVN revisions.
      * 
      * @param string $limit  Limit results count (e.g. 50)
-     * @param User   $author Author to filter on (provide a user without name if you want no filtering)
+     * @param PFUser   $author Author to filter on (provide a user without name if you want no filtering)
      * 
      * @return array
      */
-    public function getRevisions($limit, User $author) {
+    public function getRevisions($limit, PFUser $author) {
         $raw_revisions = $this->getRawRevisions($limit, $author);
         $revisions     = array();
         
@@ -85,7 +85,7 @@ class SVN_LogFactory {
         return $stats;
     }
     
-    public function getTopModifiedFiles(User $user, TimeInterval $interval, $limit) {
+    public function getTopModifiedFiles(PFUser $user, TimeInterval $interval, $limit) {
         $where_forbidden = $this->getForbiddenPaths($user);
         
         $stats = array();
@@ -100,11 +100,11 @@ class SVN_LogFactory {
     /**
      * Return SVN path the user is not allowed to see
      * 
-     * @param User $user
+     * @param PFUser $user
      * 
      * @return string 
      */
-    protected function getForbiddenPaths(User $user) {
+    protected function getForbiddenPaths(PFUser $user) {
         $forbidden = svn_utils_get_forbidden_paths($user->getName(), $this->project->getUnixName(false));
         $where_forbidden = "";
         foreach ($forbidden as $no_access => $v) {
@@ -117,7 +117,7 @@ class SVN_LogFactory {
      * Same as getRawRevisionsAndCount(), but retrieves only the revisions,
      * without the revisions count.
      */
-    private function getRawRevisions($limit, User $author) {
+    private function getRawRevisions($limit, PFUser $author) {
         list($raw_revisions, $count) = $this->getRawRevisionsAndCount($limit, $author);
         return $raw_revisions;
     }
@@ -127,7 +127,7 @@ class SVN_LogFactory {
      * 
      * Wraps svn_get_revisions for testing purpose.
      */
-    public function getRawRevisionsAndCount($limit, User $author) {
+    public function getRawRevisionsAndCount($limit, PFUser $author) {
         return svn_get_revisions($this->project,
                                  0,
                                  $limit,

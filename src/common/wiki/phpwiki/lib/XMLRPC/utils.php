@@ -158,7 +158,7 @@ function find_and_decode_xml($buf, $debug) {
  * @param args	    arguments to send (parameters to remote xmlrpc server)
  * @param debug	 debug level (0 none, 1, some, 2 more)
  * @param timeout	 timeout in secs.  (0 = never)
- * @param user		 user name for authentication.  
+ * @param PFUser		 user name for authentication.  
  * @param pass		 password for authentication
  * @param secure	 secure. wether to use fsockopen_ssl. (requires special php build).
  * @param output	 array. xml output options. can be null.  details below:

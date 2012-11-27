@@ -67,14 +67,14 @@ class Planning_NoMilestone implements Planning_Milestone {
     }
 
     /**
-     * @param User $user
+     * @param PFUser $user
      * @return boolean
      */
-    public function userCanView(User $user) {
+    public function userCanView(PFUser $user) {
         return true; // User can view milestone content, since it's empty.
     }
 
-    public function getLinkedArtifacts(User $user) {
+    public function getLinkedArtifacts(PFUser $user) {
 
     }
 
