@@ -1311,7 +1311,7 @@ workflow_admin	title_define_transitions	Definir les transitions
 workflow_admin	tab_global_rules	Règles Globales
 workflow_admin	tab_transitions	Transitions
 workflow_admin	field	Champ sur lequel les transitions seront basées :
-workflow_admin	enabled	Vérifier/Appliquer les transitions sur chaque creation/mise à jour d'artefact.
+workflow_admin	enabled	Appliquer les règles sur les transitions.
 workflow_admin	delete	Supprimer toutes les transitions
 workflow_admin	choose_field	Choisir le champ sur lequel appliquer le workflow :
 workflow_admin	updated	Transitions mises à jour
