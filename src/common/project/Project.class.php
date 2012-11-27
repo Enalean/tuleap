@@ -428,7 +428,7 @@ class Project extends Group implements PFO_Project {
     function getRolesId() {
             $role_ids = array();
 
-            if (USE_PFO_RBAC) {
+            /*if (USE_PFO_RBAC) {
                     $res = db_query_params('SELECT role_id FROM pfo_role WHERE home_group_id=$1',
                                             array($this->getID()));
                     while ($arr = db_fetch_array($res)) {
@@ -445,7 +445,7 @@ class Project extends Group implements PFO_Project {
                     while ($arr = db_fetch_array($res)) {
                             $role_ids[] = $arr['role_id'];
                     }
-            }
+            }*/
 
             return array_unique($role_ids);
     }
@@ -458,7 +458,7 @@ class Project extends Group implements PFO_Project {
     function getRoles() {
             $result = array();
 
-            $roles = $this->getRolesId();
+            /*$roles = $this->getRolesId();
             if (USE_PFO_RBAC) {
                     $engine = RBACEngine::getInstance();
                     foreach ($roles as $role_id) {
@@ -468,7 +468,7 @@ class Project extends Group implements PFO_Project {
                     foreach ($roles as $role_id) {
                             $result[] = new Role ($this, $role_id);
                     }
-            }
+            }*/
 
             return $result;
     }
