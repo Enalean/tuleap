@@ -23,7 +23,7 @@ require_once("Sanitizer.class.php");
 /**
  * SimpleSanitizer 
  */
-class SimpleSanitizer extends Sanitizer {
+class SimpleSanitizer extends Tuleap_Sanitizer {
     
     function SimpleSanitizer() {
         $this->_construct();
