@@ -29,23 +29,19 @@ require_once('List/View.class.php');
 */
 class Tracker_RulesManager {
     
+    /**
+     *
+     * @var Tracker 
+     */
     protected $tracker;
     
     /** @var Tracker_FormElementFactory */
     protected $form_element_factory;
-    
-    /**
-     *
-     * @var Tracker_Rule_Date_Factory 
-     */
-    protected $rule_date_factory;
-    
+
     public function __construct($tracker, Tracker_FormElementFactory $form_element_factory) {
         $this->tracker              = $tracker;
         $this->form_element_factory = $form_element_factory;
     }
-    
-    protected $rules_by_tracker_id;
     
     /**
      * 
@@ -111,13 +107,13 @@ class Tracker_RulesManager {
     }
 
     /**
-     * Check if all the selected values of a submitted artefact are coherent regarding the dependencies
+     * Check if all the selected values of a submitted artefact 
+     * are coherent regarding the rules
      *
      * @param int $tracker_id the artifact id to test
-     * @param array $value_field_list the selected values to test for the artifact
-     * @param {Tracker_FormElementFactory Object} $ff reference to the artifact field factory of this artifact
-     *
-     * @return boolean true if the submitted values are coherent regarding the dependencies, false otherwise
+     * @param array $value_field_list the selected values to test for the artifact     *
+     * @return boolean True if the submitted values are coherent regarding the rules,
+     * false otherwise
      */
     function validate($tracker_id, $value_field_list) {
         $valid_list_rules = $this->validateListRules($tracker_id, $value_field_list);
@@ -227,41 +223,6 @@ class Tracker_RulesManager {
         }
         return $found;
     }
-    
-    /*function displayFieldsAndValuesAsJavascript() {
-        $hp = Codendi_HTMLPurifier::instance();
-        echo "\n//------------------------------------------------------\n";
-        $ff = Tracker_FormElementFactory::instance();
-        $used_fields = $ff->getUsedSbFields($this->tracker);
-        foreach($used_fields as $field) {
-            $values = $field->getAllValues();
-            if (is_array($values)) {
-                echo "codendi.tracker.fields.add('".(int)$field->getID()."', '".$field->getName()."', '". $hp->purify(SimpleSanitizer::unsanitize($field->getLabel()), CODENDI_PURIFIER_JS_QUOTE) ."')";
-                $default_value = $field->getDefaultValue();
-                foreach ($values as $value) {
-                //while ($row = db_fetch_array($values)) {
-                    echo "\n\t.addOption('".  $hp->purify(SimpleSanitizer::unsanitize($value->getLabel()), CODENDI_PURIFIER_JS_QUOTE)  ."'.escapeHTML(), '". (int)$value->getId() ."', ". ($value->getId()==$default_value?'true':'false') .")";
-                //}
-                }
-                echo ";\n";
-            }
-        }
-        echo "\n//------------------------------------------------------\n";
-    }*/
-    
-    /*function displayRulesAsJavascript() {
-        echo "\n//------------------------------------------------------\n";
-        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
-        if ($rules && count($rules) > 0) {
-            foreach ($rules as $key => $nop) {
-                $html = new Tracker_Rule_List_View($rules[$key]);
-                echo 'codendi.tracker.rules_definitions.push(';
-                $html->fetchJavascript();
-                echo ");\n";
-            }
-        }
-        echo "\n//------------------------------------------------------\n";
-    }*/
     
     function getAllSourceFields($target_id) {
         $sources     = array();
@@ -581,6 +542,12 @@ class Tracker_RulesManager {
             }
     }
     
+    /**
+     * 
+     * @param int $tracker_id
+     * @param array $value_field_list
+     * @return boolean
+     */
     protected function validateDateRules($tracker_id, $value_field_list) {
         $rules = $this->getAllDateRulesByTrackerId($tracker_id);
         
