@@ -630,25 +630,23 @@ class Tracker_RulesManager {
                 continue;
             }
             
-            $source_id = (int) $value_field_list[$rule->getSourceFieldId()];
-            $target_id = (int) $value_field_list[$rule->getTargetFieldId()];
+            $source_id = (int) $rule->getSourceFieldId();
+            $target_id = (int) $rule->getTargetFieldId();
             $source_value = (int) $value_field_list[$rule->getSourceFieldId()];
             
             //check that the rule can be applied for the given source value
             if($source_value != $rule->getSourceValue()) {
                 continue;
             }
-            
             $key = $source_id . $target_id . $source_value;
             
             if(! isset($rule_basket[$key]) || $rule_basket[$key] === false) {
                 $is_valid = $rule->applyTo($tracker_id, 
-                    $rule->getSourceFieldId(), 
+                    $source_id, 
                     $source_value, 
-                    $rule->getTargetFieldId(), 
-                    $target_id
+                    $target_id, 
+                    $value_field_list[$target_id]
                     );
-                
                 $rule_basket[$key] = $is_valid;
             }
         }
