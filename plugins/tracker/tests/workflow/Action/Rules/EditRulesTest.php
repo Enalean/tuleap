@@ -35,7 +35,7 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
 
     public function setUp() {
         parent::setUp();
-        $this->element_factory    = stub('Tracker_FormElementFactory')->getFormElementsByType()->returns(array());
+        $this->element_factory    = stub('Tracker_FormElementFactory')->getUsedDateFields()->returns(array());
         $this->tracker            = stub('Tracker')->getId()->returns($this->tracker_id);
         $planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
         $actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
