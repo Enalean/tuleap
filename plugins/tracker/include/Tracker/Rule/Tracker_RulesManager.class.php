@@ -24,27 +24,30 @@ require_once('List/View.class.php');
 /**
 * Manager of rules
 *
-* This is only a proxy to access the factory. 
+* This is only a proxy to access the factory.
 * Maybe there is no need to have this intermediary?
 */
 class Tracker_RulesManager {
-    
+
     /**
      *
-     * @var Tracker 
+     * @var Tracker
      */
     protected $tracker;
-    
+
     /** @var Tracker_FormElementFactory */
     protected $form_element_factory;
+
+     /** @var Tracker_Rule_Date_Factory */
+    protected $rule_date_factory;
 
     public function __construct($tracker, Tracker_FormElementFactory $form_element_factory) {
         $this->tracker              = $tracker;
         $this->form_element_factory = $form_element_factory;
     }
-    
+
     /**
-     * 
+     *
      * @param int $tracker_id
      * @return array
      */
@@ -55,9 +58,9 @@ class Tracker_RulesManager {
         }
         return $this->rules_by_tracker_id[$tracker_id];
     }
-    
+
     /**
-     * 
+     *
      * @param int $tracker_id
      * @return array An array of Tracker_Rule_Date objects
      */
@@ -65,31 +68,31 @@ class Tracker_RulesManager {
         return $this->getTracker_RuleDateFactory()
                     ->searchByTrackerId($tracker_id);
     }
-    
+
     function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
         $fact = $this->_getTracker_RuleFactory();
         return $fact->saveRuleValue($tracker_id, $source, $source_value, $target, $target_value);
     }
-    
+
     function deleteRule($rule_id) {
         $fact = $this->_getTracker_RuleFactory();
         return $fact->deleteRule($rule_id);
     }
-    
+
     /**
-     * 
+     *
      * @return Tracker_Rule_Date_Factory
      */
     public function getTracker_RuleDateFactory() {
         if($this->rule_date_factory ==  null) {
             $this->rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao());
         }
-        
+
         return $this->rule_date_factory;
     }
-    
+
     /**
-     * 
+     *
      * @param Tracker_Rule_Date_Factory $factory
      * @return \Tracker_RulesManager
      */
@@ -97,17 +100,29 @@ class Tracker_RulesManager {
         $this->rule_date_factory = $factory;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return Tracker_RuleFactory
      */
     function _getTracker_RuleFactory() {
         return Tracker_RuleFactory::instance();
     }
 
+    public function setTrackerFormElementFactory(Tracker_FormElementFactory $factory) {
+        $this->form_element_factory = $factory;
+    }
+
+    public function getTrackerFormElementFactory() {
+        if ($this->form_element_factory === null) {
+            $this->form_element_factory = Tracker_FormElementFactory::instance();
+        }
+
+        return $this->form_element_factory;
+    }
+
     /**
-     * Check if all the selected values of a submitted artefact 
+     * Check if all the selected values of a submitted artefact
      * are coherent regarding the rules
      *
      * @param int $tracker_id the artifact id to test
@@ -118,18 +133,18 @@ class Tracker_RulesManager {
     function validate($tracker_id, $value_field_list) {
         $valid_list_rules = $this->validateListRules($tracker_id, $value_field_list);
         $valid_date_rules = $this->validateDateRules($tracker_id, $value_field_list);
-        
+
         if(! $valid_list_rules || ! $valid_date_rules) {
             return false;
         }
-        
+
         return true;
     }
-    
+
     /**
      * Returns the selected values of a field
-     * 
-     * @param Tracker_FormElement_Field $field 
+     *
+     * @param Tracker_FormElement_Field $field
      * @param array $value_field_list the selected values to test for the artifact
      *
      * @return array the selected values
@@ -141,20 +156,20 @@ class Tracker_RulesManager {
         $selected_values = array();
         foreach ($value_field_list as $value_field) {
             $selected_values[] = $field->getBind()->formatArtifactValue($value_field);
-            
+
         }
         return $selected_values;
-    }    
-    
+    }
+
     function fieldIsAForbiddenSource($tracker_id, $field_id, $target_id) {
-        return !$this->ruleExists($tracker_id, $field_id, $target_id) && 
+        return !$this->ruleExists($tracker_id, $field_id, $target_id) &&
                 (
-                    $field_id == $target_id || 
-                    $this->isCyclic($tracker_id, $field_id, $target_id) || 
+                    $field_id == $target_id ||
+                    $this->isCyclic($tracker_id, $field_id, $target_id) ||
                     $this->fieldHasSource($tracker_id, $target_id)
                );
     }
-    
+
     function isCyclic($tracker_id, $source_id, $target_id) {
         if ($source_id == $target_id) {
             return true;
@@ -169,16 +184,16 @@ class Tracker_RulesManager {
             return $found;
         }
     }
-    
+
     function fieldIsAForbiddenTarget($tracker_id, $field_id, $source_id) {
-        return !$this->ruleExists($tracker_id, $source_id, $field_id) && 
+        return !$this->ruleExists($tracker_id, $source_id, $field_id) &&
                 (
-                    $field_id == $source_id || 
-                    $this->isCyclic($tracker_id, $source_id, $field_id) || 
+                    $field_id == $source_id ||
+                    $this->isCyclic($tracker_id, $source_id, $field_id) ||
                     $this->fieldHasSource($tracker_id, $field_id)
                );
     }
-    
+
     function fieldHasTarget($tracker_id, $field_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
@@ -187,7 +202,7 @@ class Tracker_RulesManager {
         }
         return $found;
     }
-    
+
     function fieldHasSource($tracker_id, $field_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
@@ -196,7 +211,7 @@ class Tracker_RulesManager {
         }
         return $found;
     }
-    
+
     function valueHasTarget($tracker_id, $field_id, $value_id, $target_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
@@ -205,7 +220,7 @@ class Tracker_RulesManager {
         }
         return $found;
     }
-    
+
     function valueHasSource($tracker_id, $field_id, $value_id, $source_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
@@ -214,7 +229,7 @@ class Tracker_RulesManager {
         }
         return $found;
     }
-    
+
     function ruleExists($tracker_id, $source_id, $target_id) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
@@ -223,7 +238,7 @@ class Tracker_RulesManager {
         }
         return $found;
     }
-    
+
     function getAllSourceFields($target_id) {
         $sources     = array();
         $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
@@ -234,7 +249,7 @@ class Tracker_RulesManager {
         }
         return $sources;
     }
-    
+
     function getAllTargetFields($source_id) {
         $targets     = array();
         $used_fields = $this->form_element_factory->getUsedSbFields($this->tracker);
@@ -245,7 +260,7 @@ class Tracker_RulesManager {
         }
         return $targets;
     }
-    
+
     function displayRules($engine, $source_field = false, $target_field = false, $source_value = false, $target_value = false) {
         $this->tracker->displayAdminItemHeader($engine, 'dependencies');
         echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','inline_help') .'</p>';
@@ -254,8 +269,8 @@ class Tracker_RulesManager {
         echo '<br />';
         $this->tracker->displayFooter($engine);
     }
-    
-      
+
+
     //New interface
      /**
      *getDependenciesBySourceTarget .
@@ -270,12 +285,12 @@ class Tracker_RulesManager {
         $fact = $this->_getTracker_RuleFactory();
         return $fact->getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
     }
-    
+
     public function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
         $fact = $this->_getTracker_RuleFactory();
         return $fact->deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
     }
-    
+
     public function process($engine, $request, $current_user) {
         //$this->displayRules($engine);
         if ($request->get('source_field') && !$request->get('target_field')) {
@@ -286,30 +301,30 @@ class Tracker_RulesManager {
                 $source_field = $request->get('source_field');
                 $target_field = $request->get('target_field');
                 $tracker_id = $this->tracker->id;
-                
-                if ($this->isCyclic($tracker_id, $source_field, $target_field) || 
+
+                if ($this->isCyclic($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenSource($tracker_id, $source_field, $target_field) ||
                     $this->fieldIsAForbiddenTarget($tracker_id, $target_field, $source_field)
-                ) {                
+                ) {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_not_authorized'));
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$tracker_id, 'func'    => 'admin-dependencies')));
                 } else {
-                    
+
                     $this->displayDefineDependencies($engine, $request, $current_user, $source_field, $target_field);
                 }
             } else {
                 //We delete all previous rules
                 $this->deleteRulesBySourceTarget($this->tracker->id, $request->get('source_field'), $request->get('target_field'));
-                
+
                 //Add dependencies in db
                 $field_source = $this->form_element_factory->getFormElementById($request->get('source_field'));
                 $field_source_values = $field_source->getBind()->getAllValues();
-                
+
                 $field_target = $this->form_element_factory->getFormElementById($request->get('target_field'));
                 $field_target_values = $field_target->getBind()->getAllValues();
-                
+
                 $currMatrix=array();
-                           
+
                 foreach($field_source_values as $field_source_value_id =>$field_source_value) {
                    foreach($field_target_values as $field_target_value_id => $field_target_value) {
                        $dependency = $field_source_value_id.'_'.$field_target_value_id;
@@ -326,17 +341,17 @@ class Tracker_RulesManager {
             $this->displayChooseSourceAndTarget($engine, $request, $current_user, null);
         }
     }
-    
-    
+
+
     function displayChooseSourceAndTarget($engine, $request, $current_user, $source_field_id) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'dependencies');
         echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','inline_help') .'</p>';
-        
+
         echo '<form action="'.TRACKER_BASE_URL.'/?" method="GET">';
         echo '<input type="hidden" name="tracker" value="'. (int)$this->tracker->id .'" />';
         echo '<input type="hidden" name="func" value="admin-dependencies" />';
-        
+
         //source
         $source_field = $this->form_element_factory->getFormElementById($source_field_id);
         if (!$source_field) {
@@ -353,9 +368,9 @@ class Tracker_RulesManager {
             echo '<input type="hidden" name="source_field" value="'. $source_field_id .'" />';
             echo $source_field->getLabel();
         }
-        
+
         echo ' &rarr; ';
-        
+
         //target
         $disabled = '';
         if (!$source_field) {
@@ -372,10 +387,10 @@ class Tracker_RulesManager {
             }
         }
         echo '</select>';
-        
+
         echo ' <input type="submit" name="choose_source" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         echo '</from>';
-        
+
         //Shortcut
         $sources_targets = $this->_getTracker_RuleFactory()->getInvolvedFieldsByTrackerId($this->tracker->id);
         if (count($sources_targets)) {
@@ -385,7 +400,7 @@ class Tracker_RulesManager {
                     if ($target = $this->form_element_factory->getFormElementById($row['target_field_id'])) {
                         $d = '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
                             array(
-                                'tracker'      => (int)$this->tracker->id, 
+                                'tracker'      => (int)$this->tracker->id,
                                 'func'         => 'admin-dependencies',
                                 'source_field' => $row['source_field_id'],
                                 'target_field' => $row['target_field_id'],
@@ -397,58 +412,58 @@ class Tracker_RulesManager {
                     }
                 }
             }
-            
+
             if ($dependencies) {
                 echo '<p>'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies','choose_existing_dependency').'</p>';
                 echo '<ul><li>'. implode('</li><li>', $dependencies) .'</li></ul>';
             }
             echo '</ul>';
         }
-        
+
         $this->tracker->displayFooter($engine);
 
     }
-    
+
     function displayDefineDependencies($engine, $request, $current_user, $source_field_id, $target_field_id) {
         $hp = Codendi_HTMLPurifier::instance();
-        $this->tracker->displayAdminItemHeader($engine, 'dependencies');        
+        $this->tracker->displayAdminItemHeader($engine, 'dependencies');
         $source_field = $this->form_element_factory->getFieldById($source_field_id);
         $target_field = $this->form_element_factory->getFieldById($target_field_id);
         //Display creation form
         echo '<h3>'.$GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_matrix_title').'</h3>';
         echo '<p>'. $GLOBALS['Language']->getText('plugin_tracker_field_dependencies','dependencies_matrix_help', array($source_field->getlabel(), $target_field->getlabel())) .'</p>';
-     
+
         $this->displayDependenciesMatrix($source_field, $target_field);
     }
-    
+
 
     protected function displayDependenciesMatrix($source_field, $target_field, $dependencies=null) {
-       
+
        $source_field_values = array();
        foreach ($source_field->getBind()->getAllValues() as $id => $v) {
            if (!$v->isHidden()) {
                $source_field_values[$id] = $v;
            }
        }
-       
+
        $target_field_values = array();
        foreach ($target_field->getBind()->getAllValues() as $id => $v) {
            if (!$v->isHidden()) {
                $target_field_values[$id] = $v;
            }
-       }       
-       
+       }
+
        $nb_target_field_values =count($target_field_values);
        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker->id, 'source_field' => $source_field->getId(), 'target_field' => $target_field->getId(), 'func'    => 'admin-dependencies')) .'" method="POST">';
        echo '<table id="tracker_field_dependencies_matrix">';
-                    
+
        echo "<tr class=\"".util_get_alt_row_color(1)."\">\n";
        echo "<td></td>";
        foreach($target_field_values as $target_field_value_id=>$target_field_value) {
            echo '<td class="matrix_cell">'.$target_field_value->getLabel()."</td>";
        }
        echo "</tr>";
-       
+
        $dependencies = $this->getDependenciesBySourceTarget($this->tracker->id, $source_field->getId(), $target_field->getId());
 
        $j=0;
@@ -476,7 +491,7 @@ class Tracker_RulesManager {
         echo '<input type="submit" name="create_field_dependencies" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         echo '</FORM>';
     }
-    
+
     protected function displayCheckbox($source_field_value_id, $target_field_value_id, $dependencies, $box_value) {
         $checked = '';
         if(count($dependencies)>0) {
@@ -487,10 +502,10 @@ class Tracker_RulesManager {
                 }
              }
           }
-          
+
           echo '<td class="matrix_cell" ><label class="pc_checkbox"><input type="checkbox" name="'.$box_value.'" '. $checked .'>&nbsp;</label></td>';
     }
-    
+
     function displayRulesAsJavascript() {
         $html = '<script type="text/javascript">';
         $html .= "\n//------------------------------------------------------\n";
@@ -507,7 +522,7 @@ class Tracker_RulesManager {
         $html .= "</script>";
         return $html;
     }
-    
+
     function isUsedInFieldDependency($field) {
         $field_id = $field->getId();
         $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
@@ -516,7 +531,7 @@ class Tracker_RulesManager {
         }
         return false;
     }
-    
+
     /**
      * Export workflow to XML
      *
@@ -541,45 +556,45 @@ class Tracker_RulesManager {
                 }
             }
     }
-    
+
     /**
-     * 
+     *
      * @param int $tracker_id
      * @param array $value_field_list
      * @return boolean
      */
     protected function validateDateRules($tracker_id, $value_field_list) {
         $rules = $this->getAllDateRulesByTrackerId($tracker_id);
-        
+
         foreach ($rules as $rule) {
             /* @var $rule Tracker_Rule_Date */
-            if(! isset($value_field_list[$rule->getSourceFieldId()]) || 
+            if(! isset($value_field_list[$rule->getSourceFieldId()]) ||
                     !isset($value_field_list[$rule->getTargetFieldId()])) {
                         return false;
             }
-            
+
             $source_value = $value_field_list[$rule->getSourceFieldId()];
             $target_value = $value_field_list[$rule->getTargetFieldId()];
-            
+
             $is_valid = $rule->validate($source_value, $target_value);
-            
+
             if (! $is_valid) {
                 return false;
             }
         }
-        
+
         return true;
     }
-    
-    
+
+
     /**
      * Checks that the submitted values do not break field dependencies.
-     * 
+     *
      * The logic is that if a rule from a source field to a target field exists
      * AND the incoming source value corresponds to a source value of ONE of the rule source values
      * then the incoming target value must be in one of the rules.
-     * I.e one rule must be satsified for a given (source_id, target_id, source_value) trio. 
-     * 
+     * I.e one rule must be satsified for a given (source_id, target_id, source_value) trio.
+     *
      * @param int $tracker_id
      * @param array $value_field_list
      * @return boolean
@@ -587,31 +602,31 @@ class Tracker_RulesManager {
     protected function validateListRules($tracker_id, $value_field_list) {
         $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $rule_basket = array();
-        
+
         foreach ($rules as $rule) {
             /* @var $rule Tracker_Rule_List*/
-            
+
             //check that the rule can be applied for the given fields
             if (! isset($value_field_list[$rule->getSourceFieldId()]) ||
                     ! isset($value_field_list[$rule->getTargetFieldId()]) ) {
                 continue;
             }
-            
+
             $source_id = (int) $rule->getSourceFieldId();
             $target_id = (int) $rule->getTargetFieldId();
             $source_value = (int) $value_field_list[$rule->getSourceFieldId()];
-            
+
             //check that the rule can be applied for the given source value
             if($source_value != $rule->getSourceValue()) {
                 continue;
             }
             $key = $source_id . $target_id . $source_value;
-            
+
             if(! isset($rule_basket[$key]) || $rule_basket[$key] === false) {
-                $is_valid = $rule->applyTo($tracker_id, 
-                    $source_id, 
-                    $source_value, 
-                    $target_id, 
+                $is_valid = $rule->applyTo($tracker_id,
+                    $source_id,
+                    $source_value,
+                    $target_id,
                     $value_field_list[$target_id]
                     );
                 $rule_basket[$key] = array(
@@ -623,13 +638,15 @@ class Tracker_RulesManager {
 
         foreach ($rule_basket as $error) {
             if($error['isValid'] === false) {
+                $tracker_list_factory = $this->getTrackerFormElementFactory();
+                $source_field         = $tracker_list_factory->getFormElementById($rule->getSourceFieldId());
+                $target_field         = $tracker_list_factory->getFormElementById($rule->getTargetFieldId());
 
-                //@todo add error message
+                $GLOBALS['Response']->addFeedback('error', 'Error on the dependencie between the fields ' . $source_field->getLabel() . ' and ' . $target_field->getLabel());
                 return false;
             }
         }
-        
-        
+
         return true;
     }
 }

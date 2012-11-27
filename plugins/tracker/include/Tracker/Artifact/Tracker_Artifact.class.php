@@ -972,10 +972,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if (!(!$last_changeset && $field->isRequired() && !$field->userCanSubmit())) {
                 $is_valid = $field->validateField($this, $submitted_value, $last_changeset_value, $is_submission) && $is_valid;
             }
-            $is_valid = $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data, $this->getFormElementFactory()) && $is_valid;
         }
 
         if($is_valid) {
+
+             //Validate rules
+             $is_valid = $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data, $this->getFormElementFactory()) && $is_valid;
+
             //validate workflow
              $workflow = $this->getWorkflow();
              if ($workflow) {
@@ -1532,7 +1535,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function getABurndownField(User $user) {
         return $this->getFormElementFactory()->getABurndownField($user, $this->getTracker());
     }
-    
+
     private function unlinkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
         $comment       = '';
         $email         = '';
