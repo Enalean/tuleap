@@ -39,3 +39,9 @@ SystemEventManager::fetchEvents() => not used
   Some classes exists both on Tuleap and Mediawiki
   * User
   * Sanitizer
+
+-> How to update
+
+== Resources ==
+* Log in mediawiki : LocalSettings.php : $wgDebugLogFile         = '/tmp/wiki.log';
+* Permissions management in mediawiki: http://www.mediawiki.org/wiki/Manual:User_rights

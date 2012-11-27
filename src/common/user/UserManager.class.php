@@ -129,7 +129,7 @@ class UserManager {
     }
 
     public function getUserInstanceFromRow($row) {
-        $u = new User($row);
+        $u = new Tuleap\User($row);
         return $u;
     }
     

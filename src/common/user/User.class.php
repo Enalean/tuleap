@@ -1,4 +1,6 @@
 <?php
+namespace Tuleap;
+
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
  *
@@ -29,7 +31,7 @@ require_once('common/language/BaseLanguageFactory.class.php');
  * 
  * Sets up database results and preferences for a user and abstracts this info
  */
-class User implements PFO_User {
+class User implements \PFO_User {
     
     /**
      * The user is active
@@ -1097,14 +1099,14 @@ class User implements PFO_User {
     
     protected function getPreferencesDao() {
         if (!$this->_preferencesdao) {
-            $this->_preferencesdao = new UserPreferencesDao(CodendiDataAccess::instance());
+            $this->_preferencesdao = new \UserPreferencesDao();
         }
         return $this->_preferencesdao;
     }
     
     protected function getUserGroupDao() {
         if (!$this->_usergroupdao) {
-            $this->_usergroupdao = new UserGroupDao(CodendiDataAccess::instance());
+            $this->_usergroupdao = new \UserGroupDao();
         }
         return $this->_usergroupdao;
     }

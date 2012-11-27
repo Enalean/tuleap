@@ -273,7 +273,8 @@ function db_query_from_file($file,$limit='-1',$offset=0,$dbserver=NULL) {
 			$cmd = str_replace(';;', ";", $cmd);
 			// next 2 lines are for mediawiki subst
 			$cmd = preg_replace(":/\*_\*/:","mw",$cmd );
-			$cmd = preg_replace(":/\*i\*/:","mw",$cmd );
+                        // TOCHECK WITH CHRISTIAN: Do not change indexes for mediawiki (doesn't seems well supported)
+			//$cmd = preg_replace(":/\*i\*/:","mw",$cmd );
 			$res = db_query( $cmd );
 
         		if (!$res) {
