@@ -50,7 +50,7 @@ class Tracker_RuleFactory {
         return $_artifactrulefactory_instance;
     }
 
-    function getAllRulesByTrackerWithOrder($tracker_id) {
+    function getAllListRulesByTrackerWithOrder($tracker_id) {
         $dar = $this->rules_dao->searchByTrackerIdWithOrder($tracker_id);
         $rules = array();
         while($rule_row = $dar->getRow()) {

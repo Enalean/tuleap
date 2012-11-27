@@ -52,10 +52,10 @@ class Tracker_RulesManager {
      * @param int $tracker_id
      * @return array
      */
-    function getAllRulesByTrackerWithOrder($tracker_id) {
+    function getAllListRulesByTrackerWithOrder($tracker_id) {
         if (!isset($this->rules_by_tracker_id[$tracker_id])) {
             $this->rules_by_tracker_id[$tracker_id] = $this->_getTracker_RuleFactory()
-                    ->getAllRulesByTrackerWithOrder($tracker_id);
+                    ->getAllListRulesByTrackerWithOrder($tracker_id);
         }
         return $this->rules_by_tracker_id[$tracker_id];
     }
@@ -163,7 +163,7 @@ class Tracker_RulesManager {
         if ($source_id == $target_id) {
             return true;
         } else {
-            $rules = $this->getAllRulesByTrackerWithOrder($tracker_id);
+            $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
             $found = false;
             while (!$found && (list(,$rule) = each($rules))) {
                 if ($rule->source_field == $target_id) {
@@ -184,7 +184,7 @@ class Tracker_RulesManager {
     }
     
     function fieldHasTarget($tracker_id, $field_id) {
-        $rules = $this->getAllRulesByTrackerWithOrder($tracker_id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
         while (!$found && (list(,$rule) = each($rules))) {
             $found = ($rule->source_field == $field_id);
@@ -193,7 +193,7 @@ class Tracker_RulesManager {
     }
     
     function fieldHasSource($tracker_id, $field_id) {
-        $rules = $this->getAllRulesByTrackerWithOrder($tracker_id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
         while (!$found && (list(,$rule) = each($rules))) {
             $found = ($rule->target_field == $field_id);
@@ -202,7 +202,7 @@ class Tracker_RulesManager {
     }
     
     function valueHasTarget($tracker_id, $field_id, $value_id, $target_id) {
-        $rules = $this->getAllRulesByTrackerWithOrder($tracker_id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
         while (!$found && (list(,$rule) = each($rules))) {
             $found = ($rule->source_field == $field_id && $rule->source_value == $value_id && $rule->target_field == $target_id);
@@ -211,7 +211,7 @@ class Tracker_RulesManager {
     }
     
     function valueHasSource($tracker_id, $field_id, $value_id, $source_id) {
-        $rules = $this->getAllRulesByTrackerWithOrder($tracker_id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
         while (!$found && (list(,$rule) = each($rules))) {
             $found = ($rule->target_field == $field_id && $rule->target_value == $value_id && $rule->source_field == $source_id);
@@ -220,7 +220,7 @@ class Tracker_RulesManager {
     }
     
     function ruleExists($tracker_id, $source_id, $target_id) {
-        $rules = $this->getAllRulesByTrackerWithOrder($tracker_id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $found = false;
         while (!$found && (list(,$rule) = each($rules))) {
             $found = ($rule->source_field == $source_id && $rule->target_field == $target_id);
@@ -251,7 +251,7 @@ class Tracker_RulesManager {
     
     /*function displayRulesAsJavascript() {
         echo "\n//------------------------------------------------------\n";
-        $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->getId());
+        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $html = new Tracker_Rule_List_View($rules[$key]);
@@ -533,7 +533,7 @@ class Tracker_RulesManager {
     function displayRulesAsJavascript() {
         $html = '<script type="text/javascript">';
         $html .= "\n//------------------------------------------------------\n";
-        $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
         if ($rules && count($rules) > 0) {
             foreach ($rules as $key => $nop) {
                 $trvv = new Tracker_Rule_List_View($rules[$key]);
@@ -549,7 +549,7 @@ class Tracker_RulesManager {
     
     function isUsedInFieldDependency($field) {
         $field_id = $field->getId();
-        $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
         foreach ($rules as $rule) {
             if ($rule->isUsedInRule($field->getId())) return true;
         }
@@ -565,7 +565,7 @@ class Tracker_RulesManager {
      * @return void
      */
     public function exportToXml(&$root, $xmlMapping) {
-            $rules = $this->getAllRulesByTrackerWithOrder($this->tracker->id);
+            $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
             foreach ($rules as $rule) {
                 $source_field = $this->form_element_factory->getFormElementById($rule->source_field);
                 $target_field = $this->form_element_factory->getFormElementById($rule->target_field);
@@ -618,7 +618,7 @@ class Tracker_RulesManager {
      * @return boolean
      */
     protected function validateListRules($tracker_id, $value_field_list) {
-        $rules = $this->getAllRulesByTrackerWithOrder($tracker_id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
         $rule_basket = array();
         
         foreach ($rules as $rule) {
