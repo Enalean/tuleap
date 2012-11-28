@@ -89,8 +89,8 @@ class Tracker_Rule_Date extends Tracker_Rule {
      * 
      * Checks that two given values satisfy the rule 
      * 
-     * @param int $source_value
-     * @param int $target_value
+     * @param string $source_value
+     * @param string $target_value
      * @return boolean
      */
     public function validate($source_value, $target_value) {
@@ -105,9 +105,6 @@ class Tracker_Rule_Date extends Tracker_Rule {
         
         $source_date = mktime(0, 0, 0, $source_parts[1], $source_parts[2], $source_parts[0]);
         $target_date = mktime(0, 0, 0, $target_parts[1], $target_parts[2], $target_parts[0]);
-        
-//        var_dump($source_value, $target_value, $source_date, $target_date, $this->getComparator());
-//        die();
         
         switch ($this->getComparator()) {
             case self::COMPARATOR_EQUALS :

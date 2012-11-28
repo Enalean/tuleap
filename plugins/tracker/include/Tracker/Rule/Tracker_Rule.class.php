@@ -19,14 +19,12 @@
  */
 
 /**
-* Rule between two dynamic fields
-*
-* For a tracker, if a source field is selected to a specific value,
-* then target field will react, depending of the implementation of the rule.
-*
-* @abstract
-*/
-/* abstract */ class Tracker_Rule {
+ * Rule between two dynamic fields
+ *
+ * For a tracker, if a source field is selected to a specific value,
+ * then target field will react, depending of the implementation of the rule.
+ */
+class Tracker_Rule {
     const RULETYPE_HIDDEN       = 1;
     const RULETYPE_DISABLED     = 2;
     const RULETYPE_MANDATORY    = 3;

@@ -23,16 +23,20 @@
 */
 class Tracker_Rule_List_View {
 
+    /**
+     *
+     * @var Tracker_Rule_List 
+     */
     var $rule;
     
-	/**
-	 *  Tracker_Rule_List_View() - constructor
-	 *
-	 *  @param $artifact_rule object
-	 */
-	function __construct($rule) {
-		$this->rule = $rule;
-	}
+    /**
+     *  Tracker_Rule_List_View() - constructor
+     *
+     *  @param Tracker_Rule_List $artifact_rule object
+     */
+    public function __construct($rule) {
+            $this->rule = $rule;
+    }
     
     function display() {
         echo $this->fetch();

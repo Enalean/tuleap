@@ -21,10 +21,9 @@ require_once('Dao.class.php');
 require_once('Date.class.php');
 
 /**
-* Factory of rules
-*
-* Base class to create, retrieve, update or delete rules
-*/
+ * Factory of rules
+ * Base class to create, retrieve, update or delete rules
+ */
 class Tracker_Rule_Date_Factory {
 
     /**
@@ -39,6 +38,7 @@ class Tracker_Rule_Date_Factory {
     /**
      *
      * @param DataAccessObject $dao
+     * @param Tracker_FormElementFactory $element_factory
      */
     public function __construct(Tracker_Rule_Date_Dao $dao, Tracker_FormElementFactory $element_factory = null) {
         $this->dao = $dao;
