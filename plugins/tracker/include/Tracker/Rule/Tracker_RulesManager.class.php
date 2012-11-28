@@ -18,8 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_RuleFactory.class.php');
-require_once('List/View.class.php');
+require_once 'Tracker_RuleFactory.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/Rule/List/View.class.php';
 
 /**
 * Manager of rules
@@ -582,7 +582,7 @@ class Tracker_RulesManager {
                 $source_field         = $this->getField($rule->getSourceFieldId());
                 $target_field         = $this->getField($rule->getTargetFieldId());
 
-                $GLOBALS['Response']->addFeedback('error', 'Error on the date value : ' . $source_field->getLabel() . ' must be  '. $rule->getComparator(). ' to ' . $target_field->getLabel());
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact','rules_date_not_valid', array($source_field->getLabel(), $rule->getComparator(), $target_field->getLabel())));
 
                 return false;
             }

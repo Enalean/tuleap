@@ -987,6 +987,7 @@ plugin_tracker_artifact	formelement_artifactlink_open_parent	Open $1
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
 plugin_tracker_artifact	fields_not_valid	Fields are not valid
+plugin_tracker_artifact	rules_date_not_valid	Error on the date value : $1 must be $2 to $3.
 plugin_tracker_artifact	mail_followup_date	Date:
 plugin_tracker_artifact	mail_followup_by	By:
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">You Are NOT Logged In<br />Please <a href="$1">log in,</a> so update notifications can be emailed to you.</span></strong><br />If you don't have a user account, then enter your email address instead:
