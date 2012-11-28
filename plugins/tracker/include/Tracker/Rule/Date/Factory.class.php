@@ -131,9 +131,14 @@ class Tracker_Rule_Date_Factory {
         $rules_array = array();
 
         while ($rule = $rules->getRow()) {
-            $comparartor = $rule['comparator'];
-            $date_rule = $this->populate(new Tracker_Rule_Date(), $rule['id'], $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $comparartor);
-            $rules_array[] = $date_rule;
+            $rules_array[] = $this->populate(
+                new Tracker_Rule_Date(),
+                $rule['id'],
+                $rule['tracker_id'],
+                $rule['source_field_id'],
+                $rule['target_field_id'],
+                $rule['comparartor']
+            );
         }
 
         return $rules_array;
