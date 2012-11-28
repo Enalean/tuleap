@@ -33,13 +33,13 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      * Searches Tracker_Rule by Id
      * @return DataAccessResult
      */
-    function searchById($id) {
-        $sql = sprintf("SELECT *
-                        FROM $this->table_name
-                            JOIN tracker_rule
-                            ON (id = tracker_rule_id)
-                        WHERE tracker_rule.id = %s",
-				$this->da->quoteSmart($id));
+    public function searchById($id) {
+        $tracker_rule_id = $this->da->escapeInt($id);
+        $sql = "SELECT *
+                FROM tracker_rule_date
+                    JOIN tracker_rule
+                    ON (id = tracker_rule_id)
+                WHERE tracker_rule.id = $tracker_rule_id";
         return $this->retrieve($sql);
     }
 
@@ -47,13 +47,13 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      * Searches Tracker_Rule by TrackerId
      * @return DataAccessResult
      */
-    function searchByTrackerId($tracker_id) {
-        $sql = sprintf("SELECT *
-                        FROM tracker_rule
-                            JOIN $this->table_name
-                            ON (id = tracker_rule_id)
-                        WHERE tracker_rule.tracker_id = %s",
-				$this->da->quoteSmart($tracker_id));
+    public function searchByTrackerId($tracker_id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = "SELECT *
+                FROM tracker_rule
+                    JOIN tracker_rule_date
+                    ON (id = tracker_rule_id)
+                WHERE tracker_rule.tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
     
@@ -99,7 +99,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
                 WHERE id = $rule_id
                   AND tracker_id = $tracker_id;";
         if ($this->update($sql)) {
-            echo $sql = "DELETE
+            $sql = "DELETE
                     FROM tracker_rule
                     WHERE id = $rule_id
                       AND tracker_id = $tracker_id";
