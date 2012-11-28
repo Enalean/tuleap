@@ -481,7 +481,7 @@ class TrackerFactory {
                 // Duplicate Canned Responses
                 Tracker_CannedResponseFactory::instance()->duplicate($id_template, $id);
                 //Duplicate field dependencies
-                Tracker_RuleFactory::instance()->duplicate($id_template, $id, $field_mapping);
+                $this->getRuleFactory()->duplicate($id_template, $id, $field_mapping);
                 $tracker = $this->getTrackerById($id);
 
                 // Process event that tracker is created

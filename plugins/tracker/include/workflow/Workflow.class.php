@@ -22,6 +22,9 @@ require_once('WorkflowFactory.class.php');
 
 class Workflow {
 
+    const FUNC_ADMIN_RULES       = 'admin-workflow';
+    const FUNC_ADMIN_TRANSITIONS = 'admin-workflow-transitions';
+
     public $workflow_id;
     public $tracker_id;
     public $field_id;
@@ -151,10 +154,20 @@ class Workflow {
         }
     }
 
-     /**
-     * @return string
+    /**
+     * @deprecated since Tuleap 5.8.
+     * @see isUsed()
+     *
+     * @return bool
      */
     public function getIsUsed() {
+        return $this->isUsed();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isUsed() {
         return $this->is_used;
     }
 
@@ -288,9 +301,12 @@ class Workflow {
                 $from = (int)$from;
             }
         }
-        $to         = (int)$fields_data[$this->getFieldId()];
-        $transition = $this->getTransition($from, $to);
-        return $transition;
+        if (isset($fields_data[$this->getFieldId()])) {
+            $to         = (int)$fields_data[$this->getFieldId()];
+            $transition = $this->getTransition($from, $to);
+            return $transition;
+        }
+        return null;
     }
 
    /**

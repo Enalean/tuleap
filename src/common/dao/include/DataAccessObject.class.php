@@ -53,6 +53,18 @@ class DataAccessObject {
     public function commit() {
         $this->da->commit();
     }
+    
+    public function rollBack() {
+        $this->da->rollback();
+    }
+    
+    /**
+     * 
+     * @return DataAccess
+     */
+    public function getDa() {
+        return $this->da;
+    }
 
     /**
      * For SELECT queries

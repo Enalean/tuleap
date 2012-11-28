@@ -487,7 +487,7 @@ class Tracker_SOAPServer {
     }
 
     private function getTrackerWorkflow (Tracker $tracker) {
-        return $tracker->getWorkflowManager()->exportToSOAP();
+        return $tracker->getWorkflow()->exportToSOAP();
     }
 
     /**

@@ -306,7 +306,13 @@ class trackerPlugin extends Plugin {
                     $transition = TransitionFactory::instance()->getTransition($atid);
                     $tracker_id = $transition->getWorkflow()->getTrackerId();
                     $edit_transition = $transition->getFieldValueFrom().'_'.$transition->getFieldValueTo();
-                    echo '<TD><a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-workflow&edit_transition='.$edit_transition.'">'.$objname.'</a></TD>';
+                    echo '<TD><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
+                        array(
+                            'tracker'         => $tracker_id,
+                            'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
+                            'edit_transition' => $edit_transition
+                        )
+                    ).'">'.$objname.'</a></TD>';
                 }
             }
         }

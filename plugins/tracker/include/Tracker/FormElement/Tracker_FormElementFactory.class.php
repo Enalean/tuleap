@@ -383,7 +383,7 @@ class Tracker_FormElementFactory {
         return $this->getFormElementsByType($tracker, array_keys($field_classnames));
     }
 
-    public function getUsedFieldByIdAndType($tracker, $field_id, $type) {
+    public function getUsedFieldByIdAndType(Tracker $tracker, $field_id, $type) {
         $tracker_id = $tracker->getId();
         if ($row = $this->getDao()->searchUsedByIdAndType($tracker_id, $field_id, $type)->getRow()) {
             return $this->getCachedInstanceFromRow($row);
