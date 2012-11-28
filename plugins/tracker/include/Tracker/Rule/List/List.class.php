@@ -50,13 +50,13 @@ class Tracker_Rule_List extends Tracker_Rule {
     *
     * @return boolean
     */
-    function applyTo($tracker_id, $source_field, $source_value, $target_field, $target_value) {
+    public function applyTo($tracker_id, $source_field, $source_value, $target_field, $target_value) {
         $can_apply_to = $this->canApplyTo($tracker_id, $source_field, $source_value, $target_field, $target_value);
         $pass = $can_apply_to && $target_value == $this->target_value;
         return $pass;
     }
     
-    function canApplyTo($tracker_id, $source_field, $source_value, $target_field, $target_value) {
+    public function canApplyTo($tracker_id, $source_field, $source_value, $target_field, $target_value) {
         $match = $tracker_id == $this->tracker_id &&
             $source_field == $this->source_field && 
             $source_value == $this->source_value && 
