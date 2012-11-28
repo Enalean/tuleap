@@ -34,7 +34,7 @@ class Tracker_Rule_List_Factory {
 
     /**
      * 
-     * @param DataAccessObject $dao
+     * @param Tracker_Rule_List_Dao $dao
      */
     function __construct(Tracker_Rule_List_Dao $dao) {
         $this->dao = $dao;
