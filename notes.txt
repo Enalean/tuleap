@@ -1,3 +1,7 @@
+== How to set up ==
+*Read README.tuleap
+
+== Necessary files == 
 *src/common/include/PFO-RBAC.interface.php
 *src/common/include/RBAC.php
 *src/common/include/RBACEngine.class.php
@@ -45,3 +49,5 @@ SystemEventManager::fetchEvents() => not used
 == Resources ==
 * Log in mediawiki : LocalSettings.php : $wgDebugLogFile         = '/tmp/wiki.log';
 * Permissions management in mediawiki: http://www.mediawiki.org/wiki/Manual:User_rights
+
+
