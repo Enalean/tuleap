@@ -415,12 +415,11 @@ class Workflow_validateGlobalRulesTest extends TuleapTestCase {
     }
 
     public function itDelegatesValidationToRulesManager() {
-        $fields_data          = array();
-        $form_element_factory = mock ('Tracker_FormElementFactory');
+        $fields_data = array();
 
-        expect($this->rules_manager)->validate($this->tracker_id, $fields_data, $form_element_factory)->once();
+        expect($this->rules_manager)->validate($this->tracker_id, $fields_data)->once()->returns(true);
         $workflow = new workflow(1, $this->tracker_id, 1, 1, array());
-        $workflow->validateGlobalRules($fields_data, $form_element_factory);
+        $this->assertTrue($workflow->validateGlobalRules($fields_data));
     }
 }
 ?>
