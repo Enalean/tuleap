@@ -29,7 +29,7 @@ require_once('common/language/BaseLanguageFactory.class.php');
  * 
  * Sets up database results and preferences for a user and abstracts this info
  */
-class User implements PFO_User {
+class PFUser implements PFO_User {
     
     /**
      * The user is active
@@ -473,7 +473,7 @@ class User implements PFO_User {
      * - the "querying" user is Restricted AND the user to see is
      *   member of a project the restricted user is member too.
      *
-     * @param User $user A user to test
+     * @param PFUser $user A user to test
      *
      * @return Boolean
      */
@@ -1097,14 +1097,14 @@ class User implements PFO_User {
     
     protected function getPreferencesDao() {
         if (!$this->_preferencesdao) {
-            $this->_preferencesdao = new UserPreferencesDao(CodendiDataAccess::instance());
+            $this->_preferencesdao = new UserPreferencesDao();
         }
         return $this->_preferencesdao;
     }
     
     protected function getUserGroupDao() {
         if (!$this->_usergroupdao) {
-            $this->_usergroupdao = new UserGroupDao(CodendiDataAccess::instance());
+            $this->_usergroupdao = new UserGroupDao();
         }
         return $this->_usergroupdao;
     }
@@ -1222,7 +1222,7 @@ class User implements PFO_User {
       *
       * @param bool $has_avatar true if the user has an avatar
       *
-      * @return User for chaining methods
+      * @return PFUser for chaining methods
       */
      public function setHasAvatar($has_avatar = 1) {
          $this->has_avatar = ($has_avatar ? 1 : 0);

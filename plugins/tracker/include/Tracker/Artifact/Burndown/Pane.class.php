@@ -43,7 +43,7 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
     private $field;
     
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
@@ -52,7 +52,7 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
      */
     private $plugin_theme_path;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_FormElement_Field_Burndown $field, User $user, $plugin_theme_path) {
+    public function __construct(Tracker_Artifact $artifact, Tracker_FormElement_Field_Burndown $field, PFUser $user, $plugin_theme_path) {
         $this->artifact          = $artifact;
         $this->field             = $field;
         $this->user              = $user;

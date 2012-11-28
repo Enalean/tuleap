@@ -130,7 +130,7 @@ class SystemEvent_COMPUTE_MD5SUM extends SystemEvent {
     /**
      * Manage the mail content and send it
      * 
-     * @param User    $user
+     * @param PFUser    $user
      * @param FRSFile $file
      * @param String  $bodyContent
      * @param Array   $option

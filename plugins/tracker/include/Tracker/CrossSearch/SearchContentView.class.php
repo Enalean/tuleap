@@ -49,7 +49,7 @@ class Tracker_CrossSearch_SearchContentView {
     private $factory;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
     
@@ -58,7 +58,7 @@ class Tracker_CrossSearch_SearchContentView {
                                 TreeNode                         $tree_of_artifacts, 
                                 Tracker_ArtifactFactory          $artifact_factory, 
                                 Tracker_FormElementFactory       $factory,
-                                User                             $user) {
+                                PFUser                             $user) {
         
         $this->report            = $report;
         $this->criteria          = $criteria;

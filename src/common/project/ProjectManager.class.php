@@ -126,7 +126,7 @@ class ProjectManager {
      * @param String  $name
      * @param Integer $limit
      * @param Integer $nbFound
-     * @param User    $user
+     * @param PFUser    $user
      * @param Boolean $isMember
      * @param Boolean $isAdmin
      * @param Boolean $isPrivate Display private projects if true

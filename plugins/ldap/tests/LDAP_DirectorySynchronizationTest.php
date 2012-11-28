@@ -172,7 +172,7 @@ class LDAP_DirectorySynchronizationTest extends UnitTestCase {
         $sync->setReturnValue('getUserManager', $um);
 
         $lum = new MockLDAP_UserManager($this);
-        $lum->expectOnce('updateLdapUid', array(new User($row), 'mis_1234'));
+        $lum->expectOnce('updateLdapUid', array(new PFUser($row), 'mis_1234'));
         $sync->setReturnValue('getLdapUserManager', $lum);
 
         $lus = new MockLDAP_UserSync($this);

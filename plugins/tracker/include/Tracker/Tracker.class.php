@@ -704,7 +704,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The request
-     * @param User                           $current_user    The user who made the request
+     * @param PFUser                           $current_user    The user who made the request
      *
      * @return void
      */
@@ -2200,7 +2200,7 @@ EOS;
     /**
      * Check if user has permission to submit artifact or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to submit artifacts, false otherwise
      */
@@ -2220,7 +2220,7 @@ EOS;
     /**
      * Check if user has permission to delete a tracker or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to delete trackers, false otherwise
      */
@@ -2235,7 +2235,7 @@ EOS;
     /**
      * Check if user has full access to a tracker or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has full access to tracker, false otherwise
      */

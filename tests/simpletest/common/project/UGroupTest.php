@@ -24,7 +24,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->user_id = 400;
-        $this->user    = stub('User')->getId()->returns($this->user_id);
+        $this->user    = stub('PFUser')->getId()->returns($this->user_id);
     }
     
     function itAddUserIntoStaticGroup() {
@@ -109,7 +109,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->user_id = 400;
-        $this->user    = stub('User')->getId()->returns($this->user_id);
+        $this->user    = stub('PFUser')->getId()->returns($this->user_id);
     }
     
     function itRemoveUserFromStaticGroup() {

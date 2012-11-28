@@ -87,11 +87,11 @@ abstract class Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return string html
      */
-    public abstract function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user);
+    public abstract function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
 
     /**
      * Process the form
@@ -99,11 +99,11 @@ abstract class Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return void
      */
-    public abstract function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user);
+    public abstract function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user);
 
     /**
      * Export semantic to XML

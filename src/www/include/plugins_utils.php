@@ -30,22 +30,6 @@ function sysdebug_lazymode($enable) {
 	$sysdebug_lazymode_on = $enable ? true : false;
 }
 
-function forge_get_config($key) {
-  $conf_variables_mapping = array(
-  'lists_host' => 'sys_lists_host',
-  'web_host'  => 'sys_default_domain',
-  'config_path' => 'sys_custom_dir',
-  'database_host' => 'sys_dbhost',
-  'database_user' => 'sys_dbuser',
-  'database_name' => 'sys_dbname',
-  'database_password' => 'sys_dbpasswd',
-  );
-  if (isset($conf_variables_mapping[$key])) {
-    $key = $conf_variables_mapping[$key];
-  }
-  return Config::get($key);
-}
-
 function htmlRedirect($url) {
         $GLOBALS['HTML']->redirect($url);
 }
@@ -62,9 +46,6 @@ function helpButton($params)
 function getIcon() {
         echo '<IMG SRC="'.util_get_image_theme("ic/cfolder15.png").'" HEIGHT="13" WIDTH="15" BORDER="0">';
 }
-function util_make_url ($loc) {
-        return session_make_url($loc);
-}
 
 /**
  * plugin_hook () - run a set of hooks
@@ -73,17 +54,6 @@ function util_make_url ($loc) {
  * @param params - parameters for the hook
  */
 function plugin_hook($hookname,$params) {
-        $em =& EventManager::instance();
-        $em->processEvent($hookname,$params);
-}
-
-/**
- * plugin_hook_by_reference () - run a set of hooks with params passed by reference
- *
- * @param hookname - name of the hook
- * @param params - parameters for the hook
- */
-function plugin_hook_by_reference ($hookname, &$params) {
         $em =& EventManager::instance();
         $em->processEvent($hookname,$params);
 }

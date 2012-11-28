@@ -199,7 +199,7 @@ class MailManagerTest extends UnitTestCase {
     
     function testGetMailPrefsByUsersShouldReturnHTMLByDefault() {
         $mm   = new MailManager();
-        $user = new User(array('id' => 123, 'language_id' => 'en_US'));
+        $user = new PFUser(array('id' => 123, 'language_id' => 'en_US'));
         $this->assertEqual($mm->getMailPreferencesByUser($user), Codendi_Mail_Interface::FORMAT_HTML);
     }
     

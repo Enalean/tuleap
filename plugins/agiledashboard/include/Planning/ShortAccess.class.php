@@ -26,7 +26,7 @@ class Planning_ShortAccess {
     private $is_latest = false;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
@@ -43,7 +43,7 @@ class Planning_ShortAccess {
     /** @var array of Planning_MilestoneLinkPresenter */
     private $presenters;
 
-    public function __construct(Planning $planning, User $user, Planning_MilestoneFactory $milestone_factory) {
+    public function __construct(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
         $this->user              = $user;
         $this->planning          = $planning;
         $this->milestone_factory = $milestone_factory;

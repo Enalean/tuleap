@@ -284,7 +284,7 @@ class Codendi_Request {
     /**
      * Return the authenticated current user if any (null otherwise)
      *
-     * @return User
+     * @return PFUser
      */
     public function getCurrentUser() {
         if (!$this->current_user) {
@@ -296,9 +296,9 @@ class Codendi_Request {
     /**
      * Set a current user (should be used only for tests)
      *
-     * @param User $user
+     * @param PFUser $user
      */
-    public function setCurrentUser(User $user) {
+    public function setCurrentUser(PFUser $user) {
         $this->current_user = $user;
     }
 

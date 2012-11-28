@@ -20,7 +20,7 @@ require_once 'common/user/User_SSHKeyValidator.class.php';
 
 class User_SSHKeyValidatorTest extends TuleapTestCase {
     /**
-     * @var User
+     * @var PFUser
      */
     protected $user;
 

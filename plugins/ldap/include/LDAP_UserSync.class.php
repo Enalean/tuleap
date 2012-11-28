@@ -81,12 +81,12 @@ class LDAP_UserSync {
      * This method returns if it modified the user or not. This is usefull during
      * batch process in order to limit computing.
      *
-     * @param User       $user Codendi user
+     * @param PFUser       $user Codendi user
      * @param LDAPResult $lr   Ldap result
      *
      * @return Boolean True if the method modified the user object
      */
-    public function sync(User $user, LDAPResult $lr) {
+    public function sync(PFUser $user, LDAPResult $lr) {
         $modified = false;
 
         if (($lr->getCommonName() !== null) && ($user->getRealName() != substr($lr->getCommonName(), 0, 32))) {

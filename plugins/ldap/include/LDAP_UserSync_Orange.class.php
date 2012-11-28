@@ -39,12 +39,12 @@ class LDAP_UserSync_Orange extends LDAP_UserSync {
      * This method returns if it modified the user or not. This is usefull during
      * batch process in order to limit computing.
      *
-     * @param User       $user User
+     * @param PFUser       $user User
      * @param LDAPResult $lr   Ldap result
      *
      * @return Boolean True if the method modified the user object
      */
-    public function sync(User $user, LDAPResult $lr) {
+    public function sync(PFUser $user, LDAPResult $lr) {
         $modified  = false;
 
         $ldapEmail = $lr->getEmail();

@@ -85,12 +85,12 @@ class PlanningFactory {
     /**
      * Get a list of planning defined in a group_id
      *
-     * @param User $user     The user who will see the planning
+     * @param PFUser $user     The user who will see the planning
      * @param int  $group_id
      *
      * @return array of Planning
      */
-    public function getPlannings(User $user, $group_id) {
+    public function getPlannings(PFUser $user, $group_id) {
         $plannings = array();
         foreach ($this->dao->searchPlannings($group_id) as $row) {
             $tracker = $this->tracker_factory->getTrackerById($row['planning_tracker_id']);
@@ -108,12 +108,12 @@ class PlanningFactory {
     /**
      * Get a list of planning short access defined in a group_id
      *
-     * @param User $user     The user who will see the planning
+     * @param PFUser $user     The user who will see the planning
      * @param int  $group_id
      *
      * @return array of Planning_ShortAccess
      */
-    public function getPlanningsShortAccess(User $user, $group_id, Planning_MilestoneFactory $milestone_factory) {
+    public function getPlanningsShortAccess(PFUser $user, $group_id, Planning_MilestoneFactory $milestone_factory) {
         $plannings    = $this->getPlannings($user, $group_id);
         $short_access = array();
         foreach ($plannings as $planning) {
@@ -363,7 +363,7 @@ class PlanningFactory {
      *
      * @return Array of Integer
      */
-    public function getPlanningTrackers($group_id, User $user) {
+    public function getPlanningTrackers($group_id, PFUser $user) {
         $trackers = array();
         foreach ($this->getPlannings($user, $group_id) as $planning) {
             $planning   = $this->getPlanning($planning->getId());

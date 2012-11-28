@@ -41,7 +41,7 @@ class DocmanWatermark_Stamper {
     protected $item;
     
     /**
-     * @var User
+     * @var PFUser
      */
     protected $user;
     
@@ -66,7 +66,7 @@ class DocmanWatermark_Stamper {
      *  @param String         $lib_path Zend library path
      *  @param Docman_Item    $item
      *  @param Docman_Version $version
-     *  @param User           $user
+     *  @param PFUser           $user
      *
      *  @return void
      */

@@ -123,7 +123,7 @@ class Tracker_SOAPServer {
         return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
     }
 
-    private function artifactListToSoap(User $user, $id_list, $offset, $max_rows) {
+    private function artifactListToSoap(PFUser $user, $id_list, $offset, $max_rows) {
         $return = array(
             'artifacts' => array(),
             'total_artifacts_number' => 0
@@ -168,7 +168,7 @@ class Tracker_SOAPServer {
      * @param array of Object{Tracker} $tf_arr the array of ArtifactTrackers to convert.
      * @return array the SOAPArrayOfTracker corresponding to the array of Trackers Object
      */
-    private function trackerlist_to_soap($tf_arr, User $user) {
+    private function trackerlist_to_soap($tf_arr, PFUser $user) {
         $return = array();
         foreach ($tf_arr as $tracker_id => $tracker) {
 
@@ -230,7 +230,7 @@ class Tracker_SOAPServer {
      * @param array of Object{Field} $tracker_fields the array of TrackerFields to convert.
      * @return array the SOAPArrayOfTrackerField corresponding to the array of Tracker Fields Object
      */
-    private function trackerfields_to_soap(User $user, Tracker $tracker, $tracker_fields) {
+    private function trackerfields_to_soap(PFUser $user, Tracker $tracker, $tracker_fields) {
         $return = array();
         foreach ($tracker_fields as $tracker_field) {
             if ($tracker_field->userCanRead($user)) {
@@ -276,7 +276,7 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't view the tracker
      */
-    private function checkUserCanViewTracker(Tracker $tracker, User $user) {
+    private function checkUserCanViewTracker(Tracker $tracker, PFUser $user) {
         if (!$tracker->userCanView($user)) {
             throw new SoapFault(get_tracker_factory_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
         }
@@ -291,7 +291,7 @@ class Tracker_SOAPServer {
      * @param Object{Artifact} $artifact the artifact to convert.
      * @return array the SOAPArtifact corresponding to the Artifact Object
      */
-    private function artifact_to_soap(User $user, Tracker_Artifact $artifact) {
+    private function artifact_to_soap(PFUser $user, Tracker_Artifact $artifact) {
         $return = array();
 
         // We check if the user can view this artifact

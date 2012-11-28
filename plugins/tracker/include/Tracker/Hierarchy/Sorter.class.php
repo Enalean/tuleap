@@ -120,11 +120,11 @@ class Tracker_Hierarchy_Sorter {
      *
      * @todo: limit to the hierarchy ? (currently add all the descendants)
      * 
-     * @param User             $user
+     * @param PFUser             $user
      * @param DataAccessResult $artifacts_info
      * @return \TreeNode
      */
-    public function buildTreeWithMissingChildren(User $user, $artifacts_info, array $excluded_artifact_ids) {
+    public function buildTreeWithMissingChildren(PFUser $user, $artifacts_info, array $excluded_artifact_ids) {
         $root           = new TreeNode();
         $artifacts_info = $this->indexArtifactInfoByArtifactId($artifacts_info);
         $artifacts      = $this->getArtifactsFromArtifactInfo($artifacts_info);
@@ -148,7 +148,7 @@ class Tracker_Hierarchy_Sorter {
         return $artifacts;
     }
 
-    private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info, array $excluded_artifact_ids) {
+    private function buildArtifactsTree(PFUser $user, TreeNode $root, array $artifacts, array $artifacts_info, array $excluded_artifact_ids) {
         foreach ($artifacts as $artifact) {
             if (!isset($excluded_artifact_ids[$artifact->getId()])) {
                 $node = new TreeNode($this->getArtifactInfo($artifact, $artifacts_info));

@@ -30,11 +30,11 @@ abstract class GitViewsRepositoriesTraversalStrategy {
      * Display the list of repositories
      *
      * @param array $repositories Array of raw representation of repositories, indexed by repository id
-     * @param User  $user         The user who traverse the forest
+     * @param PFUser  $user         The user who traverse the forest
      *
      * @return string
      */
-    public function fetch(array $repositories, User $user) {
+    public function fetch(array $repositories, PFUser $user) {
         if (empty($repositories)) {
             return '';
         }
@@ -44,7 +44,7 @@ abstract class GitViewsRepositoriesTraversalStrategy {
     /**
      * @return string
      */
-    protected function _makeRepositoryList(array $repositories, User $user) {
+    protected function _makeRepositoryList(array $repositories, PFUser $user) {
         $html = '';
         foreach ( $repositories as $repository ) {
             $repoName = $repository[GitDao::REPOSITORY_NAME];

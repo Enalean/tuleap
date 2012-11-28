@@ -37,7 +37,7 @@ class WorkflowManager {
         return $tracker;
     }
 
-    public function process(TrackerManager $engine, Codendi_Request $request, User $current_user) {
+    public function process(TrackerManager $engine, Codendi_Request $request, PFUser $current_user) {
 
         if ($request->get('create')) {
 
@@ -196,7 +196,7 @@ class WorkflowManager {
         }
     }
 
-    protected function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, User $current_user, Transition $transition) {
+    protected function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, PFUser $current_user, Transition $transition) {
 
         $hp = Codendi_HTMLPurifier::instance();
         $this->tracker->displayAdminItemHeader($engine, 'editworkflow');
@@ -257,7 +257,7 @@ class WorkflowManager {
         return TransitionFactory::instance();
     }
 
-    protected function displayAdminWorkflow(TrackerManager $engine, Codendi_Request $request, User $current_user, Workflow $workflow) {
+    protected function displayAdminWorkflow(TrackerManager $engine, Codendi_Request $request, PFUser $current_user, Workflow $workflow) {
 
         $field =Tracker_FormElementFactory::instance()->getFormElementById($workflow->field_id);
 

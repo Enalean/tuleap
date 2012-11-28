@@ -250,11 +250,11 @@ class Workflow {
      * Execute actions before transition happens (if there is one)
      *
      * @param Array $fields_data  Request field data (array[field_id] => data)
-     * @param User  $current_user The user who are performing the update
+     * @param PFUser  $current_user The user who are performing the update
      *
      * @return void
      */
-    public function before(array &$fields_data, User $current_user, Tracker_Artifact $artifact) {
+    public function before(array &$fields_data, PFUser $current_user, Tracker_Artifact $artifact) {
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $artifact);
             if ($transition) {

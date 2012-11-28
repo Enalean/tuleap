@@ -183,11 +183,11 @@ class Docman_ActionsDeleteVisitor /* implements Visitor */ {
      * 
      * @param Docman_File    $item
      * @param Docman_Version $version
-     * @param User           $user
+     * @param PFUser           $user
      * 
      * @return Boolean
      */
-    function _deleteVersion(Docman_File $item, Docman_Version $version, User $user) {
+    function _deleteVersion(Docman_File $item, Docman_Version $version, PFUser $user) {
         // Proceed to deletion
         $version_factory = $this->_getVersionFactory();
         return $version_factory->deleteSpecificVersion($item, $version->getNumber());

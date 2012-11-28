@@ -38,7 +38,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     /**
      * Constructor of the class
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Project $project
      * @param FRSPackage $package
      * @param Integer $maxFileSize
@@ -176,7 +176,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     /**
      * Returns the user
      *
-     * @return User
+     * @return PFUser
      */
     function getUser() {
 
@@ -259,7 +259,7 @@ class WebDAVFRSPackage extends Sabre_DAV_Directory {
     /**
      * Checks whether the user can read the package or not
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return Boolean
      */

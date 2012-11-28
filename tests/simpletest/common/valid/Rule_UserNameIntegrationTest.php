@@ -84,7 +84,7 @@ class Rule_UserNameIntegrationTest extends UnitTestCase {
     }
 
     function testUserAlreadyExist() {
-        $u  = new MockUser();
+        $u  = mock('PFUser');
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', $u, "user");
 

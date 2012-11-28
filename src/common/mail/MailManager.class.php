@@ -35,11 +35,11 @@ class MailManager {
     /**
      * Prepare the mail according to user preferences
      * 
-     * @param User $user The user to whom send the mail
+     * @param PFUser $user The user to whom send the mail
      * 
      * @return Mail 
      */
-    public function getMailForUser(User $user) {
+    public function getMailForUser(PFUser $user) {
         $mail = $this->getMailByType($this->getMailPreferencesByUser($user));
         $mail->setToUser(array($user));
         return $mail;
@@ -88,7 +88,7 @@ class MailManager {
                     }
                 }
             } else {
-                $user = new User(array('user_id' => 0, 'language_id' => $this->getConfig('sys_lang')));
+                $user = new PFUser(array('user_id' => 0, 'language_id' => $this->getConfig('sys_lang')));
                 $user->setEmail($address);
             }
             $res[$pref][] = $user;
@@ -99,11 +99,11 @@ class MailManager {
     /**
      * Returns whether the user wants an HTML or a Text notification
      * 
-     * @param User $user
+     * @param PFUser $user
      * 
      * @return String
      */
-    public function getMailPreferencesByUser(User $user) {
+    public function getMailPreferencesByUser(PFUser $user) {
         if ($user->getPreference(Codendi_Mail_Interface::PREF_FORMAT) == Codendi_Mail_Interface::FORMAT_TEXT) {
             return Codendi_Mail_Interface::FORMAT_TEXT;
         }

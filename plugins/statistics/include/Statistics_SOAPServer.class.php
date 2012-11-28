@@ -93,7 +93,7 @@ class Statistics_SOAPServer {
         }
     }
     
-    private function getDiskStatsForUser(User $user, $group_id) {
+    private function getDiskStatsForUser(PFUser $user, $group_id) {
         $disk_stats = array(
             'services' => array(),
             'total'    => $this->disk_usage_manager->returnTotalProjectSize($group_id),
@@ -107,7 +107,7 @@ class Statistics_SOAPServer {
         return $disk_stats;
     }
     
-    private function assertUserCanAccessProject(User $user, $group_id) {
+    private function assertUserCanAccessProject(PFUser $user, $group_id) {
         $project = $this->soap_request_validator->getProjectById($group_id);
         $this->soap_request_validator->assertUserCanAccessProject($user, $project);
     }

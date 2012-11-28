@@ -27,12 +27,14 @@
 if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 
-require_once dirname(__FILE__) . '/../../../www/env.inc.php';
-require_once $gfcommon.'include/pre.php';
-require_once $gfcommon.'include/RBACEngine.class.php';
+require_once 'pre.php';
+require_once dirname(__FILE__) . '/../../../src/www/env.inc.php';
+require_once dirname(__FILE__) . '/../../../src/www/include/plugins_utils.php';
+
+//require_once 'common/include/RBACEngine.class.php';
 sysdebug_lazymode(true);
 
-$IP = forge_get_config('master_path', 'mediawiki');
+$IP = forge_get_config('src_path', 'mediawiki');
 
 if (!isset ($fusionforgeproject)) {
 	$gr=new Group(1);
@@ -255,53 +257,57 @@ function FusionForgeMWAuth( $user, &$result ) {
 function SetupPermissionsFromRoles () {
 	global $fusionforgeproject, $wgGroupPermissions ;
 
-	$g = group_get_object_by_name ($fusionforgeproject) ;
+	$group = group_get_object_by_name ($fusionforgeproject) ;
 	// Setup rights for all roles referenced by project
-	$rids = $g->getRolesID() ;
-	$e = RBACEngine::getInstance();
-	$grs = $e->getGlobalRoles();
-	foreach ($grs as $r) {
-		$rids[] = $r->getID();
+	$role_ids = $group->getRolesID() ;
+	$rbac_engine = RBACEngine::getInstance();
+        
+	$global_roles = $rbac_engine->getGlobalRoles();
+	foreach ($global_roles as $role) {
+		$role_ids[] = $role->getID();
 	}
-	$rids = array_unique($rids);
-	$rs = array();
-	foreach ($rids as $rid) {
-		$rs[] = $e->getRoleById($rid);
+	$role_ids = array_unique($role_ids);
+	$roles = array();
+	foreach ($role_ids as $rid) {
+		$roles[] = $rbac_engine->getRoleById($rid);
 	}
-	
-	foreach ($rs as $r) {
-		$gr = FusionForgeRoleToMediawikiGroupName ($r, $g) ;
-
+	$wgGroupPermissions['*']['read'] = true;
+        $wgGroupPermissions['*']['edit'] = true;
+        $wgGroupPermissions['*']['createpage'] = true;
+        
+	foreach ($roles as $role) {
+		$mw_group_name = FusionForgeRoleToMediawikiGroupName ($role, $group) ;
+                
 		// Read access
-		$wgGroupPermissions[$gr]['read'] = $r->hasPermission ('plugin_mediawiki_read', $g->getID()) ;
+		$wgGroupPermissions[$mw_group_name]['read'] = $role->hasPermission ('plugin_mediawiki_read', $group->getID()) ;
 
 		// Day-to-day edit privileges
-		$wgGroupPermissions[$gr]['edit']               = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editexisting') ;
-		$wgGroupPermissions[$gr]['writeapi']           = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editexisting') ;
-		$wgGroupPermissions[$gr]['createpage']         = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editnew') ;
-		$wgGroupPermissions[$gr]['createtalk']         = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editnew') ;
-		$wgGroupPermissions[$gr]['minoredit']          = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editnew') ;
-		$wgGroupPermissions[$gr]['move']               = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editmove') ;
-		$wgGroupPermissions[$gr]['move-subpages']      = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editmove') ;
-		$wgGroupPermissions[$gr]['move-rootuserpages'] = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editmove') ;
-		$wgGroupPermissions[$gr]['delete']             = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editmove') ;
-		$wgGroupPermissions[$gr]['undelete']           = $r->hasPermission ('plugin_mediawiki_edit', $g->getID(), 'editmove') ;
+		$wgGroupPermissions[$mw_group_name]['edit']               = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editexisting') ;
+		$wgGroupPermissions[$mw_group_name]['writeapi']           = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editexisting') ;
+		$wgGroupPermissions[$mw_group_name]['createpage']         = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editnew') ;
+		$wgGroupPermissions[$mw_group_name]['createtalk']         = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editnew') ;
+		$wgGroupPermissions[$mw_group_name]['minoredit']          = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editnew') ;
+		$wgGroupPermissions[$mw_group_name]['move']               = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editmove') ;
+		$wgGroupPermissions[$mw_group_name]['move-subpages']      = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editmove') ;
+		$wgGroupPermissions[$mw_group_name]['move-rootuserpages'] = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editmove') ;
+		$wgGroupPermissions[$mw_group_name]['delete']             = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editmove') ;
+		$wgGroupPermissions[$mw_group_name]['undelete']           = $role->hasPermission ('plugin_mediawiki_edit', $group->getID(), 'editmove') ;
 
 		// File upload privileges
-		$wgGroupPermissions[$gr]['upload']          = $r->hasPermission ('plugin_mediawiki_upload', $g->getID(), 'upload') ;
-		$wgGroupPermissions[$gr]['reupload-own']    = $r->hasPermission ('plugin_mediawiki_upload', $g->getID(), 'upload') ;
-		$wgGroupPermissions[$gr]['reupload']        = $r->hasPermission ('plugin_mediawiki_upload', $g->getID(), 'reupload') ;
-		$wgGroupPermissions[$gr]['reupload-shared'] = $r->hasPermission ('plugin_mediawiki_upload', $g->getID(), 'reupload') ;
-		$wgGroupPermissions[$gr]['upload_by_url']   = $r->hasPermission ('plugin_mediawiki_upload', $g->getID(), 'reupload') ;
+		$wgGroupPermissions[$mw_group_name]['upload']          = $role->hasPermission ('plugin_mediawiki_upload', $group->getID(), 'upload') ;
+		$wgGroupPermissions[$mw_group_name]['reupload-own']    = $role->hasPermission ('plugin_mediawiki_upload', $group->getID(), 'upload') ;
+		$wgGroupPermissions[$mw_group_name]['reupload']        = $role->hasPermission ('plugin_mediawiki_upload', $group->getID(), 'reupload') ;
+		$wgGroupPermissions[$mw_group_name]['reupload-shared'] = $role->hasPermission ('plugin_mediawiki_upload', $group->getID(), 'reupload') ;
+		$wgGroupPermissions[$mw_group_name]['upload_by_url']   = $role->hasPermission ('plugin_mediawiki_upload', $group->getID(), 'reupload') ;
 
 		// Administrative tasks
-		$wgGroupPermissions[$gr]['editinterface'] = $r->hasPermission ('plugin_mediawiki_admin', $g->getID()) ;
-		$wgGroupPermissions[$gr]['import']        = $r->hasPermission ('plugin_mediawiki_admin', $g->getID()) ;
-		$wgGroupPermissions[$gr]['importupload']  = $r->hasPermission ('plugin_mediawiki_admin', $g->getID()) ;
-		$wgGroupPermissions[$gr]['siteadmin']     = $r->hasPermission ('plugin_mediawiki_admin', $g->getID()) ;
+		$wgGroupPermissions[$mw_group_name]['editinterface'] = $role->hasPermission ('plugin_mediawiki_admin', $group->getID()) ;
+		$wgGroupPermissions[$mw_group_name]['import']        = $role->hasPermission ('plugin_mediawiki_admin', $group->getID()) ;
+		$wgGroupPermissions[$mw_group_name]['importupload']  = $role->hasPermission ('plugin_mediawiki_admin', $group->getID()) ;
+		$wgGroupPermissions[$mw_group_name]['siteadmin']     = $role->hasPermission ('plugin_mediawiki_admin', $group->getID()) ;
 
 		// Interwiki management restricted to forge admins
-		$wgGroupPermissions[$gr]['interwiki'] = $r->hasGlobalPermission ('forge_admin') ;
+		$wgGroupPermissions[$mw_group_name]['interwiki'] = $role->hasGlobalPermission ('forge_admin') ;
 	}
 }
 

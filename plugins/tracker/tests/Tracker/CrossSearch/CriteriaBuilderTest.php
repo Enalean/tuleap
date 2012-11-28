@@ -249,7 +249,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSemanticTest extends Tracker_Cross
         $this->assertNotNull($cross_search_criteria->getTitle());
     }
     
-    protected function getSemanticCriteria(User $user, $cross_search_criteria) {
+    protected function getSemanticCriteria(PFUser $user, $cross_search_criteria) {
         $builder = new Tracker_CrossSearch_CriteriaBuilder($this->form_element_factory, $this->semantic_factory, array());
         $report  = new MockTracker_Report();
         return $builder->getSemanticFieldsCriteria($user, $this->project, $report, $cross_search_criteria);

@@ -28,7 +28,7 @@ class WebDAVAuthentication {
      *
      * Returns the authenticated user
      *
-     * @return User
+     * @return PFUser
      */
     function authenticate() {
 
@@ -112,7 +112,7 @@ class WebDAVAuthentication {
      *
      * @param String $password
      *
-     * @return User
+     * @return PFUser
      */
     function getUser($username, $password) {
 

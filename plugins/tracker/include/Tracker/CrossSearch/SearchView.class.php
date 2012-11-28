@@ -70,7 +70,7 @@ class Tracker_CrossSearch_SearchView {
         $this->content_view      = $content_view;
     }
     
-    public function render(User $user) {
+    public function render(PFUser $user) {
         $title = $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'title');
         
         $breadcrumbs = array(
@@ -105,7 +105,7 @@ class Tracker_CrossSearch_SearchView {
         return $renderer->renderToString('tracker-home-nav', $presenter);
     }
 
-    private function fetchTrackerList(User $user) {
+    private function fetchTrackerList(PFUser $user) {
         $html  = '';
         $html .= '<div class="tracker_homenav_list">';
         $html .= $GLOBALS['Language']->getText('plugin_tracker_crosssearch', 'included_trackers_title');

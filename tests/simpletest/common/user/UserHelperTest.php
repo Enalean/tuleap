@@ -45,7 +45,7 @@ class UserHelperTest extends TuleapTestCase {
     }
     
     function testGetDisplayNameFromUser() {
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'user_name');
         $user->setReturnValue('getRealName', 'realname');
         
@@ -58,7 +58,7 @@ class UserHelperTest extends TuleapTestCase {
     }
     
     function testGetDisplayNameFromUserId() {
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'user_name');
         $user->setReturnValue('getRealName', 'realname');
         
@@ -74,7 +74,7 @@ class UserHelperTest extends TuleapTestCase {
     }
     
     function testGetDisplayNameFromUserName() {
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'user_name');
         $user->setReturnValue('getRealName', 'realname');
         
@@ -91,7 +91,7 @@ class UserHelperTest extends TuleapTestCase {
     }
     
     function testGetDisplayNameForNone() {
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isNone', true);
         $user->setReturnValue('getUserName', 'None');
         $user->setReturnValue('getRealName', '0');

@@ -179,11 +179,11 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
      * Execute actions before transition happens
      * 
      * @param Array &$fields_data Request field data (array[field_id] => data)
-     * @param User  $current_user The user who are performing the update
+     * @param PFUser  $current_user The user who are performing the update
      * 
      * @return void
      */
-    public function before(array &$fields_data, User $current_user) {
+    public function before(array &$fields_data, PFUser $current_user) {
         // Do something only if the value_type and the date field are properly defined 
         if ($this->isDefined()) {
             $field = $this->getField();

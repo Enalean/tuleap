@@ -47,7 +47,7 @@ class Planning_SearchContentView extends Tracker_CrossSearch_SearchContentView {
         TreeNode $tree_of_artifacts,
         Tracker_ArtifactFactory $artifact_factory,
         Tracker_FormElementFactory $factory,
-        User $user,
+        PFUser $user,
         Planning_BacklogActionsPresenter $backlog_actions_presenter,
         Planning $planning,
         $planning_redirect_parameter
