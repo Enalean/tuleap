@@ -309,6 +309,10 @@ class Workflow {
         return null;
     }
 
+    public function validateGlobalRules($fields_data, Tracker_FormElementFactory $form_element_factory) {
+        $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data, $form_element_factory);
+    }
+
    /**
     * Indicates if permissions on a field can be bypassed
     *
