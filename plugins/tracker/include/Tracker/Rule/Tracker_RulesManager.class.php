@@ -646,7 +646,7 @@ class Tracker_RulesManager {
                 $source_field         = $this->getField($rule->getSourceFieldId());
                 $target_field         = $this->getField($rule->getTargetFieldId());
 
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'dependencies_rules_not_valid'), array($source_field->getLabel(), $target_field->getLabel()));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'dependencies_rules_not_valid', array($source_field->getLabel(), $target_field->getLabel())));
                 return false;
             }
         }
