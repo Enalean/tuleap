@@ -170,12 +170,12 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function displayAdd() {
-        $comparators = Tracker_Rule_Date::$allowed_comparators;
+        $comparators = array_combine(Tracker_Rule_Date::$allowed_comparators, Tracker_Rule_Date::$allowed_comparators);
         $values      = $this->getDateFields();
         $checked_val = $this->default_value;
         echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
         echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
-        echo html_build_select_box_from_arrays($comparators, $comparators, 'comparator');
+        echo html_build_select_box_from_array($comparators, 'comparator');
         echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
     }
 
