@@ -19,6 +19,7 @@
   */
 require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
 require_once 'InvalidComparatorException.class.php';
+require_once 'MissingComparatorException.class.php';
 
 /**
  * Date Rule between two dynamic fields
@@ -123,7 +124,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
             case self::COMPARATOR_LESS_THAN_OR_EQUALS :
                 return $source_date <= $target_date;
             default :
-                throw new Tracker_Rule_Date_Exception('Missing comparator');
+                throw new Tracker_Rule_Date_MissingComparatorException();
         }
     }
 }

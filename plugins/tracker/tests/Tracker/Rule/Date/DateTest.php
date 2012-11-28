@@ -214,7 +214,7 @@ class Tracker_Rule_Date_DateTest extends TuleapTestCase {
     }
     
     public function testValidateThrowsAnExceptionWhenNoComparatorIsSet() {
-        $this->expectException('Tracker_Rule_Date_Exception');
+        $this->expectException('Tracker_Rule_Date_MissingComparatorException');
         $date_rule = new Tracker_Rule_Date();
 
         $source_value = '2015-12-15';
