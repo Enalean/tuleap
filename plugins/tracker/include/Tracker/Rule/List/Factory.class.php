@@ -84,7 +84,7 @@ class Tracker_Rule_List_Factory {
     public function searchById($rule_id) {
         $rule = $this->dao->searchById($rule_id);
 
-        if(! is_array($rule) || ! array_key_exists('source_field_id', $rule)) {
+        if(! $rule) {
             return null;
         }
 

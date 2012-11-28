@@ -66,8 +66,7 @@ class Tracker_RuleDao extends DataAccessObject {
                             $this->da->quoteSmart($rule_type)
                            );
 
-        $this->update($sql_insert_rule);
-        $tracker_rule_id = $this->da->lastInsertId();
+        $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
         $sql = sprintf("INSERT INTO tracker_rule_list (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
                         VALUES (%s, %s, %s, %s, %s)",
@@ -78,15 +77,6 @@ class Tracker_RuleDao extends DataAccessObject {
                         $this->da->quoteSmart($target_value_id));
         $this->retrieve($sql);
     }
-    
-    public function searchDateRulesById($rule_id) {
-        
-    }
-    
-    public function searchDateRulesByTrackerId($tracker_id) {
-        
-    }
-
 
     /**
     * Searches Tracker_Rule by tracker_id

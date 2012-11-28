@@ -31,7 +31,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
 
     /**
      * Searches Tracker_Rule by Id
-     * @return DataAccessResult
+     * @return DataAccessResult | false
      */
     function searchById($id) {
         $sql = sprintf("SELECT *
@@ -71,8 +71,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
                                 $this->da->quoteSmart(Tracker_Rule::RULETYPE_DATE)
                                );
 
-            $this->update($sql_insert_rule);
-            $tracker_rule_id = $this->da->lastInsertId();
+            $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
             $sql = sprintf("INSERT INTO $this->table_name (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
                             VALUES (%s, %s, %s, %s, %s)",
