@@ -44,18 +44,6 @@ class Tracker_Rule_Date_Factory {
         $this->dao = $dao;
         $this->element_factory = $element_factory;
     }
-    
-    public function getFormElementFactory() {
-        if($this->element_factory == null) {
-            $this->element_factory = Tracker_FormElementFactory::instance();
-        }
-        
-        return$this->element_factory;
-    }
-    
-    public function setFormElementFactory(Tracker_FormElementFactory $element_factory) {
-        $this->element_factory = $element_factory;
-    }
 
     /**
      *
@@ -137,7 +125,7 @@ class Tracker_Rule_Date_Factory {
                 $rule['tracker_id'],
                 $rule['source_field_id'],
                 $rule['target_field_id'],
-                $rule['comparartor']
+                $rule['comparator']
             );
         }
 
@@ -155,8 +143,8 @@ class Tracker_Rule_Date_Factory {
      */
     protected function populate(Tracker_Rule_Date $date_rule, $id, $tracker_id, $source_field_id, $target_field_id, $comparator) {
 
-        $source_field = $this->getFormElementFactory()->getFormElementById($source_field_id);
-        $target_field = $this->getFormElementFactory()->getFormElementById($target_field_id);
+        $source_field = $this->element_factory->getFormElementById($source_field_id);
+        $target_field = $this->element_factory->getFormElementById($target_field_id);
         $date_rule->setTrackerId($tracker_id)
                 ->setId($id)
                 ->setSourceFieldId($source_field_id)
