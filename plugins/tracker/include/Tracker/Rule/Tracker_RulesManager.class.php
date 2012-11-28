@@ -149,7 +149,7 @@ class Tracker_RulesManager {
      *
      * @return array the selected values
      */
-    function _getSelectedValuesForField($field, $value_field_list) {
+    function getSelectedValuesForField($field, $value_field_list) {
         if (!is_array($value_field_list)) {
             $value_field_list = array($value_field_list);
         }
@@ -605,53 +605,88 @@ class Tracker_RulesManager {
      * @return boolean
      */
     protected function validateListRules($tracker_id, $value_field_list) {
-        $rules = $this->getAllListRulesByTrackerWithOrder($tracker_id);
-        $rule_basket = array();
-
-        foreach ($rules as $rule) {
-            /* @var $rule Tracker_Rule_List*/
-
-            //check that the rule can be applied for the given fields
-            if (! isset($value_field_list[$rule->getSourceFieldId()]) ||
-                    ! isset($value_field_list[$rule->getTargetFieldId()]) ) {
-                continue;
+         // construction of $values array : selected values in the form
+        // $values[$field_id]['field'] = artifactfield Object
+        // $values[$field_id]['values'][] = selected value
+        $values = array();
+        reset($value_field_list);
+        while (list($field_id,$value) = each($value_field_list)) {
+            if ($field = $this->getTrackerFormElementFactory()->getFormElementById($field_id)) {
+                $values[$field->getID()] = array('field' => $field, 'values' => is_array($value)?$value:array($value));
             }
-
-            $source_id = (int) $rule->getSourceFieldId();
-            $target_id = (int) $rule->getTargetFieldId();
-            $source_value = (int) $value_field_list[$rule->getSourceFieldId()];
-
-            //check that the rule can be applied for the given source value
-            if($source_value != $rule->getSourceValue()) {
-                continue;
-            }
-            $key = $source_id . $target_id . $source_value;
-
-            if(! isset($rule_basket[$key]) || $rule_basket[$key] === false) {
-                $is_valid = $rule->applyTo($tracker_id,
-                    $source_id,
-                    $source_value,
-                    $target_id,
-                    $value_field_list[$target_id]
-                    );
-                $rule_basket[$key] = array(
-                    'isValid'   => $is_valid,
-                    'rule'      => $rule
-                    );
+        }
+        // construction of $dependencies array : dependcies defined rules
+        // $dependencies[$source_field_id][$target_field_id][] = artifactrulevalue Object
+        $dependencies = array();
+        foreach($this->getAllListRulesByTrackerWithOrder($tracker_id) as $rule) {
+            if (is_a($rule, 'Tracker_Rule_List')) {
+                if (!isset($dependencies[$rule->source_field])) {
+                    $dependencies[$rule->source_field] = array();
+                }
+                if (!isset($dependencies[$rule->source_field][$rule->target_field])) {
+                    $dependencies[$rule->source_field][$rule->target_field] = array();
+                }
+                $dependencies[$rule->source_field][$rule->target_field][] = $rule;
             }
         }
 
-        foreach ($rule_basket as $error) {
-            if($error['isValid'] === false) {
-                $source_field         = $this->getField($rule->getSourceFieldId());
-                $target_field         = $this->getField($rule->getTargetFieldId());
+        $error_occured = false;
+        reset($dependencies);
+        while(!$error_occured && (list($source,) = each($dependencies))) {
+            if (isset($values[$source])) {
+                reset($dependencies[$source]);
+                while(!$error_occured && (list($target,) = each($dependencies[$source]))) {
+                    if (isset($values[$target])) {
 
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'dependencies_rules_not_valid', array($source_field->getLabel(), $target_field->getLabel())));
-                return false;
+                        reset($values[$target]['values']);
+                        while(!$error_occured && (list(,$target_value) = each($values[$target]['values']))) {
+                            //Foreach target values we look if there is at least one source value whith corresponding rule valid
+                            $valid = false;
+                            reset($values[$source]['values']);
+                            while(!$valid && (list(,$source_value) = each($values[$source]['values']))) {
+                                $applied = false;
+                                reset($dependencies[$source][$target]);
+                                while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
+
+                                    if ($dependencies[$source][$target][$rule]->canApplyTo(
+                                        $tracker_id,
+                                        $source,
+                                        $source_value,
+                                        $target,
+                                        $target_value))
+                                    {
+                                        $applied = true;
+                                        $valid = $dependencies[$source][$target][$rule]->applyTo(
+                                            $tracker_id,
+                                            $source,
+                                            $source_value,
+                                            $target,
+                                            $target_value);
+                                    }
+                                }
+                            }
+                            // when a dependence problem is detected, we detail the message error
+                            // to explain the fields that trigger the problem
+                            if (! $valid) {
+                                $error_occured = true;
+                                // looking for the source field value which cause the dependence problem
+                                $source_field = $this->getTrackerFormElementFactory()->getFormElementById($source);
+                                $pb_source_values = $this->getSelectedValuesForField($source_field, $value_field_list[$source]);
+                                $source_field->setHasErrors(true);
+
+                                // looking for the target field value which cause the dependence problem
+                                $target_field = $this->getTrackerFormElementFactory()->getFormElementById($target);
+                                $pb_target_values = $this->getSelectedValuesForField($target_field, $target_value);
+                                $target_field->setHasErrors(true);
+                               // detailled error message
+                               $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
+                            }
+                        }
+                    }
+                }
             }
         }
-
-        return true;
+        return !$error_occured;
     }
 
     private function getField($field_id) {
