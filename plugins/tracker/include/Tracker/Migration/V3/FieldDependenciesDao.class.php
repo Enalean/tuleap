@@ -36,7 +36,7 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
     }
 
     private function sourceAndTargetAreStatic($tv3_id, $tv5_id) {
-        $sql = "SELECT sf.id AS SOURCE_FIELD_ID, sbv.id AS SOURCE_VALUE_ID, tf.id AS TARGET_FIELD_ID, tbv.id AS TARGET_VALUE_ID, r.rule_type
+        $sql = "SELECT sf.id AS my_source_field_id, sbv.id AS my_source_value_id, tf.id AS my_target_field_id, tbv.id AS my_target_value_id, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_static_value AS sbv ON(sbv.field_id = sf.id AND r.source_value_id = sbv.old_id)
@@ -48,7 +48,7 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
     }
 
     private function sourceIsUserAndTargetIsStatic($tv3_id, $tv5_id) {
-        $sql = "SELECT sf.id AS SOURCE_FIELD_ID, r.source_value_id AS SOURCE_VALUE_ID, tf.id AS TARGET_FIELD_ID, tbv.id AS TARGET_VALUE_ID, r.rule_type
+        $sql = "SELECT sf.id AS my_source_field_id, r.source_value_id AS my_source_value_id, tf.id AS my_target_field_id, tbv.id AS my_target_value_id, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_users AS sfu ON(sf.id = sfu.field_id)
@@ -61,7 +61,7 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
     }
 
     private function sourceIsStaticAndTargetIsUser($tv3_id, $tv5_id) {
-        $sql = "SELECT sf.id AS SOURCE_FIELD_ID, sbv.id AS SOURCE_VALUE_ID, tf.id AS TARGET_FIELD_ID, r.target_value_id AS TARGET_VALUE_ID, r.rule_type
+        $sql = "SELECT sf.id AS my_source_field_id, sbv.id AS my_source_value_id, tf.id AS my_target_field_id, r.target_value_id AS my_target_value_id, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_static_value AS sbv ON(sbv.field_id = sf.id AND r.source_value_id = sbv.old_id)
@@ -73,7 +73,7 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
     }
 
     private function sourceAndTargetAreUser($tv3_id, $tv5_id) {
-        $sql = "SELECT sf.id AS SOURCE_FIELD_ID, r.source_value_id AS SOURCE_VALUE_ID, tf.id AS TARGET_FIELD_ID, r.target_value_id AS TARGET_VALUE_ID, r.rule_type
+        $sql = "SELECT sf.id AS my_source_field_id, r.source_value_id AS my_source_value_id, tf.id AS my_target_field_id, r.target_value_id AS my_target_value_id, r.rule_type
                 FROM artifact_rule AS r
                     INNER JOIN tracker_field AS sf ON(r.source_field_id = sf.old_id AND sf.tracker_id = $tv5_id)
                     INNER JOIN tracker_field_list_bind_users AS sfu ON(sf.id = sfu.field_id)
@@ -102,10 +102,10 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
                     (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
                 VALUES (
                     $tracker_rule_id," .
-                    $old_rule['SOURCE_FIELD_ID'] . "," .
-                    $old_rule['SOURCE_VALUE_ID'] . "," .
-                    $old_rule['TARGET_FIELD_ID'] . "," .
-                    $old_rule['TARGET_VALUE_ID'] .
+                    $old_rule['my_source_field_id'] . "," .
+                    $old_rule['my_source_value_id'] . "," .
+                    $old_rule['my_target_field_id'] . "," .
+                    $old_rule['my_target_value_id'] .
                 ");" ;
             $this->update($tracker_rule_list_insert);
         }
