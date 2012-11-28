@@ -301,9 +301,12 @@ class Workflow {
                 $from = (int)$from;
             }
         }
-        $to         = (int)$fields_data[$this->getFieldId()];
-        $transition = $this->getTransition($from, $to);
-        return $transition;
+        if (isset($fields_data[$this->getFieldId()])) {
+            $to         = (int)$fields_data[$this->getFieldId()];
+            $transition = $this->getTransition($from, $to);
+            return $transition;
+        }
+        return null;
     }
 
    /**
