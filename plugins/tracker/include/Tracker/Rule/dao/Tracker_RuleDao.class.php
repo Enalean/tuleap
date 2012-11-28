@@ -130,21 +130,25 @@ class Tracker_RuleDao extends DataAccessObject {
         $field_target_id = $this->da->escapeInt($field_target_id);
 
         $this->startTransaction();
+        try {
+            $sql_delete_list = "DELETE tracker_rule.*
+                                FROM tracker_rule JOIN tracker_rule_list
+                                ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
+                                WHERE source_field_id   = $field_source_id
+                                    AND target_field_id   = $field_target_id";
 
-        $sql_delete_list = "DELETE tracker_rule.*
-                            FROM tracker_rule JOIN tracker_rule_list
-                            ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                            WHERE source_field_id   = $field_source_id
-                                AND target_field_id   = $field_target_id";
+            $this->update($sql_delete_list);
 
-        $this->update($sql_delete_list);
+            $sql = "DELETE
+                    FROM $this->table_name
+                    WHERE  source_field_id   = $field_source_id
+                        AND target_field_id   = $field_target_id";
+            $this->update($sql);
 
-        $sql = "DELETE
-                FROM $this->table_name
-                WHERE  source_field_id   = $field_source_id
-                    AND target_field_id   = $field_target_id";
-        $this->update($sql);
-
+        } catch (Exception $e) {
+            $this->rollBack();
+            throw $e;
+        }
         $this->commit();
     }
 
