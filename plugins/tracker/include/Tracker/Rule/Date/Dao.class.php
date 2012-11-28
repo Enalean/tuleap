@@ -93,7 +93,7 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
     public function deleteById($tracker_id, $rule_id) {
         $tracker_id = $this->da->escapeInt($tracker_id);
         $rule_id    = $this->da->escapeInt($rule_id);
-        echo $sql = "DELETE tracker_rule_date.*
+        $sql = "DELETE tracker_rule_date.*
                 FROM tracker_rule
                     INNER JOIN tracker_rule_date ON (id = tracker_rule_id)
                 WHERE id = $rule_id
