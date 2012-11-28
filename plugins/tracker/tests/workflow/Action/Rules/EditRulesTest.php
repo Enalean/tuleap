@@ -57,7 +57,7 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
     private function setUpField($id, $label) {
          $field = stub('Tracker_FormElement_Field_Date')->getLabel()->returns($label);
          stub($field)->getId()->returns($id);
-         stub($this->element_factory)->getUsedFieldByIdAndType($this->tracker, $id, 'date')->returns($field);
+         stub($this->element_factory)->getUsedFieldByIdAndType($this->tracker, $id, array('date','subon','lud'))->returns($field);
          return $field;
     }
 
