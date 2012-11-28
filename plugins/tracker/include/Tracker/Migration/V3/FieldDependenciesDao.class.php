@@ -93,9 +93,8 @@ class Tracker_Migration_V3_FieldDependenciesDao extends DataAccessObject {
         foreach ($old_rules as $old_rule) {
             $tracker_rule_insert = "INSERT INTO tracker_rule(tracker_id, rule_type)
                     VALUES ($tv5_id, " . $old_rule['rule_type'] . ")";
-            $this->update($tracker_rule_insert);
-
-            $tracker_rule_id = $this->da->lastInsertId();
+            
+            $tracker_rule_id = $this->updateAndGetLastId($tracker_rule_insert);
 
             $tracker_rule_list_insert = "
                 INSERT INTO tracker_rule_list

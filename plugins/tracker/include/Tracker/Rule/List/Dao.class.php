@@ -35,7 +35,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      */
     function searchById($id) {
         $sql = sprintf("SELECT *
-                        FROM $this->table_name
+                        FROM tracker_rule_list
                             JOIN tracker_rule
                             ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
                         WHERE tracker_rule.id = %s",
@@ -50,7 +50,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
     function searchByTrackerId($tracker_id) {
         $sql = sprintf("SELECT *
                         FROM tracker_rule 
-                            JOIN $this->table_name
+                            JOIN tracker_rule_list
                             ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
                         WHERE tracker_rule.tracker_id = %s",
 				$this->da->quoteSmart($tracker_id));
@@ -73,7 +73,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
 
             $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
-            $sql = sprintf("INSERT INTO $this->table_name (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+            $sql = sprintf("INSERT INTO tracker_rule_list (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
                             VALUES (%s, %s, %s, %s, %s)",
                             $tracker_rule_id,
                             $this->da->quoteSmart($rule->getSourceFieldId()),
