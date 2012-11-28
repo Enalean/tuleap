@@ -1,11 +1,17 @@
-Version 5.7 (Not Released Yet)
+Version 5.7.1 (Wednesday, November 28th 2012)
+   * Improve CLI detection mode (Fix git HTTP access).
+
+   == Plugins ==
+       * tracker: 5.47
+
+Version 5.7 (Thursday, November 22nd 2012)
 
    == Bug fix ==
 	* Fix fatal error when user start monitoring a file package
 	* Avoid double posting when body contain special characters. (Contrib STMicroelectronics)
 
    == Plugins ==
-	* tracker: 5.45
+	* tracker: 5.46
 	* git: 2.7.16
 	* tests: 5.8
 	* ldap: 3.22
