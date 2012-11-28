@@ -1,4 +1,0 @@
-Package: @PACKAGE@-plugin-doaprdf
-Architecture: all
-Depends: @OLDPACKAGE@-common, @OLDPACKAGE@-db-postgresql | @OLDPACKAGE@-db, @OLDPACKAGE@-web-apache2 | @OLDPACKAGE@-web, php-http, libarc-php, ${misc:Depends}
-Description: collaborative development tool - DOAP RDF plugin

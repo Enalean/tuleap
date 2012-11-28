@@ -15,9 +15,8 @@ require_once('common/frs/ServiceFile.class.php');
 require_once('common/svn/ServiceSVN.class.php');
 
 require_once('ProjectManager.class.php');
-require_once('ServiceNotAllowedForProjectException.class.php');
 
-require_once 'UGroupManager.class.php';
+require_once('ServiceNotAllowedForProjectException.class.php');
 
 /*
 
@@ -64,7 +63,7 @@ function getProjectsDescFieldsInfos(){
 }	
 
 
-class Project extends Group implements PFO_Project {
+class Project extends Group {
 
     /**
      * The project is active
@@ -257,7 +256,7 @@ class Project extends Group implements PFO_Project {
         The URL for this project's home page
     */
     function getHomePage() {
-        return $this->usesHomePage() ? $this->service_data_array['homepage']['link'] : '';
+        return $this->service_data_array['homepage']['link'];
     }
     
     function getWikiPage(){
@@ -393,31 +392,6 @@ class Project extends Group implements PFO_Project {
 			
 		}
     	
-    }
-
-    private function getUGroupManager() {
-        return new UGroupManager();
-    }
-
-    /**
-     * @return array of User admin of the project
-     */
-    public function getAdmins() {
-        return $this->getUGroupManager()->getDynamicUGroupsMembers(Ugroup::PROJECT_ADMIN, $this->getID());
-    }
-
-    /**
-     * @return array of User members of the project
-     */
-    public function getMembers() {
-        return $this->getUGroupManager()->getDynamicUGroupsMembers(Ugroup::PROJECT_MEMBERS, $this->getID());
-    }
-
-    /**
-     * Alias of @see getMembers()
-     */
-    public function getUsers() {
-        return $this->getMembers();
     }
 }
 ?>

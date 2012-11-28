@@ -36,7 +36,6 @@ if (isset($GLOBALS['jpgraph_dir'])) {
 }
 
 require_once('common/autoload_zend.php');
-require_once('common/autoload.php');
 
 require_once dirname(__FILE__).'/../include/simpletest/unit_tester.php';
 require_once dirname(__FILE__).'/../include/simpletest/mock_objects.php';

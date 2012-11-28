@@ -207,12 +207,18 @@ class Tracker_DateReminder {
         foreach ($ugroups as $ugroupId) {
             if ($ugroupId < 100) {
                 $members = $uGroupManager->getDynamicUGroupsMembers($ugroupId, $this->getTracker()->getGroupId());
+                if ($members && !$members->isError()) {
+                    foreach ($members as $member) {
+                        $user                       = $um->getUserById($member['user_id']);
+                        $recipients[$user->getId()] = $user;
+                    }
+                }
             } else {
-                $uGroup  = $uGroupManager->getById($ugroupId);
-                $members = $uGroup->getMembers();
-            }
-            foreach ($members as $user) {
-                $recipients[$user->getId()] = $user;
+                $uGroup     = $uGroupManager->getById($ugroupId);
+                $members    = $uGroup->getMembers();
+                foreach ($members as $user) {
+                    $recipients[$user->getId()] = $user;
+                }
             }
         }
         return $recipients;

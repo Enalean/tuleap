@@ -123,10 +123,10 @@ class UGroupManager {
     /**
      * Get Dynamic ugroups members
      *
-     * @param Integer $ugroupId Id of the ugroup
+     * @param Integer $ugroupId Id of the uGroup
      * @param Integer $groupId  Id of the project
      *
-     * @return array of User
+     * @return DataAccessResult
      */
     public function getDynamicUGroupsMembers($ugroupId, $groupId) {
         if ($ugroupId <= 100) {
@@ -217,6 +217,7 @@ class UGroupManager {
         }
         return array();
     }
+
 }
 
 ?>

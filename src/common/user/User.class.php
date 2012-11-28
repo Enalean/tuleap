@@ -22,14 +22,13 @@ require_once('common/dao/UserPreferencesDao.class.php');
 require_once('common/dao/UserGroupDao.class.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 require_once('common/language/BaseLanguageFactory.class.php');
-
 /**
  *
  * User object
  * 
  * Sets up database results and preferences for a user and abstracts this info
  */
-class User implements PFO_User {
+class User {
     
     /**
      * The user is active
@@ -524,13 +523,6 @@ class User implements PFO_User {
         return $this->user_name;
     }
     /**
-     * alias of getUserName()
-     * @return string the name of the user (aka login)
-     */
-    function getUnixName() {
-        return $this->getUserName();
-    }
-    /**
      * @return string the real name of the user
      */
     function getRealName() {
@@ -827,21 +819,6 @@ class User implements PFO_User {
             } else {
                 $projects[] = $data['group_id'];
             }
-        }
-        return $projects;
-    }
-
-    /**
-     * Should be an alias of getProjects()
-     *
-     * However we need real objects. Maybe it would be great to force getProjects to return POPO...
-     *
-     * @return array of Projects.
-     */
-    public function getGroups() {
-        $projects = array();
-        foreach ($this->getProjects() as $group_id) {
-            $projects[] = ProjectManager::instance()->getProject($group_id);
         }
         return $projects;
     }

@@ -49,11 +49,11 @@ class SingletonCounter {
     }
 
     public function replaceExpectedSingletonCountWith($count) {
-        file_put_contents(SINGLETON_COUNT_FILE, $count.PHP_EOL);
+        file_put_contents(SINGLETON_COUNT_FILE, $count);
     }
 
     public function expectedSingletonCount() {
-        return trim(file_get_contents(SINGLETON_COUNT_FILE));
+        return file_get_contents(SINGLETON_COUNT_FILE);        
     }
     
     public function getSingletoncountFilename() {

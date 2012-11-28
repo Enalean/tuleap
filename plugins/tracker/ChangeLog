@@ -1,6 +1,3 @@
-Version 5.46 - Tuleap 5.8
-    * Add adms plugin
-
 Version 5.45 - Tuleap 5.7
     * Enhancement: add conditions on transition (check that a field is not empty)
 

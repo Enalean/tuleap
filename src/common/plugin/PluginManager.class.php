@@ -55,7 +55,6 @@ class PluginManager {
                 $event_manager->addListener($hook['hook'], $plugin, $hook['callback'], $hook['recallHook'], $priority);
                 $iter->next();
             }
-            $plugin->loaded();
         }
         $this->plugins_loaded = true;
     }

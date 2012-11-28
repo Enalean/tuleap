@@ -500,7 +500,6 @@ class URLVerification {
      * @return void
      */
     function displayPrivateProjectError($url) {
-        $GLOBALS['Response']->send401UnauthorizedHeader();
         $sendMail = new Error_PermissionDenied_PrivateProject($url);
         $sendMail->buildInterface();
         exit;
