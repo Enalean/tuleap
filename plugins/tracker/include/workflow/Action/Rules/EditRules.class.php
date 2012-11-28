@@ -36,16 +36,6 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private $url_query;
 
-    /** @var array */
-    private $comparators = array(
-        Tracker_Rule_Date::COMPARATOR_LESS_THAN              => '<',
-        Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS    => '≤',
-        Tracker_Rule_Date::COMPARATOR_EQUALS                 => '=',
-        Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS => '≥',
-        Tracker_Rule_Date::COMPARATOR_GREATER_THAN           => '>',
-        Tracker_Rule_Date::COMPARATOR_NOT_EQUALS             => '≠',
-    );
-
     public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, Tracker_Rule_Date_Factory $rule_date_factory, CSRFSynchronizerToken $token) {
         parent::__construct($tracker);
         $this->form_element_factory = $form_element_factory;
@@ -180,11 +170,12 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function displayAdd() {
-        $values = $this->getDateFields();
+        $comparators = array_combine(Tracker_Rule_Date::$allowed_comparators, Tracker_Rule_Date::$allowed_comparators);
+        $values      = $this->getDateFields();
         $checked_val = $this->default_value;
         echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
         echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
-        echo html_build_select_box_from_array($this->comparators, 'comparator');
+        echo html_build_select_box_from_array($comparators, 'comparator');
         echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
     }
 
