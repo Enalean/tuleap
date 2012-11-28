@@ -5,7 +5,7 @@ require_once(dirname(__FILE__).'/builders/all.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', '_getSelectedValuesForField'));
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/List/List.class.php');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/List.class.php');
 Mock::generate('Tracker_Rule_List');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RuleFactory.class.php');

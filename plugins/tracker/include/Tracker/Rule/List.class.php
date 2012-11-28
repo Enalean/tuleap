@@ -17,7 +17,7 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
+require_once 'Tracker_Rule.class.php';
 
 /**
 * RuleValue  between two dynamic fields
@@ -27,10 +27,10 @@ require_once(dirname(__FILE__).'/../Tracker_Rule.class.php');
 *
 */
 class Tracker_Rule_List extends Tracker_Rule {
-    
+
     var $target_value;
     var $source_value;
-    
+
     public function __construct($id = null, $tracker_id = null, $source_field = null, $source_value = null, $target_field = null, $target_value = null) {
         $this->setId($id)
                 ->setTrackerId($tracker_id)
@@ -39,11 +39,11 @@ class Tracker_Rule_List extends Tracker_Rule {
                 ->setSourceValue($source_value)
                 ->setTargetValue($target_value);
     }
-    
+
     /**
     * Returns if a rule can be applied to a tuple
-    * 
-    * If parameters are not same tracker, same source field, same source value and 
+    *
+    * If parameters are not same tracker, same source field, same source value and
     * same target field, then returns true.
     * Else if params are same target value then returns true,
     * Else returns false.
@@ -55,19 +55,19 @@ class Tracker_Rule_List extends Tracker_Rule {
         $pass = $can_apply_to && $target_value == $this->target_value;
         return $pass;
     }
-    
+
     public function canApplyTo($tracker_id, $source_field, $source_value, $target_field, $target_value) {
         $match = $tracker_id == $this->tracker_id &&
-            $source_field == $this->source_field && 
-            $source_value == $this->source_value && 
+            $source_field == $this->source_field &&
+            $source_value == $this->source_value &&
             $target_field == $this->target_field;
         return $match;
     }
-    
+
     function isUsedInRule($field_id) {
         return $this->source_field == $field_id || $this->target_field == $field_id;
      }
-    
+
             /**
      *
      * @return string
@@ -103,6 +103,6 @@ class Tracker_Rule_List extends Tracker_Rule {
         $this->target_value = $value;
         return $this;
     }
-    
+
 }
 ?>

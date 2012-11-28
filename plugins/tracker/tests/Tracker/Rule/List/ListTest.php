@@ -19,7 +19,7 @@
   */
 require_once dirname(__FILE__).'/../../../builders/all.php';
 require_once dirname(__FILE__).'/../../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/List/List.class.php';
+require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/List.class.php';
 
 class Tracker_Rule_List_ListTest extends TuleapTestCase {
 
