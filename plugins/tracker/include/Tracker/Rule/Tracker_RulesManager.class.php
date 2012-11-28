@@ -85,7 +85,7 @@ class Tracker_RulesManager {
      */
     public function getTracker_RuleDateFactory() {
         if($this->rule_date_factory ==  null) {
-            $this->rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao());
+            $this->rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $this->form_element_factory);
         }
 
         return $this->rule_date_factory;
