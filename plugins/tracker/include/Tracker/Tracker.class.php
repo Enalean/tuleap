@@ -521,7 +521,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
-            case 'admin-workflow':
+            case Workflow::FUNC_ADMIN_RULES:
+            case Workflow::FUNC_ADMIN_TRANSITIONS:
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {
@@ -1167,7 +1168,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-semantic.png'),
                 ),
                 'editworkflow' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-workflow',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func='. Workflow::FUNC_ADMIN_RULES,
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','workflow'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow_desc'),
@@ -3166,6 +3167,21 @@ EOS;
         }
         return null;
     }
-}
 
+    /**
+     * Return workflow of the current tracker (there is always a workflow).
+     *
+     * @return Workflow
+     */
+    public function getWorkflow() {
+        $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
+        if (! $workflow) {
+            $workflow_id = 0;
+            $field_id    = 0;
+            $is_used     = false;
+            $workflow    = new Workflow($workflow_id, $this->getId(), $field_id, $is_used);
+        }
+        return $workflow;
+    }
+}
 ?>

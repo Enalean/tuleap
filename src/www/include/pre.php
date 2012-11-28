@@ -42,10 +42,10 @@ require_once('common/include/URL.class.php');
 require_once('common/autoload_zend.php');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
-if (php_sapi_name() == "cli") {
-    define('IS_SCRIPT', true);
+if (array_key_exists('HTTP_HOST', $_SERVER) == true) {
+    define('IS_SCRIPT', false); ;
 } else {
-    define('IS_SCRIPT', false);
+    define('IS_SCRIPT', true); 
 }
 
 //{{{ Sanitize $_REQUEST : remove cookies
