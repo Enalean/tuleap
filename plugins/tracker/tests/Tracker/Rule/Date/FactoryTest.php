@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__).'/../../../builders/all.php';
 require_once dirname(__FILE__).'/../../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/Date/Date.class.php';
+require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/Date.class.php';
 require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/Date/Dao.class.php';
 require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/Date/Factory.class.php';
 
