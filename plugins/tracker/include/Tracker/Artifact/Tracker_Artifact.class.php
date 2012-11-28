@@ -975,13 +975,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         if($is_valid) {
-
-             //Validate rules
-             $is_valid = $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data, $this->getFormElementFactory()) && $is_valid;
-
             //validate workflow
              $workflow = $this->getWorkflow();
-             if ($workflow && $is_valid) {
+             if ($workflow) {
                  $is_valid = $workflow->validate($fields_data, $this);
              }
         }
@@ -1029,6 +1025,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $workflow = $this->getWorkflow();
                     if ($workflow) {
                         $workflow->before($fields_data, $submitter, $this);
+                        if (! $workflow->validateGlobalRules($fields_data, $this->getFormElementFactory())) {
+                            return false;
+                        }
                     }
                     if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
                         //Store the comment
