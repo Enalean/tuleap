@@ -358,7 +358,7 @@ class BackendSVNTest extends UnitTestCase {
         $backend = new BackendSVNAccessTestVersion($this);
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', array(142));
        
         $project1 = new MockProject($this);

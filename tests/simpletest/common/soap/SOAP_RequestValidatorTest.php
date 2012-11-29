@@ -24,7 +24,7 @@ class SOAP_RequestValidatorTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->validator = new SOAP_RequestValidator(mock('ProjectManager'), mock('UserManager'));
-        $this->user      = mock('User');
+        $this->user      = mock('PFUser');
         $this->project   = mock('Project');
         stub($this->project)->getGroupId()->returns(123);
     }

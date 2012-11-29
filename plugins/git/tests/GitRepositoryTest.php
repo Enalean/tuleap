@@ -87,7 +87,7 @@ class GitRepositoryTest extends TuleapTestCase {
     }
 
     public function testLogGitPushDaoFail() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 2);
         $um = new MockUserManager();
         $um->setReturnValue('getUserByIdentifier', $user);
@@ -106,7 +106,7 @@ class GitRepositoryTest extends TuleapTestCase {
     }
 
     public function testLogGitPushSuccess() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 2);
         $um = new MockUserManager();
         $um->setReturnValue('getUserByIdentifier', $user);

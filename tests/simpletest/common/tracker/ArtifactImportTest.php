@@ -350,7 +350,7 @@ class ArtifactImportTest extends TuleapTestCase {
 
       $um = new MockUserManager($this);
       $ai = new ArtifactImportTestVersion($this);
-      $user =new MockUser($this);
+      $user = mock('PFUser');
       
       $ai->setReturnReference('getUserManager', $um);
       $um->setReturnReference('getUserByUserName', $user);

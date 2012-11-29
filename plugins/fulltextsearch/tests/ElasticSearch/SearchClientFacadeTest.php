@@ -25,7 +25,7 @@ class ElasticSearch_SearchClientFacadeTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $project_manager           = mock('ProjectManager');
         $this->elasticsearchclient = mock('ElasticSearchClient');
         $this->client              = new ElasticSearch_SearchClientFacade($this->elasticsearchclient, 'whatever', $project_manager);

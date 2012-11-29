@@ -33,12 +33,12 @@ class Codendi_MailTest extends UnitTestCase {
     function testValidateRecipient() {
         $mail = new Codendi_MailTestVersion($this);
 
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getRealName', 'user 1');
         $user1->setReturnValue('getEmail', 'user_1@tuleap.net');
         $user1->setReturnValue('getStatus', 'A');
 
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getRealName', 'user 2');
         $user2->setReturnValue('getEmail', 'user_2@tuleap.net');
         $user2->setReturnValue('getStatus', 'S');

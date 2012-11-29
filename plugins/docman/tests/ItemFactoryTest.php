@@ -484,7 +484,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $itemFactory->setReturnValue('_getItemDao', $dao);
 
         // Event
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);
@@ -520,7 +520,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
         // Event
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);
@@ -581,7 +581,7 @@ class Docman_ItemFactoryTest extends UnitTestCase {
         $itemFactory->setReturnValue('_getVersionFactory', $versionFactory);
 
         // Event
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $itemFactory->setReturnValue('_getUserManager', $um);

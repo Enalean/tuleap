@@ -152,7 +152,7 @@ function testPurgeDeletedVersion() {
         $if->setReturnValue('getItemFromDb', $file);
         $versionFactory->setReturnValue('_getItemFactory', $if);
         
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $versionFactory->setReturnValue('_getUserManager', $um);

@@ -35,7 +35,7 @@ class PermissionsManagerPerfTest extends UnitTestCase {
     var $refOnNull;
 
     function setUp() {
-        $this->user =& new MockUser($this);
+        $this->user = mock('PFUser');
         $this->docmanPm =& new Docman_PermissionsManagerTestPerfVersion($this);
         $this->docmanPm->setReturnValue('_itemIsLockedForUser', false);
         $this->refOnNull = null;

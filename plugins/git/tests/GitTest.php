@@ -57,7 +57,7 @@ class GitTest extends TuleapTestCase  {
         $factory = new MockGitRepositoryFactory();
         $git->setFactory($factory);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true);
         $git->user = $user;
 
@@ -74,7 +74,7 @@ class GitTest extends TuleapTestCase  {
         $factory = new MockGitRepositoryFactory();
         $git->setFactory($factory);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', false);
         $git->user = $user;
 
@@ -90,7 +90,7 @@ class GitTest extends TuleapTestCase  {
         $factory = new MockGitRepositoryFactory();
         $git->setFactory($factory);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true);
         $git->user = $user;
 
@@ -106,7 +106,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     
     public function itDispatchesTo_migrateToGerrit_withRepoManagementView() {
         $group_id    = 101;
-        $user        = stub('User')->isMember($group_id, 'A')->returns(true);
+        $user        = stub('PFUser')->isMember($group_id, 'A')->returns(true);
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
         $request     = new HTTPRequest();
         $repo_id     = 999;
@@ -123,7 +123,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     }
     
     public function itIsForbiddenForNonProjectAdmins() {
-        $user        = mock('User');
+        $user        = mock('PFUser');
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
         $request     = new HTTPRequest();
         $repo_id     = 999;
@@ -141,7 +141,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     
     public function itNeedsAValidRepoId() {
         $group_id    = 101;
-        $user        = stub('User')->isMember($group_id, 'A')->returns(true);
+        $user        = stub('PFUser')->isMember($group_id, 'A')->returns(true);
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
         $request     = new HTTPRequest();
         $repo_id     = 999;
@@ -162,7 +162,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     
     public function itNeedsAValidServerId() {
         $group_id    = 101;
-        $user        = stub('User')->isMember($group_id, 'A')->returns(true);
+        $user        = stub('PFUser')->isMember($group_id, 'A')->returns(true);
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
         $request     = new HTTPRequest();
         $repo_id     = 999;

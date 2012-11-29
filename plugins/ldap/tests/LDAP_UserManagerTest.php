@@ -92,7 +92,7 @@ class LDAP_UserManagerTest extends UnitTestCase {
     
     function testUpdateLdapUidShouldPrepareRenameOfUserInTheWholePlatform() {
         // Parameters
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 105);
         $ldap_uid = 'johndoe';
         
@@ -109,7 +109,7 @@ class LDAP_UserManagerTest extends UnitTestCase {
     
     function testTriggerRenameOfUsersShouldUpdateSVNAccessFileOfProjectWhereTheUserIsMember() {
         // Parameters
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 105);
         
         $lum  = TestHelper::getPartialMock('LDAP_UserManager', array('getSystemEventManager'));
@@ -127,11 +127,11 @@ class LDAP_UserManagerTest extends UnitTestCase {
     
     function testTriggerRenameOfUsersWithSeveralUsers() {
         // Parameters
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 101);
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getId', 102);
-        $user3 = new MockUser();
+        $user3 = mock('PFUser');
         $user3->setReturnValue('getId', 103);
         
         $lum  = TestHelper::getPartialMock('LDAP_UserManager', array('getSystemEventManager'));

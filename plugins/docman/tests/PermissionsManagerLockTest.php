@@ -34,7 +34,7 @@ class PermissionsManagerLockTest extends UnitTestCase {
     private $docmanPm;
 
     function setUp() {
-        $this->user = new MockUser($this);
+        $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 1234);
         $this->itemId = 1848;
         $this->docmanPm = new Docman_PermissionsManagerTestLock($this);

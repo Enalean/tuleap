@@ -39,7 +39,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldSetTheDate() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);
@@ -69,7 +69,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldClearTheDate() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);
@@ -99,7 +99,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldBypassAndSetTheDate() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);
@@ -127,7 +127,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldBypassAndClearTheDate() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);
@@ -158,7 +158,7 @@ class Transition_PostAction_Field_DateTest extends UnitTestCase {
     }
     
     public function testBeforeShouldNOTDisplayFeedback() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
         
         $field = new MockTracker_FormElement_Field_Date();
         $field->setReturnValue('getId', 102);

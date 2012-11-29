@@ -203,7 +203,7 @@ class Rule_UserNameTest extends UnitTestCase {
     }
 
     function testUserNameExists() {
-        $u = new MockUser($this);
+        $u = mock('PFUser');
 
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', $u, array("usertest"));

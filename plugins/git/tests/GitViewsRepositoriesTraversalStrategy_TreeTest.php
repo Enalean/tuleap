@@ -34,7 +34,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     public function testEmptyListShouldReturnEmptyString() {
         $view = new MockGitViews();
         $lastPushes = array();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $repositories = array();
         $strategy = new $this->classname($view, $lastPushes);
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
@@ -110,7 +110,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         
         // Magic call that do stuff we want, yeah!
         $repositories = $this->getFlatTree($traversal);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $tree = $traversal->getTree($repositories, $user);
         $this->assertTrue(is_array($tree['automaticTests']));
         $this->assertIsA(($tree['automaticTests']['Python']), 'GitRepository');
@@ -130,7 +130,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     public function testFetchShouldReturnOneRowPerDepthLevel() {
         $view = TestHelper::getPartialMock('GitViews', array());
         $view->groupId = 101;
-        $user = new MockUser();
+        $user = mock('PFUser');
         $lastPushes = array();
         
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
@@ -155,7 +155,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     public function testFetchShouldReturnFolderBeforeLeaves() {
         $view = TestHelper::getPartialMock('GitViews', array());
         $view->groupId = 101;
-        $user = new MockUser();
+        $user = mock('PFUser');
         $lastPushes = array();
 
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));

@@ -614,7 +614,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -687,7 +687,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 0, null));
         $dao->expectNever('create');
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 0);
         $user->setReturnValue('isAnonymous', true);
         $email = null; // anonymous user but no email...
@@ -738,7 +738,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $dao->setReturnValueAt(0, 'create', 1001, array(66, 0, 'anonymous@codendi.org'));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 0);
         $user->setReturnValue('isAnonymous', true);
         $email = 'anonymous@codendi.org'; // anonymous user with email
@@ -803,7 +803,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -867,7 +867,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -956,7 +956,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1057,7 +1057,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1154,7 +1154,7 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $dao = new MockTracker_Artifact_ChangesetDao();
         $dao->expectNever('create');
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1218,8 +1218,8 @@ class Tracker_ArtifactTest extends UnitTestCase {
         $c3 = new MockTracker_Artifact_Changeset();
         $c4 = new MockTracker_Artifact_Changeset();
 
-        $u1 = new MockUser(); $u1->setReturnValue('getUserName', 'sandrae');
-        $u2 = new MockUser(); $u2->setReturnValue('getUserName', 'marc');
+        $u1 = mock('PFUser'); $u1->setReturnValue('getUserName', 'sandrae');
+        $u2 = mock('PFUser'); $u2->setReturnValue('getUserName', 'marc');
 
         $um = new MockUserManager();
         $um->setReturnReference('getUserById', $u1, array(101));
@@ -1253,36 +1253,36 @@ class Tracker_ArtifactTest extends UnitTestCase {
         // $other and $u are neither in UgroupAss nor in UgroupSub
 
         //
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', 120);
         $u->setReturnValue('isMemberOfUgroup',false);
         $u->setReturnValue('isSuperUser', false);
         //
-        $assignee = new MockUser();
+        $assignee = mock('PFUser');
         $assignee->setReturnValue('getId', 121);
         $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
-        $u_ass = new MockUser();
+        $u_ass = mock('PFUser');
         $u_ass->setReturnValue('getId', 122);
         $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
-        $submitter = new MockUser();
+        $submitter = mock('PFUser');
         $submitter->setReturnValue('getId', 123);
         $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
-        $u_sub = new MockUser();
+        $u_sub = mock('PFUser');
         $u_sub->setReturnValue('getId', 124);
         $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
-        $other = new MockUser();
+        $other = mock('PFUser');
         $other->setReturnValue('getId', 125);
         $other->setReturnValue('isMemberOfUgroup', false);
         $other->setReturnValue('isSuperUser', false);
@@ -1327,36 +1327,36 @@ class Tracker_ArtifactTest extends UnitTestCase {
         // $submitter and $u_sub are in the same ugroup (UgroupSub - ugroup_id=102)
         // $other and $u are neither in UgroupAss nor in UgroupSub
         //
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', 120);
         $u->setReturnValue('isMemberOfUgroup',false);
         $u->setReturnValue('isSuperUser', false);
         //
-        $assignee = new MockUser();
+        $assignee = mock('PFUser');
         $assignee->setReturnValue('getId', 121);
         $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
-        $u_ass = new MockUser();
+        $u_ass = mock('PFUser');
         $u_ass->setReturnValue('getId', 122);
         $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
-        $submitter = new MockUser();
+        $submitter = mock('PFUser');
         $submitter->setReturnValue('getId', 123);
         $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
-        $u_sub = new MockUser();
+        $u_sub = mock('PFUser');
         $u_sub->setReturnValue('getId', 124);
         $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
-        $other = new MockUser();
+        $other = mock('PFUser');
         $other->setReturnValue('getId', 125);
         $other->setReturnValue('isMemberOfUgroup', false);
         $other->setReturnValue('isSuperUser', false);
@@ -1407,36 +1407,36 @@ class Tracker_ArtifactTest extends UnitTestCase {
         // $submitter and $u_sub are in the same ugroup (UgroupSub - ugroup_id=102)
         // $other and $u are neither in UgroupAss nor in UgroupSub
         //
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', 120);
         $u->setReturnValue('isMemberOfUgroup',false);
         $u->setReturnValue('isSuperUser', false);
         //
-        $assignee = new MockUser();
+        $assignee = mock('PFUser');
         $assignee->setReturnValue('getId', 121);
         $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
-        $u_ass = new MockUser();
+        $u_ass = mock('PFUser');
         $u_ass->setReturnValue('getId', 122);
         $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
-        $submitter = new MockUser();
+        $submitter = mock('PFUser');
         $submitter->setReturnValue('getId', 123);
         $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
-        $u_sub = new MockUser();
+        $u_sub = mock('PFUser');
         $u_sub->setReturnValue('getId', 124);
         $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
-        $other = new MockUser();
+        $other = mock('PFUser');
         $other->setReturnValue('getId', 125);
         $other->setReturnValue('isMemberOfUgroup', false);
         $other->setReturnValue('isSuperUser', false);
@@ -1490,28 +1490,28 @@ class Tracker_ArtifactTest extends UnitTestCase {
         // $u is in (UgroupFul - ugroup_id=103);
         // $other do not belong to any ugroup
         //
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', 120);
         $u->setReturnValue('isMemberOfUgroup', true,  array(103, 222));
         $u->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $u->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u->setReturnValue('isSuperUser', false);
         //
-        $assignee = new MockUser();
+        $assignee = mock('PFUser');
         $assignee->setReturnValue('getId', 121);
         $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(103, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
-        $submitter = new MockUser();
+        $submitter = mock('PFUser');
         $submitter->setReturnValue('getId', 122);
         $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isMemberOfUgroup', false,  array(103, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
-        $other = new MockUser();
+        $other = mock('PFUser');
         $other->setReturnValue('getId', 123);
         $other->setReturnValue('isMemberOfUgroup', false);
         $other->setReturnValue('isSuperUser', false);
@@ -1656,7 +1656,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
         $tracker                   = aMockTracker()->withId($this->tracker_id)->build();
         $this->layout              = mock('Tracker_IDisplayTrackerLayout');
         $this->request             = aRequest()->with('func', 'artifact-update')->build();
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->computed_field      = mock('Tracker_FormElement_Field_Computed');
         $this->us_computed_field   = mock('Tracker_FormElement_Field_Computed');

@@ -326,7 +326,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), false);
 
@@ -345,7 +345,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), false);
 
@@ -364,7 +364,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), false);
 
@@ -383,7 +383,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), true);
 
@@ -402,7 +402,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), false);
 
@@ -421,7 +421,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), false);
 
@@ -440,7 +440,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), false);
 
@@ -460,7 +460,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), false);
 
@@ -479,7 +479,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), false);
 
@@ -498,7 +498,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), true);
 
@@ -517,7 +517,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), true);
 
@@ -536,7 +536,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
         $webDAVFRSRelease->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSRelease->setReturnValue('getRelease', $release);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSRelease->userCanRead($user), true);
 
@@ -900,7 +900,7 @@ class WebDAVFRSReleaseTest extends UnitTestCase {
 
         $project = new MockProject();
         $webDAVFRSRelease->setReturnValue('getProject', $project);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $webDAVFRSRelease->setReturnValue('getUser', $user);
         $webDAVFRSRelease->setReturnValue('getUtils', $utils);
         

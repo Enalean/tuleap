@@ -56,7 +56,7 @@ class WebDAVAuthenticationTest extends UnitTestCase {
         $webDAVAuthentication->setReturnValue('issetUsername', true);
         $webDAVAuthentication->setReturnValue('getUsername', 'username');
         $webDAVAuthentication->setReturnValue('getPassword', null);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), null);
@@ -72,7 +72,7 @@ class WebDAVAuthenticationTest extends UnitTestCase {
         $webDAVAuthentication->setReturnValue('issetUsername', true);
         $webDAVAuthentication->setReturnValue('getUsername', null);
         $webDAVAuthentication->setReturnValue('getPassword', 'password');
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), null);
@@ -88,7 +88,7 @@ class WebDAVAuthenticationTest extends UnitTestCase {
         $webDAVAuthentication->setReturnValue('issetUsername', true);
         $webDAVAuthentication->setReturnValue('getUsername', 'username');
         $webDAVAuthentication->setReturnValue('getPassword', 'password');
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), null);
@@ -105,7 +105,7 @@ class WebDAVAuthenticationTest extends UnitTestCase {
         $webDAVAuthentication->setReturnValue('issetUsername', true);
         $webDAVAuthentication->setReturnValue('getUsername', null);
         $webDAVAuthentication->setReturnValue('getPassword', null);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), null);
@@ -122,7 +122,7 @@ class WebDAVAuthenticationTest extends UnitTestCase {
         $webDAVAuthentication->setReturnValue('issetUsername', true);
         $webDAVAuthentication->setReturnValue('getUsername', null);
         $webDAVAuthentication->setReturnValue('getPassword', null);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), $user);
@@ -138,7 +138,7 @@ class WebDAVAuthenticationTest extends UnitTestCase {
         $webDAVAuthentication->setReturnValue('issetUsername', true);
         $webDAVAuthentication->setReturnValue('getUsername', 'username');
         $webDAVAuthentication->setReturnValue('getPassword', 'password');
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
         $webDAVAuthentication->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVAuthentication->authenticate(), $user);

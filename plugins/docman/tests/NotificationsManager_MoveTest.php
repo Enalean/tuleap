@@ -210,9 +210,9 @@ class NotificationsManager_MoveTest extends UnitTestCase {
 
         $group_id = 'group_id';
         
-        $user =& new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 'user');
-        $listener =& new MockUser();
+        $listener = mock('PFUser');
         $listener->setReturnValue('getId', 'listener');
         
         $project =& new MockGroup();

@@ -379,7 +379,7 @@ class BackendCVSTest extends UnitTestCase {
         $backend = new BackendCVS4RenameCVSNT($this);
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', array(142));
        
         $project1 = new MockProject($this);

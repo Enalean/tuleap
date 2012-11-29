@@ -298,7 +298,7 @@ class _PageList_Column_top3recs extends _PageList_Column_custom
         if (is_string($active_user)) {
         	//FIXME: try to find the bug at test.php which sets request->_user and ->_group
         	trigger_error("request->getUser => string: $active_user", E_USER_WARNING);
-        	$active_user = new MockUser($active_user,true);
+        	$active_user = mock('PFUser');
         }
         // No, I don't know exactly why, but this needs to be a reference for
         // the memoization in pearson_similarity and mean_rating to work

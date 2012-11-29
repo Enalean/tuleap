@@ -46,7 +46,7 @@ class GitViewsRepositoriesTraversalStrategy_SelectboxTest extends GitViewsReposi
     
     public function testRepoIDShouldBeTheValue() {
         $view = new MockGitViews();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
         
         $repositories    = $this->getFlatTree($strategy);

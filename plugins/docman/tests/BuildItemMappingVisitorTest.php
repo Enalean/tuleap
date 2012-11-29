@@ -214,7 +214,7 @@ class BuildItemMappingVisitorTest extends UnitTestCase {
         // Permissions mock
         $mockDPM  =& new MockDocman_PermissionsManager();
         $mockDPM->setReturnValue('userCanRead', true);
-        $mockUser =& new MockUser();
+        $mockUser = mock('PFUser');
 
 
         $itemMappingVisitor =& new BuildItemMappingVisitorTestVersion($this);
@@ -286,7 +286,7 @@ class BuildItemMappingVisitorTest extends UnitTestCase {
 
         //
         // Permissions mock
-        $mockUser =& new MockUser();
+        $mockUser = mock('PFUser');
         $mockDPM  =& new MockDocman_PermissionsManager();
         // Item 40 is unreadable
         $mockDPM->setReturnValue('userCanRead', false, array($mockUser, 40));
@@ -367,7 +367,7 @@ class BuildItemMappingVisitorTest extends UnitTestCase {
         // Permissions mock
         $mockDPM  =& new MockDocman_PermissionsManager();
         $mockDPM->setReturnValue('userCanRead', true);
-        $mockUser =& new MockUser();
+        $mockUser = mock('PFUser');
 
         $itemMappingVisitor =& new BuildItemMappingVisitorTestVersion($this);
         // Need to init by hand because of fake constructor.

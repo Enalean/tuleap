@@ -332,7 +332,7 @@ class URLVerificationTest extends UnitTestCase {
 
         $GLOBALS['sys_allow_anon'] = 1;
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $urlVerification = new URLVerificationTestVersion($this);
@@ -351,7 +351,7 @@ class URLVerificationTest extends UnitTestCase {
 
         $GLOBALS['sys_allow_anon'] = 1;
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
 
         $urlVerification = new URLVerificationTestVersion($this);
@@ -372,7 +372,7 @@ class URLVerificationTest extends UnitTestCase {
         $GLOBALS['sys_allow_anon'] = 0;
         $GLOBALS['sys_https_host'] = 'secure.codendi.org';
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
@@ -395,7 +395,7 @@ class URLVerificationTest extends UnitTestCase {
         $GLOBALS['sys_allow_anon'] = 0;
         $GLOBALS['sys_https_host'] = 'secure.codendi.org';
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
@@ -418,7 +418,7 @@ class URLVerificationTest extends UnitTestCase {
         $GLOBALS['sys_allow_anon'] = 0;
         $GLOBALS['sys_https_host'] = 'secure.codendi.org';
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
@@ -439,7 +439,7 @@ class URLVerificationTest extends UnitTestCase {
 
         $GLOBALS['sys_allow_anon'] = 0;
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
 
         $urlVerification = new URLVerificationTestVersion($this);
@@ -529,7 +529,7 @@ class URLVerificationTest extends UnitTestCase {
         $urlVerification = new URLVerificationTestVersion();
         $project = new MockProject();
         $project->setReturnValue('isActive', false);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
         $this->assertTrue($urlVerification->userCanAccessProject($project));
@@ -539,7 +539,7 @@ class URLVerificationTest extends UnitTestCase {
         $urlVerification = new URLVerificationTestVersion();
         $project = new MockProject();
         $project->setReturnValue('isActive', false);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $urlVerification->setReturnValue('getCurrentUser', $user);
         $this->assertFalse($urlVerification->userCanAccessProject($project));
@@ -628,7 +628,7 @@ class URLVerificationTest extends UnitTestCase {
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project, array(120));
         $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true, array(120));
         $urlVerification->setReturnValue('getCurrentUser', $user);
         
@@ -644,7 +644,7 @@ class URLVerificationTest extends UnitTestCase {
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project, array(120));
         $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', false);
         $urlVerification->setReturnValue('getCurrentUser', $user);
         

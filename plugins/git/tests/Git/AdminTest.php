@@ -56,7 +56,7 @@ class Git_Admin_process_Test extends TuleapTestCase {
      * @return CSRFSynchronizerToken
      */
     private function setUpCSRF() {
-        $user = mock('User');
+        $user = mock('PFUser');
         $csrf = TestHelper::getPartialMock('CSRFSynchronizerToken', array('getUser'));
         stub($csrf)->getUser()->returns($user);
         $csrf->__construct('/plugin/git/admin/');

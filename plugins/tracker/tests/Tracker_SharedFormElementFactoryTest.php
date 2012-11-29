@@ -175,7 +175,7 @@ class Tracker_SharedFormElementFactoryTest extends TuleapTestCase {
     }
 
     private function GivenASharedFormElementFactory($field, $type) {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
         $boundValuesFactory = new MockTracker_FormElement_Field_List_BindFactory();

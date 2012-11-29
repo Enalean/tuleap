@@ -98,7 +98,7 @@ class Transition_equalsTest extends Transition_baseTest {
 class Transition_beforeTest extends Transition_baseTest {
 
     function testBeforeShouldTriggerActions() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
 
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);

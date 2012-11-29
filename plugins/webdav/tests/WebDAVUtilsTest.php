@@ -40,7 +40,7 @@ class WebDAVUtilsTest extends UnitTestCase {
     function testUserIsAdminNotSuperUserNotmember() {
 
         $utils = new WebDAVUtilsTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $project = new MockProject();
         $user->setReturnValue('isMember', false);
@@ -55,7 +55,7 @@ class WebDAVUtilsTest extends UnitTestCase {
     function testUserIsAdminSuperUser() {
 
         $utils = new WebDAVUtilsTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
         $project = new MockProject();
         $user->setReturnValue('isMember', false);
@@ -70,7 +70,7 @@ class WebDAVUtilsTest extends UnitTestCase {
     function testUserIsAdminGroupAdmin() {
 
         $utils = new WebDAVUtilsTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $project = new MockProject();
         $user->setReturnValue('isMember', true, array('0' => $project->getGroupId(), '1' => 'A'));
@@ -86,7 +86,7 @@ class WebDAVUtilsTest extends UnitTestCase {
     function testUserIsAdminSuperUserGroupAdmin() {
 
         $utils = new WebDAVUtilsTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
         $project = new MockProject();
         $user->setReturnValue('isMember', true, array('0' => $project->getGroupId(), '1' => 'A'));
@@ -102,7 +102,7 @@ class WebDAVUtilsTest extends UnitTestCase {
     function testUserIsAdminFRSAdmin() {
 
         $utils = new WebDAVUtilsTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $project = new MockProject();
         $user->setReturnValue('isMember', false, array('0' => $project->getGroupId(), '1' => 'A'));
@@ -118,7 +118,7 @@ class WebDAVUtilsTest extends UnitTestCase {
     function testUserIsAdminSuperuserFRSAdmin() {
 
         $utils = new WebDAVUtilsTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
         $project = new MockProject();
         $user->setReturnValue('isMember', false, array('0' => $project->getGroupId(), '1' => 'A'));
@@ -134,7 +134,7 @@ class WebDAVUtilsTest extends UnitTestCase {
     function testUserIsAdminGroupAdminFRSAdmin() {
 
         $utils = new WebDAVUtilsTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $project = new MockProject();
         $user->setReturnValue('isMember', true);
@@ -149,7 +149,7 @@ class WebDAVUtilsTest extends UnitTestCase {
     function testUserIsAdminSuperUserGroupAdminFRSAdmin() {
 
         $utils = new WebDAVUtilsTestVersion($this);
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
         $project = new MockProject();
         $user->setReturnValue('isMember', true);

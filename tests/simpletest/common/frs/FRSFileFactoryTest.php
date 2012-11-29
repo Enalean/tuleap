@@ -502,7 +502,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
         $backend = new MockBackendSystem($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
@@ -582,7 +582,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $dao->setReturnValue('restoreFile', true);
         $fileFactory->setReturnValue('_getFRSFileDao', $dao);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);
@@ -627,7 +627,7 @@ class FRSFileFactoryTest extends UnitTestCase {
         $backend = new MockBackendSystem($this);
         $backend->setReturnValue('chgrp', true);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $fileFactory->setReturnValue('_getUserManager', $um);

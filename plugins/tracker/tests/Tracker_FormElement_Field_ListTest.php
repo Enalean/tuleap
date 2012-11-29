@@ -241,7 +241,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $changeset_value_list = new $this->mockcv_class();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -302,7 +302,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $bind                 = new MockTracker_FormElement_Field_List_Bind();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -340,7 +340,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $bind                 = new MockTracker_FormElement_Field_List_Bind();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');

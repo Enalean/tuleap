@@ -68,7 +68,7 @@ abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
 class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract {
 
     public function test_saveObject() {
-        $user          = new MockUser();
+        $user          = mock('PFUser');
         $tracker       = new MockTracker();
         
         $a_formelement = new MockTracker_FormElement_Container_Fieldset();
@@ -213,7 +213,7 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
         $GLOBALS['Language']->setReturnValue('getText', 'Separator', array('plugin_tracker_formelement_admin','separator_label'));
         
         $tracker_manager = new MockTrackerManager();
-        $user            = new MockUser();
+        $user            = mock('PFUser');
         $request         = new MockHTTPRequest();
         $tracker         = new MockTracker();
         
@@ -265,7 +265,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
     }
 
     public function itReturnsTheFieldsIfUserCanReadTheOriginalAndAllTargets() {
-        $user       = mock('User');
+        $user       = mock('PFUser');
         $project = new MockProject();
         
         $readableField   = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
@@ -282,7 +282,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
     }
     
     public function itDoesntReturnAnythingIfUserCannotReadTheOriginalAndAllTheTargets() {
-        $user       = mock('User');
+        $user       = mock('PFUser');
         $project = new MockProject();
         
         $aReadableField         = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
@@ -297,7 +297,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
     }
     
     public function itReturnsACollectionOfUniqueOriginals() {
-        $user       = mock('User');
+        $user       = mock('PFUser');
         $project = new MockProject();
         
         $aReadableField         = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
@@ -461,7 +461,7 @@ class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user    = mock('User');
+        $this->user    = mock('PFUser');
         $this->tracker = mock('Tracker');
         $this->field   = mock('Tracker_FormElement_Field_ArtifactLink');
 

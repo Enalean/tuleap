@@ -112,7 +112,7 @@ class CopyItemsTest extends UnitTestCase {
         $cloneItemsVisitor->visitLink($item_to_clone, array(
             'parentId'        => $dest_folder->getId(),
             'srcRootId'       => 66,
-            'user'            => new MockUser($this),
+            'user'            => mock('PFUser'),
             'metadataMapping' => array(),
             'ugroupsMapping'  => array(),
             'data_root'       => '/tmp')

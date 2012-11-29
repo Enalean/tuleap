@@ -98,7 +98,7 @@ class Docman_SOAPActionsTest extends UnitTestCase {
             $this->fileStorage->setReturnValue('getFileMD5sum', $md5);
         }
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 9);
         
         $userManager = new MockUserManager();

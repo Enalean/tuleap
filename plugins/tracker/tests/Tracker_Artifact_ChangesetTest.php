@@ -311,7 +311,7 @@ BODY;
     }
     
     function testChangesetShouldUseUserLanguageInGetBody() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $userLanguage = new MockBaseLanguage();
         $GLOBALS['Language']->expectNever('getText');
         $userLanguage->expectAtLeastOnce('getText');
@@ -324,7 +324,7 @@ BODY;
         $userLanguage = new MockBaseLanguage();
         $userLanguage->expectAtLeastOnce('getText');
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getPreference', 'text', array('user_tracker_mailformat'));
         $user->setReturnValue('getLanguage', $userLanguage);
         
@@ -380,7 +380,7 @@ class Tracker_Artifact_ChangesetDeleteTest extends TuleapTestCase {
         parent::setUp();
         $this->tracker      = aMockTracker()->build();
         $artifact     = anArtifact()->withTracker($this->tracker)->build();
-        $this->user         = stub('User')->isSuperUser()->returns(true);
+        $this->user         = stub('PFUser')->isSuperUser()->returns(true);
         $this->changeset_id = 1234;
         $this->changeset    = partial_mock(
             'Tracker_Artifact_Changeset',

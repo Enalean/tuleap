@@ -51,11 +51,11 @@ class NotificationsManager_DeleteTest extends UnitTestCase {
                                                   array('user_id'   => 3,
                                                         'object_id' => 1)));
 
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getId', 1);
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getId', 2);
-        $user3 = new MockUser();
+        $user3 = mock('PFUser');
         $user3->setReturnValue('getId', 3);
         $um = new MockUserManager();
         $um->setReturnValueAt(0, 'getUserById', $user1);

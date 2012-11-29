@@ -531,7 +531,7 @@ class GitActions_ForkTests extends TuleapTestCase {
         $to_project   = mock('Project');
         $namespace    = 'namespace';
         $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
-        $user         = mock('User');
+        $user         = mock('PFUser');
         $response     = mock('Layout');
         $redirect_url = '/stuff';
 

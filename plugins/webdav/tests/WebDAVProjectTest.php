@@ -159,7 +159,7 @@ class WebDAVProjectTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), false);
@@ -179,7 +179,7 @@ class WebDAVProjectTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), true);
@@ -199,7 +199,7 @@ class WebDAVProjectTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), false);
@@ -219,7 +219,7 @@ class WebDAVProjectTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), true);
@@ -239,7 +239,7 @@ class WebDAVProjectTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), true);
@@ -259,7 +259,7 @@ class WebDAVProjectTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), true);
@@ -279,7 +279,7 @@ class WebDAVProjectTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), false);
@@ -299,7 +299,7 @@ class WebDAVProjectTest extends UnitTestCase {
 
         $utils = new MockWebDAVUtils();
         $webDAVProject->setReturnValue('getUtils', $utils);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $webDAVProject->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVProject->userCanRead(), true);

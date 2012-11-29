@@ -48,7 +48,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
     }
     
     public function testGetUser() {
-        $u = new MockUser();
+        $u = mock('PFUser');
         
         $uh = new MockUserManager();
         $uh->setReturnValue('getUserById', $u, array(123));

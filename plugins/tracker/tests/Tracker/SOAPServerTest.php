@@ -56,7 +56,7 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $current_user        = mock('User');
+        $current_user        = mock('PFUser');
         stub($current_user)->isSuperUser()->returns(true);
         stub($current_user)->isLoggedIn()->returns(true);
         $user_manager        = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);

@@ -262,7 +262,7 @@ class RequestHelpActionsTest extends UnitTestCase {
 
     function testAddTicketCodexDBFail() {
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $um->setReturnValue('getCurrentUser', $user);
         $actions = new RequestHelpActionsTestVersion2();
         $c = new MockRequestHelp();
@@ -287,7 +287,7 @@ class RequestHelpActionsTest extends UnitTestCase {
 
     function testAddTicketRIFDBFail() {
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $um->setReturnValue('getCurrentUser', $user);
         $actions = new RequestHelpActionsTestVersion2();
         $c = new MockRequestHelp();
@@ -313,7 +313,7 @@ class RequestHelpActionsTest extends UnitTestCase {
 
     function testAddTicketSuccess() {
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $um->setReturnValue('getCurrentUser', $user);
         $actions = new RequestHelpActionsTestVersion2();
         $c = new MockRequestHelp();
@@ -340,7 +340,7 @@ class RequestHelpActionsTest extends UnitTestCase {
 
     function testSendMailToSDFailure() {
         $um   = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $um->setReturnValue('getCurrentUser', $user);
 
         $validParams = array('ticket_id'     => 'QA0000000000001',

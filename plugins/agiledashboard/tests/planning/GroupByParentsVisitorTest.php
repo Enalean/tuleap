@@ -49,7 +49,7 @@ class Planning_GroupByParentsVisitorTest extends TuleapTestCase {
     }
 
     public function setUp() {
-        $user = mock('User');
+        $user = mock('PFUser');
 
         $this->epic = mock('Tracker_Artifact');
         stub($this->epic)->getId()->returns(123);

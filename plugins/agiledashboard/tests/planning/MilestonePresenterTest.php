@@ -47,7 +47,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
     
     public function setUp() {
         parent::setUp();
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $this->planning_tracker_id = 191;
         $this->planning_tracker    = mock('Tracker');
         $this->planning            = mock('Planning');
@@ -192,7 +192,7 @@ class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_Milesto
 
     public function setUp() {
         parent::setUp();
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $this->planning            = mock('Planning');
         $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
         $this->artifacts_to_select = array();
@@ -225,7 +225,7 @@ class Planning_MilestonePresenter_OverCapacityTest extends Planning_MilestonePre
 
     public function setUp() {
         parent::setUp();
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $this->planning            = mock('Planning');
         $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
         $this->artifacts_to_select = array();

@@ -59,7 +59,7 @@ class AdminDelegation_UserServiceTest extends UnitTestCase {
         $usm->setReturnValue('_getUserServiceDao', $usDao);
         $usm->setReturnValue('_getUserServiceLogDao', $uslDao);
         
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 112);
         
         $usm->addUserService($user, AdminDelegation_Service::SHOW_PROJECT_ADMINS);
@@ -77,7 +77,7 @@ class AdminDelegation_UserServiceTest extends UnitTestCase {
         $usm->setReturnValue('_getUserServiceDao', $usDao);
         $usm->setReturnValue('_getUserServiceLogDao', $uslDao);
         
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 112);
         
         $usm->removeUserService($user, AdminDelegation_Service::SHOW_PROJECT_ADMINS);

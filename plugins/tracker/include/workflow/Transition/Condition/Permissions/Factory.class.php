@@ -25,6 +25,7 @@ class Workflow_Transition_Condition_Permissions_Factory {
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
         $authorized_ugroups_keyname = array();
+        var_dump($xml->permissions);
         foreach ($xml->permissions->permission as $perm) {
             $ugroup = (string)$perm['ugroup'];
             if (isset($GLOBALS['UGROUPS'][$ugroup])) {

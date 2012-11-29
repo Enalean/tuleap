@@ -31,7 +31,7 @@ class SVN_SOAPServerTest extends TuleapTestCase {
         $project = mock('Project');
         stub($soap_request_valid)->getProjectById($group_id, '*')->returns($project);
 
-        $user = mock('User');
+        $user = mock('PFUser');
         stub($soap_request_valid)->continueSession($session_key)->returns($user);
         
         $svn_soap = new SVN_SOAPServer($soap_request_valid, $svn_repository_listing);

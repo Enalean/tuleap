@@ -55,7 +55,7 @@ class ApprovalTableNotificationCycleTest extends UnitTestCase {
         $mail =& new MockMail();
         $mail->expectOnce('_sendmail');
 
-        $owner =& new MockUser();
+        $owner = mock('PFUser');
         $owner->setReturnValue('getEmail', 'owner@codendi.com');
         $owner->setReturnValue('getRealName', 'Owner');
 

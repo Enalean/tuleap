@@ -107,7 +107,7 @@ class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
         $this->assertNull($this->milestone->getArtifact());
         $this->assertNull($this->milestone->getArtifactId());
         $this->assertNull($this->milestone->getArtifactTitle());
-        $this->assertTrue($this->milestone->userCanView(mock('User')), "any user should be able to read an empty milstone");
+        $this->assertTrue($this->milestone->userCanView(mock('PFUser')), "any user should be able to read an empty milstone");
     }
 
     public function itHasATitle() {
@@ -128,7 +128,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $artifact      = aMockArtifact()->withId(1111)->withUniqueLinkedArtifacts(array(aMockArtifact()->build()))->build();
 
         $milestone     = new Planning_ArtifactMilestone($this->project, mock('Planning'), $artifact);
-        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('PFUser'));
         $this->assertEqual(count($all_artifacts), 1);
     }
     
@@ -144,7 +144,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
 
         
         $milestone = new Planning_ArtifactMilestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
-        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('PFUser'));
         $this->assertEqual(count($all_artifacts), 2);
     }
     
@@ -160,7 +160,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
 
         
         $milestone = new Planning_ArtifactMilestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
-        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('PFUser'));
         $this->assertEqual(count($all_artifacts), 2);
     }
     
@@ -178,7 +178,7 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
 
         
         $milestone = new Planning_ArtifactMilestone($this->project, mock('Planning'), $root_artifact, $planned_artifacts);
-        $all_artifacts = $milestone->getLinkedArtifacts(mock('User'));
+        $all_artifacts = $milestone->getLinkedArtifacts(mock('PFUser'));
         $this->assertEqual(count($all_artifacts), 3);
     }
 }

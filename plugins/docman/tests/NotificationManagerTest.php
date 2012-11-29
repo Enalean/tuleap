@@ -79,7 +79,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $nm->setReturnValue('_getMail', $mail);
         $nm->__construct(101, '/toto', $feedback);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getEmail', 'foo@codendi.org');
         $nm->_messages = array(array('title' => 'Move', 'content' => 'Changed', 'to' => array($user)));
 
@@ -113,7 +113,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $nm->setReturnValueAt(1, '_getMail', $mail2);
         $nm->__construct(101, '/toto', $feedback);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getEmail', 'foo@codendi.org');
         $nm->_messages[] = array('title' => 'Move 1', 'content' => 'Changed 1', 'to' => array($user));
         $nm->_messages[] = array('title' => 'Move 2', 'content' => 'Changed 2', 'to' => array($user));
@@ -131,7 +131,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
         $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getRealName', 'John Doe');
         $user->setReturnValue('getId', 2);
         $params['path']      = new MockDocman_Path();
@@ -163,7 +163,7 @@ class Docman_NotificationsManagerTest extends UnitTestCase {
         $notificationsManager = new Docman_NotificationsManager_TestVersion();
         $notificationsManager->setReturnValue('_getLanguageForUser', $language);
         $notificationsManager->_url = 'http://www.example.com/plugins/docman/';
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getRealName', 'John Doe');
         $user->setReturnValue('getId', 2);
         $params['path']      = new MockDocman_Path();

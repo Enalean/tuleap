@@ -47,7 +47,7 @@ class Tracker_URLTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->user = new MockUser($this);
+        $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 666);
         
         $this->artifact = new MockTracker_Artifact($this);

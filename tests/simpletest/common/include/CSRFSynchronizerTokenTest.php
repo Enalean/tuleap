@@ -22,7 +22,7 @@ require_once('common/include/CSRFSynchronizerToken.class.php');
 Mock::generatePartial('CSRFSynchronizerToken', 'CSRFSynchronizerTokenTestVersion', array('getUser'));
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 require_once('common/include/Codendi_Request.class.php');
@@ -30,7 +30,7 @@ Mock::generate('Codendi_Request');
 require_once('common/layout/Layout.class.php');
 Mock::generate('Layout');
 
-class CSRFUserTestVersion_MockPreferences extends MockUser {
+class CSRFUserTestVersion_MockPreferences extends MockPFUser {
     protected $UserTestVersion_MockPreferences_hash = array();
     
     public function getPreference($key) {

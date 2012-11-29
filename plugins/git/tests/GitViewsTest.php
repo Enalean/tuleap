@@ -108,7 +108,7 @@ class GitViewsTest extends UnitTestCase {
     }
     
     private function GivenAUserWithProjects() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getAllProjects', array('123', '456'));
         $user->setReturnValue('isMember', true, array('123', 'A'));
         $user->setReturnValue('isMember', false, array('456', 'A'));

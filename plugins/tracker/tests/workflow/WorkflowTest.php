@@ -226,7 +226,7 @@ class WorkflowTest extends UnitTestCase {
     }
 
     function testBeforeShouldTriggerTransitionActions() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
 
         $f = new MockTracker_FormElement_Field_List();
         $f->setReturnValue('getId', 103);
@@ -272,7 +272,7 @@ class WorkflowTest extends UnitTestCase {
     }
 
     function testBeforeShouldTriggerTransitionActionsForNewArtifact() {
-        $current_user = new MockUser();
+        $current_user = mock('PFUser');
 
         $f = new MockTracker_FormElement_Field_List();
         $f->setReturnValue('getId', 103);

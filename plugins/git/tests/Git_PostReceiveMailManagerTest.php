@@ -53,7 +53,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
     public function testRemoveMailByProjectPrivateRepositoryUserStillMember(){
         $prm = new PostReceiveMailManagerTestVersion();
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', True);
         $user->setReturnValue('getEmail', "codendiadm@codendi.org");
 
@@ -72,7 +72,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
     public function testRemoveMailByProjectPrivateRepository(){
         $prm = new PostReceiveMailManagerTestVersion();
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', False);
         $user->setReturnValue('getEmail', "codendiadm@codendi.org");
 
@@ -99,7 +99,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
     public function testRemoveMailByProjectPrivateRepositoryErrorDaoRemoving(){
         $prm = new PostReceiveMailManagerTestVersion();
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', False);
         $user->setReturnValue('getEmail', "codendiadm@codendi.org");
 

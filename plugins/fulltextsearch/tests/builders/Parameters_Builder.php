@@ -33,7 +33,7 @@ class Parameters_Builder {
     public $user;
     
     public function __construct() {
-        $this->user = mock('User');
+        $this->user = mock('PFUser');
     }
 
     public function withItem($item) {
