@@ -781,7 +781,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * @return boolean true if user has persission to create trackers, false otherwise
      */
     public function userCanCreateTracker($group_id, $user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
