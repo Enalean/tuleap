@@ -40,6 +40,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
                                 'plugins/foafprofiles',
                                 'plugins/fusionforge_compat',
                                 'tools/utils/releases_notes',
+                                'plugins/mediawiki',
                                 )) .')$`';
         
         //Those files are allowed to contains something before opening tag
