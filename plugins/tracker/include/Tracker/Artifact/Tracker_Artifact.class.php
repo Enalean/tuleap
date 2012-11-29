@@ -914,6 +914,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $workflow = $this->getWorkflow();
                 if ($workflow) {
                     $workflow->before($fields_data, $submitter, $this);
+                    if (! $workflow->validateGlobalRules($fields_data, $this->getFormElementFactory())) {
+                        return false;
+                    }
                 }
                 if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
 

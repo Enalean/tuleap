@@ -610,6 +610,9 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[103]));
     }
+}
+
+class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
 
     function testCreateInitialChangeset() {
         $dao = new MockTracker_Artifact_ChangesetDao();
@@ -683,6 +686,75 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $this->assertNull($artifact->createInitialChangeset($fields_data, $user, $email));
         $this->assertFalse(isset($fields_data[101]));
         $this->assertFalse(isset($fields_data[103]));
+    }
+
+    public function itCheckThatGlobalRulesAreValid() {
+        $dao = new MockTracker_Artifact_ChangesetDao();
+        $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
+        $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
+        $dao->expectNever('create');
+
+        $user = new MockUser();
+        $user->setReturnValue('getId', 1234);
+        $user->setReturnValue('isAnonymous', false);
+
+        $tracker = new MockTracker();
+        $factory = new MockTracker_FormElementFactory();
+
+        $rules_manager = new MockTracker_RulesManager();
+        $rules_manager->setReturnValue('validate', true);
+        $tracker->setReturnReference('getRulesManager', $rules_manager);
+
+        $field1  = new MockTracker_FormElement_Field();
+        $field1->setReturnValue('getId', 101);
+        $field1->setReturnValue('isValid', true);
+        $field1->expectNever('saveNewChangeset');
+        $field1->setReturnValue('userCanSubmit', true);
+        $field1->setReturnValue('userCanUpdate', true);
+        $field2  = new MockTracker_FormElement_Field();
+        $field2->setReturnValue('getId', 102);
+        $field2->setReturnValue('isValid', true, array('*', '123'));
+        $field2->setReturnValue('isValid', false, array('*', '456'));
+        $field2->setReturnValue('userCanSubmit', true);
+        $field2->setReturnValue('userCanUpdate', true);
+        $field2->expectNever('saveNewChangeset');
+        $field3  = new MockTracker_FormElement_Field();
+        $field3->setReturnValue('getId', 103);
+        $field3->setReturnValue('isValid', true);
+        $field3->setReturnValue('userCanSubmit', true);
+        $field3->setReturnValue('userCanUpdate', true);
+        $field3->expectNever('saveNewChangeset');
+        $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+
+        $art_factory = new MockTracker_ArtifactFactory();
+
+        $artifact = new Tracker_ArtifactTestVersion();
+        $artifact->setReturnReference('getChangesetDao', $dao);
+        $artifact->setReturnReference('getFormElementFactory', $factory);
+        $artifact->setReturnReference('getTracker', $tracker);
+        $artifact->setReturnValue('getId', 66);
+        $artifact->setReturnReference('getArtifactFactory', $art_factory);
+
+        $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
+        $workflow->setReturnValue('validate', true);
+
+        $artifact->setReturnReference('getWorkflow', $workflow);
+
+        $art_factory->expectNever('save');
+
+        $email = null; //not annonymous user
+
+        // Valid
+        $fields_data = array(
+            101 => '123',
+        );
+
+        $updated_fields_data_by_workflow = array(
+            101 => '123',
+            102 => '456'
+        );
+        stub($workflow)->validateGlobalRules($updated_fields_data_by_workflow, $factory)->once()->returns(false);
+        $this->assertFalse($artifact->createInitialChangeset($fields_data, $user, $email));
     }
 
     function testCreateInitialChangesetAnonymousNoEmail() {
@@ -948,6 +1020,9 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
+}
+
+class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
     function testCreateNewChangeset() {
         $email   = null; //not annonymous user
