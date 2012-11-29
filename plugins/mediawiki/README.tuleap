@@ -20,6 +20,9 @@ $src_path = "/usr/share/mediawiki115";
 
 /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
 
+
+You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
+
 ============================= TO CHECK LATER ============================= 
 
 Is there a need for bin/create_links.sh??? as of today the links are commited

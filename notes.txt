@@ -45,6 +45,7 @@ SystemEventManager::fetchEvents() => not used
   * Sanitizer
 
 -> How to update
+  * When there is a new version of mediawiki, how do we update the code & the DBs ?
 
 == Resources ==
 * Log in mediawiki : LocalSettings.php : $wgDebugLogFile         = '/tmp/wiki.log';
