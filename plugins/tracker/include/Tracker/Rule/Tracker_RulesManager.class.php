@@ -568,7 +568,10 @@ class Tracker_RulesManager {
 
         foreach ($rules as $rule) {
             if (! $this->dateRuleApplyToSubmittedFields($rule, $value_field_list)) {
-                return false; // Return ??? WAT ???
+                // If the request doesn't contain all fields then the rules
+                // are considered violated.
+                // It may impact partial csv import / soap update
+                return false;
             }
 
             if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
