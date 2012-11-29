@@ -23,7 +23,7 @@ require_once 'common/user/UserManager.class.php';
 
 // Partial because of inheritance issues
 Mock::generatePartial('LDAPResult', 'LDAPResultTestVersion', array('getEmail', 'getCommonName', 'get'));
-Mock::generatePartial('User', 'User4LDAPUserSync', array('getRealName', 'getEmail', 'getStatus', 'setRealName', 'setEmail', 'setStatus'));
+Mock::generatePartial('PFUser', 'User4LDAPUserSync', array('getRealName', 'getEmail', 'getStatus', 'setRealName', 'setEmail', 'setStatus'));
 
 // Override instance to test the right file
 class LDAP_UserSyncTestVersion extends LDAP_UserSync {

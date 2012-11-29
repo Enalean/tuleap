@@ -44,26 +44,26 @@ class LDAPPluginCustomUserSync extends LDAP_UserSync {
      * So employeetype: GOLD == GoLd == gold. So we highly advise to 'strtolower'
      * all your tests.
      *
-     * @param User       $user Codendi user
+     * @param PFUser       $user Codendi user
      * @param LDAPResult $lr   Ldap result
      *
      * @return Boolean True if the method modified the user object
      */
-    public function sync(User $user, LDAPResult $lr) {
+    public function sync(PFUser $user, LDAPResult $lr) {
         $modified = parent::sync($user, $lr);
 
         switch (strtolower($lr->get('employeetype'))) {
             case 'company':
             case 'gold_partners':
-                if ($user->getStatus() != User::STATUS_ACTIVE) {
-                    $user->setStatus(User::STATUS_ACTIVE);
+                if ($user->getStatus() != PFUser::STATUS_ACTIVE) {
+                    $user->setStatus(PFUser::STATUS_ACTIVE);
                     $modified = true;
                 }
                 break;
 
             default:
-                if ($user->getStatus() != User::STATUS_RESTRICTED) {
-                    $user->setStatus(User::STATUS_RESTRICTED);
+                if ($user->getStatus() != PFUser::STATUS_RESTRICTED) {
+                    $user->setStatus(PFUser::STATUS_RESTRICTED);
                     $modified = true;
                     if (isset($GLOBALS['Response'])) {
                         $GLOBALS['Response']->addFeedback('info', "Your account is restricted to projects your are member of");
@@ -74,7 +74,7 @@ class LDAPPluginCustomUserSync extends LDAP_UserSync {
 
         // Suspend users that left the company and still present in LDAP
         if ($lr->get('st-entrystatus') == 'T') {
-            $user->setStatus(User::STATUS_SUSPENDED);
+            $user->setStatus(PFUser::STATUS_SUSPENDED);
             $modified = true;
         }
 
