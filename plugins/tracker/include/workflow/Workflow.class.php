@@ -309,6 +309,7 @@ class Workflow {
         return null;
     }
 
+    /** @return bool */
     public function validateGlobalRules(array $fields_data) {
         return $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data);
     }
