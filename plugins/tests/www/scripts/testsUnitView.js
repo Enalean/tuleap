@@ -18,7 +18,6 @@
 		inputBoxes.each(function(inputBox){
 			Event.observe(inputBox, 'change', (function (evt) {
 				var checked = this.checked;
-				console.log(this.up('li'));
 				this.up('li').select('input[type=checkbox]').each(function (input) {
                     input.checked = checked;
 				});
@@ -54,7 +53,7 @@
 		
 		$$('.testsControl').each(function (div) {
 			div.setStyle({
-				height: (jQuery(window).height() - 60) + 'px'
+				height: (jQuery(window).height() - 80) + 'px'
 			});
 		});
 	}
