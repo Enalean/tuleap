@@ -47,7 +47,7 @@
 		$$('li.category').each(function(category){
 			register_events(category);
 			currentCategory++;
-			new Insertion.Top(category.down('label'), '<img id="plus_' + currentCategory +'" src="' + minusSrc +'" />');
+			new Insertion.After(category.down('input[type=checkbox]'), '<img id="plus_' + currentCategory +'" src="' + minusSrc +'" />');
 			initCategory(category);
 		});
 		
