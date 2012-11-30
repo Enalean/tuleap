@@ -153,7 +153,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
             </postaction_field_date>
         ');
         
-        $post_action = $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
+        $post_action = $this->factory->getInstanceFromXML($xml, $this->mapping, $this->transition);
         
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Date');
         $this->assertEqual($post_action->getValueType(), 1);
@@ -166,7 +166,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
             </postaction_field_int>
         ');
         
-        $post_action = $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
+        $post_action = $this->factory->getInstanceFromXML($xml, $this->mapping, $this->transition);
         
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Int');
         $this->assertEqual($post_action->getValue(), 440);
@@ -179,7 +179,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
             </postaction_field_float>
         ');
         
-        $post_action = $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
+        $post_action = $this->factory->getInstanceFromXML($xml, $this->mapping, $this->transition);
         
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Float');
         $this->assertEqual($post_action->getValue(), 64.42);
@@ -194,7 +194,7 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends TuleapTestCase
         
         $this->expectException('Transition_PostAction_NotFoundException');
         
-        $this->factory->getInstanceFromXML($xml, &$this->mapping, $this->transition);
+        $this->factory->getInstanceFromXML($xml, $this->mapping, $this->transition);
     }
 }
 
