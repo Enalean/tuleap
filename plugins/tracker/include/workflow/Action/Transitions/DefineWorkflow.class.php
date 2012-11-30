@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Image/GraphViz.php';
 require_once TRACKER_BASE_DIR .'/workflow/Action/Transitions.class.php';
+require_once 'DefineWorkflow/GraphViewer.class.php';
 
 class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workflow_Action_Transitions {
     /** @var WorkflowFactory */
@@ -136,68 +136,9 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
     }
 
     public function displayTransitionsGraph(array $transitions) {
-        $gv = new Image_GraphViz();
-        $gv->setAttributes(
-            array(
-                'spline' => 'ortho',
-            )
-        );
-        $common_attributes = array(
-            'fontname'  => 'arial',
-            'fontsize'  => 10,
-            'color'     => 'grey',
-        );
-        $edge_attributes = array_merge(
-            $common_attributes,
-            array(
-                'fontcolor' => '#0676B9',
-            )
-        );
-        $nodes_attributes = array_merge(
-            $common_attributes,
-            array(
-                'fillcolor' => 'grey96',
-                'fontcolor' => 'grey27',
-                'style'     => 'filled',
-                'shape'     => 'box',
-            )
-        );
-        $nil_attributes = array_merge(
-            $nodes_attributes,
-            array(
-                'shape'     => 'point',
-                'fillcolor' => 'grey',
-            )
-        );
-        foreach ($transitions as $transition) {
-            $from   = $transition->getFieldValueFrom();
-            $to     = $transition->getFieldValueTo();
-            $from_node = $from ? $from->getLabel() : '__nil__';
-            $to_node   = $to->getLabel();
-            $attr = $from ? $nodes_attributes : $nil_attributes;
-            $gv->addNode($from_node, $attr);
-            $gv->addNode($to_node, $nodes_attributes);
-            $url = TRACKER_BASE_URL.'/?'. http_build_query(
-                array(
-                    'tracker'         => (int)$this->tracker->getId(),
-                    'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
-                    'edit_transition' => $transition->getTransitionId()
-                )
-            );
-            $gv->addEdge(
-                array($from_node => $to_node),
-                array_merge(
-                    $edge_attributes,
-                    array(
-                        'label' => ($from ? $from_node : '') .' → '. $to_node,
-                        'href'  => $url,
-                    )
-                )
-            );
-        }
-        $xml_string = $gv->fetch();
+        $graph = new Workflow_Action_Transitions_DefineWorkflow_GraphViewer($this->tracker, $transitions);
         echo '<div class="workflow_transitions_graph">';
-        echo substr($xml_string, strpos($xml_string, '<svg'));
+        echo $graph->fetchEmbeddableSvg();
         echo '</div>';
     }
 }
