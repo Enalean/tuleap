@@ -31,9 +31,47 @@ class Workflow_Action_Transitions_DefineWorkflow_GraphViewer {
     /** @var array */
     private $transitions;
 
+    /** @var array */
+    private $graph_attributes = array(
+        'spline' => 'ortho',
+    );
+
+    /** @var array */
+    private $common_attributes = array(
+        'fontname'  => 'arial',
+        'fontsize'  => 10,
+        'color'     => 'grey',
+    );
+
+    /** @var array */
+    private $edge_attributes = array(
+        'fontcolor' => '#0676B9',
+    );
+
+    /** @var array */
+    private $nodes_attributes = array(
+        'fillcolor' => 'grey96',
+        'fontcolor' => 'grey27',
+        'style'     => 'filled',
+        'shape'     => 'box',
+    );
+
+    /** @var array */
+    private $nil_attributes = array(
+        'shape'     => 'point',
+        'fillcolor' => 'grey',
+    );
+
     public function __construct(Tracker $tracker, array $transitions) {
         $this->tracker     = $tracker;
         $this->transitions = $transitions;
+        $this->inheritAttributes();
+    }
+
+    private function inheritAttributes() {
+        $this->edge_attributes  = array_merge($this->common_attributes, $this->edge_attributes);
+        $this->nodes_attributes = array_merge($this->common_attributes, $this->nodes_attributes);
+        $this->nil_attributes   = array_merge($this->nodes_attributes, $this->nil_attributes);
     }
 
     /**
@@ -47,46 +85,15 @@ class Workflow_Action_Transitions_DefineWorkflow_GraphViewer {
     /** @return string svg */
     private function fetchSvg() {
         $gv = new Image_GraphViz();
-        $gv->setAttributes(
-            array(
-                'spline' => 'ortho',
-            )
-        );
-        $common_attributes = array(
-            'fontname'  => 'arial',
-            'fontsize'  => 10,
-            'color'     => 'grey',
-        );
-        $edge_attributes = array_merge(
-            $common_attributes,
-            array(
-                'fontcolor' => '#0676B9',
-            )
-        );
-        $nodes_attributes = array_merge(
-            $common_attributes,
-            array(
-                'fillcolor' => 'grey96',
-                'fontcolor' => 'grey27',
-                'style'     => 'filled',
-                'shape'     => 'box',
-            )
-        );
-        $nil_attributes = array_merge(
-            $nodes_attributes,
-            array(
-                'shape'     => 'point',
-                'fillcolor' => 'grey',
-            )
-        );
+        $gv->setAttributes($this->graph_attributes);
         foreach ($this->transitions as $transition) {
             $from   = $transition->getFieldValueFrom();
             $to     = $transition->getFieldValueTo();
             $from_node = $from ? $from->getLabel() : '__nil__';
             $to_node   = $to->getLabel();
-            $attr = $from ? $nodes_attributes : $nil_attributes;
+            $attr = $from ? $this->nodes_attributes : $this->nil_attributes;
             $gv->addNode($from_node, $attr);
-            $gv->addNode($to_node, $nodes_attributes);
+            $gv->addNode($to_node, $this->nodes_attributes);
             $url = TRACKER_BASE_URL.'/?'. http_build_query(
                 array(
                     'tracker'         => (int)$this->tracker->getId(),
@@ -97,7 +104,7 @@ class Workflow_Action_Transitions_DefineWorkflow_GraphViewer {
             $gv->addEdge(
                 array($from_node => $to_node),
                 array_merge(
-                    $edge_attributes,
+                    $this->edge_attributes,
                     array(
                         'label' => ($from ? $from_node : '') .' → '. $to_node,
                         'href'  => $url,
