@@ -1,5 +1,8 @@
 Version 5.8 (Not Released Yet)
 
+   == Enhancement ==
+	* Tuleap can respond with several names
+
    == Bug fix ==
 	* Use reliable method to detect if we are running in CLI
 	* Fix setup script: Replace localhost reference by the mysql_host value to be able to install the db on a dedicated server (Contrib STMicroelectronics)
