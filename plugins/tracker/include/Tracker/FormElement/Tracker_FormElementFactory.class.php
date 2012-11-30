@@ -398,6 +398,11 @@ class Tracker_FormElementFactory {
         return $this->getUsedFormElementsByType($tracker, array('date', 'lud', 'subon'));
     }
 
+    public function getUsedDateFieldById(Tracker $tracker, $field_id) {
+        return $this->getUsedFieldByIdAndType($tracker, $field_id, array('date','subon','lud'));
+    }
+
+
     /**
      * @param Tracker $tracker
      * @return array All int formElements used by the tracker
@@ -1395,7 +1400,5 @@ class Tracker_FormElementFactory {
         }
         return $art_link_field_ids;
     }
-
-
 }
 ?>

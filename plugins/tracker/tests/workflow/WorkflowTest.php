@@ -392,4 +392,34 @@ class Workflow_validateTest extends TuleapTestCase {
         $this->assertFalse($workflow->validate($fields_data, $artifact));
     }
 }
+
+class Workflow_validateGlobalRulesTest extends TuleapTestCase {
+
+    private $tracker_id  = 123;
+
+    public function setUp() {
+        parent::setUp();
+
+        $tracker         = mock('Tracker');
+        $tracker_factory = mock('TrackerFactory');
+        TrackerFactory::setInstance($tracker_factory);
+        stub($tracker_factory)->getTrackerByid($this->tracker_id)->returns($tracker);
+
+        $this->rules_manager = mock ('Tracker_RulesManager');
+        stub($tracker)->getRulesManager()->returns($this->rules_manager);
+    }
+
+    public function tearDown() {
+        TrackerFactory::clearInstance();
+        parent::tearDown();
+    }
+
+    public function itDelegatesValidationToRulesManager() {
+        $fields_data = array();
+
+        expect($this->rules_manager)->validate($this->tracker_id, $fields_data)->once()->returns(true);
+        $workflow = new workflow(1, $this->tracker_id, 1, 1, array());
+        $this->assertTrue($workflow->validateGlobalRules($fields_data));
+    }
+}
 ?>

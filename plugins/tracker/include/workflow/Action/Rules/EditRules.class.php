@@ -79,8 +79,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function fieldsAreDateOnes($source_field_id, $target_field_id) {
-        $source_field_is_date = (bool)$this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $source_field_id, array('date','subon','lud'));
-        $target_field_is_date = (bool)$this->form_element_factory->getUsedFieldByIdAndType($this->tracker, $target_field_id, array('date','subon','lud'));
+        $source_field_is_date = (bool)$this->form_element_factory->getUsedDateFieldById($this->tracker, $source_field_id);
+        $target_field_is_date = (bool)$this->form_element_factory->getUsedDateFieldById($this->tracker, $target_field_id);
 
         return $source_field_is_date && $target_field_is_date;
     }

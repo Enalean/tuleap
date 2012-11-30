@@ -567,23 +567,29 @@ class Tracker_RulesManager {
         $rules = $this->getAllDateRulesByTrackerId($tracker_id);
 
         foreach ($rules as $rule) {
-            /* @var $rule Tracker_Rule_Date */
-            if(! isset($value_field_list[$rule->getSourceFieldId()]) ||
-                    !isset($value_field_list[$rule->getTargetFieldId()])) {
-                        return false;
+            if (! $this->dateRuleApplyToSubmittedFields($rule, $value_field_list)) {
+                // If the request doesn't contain all fields then the rules
+                // are considered violated.
+                // It may impact partial csv import / soap update
+                return false;
             }
 
-            $source_value = $value_field_list[$rule->getSourceFieldId()];
-            $target_value = $value_field_list[$rule->getTargetFieldId()];
+            if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
+                $source_field = $this->getField($rule->getSourceFieldId());
+                $target_field = $this->getField($rule->getTargetFieldId());
 
-            $is_valid = $rule->validate($source_value, $target_value);
-
-            if (! $is_valid) {
-                $source_field         = $this->getField($rule->getSourceFieldId());
-                $target_field         = $this->getField($rule->getTargetFieldId());
-
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact','rules_date_not_valid', array($source_field->getLabel(), $rule->getComparator(), $target_field->getLabel())));
-
+                $GLOBALS['Response']->addFeedback(
+                    'error',
+                    $GLOBALS['Language']->getText(
+                        'plugin_tracker_artifact',
+                        'rules_date_not_valid',
+                        array(
+                            $source_field->getLabel(),
+                            $rule->getComparator(),
+                            $target_field->getLabel()
+                        )
+                    )
+                );
                 return false;
             }
         }
@@ -591,6 +597,17 @@ class Tracker_RulesManager {
         return true;
     }
 
+    private function dateRuleApplyToSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
+        return isset($value_field_list[$rule->getSourceFieldId()]) && isset($value_field_list[$rule->getTargetFieldId()]);
+    }
+
+    /** @return bool */
+    private function validateDateRuleOnSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
+        $source_value = $value_field_list[$rule->getSourceFieldId()];
+        $target_value = $value_field_list[$rule->getTargetFieldId()];
+
+        return $rule->validate($source_value, $target_value);
+    }
 
     /**
      * Checks that the submitted values do not break field dependencies.
