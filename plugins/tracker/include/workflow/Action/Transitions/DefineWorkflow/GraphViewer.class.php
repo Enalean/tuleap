@@ -25,6 +25,8 @@ require_once 'Image/GraphViz.php';
  */
 class Workflow_Action_Transitions_DefineWorkflow_GraphViewer {
 
+    const INITIAL_NODE_OF_THE_GRAPH = '__NIL__';
+
     /** @var Tracker */
     private $tracker;
 
@@ -87,32 +89,57 @@ class Workflow_Action_Transitions_DefineWorkflow_GraphViewer {
         $gv = new Image_GraphViz();
         $gv->setAttributes($this->graph_attributes);
         foreach ($this->transitions as $transition) {
-            $from   = $transition->getFieldValueFrom();
-            $to     = $transition->getFieldValueTo();
-            $from_node = $from ? $from->getLabel() : '__nil__';
-            $to_node   = $to->getLabel();
-            $attr = $from ? $this->nodes_attributes : $this->nil_attributes;
-            $gv->addNode($from_node, $attr);
-            $gv->addNode($to_node, $this->nodes_attributes);
-            $url = TRACKER_BASE_URL.'/?'. http_build_query(
-                array(
-                    'tracker'         => (int)$this->tracker->getId(),
-                    'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
-                    'edit_transition' => $transition->getTransitionId()
-                )
-            );
-            $gv->addEdge(
-                array($from_node => $to_node),
-                array_merge(
-                    $this->edge_attributes,
-                    array(
-                        'label' => ($from ? $from_node : '') .' → '. $to_node,
-                        'href'  => $url,
-                    )
-                )
-            );
+            $from_node = $this->addNode($gv, $transition->getFieldValueFrom());
+            $to_node   = $this->addNode($gv, $transition->getFieldValueTo());
+            $this->addEdge($gv, $transition->getId(), $from_node, $to_node);
         }
         return $gv->fetch();
+    }
+
+    /** @return string the node */
+    private function addNode(Image_GraphViz $gv, Tracker_FormElement_Field_List_Value $value = null) {
+        $node       = self::INITIAL_NODE_OF_THE_GRAPH;
+        $attributes = $this->nil_attributes;
+        if ($value) {
+            $node       = $value->getLabel();
+            $attributes = $this->nodes_attributes;
+        }
+        $gv->addNode($node, $attributes);
+        return $node;
+    }
+
+    private function addEdge(Image_GraphViz $gv, $transition_id, $from_node, $to_node) {
+        $nodes      = array($from_node => $to_node);
+        $attributes = array_merge(
+            $this->edge_attributes,
+            array(
+                'label' => $this->getEdgeLabel($from_node, $to_node),
+                'href'  => $this->getUrl($transition_id),
+            )
+        );
+
+        $gv->addEdge($nodes, $attributes);
+    }
+
+    /** @return string */
+    private function getEdgeLabel($from_node, $to_node) {
+        $label = $from_node;
+        if ($from_node == self::INITIAL_NODE_OF_THE_GRAPH) {
+            $label = '';
+        }
+        $label .= ' → '. $to_node;
+        return $label;
+    }
+
+    /** @return string */
+    private function getUrl($transition_id) {
+        return TRACKER_BASE_URL.'/?'. http_build_query(
+            array(
+                'tracker'         => (int)$this->tracker->getId(),
+                'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
+                'edit_transition' => $transition_id
+            )
+        );
     }
 
     /** @return string xml without the declaration (<?xml version="..." ?>) */
