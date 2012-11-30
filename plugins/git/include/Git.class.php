@@ -373,6 +373,7 @@ class Git extends PluginController {
                 }
                 $valid = new Valid_String('path');
                 $valid->required();
+                $path = '';
                 if($this->request->valid($valid)) {
                     $path = $this->request->get('path');
                 }
