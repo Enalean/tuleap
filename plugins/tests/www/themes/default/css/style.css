@@ -1,15 +1,12 @@
-
+#menu {
+    margin-left: 0;
+}
 #menu,#menu ul {
     list-style-type: none;
     padding-left: 0px;
 }
 
-#menu ul li {
-    padding-left: 40px;
-}
-
 #menu ul li.categ {
-    padding-left: 24px;
 }
 
 .fail {
