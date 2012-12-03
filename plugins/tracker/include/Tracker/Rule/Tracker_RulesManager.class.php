@@ -530,6 +530,10 @@ class Tracker_RulesManager {
         foreach ($rules as $rule) {
             if ($rule->isUsedInRule($field->getId())) return true;
         }
+        $date_rules = $this->getAllDateRulesByTrackerId($this->tracker->getId());
+        foreach ($date_rules as $rule) {
+            if ($rule->isUsedInRule($field->getId())) return true;
+        }
         return false;
     }
 

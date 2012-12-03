@@ -839,6 +839,12 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
     private $a_field_not_used_in_rules_id = 14;
     private $a_field_not_used_in_rules;
 
+    private $source_field_date_id = 15;
+    private $source_field_date;
+
+    private $target_field_date_id = 16;
+    private $target_field_date;
+
     private function setUpRuleList() {
         $rule = new Tracker_Rule_List();
         $rule->setTrackerId($this->tracker_id)
@@ -846,6 +852,14 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
             ->setTargetFieldId($this->target_field_list_id)
             ->setSourceValue('A')
             ->setTargetValue('B');
+        return $rule;
+    }
+    private function setUpRuleDate() {
+        $rule = new Tracker_Rule_Date();
+        $rule->setTrackerId($this->tracker_id)
+            ->setSourceFieldId($this->source_field_date_id)
+            ->setTargetFieldId($this->target_field_date_id)
+            ->setComparator('<');
         return $rule;
     }
 
@@ -857,24 +871,37 @@ class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
         $this->a_field_not_used_in_rules = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns($this->a_field_not_used_in_rules_id);
         $this->source_field_list = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns($this->source_field_list_id);
         $this->target_field_list = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns($this->target_field_list_id);
+        $this->source_field_date = stub('Tracker_FormElement_Field_Date')->getId()->returns($this->source_field_date_id);
+        $this->target_field_date = stub('Tracker_FormElement_Field_Date')->getId()->returns($this->target_field_date_id);
 
-        $rule_factory    = mock('Tracker_RuleFactory');
-        $element_factory = mock('Tracker_FormElementFactory');
+        $rules_list = array(
+            $this->setUpRuleList()
+        );
+        $rule_list_factory = mock('Tracker_RuleFactory');
+        stub($rule_list_factory)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($rules_list);
+
+        $rules_date = array(
+            $this->setUpRuleDate()
+        );
+        $rule_date_factory = mock('Tracker_Rule_Date_Factory');
+        stub($rule_date_factory)->searchByTrackerId($this->tracker_id)->returns($rules_date);
+
+        $element_factory   = mock('Tracker_FormElementFactory');
         $this->rules_manager = partial_mock(
             'Tracker_RulesManager',
             array('getRuleFactory'),
             array($tracker, $element_factory)
         );
-        stub($this->rules_manager)->getRuleFactory()->returns($rule_factory);
-
-        $rules = array(
-            $this->setUpRuleList()
-        );
-        stub($rule_factory)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($rules);
+        stub($this->rules_manager)->getRuleFactory()->returns($rule_list_factory);
+        $this->rules_manager->setRuleDateFactory($rule_date_factory);
     }
 
     public function itReturnsTrueIfTheFieldIsUsedInARuleList() {
         $this->assertTrue($this->rules_manager->isUsedInFieldDependency($this->source_field_list));
+    }
+
+    public function itReturnsTrueIfTheFieldIsUsedInARuleDate() {
+        $this->assertTrue($this->rules_manager->isUsedInFieldDependency($this->source_field_date));
     }
 
     public function itReturnsFalseIfTheFieldIsNotUsedInARule() {

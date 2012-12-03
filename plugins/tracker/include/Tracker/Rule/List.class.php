@@ -64,11 +64,7 @@ class Tracker_Rule_List extends Tracker_Rule {
         return $match;
     }
 
-    function isUsedInRule($field_id) {
-        return $this->source_field == $field_id || $this->target_field == $field_id;
-     }
-
-            /**
+    /**
      *
      * @return string
      */

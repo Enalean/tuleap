@@ -148,5 +148,10 @@ class Tracker_Rule {
         $this->target_field = $field_id;
         return $this;
     }
+
+    /** @return bool */
+    function isUsedInRule($field_id) {
+        return $this->source_field == $field_id || $this->target_field == $field_id;
+    }
 }
 ?>
