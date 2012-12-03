@@ -44,6 +44,16 @@ class Tracker_Rule_Date_Factory {
         $this->element_factory = $element_factory;
     }
 
+    /** @return array of Tracker_FormElement_Field_Date */
+    public function getUsedDateFields(Tracker $tracker) {
+        return $this->element_factory->getUsedDateFields($tracker);
+    }
+
+    /** @return Tracker_FormElement_Field_Date */
+    public function getUsedDateFieldById(Tracker $tracker, $field_id) {
+        return $this->element_factory->getUsedDateFieldById($tracker, $field_id);
+    }
+
     /**
      *
      * @param int $source_field_id
