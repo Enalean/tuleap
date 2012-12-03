@@ -56,8 +56,9 @@ class Workflow_Transition_ConditionFactory {
         );
     }
 
-    public function isFieldUsedInConditions() {
-        die('va mourir');
+    /** @return bool */
+    public function isFieldUsedInConditions(Tracker_FormElement_Field $field) {
+        return $this->fieldnotempty_factory->isFieldUsedInConditions($field);
     }
 
     /**
