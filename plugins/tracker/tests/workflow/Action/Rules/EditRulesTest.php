@@ -127,8 +127,8 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
 
     public function itDoesNotFailIfRequestDoesNotContainRemoveParameter() {
         $request = aRequest()->withParams(array(
-            'source_date_field' => '21',
-            'target_date_field' => '14'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '21',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '14'
         ))->build();
         expect($this->date_factory)->deleteById()->never();
         $this->processRequestAndExpectFormOutput($request);
@@ -195,9 +195,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itAddsARule() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '22',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create($this->source_field_id, $this->target_field_id, $this->tracker_id, '>')->once();
@@ -206,8 +206,8 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheComparator() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -217,8 +217,8 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheSourceField() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'target_date_field' => '22',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -227,9 +227,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnInt() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '%invalid_id%',
-            'target_date_field' => '22',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '%invalid_id%',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -238,9 +238,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnGreaterThanZero() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '-1',
-            'target_date_field' => '22',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '-1',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -249,9 +249,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotChoosen() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '0',
-            'target_date_field' => '22',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '0',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -260,8 +260,8 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheTargetField() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -270,9 +270,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnInt() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '%invalid_id%',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '%invalid_id%',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -281,9 +281,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnGreaterThanZero() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '-1',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '-1',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -292,9 +292,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotChoosen() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '0',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '0',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -303,9 +303,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainAValidComparator() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '22',
-            'comparator'        => '%invalid_comparator%',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '%invalid_comparator%',
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -314,9 +314,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotCreateTheRuleIfTheTargetAndSourceFieldsAreTheSame() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '44',
-            'comparator'        => '>',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>',
         ))->build();
         expect($this->date_factory)->create()->never();
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
@@ -325,9 +325,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itProvidesFeedbackIfRuleSuccessfullyCreated() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '22',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
         expect($GLOBALS['Response'])->addFeedback('info','*')->once();
         $this->processRequestAndExpectRedirection($request);
@@ -335,9 +335,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotAddDateRuleIfTheSourceFieldIsNotADateOne() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '666',
-            'target_date_field' => '22',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '666',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -346,9 +346,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
     public function itDoesNotAddDateRuleIfTheTargetFieldIsNotADateOne() {
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            'source_date_field' => '44',
-            'target_date_field' => '666',
-            'comparator'        => '>'
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '666',
+            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();

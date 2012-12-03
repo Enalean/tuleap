@@ -28,6 +28,10 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     const PARAMETER_UPDATE_RULES = 'update_rules';
     const PARAMETER_REMOVE_RULES = 'remove_rules';
 
+    const PARAMETER_SOURCE_FIELD = 'source_date_field';
+    const PARAMETER_TARGET_FIELD = 'target_date_field';
+    const PARAMETER_COMPARATOR   = 'comparator';
+
     private $default_value = 'default_value';
 
     /** @var Tracker_Rule_Date_Factory */
@@ -54,8 +58,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function shouldAddRule(Codendi_Request $request) {
-        $source_field_id = $this->getFieldIdFromAddRequest($request, 'source_date_field');
-        $target_field_id = $this->getFieldIdFromAddRequest($request, 'target_date_field');
+        $source_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_SOURCE_FIELD);
+        $target_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD);
 
         $fields_exist         = $source_field_id && $target_field_id;
         $fields_are_different = $source_field_id != $target_field_id;
@@ -84,8 +88,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function getComparatorFromAddRequest(Codendi_Request $request) {
         $add = $request->get(self::PARAMETER_ADD_RULE);
         $rule = new Rule_WhiteList(Tracker_Rule_Date::$allowed_comparators);
-        if (is_array($add) && isset($add['comparator']) && $rule->isValid($add['comparator'])) {
-            return $add['comparator'];
+        if (is_array($add) && isset($add[self::PARAMETER_COMPARATOR]) && $rule->isValid($add[self::PARAMETER_COMPARATOR])) {
+            return $add[self::PARAMETER_COMPARATOR];
         }
     }
 
@@ -132,8 +136,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function addRule(Codendi_Request $request) {
         if ($this->shouldAddRule($request)) {
             $this->rule_date_factory->create(
-                $this->getFieldIdFromAddRequest($request, 'source_date_field'),
-                $this->getFieldIdFromAddRequest($request, 'target_date_field'),
+                $this->getFieldIdFromAddRequest($request, self::PARAMETER_SOURCE_FIELD),
+                $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD),
                 $this->tracker->getId(),
                 $this->getComparatorFromAddRequest($request)
             );
@@ -165,9 +169,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         foreach ($rules as $rule) {
             $name_prefix = self::PARAMETER_UPDATE_RULES .'['. $rule->getId() .']';
             echo '<li class="workflow_rule_action">';
-            $this->displayFieldSelector($fields, $name_prefix .'[source_date_field]', $rule->getSourceField()->getId());
-            $this->displayComparatorSelector($name_prefix .'[comparator]', $rule->getComparator());
-            $this->displayFieldSelector($fields, $name_prefix .'[target_date_field]', $rule->getTargetField()->getId());
+            $this->displayFieldSelector($fields, $name_prefix .'['. self::PARAMETER_SOURCE_FIELD .']', $rule->getSourceField()->getId());
+            $this->displayComparatorSelector($name_prefix .'['. self::PARAMETER_COMPARATOR .']', $rule->getComparator());
+            $this->displayFieldSelector($fields, $name_prefix .'['. self::PARAMETER_TARGET_FIELD .']', $rule->getTargetField()->getId());
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
             echo '<input type="checkbox" name="'. self::PARAMETER_REMOVE_RULES .'[]" value="'.$rule->getId().'" ></input>';
             echo '</label>';
@@ -193,9 +197,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $fields   = $this->getListOfDateFieldLabelsPlusPleaseChoose();
         $selected = $this->default_value;
         echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
-        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'[source_date_field]', $selected);
-        $this->displayComparatorSelector(self::PARAMETER_ADD_RULE .'[comparator]');
-        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'[target_date_field]', $selected);
+        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_SOURCE_FIELD .']', $selected);
+        $this->displayComparatorSelector(self::PARAMETER_ADD_RULE .'['. self::PARAMETER_COMPARATOR .']');
+        $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_TARGET_FIELD .']', $selected);
     }
 
     private function getListOfDateFieldLabelsPlusPleaseChoose() {
