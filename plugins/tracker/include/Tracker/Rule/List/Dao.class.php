@@ -33,7 +33,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * Searches Tracker_Rule by Id
      * @return DataAccessResult | false
      */
-    function searchById($id) {
+    public function searchById($id) {
         $sql = sprintf("SELECT *
                         FROM tracker_rule_list
                             JOIN tracker_rule
@@ -47,7 +47,11 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * Searches Tracker_Rule by TrackerId
      * @return DataAccessResult
      */
-    function searchByTrackerId($tracker_id) {
+    public function searchByTrackerId($tracker_id) {
+        /*
+         * @todo refactor to use quoteInt but not sprintf
+         */
+        
         $sql = sprintf("SELECT *
                         FROM tracker_rule 
                             JOIN tracker_rule_list
@@ -90,6 +94,30 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
         $this->commit();
 
         return $tracker_rule_id;
+    }
+    
+    /**
+     * create a row in the table tracker_rule and in tracker_rule_list
+     * @return true or id(auto_increment) if there is no error
+     */
+    public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id) {
+        $rule_type = Tracker_Rule::RULETYPE_VALUE;
+        $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
+                            VALUES (%s, %s)",
+                            $this->da->quoteSmart($tracker_id),
+                            $rule_type
+                           );
+
+        $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
+
+        $sql = sprintf("INSERT INTO tracker_rule_list (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
+                        VALUES (%s, %s, %s, %s, %s)",
+                        $tracker_rule_id,
+                        $this->da->quoteSmart($source_field_id),
+                        $this->da->quoteSmart($source_value_id),
+                        $this->da->quoteSmart($target_field_id),
+                        $this->da->quoteSmart($target_value_id));
+        return $this->retrieve($sql);
     }
 }
 ?>

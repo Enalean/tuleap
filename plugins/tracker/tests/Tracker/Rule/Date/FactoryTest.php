@@ -140,5 +140,104 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         expect($this->date_rule_dao)->deleteById($tracker_id, $rule_id)->once();
         $this->date_rule_factory->deleteById($tracker_id, $rule_id);
     }
+    
+    public function testDuplicateDoesNotInsertWhenNoRulesExist() {
+        $from_tracker_id = 56;
+        $to_tracker_id   = 789;
+        $field_mapping   = array(
+            array(
+                'from'  => 123,
+                'to'    => 888
+            ),
+            array(
+                'from'  => 456,
+                'to'    => 999
+            ),
+        );
+        
+        $db_data = false;
+        
+        $dao = mock('Tracker_Rule_Date_Dao');
+        stub($dao)->searchByTrackerId()->returnsDar($db_data);
+        stub($dao)->insert()->never();
+        $form_factory = mock('Tracker_FormElementFactory');
+        
+        $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+    }
+    
+    public function testDuplicateInsertsANewRule() {
+        $from_tracker_id = 56;
+        $to_tracker_id   = 789;
+        
+        $field_mapping   = array(
+            array(
+                'from'  => 123,
+                'to'    => 888
+            ),
+            array(
+                'from'  => 456,
+                'to'    => 999
+            ),
+        );
+        
+        $db_data = array(
+            'source_field_id' => 123,
+            'target_field_id' => 456,
+            'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
+        );
+        
+        $dao = mock('Tracker_Rule_Date_Dao');
+        stub($dao)->searchByTrackerId()->returnsDar($db_data);
+        stub($dao)->insert($to_tracker_id, 888, 999, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->once();
+        $form_factory = mock('Tracker_FormElementFactory');
+        
+        $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+    }
+    
+    public function testDuplicateInsertsMultipleRules() {
+        $from_tracker_id = 56;
+        $to_tracker_id   = 789;
+        
+        $field_mapping   = array(
+            array(
+                'from'  => 111,
+                'to'    => 555
+            ),
+            array(
+                'from'  => 222,
+                'to'    => 666
+            ),
+            array(
+                'from'  => 333,
+                'to'    => 777
+            ),
+            array(
+                'from'  => 444,
+                'to'    => 888
+            ),
+        );
+        
+        $db_data1 = array(
+            'source_field_id' => 111,
+            'target_field_id' => 222,
+            'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
+        );
+        $db_data2 = array(
+            'source_field_id' => 333,
+            'target_field_id' => 444,
+            'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
+        );
+        
+        $dao = mock('Tracker_Rule_Date_Dao');
+        stub($dao)->searchByTrackerId()->returnsDar($db_data1, $db_data2);
+        stub($dao)->insert($to_tracker_id, 555, 666, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->at(0);
+        stub($dao)->insert($to_tracker_id, 777, 888, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->at(1);
+        $form_factory = mock('Tracker_FormElementFactory');
+        
+        $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+    }
 }
 ?>

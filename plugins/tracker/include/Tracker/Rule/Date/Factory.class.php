@@ -130,6 +130,35 @@ class Tracker_Rule_Date_Factory {
 
         return $rules_array;
     }
+    
+    /**
+     * 
+     * @param int $from_tracker_id
+     * @param int $to_tracker_id
+     * @param array $field_mapping
+     */
+    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+        $dar = $this->dao->searchByTrackerId($from_tracker_id);
+
+        // Retrieve rules of tracker from
+        while ($row = $dar->getRow()) {
+            // if we already have the status field, just jump to open values
+            $source_field_id = $row['source_field_id'];
+            $target_field_id = $row['target_field_id'];
+            $comparator      = $row['comparator'];
+            // walk the mapping array to get the corresponding field values for tracker TARGET
+            foreach ($field_mapping as $mapping) {
+                if ($mapping['from'] == $source_field_id) {
+                    $duplicate_source_field_id = $mapping['to'];
+                }
+                if ($mapping['from'] == $target_field_id) {
+                    $duplicate_target_field_id = $mapping['to'];
+                }
+            }
+            $this->dao->insert($to_tracker_id, $duplicate_source_field_id, $duplicate_target_field_id, $comparator);
+        }
+    }
+    
 
     /**
      *
@@ -140,7 +169,7 @@ class Tracker_Rule_Date_Factory {
      * @param string $comparator
      * @return \Tracker_Rule_Date
      */
-    protected function populate(Tracker_Rule_Date $date_rule, $id, $tracker_id, $source_field_id, $target_field_id, $comparator) {
+    private function populate(Tracker_Rule_Date $date_rule, $id, $tracker_id, $source_field_id, $target_field_id, $comparator) {
 
         $source_field = $this->element_factory->getFormElementById($source_field_id);
         $target_field = $this->element_factory->getFormElementById($target_field_id);

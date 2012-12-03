@@ -66,5 +66,39 @@ class Tracker_RuleFactoryTest extends UnitTestCase {
         $this->assertEqual($rules[0], $target_value_expected);
         $this->assertEqual($rules[1], $target_value_expected2);
     }
+    
+    public function testDuplicateCallsListAndDateDuplicate() {
+        $from_tracker_id = 10;
+        $to_tracker_id   = 53;
+        $field_mapping   = array();
+        
+        $rule_list_factory = mock('Tracker_Rule_List_Factory');
+        $rule_date_factory = mock('Tracker_Rule_Date_Factory');
+        $rule_factory = partial_mock(
+                'Tracker_RuleFactory', 
+                array(
+                    'getListFactory', 
+                    'getDateFactory',)
+                );
+        
+        stub($rule_factory)->getListFactory()->returns($rule_list_factory);
+        stub($rule_factory)->getDateFactory()->returns($rule_date_factory);
+        
+        expect($rule_list_factory)->duplicate($from_tracker_id, $to_tracker_id, $field_mapping)->once();
+        $rule_factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
+    }
+    
+    public function testGetListOrDateFactoriesReturnNewInstancesWhenNotSet() {
+        $list_dao = mock('Tracker_Rule_List_Dao');
+        $date_dao = mock('Tracker_Rule_Date_Dao');
+        $rule_dao = mock('Tracker_RuleDao');
+        
+        $factory =  new Tracker_RuleFactory($rule_dao);
+        $factory->setListDao($list_dao);
+        $factory->setDateDao($date_dao);
+        
+        $this->assertIsA($factory->getListFactory(), 'Tracker_Rule_List_Factory');
+        $this->assertIsA($factory->getDateFactory(), 'Tracker_Rule_Date_Factory');
+    }
 }
 ?>

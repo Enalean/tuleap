@@ -568,18 +568,39 @@ class TrackerFactory {
      * - the hierarchy
      * - the shared fields
      * - etc.
+     * 
+     * @param int $from_project_id 
+     * @param int $to_project_id
+     * @param array $ugroup_mapping the ugroup mapping
      *
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_mapping = array();
         $field_mapping   = array();
 
-        foreach($this->getTrackersByGroupId($from_project_id) as $t) {
-            if ($t->mustBeInstantiatedForNewProjects()) {
-                list($tracker_mapping, $field_mapping) = $this->duplicateTracker($tracker_mapping, $field_mapping, $t, $from_project_id, $to_project_id, $ugroup_mapping);
+        foreach($this->getTrackersByGroupId($from_project_id) as $tracker) {
+            if ($tracker->mustBeInstantiatedForNewProjects()) {
+                list($tracker_mapping, $field_mapping) = $this->duplicateTracker(
+                        $tracker_mapping, 
+                        $field_mapping, 
+                        $tracker, 
+                        $from_project_id, 
+                        $to_project_id, 
+                        $ugroup_mapping
+                        );
+                /*
+                 * @todo
+                 * Unless there is some odd dependency on the last tracker meeting
+                 * the requirement of the if() condition then there should be a break here. 
+                 */
             }
         }
 
+        /*
+         * @todo
+         * $tracker_mapping has been defined as an array. Surely this should be
+         * if(! empty($tracker_mapping))
+         */
         if ($tracker_mapping) {
             $hierarchy_factory = $this->getHierarchyFactory();
             $hierarchy_factory->duplicate($tracker_mapping);
@@ -595,6 +616,16 @@ class TrackerFactory {
         ));
     }
 
+    /**
+     * 
+     * @param array $tracker_mapping
+     * @param array $field_mapping
+     * @param Tracker $tracker
+     * @param int $from_project_id
+     * @param int $to_project_id
+     * @param array $ugroup_mapping the ugroup mapping
+     * @return type
+     */
     private function duplicateTracker($tracker_mapping, $field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_and_field_mapping = $this->create($to_project_id,
                 $from_project_id,
