@@ -50,6 +50,7 @@ class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_B
 
     private $a_field_not_used_in_transitions;
     private $a_field_used_in_post_actions;
+    private $a_field_used_in_conditions;
 
     public function setUp() {
         parent::setUp();
@@ -59,12 +60,24 @@ class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_B
         $this->a_field_used_in_post_actions = mock('Tracker_FormElement_Field_Date');
         stub($this->a_field_used_in_post_actions)->getId()->returns(1003);
 
+        $this->a_field_used_in_conditions = mock('Tracker_FormElement_Field_Date');
+        stub($this->a_field_used_in_conditions)->getId()->returns(1004);
+
         stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_not_used_in_transitions)->returns(false);
         stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_used_in_post_actions)->returns(true);
+        stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_used_in_conditions)->returns(false);
+
+        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_not_used_in_transitions)->returns(false);
+        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_used_in_post_actions)->returns(false);
+        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_used_in_conditions)->returns(true);
     }
 
     public function itReturnsTrueIfFieldIsUsedInPostActions() {
         $this->assertTrue($this->factory->isFieldUsedInTransitions($this->a_field_used_in_post_actions));
+    }
+
+    public function itReturnsTrueIfFieldIsUsedInConditions() {
+        $this->assertTrue($this->factory->isFieldUsedInTransitions($this->a_field_used_in_conditions));
     }
 
     public function itReturnsFalseIsNiotUsedInTransitions() {

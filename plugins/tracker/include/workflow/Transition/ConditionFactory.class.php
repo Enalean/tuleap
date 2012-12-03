@@ -56,6 +56,10 @@ class Workflow_Transition_ConditionFactory {
         );
     }
 
+    public function isFieldUsedInConditions() {
+        die('va mourir');
+    }
+
     /**
      * @return Workflow_Transition_ConditionsCollection
      */
