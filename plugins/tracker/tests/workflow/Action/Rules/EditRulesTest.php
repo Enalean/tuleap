@@ -327,7 +327,6 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
             'comparator'        => '>'
         ))->build();
 
-        stub($this->element_factory)->getUsedFieldByIdAndType($this->tracker, 666, 'date')->returns(null);
         expect($this->date_factory)->create()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
@@ -339,7 +338,6 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
             'comparator'        => '>'
         ))->build();
 
-        stub($this->element_factory)->getUsedFieldByIdAndType($this->tracker, 666, 'date')->returns(null);
         expect($this->date_factory)->create()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
