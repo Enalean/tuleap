@@ -23,11 +23,13 @@ require_once TRACKER_BASE_DIR .'/workflow/Transition/Condition/FieldNotEmpty/Fac
 
 class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTestCase {
 
+    private $field_id = 3;
+
     public function setUp() {
         parent::setUp();
-        $this->field        = stub('Tracker_FormElement_Field_String')->getId()->returns(3);
+        $this->field        = stub('Tracker_FormElement_Field_String')->getId()->returns($this->field_id);
         $element_factory    = mock('Tracker_FormElementFactory');
-        stub($element_factory)->getFormElementById(3)->returns($this->field);
+        stub($element_factory)->getFormElementById($this->field_id)->returns($this->field);
         Tracker_FormElementFactory::setInstance($element_factory);
         $this->dao          = mock('Workflow_Transition_Condition_FieldNotEmpty_Dao');
         $this->factory      = new Workflow_Transition_Condition_FieldNotEmpty_Factory($this->dao, $element_factory);
@@ -86,6 +88,11 @@ class Workflow_Transition_Condition_FieldNotEmpty_FactoryTest extends TuleapTest
         $condition = $this->factory->getFieldNotEmpty($this->transition);
         $this->assertIsA($condition, 'Workflow_Transition_Condition_FieldNotEmpty');
         $this->assertEqual($condition->getField(), $this->field);
+    }
+
+    public function itChecksThatFieldIsNotUsed() {
+        stub($this->dao)->isFieldUsed($this->field_id)->once()->returns(true);
+        $this->assertTrue($this->factory->isFieldUsedInConditions($this->field));
     }
 }
 ?>

@@ -102,12 +102,20 @@ class Workflow_Transition_Condition_FieldNotEmpty_Dao extends DataAccessObject {
         }
     }
 
-    function addPermission($permission_type, $object_id, $ugroup_id) {
+    function addPermission($permission_type, $object_id, $ugroup_id) { // WAT ???
         $sql=sprintf("INSERT INTO permissions (object_id, permission_type, ugroup_id)".
                      " VALUES ('%s', '%s', '%s')",
                      $object_id, $permission_type, $ugroup_id);
         return $this->update($sql);
     }
 
+    /** @return bool */
+    public function isFieldUsed($field_id) {
+        $sql = "SELECT NULL
+                FROM tracker_workflow_transition_condition_field_notempty
+                WHERE field_id = $field_id
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
+    }
 }
 ?>

@@ -34,7 +34,7 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
 
     /** @return bool */
     public function isFieldUsedInConditions(Tracker_FormElement_Field $field) {
-        //die('va mourir');
+        return $this->dao->isFieldUsed($field->getId());
     }
 
     public function getFieldNotEmpty(Transition $transition){
