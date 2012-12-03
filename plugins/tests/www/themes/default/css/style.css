@@ -19,13 +19,6 @@
 
 pre {
     background-color: ivory;
-    border: 1px solid #d2d2d2;
-    padding: 1em 0.5em;
-    white-space: pre-wrap; /* css-3 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
 .brand,
 .testsControl {
@@ -47,4 +40,36 @@ pre {
 }
 .shortcuts {
     float: right;
+}
+
+
+
+.tree-blank, .tree-node, .tree-pipe, .tree-last {
+    width: 16px;
+    height: 100%;
+    display: inline-block;
+    background-image: url('../images/TreeNodeSprites.png');
+    background-repeat: repeat-y;
+
+    /*Dirty IE Hack*/
+      zoom: 1;
+      *display: inline;
+}
+
+.tree-last {
+    background-position:-48px 0px;
+}
+ .tree-node {
+    background-position:-32px 0px;
+}
+.tree-pipe {
+    background-position:-16px 0px;
+}
+
+.tree-node, .tree-last {
+    margin-right: 0.25em;
+}
+
+.tree-collapsable {
+    cursor: pointer;
 }
