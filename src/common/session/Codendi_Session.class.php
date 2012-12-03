@@ -25,7 +25,7 @@ class Codendi_Session extends PHP_Session {
     protected $session_namespace_path;
     protected $session_namespace;
 
-    public function __construct($session_storage = null) {
+    public function __construct(&$session_storage = null) {
         if ($session_storage === null) {
             $this->session =& parent::getSession();
         } else {
