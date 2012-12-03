@@ -26,9 +26,6 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     const PARAMETER_REMOVE_RULES = 'remove_rules';
 
-    /** @var Tracker_FormElementFactory */
-    private $form_element_factory;
-
     private $default_value = 'default_value';
 
     /** @var Tracker_Rule_Date_Factory */
@@ -36,9 +33,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private $url_query;
 
-    public function __construct(Tracker $tracker, Tracker_FormElementFactory $form_element_factory, Tracker_Rule_Date_Factory $rule_date_factory, CSRFSynchronizerToken $token) {
+    public function __construct(Tracker $tracker, Tracker_Rule_Date_Factory $rule_date_factory, CSRFSynchronizerToken $token) {
         parent::__construct($tracker);
-        $this->form_element_factory = $form_element_factory;
         $this->rule_date_factory    = $rule_date_factory;
         $this->token                = $token;
         $this->url_query            = TRACKER_BASE_URL.'/?'. http_build_query(
@@ -79,8 +75,8 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function fieldsAreDateOnes($source_field_id, $target_field_id) {
-        $source_field_is_date = (bool)$this->form_element_factory->getUsedDateFieldById($this->tracker, $source_field_id);
-        $target_field_is_date = (bool)$this->form_element_factory->getUsedDateFieldById($this->tracker, $target_field_id);
+        $source_field_is_date = (bool)$this->rule_date_factory->getUsedDateFieldById($this->tracker, $source_field_id);
+        $target_field_is_date = (bool)$this->rule_date_factory->getUsedDateFieldById($this->tracker, $target_field_id);
 
         return $source_field_is_date && $target_field_is_date;
     }
@@ -180,7 +176,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function getDateFields() {
-        $form_elements = $this->form_element_factory->getUsedDateFields($this->tracker);
+        $form_elements = $this->rule_date_factory->getUsedDateFields($this->tracker);
         $values = array(
             $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed')
         );

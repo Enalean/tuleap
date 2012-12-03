@@ -26,38 +26,38 @@ require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/Date/Factory.c
 
 class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
 
-    /**
-     * @var Tracker_Rule_Date_Dao
-     */
+    protected $source_field_id = 46345;
+
+    /** @var Tracker_Rule_Date_Dao */
     protected $date_rule_dao;
 
-    /**
-     *
-     * @var Tracker_Rule_Date_Factory
-     */
+    /** @var Tracker_Rule_Date_Factory */
     protected $date_rule_factory;
+
+    /** @var Tracker_FormElementFactory */
+    protected $element_factory;
 
     public function setUp() {
         parent::setUp();
 
         $this->date_rule_dao = mock('Tracker_Rule_Date_Dao');
         $this->source_field = mock('Tracker_FormElement_Field_Date');
-        stub($this->source_field)->getId()->returns(46345);
+        stub($this->source_field)->getId()->returns($this->source_field_id);
 
         $this->target_field = mock('Tracker_FormElement_Field_Date');
         stub($this->target_field)->getId()->returns(465);
 
-        $element_factory = mock('Tracker_FormElementFactory');
-        stub($element_factory)->getFormElementById(46345)->returns($this->source_field);
-        stub($element_factory)->getFormElementById(465)->returns($this->target_field);
+        $this->element_factory = mock('Tracker_FormElementFactory');
+        stub($this->element_factory)->getFormElementById($this->source_field_id)->returns($this->source_field);
+        stub($this->element_factory)->getFormElementById(465)->returns($this->target_field);
 
-        $this->date_rule_factory = new Tracker_Rule_Date_Factory($this->date_rule_dao, $element_factory);
+        $this->date_rule_factory = new Tracker_Rule_Date_Factory($this->date_rule_dao, $this->element_factory);
     }
 
     public function testCreateRuleDateGeneratesANewObjectThatContainsAllValuesPassed() {
         stub($this->date_rule_dao)->insert()->returns(20);
 
-        $source_field_id = 46345;
+        $source_field_id = $this->source_field_id;
         $target_field_id = 465;
         $tracker_id      = 999;
         $comparator      = Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
@@ -85,7 +85,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $data = array(
             'id'                => 20,
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
-            'source_field_id'   => 46345,
+            'source_field_id'   => $this->source_field_id,
             'target_field_id'   => 465,
             'tracker_id'        => 999,
         );
@@ -110,7 +110,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao() {
         $data = array(
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
-            'source_field_id'   => 46345,
+            'source_field_id'   => $this->source_field_id,
             'target_field_id'   => 465,
             'tracker_id'        => 999,
             'id'                => 20
@@ -238,6 +238,20 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         
         $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+    }
+    
+    public function itDelegatesUsedDateFieldsRetrievalToElementFactory() {
+        $tracker          = mock('Tracker');
+        $used_date_fields = array('of', 'fields');
+        expect($this->element_factory)->getUsedDateFields($tracker)->once()->returns($used_date_fields);
+        $this->assertEqual($used_date_fields, $this->date_rule_factory->getUsedDateFields($tracker));
+    }
+
+    public function itDelegatesUsedDateFieldByIdRetrievalToElementFactory() {
+        $tracker = mock('Tracker');
+        expect($this->element_factory)->getUsedDateFieldById($tracker, $this->source_field_id)->once()->returns($this->source_field);
+        $this->assertEqual($this->source_field, $this->date_rule_factory->getUsedDateFieldById($tracker, $this->source_field_id));
+
     }
 }
 ?>

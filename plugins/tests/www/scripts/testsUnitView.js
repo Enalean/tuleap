@@ -18,7 +18,6 @@
 		inputBoxes.each(function(inputBox){
 			Event.observe(inputBox, 'change', (function (evt) {
 				var checked = this.checked;
-				console.log(this.up('li'));
 				this.up('li').select('input[type=checkbox]').each(function (input) {
                     input.checked = checked;
 				});
@@ -28,20 +27,6 @@
 				}
 			}).bind(inputBox));
 		});
-	}
-	
-	function submitPanelEffect() {
-	    var submitInput = $('submit_panel').down('input');
-	    if (submitInput) {
-	    	var panelHeight = $('submit_panel').up('td').offsetHeight;
-	        document.observe('mouseover', function() {
-	            if (submitInput.offsetHeight != panelHeight) {
-	                submitInput.setStyle({
-	                    height:panelHeight + 'px',
-	                });
-	            }
-	        });
-	    }
 	}
 	
 	function initCategory(category) {
@@ -62,11 +47,15 @@
 		$$('li.category').each(function(category){
 			register_events(category);
 			currentCategory++;
-			new Insertion.Top(category, '<img id="plus_' + currentCategory +'" src="' + minusSrc +'" />');
+			new Insertion.After(category.down('input[type=checkbox]'), '<img id="plus_' + currentCategory +'" src="' + minusSrc +'" />');
 			initCategory(category);
 		});
 		
-		submitPanelEffect();
+		$$('.testsControl').each(function (div) {
+			div.setStyle({
+				height: (jQuery(window).height() - 80) + 'px'
+			});
+		});
 	}
 	Event.observe(window, 'load', init, true);
 })();
