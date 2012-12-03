@@ -53,7 +53,7 @@ class Tracker_RulesManager {
      */
     function getAllListRulesByTrackerWithOrder($tracker_id) {
         if (!isset($this->rules_by_tracker_id[$tracker_id])) {
-            $this->rules_by_tracker_id[$tracker_id] = $this->_getTracker_RuleFactory()
+            $this->rules_by_tracker_id[$tracker_id] = $this->getRuleFactory()
                     ->getAllListRulesByTrackerWithOrder($tracker_id);
         }
         return $this->rules_by_tracker_id[$tracker_id];
@@ -70,12 +70,12 @@ class Tracker_RulesManager {
     }
 
     function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
-        $fact = $this->_getTracker_RuleFactory();
+        $fact = $this->getRuleFactory();
         return $fact->saveRuleValue($tracker_id, $source, $source_value, $target, $target_value);
     }
 
     function deleteRule($rule_id) {
-        $fact = $this->_getTracker_RuleFactory();
+        $fact = $this->getRuleFactory();
         return $fact->deleteRule($rule_id);
     }
 
@@ -105,7 +105,7 @@ class Tracker_RulesManager {
      *
      * @return Tracker_RuleFactory
      */
-    function _getTracker_RuleFactory() {
+    function getRuleFactory() {
         return Tracker_RuleFactory::instance();
     }
 
@@ -282,12 +282,12 @@ class Tracker_RulesManager {
      * @return array of Tracker_Rule_List
      */
     public function getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
-        $fact = $this->_getTracker_RuleFactory();
+        $fact = $this->getRuleFactory();
         return $fact->getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
     }
 
     public function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
-        $fact = $this->_getTracker_RuleFactory();
+        $fact = $this->getRuleFactory();
         return $fact->deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
     }
 
@@ -392,7 +392,7 @@ class Tracker_RulesManager {
         echo '</from>';
 
         //Shortcut
-        $sources_targets = $this->_getTracker_RuleFactory()->getInvolvedFieldsByTrackerId($this->tracker->id);
+        $sources_targets = $this->getRuleFactory()->getInvolvedFieldsByTrackerId($this->tracker->id);
         if (count($sources_targets)) {
             $dependencies = array();
             foreach ($sources_targets as $row) {
@@ -523,9 +523,10 @@ class Tracker_RulesManager {
         return $html;
     }
 
-    function isUsedInFieldDependency($field) {
+    /** @return bool */
+    public function isUsedInFieldDependency(Tracker_FormElement $field) {
         $field_id = $field->getId();
-        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
+        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
         foreach ($rules as $rule) {
             if ($rule->isUsedInRule($field->getId())) return true;
         }

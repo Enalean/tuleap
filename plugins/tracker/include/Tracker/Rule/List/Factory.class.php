@@ -128,7 +128,6 @@ class Tracker_Rule_List_Factory {
         $list_rule->setTrackerId($tracker_id)
                 ->setSourceFieldId($source_field_id)
                 ->setTargetFieldId($target_field_id)
-                ->setTrackerId($tracker_id)
                 ->setSourceValue($source_value)
                 ->setTargetValue($target_value);
         

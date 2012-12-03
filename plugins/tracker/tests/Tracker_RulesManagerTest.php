@@ -3,7 +3,7 @@
 require_once(dirname(__FILE__).'/../include/constants.php');
 require_once(dirname(__FILE__).'/builders/all.php');
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
-Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', 'getSelectedValuesForField'));
+Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('getRuleFactory', 'getSelectedValuesForField'));
 
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/List.class.php');
 Mock::generate('Tracker_Rule_List');
@@ -110,7 +110,7 @@ class Tracker_RulesManager_legacyTest extends TuleapTestCase {
         $this->arm = new Tracker_RulesManagerTestVersion($this);
         $this->arm->setTrackerFormElementFactory($aff);
         $this->arm->setRuleDateFactory($rule_date_factory);
-        $this->arm->setReturnReference('_getTracker_RuleFactory', $arf);
+        $this->arm->setReturnReference('getRuleFactory', $arf);
         $this->arm->setReturnValue('getSelectedValuesForField', array('a_1'), array($f1, 'A1'));
         $this->arm->setReturnValue('getSelectedValuesForField', array('a_2'), array($f1, 'A2'));
         $this->arm->setReturnValue('getSelectedValuesForField', array('b_1'), array($f2, 'B1'));
@@ -250,7 +250,7 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $arf->setReturnValue('getAllListRulesByTrackerWithOrder', array($r1, $r2, $r3));
 
         $arm = new Tracker_RulesManagerTestVersion($this);
-        $arm->setReturnReference('_getTracker_RuleFactory', $arf);
+        $arm->setReturnReference('getRuleFactory', $arf);
 
         //Forbidden sources
         $this->assertTrue($arm->fieldIsAForbiddenSource(1, 'A', 'A'), "Field A cannot be the source of field A");
@@ -304,7 +304,7 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $arf->setReturnValue('getAllListRulesByTrackerWithOrder', array($r1, $r2, $r3));
 
         $arm = new Tracker_RulesManagerTestVersion($this);
-        $arm->setReturnReference('_getTracker_RuleFactory', $arf);
+        $arm->setReturnReference('getRuleFactory', $arf);
 
         $this->assertFalse($arm->fieldHasSource(1, 'A'));
         $this->assertTrue($arm->fieldHasSource(1, 'B'));
@@ -330,7 +330,7 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $arf->setReturnValue('getAllListRulesByTrackerWithOrder', array($r1, $r2, $r3));
 
         $arm = new Tracker_RulesManagerTestVersion($this);
-        $arm->setReturnReference('_getTracker_RuleFactory', $arf);
+        $arm->setReturnReference('getRuleFactory', $arf);
 
         $this->assertTrue($arm->isCyclic(1, 'A', 'A'));
         $this->assertFalse($arm->isCyclic(1, 'A', 'B'));
@@ -372,7 +372,7 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $arf->setReturnValue('getAllListRulesByTrackerWithOrder', array($r1, $r2, $r3));
 
         $arm = new Tracker_RulesManagerTestVersion($this);
-        $arm->setReturnReference('_getTracker_RuleFactory', $arf);
+        $arm->setReturnReference('getRuleFactory', $arf);
 
         //Rule exists
         $this->assertFalse($arm->ruleExists(1, 'A', 'A'));
@@ -415,7 +415,7 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
         $arf->setReturnValue('getAllListRulesByTrackerWithOrder', array($r1, $r2, $r3));
 
         $arm = new Tracker_RulesManagerTestVersion($this);
-        $arm->setReturnReference('_getTracker_RuleFactory', $arf);
+        $arm->setReturnReference('getRuleFactory', $arf);
 
         //value has source or target
         $this->assertTrue($arm->valueHasSource(1, 'B', 2, 'A'));
@@ -826,4 +826,59 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
     }
 }
 
+class Tracker_RulesManager_isUsedInFieldDependencyTest extends TuleapTestCase {
+
+    private $tracker_id = 123;
+
+    private $source_field_list_id = 12;
+    private $source_field_list;
+
+    private $target_field_list_id = 13;
+    private $target_field_list;
+
+    private $a_field_not_used_in_rules_id = 14;
+    private $a_field_not_used_in_rules;
+
+    private function setUpRuleList() {
+        $rule = new Tracker_Rule_List();
+        $rule->setTrackerId($this->tracker_id)
+            ->setSourceFieldId($this->source_field_list_id)
+            ->setTargetFieldId($this->target_field_list_id)
+            ->setSourceValue('A')
+            ->setTargetValue('B');
+        return $rule;
+    }
+
+    public function setUp() {
+        parent::setUp();
+
+        $tracker = stub('Tracker')->getId()->returns($this->tracker_id);
+
+        $this->a_field_not_used_in_rules = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns($this->a_field_not_used_in_rules_id);
+        $this->source_field_list = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns($this->source_field_list_id);
+        $this->target_field_list = stub('Tracker_FormElement_Field_Selectbox')->getId()->returns($this->target_field_list_id);
+
+        $rule_factory    = mock('Tracker_RuleFactory');
+        $element_factory = mock('Tracker_FormElementFactory');
+        $this->rules_manager = partial_mock(
+            'Tracker_RulesManager',
+            array('getRuleFactory'),
+            array($tracker, $element_factory)
+        );
+        stub($this->rules_manager)->getRuleFactory()->returns($rule_factory);
+
+        $rules = array(
+            $this->setUpRuleList()
+        );
+        stub($rule_factory)->getAllListRulesByTrackerWithOrder($this->tracker_id)->returns($rules);
+    }
+
+    public function itReturnsTrueIfTheFieldIsUsedInARuleList() {
+        $this->assertTrue($this->rules_manager->isUsedInFieldDependency($this->source_field_list));
+    }
+
+    public function itReturnsFalseIfTheFieldIsNotUsedInARule() {
+        $this->assertFalse($this->rules_manager->isUsedInFieldDependency($this->a_field_not_used_in_rules));
+    }
+}
 ?>
