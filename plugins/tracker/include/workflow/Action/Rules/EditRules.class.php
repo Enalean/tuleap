@@ -24,6 +24,8 @@ require_once dirname(__FILE__).'/../../../../tests/builders/aField.php';
 
 class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules {
 
+    const PARAMETER_ADD_RULE     = 'add_rule';
+    const PARAMETER_UPDATE_RULES = 'update_rules';
     const PARAMETER_REMOVE_RULES = 'remove_rules';
 
     private $default_value = 'default_value';
@@ -144,15 +146,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function displayRules() {
-        $rules = $this->getRules();
+        $fields = $this->getListOfDateFieldLabels();
+        $rules  = $this->getRules();
         echo '<ul class="workflow_existing_rules">';
         foreach ($rules as $rule) {
+            $name_prefix = self::PARAMETER_UPDATE_RULES .'['. $rule->getId() .']';
             echo '<li class="workflow_rule_action">';
-            echo $rule->getSourceField()->getLabel();
-            echo ' <span class="workflow_rule_date_comparator">';
-            echo $rule->getComparator();
-            echo '</span> ';
-            echo $rule->getTargetField()->getLabel();
+            $this->displayFieldSelector($fields, $name_prefix .'[source_date_field]', $rule->getSourceField()->getId());
+            $this->displayComparatorSelector($name_prefix .'[comparator]', $rule->getComparator());
+            $this->displayFieldSelector($fields, $name_prefix .'[target_date_field]', $rule->getTargetField()->getId());
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
             echo '<input type="checkbox" name="'. self::PARAMETER_REMOVE_RULES .'[]" value="'.$rule->getId().'" ></input>';
             echo '</label>';
@@ -165,22 +167,34 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return $this->rule_date_factory->searchByTrackerId($this->tracker->getId());
     }
 
-    private function displayAdd() {
+    private function displayComparatorSelector($name, $selected) {
         $comparators = array_combine(Tracker_Rule_Date::$allowed_comparators, Tracker_Rule_Date::$allowed_comparators);
-        $values      = $this->getDateFields();
-        $checked_val = $this->default_value;
-        echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
-        echo html_build_select_box_from_array($values, 'source_date_field', $checked_val);
-        echo html_build_select_box_from_array($comparators, 'comparator');
-        echo html_build_select_box_from_array($values, 'target_date_field', $checked_val);
+        echo html_build_select_box_from_array($comparators, $name, $selected);
     }
 
-    private function getDateFields() {
-        $form_elements = $this->rule_date_factory->getUsedDateFields($this->tracker);
+    private function displayFieldSelector(array $fields, $name, $selected) {
+        echo html_build_select_box_from_array($fields, $name, $selected);
+    }
+
+    private function displayAdd() {
+        $fields   = $this->getListOfDateFieldLabelsPlusPleaseChoose();
+        $selected = $this->default_value;
+        echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
+        $this->displayFieldSelector($fields, 'source_date_field', $selected);
+        $this->displayComparatorSelector('comparator', null);
+        $this->displayFieldSelector($fields, 'target_date_field', $selected);
+    }
+
+    private function getListOfDateFieldLabelsPlusPleaseChoose() {
         $values = array(
             $this->default_value => $GLOBALS['Language']->getText('global', 'please_choose_dashed')
         );
 
+        return $values + $this->getListOfDateFieldLabels();
+    }
+
+    private function getListOfDateFieldLabels() {
+        $form_elements = $this->rule_date_factory->getUsedDateFields($this->tracker);
         foreach ($form_elements as $form_element) {
             $values[$form_element->getId()] = $form_element->getLabel();
         }
