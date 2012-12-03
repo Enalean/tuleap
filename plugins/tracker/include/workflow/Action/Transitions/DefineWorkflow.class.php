@@ -68,7 +68,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
 
         }
         echo '</div>';
-        if ($workflow && UserManager::instance()->getCurrentUser()->useLabFeatures()) {
+        if ($workflow && $current_user->useLabFeatures()) {
             $this->displayTransitionsGraph($workflow->getTransitions());
         }
         $this->displayFooter($layout);
