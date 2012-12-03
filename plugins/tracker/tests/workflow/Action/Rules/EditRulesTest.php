@@ -43,14 +43,14 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
         $planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
         $actual_end_date    = $this->setUpField($this->actual_target_field_id, 'Actual End Date');
-        $this->rule_1       = $this->setUpRule(123, $planned_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $planned_end_date);
+        $this->rule_1       = $this->setUpRule(123, $planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $planned_end_date);
         $this->rule_2       = $this->setUpRule(456, $actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $actual_end_date);
         $this->layout       = mock('Tracker_IDisplayTrackerLayout');
         $this->user         = mock('User');
         stub($this->date_factory)->searchById(123)->returns($this->rule_1);
         stub($this->date_factory)->searchById(456)->returns($this->rule_2);
         stub($this->date_factory)->searchByTrackerId($this->tracker_id)->returns(array($this->rule_1, $this->rule_2));
-        stub($this->date_factory)->getUsedDateFields()->returns(array());
+        stub($this->date_factory)->getUsedDateFields()->returns(array($planned_start_date, $actual_start_date, $planned_end_date, $actual_end_date));
         $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $this->token);
     }
 
@@ -167,21 +167,34 @@ class Tracker_Workflow_Action_Rules_EditRules_failedDeleteTest extends Tracker_W
 
 class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
-    public function itRetrieveRules() {
+    public function setUp() {
+        parent::setUp();
         $request = aRequest()->build();
         ob_start();
         $this->action->process($this->layout, $request, $this->user);
-        $output = ob_get_clean();
+        $this->output = ob_get_clean();
+    }
 
-        $this->assertPattern('/Planned Start Date.*<.*Planned End Date/', $output);
-        $this->assertPattern('/Actual Start Date.*<.*Actual End Date/', $output);
+    public function itSelectTheSourceField() {
+        $this->assertPattern('/SELECTED>Planned Start Date</s', $this->output);
+        $this->assertPattern('/SELECTED>Actual Start Date</s', $this->output);
+    }
+
+    public function itSelectTheTargetField() {
+        $this->assertPattern('/SELECTED>Planned End Date</s', $this->output);
+        $this->assertPattern('/SELECTED>Actual End Date</s', $this->output);
+    }
+
+    public function itSelectTheComparator() {
+        $this->assertPattern('/SELECTED>=</s', $this->output);
+        $this->assertPattern('/SELECTED><</s', $this->output);
     }
 }
 
 class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
     public function itAddsARule() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '22',
             'comparator'        => '>'
@@ -192,7 +205,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheComparator() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '22',
         ))->build();
@@ -203,7 +216,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheSourceField() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'target_date_field' => '22',
             'comparator'        => '>'
         ))->build();
@@ -213,7 +226,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnInt() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '%invalid_id%',
             'target_date_field' => '22',
             'comparator'        => '>'
@@ -224,7 +237,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnGreaterThanZero() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '-1',
             'target_date_field' => '22',
             'comparator'        => '>'
@@ -235,7 +248,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotChoosen() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '0',
             'target_date_field' => '22',
             'comparator'        => '>'
@@ -246,7 +259,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheTargetField() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'comparator'        => '>'
         ))->build();
@@ -256,7 +269,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnInt() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '%invalid_id%',
             'comparator'        => '>'
@@ -267,7 +280,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnGreaterThanZero() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '-1',
             'comparator'        => '>'
@@ -278,7 +291,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotChoosen() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '0',
             'comparator'        => '>'
@@ -289,7 +302,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainAValidComparator() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '22',
             'comparator'        => '%invalid_comparator%',
@@ -300,7 +313,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheTargetAndSourceFieldsAreTheSame() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '44',
             'comparator'        => '>',
@@ -311,7 +324,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itProvidesFeedbackIfRuleSuccessfullyCreated() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '22',
             'comparator'        => '>'
@@ -321,7 +334,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotAddDateRuleIfTheSourceFieldIsNotADateOne() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '666',
             'target_date_field' => '22',
             'comparator'        => '>'
@@ -332,7 +345,7 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotAddDateRuleIfTheTargetFieldIsNotADateOne() {
-        $request = aRequest()->withParams(array(
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
             'source_date_field' => '44',
             'target_date_field' => '666',
             'comparator'        => '>'
