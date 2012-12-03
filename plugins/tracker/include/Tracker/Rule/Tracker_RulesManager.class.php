@@ -526,13 +526,13 @@ class Tracker_RulesManager {
     /** @return bool */
     public function isUsedInFieldDependency(Tracker_FormElement $field) {
         $field_id = $field->getId();
-        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
-        foreach ($rules as $rule) {
-            if ($rule->isUsedInRule($field->getId())) return true;
-        }
+        $list_rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
         $date_rules = $this->getAllDateRulesByTrackerId($this->tracker->getId());
-        foreach ($date_rules as $rule) {
-            if ($rule->isUsedInRule($field->getId())) return true;
+        $rules = array_merge($list_rules, $date_rules);
+        foreach ($rules as $rule) {
+            if ($rule->isUsedInRule($field->getId())) {
+                return true;
+            }
         }
         return false;
     }
