@@ -81,10 +81,23 @@ class WorkflowFactoryTest extends TuleapTestCase {
 }
 class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
 
+    /** @var Tracker_FormElement */
     private $field_status;
+
+    /** @var Tracker_FormElement */
     private $field_start_date;
+
+    /** @var Tracker_FormElement */
     private $field_close_date;
+
+    /** @var Tracker_FormElement */
     private $field_due_date;
+
+    /** @var WorkflowFactory */
+    private $workflow_factory;
+
+    /** @var TransitionFactory */
+    private $transition_factory;
 
     public function setUp() {
         parent::setUp();
@@ -98,13 +111,12 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
         $workflow = mock('Workflow');
         stub($workflow)->getFieldId()->returns($this->field_status->getId());
 
-        $transition_factory = mock('TransitionFactory');
-        stub($transition_factory)->isFieldUsedInTransitions($this->field_start_date)->returns(false);
-        stub($transition_factory)->isFieldUsedInTransitions($this->field_close_date)->returns(true);
-        expect($transition_factory)->isFieldUsedInTransitions()->count(2);
+        $this->transition_factory = mock('TransitionFactory');
+        stub($this->transition_factory)->isFieldUsedInTransitions($this->field_start_date)->returns(false);
+        stub($this->transition_factory)->isFieldUsedInTransitions($this->field_close_date)->returns(true);
 
-        $wf = partial_mock('WorkflowFactory', array('getWorkflowByTrackerId'), array($transition_factory));
-        stub($wf)->getWorkflowByTrackerId($tracker->getId())->returns($workflow);
+        $this->workflow_factory = partial_mock('WorkflowFactory', array('getWorkflowByTrackerId'), array($this->transition_factory));
+        stub($this->workflow_factory)->getWorkflowByTrackerId($tracker->getId())->returns($workflow);
     }
 
     private function setUpField(Tracker $tracker, $id) {
@@ -115,15 +127,18 @@ class WorkflowFactory_IsFieldUsedInWorkflowTest extends TuleapTestCase {
     }
 
     public function itReturnsTrueIfTheFieldIsUsedToDescribeTheStatesOfTheWorkflow() {
-        $this->assertTrue($wf->isFieldUsedInWorkflow($field_status));
+        expect($this->transition_factory)->isFieldUsedInTransitions()->never();
+        $this->assertTrue($this->workflow_factory->isFieldUsedInWorkflow($this->field_status));
     }
 
     public function itReturnsTrueIfTheFieldIsUsedInAPostAction() {
-        $this->assertTrue($wf->isFieldUsedInWorkflow($field_close_date));
+        expect($this->transition_factory)->isFieldUsedInTransitions()->once();
+        $this->assertTrue($this->workflow_factory->isFieldUsedInWorkflow($this->field_close_date));
     }
 
     public function itReturnsFalseIfTheFieldIsNotUsedByTheWorkflow() {
-        $this->assertFalse($wf->isFieldUsedInWorkflow($field_start_date));
+        expect($this->transition_factory)->isFieldUsedInTransitions()->once();
+        $this->assertFalse($this->workflow_factory->isFieldUsedInWorkflow($this->field_start_date));
     }
 }
 
