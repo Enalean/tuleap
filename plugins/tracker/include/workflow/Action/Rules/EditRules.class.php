@@ -51,10 +51,11 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         );
     }
 
-    private function shouldUpdateRules(Codendi_Request $request) {
+    private function shouldAddUpdateOrDeleteRules(Codendi_Request $request) {
         $should_delete_rules = is_array($request->get(self::PARAMETER_REMOVE_RULES));
+        $should_update_rules = is_array($request->get(self::PARAMETER_UPDATE_RULES));
 
-        return $should_delete_rules || $this->shouldAddRule($request);
+        return $should_delete_rules || $should_update_rules || $this->shouldAddRule($request);
     }
 
     private function shouldAddRule(Codendi_Request $request) {
@@ -87,9 +88,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function getComparatorFromAddRequest(Codendi_Request $request) {
         $add = $request->get(self::PARAMETER_ADD_RULE);
+        if (is_array($add)) {
+            return $this->getComparatorFromRequestParameter($add);
+        }
+    }
+
+    private function getComparatorFromRequestParameter(array $param) {
         $rule = new Rule_WhiteList(Tracker_Rule_Date::$allowed_comparators);
-        if (is_array($add) && isset($add[self::PARAMETER_COMPARATOR]) && $rule->isValid($add[self::PARAMETER_COMPARATOR])) {
-            return $add[self::PARAMETER_COMPARATOR];
+        if (isset($param[self::PARAMETER_COMPARATOR]) && $rule->isValid($param[self::PARAMETER_COMPARATOR])) {
+            return $param[self::PARAMETER_COMPARATOR];
         }
     }
 
@@ -101,20 +108,67 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
-        if ($this->shouldUpdateRules($request)) {
-
+        if ($this->shouldAddUpdateOrDeleteRules($request)) {
             // Verify CSRF Protection
             $this->token->check();
-            $this->updateRules($request);
+            $this->addUpdateOrDeleteRules($request);
             $GLOBALS['Response']->redirect($this->url_query);
         } else {
             $this->displayPane($layout);
         }
     }
 
-    private function updateRules(Codendi_Request $request) {
+    private function addUpdateOrDeleteRules(Codendi_Request $request) {
+        $this->updateRules($request);
         $this->removeRules($request);
         $this->addRule($request);
+    }
+
+    private function updateRules(Codendi_Request $request) {
+        $rules_to_update = $request->get(self::PARAMETER_UPDATE_RULES);
+        if (! is_array($rules_to_update)) {
+            return;
+        }
+        foreach ($rules_to_update as $rule_id => $new_values) {
+            $this->updateARule($rule_id, $new_values);
+        }
+    }
+
+    private function updateARule($rule_id, array $new_values) {
+        $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
+        list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($new_values);
+        if ($this->shouldUpdateTheRule($rule, $source_field, $target_field, $comparator)) {
+            $rule->setSourceField($source_field);
+            $rule->setTargetField($target_field);
+            $rule->setComparator($comparator);
+            $this->rule_date_factory->save($rule);
+        }
+    }
+
+    private function shouldUpdateTheRule($rule, $source_field, $target_field, $comparator) {
+        return $rule
+            && $source_field
+            && $target_field
+            && $comparator
+            && (
+                $rule->getSourceField() != $source_field
+                || $rule->getTargetField() != $target_field
+                || $rule->getComparator() != $comparator
+            );
+    }
+
+    /** @return array (source_field, target_field, comparator) */
+    private function getFieldsAndComparatorFromRequestParameter(array $param) {
+        $source_field = null;
+        $target_field = null;
+        if (isset($param[self::PARAMETER_SOURCE_FIELD])) {
+            $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$param[self::PARAMETER_SOURCE_FIELD]);
+        }
+        if (isset($param[self::PARAMETER_TARGET_FIELD])) {
+            $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$param[self::PARAMETER_TARGET_FIELD]);
+        }
+        $comparator = $this->getComparatorFromRequestParameter($param);
+        return array($source_field, $target_field, $comparator);
     }
 
     private function removeRules(Codendi_Request $request) {
@@ -135,11 +189,13 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function addRule(Codendi_Request $request) {
         if ($this->shouldAddRule($request)) {
+            $add_values = $request->get(self::PARAMETER_ADD_RULE);
+            list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($add_values);
             $this->rule_date_factory->create(
-                $this->getFieldIdFromAddRequest($request, self::PARAMETER_SOURCE_FIELD),
-                $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD),
+                $source_field->getId(),
+                $target_field->getId(),
                 $this->tracker->getId(),
-                $this->getComparatorFromAddRequest($request)
+                $comparator
             );
             $create_msg = $GLOBALS['Language']->getText('workflow_admin', 'created_rule');
             $GLOBALS['Response']->addFeedback('info', $create_msg);

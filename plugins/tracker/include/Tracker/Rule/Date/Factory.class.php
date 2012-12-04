@@ -92,13 +92,9 @@ class Tracker_Rule_Date_Factory {
         return $this->dao->deleteById($tracker_id, $rule_id);
     }
 
-    /**
-     *
-     * @param int $rule_id
-     * @return Tracker_Rule_Date
-     */
-    public function searchById($rule_id) {
-        $rule = $this->dao->searchById($rule_id)->getRow();
+    /** @return Tracker_Rule_Date */
+    public function getRule(Tracker $tracker, $rule_id) {
+        $rule = $this->dao->searchById($tracker->getId(), $rule_id)->getRow();
         if (!$rule) {
             return null;
         }
@@ -111,6 +107,11 @@ class Tracker_Rule_Date_Factory {
             $rule['target_field_id'],
             $rule['comparator']
         );
+    }
+
+    /** @return bool true if successfuly updated */
+    public function save(Tracker_Rule_Date $rule) {
+        die('va mourir');
     }
 
     /**

@@ -23,12 +23,23 @@ require_once TRACKER_BASE_DIR .'/workflow/Action/Rules/EditRules.class.php';
 
 class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase {
 
-    protected $remove_parameter = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_REMOVE_RULES;
+    const PARAMETER_ADD_RULE     = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE;
+    const PARAMETER_UPDATE_RULES = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES;
+    const PARAMETER_REMOVE_RULES = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_REMOVE_RULES;
+
+    const PARAMETER_SOURCE_FIELD = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD;
+    const PARAMETER_TARGET_FIELD = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD;
+    const PARAMETER_COMPARATOR   = Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR;
+
     protected $tracker_id       = 42;
     protected $date_factory;
     protected $tracker;
     protected $token;
 
+    protected $planned_start_date;
+    protected $actual_start_date;
+    protected $planned_end_date;
+    protected $actual_end_date;
     protected $source_field_id        = 44;
     protected $target_field_id        = 22;
     protected $actual_source_field_id = 66;
@@ -39,18 +50,25 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $this->date_factory = mock('Tracker_Rule_Date_Factory');
         $this->tracker      = stub('Tracker')->getId()->returns($this->tracker_id);
         $this->token        = mock('CSRFSynchronizerToken');
-        $planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
-        $actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
-        $planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
-        $actual_end_date    = $this->setUpField($this->actual_target_field_id, 'Actual End Date');
-        $this->rule_1       = $this->setUpRule(123, $planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $planned_end_date);
-        $this->rule_2       = $this->setUpRule(456, $actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $actual_end_date);
+        $this->planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
+        $this->actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
+        $this->planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
+        $this->actual_end_date    = $this->setUpField($this->actual_target_field_id, 'Actual End Date');
+        $this->rule_1       = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $this->planned_end_date);
+        $this->rule_2       = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $this->actual_end_date);
         $this->layout       = mock('Tracker_IDisplayTrackerLayout');
         $this->user         = mock('User');
-        stub($this->date_factory)->searchById(123)->returns($this->rule_1);
-        stub($this->date_factory)->searchById(456)->returns($this->rule_2);
+        stub($this->date_factory)->getRule($this->tracker, 123)->returns($this->rule_1);
+        stub($this->date_factory)->getRule($this->tracker, 456)->returns($this->rule_2);
         stub($this->date_factory)->searchByTrackerId($this->tracker_id)->returns(array($this->rule_1, $this->rule_2));
-        stub($this->date_factory)->getUsedDateFields()->returns(array($planned_start_date, $actual_start_date, $planned_end_date, $actual_end_date));
+        stub($this->date_factory)->getUsedDateFields()->returns(
+            array(
+                $this->planned_start_date,
+                $this->actual_start_date,
+                $this->planned_end_date,
+                $this->actual_end_date
+            )
+        );
         $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $this->token);
     }
 
@@ -85,6 +103,9 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $content = ob_get_clean();
         $this->assertNotEqual('', $content);
     }
+}
+
+class Tracker_Workflow_Action_Rules_EditRules_noActionsTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
     public function itDoesNotDisplayErrorsIfNoActions() {
         $request = aRequest()->build();
@@ -101,47 +122,47 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
     }
 
     public function itDeletesARule() {
-        $request = aRequest()->with($this->remove_parameter, array('123'))->build();
+        $request = aRequest()->with(self::PARAMETER_REMOVE_RULES, array('123'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 123)->once();
         $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDeletesMultipleRules() {
-        $request = aRequest()->with($this->remove_parameter, array('123','456'))->build();
+        $request = aRequest()->with(self::PARAMETER_REMOVE_RULES, array('123','456'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 123)->at(0);
         expect($this->date_factory)->deleteById($this->tracker_id, 456)->at(1);
         $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotFailIfRequestDoesNotContainAnArray() {
-        $request = aRequest()->with($this->remove_parameter, '123')->build();
+        $request = aRequest()->with(self::PARAMETER_REMOVE_RULES, '123')->build();
         expect($this->date_factory)->deleteById()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
 
     public function itDoesNotFailIfRequestContainsIrrevelantId() {
-        $request = aRequest()->with($this->remove_parameter, array('invalid_id'))->build();
+        $request = aRequest()->with(self::PARAMETER_REMOVE_RULES, array('invalid_id'))->build();
         expect($this->date_factory)->deleteById($this->tracker_id, 0)->once();
         $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotFailIfRequestDoesNotContainRemoveParameter() {
         $request = aRequest()->withParams(array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '21',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '14'
+            self::PARAMETER_SOURCE_FIELD => '21',
+            self::PARAMETER_TARGET_FIELD => '14'
         ))->build();
         expect($this->date_factory)->deleteById()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
 
     public function itProvidesFeedbackWhenDeletingARule() {
-        $request = aRequest()->with($this->remove_parameter, array('123'))->build();
+        $request = aRequest()->with(self::PARAMETER_REMOVE_RULES, array('123'))->build();
         expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
         $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotPrintMultipleTimesTheFeedbackWhenRemovingMoreThanOneRule() {
-        $request = aRequest()->with($this->remove_parameter, array('123', '456'))->build();
+        $request = aRequest()->with(self::PARAMETER_REMOVE_RULES, array('123', '456'))->build();
         expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
         $this->processRequestAndExpectRedirection($request);
     }
@@ -150,14 +171,14 @@ class Tracker_Workflow_Action_Rules_EditRules_deleteTest extends Tracker_Workflo
 class Tracker_Workflow_Action_Rules_EditRules_failedDeleteTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
     public function itDoesNotPrintSuccessfullFeebackIfTheDeleteFailed() {
-        $request = aRequest()->with($this->remove_parameter, array('123'))->build();
+        $request = aRequest()->with(self::PARAMETER_REMOVE_RULES, array('123'))->build();
         stub($this->date_factory)->deleteById()->returns(false);
         expect($GLOBALS['Response'])->addFeedback('info', '*')->never();
         $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotStopOnTheFirstFailedDelete() {
-        $request = aRequest()->with($this->remove_parameter, array('123', '456'))->build();
+        $request = aRequest()->with(self::PARAMETER_REMOVE_RULES, array('123', '456'))->build();
         stub($this->date_factory)->deleteById($this->tracker_id, 123)->at(0)->returns(false);
         stub($this->date_factory)->deleteById($this->tracker_id, 456)->at(1)->returns(true);
         expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
@@ -194,10 +215,10 @@ class Tracker_Workflow_Action_Rules_EditRules_getRulesTest extends Tracker_Workf
 class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
     public function itAddsARule() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '22',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create($this->source_field_id, $this->target_field_id, $this->tracker_id, '>')->once();
@@ -205,9 +226,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheComparator() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '22',
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -216,9 +237,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheSourceField() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_TARGET_FIELD => '22',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -226,10 +247,10 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnInt() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '%invalid_id%',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '%invalid_id%',
+            self::PARAMETER_TARGET_FIELD => '22',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -237,10 +258,10 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotAnGreaterThanZero() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '-1',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '-1',
+            self::PARAMETER_TARGET_FIELD => '22',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -248,10 +269,10 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheSourceFieldIsNotChoosen() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '0',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '0',
+            self::PARAMETER_TARGET_FIELD => '22',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -259,9 +280,9 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainTheTargetField() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -269,10 +290,10 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnInt() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '%invalid_id%',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '%invalid_id%',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -280,10 +301,10 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotAnGreaterThanZero() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '-1',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '-1',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -291,10 +312,10 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheTargetFieldIsNotChoosen() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '0',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '0',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -302,10 +323,10 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheRequestDoesNotContainAValidComparator() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '%invalid_comparator%',
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '22',
+            self::PARAMETER_COMPARATOR   => '%invalid_comparator%',
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -313,10 +334,10 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotCreateTheRuleIfTheTargetAndSourceFieldsAreTheSame() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>',
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '44',
+            self::PARAMETER_COMPARATOR   => '>',
         ))->build();
         expect($this->date_factory)->create()->never();
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
@@ -324,20 +345,20 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itProvidesFeedbackIfRuleSuccessfullyCreated() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '22',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
         expect($GLOBALS['Response'])->addFeedback('info','*')->once();
         $this->processRequestAndExpectRedirection($request);
     }
 
     public function itDoesNotAddDateRuleIfTheSourceFieldIsNotADateOne() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '666',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '666',
+            self::PARAMETER_TARGET_FIELD => '22',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
@@ -345,15 +366,170 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
     }
 
     public function itDoesNotAddDateRuleIfTheTargetFieldIsNotADateOne() {
-        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_ADD_RULE, array(
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '666',
-            Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+        $request = aRequest()->with(self::PARAMETER_ADD_RULE, array(
+            self::PARAMETER_SOURCE_FIELD => '44',
+            self::PARAMETER_TARGET_FIELD => '666',
+            self::PARAMETER_COMPARATOR   => '>'
         ))->build();
 
         expect($this->date_factory)->create()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
+}
 
+class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+
+    private $rule_42_id = 42;
+    private $rule_42;
+    private $rule_66_id = 66;
+    private $rule_66;
+
+    public function setUp() {
+        parent::setUp();
+        $this->rule_42 = mock('Tracker_Rule_Date');
+        stub($this->rule_42)->getId()->returns($this->rule_42_id);
+        stub($this->rule_42)->getSourceField()->returns($this->planned_start_date);
+        stub($this->rule_42)->getTargetField()->returns($this->actual_start_date);
+        stub($this->rule_42)->getComparator()->returns('<');
+        stub($this->date_factory)->getRule($this->tracker, $this->rule_42_id)->returns($this->rule_42);
+
+        $this->rule_66 = mock('Tracker_Rule_Date');
+        stub($this->rule_66)->getId()->returns($this->rule_66_id);
+        stub($this->rule_42)->getSourceField()->returns($this->actual_start_date);
+        stub($this->rule_42)->getTargetField()->returns($this->planned_start_date);
+        stub($this->rule_42)->getComparator()->returns('>');
+        stub($this->date_factory)->getRule($this->tracker, $this->rule_66_id)->returns($this->rule_66);
+    }
+
+    public function itUpdatesARule() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '44',
+                self::PARAMETER_TARGET_FIELD => '22',
+                self::PARAMETER_COMPARATOR   => '>'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setSourceField($this->planned_start_date)->once();
+        expect($this->rule_42)->setTargetField($this->actual_start_date)->once();
+        expect($this->rule_42)->setComparator('>')->once();
+        expect($this->date_factory)->save($this->rule_42)->once();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itUpdatesMoreThanOneRule() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '44',
+                self::PARAMETER_TARGET_FIELD => '22',
+                self::PARAMETER_COMPARATOR   => '>'
+            ),
+            "$this->rule_66_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '22',
+                self::PARAMETER_TARGET_FIELD => '44',
+                self::PARAMETER_COMPARATOR   => '<'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setSourceField($this->planned_start_date)->once();
+        expect($this->rule_66)->setSourceField($this->actual_start_date)->once();
+        expect($this->date_factory)->save($this->rule_42)->at(0);
+        expect($this->date_factory)->save($this->rule_66)->at(1);
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotUpdateTheRuleIfTheNewSourceFieldIsNotADateOne() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '666',
+                self::PARAMETER_TARGET_FIELD => '22',
+                self::PARAMETER_COMPARATOR   => '>'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setSourceField()->never();
+        expect($this->date_factory)->save($this->rule_42)->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotUpdateTheRuleIfTheNewTargetFieldIsNotADateOne() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '44',
+                self::PARAMETER_TARGET_FIELD => '666',
+                self::PARAMETER_COMPARATOR   => '>'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setTargetField()->never();
+        expect($this->date_factory)->save($this->rule_42)->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotUpdateTheRuleIfTheNewComparatorIsNotValid() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '44',
+                self::PARAMETER_TARGET_FIELD => '22',
+                self::PARAMETER_COMPARATOR   => '%invalid_comparator%'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setComparator()->never();
+        expect($this->date_factory)->save($this->rule_42)->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotFailIfTheTargetFieldIsMissingFromTheRequest() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '44',
+                self::PARAMETER_COMPARATOR   => '<'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setComparator()->never();
+        expect($this->date_factory)->save($this->rule_42)->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotFailIfTheSourceFieldIsMissingFromTheRequest() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_TARGET_FIELD => '22',
+                self::PARAMETER_COMPARATOR   => '<'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setComparator()->never();
+        expect($this->date_factory)->save($this->rule_42)->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotFailIfTheRuleDoesNotBelongToTracker() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "%invalid_rule_id%" => array(
+                self::PARAMETER_SOURCE_FIELD => '44',
+                self::PARAMETER_TARGET_FIELD => '22',
+                self::PARAMETER_COMPARATOR   => '<'
+            ),
+        ))->build();
+
+        expect($this->date_factory)->save()->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotUpdateIfTheRuleDoesNotChange() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => $this->rule_42->getSourceField()->getId(),
+                self::PARAMETER_TARGET_FIELD => $this->rule_42->getTargetField()->getId(),
+                self::PARAMETER_COMPARATOR   => $this->rule_42->getComparator()
+            ),
+        ))->build();
+
+        expect($this->date_factory)->save()->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
 }
 ?>
