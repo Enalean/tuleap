@@ -317,5 +317,17 @@ document.observe('dom:loaded', function () {
             }
         });
     });
+
+    $$('.add_new_rule_title').each(function (add) {
+        var link = new Element('a', { href: '#add_new_rule' })
+            .update(add.innerHTML)
+            .observe('click', function (evt) {
+                add.next().toggle();
+                Event.stop(evt);
+                return false;
+            });
+        add.update(link);
+        add.next().hide();
+    });
 });
 

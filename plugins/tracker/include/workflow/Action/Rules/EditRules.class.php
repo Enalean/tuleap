@@ -228,7 +228,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         echo $this->token->fetchHTMLInput();
         $this->displayRules();
         $this->displayAdd();
-        echo '<p><input type="submit" name="add" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
+        echo '<p><input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
         echo '</form>';
         echo '</div>' ;
         $this->displayFooter($layout);
@@ -276,10 +276,17 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function displayAdd() {
         $fields   = $this->getListOfDateFieldLabelsPlusPleaseChoose();
         $selected = $this->default_value;
+        echo '<p class="add_new_rule">';
+        echo '<span class="add_new_rule_title">';
+        echo '<i class="icon-plus"></i> ';
         echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
+        echo '</span>';
+        echo '<span>';
         $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_SOURCE_FIELD .']', $selected);
         $this->displayComparatorSelector(self::PARAMETER_ADD_RULE .'['. self::PARAMETER_COMPARATOR .']');
         $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_TARGET_FIELD .']', $selected);
+        echo '</span>';
+        echo '</p>';
     }
 
     private function getListOfDateFieldLabelsPlusPleaseChoose() {

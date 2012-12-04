@@ -806,6 +806,9 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_rule.deleted {
     text-decoration: line-through;
 }
+.add_new_rule {
+    line-height:2em;
+}
 .workflow_actions, .workflow_conditions  {
     list-style-type: none;
 }
