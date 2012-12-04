@@ -113,6 +113,16 @@ class Tracker_Rule_Date_Factory {
         );
     }
 
+    /** @return Tracker_Rule_Date */
+    public function getRule(Tracker $tracker, $rule_id) {
+        die('va mourir');
+    }
+
+    /** @return bool true if successfuly updated */
+    public function save(Tracker_Rule_Date $rule) {
+        die('va mourir');
+    }
+
     /**
      *
      * @param int $tracker_id

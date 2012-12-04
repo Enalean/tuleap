@@ -51,10 +51,11 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         );
     }
 
-    private function shouldUpdateRules(Codendi_Request $request) {
+    private function shouldAddUpdateOrDeleteRules(Codendi_Request $request) {
         $should_delete_rules = is_array($request->get(self::PARAMETER_REMOVE_RULES));
+        $should_update_rules = is_array($request->get(self::PARAMETER_UPDATE_RULES));
 
-        return $should_delete_rules || $this->shouldAddRule($request);
+        return $should_delete_rules || $should_update_rules || $this->shouldAddRule($request);
     }
 
     private function shouldAddRule(Codendi_Request $request) {
@@ -101,8 +102,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
-        if ($this->shouldUpdateRules($request)) {
-
+        if ($this->shouldAddUpdateOrDeleteRules($request)) {
             // Verify CSRF Protection
             $this->token->check();
             $this->updateRules($request);
@@ -113,6 +113,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function updateRules(Codendi_Request $request) {
+        $rules_to_update = $request->get(self::PARAMETER_UPDATE_RULES);
+        if (is_array($rules_to_update)) {
+            list($rule_id, $params) = each($rules_to_update);
+            $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
+            $rule->setSourceFieldId((int)$params[self::PARAMETER_SOURCE_FIELD]);
+            $rule->setTargetFieldId((int)$params[self::PARAMETER_TARGET_FIELD]);
+            $rule->setComparator($params[self::PARAMETER_COMPARATOR]);
+            $this->rule_date_factory->save($rule);
+        }
         $this->removeRules($request);
         $this->addRule($request);
     }

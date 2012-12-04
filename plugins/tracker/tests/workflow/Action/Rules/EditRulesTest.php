@@ -354,6 +354,28 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
         expect($this->date_factory)->create()->never();
         $this->processRequestAndExpectFormOutput($request);
     }
+}
 
+class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
+
+    public function itUpdatesARule() {
+        $rule_id = 42;
+        $rule_42 = mock('Tracker_Rule_Date');
+        stub($rule_42)->getId()->returns($rule_id);
+        stub($this->date_factory)->getRule($this->tracker, $rule_id)->returns($rule_42);
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES, array(
+            "$rule_id" => array(
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+            ),
+        ))->build();
+
+        expect($rule_42)->setSourceFieldId(44)->once();
+        expect($rule_42)->setTargetFieldId(22)->once();
+        expect($rule_42)->setComparator('>')->once();
+        expect($this->date_factory)->save($rule_42)->once();
+        $this->processRequestAndExpectRedirection($request);
+    }
 }
 ?>
