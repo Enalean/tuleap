@@ -253,5 +253,35 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $this->assertEqual($this->source_field, $this->date_rule_factory->getUsedDateFieldById($tracker, $this->source_field_id));
 
     }
+    
+    function testExport() {
+        $xml = simplexml_load_file(dirname(__FILE__) . '/../../../_fixtures/ImportTrackerRulesTest.xml');
+
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $array_xml_mapping = array('F25' => 102,
+                                   'F28' => 103,
+                                   'F29' => 801,
+                                   'F22' => 806,
+                                   );
+
+        $r1 = new Tracker_Rule_Date();
+        $r1->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)
+                ->setSourceFieldId(102)
+                ->setTargetFieldId(801);
+        
+        $r2 = new Tracker_Rule_Date();
+        $r2->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS)
+                ->setSourceFieldId(103)
+                ->setTargetFieldId(806);
+         
+        $trm = partial_mock('Tracker_Rule_Date_Factory', 
+                array('searchByTrackerId'), 
+                array(mock('Tracker_Rule_Date_Dao'), mock('Tracker_FormElementFactory'))
+                );
+        $trm->setReturnValue('searchByTrackerId', array($r1, $r2));
+
+        $trm->exportToXML($root, $array_xml_mapping, 666);
+        $this->assertEqual(count($xml->dependencies->rule), count($root->dependencies->rule));
+    }
 }
 ?>

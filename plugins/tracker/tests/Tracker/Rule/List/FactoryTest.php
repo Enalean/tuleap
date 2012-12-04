@@ -213,5 +213,50 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         $factory = new Tracker_Rule_List_Factory($dao, $form_factory);
         $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping);
     }
+    
+    function testExport() {
+        $xml = simplexml_load_file(dirname(__FILE__) . '/../../../_fixtures/ImportTrackerRulesTest.xml');
+
+        $f1 = stub('Tracker_FormElement_Field_List')->getId()->returns(102);
+        $f2 = stub('Tracker_FormElement_Field_List')->getId()->returns(103);
+
+        $form_element_factory = mock('Tracker_FormElementFactory');
+        stub($form_element_factory)->getFormElementById(102)->returns($f1);
+        stub($form_element_factory)->getFormElementById(103)->returns($f2);
+
+        $bind_f1 = mock('Tracker_FormElement_Field_List_Bind');
+        $bind_f2 = mock('Tracker_FormElement_Field_List_Bind');
+
+        stub($f1)->getBind()->returns($bind_f1);
+        stub($f2)->getBind()->returns($bind_f2);
+
+        $bf = new MockTracker_FormElement_Field_List_BindFactory($this);
+        $bf->setReturnValue('getType', 'static', array($bind_f1));
+        $bf->setReturnValue('getType', 'static', array($bind_f2));
+
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $array_xml_mapping = array('F25' => 102,
+                                   'F28' => 103,
+                                   'values' => array(
+                                       'F25-V1' => 801,
+                                       'F25-V2' => 802,
+                                       'F25-V3' => 803,
+                                       'F25-V4' => 804,
+                                       'F28-V1' => 806,
+                                       'F28-V2' => 807,
+                                       'F28-V3' => 808,
+                                       'F28-V4' => 809,
+                                   ));
+
+
+        $r1 = new Tracker_Rule_List(1, 101, 103, 806, 102, 803);
+        $r2 = new Tracker_Rule_List(1, 101, 103, 806, 102, 804);
+
+        $trm = partial_mock('Tracker_Rule_List_Factory', array('searchByTrackerId'), array(mock('Tracker_Rule_List_Dao')));
+        $trm->setReturnValue('searchByTrackerId', array($r1, $r2));
+
+        $trm->exportToXML($root, $array_xml_mapping, $form_element_factory, 666);
+        $this->assertEqual(count($xml->dependencies->rule), count($root->dependencies->rule));
+    }
 } 
 ?>

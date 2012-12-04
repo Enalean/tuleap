@@ -2330,7 +2330,7 @@ EOS;
         
         // rules
         $trm = $this->getRulesManager();
-        $child = $xmlElem->addChild('dependencies');
+        $child = $xmlElem->addChild('rules');
         $trm->exportToXML($child, $xmlMapping);
         
         // only the reports with project scope are exported

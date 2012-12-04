@@ -40,6 +40,12 @@ class Tracker_RulesManager {
 
      /** @var Tracker_Rule_Date_Factory */
     protected $rule_date_factory;
+    
+    /**
+     *
+     * @var Tracker_Rule_List_Factory 
+     */
+    private $rule_list_factory;
 
     public function __construct($tracker, Tracker_FormElementFactory $form_element_factory) {
         $this->tracker              = $tracker;
@@ -65,7 +71,7 @@ class Tracker_RulesManager {
      * @return array An array of Tracker_Rule_Date objects
      */
     public function getAllDateRulesByTrackerId($tracker_id) {
-        return $this->getTracker_RuleDateFactory()
+        return $this->getTrackerRuleDateFactory()
                     ->searchByTrackerId($tracker_id);
     }
 
@@ -83,7 +89,7 @@ class Tracker_RulesManager {
      *
      * @return Tracker_Rule_Date_Factory
      */
-    public function getTracker_RuleDateFactory() {
+    public function getTrackerRuleDateFactory() {
         if($this->rule_date_factory ==  null) {
             $this->rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $this->form_element_factory);
         }
@@ -98,6 +104,28 @@ class Tracker_RulesManager {
      */
     public function setRuleDateFactory(Tracker_Rule_Date_Factory $factory) {
         $this->rule_date_factory = $factory;
+        return $this;
+    }
+    
+    /**
+     *
+     * @return Tracker_Rule_List_Factory
+     */
+    public function getTrackerRuleListFactory() {
+        if($this->rule_list_factory ==  null) {
+            $this->rule_list_factory = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao());
+        }
+
+        return $this->rule_list_factory;
+    }
+
+    /**
+     *
+     * @param Tracker_Rule_List_Factory $factory
+     * @return \Tracker_RulesManager
+     */
+    public function setRuleListFactory(Tracker_Rule_List_Factory $factory) {
+        $this->rule_list_factory = $factory;
         return $this;
     }
 
@@ -540,26 +568,23 @@ class Tracker_RulesManager {
     /**
      * Export workflow to XML
      *
-     * @param SimpleXMLElement &$root     the node to which the workflow is attached (passed by reference)
+     * @param SimpleXMLElement $root     the node to which the workflow is attached (passed by reference)
      * @param array            $xmlMapping correspondance between real ids and xml IDs
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
-            $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
-            foreach ($rules as $rule) {
-                $source_field = $this->form_element_factory->getFormElementById($rule->source_field);
-                $target_field = $this->form_element_factory->getFormElementById($rule->target_field);
-                $bf = new Tracker_FormElement_Field_List_BindFactory();
-                //TODO: handle sb/msb bind to users and remove condition
-                if ($bf->getType($source_field->getBind()) == 'static' &&  $bf->getType($target_field->getBind()) == 'static') {
-                    $child = $root->addChild('rule');
-                    $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
-                    $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
-                    $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
-                    $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
-                }
-            }
+    public function exportToXml($root, $xmlMapping) {
+        $this->getTrackerRuleDateFactory()->exportToXml(
+                $root, 
+                $xmlMapping, 
+                $this->tracker->getId()
+                );
+        $this->getTrackerRuleListFactory()->exportToXml(
+                $root, 
+                $xmlMapping, 
+                $this->getTrackerFormElementFactory(),
+                $this->tracker->getId()
+                );
     }
 
     /**

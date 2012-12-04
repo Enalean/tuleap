@@ -862,9 +862,9 @@ class TrackerFactory {
                     Tracker_SemanticFactory::instance()->saveObject($semantic, $trackerDB);
                 }
             }
-            //create dependencies
-            if (isset($tracker->dependencies)) {
-                $this->getRuleFactory()->saveObject($tracker->dependencies, $trackerDB);
+            //create rules
+            if (isset($tracker->rules)) {
+                $this->getRuleFactory()->saveObject($tracker->rules, $trackerDB);
             }
             //create workflow
             if (isset($tracker->workflow)) {
