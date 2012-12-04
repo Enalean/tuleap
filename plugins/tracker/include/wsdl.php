@@ -583,6 +583,19 @@ $GLOBALS['server']->register(
     'Returns the reports the user can execute.'
 );
 
+$GLOBALS['server']->register(
+    'getTrackerReportArtifacts',
+    array('sessionKey'=>'xsd:string',
+          'report_id'=>'xsd:int'
+    ),
+    array('return'=>'tns:ArrayOfInt'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getTrackerReportArtifacts',
+    'rpc',
+    'encoded',
+    'Execute a report and returns corresponding artifact ids.'
+);
+
 /*$GLOBALS['server']->register(
     'getArtifactHistory',
     array('sessionKey' => 'xsd:string',
