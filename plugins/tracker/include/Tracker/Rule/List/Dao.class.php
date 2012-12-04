@@ -63,7 +63,7 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * @return int The ID of the saved tracker_rule
      */
     public function insert(Tracker_Rule_List $rule) {
-        $rule_id         = $this->da->escapeInt($rule->getTracker()->getId());
+        $rule_id         = $this->da->escapeInt($rule->getTrackerId());
         $rule_type       = $this->da->quoteSmart(Tracker_Rule::RULETYPE_VALUE);
         $source_field_id = $this->da->escapeInt($rule->getSourceFieldId());
         $source_value_id = $this->da->quoteSmart($rule->getSourceValue());

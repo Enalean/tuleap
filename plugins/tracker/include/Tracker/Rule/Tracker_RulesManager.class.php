@@ -79,8 +79,8 @@ class Tracker_RulesManager {
      * Pretty sure this isn't used anywhere
      */
 //    function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
-//        $fact = $this->getRuleFactory();
-//        return $fact->saveRuleValue($tracker_id, $source, $source_value, $target, $target_value);
+//        $factory = $this->getTrackerRuleListFactory();
+//        return $factory->create($source, $target, $tracker_id, $source_value, $target_value);
 //    }
 
     function deleteRule($rule_id) {
@@ -361,7 +361,15 @@ class Tracker_RulesManager {
                        $dependency = $field_source_value_id.'_'.$field_target_value_id;
                        if ($request->existAndNonEmpty($dependency)) {
                            $currMatrix[]=array($field_source_value_id, $field_target_value_id);
-                           $this->saveRuleValue($this->tracker->id, $field_source->getId(), $field_source_value_id, $field_target->getId(), $field_target_value_id);
+                           $this->getTrackerRuleListFactory()->create(
+                                   $field_source->getId(), 
+                                   $field_target->getId(), 
+                                   $this->tracker->id, 
+                                   $field_source_value_id, 
+                                   $field_target_value_id
+                                   );
+//                           $this->saveRuleValue($this->tracker->id, $field_source->getId(), 
+//                                   $field_source_value_id, $field_target->getId(), $field_target_value_id);
                         }
                    }
                 }
