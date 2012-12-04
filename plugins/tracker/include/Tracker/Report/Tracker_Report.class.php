@@ -817,7 +817,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $this->tracker;
     }
-    
+
+    public function setTracker(Tracker $tracker) {
+        $this->tracker    = $tracker;
+        $this->tracker_id = $tracker->getId();
+    }
+
     /**
      * hide or show the criteria
      */

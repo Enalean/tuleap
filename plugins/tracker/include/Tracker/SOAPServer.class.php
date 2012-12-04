@@ -46,6 +46,7 @@ define('delete_artifact_followup_fault','3023');
 define('get_tracker_factory_fault','3024');
 define('get_tracker_fault','3025');
 define('user_is_not_tracker_admin','3026');
+define('invalid_report', '3027');
 
 class Tracker_SOAPServer {
     /**
@@ -148,6 +149,29 @@ class Tracker_SOAPServer {
             }
         }
         return $return;
+    }
+
+    /**
+     * Returns all artifacts that match criteria defined in reports
+     *
+     * @param String $session_key
+     * @param Integer $report_id
+     * @param Integer $offset
+     * @param Integer $max_rows
+     *
+     * @return Array
+     * @throws SoapFault
+     */
+    public function getArtifactsFromReport($session_key, $report_id, $offset, $max_rows) {
+        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $report = $this->report_factory->getReportById($report_id, $current_user->getId(), false);
+        if ($report) {
+            $this->checkUserCanViewTracker($report->getTracker(), $current_user);
+            $matching = $report->getMatchingIds(null, true);
+            return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
+        } else {
+            throw new SoapFault(invalid_report, "You attempt to use a report that doesn't exist or you don't have access to");
+        }
     }
 
     /**
@@ -523,9 +547,6 @@ class Tracker_SOAPServer {
             $soap_tracker_reports[] = $report->exportToSoap();
         }
         return $soap_tracker_reports;
-    }
-
-    public function getTrackerReportArtifacts($session_key, $report_id) {
     }
 
     /**

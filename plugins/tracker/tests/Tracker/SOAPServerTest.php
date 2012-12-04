@@ -28,7 +28,9 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     protected $session_key           = 'zfsdfs65465';
     protected $user_id               = 9876;
     protected $tracker_id            = 1235;
+    protected $tracker;
     protected $unreadable_tracker_id = 5321;
+    protected $unreadable_tracker;
     protected $int_field_name        = 'int_field';
     protected $date_field_name       = 'date_field';
     protected $list_field_name       = 'list_field';
@@ -121,13 +123,13 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function setUpTrackers(TrackerFactory $tracker_factory) {
-        $tracker      = aMockTracker()->withId($this->tracker_id)->build();
-        $unreadable_tracker = aMockTracker()->withId($this->unreadable_tracker_id)->build();
-        stub($tracker)->userCanView()->returns(true);
-        stub($tracker)->userIsAdmin()->returns(true);
-        stub($unreadable_tracker)->userCanView()->returns(false);
-        stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($tracker);
-        stub($tracker_factory)->getTrackerById($this->unreadable_tracker_id)->returns($unreadable_tracker);
+        $this->tracker      = aMockTracker()->withId($this->tracker_id)->build();
+        $this->unreadable_tracker = aMockTracker()->withId($this->unreadable_tracker_id)->build();
+        stub($this->tracker)->userCanView()->returns(true);
+        stub($this->tracker)->userIsAdmin()->returns(true);
+        stub($this->unreadable_tracker)->userCanView()->returns(false);
+        stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($this->tracker);
+        stub($tracker_factory)->getTrackerById($this->unreadable_tracker_id)->returns($this->unreadable_tracker);
     }
 
     private function setUpArtifactResults(Tracker_ReportDao $dao) {
@@ -405,4 +407,60 @@ class Tracker_SOAPServer_getTrackerReports_Test extends Tracker_SOAPServer_BaseT
     }
 }
 
+class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServer_BaseTest {
+
+    public function setUp() {
+        parent::setUp();
+        $this->report_id = 987;
+        $this->report = mock('Tracker_Report');
+        stub($this->report)->getTracker()->returns($this->tracker);
+    }
+
+    public function itRaisesAnExceptionWhenReportIsPublicButTheTrackerIsNotReadableByUser() {
+        $report_id = 987;
+        $report = aTrackerReport()->withTracker($this->unreadable_tracker)->build();
+        stub($this->report_factory)->getReportById($report_id, $this->user_id, false)->returns($report);
+        $this->expectException('SoapFault');
+        $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+    }
+
+    public function itRaisesAnExceptionWhenThereIsNoReportMatching() {
+        $report_id = 987;
+        stub($this->report_factory)->getReportById()->returns(null);
+        $this->expectException('SoapFault');
+        $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+    }
+
+    public function itGetsMatchingIdsFromReport() {
+        expect($this->report)->getMatchingIds(null, true)->once();
+        stub($this->report_factory)->getReportById()->returns($this->report);
+        $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
+    }
+
+    public function itConvertsMatchingIdsIntoAnArrayOfInteger() {
+        stub($this->report)->getMatchingIds()->returns(array('id' => '42,66,9001', 'last_changeset_id' => '421,661,90011'));
+
+        stub($this->report_factory)->getReportById()->returns($this->report);
+        $soap_response = $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
+        $this->assertEqual($soap_response, array(
+            'total_artifacts_number' => 3,
+            'artifacts' => array(
+                $this->expected_artifact_42,
+                $this->expected_artifact_66,
+                $this->expected_artifact_9001,
+            )
+        ));
+    }
+
+    public function itReturnsNoMatchingResults() {
+        stub($this->report)->getMatchingIds()->returns(array('id' => '', 'last_changeset_id' => ''));
+
+        stub($this->report_factory)->getReportById()->returns($this->report);
+        $soap_response = $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
+        $this->assertEqual($soap_response, array(
+            'total_artifacts_number' => 0,
+            'artifacts' => array()
+        ));
+    }
+}
 ?>

@@ -28,7 +28,7 @@ $soapLogin = new SoapClient($serverUrl.'/soap/?wsdl',
                             array('cache_wsdl' => WSDL_CACHE_NONE));
 
 
-$requesterSessionHash = $soapLogin->login('admin', 'siteadmin')->session_hash;
+$requesterSessionHash = $soapLogin->login('manuel', '')->session_hash;
 
 $group_id   = $argv[1];
 $tracker_id = $argv[2];

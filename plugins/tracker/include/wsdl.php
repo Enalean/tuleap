@@ -584,16 +584,18 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
-    'getTrackerReportArtifacts',
-    array('sessionKey'=>'xsd:string',
-          'report_id'=>'xsd:int'
+    'getArtifactsFromReport',
+    array('sessionKey' => 'xsd:string',
+          'report_id'  => 'xsd:int',
+          'offset'     => 'xsd:int',
+          'max_rows'   => 'xsd:int'
     ),
-    array('return'=>'tns:ArrayOfInt'),
+    array('return'=>'tns:ArtifactQueryResult'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getTrackerReportArtifacts',
+    $GLOBALS['uri'].'#getArtifactsFromReport',
     'rpc',
     'encoded',
-    'Execute a report and returns corresponding artifact ids.'
+    'Execute a report and returns corresponding artifacts.'
 );
 
 /*$GLOBALS['server']->register(
