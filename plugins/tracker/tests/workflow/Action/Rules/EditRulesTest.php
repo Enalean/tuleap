@@ -38,6 +38,8 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
 
     protected $planned_start_date;
     protected $actual_start_date;
+    protected $planned_end_date;
+    protected $actual_end_date;
     protected $source_field_id        = 44;
     protected $target_field_id        = 22;
     protected $actual_source_field_id = 66;
@@ -50,10 +52,10 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $this->token        = mock('CSRFSynchronizerToken');
         $this->planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
         $this->actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
-        $planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
-        $actual_end_date    = $this->setUpField($this->actual_target_field_id, 'Actual End Date');
-        $this->rule_1       = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $planned_end_date);
-        $this->rule_2       = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $actual_end_date);
+        $this->planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
+        $this->actual_end_date    = $this->setUpField($this->actual_target_field_id, 'Actual End Date');
+        $this->rule_1       = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $this->planned_end_date);
+        $this->rule_2       = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $this->actual_end_date);
         $this->layout       = mock('Tracker_IDisplayTrackerLayout');
         $this->user         = mock('User');
         stub($this->date_factory)->searchById(123)->returns($this->rule_1);
@@ -63,8 +65,8 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
             array(
                 $this->planned_start_date,
                 $this->actual_start_date,
-                $planned_end_date,
-                $actual_end_date
+                $this->planned_end_date,
+                $this->actual_end_date
             )
         );
         $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $this->token);
@@ -383,10 +385,16 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
         parent::setUp();
         $this->rule_42 = mock('Tracker_Rule_Date');
         stub($this->rule_42)->getId()->returns($this->rule_42_id);
+        stub($this->rule_42)->getSourceField()->returns($this->planned_start_date);
+        stub($this->rule_42)->getTargetField()->returns($this->actual_start_date);
+        stub($this->rule_42)->getComparator()->returns('<');
         stub($this->date_factory)->getRule($this->tracker, $this->rule_42_id)->returns($this->rule_42);
 
         $this->rule_66 = mock('Tracker_Rule_Date');
         stub($this->rule_66)->getId()->returns($this->rule_66_id);
+        stub($this->rule_42)->getSourceField()->returns($this->actual_start_date);
+        stub($this->rule_42)->getTargetField()->returns($this->planned_start_date);
+        stub($this->rule_42)->getComparator()->returns('>');
         stub($this->date_factory)->getRule($this->tracker, $this->rule_66_id)->returns($this->rule_66);
     }
 
@@ -501,6 +509,19 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
                 self::PARAMETER_SOURCE_FIELD => '44',
                 self::PARAMETER_TARGET_FIELD => '22',
                 self::PARAMETER_COMPARATOR   => '<'
+            ),
+        ))->build();
+
+        expect($this->date_factory)->save()->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itDoesNotUpdateIfTheRuleDoesNotChange() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => $this->rule_42->getSourceField()->getId(),
+                self::PARAMETER_TARGET_FIELD => $this->rule_42->getTargetField()->getId(),
+                self::PARAMETER_COMPARATOR   => $this->rule_42->getComparator()
             ),
         ))->build();
 
