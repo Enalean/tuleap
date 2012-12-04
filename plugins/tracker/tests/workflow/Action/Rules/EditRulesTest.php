@@ -545,5 +545,24 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
         $this->processRequestAndExpectRedirection($request);
     }
+
+    public function itProvidesFeedbackIfRulesSuccessfullyUpdated() {
+        $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '44',
+                self::PARAMETER_TARGET_FIELD => '22',
+                self::PARAMETER_COMPARATOR   => '>'
+            ),
+            "$this->rule_66_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '22',
+                self::PARAMETER_TARGET_FIELD => '44',
+                self::PARAMETER_COMPARATOR   => '<'
+            ),
+        ))->build();
+
+        stub($this->date_factory)->save()->returns(true);
+        expect($GLOBALS['Response'])->addFeedback('info','*')->once();
+        $this->processRequestAndExpectRedirection($request);
+    }
 }
 ?>

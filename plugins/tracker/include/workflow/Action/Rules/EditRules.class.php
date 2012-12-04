@@ -137,8 +137,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         if (! is_array($rules_to_update)) {
             return;
         }
+        $nb_updated = 0;
         foreach ($rules_to_update as $rule_id => $new_values) {
-            $this->updateARule($rule_id, $new_values);
+            if ($this->updateARule($rule_id, $new_values)) {
+                ++$nb_updated;
+            }
+        }
+        if ($nb_updated) {
+            $update_msg = $GLOBALS['Language']->getText('workflow_admin', 'updated_rules');
+            $GLOBALS['Response']->addFeedback('info', $update_msg);
         }
     }
 
@@ -149,7 +156,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
             $rule->setSourceField($source_field);
             $rule->setTargetField($target_field);
             $rule->setComparator($comparator);
-            $this->rule_date_factory->save($rule);
+            return $this->rule_date_factory->save($rule);
         }
     }
 
