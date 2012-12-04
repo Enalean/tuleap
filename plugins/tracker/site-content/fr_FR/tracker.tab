@@ -1305,10 +1305,11 @@ workflow_admin	title	Gestion du Workflow
 workflow_admin	transitions_deactivated	Les règles de transition ne s'appliquent pas pour l'instant
 workflow_admin	same_field	Les deux champs doivent être différents
 workflow_admin	deleted_rules	Règle(s) supprimée(s) avec succès
+workflow_admin	updated_rules	Règle(s) mise(s) à jour avec succès
 workflow_admin	created_rule	Règle créée avec succès
 workflow_admin	title_define_global_date_rules	Définition des règles globales sur les dates
 workflow_admin	hint_date_rules_definition	Ces règles s'appliqueront à chaque création/modification d'artéfacts.
-workflow_admin	add_new_rule	Ajouter une nouvelle règle:
+workflow_admin	add_new_rule	Ajouter une nouvelle règle
 workflow_admin	title_define_transitions	Definir les transitions
 workflow_admin	tab_global_rules	Règles Globales
 workflow_admin	tab_transitions	Transitions

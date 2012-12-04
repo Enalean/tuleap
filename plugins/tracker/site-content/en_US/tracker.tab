@@ -1309,10 +1309,11 @@ workflow_admin	title	Workflow Administration
 workflow_admin	transitions_deactivated	Transition rules don't apply yet
 workflow_admin	same_field	The two fields must be different
 workflow_admin	deleted_rules	Rule(s) successfully deleted
+workflow_admin	updated_rules	Rule(s) successfully updated
 workflow_admin	created_rule	Rule successfully created
 workflow_admin	title_define_global_date_rules	Define global date rules
 workflow_admin	hint_date_rules_definition	Those rules will be applied on each creation/update of artifacts.
-workflow_admin	add_new_rule	Add a new rule:
+workflow_admin	add_new_rule	Add a new rule
 workflow_admin	title_define_transitions	Define the transitions
 workflow_admin	tab_global_rules	Global Rules
 workflow_admin	tab_transitions	Transitions

@@ -63,11 +63,10 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $target_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD);
 
         $fields_exist         = $source_field_id && $target_field_id;
-        $fields_are_different = $source_field_id != $target_field_id;
+        $fields_are_different = false;
 
-        if ($fields_exist && ! $fields_are_different) {
-            $error_msg = $GLOBALS['Language']->getText('workflow_admin', 'same_field');
-            $GLOBALS['Response']->addFeedback('error', $error_msg);
+        if ($fields_exist) {
+            $fields_are_different = $this->checkFieldsAreDifferent($source_field_id, $target_field_id);
         }
 
         if ($fields_exist) {
@@ -77,6 +76,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $exist_comparator = (bool)$this->getComparatorFromAddRequest($request);
 
         return $fields_exist && $fields_are_different && $exist_comparator && $fields_have_good_type;
+    }
+
+    private function checkFieldsAreDifferent($source_field, $target_field) {
+        $fields_are_different = $source_field != $target_field;
+        if (! $fields_are_different) {
+            $error_msg = $GLOBALS['Language']->getText('workflow_admin', 'same_field');
+            $GLOBALS['Response']->addFeedback('error', $error_msg);
+        }
+        return $fields_are_different;
     }
 
     private function getFieldIdFromAddRequest(Codendi_Request $request, $source_or_target) {
@@ -129,8 +137,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         if (! is_array($rules_to_update)) {
             return;
         }
+        $nb_updated = 0;
         foreach ($rules_to_update as $rule_id => $new_values) {
-            $this->updateARule($rule_id, $new_values);
+            if ($this->updateARule($rule_id, $new_values)) {
+                ++$nb_updated;
+            }
+        }
+        if ($nb_updated) {
+            $update_msg = $GLOBALS['Language']->getText('workflow_admin', 'updated_rules');
+            $GLOBALS['Response']->addFeedback('info', $update_msg);
         }
     }
 
@@ -141,7 +156,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
             $rule->setSourceField($source_field);
             $rule->setTargetField($target_field);
             $rule->setComparator($comparator);
-            $this->rule_date_factory->save($rule);
+            return $this->rule_date_factory->save($rule);
         }
     }
 
@@ -149,6 +164,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return $rule
             && $source_field
             && $target_field
+            && $this->checkFieldsAreDifferent($source_field, $target_field)
             && $comparator
             && (
                 $rule->getSourceField() != $source_field
@@ -212,7 +228,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         echo $this->token->fetchHTMLInput();
         $this->displayRules();
         $this->displayAdd();
-        echo '<p><input type="submit" name="add" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
+        echo '<p><input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_submit').'" /></p>';
         echo '</form>';
         echo '</div>' ;
         $this->displayFooter($layout);
@@ -221,19 +237,27 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function displayRules() {
         $fields = $this->getListOfDateFieldLabels();
         $rules  = $this->getRules();
-        echo '<ul class="workflow_existing_rules">';
+        echo '<table class="workflow_existing_rules">';
+        echo '<tbody>';
         foreach ($rules as $rule) {
             $name_prefix = self::PARAMETER_UPDATE_RULES .'['. $rule->getId() .']';
-            echo '<li class="workflow_rule_action">';
+            echo '<tr>';
+            echo '<td>';
+            echo '<div class="workflow_rule">';
             $this->displayFieldSelector($fields, $name_prefix .'['. self::PARAMETER_SOURCE_FIELD .']', $rule->getSourceField()->getId());
             $this->displayComparatorSelector($name_prefix .'['. self::PARAMETER_COMPARATOR .']', $rule->getComparator());
             $this->displayFieldSelector($fields, $name_prefix .'['. self::PARAMETER_TARGET_FIELD .']', $rule->getTargetField()->getId());
+            echo '</div>';
+            echo '</td>';
+            echo '<td>';
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
             echo '<input type="checkbox" name="'. self::PARAMETER_REMOVE_RULES .'[]" value="'.$rule->getId().'" ></input>';
             echo '</label>';
-            echo '</li>';
+            echo '</td>';
+            echo '</tr>';
         }
-        echo '</ul>';
+        echo '</tbody>';
+        echo '</table>';
     }
 
     private function getRules() {
@@ -252,10 +276,17 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function displayAdd() {
         $fields   = $this->getListOfDateFieldLabelsPlusPleaseChoose();
         $selected = $this->default_value;
+        echo '<p class="add_new_rule">';
+        echo '<span class="add_new_rule_title">';
+        echo '<i class="icon-plus"></i> ';
         echo $GLOBALS['Language']->getText('workflow_admin','add_new_rule').' ';
+        echo '</span>';
+        echo '<span>';
         $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_SOURCE_FIELD .']', $selected);
         $this->displayComparatorSelector(self::PARAMETER_ADD_RULE .'['. self::PARAMETER_COMPARATOR .']');
         $this->displayFieldSelector($fields, self::PARAMETER_ADD_RULE .'['. self::PARAMETER_TARGET_FIELD .']', $selected);
+        echo '</span>';
+        echo '</p>';
     }
 
     private function getListOfDateFieldLabelsPlusPleaseChoose() {
