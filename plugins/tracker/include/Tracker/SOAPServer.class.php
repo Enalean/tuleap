@@ -46,7 +46,6 @@ define('delete_artifact_followup_fault','3023');
 define('get_tracker_factory_fault','3024');
 define('get_tracker_fault','3025');
 define('user_is_not_tracker_admin','3026');
-define('user_cannot_access_tracker','3027');
 
 class Tracker_SOAPServer {
     /**
@@ -511,18 +510,22 @@ class Tracker_SOAPServer {
      * @throws SoapFault
      */
     public function getTrackerReports($session_key, $group_id, $tracker_id) {
-        $user      = $this->soap_user_manager->continueSession($session_key);
-        $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerReports');
-        if ($tracker->userCanView($user)) {
-            $reports = $this->report_factory->getReportsByTrackerId($tracker_id, $user->getId());
-            $soap_tracker_reports = array();
-            foreach ($reports as $report) {
-                $soap_tracker_reports[] = $report->exportToSoap();
-            }
-            return $soap_tracker_reports;
-        } else {
-            throw new SoapFault(user_cannot_access_tracker, 'Permission denied: you cannot access this tracker');
+        $current_user      = $this->soap_user_manager->continueSession($session_key);
+        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+        $this->checkUserCanViewTracker($tracker, $current_user);
+
+        return $this->exportReportsToSoap($this->report_factory->getReportsByTrackerId($tracker_id, $current_user->getId()));
+    }
+
+    private function exportReportsToSoap(array $reports) {
+        $soap_tracker_reports = array();
+        foreach ($reports as $report) {
+            $soap_tracker_reports[] = $report->exportToSoap();
         }
+        return $soap_tracker_reports;
+    }
+
+    public function getTrackerReportArtifacts($session_key, $report_id) {
     }
 
     /**
