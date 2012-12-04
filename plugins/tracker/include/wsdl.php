@@ -115,6 +115,17 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfFieldValueFileInfo',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:FieldValueFileInfo[]')),
+    'tns:FieldValueFileInfo'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
     'FieldValue',
     'complexType',
     'struct',
@@ -122,7 +133,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     '',
     array(
         'value'        => array('type' => 'xsd:string'),
-        'file_info'    => array('type' => 'tns:FieldValueFileInfo')
+        'file_info'    => array('type' => 'tns:ArrayOfFieldValueFileInfo')
     )
 );
 

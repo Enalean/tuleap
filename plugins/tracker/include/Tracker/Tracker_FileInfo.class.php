@@ -50,7 +50,23 @@ class Tracker_FileInfo {
         $this->filesize     = $filesize;
         $this->filetype     = $filetype;
     }
-    
+
+    /**
+     * Soap version of the object
+     *
+     * @return Array
+     */
+    public function getSoapValue() {
+        return array(
+            'id'           => $this->id,
+            'submitted_by' => $this->submitted_by,
+            'description'  => $this->description,
+            'filename'     => $this->filename,
+            'filesize'     => $this->filesize,
+            'filetype'     => $this->filetype,
+        );
+    }
+
     /**
      * @return string the description of the file
      */

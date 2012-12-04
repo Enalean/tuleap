@@ -343,11 +343,17 @@ class Tracker_SOAPServer {
                 if ($field_value &&
                         ($field = $this->formelement_factory->getFormElementById($field_id)) &&
                         ($field->userCanRead($user))) {
-                    $return['value'][] = array(
+                    $soap_field_value = array(
                         'field_name' => $field->getName(),
                         'field_label' => $field->getLabel(),
-                        'field_value' => $field_value->getSoapValue()
                     );
+                    if ($field instanceof Tracker_FormElement_Field_File) {
+                        $soap_field_value['field_value'] = $field_value->getSoapValue();
+                    } else {
+                        // TODO: refactor to move 'value' into Field
+                        $soap_field_value['field_value'] = array('value' => $field_value->getSoapValue());
+                    }
+                    $return['value'][] = $soap_field_value;
                 }
             }
         }
