@@ -32,10 +32,17 @@ if ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') || $GLOBALS['sys_fo
     $protocol = "http";
 }
 
-$uri = $protocol.'://'.$GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/soap';
-
+$server_uri  = $protocol .'://'. Config::get('sys_default_domain');
+$uri         = $server_uri . TRACKER_BASE_URL .'/soap';
 
 if ($request->exist('wsdl')) {
+    // Use a static wsdl file
+    //$wsdl = file_get_contents(TRACKER_BASE_DIR .'/tracker.wsdl');
+    //header('Content-type: text/xml');
+    //echo str_replace('https://tuleap.example.com', $server_uri, $wsdl);
+    //die();
+
+    // Use nusoap to generate the wsdl
     require_once 'nusoap.php';
     require_once 'utils_soap.php';
 
@@ -47,10 +54,11 @@ if ($request->exist('wsdl')) {
     // Call the service method to initiate the transaction and send the response
     $HTTP_RAW_POST_DATA = isset($HTTP_RAW_POST_DATA) ? $HTTP_RAW_POST_DATA : '';
     $server->service($HTTP_RAW_POST_DATA);
+
 } else {
     require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
-    $server = new SoapServer($uri.'/?wsdl',
+    $server = new SoapServer($uri .'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
 
     $server->setClass(

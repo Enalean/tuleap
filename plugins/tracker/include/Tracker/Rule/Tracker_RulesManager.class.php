@@ -774,6 +774,20 @@ class Tracker_RulesManager {
         $field                = $tracker_list_factory->getFormElementById($field_id);
         return $field;
     }
-}
 
+    /** @return array { 'dates' => [...], 'lists' => [...] } */
+    public function exportToSOAP() {
+        $soap = array(
+            'dates' => array(),
+            'lists' => array()
+        );
+        foreach ($this->getAllListRulesByTrackerWithOrder($this->tracker->getId()) as $rule) {
+            $soap['lists'][] = $rule->exportToSOAP();
+        }
+        foreach ($this->getAllDateRulesByTrackerId($this->tracker->getId()) as $rule) {
+            $soap['dates'][] = $rule->exportToSOAP();
+        }
+        return $soap;
+    }
+}
 ?>

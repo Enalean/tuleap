@@ -24,7 +24,7 @@
  * For a tracker, if a source field is selected to a specific value,
  * then target field will react, depending of the implementation of the rule.
  */
-class Tracker_Rule {
+abstract class Tracker_Rule {
     const RULETYPE_HIDDEN       = 1;
     const RULETYPE_DISABLED     = 2;
     const RULETYPE_MANDATORY    = 3;
@@ -163,11 +163,12 @@ class Tracker_Rule {
         return $this;
     }
 
-    /**
-     *  @return bool 
-     */
+    /** @return bool */
     public function isUsedInRule($field_id) {
         return $this->source_field == $field_id || $this->target_field == $field_id;
     }
+
+    /** @return mixed */
+    public abstract function exportToSOAP();
 }
 ?>

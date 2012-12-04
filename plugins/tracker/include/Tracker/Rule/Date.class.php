@@ -46,6 +46,15 @@ class Tracker_Rule_Date extends Tracker_Rule {
         self::COMPARATOR_NOT_EQUALS,
     );
 
+    /** @return mixed */
+    public function exportToSOAP() {
+        return array(
+            'source_field_id' => $this->getSourceFieldId(),
+            'target_field_id' => $this->getTargetFieldId(),
+            'comparator'      => $this->getComparator(),
+        );
+    }
+
     /**
      *
      * @var string
