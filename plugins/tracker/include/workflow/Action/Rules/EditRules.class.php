@@ -63,11 +63,10 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $target_field_id = $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD);
 
         $fields_exist         = $source_field_id && $target_field_id;
-        $fields_are_different = $source_field_id != $target_field_id;
+        $fields_are_different = false;
 
-        if ($fields_exist && ! $fields_are_different) {
-            $error_msg = $GLOBALS['Language']->getText('workflow_admin', 'same_field');
-            $GLOBALS['Response']->addFeedback('error', $error_msg);
+        if ($fields_exist) {
+            $fields_are_different = $this->checkFieldsAreDifferent($source_field_id, $target_field_id);
         }
 
         if ($fields_exist) {
@@ -77,6 +76,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $exist_comparator = (bool)$this->getComparatorFromAddRequest($request);
 
         return $fields_exist && $fields_are_different && $exist_comparator && $fields_have_good_type;
+    }
+
+    private function checkFieldsAreDifferent($source_field, $target_field) {
+        $fields_are_different = $source_field != $target_field;
+        if (! $fields_are_different) {
+            $error_msg = $GLOBALS['Language']->getText('workflow_admin', 'same_field');
+            $GLOBALS['Response']->addFeedback('error', $error_msg);
+        }
+        return $fields_are_different;
     }
 
     private function getFieldIdFromAddRequest(Codendi_Request $request, $source_or_target) {
@@ -149,6 +157,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return $rule
             && $source_field
             && $target_field
+            && $this->checkFieldsAreDifferent($source_field, $target_field)
             && $comparator
             && (
                 $rule->getSourceField() != $source_field

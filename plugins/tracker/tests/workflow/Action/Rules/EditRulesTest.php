@@ -531,5 +531,19 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
         expect($this->date_factory)->save()->never();
         $this->processRequestAndExpectRedirection($request);
     }
+
+    public function itDoesNotUpdateTheRuleIfTheTargetAndSourceFieldsAreTheSame() {
+         $request = aRequest()->with(self::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                self::PARAMETER_SOURCE_FIELD => '22',
+                self::PARAMETER_TARGET_FIELD => '22',
+                self::PARAMETER_COMPARATOR   => '>'
+            ),
+        ))->build();
+
+        expect($this->date_factory)->save()->never();
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        $this->processRequestAndExpectRedirection($request);
+    }
 }
 ?>
