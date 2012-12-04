@@ -75,10 +75,13 @@ class Tracker_RulesManager {
                     ->searchByTrackerId($tracker_id);
     }
 
-    function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
-        $fact = $this->getRuleFactory();
-        return $fact->saveRuleValue($tracker_id, $source, $source_value, $target, $target_value);
-    }
+    /**
+     * Pretty sure this isn't used anywhere
+     */
+//    function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
+//        $fact = $this->getRuleFactory();
+//        return $fact->saveRuleValue($tracker_id, $source, $source_value, $target, $target_value);
+//    }
 
     function deleteRule($rule_id) {
         $fact = $this->getRuleFactory();

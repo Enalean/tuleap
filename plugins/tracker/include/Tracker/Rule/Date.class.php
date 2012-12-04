@@ -48,18 +48,6 @@ class Tracker_Rule_Date extends Tracker_Rule {
 
     /**
      *
-     * @var int
-     */
-    protected $source_field_id;
-
-    /**
-     *
-     * @var int
-     */
-    protected $target_field_id;
-
-    /**
-     *
      * @var string
      */
     protected $comparator;

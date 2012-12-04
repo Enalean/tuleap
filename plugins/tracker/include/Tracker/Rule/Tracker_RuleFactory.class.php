@@ -116,19 +116,30 @@ class Tracker_RuleFactory {
         return $rule;
     }
 
+    /**
+     * called by TrackerFactory::saveObject();
+     * @param array $rules
+     */
     public function saveObject(array $rules) {
-        foreach ($rules['list_rules'] as $list_rule) {
-            $this->getListFactory()->insert($list_rule);
+        if(isset($rules['list_rules'])) {
+            foreach ($rules['list_rules'] as $list_rule) {
+                $this->getListFactory()->insert($list_rule);
+            }
         }
         
-        foreach ($rules['date_rules'] as $date_rule) {
-            $this->getDateFactory()->insert($date_rule);
+        if(isset($rules['date_rules'])) {
+            foreach ($rules['date_rules'] as $date_rule) {
+                $this->getDateFactory()->insert($date_rule);
+            }
         }
     }
 
-    public function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
-        $this->rules_dao->create($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_VALUE, $target_value);
-    }
+    /**
+     * This should no longer be used
+     */
+//    public function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
+//        $this->rules_dao->create($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_VALUE, $target_value);
+//    }
 
     public function deleteRule($rule_id) {
         $deleted = $this->rules_dao->deleteByRuleId($rule_id);
@@ -165,62 +176,26 @@ class Tracker_RuleFactory {
 
     /**
      * Creates a Tracker_Semantic Object
+     * 
+     * Called by TrackerFactory::getInstanceFromXML()
      *
      * @param SimpleXMLElement $xml         containing the structure of the imported semantic
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param array            $xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Tracker          $tracker     to which the rule is attached
      *
      * @return Tracker_Rule_List The rule object, or null if error
      */
-    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
-        $rules = array(
-            'list_rules' => array(),
-            'date_rules' => array(),
-        );
-        
-        $list_rules = $xml->list_rules;
-        $date_rules = $xml->list_rules;
-        
-        foreach ($list_rules->rule as $xml_rule) {
-            $xml_source_field_attributes = $xml_rule->source_field->attributes();
-            $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
-
-            $xml_target_field_attributes = $xml_rule->target_field->attributes();
-            $target_field = $xmlMapping[(string)$xml_target_field_attributes['REF']];
-
-            $xml_source_value_attributes = $xml_rule->source_value->attributes();
-            $source_value = $xmlMapping[(string)$xml_source_value_attributes['REF']];
-
-            $xml_target_value_attributes = $xml_rule->target_value->attributes();
-            $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
-            
-            $rule_list = new Tracker_Rule_List();
-            $rule_list->setSourceValue($source_value)
-                    ->setTargetValue($target_value)
-                    ->setTrackerId($tracker->getId())
-                    ->setSourceFieldId($source_field)
-                    ->setTargetFieldId($target_field);
-
-            $rules['list_rules'][] = $rule_list;
+    public function getInstanceFromXML($xml, $xmlMapping, $tracker) {
+        $rules = array();
+        //test this better
+        if(property_exists($xml, 'list_rules')) {
+            $list_rules = $xml->list_rules;
+            $rules['list_rules'] = $this->generateListRulesArrayFromXml($list_rules, $xmlMapping, $tracker);
         }
         
-        foreach ($date_rules->rule as $xml_rule) {
-            $xml_source_field_attributes = $xml_rule->source_field->attributes();
-            $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
-
-            $xml_target_field_attributes = $xml_rule->target_field->attributes();
-            $target_field = $xmlMapping[(string)$xml_target_field_attributes['REF']];
-
-            $xml_comparator_attributes = $xml_rule->comparator->attributes();
-            $comparator = $xmlMapping[(string)$xml_source_value_attributes['type']];
-            
-            $rule_list = new Tracker_Rule_Date();
-            $rule_list->setComparator($comparator)
-                    ->setTrackerId($tracker->getId())
-                    ->setSourceFieldId($source_field)
-                    ->setTargetFieldId($target_field);
-
-            $rules['date_rules'][] = $rule_list;
+        if(property_exists($xml, 'date_rules')) {
+            $date_rules = $xml->date_rules;
+            $rules['date_rules'] = $this->generateDateRulesArrayFromXml($date_rules, $xmlMapping, $tracker);
         }
         
         return $rules;
@@ -350,5 +325,72 @@ class Tracker_RuleFactory {
         return $this;
     }
     
+    /**
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported semantic
+     * @param array            $xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param Tracker          $tracker     to which the rule is attached
+     * @return array of \Tracker_Rule_Date
+     */
+    private function generateDateRulesArrayFromXml($date_rules, $xmlMapping, $tracker) {
+        $rules = array();
+        
+        foreach ($date_rules->rule as $xml_rule) {
+            $xml_source_field_attributes = $xml_rule->source_field->attributes();
+            $source_field = $xmlMapping[(string) $xml_source_field_attributes['REF']];
+
+            $xml_target_field_attributes = $xml_rule->target_field->attributes();
+            $target_field = $xmlMapping[(string) $xml_target_field_attributes['REF']];
+
+            $xml_comparator_attributes = $xml_rule->comparator->attributes();
+            $comparator = $xml_comparator_attributes['type'];
+
+            $rule_list = new Tracker_Rule_Date();
+            $rule_list->setComparator($comparator)
+                    ->setTrackerId($tracker->getId())
+                    ->setSourceFieldId($source_field)
+                    ->setTargetFieldId($target_field);
+
+            $rules[] = $rule_list;
+        }
+        
+        return $rules;
+    }
+    
+    /**
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported semantic
+     * @param array            $xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param Tracker          $tracker     to which the rule is attached
+     * @return array of Tracker_Rule_List
+     */
+    private function generateListRulesArrayFromXml($list_rules, $xmlMapping, $tracker) {
+        $rules = array();
+        
+        foreach ($list_rules->rule as $xml_rule) {
+            $xml_source_field_attributes = $xml_rule->source_field->attributes();
+            $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
+
+            $xml_target_field_attributes = $xml_rule->target_field->attributes();
+            $target_field = $xmlMapping[(string)$xml_target_field_attributes['REF']];
+
+            $xml_source_value_attributes = $xml_rule->source_value->attributes();
+            $source_value = $xmlMapping[(string)$xml_source_value_attributes['REF']];
+
+            $xml_target_value_attributes = $xml_rule->target_value->attributes();
+            $target_value = $xmlMapping[(string)$xml_target_value_attributes['REF']];
+
+            $rule_list = new Tracker_Rule_List();
+            $rule_list->setSourceValue($source_value)
+                    ->setTargetValue($target_value)
+                    ->setTrackerId($tracker->getId())
+                    ->setSourceFieldId($source_field)
+                    ->setTargetFieldId($target_field);
+
+            $rules[] = $rule_list;
+        }
+        
+        return $rules;
+    }
 }
 ?>
