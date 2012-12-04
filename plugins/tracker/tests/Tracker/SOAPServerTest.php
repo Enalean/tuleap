@@ -21,7 +21,10 @@ require_once(dirname(__FILE__).'/../builders/all.php');
 require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
 class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
-
+    /**
+     * @var Tracker_SOAPServer
+     */
+    protected $server;
     protected $session_key           = 'zfsdfs65465';
     protected $tracker_id            = 1235;
     protected $unreadable_tracker_id = 5321;
@@ -360,4 +363,17 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
         ));
     }
 }
+
+class Tracker_SOAPServer_getTrackerReports_Test extends Tracker_SOAPServer_BaseTest {
+    
+    public function itRaisesAnExceptionWhenTheTrackerIsNotReadableByUser() {
+        $this->expectException('SoapFault');
+        $this->server->getTrackerReports($this->session_key, null, $this->unreadable_tracker_id);
+    }
+    
+    public function itReturnsOneDefaultReport() {
+        
+    }
+}
+
 ?>

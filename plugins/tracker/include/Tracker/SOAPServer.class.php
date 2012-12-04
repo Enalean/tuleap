@@ -45,6 +45,7 @@ define('delete_artifact_followup_fault','3023');
 define('get_tracker_factory_fault','3024');
 define('get_tracker_fault','3025');
 define('user_is_not_tracker_admin','3026');
+define('user_cannot_access_tracker','3027');
 
 class Tracker_SOAPServer {
     /**
@@ -488,6 +489,17 @@ class Tracker_SOAPServer {
 
     private function getTrackerWorkflow (Tracker $tracker) {
         return $tracker->getWorkflow()->exportToSOAP();
+    }
+
+    
+    public function getTrackerReports($session_key, $group_id, $tracker_id) {
+        $user      = $this->soap_user_manager->continueSession($session_key);
+        $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerReports');
+        if ($tracker->userCanView($user)) {
+            
+        } else {
+            throw new SoapFault(user_cannot_access_tracker, 'Permission denied: you cannot access this tracker');
+        }
     }
 
     /**

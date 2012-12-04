@@ -419,6 +419,33 @@ $GLOBALS['server']->wsdl->addComplexType(
        'workflow' => array('name'=>'workflow', 'type' => 'tns:TrackerWorkflow')
     )
 );
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerReport',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'report_id'    => array('name'=>'report_id',   'type' => 'xsd:int'),
+        'name'         => array('name'=>'name',        'type' => 'xsd:string'),
+        'description'  => array('name'=>'description', 'type' => 'xsd:string'),
+        'is_default'   => array('name'=>'is_default',  'type' => 'xsd:boolean'),
+        'user_id'      => array('name'=>'user_id',     'type' => 'xsd:int'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfTrackerReport',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerReport[]')),
+    'tns:TrackerReport'
+);
+
 //
 // Function definition
 //
@@ -540,6 +567,20 @@ $GLOBALS['server']->register(
     'rpc',
     'encoded',
     'Returns the tracker structure.'
+);
+
+$GLOBALS['server']->register(
+    'getTrackerReports',
+    array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'tracker_id'=>'xsd:int',
+    ),
+    array('return'=>'tns:ArrayOfTrackerReport'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getTrackerReports',
+    'rpc',
+    'encoded',
+    'Returns the reports the user can execute.'
 );
 
 /*$GLOBALS['server']->register(
