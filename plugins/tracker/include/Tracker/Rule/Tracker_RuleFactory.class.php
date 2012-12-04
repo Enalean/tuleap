@@ -119,16 +119,22 @@ class Tracker_RuleFactory {
     /**
      * called by TrackerFactory::saveObject();
      * @param array $rules
+     * @param Tracker $trackerDB
      */
-    public function saveObject(array $rules) {
+    public function saveObject(array $rules, Tracker $trackerDB) {
+        
         if(isset($rules['list_rules'])) {
             foreach ($rules['list_rules'] as $list_rule) {
+                /* @var $list_rule Tracker_Rule_List */
+                $list_rule->setTrackerId($trackerDB->getId());
                 $this->getListFactory()->insert($list_rule);
             }
         }
         
         if(isset($rules['date_rules'])) {
             foreach ($rules['date_rules'] as $date_rule) {
+                /* @var $list_rule Tracker_Rule_Date */
+                $date_rule->setTrackerId($trackerDB->getId());
                 $this->getDateFactory()->insert($date_rule);
             }
         }
@@ -185,7 +191,7 @@ class Tracker_RuleFactory {
      *
      * @return Tracker_Rule_List The rule object, or null if error
      */
-    public function getInstanceFromXML($xml, $xmlMapping, $tracker) {
+    public function getInstanceFromXML($xml, &$xmlMapping, $tracker) {
         $rules = array();
         //test this better
         if(property_exists($xml, 'list_rules')) {
@@ -197,7 +203,7 @@ class Tracker_RuleFactory {
             $date_rules = $xml->date_rules;
             $rules['date_rules'] = $this->generateDateRulesArrayFromXml($date_rules, $xmlMapping, $tracker);
         }
-        
+
         return $rules;
     }
 
@@ -332,7 +338,7 @@ class Tracker_RuleFactory {
      * @param Tracker          $tracker     to which the rule is attached
      * @return array of \Tracker_Rule_Date
      */
-    private function generateDateRulesArrayFromXml($date_rules, $xmlMapping, $tracker) {
+    private function generateDateRulesArrayFromXml($date_rules, &$xmlMapping, $tracker) {
         $rules = array();
         
         foreach ($date_rules->rule as $xml_rule) {
@@ -348,8 +354,8 @@ class Tracker_RuleFactory {
             $rule_list = new Tracker_Rule_Date();
             $rule_list->setComparator($comparator)
                     ->setTrackerId($tracker->getId())
-                    ->setSourceFieldId($source_field)
-                    ->setTargetFieldId($target_field);
+                    ->setSourceField($source_field)
+                    ->setTargetField($target_field);
 
             $rules[] = $rule_list;
         }
@@ -364,7 +370,7 @@ class Tracker_RuleFactory {
      * @param Tracker          $tracker     to which the rule is attached
      * @return array of Tracker_Rule_List
      */
-    private function generateListRulesArrayFromXml($list_rules, $xmlMapping, $tracker) {
+    private function generateListRulesArrayFromXml($list_rules, &$xmlMapping, $tracker) {
         $rules = array();
         
         foreach ($list_rules->rule as $xml_rule) {
@@ -384,9 +390,8 @@ class Tracker_RuleFactory {
             $rule_list->setSourceValue($source_value)
                     ->setTargetValue($target_value)
                     ->setTrackerId($tracker->getId())
-                    ->setSourceFieldId($source_field)
-                    ->setTargetFieldId($target_field);
-
+                    ->setSourceField($source_field)
+                    ->setTargetField($target_field);
             $rules[] = $rule_list;
         }
         

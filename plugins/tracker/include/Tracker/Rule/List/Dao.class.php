@@ -65,11 +65,21 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
     public function insert(Tracker_Rule_List $rule) {
         $rule_id         = $this->da->escapeInt($rule->getTrackerId());
         $rule_type       = $this->da->quoteSmart(Tracker_Rule::RULETYPE_VALUE);
-        $source_field_id = $this->da->escapeInt($rule->getSourceFieldId());
-        $source_value_id = $this->da->quoteSmart($rule->getSourceValue());
-        $target_field_id = $this->da->escapeInt($rule->getTargetFieldId());
-        $target_value_id = $this->da->quoteSmart($rule->getTargetValue());
         
+        $source_field_id = $this->da->escapeInt($rule->getSourceFieldId());
+        if($rule->getSourceValue() instanceof Tracker_FormElement_Field_List_Value) {
+            $source_value_id = $this->da->quoteSmart($rule->getSourceValue()->getId());
+        } else {
+            $source_value_id = $this->da->quoteSmart($rule->getSourceValue());
+        }
+        
+        $target_field_id = $this->da->escapeInt($rule->getTargetFieldId());
+        if($rule->getTargetValue() instanceof Tracker_FormElement_Field_List_Value) {
+            $target_value_id = $this->da->quoteSmart($rule->getTargetValue()->getId());
+        } else {
+            $target_value_id = $this->da->quoteSmart($rule->getTargetValue());
+        }
+
         $sql_insert_rule = "INSERT INTO tracker_rule (tracker_id, rule_type)
                                 VALUES ($rule_id, $rule_type)";
         

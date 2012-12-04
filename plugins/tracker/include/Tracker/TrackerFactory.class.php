@@ -783,6 +783,7 @@ class TrackerFactory {
                     echo implode(PHP_EOL, $output);
                     echo PHP_EOL;
                 }
+
             } else {
                 $tracker = $this->getInstanceFromXML($xml_element, $groupId, $name, $description, $itemname);
                 //Testing consistency of the imported tracker before updating database
@@ -799,6 +800,7 @@ class TrackerFactory {
                 }
             }
         }
+
         return $tracker;
     }
 

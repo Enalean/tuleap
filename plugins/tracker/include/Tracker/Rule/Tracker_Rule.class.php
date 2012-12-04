@@ -87,6 +87,9 @@ class Tracker_Rule {
      * @return int
      */
     public function getSourceFieldId() {
+        if($this->source_field_obj instanceof Tracker_FormElement_Field){
+            return $this->source_field_obj->getId();
+        }
         return $this->source_field;
     }
 
@@ -136,6 +139,9 @@ class Tracker_Rule {
      * @return int
      */
     public function getTargetFieldId() {
+        if($this->target_field_obj instanceof Tracker_FormElement_Field){
+            return $this->target_field_obj->getId();
+        }
         return $this->target_field;
     }
 
