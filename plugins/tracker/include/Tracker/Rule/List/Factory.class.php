@@ -151,13 +151,15 @@ class Tracker_Rule_List_Factory {
      */
     public function exportToXml($root, $xmlMapping, $form_element_factory, $tracker_id) {
         $rules = $this->searchByTrackerId($tracker_id);
+        $list_rules = $root->addChild('list_rules');
+        
         foreach ($rules as $rule) {
             $source_field = $form_element_factory->getFormElementById($rule->getSourceFieldId());
             $target_field = $form_element_factory->getFormElementById($rule->getTargetFieldId());
             $bf = new Tracker_FormElement_Field_List_BindFactory();
             //TODO: handle sb/msb bind to users and remove condition
             if ($bf->getType($source_field->getBind()) == 'static' &&  $bf->getType($target_field->getBind()) == 'static') {
-                $child = $root->addChild('list_rule');
+                $child = $list_rules->addChild('rule');
                 $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
                 $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
                 $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));

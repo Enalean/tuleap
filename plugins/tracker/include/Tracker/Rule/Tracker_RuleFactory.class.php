@@ -117,7 +117,7 @@ class Tracker_RuleFactory {
     }
 
     public function saveObject(array $rules, Tracker $tracker) {
-        foreach ($rules as $rule) {
+        foreach ($rules->list_rules as $rule) {
             $this->saveRuleValue($tracker->id, $rule->source_field->getId(), $rule->source_value->getId(), $rule->target_field->getId(), $rule->target_value->getId());
         }
     }

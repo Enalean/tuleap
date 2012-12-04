@@ -171,9 +171,10 @@ class Tracker_Rule_Date_Factory {
     }
     
     public function exportToXml($root, $xmlMapping, $tracker_id) {
+        $date_rules = $root->addChild('date_rules');
         $rules = $this->searchByTrackerId($tracker_id);
         foreach ($rules as $rule) {
-            $child = $root->addChild('date_rule');
+            $child = $date_rules->addChild('rule');
             $child->addChild('source_field')->addAttribute('REF', array_search($rule->getSourceFieldId(), $xmlMapping));
             $child->addChild('target_field')->addAttribute('REF', array_search($rule->getTargetFieldId(), $xmlMapping));
             $child->addChild('comparator')->addAttribute('type', $rule->getComparator());
