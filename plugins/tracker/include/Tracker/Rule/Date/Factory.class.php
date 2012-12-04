@@ -117,7 +117,12 @@ class Tracker_Rule_Date_Factory {
     }
     
     public function save(Tracker_Rule_Date $rule) {
-        $this->dao;
+        return $this->dao->save(
+            $rule->getId(),
+            $rule->getSourceField()->getId(),
+            $rule->getTargetField()->getId(),
+            $rule->getComparator()
+        );
     }
 
     /**
