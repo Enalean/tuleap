@@ -30,6 +30,7 @@ Mock::generate('Layout');
 
 require_once dirname(__FILE__).'/../simpletest/common/user/UserTestBuilder.php';
 require_once dirname(__FILE__).'/../simpletest/common/include/builders/aRequest.php';
+require_once dirname(__FILE__).'/../simpletest/common/project/aMockProject.php';
 
 require_once 'MockBuilder.php';
 

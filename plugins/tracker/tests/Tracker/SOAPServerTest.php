@@ -58,6 +58,9 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         'last_update_date'  => '',
         'value'             => array(),
     );
+    protected $artifact_factory;
+    protected $formelement_factory;
+    protected $report_factory;
 
     public function setUp() {
         parent::setUp();
@@ -70,14 +73,14 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $project_manager     = mock('ProjectManager');
         $permissions_manager = mock('PermissionsManager');
 
-        $artifact_factory    = mock('Tracker_ArtifactFactory');
-        $this->setUpArtifacts($artifact_factory);
+        $this->artifact_factory    = mock('Tracker_ArtifactFactory');
+        $this->setUpArtifacts($this->artifact_factory);
 
         $dao = mock('Tracker_ReportDao');
         $this->setUpArtifactResults($dao);
 
-        $formelement_factory = mock('Tracker_FormElementFactory');
-        $this->setUpFields($formelement_factory);
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        $this->setUpFields($this->formelement_factory);
 
         $tracker_factory = mock('TrackerFactory');
         $this->setUpTrackers($tracker_factory);
@@ -93,8 +96,8 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
             $tracker_factory,
             $permissions_manager,
             $dao,
-            $formelement_factory,
-            $artifact_factory,
+            $this->formelement_factory,
+            $this->artifact_factory,
             $this->report_factory
         );
     }
@@ -218,7 +221,7 @@ class FromFragmentsExpectation extends SimpleExpectation {
         }
     }
 }
-
+/*
 class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
 
     public function itRaisesASoapFaultIfTheTrackerIsNotReadableByTheUser() {
@@ -463,4 +466,57 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         ));
     }
 }
+*/
+class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTest {
+
+    public function itRaisesAnExceptionIfTrackerIsNotReadable() {
+        $artifact_id = 55;
+        $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->unreadable_tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
+        $this->expectException('SoapFault');
+        $this->server->getFileFieldInfo($this->session_key, $artifact_id, 0);
+    }
+
+    public function itRaisesAnExceptionIfFieldIsNotReadable() {
+        $artifact_id = 55;
+        $artifact    = anArtifact()->withId($artifact_id)->withTracker($this->tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact);
+
+        $field_id = 356;
+        $field = aMockField()->build();
+        stub($field)->userCanRead()->returns(false);
+        stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
+
+        $this->expectException('SoapFault');
+        $this->server->getFileFieldInfo($this->session_key, $artifact_id, $field_id);
+    }
+
+    public function itRaisesAnExceptionIfFieldIsNotFile() {
+        $artifact_id = 55;
+        $artifact    = anArtifact()->withId($artifact_id)->withTracker($this->tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact);
+
+        $field_id = 356;
+        $field = aMockField()->build();
+        stub($field)->userCanRead()->returns(true);
+        stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
+
+        $this->expectException('SoapFault');
+        $this->server->getFileFieldInfo($this->session_key, $artifact_id, $field_id);
+    }
+
+    /*public function itDoesStuffWhenThereAreNoErrors() {
+        $artifact_id = 55;
+        $artifact    = anArtifact()->withId($artifact_id)->withTracker($this->tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact);
+
+        $field_id = 356;
+        $field = mock('Tracker_FormElement_Field_File');
+        stub($field)->userCanRead()->returns(true);
+        stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
+
+        $this->server->getFileFieldInfo($this->session_key, $artifact_id, $field_id);
+    }*/
+}
+
 ?>

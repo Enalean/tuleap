@@ -293,16 +293,18 @@ class Tracker_SOAPServer {
     public function getArtifact($session_key, $group_id, $tracker_id, $artifact_id) {
         $current_user = $this->soap_user_manager->continueSession($session_key);
         $artifact     = $this->getArtifactById($artifact_id, 'getArtifact');
+        $this->checkUserCanViewArtifact($artifact, $current_user);
+        return $this->artifact_to_soap($current_user, $artifact);
+    }
 
+    private function checkUserCanViewArtifact(Tracker_Artifact $artifact, User $user) {
         $tracker = $artifact->getTracker();
         if (!$tracker) {
             throw new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
         }
-        $group_id = $tracker->getProject()->getGroupId();
-        $this->getProjectById($group_id, 'getArtifact');
+        $this->getProjectById($tracker->getProject()->getGroupId(), 'getArtifact');
 
-        $this->checkUserCanViewTracker($tracker, $current_user);
-        return $this->artifact_to_soap($current_user, $artifact);
+        $this->checkUserCanViewTracker($tracker, $user);
     }
 
     /**
@@ -547,6 +549,24 @@ class Tracker_SOAPServer {
             $soap_tracker_reports[] = $report->exportToSoap();
         }
         return $soap_tracker_reports;
+    }
+
+    public function getFileFieldInfo($session_key, $artifact_id, $field_id, $filename) {
+        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $artifact     = $this->getArtifactById($artifact_id, 'getFileFieldInfo');
+        $tracker      = $artifact->getTracker();
+        $this->checkUserCanViewTracker($tracker, $current_user);
+
+        $field = $this->formelement_factory->getFormElementById($field_id);
+        if ($field->userCanRead($current_user) && $field instanceof Tracker_FormElement_Field_File) {
+
+        } else {
+            throw new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+        }
+    }
+
+    public function getFileFieldDataChunk() {
+
     }
 
     /**
