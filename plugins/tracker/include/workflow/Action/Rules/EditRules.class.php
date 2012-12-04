@@ -135,25 +135,28 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function updateARule($rule_id, array $new_values) {
-        if (! isset($new_values[self::PARAMETER_TARGET_FIELD])) {
-            return;
-        }
-        if (! isset($new_values[self::PARAMETER_SOURCE_FIELD])) {
-            return;
-        }
         $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
-        if (! $rule) {
-            return;
-        }
-        $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_SOURCE_FIELD]);
-        $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_TARGET_FIELD]);
-        $comparator   = $this->getComparatorFromRequestParameter($new_values);
-        if ($source_field && $target_field && $comparator) {
+        list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($new_values);
+        if ($rule && $source_field && $target_field && $comparator) {
             $rule->setSourceField($source_field);
             $rule->setTargetField($target_field);
             $rule->setComparator($comparator);
             $this->rule_date_factory->save($rule);
         }
+    }
+
+    /** @return array (source_field, target_field, comparator) */
+    private function getFieldsAndComparatorFromRequestParameter(array $param) {
+        $source_field = null;
+        $target_field = null;
+        if (isset($param[self::PARAMETER_SOURCE_FIELD])) {
+            $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$param[self::PARAMETER_SOURCE_FIELD]);
+        }
+        if (isset($param[self::PARAMETER_TARGET_FIELD])) {
+            $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$param[self::PARAMETER_TARGET_FIELD]);
+        }
+        $comparator = $this->getComparatorFromRequestParameter($param);
+        return array($source_field, $target_field, $comparator);
     }
 
     private function removeRules(Codendi_Request $request) {
@@ -174,11 +177,13 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function addRule(Codendi_Request $request) {
         if ($this->shouldAddRule($request)) {
+            $add_values = $request->get(self::PARAMETER_ADD_RULE);
+            list($source_field, $target_field, $comparator) = $this->getFieldsAndComparatorFromRequestParameter($add_values);
             $this->rule_date_factory->create(
-                $this->getFieldIdFromAddRequest($request, self::PARAMETER_SOURCE_FIELD),
-                $this->getFieldIdFromAddRequest($request, self::PARAMETER_TARGET_FIELD),
+                $source_field->getId(),
+                $target_field->getId(),
                 $this->tracker->getId(),
-                $this->getComparatorFromAddRequest($request)
+                $comparator
             );
             $create_msg = $GLOBALS['Language']->getText('workflow_admin', 'created_rule');
             $GLOBALS['Response']->addFeedback('info', $create_msg);
