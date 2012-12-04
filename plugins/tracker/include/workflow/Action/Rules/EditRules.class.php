@@ -237,19 +237,27 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function displayRules() {
         $fields = $this->getListOfDateFieldLabels();
         $rules  = $this->getRules();
-        echo '<ul class="workflow_existing_rules">';
+        echo '<table class="workflow_existing_rules">';
+        echo '<tbody>';
         foreach ($rules as $rule) {
             $name_prefix = self::PARAMETER_UPDATE_RULES .'['. $rule->getId() .']';
-            echo '<li class="workflow_rule_action">';
+            echo '<tr>';
+            echo '<td>';
+            echo '<div class="workflow_rule">';
             $this->displayFieldSelector($fields, $name_prefix .'['. self::PARAMETER_SOURCE_FIELD .']', $rule->getSourceField()->getId());
             $this->displayComparatorSelector($name_prefix .'['. self::PARAMETER_COMPARATOR .']', $rule->getComparator());
             $this->displayFieldSelector($fields, $name_prefix .'['. self::PARAMETER_TARGET_FIELD .']', $rule->getTargetField()->getId());
+            echo '</div>';
+            echo '</td>';
+            echo '<td>';
             echo '<label class="pc_checkbox pc_check_unchecked" title="Remove the rule">&nbsp;';
             echo '<input type="checkbox" name="'. self::PARAMETER_REMOVE_RULES .'[]" value="'.$rule->getId().'" ></input>';
             echo '</label>';
-            echo '</li>';
+            echo '</td>';
+            echo '</tr>';
         }
-        echo '</ul>';
+        echo '</tbody>';
+        echo '</table>';
     }
 
     private function getRules() {
