@@ -135,17 +135,20 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     }
 
     private function updateARule($rule_id, array $new_values) {
-        if (!isset($new_values[self::PARAMETER_TARGET_FIELD])) {
+        if (! isset($new_values[self::PARAMETER_TARGET_FIELD])) {
             return;
         }
-        if (!isset($new_values[self::PARAMETER_SOURCE_FIELD])) {
+        if (! isset($new_values[self::PARAMETER_SOURCE_FIELD])) {
+            return;
+        }
+        $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
+        if (! $rule) {
             return;
         }
         $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_SOURCE_FIELD]);
         $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_TARGET_FIELD]);
         $comparator   = $this->getComparatorFromRequestParameter($new_values);
         if ($source_field && $target_field && $comparator) {
-            $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
             $rule->setSourceField($source_field);
             $rule->setTargetField($target_field);
             $rule->setComparator($comparator);
