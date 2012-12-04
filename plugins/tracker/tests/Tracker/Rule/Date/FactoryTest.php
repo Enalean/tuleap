@@ -37,8 +37,16 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     /** @var Tracker_FormElementFactory */
     protected $element_factory;
 
+    /** @var int */
+    protected $tracker_id = 999;
+
+    /** @var Tracker */
+    protected $tracker;
+
     public function setUp() {
         parent::setUp();
+
+        $this->tracker = stub('Tracker')->getId()->returns($this->tracker_id);
 
         $this->date_rule_dao = mock('Tracker_Rule_Date_Dao');
         $this->source_field = mock('Tracker_FormElement_Field_Date');
@@ -59,14 +67,13 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
 
         $source_field_id = $this->source_field_id;
         $target_field_id = 465;
-        $tracker_id      = 999;
         $comparator      = Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
 
         $date_rule = $this->date_rule_factory
-                ->create($source_field_id, $target_field_id, $tracker_id, $comparator);
+                ->create($source_field_id, $target_field_id, $this->tracker_id, $comparator);
 
         $this->assertIsA($date_rule, 'Tracker_Rule_Date');
-        $this->assertEqual($date_rule->getTrackerId(), $tracker_id);
+        $this->assertEqual($date_rule->getTrackerId(), $this->tracker_id);
         $this->assertEqual($date_rule->getTargetFieldId(), $target_field_id);
         $this->assertEqual($date_rule->getSourceFieldId(), $source_field_id);
         $this->assertEqual($date_rule->getComparator(), $comparator);
@@ -76,7 +83,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao() {
         stub($this->date_rule_dao)->searchById()->returnsEmptyDar();
         $date_rule = $this->date_rule_factory
-                ->searchById(20);
+                ->getRule($this->tracker, 20);
 
         $this->assertNull($date_rule);
     }
@@ -87,12 +94,13 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
             'source_field_id'   => $this->source_field_id,
             'target_field_id'   => 465,
-            'tracker_id'        => 999,
+            'tracker_id'        => $this->tracker_id,
         );
 
-        stub($this->date_rule_dao)->searchById(20)->returnsDar($data);
+        stub($this->date_rule_dao)->searchById($this->tracker_id, 20)->returnsDar($data);
+        stub($this->date_rule_dao)->searchById()->returnsEmptyDar();
         $date_rule = $this->date_rule_factory
-                ->searchById(20);
+                ->getRule($this->tracker, 20);
 
         $this->assertNotNull($date_rule);
     }
@@ -100,7 +108,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao() {
         stub($this->date_rule_dao)->searchByTrackerId()->returnsEmptyDar();
         $date_rule = $this->date_rule_factory
-                ->searchByTrackerId(999);
+                ->searchByTrackerId($this->tracker_id);
 
         $this->assertTrue(is_array($date_rule));
         $this->assertCount($date_rule, 0);
@@ -112,13 +120,13 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
             'source_field_id'   => $this->source_field_id,
             'target_field_id'   => 465,
-            'tracker_id'        => 999,
+            'tracker_id'        => $this->tracker_id,
             'id'                => 20
         );
 
         stub($this->date_rule_dao)->searchByTrackerId()->returnsDar($data);
         $date_rules = $this->date_rule_factory
-                ->searchByTrackerId(999);
+                ->searchByTrackerId($this->tracker_id);
 
         $this->assertNotNull($date_rules);
         $this->assertIsA($date_rules, 'array');
@@ -135,10 +143,9 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     }
 
     public function itDelegatesDeletionToDao() {
-        $tracker_id = '123';
         $rule_id    = '456';
-        expect($this->date_rule_dao)->deleteById($tracker_id, $rule_id)->once();
-        $this->date_rule_factory->deleteById($tracker_id, $rule_id);
+        expect($this->date_rule_dao)->deleteById($this->tracker_id, $rule_id)->once();
+        $this->date_rule_factory->deleteById($this->tracker_id, $rule_id);
     }
     
     public function testDuplicateDoesNotInsertWhenNoRulesExist() {

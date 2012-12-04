@@ -58,8 +58,8 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $this->rule_2       = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $this->actual_end_date);
         $this->layout       = mock('Tracker_IDisplayTrackerLayout');
         $this->user         = mock('User');
-        stub($this->date_factory)->searchById(123)->returns($this->rule_1);
-        stub($this->date_factory)->searchById(456)->returns($this->rule_2);
+        stub($this->date_factory)->getRule($this->tracker, 123)->returns($this->rule_1);
+        stub($this->date_factory)->getRule($this->tracker, 456)->returns($this->rule_2);
         stub($this->date_factory)->searchByTrackerId($this->tracker_id)->returns(array($this->rule_1, $this->rule_2));
         stub($this->date_factory)->getUsedDateFields()->returns(
             array(
@@ -103,6 +103,9 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $content = ob_get_clean();
         $this->assertNotEqual('', $content);
     }
+}
+
+class Tracker_Workflow_Action_Rules_EditRules_noActionsTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
     public function itDoesNotDisplayErrorsIfNoActions() {
         $request = aRequest()->build();

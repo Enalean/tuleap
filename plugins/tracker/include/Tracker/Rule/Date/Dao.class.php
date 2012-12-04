@@ -33,13 +33,15 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
      * Searches Tracker_Rule by Id
      * @return DataAccessResult
      */
-    public function searchById($id) {
-        $tracker_rule_id = $this->da->escapeInt($id);
+    public function searchById($tracker_id, $id) {
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $id         = $this->da->escapeInt($id);
         $sql = "SELECT *
                 FROM tracker_rule_date
                     JOIN tracker_rule
                     ON (id = tracker_rule_id)
-                WHERE tracker_rule.id = $tracker_rule_id";
+                WHERE tracker_rule.id = $id
+                  AND tracker_rule.tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
 
