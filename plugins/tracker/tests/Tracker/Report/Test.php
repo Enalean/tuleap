@@ -46,7 +46,7 @@ class Tracker_Report_Test extends TuleapTestCase {
                     $updated_by,
                     $updated_at
         );
- 
+
         $this->assertEqual($report->exportToSoap(), array(
            'id' => $report_id,
            'name' => $name,

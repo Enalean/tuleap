@@ -88,7 +88,7 @@ class Tracker_SOAPServer {
      * @var Tracker_ReportFactory
      */
     private $report_factory;
-    
+
     public function __construct(
             SOAP_UserManager $soap_user_manager,
             ProjectManager $project_manager,
