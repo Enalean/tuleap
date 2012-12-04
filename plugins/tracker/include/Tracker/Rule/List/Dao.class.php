@@ -34,12 +34,12 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * @return DataAccessResult | false
      */
     public function searchById($id) {
-        $sql = sprintf("SELECT *
-                        FROM tracker_rule_list
-                            JOIN tracker_rule
-                            ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule.id = %s",
-				$this->da->quoteSmart($id));
+        $rule_id = $this->da->escapeInt($id);
+        $sql = "SELECT *
+                FROM tracker_rule_list
+                    JOIN tracker_rule
+                    ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
+                WHERE tracker_rule.id = $rule_id";
         return $this->retrieve($sql);
     }
 
@@ -48,16 +48,12 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * @return DataAccessResult
      */
     public function searchByTrackerId($tracker_id) {
-        /*
-         * @todo refactor to use quoteInt but not sprintf
-         */
-        
-        $sql = sprintf("SELECT *
-                        FROM tracker_rule 
-                            JOIN tracker_rule_list
-                            ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
-                        WHERE tracker_rule.tracker_id = %s",
-				$this->da->quoteSmart($tracker_id));
+        $tracker_id = $this->da->escapeInt($tracker_id);
+        $sql = "SELECT *
+                FROM tracker_rule 
+                    JOIN tracker_rule_list
+                    ON (tracker_rule.id = tracker_rule_list.tracker_rule_id)
+                WHERE tracker_rule.tracker_id = $tracker_id";
         return $this->retrieve($sql);
     }
 
@@ -67,24 +63,34 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * @return int The ID of the saved tracker_rule
      */
     public function insert(Tracker_Rule_List $rule) {
+        $rule_id         = $this->da->escapeInt($rule->getTracker()->getId());
+        $rule_type       = $this->da->quoteSmart(Tracker_Rule::RULETYPE_VALUE);
+        $source_field_id = $this->da->escapeInt($rule->getSourceFieldId());
+        $source_value_id = $this->da->quoteSmart($rule->getSourceValue());
+        $target_field_id = $this->da->escapeInt($rule->getTargetFieldId());
+        $target_value_id = $this->da->quoteSmart($rule->getTargetValue());
+        
+        $sql_insert_rule = "INSERT INTO tracker_rule (tracker_id, rule_type)
+                                VALUES ($rule_id, $rule_type)";
+        
         $this->startTransaction();
+        
         try{
-            $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
-                                VALUES (%s, %s)",
-                                $this->da->quoteSmart($rule->getTracker()->getId()),
-                                $this->da->quoteSmart(Tracker_Rule::RULETYPE_DATE)
-                               );
-
             $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
-            $sql = sprintf("INSERT INTO tracker_rule_list (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
-                            VALUES (%s, %s, %s, %s, %s)",
-                            $tracker_rule_id,
-                            $this->da->quoteSmart($rule->getSourceFieldId()),
-                            $this->da->quoteSmart($rule->getSourceValue()),
-                            $this->da->quoteSmart($rule->getTargetFieldId()),
-                            $this->da->quoteSmart($rule->getTargetValue())
-                    );
+            $sql = "INSERT INTO tracker_rule_list (
+                        tracker_rule_id, 
+                        source_field_id, 
+                        source_value_id, 
+                        target_field_id, 
+                        target_value_id
+                        )
+                    VALUES (
+                        $tracker_rule_id, 
+                        $source_field_id, 
+                        $source_value_id, 
+                        $target_field_id, 
+                        $target_value_id)";
             $this->retrieve($sql);
         } catch (Exception $e) {
             $this->rollBack();
@@ -101,23 +107,40 @@ class Tracker_Rule_List_Dao extends DataAccessObject {
      * @return true or id(auto_increment) if there is no error
      */
     public function create($tracker_id, $source_field_id, $source_value_id, $target_field_id, $target_value_id) {
-        $rule_type = Tracker_Rule::RULETYPE_VALUE;
-        $sql_insert_rule = sprintf("INSERT INTO tracker_rule (tracker_id, rule_type)
-                            VALUES (%s, %s)",
-                            $this->da->quoteSmart($tracker_id),
-                            $rule_type
-                           );
+        $rule_type       = Tracker_Rule::RULETYPE_VALUE;
+        $tracker_id      = $this->da->escapeInt($tracker_id);
+        $source_field_id = $this->da->escapeInt($source_field_id);
+        $source_value_id = $this->da->escapeInt($source_value_id);
+        $target_field_id = $this->da->escapeInt($target_field_id);
+        $target_value_id = $this->da->escapeInt($target_value_id);
+        
+        $sql_insert_rule = "INSERT INTO tracker_rule (tracker_id, rule_type)
+                            VALUES ($tracker_id, $rule_type)";
 
-        $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
+        try{
+            $tracker_rule_id = $this->updateAndGetLastId($sql_insert_rule);
 
-        $sql = sprintf("INSERT INTO tracker_rule_list (tracker_rule_id, source_field_id, source_value_id, target_field_id, target_value_id)
-                        VALUES (%s, %s, %s, %s, %s)",
-                        $tracker_rule_id,
-                        $this->da->quoteSmart($source_field_id),
-                        $this->da->quoteSmart($source_value_id),
-                        $this->da->quoteSmart($target_field_id),
-                        $this->da->quoteSmart($target_value_id));
-        return $this->retrieve($sql);
+            $sql = "INSERT INTO tracker_rule_list (
+                        tracker_rule_id, 
+                        source_field_id, 
+                        source_value_id, 
+                        target_field_id, 
+                        target_value_id)
+                    VALUES (
+                        $tracker_rule_id, 
+                        $source_field_id, 
+                        $source_value_id, 
+                        $target_field_id, 
+                        $target_value_id)";
+            
+            $retrieve = $this->retrieve($sql);
+        } catch (Exception $e) {
+            $this->rollBack();
+            throw $e;
+        }
+        
+        $this->commit();
+        return $retrieve;
     }
 }
 ?>

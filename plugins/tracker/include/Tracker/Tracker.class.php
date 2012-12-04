@@ -2328,7 +2328,7 @@ EOS;
         $child = $xmlElem->addChild('semantics');
         $tsm->exportToXML($child, $xmlMapping);
         
-        //field dependencies
+        // rules
         $trm = $this->getRulesManager();
         $child = $xmlElem->addChild('dependencies');
         $trm->exportToXML($child, $xmlMapping);
