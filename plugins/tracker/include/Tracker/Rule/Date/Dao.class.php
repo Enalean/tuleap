@@ -108,5 +108,20 @@ class Tracker_Rule_Date_Dao extends DataAccessObject {
             return $this->update($sql);
         }
     }
+
+    public function save($id, $source_field_id, $target_field_id, $comparator) {
+        $id              = $this->da->escapeInt($id);
+        $source_field_id = $this->da->escapeInt($source_field_id);
+        $target_field_id = $this->da->escapeInt($target_field_id);
+        $comparator      = $this->da->quoteSmart($comparator);
+
+        $sql = "UPDATE tracker_rule_date
+                SET source_field_id = $source_field_id,
+                    target_field_id = $target_field_id,
+                    comparator      = $comparator
+                WHERE tracker_rule_id = $id";
+
+        return $this->update($sql);
+    }
 }
 ?>

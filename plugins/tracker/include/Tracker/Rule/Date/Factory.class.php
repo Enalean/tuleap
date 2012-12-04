@@ -111,7 +111,12 @@ class Tracker_Rule_Date_Factory {
 
     /** @return bool true if successfuly updated */
     public function save(Tracker_Rule_Date $rule) {
-        die('va mourir');
+        return $this->dao->save(
+            $rule->getId(),
+            $rule->getSourceField()->getId(),
+            $rule->getTargetField()->getId(),
+            $rule->getComparator()
+        );
     }
 
     /**

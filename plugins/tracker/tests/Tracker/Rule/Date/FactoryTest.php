@@ -27,6 +27,7 @@ require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/Date/Factory.c
 class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
 
     protected $source_field_id = 46345;
+    protected $target_field_id = 465;
 
     /** @var Tracker_Rule_Date_Dao */
     protected $date_rule_dao;
@@ -65,17 +66,19 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     public function testCreateRuleDateGeneratesANewObjectThatContainsAllValuesPassed() {
         stub($this->date_rule_dao)->insert()->returns(20);
 
-        $source_field_id = $this->source_field_id;
-        $target_field_id = 465;
-        $comparator      = Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
+        $comparator = Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
 
-        $date_rule = $this->date_rule_factory
-                ->create($source_field_id, $target_field_id, $this->tracker_id, $comparator);
+        $date_rule = $this->date_rule_factory->create(
+            $this->source_field_id,
+            $this->target_field_id,
+            $this->tracker_id,
+            $comparator
+        );
 
         $this->assertIsA($date_rule, 'Tracker_Rule_Date');
         $this->assertEqual($date_rule->getTrackerId(), $this->tracker_id);
-        $this->assertEqual($date_rule->getTargetFieldId(), $target_field_id);
-        $this->assertEqual($date_rule->getSourceFieldId(), $source_field_id);
+        $this->assertEqual($date_rule->getTargetFieldId(), $this->target_field_id);
+        $this->assertEqual($date_rule->getSourceFieldId(), $this->source_field_id);
         $this->assertEqual($date_rule->getComparator(), $comparator);
         $this->assertEqual($date_rule->getId(), 20);
     }
@@ -93,7 +96,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
             'id'                => 20,
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
             'source_field_id'   => $this->source_field_id,
-            'target_field_id'   => 465,
+            'target_field_id'   => $this->target_field_id,
             'tracker_id'        => $this->tracker_id,
         );
 
@@ -119,7 +122,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $data = array(
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
             'source_field_id'   => $this->source_field_id,
-            'target_field_id'   => 465,
+            'target_field_id'   => $this->target_field_id,
             'tracker_id'        => $this->tracker_id,
             'id'                => 20
         );
@@ -259,6 +262,19 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         expect($this->element_factory)->getUsedDateFieldById($tracker, $this->source_field_id)->once()->returns($this->source_field);
         $this->assertEqual($this->source_field, $this->date_rule_factory->getUsedDateFieldById($tracker, $this->source_field_id));
 
+    }
+
+    public function itDelegatesSaveToDao() {
+        $id   = 20;
+        $rule = new Tracker_Rule_Date();
+        $rule->setId($id);
+        $rule->setSourceField($this->source_field);
+        $rule->setComparator('>');
+        $rule->setTargetField($this->target_field);
+
+        stub($this->date_rule_dao)->save($id, $this->source_field_id, $this->target_field_id, '>')->once()->returns(true);
+        $success = $this->date_rule_factory->save($rule);
+        $this->assertTrue($success);
     }
 }
 ?>
