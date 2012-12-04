@@ -105,25 +105,30 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         if ($this->shouldAddUpdateOrDeleteRules($request)) {
             // Verify CSRF Protection
             $this->token->check();
-            $this->updateRules($request);
+            $this->addUpdateOrDeleteRules($request);
             $GLOBALS['Response']->redirect($this->url_query);
         } else {
             $this->displayPane($layout);
         }
     }
 
+    private function addUpdateOrDeleteRules(Codendi_Request $request) {
+        $this->updateRules($request);
+        $this->removeRules($request);
+        $this->addRule($request);
+    }
+
     private function updateRules(Codendi_Request $request) {
         $rules_to_update = $request->get(self::PARAMETER_UPDATE_RULES);
         if (is_array($rules_to_update)) {
-            list($rule_id, $params) = each($rules_to_update);
-            $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
-            $rule->setSourceFieldId((int)$params[self::PARAMETER_SOURCE_FIELD]);
-            $rule->setTargetFieldId((int)$params[self::PARAMETER_TARGET_FIELD]);
-            $rule->setComparator($params[self::PARAMETER_COMPARATOR]);
-            $this->rule_date_factory->save($rule);
+            foreach ($rules_to_update as $rule_id => $params) {
+                $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
+                $rule->setSourceFieldId((int)$params[self::PARAMETER_SOURCE_FIELD]);
+                $rule->setTargetFieldId((int)$params[self::PARAMETER_TARGET_FIELD]);
+                $rule->setComparator($params[self::PARAMETER_COMPARATOR]);
+                $this->rule_date_factory->save($rule);
+            }
         }
-        $this->removeRules($request);
-        $this->addRule($request);
     }
 
     private function removeRules(Codendi_Request $request) {

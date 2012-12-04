@@ -358,23 +358,56 @@ class Tracker_Workflow_Action_Rules_EditRules_addRuleTest extends Tracker_Workfl
 
 class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Workflow_Action_Rules_EditRules_processTest {
 
+    private $rule_42_id = 42;
+    private $rule_42;
+    private $rule_66_id = 66;
+    private $rule_66;
+
+    public function setUp() {
+        parent::setUp();
+        $this->rule_42 = mock('Tracker_Rule_Date');
+        stub($this->rule_42)->getId()->returns($this->rule_42_id);
+        stub($this->date_factory)->getRule($this->tracker, $this->rule_42_id)->returns($this->rule_42);
+
+        $this->rule_66 = mock('Tracker_Rule_Date');
+        stub($this->rule_66)->getId()->returns($this->rule_66_id);
+        stub($this->date_factory)->getRule($this->tracker, $this->rule_66_id)->returns($this->rule_66);
+    }
+
     public function itUpdatesARule() {
-        $rule_id = 42;
-        $rule_42 = mock('Tracker_Rule_Date');
-        stub($rule_42)->getId()->returns($rule_id);
-        stub($this->date_factory)->getRule($this->tracker, $rule_id)->returns($rule_42);
         $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES, array(
-            "$rule_id" => array(
+            "$this->rule_42_id" => array(
                 Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
                 Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
                 Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
             ),
         ))->build();
 
-        expect($rule_42)->setSourceFieldId(44)->once();
-        expect($rule_42)->setTargetFieldId(22)->once();
-        expect($rule_42)->setComparator('>')->once();
-        expect($this->date_factory)->save($rule_42)->once();
+        expect($this->rule_42)->setSourceFieldId(44)->once();
+        expect($this->rule_42)->setTargetFieldId(22)->once();
+        expect($this->rule_42)->setComparator('>')->once();
+        expect($this->date_factory)->save($this->rule_42)->once();
+        $this->processRequestAndExpectRedirection($request);
+    }
+
+    public function itUpdatesMoreThanOneRule() {
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+            ),
+            "$this->rule_66_id" => array(
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '22',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '44',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '<'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setSourceFieldId(44)->once();
+        expect($this->rule_66)->setSourceFieldId(22)->once();
+        expect($this->date_factory)->save($this->rule_42)->at(0);
+        expect($this->date_factory)->save($this->rule_66)->at(1);
         $this->processRequestAndExpectRedirection($request);
     }
 }
