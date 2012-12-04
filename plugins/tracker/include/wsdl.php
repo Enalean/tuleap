@@ -99,6 +99,34 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
+    'FieldValueFileInfo',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'id'           => array('type' => 'xsd:string'),
+        'submitted_by' => array('type' => 'xsd:int'),
+        'description'  => array('type' => 'xsd:string'),
+        'filename'     => array('type' => 'xsd:string'),
+        'filesize'     => array('type' => 'xsd:int'),
+        'filetype'     => array('type' => 'xsd:string'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'FieldValue',
+    'complexType',
+    'struct',
+    'choice',
+    '',
+    array(
+        'value'        => array('type' => 'xsd:string'),
+        'file_info'    => array('type' => 'tns:FieldValueFileInfo')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
     'ArtifactFieldValue',
     'complexType',
     'struct',
@@ -107,7 +135,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(
         'field_name' => array('name' => 'field_name', 'type' => 'xsd:string'),
         'field_label' => array('name' => 'field_label', 'type' => 'xsd:string'),
-        'field_value' => array('name' => 'field_value', 'type' => 'xsd:string')
+        'field_value' => array('name' => 'field_value', 'type' => 'tns:FieldValue')
     )
 );
 
