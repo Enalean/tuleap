@@ -447,5 +447,19 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
         expect($this->date_factory)->save($this->rule_42)->never();
         $this->processRequestAndExpectRedirection($request);
     }
+
+    public function itDoesNotUpdateTheRuleIfTheNewComparatorIsNotValid() {
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '44',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '%invalid_comparator%'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setComparator()->never();
+        expect($this->date_factory)->save($this->rule_42)->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
 }
 ?>

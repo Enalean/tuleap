@@ -88,9 +88,15 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function getComparatorFromAddRequest(Codendi_Request $request) {
         $add = $request->get(self::PARAMETER_ADD_RULE);
+        if (is_array($add)) {
+            return $this->getComparatorFromRequestParameter($add);
+        }
+    }
+
+    private function getComparatorFromRequestParameter(array $param) {
         $rule = new Rule_WhiteList(Tracker_Rule_Date::$allowed_comparators);
-        if (is_array($add) && isset($add[self::PARAMETER_COMPARATOR]) && $rule->isValid($add[self::PARAMETER_COMPARATOR])) {
-            return $add[self::PARAMETER_COMPARATOR];
+        if (isset($param[self::PARAMETER_COMPARATOR]) && $rule->isValid($param[self::PARAMETER_COMPARATOR])) {
+            return $param[self::PARAMETER_COMPARATOR];
         }
     }
 
@@ -131,11 +137,12 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
     private function updateARule($rule_id, array $new_values) {
         $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_SOURCE_FIELD]);
         $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_TARGET_FIELD]);
-        if ($source_field && $target_field) {
+        $comparator   = $this->getComparatorFromRequestParameter($new_values);
+        if ($source_field && $target_field && $comparator) {
             $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
             $rule->setSourceField($source_field);
             $rule->setTargetField($target_field);
-            $rule->setComparator($new_values[self::PARAMETER_COMPARATOR]);
+            $rule->setComparator($comparator);
             $this->rule_date_factory->save($rule);
         }
     }
