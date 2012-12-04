@@ -120,16 +120,23 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
 
     private function updateRules(Codendi_Request $request) {
         $rules_to_update = $request->get(self::PARAMETER_UPDATE_RULES);
-        if (is_array($rules_to_update)) {
-            foreach ($rules_to_update as $rule_id => $params) {
-                $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$params[self::PARAMETER_SOURCE_FIELD]);
-                $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$params[self::PARAMETER_TARGET_FIELD]);
-                $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
-                $rule->setSourceField($source_field);
-                $rule->setTargetField($target_field);
-                $rule->setComparator($params[self::PARAMETER_COMPARATOR]);
-                $this->rule_date_factory->save($rule);
-            }
+        if (! is_array($rules_to_update)) {
+            return;
+        }
+        foreach ($rules_to_update as $rule_id => $new_values) {
+            $this->updateARule($rule_id, $new_values);
+        }
+    }
+
+    private function updateARule($rule_id, array $new_values) {
+        $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_SOURCE_FIELD]);
+        $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_TARGET_FIELD]);
+        if ($source_field) {
+            $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
+            $rule->setSourceField($source_field);
+            $rule->setTargetField($target_field);
+            $rule->setComparator($new_values[self::PARAMETER_COMPARATOR]);
+            $this->rule_date_factory->save($rule);
         }
     }
 

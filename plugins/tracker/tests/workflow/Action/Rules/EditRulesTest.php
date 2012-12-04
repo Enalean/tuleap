@@ -419,5 +419,19 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
         expect($this->date_factory)->save($this->rule_66)->at(1);
         $this->processRequestAndExpectRedirection($request);
     }
+
+    public function itDoesNotUpdateTheRuleIfTheNewSourceFieldIsNotADateOne() {
+        $request = aRequest()->with(Tracker_Workflow_Action_Rules_EditRules::PARAMETER_UPDATE_RULES, array(
+            "$this->rule_42_id" => array(
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_SOURCE_FIELD => '666',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_TARGET_FIELD => '22',
+                Tracker_Workflow_Action_Rules_EditRules::PARAMETER_COMPARATOR   => '>'
+            ),
+        ))->build();
+
+        expect($this->rule_42)->setSourceField()->never();
+        expect($this->date_factory)->save($this->rule_42)->never();
+        $this->processRequestAndExpectRedirection($request);
+    }
 }
 ?>
