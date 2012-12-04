@@ -47,18 +47,20 @@ XML;
         $rule2->addChild('target_value')->addAttribute('REF', 'F25-V4');
 
         $tracker = aTracker()->withId(666)->build();
+        $f1 = stub('Tracker_FormElement_Field_List')->getId()->returns(102);
+        $f2 = stub('Tracker_FormElement_Field_List')->getId()->returns(103);
+        $f3 = stub('Tracker_FormElement_Field_List')->getId()->returns(104);
+        $f4 = stub('Tracker_FormElement_Field_List')->getId()->returns(105);
+        $f5 = stub('Tracker_FormElement_Field_List')->getId()->returns(106);
         
-        $array_xml_mapping = array('F25' => 102,
-                                   'F28' => 103,
-                                   'F25-V1' => 801,
-                                   'F25-V2' => 802,
-                                   'F25-V3' => 803,
-                                   'F25-V4' => 804,
-                                   'F28-V1' => 806,
-                                   'F28-V2' => 807,
-                                   'F28-V3' => 808,
-                                   'F28-V4' => 809,
+        $array_xml_mapping = array('F25' => $f1,
+                                   'F28' => $f2,
+                                   'F25-V3' => $f4,
+                                   'F25-V4' => $f5,
+                                   'F28-V1' => $f3,
                                    );
+        
+        
         $tracker_rule_dao = mock('Tracker_RuleDao');
         $rule_factory = new Tracker_RuleFactory($tracker_rule_dao);
         $rules = $rule_factory->getInstanceFromXML($xml, $array_xml_mapping, $tracker);
@@ -68,16 +70,16 @@ XML;
                 ->setTargetValue($array_xml_mapping['F25-V3'])
                 ->setId(0)
                 ->setTrackerId($tracker->getId())
-                ->setSourceFieldId($array_xml_mapping['F28'])
-                ->setTargetFieldId($array_xml_mapping['F25']);
+                ->setSourceField($array_xml_mapping['F28'])
+                ->setTargetField($array_xml_mapping['F25']);
         
         $list_rule_expected2 = new Tracker_Rule_List();
         $list_rule_expected2->setSourceValue($array_xml_mapping['F28-V1'])
                 ->setTargetValue($array_xml_mapping['F25-V4'])
                 ->setId(0)
                 ->setTrackerId($tracker->getId())
-                ->setSourceFieldId($array_xml_mapping['F28'])
-                ->setTargetFieldId($array_xml_mapping['F25']);
+                ->setSourceField($array_xml_mapping['F28'])
+                ->setTargetField($array_xml_mapping['F25']);
         
         $this->assertEqual(count($rules['list_rules']), 2);
         $this->assertEqual($rules['list_rules'][0], $list_rule_expected);
@@ -106,12 +108,16 @@ XML;
 
         $tracker = mock('Tracker');
         stub($tracker)->getId()->returns(900);
+        $f1 = stub('Tracker_FormElement_Field_Date')->getId()->returns(102);
+        $f2 = stub('Tracker_FormElement_Field_Date')->getId()->returns(103);
+        $f3 = stub('Tracker_FormElement_Field_Date')->getId()->returns(104);
+        $f4 = stub('Tracker_FormElement_Field_Date')->getId()->returns(105);
         
         $array_xml_mapping = array(
-            'F25' => 102,
-            'F28' => 103,
-            'F29' => 202,
-            'F30' => 503,
+            'F25' => $f3,
+            'F28' => $f1,
+            'F29' => $f2,
+            'F30' => $f4,
             );
         
         $tracker_rule_dao = mock('Tracker_RuleDao');
@@ -121,14 +127,14 @@ XML;
         $date_rule_expected  = new Tracker_Rule_Date();
         $date_rule_expected->setComparator(Tracker_rule_date::COMPARATOR_NOT_EQUALS)
                 ->setTrackerId($tracker->getId())
-                ->setSourceFieldId($array_xml_mapping['F28'])
-                ->setTargetFieldId($array_xml_mapping['F25']);
+                ->setSourceField($array_xml_mapping['F28'])
+                ->setTargetField($array_xml_mapping['F25']);
         
         $date_rule_expected2 = new Tracker_Rule_Date();
         $date_rule_expected2->setComparator(Tracker_rule_date::COMPARATOR_LESS_THAN_OR_EQUALS)
                 ->setTrackerId($tracker->getId())
-                ->setSourceFieldId($array_xml_mapping['F29'])
-                ->setTargetFieldId($array_xml_mapping['F30']);
+                ->setSourceField($array_xml_mapping['F29'])
+                ->setTargetField($array_xml_mapping['F30']);
 
         $this->assertEqual(count($rules['date_rules']), 2);
         $this->assertEqual($rules['date_rules'][0], $date_rule_expected);

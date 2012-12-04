@@ -374,6 +374,7 @@ class Tracker_RuleFactory {
         $rules = array();
         
         foreach ($list_rules->rule as $xml_rule) {
+
             $xml_source_field_attributes = $xml_rule->source_field->attributes();
             $source_field = $xmlMapping[(string)$xml_source_field_attributes['REF']];
 
