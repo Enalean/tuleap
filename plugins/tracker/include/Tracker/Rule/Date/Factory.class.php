@@ -63,8 +63,8 @@ class Tracker_Rule_Date_Factory {
      * @return Tracker_Rule_Date
      */
     public function create($source_field_id, $target_field_id, $tracker_id, $comparator) {
-        $rule_id   = $this->insert($tracker_id, $source_field_id, $target_field_id, $comparator);
-        $date_rule = $this->populate(new Tracker_Rule_Date(), $rule_id, $tracker_id, $source_field_id, $target_field_id, $comparator);
+        $date_rule = $this->populate(new Tracker_Rule_Date(), $tracker_id, $source_field_id, $target_field_id, $comparator);
+        $this->insert($date_rule);
 
         return $date_rule;
     }
@@ -77,12 +77,19 @@ class Tracker_Rule_Date_Factory {
      * @param string $comparator
      * @throws Tracker_Rule_Date_Exception
      */
-    public function insert($tracker_id, $source_field_id, $target_field_id, $comparator) {
-        if (!in_array($comparator, Tracker_Rule_Date::$allowed_comparators)) {
+    public function insert(Tracker_Rule_Date $rule) {
+        if (!in_array($rule->getComparator(), Tracker_Rule_Date::$allowed_comparators)) {
             throw new Tracker_Rule_Date_Exception('Invalid Comparator');
         }
         
-        return $this->dao->insert($tracker_id, $source_field_id, $target_field_id, $comparator);  
+        $rule_id = $this->dao->insert(
+                $rule->getTrackerId(), 
+                $rule->getSourceFieldId(), 
+                $rule->getTargetFieldId(), 
+                $rule->getComparator()
+                );
+        
+        $rule->setId($rule_id);
     }
 
     /**
@@ -101,17 +108,16 @@ class Tracker_Rule_Date_Factory {
 
         return $this->populate(
             new Tracker_Rule_Date(),
-            $rule['id'],
             $rule['tracker_id'],
             $rule['source_field_id'],
             $rule['target_field_id'],
-            $rule['comparator']
+            $rule['comparator'],
+            $rule['id']
         );
     }
-
-    /** @return bool true if successfuly updated */
+    
     public function save(Tracker_Rule_Date $rule) {
-        die('va mourir');
+        $this->dao;
     }
 
     /**
@@ -131,11 +137,11 @@ class Tracker_Rule_Date_Factory {
         while ($rule = $rules->getRow()) {
             $rules_array[] = $this->populate(
                 new Tracker_Rule_Date(),
-                $rule['id'],
                 $rule['tracker_id'],
                 $rule['source_field_id'],
                 $rule['target_field_id'],
-                $rule['comparator']
+                $rule['comparator'],
+                $rule['id']
             );
         }
 
@@ -190,18 +196,20 @@ class Tracker_Rule_Date_Factory {
      * @param string $comparator
      * @return \Tracker_Rule_Date
      */
-    private function populate(Tracker_Rule_Date $date_rule, $id, $tracker_id, $source_field_id, $target_field_id, $comparator) {
-
+    private function populate(Tracker_Rule_Date $date_rule, $tracker_id, $source_field_id, $target_field_id, $comparator, $id = null) {
         $source_field = $this->element_factory->getFormElementById($source_field_id);
         $target_field = $this->element_factory->getFormElementById($target_field_id);
         $date_rule->setTrackerId($tracker_id)
-                ->setId($id)
                 ->setSourceFieldId($source_field_id)
                 ->setSourceField($source_field)
                 ->setTargetFieldId($target_field_id)
                 ->setTargetField($target_field)
                 ->setTrackerId($tracker_id)
                 ->setComparator($comparator);
+        
+        if($date_rule !== null) {
+            $date_rule->setId($id);
+        }
 
         return $date_rule;
     }

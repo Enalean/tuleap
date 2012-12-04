@@ -238,9 +238,9 @@ class TrackerFactory {
             }
         }
 
-        //set field dependencies
-        if (isset($xml->dependencies)) {
-            $tracker->dependencies = $this->getRuleFactory()->getInstanceFromXML($xml->dependencies, $xmlMapping, $tracker);
+        //set field rules
+        if (isset($xml->rules)) {
+            $tracker->rules = $this->getRuleFactory()->getInstanceFromXML($xml->rules, $xmlMapping, $tracker);
         }
 
         // set report

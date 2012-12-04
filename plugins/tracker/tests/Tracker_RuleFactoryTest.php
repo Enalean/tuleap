@@ -100,5 +100,30 @@ class Tracker_RuleFactoryTest extends UnitTestCase {
         $this->assertIsA($factory->getListFactory(), 'Tracker_Rule_List_Factory');
         $this->assertIsA($factory->getDateFactory(), 'Tracker_Rule_Date_Factory');
     }
+    
+    public function testSaveObjectCallsDateAndListFactorySaveObjectMethods() {
+        $rule_dao = mock('Tracker_RuleDao');
+        $list_rules= array();
+        $date_rules= array();
+
+        $rules = array(
+            'list_rules' => $list_rules,
+            'date_rules' => $date_rules,
+        );
+        
+        $tracker = mock('Tracker');
+        
+        $date_factory = mock('Tracker_Rule_Date_Factory');
+        stub($date_factory)->saveObject($date_rules, $tracker)->once();
+        
+        $list_factory = mock('Tracker_Rule_List_Factory');
+        stub($list_factory)->saveObject($list_rules, $tracker)->once();
+        
+        $factory =  new Tracker_RuleFactory($rule_dao);
+        $factory->setListFactory($list_factory);
+        $factory->setDateFactory($date_factory);
+        
+        $factory->saveObject($rules, $tracker);     
+    }
 }
 ?>
