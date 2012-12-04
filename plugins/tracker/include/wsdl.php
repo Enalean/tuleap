@@ -427,11 +427,11 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'report_id'    => array('name'=>'report_id',   'type' => 'xsd:int'),
+        'id'           => array('name'=>'id',          'type' => 'xsd:int'),
         'name'         => array('name'=>'name',        'type' => 'xsd:string'),
         'description'  => array('name'=>'description', 'type' => 'xsd:string'),
-        'is_default'   => array('name'=>'is_default',  'type' => 'xsd:boolean'),
         'user_id'      => array('name'=>'user_id',     'type' => 'xsd:int'),
+        'is_default'   => array('name'=>'is_default',  'type' => 'xsd:boolean'),
     )
 );
 

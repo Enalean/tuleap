@@ -26,6 +26,7 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
      */
     protected $server;
     protected $session_key           = 'zfsdfs65465';
+    protected $user_id               = 9876;
     protected $tracker_id            = 1235;
     protected $unreadable_tracker_id = 5321;
     protected $int_field_name        = 'int_field';
@@ -60,6 +61,7 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         parent::setUp();
 
         $current_user        = mock('User');
+        stub($current_user)->getId()->returns($this->user_id);
         stub($current_user)->isSuperUser()->returns(true);
         stub($current_user)->isLoggedIn()->returns(true);
         $user_manager        = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);
@@ -81,6 +83,8 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $soap_user_manager = mock('SOAP_UserManager');
         stub($soap_user_manager)->continueSession($this->session_key)->returns($current_user);
 
+        $this->report_factory = mock('Tracker_ReportFactory');
+        
         $this->server = new Tracker_SOAPServer(
             $soap_user_manager,
             $project_manager,
@@ -88,7 +92,8 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
             $permissions_manager,
             $dao,
             $formelement_factory,
-            $artifact_factory
+            $artifact_factory,
+            $this->report_factory
         );
     }
 
@@ -371,8 +376,32 @@ class Tracker_SOAPServer_getTrackerReports_Test extends Tracker_SOAPServer_BaseT
         $this->server->getTrackerReports($this->session_key, null, $this->unreadable_tracker_id);
     }
     
-    public function itReturnsOneDefaultReport() {
-        
+    public function itGetTheReportsFromTheUnderlyingAPI() {
+        expect($this->report_factory)->getReportsByTrackerId($this->tracker_id, $this->user_id)->once();
+        stub($this->report_factory)->getReportsByTrackerId()->returns(array());
+        $this->server->getTrackerReports($this->session_key, null, $this->tracker_id);
+    }
+    
+    public function itTransformTheReportIntoASoapResponse() {
+        $report = mock('Tracker_Report');
+        expect($report)->exportToSoap()->once();
+        stub($this->report_factory)->getReportsByTrackerId()->returns(
+            array(
+                100 => $report
+            )
+        );
+        $this->server->getTrackerReports($this->session_key, null, $this->tracker_id);
+    }
+    
+    public function itReturnsTheSOAPVersionOfTheReport() {
+        $soap_of_one_report = array('id' => 100);
+        stub($this->report_factory)->getReportsByTrackerId()->returns(
+            array(
+                100 => stub('Tracker_Report')->exportToSoap()->returns($soap_of_one_report)
+            )
+        );
+        $soap_response = $this->server->getTrackerReports($this->session_key, null, $this->tracker_id);
+        $this->assertEqual($soap_response, array($soap_of_one_report));
     }
 }
 

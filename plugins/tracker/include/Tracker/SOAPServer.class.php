@@ -18,6 +18,7 @@
  */
 require_once 'common/soap/SOAP_UserManager.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
+require_once 'Report/Tracker_ReportFactory.class.php';
 
 //define fault code constants
 define ('get_group_fault', '3000');
@@ -83,6 +84,11 @@ class Tracker_SOAPServer {
      */
     private $artifact_factory;
 
+    /**
+     * @var Tracker_ReportFactory
+     */
+    private $report_factory;
+    
     public function __construct(
             SOAP_UserManager $soap_user_manager,
             ProjectManager $project_manager,
@@ -90,7 +96,8 @@ class Tracker_SOAPServer {
             PermissionsManager $permissions_manager,
             Tracker_ReportDao $dao,
             Tracker_FormElementFactory $formelement_factory,
-            Tracker_ArtifactFactory $artifact_factory
+            Tracker_ArtifactFactory $artifact_factory,
+            Tracker_ReportFactory $report_factory
     ) {
         $this->soap_user_manager        = $soap_user_manager;
         $this->project_manager          = $project_manager;
@@ -99,6 +106,7 @@ class Tracker_SOAPServer {
         $this->report_dao               = $dao;
         $this->formelement_factory      = $formelement_factory;
         $this->artifact_factory         = $artifact_factory;
+        $this->report_factory           = $report_factory;
     }
 
     /**
@@ -491,12 +499,27 @@ class Tracker_SOAPServer {
         return $tracker->getWorkflow()->exportToSOAP();
     }
 
-    
+    /**
+     * List all reports the user can access/run (both project reports and personnal reports)
+     *
+     * @param String  $session_key
+     * @param Integer $group_id
+     * @param Integer $tracker_id
+     *
+     * @return Array
+     *
+     * @throws SoapFault
+     */
     public function getTrackerReports($session_key, $group_id, $tracker_id) {
         $user      = $this->soap_user_manager->continueSession($session_key);
         $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerReports');
         if ($tracker->userCanView($user)) {
-            
+            $reports = $this->report_factory->getReportsByTrackerId($tracker_id, $user->getId());
+            $soap_tracker_reports = array();
+            foreach ($reports as $report) {
+                $soap_tracker_reports[] = $report->exportToSoap();
+            }
+            return $soap_tracker_reports;
         } else {
             throw new SoapFault(user_cannot_access_tracker, 'Permission denied: you cannot access this tracker');
         }
