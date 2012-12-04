@@ -138,6 +138,9 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         if (!isset($new_values[self::PARAMETER_TARGET_FIELD])) {
             return;
         }
+        if (!isset($new_values[self::PARAMETER_SOURCE_FIELD])) {
+            return;
+        }
         $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_SOURCE_FIELD]);
         $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$new_values[self::PARAMETER_TARGET_FIELD]);
         $comparator   = $this->getComparatorFromRequestParameter($new_values);
