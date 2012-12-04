@@ -61,6 +61,7 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     protected $artifact_factory;
     protected $formelement_factory;
     protected $report_factory;
+    protected $fileinfo_factory;
 
     public function setUp() {
         parent::setUp();
@@ -90,6 +91,8 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
 
         $this->report_factory = mock('Tracker_ReportFactory');
 
+        $this->fileinfo_factory = mock('Tracker_FileInfoFactory');
+
         $this->server = new Tracker_SOAPServer(
             $soap_user_manager,
             $project_manager,
@@ -98,7 +101,8 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
             $dao,
             $this->formelement_factory,
             $this->artifact_factory,
-            $this->report_factory
+            $this->report_factory,
+            $this->fileinfo_factory
         );
     }
 
@@ -471,60 +475,63 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
 
     public function setUp() {
         parent::setUp();
+        $this->artifact_id   = 55;
         $this->attachment_id = 255;
         $this->offset        = 0;
         $this->size          = 2000;
+        $this->field         = mock('Tracker_FormElement_Field_File');
+        $this->file_info     = partial_mock(
+            'Tracker_FileInfo',
+            array('getSoapContent', 'fileExists'),
+            array($this->attachment_id, $this->field, null, null, null, null, null)
+        );
+
+        $artifact = anArtifact()->withId($this->artifact_id)->withTracker($this->tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
+
+        stub($this->fileinfo_factory)->getById($this->attachment_id)->returns($this->file_info);
     }
 
     public function itRaisesAnExceptionIfTrackerIsNotReadable() {
-        $artifact_id = 55;
+        $artifact_id = 9348;
         $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->unreadable_tracker)->build();
         stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
         $this->expectException('SoapFault');
-        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, 0, $this->attachment_id, $this->offset, $this->size);
+        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $this->attachment_id, $this->offset, $this->size);
+    }
+
+    public function itRaisesAnExeptionIfTheAttachementIsInvalid() {
+        $artifact    = anArtifact()->withId($this->artifact_id)->withTracker($this->tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
+
+        $this->expectException('SoapFault');
+        $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, 321654, $this->offset, $this->size);
+    }
+
+    public function itRaisesAnExeptionIfTheFileDoesntExistOnFilesystem() {
+        stub($this->field)->userCanRead()->returns(true);
+        stub($this->file_info)->fileExists()->returns(false);
+
+        $this->expectException('SoapFault');
+        $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
     }
 
     public function itRaisesAnExceptionIfFieldIsNotReadable() {
-        $artifact_id = 55;
-        $artifact    = anArtifact()->withId($artifact_id)->withTracker($this->tracker)->build();
-        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact);
-
-        $field_id = 356;
-        $field = aMockField()->build();
-        stub($field)->userCanRead()->returns(false);
-        stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
+        stub($this->file_info)->fileExists()->returns(true);
+        stub($this->field)->userCanRead()->returns(false);
 
         $this->expectException('SoapFault');
-        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $field_id, $this->attachment_id, $this->offset, $this->size);
+        $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
     }
 
-    public function itRaisesAnExceptionIfFieldIsNotFile() {
-        $artifact_id = 55;
-        $artifact    = anArtifact()->withId($artifact_id)->withTracker($this->tracker)->build();
-        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact);
-
-        $field_id = 356;
-        $field = aMockField()->build();
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
-
-        $this->expectException('SoapFault');
-        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $field_id, $this->attachment_id, $this->offset, $this->size);
-    }
 
     public function itGetsTheDataFromTheFieldFormElement() {
-        $artifact_id = 55;
-        $artifact    = anArtifact()->withId($artifact_id)->withTracker($this->tracker)->build();
-        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact);
+        stub($this->file_info)->fileExists()->returns(true);
+        stub($this->field)->userCanRead()->returns(true);
 
-        $field_id = 356;
-        $field = mock('Tracker_FormElement_Field_File');
-        stub($field)->userCanRead()->returns(true);
-        stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
+        expect($this->file_info)->getSoapContent($this->offset, $this->size)->once();
 
-        expect($field)->getSoapFileContent($this->attachment_id, $this->offset, $this->size)->once();
-        
-        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $field_id, $this->attachment_id, $this->offset, $this->size);
+        $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
     }
 }
 

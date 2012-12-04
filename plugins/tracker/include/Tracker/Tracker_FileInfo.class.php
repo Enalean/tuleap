@@ -67,6 +67,17 @@ class Tracker_FileInfo {
         );
     }
 
+    public function getSoapContent($offset, $size) {
+        return base64_encode(file_get_contents($this->getPath(), false, NULL, $offset, $size));
+    }
+
+    /**
+     * @return Tracker_FormElement_Field_File
+     */
+    public function getField() {
+        return $this->field;
+    }
+
     /**
      * @return string the description of the file
      */
@@ -160,8 +171,8 @@ class Tracker_FileInfo {
         return '#'. $this->getId() .' '. $this->getFilename();
     }
 
-    public function getFileContents($offset, $size) {
-        return file_get_contents($this->getPath(), false, NULL, $offset, $size);
+    public function fileExists() {
+        return file_exists($this->getPath());
     }
 
     /**

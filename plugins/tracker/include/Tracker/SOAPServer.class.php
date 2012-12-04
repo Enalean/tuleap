@@ -19,6 +19,7 @@
 require_once 'common/soap/SOAP_UserManager.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
 require_once 'Report/Tracker_ReportFactory.class.php';
+require_once 'Tracker_FileInfoFactory.class.php';
 
 //define fault code constants
 define ('get_group_fault', '3000');
@@ -90,6 +91,11 @@ class Tracker_SOAPServer {
      */
     private $report_factory;
 
+    /**
+     * @var Tracker_FileInfoFactory
+     */
+    private $fileinfo_factory;
+
     public function __construct(
             SOAP_UserManager $soap_user_manager,
             ProjectManager $project_manager,
@@ -98,7 +104,8 @@ class Tracker_SOAPServer {
             Tracker_ReportDao $dao,
             Tracker_FormElementFactory $formelement_factory,
             Tracker_ArtifactFactory $artifact_factory,
-            Tracker_ReportFactory $report_factory
+            Tracker_ReportFactory $report_factory,
+            Tracker_FileInfoFactory $fileinfo_factory
     ) {
         $this->soap_user_manager        = $soap_user_manager;
         $this->project_manager          = $project_manager;
@@ -108,6 +115,7 @@ class Tracker_SOAPServer {
         $this->formelement_factory      = $formelement_factory;
         $this->artifact_factory         = $artifact_factory;
         $this->report_factory           = $report_factory;
+        $this->fileinfo_factory         = $fileinfo_factory;
     }
 
     /**
@@ -558,15 +566,20 @@ class Tracker_SOAPServer {
         return $soap_tracker_reports;
     }
 
-    public function getArtifactAttachmentChunk($session_key, $artifact_id, $field_id, $attachment_id, $offset, $size) {
+    public function getArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $offset, $size) {
         $current_user = $this->soap_user_manager->continueSession($session_key);
-        $artifact     = $this->getArtifactById($artifact_id, 'getFileFieldInfo');
+        $artifact     = $this->getArtifactById($artifact_id, 'getArtifactAttachmentChunk');
         $tracker      = $artifact->getTracker();
         $this->checkUserCanViewTracker($tracker, $current_user);
 
-        $field = $this->formelement_factory->getFormElementById($field_id);
-        if ($field->userCanRead($current_user) && $field instanceof Tracker_FormElement_Field_File) {
-            return $field->getSoapFileContent($attachment_id, $offset, $size);
+        $file_info = $this->fileinfo_factory->getById($attachment_id);
+        if ($file_info && $file_info->fileExists()) {
+            $field = $file_info->getField();
+            if ($field->userCanRead($current_user)) {
+                return $file_info->getSoapContent($offset, $size);
+            } else {
+                throw new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+            }
         } else {
             throw new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
         }

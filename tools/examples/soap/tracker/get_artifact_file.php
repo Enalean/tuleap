@@ -32,16 +32,17 @@ $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL
 $requesterSessionHash = $soapLogin->login('manuel','manuel')->session_hash;
 
 //save values
-$attachment_id = $argv[1];
+$artifact_id   = $argv[1];
+$attachment_id = $argv[2];
 $offset = 0;
 $size = 10;
 
 // Connecting to the soap's tracker client
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
-$artifact_id = 41330;
 
-$response = $soapTracker->getArtifactAttachmentChunk($requesterSessionHash, $artifact_id, 11422, $attachment_id, $offset, $size);
+
+$response = $soapTracker->getArtifactAttachmentChunk($requesterSessionHash, $artifact_id, $attachment_id, $offset, $size);
 
 file_put_contents('/tmp/plop', base64_decode($response));
 
