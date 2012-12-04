@@ -29,6 +29,8 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
     protected $tracker;
     protected $token;
 
+    protected $planned_start_date;
+    protected $actual_start_date;
     protected $source_field_id        = 44;
     protected $target_field_id        = 22;
     protected $actual_source_field_id = 66;
@@ -39,18 +41,25 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $this->date_factory = mock('Tracker_Rule_Date_Factory');
         $this->tracker      = stub('Tracker')->getId()->returns($this->tracker_id);
         $this->token        = mock('CSRFSynchronizerToken');
-        $planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
-        $actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
+        $this->planned_start_date = $this->setUpField($this->source_field_id, 'Planned Start Date');
+        $this->actual_start_date  = $this->setUpField($this->target_field_id, 'Actual Start Date');
         $planned_end_date   = $this->setUpField($this->actual_source_field_id, 'Planned End Date');
         $actual_end_date    = $this->setUpField($this->actual_target_field_id, 'Actual End Date');
-        $this->rule_1       = $this->setUpRule(123, $planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $planned_end_date);
-        $this->rule_2       = $this->setUpRule(456, $actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $actual_end_date);
+        $this->rule_1       = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $planned_end_date);
+        $this->rule_2       = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $actual_end_date);
         $this->layout       = mock('Tracker_IDisplayTrackerLayout');
         $this->user         = mock('User');
         stub($this->date_factory)->searchById(123)->returns($this->rule_1);
         stub($this->date_factory)->searchById(456)->returns($this->rule_2);
         stub($this->date_factory)->searchByTrackerId($this->tracker_id)->returns(array($this->rule_1, $this->rule_2));
-        stub($this->date_factory)->getUsedDateFields()->returns(array($planned_start_date, $actual_start_date, $planned_end_date, $actual_end_date));
+        stub($this->date_factory)->getUsedDateFields()->returns(
+            array(
+                $this->planned_start_date,
+                $this->actual_start_date,
+                $planned_end_date,
+                $actual_end_date
+            )
+        );
         $this->action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $this->date_factory, $this->token);
     }
 
@@ -383,8 +392,8 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
             ),
         ))->build();
 
-        expect($this->rule_42)->setSourceFieldId(44)->once();
-        expect($this->rule_42)->setTargetFieldId(22)->once();
+        expect($this->rule_42)->setSourceField($this->planned_start_date)->once();
+        expect($this->rule_42)->setTargetField($this->actual_start_date)->once();
         expect($this->rule_42)->setComparator('>')->once();
         expect($this->date_factory)->save($this->rule_42)->once();
         $this->processRequestAndExpectRedirection($request);
@@ -404,8 +413,8 @@ class Tracker_Workflow_Action_Rules_EditRules_updateRuleTest extends Tracker_Wor
             ),
         ))->build();
 
-        expect($this->rule_42)->setSourceFieldId(44)->once();
-        expect($this->rule_66)->setSourceFieldId(22)->once();
+        expect($this->rule_42)->setSourceField($this->planned_start_date)->once();
+        expect($this->rule_66)->setSourceField($this->actual_start_date)->once();
         expect($this->date_factory)->save($this->rule_42)->at(0);
         expect($this->date_factory)->save($this->rule_66)->at(1);
         $this->processRequestAndExpectRedirection($request);

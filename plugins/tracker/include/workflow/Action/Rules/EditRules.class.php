@@ -122,9 +122,11 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         $rules_to_update = $request->get(self::PARAMETER_UPDATE_RULES);
         if (is_array($rules_to_update)) {
             foreach ($rules_to_update as $rule_id => $params) {
+                $source_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$params[self::PARAMETER_SOURCE_FIELD]);
+                $target_field = $this->rule_date_factory->getUsedDateFieldById($this->tracker, (int)$params[self::PARAMETER_TARGET_FIELD]);
                 $rule = $this->rule_date_factory->getRule($this->tracker, (int)$rule_id);
-                $rule->setSourceFieldId((int)$params[self::PARAMETER_SOURCE_FIELD]);
-                $rule->setTargetFieldId((int)$params[self::PARAMETER_TARGET_FIELD]);
+                $rule->setSourceField($source_field);
+                $rule->setTargetField($target_field);
                 $rule->setComparator($params[self::PARAMETER_COMPARATOR]);
                 $this->rule_date_factory->save($rule);
             }
