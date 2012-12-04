@@ -47,6 +47,7 @@ define('get_tracker_factory_fault','3024');
 define('get_tracker_fault','3025');
 define('user_is_not_tracker_admin','3026');
 define('invalid_report', '3027');
+define('invalid_file', '3028');
 
 class Tracker_SOAPServer {
     /**
@@ -557,7 +558,7 @@ class Tracker_SOAPServer {
         return $soap_tracker_reports;
     }
 
-    public function getFileFieldInfo($session_key, $artifact_id, $field_id, $filename) {
+    public function getArtifactAttachmentChunk($session_key, $artifact_id, $field_id, $attachment_id, $offset, $size) {
         $current_user = $this->soap_user_manager->continueSession($session_key);
         $artifact     = $this->getArtifactById($artifact_id, 'getFileFieldInfo');
         $tracker      = $artifact->getTracker();
@@ -565,14 +566,10 @@ class Tracker_SOAPServer {
 
         $field = $this->formelement_factory->getFormElementById($field_id);
         if ($field->userCanRead($current_user) && $field instanceof Tracker_FormElement_Field_File) {
-
+            return $field->getSoapFileContent($attachment_id, $offset, $size);
         } else {
             throw new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
         }
-    }
-
-    public function getFileFieldDataChunk() {
-
     }
 
     /**

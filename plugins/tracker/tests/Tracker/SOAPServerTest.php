@@ -469,12 +469,19 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
 */
 class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTest {
 
+    public function setUp() {
+        parent::setUp();
+        $this->attachment_id = 255;
+        $this->offset        = 0;
+        $this->size          = 2000;
+    }
+
     public function itRaisesAnExceptionIfTrackerIsNotReadable() {
         $artifact_id = 55;
         $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->unreadable_tracker)->build();
         stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
         $this->expectException('SoapFault');
-        $this->server->getFileFieldInfo($this->session_key, $artifact_id, 0);
+        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, 0, $this->attachment_id, $this->offset, $this->size);
     }
 
     public function itRaisesAnExceptionIfFieldIsNotReadable() {
@@ -488,7 +495,7 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
         stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
 
         $this->expectException('SoapFault');
-        $this->server->getFileFieldInfo($this->session_key, $artifact_id, $field_id);
+        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $field_id, $this->attachment_id, $this->offset, $this->size);
     }
 
     public function itRaisesAnExceptionIfFieldIsNotFile() {
@@ -502,10 +509,10 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
         stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
 
         $this->expectException('SoapFault');
-        $this->server->getFileFieldInfo($this->session_key, $artifact_id, $field_id);
+        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $field_id, $this->attachment_id, $this->offset, $this->size);
     }
 
-    /*public function itDoesStuffWhenThereAreNoErrors() {
+    public function itGetsTheDataFromTheFieldFormElement() {
         $artifact_id = 55;
         $artifact    = anArtifact()->withId($artifact_id)->withTracker($this->tracker)->build();
         stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact);
@@ -515,8 +522,10 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
         stub($field)->userCanRead()->returns(true);
         stub($this->formelement_factory)->getFormElementById($field_id)->returns($field);
 
-        $this->server->getFileFieldInfo($this->session_key, $artifact_id, $field_id);
-    }*/
+        expect($field)->getSoapFileContent($this->attachment_id, $this->offset, $this->size)->once();
+        
+        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $field_id, $this->attachment_id, $this->offset, $this->size);
+    }
 }
 
 ?>

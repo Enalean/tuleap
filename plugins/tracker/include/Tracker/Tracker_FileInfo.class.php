@@ -159,7 +159,11 @@ class Tracker_FileInfo {
     public function __toString() {
         return '#'. $this->getId() .' '. $this->getFilename();
     }
-    
+
+    public function getFileContents($offset, $size) {
+        return file_get_contents($this->getPath(), false, NULL, $offset, $size);
+    }
+
     /**
      * create a file info
      *

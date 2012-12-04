@@ -482,7 +482,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
         exit();
     }
-    
+
+    public function getSoapFileContent($attachment_id, $offset, $size) {
+        if ($fileinfo = Tracker_FileInfo::instance($this, $attachment_id)) {
+            return base64_encode($fileinfo->getFileContents($offset, $size));
+        }
+        throw new SoapFault(invalid_file, 'File cannot be read');
+    }
+
     public function getRootPath() {
         return Config::get('sys_data_dir') .'/tracker/'. $this->getId();
     }

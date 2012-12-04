@@ -595,6 +595,38 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
+    'getArtifactsFromReport',
+    array('sessionKey' => 'xsd:string',
+          'report_id'  => 'xsd:int',
+          'offset'     => 'xsd:int',
+          'max_rows'   => 'xsd:int'
+    ),
+    array('return'=>'tns:ArtifactQueryResult'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getArtifactsFromReport',
+    'rpc',
+    'encoded',
+    'Execute a report and returns corresponding artifacts.'
+);
+
+$GLOBALS['server']->register(
+    'getArtifactAttachmentChunk',
+    array('sessionKey'=>'xsd:string',
+          'artifact_id'=>'xsd:int',
+          'field_id' => 'xsd:int', 
+          'attachment_id' => 'xsd:int',
+          'offset' => 'xsd:int', 
+          'size' => 'xsd:int',
+    ),
+    array('return'=>'xsd:string'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getArtifactAttachmentChunk',
+    'rpc',
+    'encoded',
+    'Return base64 encoded chunk of request file'
+);
+
+$GLOBALS['server']->register(
     'getTrackerStructure',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
@@ -620,21 +652,6 @@ $GLOBALS['server']->register(
     'rpc',
     'encoded',
     'Returns the reports the user can execute.'
-);
-
-$GLOBALS['server']->register(
-    'getArtifactsFromReport',
-    array('sessionKey' => 'xsd:string',
-          'report_id'  => 'xsd:int',
-          'offset'     => 'xsd:int',
-          'max_rows'   => 'xsd:int'
-    ),
-    array('return'=>'tns:ArtifactQueryResult'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getArtifactsFromReport',
-    'rpc',
-    'encoded',
-    'Execute a report and returns corresponding artifacts.'
 );
 
 /*$GLOBALS['server']->register(
