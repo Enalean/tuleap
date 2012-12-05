@@ -37,8 +37,9 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 {
         $ff = Tracker_FormElementFactory::instance();
         $af = $ff->getFormElementById($this->chart->getField_base());
         if ($af && $af->userCanRead()) {
-            $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelect();
+            $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelect() .", color.red, color.green, color.blue";
             $from   = " FROM tracker_artifact AS a INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) ". $af->getQueryFrom();
+            $from  .= " LEFT JOIN tracker_field_list_bind_decorator AS color ON (color.value_id = R2_". $af->id .".id)";
             $where  = " WHERE a.id IN (". $this->artifacts['id'] .") 
                           AND c.id IN (". $this->artifacts['last_changeset_id'] .") ";
             $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy();
@@ -46,9 +47,11 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 {
             while($data = db_fetch_array($res)) {
                 if ($data[$af->name] !== null) {
                     $engine->data[]   = $data['nb'];
+                    $engine->color[] =  array($data['red'], $data['green'], $data['blue']);
                     $engine->legend[] = $af->fetchRawValue($data[$af->name]);
                 } else {
                     $engine->data[]   = $data['nb'];
+                    $engine->color[] =  array($data['red'], $data['green'], $data['blue']);
                     $engine->legend[] = $GLOBALS['Language']->getText('global','none');
                 }
             }

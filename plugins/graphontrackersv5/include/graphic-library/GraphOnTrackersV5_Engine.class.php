@@ -26,6 +26,7 @@ abstract class GraphOnTrackersV5_Engine {
     
     public $graph;
     public $data;
+    public $color;
     
     /**
      * @return boolean true if the data are valid to buid the chart
