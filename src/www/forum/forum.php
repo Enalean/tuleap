@@ -497,8 +497,12 @@ if ($request->valid(new Valid_UInt('forum_id'))) {
 
         if (!isset($pv)||!$pv) {
             echo '<P>&nbsp;<P>';
-            
+           if (user_isloggedin()) {
             echo '<h3>'.$Language->getText('forum_forum','start_new_thread').':</H3><a name="start_new_thread"></a>';
+           }
+           else {
+	    echo '<h3>'.$Language->getText('forum_forum','login_start_new_thread').':</H3><a name="login_start_new_thread"></a>';
+           }
             show_post_form($forum_id);
         }
 

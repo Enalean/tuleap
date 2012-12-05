@@ -70,6 +70,7 @@ forum_forum	date	Date
 forum_forum	prev_msg	Previous Messages
 forum_forum	next_msg	Next Messages
 forum_forum	start_new_thread	Start a New Thread
+forum_forum	login_start_new_thread	Login to Post a New Thread
 forum_forum	choose_forum_first	Error - choose a forum first
 #
 #-----------------------------------------------
