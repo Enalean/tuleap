@@ -100,21 +100,34 @@
         </element>
       </optional>
       <optional>
+        <element name="dependencies">
+          <zeroOrMore>
+            <element name="rule">
+              <ref name="listRuleContent"/>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
         <element name="rules">
-          <element name="date_rules">
-            <zeroOrMore>
-              <element name="rule">
-                <ref name="dateRuleContent"/>
-              </element>
-            </zeroOrMore>
-          </element>
-          <element name="list_rules">
-            <zeroOrMore>
-              <element name="rule">
-                <ref name="listRuleContent"/>
-              </element>
-            </zeroOrMore>
-          </element>
+          <optional>
+            <element name="date_rules">
+              <zeroOrMore>
+                <element name="rule">
+                  <ref name="dateRuleContent"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+          <optional>
+            <element name="list_rules">
+              <zeroOrMore>
+                <element name="rule">
+                  <ref name="listRuleContent"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
         </element>
       </optional>
       <optional>

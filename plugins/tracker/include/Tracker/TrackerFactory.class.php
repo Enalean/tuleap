@@ -237,6 +237,36 @@ class TrackerFactory {
                 $tracker->semantics[] = $this->getSemanticFactory()->getInstanceFromXML($semantic, $xmlMapping, $tracker);
             }
         }
+        
+        /*
+         * legacy compatibility
+         * 
+         * SimpleXML does not allow for nodes to be moved !!!
+         */
+         if (isset($xml->dependencies)) {
+             $list_rules = null;
+             
+            if(!isset($xml->rules)) {
+                $list_rules = $xml->addChild('rules')->addChild('list_rules');    
+            } elseif (!isset($xml->rules->list_rules)) {
+                $list_rules = $xml->rules->addChild('list_rules', $xml->dependencies);    
+            } 
+             
+            if($list_rules !== null) {
+                foreach ($xml->dependencies->rule as $old_rule) {
+                    $source_field_attributes = $old_rule->source_field->attributes();
+                    $target_field_attributes = $old_rule->target_field->attributes();
+                    $source_value_attributes = $old_rule->source_value->attributes();
+                    $target_value_attributes = $old_rule->target_value->attributes();
+
+                    $new_rule = $list_rules->addChild('rule', $old_rule);
+                    $new_rule->addChild('source_field')->addAttribute('REF', $source_field_attributes['REF']);
+                    $new_rule->addChild('target_field')->addAttribute('REF', $target_field_attributes['REF']);
+                    $new_rule->addChild('source_value')->addAttribute('REF', $source_value_attributes['REF']);
+                    $new_rule->addChild('target_value')->addAttribute('REF', $target_value_attributes['REF']);
+                }
+            }
+        }
 
         //set field rules
         if (isset($xml->rules)) {

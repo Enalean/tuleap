@@ -37,13 +37,17 @@ grammar {
             element semantic { semanticContent }*
         }?,
 
+        element dependencies {
+            element rule { listRuleContent }*
+        }?,
+
         element rules {
             element date_rules { 
                 element rule {dateRuleContent }*
-            },
+            }?,
             element list_rules { 
                 element rule {listRuleContent }*
-            }
+            }?
             
         }?,
 
