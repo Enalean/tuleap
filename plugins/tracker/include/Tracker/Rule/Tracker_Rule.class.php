@@ -67,7 +67,7 @@ class Tracker_Rule {
     /**
      *
      * @param int $tracker
-     * @return \Tracker_Rule_Date
+     * @return \Tracker_Rule
      */
     public function setTrackerId($tracker_id) {
         $this->tracker_id = $tracker_id;
@@ -108,6 +108,7 @@ class Tracker_Rule {
      */
     public function setSourceField(Tracker_FormElement_Field $field) {
         $this->source_field_obj = $field;
+        $this->source_field = $field->getId();
         return $this;
     }
 
@@ -119,15 +120,22 @@ class Tracker_Rule {
         return $this->target_field_obj;
     }
 
+    /**
+     * 
+     * @param Tracker_FormElement_Field $field
+     * @return \Tracker_Rule
+     */
     public function setTargetField(Tracker_FormElement_Field $field) {
         $this->target_field_obj = $field;
+        $this->target_field = $field->getId();
+        
         return $this;
     }
 
     /**
      *
      * @param int $field_id
-     * @return \Tracker_Rule_Date
+     * @return \Tracker_Rule
      */
     public function setSourceFieldId($field_id) {
         $this->source_field = $field_id;
@@ -148,15 +156,17 @@ class Tracker_Rule {
     /**
      *
      * @param int $field_id
-     * @return \Tracker_Rule_Date
+     * @return \Tracker_Rule
      */
     public function setTargetFieldId($field_id) {
         $this->target_field = $field_id;
         return $this;
     }
 
-    /** @return bool */
-    function isUsedInRule($field_id) {
+    /**
+     *  @return bool 
+     */
+    public function isUsedInRule($field_id) {
         return $this->source_field == $field_id || $this->target_field == $field_id;
     }
 }
