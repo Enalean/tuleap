@@ -162,9 +162,16 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
         if ($topic) {
             echo '<a href="/plugins/forumml/message.php?group_id='.$group_id.'&list='.$list_id.'">['.$GLOBALS['Language']->getText('plugin_forumml','back_to_list').']</a>';
         } else {
-            echo "		<a href='/plugins/forumml/index.php?group_id=".$group_id."&list=".$list_id."'>
+		if(user_isloggedin()){
+				echo "		<a href='/plugins/forumml/index.php?group_id=".$group_id."&list=".$list_id."'>
 					[".$GLOBALS['Language']->getText('plugin_forumml','post_thread')."]
 				</a>";
+			}
+		else{
+				echo "		<a href='/index.php'>
+					[".$GLOBALS['Language']->getText('plugin_forumml','post_thread_login')."]
+				</a>";
+		}
         }
         echo "</td>";
 
