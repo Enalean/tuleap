@@ -56,8 +56,7 @@ if ($request->exist('wsdl')) {
 
     $server->setClass(
         'Tracker_SOAPServer',
-        new SOAP_UserManager(UserManager::instance()),
-        ProjectManager::instance(),
+        new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance()),
         TrackerFactory::instance(),
         PermissionsManager::instance(),
         new Tracker_ReportDao(),
