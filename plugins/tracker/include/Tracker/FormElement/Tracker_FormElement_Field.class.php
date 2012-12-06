@@ -135,6 +135,17 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return "$R.value_id AS `". $this->name."`";
     }
 
+    
+	/**
+     * Get the "select" statement to retrieve field values with the RGB values of their decorator
+     * Has no sense for fields other than lists
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getQuerySelect();
+    }
+    
     /**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c
@@ -145,7 +156,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $R = 'R_'. $this->id;
         return "INNER JOIN tracker_changeset_value AS $R ON ($R.changeset_id = c.id)";
     }
-
+    
+	/**
+     * Get the "from" statement to retrieve field values with the RGB values of their decorator
+     * Has no sense for fields other than lists
+     * @return string
+     */
+    public function getQueryFromWithDecorator() {
+        return $this->getQueryFromWithDecorator();
+    }
+    
     /**
      * Get the "order by" statement to retrieve field values
      */

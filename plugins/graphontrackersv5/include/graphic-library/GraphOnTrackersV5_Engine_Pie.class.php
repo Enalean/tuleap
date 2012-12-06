@@ -45,7 +45,6 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
     private function convertColors() {
         if ($this->graph) {
             $availableColors = $this->graph->getThemedColors();
-            
             $length = count($this->colors);
             for ($i = 0 ; $i < $length ; $i++ ) {
                 //We fill the blanks

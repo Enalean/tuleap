@@ -305,6 +305,15 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return "$R2.id AS `". $this->field->name ."`";
     }
     
+	/**
+     * Get the "select" statement to retrieve field values with the RGB values of their decorator
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getQuerySelect() . ", color.red, color.green, color.blue";
+    }
+    
     /**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c 
@@ -325,6 +334,16 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     LEFT JOIN tracker_field_list_bind_static_value AS $R2 ON ($R2.id = $R3.bindvalue_id AND $R2.field_id = ". $this->field->id ." )
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->field->id ." )
                ";
+    }
+    
+/**
+     * Get the "from" statement to retrieve field values with the RGB values of their decorator
+     * Has no sense for fields other than lists
+     * @return string
+     */
+    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list') {
+        $R2 = 'R2_'. $this->field->id;
+        return $this->getQueryFrom($changesetvalue_table) . " LEFT OUTER JOIN tracker_field_list_bind_decorator AS color ON (color.value_id = $R2.id)";
     }
     
     /**
