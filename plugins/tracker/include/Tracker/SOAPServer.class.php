@@ -49,6 +49,7 @@ define('get_tracker_fault','3025');
 define('user_is_not_tracker_admin','3026');
 define('invalid_report', '3027');
 define('invalid_file', '3028');
+define('invalid_file_field_format', Tracker_FormElement_Field_File::SOAP_FAULT_INVALID_REQUEST_FORMAT); //'3029'
 
 class Tracker_SOAPServer {
     /**
@@ -398,7 +399,12 @@ class Tracker_SOAPServer {
                 $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
                 if ($field) {
 
-                    $field_data = $field->getFieldData($field_value->field_value);
+                    // TODO: reintegrate file_info/value into formelement classes
+                    if ($field instanceof Tracker_FormElement_Field_File) {
+                        $field_data = $field->getFieldData($field_value->field_value);
+                    } else {
+                        $field_data = $field->getFieldData($field_value->field_value->value);
+                    }
                     if ($field_data != null) {
                         // $field_value is an object: SOAP must cast it in ArtifactFieldValue
                         if (isset($fields_data[$field->getId()])) {
