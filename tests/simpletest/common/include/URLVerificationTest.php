@@ -64,7 +64,7 @@ Mock::generate('BaseLanguage');
 
 Mock::generate('URL');
 
-class URLVerificationTest extends UnitTestCase {
+class URLVerificationTest extends TuleapTestCase {
 
     function setUp() {
         $this->fixtures = dirname(__FILE__).'/_fixtures';
@@ -100,6 +100,26 @@ class URLVerificationTest extends UnitTestCase {
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/scripts/check_pw.js.php')));
 
         $this->assertFalse($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
+    }
+
+    function itDoesNotTreatRegularUrlsAsExceptions() {
+        $urlVerification = new URLVerification();
+        $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar')));
+    }
+
+    function itDoesNotTreatRegularUrlsWhichContainsSOAPAsExceptions() {
+        $urlVerification = new URLVerification();
+        $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/soap/index.php')));
+    }
+
+    function itTreatsSOAPApiAsException() {
+        $urlVerification = new URLVerification();
+        $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/soap/index.php')));
+    }
+
+    function itTreatsSOAPApiOfPluginsAsException() {
+        $urlVerification = new URLVerification();
+        $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/plugins/docman/soap/index.php')));
     }
 
     function testIsScriptAllowedForAnonymousFromHook() {
