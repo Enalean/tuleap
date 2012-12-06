@@ -168,7 +168,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 				</a>";
 			}
 		else{
-				echo "		<a href='/index.php'>
+				echo "		<a href='/account/login.php'>
 					[".$GLOBALS['Language']->getText('plugin_forumml','post_thread_login')."]
 				</a>";
 		}
