@@ -1992,4 +1992,29 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         $this->task->process($this->layout, $this->request, $this->user);
     }
 }
+
+class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
+
+    private $workflow;
+    private $artifact;
+
+    public function setUp() {
+        $tracker_id = 123;
+        $this->workflow = new Workflow(1, $tracker_id, 0, 0);
+        $tracker = aMockTracker()->withId($tracker_id)->build();
+        stub($tracker)->getWorkflow()->returns($this->workflow);
+        $this->artifact = anArtifact()->build();
+        $this->artifact->setTracker($tracker);
+    }
+
+    public function itGetsTheWorkflowFromTheTracker() {
+        $workflow = $this->artifact->getWorkflow();
+        $this->assertEqual($workflow, $this->workflow);
+    }
+
+    public function itInjectsItselfInTheWorkflow() {
+        $workflow = $this->artifact->getWorkflow();
+        $this->assertEqual($workflow->getArtifact(), $this->artifact);
+    }
+}
 ?>

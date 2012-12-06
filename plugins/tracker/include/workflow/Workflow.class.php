@@ -63,6 +63,11 @@ class Workflow {
         $this->artifact = $artifact;
     }
 
+    /** @return Tracker_Artifact */
+    public function getArtifact() {
+        return $this->artifact;
+    }
+
     /**
      * Set field
      *
