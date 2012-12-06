@@ -49,15 +49,15 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                     $order_group  = ', '. $gf->getQueryOrderby();
                 }
             }
-            $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelect() . $select_group;
+            $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelectWithDecorator() . $select_group;
             $from   = " FROM tracker_artifact AS a 
                              INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) " . 
-                             $af->getQueryFrom() . 
+                             $af->getQueryFromWithDecorator() . 
                              $from_group;
             $where  = " WHERE a.id IN (". $this->artifacts['id'] .") 
                           AND c.id IN (". $this->artifacts['last_changeset_id'] .") ";
             $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . $group_group . ' ORDER BY '. $af->getQueryOrderby() . $order_group;
-            //syntax($sql, 'sql');
+           //echo($sql);
             $res = db_query($sql);
             while($data = db_fetch_array($res)) {
                 if ($data[$af->name] !== null) {
