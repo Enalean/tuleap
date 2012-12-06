@@ -64,7 +64,7 @@ Mock::generate('BaseLanguage');
 
 Mock::generate('URL');
 
-class URLVerificationTest extends UnitTestCase {
+class URLVerificationTest extends TuleapTestCase {
 
     function setUp() {
         $this->fixtures = dirname(__FILE__).'/_fixtures';
@@ -100,6 +100,36 @@ class URLVerificationTest extends UnitTestCase {
         $this->assertTrue($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/scripts/check_pw.js.php')));
 
         $this->assertFalse($urlVerification->isScriptAllowedForAnonymous(array('SCRIPT_NAME' => '/foobar')));
+    }
+
+    function itDoesNotTreatRegularUrlsAsExceptions() {
+        $urlVerification = new URLVerification();
+        $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar')));
+    }
+
+    function itDoesNotTreatRegularUrlsWhichContainsSOAPAsExceptions() {
+        $urlVerification = new URLVerification();
+        $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/soap/index.php')));
+    }
+
+    function itDoesNotTreatRegularUrlsWhichContainsAPIAsExceptions() {
+        $urlVerification = new URLVerification();
+        $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross')));
+    }
+
+    function itTreatsSOAPApiAsException() {
+        $urlVerification = new URLVerification();
+        $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/soap/index.php')));
+    }
+
+    function itTreatsSOAPApiOfPluginsAsException() {
+        $urlVerification = new URLVerification();
+        $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/plugins/docman/soap/index.php')));
+    }
+
+    function itTreatsExtractionOfCrossReferencesApiAsException() {
+        $urlVerification = new URLVerification();
+        $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/api/reference/extractCross')));
     }
 
     function testIsScriptAllowedForAnonymousFromHook() {
@@ -161,13 +191,13 @@ class URLVerificationTest extends UnitTestCase {
     }
 
    function testVerifyHostHTTPSAndForceSslEquals1() {
-        $server = array('HTTP_HOST'   => 'secure.codendi.org',
-                        'SERVER_NAME' => 'secure.codendi.org',
+        $server = array('HTTP_HOST'   => 'secure.example.com',
+                        'SERVER_NAME' => 'secure.example.com',
                         'HTTPS'       => 'on',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 1;
-        $GLOBALS['sys_https_host']     = 'secure.codendi.org';
+        $GLOBALS['sys_https_host']     = 'secure.example.com';
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
@@ -176,12 +206,12 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyHostHTTPAndForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'codendi.org',
-                        'SERVER_NAME' => 'codendi.org',
+        $server = array('HTTP_HOST'   => 'example.com',
+                        'SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 0;
-        $GLOBALS['sys_default_domain'] = 'codendi.org';
+        $GLOBALS['sys_default_domain'] = 'example.com';
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
@@ -190,13 +220,13 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyHostHTTPSAndForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'secure.codendi.org',
-                        'SERVER_NAME' => 'secure.codendi.org',
+        $server = array('HTTP_HOST'   => 'secure.example.com',
+                        'SERVER_NAME' => 'secure.example.com',
                         'HTTPS'       => 'on',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 0;
-        $GLOBALS['sys_https_host'] = 'secure.codendi.org';
+        $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
@@ -205,29 +235,29 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyHostHTTPAndForceSslEquals1() {
-        $server = array('HTTP_HOST'   => 'codendi.org',
-                        'SERVER_NAME' => 'codendi.org',
+        $server = array('HTTP_HOST'   => 'example.com',
+                        'SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 1;
-        $GLOBALS['sys_default_domain'] = 'codendi.org';
-        $GLOBALS['sys_https_host'] = 'secure.codendi.org';
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
         $chunks = $urlVerification->getUrlChunks();
-        $this->assertEqual($chunks['host'], 'secure.codendi.org');
+        $this->assertEqual($chunks['host'], 'secure.example.com');
     }
 
     function testVerifyHostInvalidHostHTTPForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'test.codendi.org',
-                        'SERVER_NAME' => 'test.codendi.org',
+        $server = array('HTTP_HOST'   => 'test.example.com',
+                        'SERVER_NAME' => 'test.example.com',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 0;
         $GLOBALS['sys_allow_anon']     = 1;
-        $GLOBALS['sys_default_domain'] = 'codendi.org';
-        $GLOBALS['sys_https_host'] = 'secure.codendi.org';
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
@@ -236,14 +266,14 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyHostInvalidHostHTTPSForceSslEquals0() {
-        $server = array('HTTP_HOST'   => 'test.codendi.org',
-                        'SERVER_NAME' => 'test.codendi.org',
+        $server = array('HTTP_HOST'   => 'test.example.com',
+                        'SERVER_NAME' => 'test.example.com',
                         'HTTPS'       => 'on',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 0;
-        $GLOBALS['sys_default_domain'] = 'codendi.org';
-        $GLOBALS['sys_https_host'] = 'secure.codendi.org';
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
@@ -252,14 +282,14 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyHostInvalidHostForceSslEquals1() {
-        $server = array('HTTP_HOST'   => 'test.codendi.org',
-                        'SERVER_NAME' => 'test.codendi.org',
+        $server = array('HTTP_HOST'   => 'test.example.com',
+                        'SERVER_NAME' => 'test.example.com',
                         'HTTPS'       => 'on',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_force_ssl']      = 1;
-        $GLOBALS['sys_default_domain'] = 'codendi.org';
-        $GLOBALS['sys_https_host'] = 'secure.codendi.org';
+        $GLOBALS['sys_default_domain'] = 'example.com';
+        $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $urlVerification = new URLVerification();
         $urlVerification->verifyHost($server);
@@ -268,7 +298,7 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyRequestAnonymousWhenScriptException() {
-        $server = array('SERVER_NAME' => 'codendi.org',
+        $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '/account/login.php');
 
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
@@ -281,7 +311,7 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyRequestAnonymousWhenAllowed() {
-        $server = array('SERVER_NAME' => 'codendi.org',
+        $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_allow_anon'] = 1;
@@ -300,7 +330,7 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyRequestAuthenticatedWhenAnonymousAllowed() {
-        $server = array('SERVER_NAME' => 'codendi.org',
+        $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_allow_anon'] = 1;
@@ -319,12 +349,12 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyRequestAnonymousWhenNotAllowedAtRoot() {
-        $server = array('SERVER_NAME' => 'codendi.org',
+        $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/');
 
         $GLOBALS['sys_allow_anon'] = 0;
-        $GLOBALS['sys_https_host'] = 'secure.codendi.org';
+        $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', true);
@@ -342,12 +372,12 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyRequestAnonymousWhenNotAllowedWithScript() {
-        $server = array('SERVER_NAME' => 'codendi.org',
+        $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/script/');
 
         $GLOBALS['sys_allow_anon'] = 0;
-        $GLOBALS['sys_https_host'] = 'secure.codendi.org';
+        $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', true);
@@ -365,12 +395,12 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyRequestAnonymousWhenNotAllowedWithLightView() {
-        $server = array('SERVER_NAME' => 'codendi.org',
+        $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '',
                         'REQUEST_URI' => '/script?pv=2');
 
         $GLOBALS['sys_allow_anon'] = 0;
-        $GLOBALS['sys_https_host'] = 'secure.codendi.org';
+        $GLOBALS['sys_https_host'] = 'secure.example.com';
 
         $user = new MockUser();
         $user->setReturnValue('isAnonymous', true);
@@ -388,7 +418,7 @@ class URLVerificationTest extends UnitTestCase {
     }
 
     function testVerifyRequestAuthenticatedWhenAnonymousNotAllowed() {
-        $server = array('SERVER_NAME' => 'codendi.org',
+        $server = array('SERVER_NAME' => 'example.com',
                         'SCRIPT_NAME' => '');
 
         $GLOBALS['sys_allow_anon'] = 0;
@@ -407,7 +437,7 @@ class URLVerificationTest extends UnitTestCase {
     }
     
     function testGetRedirectionProtocolModified() {
-        $server = array('HTTP_HOST' => 'codendi.org',
+        $server = array('HTTP_HOST' => 'example.com',
                         'REQUEST_URI' => '');
         $chunks =  array('protocol'=> 'https');
         
@@ -415,23 +445,23 @@ class URLVerificationTest extends UnitTestCase {
         
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
-        $this->assertEqual($urlVerification->getRedirectionURL($server), 'https://codendi.org');
+        $this->assertEqual($urlVerification->getRedirectionURL($server), 'https://example.com');
     }
     
     function testGetRedirectionProtocolAndHostModified() {
-        $server = array('HTTP_HOST' => 'test.codendi.org',
+        $server = array('HTTP_HOST' => 'test.example.com',
                         'REQUEST_URI' => '/user.php');
-        $chunks =  array('protocol'=> 'http', 'host' =>'secure.codendi.org');
+        $chunks =  array('protocol'=> 'http', 'host' =>'secure.example.com');
         
         $urlVerification = new URLVerificationTestVersion2($this);
         
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
-        $this->assertEqual($urlVerification->getRedirectionURL($server), 'http://secure.codendi.org/user.php');
+        $this->assertEqual($urlVerification->getRedirectionURL($server), 'http://secure.example.com/user.php');
     }
     
     function testGetRedirectionRequestModified() {
-        $server = array('HTTP_HOST' => 'secure.codendi.org',
+        $server = array('HTTP_HOST' => 'secure.example.com',
                         'REQUEST_URI' => '/user.php',
                         'HTTPS'       => 'on',);
         $chunks =  array('script'=> '/project.php');
@@ -440,7 +470,7 @@ class URLVerificationTest extends UnitTestCase {
         
         $urlVerification->setReturnValue('getUrlChunks', $chunks);
 
-        $this->assertEqual($urlVerification->getRedirectionURL($server), 'https://secure.codendi.org/project.php');
+        $this->assertEqual($urlVerification->getRedirectionURL($server), 'https://secure.example.com/project.php');
     }
 
     function testAssertValidUrlWithException() {
@@ -465,7 +495,7 @@ class URLVerificationTest extends UnitTestCase {
     function testAssertValidUrlWithRedirection() {
         $urlVerification = new URLVerificationTestVersion3($this);
         $urlVerification->setReturnValue('isException', false);
-        $urlVerification->setReturnValue('getUrlChunks', array('protocol' => 'https', 'host' => 'secure.codendi.org'));
+        $urlVerification->setReturnValue('getUrlChunks', array('protocol' => 'https', 'host' => 'secure.example.com'));
 
         $urlVerification->expectOnce('header');
         $server = array();
