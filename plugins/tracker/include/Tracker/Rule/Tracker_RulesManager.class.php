@@ -608,29 +608,31 @@ class Tracker_RulesManager {
         $rules = $this->getAllDateRulesByTrackerId($tracker_id);
 
         foreach ($rules as $rule) {
+            
             if (! $this->dateRuleApplyToSubmittedFields($rule, $value_field_list)) {
+                return false;
+            }
+                    
+            if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
                 // If the request doesn't contain all fields then the rules
                 // are considered violated.
                 // It may impact partial csv import / soap update
-                return false;
-            }
-
-            if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
                 $source_field = $this->getField($rule->getSourceFieldId());
                 $target_field = $this->getField($rule->getTargetFieldId());
-
-                $GLOBALS['Response']->addFeedback(
-                    'error',
-                    $GLOBALS['Language']->getText(
+                $feedback = $GLOBALS['Language']->getText(
                         'plugin_tracker_artifact',
                         'rules_date_not_valid',
                         array(
-                            $source_field->getLabel(),
+                            $source_field->getLabel() ,
                             $rule->getComparator(),
-                            $target_field->getLabel()
+                            $target_field->getLabel() 
                         )
-                    )
-                );
+                    );
+                
+                if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
+                    $GLOBALS['Response']->addFeedback('error', $feedback);
+                }
+                 
                 return false;
             }
         }
@@ -639,7 +641,29 @@ class Tracker_RulesManager {
     }
 
     private function dateRuleApplyToSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
-        return isset($value_field_list[$rule->getSourceFieldId()]) && isset($value_field_list[$rule->getTargetFieldId()]);
+        $is_valid = true;
+        if(! isset($value_field_list[$rule->getSourceFieldId()])) {
+            $source_field = $this->getField($rule->getSourceFieldId());
+            $feedback = $source_field->getLabel() . ' null';
+            
+            if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
+                $GLOBALS['Response']->addFeedback('error', $feedback);
+            }
+            $is_valid = false;
+        }
+        
+        if(! isset($value_field_list[$rule->getTargetFieldId()])) {
+            $target_field = $this->getField($rule->getTargetFieldId());
+            $feedback = $target_field->getLabel() . ' null';
+            if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
+                $GLOBALS['Response']->addFeedback('error', $target_field->getLabel() . ' null');
+            }
+            $is_valid = false;
+        }
+          $GLOBALS['Response']->addFeedback('error', print_r($value_field_list, true)); 
+          var_dump($value_field_list);
+          die();
+        return $is_valid;
     }
 
     /** @return bool */

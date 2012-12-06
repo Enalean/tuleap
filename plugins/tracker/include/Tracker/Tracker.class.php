@@ -1900,7 +1900,7 @@ EOS;
             $fields_data[$field_id] = $data;
         }
         $this->augmentDataFromRequest($fields_data);
-        
+
         $not_updated_aids = array();
         foreach ( $masschange_aids as $aid ) {
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($aid);
@@ -1909,7 +1909,26 @@ EOS;
                 continue;
             }
             
-            if ( !$artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format)) {
+
+             /* 1) Create a new array called $tracker_data containing the existing data for this tracker
+              * 2) replace where appropriate with submitted values
+              */
+            $tracker_data = array();
+            //var_dump($this->getAllFormElements()); die();
+            foreach ($this->getAllFormElements() as $field) {
+                if($field instanceof Tracker_FormElement_Field){
+                    $tracker_data[$field->getId()] = $artifact->getValue($field);
+                }
+                /* @var $field Tracker_FormElement_Field */   
+            }
+            var_dump($tracker_data); die();
+            $validate_data = array_merge($tracker_data, $fields_data);
+            
+            /*
+             * 3) the first argument becomes $validate_data
+             */
+            if (! $artifact->validateNewChangeset($validate_data, $comment, $submitter, $email='', $send_notifications, $comment_format) || 
+                    ! $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format)) {
                 $not_updated_aids[] = $aid;
                 continue;
             }
@@ -2805,7 +2824,8 @@ EOS;
                     $artifact = $af->getArtifactById($artifact_id);
                     if ($artifact) {
                         $followup_comment = '';
-                        if ($artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications)) {
+                        if ($artifact->validateNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications) || 
+                                $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications)) {
                             $nb_artifact_update++;
                         } else {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($artifact_id)));

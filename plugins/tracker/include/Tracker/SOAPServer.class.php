@@ -445,7 +445,8 @@ class Tracker_SOAPServer {
                 }
             }
 
-            if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
+            if ($artifact->validateNewChangeset($fields_data, $comment, $user, null, true, $comment_format) || 
+                    $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
                 return $artifact_id;
             } else {
                 $response = new Response();
