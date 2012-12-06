@@ -25,11 +25,12 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
      * @var Tracker_SOAPServer
      */
     protected $server;
-    protected $session_key           = 'zfsdfs65465';
-    protected $user_id               = 9876;
-    protected $tracker_id            = 1235;
+    protected $session_key                   = 'zfsdfs65465';
+    protected $user_id                       = 9876;
+    protected $tracker_id                    = 1235;
     protected $tracker;
-    protected $unreadable_tracker_id = 5321;
+    protected $unreadable_tracker_id         = 5321;
+    protected $private_unreadable_tracker_id = 5322;
     protected $unreadable_tracker;
     protected $int_field_name        = 'int_field';
     protected $date_field_name       = 'date_field';
@@ -63,6 +64,9 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     protected $report_factory;
     protected $fileinfo_factory;
 
+    protected $i_should_not_have_access_to_this_private_project_id = 666;
+    protected $project_id = 111;
+
     public function setUp() {
         parent::setUp();
 
@@ -70,8 +74,12 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($current_user)->getId()->returns($this->user_id);
         stub($current_user)->isSuperUser()->returns(true);
         stub($current_user)->isLoggedIn()->returns(true);
+        stub($current_user)->isRestricted()->returns(false);
         $user_manager        = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);
         $permissions_manager = mock('PermissionsManager');
+        $project_manager     = mock('ProjectManager');
+        $project             = mock('Project');
+        $private_project     = mock('Project');
 
         $this->artifact_factory    = mock('Tracker_ArtifactFactory');
         $this->setUpArtifacts($this->artifact_factory);
@@ -83,10 +91,20 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $this->setUpFields($this->formelement_factory);
 
         $tracker_factory = mock('TrackerFactory');
-        $this->setUpTrackers($tracker_factory);
+        $this->setUpTrackers($tracker_factory, $project, $private_project);
 
-        $soap_request_validator = mock('SOAP_RequestValidator');
-        stub($soap_request_validator)->continueSession($this->session_key)->returns($current_user);
+        stub($project)->getId()->returns($this->project_id);
+        stub($project)->isPublic()->returns(true);
+        stub($current_user)->isMember($this->project_id)->returns(true);
+
+        stub($private_project)->getId()->returns($this->i_should_not_have_access_to_this_private_project_id);
+        stub($project)->isPublic()->returns(false);
+        stub($current_user)->isMember($this->i_should_not_have_access_to_this_private_project_id)->returns(false);
+
+        $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
+
+        stub($project_manager)->getGroupByIdForSoap($this->project_id, '*')->returns($project);
+        stub($project_manager)->getGroupByIdForSoap($this->i_should_not_have_access_to_this_private_project_id, '*')->returns($private_project);
 
         $this->report_factory = mock('Tracker_ReportFactory');
 
@@ -127,14 +145,18 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($formelement_factory)->getFormElementByName($this->tracker_id, $this->int_field_name)->returns($integer_field);
     }
 
-    private function setUpTrackers(TrackerFactory $tracker_factory) {
-        $this->tracker      = aMockTracker()->withId($this->tracker_id)->build();
-        $this->unreadable_tracker = aMockTracker()->withId($this->unreadable_tracker_id)->build();
+    private function setUpTrackers(TrackerFactory $tracker_factory, Project $project, Project $private_project) {
+        $this->tracker                    = aMockTracker()->withId($this->tracker_id)->withProject($project)->build();
+        $this->unreadable_tracker         = aMockTracker()->withId($this->unreadable_tracker_id)->withProject($project)->build();
+        $this->private_unreadable_tracker = aMockTracker()->withId($this->private_unreadable_tracker_id)->withProject($private_project)->build();
         stub($this->tracker)->userCanView()->returns(true);
         stub($this->tracker)->userIsAdmin()->returns(true);
         stub($this->unreadable_tracker)->userCanView()->returns(false);
+        stub($this->private_unreadable_tracker)->userCanView()->returns(true);
+        stub($this->private_unreadable_tracker)->userIsAdmin()->returns(true);
         stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($this->tracker);
         stub($tracker_factory)->getTrackerById($this->unreadable_tracker_id)->returns($this->unreadable_tracker);
+        stub($tracker_factory)->getTrackerById($this->private_unreadable_tracker_id)->returns($this->private_unreadable_tracker);
     }
 
     private function setUpArtifactResults(Tracker_ReportDao $dao) {
@@ -227,8 +249,13 @@ class FromFragmentsExpectation extends SimpleExpectation {
 class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
 
     public function itRaisesASoapFaultIfTheTrackerIsNotReadableByTheUser() {
-        $this->expectException('SoapFault');
-        $this->server->getArtifacts($this->session_key, null, $this->unreadable_tracker_id, array(), null, null);
+        $results = $this->server->getArtifacts($this->session_key, null, $this->unreadable_tracker_id, array(), null, null);
+        $this->assertIsA($results, 'SoapFault');
+    }
+
+    public function itRaisesASoapFaultIfTheTrackerBelongsToAProjectNotReadableByTheUser() {
+        $results = $this->server->getArtifacts($this->session_key, null, $this->private_unreadable_tracker_id, array(), null, null);
+        $this->assertIsA($results, 'SoapFault');
     }
 
     public function itReturnsEmptyResultsWhenThereIsNoMatch() {
@@ -379,8 +406,13 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
 class Tracker_SOAPServer_getTrackerReports_Test extends Tracker_SOAPServer_BaseTest {
 
     public function itRaisesAnExceptionWhenTheTrackerIsNotReadableByUser() {
-        $this->expectException('SoapFault');
-        $this->server->getTrackerReports($this->session_key, null, $this->unreadable_tracker_id);
+        $results = $this->server->getTrackerReports($this->session_key, null, $this->unreadable_tracker_id);
+        $this->assertIsA($results, 'SoapFault');
+    }
+
+    public function itRaisesAnExceptionWhenTheTrackerBelongsToAProjectNotReadableByUser() {
+        $results = $this->server->getTrackerReports($this->session_key, null, $this->private_unreadable_tracker_id);
+        $this->assertIsA($results, 'SoapFault');
     }
 
     public function itGetTheReportsFromTheUnderlyingAPI() {
@@ -425,15 +457,23 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         $report_id = 987;
         $report = aTrackerReport()->withTracker($this->unreadable_tracker)->build();
         stub($this->report_factory)->getReportById($report_id, $this->user_id, false)->returns($report);
-        $this->expectException('SoapFault');
-        $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+        $results = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+        $this->assertIsA($results, 'SoapFault');
+    }
+
+    public function itRaisesAnExceptionWhenReportIsPublicButTheTrackerBelongsToProjectNotReadableByUser() {
+        $report_id = 987;
+        $report = aTrackerReport()->withTracker($this->private_unreadable_tracker)->build();
+        stub($this->report_factory)->getReportById($report_id, $this->user_id, false)->returns($report);
+        $results = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+        $this->assertIsA($results, 'SoapFault');
     }
 
     public function itRaisesAnExceptionWhenThereIsNoReportMatching() {
         $report_id = 987;
         stub($this->report_factory)->getReportById()->returns(null);
-        $this->expectException('SoapFault');
-        $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+        $results = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+        $this->assertIsA($results, 'SoapFault');
     }
 
     public function itGetsMatchingIdsFromReport() {
@@ -494,32 +534,40 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
         $artifact_id = 9348;
         $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->unreadable_tracker)->build();
         stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
-        $this->expectException('SoapFault');
-        $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $this->attachment_id, $this->offset, $this->size);
+        $returns = $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $this->attachment_id, $this->offset, $this->size);
+        $this->assertIsA($returns, 'SoapFault');
+    }
+
+    public function itRaisesAnExceptionIfTrackerBelongsToProjectNotReadable() {
+        $artifact_id = 9348;
+        $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->private_unreadable_tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
+        $returns = $this->server->getArtifactAttachmentChunk($this->session_key, $artifact_id, $this->attachment_id, $this->offset, $this->size);
+        $this->assertIsA($returns, 'SoapFault');
     }
 
     public function itRaisesAnExeptionIfTheAttachementIsInvalid() {
         $artifact    = anArtifact()->withId($this->artifact_id)->withTracker($this->tracker)->build();
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
 
-        $this->expectException('SoapFault');
-        $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, 321654, $this->offset, $this->size);
+        $returns = $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, 321654, $this->offset, $this->size);
+        $this->assertIsA($returns, 'SoapFault');
     }
 
     public function itRaisesAnExeptionIfTheFileDoesntExistOnFilesystem() {
         stub($this->field)->userCanRead()->returns(true);
         stub($this->file_info)->fileExists()->returns(false);
 
-        $this->expectException('SoapFault');
-        $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
+        $returns = $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
+        $this->assertIsA($returns, 'SoapFault');
     }
 
     public function itRaisesAnExceptionIfFieldIsNotReadable() {
         stub($this->file_info)->fileExists()->returns(true);
         stub($this->field)->userCanRead()->returns(false);
 
-        $this->expectException('SoapFault');
-        $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
+        $returns = $this->server->getArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->offset, $this->size);
+        $this->assertIsA($returns, 'SoapFault');
     }
 
 

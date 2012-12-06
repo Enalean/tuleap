@@ -124,14 +124,18 @@ class Tracker_SOAPServer {
      * @return Array
      */
     public function getArtifacts($session_key, $group_id, $tracker_id, $criteria, $offset, $max_rows) {
-        $current_user = $this->soap_request_validator->continueSession($session_key);
-        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
-        $this->checkUserCanViewTracker($tracker, $current_user);
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+            $this->checkUserCanViewTracker($tracker, $current_user);
 
-        $report = new Tracker_Report_SOAP($current_user, $tracker, $this->permissions_manager, $this->report_dao, $this->formelement_factory);
-        $report->setSoapCriteria($criteria);
-        $matching = $report->getMatchingIds();
-        return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
+            $report = new Tracker_Report_SOAP($current_user, $tracker, $this->permissions_manager, $this->report_dao, $this->formelement_factory);
+            $report->setSoapCriteria($criteria);
+            $matching = $report->getMatchingIds();
+            return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
     }
 
     private function artifactListToSoap(User $user, $id_list, $offset, $max_rows) {
@@ -165,14 +169,18 @@ class Tracker_SOAPServer {
      * @throws SoapFault
      */
     public function getArtifactsFromReport($session_key, $report_id, $offset, $max_rows) {
-        $current_user = $this->soap_request_validator->continueSession($session_key);
-        $report = $this->report_factory->getReportById($report_id, $current_user->getId(), false);
-        if ($report) {
-            $this->checkUserCanViewTracker($report->getTracker(), $current_user);
-            $matching = $report->getMatchingIds(null, true);
-            return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
-        } else {
-            throw new SoapFault(invalid_report, "You attempt to use a report that doesn't exist or you don't have access to");
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $report = $this->report_factory->getReportById($report_id, $current_user->getId(), false);
+            if ($report) {
+                $this->checkUserCanViewTracker($report->getTracker(), $current_user);
+                $matching = $report->getMatchingIds(null, true);
+                return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
+            } else {
+                return new SoapFault(invalid_report, "You attempt to use a report that doesn't exist or you don't have access to");
+            }
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 
@@ -313,9 +321,10 @@ class Tracker_SOAPServer {
      * @throws SoapFault if user can't view the tracker
      */
     private function checkUserCanViewTracker(Tracker $tracker, User $user) {
-        if (!$tracker->userCanView($user)) {
-            throw new SoapFault(get_tracker_factory_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
+        if (! $tracker->userCanView($user)) {
+            throw new Exception('Permission Denied: You are not granted sufficient permission to perform this operation.', (string)get_tracker_factory_fault);
         }
+        $this->soap_request_validator->assertUserCanAccessProject($user, $tracker->getProject());
     }
 
     /**
@@ -544,11 +553,15 @@ class Tracker_SOAPServer {
      * @throws SoapFault
      */
     public function getTrackerReports($session_key, $group_id, $tracker_id) {
-        $current_user      = $this->soap_request_validator->continueSession($session_key);
-        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
-        $this->checkUserCanViewTracker($tracker, $current_user);
+        try {
+            $current_user      = $this->soap_request_validator->continueSession($session_key);
+            $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+            $this->checkUserCanViewTracker($tracker, $current_user);
 
-        return $this->exportReportsToSoap($this->report_factory->getReportsByTrackerId($tracker_id, $current_user->getId()));
+            return $this->exportReportsToSoap($this->report_factory->getReportsByTrackerId($tracker_id, $current_user->getId()));
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
     }
 
     private function exportReportsToSoap(array $reports) {
@@ -560,21 +573,25 @@ class Tracker_SOAPServer {
     }
 
     public function getArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $offset, $size) {
-        $current_user = $this->soap_request_validator->continueSession($session_key);
-        $artifact     = $this->getArtifactById($artifact_id, 'getArtifactAttachmentChunk');
-        $tracker      = $artifact->getTracker();
-        $this->checkUserCanViewTracker($tracker, $current_user);
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $artifact     = $this->getArtifactById($artifact_id, 'getArtifactAttachmentChunk');
+            $tracker      = $artifact->getTracker();
+            $this->checkUserCanViewTracker($tracker, $current_user);
 
-        $file_info = $this->fileinfo_factory->getById($attachment_id);
-        if ($file_info && $file_info->fileExists()) {
-            $field = $file_info->getField();
-            if ($field->userCanRead($current_user)) {
-                return $file_info->getSoapContent($offset, $size);
+            $file_info = $this->fileinfo_factory->getById($attachment_id);
+            if ($file_info && $file_info->fileExists()) {
+                $field = $file_info->getField();
+                if ($field->userCanRead($current_user)) {
+                    return $file_info->getSoapContent($offset, $size);
+                } else {
+                    return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+                }
             } else {
-                throw new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+                return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
             }
-        } else {
-            throw new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 
