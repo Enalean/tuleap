@@ -152,7 +152,7 @@ class URLVerification {
      * @return Boolean
      */
     function isException($server) {
-        return preg_match('`^(?:/plugins/[^/]+)?/soap/`', $server['SCRIPT_NAME']);
+        return preg_match('`^(?:/plugins/[^/]+)?/(?:soap|api)/`', $server['SCRIPT_NAME']);
     }
 
     /**

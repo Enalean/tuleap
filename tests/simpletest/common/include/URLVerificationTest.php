@@ -109,7 +109,12 @@ class URLVerificationTest extends TuleapTestCase {
 
     function itDoesNotTreatRegularUrlsWhichContainsSOAPAsExceptions() {
         $urlVerification = new URLVerification();
-        $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/soap/index.php')));
+        $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/soap/index.php')));
+    }
+
+    function itDoesNotTreatRegularUrlsWhichContainsAPIAsExceptions() {
+        $urlVerification = new URLVerification();
+        $this->assertFalse($urlVerification->isException(array('SCRIPT_NAME' => '/projects/foobar/?p=/api/reference/extractCross')));
     }
 
     function itTreatsSOAPApiAsException() {
@@ -120,6 +125,11 @@ class URLVerificationTest extends TuleapTestCase {
     function itTreatsSOAPApiOfPluginsAsException() {
         $urlVerification = new URLVerification();
         $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/plugins/docman/soap/index.php')));
+    }
+
+    function itTreatsExtractionOfCrossReferencesApiAsException() {
+        $urlVerification = new URLVerification();
+        $this->assertTrue($urlVerification->isException(array('SCRIPT_NAME' => '/api/reference/extractCross')));
     }
 
     function testIsScriptAllowedForAnonymousFromHook() {
