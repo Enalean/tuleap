@@ -659,10 +659,8 @@ class Tracker_RulesManager {
                 $GLOBALS['Response']->addFeedback('error', $target_field->getLabel() . ' null');
             }
             $is_valid = false;
-        }
-          $GLOBALS['Response']->addFeedback('error', print_r($value_field_list, true)); 
-          var_dump($value_field_list);
-          die();
+        } 
+          
         return $is_valid;
     }
 

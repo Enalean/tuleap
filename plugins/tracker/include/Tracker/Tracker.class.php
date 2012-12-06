@@ -1908,26 +1908,20 @@ EOS;
                 $not_updated_aids[] = $aid;
                 continue;
             }
-            
 
-             /* 1) Create a new array called $tracker_data containing the existing data for this tracker
-              * 2) replace where appropriate with submitted values
-              */
+            //Create a new array called $tracker_data containing the existing data for this tracker
             $tracker_data = array();
-            //var_dump($this->getAllFormElements()); die();
-            foreach ($this->getAllFormElements() as $field) {
-                if($field instanceof Tracker_FormElement_Field){
-                    $tracker_data[$field->getId()] = $artifact->getValue($field);
+            foreach ($artifact->getLastChangeset()->getValues() as $key => $field) {
+                if($field instanceof Tracker_Artifact_ChangesetValue_Date){
+                    $tracker_data[$key] = $field->getValue();
                 }
-                /* @var $field Tracker_FormElement_Field */   
             }
-            var_dump($tracker_data); die();
-            $validate_data = array_merge($tracker_data, $fields_data);
-            
-            /*
-             * 3) the first argument becomes $validate_data
-             */
-            if (! $artifact->validateNewChangeset($validate_data, $comment, $submitter, $email='', $send_notifications, $comment_format) || 
+            //replace where appropriate with submitted values
+            foreach ($fields_data as $key => $value) {
+                $tracker_data[$key] = $value;
+            }
+
+            if (! $artifact->validateNewChangeset($tracker_data, $comment, $submitter) || 
                     ! $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format)) {
                 $not_updated_aids[] = $aid;
                 continue;
@@ -2824,7 +2818,7 @@ EOS;
                     $artifact = $af->getArtifactById($artifact_id);
                     if ($artifact) {
                         $followup_comment = '';
-                        if ($artifact->validateNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications) || 
+                        if ($artifact->validateNewChangeset($fields_data, $followup_comment, $current_user) && 
                                 $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications)) {
                             $nb_artifact_update++;
                         } else {
