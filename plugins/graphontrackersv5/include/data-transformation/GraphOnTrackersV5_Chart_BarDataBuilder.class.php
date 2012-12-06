@@ -64,12 +64,13 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                     if ($select_group) {
                         $engine->data[$data[$af->name]][$data[$gf->name]]   = $data['nb'];
                         if($data[$gf->name] !== null) {
-                            $engine->xaxis[] = $gf->fetchRawValue($data[$gf->name]);
+                            $engine->xaxis[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
                             $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
                         } else {
-                            $engine->xaxis[] = $GLOBALS['Language']->getText('global','none');
+                            $engine->xaxis[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                             $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                         }
+                        $engine->xaxis = array_values($engine->xaxis);
                     } else {
                         $engine->data[]   = $data['nb'];
                     }
@@ -78,12 +79,13 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                     if ($select_group) {
                         $engine->data[$data[$af->name]][$data[$gf->name]]   = $data['nb'];
                         if($data[$gf->name] !== null) {
-                            $engine->xaxis[] = $gf->fetchRawValue($data[$gf->name]);
+                            $engine->xaxis[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
                             $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
                         } else {
-                            $engine->xaxis[] = $GLOBALS['Language']->getText('global','none');
+                            $engine->xaxis[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                             $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                         }
+                        $engine->xaxis = array_values($engine->xaxis);
                     } else {
                         $engine->data[]   = $data['nb'];
                     }
