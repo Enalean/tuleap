@@ -62,6 +62,7 @@ plugin_forumml	back_to_list	Retour à la liste
 # Script:plugins/forumml/www/message.php
 #
 plugin_forumml	post_thread	Soumettre un nouveau fil de discussion
+plugin_forumml	post_thread_login   Connectez-vous pour poster un nouveau sujet
 plugin_forumml	thread	Fil de discussion
 plugin_forumml	submitted_on	Date
 plugin_forumml	author	Auteur
