@@ -21,6 +21,7 @@
  */
 require_once('common/chart/Chart_Pie.class.php');
 require_once('GraphOnTrackersV5_Engine.class.php');
+//require_once('plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindDecorator');
 
 class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
 
@@ -41,29 +42,18 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
         }
     }
     
-    function convertColors() {
-        if($this->graph) {
-            $availableColors=$this->graph->getThemedColors();
+    private function convertColors() {
+        if ($this->graph) {
+            $availableColors = $this->graph->getThemedColors();
             
-            for($i=0;$i<count($this->color);$i++) {
+            $length = count($this->colors);
+            for ($i = 0 ; $i < $length ; $i++ ) {
                 //We fill the blanks
-                if($this->color[$i][0]==NULL || $this->color[$i][1]==NULL || $this->color[$i][2]==NULL )
-                    $this->color[$i]=$availableColors[$i];
+                if ($this->colors[$i][0] == NULL || $this->colors[$i][1] == NULL || $this->colors[$i][2] == NULL )
+                    $this->colors[$i] = $availableColors[$i];
                 else {
                     //We convert RGB array to hex
-                    $r = dechex($this->color[$i][0]);
-                    if (strlen($r) < 2) {
-                        $r = "0".$r;
-                    }
-                    $g = dechex($this->color[$i][1]);
-                    if (strlen($g) < 2) {
-                        $g = "0".$g;
-                    }
-                    $b = dechex($this->color[$i][2]);
-                    if (strlen($b) < 2) {
-                        $b = "0".$b;
-                    }
-                    $this->color[$i]="#".$r.$g.$b;
+                    $this->colors[$i]= sprintf('#%02X%02X%02X', $this->colors[$i][0], $this->colors[$i][1], $this->colors[$i][2]);//"#".$r.$g.$b;
                 }
             }
         }
@@ -88,7 +78,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
         if ((is_array($this->data)) && (array_sum($this->data)>0)) {
             $p = new PiePlot($this->data);
             
-            $p->setSliceColors($this->color);
+            $p->setSliceColors($this->colors);
             
             $p->SetCenter(0.4,0.6);
             $p->SetLegends($this->legend);
