@@ -28,7 +28,7 @@ require_once(dirname(__FILE__).'/../Tracker_FileInfo.class.php');
 require_once('common/valid/Rule.class.php');
 
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
-
+    const SOAP_FAKE_FILE = 'soapfakefile';
     const SOAP_FAULT_INVALID_REQUEST_FORMAT = '3029';
 
     const THUMBNAILS_MAX_WIDTH  = 150;
@@ -746,23 +746,17 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $r = new Rule_File();
         foreach ($value as $i => $file_info) {
             if ("$i" != 'delete' && $r->isValid($file_info)) {
-                if ($attachment = Tracker_FileInfo::create($this, $current_user->getId(), trim($file_info['description']), $file_info['name'], $file_info['size'], $file_info['type'])) {
-                    $path = $this->getRootPath();
-                    if (!is_dir($path .'/thumbnails')) {
-                        mkdir($path .'/thumbnails', 0777, true);
-                    }
-                    $filename = $path .'/'. $attachment->getId();
-                    if (move_uploaded_file($file_info['tmp_name'], $filename)) {
-                        $success[] = $attachment->getId();
-                        //If image, store thumbnails
-                        if ($attachment->isImage()) {
-                            $this->createThumbnail($attachment->getId(), $path, $filename);
-                        }
-                    } else {
-                        //Something goes wrong
-                        //delete the attachment
-                        $attachment->delete();
-                    }
+                $attachment = new Tracker_FileInfo(
+                    null,
+                    $this,
+                    $current_user->getId(),
+                    trim($file_info['description']),
+                    $file_info['name'],
+                    $file_info['size'],
+                    $file_info['type']
+                );
+                if ($this->createAttachment($attachment, $file_info)) {
+                    $success[] = $attachment->getId();
                 }
             }
         }
@@ -771,7 +765,31 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
         return $success;
     }
-    
+
+    protected function createAttachment(Tracker_FileInfo $attachment, $file_info) {
+        if ($attachment->save()) {
+            $path = $this->getRootPath();
+            if (!is_dir($path .'/thumbnails')) {
+                mkdir($path .'/thumbnails', 0777, true);
+            }
+            $filename = $path .'/'. $attachment->getId();
+            if ($file_info['tmp_name'] === self::SOAP_FAKE_FILE) {
+                touch($filename);
+                return true;
+            } else {
+                if (move_uploaded_file($file_info['tmp_name'], $filename)) {
+                    if ($attachment->isImage()) {
+                        $this->createThumbnail($attachment->getId(), $path, $filename);
+                    }
+                    return true;
+                } else {
+                    $attachment->delete();
+                }
+            }
+        }
+        return false;
+    }
+
     /**
      * Create a thumbnail of the image
      * 
@@ -935,7 +953,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 'type'        => $fileinfo->filetype,
                 'size'        => $fileinfo->filesize,
                 'error'       => UPLOAD_ERR_OK,
-                'tmp_name'    => 'fakesoap',
+                'tmp_name'    => self::SOAP_FAKE_FILE,
             );
         }
         return $field_data;

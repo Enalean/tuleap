@@ -176,24 +176,17 @@ class Tracker_FileInfo {
     }
 
     /**
-     * create a file info
+     * Persist current object to the database
      *
-     * @param Tracker_FormElement_Field $field
-     * @param integer                   $submitted_by
-     * @param string                    $description
-     * @param string                    $filename
-     * @param integer                   $filesize
-     * @param string                    $filetype
-     *
-     * @return Tracker_FileInfo
+     * @return Boolean
      */
-    public static function create($field, $submitted_by, $description, $filename, $filesize, $filetype) {
-        $instance = null;
+    public function save() {
         $dao = new Tracker_FileInfoDao();
-        if ($id = $dao->create($submitted_by, $description, $filename, $filesize, $filetype)) {
-            $instance = new Tracker_FileInfo($id, $field, $submitted_by, $description, $filename, $filesize, $filetype);
+        $this->id = $dao->create($this->submitted_by, $this->description, $this->filename, $this->filesize, $this->filetype);
+        if ($this->id) {
+            return true;
         }
-        return $instance;
+        return false;
     }
 
     /**

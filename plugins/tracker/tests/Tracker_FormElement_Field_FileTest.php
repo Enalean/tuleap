@@ -51,22 +51,31 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
+    protected $fixture_dir;
+    protected $attachment_dir;
+    protected $thumbnails_dir;
+    protected $tmp_name;
+    protected $another_tmp_name;
+
     function setUp() {
         parent::setUp();
         Config::store();
-        mkdir(dirname(__FILE__) .'/_fixtures/attachments/thumbnails/');
-        $this->tmp_name         = dirname(__FILE__) .'/_fixtures/uploaded_file.txt';
-        $this->another_tmp_name = dirname(__FILE__) .'/_fixtures/another_uploaded_file.txt';
+        $this->fixture_dir    = dirname(__FILE__).'/_fixtures';
+        $this->attachment_dir = $this->fixture_dir.'/attachments';
+        $this->thumbnails_dir = $this->attachment_dir.'/thumbnails';
+        mkdir($this->thumbnails_dir);
+        $this->tmp_name         = $this->fixture_dir.'/uploaded_file.txt';
+        $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
     }
     
     function tearDown() {
         Config::restore();
-        foreach(glob(dirname(__FILE__) .'/_fixtures/attachments/thumbnails/*') as $f) {
+        foreach(glob($this->thumbnails_dir.'/*') as $f) {
             if ($f != '.' && $f != '..') {
                 unlink($f);
             }
         }
-        rmdir(dirname(__FILE__) .'/_fixtures/attachments/thumbnails');
+        rmdir($this->thumbnails_dir);
         parent::tearDown();
     }
     
@@ -411,9 +420,9 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
     
     function test_createThumbnail() {
         $f = new Tracker_FormElement_Field_FileTestVersion();
-        $thumb_png = dirname(__FILE__) .'/_fixtures/attachments/thumbnails/66';
+        $thumb_png = $this->thumbnails_dir.'/66';
         $this->assertFalse(file_exists($thumb_png));
-        $f->createThumbnail(66, dirname(__FILE__) .'/_fixtures/attachments/', dirname(__FILE__) .'/_fixtures/attachments/logo.png');
+        $f->createThumbnail(66, $this->attachment_dir, $this->attachment_dir.'/logo.png');
         $this->assertTrue(file_exists($thumb_png));
         $this->assertEqual(getimagesize($thumb_png), array(
             150,
@@ -424,9 +433,9 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
             'mime' => 'image/png'
         ));
         
-        $thumb_gif = dirname(__FILE__) .'/_fixtures/attachments/thumbnails/111';
+        $thumb_gif = $this->thumbnails_dir.'/111';
         $this->assertFalse(file_exists($thumb_gif));
-        $f->createThumbnail(111, dirname(__FILE__) .'/_fixtures/attachments/', dirname(__FILE__) .'/_fixtures/attachments/logo.gif');
+        $f->createThumbnail(111, $this->attachment_dir, $this->attachment_dir.'/logo.gif');
         $this->assertTrue(file_exists($thumb_gif));
         $this->assertEqual(getimagesize($thumb_gif), array(
             150,
@@ -440,9 +449,9 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
         
         /* TODO: add suport for jpeg 
         
-        $thumb_jpg = dirname(__FILE__) .'/_fixtures/attachments/thumbnails/421';
+        $thumb_jpg = $this->thumbnails_dir.'/421';
         $this->assertFalse(file_exists($thumb_jpg));
-        $f->createThumbnail(421, dirname(__FILE__) .'/_fixtures/attachments/', dirname(__FILE__) .'/_fixtures/attachments/logo.jpg');
+        $f->createThumbnail(421, $this->attachment_dir, $this->attachment_dir.'/logo.jpg');
         $this->assertTrue(file_exists($thumb_jpg));
         $this->assertEqual(getimagesize($thumb_jpg), array(
             150,
@@ -672,6 +681,55 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
     }
 }
 
+
+
+class Tracker_FormElement_Field_File_FileSystemPersistanceTest  extends Tracker_FormElement_Field_File {
+    public function __construct($id) {
+        $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = null;
+        parent::__construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
+    }
+    public function createAttachment(Tracker_FileInfo $attachment, $file_info) {
+        return parent::createAttachment($attachment, $file_info);
+    }
+}
+
+class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_FileTest {
+    /** @var Tracker_FormElement_Field_File_FileSystemPersistanceTest */
+    private $field;
+
+    private $storage_dir;
+
+    public function setUp() {
+        parent::setUp();
+        $this->storage_dir = $this->fixture_dir.'/storage';
+        mkdir($this->storage_dir);
+        Config::set('sys_data_dir', $this->storage_dir);
+        $this->field_id = 987;
+        $this->field    = new Tracker_FormElement_Field_File_FileSystemPersistanceTest($this->field_id);
+    }
+
+    public function tearDown() {
+        $this->recurseDeleteInDir($this->storage_dir);
+        rmdir($this->storage_dir);
+        parent::tearDown();
+    }
+
+    public function itCreatesAFileWhenItComesFromAsSoapRequest() {
+        $attachment_id = 654;
+        $attachment = mock('Tracker_FileInfo');
+        stub($attachment)->getId()->returns($attachment_id);
+        stub($attachment)->save()->returns(true);
+        $file_info = array('tmp_name' => Tracker_FormElement_Field_File::SOAP_FAKE_FILE);
+
+        expect($attachment)->delete()->never();
+
+        $this->assertTrue($this->field->createAttachment($attachment, $file_info));
+        $this->assertTrue(file_exists($this->field->getRootPath().'/'.$attachment_id));
+    }
+}
+
+
+
 class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTestCase {
     /** @var Tracker_FormElement_Field_File */
     private $field;
@@ -681,7 +739,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
         $this->field = aFileField()->build();
     }
 
-    private function createFakeSoapFileRequest($name, $description, $filename, $filesize, $filetype) {
+    private function createFakeSoapFileRequest($description, $filename, $filesize, $filetype) {
         $soap_file = new stdClass();
         $soap_file->id           = 0;
         $soap_file->submitted_by = 0;
@@ -751,7 +809,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
         $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
 
         $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($filename, $description, $filename, $filesize, $filetype)
+            $this->createFakeSoapFileRequest($description, $filename, $filesize, $filetype)
         );
 
         $field = aFileField()->build();
@@ -762,7 +820,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description,
                     'name'        =>  $filename,
                     'type'        =>  $filetype,
-                    'tmp_name'    =>  'fakesoap',
+                    'tmp_name'    =>  Tracker_FormElement_Field_File::SOAP_FAKE_FILE,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize,
                 )
@@ -782,8 +840,8 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
         $filetype2    = 'image/png';
 
         $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($filename1, $description1, $filename1, $filesize1, $filetype1),
-            $this->createFakeSoapFileRequest($filename2, $description2, $filename2, $filesize2, $filetype2)
+            $this->createFakeSoapFileRequest($description1, $filename1, $filesize1, $filetype1),
+            $this->createFakeSoapFileRequest($description2, $filename2, $filesize2, $filetype2)
         );
 
         $this->assertEqual(
@@ -793,7 +851,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description1,
                     'name'        =>  $filename1,
                     'type'        =>  $filetype1,
-                    'tmp_name'    =>  'fakesoap',
+                    'tmp_name'    =>  Tracker_FormElement_Field_File::SOAP_FAKE_FILE,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize1,
                 ),
@@ -801,7 +859,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description2,
                     'name'        =>  $filename2,
                     'type'        =>  $filetype2,
-                    'tmp_name'    =>  'fakesoap',
+                    'tmp_name'    =>  Tracker_FormElement_Field_File::SOAP_FAKE_FILE,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize2,
                 )
