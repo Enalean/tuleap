@@ -959,8 +959,23 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $rules_manager->setReturnValue('validate', true);
         $tracker->setReturnReference('getRulesManager', $rules_manager);
 
-        $artifact = new Tracker_ArtifactTestVersion();
-        $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
+        $artifact = partial_mock('Tracker_Artifact', array(
+            'getChangesetDao',
+            'getChangesetCommentDao',
+            'getFormElementFactory',
+            'getTracker',
+            'getId',
+            'getLastChangeset',
+            'getReferenceManager',
+            'getChangesets',
+            'getChangeset',
+            'getUserManager',
+            'getArtifactFactory',
+            'getWorkflow',
+            'validateFields',
+            )
+        );
+        $workflow = new MockWorkflow();
         $workflow->expectOnce('before');
         $workflow->setReturnValue('validate', true);
         $workflow->setReturnValue('validateGlobalRules', true);
@@ -1006,6 +1021,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
+        $artifact->setReturnValue('validateFields', true);
         $artifact->setReturnReference('getLastChangeset', $changeset);
         $artifact->setReturnReference('getChangeset', $new_changeset);
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
@@ -1016,8 +1032,10 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         // Valid
         $fields_data = array(
             101 => '123',
+            102 => '456'
         );
 
+        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
 }
@@ -1117,13 +1135,16 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
+        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
 
         // Not valid
         $fields_data = array(
             102 => '456',
         );
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        
+        $this->assertFalse($artifact->validateNewChangeset($fields_data, $comment, $user, $email));
+
     }
 
     public function itCheckThatGlobalRulesAreValid() {
@@ -1224,7 +1245,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             102 => '456'
         );
         stub($workflow)->validateGlobalRules($updated_fields_data_by_workflow, $factory)->once()->returns(false);
-        $this->assertFalse($artifact->createNewChangeset($fields_data, $comment, $user, $email));
+        
+        $this->assertFalse($artifact->validateNewChangeset($fields_data, $comment, $user, $email));
     }
 
     function testCreateNewChangesetWithoutNotification() {
@@ -1320,13 +1342,15 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
+        $artifact->validateNewChangeset($fields_data, $comment, $user, $email, false);
         $artifact->createNewChangeset($fields_data, $comment, $user, $email, false);
 
         // Not valid
         $fields_data = array(
             102 => '456',
         );
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email, false);
+        
+        $this->assertFalse($artifact->validateNewChangeset($fields_data, $comment, $user, $email));
     }
 
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
@@ -1395,7 +1419,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         // Valid
         $fields_data = array();
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+        $this->assertFalse($artifact->validateNewChangeset($fields_data, $comment, $user, $email));
     }
 
     function testGetCommentators() {
@@ -1855,12 +1879,13 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
 
         $this->task = partial_mock(
             'Tracker_Artifact',
-            array('createNewChangeset'),
+            array('createNewChangeset', 'validateNewChangeset'),
             array($this->artifact_id, $this->tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
         );
         $this->task->setTracker($tracker);
         $this->task->setFormElementFactory($this->formelement_factory);
         stub($this->task)->createNewChangeset()->returns(true);
+        stub($this->task)->validateNewChangeset()->returns(true);
         stub($this->formelement_factory)->getComputableFieldByNameForUser($tracker_user_story_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($this->us_computed_field);
 
         stub($this->computed_field)->fetchCardValue($this->task)->returns(42);
