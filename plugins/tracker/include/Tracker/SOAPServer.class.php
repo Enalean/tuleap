@@ -16,7 +16,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'common/soap/SOAP_UserManager.class.php';
+require_once 'common/soap/SOAP_RequestValidator.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
 require_once 'Report/Tracker_ReportFactory.class.php';
 require_once 'Tracker_FileInfoFactory.class.php';
@@ -52,14 +52,9 @@ define('invalid_file', '3028');
 
 class Tracker_SOAPServer {
     /**
-     * @var SOAP_UserManager
+     * @var SOAP_RequestValidator
      */
-    private $soap_user_manager;
-
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
+    private $soap_request_validator;
 
     /**
      * @var TrackerFactory
@@ -97,8 +92,7 @@ class Tracker_SOAPServer {
     private $fileinfo_factory;
 
     public function __construct(
-            SOAP_UserManager $soap_user_manager,
-            ProjectManager $project_manager,
+            SOAP_RequestValidator $soap_request_validator,
             TrackerFactory $tracker_factory,
             PermissionsManager $permissions_manager,
             Tracker_ReportDao $dao,
@@ -107,8 +101,7 @@ class Tracker_SOAPServer {
             Tracker_ReportFactory $report_factory,
             Tracker_FileInfoFactory $fileinfo_factory
     ) {
-        $this->soap_user_manager        = $soap_user_manager;
-        $this->project_manager          = $project_manager;
+        $this->soap_request_validator   = $soap_request_validator;
         $this->tracker_factory          = $tracker_factory;
         $this->permissions_manager      = $permissions_manager;
         $this->report_dao               = $dao;
@@ -131,7 +124,7 @@ class Tracker_SOAPServer {
      * @return Array
      */
     public function getArtifacts($session_key, $group_id, $tracker_id, $criteria, $offset, $max_rows) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $current_user = $this->soap_request_validator->continueSession($session_key);
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         $this->checkUserCanViewTracker($tracker, $current_user);
 
@@ -172,7 +165,7 @@ class Tracker_SOAPServer {
      * @throws SoapFault
      */
     public function getArtifactsFromReport($session_key, $report_id, $offset, $max_rows) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $current_user = $this->soap_request_validator->continueSession($session_key);
         $report = $this->report_factory->getReportById($report_id, $current_user->getId(), false);
         if ($report) {
             $this->checkUserCanViewTracker($report->getTracker(), $current_user);
@@ -191,7 +184,7 @@ class Tracker_SOAPServer {
      * @return array the array of SOAPTracker that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
      */
     public function getTrackerList($session_key, $group_id) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $current_user = $this->soap_request_validator->continueSession($session_key);
         $this->getProjectById($group_id, 'getTrackerList');
 
         // The function getTrackersByGroupId returns all trackers,
@@ -251,7 +244,7 @@ class Tracker_SOAPServer {
      *          or a soap fault if tracker_id or group_id does not match with a valid project/tracker.
      */
     public function getTrackerFields($session_key, $group_id, $tracker_id) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $current_user = $this->soap_request_validator->continueSession($session_key);
         $this->getProjectById($group_id, 'getTrackerFields');
         $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerFields');
 
@@ -300,7 +293,7 @@ class Tracker_SOAPServer {
      *          or a soap fault if artifact_id is not a valid artifact
      */
     public function getArtifact($session_key, $group_id, $tracker_id, $artifact_id) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $current_user = $this->soap_request_validator->continueSession($session_key);
         $artifact     = $this->getArtifactById($artifact_id, 'getArtifact');
         $this->checkUserCanViewArtifact($artifact, $current_user);
         return $this->artifact_to_soap($current_user, $artifact);
@@ -386,7 +379,7 @@ class Tracker_SOAPServer {
      *              - the artifact creation failed.
      */
     public function addArtifact($session_key, $group_id, $tracker_id, $value) {
-        $user = $this->soap_user_manager->continueSession($session_key);
+        $user = $this->soap_request_validator->continueSession($session_key);
         $this->getProjectById($group_id, 'addArtifact');
         $tracker = $this->getTrackerById($group_id, $tracker_id, 'addArtifact');
 
@@ -449,7 +442,7 @@ class Tracker_SOAPServer {
      *              - the artifact modification failed.
      */
     public function updateArtifact($session_key, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format) {
-        $user = $this->soap_user_manager->continueSession($session_key);
+        $user = $this->soap_request_validator->continueSession($session_key);
         $this->getProjectById($group_id, 'updateArtifact');
         $this->getTrackerById($group_id, $tracker_id, 'updateArtifact');
 
@@ -518,7 +511,7 @@ class Tracker_SOAPServer {
      * @throws SoapFault in case of failure.
      */
     public function getTrackerStructure($session_key, $group_id, $tracker_id) {
-        $user      = $this->soap_user_manager->continueSession($session_key);
+        $user      = $this->soap_request_validator->continueSession($session_key);
         $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
         $structure = array();
         if ($tracker->userIsAdmin($user)) {
@@ -551,7 +544,7 @@ class Tracker_SOAPServer {
      * @throws SoapFault
      */
     public function getTrackerReports($session_key, $group_id, $tracker_id) {
-        $current_user      = $this->soap_user_manager->continueSession($session_key);
+        $current_user      = $this->soap_request_validator->continueSession($session_key);
         $tracker = $this->tracker_factory->getTrackerById($tracker_id);
         $this->checkUserCanViewTracker($tracker, $current_user);
 
@@ -567,7 +560,7 @@ class Tracker_SOAPServer {
     }
 
     public function getArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $offset, $size) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $current_user = $this->soap_request_validator->continueSession($session_key);
         $artifact     = $this->getArtifactById($artifact_id, 'getArtifactAttachmentChunk');
         $tracker      = $artifact->getTracker();
         $this->checkUserCanViewTracker($tracker, $current_user);
@@ -599,7 +592,7 @@ class Tracker_SOAPServer {
      *              - artifact_id does not match with a valid artifact
      */
     public function getArtifactHistory($session_key, $group_id, $tracker_id, $artifact_id) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
+        $current_user = $this->soap_request_validator->continueSession($session_key);
         $this->getProjectById($group_id, 'getArtifactHistory');
         $tracker = $this->getTrackerById($group_id, $tracker_id, 'getArtifactHistory');
 
@@ -646,7 +639,7 @@ class Tracker_SOAPServer {
     }
 
     private function getProjectById($group_id, $method_name) {
-        $project = $this->project_manager->getGroupByIdForSoap($group_id, $method_name);
+        $project = $this->soap_request_validator->getGroupByIdForSoap($group_id, $method_name);
         if (!$project->usesService('plugin_tracker')) {
             throw new SoapFault(get_service_fault, 'Tracker service is not used for this project.', $method_name);
         }

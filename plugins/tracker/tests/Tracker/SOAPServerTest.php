@@ -71,7 +71,6 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($current_user)->isSuperUser()->returns(true);
         stub($current_user)->isLoggedIn()->returns(true);
         $user_manager        = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);
-        $project_manager     = mock('ProjectManager');
         $permissions_manager = mock('PermissionsManager');
 
         $this->artifact_factory    = mock('Tracker_ArtifactFactory');
@@ -86,16 +85,15 @@ class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $tracker_factory = mock('TrackerFactory');
         $this->setUpTrackers($tracker_factory);
 
-        $soap_user_manager = mock('SOAP_UserManager');
-        stub($soap_user_manager)->continueSession($this->session_key)->returns($current_user);
+        $soap_request_validator = mock('SOAP_RequestValidator');
+        stub($soap_request_validator)->continueSession($this->session_key)->returns($current_user);
 
         $this->report_factory = mock('Tracker_ReportFactory');
 
         $this->fileinfo_factory = mock('Tracker_FileInfoFactory');
 
         $this->server = new Tracker_SOAPServer(
-            $soap_user_manager,
-            $project_manager,
+            $soap_request_validator,
             $tracker_factory,
             $permissions_manager,
             $dao,
@@ -225,7 +223,7 @@ class FromFragmentsExpectation extends SimpleExpectation {
         }
     }
 }
-/*
+/**/
 class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
 
     public function itRaisesASoapFaultIfTheTrackerIsNotReadableByTheUser() {
@@ -470,7 +468,7 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         ));
     }
 }
-*/
+
 class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTest {
 
     public function setUp() {
