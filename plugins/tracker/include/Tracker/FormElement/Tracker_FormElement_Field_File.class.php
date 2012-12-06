@@ -28,7 +28,9 @@ require_once(dirname(__FILE__).'/../Tracker_FileInfo.class.php');
 require_once('common/valid/Rule.class.php');
 
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
-    
+
+    const SOAP_FAULT_INVALID_REQUEST_FORMAT = '3029';
+
     const THUMBNAILS_MAX_WIDTH  = 150;
     const THUMBNAILS_MAX_HEIGHT = 112;
     protected $supported_image_types = array('gif', 'png', 'jpeg', 'jpg');
@@ -913,8 +915,30 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return String the field data corresponding to the soap_value for artifact submision
      */
     public function getFieldData($soap_value) {
-        // files can't be imported. Always return an empty array
-        return array();
+        if (!($soap_value instanceof stdClass)) {
+            throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid submitted value for file field");
+        }
+        if (!isset($soap_value->file_info) || !is_array($soap_value->file_info)) {
+            throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "A File FieldValue must have a 'file_info' array (ArrayOfFieldValueFileInfo)");
+        }
+        $field_data = array();
+        foreach ($soap_value->file_info as $fileinfo) {
+            if (!($fileinfo instanceof stdClass)) {
+                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Fileinfo must be an array of FieldValueFileInfo");
+            }
+            if (!(isset($fileinfo->description) && isset($fileinfo->filename) && isset($fileinfo->filetype) && isset($fileinfo->filesize))) {
+                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Fileinfo must be an array of FieldValueFileInfo");
+            }
+            $field_data[] = array(
+                'description' => $fileinfo->description,
+                'name'        => $fileinfo->filename,
+                'type'        => $fileinfo->filetype,
+                'size'        => $fileinfo->filesize,
+                'error'       => UPLOAD_ERR_OK,
+                'tmp_name'    => 'fakesoap',
+            );
+        }
+        return $field_data;
     }
 
     public function deleteChangesetValue($changeset_value_id) {

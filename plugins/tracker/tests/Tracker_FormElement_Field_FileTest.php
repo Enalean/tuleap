@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'builders/all.php';
+
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_File.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_File',
@@ -143,15 +145,7 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $this->assertNull($f->getSoapAvailableValues());
     }
-    
-    function testGetFieldData() {
-        $file_field = new Tracker_FormElement_Field_FileTestVersion();
-        $this->assertNotNull($file_field->getFieldData('/var/lib/codendi/ftp/users/my_file.iso'));
-        $this->assertIdentical(array(), $file_field->getFieldData('/usr/share/codendi/VERSION'));
-        $this->assertNotNull($file_field->getFieldData(null));
-        $this->assertIdentical(array(), $file_field->getFieldData(null));
-    }
-    
+
     function test_augmentDataFromRequest_null() {
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $f->setReturnValue('getSubmittedInfoFromFILES', null);
@@ -677,4 +671,143 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
         $this->assertEqual($f->getRootPath(), Config::get('sys_data_dir') .'/tracker/123');
     }
 }
+
+class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTestCase {
+    /** @var Tracker_FormElement_Field_File */
+    private $field;
+
+    public function setUp() {
+        parent::setUp();
+        $this->field = aFileField()->build();
+    }
+
+    private function createFakeSoapFileRequest($name, $description, $filename, $filesize, $filetype) {
+        $soap_file = new stdClass();
+        $soap_file->id           = 0;
+        $soap_file->submitted_by = 0;
+        $soap_file->description  = $description;
+        $soap_file->filename     = $filename;
+        $soap_file->filesize     = $filesize;
+        $soap_file->filetype     = $filetype;
+        return $soap_file;
+    }
+
+    private function createFakeSoapFieldValue() {
+        $field_value = new stdClass();
+        $field_value->file_info = func_get_args();
+        return $field_value;
+    }
+
+    public function itRaisesAnErrorWhenThereIsNoData() {
+        $this->expectException();
+        $this->field->getFieldData(null);
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitAnArray() {
+        $this->expectException();
+        $this->field->getFieldData(array());
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitAnStringValue() {
+        $this->expectException();
+        $this->field->getFieldData('bla');
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitStdClassWithValue() {
+        $this->expectException();
+        $field_value = new stdClass();
+        $field_value->value = 'bla';
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitFileInfoThatIsNotAnArray() {
+        $this->expectException();
+        $field_value = new stdClass();
+        $field_value->file_info = 'bla';
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitFileInfoThatIsNotAnArrayOfFileValue() {
+        $this->expectException();
+        $field_value = $this->createFakeSoapFieldValue('bla');
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitFileInfoHasNotTheRequiredFields() {
+        $this->expectException();
+        $field_value = $this->createFakeSoapFieldValue(new stdClass());
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itDoesNothingWhenArrayIsEmpty() {
+        $field_value = $this->createFakeSoapFieldValue();
+        $this->assertEqual(array(), $this->field->getFieldData($field_value));
+    }
+
+    public function itConvertsOneFile() {
+        $description = "Purchase Order";
+        $filename    = 'my_file.ods';
+        $filesize    = 1234;
+        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($filename, $description, $filename, $filesize, $filetype)
+        );
+
+        $field = aFileField()->build();
+        $this->assertEqual(
+            $field->getFieldData($field_value),
+            array(
+                array(
+                    'description' =>  $description,
+                    'name'        =>  $filename,
+                    'type'        =>  $filetype,
+                    'tmp_name'    =>  'fakesoap',
+                    'error'       =>  UPLOAD_ERR_OK,
+                    'size'        =>  $filesize,
+                )
+           )
+        );
+    }
+
+    public function itConvertsTwoFiles() {
+        $description1 = "Purchase Order";
+        $filename1    = 'my_file.ods';
+        $filesize1    = 1234;
+        $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
+
+        $description2 = "Capture d'écran";
+        $filename2    = 'stuff.png';
+        $filesize2    = 5698;
+        $filetype2    = 'image/png';
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($filename1, $description1, $filename1, $filesize1, $filetype1),
+            $this->createFakeSoapFileRequest($filename2, $description2, $filename2, $filesize2, $filetype2)
+        );
+
+        $this->assertEqual(
+            $this->field->getFieldData($field_value),
+            array(
+                array(
+                    'description' =>  $description1,
+                    'name'        =>  $filename1,
+                    'type'        =>  $filetype1,
+                    'tmp_name'    =>  'fakesoap',
+                    'error'       =>  UPLOAD_ERR_OK,
+                    'size'        =>  $filesize1,
+                ),
+                array(
+                    'description' =>  $description2,
+                    'name'        =>  $filename2,
+                    'type'        =>  $filetype2,
+                    'tmp_name'    =>  'fakesoap',
+                    'error'       =>  UPLOAD_ERR_OK,
+                    'size'        =>  $filesize2,
+                )
+           )
+        );
+    }
+}
+
 ?>
