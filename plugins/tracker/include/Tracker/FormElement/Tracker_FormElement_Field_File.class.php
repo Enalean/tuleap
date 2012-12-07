@@ -764,7 +764,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 mkdir($path .'/thumbnails', 0777, true);
             }
             $filename = $path .'/'. $attachment->getId();
-            if ($file_info['tmp_name'] === self::SOAP_FAKE_FILE) {
+            if ($file_info['tmp_name'] === $this->getSoapFakeFilePath()) {
                 touch($filename);
                 return true;
             } else {
@@ -891,10 +891,23 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 'type'        => $fileinfo->filetype,
                 'size'        => $fileinfo->filesize,
                 'error'       => UPLOAD_ERR_OK,
-                'tmp_name'    => self::SOAP_FAKE_FILE,
+                'tmp_name'    => $this->getSoapFakeFilePath(),
             );
         }
         return $field_data;
+    }
+
+    /**
+     * Generate a empty file in php upload dir to fake existance for request validation
+     *
+     * @return string
+     */
+    protected function getSoapFakeFilePath() {
+        $full_path = ini_get('upload_tmp_dir').DIRECTORY_SEPARATOR.self::SOAP_FAKE_FILE;
+        if (!file_exists($full_path)) {
+            touch($full_path);
+        }
+        return $full_path;
     }
 
     public function deleteChangesetValue($changeset_value_id) {

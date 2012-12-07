@@ -644,6 +644,9 @@ class Tracker_FormElement_Field_File_FileSystemPersistanceTest  extends Tracker_
     public function createAttachment(Tracker_FileInfo $attachment, $file_info) {
         return parent::createAttachment($attachment, $file_info);
     }
+    public function getSoapFakeFilePath() {
+        return parent::getSoapFakeFilePath();
+    }
 }
 
 class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_FileTest {
@@ -672,7 +675,7 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
         $attachment = mock('Tracker_FileInfo');
         stub($attachment)->getId()->returns($attachment_id);
         stub($attachment)->save()->returns(true);
-        $file_info = array('tmp_name' => Tracker_FormElement_Field_File::SOAP_FAKE_FILE);
+        $file_info = array('tmp_name' => $this->field->getSoapFakeFilePath());
 
         expect($attachment)->delete()->never();
 
@@ -687,9 +690,14 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
     /** @var Tracker_FormElement_Field_File */
     private $field;
 
+    private $fake_soap_file_path;
+
     public function setUp() {
         parent::setUp();
         $this->field = aFileField()->build();
+
+        $f = new Tracker_FormElement_Field_File_FileSystemPersistanceTest(0);
+        $this->fake_soap_file_path = $f->getSoapFakeFilePath();
     }
 
     private function createFakeSoapFileRequest($description, $filename, $filesize, $filetype) {
@@ -773,7 +781,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description,
                     'name'        =>  $filename,
                     'type'        =>  $filetype,
-                    'tmp_name'    =>  Tracker_FormElement_Field_File::SOAP_FAKE_FILE,
+                    'tmp_name'    =>  $this->fake_soap_file_path,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize,
                 )
@@ -804,7 +812,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description1,
                     'name'        =>  $filename1,
                     'type'        =>  $filetype1,
-                    'tmp_name'    =>  Tracker_FormElement_Field_File::SOAP_FAKE_FILE,
+                    'tmp_name'    =>  $this->fake_soap_file_path,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize1,
                 ),
@@ -812,7 +820,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description2,
                     'name'        =>  $filename2,
                     'type'        =>  $filetype2,
-                    'tmp_name'    =>  Tracker_FormElement_Field_File::SOAP_FAKE_FILE,
+                    'tmp_name'    =>  $this->fake_soap_file_path,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize2,
                 )
