@@ -156,9 +156,7 @@ input_password() {
     local pass2="b"
     while [ "$pass1" != "$pass2" ]; do
 	read -s -p "Password for $label: " pass1
-	echo
 	read -s -p "Retype $label password: " pass2
-	echo
     done
     echo "$pass1"
 }
