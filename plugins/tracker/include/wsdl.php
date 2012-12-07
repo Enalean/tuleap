@@ -626,7 +626,7 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
-    'appendArtifactAttachmentChuck',
+    'appendArtifactAttachmentChunk',
     array('sessionKey'=>'xsd:string',
           'artifact_id'=>'xsd:int',
           'attachment_id' => 'xsd:int',
@@ -635,7 +635,7 @@ $GLOBALS['server']->register(
     ),
     array('return'=>'xsd:int'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#appendArtifactAttachmentChuck',
+    $GLOBALS['uri'].'#appendArtifactAttachmentChunk',
     'rpc',
     'encoded',
     'Append file content chunk into selected attachement'

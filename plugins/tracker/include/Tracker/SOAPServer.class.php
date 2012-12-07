@@ -644,7 +644,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    public function appendArtifactAttachmentChuck($session_key, $artifact_id, $attachment_id, $content, $is_last_chunk) {
+    public function appendArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $content, $is_last_chunk) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $artifact     = $this->getArtifactById($artifact_id, 'appendArtifactAttachmentChuck');
@@ -652,7 +652,7 @@ class Tracker_SOAPServer {
             $this->checkUserCanViewTracker($tracker, $current_user);
 
             $file_info = $this->fileinfo_factory->getById($attachment_id);
-            if ($file_info && $file_info->fileExists()) {
+            if ($file_info) {
                 $field = $file_info->getField();
                 if ($field->userCanUpdate($current_user)) {
                     $written = $file_info->appendSoapContent($content);

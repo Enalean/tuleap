@@ -591,7 +591,7 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
     }
 }
 
-class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTest {
+abstract class Tracker_SOAPServer_AttachmentChunkTest extends Tracker_SOAPServer_BaseTest {
 
     public function setUp() {
         parent::setUp();
@@ -602,7 +602,7 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
         $this->field         = mock('Tracker_FormElement_Field_File');
         $this->file_info     = partial_mock(
             'Tracker_FileInfo',
-            array('getSoapContent', 'fileExists'),
+            array('getSoapContent', 'fileExists', 'appendSoapContent', 'postUploadActions'),
             array($this->attachment_id, $this->field, null, null, null, null, null)
         );
 
@@ -610,6 +610,15 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
 
         stub($this->fileinfo_factory)->getById($this->attachment_id)->returns($this->file_info);
+    }
+}
+
+class Tracker_SOAPServer_GetArtifactAttachmentChunk_Test extends Tracker_SOAPServer_AttachmentChunkTest {
+
+    public function setUp() {
+        parent::setUp();
+        $this->offset        = 0;
+        $this->size          = 2000;
     }
 
     public function itRaisesAnExceptionIfTrackerIsNotReadable() {
@@ -652,7 +661,6 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
         $this->assertIsA($returns, 'SoapFault');
     }
 
-
     public function itGetsTheDataFromTheFieldFormElement() {
         stub($this->file_info)->fileExists()->returns(true);
         stub($this->field)->userCanRead()->returns(true);
@@ -663,4 +671,67 @@ class Tracker_SOAPServer_getFileFieldInfo_Test extends Tracker_SOAPServer_BaseTe
     }
 }
 
+class Tracker_SOAPServer_AppendArtifactAttachmentChunk_Test extends Tracker_SOAPServer_AttachmentChunkTest {
+
+    public function setUp() {
+        parent::setUp();
+        $this->content = 'stuff';
+        $this->is_last_chunk = false;
+    }
+
+    public function itRaisesAnExceptionIfTrackerIsNotReadable() {
+        $artifact_id = 9348;
+        $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->unreadable_tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
+        $returns = $this->server->appendArtifactAttachmentChunk($this->session_key, $artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
+        $this->assertIsA($returns, 'SoapFault');
+    }
+
+    public function itRaisesAnExceptionIfTrackerBelongsToProjectNotReadable() {
+        $artifact_id = 9348;
+        $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->private_unreadable_tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
+        $soap_fault = $this->server->appendArtifactAttachmentChunk($this->session_key, $artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
+        $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
+    }
+
+    public function itRaisesAnExeptionIfTheAttachementIsInvalid() {
+        $artifact    = anArtifact()->withId($this->artifact_id)->withTracker($this->tracker)->build();
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
+
+        $returns = $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, 321654, $this->content, $this->is_last_chunk);
+        $this->assertIsA($returns, 'SoapFault');
+    }
+
+    public function itRaisesAnExceptionIfFieldIsNotReadable() {
+        stub($this->field)->userCanUpdate()->returns(false);
+
+        $returns = $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
+        $this->assertIsA($returns, 'SoapFault');
+    }
+
+    public function itForwardsTheWriteToFileInfo() {
+        stub($this->field)->userCanUpdate()->returns(true);
+
+        expect($this->file_info)->appendSoapContent($this->content)->once();
+
+        $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
+    }
+
+    public function itDoesntDoAnythingSpecialWhenNotTheLastChunk() {
+        stub($this->field)->userCanUpdate()->returns(true);
+
+        expect($this->file_info)->postUploadActions()->never();
+
+        $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
+    }
+
+    public function itDoesSpecificThingsWhenItsTheLastChunk() {
+        stub($this->field)->userCanUpdate()->returns(true);
+
+        expect($this->file_info)->postUploadActions()->once();
+
+        $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, true);
+    }
+}
 ?>
