@@ -71,6 +71,10 @@ class Tracker_FileInfo {
         return base64_encode(file_get_contents($this->getPath(), false, NULL, $offset, $size));
     }
 
+    public function appendSoapContent($content) {
+        file_put_contents($this->getPath(), base64_decode($content));
+    }
+
     /**
      * @return Tracker_FormElement_Field_File
      */
