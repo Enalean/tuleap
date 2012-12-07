@@ -748,15 +748,24 @@ class Tracker_RulesManager {
                             // when a dependence problem is detected, we detail the message error
                             // to explain the fields that trigger the problem
                             if (! $valid) {
+                                                               
                                 $error_occured = true;
                                 // looking for the source field value which cause the dependence problem
                                 $source_field = $this->getTrackerFormElementFactory()->getFormElementById($source);
-                                $pb_source_values = $this->getSelectedValuesForField($source_field, $value_field_list[$source]);
+                                if(is_null($value_field_list[$source])) {
+                                    $pb_source_values = array();
+                                } else {
+                                    $pb_source_values = $this->getSelectedValuesForField($source_field, $value_field_list[$source]);
+                                }
                                 $source_field->setHasErrors(true);
 
                                 // looking for the target field value which cause the dependence problem
                                 $target_field = $this->getTrackerFormElementFactory()->getFormElementById($target);
-                                $pb_target_values = $this->getSelectedValuesForField($target_field, $target_value);
+                                if(is_null($value_field_list[$target])) {
+                                   $pb_target_values = array();
+                                } else {
+                                    $pb_target_values = $this->getSelectedValuesForField($target_field, $value_field_list[$target]);
+                                }
                                 $target_field->setHasErrors(true);
                                // detailled error message
                                $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
