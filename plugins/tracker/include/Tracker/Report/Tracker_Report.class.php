@@ -1211,15 +1211,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         //Delete criteria in the db
         $this->deleteAllCriteria();
 
-        foreach($this->report_session->getCriteria() as $key=>$session_criterion) {
-            if ( !empty($session_criterion['is_removed']) ) {
-                continue;
+        $session_criteria = $this->report_session->getCriteria();
+        if (is_array($session_criteria)) {
+            foreach($session_criteria as $key=>$session_criterion) {
+                if ( !empty($session_criterion['is_removed']) ) {
+                    continue;
+                }
+                $c  = $this->criteria[$key];
+                $id = $this->addCriteria($c);
+                $c->setId($id);
+                $c->updateValue($session_criterion['value']);
             }
-            $c  = $this->criteria[$key];
-            $id = $this->addCriteria($c);
-            $c->setId($id);
-            $c->updateValue($session_criterion['value']);
-        }       
+        }
     }
 
     /**
