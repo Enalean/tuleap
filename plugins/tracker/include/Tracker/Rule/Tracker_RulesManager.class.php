@@ -761,10 +761,10 @@ class Tracker_RulesManager {
 
                                 // looking for the target field value which cause the dependence problem
                                 $target_field = $this->getTrackerFormElementFactory()->getFormElementById($target);
-                                if(is_null($value_field_list[$target])) {
+                                if(is_null($target_value)) {
                                    $pb_target_values = array();
                                 } else {
-                                    $pb_target_values = $this->getSelectedValuesForField($target_field, $value_field_list[$target]);
+                                    $pb_target_values = $this->getSelectedValuesForField($target_field, $target_value);
                                 }
                                 $target_field->setHasErrors(true);
                                // detailled error message
