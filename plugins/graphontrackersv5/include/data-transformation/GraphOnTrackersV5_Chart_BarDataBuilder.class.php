@@ -70,7 +70,6 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                             $engine->xaxis[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                             $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                         }
-                        $engine->xaxis = array_values($engine->xaxis);
                     } else {
                         $engine->data[]   = $data['nb'];
                     }
@@ -85,12 +84,14 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                             $engine->xaxis[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                             $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                         }
-                        $engine->xaxis = array_values($engine->xaxis);
                     } else {
                         $engine->data[]   = $data['nb'];
                     }
                     $engine->legend[$data[$af->name]] = $GLOBALS['Language']->getText('global','none');
                 }
+            }
+            if ($select_group) {
+                $engine->xaxis = array_values($engine->xaxis);
             }
         }
         return $result;
