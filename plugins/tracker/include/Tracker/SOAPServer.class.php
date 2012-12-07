@@ -375,7 +375,7 @@ class Tracker_SOAPServer {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'addArtifact');
             } else {
-                return new SoapFault(update_artifact_fault, 'Unknown error', 'addArtifact');
+                return new SoapFault(update_artifact_fault, 'Unknown error(s)', 'addArtifact');
             }
         }
     }
@@ -464,6 +464,8 @@ class Tracker_SOAPServer {
                 $response = new Response();
                 if ($response->feedbackHasErrors()) {
                     return new SoapFault(update_artifact_fault, $response->getRawFeedback(), 'updateArtifact');
+                } elseif ($GLOBALS['Response']) {
+                    return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
                 } else {
                     return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
                 }
