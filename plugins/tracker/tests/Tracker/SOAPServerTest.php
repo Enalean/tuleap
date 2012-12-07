@@ -761,5 +761,15 @@ class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_BaseTe
         $uniq_name = $this->server->createTemporaryAttachment($this->session_key);
         $this->assertTrue(file_exists($this->fixture_dir.'/soap_attachement_temp_'.$this->user_id.'_'.$uniq_name));
     }
+
+    public function itCannotCreateMoreThanFiveTemporaryFiles() {
+        $this->server->createTemporaryAttachment($this->session_key);
+        $this->server->createTemporaryAttachment($this->session_key);
+        $this->server->createTemporaryAttachment($this->session_key);
+        $this->server->createTemporaryAttachment($this->session_key);
+        $this->server->createTemporaryAttachment($this->session_key);
+        $returns = $this->server->createTemporaryAttachment($this->session_key);
+        $this->assertIsA($returns, 'SoapFault');
+    }
 }
 ?>

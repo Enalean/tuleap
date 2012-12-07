@@ -50,8 +50,12 @@ define('user_is_not_tracker_admin','3026');
 define('invalid_report', '3027');
 define('invalid_file', '3028');
 define('invalid_file_field_format', Tracker_FormElement_Field_File::SOAP_FAULT_INVALID_REQUEST_FORMAT); //'3029'
+define('nb_max_temp_files', '3030');
 
 class Tracker_SOAPServer {
+    const TEMP_FILE_PREFIX = 'soap_attachement_temp_';
+    const TEMP_FILE_NB_MAX = 5;
+
     /**
      * @var SOAP_RequestValidator
      */
@@ -672,10 +676,21 @@ class Tracker_SOAPServer {
     }
 
     public function createTemporaryAttachment($session_key) {
-        $current_user = $this->soap_request_validator->continueSession($session_key);
-        $prefix = 'soap_attachement_temp_'.$current_user->getId().'_';
-        $file_path = tempnam(Config::get('codendi_cache_dir'), $prefix);
-        return substr(basename($file_path), strlen($prefix));
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $prefix       = self::TEMP_FILE_PREFIX.$current_user->getId().'_';
+            if ($this->isOverUserTemporaryFileLimit(Config::get('codendi_cache_dir'), $prefix)) {
+                return new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
+            }
+            $file_path    = tempnam(Config::get('codendi_cache_dir'), $prefix);
+            return substr(basename($file_path), strlen($prefix));
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    private function isOverUserTemporaryFileLimit($directory, $prefix) {
+        return count(glob($directory.DIRECTORY_SEPARATOR.$prefix.'*')) > (self::TEMP_FILE_NB_MAX - 1);
     }
 
     /**
