@@ -64,6 +64,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     protected $formelement_factory;
     protected $report_factory;
     protected $fileinfo_factory;
+    protected $user_manager;
 
     protected $i_should_not_have_access_to_this_private_project_id = 666;
     protected $project_id = 111;
@@ -76,7 +77,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($current_user)->isSuperUser()->returns(true);
         stub($current_user)->isLoggedIn()->returns(true);
         stub($current_user)->isRestricted()->returns(false);
-        $user_manager        = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);
+        $this->user_manager  = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);
         $permissions_manager = mock('PermissionsManager');
         $project_manager     = mock('ProjectManager');
         $project             = mock('Project');
@@ -104,7 +105,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $this->artifact_factory    = mock('Tracker_ArtifactFactory');
         $this->setUpArtifacts($this->artifact_factory);
 
-        $soap_request_validator = new SOAP_RequestValidator($project_manager, $user_manager);
+        $soap_request_validator = new SOAP_RequestValidator($project_manager, $this->user_manager);
 
         stub($project_manager)->getGroupByIdForSoap($this->project_id, '*')->returns($project);
         stub($project_manager)->getGroupByIdForSoap($this->i_should_not_have_access_to_this_private_project_id, '*')->returns($private_project);
@@ -735,7 +736,7 @@ class Tracker_SOAPServer_AppendArtifactAttachmentChunk_Test extends Tracker_SOAP
     }
 }
 
-class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_BaseTest {
+abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker_SOAPServer_BaseTest {
     protected $fixture_dir;
 
     public function setUp() {
@@ -752,6 +753,9 @@ class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_BaseTe
         Config::restore();
         parent::tearDown();
     }
+}
+
+class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_TemproraryAttachments_BaseTest {
 
     public function itCreatesAnAttachment() {
         $this->assertNotNull($this->server->createTemporaryAttachment($this->session_key));
@@ -759,7 +763,7 @@ class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_BaseTe
 
     public function itProvisionAFileOnTheFileSystem() {
         $uniq_name = $this->server->createTemporaryAttachment($this->session_key);
-        $this->assertTrue(file_exists($this->fixture_dir.'/soap_attachement_temp_'.$this->user_id.'_'.$uniq_name));
+        $this->assertTrue(file_exists($this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.$this->user_id.'_'.$uniq_name));
     }
 
     public function itCannotCreateMoreThanFiveTemporaryFiles() {
@@ -772,4 +776,50 @@ class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_BaseTe
         $this->assertIsA($returns, 'SoapFault');
     }
 }
+
+class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServer_TemproraryAttachments_BaseTest {
+    private $another_session_key;
+    private $another_user_id;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->another_session_key = 'sdf54564dsfsd';
+        $this->another_user_id     = 357159;
+        $another_user = mock('User');
+        stub($another_user)->getId()->returns($this->another_user_id);
+        stub($another_user)->isSuperUser()->returns(true);
+        stub($another_user)->isLoggedIn()->returns(true);
+        stub($another_user)->isRestricted()->returns(false);
+        stub($this->user_manager)->getCurrentUser($this->another_session_key)->returns($another_user);
+    }
+
+    public function itDoesNothingWhenThereIsNothingToPurge() {
+        $this->assertTrue($this->server->purgeAllTemporaryAttachments($this->session_key));
+    }
+
+    public function itRemovesExistingFiles() {
+        $this->server->createTemporaryAttachment($this->session_key);
+        $this->server->createTemporaryAttachment($this->session_key);
+        $this->assertTrue($this->server->purgeAllTemporaryAttachments($this->session_key));
+        $this->assertCount(glob($this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.'*'), 0);
+    }
+
+    public function itRemovesOnlyFilesForCurrentUser() {
+        $this->server->createTemporaryAttachment($this->session_key);
+        $this->server->createTemporaryAttachment($this->session_key);
+
+        $this->server->createTemporaryAttachment($this->another_session_key);
+        $this->server->createTemporaryAttachment($this->another_session_key);
+
+        $this->assertTrue($this->server->purgeAllTemporaryAttachments($this->session_key));
+        $temporary_files = glob($this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.'*');
+        $this->assertCount($temporary_files, 2);
+        $another_user_prefix = $this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.$this->another_user_id;
+        foreach ($temporary_files as $file) {
+            $this->assertPattern("%^$another_user_prefix%", $file);
+        }
+    }
+}
+
 ?>
