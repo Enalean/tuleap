@@ -62,7 +62,7 @@ plugin_forumml	back_to_list	Back to the list
 # Script:plugins/forumml/www/message.php
 #
 plugin_forumml	post_thread	Post a new Thread
-plugin_forumml	post_thread_login   Login to Post a new Thread
+plugin_forumml	post_thread_login	Login to Post a new Thread
 plugin_forumml	thread	Thread
 plugin_forumml	submitted_on	Submitted on
 plugin_forumml	author	Author

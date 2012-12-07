@@ -63,6 +63,7 @@ forum_forum	date	Date
 forum_forum	prev_msg	Messages précédents
 forum_forum	next_msg	Messages suivants
 forum_forum	start_new_thread	Commencer une nouvelle discussion
+forum_forum	login_start_new_thread	Connectez-vous pour poster un nouveau sujet
 forum_forum	choose_forum_first	Erreur - Veuillez d'abord choisir un forum
 #
 #-----------------------------------------------
