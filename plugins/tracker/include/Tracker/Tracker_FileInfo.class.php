@@ -82,17 +82,6 @@ class Tracker_FileInfo {
     }
 
     /**
-     * Put some SOAP contents at the end of the file
-     *
-     * @param String $content Base64 encoded content
-     *
-     * @return Integer length of written data
-     */
-    public function appendSoapContent($content) {
-        return file_put_contents($this->getPath(), base64_decode($content), FILE_APPEND);
-    }
-
-    /**
      * @return Tracker_FormElement_Field_File
      */
     public function getField() {
