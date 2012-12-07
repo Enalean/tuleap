@@ -20,8 +20,8 @@
  */
 // format : project_id  tracker_id  value
 
-if ($argc < 4) {
-    die('Usage: ".$argv[0]." project_id  tracker_id  value \n');
+if ($argc != 5) {
+    die('Usage: ".$argv[0]." project_id  tracker_id  value file\n');
 }
 
 $serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
@@ -36,11 +36,18 @@ $requesterSessionHash = $soapLogin->login($login, $password)->session_hash;
 //save values
 $project_id  = $argv[1];
 $tracker_id  = $argv[2];
-$value       = array(
+$summary     = $argv[3];
+$file        = $argv[4];
+
+$filesize = filesize($file);
+$filename = basename($file);
+$filetype = system('file -b --mime-type '.escapeshellarg($file));
+
+$value = array(
     array(
         'field_name' => 'summary',
         'field_label' => '',
-        'field_value' => array('value' => $argv[3])
+        'field_value' => array('value' => $summary)
     ),
     array(
         'field_name' => 'attachment',
@@ -48,12 +55,12 @@ $value       = array(
         'field_value' => array(
             'file_info' => array(
                 array(
-                    'id' => 0,
+                    'id'           => 0,
                     'submitted_by' => 0,
-                    'description' => 'description',
-                    'filename' => 'my_file.doc',
-                    'filesize' => 1234,
-                    'filetype' => 'image/png',
+                    'description'  => 'description',
+                    'filename'     => $filename,
+                    'filesize'     => $filesize,
+                    'filetype'     => $filetype,
                 )
             )
         )
@@ -66,7 +73,34 @@ $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('c
 //executing method updateArtefact
 
 $response = $soapTracker->addArtifact($requesterSessionHash, $project_id, $tracker_id, $value);
+var_dump("Artifact: ".$response);
 
-var_dump($response);
+$artifact_id = (int) $response;
+
+// Find the attachment id
+$attachment_id = false;
+$artifact = $soapTracker->getArtifact($requesterSessionHash, '', '', $artifact_id);
+foreach ($artifact->value as $field_value) {
+    if ($field_value->field_name == 'attachment') {
+        foreach ($field_value->field_value->file_info as $file_info) {
+            if ((string)$file_info->filename == $filename) {
+                $attachment_id = (int)$file_info->id;
+            }
+        }
+    }
+}
+
+var_dump("Attachment id: ".$attachment_id);
+
+if ($attachment_id) {
+    $file_contents = file_get_contents($file);
+    var_dump(strlen(base64_encode($file_contents)));
+    $written = $soapTracker->appendArtifactAttachmentChuck($requesterSessionHash, $artifact_id, $attachment_id, base64_encode($file_contents));
+    var_dump($written);
+    if ($written == strlen($file_contents)) {
+        var_dump("File successfully uploaded");
+    }
+}
+
 
 ?>

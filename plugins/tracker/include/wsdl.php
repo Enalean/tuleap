@@ -613,7 +613,6 @@ $GLOBALS['server']->register(
     'getArtifactAttachmentChunk',
     array('sessionKey'=>'xsd:string',
           'artifact_id'=>'xsd:int',
-          'field_id' => 'xsd:int', 
           'attachment_id' => 'xsd:int',
           'offset' => 'xsd:int', 
           'size' => 'xsd:int',
@@ -624,6 +623,21 @@ $GLOBALS['server']->register(
     'rpc',
     'encoded',
     'Return base64 encoded chunk of request file'
+);
+
+$GLOBALS['server']->register(
+    'appendArtifactAttachmentChuck',
+    array('sessionKey'=>'xsd:string',
+          'artifact_id'=>'xsd:int',
+          'attachment_id' => 'xsd:int',
+          'content' => 'xsd:string',
+    ),
+    array('return'=>'xsd:int'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#appendArtifactAttachmentChuck',
+    'rpc',
+    'encoded',
+    'Append file content chunk into selected attachement'
 );
 
 $GLOBALS['server']->register(

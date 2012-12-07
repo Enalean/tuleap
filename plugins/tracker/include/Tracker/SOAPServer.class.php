@@ -644,6 +644,29 @@ class Tracker_SOAPServer {
         }
     }
 
+    public function appendArtifactAttachmentChuck($session_key, $artifact_id, $attachment_id, $content) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $artifact     = $this->getArtifactById($artifact_id, 'appendArtifactAttachmentChuck');
+            $tracker      = $artifact->getTracker();
+            $this->checkUserCanViewTracker($tracker, $current_user);
+
+            $file_info = $this->fileinfo_factory->getById($attachment_id);
+            if ($file_info && $file_info->fileExists()) {
+                $field = $file_info->getField();
+                if ($field->userCanUpdate($current_user)) {
+                    return $file_info->appendSoapContent($content);
+                } else {
+                    return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+                }
+            } else {
+                return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+            }
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
     /**
      * getArtifactHistory - returns the array of ArtifactHistory of the artifact $artifact_id in the tracker $tracker_id of the project $group_id
      *
