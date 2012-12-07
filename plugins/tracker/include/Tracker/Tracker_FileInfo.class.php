@@ -21,7 +21,9 @@
 require_once('dao/Tracker_FileInfoDao.class.php');
 
 class Tracker_FileInfo {
-    
+    const THUMBNAILS_MAX_WIDTH  = 150;
+    const THUMBNAILS_MAX_HEIGHT = 112;
+
     protected $id;
     protected $field;
     protected $submitted_by;
@@ -29,9 +31,9 @@ class Tracker_FileInfo {
     protected $filename;
     protected $filesize;
     protected $filetype;
-    
+
     protected $supported_image_types = array('gif', 'png', 'jpeg', 'jpg');
-    
+
     /**
      * @param integer                   $id
      * @param Tracker_FormElement_Field $field
@@ -42,7 +44,7 @@ class Tracker_FileInfo {
      * @param string                    $filetype
      */
     public function __construct($id, $field, $submitted_by, $description, $filename, $filesize, $filetype) {
-        $this->id           = $id; 
+        $this->id           = $id;
         $this->field        = $field;
         $this->submitted_by = $submitted_by;
         $this->description  = $description;
@@ -103,32 +105,32 @@ class Tracker_FileInfo {
     public function getDescription() {
         return $this->description;
     }
-    
+
     /**
      * @return int the id of the user whos submitted the file
      */
     public function getSubmittedBy() {
         return $this->submitted_by;
     }
-    
+
     /**
      * @return string the filename of the file
      */
     public function getFilename() {
         return $this->filename;
     }
-    
+
     /**
      * @return string the size of the file
      */
     public function getFilesize() {
         return $this->filesize;
     }
-    
+
     /**
      * Get the human readable file size
      *
-     * @return string 
+     * @return string
      */
     public function getHumanReadableFilesize() {
         $s = array('B', 'kB', 'MB', 'GB', 'TB', 'PB');
@@ -138,21 +140,21 @@ class Tracker_FileInfo {
         }
         return sprintf('%.0f '.$s[$e], ($this->getFilesize() / pow(1024, floor($e))));
     }
-    
+
     /**
      * @return string the type of the file
      */
     public function getFiletype() {
         return $this->filetype;
     }
-    
+
     /**
      * @return int the id of the file
      */
     public function getId() {
         return $this->id;
     }
-    
+
     /**
      * @return true if the file is a supported image
      */
@@ -160,14 +162,14 @@ class Tracker_FileInfo {
         $parts = split('/', $this->getFileType());
         return $parts[0] == 'image' && in_array(strtolower($parts[1]), $this->supported_image_types) ;
     }
-    
+
     /**
      * @return string the filesystem path to the file
      */
     public function getPath() {
         return $this->getRootPath() .'/'. $this->id;
     }
-    
+
     /**
      * @return string the filesystem path to the file
      */
@@ -177,7 +179,7 @@ class Tracker_FileInfo {
         }
         return null;
     }
-    
+
     /**
      * Compute the root path of the filesystem
      * @return string
@@ -185,13 +187,65 @@ class Tracker_FileInfo {
     protected function getRootPath() {
         return $this->field->getRootPath();
     }
-    
+
     public function __toString() {
         return '#'. $this->getId() .' '. $this->getFilename();
     }
 
     public function fileExists() {
         return file_exists($this->getPath());
+    }
+
+    public function postUploadActions() {
+        if ($this->isImage()) {
+            $this->createThumbnail();
+        }
+    }
+
+    /**
+     * Create a thumbnail of the image
+     *
+     * All modifications to this script should be done in the migration script 125
+     *
+     * @return void
+     */
+    private function createThumbnail() {
+        $size = getimagesize($this->getPath());
+        $thumbnail_width  = $size[0];
+        $thumbnail_height = $size[1];
+        if ($thumbnail_width > self::THUMBNAILS_MAX_WIDTH || $thumbnail_height > self::THUMBNAILS_MAX_HEIGHT) {
+            if ($thumbnail_width / self::THUMBNAILS_MAX_WIDTH < $thumbnail_height / self::THUMBNAILS_MAX_HEIGHT) {
+                //keep the height
+                $thumbnail_width  = $thumbnail_width * self::THUMBNAILS_MAX_HEIGHT / $thumbnail_height;
+                $thumbnail_height = self::THUMBNAILS_MAX_HEIGHT;
+            } else {
+                //keep the width
+                $thumbnail_height = $thumbnail_height * self::THUMBNAILS_MAX_WIDTH / $thumbnail_width;
+                $thumbnail_width  = self::THUMBNAILS_MAX_WIDTH;
+            }
+        }
+        switch ($size[2]) {
+        case IMAGETYPE_GIF:
+            $source      = imagecreatefromgif($this->getPath());
+            $destination = imagecreate((int)$thumbnail_width, (int)$thumbnail_height);
+            imagepalettecopy($destination, $source);
+            $store       = 'imagegif';
+            break;
+        case IMAGETYPE_JPEG:
+            $source      = imagecreatefromjpeg($this->getPath());
+            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
+            $store       = 'imagejpeg';
+            break;
+        case IMAGETYPE_PNG:
+            $source      = imagecreatefrompng($this->getPath());
+            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
+            $store       = 'imagepng';
+            break;
+        }
+        imagecopyresized($destination, $source, 0, 0, 0, 0, (int)$thumbnail_width, (int)$thumbnail_height, $size[0], $size[1]);
+        $store($destination, $this->getThumbnailPath());
+        imagedestroy($source);
+        imagedestroy($destination);
     }
 
     /**
@@ -241,7 +295,7 @@ class Tracker_FileInfo {
             //TODO: check that the attachment belongs to the field
             if ($row || ($row = $dao->searchById($id)->getRow())) {
                 self::$instances_by_id[$id] = new Tracker_FileInfo(
-                    $row['id'], 
+                    $row['id'],
                     $field,
                     $row['submitted_by'],
                     $row['description'],

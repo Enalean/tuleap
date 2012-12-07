@@ -417,54 +417,7 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertEqual($fields_data[66][0]['description'], 'The description of the file');
     }
-    
-    function test_createThumbnail() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $thumb_png = $this->thumbnails_dir.'/66';
-        $this->assertFalse(file_exists($thumb_png));
-        $f->createThumbnail(66, $this->attachment_dir, $this->attachment_dir.'/logo.png');
-        $this->assertTrue(file_exists($thumb_png));
-        $this->assertEqual(getimagesize($thumb_png), array(
-            150,
-            55,
-            IMAGETYPE_PNG,
-            'width="150" height="55"',
-            'bits' => 8,
-            'mime' => 'image/png'
-        ));
-        
-        $thumb_gif = $this->thumbnails_dir.'/111';
-        $this->assertFalse(file_exists($thumb_gif));
-        $f->createThumbnail(111, $this->attachment_dir, $this->attachment_dir.'/logo.gif');
-        $this->assertTrue(file_exists($thumb_gif));
-        $this->assertEqual(getimagesize($thumb_gif), array(
-            150,
-            55,
-            IMAGETYPE_GIF,
-            'width="150" height="55"',
-            'bits' => 8,
-            'channels' => 3,
-            'mime' => 'image/gif'
-        ));
-        
-        /* TODO: add suport for jpeg 
-        
-        $thumb_jpg = $this->thumbnails_dir.'/421';
-        $this->assertFalse(file_exists($thumb_jpg));
-        $f->createThumbnail(421, $this->attachment_dir, $this->attachment_dir.'/logo.jpg');
-        $this->assertTrue(file_exists($thumb_jpg));
-        $this->assertEqual(getimagesize($thumb_jpg), array(
-            150,
-            55,
-            IMAGETYPE_JPEG,
-            'width="150" height="55"',
-            'bits' => 8,
-            'channels' => 3,
-            'mime' => 'image/jpg'
-        ));
-        /**/
-    }
-    
+
     function test_isValid_not_filled() {
         $artifact = new MockTracker_Artifact();
         $value = array(

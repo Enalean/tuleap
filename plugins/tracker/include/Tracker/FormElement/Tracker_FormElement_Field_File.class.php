@@ -30,10 +30,6 @@ require_once('common/valid/Rule.class.php');
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     const SOAP_FAKE_FILE = 'soapfakefile';
     const SOAP_FAULT_INVALID_REQUEST_FORMAT = '3029';
-
-    const THUMBNAILS_MAX_WIDTH  = 150;
-    const THUMBNAILS_MAX_HEIGHT = 112;
-    protected $supported_image_types = array('gif', 'png', 'jpeg', 'jpg');
     
     public function getCriteriaFrom($criteria) {
         //Only filter query if field  is used
@@ -488,12 +484,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function getRootPath() {
         return Config::get('sys_data_dir') .'/tracker/'. $this->getId();
     }
-    
-    protected function isImage($value) {
-        $parts = split('/', $value['filetype']);
-        return $parts[0] == 'image' && in_array(strtolower($parts[1]), $this->supported_image_types);
-    }
-    
+
     /**
      * Display the html field in the admin ui
      *
@@ -778,9 +769,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 return true;
             } else {
                 if (move_uploaded_file($file_info['tmp_name'], $filename)) {
-                    if ($attachment->isImage()) {
-                        $this->createThumbnail($attachment->getId(), $path, $filename);
-                    }
+                    $attachment->postUploadActions();
                     return true;
                 } else {
                     $attachment->delete();
@@ -790,57 +779,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return false;
     }
 
-    /**
-     * Create a thumbnail of the image
-     * 
-     * @param integer $attachment_id The id of the attachment
-     * @param string  $path          The path of the thumbnail. Assume that the dir exists.
-     * @param string  $filename      The name of the file
-     *
-     * @return void
-     */
-    public function createThumbnail($attachment_id, $path, $filename) {
-        //
-        // All modifications to this script should be done in the migration script 125
-        //
-        $size = getimagesize($filename);
-        $thumbnail_width  = $size[0];
-        $thumbnail_height = $size[1];
-        if ($thumbnail_width > self::THUMBNAILS_MAX_WIDTH || $thumbnail_height > self::THUMBNAILS_MAX_HEIGHT) { 
-            if ($thumbnail_width / self::THUMBNAILS_MAX_WIDTH < $thumbnail_height / self::THUMBNAILS_MAX_HEIGHT) {
-                //keep the height
-                $thumbnail_width  = $thumbnail_width * self::THUMBNAILS_MAX_HEIGHT / $thumbnail_height;
-                $thumbnail_height = self::THUMBNAILS_MAX_HEIGHT;
-            } else {
-                //keep the width
-                $thumbnail_height = $thumbnail_height * self::THUMBNAILS_MAX_WIDTH / $thumbnail_width;
-                $thumbnail_width  = self::THUMBNAILS_MAX_WIDTH;
-            }
-        }
-        switch ($size[2]) {
-        case IMAGETYPE_GIF:
-            $source      = imagecreatefromgif($filename);
-            $destination = imagecreate((int)$thumbnail_width, (int)$thumbnail_height);
-            imagepalettecopy($destination, $source);
-            $store       = 'imagegif';
-            break;
-        case IMAGETYPE_JPEG:
-            $source      = imagecreatefromjpeg($filename);
-            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
-            $store       = 'imagejpeg';
-            break;
-        case IMAGETYPE_PNG:
-            $source      = imagecreatefrompng($filename);
-            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
-            $store       = 'imagepng';
-            break;
-        }
-        imagecopyresized($destination, $source, 0, 0, 0, 0, (int)$thumbnail_width, (int)$thumbnail_height, $size[0], $size[1]);
-        $store($destination, $path .'/thumbnails/'. $attachment_id);
-        imagedestroy($source);
-        imagedestroy($destination);
-    }
-    
     /**
      * Check if there are changes between old and new value for this field
      *
