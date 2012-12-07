@@ -1015,6 +1015,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return boolean True if update is done without error, false otherwise
      */
     public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+        $this->getWorkflow()->before($fields_data, $submitter, $this);
         $changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email);
         if(! $changeset_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
@@ -1069,7 +1070,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required'));
             return false;
-        } 
+        }
       
         if (! $this->validateFields($fields_data, false)) {  
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid'));

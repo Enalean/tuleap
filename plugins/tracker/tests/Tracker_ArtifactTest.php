@@ -976,7 +976,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
             )
         );
         $workflow = new MockWorkflow();
-        $workflow->expectOnce('before');
+        $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
         $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
@@ -1126,7 +1126,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $art_factory->expectOnce('save');
 
         $workflow = new MockWorkflow();
-        $workflow->expectOnce('before');
+        $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
         $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
@@ -1333,7 +1333,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $art_factory->expectOnce('save');
 
         $workflow = new MockWorkflow();
-        $workflow->expectOnce('before');
+        $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
         $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
