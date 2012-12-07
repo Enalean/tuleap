@@ -20,7 +20,7 @@
 require_once(dirname(__FILE__).'/../builders/all.php');
 require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
-class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
+abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     /**
      * @var Tracker_SOAPServer
      */
@@ -732,6 +732,34 @@ class Tracker_SOAPServer_AppendArtifactAttachmentChunk_Test extends Tracker_SOAP
         expect($this->file_info)->postUploadActions()->once();
 
         $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, true);
+    }
+}
+
+class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_BaseTest {
+    protected $fixture_dir;
+
+    public function setUp() {
+        parent::setUp();
+        Config::store();
+        $this->fixture_dir = dirname(__FILE__).'/../_fixtures/attachments/tmp';
+        mkdir($this->fixture_dir);
+        Config::set('codendi_cache_dir', $this->fixture_dir);
+    }
+
+    public function tearDown() {
+        $this->recurseDeleteInDir($this->fixture_dir);
+        rmdir($this->fixture_dir);
+        Config::restore();
+        parent::tearDown();
+    }
+
+    public function itCreatesAnAttachment() {
+        $this->assertNotNull($this->server->createTemporaryAttachment($this->session_key));
+    }
+
+    public function itProvisionAFileOnTheFileSystem() {
+        $uniq_name = $this->server->createTemporaryAttachment($this->session_key);
+        $this->assertTrue(file_exists($this->fixture_dir.'/soap_attachement_temp_'.$this->user_id.'_'.$uniq_name));
     }
 }
 ?>

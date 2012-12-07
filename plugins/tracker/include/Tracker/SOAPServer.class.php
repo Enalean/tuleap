@@ -671,6 +671,13 @@ class Tracker_SOAPServer {
         }
     }
 
+    public function createTemporaryAttachment($session_key) {
+        $current_user = $this->soap_request_validator->continueSession($session_key);
+        $prefix = 'soap_attachement_temp_'.$current_user->getId().'_';
+        $file_path = tempnam(Config::get('codendi_cache_dir'), $prefix);
+        return substr(basename($file_path), strlen($prefix));
+    }
+
     /**
      * getArtifactHistory - returns the array of ArtifactHistory of the artifact $artifact_id in the tracker $tracker_id of the project $group_id
      *
