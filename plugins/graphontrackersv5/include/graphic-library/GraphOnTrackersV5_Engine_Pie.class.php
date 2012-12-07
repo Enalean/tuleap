@@ -21,7 +21,7 @@
  */
 require_once('common/chart/Chart_Pie.class.php');
 require_once('GraphOnTrackersV5_Engine.class.php');
-//require_once('plugins/tracker/include/Tracker/FormElement/Tracker_FormElement_Field_List_BindDecorator');
+require_once('common/layout/ColorHelper.class.php');
 
 class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
 
@@ -52,7 +52,7 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
                     $this->colors[$i] = $availableColors[$i];
                 else {
                     //We convert RGB array to hex
-                    $this->colors[$i]= sprintf('#%02X%02X%02X', $this->colors[$i][0], $this->colors[$i][1], $this->colors[$i][2]);//"#".$r.$g.$b;
+                    $this->colors[$i]= ColorHelper::RBGToHexa($this->colors[$i][0], $this->colors[$i][1], $this->colors[$i][2]);
                 }
             }
         }
