@@ -644,7 +644,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    public function appendArtifactAttachmentChuck($session_key, $artifact_id, $attachment_id, $content) {
+    public function appendArtifactAttachmentChuck($session_key, $artifact_id, $attachment_id, $content, $is_last_chunk) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $artifact     = $this->getArtifactById($artifact_id, 'appendArtifactAttachmentChuck');
@@ -655,7 +655,11 @@ class Tracker_SOAPServer {
             if ($file_info && $file_info->fileExists()) {
                 $field = $file_info->getField();
                 if ($field->userCanUpdate($current_user)) {
-                    return $file_info->appendSoapContent($content);
+                    $written = $file_info->appendSoapContent($content);
+                    if ($is_last_chunk) {
+                        $file_info->postUploadActions();
+                    }
+                    return $written;
                 } else {
                     return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
                 }

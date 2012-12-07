@@ -93,11 +93,27 @@ foreach ($artifact->value as $field_value) {
 var_dump("Attachment id: ".$attachment_id);
 
 if ($attachment_id) {
-    $file_contents = file_get_contents($file);
-    var_dump(strlen(base64_encode($file_contents)));
-    $written = $soapTracker->appendArtifactAttachmentChuck($requesterSessionHash, $artifact_id, $attachment_id, base64_encode($file_contents));
-    var_dump($written);
-    if ($written == strlen($file_contents)) {
+    $total_written = 0;
+    $offset        = 0;
+    $chunk_size    = 20000;
+    $is_last_chunk = false;
+    while ($chunk = file_get_contents($file, false, null, $offset, $chunk_size)) {
+        $chunk_length  = strlen($chunk);
+        $is_last_chunk = $chunk_length < $chunk_size;
+        $chunk_written = $soapTracker->appendArtifactAttachmentChuck($requesterSessionHash, $artifact_id, $attachment_id, base64_encode($chunk), $is_last_chunk);
+        if ($chunk_written !== $chunk_length) {
+            var_dump("Warning: chunk not completely written on server");
+        }
+        $total_written += $chunk_written;
+        $offset += $chunk_size;
+    }
+
+    // If by any chance the last chunk as no lenght, ensure to "commit" the transaction by uploading empty content
+    if ($offset > 0 && !$chunk) {
+        $soapTracker->appendArtifactAttachmentChuck($requesterSessionHash, $artifact_id, $attachment_id, '', true);
+    }
+
+    if ($total_written == strlen(file_get_contents($file))) {
         var_dump("File successfully uploaded");
     }
 }

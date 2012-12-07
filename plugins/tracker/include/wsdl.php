@@ -631,6 +631,7 @@ $GLOBALS['server']->register(
           'artifact_id'=>'xsd:int',
           'attachment_id' => 'xsd:int',
           'content' => 'xsd:string',
+          'last_chunk' => 'xsd:boolean',
     ),
     array('return'=>'xsd:int'),
     $GLOBALS['uri'],
