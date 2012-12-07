@@ -703,7 +703,7 @@ class Tracker_SOAPServer_AppendArtifactAttachmentChunk_Test extends Tracker_SOAP
         $this->assertIsA($returns, 'SoapFault');
     }
 
-    public function itRaisesAnExceptionIfFieldIsNotReadable() {
+    public function itRaisesAnExceptionIfFieldIsNotWritable() {
         stub($this->field)->userCanUpdate()->returns(false);
 
         $returns = $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
