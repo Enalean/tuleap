@@ -1015,6 +1015,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return boolean True if update is done without error, false otherwise
      */
     public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+        /*
+         * Post actions were run by validateNewChangeset but they modified a 
+         * different set of $fields_data in the case of massChange or soap requests;
+         * we run them again for the current $fields_data
+         * 
+         */
         $this->getWorkflow()->before($fields_data, $submitter, $this);
         $changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email);
         if(! $changeset_id) {
@@ -1088,7 +1094,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $workflow = $this->getWorkflow();
         if ($workflow) {
-            
+            /*
+             * We need to run the post actions to validate the data
+             */
             $workflow->before($fields_data, $submitter, $this);
             if (! $workflow->validateGlobalRules($fields_data, $this->getFormElementFactory())) {
                 return false;
