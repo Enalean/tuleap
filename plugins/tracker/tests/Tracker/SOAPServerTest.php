@@ -672,70 +672,6 @@ class Tracker_SOAPServer_GetArtifactAttachmentChunk_Test extends Tracker_SOAPSer
     }
 }
 
-class Tracker_SOAPServer_AppendArtifactAttachmentChunk_Test extends Tracker_SOAPServer_AttachmentChunkTest {
-
-    public function setUp() {
-        parent::setUp();
-        $this->content = 'stuff';
-        $this->is_last_chunk = false;
-    }
-
-    public function itRaisesAnExceptionIfTrackerIsNotReadable() {
-        $artifact_id = 9348;
-        $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->unreadable_tracker)->build();
-        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
-        $returns = $this->server->appendArtifactAttachmentChunk($this->session_key, $artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
-        $this->assertIsA($returns, 'SoapFault');
-    }
-
-    public function itRaisesAnExceptionIfTrackerBelongsToProjectNotReadable() {
-        $artifact_id = 9348;
-        $artifact_in_unreadable_tracker = anArtifact()->withId($artifact_id)->withTracker($this->private_unreadable_tracker)->build();
-        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($artifact_in_unreadable_tracker);
-        $soap_fault = $this->server->appendArtifactAttachmentChunk($this->session_key, $artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
-        $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
-    }
-
-    public function itRaisesAnExeptionIfTheAttachementIsInvalid() {
-        $artifact    = anArtifact()->withId($this->artifact_id)->withTracker($this->tracker)->build();
-        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($artifact);
-
-        $returns = $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, 321654, $this->content, $this->is_last_chunk);
-        $this->assertIsA($returns, 'SoapFault');
-    }
-
-    public function itRaisesAnExceptionIfFieldIsNotWritable() {
-        stub($this->field)->userCanUpdate()->returns(false);
-
-        $returns = $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
-        $this->assertIsA($returns, 'SoapFault');
-    }
-
-    public function itForwardsTheWriteToFileInfo() {
-        stub($this->field)->userCanUpdate()->returns(true);
-
-        expect($this->file_info)->appendSoapContent($this->content)->once();
-
-        $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
-    }
-
-    public function itDoesntDoAnythingSpecialWhenNotTheLastChunk() {
-        stub($this->field)->userCanUpdate()->returns(true);
-
-        expect($this->file_info)->postUploadActions()->never();
-
-        $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, $this->is_last_chunk);
-    }
-
-    public function itDoesSpecificThingsWhenItsTheLastChunk() {
-        stub($this->field)->userCanUpdate()->returns(true);
-
-        expect($this->file_info)->postUploadActions()->once();
-
-        $this->server->appendArtifactAttachmentChunk($this->session_key, $this->artifact_id, $this->attachment_id, $this->content, true);
-    }
-}
-
 abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker_SOAPServer_BaseTest {
     protected $fixture_dir;
 
@@ -753,6 +689,10 @@ abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker
         Config::restore();
         parent::tearDown();
     }
+
+    protected function getTemporaryFilePath($user_id, $temporary_name) {
+        return $this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.$user_id.'_'.$temporary_name;
+    }
 }
 
 class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_TemproraryAttachments_BaseTest {
@@ -763,7 +703,7 @@ class Tracker_SOAPServer_CreateAttachment_Test extends Tracker_SOAPServer_Tempro
 
     public function itProvisionAFileOnTheFileSystem() {
         $uniq_name = $this->server->createTemporaryAttachment($this->session_key);
-        $this->assertTrue(file_exists($this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.$this->user_id.'_'.$uniq_name));
+        $this->assertTrue(file_exists($this->getTemporaryFilePath($this->user_id, $uniq_name)));
     }
 
     public function itCannotCreateMoreThanFiveTemporaryFiles() {
@@ -819,6 +759,41 @@ class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServ
         foreach ($temporary_files as $file) {
             $this->assertPattern("%^$another_user_prefix%", $file);
         }
+    }
+}
+
+class Tracker_SOAPServer_AppendTemporaryAttachments_Test extends Tracker_SOAPServer_TemproraryAttachments_BaseTest {
+
+    public function itCannotAppendToNonExistingFile() {
+        $return = $this->server->appendTemporaryAttachmentChunk($this->session_key, 'bla', base64_encode('bla'));
+        $this->assertIsA($return, 'SoapFault');
+    }
+
+    public function itRaisesAnErrorWhenUserTriesToChangeDirectory() {
+        $return = $this->server->appendTemporaryAttachmentChunk($this->session_key, '/../logo.png', base64_encode('bla'));
+        $this->assertIsA($return, 'SoapFault');
+    }
+
+    public function itAppendsFileContents() {
+        $soap_content = "some content";
+        $attachment_name = $this->server->createTemporaryAttachment($this->session_key);
+        $this->server->appendTemporaryAttachmentChunk($this->session_key, $attachment_name, base64_encode($soap_content));
+        $this->assertEqual($soap_content, file_get_contents($this->getTemporaryFilePath($this->user_id, $attachment_name)));
+    }
+
+    public function itAppendsFileContentsInSeveralChunks() {
+        $soap_content1 = "some content";
+        $soap_content2 = "\nsome content";
+        $attachment_name = $this->server->createTemporaryAttachment($this->session_key);
+        $this->server->appendTemporaryAttachmentChunk($this->session_key, $attachment_name, base64_encode($soap_content1));
+        $this->server->appendTemporaryAttachmentChunk($this->session_key, $attachment_name, base64_encode($soap_content2));
+        $this->assertEqual($soap_content1.$soap_content2, file_get_contents($this->getTemporaryFilePath($this->user_id, $attachment_name)));
+    }
+
+    public function itReturnsTheLengthOfWrittenContent() {
+        $soap_content = "some content";
+        $attachment_name = $this->server->createTemporaryAttachment($this->session_key);
+        $this->assertEqual(strlen($soap_content), $this->server->appendTemporaryAttachmentChunk($this->session_key, $attachment_name, base64_encode($soap_content)));
     }
 }
 

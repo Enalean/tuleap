@@ -51,6 +51,7 @@ define('invalid_report', '3027');
 define('invalid_file', '3028');
 define('invalid_file_field_format', Tracker_FormElement_Field_File::SOAP_FAULT_INVALID_REQUEST_FORMAT); //'3029'
 define('nb_max_temp_files', '3030');
+define('temp_file_invalid', '3031');
 
 class Tracker_SOAPServer {
     const TEMP_FILE_PREFIX = 'soap_attachement_temp_';
@@ -648,27 +649,14 @@ class Tracker_SOAPServer {
         }
     }
 
-    public function appendArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $content, $is_last_chunk) {
+    public function appendTemporaryAttachmentChunk($session_key, $attachment_name, $content) {
         try {
-            $current_user = $this->soap_request_validator->continueSession($session_key);
-            $artifact     = $this->getArtifactById($artifact_id, 'appendArtifactAttachmentChuck');
-            $tracker      = $artifact->getTracker();
-            $this->checkUserCanViewTracker($tracker, $current_user);
-
-            $file_info = $this->fileinfo_factory->getById($attachment_id);
-            if ($file_info) {
-                $field = $file_info->getField();
-                if ($field->userCanUpdate($current_user)) {
-                    $written = $file_info->appendSoapContent($content);
-                    if ($is_last_chunk) {
-                        $file_info->postUploadActions();
-                    }
-                    return $written;
-                } else {
-                    return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
-                }
+            $current_user    = $this->soap_request_validator->continueSession($session_key);
+            $attachment_path = Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix($current_user).$attachment_name;
+            if (file_exists($attachment_path)) {
+                return file_put_contents($attachment_path, base64_decode($content), FILE_APPEND);
             } else {
-                return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
+                return new SoapFault(temp_file_invalid, 'Invalid temporary file path');
             }
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
