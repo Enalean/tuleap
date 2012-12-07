@@ -163,5 +163,18 @@ class Tracker_FileInfo_AppendSoapContentTest extends Tracker_FileInfo_CommonTest
         $this->file_info_1->appendSoapContent(base64_encode($soap_content));
         $this->assertEqual($soap_content, file_get_contents($this->file_info_1->getPath()));
     }
+
+    public function itAppendsFileContentsInSeveralChunks() {
+        $soap_content1 = "some content";
+        $soap_content2 = "\nsome content";
+        $this->file_info_1->appendSoapContent(base64_encode($soap_content1));
+        $this->file_info_1->appendSoapContent(base64_encode($soap_content2));
+        $this->assertEqual($soap_content1.$soap_content2, file_get_contents($this->file_info_1->getPath()));
+    }
+
+    public function itReturnsTheLengthOfWrittenContent() {
+        $soap_content = "some content";
+        $this->assertEqual(strlen($soap_content), $this->file_info_1->appendSoapContent(base64_encode($soap_content)));
+    }
 }
 ?>

@@ -67,12 +67,27 @@ class Tracker_FileInfo {
         );
     }
 
+    /**
+     * Returns SOAP encoded content chunk of file
+     *
+     * @param Integer $offset Where to start reading
+     * @param Integer $size   How much to read
+     *
+     * @return String Base64 encoded content
+     */
     public function getSoapContent($offset, $size) {
         return base64_encode(file_get_contents($this->getPath(), false, NULL, $offset, $size));
     }
 
+    /**
+     * Put some SOAP contents at the end of the file
+     *
+     * @param String $content Base64 encoded content
+     *
+     * @return Integer length of written data
+     */
     public function appendSoapContent($content) {
-        file_put_contents($this->getPath(), base64_decode($content));
+        return file_put_contents($this->getPath(), base64_decode($content), FILE_APPEND);
     }
 
     /**
