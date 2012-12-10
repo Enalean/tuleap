@@ -71,6 +71,7 @@ $value = array(
                     'filename'     => $filename,
                     'filesize'     => $filesize,
                     'filetype'     => $filetype,
+                    'action'       => '',
                 )
             )
         )
