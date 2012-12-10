@@ -452,7 +452,7 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
 
 class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
     
-    public function testValidateReturnsFalseWhenTheDataIsInvalid() {
+    public function testValidateReturnsFalseWhenTheDateDataIsInvalid() {
 
         $value_field_list = array(
             10 => '',
@@ -465,7 +465,7 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         stub($tracker)->getId()->returns(10);
 
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $source_field         = mock('Tracker_FormElement_Field_List_OpenValue');
+        $source_field         = mock('Tracker_FormElement_Field_Date');
         stub($source_field)->getLabel()->returns('aaaaa');
         stub($form_element_factory)->getFormElementById()->returns($source_field);
 
@@ -490,6 +490,8 @@ class Tracker_RulesManagerValidationTest extends Tracker_RulesManagerTest {
         $tracker_rules_manager->setReturnValue('getAllListRulesByTrackerWithOrder',array());
         $tracker_rules_manager->setReturnValue('getAllDateRulesByTrackerId',
                 array($tracker_rule_date, $tracker_rule_date2));
+        
+        
         $tracker_rules_manager->setTrackerFormElementFactory($form_element_factory);
 
 
