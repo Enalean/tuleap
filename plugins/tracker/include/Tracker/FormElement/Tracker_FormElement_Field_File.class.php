@@ -917,19 +917,6 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $field_data;
     }
 
-    /**
-     * Generate a empty file in php upload dir to fake existance for request validation
-     *
-     * @return string
-     */
-    protected function getSoapFakeFilePath() {
-        $full_path = ini_get('upload_tmp_dir').DIRECTORY_SEPARATOR.self::SOAP_FAKE_FILE;
-        if (!file_exists($full_path)) {
-            touch($full_path);
-        }
-        return $full_path;
-    }
-
     public function deleteChangesetValue($changeset_value_id) {
         $values = $this->getChangesetValue(null, $changeset_value_id, false);
         foreach($values as $fileinfo) {

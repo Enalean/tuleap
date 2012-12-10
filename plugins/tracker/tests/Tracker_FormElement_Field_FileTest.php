@@ -671,9 +671,6 @@ class Tracker_FormElement_Field_File_FileSystemPersistanceTest  extends Tracker_
     public function createAttachment(Tracker_FileInfo $attachment, $file_info) {
         return parent::createAttachment($attachment, $file_info);
     }
-    public function getSoapFakeFilePath() {
-        return parent::getSoapFakeFilePath();
-    }
 }
 
 class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_File_TemporaryFileTest {
@@ -751,7 +748,6 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $this->field = aFileField()->build();
 
         $f = new Tracker_FormElement_Field_File_FileSystemPersistanceTest(0);
-        $this->fake_soap_file_path = $f->getSoapFakeFilePath();
     }
 
     private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype) {
