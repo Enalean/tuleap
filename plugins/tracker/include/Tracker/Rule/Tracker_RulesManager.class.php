@@ -721,17 +721,32 @@ class Tracker_RulesManager {
                 reset($dependencies[$source]);
                 while(!$error_occured && (list($target,) = each($dependencies[$source]))) {
                     if (isset($values[$target])) {
-
                         reset($values[$target]['values']);
                         while(!$error_occured && (list(,$target_value) = each($values[$target]['values']))) {
+                            
+                            if($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE_ID
+                                    || $target_value == null) {
+                                
+                                /*
+                                 * Field dependencies are only set between fields with values.
+                                 * Ideally, field dependencies between all other fields and the null/ 100
+                                 * value should be set.
+                                 */
+                                continue;
+                            }
                             //Foreach target values we look if there is at least one source value whith corresponding rule valid
                             $valid = false;
                             reset($values[$source]['values']);
+                            
+                            
+
                             while(!$valid && (list(,$source_value) = each($values[$source]['values']))) {
+                                
+                                
                                 $applied = false;
                                 reset($dependencies[$source][$target]);
                                 while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
-
+                
                                     if ($dependencies[$source][$target][$rule]->canApplyTo(
                                         $tracker_id,
                                         $source,
