@@ -392,7 +392,6 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
         $comment_format = NULL;
         
         $results = $this->server->updateArtifact($this->session_key, null, $this->tracker_id, 9999, $title_update, $comment, $comment_format);
-        var_dump($results);
         $this->assertEqual($results, 9999);
     }
 }
