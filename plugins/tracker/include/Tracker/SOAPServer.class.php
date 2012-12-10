@@ -525,8 +525,13 @@ class Tracker_SOAPServer {
 
                         $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
                         if ($field) {
+                            // TODO: reintegrate file_info/value into formelement classes
+                            if ($field instanceof Tracker_FormElement_Field_File) {
+                                $field_data = $field->getFieldData($field_value->field_value);
+                            } else {
+                                $field_data = $field->getFieldData($field_value->field_value->value);
+                            }
 
-                            $field_data = $field->getFieldData($field_value->field_value);
                             if ($field_data != null) {
                                 // $field_value is an object: SOAP must cast it in ArtifactFieldValue
                                 if (isset($fields_data[$field->getId()])) {
