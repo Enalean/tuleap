@@ -1213,6 +1213,7 @@ plugin_tracker_admin_import	aid_does_not_exist	L'artefact Id $1 n'existe  pas.
 plugin_tracker_admin_import	field_not_taken_account	Le champ "$1" ne sera pas pris en compte.
 plugin_tracker_admin_import	nb_created_import	$1 artefact(s) créé(s)
 plugin_tracker_admin_import	nb_updated_import	$1 artefact(s) mis à jour
+plugin_tracker_admin_import	missing_field_value	Valeur de champ manquant: 
 plugin_tracker_admin_import	date_format_help	Format de date attendu : <strong>$1</strong>. <a href="/account/preferences.php">Changer le format de date pour l'import/export</a>
 plugin_tracker_admin_import	separator_not_found	Séparateur CSV non trouvé ($1). Soit vous tentez d'importer un seul champ, soit vous utilisez le mauvais séparateur.<br />Si c'est le cas, vous pouvez <a href="/account/preferences.php">changer le séparateur CSV pour l'import/export</a>
 

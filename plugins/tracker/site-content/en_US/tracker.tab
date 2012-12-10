@@ -1212,6 +1212,7 @@ plugin_tracker_admin_import	unable_to_open_file	Unable to open file $1
 plugin_tracker_admin_import	file_not_found	File not found
 plugin_tracker_admin_import	missing_required_field	Missing required field: $1
 plugin_tracker_admin_import	missing_required_field_value	Missing value on a required field: $1
+plugin_tracker_admin_import	missing_field_value	Missing field in data: 
 plugin_tracker_admin_import	aid_does_not_exist	Artifact Id $1 does not exist
 plugin_tracker_admin_import	field_not_taken_account	The field "$1" will not be taken into account.
 plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created

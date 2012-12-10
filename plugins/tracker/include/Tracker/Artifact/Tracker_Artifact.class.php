@@ -1109,7 +1109,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
              */
             $workflow->before($fields_data, $submitter, $this);
             if (! $workflow->validateGlobalRules($fields_data, $this->getFormElementFactory())) {
-                throw new Tracker_Exception('Invalid new changeset');
+                throw new Tracker_Exception();
             }
         }
         

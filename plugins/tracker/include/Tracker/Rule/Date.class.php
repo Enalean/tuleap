@@ -94,7 +94,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
     public function validate($source_value, $target_value) {
         
         //if one of the value is empty then return true
-        if ($source_value === '' || $target_value === '') {
+        if ($source_value == null || $target_value == null) {
             return true;
         }
         

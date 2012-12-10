@@ -644,9 +644,9 @@ class Tracker_RulesManager {
 
     private function dateRuleApplyToSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
         $is_valid = true;
-        if(! isset($value_field_list[$rule->getSourceFieldId()])) {
+        if(! array_key_exists($rule->getSourceFieldId(), $value_field_list)) {
             $source_field = $this->getField($rule->getSourceFieldId());
-            $feedback = $source_field->getLabel() . ' null';
+            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $source_field->getLabel();
             
             if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
                 $GLOBALS['Response']->addFeedback('error', $feedback);
@@ -655,11 +655,11 @@ class Tracker_RulesManager {
             $is_valid = false;
         }
         
-        if(! isset($value_field_list[$rule->getTargetFieldId()])) {
+        if(! array_key_exists($rule->getTargetFieldId(), $value_field_list)) {
             $target_field = $this->getField($rule->getTargetFieldId());
-            $feedback = $target_field->getLabel() . ' null';
+            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $target_field->getLabel();
             if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
-                $GLOBALS['Response']->addFeedback('error', $target_field->getLabel() . ' null');
+                $GLOBALS['Response']->addFeedback('error', $feedback);
             }
             $target_field->setHasErrors(true);
             $is_valid = false;
