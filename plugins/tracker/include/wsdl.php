@@ -111,6 +111,7 @@ $GLOBALS['server']->wsdl->addComplexType(
         'filename'     => array('type' => 'xsd:string'),
         'filesize'     => array('type' => 'xsd:int'),
         'filetype'     => array('type' => 'xsd:string'),
+        'action'       => array('type' => 'xsd:string')
     )
 );
 
