@@ -632,7 +632,9 @@ class Tracker_RulesManager {
                 if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
                     $GLOBALS['Response']->addFeedback('error', $feedback);
                 }
-                 
+                
+                $source_field->setHasErrors(true);
+                $target_field->setHasErrors(true);
                 return false;
             }
         }
@@ -649,6 +651,7 @@ class Tracker_RulesManager {
             if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
                 $GLOBALS['Response']->addFeedback('error', $feedback);
             }
+            $source_field->setHasErrors(true);
             $is_valid = false;
         }
         
@@ -658,6 +661,7 @@ class Tracker_RulesManager {
             if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
                 $GLOBALS['Response']->addFeedback('error', $target_field->getLabel() . ' null');
             }
+            $target_field->setHasErrors(true);
             $is_valid = false;
         } 
           

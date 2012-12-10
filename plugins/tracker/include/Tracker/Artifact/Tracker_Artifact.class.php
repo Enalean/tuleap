@@ -1070,12 +1070,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         return true;
     }
-    
+
     /**
      * 
      * @param array $fields_data
      * @param string $comment
+     * @param User $submitter
+     * @param string $email
      * @return boolean
+     * @throws Tracker_Exception
+     * @throws Tracker_InfoException
      */
     public function validateNewChangeset($fields_data, $comment, $submitter, $email = null) {
         
