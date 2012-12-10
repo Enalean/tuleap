@@ -25,11 +25,12 @@ if ($argc < 4) {
     die('Usage: ".$argv[0]." project_id  tracker_id  artifact_id value \n');
 }
 
-$serverURL = 'http://crampons.cro.enalean.com';
+
+$serverURL = 'http://sonde.cro.enalean.com';
 $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
 // Establish connection to the server
-$requesterSessionHash = $soapLogin->login('manuel','patricia')->session_hash;
+$requesterSessionHash = $soapLogin->login('testman','testpwd')->session_hash;
 
 //save values
 $project_id  = $argv[1];
@@ -37,8 +38,8 @@ $tracker_id  = $argv[2];
 $artifact_id = $argv[3];
 $value       = array(
     array(
-        'field_name' => 'status_id',
-        'field_label' => 'Summary',
+        'field_name' => 'title',
+        'field_label' => 'title',
         'field_value' => $argv[4]
     )
 );
