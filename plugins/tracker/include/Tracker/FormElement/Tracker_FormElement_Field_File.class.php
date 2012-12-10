@@ -726,9 +726,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             foreach($previous_changesetvalue as $previous_attachment) {
                 if (empty($value['delete']) || !in_array($previous_attachment->getId(), $value['delete'])) {
                     $previous_fileinfo_ids[] = $previous_attachment->getId();
-                }/* else {
-                    $previous_attachment->delete();
-                }*/
+                }
             }
             if (count($previous_fileinfo_ids)) {
                 $dao->create($changeset_value_id, $previous_fileinfo_ids);
@@ -877,6 +875,10 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return $data_cell;
     }
     
+    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+        return $this->getFieldData($soap_value->field_value);
+    }
+
     /**
      * Get the field data for artifact submission
      *

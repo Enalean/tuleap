@@ -949,6 +949,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $soap_value;
     }
 
+    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+        return $this->getFieldData($soap_value->field_value->value);
+    }
+
     /**
      * Get the field data for CSV import
      *
