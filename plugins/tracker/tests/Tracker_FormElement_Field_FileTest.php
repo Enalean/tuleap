@@ -638,6 +638,30 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
 }
 
 
+abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_FormElement_Field_File_BaseTest {
+    /** @var User */
+    protected $current_user;
+    protected $tmp_dir;
+
+    public function setUp() {
+        parent::setUp();
+        Config::store();
+        $this->tmp_dir = dirname(__FILE__).'/_fixtures/tmp';
+        Config::set('codendi_cache_dir', $this->tmp_dir);
+        mkdir($this->tmp_dir);
+        $this->current_user = aUser()->withId(123)->build();
+        $user_manager = stub('UserManager')->getCurrentUser()->returns($this->current_user);
+        UserManager::setInstance($user_manager);
+    }
+
+    public function tearDown() {
+        Config::restore();
+        $this->recurseDeleteInDir($this->tmp_dir);
+        rmdir($this->tmp_dir);
+        clearstatcache();
+        parent::tearDown();
+    }
+}
 
 class Tracker_FormElement_Field_File_FileSystemPersistanceTest  extends Tracker_FormElement_Field_File {
     public function __construct($id) {
@@ -652,7 +676,7 @@ class Tracker_FormElement_Field_File_FileSystemPersistanceTest  extends Tracker_
     }
 }
 
-class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_File_BaseTest {
+class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_File_TemporaryFileTest {
     /** @var Tracker_FormElement_Field_File_FileSystemPersistanceTest */
     private $field;
 
@@ -662,9 +686,16 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
         parent::setUp();
         $this->storage_dir = $this->fixture_dir.'/storage';
         mkdir($this->storage_dir);
+
         Config::set('sys_data_dir', $this->storage_dir);
         $this->field_id = 987;
         $this->field    = new Tracker_FormElement_Field_File_FileSystemPersistanceTest($this->field_id);
+
+        $this->attachment_id = 654;
+        $this->attachment = partial_mock('Tracker_FileInfo', array('save', 'delete', 'postUploadActions'), array(
+            $this->attachment_id, $this->field, null, null, null, null, null
+        ));
+        stub($this->attachment)->save()->returns(true);
     }
 
     public function tearDown() {
@@ -674,50 +705,53 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
     }
 
     public function itCreatesAFileWhenItComesFromAsSoapRequest() {
-        $attachment_id = 654;
-        $attachment = mock('Tracker_FileInfo');
-        stub($attachment)->getId()->returns($attachment_id);
-        stub($attachment)->save()->returns(true);
-        $file_info = array('tmp_name' => $this->field->getSoapFakeFilePath());
+        $file_id        = 'coucou123';
+        $temp_file      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
+        $temp_file_path = $temp_file->getPath();
 
-        expect($attachment)->delete()->never();
+        $file_info = array(
+            'tmp_name' => $temp_file_path,
+            'id'       => $file_id,
+        );
 
-        $this->assertTrue($this->field->createAttachment($attachment, $file_info));
-        $this->assertTrue(file_exists($this->field->getRootPath().'/'.$attachment_id));
+        touch($temp_file_path);
+
+        expect($this->attachment)->delete()->never();
+        expect($this->attachment)->postUploadActions()->once();
+
+        $this->assertTrue($this->field->createAttachment($this->attachment, $file_info));
+        $this->assertTrue(file_exists($this->field->getRootPath().'/'.$this->attachment_id));
+        $this->assertFalse(file_exists($temp_file_path));
+    }
+
+    public function itDoesntAcceptToMoveAFileThatIsNotAValidSoapTemporaryFile() {
+        $file_id       = 'coucou123';
+        $file_tmp_path = '/etc/passwd';
+        $file_info     = array(
+            'tmp_name' => $file_tmp_path,
+            'id'  => $file_id,
+        );
+
+        expect($this->attachment)->delete()->once();
+
+        $this->assertFalse($this->field->createAttachment($this->attachment, $file_info));
+        $this->assertFalse(file_exists($this->field->getRootPath().'/'.$this->attachment_id));
     }
 }
 
 
 
-class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTestCase {
+class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_FormElement_Field_File_TemporaryFileTest {
     /** @var Tracker_FormElement_Field_File */
     private $field;
     private $fake_soap_file_path;
-    /** @var User */
-    private $current_user;
-    private $tmp_dir;
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        $this->tmp_dir = dirname(__FILE__).'/_fixtures/tmp';
-        Config::set('codendi_cache_dir', $this->tmp_dir);
-        mkdir($this->tmp_dir);
         $this->field = aFileField()->build();
 
         $f = new Tracker_FormElement_Field_File_FileSystemPersistanceTest(0);
         $this->fake_soap_file_path = $f->getSoapFakeFilePath();
-
-        $this->current_user = aUser()->withId(123)->build();
-        $user_manager = stub('UserManager')->getCurrentUser()->returns($this->current_user);
-        UserManager::setInstance($user_manager);
-    }
-
-    public function tearDown() {
-        Config::restore();
-        $this->recurseDeleteInDir($this->tmp_dir);
-        rmdir($this->tmp_dir);
-        parent::tearDown();
     }
 
     private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype) {

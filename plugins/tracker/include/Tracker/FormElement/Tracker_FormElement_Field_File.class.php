@@ -765,19 +765,30 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 mkdir($path .'/thumbnails', 0777, true);
             }
             $filename = $path .'/'. $attachment->getId();
-            if ($file_info['tmp_name'] === $this->getSoapFakeFilePath()) {
-                touch($filename);
-                return true;
-            } else {
-                if (move_uploaded_file($file_info['tmp_name'], $filename)) {
-                    $attachment->postUploadActions();
-                    return true;
-                } else {
+
+            if(isset($file_info['id'])) {
+                $temporary = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $file_info['id']);
+
+                if (!$temporary->exists()) {
                     $attachment->delete();
+                    return false;
                 }
+
+                return $this->moveAttachementToFinalPlace($attachment, 'rename', $temporary->getPath());
             }
+            return $this->moveAttachementToFinalPlace($attachment, 'move_uploaded_file', $file_info['tmp_name']);
         }
         return false;
+    }
+
+    private function moveAttachementToFinalPlace(Tracker_FileInfo $attachment, $method, $src_path) {
+        if ($method($src_path, $attachment->getPath())) {
+            $attachment->postUploadActions();
+            return true;
+        } else {
+            $attachment->delete();
+            return false;
+        }
     }
 
     /**
