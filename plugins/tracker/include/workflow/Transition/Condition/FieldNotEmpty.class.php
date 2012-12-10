@@ -140,18 +140,20 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
 
     private function getFieldValue($fields_data, Tracker_Artifact $artifact, Tracker_FormElement_Field $field) {
         $field_id = $field->getId();
+        if (isset($fields_data[$field_id])) {
+            return $fields_data[$field_id];
+        }
+        return $this->getFieldValueFromLastChangeset($artifact, $field);
+    }
 
+    private function getFieldValueFromLastChangeset(Tracker_Artifact $artifact, Tracker_FormElement_Field $field) {
         $value = null;
-        if (! isset($fields_data[$field_id])) {
-            $last_changeset = $artifact->getLastChangeset();
-            if ($last_changeset) {
-                $last_changeset_value = $last_changeset->getValue($field);
-                if ($last_changeset_value) {
-                    $value = $last_changeset_value->getValue();
-                }
+        $last_changeset = $artifact->getLastChangeset();
+        if ($last_changeset) {
+            $last_changeset_value = $last_changeset->getValue($field);
+            if ($last_changeset_value) {
+                $value = $last_changeset_value->getValue();
             }
-        } else {
-            $value = $fields_data[$field_id];
         }
         return $value;
     }
