@@ -626,19 +626,39 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
-    'appendArtifactAttachmentChunk',
+    'createTemporaryAttachment',
+    array('sessionKey'=>'xsd:string'),
+    array('return'=>'xsd:string'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#createTemporaryAttachment',
+    'rpc',
+    'encoded',
+    'Provision an attachment'
+);
+
+$GLOBALS['server']->register(
+    'appendTemporaryAttachmentChunk',
     array('sessionKey'=>'xsd:string',
-          'artifact_id'=>'xsd:int',
-          'attachment_id' => 'xsd:int',
+          'attachment_name' => 'xsd:string',
           'content' => 'xsd:string',
-          'last_chunk' => 'xsd:boolean',
     ),
     array('return'=>'xsd:int'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#appendArtifactAttachmentChunk',
+    $GLOBALS['uri'].'#appendTemporaryAttachmentChunk',
     'rpc',
     'encoded',
     'Append file content chunk into selected attachement'
+);
+
+$GLOBALS['server']->register(
+    'purgeAllTemporaryAttachments',
+    array('sessionKey'=>'xsd:string'),
+    array('return'=>'xsd:boolean'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#purgeAllTemporaryAttachments',
+    'rpc',
+    'encoded',
+    'Remove all temporary attachment not yet attached to an artifact'
 );
 
 $GLOBALS['server']->register(
