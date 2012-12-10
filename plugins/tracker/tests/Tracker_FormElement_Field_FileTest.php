@@ -689,20 +689,37 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
 class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTestCase {
     /** @var Tracker_FormElement_Field_File */
     private $field;
-
     private $fake_soap_file_path;
+    /** @var User */
+    private $current_user;
+    private $tmp_dir;
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        $this->tmp_dir = dirname(__FILE__).'/_fixtures/tmp';
+        Config::set('codendi_cache_dir', $this->tmp_dir);
+        mkdir($this->tmp_dir);
         $this->field = aFileField()->build();
 
         $f = new Tracker_FormElement_Field_File_FileSystemPersistanceTest(0);
         $this->fake_soap_file_path = $f->getSoapFakeFilePath();
+
+        $this->current_user = aUser()->withId(123)->build();
+        $user_manager = stub('UserManager')->getCurrentUser()->returns($this->current_user);
+        UserManager::setInstance($user_manager);
     }
 
-    private function createFakeSoapFileRequest($description, $filename, $filesize, $filetype) {
+    public function tearDown() {
+        Config::restore();
+        $this->recurseDeleteInDir($this->tmp_dir);
+        rmdir($this->tmp_dir);
+        parent::tearDown();
+    }
+
+    private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype) {
         $soap_file = new stdClass();
-        $soap_file->id           = 0;
+        $soap_file->id           = $id;
         $soap_file->submitted_by = 0;
         $soap_file->description  = $description;
         $soap_file->filename     = $filename;
@@ -758,6 +775,36 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
         $this->field->getFieldData($field_value);
     }
 
+    public function itRaisesAnErrorWhenNoFileGiven() {
+        $this->expectException();
+
+        $description = "Purchase Order";
+        $filename    = 'my_file.ods';
+        $filesize    = 1234;
+        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest(null, $description, $filename, $filesize, $filetype)
+        );
+
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenFileDoesNotExist() {
+        $this->expectException();
+
+        $description = "Purchase Order";
+        $filename    = 'my_file.ods';
+        $filesize    = 1234;
+        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest(123, $description, $filename, $filesize, $filetype)
+        );
+
+        $this->field->getFieldData($field_value);
+    }
+
     public function itDoesNothingWhenArrayIsEmpty() {
         $field_value = $this->createFakeSoapFieldValue();
         $this->assertEqual(array(), $this->field->getFieldData($field_value));
@@ -768,10 +815,15 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
         $filename    = 'my_file.ods';
         $filesize    = 1234;
         $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
+        $file_id     = 'coucou123';
 
         $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($description, $filename, $filesize, $filetype)
+            $this->createFakeSoapFileRequest($file_id, $description, $filename, $filesize, $filetype)
         );
+
+        $temp_file = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
+        $temp_file_path = $temp_file->getPath();
+        touch($temp_file_path);
 
         $field = aFileField()->build();
         $this->assertEqual(
@@ -781,7 +833,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description,
                     'name'        =>  $filename,
                     'type'        =>  $filetype,
-                    'tmp_name'    =>  $this->fake_soap_file_path,
+                    'tmp_name'    =>  $temp_file_path,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize,
                 )
@@ -794,15 +846,23 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
         $filename1    = 'my_file.ods';
         $filesize1    = 1234;
         $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
+        $file_id1     = 'sdfsdfaz';
+        $temp_file1      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
+        $temp_file_path1 = $temp_file1->getPath();
+        touch($temp_file_path1);
 
         $description2 = "Capture d'écran";
         $filename2    = 'stuff.png';
         $filesize2    = 5698;
         $filetype2    = 'image/png';
+        $file_id2     = 'sdfsdfaz';
+        $temp_file2      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id2);
+        $temp_file_path2 = $temp_file2->getPath();
+        touch($temp_file_path2);
 
         $field_value = $this->createFakeSoapFieldValue(
-            $this->createFakeSoapFileRequest($description1, $filename1, $filesize1, $filetype1),
-            $this->createFakeSoapFileRequest($description2, $filename2, $filesize2, $filetype2)
+            $this->createFakeSoapFileRequest($file_id1, $description1, $filename1, $filesize1, $filetype1),
+            $this->createFakeSoapFileRequest($file_id2, $description2, $filename2, $filesize2, $filetype2)
         );
 
         $this->assertEqual(
@@ -812,7 +872,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description1,
                     'name'        =>  $filename1,
                     'type'        =>  $filetype1,
-                    'tmp_name'    =>  $this->fake_soap_file_path,
+                    'tmp_name'    =>  $temp_file_path1,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize1,
                 ),
@@ -820,7 +880,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends TuleapTest
                     'description' =>  $description2,
                     'name'        =>  $filename2,
                     'type'        =>  $filetype2,
-                    'tmp_name'    =>  $this->fake_soap_file_path,
+                    'tmp_name'    =>  $temp_file_path2,
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize2,
                 )

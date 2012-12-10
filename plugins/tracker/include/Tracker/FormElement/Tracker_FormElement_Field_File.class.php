@@ -25,6 +25,7 @@ require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_File_Valu
 require_once('dao/Tracker_FormElement_Field_Value_FileDao.class.php');
 require_once(dirname(__FILE__).'/../dao/Tracker_FileInfoDao.class.php');
 require_once(dirname(__FILE__).'/../Tracker_FileInfo.class.php');
+require_once(dirname(__FILE__).'/../SOAP/TemporaryFile.class.php');
 require_once('common/valid/Rule.class.php');
 
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
@@ -885,13 +886,20 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             if (!(isset($fileinfo->description) && isset($fileinfo->filename) && isset($fileinfo->filetype) && isset($fileinfo->filesize))) {
                 throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Fileinfo must be an array of FieldValueFileInfo");
             }
+            if (!(isset($fileinfo->id) && $fileinfo->id)) {
+                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "FieldValueFileInfo must have an id of a temporary file");
+            }
+            $temporary_file = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $fileinfo->id);
+            if (!$temporary_file->exists()) {
+                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid FieldValueFileInfo->id, file doesn't exist");
+            }
             $field_data[] = array(
                 'description' => $fileinfo->description,
                 'name'        => $fileinfo->filename,
                 'type'        => $fileinfo->filetype,
                 'size'        => $fileinfo->filesize,
                 'error'       => UPLOAD_ERR_OK,
-                'tmp_name'    => $this->getSoapFakeFilePath(),
+                'tmp_name'    => $temporary_file->getPath(),
             );
         }
         return $field_data;
