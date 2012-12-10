@@ -905,6 +905,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                 throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid FieldValueFileInfo->id, file doesn't exist");
             }
             $field_data[] = array(
+                'id'          => $fileinfo->id,
                 'description' => $fileinfo->description,
                 'name'        => $fileinfo->filename,
                 'type'        => $fileinfo->filetype,

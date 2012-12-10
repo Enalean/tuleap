@@ -867,6 +867,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
             $field->getFieldData($field_value),
             array(
                 array(
+                    'id'          =>  $file_id,
                     'description' =>  $description,
                     'name'        =>  $filename,
                     'type'        =>  $filetype,
@@ -906,6 +907,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
             $this->field->getFieldData($field_value),
             array(
                 array(
+                    'id'          =>  $file_id1,
                     'description' =>  $description1,
                     'name'        =>  $filename1,
                     'type'        =>  $filetype1,
@@ -914,6 +916,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
                     'size'        =>  $filesize1,
                 ),
                 array(
+                    'id'          =>  $file_id2,
                     'description' =>  $description2,
                     'name'        =>  $filename2,
                     'type'        =>  $filetype2,
