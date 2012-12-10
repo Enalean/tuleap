@@ -741,13 +741,10 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
 class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_FormElement_Field_File_TemporaryFileTest {
     /** @var Tracker_FormElement_Field_File */
     private $field;
-    private $fake_soap_file_path;
 
     public function setUp() {
         parent::setUp();
         $this->field = aFileField()->build();
-
-        $f = new Tracker_FormElement_Field_File_FileSystemPersistanceTest(0);
     }
 
     private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype) {
