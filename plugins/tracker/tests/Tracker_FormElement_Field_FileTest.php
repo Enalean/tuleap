@@ -50,14 +50,14 @@ Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
+abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
     protected $fixture_dir;
     protected $attachment_dir;
     protected $thumbnails_dir;
     protected $tmp_name;
     protected $another_tmp_name;
 
-    function setUp() {
+    public function setUp() {
         parent::setUp();
         Config::store();
         $this->fixture_dir    = dirname(__FILE__).'/_fixtures';
@@ -67,8 +67,8 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
         $this->tmp_name         = $this->fixture_dir.'/uploaded_file.txt';
         $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
     }
-    
-    function tearDown() {
+
+    public function tearDown() {
         Config::restore();
         foreach(glob($this->thumbnails_dir.'/*') as $f) {
             if ($f != '.' && $f != '..') {
@@ -79,6 +79,9 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
         parent::tearDown();
     }
     
+}
+
+class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_BaseTest {
     function testGetChangesetValue() {
         $fileinfo_dao = new MockTracker_FileInfoDao();
         $fi_dar = new MockDataAccessResult();
@@ -649,7 +652,7 @@ class Tracker_FormElement_Field_File_FileSystemPersistanceTest  extends Tracker_
     }
 }
 
-class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_FileTest {
+class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_File_BaseTest {
     /** @var Tracker_FormElement_Field_File_FileSystemPersistanceTest */
     private $field;
 
