@@ -133,6 +133,8 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
         if (! $is_valid) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_condition', 'invalid_condition', $field->getLabel(). ' ('. $field->getName() .')'));
         }
+        
+        $field->setHasErrors(true);
         return $is_valid;
     }
 
