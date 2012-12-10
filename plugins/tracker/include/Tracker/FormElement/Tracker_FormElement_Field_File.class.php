@@ -726,6 +726,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             foreach($previous_changesetvalue as $previous_attachment) {
                 if (empty($value['delete']) || !in_array($previous_attachment->getId(), $value['delete'])) {
                     $previous_fileinfo_ids[] = $previous_attachment->getId();
+                } else {
+                    $previous_attachment->delete();
                 }
             }
             if (count($previous_fileinfo_ids)) {
@@ -900,19 +902,23 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
             if (!(isset($fileinfo->id) && $fileinfo->id)) {
                 throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "FieldValueFileInfo must have an id of a temporary file");
             }
-            $temporary_file = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $fileinfo->id);
-            if (!$temporary_file->exists()) {
-                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid FieldValueFileInfo->id, file doesn't exist");
+            if (isset($fileinfo->action) && $fileinfo->action == 'delete') {
+                $field_data['delete'][] = $fileinfo->id;
+            } else {
+                $temporary_file = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $fileinfo->id);
+                if (!$temporary_file->exists()) {
+                    throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid FieldValueFileInfo->id, file doesn't exist");
+                }
+                $field_data[] = array(
+                    'id'          => $fileinfo->id,
+                    'description' => $fileinfo->description,
+                    'name'        => $fileinfo->filename,
+                    'type'        => $fileinfo->filetype,
+                    'size'        => $fileinfo->filesize,
+                    'error'       => UPLOAD_ERR_OK,
+                    'tmp_name'    => $temporary_file->getPath(),
+                );
             }
-            $field_data[] = array(
-                'id'          => $fileinfo->id,
-                'description' => $fileinfo->description,
-                'name'        => $fileinfo->filename,
-                'type'        => $fileinfo->filetype,
-                'size'        => $fileinfo->filesize,
-                'error'       => UPLOAD_ERR_OK,
-                'tmp_name'    => $temporary_file->getPath(),
-            );
         }
         return $field_data;
     }

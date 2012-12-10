@@ -747,7 +747,7 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $this->field = aFileField()->build();
     }
 
-    private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype) {
+    private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype, $action = null) {
         $soap_file = new stdClass();
         $soap_file->id           = $id;
         $soap_file->submitted_by = 0;
@@ -755,6 +755,9 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
         $soap_file->filename     = $filename;
         $soap_file->filesize     = $filesize;
         $soap_file->filetype     = $filetype;
+        if ($action) {
+            $soap_file->action = $action;
+        }
         return $soap_file;
     }
 
@@ -917,6 +920,70 @@ class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_Fo
                     'error'       =>  UPLOAD_ERR_OK,
                     'size'        =>  $filesize2,
                 )
+           )
+        );
+    }
+
+    public function itConvertsForDeletionOfOneFile() {
+        $file_id = 678;
+
+        $soap_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($file_id, '', '', '', '', 'delete')
+        );
+        $this->assertEqual(
+            $this->field->getFieldData($soap_value),
+            array(
+                'delete' => array($file_id)
+            )
+        );
+    }
+
+    public function itConvertsForDeletionOfTwoFiles() {
+        $file_id1 = 678;
+        $file_id2 = 12;
+
+        $soap_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($file_id1, '', '', '', '', 'delete'),
+            $this->createFakeSoapFileRequest($file_id2, '', '', '', '', 'delete')
+        );
+        $this->assertEqual(
+            $this->field->getFieldData($soap_value),
+            array(
+                'delete' => array($file_id1, $file_id2)
+            )
+        );
+    }
+
+    public function itCreatesAndDeleteInTheSameTime() {
+        $description1 = "Purchase Order";
+        $filename1    = 'my_file.ods';
+        $filesize1    = 1234;
+        $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
+        $file_id1     = 'sdfsdfaz';
+        $temp_file1      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
+        $temp_file_path1 = $temp_file1->getPath();
+        touch($temp_file_path1);
+
+        $file_id2 = 12;
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($file_id1, $description1, $filename1, $filesize1, $filetype1),
+            $this->createFakeSoapFileRequest($file_id2, '', '', '', '', 'delete')
+        );
+
+        $this->assertEqual(
+            $this->field->getFieldData($field_value),
+            array(
+                'delete' => array($file_id2),
+                array(
+                    'id'          =>  $file_id1,
+                    'description' =>  $description1,
+                    'name'        =>  $filename1,
+                    'type'        =>  $filetype1,
+                    'tmp_name'    =>  $temp_file_path1,
+                    'error'       =>  UPLOAD_ERR_OK,
+                    'size'        =>  $filesize1,
+                ),
            )
         );
     }
