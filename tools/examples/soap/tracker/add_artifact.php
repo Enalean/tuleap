@@ -80,10 +80,9 @@ $value = array(
 
 $total_written = 0;
 $offset        = 0;
-$chunk_size    = 200;
+$chunk_size    = 20000;
 $is_last_chunk = false;
 while ($chunk = file_get_contents($file, false, null, $offset, $chunk_size)) {
-    var_dump('chunk!');
     $chunk_length  = strlen($chunk);
     $is_last_chunk = $chunk_length < $chunk_size;
     $chunk_written = $soapTracker->appendTemporaryAttachmentChunk($requesterSessionHash, $uuid, base64_encode($chunk));
