@@ -863,18 +863,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function getSoapAvailableValues() {
         return null;
     }
-    
-    /**
-     * Get the field data for CSV import
-     *
-     * @param string $data_cell the CSV field value (a date with the form dd/mm/YYYY or mm/dd/YYYY)
-     *
-     * @return string the date with the form YYYY-mm-dd corresponding to the date $data_cell
-     */
-    public function getFieldDataForCSVPreview($data_cell) {
-        return $data_cell;
+
+    public function getFieldDataFromCSVValue($csv_value) {
+        return array();
     }
-    
+
     public function getFieldDataFromSoapValue(stdClass $soap_value) {
         return $this->getFieldData($soap_value->field_value);
     }

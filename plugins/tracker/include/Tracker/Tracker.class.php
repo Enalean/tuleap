@@ -2678,7 +2678,7 @@ EOS;
                                   );
                         if ($line[$idx]!=''){
                             
-                            $data[$field->getId()] = $field->getFieldData($line[$idx]);
+                            $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
                             
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
@@ -2781,7 +2781,7 @@ EOS;
                 foreach ($data_line as $idx => $data_cell) {
                     if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement_Field')) {
                         $field = $fields[$idx];
-                        $fields_data[$field->getId()] = $field->getFieldData($data_cell);
+                        $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
                     } else  {
                         // else: this cell is an 'aid' cell
                         if ($data_cell) {
