@@ -1046,7 +1046,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
 
-        $this->response->expectCallCount('addFeedback', 1);
+        $this->response->expectCallCount('addFeedback', 0);
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
         $comment_dao->expectCallCount('createNewVersion', 1);
@@ -1143,7 +1143,9 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             102 => '456',
         );
         
-        $this->assertFalse($artifact->validateNewChangeset($fields_data, $comment, $user, $email));
+        $this->expectException('Tracker_Exception');
+        
+        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
 
     }
 
@@ -1246,14 +1248,15 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         );
         stub($workflow)->validateGlobalRules($updated_fields_data_by_workflow, $factory)->once()->returns(false);
         
-        $this->assertFalse($artifact->validateNewChangeset($fields_data, $comment, $user, $email));
+        $this->expectException('Tracker_Exception');
+        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
     }
 
     function testCreateNewChangesetWithoutNotification() {
         $email   = null; //not anonymous user
         $comment = '';
 
-        $this->response->expectCallCount('addFeedback', 1);
+        $this->response->expectCallCount('addFeedback', 0);
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
         $comment_dao->expectCallCount('createNewVersion', 1);
@@ -1349,13 +1352,13 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '456',
         );
-        
-        $this->assertFalse($artifact->validateNewChangeset($fields_data, $comment, $user, $email));
+        $this->expectException('Tracker_Exception');
+        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
     }
 
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
         $this->language->setReturnValue('getText', 'no changes', array('plugin_tracker_artifact', 'no_changes', '*'));
-        $this->response->expectOnce('addFeedback', array('info', 'no changes', CODENDI_PURIFIER_LIGHT));
+        $this->response->expectNever('addFeedback');
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
         $comment_dao->expectNever('createNewVersion');
@@ -1419,7 +1422,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         // Valid
         $fields_data = array();
-        $this->assertFalse($artifact->validateNewChangeset($fields_data, $comment, $user, $email));
+        $this->expectException('Tracker_InfoException');
+        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
     }
 
     function testGetCommentators() {

@@ -18,6 +18,7 @@
  */
 require_once 'common/soap/SOAP_UserManager.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/InfoException.class.php';
 
 //define fault code constants
 define ('get_group_fault', '3000');
@@ -457,19 +458,25 @@ class Tracker_SOAPServer {
                 $tracker_data[$key] = $value;
             }
             
-            if ($artifact->validateNewChangeset($tracker_data, $comment, $user) && 
-                    $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
+            try {
+                $this->validateNewChangeset($tracker_data, $comment, $user);
+                $this->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
-            } else {
-                $response = new Response();
-                if ($response->feedbackHasErrors()) {
-                    return new SoapFault(update_artifact_fault, $response->getRawFeedback(), 'updateArtifact');
-                } elseif ($GLOBALS['Response']) {
-                    return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
-                } else {
-                    return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
-                }
+            } catch (Tracker_InfoException $e) {
+                $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             }
+
+            $response = new Response();
+            if ($response->feedbackHasErrors()) {
+                return new SoapFault(update_artifact_fault, $response->getRawFeedback(), 'updateArtifact');
+            } elseif ($GLOBALS['Response']) {
+                return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
+            } else {
+                return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
+            }
+
         } else {
             return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
         }

@@ -36,6 +36,7 @@ require_once('Hierarchy/Controller.class.php');
 require_once('Hierarchy/HierarchyFactory.class.php');
 require_once 'IFetchTrackerSwitcher.class.php';
 require_once 'Action/CreateArtifact.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/InfoException.class.php';
 
 require_once('json.php');
 
@@ -1920,9 +1921,16 @@ EOS;
             foreach ($fields_data as $key => $value) {
                 $tracker_data[$key] = $value;
             }
-
-            if (! $artifact->validateNewChangeset($tracker_data, $comment, $submitter) || 
-                    ! $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format)) {
+            
+            try {
+                $this->validateNewChangeset($tracker_data, $comment, $submitter);
+                $this->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
+            } catch (Tracker_InfoException $e) {
+                $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                $not_updated_aids[] = $aid;
+                continue;
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 $not_updated_aids[] = $aid;
                 continue;
             }
@@ -2818,11 +2826,16 @@ EOS;
                     $artifact = $af->getArtifactById($artifact_id);
                     if ($artifact) {
                         $followup_comment = '';
-                        if ($artifact->validateNewChangeset($fields_data, $followup_comment, $current_user) && 
-                                $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications)) {
+                        try {
+                            $artifact->validateNewChangeset($fields_data, $followup_comment, $current_user);
+                            $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications);
                             $nb_artifact_update++;
-                        } else {
+                        } catch (Tracker_InfoException $e) {
+                            $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                            $is_error = true;
+                        } catch (Tracker_Exception $e) {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($artifact_id)));
+                            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                             $is_error = true;
                         }
                     } else {
