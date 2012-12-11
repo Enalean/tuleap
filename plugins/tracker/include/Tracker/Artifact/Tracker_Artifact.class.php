@@ -1085,8 +1085,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @throws Tracker_NoChangeException
      */
     private function validateNewChangeset($fields_data, $comment, $submitter, $email = null) {
-        $fields_data = $this->addDatesToRequestData($fields_data);
-        
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
             $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required');
             throw new Tracker_Exception($message);
@@ -1105,6 +1103,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         $workflow = $this->getWorkflow();
+        $fields_data = $this->addDatesToRequestData($fields_data);
         if ($workflow) {
             /*
              * We need to run the post actions to validate the data
