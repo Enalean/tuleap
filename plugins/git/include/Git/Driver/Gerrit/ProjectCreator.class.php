@@ -63,7 +63,13 @@ class Git_Driver_Gerrit_ProjectCreator {
                 // Should we add a warning ?
             }
         }
-        $this->initiatePermissions($gerrit_server, $gerrit_server->getCloneSSHUrl().'/'.$gerrit_project, $gerrit_project.'-contributors', $gerrit_project.'-integrators', $gerrit_project.'-supermen');
+        $this->initiatePermissions(
+            $gerrit_server,
+            $gerrit_server->getCloneSSHUrl($gerrit_project),
+            $gerrit_project.'-contributors',
+            $gerrit_project.'-integrators',
+            $gerrit_project.'-supermen'
+        );
         return $gerrit_project;
     }
 

@@ -35,6 +35,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     /** @var Git_RemoteServer_GerritServer */
     protected $server;
 
+    protected $gerrit_project = 'tuleap-localhost-mozilla/firefox';
+
     public function setUp() {
         parent::setUp();
         Config::store();
@@ -46,11 +48,11 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $host = $this->tmpdir;
         $id = $port = $login = $identity_file = 0;
         $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), array($id, $host, $port, $login, $identity_file));
-        stub($this->server)->getCloneSSHUrl()->returns($host);
+        stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns("$host/$this->gerrit_project");
 
         $this->repository = mock('GitRepository');
         $this->driver = mock('Git_Driver_Gerrit');
-        stub($this->driver)->createProject($this->server, $this->repository)->returns('tuleap-localhost-mozilla/firefox');
+        stub($this->driver)->createProject($this->server, $this->repository)->returns($this->gerrit_project);
 
         stub($this->driver)->getGroupUUID($this->server, $this->contributors)->returns($this->contributors_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->integrators)->returns($this->integrators_uuid);
@@ -127,9 +129,9 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
     public function itCreatesAProject() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
-        expect($this->driver)->createProject($this->server, $this->repository)->once()->returns('tuleap-localhost-mozilla/firefox');
+        expect($this->driver)->createProject($this->server, $this->repository)->once();
         $project_name = $this->project_creator->createProject($this->server, $this->repository);
-        $this->assertEqual('tuleap-localhost-mozilla/firefox', $project_name);
+        $this->assertEqual($this->gerrit_project, $project_name);
     }
 
     public function itCreatesContributorsGroup() {
