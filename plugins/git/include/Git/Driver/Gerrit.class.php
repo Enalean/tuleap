@@ -29,7 +29,8 @@ require_once 'common/backend/BackendLogger.class.php';
  */
 class Git_Driver_Gerrit {
 
-    const COMMAND = 'gerrit';
+    const COMMAND      = 'gerrit';
+    const GSQL_COMMAND = 'gerrit gsql --format json -c';
     const EXIT_CODE = 1;
 
     /**
@@ -74,7 +75,7 @@ class Git_Driver_Gerrit {
     }
     
     public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
-        $command = self::COMMAND.' gsql -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\''. $group_full_name .'\'"';
+        $command = self::GSQL_COMMAND .' "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\''. $group_full_name .'\'"';
         $command_result = $this->ssh->execute($server, $command);
         $json_result = json_decode(array_shift(explode("\n", $command_result)));
         return $json_result->columns->group_uuid;
