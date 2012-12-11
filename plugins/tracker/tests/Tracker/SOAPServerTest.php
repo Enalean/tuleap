@@ -800,6 +800,12 @@ class Tracker_SOAPServer_AppendTemporaryAttachments_Test extends Tracker_SOAPSer
         $attachment_name = $this->server->createTemporaryAttachment($this->session_key);
         $this->assertEqual(strlen($soap_content), $this->server->appendTemporaryAttachmentChunk($this->session_key, $attachment_name, base64_encode($soap_content)));
     }
+
+    public function itRaisesAnErrorIfChunkIsTooBig() {
+        Config::set('sys_max_size_upload', 2);
+        $return = $this->server->appendTemporaryAttachmentChunk($this->session_key, '/../logo.png', base64_encode('toto le trololo'));
+        $this->assertIsA($return, 'SOAPFault');
+    }
 }
 
 ?>
