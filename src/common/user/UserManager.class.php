@@ -879,6 +879,7 @@ class UserManager {
         $nonUserArray = array();
         foreach($mailArray as $key => $ident) {
             $ident = trim($ident);
+            $user  = null;
             if(!empty($ident)) {
                 if (validate_email($ident)) {
                     try {
