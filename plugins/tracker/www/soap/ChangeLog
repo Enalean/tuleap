@@ -10,7 +10,7 @@
 
     == New methods ==
     * getTrackerReports
-    * getArtifactsFromReport
+    * getArtifactsFromReportId
     * getArtifactAttachmentChunk
     * createTemporaryAttachment
     * appendTemporaryAttachmentChunk

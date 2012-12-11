@@ -176,7 +176,7 @@ class Tracker_SOAPServer {
      * @return Array
      * @throws SoapFault
      */
-    public function getArtifactsFromReport($session_key, $report_id, $offset, $max_rows) {
+    public function getArtifactsFromReportId($session_key, $report_id, $offset, $max_rows) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $report = $this->report_factory->getReportById($report_id, $current_user->getId(), false);

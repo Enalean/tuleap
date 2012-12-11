@@ -609,7 +609,7 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
-    'getArtifactsFromReport',
+    'getArtifactsFromReportId',
     array('sessionKey' => 'xsd:string',
           'report_id'  => 'xsd:int',
           'offset'     => 'xsd:int',
@@ -617,7 +617,7 @@ $GLOBALS['server']->register(
     ),
     array('return'=>'tns:ArtifactQueryResult'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getArtifactsFromReport',
+    $GLOBALS['uri'].'#getArtifactsFromReportId',
     'rpc',
     'encoded',
     'Execute a report and returns corresponding artifacts.'
