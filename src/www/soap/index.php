@@ -20,6 +20,8 @@ if ($request->exist('wsdl')) {
     exit();
 }
 
+$event_manager = EventManager::instance();
+
 try {
 
     $server = new SoapServer($uri.'/soap/codendi.wsdl.php?wsdl',array('trace' => 1, 'soap_version' => SOAP_1_1));
@@ -32,9 +34,7 @@ try {
     require_once('frs/frs.php');
     
     // include the <Plugin> API (only if plugin is available)
-    $em =& EventManager::instance();
-    $em->processEvent('soap', array());
-    
+    $event_manager->processEvent('soap', array());
 } catch (Exception $e) {
     echo $e;
 }
@@ -49,13 +49,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     $server -> handle();
 } else {
-    echo '<strong>This SOAP server can handle following functions : </strong>';    
-    echo '<ul>';
-    foreach($server -> getFunctions() as $func) {        
-        echo '<li>' , $func , '</li>';
-    }
-    echo '</ul>';
-    echo '<a href="codendi.wsdl.php?wsdl">You can access the WSDL</a>';
+    $presenter = array('end_points' => array(
+        array(
+            'title'       => 'Core',
+            'wsdl'        => '/soap/?wsdl',
+            'wsdl_viewer' => '/soap/wsdl',
+            'description' => <<<EOT
+Historically the sole end point, therefore it groups multiple different functions:
+<ul>
+    <li>Session management: login, logout, projects, ...</li>
+    <li>File Release System access (FRS): addPackage, addRelease, addFile, ...</li>
+    <li>Tracker v3 (for historical deployments): get/updateTracker, get/updateArtifact, ...</li>
+    <li>Documentation: get/updateDocman, ...</li>
+</ul>
+EOT
+        ),
+        array(
+            'title'       => 'Subversion',
+            'wsdl'        => '/soap/svn/?wsdl',
+            'wsdl_viewer' => '/soap/svn/wsdl-viewer',
+            'description' => 'Get informations about Subversion usage in project.',
+        ),
+        array(
+            'title'       => 'Project',
+            'wsdl'        => '/soap/project/?wsdl',
+            'wsdl_viewer' => '/soap/project/wsdl-viewer',
+            'description' => 'Create and administrate projects.',
+        ),
+    ));
+
+    $event_manager->processEvent(Event::SOAP_DESCRIPTION, array('end_points' => &$presenter['end_points']));
+
+    require_once 'common/templating/mustache/MustacheRenderer.class.php';
+    site_header(array('title' => "SOAP API"));
+    $renderer = new MustacheRenderer('templates');
+    $renderer->renderToPage('soap_index', $presenter);
+    site_footer(array());
 }
 
 ?>
