@@ -78,6 +78,42 @@ interface iCodeCoverageReporter {
     public function generateCoverage($path);
 }
 
+class TestsPluginHtmlDumper extends SimpleDumper {
+     /**
+     *    Creates a human readable description of the
+     *    difference between two variables. Uses a
+     *    dynamic call.
+     *    @param mixed $first        First variable.
+     *    @param mixed $second       Value to compare with.
+     *    @param boolean $identical  If true then type anomolies count.
+     *    @return string             Description of difference.
+     *    @access public
+     */
+    function describeDifference($first, $second, $identical = false) {
+        $difference = parent::describeDifference($first, $second, $identical);
+        if ($this->getType($first) == 'String') {
+            $diff = $this->describeStringDifferenceAsADiff($first, $second, $identical);
+            if ($diff) {
+                $difference .= PHP_EOL . PHP_EOL;
+                $difference .= '------------------------------------- UNIFIED DIFF --'. PHP_EOL;
+                $difference .= $diff;
+            }
+        }
+        return $difference;
+    }
+
+    /** @return string */
+    private function describeStringDifferenceAsADiff($first, $second, $identical) {
+        if (is_object($second) || is_array($second)) {
+            return;
+        }
+        $first   = explode(PHP_EOL, $first);
+        $second  = explode(PHP_EOL, $second);
+        $diff    = new Codendi_Diff($first, $second);
+        $unified = new Codendi_UnifiedDiffFormatter();
+        return $unified->format($diff);
+    }
+}
 
 class TestsPluginHtmlReporter extends HtmlReporter implements iCodeCoverageReporter {
     protected $_timer;
@@ -86,6 +122,16 @@ class TestsPluginHtmlReporter extends HtmlReporter implements iCodeCoverageRepor
     function __construct($coverage) {
         parent::__construct();
         $this->coverage = $coverage;
+    }
+
+    /**
+     *    Gets the formatter for variables and other small
+     *    generic data items.
+     *    @return SimpleDumper          Formatter.
+     *    @access public
+     */
+    function getDumper() {
+        return new TestsPluginHtmlDumper();
     }
 
     function paintHeader($test_name) {
