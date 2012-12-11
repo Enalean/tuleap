@@ -39,9 +39,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         parent::setUp();
         Config::store();
         Config::set('tmp_dir', '/var/tmp');
-        $this->current_dir = dirname(__FILE__);
-        $this->tmpdir      = Config::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
-        `unzip $this->current_dir/firefox.zip -d $this->tmpdir`;
+        $this->fixtures = dirname(__FILE__) .'/_fixtures';
+        $this->tmpdir   = Config::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
+        `unzip $this->fixtures/firefox.zip -d $this->tmpdir`;
 
         $host = $this->tmpdir;
         $id = $port = $login = $identity_file = 0;
@@ -97,18 +97,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
     private function assertPermissionsFileHasEverything() {
         $config_file_contents = file_get_contents("$this->tmpdir/project.config");
-        $expected_contents    = <<<EOF
-[access]
-	inheritFrom = tuleap-localhost-AlmAcl
-[project]
-	state = active
-[access "refs/heads/*"]
-	Read = group Registered Users
-	Read = group tuleap-localhost-mozilla/firefox-contributors
-	create = group tuleap-localhost-mozilla/firefox-integrators
-
-EOF;
-        // TODO: To be completed, use a map
+        $expected_contents    = file_get_contents("$this->fixtures/expected_access_rights.config"); // TODO: To be completed
 
         $this->assertEqual($config_file_contents, $expected_contents);
     }
