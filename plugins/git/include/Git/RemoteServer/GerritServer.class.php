@@ -78,5 +78,9 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         $this->port = $port;
         return $this;
     }
+
+    public function getCloneSSHUrl() {
+        return "ssh://$this->login@$this->host:$this->port";
+    }
 }
 ?>

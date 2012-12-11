@@ -31,7 +31,7 @@ class Git_Driver_Gerrit {
 
     const COMMAND      = 'gerrit';
     const GSQL_COMMAND = 'gerrit gsql --format json -c';
-    const EXIT_CODE = 1;
+    const EXIT_CODE    = 1;
 
     /**
      * @var Git_Driver_Gerrit_RemoteSSHCommand

@@ -11,26 +11,26 @@ abstract class MockBuilderBaseTest extends TuleapTestCase {
     }
     public function itWorksWithoutArguments() {
         $this->mockWithoutArguments();
-        
+
         $this->assertEqual($this->mockToto->greet(), "Hello");
     }
-    
+
     public function itIsPossibleToSpecifyAnArgument() {
         $this->mockWithOneArgument();
-                
+
         $this->assertEqual($this->mockToto->greet('Rasmus Lerdorf'), "Hello, Rasmus Lerdorf");
         $this->assertNotEqual($this->mockToto->greet('Linus Thorvalds'), "Hello, Rasmus Lerdorf");
     }
-    
+
     public function itIsPossibleToSpecifySeveralArguments() {
         $this->mockWith2Arguments();
-        
+
         $this->assertEqual($this->mockToto->greet('Rasmus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
         $this->assertNotEqual($this->mockToto->greet('Linus', 'Lerdorf'), "Hello, Rasmus Lerdorf");
         $this->assertNotEqual($this->mockToto->greet('Rasmus', 'Torvalds'), "Hello, Rasmus Lerdorf");
     }
-    
-    
+
+
     public abstract function mockWithoutArguments();
 
 }
@@ -51,14 +51,14 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
             ->greet('Rasmus', 'Lerdorf')
             ->returns("Hello, Rasmus Lerdorf");
     }
-    
+
     public function itCanAlsoBuildTheMock() {
        $mockOfSomeClass = stub('SomeClass')
                             ->someMethod()
                             ->returns("a precise result");
        $this->assertEqual("a precise result", $mockOfSomeClass->someMethod());
     }
-    
+
     public function itCanStubMoreThanOneMethod() {
         $mock = stub('Toto')
             ->greet('John Doe')
@@ -71,7 +71,7 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
         $this->assertEqual($mock->greet('John Doe'), 'Hello, John Doe');
         $this->assertEqual($mock->greet('Rasmus', 'Lerdorf'), 'Hello, Rasmus Lerdorf');
     }
-    
+
     public function itEnsuresThatMethodIsCalledOnceWithoutArguments() {
         $mock = mock('Toto');
         stub($mock)->greet()->once();
@@ -110,25 +110,36 @@ class MockBuilderIntelligentsTest extends MockBuilderBaseTest {
         $mock->greet('Rasmus', 'Lerdorf');
         $mock->greet();
     }
-    
+
     public function itCanThrowExceptions() {
         $mock = stub('Toto')->greet()->throws(new SomeException());
         $this->expectException('SomeException');
         $mock->greet();
     }
-    
+
+    public function itCanThrowExceptionAtASpecificTime() {
+        $mock = stub('Toto')->greet()->throwsAt(2, new SomeException());
+        $mock = stub('Toto')->sayGoodBye()->throwsAt(2, new AnotherException());
+        $this->expectException('AnotherException');
+        $mock->greet();
+        $mock->greet();
+        $mock->sayGoodBye();
+        $mock->sayGoodBye();
+        $mock->sayGoodBye();
+    }
+
     public function itCanThrowExceptionsDependingOnArguments() {
         $mock = stub('Toto')->greet('john')->throws(new SomeException());
         $mock->greet('dave');
         $this->expectException('SomeException');
         $mock->greet('john');
     }
-    
+
     public function itDoesNotStoreArgumentsBetweenThrowConfigurations() {
         $mock = stub('Toto')->greet('john')->throws(new SomeException());
         stub($mock)->sayGoodbye()->throws(new SomeException());
         $this->expectException('SomeException');
-        $mock->sayGoodbye('dave'); 
+        $mock->sayGoodbye('dave');
     }
 }
 
@@ -137,9 +148,9 @@ class Toto {
     function greet() {
         // this function is mocked out in the tests
     }
-    
+
     function sayGoodBye() {
-        
+
     }
 
 }
@@ -151,6 +162,10 @@ class SomeClass {
 }
 
 class SomeException extends Exception {
+
+}
+
+class AnotherException extends Exception {
 
 }
 ?>

@@ -45,7 +45,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
         $host = $this->tmpdir;
         $id = $port = $login = $identity_file = 0;
-        $this->server = new Git_RemoteServer_GerritServer($id, $host, $port, $login, $identity_file);
+        $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), array($id, $host, $port, $login, $identity_file));
+        stub($this->server)->getCloneSSHUrl()->returns($host);
 
         $this->repository = mock('GitRepository');
         $this->driver = mock('Git_Driver_Gerrit');
