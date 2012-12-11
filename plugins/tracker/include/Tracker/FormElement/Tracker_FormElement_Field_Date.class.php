@@ -766,7 +766,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             }
         } elseif(intval($soap_value) == $soap_value) {
             // Assume it's a timestamp
-            return date('Y-m-d', $soap_value);
+            return date('Y-m-d', (int) $soap_value);
         }
         return null;
     }
