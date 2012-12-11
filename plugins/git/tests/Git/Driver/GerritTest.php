@@ -180,14 +180,25 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
 }
 
 class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
-    
+
+    private $groupname = 'host-project/repo-contributors';
+    private $expected_query = 'gerrit gsql --format json -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\\\'host-project/repo-contributors\\\'"';
+
     public function itAsksGerritForTheGroupUUID() {
-        $groupname = 'host-project/repo-contributors';
-        $uuid      = 'lsalkj4jlk2jj3452lkj23kj421465';
-        //TODO: does not seem to be valid json…
-        $uuid_as_json = '{"type":"row","columns":{"group_uuid":"'.$uuid.'"}}'. "\n" .'{"type":"query-stats","rowCount":1,"runTimeMilliseconds":1}';
-        stub($this->ssh)->execute($this->gerrit_server, 'gerrit gsql --format json -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\\\''. $groupname .'\\\'"')->once()->returns($uuid_as_json);
-        $this->assertEqual($uuid, $this->driver->getGroupUUID($this->gerrit_server, $groupname));
+        $uuid         = 'lsalkj4jlk2jj3452lkj23kj421465';
+        $query_result = '{"type":"row","columns":{"group_uuid":"'. $uuid .'"}}'.
+                        PHP_EOL .
+                        '{"type":"query-stats","rowCount":1,"runTimeMilliseconds":1}';
+        stub($this->ssh)->execute($this->gerrit_server, $this->expected_query)->once()->returns($query_result);
+
+        $this->assertEqual($uuid, $this->driver->getGroupUUID($this->gerrit_server, $this->groupname));
+    }
+
+    public function itReturnsNullIfNotFound() {
+        $query_result = '{"type":"query-stats","rowCount":0,"runTimeMilliseconds":0}';
+        stub($this->ssh)->execute($this->gerrit_server, $this->expected_query)->once()->returns($query_result);
+
+        $this->assertNull($this->driver->getGroupUUID($this->gerrit_server, $this->groupname));
     }
 }
 
