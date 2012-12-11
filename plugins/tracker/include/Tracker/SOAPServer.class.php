@@ -608,18 +608,10 @@ class Tracker_SOAPServer {
             $tracker = $this->tracker_factory->getTrackerById($tracker_id);
             $this->checkUserCanViewTracker($tracker, $current_user);
 
-            return $this->exportReportsToSoap($this->report_factory->getReportsByTrackerId($tracker_id, $current_user->getId()));
+            return $this->report_factory->exportToSoap($tracker, $current_user);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
-    }
-
-    private function exportReportsToSoap(array $reports) {
-        $soap_tracker_reports = array();
-        foreach ($reports as $report) {
-            $soap_tracker_reports[] = $report->exportToSoap();
-        }
-        return $soap_tracker_reports;
     }
 
     public function getArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $offset, $size) {

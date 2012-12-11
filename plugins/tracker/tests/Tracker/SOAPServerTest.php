@@ -65,6 +65,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     protected $report_factory;
     protected $fileinfo_factory;
     protected $user_manager;
+    protected $current_user;
 
     protected $i_should_not_have_access_to_this_private_project_id = 666;
     protected $project_id = 111;
@@ -72,12 +73,12 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $current_user        = mock('User');
-        stub($current_user)->getId()->returns($this->user_id);
-        stub($current_user)->isSuperUser()->returns(true);
-        stub($current_user)->isLoggedIn()->returns(true);
-        stub($current_user)->isRestricted()->returns(false);
-        $this->user_manager  = stub('UserManager')->getCurrentUser($this->session_key)->returns($current_user);
+        $this->current_user        = mock('User');
+        stub($this->current_user)->getId()->returns($this->user_id);
+        stub($this->current_user)->isSuperUser()->returns(true);
+        stub($this->current_user)->isLoggedIn()->returns(true);
+        stub($this->current_user)->isRestricted()->returns(false);
+        $this->user_manager  = stub('UserManager')->getCurrentUser($this->session_key)->returns($this->current_user);
         $permissions_manager = mock('PermissionsManager');
         $project_manager     = mock('ProjectManager');
         $project             = mock('Project');
@@ -86,12 +87,12 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($project)->getGroupId()->returns($this->project_id);
         stub($project)->isPublic()->returns(true);
         stub($project)->usesService('plugin_tracker')->returns(true);
-        stub($current_user)->isMember($this->project_id)->returns(true);
+        stub($this->current_user)->isMember($this->project_id)->returns(true);
 
         stub($private_project)->getGroupId()->returns($this->i_should_not_have_access_to_this_private_project_id);
         stub($private_project)->isPublic()->returns(false);
         stub($private_project)->usesService('plugin_tracker')->returns(true);
-        stub($current_user)->isMember($this->i_should_not_have_access_to_this_private_project_id)->returns(false);
+        stub($this->current_user)->isMember($this->i_should_not_have_access_to_this_private_project_id)->returns(false);
 
         $dao = mock('Tracker_ReportDao');
         $this->setUpArtifactResults($dao);
@@ -499,31 +500,9 @@ class Tracker_SOAPServer_getTrackerReports_Test extends Tracker_SOAPServer_BaseT
     }
 
     public function itGetTheReportsFromTheUnderlyingAPI() {
-        expect($this->report_factory)->getReportsByTrackerId($this->tracker_id, $this->user_id)->once();
-        stub($this->report_factory)->getReportsByTrackerId()->returns(array());
-        $this->server->getTrackerReports($this->session_key, null, $this->tracker_id);
-    }
-
-    public function itTransformTheReportIntoASoapResponse() {
-        $report = mock('Tracker_Report');
-        expect($report)->exportToSoap()->once();
-        stub($this->report_factory)->getReportsByTrackerId()->returns(
-            array(
-                100 => $report
-            )
-        );
-        $this->server->getTrackerReports($this->session_key, null, $this->tracker_id);
-    }
-
-    public function itReturnsTheSOAPVersionOfTheReport() {
-        $soap_of_one_report = array('id' => 100);
-        stub($this->report_factory)->getReportsByTrackerId()->returns(
-            array(
-                100 => stub('Tracker_Report')->exportToSoap()->returns($soap_of_one_report)
-            )
-        );
-        $soap_response = $this->server->getTrackerReports($this->session_key, null, $this->tracker_id);
-        $this->assertEqual($soap_response, array($soap_of_one_report));
+        expect($this->report_factory)->exportToSoap($this->tracker, $this->current_user)->once();
+        stub($this->report_factory)->exportToSoap()->returns(array('whatever'));
+        $this->assertEqual(array('whatever'), $this->server->getTrackerReports($this->session_key, null, $this->tracker_id));
     }
 }
 
@@ -540,7 +519,7 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         $report_id = 987;
         $report = aTrackerReport()->withTracker($this->unreadable_tracker)->build();
         stub($this->report_factory)->getReportById($report_id, $this->user_id, false)->returns($report);
-        $results = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+        $results = $this->server->getArtifactsFromReportId($this->session_key, $report_id, 0, 10);
         $this->assertIsA($results, 'SoapFault');
     }
 
@@ -548,28 +527,28 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         $report_id = 987;
         $report = aTrackerReport()->withTracker($this->private_unreadable_tracker)->build();
         stub($this->report_factory)->getReportById($report_id, $this->user_id, false)->returns($report);
-        $soap_fault = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+        $soap_fault = $this->server->getArtifactsFromReportId($this->session_key, $report_id, 0, 10);
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
     }
 
     public function itRaisesAnExceptionWhenThereIsNoReportMatching() {
         $report_id = 987;
         stub($this->report_factory)->getReportById()->returns(null);
-        $results = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
+        $results = $this->server->getArtifactsFromReportId($this->session_key, $report_id, 0, 10);
         $this->assertIsA($results, 'SoapFault');
     }
 
     public function itGetsMatchingIdsFromReport() {
         expect($this->report)->getMatchingIds(null, true)->once();
         stub($this->report_factory)->getReportById()->returns($this->report);
-        $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
+        $this->server->getArtifactsFromReportId($this->session_key, $this->report_id, 0, 10);
     }
 
     public function itConvertsMatchingIdsIntoAnArrayOfInteger() {
         stub($this->report)->getMatchingIds()->returns(array('id' => '42,66,9001', 'last_changeset_id' => '421,661,90011'));
 
         stub($this->report_factory)->getReportById()->returns($this->report);
-        $soap_response = $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
+        $soap_response = $this->server->getArtifactsFromReportId($this->session_key, $this->report_id, 0, 10);
         $this->assertEqual($soap_response, array(
             'total_artifacts_number' => 3,
             'artifacts' => array(
@@ -584,7 +563,7 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         stub($this->report)->getMatchingIds()->returns(array('id' => '', 'last_changeset_id' => ''));
 
         stub($this->report_factory)->getReportById()->returns($this->report);
-        $soap_response = $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
+        $soap_response = $this->server->getArtifactsFromReportId($this->session_key, $this->report_id, 0, 10);
         $this->assertEqual($soap_response, array(
             'total_artifacts_number' => 0,
             'artifacts' => array()
