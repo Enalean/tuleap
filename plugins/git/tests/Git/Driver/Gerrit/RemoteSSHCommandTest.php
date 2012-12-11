@@ -142,11 +142,13 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
     
     public function itLogsEveryCommand() {
+        $expected_result = array('exit_code' => 0, 'std_err' => '', 'std_out' => 'Some successful output');
+        stub($this->ssh)->sshExec()->returns($expected_result);
         $cmd = '-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com create-group toto --username johan';
-        expect($this->logger)->info("executing $cmd")->once();
+        expect($this->logger)->info("executing $cmd")->at(0);
+        expect($this->logger)->info("Result: ". var_export($expected_result, 1))->at(1);
         $this->ssh->execute($this->config, 'create-group toto --username johan');
     }
-    
 }
 
 class RemoteSSHCommandFailureTest extends TuleapTestCase {

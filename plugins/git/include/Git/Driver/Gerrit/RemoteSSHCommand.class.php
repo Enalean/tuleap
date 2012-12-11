@@ -41,6 +41,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
         $full_cmd      = "-p $port -i $identity_file $login@$host $cmd";
         $this->logger->info("executing $full_cmd");
         $result = $this->sshExec($full_cmd);
+        $this->logger->info('Result: '. var_export($result, 1));
         $exit_code = $result['exit_code'];
         $std_out = $result['std_out'];
         if ($exit_code != self::SUCCESS) {
