@@ -78,7 +78,10 @@ class Tracker_FileInfo {
      * @return String Base64 encoded content
      */
     public function getSoapContent($offset, $size) {
-        return base64_encode(file_get_contents($this->getPath(), false, NULL, $offset, $size));
+        if (file_exists($this->getPath())) {
+            return base64_encode(file_get_contents($this->getPath(), false, NULL, $offset, $size));
+        }
+        return null;
     }
 
     /**
