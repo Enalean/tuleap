@@ -641,38 +641,21 @@ class Tracker_SOAPServer {
         }
     }
 
-    public function appendTemporaryAttachmentChunk($session_key, $attachment_name, $content) {
-        try {
-            $current_user    = $this->soap_request_validator->continueSession($session_key);
-            $temporary = new Tracker_SOAP_TemporaryFile($current_user, $attachment_name);
-            $attachment_path = $temporary->getPath();
-            if (file_exists($attachment_path)) {
-                $decoded_content = base64_decode($content);
-                if ($this->validTemporaryFilesSize($temporary, $decoded_content)) {
-                    return file_put_contents($attachment_path, $decoded_content, FILE_APPEND);
-                } else {
-                    return new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments ('.Config::get('sys_max_size_upload').')');
-                }
-            } else {
-                return new SoapFault(temp_file_invalid, 'Invalid temporary file path');
-            }
-        } catch (Exception $e) {
-            return new SoapFault((string) $e->getCode(), $e->getMessage());
-        }
-    }
-
-    private function validTemporaryFilesSize($temporary_file, $decoded_content) {
-        $chunk_size      = strlen($decoded_content);
-        $total_size      = $chunk_size + $temporary_file->getTemporaryFilesSize();
-
-        return $total_size <= Config::get('sys_max_size_upload');
-    }
-
     public function createTemporaryAttachment($session_key) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
             return $temporary->getUniqueFileName();
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    public function appendTemporaryAttachmentChunk($session_key, $attachment_name, $content) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user, $attachment_name);
+            return $temporary->appendChunk(base64_decode($content));
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }

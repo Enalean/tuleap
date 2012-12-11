@@ -66,6 +66,26 @@ class Tracker_SOAP_TemporaryFile {
         $file_path    = tempnam(Config::get('codendi_cache_dir'), $prefix);
         return substr(basename($file_path), strlen($prefix));
     }
+
+    public function appendChunk($content) {
+        $attachment_path = $this->getPath();
+        if (file_exists($attachment_path)) {
+            if ($this->validTemporaryFilesSize($content)) {
+                return file_put_contents($attachment_path, $content, FILE_APPEND);
+            } else {
+                return new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments ('.Config::get('sys_max_size_upload').')');
+            }
+        } else {
+            return new SoapFault(temp_file_invalid, 'Invalid temporary file path');
+        }
+    }
+
+    private function validTemporaryFilesSize($content) {
+        $chunk_size = strlen($content);
+        $total_size = $chunk_size + $this->getTemporaryFilesSize();
+
+        return $total_size <= Config::get('sys_max_size_upload');
+    }
 }
 
 ?>
