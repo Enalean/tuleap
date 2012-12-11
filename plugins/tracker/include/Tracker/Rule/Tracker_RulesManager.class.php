@@ -57,7 +57,7 @@ class Tracker_RulesManager {
      * @param int $tracker_id
      * @return array
      */
-    function getAllListRulesByTrackerWithOrder($tracker_id) {
+    public function getAllListRulesByTrackerWithOrder($tracker_id) {
         if (!isset($this->rules_by_tracker_id[$tracker_id])) {
             $this->rules_by_tracker_id[$tracker_id] = $this->getRuleFactory()
                     ->getAllListRulesByTrackerWithOrder($tracker_id);
@@ -73,19 +73,6 @@ class Tracker_RulesManager {
     public function getAllDateRulesByTrackerId($tracker_id) {
         return $this->getTrackerRuleDateFactory()
                     ->searchByTrackerId($tracker_id);
-    }
-
-    /**
-     * Pretty sure this isn't used anywhere
-     */
-//    function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
-//        $factory = $this->getTrackerRuleListFactory();
-//        return $factory->create($source, $target, $tracker_id, $source_value, $target_value);
-//    }
-
-    function deleteRule($rule_id) {
-        $fact = $this->getRuleFactory();
-        return $fact->deleteRule($rule_id);
     }
 
     /**
@@ -614,9 +601,6 @@ class Tracker_RulesManager {
             }
                     
             if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
-                // If the request doesn't contain all fields then the rules
-                // are considered violated.
-                // It may impact partial csv import / soap update
                 $source_field = $this->getField($rule->getSourceFieldId());
                 $target_field = $this->getField($rule->getTargetFieldId());
                 $feedback = $GLOBALS['Language']->getText(

@@ -141,26 +141,14 @@ class Tracker_RuleFactory {
     }
 
     /**
-     * This should no longer be used
+     * Delete all rules by source field id and target field id
+     *
+     * @param $tracker_id, the id of the tracker
+     * @param $field_source_id, the id of the source field
+     * @param $field_target_id, the id of the target field
+     *
+     * @return bool
      */
-//    public function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
-//        $this->rules_dao->create($tracker_id, $source, $source_value, $target, Tracker_Rule::RULETYPE_VALUE, $target_value);
-//    }
-
-    public function deleteRule($rule_id) {
-        $deleted = $this->rules_dao->deleteByRuleId($rule_id);
-        return $deleted;
-    }
-
-    /**
-    * Delete all rules by source field id and target field id
-    *
-    * @param $tracker_id, the id of the tracker
-    * @param $field_source_id, the id of the source field
-    * @param $field_target_id, the id of the target field
-    *
-    * @return bool
-    */
     public function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
         $deleted = $this->rules_dao->deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
         return $deleted;

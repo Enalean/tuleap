@@ -1031,7 +1031,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email);
         if(! $changeset_id) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
-            return false; //TODO To be removed
+            return false;
         }
         
         $comment = trim($comment);
@@ -1053,8 +1053,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                 $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
             } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
-
-                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, true);
+                $bypass_perms  = true;
+                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
             } else {
                 $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, $submitter, $is_submission);
             }

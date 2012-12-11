@@ -465,7 +465,7 @@ class Tracker_SOAPServer {
             } catch (Tracker_InfoException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
             } catch (Tracker_Exception $e) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                return new SoapFault(update_artifact_fault, $e->getMessage(), 'updateArtifact');
             }
 
             $response = new Response();

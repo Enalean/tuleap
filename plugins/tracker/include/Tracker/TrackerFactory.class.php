@@ -207,18 +207,12 @@ class TrackerFactory {
                 'status' => '',
                 'deletion_date' => '');
         $row['allow_copy'] = isset($att['allow_copy']) ?
-                (int)$att['allow_copy'] : 0;
+                (int) $att['allow_copy'] : 0;
         $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?
-                (int)$att['instantiate_for_new_projects'] : 0;
+                (int) $att['instantiate_for_new_projects'] : 0;
         $row['stop_notification'] = isset($att['stop_notification']) ?
-                (int)$att['stop_notification'] : 0;
-        // in case old id values are important modify code here
-        if (false) {
-            foreach ($xml->attributes() as $key => $value) {
-                // ! group_id and item_name will be changed to the old value
-                $row[$key] = (int)$value;
-            }
-        }
+                (int) $att['stop_notification'] : 0;
+
         $tracker = $this->getInstanceFromRow($row);
         // set canned responses
         foreach ($xml->cannedResponses->cannedResponse as $index => $response) {
@@ -239,16 +233,20 @@ class TrackerFactory {
         }
         
         /*
-         * legacy compatibility
+         * Legacy compatibility
          * 
-         * SimpleXML does not allow for nodes to be moved !!!
+         * All new Tuleap versions will not export dependencies but rules instead.
+         * However, we still want to be able to import old xml files.
+         * 
+         * SimpleXML does not allow for nodes to be moved so have to recursively 
+         * generate rules from the dependencies data.
          */
          if (isset($xml->dependencies)) {
              $list_rules = null;
              
-            if(!isset($xml->rules)) {
+            if(! isset($xml->rules)) {
                 $list_rules = $xml->addChild('rules')->addChild('list_rules');    
-            } elseif (!isset($xml->rules->list_rules)) {
+            } elseif (! isset($xml->rules->list_rules)) {
                 $list_rules = $xml->rules->addChild('list_rules', $xml->dependencies);    
             } 
              
