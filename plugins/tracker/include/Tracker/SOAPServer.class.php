@@ -646,7 +646,8 @@ class Tracker_SOAPServer {
     public function appendTemporaryAttachmentChunk($session_key, $attachment_name, $content) {
         try {
             $current_user    = $this->soap_request_validator->continueSession($session_key);
-            $attachment_path = Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix($current_user).$attachment_name;
+            $temporary = new Tracker_SOAP_TemporaryFile($current_user, $attachment_name);
+            $attachment_path = $temporary->getPath();
             if (file_exists($attachment_path)) {
                 return file_put_contents($attachment_path, base64_decode($content), FILE_APPEND);
             } else {
@@ -660,8 +661,9 @@ class Tracker_SOAPServer {
     public function createTemporaryAttachment($session_key) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            $prefix       = $this->getUserTemporaryFilePrefix($current_user);
-            if ($this->isOverUserTemporaryFileLimit($current_user)) {
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
+            $prefix       = $temporary->getUserTemporaryFilePrefix();
+            if ($temporary->isOverUserTemporaryFileLimit()) {
                 return new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
             }
             $file_path    = tempnam(Config::get('codendi_cache_dir'), $prefix);
@@ -671,22 +673,11 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function isOverUserTemporaryFileLimit(User $user) {
-        return count($this->getUserTemporaryFiles($user)) > (self::TEMP_FILE_NB_MAX - 1);
-    }
-
-    private function getUserTemporaryFilePrefix(User $user) {
-        return self::TEMP_FILE_PREFIX.$user->getId().'_';
-    }
-
-    private function getUserTemporaryFiles(User $user) {
-        return glob(Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix($user).'*');
-    }
-
     public function purgeAllTemporaryAttachments($session_key) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            foreach ($this->getUserTemporaryFiles($current_user) as $file) {
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
+            foreach ($temporary->getUserTemporaryFiles() as $file) {
                 unlink($file);
             }
             return true;
