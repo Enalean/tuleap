@@ -651,7 +651,7 @@ class Tracker_SOAPServer {
                 if ($this->validTemporaryFilesSize($temporary, $decoded_content)) {
                     return file_put_contents($attachment_path, $decoded_content, FILE_APPEND);
                 } else {
-                    return new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments');
+                    return new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments ('.Config::get('sys_max_size_upload').')');
                 }
             } else {
                 return new SoapFault(temp_file_invalid, 'Invalid temporary file path');
@@ -672,12 +672,7 @@ class Tracker_SOAPServer {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
-            $prefix       = $temporary->getUserTemporaryFilePrefix();
-            if ($temporary->isOverUserTemporaryFileLimit()) {
-                return new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.Tracker_SOAP_TemporaryFile::TEMP_FILE_NB_MAX.' files max.');
-            }
-            $file_path    = tempnam(Config::get('codendi_cache_dir'), $prefix);
-            return substr(basename($file_path), strlen($prefix));
+            return $temporary->getUniqueFileName();
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }

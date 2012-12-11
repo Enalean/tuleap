@@ -57,6 +57,15 @@ class Tracker_SOAP_TemporaryFile {
         }
         return $size;
     }
+
+    public function getUniqueFileName() {
+        if ($this->isOverUserTemporaryFileLimit()) {
+            return new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
+        }
+        $prefix       = $this->getUserTemporaryFilePrefix();
+        $file_path    = tempnam(Config::get('codendi_cache_dir'), $prefix);
+        return substr(basename($file_path), strlen($prefix));
+    }
 }
 
 ?>
