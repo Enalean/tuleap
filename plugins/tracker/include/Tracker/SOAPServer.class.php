@@ -544,9 +544,8 @@ class Tracker_SOAPServer {
                 if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
                     return $artifact_id;
                 } else {
-                    $response = new Response();
-                    if ($response->feedbackHasErrors()) {
-                        return new SoapFault(update_artifact_fault, $response->getRawFeedback(), 'updateArtifact');
+                    if ($GLOBALS['Response']->feedbackHasErrors()) {
+                        return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
                     } else {
                         return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
                     }
