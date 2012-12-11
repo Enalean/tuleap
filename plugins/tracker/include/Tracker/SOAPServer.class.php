@@ -18,7 +18,7 @@
  */
 require_once 'common/soap/SOAP_UserManager.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/InfoException.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/NoChangeException.class.php';
 
 //define fault code constants
 define ('get_group_fault', '3000');

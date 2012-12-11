@@ -36,7 +36,7 @@ require_once('Hierarchy/Controller.class.php');
 require_once('Hierarchy/HierarchyFactory.class.php');
 require_once 'IFetchTrackerSwitcher.class.php';
 require_once 'Action/CreateArtifact.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/InfoException.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/NoChangeException.class.php';
 
 require_once('json.php');
 

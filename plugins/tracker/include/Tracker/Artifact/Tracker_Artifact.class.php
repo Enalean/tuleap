@@ -24,7 +24,7 @@ require_once TRACKER_BASE_DIR.'/Tracker/Tracker_History.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Tracker_Dispatchable_Interface.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/InfoException.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/NoChangeException.class.php';
 require_once('Tracker_Artifact_Changeset.class.php');
 require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
