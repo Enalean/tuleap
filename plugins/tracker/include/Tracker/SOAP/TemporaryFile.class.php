@@ -24,7 +24,7 @@ class Tracker_SOAP_TemporaryFile {
     private $user;
     private $attachment_name;
 
-    public function __construct(User $user, $attachment_name) {
+    public function __construct(User $user, $attachment_name = null) {
         $this->user = $user;
         $this->attachment_name = $attachment_name;
     }
@@ -33,12 +33,20 @@ class Tracker_SOAP_TemporaryFile {
         return file_exists($this->getPath());
     }
 
-    private function getUserTemporaryFilePrefix(User $user) {
-        return self::TEMP_FILE_PREFIX.$user->getId().'_';
+    public function getUserTemporaryFilePrefix() {
+        return self::TEMP_FILE_PREFIX.$this->user->getId().'_';
     }
 
     public function getPath() {
-        return Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix($this->user).$this->attachment_name;
+        return Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().$this->attachment_name;
+    }
+
+    public function getUserTemporaryFiles() {
+        return glob(Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().'*');
+    }
+
+    public function isOverUserTemporaryFileLimit() {
+        return count($this->getUserTemporaryFiles()) > (self::TEMP_FILE_NB_MAX - 1);
     }
 }
 
