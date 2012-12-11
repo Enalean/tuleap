@@ -613,7 +613,7 @@ class Tracker_RulesManager {
                         )
                     );
                 
-                $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
+                $GLOBALS['Response']->addFeedback('error', $feedback);
                 
                 $source_field->setHasErrors(true);
                 $target_field->setHasErrors(true);
