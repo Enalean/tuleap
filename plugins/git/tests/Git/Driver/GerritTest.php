@@ -186,7 +186,7 @@ class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
         $uuid      = 'lsalkj4jlk2jj3452lkj23kj421465';
         //TODO: does not seem to be valid json…
         $uuid_as_json = '{"type":"row","columns":{"group_uuid":"'.$uuid.'"}}'. "\n" .'{"type":"query-stats","rowCount":1,"runTimeMilliseconds":1}';
-        stub($this->ssh)->execute($this->gerrit_server, 'gerrit gsql --format json -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\''. $groupname .'\'"')->once()->returns($uuid_as_json);
+        stub($this->ssh)->execute($this->gerrit_server, 'gerrit gsql --format json -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\\\''. $groupname .'\\\'"')->once()->returns($uuid_as_json);
         $this->assertEqual($uuid, $this->driver->getGroupUUID($this->gerrit_server, $groupname));
     }
 }
