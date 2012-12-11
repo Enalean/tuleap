@@ -48,6 +48,15 @@ class Tracker_SOAP_TemporaryFile {
     public function isOverUserTemporaryFileLimit() {
         return count($this->getUserTemporaryFiles()) > (self::TEMP_FILE_NB_MAX - 1);
     }
+
+    public function getTemporaryFilesSize() {
+        $size  = 0;
+        $files = $this->getUserTemporaryFiles();
+        foreach ($files as $file) {
+            $size = $size + filesize($file);
+        }
+        return $size;
+    }
 }
 
 ?>

@@ -763,6 +763,11 @@ class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServ
 }
 
 class Tracker_SOAPServer_AppendTemporaryAttachments_Test extends Tracker_SOAPServer_TemproraryAttachments_BaseTest {
+    public function setUp() {
+        parent::setUp();
+        $this->max_size_upload = 16777216;
+        Config::set('sys_max_size_upload',$this->max_size_upload);
+    }
 
     public function itCannotAppendToNonExistingFile() {
         $return = $this->server->appendTemporaryAttachmentChunk($this->session_key, 'bla', base64_encode('bla'));

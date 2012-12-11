@@ -52,6 +52,7 @@ define('invalid_file', '3028');
 define('invalid_file_field_format', Tracker_FormElement_Field_File::SOAP_FAULT_INVALID_REQUEST_FORMAT); //'3029'
 define('nb_max_temp_files', '3030');
 define('temp_file_invalid', '3031');
+define('uploaded_file_too_big', '3032');
 
 class Tracker_SOAPServer {
     /**
@@ -646,13 +647,25 @@ class Tracker_SOAPServer {
             $temporary = new Tracker_SOAP_TemporaryFile($current_user, $attachment_name);
             $attachment_path = $temporary->getPath();
             if (file_exists($attachment_path)) {
-                return file_put_contents($attachment_path, base64_decode($content), FILE_APPEND);
+                $decoded_content = base64_decode($content);
+                if ($this->validTemporaryFilesSize($temporary, $decoded_content)) {
+                    return file_put_contents($attachment_path, $decoded_content, FILE_APPEND);
+                } else {
+                    return new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments');
+                }
             } else {
                 return new SoapFault(temp_file_invalid, 'Invalid temporary file path');
             }
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
+    }
+
+    private function validTemporaryFilesSize($temporary_file, $decoded_content) {
+        $chunk_size      = strlen($decoded_content);
+        $total_size      = $chunk_size + $temporary_file->getTemporaryFilesSize();
+
+        return $total_size <= Config::get('sys_max_size_upload');
     }
 
     public function createTemporaryAttachment($session_key) {
