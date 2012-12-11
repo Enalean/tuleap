@@ -91,12 +91,14 @@ class TestsPluginHtmlDumper extends SimpleDumper {
      */
     function describeDifference($first, $second, $identical = false) {
         $difference = parent::describeDifference($first, $second, $identical);
+        $difference = htmlentities($difference, ENT_COMPAT, 'UTF-8');
         if ($this->getType($first) == 'String') {
             $diff = $this->describeStringDifferenceAsADiff($first, $second, $identical);
             if ($diff) {
                 $difference .= PHP_EOL . PHP_EOL;
-                $difference .= '------------------------------------- UNIFIED DIFF --'. PHP_EOL;
-                $difference .= $diff;
+                $difference .= '<fieldset><legend>Unified diff</legend>';
+                $difference .= '<div class="diff">'. $diff .'</div>';
+                $difference .= '</fieldset>';
             }
         }
         return $difference;
@@ -110,7 +112,7 @@ class TestsPluginHtmlDumper extends SimpleDumper {
         $first   = explode(PHP_EOL, $first);
         $second  = explode(PHP_EOL, $second);
         $diff    = new Codendi_Diff($first, $second);
-        $unified = new Codendi_UnifiedDiffFormatter();
+        $unified = new Codendi_HtmlUnifiedDiffFormatter();
         return $unified->format($diff);
     }
 }
@@ -176,7 +178,7 @@ class TestsPluginHtmlReporter extends HtmlReporter implements iCodeCoverageRepor
         print "<span class=\"fail\">Fail</span>: ";
         $breadcrumb = $this->getTestListAsTreeNode();
         $breadcrumb->accept($this);
-        print '<pre style="clear:both; margin-left:6em;">' . $this->_htmlEntities($message) . '</pre>';
+        print '<pre style="clear:both; margin-left:6em;">' . $message . '</pre>';
         if ($output_buffering_is_active) ob_start();
     }
     
