@@ -1925,7 +1925,7 @@ EOS;
             try {
                 $artifact->validateNewChangeset($tracker_data, $comment, $submitter);
                 $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
-            } catch (Tracker_InfoException $e) {
+            } catch (Tracker_NoChangeException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $not_updated_aids[] = $aid;
                 continue;
@@ -2830,7 +2830,7 @@ EOS;
                             $artifact->validateNewChangeset($fields_data, $followup_comment, $current_user);
                             $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications);
                             $nb_artifact_update++;
-                        } catch (Tracker_InfoException $e) {
+                        } catch (Tracker_NoChangeException $e) {
                             $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                             $is_error = true;
                         } catch (Tracker_Exception $e) {

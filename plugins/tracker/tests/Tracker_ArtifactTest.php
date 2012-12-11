@@ -1422,7 +1422,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         // Valid
         $fields_data = array();
-        $this->expectException('Tracker_InfoException');
+        $this->expectException('Tracker_NoChangeException');
         $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
     }
 

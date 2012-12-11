@@ -749,7 +749,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     } else {
                         $GLOBALS['Response']->redirect($redirect->toUrl());
                     }
-                } catch (Tracker_InfoException $e) {
+                } catch (Tracker_NoChangeException $e) {
                     $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                     $this->display($layout, $request, $current_user);
                 } catch (Tracker_Exception $e) {
@@ -1079,7 +1079,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param string $email
      * @return boolean
      * @throws Tracker_Exception
-     * @throws Tracker_InfoException
+     * @throws Tracker_NoChangeException
      */
     public function validateNewChangeset($fields_data, $comment, $submitter, $email = null) {
         
@@ -1097,10 +1097,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $last_changeset = $this->getLastChangeset();
 
         if (! $comment && ! $last_changeset->hasChanges($fields_data)) {
-            $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getXRef() . '</a>';
-            $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($art_link));
-            throw new Tracker_InfoException($message);
-        } //There is a comment or some change in fields: create a changeset
+            throw new Tracker_NoChangeException($this->getId(), $this->getXRef());
+        }
 
         $workflow = $this->getWorkflow();
         if ($workflow) {
@@ -1400,7 +1398,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $this->validateNewChangeset($fields_data, $comment, $current_user, $email);
                 $this->createNewChangeset($fields_data, $comment, $current_user, $email);
                 return true;
-            } catch (Tracker_InfoException $e) {
+            } catch (Tracker_NoChangeException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 return false;
             } catch (Tracker_Exception $e) {
@@ -1596,7 +1594,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         try {
             $this->validateNewChangeset($fields_data, $comment, $current_user, $email);
             $this->createNewChangeset($fields_data, $comment, $current_user, $email);
-        } catch (Tracker_InfoException $e) {
+        } catch (Tracker_NoChangeException $e) {
             $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
         } catch (Tracker_Exception $e) {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
