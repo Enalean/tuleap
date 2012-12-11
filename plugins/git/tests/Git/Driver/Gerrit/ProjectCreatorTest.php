@@ -168,5 +168,12 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
         $this->project_creator->createProject($this->server, $this->repository);
     }
+
+    public function itDoesNotStopIfAGroupCannotBeCreated() {
+        stub($this->driver)->createGroup()->throwsAt(1, new Exception());
+        $this->driver->expectCallCount('createGroup', 3);
+
+        $this->project_creator->createProject($this->server, $this->repository);
+    }
 }
 ?>
