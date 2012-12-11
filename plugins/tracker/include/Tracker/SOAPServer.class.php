@@ -377,19 +377,19 @@ class Tracker_SOAPServer {
      * @return array the SOAPArtifact corresponding to the Artifact Object
      */
     private function artifact_to_soap(User $user, Tracker_Artifact $artifact) {
-        $return = array();
+        $soap_artifact = array();
 
         // We check if the user can view this artifact
         if ($artifact->userCanView($user)) {
             $last_changeset = $artifact->getLastChangeset();
 
-            $return['artifact_id']      = $artifact->getId();
-            $return['tracker_id']       = $artifact->getTrackerId();
-            $return['submitted_by']     = $artifact->getSubmittedBy();
-            $return['submitted_on']     = $artifact->getSubmittedOn();
-            $return['last_update_date'] = $last_changeset->getSubmittedOn();
+            $soap_artifact['artifact_id']      = $artifact->getId();
+            $soap_artifact['tracker_id']       = $artifact->getTrackerId();
+            $soap_artifact['submitted_by']     = $artifact->getSubmittedBy();
+            $soap_artifact['submitted_on']     = $artifact->getSubmittedOn();
+            $soap_artifact['last_update_date'] = $last_changeset->getSubmittedOn();
 
-            $return['value'] = array();
+            $soap_artifact['value'] = array();
             foreach ($last_changeset->getValues() as $field_id => $field_value) {
                 if ($field_value &&
                         ($field = $this->formelement_factory->getFormElementById($field_id)) &&
@@ -404,11 +404,11 @@ class Tracker_SOAPServer {
                         // TODO: refactor to move 'value' into Field
                         $soap_field_value['field_value'] = array('value' => $field_value->getSoapValue());
                     }
-                    $return['value'][] = $soap_field_value;
+                    $soap_artifact['value'][] = $soap_field_value;
                 }
             }
         }
-        return $return;
+        return $soap_artifact;
     }
 
     /**
