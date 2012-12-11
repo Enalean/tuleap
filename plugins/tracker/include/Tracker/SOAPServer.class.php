@@ -422,7 +422,6 @@ class Tracker_SOAPServer {
             foreach ($value as $field_value) {
                 // field are identified by name, we need to retrieve the field id
                 if ($field_value->field_name) {
-
                     $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
                     if ($field) {
 
@@ -459,11 +458,11 @@ class Tracker_SOAPServer {
             }
             
             try {
-                $this->validateNewChangeset($tracker_data, $comment, $user);
-                $this->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
+                $artifact->validateNewChangeset($tracker_data, $comment, $user);
+                $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
             } catch (Tracker_InfoException $e) {
-                $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                return $artifact_id;
             } catch (Tracker_Exception $e) {
                 return new SoapFault(update_artifact_fault, $e->getMessage(), 'updateArtifact');
             }
