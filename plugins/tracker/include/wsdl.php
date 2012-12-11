@@ -489,6 +489,19 @@ $GLOBALS['server']->wsdl->addComplexType(
 //
 // Function definition
 //
+
+$GLOBALS['server']->register(
+    'getVersion',
+    array(),
+    array('return'=>'xsd:float'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getVersion',
+    'rpc',
+    'encoded',
+    'Returns the version number of the SOAP API.
+     Changes are available in /plugins/tracker/soap/ChangeLog'
+);
+
 $GLOBALS['server']->register(
     'getTrackerList', // method name
     array('sessionKey'=>'xsd:string', // input parameters

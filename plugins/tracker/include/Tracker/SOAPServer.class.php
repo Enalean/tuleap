@@ -115,6 +115,10 @@ class Tracker_SOAPServer {
         $this->fileinfo_factory         = $fileinfo_factory;
     }
 
+    public function getVersion() {
+        return file_get_contents(dirname(__FILE__).'/../../www/soap/VERSION');
+    }
+
     /**
      * Return artifacts according to given criteria
      *
