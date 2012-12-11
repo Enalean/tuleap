@@ -26,7 +26,7 @@ $login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman
 $password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
 
 // Establish connexion to the server
-$soapLogin = new SoapClient($serverUrl.'/soap/?wsdl',
+$soapLogin = new SoapClient($serverURL.'/soap/?wsdl',
                             array('cache_wsdl' => WSDL_CACHE_NONE));
 
 
@@ -36,7 +36,7 @@ $group_id   = $argv[1];
 $tracker_id = $argv[2];
 
 // Connecting to the soap's tracker client
-$soapTracker = new SoapClient($serverUrl.'/plugins/tracker/soap/?wsdl',
+$soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl',
                                     array('cache_wsdl' => WSDL_CACHE_NONE));
 
 //Executing method getTrackerSemantic
