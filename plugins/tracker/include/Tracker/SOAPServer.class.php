@@ -54,9 +54,6 @@ define('nb_max_temp_files', '3030');
 define('temp_file_invalid', '3031');
 
 class Tracker_SOAPServer {
-    const TEMP_FILE_PREFIX = 'soap_attachement_temp_';
-    const TEMP_FILE_NB_MAX = 5;
-
     /**
      * @var SOAP_RequestValidator
      */
@@ -664,7 +661,7 @@ class Tracker_SOAPServer {
             $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
             $prefix       = $temporary->getUserTemporaryFilePrefix();
             if ($temporary->isOverUserTemporaryFileLimit()) {
-                return new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
+                return new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.Tracker_SOAP_TemporaryFile::TEMP_FILE_NB_MAX.' files max.');
             }
             $file_path    = tempnam(Config::get('codendi_cache_dir'), $prefix);
             return substr(basename($file_path), strlen($prefix));

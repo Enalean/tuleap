@@ -691,7 +691,7 @@ abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker
     }
 
     protected function getTemporaryFilePath($user_id, $temporary_name) {
-        return $this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.$user_id.'_'.$temporary_name;
+        return $this->fixture_dir.'/'.Tracker_SOAP_TemporaryFile::TEMP_FILE_PREFIX.$user_id.'_'.$temporary_name;
     }
 }
 
@@ -742,7 +742,7 @@ class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServ
         $this->server->createTemporaryAttachment($this->session_key);
         $this->server->createTemporaryAttachment($this->session_key);
         $this->assertTrue($this->server->purgeAllTemporaryAttachments($this->session_key));
-        $this->assertCount(glob($this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.'*'), 0);
+        $this->assertCount(glob($this->fixture_dir.'/'.Tracker_SOAP_TemporaryFile::TEMP_FILE_PREFIX.'*'), 0);
     }
 
     public function itRemovesOnlyFilesForCurrentUser() {
@@ -753,9 +753,9 @@ class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServ
         $this->server->createTemporaryAttachment($this->another_session_key);
 
         $this->assertTrue($this->server->purgeAllTemporaryAttachments($this->session_key));
-        $temporary_files = glob($this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.'*');
+        $temporary_files = glob($this->fixture_dir.'/'.Tracker_SOAP_TemporaryFile::TEMP_FILE_PREFIX.'*');
         $this->assertCount($temporary_files, 2);
-        $another_user_prefix = $this->fixture_dir.'/'.Tracker_SOAPServer::TEMP_FILE_PREFIX.$this->another_user_id;
+        $another_user_prefix = $this->fixture_dir.'/'.Tracker_SOAP_TemporaryFile::TEMP_FILE_PREFIX.$this->another_user_id;
         foreach ($temporary_files as $file) {
             $this->assertPattern("%^$another_user_prefix%", $file);
         }
