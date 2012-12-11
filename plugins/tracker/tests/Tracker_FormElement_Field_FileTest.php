@@ -630,7 +630,6 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
     }
     
     function testGetRootPath() {
-        //Config::load(dirname(__FILE__).'/_fixtures/local.inc');
         Config::set('sys_data_dir', dirname(__FILE__) .'/data');
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $f->setReturnValue('getId', 123);
@@ -646,7 +645,6 @@ abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_
 
     public function setUp() {
         parent::setUp();
-        //Config::store();
         $this->tmp_dir = dirname(__FILE__).'/_fixtures/tmp';
         Config::set('codendi_cache_dir', $this->tmp_dir);
         mkdir($this->tmp_dir);
@@ -659,7 +657,6 @@ abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_
         $this->recurseDeleteInDir($this->tmp_dir);
         rmdir($this->tmp_dir);
         clearstatcache();
-        //Config::restore();
         parent::tearDown();
     }
 }
