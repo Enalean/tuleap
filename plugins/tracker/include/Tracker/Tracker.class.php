@@ -1923,8 +1923,8 @@ EOS;
             }
             
             try {
-                $this->validateNewChangeset($tracker_data, $comment, $submitter);
-                $this->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
+                $artifact->validateNewChangeset($tracker_data, $comment, $submitter);
+                $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
             } catch (Tracker_InfoException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
                 $not_updated_aids[] = $aid;

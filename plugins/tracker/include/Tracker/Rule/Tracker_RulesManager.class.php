@@ -613,9 +613,7 @@ class Tracker_RulesManager {
                         )
                     );
                 
-                if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
-                    $GLOBALS['Response']->addFeedback('error', $feedback);
-                }
+                $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
                 
                 $source_field->setHasErrors(true);
                 $target_field->setHasErrors(true);
@@ -632,9 +630,7 @@ class Tracker_RulesManager {
             $source_field = $this->getField($rule->getSourceFieldId());
             $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $source_field->getLabel();
             
-            if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
-                $GLOBALS['Response']->addFeedback('error', $feedback);
-            }
+            $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
             $source_field->setHasErrors(true);
             $is_valid = false;
         }
@@ -642,9 +638,7 @@ class Tracker_RulesManager {
         if(! array_key_exists($rule->getTargetFieldId(), $value_field_list)) {
             $target_field = $this->getField($rule->getTargetFieldId());
             $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $target_field->getLabel();
-            if(! strstr($GLOBALS['Response']->getRawFeedback(), $feedback)) {
-                $GLOBALS['Response']->addFeedback('error', $feedback);
-            }
+            $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
             $target_field->setHasErrors(true);
             $is_valid = false;
         } 
