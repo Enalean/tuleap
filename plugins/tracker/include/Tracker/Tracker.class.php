@@ -1910,20 +1910,7 @@ EOS;
                 continue;
             }
 
-            //Create a new array called $tracker_data containing the existing data for this tracker
-            $tracker_data = array();
-            foreach ($artifact->getLastChangeset()->getValues() as $key => $field) {
-                if($field instanceof Tracker_Artifact_ChangesetValue_Date){
-                    $tracker_data[$key] = $field->getValue();
-                }
-            }
-            //replace where appropriate with submitted values
-            foreach ($fields_data as $key => $value) {
-                $tracker_data[$key] = $value;
-            }
-            
             try {
-                $artifact->validateNewChangeset($tracker_data, $comment, $submitter);
                 $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
             } catch (Tracker_NoChangeException $e) {
                 $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
@@ -2827,7 +2814,6 @@ EOS;
                     if ($artifact) {
                         $followup_comment = '';
                         try {
-                            $artifact->validateNewChangeset($fields_data, $followup_comment, $current_user);
                             $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications);
                             $nb_artifact_update++;
                         } catch (Tracker_NoChangeException $e) {

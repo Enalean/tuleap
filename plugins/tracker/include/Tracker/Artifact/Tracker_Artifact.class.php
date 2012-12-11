@@ -732,11 +732,36 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'artifact-update':
                 //TODO : check permissions on this action?
                 $fields_data   = $request->get('artifact');
+                
+//                $tracker_data = array();
+//                foreach ($this->getLastChangeset()->getValues() as $key => $field) {
+//                    $tracker_data['type ' . $key] = get_class($field);
+//                    if($field instanceof Tracker_Artifact_ChangesetValue_Date){
+//                        $tracker_data[$key] = $field->getValue();
+//                        $tracker_data['type ' . $key] = $field->getDate();
+//                    } if($field instanceof Tracker_Artifact_ChangesetValue_Text){
+//                        $tracker_data[$key] = $field->getValue();
+//                       // $tracker_data['type ' . $key] = $field->getDate();
+//                    }
+//                }
+//                //replace where appropriate with submitted values
+//                foreach ($fields_data as $key => $value) {
+//                    $tracker_data[$key] = $value;
+//                }
+//                
+//                //addlastUpdateDate and submitted on if available 
+//                foreach ($this->getTracker()->getFormElements() as $elm ) {
+//                    if($elm instanceof Tracker_FormElement_Field_LastUpdateDate ||
+//                            $elm instanceof Tracker_FormElement_Field_SubmittedOn) {
+//                         $tracker_data[$elm->getId()] = $elm->getLastValue($this);
+//                    }
+//                }
+                
                 $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
                 try {
-                    $this->validateNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'));
+                    //$this->validateNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'));
                     $this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format);
                     
                     $art_link = $this->fetchDirectLinkToArtifact();
@@ -1018,9 +1043,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param boolean $send_notification true if a notification must be sent, false otherwise
      * @param string  $comment_format     The comment (follow-up) type ("text" | "html")
      *
+     * @throws Tracker_Exception In the validation
+     * @throws Tracker_NoChangeException In the validation
      * @return boolean True if update is done without error, false otherwise
      */
     public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
+        $this->validateNewChangeset($fields_data, $comment, $submitter);
+        
         /*
          * Post actions were run by validateNewChangeset but they modified a 
          * different set of $fields_data in the case of massChange or soap requests;
@@ -1081,7 +1110,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @throws Tracker_Exception
      * @throws Tracker_NoChangeException
      */
-    public function validateNewChangeset($fields_data, $comment, $submitter, $email = null) {
+    private function validateNewChangeset($fields_data, $comment, $submitter, $email = null) {
+        $fields_data = $this->addDatesToRequestData($fields_data);
         
         if ($submitter->isAnonymous() && ($email == null || $email == '')) {
             $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required');
@@ -1395,7 +1425,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
 
             try {
-                $this->validateNewChangeset($fields_data, $comment, $current_user, $email);
+            //    $this->validateNewChangeset($fields_data, $comment, $current_user, $email);
                 $this->createNewChangeset($fields_data, $comment, $current_user, $email);
                 return true;
             } catch (Tracker_NoChangeException $e) {
@@ -1592,7 +1622,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
         
         try {
-            $this->validateNewChangeset($fields_data, $comment, $current_user, $email);
+          //  $this->validateNewChangeset($fields_data, $comment, $current_user, $email);
             $this->createNewChangeset($fields_data, $comment, $current_user, $email);
         } catch (Tracker_NoChangeException $e) {
             $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
@@ -1684,6 +1714,35 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     protected function getCrossReferenceManager() {
         return new CrossReferenceManager();
+    }
+    
+    /**
+     * 
+     * @param array $fields_data
+     * @return array
+     */
+    private function addDatesToRequestData(array $fields_data) {
+        $tracker_data = array();
+
+        foreach ($this->getLastChangeset()->getValues() as $key => $field) {
+            if($field instanceof Tracker_Artifact_ChangesetValue_Date){
+                $tracker_data[$key] = $field->getValue();
+            }
+        }
+        //replace where appropriate with submitted values
+        foreach ($fields_data as $key => $value) {
+            $tracker_data[$key] = $value;
+        }
+
+        //addlastUpdateDate and submitted on if available 
+        foreach ($this->getTracker()->getFormElements() as $elm ) {
+            if($elm instanceof Tracker_FormElement_Field_LastUpdateDate ||
+                    $elm instanceof Tracker_FormElement_Field_SubmittedOn) {
+                 $tracker_data[$elm->getId()] = $elm->getLastValue($this);
+            }
+        }
+        
+        return $tracker_data;
     }
 
 }

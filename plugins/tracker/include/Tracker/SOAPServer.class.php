@@ -444,21 +444,8 @@ class Tracker_SOAPServer {
                     }
                 }
             }
-
-            //Create a new array called $tracker_data containing the existing data for this tracker
-            $tracker_data = array();
-            foreach ($artifact->getLastChangeset()->getValues() as $key => $field) {
-                if($field instanceof Tracker_Artifact_ChangesetValue_Date){
-                    $tracker_data[$key] = $field->getValue();
-                }
-            }
-            //replace where appropriate with submitted values
-            foreach ($fields_data as $key => $value) {
-                $tracker_data[$key] = $value;
-            }
             
             try {
-                $artifact->validateNewChangeset($tracker_data, $comment, $user);
                 $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
             } catch (Tracker_NoChangeException $e) {

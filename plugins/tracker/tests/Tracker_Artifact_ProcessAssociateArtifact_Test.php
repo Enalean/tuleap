@@ -40,7 +40,6 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
                 array(
                     'getFormElementFactory', 
                     'getTracker',
-                    'validateNewChangeset',
                     'createNewChangeset',
                     )
                 );
@@ -59,8 +58,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
             );
         $no_comment = $no_email = '';
 
-         stub($artifact)->validateNewChangeset($expected_field_data, $no_comment, $this->user, $no_email)->once()->returns(true);
-         stub($artifact)->createNewChangeset($expected_field_data, $no_comment, $this->user, $no_email)->once();      
+        stub($artifact)->createNewChangeset($expected_field_data, $no_comment, $this->user, $no_email)->once();      
  
         $artifact->process(new MockTrackerManager(), $this->request, $this->user);
     }
@@ -70,7 +68,6 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
                 array(
                     'getFormElementFactory', 
                     'getTracker',
-                    'validateNewChangeset',
                     'createNewChangeset',
                     )
                 );
@@ -85,7 +82,6 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
         $expected_field_data = array($field->getId() => array('new_values' => 987));
         $no_comment = $no_email = '';
 
-        stub($artifact)->validateNewChangeset()->once()->returns(true);
         $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user, $no_email));
 
         $artifact->process(new MockTrackerManager(), $this->request, $this->user);

@@ -952,6 +952,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
         $tracker->setReturnValue('getItemName', 'foobar');
+        $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
 
@@ -1000,6 +1001,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $new_changeset->expect('notify', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValues', array());
         $changeset->setReturnValue('hasChanges', true);
         $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
         $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
@@ -1035,7 +1037,6 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
             102 => '456'
         );
 
-        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
 }
@@ -1063,6 +1064,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
         $tracker->setReturnValue('getItemName', 'foobar');
+        $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
 
@@ -1093,6 +1095,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', true);
+        $changeset->setReturnValue('getValues', array());
         $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
         $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
         $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
@@ -1135,7 +1138,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
-        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
+
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
 
         // Not valid
@@ -1145,7 +1148,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         
         $this->expectException('Tracker_Exception');
         
-        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
 
     }
 
@@ -1170,6 +1173,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
         $tracker->setReturnValue('getItemName', 'foobar');
+        $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
 
@@ -1206,6 +1210,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
         $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
         $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
+        $changeset->setReturnValue('getValues', array());
 
         $reference_manager = new MockReferenceManager();
         $reference_manager->expect('extractCrossRef', array(
@@ -1249,7 +1254,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         stub($workflow)->validateGlobalRules($updated_fields_data_by_workflow, $factory)->once()->returns(false);
         
         $this->expectException('Tracker_Exception');
-        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
 
     function testCreateNewChangesetWithoutNotification() {
@@ -1273,6 +1278,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
         $tracker->setReturnValue('getItemName', 'foobar');
+        $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
 
@@ -1309,6 +1315,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
         $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
         $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
+        $changeset->setReturnValue('getValues', array());
 
         $reference_manager = new MockReferenceManager();
         $reference_manager->expect('extractCrossRef', array(
@@ -1345,7 +1352,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
-        $artifact->validateNewChangeset($fields_data, $comment, $user, $email, false);
+
         $artifact->createNewChangeset($fields_data, $comment, $user, $email, false);
 
         // Not valid
@@ -1353,7 +1360,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             102 => '456',
         );
         $this->expectException('Tracker_Exception');
-        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
 
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
@@ -1371,6 +1378,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $user->setReturnValue('isAnonymous', false);
 
         $tracker = new MockTracker();
+        $tracker->setReturnValue('getFormElements', array());
         $factory = new MockTracker_FormElementFactory();
 
         $rules_manager = new MockTracker_RulesManager();
@@ -1396,6 +1404,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', false);
+        $changeset->setReturnValue('getValues', array());
         $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
         $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
         $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
@@ -1423,7 +1432,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         // Valid
         $fields_data = array();
         $this->expectException('Tracker_NoChangeException');
-        $artifact->validateNewChangeset($fields_data, $comment, $user, $email);
+        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
 
     function testGetCommentators() {
@@ -1883,13 +1892,12 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
 
         $this->task = partial_mock(
             'Tracker_Artifact',
-            array('createNewChangeset', 'validateNewChangeset'),
+            array('createNewChangeset'),
             array($this->artifact_id, $this->tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
         );
         $this->task->setTracker($tracker);
         $this->task->setFormElementFactory($this->formelement_factory);
         stub($this->task)->createNewChangeset()->returns(true);
-        stub($this->task)->validateNewChangeset()->returns(true);
         stub($this->formelement_factory)->getComputableFieldByNameForUser($tracker_user_story_id, Tracker::REMAINING_EFFORT_FIELD_NAME, $this->user)->returns($this->us_computed_field);
 
         stub($this->computed_field)->fetchCardValue($this->task)->returns(42);
