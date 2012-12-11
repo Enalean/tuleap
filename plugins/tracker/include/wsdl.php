@@ -316,33 +316,6 @@ $GLOBALS['server']->wsdl->addComplexType(
     'tns:ArtifactFile'
 );
 
-//$GLOBALS['server']->wsdl->addComplexType(
-//    'ArtifactHistory',
-//    'complexType',
-//    'struct',
-//    'sequence',
-//    '',
-//    array(
-//        'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
-//        'changeset_id' => array('name'=>'changeset_id', 'type' => 'xsd:int'),
-//        'changes' => array('name'=>'changes', 'type' => 'tns:ArrayOfString'),
-//        'modification_by' => array('name'=>'modification_by', 'type' => 'xsd:string'),
-//        'date' => array('name'=>'date', 'type' => 'xsd:int'),
-//        'comment' => array('name'=>'comment', 'type' => 'tns:ArtifactFollowup')
-//    )
-//);
-//
-//$GLOBALS['server']->wsdl->addComplexType(
-//    'ArrayOfArtifactHistory',
-//    'complexType',
-//    'array',
-//    '',
-//    'SOAP-ENC:Array',
-//    array(),
-//    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactHistory[]')),
-//    'tns:ArtifactHistory'
-//);
-
 $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfInt',
     'complexType',
@@ -702,20 +675,5 @@ $GLOBALS['server']->register(
     'encoded',
     'Returns the reports the user can execute.'
 );
-
-/*$GLOBALS['server']->register(
-    'getArtifactHistory',
-    array('sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'tracker_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int'
-    ),
-    array('return'=>'tns:ArrayOfArtifactHistory'),
-    $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getArtifactHistory',
-    'rpc',
-    'encoded',
-    'Get the history of the artifact (the history of the fields values)'
-);*/
 
 ?>
