@@ -614,6 +614,17 @@ class Tracker_SOAPServer {
         }
     }
 
+    /**
+     * Return a part of the requested attachment, base64 encoded.
+     *
+     * @param String  $session_key
+     * @param Integer $artifact_id
+     * @param Integer $attachment_id
+     * @param Integer $offset
+     * @param Integer $size
+     *
+     * @return String
+     */
     public function getArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $offset, $size) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
@@ -637,6 +648,13 @@ class Tracker_SOAPServer {
         }
     }
 
+    /**
+     * Provision a file name for a future upload
+     *
+     * @param String $session_key
+     *
+     * @return String Name (UUID) of the provisioned file
+     */
     public function createTemporaryAttachment($session_key) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
@@ -647,6 +665,15 @@ class Tracker_SOAPServer {
         }
     }
 
+    /**
+     * Upload base64 encoded content of file (appened at the end of file)
+     *
+     * @param String $session_key
+     * @param String $attachment_name (generated wuth createTemporaryAttachment)
+     * @param String $content
+     *
+     * @return Integer the length written on disk
+     */
     public function appendTemporaryAttachmentChunk($session_key, $attachment_name, $content) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
@@ -657,6 +684,13 @@ class Tracker_SOAPServer {
         }
     }
 
+    /**
+     * Remove existing temporary files for a user
+     *
+     * @param String $session_key
+     *
+     * @return Boolean
+     */
     public function purgeAllTemporaryAttachments($session_key) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
