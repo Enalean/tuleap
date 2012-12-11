@@ -17,6 +17,9 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+/**
+ * Manage the temporary uploaded files for SOAP API
+ */
 class Tracker_SOAP_TemporaryFile {
     const TEMP_FILE_PREFIX = 'soap_attachement_temp_';
     const TEMP_FILE_NB_MAX = 5;
@@ -33,29 +36,8 @@ class Tracker_SOAP_TemporaryFile {
         return file_exists($this->getPath());
     }
 
-    public function getUserTemporaryFilePrefix() {
-        return self::TEMP_FILE_PREFIX.$this->user->getId().'_';
-    }
-
     public function getPath() {
         return Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().$this->attachment_name;
-    }
-
-    public function getUserTemporaryFiles() {
-        return glob(Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().'*');
-    }
-
-    public function isOverUserTemporaryFileLimit() {
-        return count($this->getUserTemporaryFiles()) > (self::TEMP_FILE_NB_MAX - 1);
-    }
-
-    public function getTemporaryFilesSize() {
-        $size  = 0;
-        $files = $this->getUserTemporaryFiles();
-        foreach ($files as $file) {
-            $size = $size + filesize($file);
-        }
-        return $size;
     }
 
     public function getUniqueFileName() {
@@ -68,16 +50,44 @@ class Tracker_SOAP_TemporaryFile {
     }
 
     public function appendChunk($content) {
-        $attachment_path = $this->getPath();
-        if (file_exists($attachment_path)) {
-            if ($this->validTemporaryFilesSize($content)) {
-                return file_put_contents($attachment_path, $content, FILE_APPEND);
+        $decoded_content = base64_decode($content);
+        if ($this->exists()) {
+            if ($this->validTemporaryFilesSize($decoded_content)) {
+                return file_put_contents($this->getPath(), $decoded_content, FILE_APPEND);
             } else {
                 return new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments ('.Config::get('sys_max_size_upload').')');
             }
         } else {
             return new SoapFault(temp_file_invalid, 'Invalid temporary file path');
         }
+    }
+
+    public function purgeAllTemporaryFiles() {
+        foreach ($this->getUserTemporaryFiles() as $file) {
+            unlink($file);
+        }
+        return true;
+    }
+
+    private function getUserTemporaryFiles() {
+        return glob(Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().'*');
+    }
+
+    private function isOverUserTemporaryFileLimit() {
+        return count($this->getUserTemporaryFiles()) > (self::TEMP_FILE_NB_MAX - 1);
+    }
+
+    private function getUserTemporaryFilePrefix() {
+        return self::TEMP_FILE_PREFIX.$this->user->getId().'_';
+    }
+
+    private function getTemporaryFilesSize() {
+        $size  = 0;
+        $files = $this->getUserTemporaryFiles();
+        foreach ($files as $file) {
+            $size = $size + filesize($file);
+        }
+        return $size;
     }
 
     private function validTemporaryFilesSize($content) {

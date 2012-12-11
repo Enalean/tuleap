@@ -655,7 +655,7 @@ class Tracker_SOAPServer {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $temporary    = new Tracker_SOAP_TemporaryFile($current_user, $attachment_name);
-            return $temporary->appendChunk(base64_decode($content));
+            return $temporary->appendChunk($content);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
@@ -665,10 +665,7 @@ class Tracker_SOAPServer {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
-            foreach ($temporary->getUserTemporaryFiles() as $file) {
-                unlink($file);
-            }
-            return true;
+            return $temporary->purgeAllTemporaryFiles();
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
