@@ -657,6 +657,7 @@ abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_
         $this->recurseDeleteInDir($this->tmp_dir);
         rmdir($this->tmp_dir);
         clearstatcache();
+        UserManager::clearInstance();
         parent::tearDown();
     }
 }
