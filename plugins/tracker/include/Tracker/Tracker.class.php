@@ -1917,6 +1917,7 @@ EOS;
                 $not_updated_aids[] = $aid;
                 continue;
             } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($aid)));
                 $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 $not_updated_aids[] = $aid;
                 continue;
