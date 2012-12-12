@@ -87,7 +87,7 @@ class GitRepositoryManager {
      * @param User          $user            The user who does the fork (she will own the clone)
      * @param String        $namespace       The namespace to put the repo in (might be emtpy)
      * @param String        $scope           Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
-     * @param Array         $forkPermissions Permissions to be applied for the new reposiotry
+     * @param Array         $forkPermissions Permissions to be applied for the new repository
      */
     public function fork(GitRepository $repository, Project $to_project, User $user, $namespace, $scope, array $forkPermissions) {
         $clone = clone $repository;
@@ -119,7 +119,7 @@ class GitRepositoryManager {
      * @param User          $user            The user who does the fork (she will own the clone)
      * @param String        $namespace       The namespace to put the repo in (might be emtpy)
      * @param String        $scope           Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
-     * @param array         $forkPermissions Permissions to be applied for the new reposiotry
+     * @param array         $forkPermissions Permissions to be applied for the new repository
      *
      * @return Boolean
      *

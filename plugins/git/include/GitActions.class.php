@@ -474,7 +474,7 @@ class GitActions extends PluginActions {
      * @param string $namespace       The namespace where the new repositories will live
      * @param User   $user            The owner of those new repositories
      * @param Layout $response        The response object
-     * @param array  $forkPermissions Permissions to be applied for the new reposiotry
+     * @param array  $forkPermissions Permissions to be applied for the new repository
      */
     public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url, array $forkPermissions) {
         try {
