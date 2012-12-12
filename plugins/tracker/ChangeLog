@@ -1,3 +1,6 @@
+Version 5.50 - Tuleap 5.8
+    * Fix bugs #1537 - Issue with status semantic criteria on cross tracker search
+
 Version 5.49 - Tuleap 5.8
     * Remove call time pass by reference for unit tests
 
