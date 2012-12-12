@@ -56,7 +56,6 @@ class Git_Driver_Gerrit_ProjectCreator {
                 // Should we add a warning ?
             }
         }
-        var_dump($gerrit_server->getCloneSSHUrl($gerrit_project));
         $this->initiatePermissions(
             $gerrit_server,
             $gerrit_server->getCloneSSHUrl($gerrit_project),
