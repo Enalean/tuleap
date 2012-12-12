@@ -36,6 +36,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     protected $server;
 
     protected $gerrit_project = 'tuleap-localhost-mozilla/firefox';
+    protected $gerrit_git_url;
 
     public function setUp() {
         parent::setUp();
@@ -48,7 +49,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $host = $this->tmpdir;
         $id = $port = $login = $identity_file = 0;
         $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), array($id, $host, $port, $login, $identity_file));
-        stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns("$host/$this->gerrit_project");
+
+        $this->gerrit_git_url = "$host/$this->gerrit_project";
+        stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns($this->gerrit_git_url);
 
         $this->repository = mock('GitRepository');
         $this->driver = mock('Git_Driver_Gerrit');
@@ -87,6 +90,18 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $config_file = "$this->tmpdir/project.config";
         $this->assertTrue(is_file($groups_file));
         $this->assertTrue(is_file($config_file));
+    }
+
+    private function assertTheRemoteOriginIsConfigured() {
+        $cwd = getcwd();
+        chdir("$this->tmpdir");
+        exec('git remote -v', $output, $ret_val);
+        chdir($cwd);
+        $this->assertEqual($output, array(
+            "origin\t$this->gerrit_git_url (fetch)",
+            "origin\t$this->gerrit_git_url (push)")
+        );
+        $this->assertEqual($ret_val, 0);
     }
 
     private function assertEverythingIsPushedToTheServer() {

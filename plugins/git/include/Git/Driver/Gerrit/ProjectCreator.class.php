@@ -80,7 +80,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         $gerrit_project_url = escapeshellarg($gerrit_project_url);
         `mkdir $this->dir`;
         `cd $this->dir; git init`;
-        `cd $this->dir; git pull $gerrit_project_url refs/meta/config`; // TODO: should we use 'git remote add origin $gerrit_project_url' as we need to push just after?
+        `cd $this->dir; git remote add origin $gerrit_project_url`;
+        `cd $this->dir; git pull origin refs/meta/config`;
         `cd $this->dir; git checkout FETCH_HEAD`;
     }
 
