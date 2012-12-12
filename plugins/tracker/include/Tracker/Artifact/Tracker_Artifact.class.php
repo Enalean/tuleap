@@ -1698,7 +1698,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $tracker_data = array();
 
         //only when a previous changeset exists
-        if($this->getLastChangeset()) {
+        if(! $this->getLastChangeset() instanceof Tracker_Artifact_Changeset_Null) {
             foreach ($this->getLastChangeset()->getValues() as $key => $field) {
                 if($field instanceof Tracker_Artifact_ChangesetValue_Date){
                     $tracker_data[$key] = $field->getValue();
