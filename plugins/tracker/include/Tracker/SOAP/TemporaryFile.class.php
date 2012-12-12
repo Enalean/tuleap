@@ -32,14 +32,30 @@ class Tracker_SOAP_TemporaryFile {
         $this->attachment_name = $attachment_name;
     }
 
+    /**
+     * Does the temporary file exists on filesystem
+     *
+     * @return Boolean
+     */
     public function exists() {
         return file_exists($this->getPath());
     }
 
+    /**
+     * Return full path to the file on filesystem
+     *
+     * @return String
+     */
     public function getPath() {
         return Config::get('codendi_cache_dir').DIRECTORY_SEPARATOR.$this->getUserTemporaryFilePrefix().$this->attachment_name;
     }
 
+    /**
+     * Provision a new temporary file for user if possible and return it's UUID
+     *
+     * @return String
+     * @throws SoapFault
+     */
     public function getUniqueFileName() {
         if ($this->isOverUserTemporaryFileLimit()) {
             throw new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
@@ -49,6 +65,13 @@ class Tracker_SOAP_TemporaryFile {
         return substr(basename($file_path), strlen($prefix));
     }
 
+    /**
+     * Append some SOAP content (base64 encoded) to the file
+     *
+     * @param String $content
+     * @return Number of written bytes on filesystem
+     * @throws SoapFault
+     */
     public function appendChunk($content) {
         $decoded_content = base64_decode($content);
         if ($this->exists()) {
@@ -62,6 +85,11 @@ class Tracker_SOAP_TemporaryFile {
         }
     }
 
+    /**
+     * Remove all temporary files of user
+     *
+     * @return Boolean
+     */
     public function purgeAllTemporaryFiles() {
         foreach ($this->getUserTemporaryFiles() as $file) {
             unlink($file);
