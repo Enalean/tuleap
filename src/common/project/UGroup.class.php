@@ -169,6 +169,11 @@ class UGroup {
     public function getUserNames($group_id) {
         return $this->getUsers($group_id)->getNames();
     }
+
+    public function getUserLdapIds($group_id) {
+        return $this->getUsers($group_id)->getLdapIds();
+    }
+
     /**
      * Return array containing the user_name of all ugroup members
      *
@@ -445,6 +450,14 @@ class Users {
         $result = array();
         foreach ($this->dar as $user) {
             $result[] = $user->getUserName();
+        }
+        return $result;
+    }
+
+    public function getLdapIds() {
+        $result = array();
+        foreach ($this->dar as $user) {
+            $result[] = $user->getLdapId();
         }
         return $result;
     }
