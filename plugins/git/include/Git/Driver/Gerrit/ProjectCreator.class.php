@@ -44,13 +44,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->user_finder   = $user_finder;
     }
 
-    private function cloneGerritProjectConfig($gerrit_project_url) {
-        `mkdir $this->dir`;
-        `cd $this->dir; git init`;
-        `cd $this->dir; git pull $gerrit_project_url refs/meta/config`;
-        `cd $this->dir; git checkout FETCH_HEAD`;
-    }
-
     public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
         $gerrit_project = $this->driver->createProject($gerrit_server, $repository);
 
@@ -63,6 +56,7 @@ class Git_Driver_Gerrit_ProjectCreator {
                 // Should we add a warning ?
             }
         }
+        var_dump($gerrit_server->getCloneSSHUrl($gerrit_project));
         $this->initiatePermissions(
             $gerrit_server,
             $gerrit_server->getCloneSSHUrl($gerrit_project),
@@ -80,6 +74,14 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addGroupToGroupFile($gerrit_server, $supermen);
         $this->addPermissionsToProjectConf($contributors, $integrators, $supermen);
         $this->pushToServer();
+    }
+
+    private function cloneGerritProjectConfig($gerrit_project_url) {
+        $gerrit_project_url = escapeshellarg($gerrit_project_url);
+        `mkdir $this->dir`;
+        `cd $this->dir; git init`;
+        `cd $this->dir; git pull $gerrit_project_url refs/meta/config`;
+        `cd $this->dir; git checkout FETCH_HEAD`;
     }
 
     private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
