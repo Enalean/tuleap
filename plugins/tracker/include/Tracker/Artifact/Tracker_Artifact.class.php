@@ -1711,24 +1711,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $tracker_data[$key] = $value;
         }
 
-        /*
-         * getFormElements() returns containers (if created) that themselves
-         * contain FormElements. 
-         * Recursion needed to get all final form elements!
-         */
-        $elements = $this->getTracker()->getFormElements();
-        $exists = true;
-        while ($exists) {
-            foreach ($elements as $key => $elm ) { 
-                if (method_exists($elm, 'getFormElements')) {
-                    unset($elements[$key]);
-                    foreach ($elm->getFormElements() as $sub_elm) {
-                        $elements[] = $sub_elm;
-                    }
-                } 
-            }
-            $exists = $this->methodExistsInArrayOfObjects('getFormElements', $elements);
-        }
+        $elements = $this->getFormElementFactory()->getAllFormElementsForTracker($this->getTracker());
         
         //addlastUpdateDate and submitted on if available 
         foreach ($elements as $elm ) {
@@ -1742,23 +1725,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         return $tracker_data;
     }
-    
-    /**
-     * 
-     * @param string $method
-     * @param array $array
-     * @return boolean
-     */
-    private function methodExistsInArrayOfObjects($method, $array) {
-        foreach ($array as $value) {
-            if(is_object($value) && method_exists($value, $method)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
 }
 
 ?>
