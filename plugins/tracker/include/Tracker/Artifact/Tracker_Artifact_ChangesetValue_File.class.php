@@ -165,7 +165,7 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * Return a string that will be use in SOAP API
      * as the value of this ChangesetValue_File 
      *
-     * @return string The value of this artifact changeset value for Soap API
+     * @return Array The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
         $soap_array = array();
