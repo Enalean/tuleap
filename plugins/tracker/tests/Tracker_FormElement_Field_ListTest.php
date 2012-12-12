@@ -107,7 +107,7 @@ require_once('common/user/User.class.php');
 Mock::generate('User');
 
 
-class Tracker_FormElement_Field_ListTest extends UnitTestCase {
+class Tracker_FormElement_Field_ListTest extends TuleapTestCase {
     
     function __construct($name = 'Open List test') {
         parent::__construct($name);
@@ -116,16 +116,6 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $this->dao_class              = 'MockTracker_FormElement_Field_Value_ListDao';
         $this->cv_class               = 'Tracker_Artifact_ChangesetValue_List';
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_List';
-    }
-    
-    function setUp() {
-        $GLOBALS['Response'] = new MockResponse();
-        $GLOBALS['Language'] = new MockBaseLanguage();
-    }
-    
-    function tearDown() {
-        unset($GLOBALS['Response']);
-        unset($GLOBALS['Language']);
     }
     
     function testGetChangesetValue() {
@@ -385,7 +375,43 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $bind->expectOnce('getSoapAvailableValues');
         $f->getSoapAvailableValues();
     }
-    
+
+    function itFormatsTheCriteriaComingFromSOAP() {
+        $value1 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(1);
+        $value2 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(2);
+        $value3 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(3);
+        $value4 = stub('Tracker_FormElement_Field_List_Bind_StaticValue')->getId()->returns(4);
+
+        stub($value1)->getLabel()->returns('tata');
+        stub($value2)->getLabel()->returns('toto');
+        stub($value3)->getLabel()->returns('tutu');
+        stub($value4)->getLabel()->returns('titi');
+
+        $soap_criteria_value = mock('StdClass');
+        $soap_criteria_value->value = '3,toto,4,tata';
+
+        $criteria = mock('Tracker_Report_Criteria');
+        $expected_arguments = array(3,2,4,1);
+
+        $form_element = partial_mock(
+            'Tracker_FormElement_Field_Selectbox',
+            array('setCriteriaValue','getAllValues'),
+            array(null, null, null, null, null, null, null, null, null, null, null)
+        );
+
+        $all_values   = array(
+            1 => $value1,
+            2 => $value2,
+            3 => $value3,
+            4 => $value4,
+        );
+        stub($form_element)->getAllValues()->returns($all_values);
+
+        expect($form_element)->setCriteriaValue($expected_arguments)->once();
+        $form_element->setCriteriaValueFromSOAP($criteria, $soap_criteria_value);
+
+    }
+
     //testing field import
     public function testImportFormElement() {
         

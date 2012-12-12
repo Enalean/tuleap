@@ -262,11 +262,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
         foreach ($soap_criteria_values as $soap_criteria_value) {
             // Check if the SOAP string only contains digits
-            if (ctype_digit($soap_criteria_value)) {
-                $criterias[] = $soap_criteria_value;
+            if (is_numeric($soap_criteria_value)) {
+                $criterias[] = intval($soap_criteria_value);
             } else {
-                $field_value_id = $values[$soap_criteria_value];
-                if ($field_value_id) {
+                if (isset($values[$soap_criteria_value])) {
+                    $field_value_id = $values[$soap_criteria_value];
                     $criterias[] = $field_value_id;
                 }
             }
