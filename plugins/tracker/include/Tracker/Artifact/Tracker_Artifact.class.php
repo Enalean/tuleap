@@ -920,7 +920,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $workflow = $this->getWorkflow();
                 if ($workflow) {
                     $workflow->before($fields_data, $submitter, $this);
-                    if (! $workflow->validateGlobalRules($fields_data, $this->getFormElementFactory())) {
+                    $augmented_data = $this->addDatesToRequestData($fields_data);
+                    if (! $workflow->validateGlobalRules($augmented_data, $this->getFormElementFactory())) {
                         return false;
                     }
                 }
@@ -1688,6 +1689,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
     
     /**
+     * Used when validating the rules of a new/ initial changset creating.
      * 
      * @param array $fields_data
      * @return array
@@ -1695,11 +1697,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function addDatesToRequestData(array $fields_data) {
         $tracker_data = array();
 
-        foreach ($this->getLastChangeset()->getValues() as $key => $field) {
-            if($field instanceof Tracker_Artifact_ChangesetValue_Date){
-                $tracker_data[$key] = $field->getValue();
+        //only when a previous changeset exists
+        if($this->getLastChangeset()) {
+            foreach ($this->getLastChangeset()->getValues() as $key => $field) {
+                if($field instanceof Tracker_Artifact_ChangesetValue_Date){
+                    $tracker_data[$key] = $field->getValue();
+                }
             }
         }
+        
         //replace where appropriate with submitted values
         foreach ($fields_data as $key => $value) {
             $tracker_data[$key] = $value;
