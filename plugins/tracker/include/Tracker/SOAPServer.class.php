@@ -451,13 +451,10 @@ class Tracker_SOAPServer {
             } catch (Tracker_NoChangeException $e) {
                 return $artifact_id;
             } catch (Tracker_Exception $e) {
-                return new SoapFault(update_artifact_fault, $e->getMessage(), 'updateArtifact');
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             }
 
-            $response = new Response();
-            if ($response->feedbackHasErrors()) {
-                return new SoapFault(update_artifact_fault, $response->getRawFeedback(), 'updateArtifact');
-            } elseif ($GLOBALS['Response']) {
+            if ($GLOBALS['Response']) {
                 return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
             } else {
                 return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
