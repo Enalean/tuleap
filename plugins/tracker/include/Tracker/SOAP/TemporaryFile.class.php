@@ -42,7 +42,7 @@ class Tracker_SOAP_TemporaryFile {
 
     public function getUniqueFileName() {
         if ($this->isOverUserTemporaryFileLimit()) {
-            return new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
+            throw new SoapFault(nb_max_temp_files, 'Temporary attachment limits: '.self::TEMP_FILE_NB_MAX.' files max.');
         }
         $prefix       = $this->getUserTemporaryFilePrefix();
         $file_path    = tempnam(Config::get('codendi_cache_dir'), $prefix);
@@ -55,10 +55,10 @@ class Tracker_SOAP_TemporaryFile {
             if ($this->validTemporaryFilesSize($decoded_content)) {
                 return file_put_contents($this->getPath(), $decoded_content, FILE_APPEND);
             } else {
-                return new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments ('.Config::get('sys_max_size_upload').')');
+                throw new SoapFault(uploaded_file_too_big, 'Uploaded file exceed max file size for attachments ('.Config::get('sys_max_size_upload').')');
             }
         } else {
-            return new SoapFault(temp_file_invalid, 'Invalid temporary file path');
+            throw new SoapFault(temp_file_invalid, 'Invalid temporary file path');
         }
     }
 
