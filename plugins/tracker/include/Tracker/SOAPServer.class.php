@@ -19,7 +19,7 @@
 require_once 'common/soap/SOAP_RequestValidator.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
 require_once 'Report/Tracker_ReportFactory.class.php';
-require_once 'Tracker_FileInfoFactory.class.php';
+require_once 'FileInfoFactory.class.php';
 
 //define fault code constants
 define ('get_group_fault', '3000');
