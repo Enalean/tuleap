@@ -387,7 +387,28 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
     public function testImport() {
         return true;
     }
-
+    
+     /**
+     * Validate a field
+     *
+     * @param Tracker_Artifact                $artifact             The artifact to check
+     * @param mixed                           $submitted_value      The submitted value
+     * @param Tracker_Artifact_ChangesetValue $last_changeset_value The last changeset value of the field (give null if no old value)
+     *
+     * @return boolean true on success or false on failure
+     */
+    public function validateField(Tracker_Artifact $artifact, $submitted_value, Tracker_Artifact_ChangesetValue $last_changeset_value = null) {
+        $is_valid = true;
+        if ($last_changeset_value === null && $submitted_value === null && $this->isRequired()) {
+            $is_valid = false;
+            $this->setHasErrors(true);
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
+        } else if ($submitted_value !== null &&  ! $this->userCanUpdate()) {
+            $is_valid = true;
+            $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
+        } 
+        return $is_valid;
+    }
     
     /**
      * Validate a value
