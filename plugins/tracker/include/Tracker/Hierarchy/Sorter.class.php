@@ -158,7 +158,6 @@ class Tracker_Hierarchy_Sorter {
      * @param array    $artifacts_done        list of artifacts already processed
      */
     private function buildArtifactsTree(User $user, TreeNode $root, array $artifacts, array $artifacts_info, array $excluded_artifact_ids, array &$artifacts_done) {
-        var_dump($artifacts_info);
         foreach ($artifacts as $artifact) {
             $artifact_id = $artifact->getId();
             if (!isset($excluded_artifact_ids[$artifact_id]) && ! isset($artifacts_done[$artifact_id])) {
