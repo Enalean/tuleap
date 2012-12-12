@@ -34,7 +34,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
     /** @var GitRepository **/
     protected $repository;
-    
+
     public function setUp() {
         parent::setUp();
         $this->permissions_manager = mock('PermissionsManager');
@@ -49,7 +49,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
     public function itReturnsNothingWhenNoGroupsHaveTheGivenPermission() {
         $permission_level = Git::PERM_WPLUS;
-        
+
 
         stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->repository->getId(), $permission_level)->returns(array());
         $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $this->repository));
@@ -57,7 +57,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
     public function itReturnsNothingWhenNoneOfTheGroupsHaveAnyMembers() {
         $permission_level = Git::PERM_WPLUS;
-        
+
 
         $ugroup_id_list = array(99);
         $group1         = mock('Ugroup');
@@ -70,10 +70,10 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
     public function itReturnsMembersOfAGroup() {
         $permission_level = Git::PERM_WPLUS;
-        
+
 
         $ugroup_id_dar = $this->ugroupIdDar(150);
-        $group1         = mock('Ugroup');
+        $group1        = mock('Ugroup');
 
         stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_dar);
         stub($this->ugroup_manager)->getById(150)->returns($group1);
@@ -85,9 +85,27 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $this->assertEqual($users, $the_simpsons);
     }
 
+    public function itExcludesUsersThatDoNotHaveALdapId() {
+        $permission_level = Git::PERM_WPLUS;
+
+        $ugroup_id_dar = $this->ugroupIdDar(150);
+        $group1        = mock('Ugroup');
+
+        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->repository->getId(), $permission_level)->once()->returns($ugroup_id_dar);
+        stub($this->ugroup_manager)->getById(150)->returns($group1);
+
+        $bart_ldap_id  = 'Bart';
+        $homer_ldap_id = null;
+        $the_simpsons  = array($bart_ldap_id, $homer_ldap_id);
+        stub($group1)->getUserLdapIds($this->project_id)->returns($the_simpsons);
+
+        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
+        $this->assertEqual($users, array($bart_ldap_id));
+    }
+
     public function itReturnsMembersOfAllGroups() {
         $permission_level = Git::PERM_WPLUS;
-        
+
 
         $ugroup_id_list     = $this->ugroupIdDar(150, 152);
         $the_simpsons       = array('Bart', 'Homer');
@@ -105,7 +123,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
     public function itExcludesMembersOfRegisteredUsers_ToAvoidFloodingTheGerritConfig() {
         $permission_level = Git::PERM_WPLUS;
-        
+
 
         $ugroup_id_list     = $this->ugroupIdDar(150, Ugroup::REGISTERED);
         $the_simpsons       = array('Bart', 'Homer');
@@ -142,7 +160,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
     public function itReturnsAUserOnlyOnceEvenIfHeExistInSeveralGroups() {
         $permission_level = Git::PERM_WPLUS;
-        
+
 
         $ugroup_id_list     = $this->ugroupIdDar(150, 152);
         $superman           = array('ClarkKent');
@@ -161,7 +179,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 
     public function itDoesNotFailIfTheUGroupDoesNotExist() {
         $permission_level = Git::PERM_WPLUS;
-        
+
 
         $ugroup_id_list = $this->ugroupIdDar(99);
 
@@ -169,7 +187,7 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         stub($this->ugroup_manager)->getById(99)->returns(null);
         $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $this->repository));
     }
-    
+
     private function ugroupIdDar() {
         $ugroup_id_list = func_get_args();
         $result = array();

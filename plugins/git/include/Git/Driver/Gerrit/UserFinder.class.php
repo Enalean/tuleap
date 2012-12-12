@@ -54,7 +54,7 @@ class Git_Driver_Gerrit_UserFinder {
                 $ugroups_members = array_merge($ugroup->getUserLdapIds($group_id), $ugroups_members);
             }
         }
-        return array_unique($ugroups_members);
+        return array_filter(array_unique($ugroups_members));
     }
 
     private function getUgroups($repository_id, $permission_type) {
