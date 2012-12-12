@@ -382,8 +382,14 @@ class Git extends PluginController {
                 if($this->request->valid($valid)) {
                     $scope = $this->request->get('choose_destination');
                 }
-                $this->addAction('forkRepositoriesPermissions', array($repos, $toProject, $path, $scope));
-                $this->addView('forkRepositoriesPermissions');
+                if (!empty($repos)) {
+                    $this->addAction('forkRepositoriesPermissions', array($repos, $toProject, $path, $scope));
+                    $this->addView('forkRepositoriesPermissions');
+                } else {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->addAction('getProjectRepositoryList', array($this->groupId));
+                    $this->addView('forkRepositories');
+                }
                 break;
             case 'do_fork_repositories':
                 try {
