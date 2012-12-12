@@ -37,17 +37,21 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
     protected $gerrit_project = 'tuleap-localhost-mozilla/firefox';
     protected $gerrit_git_url;
+    protected $gerrit_admin_instance = 'admin-tuleap.example.com';
+    protected $tuleap_instance       = 'tuleap.example.com';
 
     public function setUp() {
         parent::setUp();
         Config::store();
+        Config::set('sys_default_domain', $this->tuleap_instance);
         Config::set('tmp_dir', '/var/tmp');
         $this->fixtures = dirname(__FILE__) .'/_fixtures';
         $this->tmpdir   = Config::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
         `unzip $this->fixtures/firefox.zip -d $this->tmpdir`;
 
-        $host = $this->tmpdir;
-        $id = $port = $login = $identity_file = 0;
+        $host  = $this->tmpdir;
+        $login = $this->gerrit_admin_instance;
+        $id = $port = $identity_file = 0;
         $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), array($id, $host, $port, $login, $identity_file));
 
         $this->gerrit_git_url = "$host/$this->gerrit_project";
@@ -80,6 +84,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->project_creator->createProject($this->server, $this->repository);
 
         $this->assertItClonesTheDistantRepo();
+        $this->assertCommitterIsConfigured();
         $this->assertTheRemoteOriginIsConfigured();
         $this->assertGroupsFileHasEverything();
         $this->assertPermissionsFileHasEverything();
@@ -92,6 +97,11 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $config_file = "$this->tmpdir/project.config";
         $this->assertTrue(is_file($groups_file));
         $this->assertTrue(is_file($config_file));
+    }
+
+    private function assertCommitterIsConfigured() {
+        $this->assertEqual(trim(`cd $this->tmpdir; git config --get user.name`), $this->gerrit_admin_instance);
+        $this->assertEqual(trim(`cd $this->tmpdir; git config --get user.email`), 'codendiadm@'. $this->tuleap_instance);
     }
 
     private function assertTheRemoteOriginIsConfigured() {

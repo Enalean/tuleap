@@ -67,7 +67,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function initiatePermissions(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen) {
-        $this->cloneGerritProjectConfig($gerrit_project_url);
+        $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         $this->addGroupToGroupFile($gerrit_server, $contributors);
         $this->addGroupToGroupFile($gerrit_server, $integrators);
         $this->addGroupToGroupFile($gerrit_server, $supermen);
@@ -76,13 +76,21 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->pushToServer();
     }
 
-    private function cloneGerritProjectConfig($gerrit_project_url) {
+    private function cloneGerritProjectConfig(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url) {
         $gerrit_project_url = escapeshellarg($gerrit_project_url);
         `mkdir $this->dir`;
         `cd $this->dir; git init`;
+        $this->setUpCommitter($gerrit_server);
         `cd $this->dir; git remote add origin $gerrit_project_url`;
         `cd $this->dir; git pull origin refs/meta/config`;
         `cd $this->dir; git checkout FETCH_HEAD`;
+    }
+
+    private function setUpCommitter(Git_RemoteServer_GerritServer $gerrit_server) {
+        $name  = escapeshellarg($gerrit_server->getLogin());
+        $email = escapeshellarg('codendiadm@'. Config::get('sys_default_domain'));
+        `cd $this->dir; git config --add user.name $name`;
+        `cd $this->dir; git config --add user.email $email`;
     }
 
     private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
