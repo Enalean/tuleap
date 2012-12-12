@@ -1711,6 +1711,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $tracker_data[$key] = $value;
         }
 
+        /*
+         * getFormElements() returns containers (if created) that themselves
+         * contain FormElements. 
+         * Recursion needed to get all final form elements!
+         */
         $elements = $this->getTracker()->getFormElements();
         $exists = true;
         while ($exists) {
