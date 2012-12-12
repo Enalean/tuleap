@@ -112,6 +112,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertPattern("%$this->contributors_uuid\t$this->contributors%", $group_file_contents);
         $this->assertPattern("%$this->integrators_uuid\t$this->integrators%",   $group_file_contents);
         $this->assertPattern("%$this->supermen_uuid\t$this->supermen%",         $group_file_contents);
+        $this->assertPattern("%global:Registered-Users\tRegistered Users%",     $group_file_contents);
     }
 
     private function itThrowsAnExceptionWhenSomethingGoneBad() {

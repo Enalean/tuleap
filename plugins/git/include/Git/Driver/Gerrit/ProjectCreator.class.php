@@ -71,6 +71,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addGroupToGroupFile($gerrit_server, $contributors);
         $this->addGroupToGroupFile($gerrit_server, $integrators);
         $this->addGroupToGroupFile($gerrit_server, $supermen);
+        $this->addRegisteredUsersGroupToGroupFile();
         $this->addPermissionsToProjectConf($contributors, $integrators, $supermen);
         $this->pushToServer();
     }
@@ -79,13 +80,21 @@ class Git_Driver_Gerrit_ProjectCreator {
         $gerrit_project_url = escapeshellarg($gerrit_project_url);
         `mkdir $this->dir`;
         `cd $this->dir; git init`;
-        `cd $this->dir; git pull $gerrit_project_url refs/meta/config`;
+        `cd $this->dir; git pull $gerrit_project_url refs/meta/config`; // TODO: should we use 'git remote add origin $gerrit_project_url' as we need to push just after?
         `cd $this->dir; git checkout FETCH_HEAD`;
     }
 
     private function addGroupToGroupFile(Git_RemoteServer_GerritServer $gerrit_server, $group) {
         $group_uuid = $this->driver->getGroupUUID($gerrit_server, $group);
-        file_put_contents("$this->dir/groups", "$group_uuid\t$group", FILE_APPEND);
+        $this->addGroupDefinitionToGroupFile($group_uuid, $group);
+    }
+
+    private function addRegisteredUsersGroupToGroupFile() {
+        $this->addGroupDefinitionToGroupFile('global:Registered-Users', 'Registered Users');
+    }
+
+    private function addGroupDefinitionToGroupFile($uuid, $group_name) {
+        file_put_contents("$this->dir/groups", "$uuid\t$group_name", FILE_APPEND);
     }
 
     private function addPermissionsToProjectConf($contributors, $integrators, $supermen) {
@@ -99,7 +108,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
     private function pushToServer() {
         `cd $this->dir; git add project.config groups`;
-        `cd $this->dir; git commit -m 'Updated project config'`;
+        `cd $this->dir; git commit -m 'Updated project config'`; //TODO: what about author name?
     }
 }
 
