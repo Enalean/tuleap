@@ -103,7 +103,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     private function addGroupDefinitionToGroupFile($uuid, $group_name) {
-        file_put_contents("$this->dir/groups", "$uuid\t$group_name", FILE_APPEND);
+        file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
     private function addPermissionsToProjectConf($contributors, $integrators, $supermen) {
