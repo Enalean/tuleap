@@ -251,8 +251,26 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
-        $criteria_value = explode(',', $soap_criteria_value->value);
-        $this->setCriteriaValue($criteria_value);
+        $criteria_values = explode(',', $soap_criteria_value->value);
+        $criterias       = array();
+        $field_values    = $this->getAllValues();
+        $values = array();
+
+        foreach ($field_values as $value_id => $value) {
+            $values[$value->getLabel()] = $value_id;
+        }
+        foreach ($criteria_values as $criteria_value) {
+            // Check if the SOAP string only contains digits
+            if (ctype_digit($criteria_value)) {
+                $criterias[] = $criteria_value;
+            } else {
+                $value_id = $values[$criteria_value];
+                if ($value_id) {
+                    $criterias[] = $value_id;
+                }
+            }
+        }
+        $this->setCriteriaValue($criterias);
     }
 
     /**
