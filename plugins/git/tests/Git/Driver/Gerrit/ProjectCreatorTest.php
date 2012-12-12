@@ -82,6 +82,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertItClonesTheDistantRepo();
         $this->assertGroupsFileHasEverything();
         $this->assertPermissionsFileHasEverything();
+        $this->assertEverythingIsCommitted();
         $this->assertEverythingIsPushedToTheServer();
     }
 
@@ -105,6 +106,19 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     private function assertEverythingIsPushedToTheServer() {
+        $cwd = getcwd();
+        chdir("$this->tmpdir");
+        exec('git push origin HEAD:refs/meta/config --porcelain', $output, $ret_val);
+        chdir($cwd);
+        $this->assertEqual($output, array(
+            "To $this->gerrit_git_url",
+            "=\tHEAD:refs/meta/config\t[up to date]",
+            "Done")
+        );
+        $this->assertEqual($ret_val, 0);
+    }
+
+    private function assertEverythingIsCommitted() {
         $cwd = getcwd();
         chdir("$this->tmpdir");
         exec('git status --porcelain', $output, $ret_val);

@@ -109,7 +109,8 @@ class Git_Driver_Gerrit_ProjectCreator {
 
     private function pushToServer() {
         `cd $this->dir; git add project.config groups`;
-        `cd $this->dir; git commit -m 'Updated project config'`; //TODO: what about author name?
+        `cd $this->dir; git commit -m 'Updated project config and access rights'`; //TODO: what about author name?
+        `cd $this->dir; git push origin HEAD:refs/meta/config`;
     }
 }
 
