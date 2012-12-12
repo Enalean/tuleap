@@ -80,6 +80,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->project_creator->createProject($this->server, $this->repository);
 
         $this->assertItClonesTheDistantRepo();
+        $this->assertTheRemoteOriginIsConfigured();
         $this->assertGroupsFileHasEverything();
         $this->assertPermissionsFileHasEverything();
         $this->assertEverythingIsCommitted();
