@@ -504,14 +504,9 @@ class GitViews extends PluginViews {
         $sourceReposHTML = '';
         $repositories    = explode(',', $params['repos']);
         foreach ($repositories as $repositoryId) {
-            $repository  = $repoFactory->getRepositoryById($repositoryId);
+            $repository       = $repoFactory->getRepositoryById($repositoryId);
             $sourceReposHTML .= '"'.$repository->getFullName().'" ';
         }
-        if (!empty($repository)) {
-            $accessControl     = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
-            $accessControlForm = $accessControl->getHeadlessAccessControl($groupId);
-        }
-
         $this->_getBreadCrumb();
         echo '<h2>'.$this->getText('fork_repositories').'</h2>';
         echo $this->getText('fork_repository_message', array($sourceReposHTML));
@@ -527,7 +522,10 @@ class GitViews extends PluginViews {
         echo '<input id="to_project" type="hidden" name="to_project" value="'.$purifier->purify($params['group_id']).'" />';
         echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$purifier->purify($params['namespace']).'" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
-        echo $accessControlForm;
+        if (!empty($repository)) {
+            $accessControl = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
+            echo $accessControl->getHeadlessAccessControl($groupId);
+        }
         echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
         echo '</form>';
     }
