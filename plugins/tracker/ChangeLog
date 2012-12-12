@@ -1,3 +1,6 @@
+Version 5.51 - Tuleap 5.8
+    * Fix bugs #1905: soap criteria for list fields are not consistance with what is returned getArtifacts
+
 Version 5.50 - Tuleap 5.8
     * Fix bugs #1537 - Issue with status semantic criteria on cross tracker search
 
