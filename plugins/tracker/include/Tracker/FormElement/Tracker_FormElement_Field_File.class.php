@@ -864,6 +864,13 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return null;
     }
 
+    /**
+     * Override default value as it's not possible to import a file via CSV
+     *
+     * @param type $csv_value
+     *
+     * @return array
+     */
     public function getFieldDataFromCSVValue($csv_value) {
         return array();
     }
