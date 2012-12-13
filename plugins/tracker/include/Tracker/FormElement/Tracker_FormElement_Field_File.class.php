@@ -774,14 +774,14 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
                     return false;
                 }
 
-                return $this->moveAttachementToFinalPlace($attachment, 'rename', $temporary->getPath());
+                return $this->moveAttachmentToFinalPlace($attachment, 'rename', $temporary->getPath());
             }
-            return $this->moveAttachementToFinalPlace($attachment, 'move_uploaded_file', $file_info['tmp_name']);
+            return $this->moveAttachmentToFinalPlace($attachment, 'move_uploaded_file', $file_info['tmp_name']);
         }
         return false;
     }
 
-    private function moveAttachementToFinalPlace(Tracker_FileInfo $attachment, $method, $src_path) {
+    private function moveAttachmentToFinalPlace(Tracker_FileInfo $attachment, $method, $src_path) {
         if ($method($src_path, $attachment->getPath())) {
             $attachment->postUploadActions();
             return true;
