@@ -19,9 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
-$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
-$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+$host     = getenv('TULEAP_SERVER')   ? getenv('TULEAP_SERVER')   : 'http://sonde.cro.enalean.com';
+$login    = getenv('TULEAP_USER')     ? getenv('TULEAP_USER')     : 'testman';
+$password = getenv('TULEAP_PASSWORD') ? getenv('TULEAP_PASSWORD') : 'testpwd';
 
 $report_id  = $argv[1];
 $offset     = 0;

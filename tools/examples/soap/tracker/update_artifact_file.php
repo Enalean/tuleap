@@ -18,15 +18,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-// format : project_id  tracker_id  value
 
 if ($argc != 6) {
-    die('Usage: ".$argv[0]." project_id  tracker_id artifact_id value file\n');
+    die('Usage: ".$argv[0]." project_id  tracker_id artifact_id summary file\n');
 }
 
-$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
-$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
-$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+$serverURL = getenv('TULEAP_SERVER')   ? getenv('TULEAP_SERVER')   : 'http://sonde.cro.enalean.com';
+$login     = getenv('TULEAP_USER')     ? getenv('TULEAP_USER')     : 'testman';
+$password  = getenv('TULEAP_PASSWORD') ? getenv('TULEAP_PASSWORD') : 'testpwd';
 
 $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 

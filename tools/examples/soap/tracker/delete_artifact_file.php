@@ -24,9 +24,9 @@ if ($argc != 5) {
     die('Usage: ".$argv[0]." project_id  tracker_id artifact_id attachment_id\n');
 }
 
-$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
-$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
-$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+$serverURL = getenv('TULEAP_SERVER')   ? getenv('TULEAP_SERVER')   : 'http://sonde.cro.enalean.com';
+$login     = getenv('TULEAP_USER')     ? getenv('TULEAP_USER')     : 'testman';
+$password  = getenv('TULEAP_PASSWORD') ? getenv('TULEAP_PASSWORD') : 'testpwd';
 
 $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
