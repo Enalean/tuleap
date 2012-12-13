@@ -544,6 +544,8 @@ class trackerPlugin extends Plugin {
             'title'       => 'Tracker',
             'wsdl'        => $this->getPluginPath().'/soap/?wsdl',
             'wsdl_viewer' => $this->getPluginPath().'/soap/view-wsdl',
+            'changelog'   => $this->getPluginPath().'/soap/ChangeLog',
+            'version'     => file_get_contents(dirname(__FILE__).'/../www/soap/VERSION'),
             'description' => 'Query and modify Trackers.',
         );
     }

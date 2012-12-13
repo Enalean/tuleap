@@ -1,8 +1,14 @@
+<h1>SOAP API end points</h1>
 <p>You can access this platform using it's SOAP API.</p>
 <p>More informations available in the <a href="https://tuleap.net/wiki/index.php?group_id=101&pagename=HowToUseTuleapSoapApi">documentation</a> on Tuleap.net.</p>
-<dl>
-    {{#end_points}}
-    <dt>{{title}} <a href="{{wsdl}}">WSDL</a> - <a href="{{wsdl_viewer}}">WSDL Viewer</a>:</dt>
-    <dd>{{{description}}}</dd>
-    {{/end_points}}
-</dl>
+<h2>All end points</h2>
+{{#end_points}}
+<h3>{{title}} - v{{version}}</h3>
+<ul>
+    <li><a href="{{changelog}}">ChangeLog</a></li>
+    <li><a href="{{wsdl_viewer}}">WSDL Documentation</a></li>
+    <li><a href="{{wsdl}}">WSDL</a></li>
+</ul>
+{{{description}}}
+{{/end_points}}
+
