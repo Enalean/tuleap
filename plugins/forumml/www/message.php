@@ -183,10 +183,10 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 	if (! $request->valid($vSrch)) {
 		// Check if there are archives to browse
 		$qry = sprintf('SELECT NULL'.
-						' FROM plugin_forumml_message'.
-						' WHERE id_list = %d'.
-                        ' LIMIT 1',
-						db_ei($list_id));
+                                ' FROM plugin_forumml_message'.
+                                ' WHERE id_list = %d'.
+                        '        LIMIT 1',
+                                db_ei($list_id));
 		$res = db_query($qry);
 		if (db_numrows($res) > 0) {
 			// Call to show_thread() function to display the archives			
@@ -200,6 +200,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 			echo "<H2>".$GLOBALS["Language"]->getText('plugin_forumml','empty_archives')."</H2>";
 		}
 	} else {
+            
 		// search archives		
 		$pattern = "%".$request->get('search')."%";
 		$sql = sprintf('SELECT mh.id_message, mh.value'.

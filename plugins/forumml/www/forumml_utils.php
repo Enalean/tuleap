@@ -127,10 +127,10 @@ function plugin_forumml_show_search_results($p,$result,$group_id,$list_id) {
 }
 
 // List all threads
-function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
+function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 	
-	$chunks = 30;
-	$request =& HTTPRequest::instance();
+    $chunks = 30;
+    $request =& HTTPRequest::instance();
 
     // all threads
     $sql = 'SELECT SQL_CALC_FOUND_ROWS 
@@ -146,7 +146,11 @@ function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
             ON (mh_f.id_message = m.id_message AND mh_f.id_header = '.FORUMML_FROM.') '.
         ' LEFT JOIN plugin_forumml_messageheader mh_s 
             ON (mh_s.id_message = m.id_message AND mh_s.id_header = '.FORUMML_SUBJECT.') '.
-        ' WHERE m.id_parent = 0'.
+        ' WHERE (m.id_parent = 0 OR'.
+            "  m.id_parent NOT IN (
+                SELECT id_message FROM plugin_forumml_message 
+                WHERE id_list = " . db_ei($list_id) . ")
+                    )" .
         ' AND id_list = '.db_ei($list_id).
         ' ORDER BY last_thread_update DESC'.
         ' LIMIT '.db_ei($offset).', '.db_ei($chunks);
@@ -220,7 +224,9 @@ function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
 
         $hp =& ForumML_HTMLPurifier::instance();
         $i = 0;
+      //  var_dump(db_fetch_array($result));
         while (($msg = db_fetch_array($result))) {
+            var_dump($msg['id_message']);
             $i++;
             if ($i % 2 == 0) {
                 $class="boxitemalt";
@@ -234,6 +240,7 @@ function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
             // nb of children + message
             $count = 1 + plugin_forumml_nb_children(array($msg['id_message']), $list_id);
 
+            var_dump(plugin_forumml_nb_children(array($msg['id_message']), $list_id));
 
             // all threads
             print "<tr class='".$class."'><a name='".$msg['id_message']."'></a>
