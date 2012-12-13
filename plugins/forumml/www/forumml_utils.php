@@ -224,9 +224,8 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 
         $hp =& ForumML_HTMLPurifier::instance();
         $i = 0;
-      //  var_dump(db_fetch_array($result));
+
         while (($msg = db_fetch_array($result))) {
-            var_dump($msg['id_message']);
             $i++;
             if ($i % 2 == 0) {
                 $class="boxitemalt";
@@ -240,7 +239,7 @@ function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
             // nb of children + message
             $count = 1 + plugin_forumml_nb_children(array($msg['id_message']), $list_id);
 
-            var_dump(plugin_forumml_nb_children(array($msg['id_message']), $list_id));
+            
 
             // all threads
             print "<tr class='".$class."'><a name='".$msg['id_message']."'></a>
@@ -296,7 +295,7 @@ function plugin_forumml_nb_children($parents, $list_id) {
         $sql = 'SELECT id_message'.
             ' FROM plugin_forumml_message m'.
             ' WHERE m.id_parent IN ('.implode(',', $parents).')
-                AND id_list = ';
+                AND id_list = ' . $list_id;
         //echo $sql.'<br>';
         $result = db_query($sql);
         if ($result && !db_error($result)) {
@@ -304,6 +303,7 @@ function plugin_forumml_nb_children($parents, $list_id) {
             while (($row = db_fetch_array($result))) {
                 $p[] = $row['id_message'];
             }
+
             $num = db_numrows($result);
             return $num + plugin_forumml_nb_children($p, $list_id);
         }
