@@ -1719,7 +1719,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                  $tracker_data[$elm->getId()] = date("Y-m-d");
             }
             if($elm instanceof Tracker_FormElement_Field_SubmittedOn ) {
-                 $tracker_data[$elm->getId()] = $elm->getLastValue($this);
+                 $tracker_data[$elm->getId()] = $this->getSubmittedOn();
             } 
         }
 
