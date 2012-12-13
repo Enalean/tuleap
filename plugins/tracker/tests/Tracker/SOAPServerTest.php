@@ -519,7 +519,7 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         $report_id = 987;
         $report = aTrackerReport()->withTracker($this->unreadable_tracker)->build();
         stub($this->report_factory)->getReportById($report_id, $this->user_id, false)->returns($report);
-        $results = $this->server->getArtifactsFromReportId($this->session_key, $report_id, 0, 10);
+        $results = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
         $this->assertIsA($results, 'SoapFault');
     }
 
@@ -527,28 +527,28 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         $report_id = 987;
         $report = aTrackerReport()->withTracker($this->private_unreadable_tracker)->build();
         stub($this->report_factory)->getReportById($report_id, $this->user_id, false)->returns($report);
-        $soap_fault = $this->server->getArtifactsFromReportId($this->session_key, $report_id, 0, 10);
+        $soap_fault = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
     }
 
     public function itRaisesAnExceptionWhenThereIsNoReportMatching() {
         $report_id = 987;
         stub($this->report_factory)->getReportById()->returns(null);
-        $results = $this->server->getArtifactsFromReportId($this->session_key, $report_id, 0, 10);
+        $results = $this->server->getArtifactsFromReport($this->session_key, $report_id, 0, 10);
         $this->assertIsA($results, 'SoapFault');
     }
 
     public function itGetsMatchingIdsFromReport() {
         expect($this->report)->getMatchingIds(null, true)->once();
         stub($this->report_factory)->getReportById()->returns($this->report);
-        $this->server->getArtifactsFromReportId($this->session_key, $this->report_id, 0, 10);
+        $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
     }
 
     public function itConvertsMatchingIdsIntoAnArrayOfInteger() {
         stub($this->report)->getMatchingIds()->returns(array('id' => '42,66,9001', 'last_changeset_id' => '421,661,90011'));
 
         stub($this->report_factory)->getReportById()->returns($this->report);
-        $soap_response = $this->server->getArtifactsFromReportId($this->session_key, $this->report_id, 0, 10);
+        $soap_response = $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
         $this->assertEqual($soap_response, array(
             'total_artifacts_number' => 3,
             'artifacts' => array(
@@ -563,7 +563,7 @@ class Tracker_SOAPServer_getTrackerReportArtifacts_Test extends Tracker_SOAPServ
         stub($this->report)->getMatchingIds()->returns(array('id' => '', 'last_changeset_id' => ''));
 
         stub($this->report_factory)->getReportById()->returns($this->report);
-        $soap_response = $this->server->getArtifactsFromReportId($this->session_key, $this->report_id, 0, 10);
+        $soap_response = $this->server->getArtifactsFromReport($this->session_key, $this->report_id, 0, 10);
         $this->assertEqual($soap_response, array(
             'total_artifacts_number' => 0,
             'artifacts' => array()
