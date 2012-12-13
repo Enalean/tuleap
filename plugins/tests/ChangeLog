@@ -1,3 +1,10 @@
+Version 5.11 - Tuleap 5.8
+    * Apply global validation rules on
+* CSV Import
+* SOAP create/update artifact
+* Tracker clone
+* XML Import/Export
+
 Version 5.10 - Tuleap 5.8
     * Kickass unit test runner interface
 

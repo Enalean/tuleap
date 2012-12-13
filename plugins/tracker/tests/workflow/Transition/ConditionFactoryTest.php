@@ -21,18 +21,40 @@
 require_once dirname(__FILE__) .'/../../../include/constants.php';
 require_once TRACKER_BASE_DIR .'/workflow/Transition/ConditionFactory.class.php';
 
-class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends TuleapTestCase {
-
-    private $xml_mapping = array();
+class Workflow_Transition_ConditionFactory_BaseTest extends TuleapTestCase {
 
     /** @var Workflow_Transition_ConditionFactory */
-    private $condition_factory;
+    protected $condition_factory;
 
     /** @var Workflow_Transition_Condition_FieldNotEmpty_Factory */
-    private $fieldnotempty_factory;
+    protected $fieldnotempty_factory;
 
     /** @var Workflow_Transition_Condition_Permissions_Factory */
-    private $permissions_factory;
+    protected $permissions_factory;
+
+    public function setUp() {
+        parent::setUp();
+        $this->permissions_factory   = mock('Workflow_Transition_Condition_Permissions_Factory');
+        $this->fieldnotempty_factory = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
+        $this->condition_factory     = new Workflow_Transition_ConditionFactory(
+            $this->permissions_factory,
+            $this->fieldnotempty_factory
+        );
+    }
+}
+
+class Workflow_Transition_ConditionFactory_isFieldUsedInConditionsTest extends Workflow_Transition_ConditionFactory_BaseTest {
+
+    public function itDelegatesToFieldNotEmptyFactory() {
+        $field = mock('Tracker_FormElement_Field_Date');
+        stub($this->fieldnotempty_factory)->isFieldUsedInConditions($field)->once()->returns(true);
+        $this->assertTrue($this->condition_factory->isFieldUsedInConditions($field));
+    }
+}
+
+class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends Workflow_Transition_ConditionFactory_BaseTest {
+
+    private $xml_mapping = array();
 
     /** @var Transition */
     private $transition;
@@ -42,12 +64,6 @@ class Workflow_Transition_ConditionFactory_getAllInstancesFromXML_Test extends T
         PermissionsManager::setInstance(mock('PermissionsManager'));
 
         $this->transition            = mock('Transition');
-        $this->permissions_factory   = mock('Workflow_Transition_Condition_Permissions_Factory');
-        $this->fieldnotempty_factory = mock('Workflow_Transition_Condition_FieldNotEmpty_Factory');
-        $this->condition_factory     = new Workflow_Transition_ConditionFactory(
-            $this->permissions_factory,
-            $this->fieldnotempty_factory
-        );
 
         $this->legacy_permissions_xml = new SimpleXMLElement('
             <transition>

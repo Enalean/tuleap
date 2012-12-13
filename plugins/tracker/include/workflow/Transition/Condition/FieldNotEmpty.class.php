@@ -127,21 +127,35 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
             return true;
         }
 
-        $field_id = $this->getField()->getId();
-
-        if (! isset($fields_data[$field_id])) {
-            $changeset = $artifact->getLastChangeset();
-            $field_value = $changeset->getValue($field);
-            $value = $field_value->getValue();
-        } else {
-            $value = $fields_data[$field_id];
-        }
+        $value    = $this->getFieldValue($fields_data,  $artifact, $field);
         $is_valid = ! $field->isEmpty($value);
 
         if (! $is_valid) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_condition', 'invalid_condition', $field->getLabel(). ' ('. $field->getName() .')'));
         }
+        
+        $field->setHasErrors(true);
         return $is_valid;
+    }
+
+    private function getFieldValue($fields_data, Tracker_Artifact $artifact, Tracker_FormElement_Field $field) {
+        $field_id = $field->getId();
+        if (isset($fields_data[$field_id])) {
+            return $fields_data[$field_id];
+        }
+        return $this->getFieldValueFromLastChangeset($artifact, $field);
+    }
+
+    private function getFieldValueFromLastChangeset(Tracker_Artifact $artifact, Tracker_FormElement_Field $field) {
+        $value = null;
+        $last_changeset = $artifact->getLastChangeset();
+        if ($last_changeset) {
+            $last_changeset_value = $last_changeset->getValue($field);
+            if ($last_changeset_value) {
+                $value = $last_changeset_value->getValue();
+            }
+        }
+        return $value;
     }
 }
 ?>

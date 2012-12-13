@@ -38,6 +38,26 @@ $project_id  = $argv[1];
 $tracker_id  = $argv[2];
 $summary     = $argv[3];
 
+$value       = array(
+    array(
+        'field_name' => 'title',
+        'field_label' => 'title',
+        'field_value' => $argv[3]
+    ),
+    
+    array(
+        'field_name' => 'start',
+        'field_label' => 'start',
+        'field_value' => date("Y-m-d")
+    ),
+    
+    array(
+        'field_name' => 'end',
+        'field_label' => 'end',
+        'field_value' => date("Y-m-d")
+    )
+);
+
 // Connecting to the soap's tracker client
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 

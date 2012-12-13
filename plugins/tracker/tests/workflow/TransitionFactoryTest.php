@@ -39,30 +39,53 @@ class TransitionFactory_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->condition_factory = mock('Workflow_Transition_ConditionFactory');
-        $this->factory           = new TransitionFactory($this->condition_factory);
+        $this->condition_factory  = mock('Workflow_Transition_ConditionFactory');
+        $this->postaction_factory = mock('Transition_PostActionFactory');
+        $this->factory            = partial_mock('TransitionFactory', array('getPostActionFactory'), array($this->condition_factory));
+        stub($this->factory)->getPostActionFactory()->returns($this->postaction_factory);
     }
 }
-class TransitionFactoryTest extends TransitionFactory_BaseTest {
 
-    public function testIsFieldUsedInTransitions() {
+class TransitionFactory_isFieldUsedInTransitionsTest extends TransitionFactory_BaseTest {
 
-        $field_start_date = new MockTracker_FormElement_Field_Date($this);
-        $field_start_date->setReturnValue('getId', 1002);
+    private $a_field_not_used_in_transitions;
+    private $a_field_used_in_post_actions;
+    private $a_field_used_in_conditions;
 
-        $field_close_date = new MockTracker_FormElement_Field_Date($this);
-        $field_close_date->setReturnValue('getId', 1003);
+    public function setUp() {
+        parent::setUp();
+        $this->a_field_not_used_in_transitions = mock('Tracker_FormElement_Field_Date');
+        stub($this->a_field_not_used_in_transitions)->getId()->returns(1002);
 
-        $tpaf = new MockTransition_PostActionFactory();
-        $tpaf->setReturnValue('isFieldUsedInPostActions', false, array($field_start_date));
-        $tpaf->setReturnValue('isFieldUsedInPostActions', true,  array($field_close_date));
+        $this->a_field_used_in_post_actions = mock('Tracker_FormElement_Field_Date');
+        stub($this->a_field_used_in_post_actions)->getId()->returns(1003);
 
-        $tf = partial_mock('TransitionFactory', array('getPostActionFactory'), array($this->condition_factory));
-        $tf->setReturnReference('getPostActionFactory', $tpaf);
+        $this->a_field_used_in_conditions = mock('Tracker_FormElement_Field_Date');
+        stub($this->a_field_used_in_conditions)->getId()->returns(1004);
 
-        $this->assertFalse($tf->isFieldUsedInTransitions($field_start_date));
-        $this->assertTrue($tf->isFieldUsedInTransitions($field_close_date));
+        stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_not_used_in_transitions)->returns(false);
+        stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_used_in_post_actions)->returns(true);
+        stub($this->postaction_factory)->isFieldUsedInPostActions($this->a_field_used_in_conditions)->returns(false);
+
+        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_not_used_in_transitions)->returns(false);
+        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_used_in_post_actions)->returns(false);
+        stub($this->condition_factory)->isFieldUsedInConditions($this->a_field_used_in_conditions)->returns(true);
     }
+
+    public function itReturnsTrueIfFieldIsUsedInPostActions() {
+        $this->assertTrue($this->factory->isFieldUsedInTransitions($this->a_field_used_in_post_actions));
+    }
+
+    public function itReturnsTrueIfFieldIsUsedInConditions() {
+        $this->assertTrue($this->factory->isFieldUsedInTransitions($this->a_field_used_in_conditions));
+    }
+
+    public function itReturnsFalseIsNiotUsedInTransitions() {
+        $this->assertFalse($this->factory->isFieldUsedInTransitions($this->a_field_not_used_in_transitions));
+    }
+}
+
+class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest {
 
     public function testDuplicate() {
         $field_value_new = new MockTracker_FormElement_Field_List_Value();

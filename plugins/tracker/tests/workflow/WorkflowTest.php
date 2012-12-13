@@ -315,13 +315,24 @@ class WorkflowTest extends UnitTestCase {
 
 }
 
-class Workflow_ExportToSOAPTest extends TuleapTestCase {
+class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {
 
-    private $workflow;
-    private $result;
+    protected $tracker_id = 123;
+    protected $tracker;
+    protected $workflow;
+    protected $result;
 
     public function setUp() {
         parent::setUp();
+
+        $this->tracker   = stub('Tracker')->getId()->returns($this->tracker_id);
+        $tracker_factory = mock('TrackerFactory');
+        TrackerFactory::setInstance($tracker_factory);
+        stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($this->tracker);
+
+        $this->rules_manager = mock('Tracker_RulesManager');
+        stub($this->rules_manager)->exportToSOAP()->returns('rules in soap format');
+        stub($this->tracker)->getRulesManager()->returns($this->rules_manager);
 
         $field_list_value1 = aFieldListStaticValue()->withId(0)->build();
         $field_list_value2 = aFieldListStaticValue()->withId(11)->build();
@@ -334,34 +345,56 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
         $transition2 = new Transition(0,1, $field_list_value3, $field_list_value4);
         $transition3 = new Transition(0,1, $field_list_value5, $field_list_value6);
 
-        $this->workflow = new Workflow(1,1,1,1, array($transition1, $transition2, $transition3));
-        $this->result   = $this->workflow->exportToSOAP();
+        $this->workflow = new Workflow(1, $this->tracker_id, 1, 1, array($transition1, $transition2, $transition3));
     }
 
+    public function tearDown() {
+        TrackerFactory::clearInstance();
+        parent::tearDown();
+    }
+}
+
+class Workflow_ExportToSOAPTest extends Workflow_ExportToSOAP_BaseTest {
+
     public function itExportsTheFieldId() {
+        $result = $this->workflow->exportToSOAP();
         $expected_field_id = 1;
-        $this->assertEqual($this->result['field_id'], $expected_field_id);
+        $this->assertEqual($result['field_id'], $expected_field_id);
     }
 
     public function itExportsTheIsUsedValue() {
+        $result = $this->workflow->exportToSOAP();
         $expected_is_used = 1;
-        $this->assertEqual($this->result['is_used'], $expected_is_used);
+        $this->assertEqual($result['is_used'], $expected_is_used);
     }
+}
+
+class Workflow_ExportToSOAP_transitionsTest extends Workflow_ExportToSOAP_BaseTest {
 
     public function itExportsAllTheTransitions() {
+        $result = $this->workflow->exportToSOAP();
         $expected_transisitions = array(
             '0' => array ('from_id' => 0, 'to_id'=> 11),
             '1' => array ('from_id' => 4, 'to_id'=> 5),
             '2' => array ('from_id' => 6, 'to_id'=> 89)
         );
 
-        $this->assertEqual($this->result['transitions'], $expected_transisitions);
+        $this->assertEqual($result['transitions'], $expected_transisitions);
     }
 
     public function itExportsEmptyTransitionWhenWorkflowDoesntHaveTransition() {
-        $workflow = new Workflow(1,1,1,1, array());
+        $workflow = new Workflow(1, $this->tracker_id, 1, 1, array());
         $result   = $workflow->exportToSOAP();
-        $this->assertTrue(empty($result['transitions']));
+        $this->assertArrayEmpty($result['transitions']);
+    }
+}
+
+class Workflow_ExportToSOAP_rulesTest extends Workflow_ExportToSOAP_BaseTest {
+
+    public function itExportsRules() {
+        $result = $this->workflow->exportToSOAP();
+
+        $this->assertEqual($result['rules'], 'rules in soap format');
     }
 }
 

@@ -70,6 +70,21 @@ abstract class TuleapTestCase extends UnitTestCase {
             $GLOBALS = $this->globals;
         }
     }
+
+    function getTests() {
+        $methods = array();
+        foreach (get_class_methods(get_class($this)) as $method) {
+            if ($this->_isTest($method)) {
+                $methods[] = $method;
+            }
+            if (strtolower(substr($method, 0, 8)) == '__only__') {
+                $methods = array($method);
+                break;
+            }
+        }
+        return $methods;
+    }
+
     /**
      *    Tests to see if the method is a test that should
      *    be run, override default by searching methods that starts with 'it'

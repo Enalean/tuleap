@@ -1213,6 +1213,7 @@ plugin_tracker_admin_import	aid_does_not_exist	L'artefact Id $1 n'existe  pas.
 plugin_tracker_admin_import	field_not_taken_account	Le champ "$1" ne sera pas pris en compte.
 plugin_tracker_admin_import	nb_created_import	$1 artefact(s) créé(s)
 plugin_tracker_admin_import	nb_updated_import	$1 artefact(s) mis à jour
+plugin_tracker_admin_import	missing_field_value	Valeur de champ manquant: 
 plugin_tracker_admin_import	date_format_help	Format de date attendu : <strong>$1</strong>. <a href="/account/preferences.php">Changer le format de date pour l'import/export</a>
 plugin_tracker_admin_import	separator_not_found	Séparateur CSV non trouvé ($1). Soit vous tentez d'importer un seul champ, soit vous utilisez le mauvais séparateur.<br />Si c'est le cas, vous pouvez <a href="/account/preferences.php">changer le séparateur CSV pour l'import/export</a>
 
@@ -1305,10 +1306,11 @@ workflow_admin	title	Gestion du Workflow
 workflow_admin	transitions_deactivated	Les règles de transition ne s'appliquent pas pour l'instant
 workflow_admin	same_field	Les deux champs doivent être différents
 workflow_admin	deleted_rules	Règle(s) supprimée(s) avec succès
+workflow_admin	updated_rules	Règle(s) mise(s) à jour avec succès
 workflow_admin	created_rule	Règle créée avec succès
 workflow_admin	title_define_global_date_rules	Définition des règles globales sur les dates
 workflow_admin	hint_date_rules_definition	Ces règles s'appliqueront à chaque création/modification d'artéfacts.
-workflow_admin	add_new_rule	Ajouter une nouvelle règle:
+workflow_admin	add_new_rule	Ajouter une nouvelle règle
 workflow_admin	title_define_transitions	Definir les transitions
 workflow_admin	tab_global_rules	Règles Globales
 workflow_admin	tab_transitions	Transitions
@@ -1349,8 +1351,8 @@ workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	la date courante
 workflow_admin	post_action_not_defined	Cette action sera inactive tant qu'elle ne sera pas complètement définie
 
-workflow_postaction	field_value_set	Le champs '$1' a été automatiquement valué à $2
-workflow_postaction	field_clear	Le valeur du champs '$1' a été automatiquement effacée
+workflow_postaction	field_value_set	Le champ '$1' sera automatiquement valué à $2
+workflow_postaction	field_clear	Le valeur du champs '$1' sera automatiquement effacée
 
 workflow_condition	invalid_condition	Condition invalide : le champ '$1' doit être rempli
 

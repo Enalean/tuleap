@@ -40,8 +40,8 @@ $tracker_id  = $argv[2];
 $artifact_id = $argv[3];
 $value       = array(
     array(
-        'field_name' => 'summary',
-        'field_label' => 'Summary',
+        'field_name' => 'title',
+        'field_label' => 'title',
         'field_value' => $argv[4]
     )
 );

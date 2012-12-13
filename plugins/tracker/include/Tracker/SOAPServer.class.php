@@ -19,7 +19,9 @@
 require_once 'common/soap/SOAP_RequestValidator.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
 require_once 'Report/Tracker_ReportFactory.class.php';
+require_once 'NoChangeException.class.php';
 require_once 'FileInfoFactory.class.php';
+
 
 //define fault code constants
 define ('get_group_fault', '3000');
@@ -543,14 +545,19 @@ class Tracker_SOAPServer {
                     }
                 }
 
-                if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
+                try {
+                    $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                     return $artifact_id;
+                } catch (Tracker_NoChangeException $e) {
+                    return $artifact_id;
+                } catch (Tracker_Exception $e) {
+                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                }
+
+                if ($GLOBALS['Response']) {
+                    return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
                 } else {
-                    if ($GLOBALS['Response']->feedbackHasErrors()) {
-                        return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
-                    } else {
-                        return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
-                    }
+                    return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
                 }
             } else {
                 return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');

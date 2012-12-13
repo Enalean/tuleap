@@ -63,6 +63,11 @@ class Workflow {
         $this->artifact = $artifact;
     }
 
+    /** @return Tracker_Artifact */
+    public function getArtifact() {
+        return $this->artifact;
+    }
+
     /**
      * Set field
      *
@@ -248,13 +253,10 @@ class Workflow {
         $soap_result = array();
         $soap_result['field_id']    = $this->getFieldId();
         $soap_result['is_used']     = $this->getIsUsed();
+        $soap_result['rules']       = $this->getTracker()->getRulesManager()->exportToSOAP();
         $soap_result['transitions'] = array();
-        if ($this->hasTransitions()) {
-             foreach ($this->getTransitions() as $transition) {
-                 $transition_infos             = $transition->exportToSOAP();
-                 $soap_result['transitions'][] = $transition_infos;
-             }
-
+        foreach ($this->getTransitions() as $transition) {
+            $soap_result['transitions'][] = $transition->exportToSOAP();
         }
         return $soap_result;
     }
@@ -312,6 +314,12 @@ class Workflow {
     /** @return bool */
     public function validateGlobalRules(array $fields_data) {
         return $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data);
+    }
+
+    /** @return array of Tracker_Rule */
+    public function getGlobalRules() {
+        $tracker = $this->getTracker();
+        return $tracker->getRulesManager()->getRules($tracker);
     }
 
    /**

@@ -630,7 +630,8 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $rules_manager = new MockTracker_RulesManager();
         $rules_manager->setReturnValue('validate', true);
         $tracker->setReturnReference('getRulesManager', $rules_manager);
-
+        $tracker->setReturnValue('getFormElements', array());
+        
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
         $field1->setReturnValue('isValid', true);
@@ -659,6 +660,8 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
+        $artifact->setReturnValue('getLastChangeset', mock('Tracker_Artifact_Changeset_Null'));
+        
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
 
         $workflow = new MockWorkflow();
@@ -704,6 +707,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $rules_manager = new MockTracker_RulesManager();
         $rules_manager->setReturnValue('validate', true);
         $tracker->setReturnReference('getRulesManager', $rules_manager);
+        $tracker->setReturnValue('getFormElements', array());
 
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
@@ -734,6 +738,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
+        $artifact->setReturnValue('getLastChangeset', mock('Tracker_Artifact_Changeset_Null'));
 
         $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
         $workflow->setReturnValue('validate', true);
@@ -825,6 +830,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $rules_manager = new MockTracker_RulesManager();
         $rules_manager->setReturnValue('validate', true);
         $tracker->setReturnReference('getRulesManager', $rules_manager);
+        $tracker->setReturnValue('getFormElements', array());
 
         $field1  = new MockTracker_FormElement_Field();
         $field1->setReturnValue('getId', 101);
@@ -855,6 +861,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
+        $artifact->setReturnValue('getLastChangeset', mock('Tracker_Artifact_Changeset_Null'));
 
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
@@ -890,6 +897,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $rules_manager = new MockTracker_RulesManager();
         $rules_manager->setReturnValue('validate', true);
         $tracker->setReturnReference('getRulesManager', $rules_manager);
+        $tracker->setReturnValue('getFormElements', array());
 
         $artifact = new Tracker_ArtifactTestVersion();
         $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
@@ -920,6 +928,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
         $artifact->setReturnReference('getArtifactFactory', $art_factory);
+        $artifact->setReturnValue('getLastChangeset', mock('Tracker_Artifact_Changeset_Null'));
 
         $art_factory->expectOnce('save');
 
@@ -952,6 +961,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
         $tracker->setReturnValue('getItemName', 'foobar');
+        $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
 
@@ -959,9 +969,24 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $rules_manager->setReturnValue('validate', true);
         $tracker->setReturnReference('getRulesManager', $rules_manager);
 
-        $artifact = new Tracker_ArtifactTestVersion();
-        $workflow = new MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields();
-        $workflow->expectOnce('before');
+        $artifact = partial_mock('Tracker_Artifact', array(
+            'getChangesetDao',
+            'getChangesetCommentDao',
+            'getFormElementFactory',
+            'getTracker',
+            'getId',
+            'getLastChangeset',
+            'getReferenceManager',
+            'getChangesets',
+            'getChangeset',
+            'getUserManager',
+            'getArtifactFactory',
+            'getWorkflow',
+            'validateFields',
+            )
+        );
+        $workflow = new MockWorkflow();
+        $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
         $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
@@ -985,6 +1010,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $new_changeset->expect('notify', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValues', array());
         $changeset->setReturnValue('hasChanges', true);
         $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
         $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
@@ -1006,6 +1032,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $artifact->setReturnReference('getFormElementFactory', $factory);
         $artifact->setReturnReference('getTracker', $tracker);
         $artifact->setReturnValue('getId', 66);
+        $artifact->setReturnValue('validateFields', true);
         $artifact->setReturnReference('getLastChangeset', $changeset);
         $artifact->setReturnReference('getChangeset', $new_changeset);
         $artifact->setReturnReference('getReferenceManager', $reference_manager);
@@ -1016,6 +1043,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         // Valid
         $fields_data = array(
             101 => '123',
+            102 => '456'
         );
 
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
@@ -1028,7 +1056,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $email   = null; //not annonymous user
         $comment = 'It did solve my problem, I let you close the artifact.';
 
-        $this->response->expectCallCount('addFeedback', 1);
+        $this->response->expectCallCount('addFeedback', 0);
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
         $comment_dao->expectCallCount('createNewVersion', 1);
@@ -1045,6 +1073,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
         $tracker->setReturnValue('getItemName', 'foobar');
+        $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
 
@@ -1075,6 +1104,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', true);
+        $changeset->setReturnValue('getValues', array());
         $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
         $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
         $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
@@ -1108,7 +1138,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $art_factory->expectOnce('save');
 
         $workflow = new MockWorkflow();
-        $workflow->expectOnce('before');
+        $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
         $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
@@ -1117,13 +1147,18 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
+
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
 
         // Not valid
         $fields_data = array(
             102 => '456',
         );
+        
+        $this->expectException('Tracker_Exception');
+        
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
+
     }
 
     public function itCheckThatGlobalRulesAreValid() {
@@ -1147,6 +1182,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
         $tracker->setReturnValue('getItemName', 'foobar');
+        $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
 
@@ -1183,6 +1219,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
         $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
         $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
+        $changeset->setReturnValue('getValues', array());
 
         $reference_manager = new MockReferenceManager();
         $reference_manager->expect('extractCrossRef', array(
@@ -1224,14 +1261,16 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
             102 => '456'
         );
         stub($workflow)->validateGlobalRules($updated_fields_data_by_workflow, $factory)->once()->returns(false);
-        $this->assertFalse($artifact->createNewChangeset($fields_data, $comment, $user, $email));
+        
+        $this->expectException('Tracker_Exception');
+        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
 
     function testCreateNewChangesetWithoutNotification() {
         $email   = null; //not anonymous user
         $comment = '';
 
-        $this->response->expectCallCount('addFeedback', 1);
+        $this->response->expectCallCount('addFeedback', 0);
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
         $comment_dao->expectCallCount('createNewVersion', 1);
@@ -1248,6 +1287,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker = new MockTracker();
         $tracker->setReturnValue('getGroupId', 666);
         $tracker->setReturnValue('getItemName', 'foobar');
+        $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
 
@@ -1284,6 +1324,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $changeset->setReturnReference('getValue', $changeset_value1, array($field1));
         $changeset->setReturnReference('getValue', $changeset_value2, array($field2));
         $changeset->setReturnReference('getValue', $changeset_value3, array($field3));
+        $changeset->setReturnValue('getValues', array());
 
         $reference_manager = new MockReferenceManager();
         $reference_manager->expect('extractCrossRef', array(
@@ -1311,7 +1352,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $art_factory->expectOnce('save');
 
         $workflow = new MockWorkflow();
-        $workflow->expectOnce('before');
+        $workflow->expectCallCount('before', 2);
         $workflow->setReturnValue('validate', true);
         $workflow->setReturnValue('validateGlobalRules', true);
         $artifact->setReturnValue('getWorkflow', $workflow);
@@ -1320,18 +1361,20 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $fields_data = array(
             102 => '123',
         );
+
         $artifact->createNewChangeset($fields_data, $comment, $user, $email, false);
 
         // Not valid
         $fields_data = array(
             102 => '456',
         );
-        $artifact->createNewChangeset($fields_data, $comment, $user, $email, false);
+        $this->expectException('Tracker_Exception');
+        $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
 
     function testDontCreateNewChangesetIfNoCommentOrNoChanges() {
         $this->language->setReturnValue('getText', 'no changes', array('plugin_tracker_artifact', 'no_changes', '*'));
-        $this->response->expectOnce('addFeedback', array('info', 'no changes', CODENDI_PURIFIER_LIGHT));
+        $this->response->expectNever('addFeedback');
 
         $comment_dao = new MockTracker_Artifact_Changeset_CommentDao();
         $comment_dao->expectNever('createNewVersion');
@@ -1344,6 +1387,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $user->setReturnValue('isAnonymous', false);
 
         $tracker = new MockTracker();
+        $tracker->setReturnValue('getFormElements', array());
         $factory = new MockTracker_FormElementFactory();
 
         $rules_manager = new MockTracker_RulesManager();
@@ -1369,6 +1413,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', false);
+        $changeset->setReturnValue('getValues', array());
         $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
         $changeset_value2 = new MockTracker_Artifact_ChangesetValue();
         $changeset_value3 = new MockTracker_Artifact_ChangesetValue();
@@ -1395,6 +1440,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
 
         // Valid
         $fields_data = array();
+        $this->expectException('Tracker_NoChangeException');
         $artifact->createNewChangeset($fields_data, $comment, $user, $email);
     }
 
@@ -1965,6 +2011,31 @@ class Tracker_Artifact_SendCardInfoOnUpdate_WithRemainingEffortTest extends Trac
         expect($GLOBALS['Response'])->sendJSON($expected)->once();
 
         $this->task->process($this->layout, $this->request, $this->user);
+    }
+}
+
+class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
+
+    private $workflow;
+    private $artifact;
+
+    public function setUp() {
+        $tracker_id = 123;
+        $this->workflow = new Workflow(1, $tracker_id, 0, 0);
+        $tracker = aMockTracker()->withId($tracker_id)->build();
+        stub($tracker)->getWorkflow()->returns($this->workflow);
+        $this->artifact = anArtifact()->build();
+        $this->artifact->setTracker($tracker);
+    }
+
+    public function itGetsTheWorkflowFromTheTracker() {
+        $workflow = $this->artifact->getWorkflow();
+        $this->assertEqual($workflow, $this->workflow);
+    }
+
+    public function itInjectsItselfInTheWorkflow() {
+        $workflow = $this->artifact->getWorkflow();
+        $this->assertEqual($workflow->getArtifact(), $this->artifact);
     }
 }
 ?>
