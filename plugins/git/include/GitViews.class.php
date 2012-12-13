@@ -318,6 +318,8 @@ class GitViews extends PluginViews {
         include_once 'common/include/Codendi_HTMLPurifier.class.php';
         if ( empty($_REQUEST['a']) )  {
             $_REQUEST['a'] = 'summary';
+        } else if ($_REQUEST['a'] === 'blobdiff') {
+            $this->inverseURLArgumentsForGitPhpDiff();
         }
         set_time_limit(300);
         $_GET['a'] = $_REQUEST['a'];        
@@ -339,6 +341,17 @@ class GitViews extends PluginViews {
         if ( empty($_REQUEST['noheader']) ) {
             echo '</div>';
         }
+    }
+    /**
+     * inverse the source and destination params in the URL to match the Git PHP
+     * template
+     */
+    private function inverseURLArgumentsForGitPhpDiff() {
+        $old_src  = $_GET['h'];
+        $old_dest = $_GET['hp'];
+
+        $_GET['h']  = $old_dest;
+        $_GET['hp'] = $old_src;
     }
 
     /**
