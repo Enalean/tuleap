@@ -127,24 +127,36 @@ function plugin_forumml_show_search_results($p,$result,$group_id,$list_id) {
 }
 
 // List all threads
-function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
+function plugin_forumml_show_all_threads($p, $list_id, $list_name, $offset) {
 	
-	$chunks = 30;
-	$request =& HTTPRequest::instance();
+    $chunks = 30;
+    $request =& HTTPRequest::instance();
 
     // all threads
-    $sql = 'SELECT SQL_CALC_FOUND_ROWS m.id_message, m.last_thread_update, mh_d.value as date, mh_f.value as sender, mh_s.value as subject'.
+    $sql = 'SELECT SQL_CALC_FOUND_ROWS 
+                m.id_message,
+                m.last_thread_update, 
+                mh_d.value as date, 
+                mh_f.value as sender, 
+                mh_s.value as subject'.
         ' FROM plugin_forumml_message m'.
-        ' LEFT JOIN plugin_forumml_messageheader mh_d ON (mh_d.id_message = m.id_message AND mh_d.id_header = '.FORUMML_DATE.')'.
-        ' LEFT JOIN plugin_forumml_messageheader mh_f ON (mh_f.id_message = m.id_message AND mh_f.id_header = '.FORUMML_FROM.') '.
-        ' LEFT JOIN plugin_forumml_messageheader mh_s ON (mh_s.id_message = m.id_message AND mh_s.id_header = '.FORUMML_SUBJECT.') '.
-        ' WHERE m.id_parent = 0'.
+        ' LEFT JOIN plugin_forumml_messageheader mh_d 
+            ON (mh_d.id_message = m.id_message AND mh_d.id_header = '.FORUMML_DATE.')'.
+        ' LEFT JOIN plugin_forumml_messageheader mh_f 
+            ON (mh_f.id_message = m.id_message AND mh_f.id_header = '.FORUMML_FROM.') '.
+        ' LEFT JOIN plugin_forumml_messageheader mh_s 
+            ON (mh_s.id_message = m.id_message AND mh_s.id_header = '.FORUMML_SUBJECT.') '.
+        ' WHERE (m.id_parent = 0 OR'.
+            "  m.id_parent NOT IN (
+                SELECT id_message FROM plugin_forumml_message 
+                WHERE id_list = " . db_ei($list_id) . ")
+                    )" .
         ' AND id_list = '.db_ei($list_id).
         ' ORDER BY last_thread_update DESC'.
         ' LIMIT '.db_ei($offset).', '.db_ei($chunks);
     $result     = db_query($sql);
     $nbRowFound = db_numrows($result);
-
+    
     // Total number of threads
     $nbThreads = 0;
     $sql = 'SELECT FOUND_ROWS() as nb';
@@ -199,7 +211,6 @@ function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
 					</td>														
 				</tr>	
 			</table>";
-
     if ($nbRowFound > 0) {
 	
         echo "<table class='border' width='100%' border='0'>
@@ -213,6 +224,7 @@ function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
 
         $hp =& ForumML_HTMLPurifier::instance();
         $i = 0;
+
         while (($msg = db_fetch_array($result))) {
             $i++;
             if ($i % 2 == 0) {
@@ -225,8 +237,9 @@ function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
 
             // Get the number of messages in thread
             // nb of children + message
-            $count = 1 + plugin_forumml_nb_children(array($msg['id_message']));
+            $count = 1 + plugin_forumml_nb_children(array($msg['id_message']), $list_id);
 
+            
 
             // all threads
             print "<tr class='".$class."'><a name='".$msg['id_message']."'></a>
@@ -275,13 +288,15 @@ function plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset) {
  
 }
 
-function plugin_forumml_nb_children($parents) {
+function plugin_forumml_nb_children($parents, $list_id) {
     if (count($parents) == 0) {
         return 0;
     } else {
+        $list_id = db_ei($list_id);
         $sql = 'SELECT id_message'.
             ' FROM plugin_forumml_message m'.
-            ' WHERE m.id_parent IN ('.implode(',', $parents).')';
+            ' WHERE m.id_parent IN ('.implode(',', $parents).')
+                AND id_list = ' . $list_id;
         //echo $sql.'<br>';
         $result = db_query($sql);
         if ($result && !db_error($result)) {
@@ -289,8 +304,9 @@ function plugin_forumml_nb_children($parents) {
             while (($row = db_fetch_array($result))) {
                 $p[] = $row['id_message'];
             }
+
             $num = db_numrows($result);
-            return $num + plugin_forumml_nb_children($p);
+            return $num + plugin_forumml_nb_children($p, $list_id);
         }
     }
 }
@@ -358,7 +374,7 @@ function plugin_forumml_insert_msg_attach(&$thread, $result) {
  *
  * @see plugin_forumml_build_flattened_thread
  */
-function plugin_forumml_build_flattened_thread_children(&$thread, $parents) {
+function plugin_forumml_build_flattened_thread_children(&$thread, $parents, $list_id) {
     if (count($parents) > 0) {
         $sql = 'SELECT m.*, mh_d.value as date, mh_f.value as sender, mh_s.value as subject, mh_ct.value as content_type, mh_cc.value as cc, a.id_attachment, a.file_name, a.file_type, a.file_size, a.file_path, a.content_id'.
             ' FROM plugin_forumml_message m'.
@@ -368,12 +384,14 @@ function plugin_forumml_build_flattened_thread_children(&$thread, $parents) {
             ' LEFT JOIN plugin_forumml_messageheader mh_ct ON (mh_ct.id_message = m.id_message AND mh_ct.id_header = '.FORUMML_CONTENT_TYPE.') '.
             ' LEFT JOIN plugin_forumml_messageheader mh_cc ON (mh_cc.id_message = m.id_message AND mh_cc.id_header = '.FORUMML_CC.') '.
             ' LEFT JOIN plugin_forumml_attachment a ON (a.id_message = m.id_message AND a.content_id = "")'.
-            ' WHERE m.id_parent IN ('.implode(',', $parents).')';
+            ' WHERE 
+                m.id_parent IN ('.implode(',', $parents).')' . 
+                "AND m.id_list = " . db_ei($list_id);
         //echo $sql.'<br>';
         $result = db_query($sql);
         if ($result && !db_error($result)) {
             $p = plugin_forumml_insert_msg_attach($thread, $result);
-            plugin_forumml_build_flattened_thread_children($thread, $p);
+            plugin_forumml_build_flattened_thread_children($thread, $p, $list_id);
         }
     }
 }
@@ -404,22 +422,40 @@ function plugin_forumml_build_flattened_thread_children(&$thread, $parents) {
  * );
  * 
  */
-function plugin_forumml_build_flattened_thread($topic) {
+function plugin_forumml_build_flattened_thread($topic, $list_id) {
     $thread = array();
-    $sql = 'SELECT m.*, mh_d.value as date, mh_f.value as sender, mh_s.value as subject, mh_ct.value as content_type, mh_cc.value as cc, a.id_attachment, a.file_name, a.file_type, a.file_size, a.file_path, a.content_id'.
+    $sql = 'SELECT 
+                m.*,
+                mh_d.value AS date, 
+                mh_f.value AS sender, 
+                mh_s.value AS subject, 
+                mh_ct.value AS content_type, 
+                mh_cc.value AS cc, 
+                a.id_attachment, 
+                a.file_name, 
+                a.file_type, 
+                a.file_size, 
+                a.file_path, 
+                a.content_id'.
         ' FROM plugin_forumml_message m'.
-        ' LEFT JOIN plugin_forumml_messageheader mh_d ON (mh_d.id_message = m.id_message AND mh_d.id_header = '.FORUMML_DATE.')'.
-        ' LEFT JOIN plugin_forumml_messageheader mh_f ON (mh_f.id_message = m.id_message AND mh_f.id_header = '.FORUMML_FROM.')'.
-        ' LEFT JOIN plugin_forumml_messageheader mh_s ON (mh_s.id_message = m.id_message AND mh_s.id_header = '.FORUMML_SUBJECT.')'.
-        ' LEFT JOIN plugin_forumml_messageheader mh_ct ON (mh_ct.id_message = m.id_message AND mh_ct.id_header = '.FORUMML_CONTENT_TYPE.')'.
-        ' LEFT JOIN plugin_forumml_messageheader mh_cc ON (mh_cc.id_message = m.id_message AND mh_cc.id_header = '.FORUMML_CC.')'.
-        ' LEFT JOIN plugin_forumml_attachment a ON (a.id_message = m.id_message AND a.content_id = "")'.
+        ' LEFT JOIN plugin_forumml_messageheader mh_d 
+            ON (mh_d.id_message = m.id_message AND mh_d.id_header = '.FORUMML_DATE.')'.
+        ' LEFT JOIN plugin_forumml_messageheader mh_f 
+            ON (mh_f.id_message = m.id_message AND mh_f.id_header = '.FORUMML_FROM.')'.
+        ' LEFT JOIN plugin_forumml_messageheader mh_s 
+            ON (mh_s.id_message = m.id_message AND mh_s.id_header = '.FORUMML_SUBJECT.')'.
+        ' LEFT JOIN plugin_forumml_messageheader mh_ct 
+            ON (mh_ct.id_message = m.id_message AND mh_ct.id_header = '.FORUMML_CONTENT_TYPE.')'.
+        ' LEFT JOIN plugin_forumml_messageheader mh_cc 
+            ON (mh_cc.id_message = m.id_message AND mh_cc.id_header = '.FORUMML_CC.')'.
+        ' LEFT JOIN plugin_forumml_attachment a 
+            ON (a.id_message = m.id_message AND a.content_id = "")'.
         ' WHERE m.id_message = '.db_ei($topic);
     //echo $sql.'<br>';
     $result = db_query($sql);
     if ($result && !db_error($result)) {
         $p = plugin_forumml_insert_msg_attach($thread, $result);
-        plugin_forumml_build_flattened_thread_children($thread, $p);
+        plugin_forumml_build_flattened_thread_children($thread, $p, $list_id);
     }
     ksort($thread, SORT_NUMERIC);
     return $thread;
@@ -428,7 +464,7 @@ function plugin_forumml_build_flattened_thread($topic) {
 // List all messages inside a thread
 function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache) {
     $hp     = ForumML_HTMLPurifier::instance();
-    $thread = plugin_forumml_build_flattened_thread($parentId);
+    $thread = plugin_forumml_build_flattened_thread($parentId, $list_id);
     foreach ($thread as $message) {
         plugin_forumml_show_message($p, $hp, $message, $parentId, $purgeCache);
     }
