@@ -1,3 +1,10 @@
+Version 5.52 - Tuleap 5.8
+    * Apply global validation rules on
+* CSV Import
+* SOAP create/update artifact
+* Tracker clone
+* XML Import/Export
+
 Version 5.51 - Tuleap 5.8
     * Fix bugs #1905: soap criteria for list fields are not consistance with what is returned getArtifacts
 
