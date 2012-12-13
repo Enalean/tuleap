@@ -233,6 +233,9 @@ class Tracker_FileInfo {
             $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
             $store       = 'imagepng';
             break;
+        default:
+            // Not an image, exit;
+            return false;
         }
         imagecopyresized($destination, $source, 0, 0, 0, 0, (int)$thumbnail_width, (int)$thumbnail_height, $size[0], $size[1]);
         $store($destination, $this->getThumbnailPath());
