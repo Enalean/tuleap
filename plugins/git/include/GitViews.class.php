@@ -26,6 +26,7 @@ require_once GIT_BASE_DIR .'/Git_LogDao.class.php';
 require_once GIT_BASE_DIR .'/GitBackend.class.php';
 require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Selectbox.class.php';
 require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
+require_once GIT_BASE_DIR .'/GitForkPermissionsManager.class.php';
 require_once 'www/project/admin/permissions.php';
 require_once 'common/include/CSRFSynchronizerToken.class.php';
 require_once 'GitViews/RepoManagement/RepoManagement.class.php';
@@ -523,8 +524,8 @@ class GitViews extends PluginViews {
         echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$purifier->purify($params['namespace']).'" />';
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
         if (!empty($repository)) {
-            $accessControl = new GitViews_RepoManagement_Pane_AccessControl($repository, $request);
-            echo $accessControl->getHeadlessAccessControl($groupId);
+            $forkPermissionsManager = new GitForkPermissionsManager($repository);
+            echo $forkPermissionsManager->getHeadlessAccessControl($groupId);
         }
         echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
         echo '</form>';
@@ -549,7 +550,7 @@ class GitViews extends PluginViews {
         }
         return $html;
     }
-    
+
     public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
