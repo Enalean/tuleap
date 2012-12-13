@@ -142,7 +142,8 @@ class TransitionFactory {
      * @return bool
      */
     public function isFieldUsedInTransitions(Tracker_FormElement_Field $field) {
-        return $this->getPostActionFactory()->isFieldUsedInPostActions($field);
+        return $this->getPostActionFactory()->isFieldUsedInPostActions($field)
+            || $this->condition_factory->isFieldUsedInConditions($field);
     }
 
     /**

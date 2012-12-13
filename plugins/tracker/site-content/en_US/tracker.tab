@@ -1212,6 +1212,7 @@ plugin_tracker_admin_import	unable_to_open_file	Unable to open file $1
 plugin_tracker_admin_import	file_not_found	File not found
 plugin_tracker_admin_import	missing_required_field	Missing required field: $1
 plugin_tracker_admin_import	missing_required_field_value	Missing value on a required field: $1
+plugin_tracker_admin_import	missing_field_value	Missing field in data: 
 plugin_tracker_admin_import	aid_does_not_exist	Artifact Id $1 does not exist
 plugin_tracker_admin_import	field_not_taken_account	The field "$1" will not be taken into account.
 plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created
@@ -1309,10 +1310,11 @@ workflow_admin	title	Workflow Administration
 workflow_admin	transitions_deactivated	Transition rules don't apply yet
 workflow_admin	same_field	The two fields must be different
 workflow_admin	deleted_rules	Rule(s) successfully deleted
+workflow_admin	updated_rules	Rule(s) successfully updated
 workflow_admin	created_rule	Rule successfully created
 workflow_admin	title_define_global_date_rules	Define global date rules
 workflow_admin	hint_date_rules_definition	Those rules will be applied on each creation/update of artifacts.
-workflow_admin	add_new_rule	Add a new rule:
+workflow_admin	add_new_rule	Add a new rule
 workflow_admin	title_define_transitions	Define the transitions
 workflow_admin	tab_global_rules	Global Rules
 workflow_admin	tab_transitions	Transitions
@@ -1352,8 +1354,8 @@ workflow_admin	post_action_not_defined	This action will be inactive until it is 
 workflow_admin	the_field	The field
 workflow_admin	field_not_empty	must not be empty
 
-workflow_postaction	field_value_set	The field '$1' has been automatically set to $2
-workflow_postaction	field_clear	The field '$1' has been automatically cleared
+workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
+workflow_postaction	field_clear	The field '$1' will be automatically cleared
 
 workflow_condition	invalid_condition	Invalid condition: the field '$1'must not be empty
 

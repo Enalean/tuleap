@@ -18,6 +18,7 @@
  */
 require_once 'common/soap/SOAP_UserManager.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/NoChangeException.class.php';
 
 //define fault code constants
 define ('get_group_fault', '3000');
@@ -375,7 +376,7 @@ class Tracker_SOAPServer {
             if ($GLOBALS['Response']->feedbackHasErrors()) {
                 return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'addArtifact');
             } else {
-                return new SoapFault(update_artifact_fault, 'Unknown error', 'addArtifact');
+                return new SoapFault(update_artifact_fault, 'Unknown error(s)', 'addArtifact');
             }
         }
     }
@@ -421,7 +422,6 @@ class Tracker_SOAPServer {
             foreach ($value as $field_value) {
                 // field are identified by name, we need to retrieve the field id
                 if ($field_value->field_name) {
-
                     $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
                     if ($field) {
 
@@ -444,17 +444,22 @@ class Tracker_SOAPServer {
                     }
                 }
             }
-
-            if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
+            
+            try {
+                $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
-            } else {
-                $response = new Response();
-                if ($response->feedbackHasErrors()) {
-                    return new SoapFault(update_artifact_fault, $response->getRawFeedback(), 'updateArtifact');
-                } else {
-                    return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
-                }
+            } catch (Tracker_NoChangeException $e) {
+                return $artifact_id;
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             }
+
+            if ($GLOBALS['Response']) {
+                return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
+            } else {
+                return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
+            }
+
         } else {
             return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
         }

@@ -96,7 +96,8 @@ abstract class Transition_PostAction {
      * @return void
      */
     protected function addFeedback($level, $pagename, $category, $args) {
-        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText($pagename, $category, $args));
+        $feedback = $GLOBALS['Language']->getText($pagename, $category, $args);
+        $GLOBALS['Response']->addUniqueFeedback($level, $feedback);
     }
     
     /**

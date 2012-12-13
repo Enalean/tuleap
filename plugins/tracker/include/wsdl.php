@@ -385,6 +385,45 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
+    'TrackerWorkflowRuleList',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'source_field_id' => array('name'=>'source_field_id', 'type' => 'xsd:int'),
+        'target_field_id' => array('name'=>'target_field_id', 'type' => 'xsd:int'),
+        'source_value_id' => array('name'=>'source_value_id', 'type' => 'xsd:int'),
+        'target_value_id' => array('name'=>'target_value_id', 'type' => 'xsd:int'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerWorkflowRuleDate',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'source_field_id' => array('name'=>'source_field_id', 'type' => 'xsd:int'),
+        'target_field_id' => array('name'=>'target_field_id', 'type' => 'xsd:int'),
+        'comparator' => array('name'=>'comparator', 'type' => 'xsd:string'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerWorkflowRules',
+    'complexType',
+    'struct',
+    'choice',
+    '',
+    array(
+        'date' => array('type' => 'tns:TrackerWorkflowRuleDateArray'),
+        'list' => array('type' => 'tns:TrackerWorkflowRuleListArray'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
     'TrackerWorkflowTransitionArray',
     'complexType',
     'array',
@@ -392,6 +431,28 @@ $GLOBALS['server']->wsdl->addComplexType(
     'SOAP-ENC:Array',
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerWorkflowTransition[]')),
+    'tns:TrackerWorkflowTransition'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerWorkflowRuleDateArray',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerWorkflowRuleDate[]')),
+    'tns:TrackerWorkflowTransition'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerWorkflowRuleListArray',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerWorkflowRuleList[]')),
     'tns:TrackerWorkflowTransition'
 );
 
@@ -404,6 +465,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(
         'field_id'    => array('name'=>'field_id', 'type' => 'xsd:int'),
         'is_used'     => array('name'=>'is_used', 'type' => 'xsd:int'),
+        'rules'       => array('name'=>'transitions', 'type' => 'tns:TrackerWorkflowRuleArray'),
         'transitions' => array('name'=>'transitions', 'type' => 'tns:TrackerWorkflowTransitionArray'),
     )
 );

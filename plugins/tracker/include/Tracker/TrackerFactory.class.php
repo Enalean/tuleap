@@ -207,18 +207,12 @@ class TrackerFactory {
                 'status' => '',
                 'deletion_date' => '');
         $row['allow_copy'] = isset($att['allow_copy']) ?
-                (int)$att['allow_copy'] : 0;
+                (int) $att['allow_copy'] : 0;
         $row['instantiate_for_new_projects'] = isset($att['instantiate_for_new_projects']) ?
-                (int)$att['instantiate_for_new_projects'] : 0;
+                (int) $att['instantiate_for_new_projects'] : 0;
         $row['stop_notification'] = isset($att['stop_notification']) ?
-                (int)$att['stop_notification'] : 0;
-        // in case old id values are important modify code here
-        if (false) {
-            foreach ($xml->attributes() as $key => $value) {
-                // ! group_id and item_name will be changed to the old value
-                $row[$key] = (int)$value;
-            }
-        }
+                (int) $att['stop_notification'] : 0;
+
         $tracker = $this->getInstanceFromRow($row);
         // set canned responses
         foreach ($xml->cannedResponses->cannedResponse as $index => $response) {
@@ -237,10 +231,44 @@ class TrackerFactory {
                 $tracker->semantics[] = $this->getSemanticFactory()->getInstanceFromXML($semantic, $xmlMapping, $tracker);
             }
         }
+        
+        /*
+         * Legacy compatibility
+         * 
+         * All new Tuleap versions will not export dependencies but rules instead.
+         * However, we still want to be able to import old xml files.
+         * 
+         * SimpleXML does not allow for nodes to be moved so have to recursively 
+         * generate rules from the dependencies data.
+         */
+         if (isset($xml->dependencies)) {
+             $list_rules = null;
+             
+            if(! isset($xml->rules)) {
+                $list_rules = $xml->addChild('rules')->addChild('list_rules');    
+            } elseif (! isset($xml->rules->list_rules)) {
+                $list_rules = $xml->rules->addChild('list_rules', $xml->dependencies);    
+            } 
+             
+            if($list_rules !== null) {
+                foreach ($xml->dependencies->rule as $old_rule) {
+                    $source_field_attributes = $old_rule->source_field->attributes();
+                    $target_field_attributes = $old_rule->target_field->attributes();
+                    $source_value_attributes = $old_rule->source_value->attributes();
+                    $target_value_attributes = $old_rule->target_value->attributes();
 
-        //set field dependencies
-        if (isset($xml->dependencies)) {
-            $tracker->dependencies = $this->getRuleFactory()->getInstanceFromXML($xml->dependencies, $xmlMapping, $tracker);
+                    $new_rule = $list_rules->addChild('rule', $old_rule);
+                    $new_rule->addChild('source_field')->addAttribute('REF', $source_field_attributes['REF']);
+                    $new_rule->addChild('target_field')->addAttribute('REF', $target_field_attributes['REF']);
+                    $new_rule->addChild('source_value')->addAttribute('REF', $source_value_attributes['REF']);
+                    $new_rule->addChild('target_value')->addAttribute('REF', $target_value_attributes['REF']);
+                }
+            }
+        }
+
+        //set field rules
+        if (isset($xml->rules)) {
+            $tracker->rules = $this->getRuleFactory()->getInstanceFromXML($xml->rules, $xmlMapping, $tracker);
         }
 
         // set report
@@ -568,18 +596,39 @@ class TrackerFactory {
      * - the hierarchy
      * - the shared fields
      * - etc.
+     * 
+     * @param int $from_project_id 
+     * @param int $to_project_id
+     * @param array $ugroup_mapping the ugroup mapping
      *
      */
     public function duplicate($from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_mapping = array();
         $field_mapping   = array();
 
-        foreach($this->getTrackersByGroupId($from_project_id) as $t) {
-            if ($t->mustBeInstantiatedForNewProjects()) {
-                list($tracker_mapping, $field_mapping) = $this->duplicateTracker($tracker_mapping, $field_mapping, $t, $from_project_id, $to_project_id, $ugroup_mapping);
+        foreach($this->getTrackersByGroupId($from_project_id) as $tracker) {
+            if ($tracker->mustBeInstantiatedForNewProjects()) {
+                list($tracker_mapping, $field_mapping) = $this->duplicateTracker(
+                        $tracker_mapping, 
+                        $field_mapping, 
+                        $tracker, 
+                        $from_project_id, 
+                        $to_project_id, 
+                        $ugroup_mapping
+                        );
+                /*
+                 * @todo
+                 * Unless there is some odd dependency on the last tracker meeting
+                 * the requirement of the if() condition then there should be a break here. 
+                 */
             }
         }
 
+        /*
+         * @todo
+         * $tracker_mapping has been defined as an array. Surely this should be
+         * if(! empty($tracker_mapping))
+         */
         if ($tracker_mapping) {
             $hierarchy_factory = $this->getHierarchyFactory();
             $hierarchy_factory->duplicate($tracker_mapping);
@@ -595,6 +644,16 @@ class TrackerFactory {
         ));
     }
 
+    /**
+     * 
+     * @param array $tracker_mapping
+     * @param array $field_mapping
+     * @param Tracker $tracker
+     * @param int $from_project_id
+     * @param int $to_project_id
+     * @param array $ugroup_mapping the ugroup mapping
+     * @return type
+     */
     private function duplicateTracker($tracker_mapping, $field_mapping, $tracker, $from_project_id, $to_project_id, $ugroup_mapping) {
         $tracker_and_field_mapping = $this->create($to_project_id,
                 $from_project_id,
@@ -752,6 +811,7 @@ class TrackerFactory {
                     echo implode(PHP_EOL, $output);
                     echo PHP_EOL;
                 }
+
             } else {
                 $tracker = $this->getInstanceFromXML($xml_element, $groupId, $name, $description, $itemname);
                 //Testing consistency of the imported tracker before updating database
@@ -768,6 +828,7 @@ class TrackerFactory {
                 }
             }
         }
+
         return $tracker;
     }
 
@@ -831,9 +892,9 @@ class TrackerFactory {
                     Tracker_SemanticFactory::instance()->saveObject($semantic, $trackerDB);
                 }
             }
-            //create dependencies
-            if (isset($tracker->dependencies)) {
-                $this->getRuleFactory()->saveObject($tracker->dependencies, $trackerDB);
+            //create rules
+            if (isset($tracker->rules)) {
+                $this->getRuleFactory()->saveObject($tracker->rules, $trackerDB);
             }
             //create workflow
             if (isset($tracker->workflow)) {

@@ -142,6 +142,12 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $this->assertNull($f->getFieldData('03-04-2010'));
     }
     
+    function testGetFieldDataAsTimestamp() {
+        $f = new Tracker_FormElement_Field_DateTestVersion();
+        $this->assertEqual('2010-04-30', $f->getFieldData((string)mktime(5,3,2,4,30,2010)));
+        $this->assertNull($f->getFieldData('1.5'));
+    }
+
     function testGetFieldDataForCSVPreview() {
         $f = new Tracker_FormElement_Field_DateTestVersion();
         $f->setReturnValueAt(0, '_getUserCSVDateFormat', 'day_month_year');

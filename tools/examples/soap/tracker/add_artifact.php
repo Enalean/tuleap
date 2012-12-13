@@ -35,9 +35,21 @@ $project_id  = $argv[1];
 $tracker_id  = $argv[2];
 $value       = array(
     array(
-        'field_name' => 'name',
-        'field_label' => 'Name',
+        'field_name' => 'title',
+        'field_label' => 'title',
         'field_value' => $argv[3]
+    ),
+    
+    array(
+        'field_name' => 'start',
+        'field_label' => 'start',
+        'field_value' => date("Y-m-d")
+    ),
+    
+    array(
+        'field_name' => 'end',
+        'field_label' => 'end',
+        'field_value' => date("Y-m-d")
     )
 );
 

@@ -1,7 +1,7 @@
 <?php
 /* OBSOLETE 
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
-Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', '_getSelectedValuesForField'));
+Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('getRuleFactory', '_getSelectedValuesForField'));
 
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/List/List.class.php');
 Mock::generate('Tracker_Rule_List');
@@ -109,7 +109,7 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         $aff->setReturnReference('getFieldFromName', $f4, array('f_4'));
         
         $arm = new Tracker_RulesManagerTestVersion($this);
-        $arm->setReturnReference('_getTracker_RuleFactory', $arf);
+        $arm->setReturnReference('getRuleFactory', $arf);
         $arm->setReturnValue('_getSelectedValuesForField', array('a_1'), array(null, 'F1', 'A1'));
         $arm->setReturnValue('_getSelectedValuesForField', array('a_2'), array(null, 'F1', 'A2'));
         $arm->setReturnValue('_getSelectedValuesForField', array('b_1'), array(null, 'F2', 'B1'));

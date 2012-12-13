@@ -46,17 +46,14 @@ class Tracker_Rule_Date extends Tracker_Rule {
         self::COMPARATOR_NOT_EQUALS,
     );
 
-    /**
-     *
-     * @var int
-     */
-    protected $source_field_id;
-
-    /**
-     *
-     * @var int
-     */
-    protected $target_field_id;
+    /** @return mixed */
+    public function exportToSOAP() {
+        return array(
+            'source_field_id' => $this->getSourceFieldId(),
+            'target_field_id' => $this->getTargetFieldId(),
+            'comparator'      => $this->getComparator(),
+        );
+    }
 
     /**
      *
@@ -97,7 +94,7 @@ class Tracker_Rule_Date extends Tracker_Rule {
     public function validate($source_value, $target_value) {
         
         //if one of the value is empty then return true
-        if ($source_value === '' || $target_value === '') {
+        if ($source_value == null || $target_value == null) {
             return true;
         }
         
