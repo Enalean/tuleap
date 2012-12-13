@@ -80,33 +80,33 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
         $purgeCache = false;
     }
 	
-	// Checks 'list' parameter
-	$vList = new Valid_UInt('list');
-	$vList->required();
-	if (! $request->valid($vList)) {
-		exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
-	} else {
-		$list_id = $request->get('list');
-		$project = ProjectManager::instance()->getProject($group_id);
-		if (!$user->isMember($group_id) && 
-		    ($user->isRestricted() || !mail_is_list_public($list_id) || !$project->isPublic())
-		) {
-			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
-		}		
-		if (!mail_is_list_active($list_id)) {
-			exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','wrong_list'));
-		}
-	}
+    // Checks 'list' parameter
+    $vList = new Valid_UInt('list');
+    $vList->required();
+    if (! $request->valid($vList)) {
+            exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','specify_list'));
+    } else {
+            $list_id = $request->get('list');
+            $project = ProjectManager::instance()->getProject($group_id);
+            if (!$user->isMember($group_id) && 
+                ($user->isRestricted() || !mail_is_list_public($list_id) || !$project->isPublic())
+            ) {
+                    exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('include_exit','no_perm'));
+            }		
+            if (!mail_is_list_active($list_id)) {
+                    exit_error($GLOBALS["Language"]->getText('global','error'),$GLOBALS["Language"]->getText('plugin_forumml','wrong_list'));
+            }
+    }
 
-	// If the list is private, search if the current user is a member of that list. If not, permission denied
-	$list_name = mail_get_listname_from_list_id($list_id);
-	if (!mail_is_list_public($list_id)) {
- 		exec("{$GLOBALS['mailman_bin_dir']}/list_members ".$list_name,$members);
- 		$user = user_getemail(user_getid());
- 		if (! in_array($user,$members)) {
- 			exit_permission_denied();
- 		}
-	}
+    // If the list is private, search if the current user is a member of that list. If not, permission denied
+    $list_name = mail_get_listname_from_list_id($list_id);
+    if (!mail_is_list_public($list_id)) {
+            exec("{$GLOBALS['mailman_bin_dir']}/list_members ".$list_name,$members);
+            $user = user_getemail(user_getid());
+            if (! in_array($user,$members)) {
+                    exit_permission_denied();
+            }
+    }
 
 	// Build the mail to be sent
 	if ($request->exist('send_reply')) {
