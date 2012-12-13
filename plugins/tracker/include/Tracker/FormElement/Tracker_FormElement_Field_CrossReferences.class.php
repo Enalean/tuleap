@@ -403,7 +403,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
             $is_valid = false;
             $this->setHasErrors(true);
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_common_artifact', 'err_required', $this->getLabel(). ' ('. $this->getName() .')'));
-        } else if ($submitted_value !== null &&  ! $this->userCanUpdate()) {
+        } else if ($submitted_value !== null) {
             $is_valid = true;
             $GLOBALS['Response']->addFeedback('warning', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'field_not_taken_account', array($this->getName())));
         } 
