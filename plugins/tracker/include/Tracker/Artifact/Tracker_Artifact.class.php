@@ -1090,7 +1090,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required');
             throw new Tracker_Exception($message);
         }
-      
+
         if (! $this->validateFields($fields_data, false)) {
             $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid');
             throw new Tracker_Exception($message);

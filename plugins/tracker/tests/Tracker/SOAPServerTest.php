@@ -137,14 +137,11 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $artifact_5323 = anArtifact()->withId($this->private_artifact_id)->withTracker($this->private_unreadable_tracker)->withChangesets($changesets)->build();
         $artifact_9001 = anArtifact()->withId(9001)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
 
-        $changesets       = array(stub('Tracker_Artifact_Changeset')->getValues()->returns(array("title" => "title")));
-        $artifact_9999    = anArtifact()->withId(9999)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
-        /*
+        $changesets       = stub('Tracker_Artifact_Changeset')->getValues()->returns(array("title" => "title"));
         $artifact_9999    = mock('Tracker_Artifact');
         stub($artifact_9999)->getId()->returns(9999);
         stub($artifact_9999)->getTrackerId()->returns($this->tracker_id);
-        stub($artifact_9999)->getLastChangeset()->returns($changesets);*/
-    //    stub($artifact_9999)->validateNewChangeset()->returns(true);
+        stub($artifact_9999)->getLastChangeset()->returns($changesets);
 
         stub($artifact_factory)->getArtifactById(42)->returns($artifact_42);
         stub($artifact_factory)->getArtifactById(66)->returns($artifact_66);
@@ -166,9 +163,9 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($formelement_factory)->getFormElementByName($this->tracker_id, $this->int_field_name)->returns($integer_field);
 
         $field_title = mock('Tracker_FormElement_Field_Text');
-        stub($field_title)->getFieldData()->returns('titre');
+        stub($field_title)->getFieldDataFromSoapValue()->returns('titre');
 
-        stub($formelement_factory)->getUsedFieldByName()->returns($field_title);
+        stub($formelement_factory)->getUsedFieldByName($this->tracker_id, 'title')->returns($field_title);
     }
 
     private function setUpTrackers(TrackerFactory $tracker_factory, Project $project, Project $private_project) {
@@ -334,6 +331,21 @@ class Tracker_SOAPServer_updateArtifact_Test extends Tracker_SOAPServer_BaseTest
             '*'
         );
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
+    }
+
+    public function itReturnsTheArtifactIDWhenThereIsNoChangeOnUpdate() {
+        $title_update   = $this->convertCriteriaToSoapParameter(array(
+            array(
+                'field_name'  => 'title',
+                'field_label' => 'title',
+                'field_value' => 'titre',
+            )
+        ));
+        $comment        = NULL;
+        $comment_format = NULL;
+
+        $results = $this->server->updateArtifact($this->session_key, $this->project_id, $this->tracker_id, 9999, $title_update, $comment, $comment_format);
+        $this->assertEqual($results, 9999);
     }
 }
 
@@ -503,21 +515,6 @@ class Tracker_SOAPServer_getArtifacts_Test extends Tracker_SOAPServer_BaseTest {
                 $this->expected_artifact_66,
             )
         ));
-    }
-    
-    public function _itReturnsTheArtifactIDWhenThereIsNoChangeOnUpdate() {
-        $title_update   = $this->convertCriteriaToSoapParameter(array(
-            array(
-                'field_name'  => 'title',
-                'field_label' => 'title',
-                'field_value' => 'titre',
-            )
-        ));
-        $comment        = NULL;
-        $comment_format = NULL;
-        
-        $results = $this->server->updateArtifact($this->session_key, $this->project_id, $this->tracker_id, 9999, $title_update, $comment, $comment_format);
-        $this->assertEqual($results, 9999);
     }
 }
 

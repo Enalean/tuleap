@@ -554,7 +554,7 @@ class Tracker_SOAPServer {
                     $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 }
 
-                if ($GLOBALS['Response']) {
+                if ($GLOBALS['Response']->feedbackHasErrors()) {
                     return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
                 } else {
                     return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
