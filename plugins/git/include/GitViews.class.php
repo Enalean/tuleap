@@ -505,7 +505,7 @@ class GitViews extends PluginViews {
         $repositories    = explode(',', $params['repos']);
         foreach ($repositories as $repositoryId) {
             $repository       = $repoFactory->getRepositoryById($repositoryId);
-            $sourceReposHTML .= '"'.$repository->getFullName().'" ';
+            $sourceReposHTML .= '"'.$purifier->purify($repository->getFullName()).'" ';
         }
         $this->_getBreadCrumb();
         echo '<h2>'.$this->getText('fork_repositories').'</h2>';
