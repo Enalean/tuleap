@@ -333,6 +333,10 @@ class Tracker_SOAPServer {
     }
 
     private function checkUserCanViewArtifact(Tracker_Artifact $artifact, User $user) {
+        if (!$artifact->userCanView($user)) {
+            throw new SoapFault(get_artifact_fault, 'Permission Denied: you cannot access this artifact');
+        }
+
         $tracker = $artifact->getTracker();
         if (!$tracker) {
             throw new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
@@ -432,9 +436,8 @@ class Tracker_SOAPServer {
     public function addArtifact($session_key, $group_id, $tracker_id, $value) {
         try {
             $user = $this->soap_request_validator->continueSession($session_key);
-            $project = $this->getProjectById($group_id, 'addArtifact');
-            $this->checkUserCanAccessProject($user, $project);
             $tracker = $this->getTrackerById($group_id, $tracker_id, 'addArtifact');
+            $this->checkUserCanViewTracker($tracker, $user);
 
             $fields_data = array();
             foreach ($value as $field_value) {

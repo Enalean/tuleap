@@ -142,6 +142,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($artifact_9999)->getId()->returns(9999);
         stub($artifact_9999)->getTracker()->returns($this->tracker);
         stub($artifact_9999)->getTrackerId()->returns($this->tracker_id);
+        stub($artifact_9999)->userCanView()->returns(true);
         stub($artifact_9999)->getLastChangeset()->returns($changesets);
 
         stub($artifact_factory)->getArtifactById(42)->returns($artifact_42);
