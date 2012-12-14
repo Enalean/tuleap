@@ -66,6 +66,7 @@ class Tracker_FileInfo {
             'filename'     => $this->filename,
             'filesize'     => $this->filesize,
             'filetype'     => $this->filetype,
+            'action'       => '',
         );
     }
 

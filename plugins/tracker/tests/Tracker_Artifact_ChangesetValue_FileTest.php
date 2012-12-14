@@ -55,6 +55,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
                         'filename' => $filename,
                         'filesize' => $filesize,
                         'filetype' => $filetype,
+                        'action'   => '',
                     )
                 )
             )
@@ -138,6 +139,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
                         'filename' => $filename1,
                         'filesize' => $filesize,
                         'filetype' => $filetype,
+                        'action'   => '',
                     ),
                     array(
                         'id' => $attachment2_id,
@@ -146,6 +148,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
                         'filename' => $filename2,
                         'filesize' => $filesize,
                         'filetype' => $filetype,
+                        'action'   => '',
                     ),
                     array(
                         'id' => $attachment3_id,
@@ -154,6 +157,7 @@ class Tracker_Artifact_ChangesetValue_FileTest extends UnitTestCase {
                         'filename' => $filename3,
                         'filesize' => $filesize,
                         'filetype' => $filetype,
+                        'action'   => '',
                     )
                 )
             )
