@@ -25,9 +25,13 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      */
     private $gerrit_servers;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request, array $gerrit_servers) {
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers) {
         parent::__construct($repository, $request);
         $this->gerrit_servers = $gerrit_servers;
+        $this->driver         = $driver;
     }
 
     /**
@@ -58,9 +62,13 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html  = '';
         $html .= '<h3>'. $this->getTitle() .'</h3>';
         if ($this->repository->getRemoteServerId()) {
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_is_on') .' <code>';
-            $html .= $this->gerrit_servers[$this->repository->getRemoteServerId()]->getHost();
-            $html .= '</code>';
+            $link  = 'http://';
+            $link .= $this->gerrit_servers[$this->repository->getRemoteServerId()]->getHost();
+            $link .= '/#/admin/projects/';
+            $link .= $this->driver->getGerritProjectName($this->repository);
+
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_is_on');
+            $html .= '<br /><a href="'. $link .'">'. $link .'</a>';
         } else {
             $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
             $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';

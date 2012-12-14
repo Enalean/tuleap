@@ -189,7 +189,7 @@ class GitPlugin extends Plugin {
 
     public function process() {
         require_once('Git.class.php');
-        $controler = new Git($this, $this->getGerritServerFactory());
+        $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
         $controler->process();
     }
 
