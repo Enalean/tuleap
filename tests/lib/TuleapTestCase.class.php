@@ -30,6 +30,7 @@ Mock::generate('Layout');
 
 require_once dirname(__FILE__).'/../simpletest/common/user/UserTestBuilder.php';
 require_once dirname(__FILE__).'/../simpletest/common/include/builders/aRequest.php';
+require_once dirname(__FILE__).'/../simpletest/common/project/aMockProject.php';
 
 require_once 'MockBuilder.php';
 
@@ -39,12 +40,12 @@ require_once 'MockBuilder.php';
  * It typically setUp globals objects like Response and Language, common in all the platform.
  */
 abstract class TuleapTestCase extends UnitTestCase {
-    
+
     /**
      * @var Save/restore the GLOBALS
      */
     private $globals;
-    
+
     /**
      * SetUp a test (called before each test)
      */
@@ -57,7 +58,7 @@ abstract class TuleapTestCase extends UnitTestCase {
         $GLOBALS['HTML']     = new MockLayout();
         $GLOBALS['Response'] = $GLOBALS['HTML'];
     }
-    
+
     /**
      * tearDown a test (called after each test)
      */
@@ -69,6 +70,21 @@ abstract class TuleapTestCase extends UnitTestCase {
             $GLOBALS = $this->globals;
         }
     }
+
+    function getTests() {
+        $methods = array();
+        foreach (get_class_methods(get_class($this)) as $method) {
+            if ($this->_isTest($method)) {
+                $methods[] = $method;
+            }
+            if (strtolower(substr($method, 0, 8)) == '__only__') {
+                $methods = array($method);
+                break;
+            }
+        }
+        return $methods;
+    }
+
     /**
      *    Tests to see if the method is a test that should
      *    be run, override default by searching methods that starts with 'it'
@@ -83,7 +99,7 @@ abstract class TuleapTestCase extends UnitTestCase {
         }
         return parent::_isTest($method);
     }
-    
+
     function getLabel() {
         $label = parent::getLabel();
         return $this->cleanCamelCase($label);
@@ -105,29 +121,29 @@ abstract class TuleapTestCase extends UnitTestCase {
     function after($method) {
         parent::after($this->cleanCamelCase($method));
     }
-    
+
     function cleanCamelCase($textInCamelCase) {
         $return = preg_replace_callback('@(?<!=[A-Z])[A-Z]@', array($this, 'replaceCamelUpperCase'), $textInCamelCase);
         $return = str_replace('test ', '', $return);
         return '<strong>' . ucfirst($return) . '</strong> ('. $textInCamelCase .')';
     }
-    
+
     function replaceCamelUpperCase($match) {
         return ' '.strtolower($match[0]);
     }
-    
+
     public function expectRedirectTo($url) {
         $GLOBALS['Response']->expectOnce('redirect', array($url));
     }
-    
+
     public function expectFeedback($level, $message) {
         $GLOBALS['Response']->expectOnce('addFeedback', array($level, $message));
     }
-    
+
     protected function setText($text, $args) {
         $GLOBALS['Language']->setReturnValue('getText', $text, $args);
     }
-    
+
     protected function assertNotEmpty($string) {
         $this->assertTrue(is_string($string));
         return $this->assertNotNull($string) && $this->assertNotEqual($string, '');
@@ -136,7 +152,7 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertArrayNotEmpty($a) {
         $this->assertFalse(count($a) == 0, "expected array not to be empty, but it contains 0 elements");
     }
-   
+
     protected function assertArrayEmpty($a) {
         return $this->assertTrue(is_array($a), "expected an array, but '$a' is not an array") &&
                $this->assertTrue(empty($a), "expected array to be empty, but it contains ". count($a). " elements");
@@ -146,7 +162,7 @@ abstract class TuleapTestCase extends UnitTestCase {
         // What about trim() ?
         return $this->assertNotEmpty($string) && $this->assertNoPattern('/^[ ]+$/', $string);
     }
-    
+
     /**
      * assert that $substring is present $string
      * @param string $string
@@ -156,31 +172,31 @@ abstract class TuleapTestCase extends UnitTestCase {
     protected function assertStringContains($string, $substring) {
         return $this->assertPattern("/$substring/", $string);
     }
-    
+
     /**
      * assert that uri has the specified parameters, no matter the possition in the uri
      * @param type $uri
      * @param type $param
-     * @param type $value 
+     * @param type $value
      */
     protected function assertUriHasArgument($uri, $param, $value) {
         $query_string = parse_url($uri, PHP_URL_QUERY);
         parse_str($query_string, $args);
         return $this->assertTrue(isset($args[$param]) && $args[$param] == $value);
     }
-    
+
     /**
      * asserts that $string starts with the $start_sequence
      * @param type $string
-     * @param type $start_sequence 
+     * @param type $start_sequence
      */
     protected function assertStringBeginsWith($string, $start_sequence) {
         return $this->assertPattern("%^$start_sequence%", $string);
     }
-    
+
     /**
      * Passes if var is inside or equal to either of the two bounds
-     * 
+     *
      * @param type $var
      * @param type $lower_bound
      * @param type $higher_bound
@@ -192,7 +208,7 @@ abstract class TuleapTestCase extends UnitTestCase {
 
     /**
      * Asserts that an array has the expected number of items.
-     * 
+     *
      * @param array $array
      * @param int $expected_count
      */
@@ -200,5 +216,32 @@ abstract class TuleapTestCase extends UnitTestCase {
         return $this->assertEqual(count($array), $expected_count);
     }
 
+    /**
+     * Recursive rm function.
+     * see: http://us2.php.net/manual/en/function.rmdir.php#87385
+     * Note: the function will empty everything in the given directory but won't remove the directory itself
+     *
+     * @param string $mypath Path to the directory
+     *
+     * @return void
+     */
+    protected function recurseDeleteInDir($mypath) {
+        $mypath = rtrim($mypath, '/');
+        $d      = opendir($mypath);
+        while (($file = readdir($d)) !== false) {
+            if ($file != "." && $file != "..") {
+
+                $typepath = $mypath . "/" . $file ;
+
+                if ( is_dir($typepath) ) {
+                    $this->recurseDeleteInDir($typepath);
+                    rmdir($typepath);
+                } else {
+                    unlink($typepath);
+                }
+            }
+        }
+        closedir($d);
+    }
 }
 ?>

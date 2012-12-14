@@ -21,26 +21,28 @@
 
 // format : project_id  tracker_id  artifact_id value [comment]
 
-if ($argc < 4) {
-    die('Usage: ".$argv[0]." project_id  tracker_id  artifact_id value \n');
+if ($argc < 2) {
+    die('Usage: ".$argv[0]." artifact_id value \n');
 }
 
+$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
+$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
+$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
 
-$serverURL = 'http://sonde.cro.enalean.com';
 $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
 // Establish connection to the server
-$requesterSessionHash = $soapLogin->login('testman','testpwd')->session_hash;
+$requesterSessionHash = $soapLogin->login($login, $password)->session_hash;
 
 //save values
-$project_id  = $argv[1];
-$tracker_id  = $argv[2];
-$artifact_id = $argv[3];
+$project_id  = 0;
+$tracker_id  = 0;
+$artifact_id = $argv[1];
 $value       = array(
     array(
-        'field_name' => 'title',
+        'field_name' => 'summary',
         'field_label' => 'title',
-        'field_value' => $argv[4]
+        'field_value' => array('value' => $argv[2])
     )
 );
 

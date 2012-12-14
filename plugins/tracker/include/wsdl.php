@@ -99,6 +99,46 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
+    'FieldValueFileInfo',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'id'           => array('type' => 'xsd:string'),
+        'submitted_by' => array('type' => 'xsd:int'),
+        'description'  => array('type' => 'xsd:string'),
+        'filename'     => array('type' => 'xsd:string'),
+        'filesize'     => array('type' => 'xsd:int'),
+        'filetype'     => array('type' => 'xsd:string'),
+        'action'       => array('type' => 'xsd:string')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfFieldValueFileInfo',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:FieldValueFileInfo[]')),
+    'tns:FieldValueFileInfo'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'FieldValue',
+    'complexType',
+    'struct',
+    'choice',
+    '',
+    array(
+        'value'        => array('type' => 'xsd:string'),
+        'file_info'    => array('type' => 'tns:ArrayOfFieldValueFileInfo')
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
     'ArtifactFieldValue',
     'complexType',
     'struct',
@@ -107,7 +147,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(
         'field_name' => array('name' => 'field_name', 'type' => 'xsd:string'),
         'field_label' => array('name' => 'field_label', 'type' => 'xsd:string'),
-        'field_value' => array('name' => 'field_value', 'type' => 'xsd:string')
+        'field_value' => array('name' => 'field_value', 'type' => 'tns:FieldValue')
     )
 );
 
@@ -275,33 +315,6 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactFile[]')),
     'tns:ArtifactFile'
 );
-
-//$GLOBALS['server']->wsdl->addComplexType(
-//    'ArtifactHistory',
-//    'complexType',
-//    'struct',
-//    'sequence',
-//    '',
-//    array(
-//        'artifact_id' => array('name'=>'artifact_id', 'type' => 'xsd:int'),
-//        'changeset_id' => array('name'=>'changeset_id', 'type' => 'xsd:int'),
-//        'changes' => array('name'=>'changes', 'type' => 'tns:ArrayOfString'),
-//        'modification_by' => array('name'=>'modification_by', 'type' => 'xsd:string'),
-//        'date' => array('name'=>'date', 'type' => 'xsd:int'),
-//        'comment' => array('name'=>'comment', 'type' => 'tns:ArtifactFollowup')
-//    )
-//);
-//
-//$GLOBALS['server']->wsdl->addComplexType(
-//    'ArrayOfArtifactHistory',
-//    'complexType',
-//    'array',
-//    '',
-//    'SOAP-ENC:Array',
-//    array(),
-//    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactHistory[]')),
-//    'tns:ArtifactHistory'
-//);
 
 $GLOBALS['server']->wsdl->addComplexType(
     'ArrayOfInt',
@@ -481,9 +494,49 @@ $GLOBALS['server']->wsdl->addComplexType(
        'workflow' => array('name'=>'workflow', 'type' => 'tns:TrackerWorkflow')
     )
 );
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerReport',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'id'           => array('name'=>'id',          'type' => 'xsd:int'),
+        'name'         => array('name'=>'name',        'type' => 'xsd:string'),
+        'description'  => array('name'=>'description', 'type' => 'xsd:string'),
+        'user_id'      => array('name'=>'user_id',     'type' => 'xsd:int'),
+        'is_default'   => array('name'=>'is_default',  'type' => 'xsd:boolean'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfTrackerReport',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerReport[]')),
+    'tns:TrackerReport'
+);
+
 //
 // Function definition
 //
+
+$GLOBALS['server']->register(
+    'getVersion',
+    array(),
+    array('return'=>'xsd:float'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getVersion',
+    'rpc',
+    'encoded',
+    'Returns the version number of the SOAP API.
+     Changes are available in /plugins/tracker/soap/ChangeLog'
+);
+
 $GLOBALS['server']->register(
     'getTrackerList', // method name
     array('sessionKey'=>'xsd:string', // input parameters
@@ -591,6 +644,84 @@ $GLOBALS['server']->register(
 );
 
 $GLOBALS['server']->register(
+    'getArtifactsFromReport',
+    array('sessionKey' => 'xsd:string',
+          'report_id'  => 'xsd:int',
+          'offset'     => 'xsd:int',
+          'max_rows'   => 'xsd:int'
+    ),
+    array('return'=>'tns:ArtifactQueryResult'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getArtifactsFromReport',
+    'rpc',
+    'encoded',
+    'Execute a report and returns corresponding artifacts.'
+);
+
+$GLOBALS['server']->register(
+    'getArtifactAttachmentChunk',
+    array('sessionKey'=>'xsd:string',
+          'artifact_id'=>'xsd:int',
+          'attachment_id' => 'xsd:int',
+          'offset' => 'xsd:int', 
+          'size' => 'xsd:int',
+    ),
+    array('return'=>'xsd:string'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getArtifactAttachmentChunk',
+    'rpc',
+    'encoded',
+    'Return base64 encoded chunk of request file'
+);
+
+$GLOBALS['server']->register(
+    'createTemporaryAttachment',
+    array('sessionKey'=>'xsd:string'),
+    array('return'=>'xsd:string'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#createTemporaryAttachment',
+    'rpc',
+    'encoded',
+    '<pre>Provision an attachment for future upload
+
+This method is supposed to be run before "appendTemporaryAttachmentChunk" to
+allocate an file name on the server for upload before running "addArtifact" or
+"updateArtifact"
+
+Returns an attachment_name to be used with appendTemporaryAttachmentChunk.</pre>'
+);
+
+$GLOBALS['server']->register(
+    'appendTemporaryAttachmentChunk',
+    array('sessionKey'=>'xsd:string',
+          'attachment_name' => 'xsd:string',
+          'content' => 'xsd:string',
+    ),
+    array('return'=>'xsd:int'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#appendTemporaryAttachmentChunk',
+    'rpc',
+    'encoded',
+    '<pre>Appends file content chunk into selected attachment.
+
+attachment_name is generated by createTemporaryAttachment
+content must be base64 encoded
+
+Returns the number of written bytes on the file system.</pre>'
+);
+
+$GLOBALS['server']->register(
+    'purgeAllTemporaryAttachments',
+    array('sessionKey'=>'xsd:string'),
+    array('return'=>'xsd:boolean'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#purgeAllTemporaryAttachments',
+    'rpc',
+    'encoded',
+    'Remove all temporary attachment not yet attached to an artifact'
+);
+
+$GLOBALS['server']->register(
     'getTrackerStructure',
     array('sessionKey'=>'xsd:string',
           'group_id'=>'xsd:int',
@@ -604,19 +735,18 @@ $GLOBALS['server']->register(
     'Returns the tracker structure.'
 );
 
-/*$GLOBALS['server']->register(
-    'getArtifactHistory',
-    array('sessionKey' => 'xsd:string',
-        'group_id' => 'xsd:int',
-        'tracker_id' => 'xsd:int',
-        'artifact_id' => 'xsd:int'
+$GLOBALS['server']->register(
+    'getTrackerReports',
+    array('sessionKey'=>'xsd:string',
+          'group_id'=>'xsd:int',
+          'tracker_id'=>'xsd:int',
     ),
-    array('return'=>'tns:ArrayOfArtifactHistory'),
+    array('return'=>'tns:ArrayOfTrackerReport'),
     $GLOBALS['uri'],
-    $GLOBALS['uri'].'#getArtifactHistory',
+    $GLOBALS['uri'].'#getTrackerReports',
     'rpc',
     'encoded',
-    'Get the history of the artifact (the history of the fields values)'
-);*/
+    'Returns the reports the user can execute.'
+);
 
 ?>

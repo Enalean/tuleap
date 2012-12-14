@@ -22,7 +22,7 @@
 // format : project_id  tracker_id  artifact_id value [comment]
 
 if ($argc < 1) {
-    die('Usage: ".$argv[0]." artifact_id'.PHP_EOL);
+    die('Usage: ".$argv[0]." artifact_id attachement_id'.PHP_EOL);
 }
 
 $serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
@@ -35,16 +35,30 @@ $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL
 $requesterSessionHash = $soapLogin->login($login, $password)->session_hash;
 
 //save values
-$artifact_id = $argv[1];
+$artifact_id   = $argv[1];
+$attachment_id = $argv[2];
+$offset = 0;
+$size = 2000;
+$filename = 'unknown_file';
 
 // Connecting to the soap's tracker client
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
-var_dump($soapTracker->getVersion());
+// Brute force search of attachement name based on ID
+$artifact = $soapTracker->getArtifact($requesterSessionHash, '', '', $artifact_id);
+foreach ($artifact->value as $field_value) {
+    if (isset($field_value->field_value->file_info)) {
+        foreach ($field_value->field_value->file_info as $file_info) {
+            if ((int)$file_info->id == $attachment_id) {
+                $filename = (string)$file_info->filename;
+            }
+        }
+    }
+}
 
-$response = $soapTracker->getArtifact($requesterSessionHash, '', '', $artifact_id);
-
-
-var_dump($response);
+while($response = $soapTracker->getArtifactAttachmentChunk($requesterSessionHash, $artifact_id, $attachment_id, $offset, $size)) {
+    file_put_contents($filename, base64_decode($response), FILE_APPEND);
+    $offset += $size;
+}
 
 ?>

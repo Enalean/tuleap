@@ -19,40 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
-$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
-$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+$host     = getenv('TULEAP_SERVER')   ? getenv('TULEAP_SERVER')   : 'http://sonde.cro.enalean.com';
+$login    = getenv('TULEAP_USER')     ? getenv('TULEAP_USER')     : 'testman';
+$password = getenv('TULEAP_PASSWORD') ? getenv('TULEAP_PASSWORD') : 'testpwd';
 
-$project_id = 0; //not needed
-$tracker_id = 276;
+$report_id  = $argv[1];
 $offset     = 0;
-$limit      = 100;
-$criteria = array(
-//    array(
-//        'field_name' => 'description',
-//        'value' => array('value' => '/^(Choose|Integrate)/')
-//    ),
-//    array(
-//        'field_name' => 'submitted_on',
-//        'value' => array(
-//            'date' => array('op' => '>', 'to_date' => mktime(0,0,0,10,1,2012))
-//        )
-//    ),
-//    array(
-//        'field_name' => 'submitted_on',
-//        'value' => array(
-//            'dateAdvanced' => array(
-//                'from_date' => mktime(0, 0, 0, 8, 14, 2012),
-//                'to_date'   => mktime(0, 0, 0, 8, 20, 2012)
-//            )
-//        )
-//    ),
-    array(
-        'field_name' => 'status',
-        'value' => array('value' => '4746')
-    )
-);
-
+$limit = 10;
 $soap_options = array(
     'cache_wsdl' => WSDL_CACHE_NONE,
     'exceptions' => 1,
@@ -67,11 +40,9 @@ $session_hash = $client_login->login($login, $password)->session_hash;
 try {
     // Connecting to the soap's tracker api
     $client_tracker = new SoapClient($host_tracker, $soap_options);
-    $response = $client_tracker->getArtifacts(
+    $response = $client_tracker->getArtifactsFromReport(
         $session_hash,
-        $project_id,
-        $tracker_id,
-        $criteria,
+        $report_id,
         $offset,
         $limit
     );
@@ -98,4 +69,5 @@ try {
     echo "\n";
 }
 
+$client_login->logout($session_hash);
 ?>

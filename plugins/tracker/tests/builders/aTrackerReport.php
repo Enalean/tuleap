@@ -23,22 +23,20 @@
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
 
-require_once(dirname(__FILE__).'/../../include/Tracker/TrackerManager.class.php');
+require_once(dirname(__FILE__).'/../../include/constants.php');
+require_once(dirname(__FILE__).'/../../include/Tracker/Report/Tracker_Report.class.php');
 
-function aFieldListStaticValue() {
-    return new Test_Tracker_FormElement_Field_List_BindValue_Builder('Tracker_FormElement_Field_List_Bind_StaticValue');
+function aTrackerReport() {
+    return new Test_TrackerReport_Builder();
 }
 
-class Test_Tracker_FormElement_Field_List_BindValue_Builder {
-    private $name;
+class Test_TrackerReport_Builder {
     private $id;
-    private $label;
-    private $description;
-    private $rank;
-    private $is_hidden;
+    private $tracker;
+    private $name;
 
-    public function __construct($klass) {
-        $this->name = $klass;
+    public function __construct() {
+        $this->id = uniqid();
     }
 
     public function withId($id) {
@@ -46,18 +44,26 @@ class Test_Tracker_FormElement_Field_List_BindValue_Builder {
         return $this;
     }
 
-    public function withLabel($label) {
-        $this->label = $label;
+    public function withTracker(Tracker $tracker) {
+        $this->tracker = $tracker;
+        return $this;
+    }
+
+    public function withName($name) {
+        $this->name = $name;
         return $this;
     }
 
     /**
-     * @return Tracker_FormElement_Field_List_BindValue
+     * @return \Tracker_Report
      */
     public function build() {
-        $klass  = $this->name;
-        $object = new $klass($this->id, $this->label, $this->description, $this->rank, $this->is_hidden);
-        return $object;
+        $tracker_id = $description = $current_renderer_id = $parent_report_id = $user_id = $is_default = $is_query_displayed = $updated_by = $updated_at = null;
+        $report = new Tracker_Report($this->id, $this->name, $description, $current_renderer_id, $parent_report_id, $user_id, $is_default, $tracker_id, $is_query_displayed, $updated_by, $updated_at);
+        if ($this->tracker) {
+            $report->setTracker($this->tracker);
+        }
+        return $report;
     }
 }
 

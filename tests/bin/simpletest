@@ -45,10 +45,18 @@ if ($format == 'checkstyle') {
 array_shift($_SERVER['argv']);
 
 $suite = new TuleapTestSuite($_SERVER['argv']);
-$suite->run($reporter);
+$status = $suite->run($reporter);
 
 if ($format == 'checkstyle') {
     $reporter->writeXML('unit_tests_report.xml');
 }
+
+/* Un comment if you need return code (eg. git bisect usage). Today it breaks CI for no reason
+if ($status === false) {
+    exit(1);
+} else {
+    exit(0);
+}
+ */
 
 ?>

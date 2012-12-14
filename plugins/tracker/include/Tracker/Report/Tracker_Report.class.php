@@ -817,7 +817,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $this->tracker;
     }
-    
+
+    public function setTracker(Tracker $tracker) {
+        $this->tracker    = $tracker;
+        $this->tracker_id = $tracker->getId();
+    }
+
     /**
      * hide or show the criteria
      */
@@ -1331,7 +1336,22 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $renderer->exportToXML($grandchild, $xmlMapping);
         }
     }
-    
+
+    /**
+     * Convert the current report to its SOAP representation
+     *
+     * @return Array
+     */
+    public function exportToSoap() {
+        return array(
+            'id'          => (int)$this->id,
+            'name'        => (string)$this->name,
+            'description' => (string)$this->description,
+            'user_id'     => (int)$this->user_id,
+            'is_default'  => (bool)$this->is_default,
+        );
+    }
+
     protected $dao;
     /**
      * @return Tracker_ReportDao

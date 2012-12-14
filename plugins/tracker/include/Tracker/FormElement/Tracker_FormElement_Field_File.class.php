@@ -25,13 +25,12 @@ require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_File_Valu
 require_once('dao/Tracker_FormElement_Field_Value_FileDao.class.php');
 require_once(dirname(__FILE__).'/../dao/Tracker_FileInfoDao.class.php');
 require_once(dirname(__FILE__).'/../Tracker_FileInfo.class.php');
+require_once(dirname(__FILE__).'/../SOAP/TemporaryFile.class.php');
 require_once('common/valid/Rule.class.php');
 
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
-    
-    const THUMBNAILS_MAX_WIDTH  = 150;
-    const THUMBNAILS_MAX_HEIGHT = 112;
-    protected $supported_image_types = array('gif', 'png', 'jpeg', 'jpg');
+    const SOAP_FAKE_FILE = 'soapfakefile';
+    const SOAP_FAULT_INVALID_REQUEST_FORMAT = '3029';
     
     public function getCriteriaFrom($criteria) {
         //Only filter query if field  is used
@@ -471,7 +470,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     
     public function showAttachment($attachment_id) {
         if ($fileinfo = Tracker_FileInfo::instance($this, $attachment_id)) {
-            if (file_exists($fileinfo->getPath())) {
+            if ($fileinfo->fileExists()) {
                 $http = Codendi_HTTPPurifier::instance();
                 header('Content-Type: '.$http->purify($fileinfo->getFiletype()));
                 header('Content-Length: '.$http->purify($fileinfo->getFilesize()));
@@ -482,16 +481,11 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
         exit();
     }
-    
+
     public function getRootPath() {
         return Config::get('sys_data_dir') .'/tracker/'. $this->getId();
     }
-    
-    protected function isImage($value) {
-        $parts = split('/', $value['filetype']);
-        return $parts[0] == 'image' && in_array(strtolower($parts[1]), $this->supported_image_types);
-    }
-    
+
     /**
      * Display the html field in the admin ui
      *
@@ -744,23 +738,17 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         $r = new Rule_File();
         foreach ($value as $i => $file_info) {
             if ("$i" != 'delete' && $r->isValid($file_info)) {
-                if ($attachment = Tracker_FileInfo::create($this, $current_user->getId(), trim($file_info['description']), $file_info['name'], $file_info['size'], $file_info['type'])) {
-                    $path = $this->getRootPath();
-                    if (!is_dir($path .'/thumbnails')) {
-                        mkdir($path .'/thumbnails', 0777, true);
-                    }
-                    $filename = $path .'/'. $attachment->getId();
-                    if (move_uploaded_file($file_info['tmp_name'], $filename)) {
-                        $success[] = $attachment->getId();
-                        //If image, store thumbnails
-                        if ($attachment->isImage()) {
-                            $this->createThumbnail($attachment->getId(), $path, $filename);
-                        }
-                    } else {
-                        //Something goes wrong
-                        //delete the attachment
-                        $attachment->delete();
-                    }
+                $attachment = new Tracker_FileInfo(
+                    null,
+                    $this,
+                    $current_user->getId(),
+                    trim($file_info['description']),
+                    $file_info['name'],
+                    $file_info['size'],
+                    $file_info['type']
+                );
+                if ($this->createAttachment($attachment, $file_info)) {
+                    $success[] = $attachment->getId();
                 }
             }
         }
@@ -769,58 +757,40 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         }
         return $success;
     }
-    
-    /**
-     * Create a thumbnail of the image
-     * 
-     * @param integer $attachment_id The id of the attachment
-     * @param string  $path          The path of the thumbnail. Assume that the dir exists.
-     * @param string  $filename      The name of the file
-     *
-     * @return void
-     */
-    public function createThumbnail($attachment_id, $path, $filename) {
-        //
-        // All modifications to this script should be done in the migration script 125
-        //
-        $size = getimagesize($filename);
-        $thumbnail_width  = $size[0];
-        $thumbnail_height = $size[1];
-        if ($thumbnail_width > self::THUMBNAILS_MAX_WIDTH || $thumbnail_height > self::THUMBNAILS_MAX_HEIGHT) { 
-            if ($thumbnail_width / self::THUMBNAILS_MAX_WIDTH < $thumbnail_height / self::THUMBNAILS_MAX_HEIGHT) {
-                //keep the height
-                $thumbnail_width  = $thumbnail_width * self::THUMBNAILS_MAX_HEIGHT / $thumbnail_height;
-                $thumbnail_height = self::THUMBNAILS_MAX_HEIGHT;
-            } else {
-                //keep the width
-                $thumbnail_height = $thumbnail_height * self::THUMBNAILS_MAX_WIDTH / $thumbnail_width;
-                $thumbnail_width  = self::THUMBNAILS_MAX_WIDTH;
+
+    protected function createAttachment(Tracker_FileInfo $attachment, $file_info) {
+        if ($attachment->save()) {
+            $path = $this->getRootPath();
+            if (!is_dir($path .'/thumbnails')) {
+                mkdir($path .'/thumbnails', 0777, true);
             }
+            $filename = $path .'/'. $attachment->getId();
+
+            if(isset($file_info['id'])) {
+                $temporary = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $file_info['id']);
+
+                if (!$temporary->exists()) {
+                    $attachment->delete();
+                    return false;
+                }
+
+                return $this->moveAttachmentToFinalPlace($attachment, 'rename', $temporary->getPath());
+            }
+            return $this->moveAttachmentToFinalPlace($attachment, 'move_uploaded_file', $file_info['tmp_name']);
         }
-        switch ($size[2]) {
-        case IMAGETYPE_GIF:
-            $source      = imagecreatefromgif($filename);
-            $destination = imagecreate((int)$thumbnail_width, (int)$thumbnail_height);
-            imagepalettecopy($destination, $source);
-            $store       = 'imagegif';
-            break;
-        case IMAGETYPE_JPEG:
-            $source      = imagecreatefromjpeg($filename);
-            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
-            $store       = 'imagejpeg';
-            break;
-        case IMAGETYPE_PNG:
-            $source      = imagecreatefrompng($filename);
-            $destination = imagecreatetruecolor((int)$thumbnail_width, (int)$thumbnail_height);
-            $store       = 'imagepng';
-            break;
-        }
-        imagecopyresized($destination, $source, 0, 0, 0, 0, (int)$thumbnail_width, (int)$thumbnail_height, $size[0], $size[1]);
-        $store($destination, $path .'/thumbnails/'. $attachment_id);
-        imagedestroy($source);
-        imagedestroy($destination);
+        return false;
     }
-    
+
+    private function moveAttachmentToFinalPlace(Tracker_FileInfo $attachment, $method, $src_path) {
+        if ($method($src_path, $attachment->getPath())) {
+            $attachment->postUploadActions();
+            return true;
+        } else {
+            $attachment->delete();
+            return false;
+        }
+    }
+
     /**
      * Check if there are changes between old and new value for this field
      *
@@ -893,18 +863,22 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     public function getSoapAvailableValues() {
         return null;
     }
-    
+
     /**
-     * Get the field data for CSV import
+     * Override default value as it's not possible to import a file via CSV
      *
-     * @param string $data_cell the CSV field value (a date with the form dd/mm/YYYY or mm/dd/YYYY)
+     * @param type $csv_value
      *
-     * @return string the date with the form YYYY-mm-dd corresponding to the date $data_cell
+     * @return array
      */
-    public function getFieldDataForCSVPreview($data_cell) {
-        return $data_cell;
+    public function getFieldDataFromCSVValue($csv_value) {
+        return array();
     }
-    
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+        return $this->getFieldData($soap_value->field_value);
+    }
+
     /**
      * Get the field data for artifact submission
      *
@@ -913,8 +887,42 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return String the field data corresponding to the soap_value for artifact submision
      */
     public function getFieldData($soap_value) {
-        // files can't be imported. Always return an empty array
-        return array();
+        if (!($soap_value instanceof stdClass)) {
+            throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid submitted value for file field");
+        }
+        if (!isset($soap_value->file_info) || !is_array($soap_value->file_info)) {
+            throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "A File FieldValue must have a 'file_info' array (ArrayOfFieldValueFileInfo)");
+        }
+        $field_data = array();
+        foreach ($soap_value->file_info as $fileinfo) {
+            if (!($fileinfo instanceof stdClass)) {
+                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Fileinfo must be an array of FieldValueFileInfo");
+            }
+            if (!(isset($fileinfo->description) && isset($fileinfo->filename) && isset($fileinfo->filetype) && isset($fileinfo->filesize))) {
+                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Fileinfo must be an array of FieldValueFileInfo");
+            }
+            if (!(isset($fileinfo->id) && $fileinfo->id)) {
+                throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "FieldValueFileInfo must have an id of a temporary file");
+            }
+            if (isset($fileinfo->action) && $fileinfo->action == 'delete') {
+                $field_data['delete'][] = $fileinfo->id;
+            } else {
+                $temporary_file = new Tracker_SOAP_TemporaryFile($this->getCurrentUser(), $fileinfo->id);
+                if (!$temporary_file->exists()) {
+                    throw new SoapFault(self::SOAP_FAULT_INVALID_REQUEST_FORMAT, "Invalid FieldValueFileInfo->id, file doesn't exist");
+                }
+                $field_data[] = array(
+                    'id'          => $fileinfo->id,
+                    'description' => $fileinfo->description,
+                    'name'        => $fileinfo->filename,
+                    'type'        => $fileinfo->filetype,
+                    'size'        => $fileinfo->filesize,
+                    'error'       => UPLOAD_ERR_OK,
+                    'tmp_name'    => $temporary_file->getPath(),
+                );
+            }
+        }
+        return $field_data;
     }
 
     public function deleteChangesetValue($changeset_value_id) {

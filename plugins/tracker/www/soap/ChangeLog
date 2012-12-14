@@ -1,0 +1,17 @@
+2.0 - Tuleap 5.8
+    == /!\ Backward compatibility break /!\ ==
+    * On type ArtifactFieldValue field_value changes from 'string' to complex type
+      FieldValue
+      -> impacted methods getArtifact, getArtifacts, addArtifact, updateArtifact
+
+    == New behaviour ==
+    * addArtifact and updateArtifact can now create and delete file attachments.
+      See details in https://tuleap.net/wiki/index.php?pagename=HowToUseTuleapSoapApi&group_id=101
+
+    == New methods ==
+    * getTrackerReports
+    * getArtifactsFromReportId
+    * getArtifactAttachmentChunk
+    * createTemporaryAttachment
+    * appendTemporaryAttachmentChunk
+    * purgeAllTemporaryAttachments

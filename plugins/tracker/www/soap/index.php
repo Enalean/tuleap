@@ -58,18 +58,20 @@ if ($request->exist('wsdl')) {
 } else {
     require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
-    $server = new SoapServer($uri .'/?wsdl',
+    $formelement_factory = Tracker_FormElementFactory::instance();
+    $server = new SoapServer($uri.'/?wsdl',
                              array('cache_wsdl' => WSDL_CACHE_NONE));
 
     $server->setClass(
         'Tracker_SOAPServer',
-        new SOAP_UserManager(UserManager::instance()),
-        ProjectManager::instance(),
+        new SOAP_RequestValidator(ProjectManager::instance(), UserManager::instance()),
         TrackerFactory::instance(),
         PermissionsManager::instance(),
         new Tracker_ReportDao(),
-        Tracker_FormElementFactory::instance(),
-        Tracker_ArtifactFactory::instance()
+        $formelement_factory,
+        Tracker_ArtifactFactory::instance(),
+        Tracker_ReportFactory::instance(),
+        new Tracker_FileInfoFactory(new Tracker_FileInfoDao, $formelement_factory)
     );
     $server->handle();
 }
