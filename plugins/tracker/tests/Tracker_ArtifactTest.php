@@ -165,6 +165,8 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $this->field->setReturnValue('getLabel', 'Summary');
         $this->field->setReturnValue('getName', 'summary');
         $factory->setReturnValue('getUsedFields', array($this->field));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
+        
         $this->artifact = new Tracker_ArtifactTestVersion();
         $this->artifact->setReturnReference('getFormElementFactory', $factory);
         $this->artifact->setReturnReference('getTracker', $tracker);
@@ -175,7 +177,6 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $workflow->setReturnValue('validateGlobalRules', true);
 
         $this->artifact->setReturnReference('getWorkflow', $workflow);
-
         $this->artifact_update = new Tracker_ArtifactTestVersion();
         $this->artifact_update->setReturnReference('getFormElementFactory', $factory);
         $this->artifact_update->setReturnReference('getTracker', $tracker);
@@ -240,7 +241,7 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $field3->setReturnValue('getId', 103);
         $field3->setReturnValue('isValid', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
-
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
         $workflow = new MockWorkflow();
         $workflow->setReturnValue('validate', true);
         $workflow->setReturnValue('validateGlobalRules', true);
@@ -393,6 +394,7 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $field3->setReturnValue('userCanSubmit', true);
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
@@ -439,6 +441,7 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $field3->setReturnValue('userCanSubmit', true);
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
@@ -491,6 +494,7 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $field3->setReturnValue('userCanSubmit', true);
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset_value1 = new MockTracker_Artifact_ChangesetValue();
@@ -542,6 +546,7 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $field3->setReturnValue('userCanSubmit', true);
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
@@ -585,6 +590,7 @@ class Tracker_ArtifactTest extends TuleapTestCase {
         $field3->setReturnValue('userCanUpdate', true);
         $field3->setReturnValue('isValid', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $artifact = new Tracker_ArtifactTestVersion();
         $artifact->setReturnReference('getFormElementFactory', $factory);
@@ -652,6 +658,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $art_factory = new MockTracker_ArtifactFactory();
 
@@ -729,6 +736,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $art_factory = new MockTracker_ArtifactFactory();
 
@@ -795,6 +803,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
         $art_factory = new MockTracker_ArtifactFactory();
 
         $artifact = new Tracker_ArtifactTestVersion();
@@ -826,6 +835,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
 
         $tracker = new MockTracker();
         $factory = new MockTracker_FormElementFactory();
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $rules_manager = new MockTracker_RulesManager();
         $rules_manager->setReturnValue('validate', true);
@@ -852,6 +862,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $art_factory = new MockTracker_ArtifactFactory();
 
@@ -920,6 +931,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $workflow->setReturnValue('bypassPermissions', true, array($field2));
         $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', $user, true, true));
         $factory->setReturnValue('getUsedFields', array($field1, $field2));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $art_factory = new MockTracker_ArtifactFactory();
 
@@ -1005,6 +1017,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $workflow->setReturnValue('bypassPermissions', true, array($field2));
         $field2->expectOnce('saveNewChangeset', array('*', '*', '*', '*', $user, false, true));
         $factory->setReturnValue('getUsedFields', array($field1, $field2));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $new_changeset = new MockTracker_Artifact_Changeset();
         $new_changeset->expect('notify', array());
@@ -1098,6 +1111,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field3->expectOnce('saveNewChangeset');
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $new_changeset = new MockTracker_Artifact_Changeset();
         $new_changeset->expect('notify', array());
@@ -1185,7 +1199,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $tracker->setReturnValue('getFormElements', array());
 
         $factory = new MockTracker_FormElementFactory();
-
+        
         $rules_manager = new MockTracker_RulesManager();
         $rules_manager->setReturnValue('validate', true);
         $tracker->setReturnReference('getRulesManager', $rules_manager);
@@ -1207,6 +1221,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field3->expectNever('saveNewChangeset');
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $new_changeset = new MockTracker_Artifact_Changeset();
         $new_changeset->expectNever('notify');
@@ -1312,6 +1327,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field3->expectOnce('saveNewChangeset');
         $field3->setReturnValue('userCanUpdate', true);
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $new_changeset = new MockTracker_Artifact_Changeset();
         $new_changeset->expectNever('notify', array());
@@ -1410,6 +1426,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $field3->setReturnValue('userCanUpdate', true);
         $field3->expectNever('saveNewChangeset');
         $factory->setReturnValue('getUsedFields', array($field1, $field2, $field3));
+        $factory->setReturnValue('getAllFormElementsForTracker', array());
 
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('hasChanges', false);
