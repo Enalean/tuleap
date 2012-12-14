@@ -2,6 +2,7 @@ Version 5.8 (Not Released Yet)
 
    == Enhancement ==
 	* Tuleap can respond with several names
+	* Better documentation of SOAP API
 
    == Bug fix ==
 	* Use reliable method to detect if we are running in CLI
@@ -25,6 +26,7 @@ Version 5.8 (Not Released Yet)
 	* tests: 5.11
 	* tracker: 5.52
 	* tracker: 5.53
+	* tracker: 5.54
 
 Version 5.7 (Thursday, November 22nd 2012)
 
