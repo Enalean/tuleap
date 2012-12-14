@@ -209,13 +209,11 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function repoManagement($projectId, $repositoryId) {
-        $c = $this->getController();
-        if (empty($repositoryId)) {
-            $this->addError('actions_params_error');
-            return false;
+    public function repoManagement(GitRepository $repository) {
+        $this->addData(array('repository'=>$repository));
+        if ($this->systemEventManager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, $repository->getId())) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
         }
-        $this->_loadRepository($projectId, $repositoryId);
         $this->addData(array(
             'gerrit_servers' => $this->gerrit_server_factory->getServers(),
             'driver'         => $this->driver,

@@ -111,6 +111,7 @@ plugin_git	gerrit_url	Url du serveur gerrit
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
 plugin_git	gerrit_server_is_on	Ce dépot est hébergé sur le serveur suivant :
 plugin_git	permissions_on_remote_server	Vous ne pouvez pas modifier les permissions, car elles sont gérés sur un serveur distant
+plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes (ce message disparaitra une fois la conversion achevée).
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification

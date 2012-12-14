@@ -323,7 +323,8 @@ class Git extends PluginController {
                 break;
             #repo_management
             case 'repo_management':
-                $this->addAction('repoManagement', array($this->groupId, $repoId));
+                $repository = $this->factory->getRepositoryById($repoId);
+                $this->addAction('repoManagement', array($repository));
                 $this->addView('repoManagement');
                 break;
             case 'mail':
