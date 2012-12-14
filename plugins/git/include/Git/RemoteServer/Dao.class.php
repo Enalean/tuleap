@@ -33,14 +33,15 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-    public function save($id, $host, $port, $login, $identity_file) {
+    public function save($id, $host, $ssh_port, $http_port, $login, $identity_file) {
         $id            = $this->da->escapeInt($id);
         $host          = $this->da->quoteSmart($host);
-        $port          = $this->da->escapeInt($port);
+        $ssh_port      = $this->da->escapeInt($ssh_port);
+        $http_port     = $this->da->escapeInt($http_port);
         $login         = $this->da->quoteSmart($login);
         $identity_file = $this->da->quoteSmart($identity_file);
-        $sql = "REPLACE INTO plugin_git_remote_servers (id, host, port, login, identity_file)
-                VALUES ($id, $host, $port, $login, $identity_file)";
+        $sql = "REPLACE INTO plugin_git_remote_servers (id, host, ssh_port, http_port, login, identity_file)
+                VALUES ($id, $host, $ssh_port, $http_port, $login, $identity_file)";
         return $this->update($sql);
     }
 

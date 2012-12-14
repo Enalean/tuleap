@@ -85,7 +85,8 @@ class Git_Admin {
         $html .= '<dd>';
         $html .= '<table><tbody>';
         $fields = array(array('Host:',          'host',          $server->getHost()), 
-                        array('Port:',          'port',          $server->getPort()),
+                        array('HTTP Port:',     'http_port',     $server->getHTTPPort()),
+                        array('SSH Port:',      'ssh_port',      $server->getSSHPort()),
                         array('Login:',         'login',         $server->getLogin()),
                         array('Identity File:', 'identity_file', $server->getIdentityFile()));
         foreach ($fields as $field) {
@@ -104,7 +105,7 @@ class Git_Admin {
      */
     private function getGerritServers() {
         $servers = $this->gerrit_server_factory->getServers();
-        $servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '');
+        $servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '');
         return $servers;
     }
 
@@ -119,18 +120,21 @@ class Git_Admin {
             }
 
             $host          = isset($settings['host'])          ? $settings['host']          : '';
-            $port          = isset($settings['port'])          ? $settings['port']          : '';
+            $ssh_port      = isset($settings['ssh_port'])      ? $settings['ssh_port']      : '';
+            $http_port     = isset($settings['http_port'])     ? $settings['http_port']     : '';
             $login         = isset($settings['login'])         ? $settings['login']         : '';
             $identity_file = isset($settings['identity_file']) ? $settings['identity_file'] : '';
             if ($host &&
                 $host != $gerrit_servers[$id]->getHost() ||
-                $port != $gerrit_servers[$id]->getPort() ||
+                $ssh_port != $gerrit_servers[$id]->getSSHPort() ||
+                $http_port != $gerrit_servers[$id]->getHTTPPort() ||
                 $login != $gerrit_servers[$id]->getLogin() ||
                 $identity_file != $gerrit_servers[$id]->getIdentityFile()
             ) {
                 $gerrit_servers[$id]
                     ->setHost($host)
-                    ->setPort($port)
+                    ->setSSHPort($ssh_port)
+                    ->setHTTPPort($http_port)
                     ->setLogin($login)
                     ->setIdentityFile($identity_file);
                 $this->gerrit_server_factory->save($gerrit_servers[$id]);

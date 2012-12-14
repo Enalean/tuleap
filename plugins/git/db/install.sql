@@ -45,7 +45,8 @@ PRIMARY KEY (`job_id`));
 CREATE TABLE plugin_git_remote_servers (
     id INT(11) UNSIGNED NOT NULL auto_increment,
     host VARCHAR(255) NOT NULL,
-    port INT(11) UNSIGNED NOT NULL,
+    http_port INT(11) UNSIGNED NOT NULL,
+    ssh_port INT(11) UNSIGNED NOT NULL,
     login VARCHAR(255) NOT NULL,
     identity_file VARCHAR(255) NOT NULL,
 PRIMARY KEY (id));

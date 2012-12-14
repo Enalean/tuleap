@@ -34,7 +34,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     }
     
     public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd) {
-        $port          = $config->getPort();
+        $port          = $config->getSSHPort();
         $host          = $config->getHost();
         $login         = $config->getLogin();
         $identity_file = $config->getIdentityFile();

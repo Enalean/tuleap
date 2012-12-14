@@ -28,7 +28,9 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
     protected $host = 'gerrit.example.com';
 
-    protected $port = '29418';
+    protected $ssh_port = '29418';
+
+    protected $http_port = '80';
 
     protected $login = 'gerrit';
 
@@ -52,7 +54,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         $this->logger = mock('Logger');
 
         $this->ssh->__construct($this->logger);
-        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->port, $this->login, $this->identity_file);
+        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->ssh_port, $this->http_port, $this->login, $this->identity_file);
     }
 
     public function itExecutesTheCreateCommandOnTheRemoteServer() {
