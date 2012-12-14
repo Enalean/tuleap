@@ -25,6 +25,10 @@ require_once GIT_BASE_DIR . '/GitRepository.class.php';
 require_once 'UserFinder.class.php';
 
 class Git_Driver_Gerrit_ProjectCreator {
+    const GROUP_CONTRIBUTORS = 'contributors';
+    const GROUP_INTEGRATORS  = 'integrators';
+    const GROUP_SUPERMEN     = 'supermen';
+    const GROUP_OWNERS       = 'owners';
 
     /** @var Git_Driver_Gerrit */
     private $driver;
@@ -35,9 +39,10 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_UserFinder */
     private $user_finder;
 
-    private $gerrit_groups = array('contributors' => Git::PERM_READ,
-                                   'integrators'  => Git::PERM_WRITE,
-                                   'supermen'     => Git::PERM_WPLUS);
+    private $gerrit_groups = array(self::GROUP_CONTRIBUTORS => Git::PERM_READ,
+                                   self::GROUP_INTEGRATORS  => Git::PERM_WRITE,
+                                   self::GROUP_SUPERMEN     => Git::PERM_WPLUS,
+                                   self::GROUP_OWNERS       => Git::SPECIAL_PERM_ADMIN);
 
     
     public function __construct($dir, Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder) {
@@ -61,20 +66,22 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->initiatePermissions(
             $gerrit_server,
             $gerrit_server->getCloneSSHUrl($gerrit_project),
-            $gerrit_project.'-contributors',
-            $gerrit_project.'-integrators',
-            $gerrit_project.'-supermen'
+            $gerrit_project.'-'.self::GROUP_CONTRIBUTORS,
+            $gerrit_project.'-'.self::GROUP_INTEGRATORS,
+            $gerrit_project.'-'.self::GROUP_SUPERMEN,
+            $gerrit_project.'-'.self::GROUP_OWNERS
         );
         return $gerrit_project;
     }
 
-    private function initiatePermissions(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen) {
+    private function initiatePermissions(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners) {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         $this->addGroupToGroupFile($gerrit_server, $contributors);
         $this->addGroupToGroupFile($gerrit_server, $integrators);
         $this->addGroupToGroupFile($gerrit_server, $supermen);
+        $this->addGroupToGroupFile($gerrit_server, $owners);
         $this->addRegisteredUsersGroupToGroupFile();
-        $this->addPermissionsToProjectConf($contributors, $integrators, $supermen);
+        $this->addPermissionsToProjectConf($contributors, $integrators, $supermen, $owners);
         $this->pushToServer();
     }
 
@@ -108,7 +115,13 @@ class Git_Driver_Gerrit_ProjectCreator {
         file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
-    private function addPermissionsToProjectConf($contributors, $integrators, $supermen) {
+    private function addPermissionsToProjectConf($contributors, $integrators, $supermen, $owners) {
+        // https://groups.google.com/d/msg/repo-discuss/jTAY2ApcTGU/DPZz8k0ZoUMJ
+        // Project owners are those who own refs/* within that project... which
+        // means they can modify the permissions for any reference in the
+        // project.
+        $this->addToSection('refs', 'owner', "group $owners");
+
         // TODO: if (it is a public project && RegisteredUsers = Read) {
         $this->addToSection('refs/heads', 'Read', "group Registered Users");
         // }
