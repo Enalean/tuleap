@@ -35,7 +35,7 @@ EOT;
             $sql = "INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
                     VALUES ('PLUGIN_GIT_READ', 1, 0)";
             $res = $this->db->dbh->exec($sql);
-            if ($res !== 9) {
+            if ($res !== 1) {
                 throw new ForgeUpgrade_Bucket_Exception_UpgradeNotComplete('An error occured while adding permission types into permissions_values');
             }
         }
