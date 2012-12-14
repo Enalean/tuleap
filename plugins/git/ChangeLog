@@ -1,3 +1,6 @@
+Version 2.7.18 - Tuleap 5.8
+    * Fix link between Jenkins and gitphp (to display diff in the right sense)
+
 Version 2.7.17 - Tuleap 5.8
     * Allow anonymous browsing of repositories
 
