@@ -439,34 +439,7 @@ class Tracker_SOAPServer {
             $tracker = $this->getTrackerById($group_id, $tracker_id, 'addArtifact');
             $this->checkUserCanViewTracker($tracker, $user);
 
-            $fields_data = array();
-            foreach ($value as $field_value) {
-                // field are identified by name, we need to retrieve the field id
-                if ($field_value->field_name) {
-
-                    $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
-                    if ($field) {
-
-                        $field_data = $field->getFieldDataFromSoapValue($field_value);
-                        if ($field_data != null) {
-                            // $field_value is an object: SOAP must cast it in ArtifactFieldValue
-                            if (isset($fields_data[$field->getId()])) {
-                                if (!is_array($fields_data[$field->getId()])) {
-                                    $fields_data[$field->getId()] = array($fields_data[$field->getId()]);
-                                }
-                                $fields_data[$field->getId()][] = $field_data;
-                            } else {
-                                $fields_data[$field->getId()] = $field_data;
-                            }
-                        } else {
-                            return new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name, 'addArtifact');
-                        }
-                    } else {
-                        return new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name, 'addArtifact');
-                    }
-                }
-            }
-
+            $fields_data = $this->getArtifactDataFromSoapRequest($tracker, $value);
             if ($artifact = $this->artifact_factory->createArtifact($tracker, $fields_data, $user, null)) {
                 return $artifact->getId();
             } else {
@@ -479,6 +452,37 @@ class Tracker_SOAPServer {
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
+    }
+
+    private function getArtifactDataFromSoapRequest(Tracker $tracker, $values) {
+        $fields_data = array();
+        foreach ($values as $field_value) {
+            // field are identified by name, we need to retrieve the field id
+            if ($field_value->field_name) {
+
+                $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_value->field_name);
+                if ($field) {
+                    $field_data = $field->getFieldDataFromSoapValue($field_value);
+
+                    if ($field_data != null) {
+                        // $field_value is an object: SOAP must cast it in ArtifactFieldValue
+                        if (isset($fields_data[$field->getId()])) {
+                            if (!is_array($fields_data[$field->getId()])) {
+                                $fields_data[$field->getId()] = array($fields_data[$field->getId()]);
+                            }
+                            $fields_data[$field->getId()][] = $field_data;
+                        } else {
+                            $fields_data[$field->getId()] = $field_data;
+                        }
+                    } else {
+                        throw new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name);
+                    }
+                } else {
+                    throw new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name);
+                }
+            }
+        }
+        return $fields_data;
     }
 
     /**
@@ -506,34 +510,7 @@ class Tracker_SOAPServer {
             $artifact = $this->getArtifactById($artifact_id, 'updateArtifact');
             $this->checkUserCanViewArtifact($artifact, $user);
 
-            $fields_data = array();
-            foreach ($value as $field_value) {
-                // field are identified by name, we need to retrieve the field id
-                if ($field_value->field_name) {
-
-                    $field = $this->formelement_factory->getUsedFieldByName($artifact->getTrackerId(), $field_value->field_name);
-                    if ($field) {
-                        $field_data = $field->getFieldDataFromSoapValue($field_value);
-
-                        if ($field_data != null) {
-                            // $field_value is an object: SOAP must cast it in ArtifactFieldValue
-                            if (isset($fields_data[$field->getId()])) {
-                                if (!is_array($fields_data[$field->getId()])) {
-                                    $fields_data[$field->getId()] = array($fields_data[$field->getId()]);
-                                }
-                                $fields_data[$field->getId()][] = $field_data;
-                            } else {
-                                $fields_data[$field->getId()] = $field_data;
-                            }
-                        } else {
-                            return new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name, 'addArtifact');
-                        }
-                    } else {
-                        return new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name, 'addArtifact');
-                    }
-                }
-            }
-
+            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value);
             try {
                 $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
