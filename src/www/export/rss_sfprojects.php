@@ -28,6 +28,7 @@ if ($request->get('option') == "newest") {
 if ($request->get('type') == "rss") {
 
 header("Content-Type: text/xml");
+header("Cache-Control: no-cache, no-store, must-revalidate");
 print '<?xml version="1.0"  encoding="UTF-8" ?>
 <rss version="0.91">
 ';

@@ -31,6 +31,7 @@ if ($request->exist('group_id')) {
 }
 
 header("Content-Type: text/xml");
+header("Cache-Control: no-cache, no-store, must-revalidate");
 print '<?xml version="1.0"  encoding="UTF-8" ?>
 <?xml-stylesheet type="text/xsl"  href="/export/rss.xsl" ?>
 <rss version="0.91">
