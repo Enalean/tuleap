@@ -62,10 +62,8 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html  = '';
         $html .= '<h3>'. $this->getTitle() .'</h3>';
         if ($this->repository->getRemoteServerId()) {
-            $link  = 'http://';
-            $link .= $this->gerrit_servers[$this->repository->getRemoteServerId()]->getHost();
-            $link .= '/#/admin/projects/';
-            $link .= $this->driver->getGerritProjectName($this->repository);
+            $gerrit_project = $this->driver->getGerritProjectName($this->repository);
+            $link = $this->gerrit_servers[$this->repository->getRemoteServerId()]->getProjectAdminUrl($gerrit_project);
 
             $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_is_on');
             $html .= '<br /><a href="'. $link .'">'. $link .'</a>';
