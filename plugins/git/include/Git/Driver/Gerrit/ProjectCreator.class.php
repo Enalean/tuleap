@@ -21,6 +21,8 @@
 
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RemoteSSHCommand.class.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
+require_once GIT_BASE_DIR . '/GitRepository.class.php';
+require_once 'UserFinder.class.php';
 
 class Git_Driver_Gerrit_ProjectCreator {
 
@@ -108,13 +110,37 @@ class Git_Driver_Gerrit_ProjectCreator {
 
     private function addPermissionsToProjectConf($contributors, $integrators, $supermen) {
         // TODO: if (it is a public project && RegisteredUsers = Read) {
-        `cd $this->dir; git config -f project.config --add access.refs/heads/*.Read 'group Registered Users'`;
+        $this->addToSection('refs/heads', 'Read', "group Registered Users");
         // }
-        `cd $this->dir; git config -f project.config --add access.refs/heads/*.Read 'group $contributors'`;
-        `cd $this->dir; git config -f project.config --add access.refs/heads/*.create 'group $integrators'`;
-        // TODO: complete this list of access rights
+        $this->addToSection('refs/heads', 'Read', "group $contributors");
+        $this->addToSection('refs/heads', 'Read', "group $integrators");
+        $this->addToSection('refs/heads', 'create', "group $integrators");
+        $this->addToSection('refs/heads', 'forgeAuthor', "group $integrators");
+        $this->addToSection('refs/heads', 'label-Code-Review', "-2..+2 group $integrators");
+        $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $contributors");
+        $this->addToSection('refs/heads', 'label-Verified', "-1..+1 group $integrators");
+        $this->addToSection('refs/heads', 'submit', "group $integrators");
+        $this->addToSection('refs/heads', 'push', "group $integrators");
+        $this->addToSection('refs/heads', 'push', "+force group $supermen");
+        $this->addToSection('refs/heads', 'pushMerge', "group $integrators");
+
+        $this->addToSection('refs/changes', 'push', "group $contributors");
+        $this->addToSection('refs/changes', 'push', "group $integrators");
+        $this->addToSection('refs/changes', 'push', "+force group $supermen");
+        $this->addToSection('refs/changes', 'pushMerge', "group $integrators");
+
+        $this->addToSection('refs/for/refs/heads', 'push', "group $contributors");
+        $this->addToSection('refs/for/refs/heads', 'push', "group $integrators");
+        $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $integrators");
+
+        $this->addToSection('refs/tags', 'read', "group $contributors");
+        $this->addToSection('refs/tags', 'read', "group $integrators");
+        $this->addToSection('refs/tags', 'pushTag', "group $integrators");
     }
 
+    private function addToSection($section, $permission, $value) {
+        `cd $this->dir; git config -f project.config --add access.$section/*.$permission '$value'`;
+    }
     private function pushToServer() {
         `cd $this->dir; git add project.config groups`;
         `cd $this->dir; git commit -m 'Updated project config and access rights'`; //TODO: what about author name?
