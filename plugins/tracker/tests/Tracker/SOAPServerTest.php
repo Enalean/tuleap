@@ -140,6 +140,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $changesets       = stub('Tracker_Artifact_Changeset')->getValues()->returns(array("title" => "title"));
         $artifact_9999    = mock('Tracker_Artifact');
         stub($artifact_9999)->getId()->returns(9999);
+        stub($artifact_9999)->getTracker()->returns($this->tracker);
         stub($artifact_9999)->getTrackerId()->returns($this->tracker_id);
         stub($artifact_9999)->getLastChangeset()->returns($changesets);
 
@@ -325,7 +326,7 @@ class Tracker_SOAPServer_updateArtifact_Test extends Tracker_SOAPServer_BaseTest
             $this->session_key,
             $this->i_should_not_have_access_to_this_private_project_id,
             $this->private_unreadable_tracker_id,
-            '*',
+            $this->private_artifact_id,
             '*',
             '*',
             '*'

@@ -500,67 +500,50 @@ class Tracker_SOAPServer {
     public function updateArtifact($session_key, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format) {
         try {
             $user = $this->soap_request_validator->continueSession($session_key);
-            $project = $this->getProjectById($group_id, 'updateArtifact');
-            $this->checkUserCanAccessProject($user, $project);
-            $this->getTrackerById($group_id, $tracker_id, 'updateArtifact');
+            $artifact = $this->getArtifactById($artifact_id, 'updateArtifact');
+            $this->checkUserCanViewArtifact($artifact, $user);
 
-            if ($artifact = $this->getArtifactById($artifact_id, 'updateArtifact')) {
-                if ($artifact->getTrackerId() != $tracker_id) {
-                    return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
-                }
+            $fields_data = array();
+            foreach ($value as $field_value) {
+                // field are identified by name, we need to retrieve the field id
+                if ($field_value->field_name) {
 
-                //Check Field Dependencies
-                // TODO : implement it
-                /* require_once('common/tracker/ArtifactRulesManager.class.php');
-                  $arm =& new ArtifactRulesManager();
-                  if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
-                  return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'updateArtifact');
-                  } */
+                    $field = $this->formelement_factory->getUsedFieldByName($artifact->getTrackerId(), $field_value->field_name);
+                    if ($field) {
+                        $field_data = $field->getFieldDataFromSoapValue($field_value);
 
-                $fields_data = array();
-                foreach ($value as $field_value) {
-                    // field are identified by name, we need to retrieve the field id
-                    if ($field_value->field_name) {
-
-                        $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
-                        if ($field) {
-                            $field_data = $field->getFieldDataFromSoapValue($field_value);
-
-                            if ($field_data != null) {
-                                // $field_value is an object: SOAP must cast it in ArtifactFieldValue
-                                if (isset($fields_data[$field->getId()])) {
-                                    if (!is_array($fields_data[$field->getId()])) {
-                                        $fields_data[$field->getId()] = array($fields_data[$field->getId()]);
-                                    }
-                                    $fields_data[$field->getId()][] = $field_data;
-                                } else {
-                                    $fields_data[$field->getId()] = $field_data;
+                        if ($field_data != null) {
+                            // $field_value is an object: SOAP must cast it in ArtifactFieldValue
+                            if (isset($fields_data[$field->getId()])) {
+                                if (!is_array($fields_data[$field->getId()])) {
+                                    $fields_data[$field->getId()] = array($fields_data[$field->getId()]);
                                 }
+                                $fields_data[$field->getId()][] = $field_data;
                             } else {
-                                return new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name, 'addArtifact');
+                                $fields_data[$field->getId()] = $field_data;
                             }
                         } else {
-                            return new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name, 'addArtifact');
+                            return new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name, 'addArtifact');
                         }
+                    } else {
+                        return new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name, 'addArtifact');
                     }
                 }
+            }
 
-                try {
-                    $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
-                    return $artifact_id;
-                } catch (Tracker_NoChangeException $e) {
-                    return $artifact_id;
-                } catch (Tracker_Exception $e) {
-                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                }
+            try {
+                $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
+                return $artifact_id;
+            } catch (Tracker_NoChangeException $e) {
+                return $artifact_id;
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+            }
 
-                if ($GLOBALS['Response']->feedbackHasErrors()) {
-                    return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
-                } else {
-                    return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
-                }
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
+                return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
             } else {
-                return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
+                return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
             }
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
