@@ -1714,13 +1714,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $elements = $this->getFormElementFactory()->getAllFormElementsForTracker($this->getTracker());
         
         //addlastUpdateDate and submitted on if available 
-        foreach ($elements as $elm ) {
+        foreach ($elements as $elm ) {      
             if($elm instanceof Tracker_FormElement_Field_LastUpdateDate ) {
                  $tracker_data[$elm->getId()] = date("Y-m-d");
             }
             if($elm instanceof Tracker_FormElement_Field_SubmittedOn ) {
                  $tracker_data[$elm->getId()] = $this->getSubmittedOn();
             } 
+            
+            if($elm instanceof Tracker_FormElement_Field_Date &&
+                    ! array_key_exists($elm->getId(), $tracker_data)) {
+                //user doesn't have access to field
+                $tracker_data[$elm->getId()] = $elm->getValue();
+            }
         }
 
         return $tracker_data;
