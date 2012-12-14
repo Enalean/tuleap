@@ -188,6 +188,17 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         $this->assertArrayEmpty($this->user_finder->getUsersForPermission($permission_level, $this->repository));
     }
 
+    public function itReturnsTheProjectAdministratorsWhenSpecialAdminPermission() {
+        $permission_level = Git::SPECIAL_PERM_ADMIN;
+
+        $superman           = array('ClarkKent');
+        $group1             = stub('Ugroup')->getUserLdapIds($this->project_id)->returns($superman);
+
+        stub($this->ugroup_manager)->getById()->returns($group1);
+        $users = $this->user_finder->getUsersForPermission($permission_level, $this->repository);
+        $this->assertEqual($users, $superman);
+    }
+
     private function ugroupIdDar() {
         $ugroup_id_list = func_get_args();
         $result = array();
