@@ -117,9 +117,12 @@ class GitViewsTest extends UnitTestCase {
 
 }
 
-    class GitViewTest_View extends TuleapTestCase {
+class GitView_DiffViewTest extends TuleapTestCase {
 
-    var $project_manager;
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
 
     public function setUp() {
         parent::setUp();
