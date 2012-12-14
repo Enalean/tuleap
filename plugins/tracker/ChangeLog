@@ -1,3 +1,6 @@
+Version 5.53 - Tuleap 5.8
+    * Cross references field no longer taken into account in CSV import (read-only field)
+
 Version 5.52 - Tuleap 5.8
     * Apply global validation rules on
 * CSV Import
