@@ -58,12 +58,13 @@ class Git_Driver_Gerrit_UserFinder {
     }
 
     private function getUgroups($repository_id, $permission_type) {
-        $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($repository_id, $permission_type);
+        $ugroup_ids = $this->permissions_manager->getAuthorizedUgroups($repository_id, $permission_type);
         $result = array();
         foreach ($ugroup_ids as $row) {
             $id = $row['ugroup_id'];
-            if ($this->isNeitherRegisteredNorAnonymous($id))
+            if ($this->isNeitherRegisteredNorAnonymous($id)) {
                 $result[] = $id;
+            }
         }
         return $result;
     }

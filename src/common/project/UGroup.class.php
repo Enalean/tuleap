@@ -190,15 +190,18 @@ class UGroup {
     private function getStaticOrDynamicMembers($group_id) {
         if ($this->is_dynamic) {
             $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $group_id);
-        } else {
-            $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+            return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
         }
-        
+        $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
         return $dar->instanciateWith(array($this, 'newUser'));
     }
-    
+
     public function newUser($row) {
         return new User($row);
+    }
+
+    public function newUserFromIncompleteRow($row) {
+        return UserManager::instance()->getUserById($row['user_id']);
     }
 
     /**
@@ -425,19 +428,18 @@ class UGroup {
 }
 
 class Users {
-    
+
     /** @var DataAccessResult */
     private $dar;
-    
+
     public function __construct(DataAccessResult $dar = null) {
         $this->dar = $dar;
     }
-    
+
     public function getDar() {
         return $this->dar;
     }
 
-    
     public function reify() {
         $result = array();
         foreach ($this->dar as $row) {
@@ -445,7 +447,7 @@ class Users {
         }
         return $result;
     }
-    
+
     public function getNames() {
         $result = array();
         foreach ($this->dar as $user) {
