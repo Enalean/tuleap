@@ -49,31 +49,6 @@ class GitActionsTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
     }
 
-    function testRepoManagement() {
-        $repository = mock('GitRepository');
-        $controller = mock('Git');
-        $factory    = stub('GitRepositoryFactory')->getRepositoryById()->returns($repository);
-
-        $action = partial_mock(
-            'GitActions',
-            array('getText'),
-            array(
-                $controller,
-                mock('SystemEventManager'),
-                $factory,
-                mock('GitRepositoryManager'),
-                mock('Git_RemoteServer_GerritServerFactory'),
-                mock('Git_Driver_Gerrit')
-            )
-        );
-        $action->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-
-        expect($controller)->addError('actions_params_error')->once();
-
-        $this->assertFalse($action->repoManagement(1, null));
-        $this->assertTrue($action->repoManagement(1, 1));
-    }
-
     function testNotificationUpdatePrefixFail() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
