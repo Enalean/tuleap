@@ -96,7 +96,7 @@ class Git_Driver_Gerrit {
         return new Git_Driver_Gerrit_Exception("Command: $command".PHP_EOL."Error: ".$e->getStdErr());
     }
 
-    private function getGerritProjectName(GitRepository $repository) {
+    public function getGerritProjectName(GitRepository $repository) {
         $host    = Config::get('sys_default_domain');
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();

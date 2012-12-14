@@ -76,13 +76,17 @@ class Git extends PluginController {
      */
     private $gerrit_server_factory;
 
-    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory) {
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
+    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory, Git_Driver_Gerrit $driver) {
         parent::__construct();
         
         $this->userManager           = UserManager::instance();
         $this->projectManager        = ProjectManager::instance();
         $this->factory               = new GitRepositoryFactory(new GitDao(), $this->projectManager);
         $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->driver                = $driver;
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -505,7 +509,7 @@ class Git extends PluginController {
     protected function instantiateAction($action) {
         $system_event_manager   = SystemEventManager::instance();
         $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
-        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory);
+        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory, $this->driver);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {

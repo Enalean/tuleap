@@ -206,8 +206,32 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     }
 }
 
-class UGroup_getUsersTest extends TuleapTestCase {
-    
+class UGroup_getUsersBaseTest extends TuleapTestCase {
+
+    protected $garfield;
+    protected $goofy;
+    protected $garfield_incomplete_row = array('user_id' => 1234, 'user_name' => 'garfield');
+    protected $goofy_incomplete_row    = array('user_id' => 5677, 'user_name' => 'goofy');
+
+    public function setUp() {
+        parent::setUp();
+        $user_manager = mock('UserManager');
+        UserManager::setInstance($user_manager);
+
+        $this->garfield = new User($this->garfield_incomplete_row);
+        $this->goofy = new User($this->goofy_incomplete_row);
+        stub($user_manager)->getUserById($this->garfield_incomplete_row['user_id'])->returns($this->garfield);
+        stub($user_manager)->getUserById($this->goofy_incomplete_row['user_id'])->returns($this->goofy);
+    }
+
+    public function tearDown() {
+        UserManager::clearInstance();
+        parent::tearDown();
+    }
+}
+
+class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
+
     public function itIsEmptyWhenTheGroupIsEmpty() {
         $id       = 333;
         $row      = array('ugroup_id' =>$id);
@@ -221,11 +245,9 @@ class UGroup_getUsersTest extends TuleapTestCase {
         $id       = 333;
         $row      = array('ugroup_id' =>$id);
         $ugroup   = new UGroup($row);
-        $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
-        $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($garfield, $goofy));
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         
-        $users = array(new User($garfield), new User($goofy));
+        $users = array($this->garfield, $this->goofy);
         $this->assertEqual($ugroup->getUsers($id)->reify(), $users);
         $this->assertEqual($ugroup->getUserNames($id), array('garfield', 'goofy'));
     }
@@ -235,33 +257,16 @@ class UGroup_getUsersTest extends TuleapTestCase {
         $group_id = 555;
         $row      = array('ugroup_id' =>$id , 'group_id' => 100); // this is how UgroupManager instantiates dynamic ugroups
         $ugroup   = new UGroup($row);
-        $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
-        $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($garfield, $goofy));
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
 
-        $users = array(new User($garfield), new User($goofy));
+        $users = array($this->garfield, $this->goofy);
         $this->assertEqual($ugroup->getUsers($group_id)->reify(), $users);
         $this->assertEqual($ugroup->getUserNames($group_id), array('garfield', 'goofy'));
     }
 }
-    
-class Users_Test extends TuleapTestCase {
-    public function itProvidesTheBareDAR() {
-        $dar = TestHelper::arrayToDar('hej', 'hopp', 'trallalalala');
-        $users = new Users($dar);
-        $this->assertEqual($users->getDar(), $dar);
-        $this->assertEqual($users->reify(), array('hej', 'hopp', 'trallalalala'));
-    }
-    
-    public function itProvidesTheUserNames() {
-        $dar = TestHelper::arrayToDar(aUser()->withUserName('Nicolas')->build(), aUser()->withUserName('Johan')->build());
-        $users = new Users($dar);
-        $this->assertEqual($users->getNames(), array('Nicolas', 'Johan'));
-    }
-    
-}
-class UGroup_getMembersTest extends TuleapTestCase {
-    
+
+class UGroup_getMembersTest extends UGroup_getUsersBaseTest {
+
     public function itIsEmptyWhenTheGroupIsEmpty() {
         $id       = 333;
         $row      = array('ugroup_id' =>$id);
@@ -270,33 +275,30 @@ class UGroup_getMembersTest extends TuleapTestCase {
         $this->assertTrue(count($ugroup->getMembers()) == 0);
         $this->assertTrue(count($ugroup->getMembersUserName()) == 0);
     }
+
     public function itReturnsTheMembersOfStaticGroups() {
         $id       = 333;
         $row      = array('ugroup_id' =>$id);
         $ugroup   = new UGroup($row);
-        $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
-        $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($garfield, $goofy));
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         $this->assertArrayNotEmpty($ugroup->getMembers());
         $this->assertEqual(count($ugroup->getMembers()), 2);
         
         $this->assertArrayNotEmpty($ugroup->getMembersUserName());
-        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $goofy));
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $this->goofy_incomplete_row));
     }
-    
+
     public function itReturnsTheMembersOfDynamicGroups() {
         $id       = 1;
         $group_id = 555;
         $row      = array('ugroup_id' =>$id , 'group_id' => $group_id);
         $ugroup   = new UGroup($row);
-        $garfield = array('user_id' => 1234, 'user_name' => 'garfield');
-        $goofy    = array('user_id' => 5677, 'user_name' => 'goofy');
-        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($garfield, $goofy));
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
         $this->assertArrayNotEmpty($ugroup->getMembers());
         $this->assertEqual(count($ugroup->getMembers()), 2);
         
         $this->assertArrayNotEmpty($ugroup->getMembersUserName());
-        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $goofy));
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $this->goofy_incomplete_row));
     }
 }
 
@@ -327,4 +329,19 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
     }
 }
 
+class Users_Test extends TuleapTestCase { //TODO to be moved
+
+    public function itProvidesTheBareDAR() {
+        $dar = TestHelper::arrayToDar('hej', 'hopp', 'trallalalala');
+        $users = new Users($dar);
+        $this->assertEqual($users->getDar(), $dar);
+        $this->assertEqual($users->reify(), array('hej', 'hopp', 'trallalalala'));
+    }
+
+    public function itProvidesTheUserNames() {
+        $dar = TestHelper::arrayToDar(aUser()->withUserName('Nicolas')->build(), aUser()->withUserName('Johan')->build());
+        $users = new Users($dar);
+        $this->assertEqual($users->getNames(), array('Nicolas', 'Johan'));
+    }
+}
 ?>
