@@ -525,7 +525,7 @@ class GitViews extends PluginViews {
         echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
         if (!empty($repository)) {
             $forkPermissionsManager = new GitForkPermissionsManager($repository);
-            echo $forkPermissionsManager->getHeadlessAccessControl($groupId);
+            echo $forkPermissionsManager->displayAccessControl($groupId);
         }
         echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
         echo '</form>';

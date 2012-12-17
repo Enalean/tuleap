@@ -32,13 +32,16 @@ class GitForkPermissionsManager {
      *
      * @return String
      */
-    public function getHeadlessAccessControl($projectId) {
+    public function displayAccessControl($projectId = NULL) {
         $html  = '';
         $disabled = $this->repository->getRemoteServerId() ? true : false;
         if ($disabled) {
             $html .= '<div class="alert-message block-message warning">';
             $html .=  $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
             $html .= '</div>';
+        }
+        if (empty($projectId)) {
+            $projectId = $this->repository->getProjectId();
         }
         $html  = '<table>';
         $html .= '<thead><tr>';

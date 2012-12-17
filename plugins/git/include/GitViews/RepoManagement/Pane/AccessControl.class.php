@@ -89,36 +89,8 @@ class GitViews_RepoManagement_Pane_AccessControl extends GitViews_RepoManagement
      * @return void
      */
     private function accessControlGitolite() {
-        $html  = '';
-
-        $disabled = $this->repository->getRemoteServerId() ? true : false;
-        if ($disabled) {
-            $html .= '<div class="alert-message block-message warning">';
-            $html .=  $GLOBALS['Language']->getText('plugin_git', 'permissions_on_remote_server');
-            $html .= '</div>';
-        }
-        $html  = '<table>';
-        $html .= '<thead><tr>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_R') .'</td>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W') .'</td>';
-        $html .= '<td>'. $GLOBALS['Language']->getText('plugin_git', 'perm_W+') .'</td>';
-        $html .= '</tr></thead>';
-        $html .= '<tbody><tr>';
-        // R
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_READ', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[read]', $disabled);
-        $html .= '</td>';
-        // W
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_WRITE', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[write]', $disabled);
-        $html .= '</td>';
-        // W+
-        $html .= '<td>';
-        $html .= permission_fetch_selection_field('PLUGIN_GIT_WPLUS', $this->repository->getId(), $this->repository->getProjectId(), 'repo_access[wplus]', $disabled);
-        $html .= '</td>';
-        $html .= '</tr></tbody>';
-        $html .= '</table>';
-        return $html;
+        $forkPermissionsManager = new GitForkPermissionsManager($this->repository);
+        return $forkPermissionsManager->displayAccessControl();
     }
 }
 ?>
