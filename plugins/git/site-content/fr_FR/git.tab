@@ -110,9 +110,10 @@ plugin_git	gerrit_pane_title	Gerrit
 plugin_git	gerrit_title	Migration vers Gerrit
 plugin_git	gerrit_url	Veuillez choisir le serveur Gerrit de destination :
 plugin_git	gerrit_migration_description	Vous vous apprêtez à effectuer la migration de votre dépôt <em>$1</em> vers l'outil Gerrit.
-plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à celui-ci : <ul><li>Un projet <em>$2</em> sera créé sur le serveur sélectionné.</li><li>Les groupes d'utilisateurs <em>contributors, integrators, supermen</em> et <em>owners</em> seront créés et obtiendront les droits d'accès par défaut.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à Gerrit : <ul><li>Un projet <em>$1</em> sera créé sur le serveur sélectionné.</li><li>Les groupes d'utilisateurs <em>contributors, integrators, supermen</em> et <em>owners</em> seront créés et obtiendront les droits d'accès par défaut.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
+plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (permissions, ...) à été déléguée à Gerrit : <ul><li>Un projet <em>$1</em> a été créé sur le serveur $2.</li><li>Les groupes d'utilisateurs <em>contributors, integrators, supermen</em> et <em>owners</em> ont été créés et ont obtenu les droits d'accès par défaut.</li><li>Le dépot courant est maintenant un miroir de la référence sur Gerrit.</li></ul>
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
-plugin_git	gerrit_server_is_on	Ce dépot est hébergé sur le serveur suivant :
+plugin_git	gerrit_server_already_migrated	Le dépôt <em>$1</em> a déjà été migré sur le projet Gerrit : <a href="$3">$2</a>.
 plugin_git	permissions_on_remote_server	Vous ne pouvez pas modifier les permissions, car elles sont gérés sur un serveur distant
 plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes (ce message disparaitra une fois la conversion achevée).
 

@@ -63,11 +63,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         $html  = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
         if ($this->repository->getRemoteServerId()) {
-            $gerrit_project = $this->driver->getGerritProjectName($this->repository);
-            $link = $this->gerrit_servers[$this->repository->getRemoteServerId()]->getProjectAdminUrl($gerrit_project);
-
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_is_on');
-            $html .= '<br /><a href="'. $link .'">'. $link .'</a>';
+            $html .= $this->getContentAlreadyMigrated();
         } else {
             $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
             $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
@@ -93,6 +89,21 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
             $html .= '</form>';
         }
+        return $html;
+    }
+
+    private function getContentAlreadyMigrated() {
+        $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+        $gerrit_project = $this->driver->getGerritProjectName($this->repository);
+        $link = $gerrit_server->getProjectAdminUrl($gerrit_project);
+
+        $html  = '';
+        $html .= '<p>';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_already_migrated', array($this->repository->getName(), $gerrit_project, $link));
+        $html .= '</p>';
+        $html .= '<div class="git_repomanagement_gerrit_more_description">';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrated_more_description', array($gerrit_project, $gerrit_server->getHost()));
+        $html .= '</div>';
         return $html;
     }
 }
