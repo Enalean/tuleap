@@ -1,3 +1,6 @@
+Version 2.6.5 - Tuleap 5.8
+    * Fix bug when a message is not displayed in the list it should belong to
+
 Version 2.6.4 - Tuleap 5.5
     * Fix send message through interface
 
