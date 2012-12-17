@@ -104,7 +104,12 @@ class GitTest extends TuleapTestCase  {
 }
 class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     
-    public function itDispatchesTo_migrateToGerrit_withRepoManagementView() {
+    public function setUp() {
+        parent::setUp();
+        $GLOBALS['sys_auth_type'] = Git::SYS_AUTH_TYPE_LDAP;
+    }
+
+        public function itDispatchesTo_migrateToGerrit_withRepoManagementView() {
         $group_id    = 101;
         $user        = stub('User')->isMember($group_id, 'A')->returns(true);
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
@@ -156,7 +161,6 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         $git->expectNever('addAction');
         
         $git->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id));
-        
         $git->request();
     }
     
@@ -184,7 +188,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     }
 
     public function itForbidsGerritMigrationIfTuleapIsNotConnectedToLDAP() {
-        Config::set('sys_auth_type', 'ldap');
+        $GLOBALS['sys_auth_type'] = Git::SYS_AUTH_TYPE_CODENDI;
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         $group_id    = 101;
         $user        = stub('User')->isMember($group_id, 'A')->returns(true);
@@ -197,6 +201,24 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         $git = $this->getGit($request, $usermanager, $factory, $group_id);
         $git->expectNever('addAction');
         $git->expectOnce('redirect', array('/plugins/git/?group_id='. $group_id));
+        
+        $git->request();
+    }
+    
+    public function itAllowsGerritMigrationIfTuleapIsConnectedToLDAP() {
+        $GLOBALS['sys_auth_type'] = Git::SYS_AUTH_TYPE_LDAP;
+        $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
+        $group_id    = 101;
+        $user        = stub('User')->isMember($group_id, 'A')->returns(true);
+        $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
+        $request     = new HTTPRequest();
+        $repo_id     = 999;
+        $server_id   = 111;
+        $request->set('repo_id', $repo_id);
+        $request->set('remote_server_id', $server_id);
+        $git = $this->getGit($request, $usermanager, $factory, $group_id);
+        $git->expectAtLeastOnce('addAction');
+        $git->expectNever('redirect');
         
         $git->request();
     }

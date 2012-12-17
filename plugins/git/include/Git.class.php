@@ -38,6 +38,8 @@ class Git extends PluginController {
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
 
     const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
+    const SYS_AUTH_TYPE_LDAP = 'ldap';
+    const SYS_AUTH_TYPE_CODENDI = 'codendi';
 
     /**
      * Lists all git-related permission types.
@@ -258,7 +260,7 @@ class Git extends PluginController {
 
     }
     
-    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
+    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) { 
         $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
@@ -400,6 +402,11 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
+                if ($GLOBALS['sys_auth_type'] !== self::SYS_AUTH_TYPE_LDAP) {
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                    break;
+                }
+                
                 $repo = $this->factory->getRepositoryById($repoId);
                 $remote_server_id = $this->request->getValidated('remote_server_id', 'uint');
                 if (empty($repo) || empty($remote_server_id)) {
@@ -412,7 +419,7 @@ class Git extends PluginController {
                 break;
             #LIST
             default:
-                
+               
                 $user_id = null;
                 $valid = new Valid_UInt('user');
                 $valid->required();
