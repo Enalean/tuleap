@@ -52,7 +52,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
     public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_settings');
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_pane_title');
     }
 
     /**
@@ -60,7 +60,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      */
     public function getContent() {
         $html  = '';
-        $html .= '<h3>'. $this->getTitle() .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
         if ($this->repository->getRemoteServerId()) {
             $gerrit_project = $this->driver->getGerritProjectName($this->repository);
             $link = $this->gerrit_servers[$this->repository->getRemoteServerId()]->getProjectAdminUrl($gerrit_project);
@@ -73,6 +73,12 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
             $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
 
+            $html .= '<p>';
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_description', $this->repository->getName());
+            $html .= '</p>';
+            $html .= '<div class="git_repomanagement_gerrit_more_description">';
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_more_description', $this->driver->getGerritProjectName($this->repository));
+            $html .= '</div>';
             $html .= '<p>';
             $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
             $html .= '<select name="remote_server_id" id="gerrit_url">';

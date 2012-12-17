@@ -9,7 +9,7 @@ plugin_git	help_reference_title	Intialiser un dépôt
 plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (par exemple)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push &lt;url_du_dépôt&gt; master</li>
 plugin_git	help_init_reference_msg	Le dépôt n'a pas encore été initialisé, ceci est nécessaire pour permettre aux utilisateurs de le cloner
 plugin_git	help_create_reference_title	Créer une réference
-plugin_git	help_create_reference	<li>Une référence est un dépôt principal qui peut être cloné sur le serveur codendi (ex: développement d'une fonctionnalité) et aussi cloné localement par les membres du projet pour leur développements.</li>
+plugin_git	help_create_reference	<li>Une référence est un dépôt principal qui peut être cloné sur le serveur Tuleap (ex: développement d'une fonctionnalité) et aussi cloné localement par les membres du projet pour leur développements.</li>
 plugin_git	help_link	Aide
 plugin_git	help_tree	<li>La liste des dépôt est hiérarchique.</li><li>Les références sont les racines tandis que les clones (forks) sont présentés décalés sous leur dépôt parent.</li><li>Chaque dépôt est un lien vers un page de détail et d'adminstration.</li>
 plugin_git	help_fork	<li>Un fork est le clone d'une référence ou d'un fork.</li><li>Il est accessible en lecture et écriture pour tous les membres d'un projet.</li><li>Il peut être utilisé comme le dépôt pour le développement d'une fonctionnalité.</li>
@@ -106,8 +106,11 @@ plugin_git	reference_commit_desc_key	Commit Git
 plugin_git	admin_repo_management	Gestion du dépôt GIT
 
 plugin_git	admin_settings	Options générales
-plugin_git	gerrit_settings	Gerrit
-plugin_git	gerrit_url	Url du serveur gerrit
+plugin_git	gerrit_pane_title	Gerrit
+plugin_git	gerrit_title	Migration vers Gerrit
+plugin_git	gerrit_url	Veuillez choisir le serveur Gerrit de destination :
+plugin_git	gerrit_migration_description	Vous vous apprêtez à effectuer la migration de votre dépôt <em>$1</em> vers l'outil Gerrit.
+plugin_git	gerrit_migration_more_description	La gestion du dépôt (permissions, ...) sera déléguée à celui-ci : <ul><li>Un projet <em>$2</em> sera créé sur le serveur sélectionné.</li><li>Les groupes d'utilisateurs <em>contributors, integrators, supermen</em> et <em>owners</em> seront créés et obtiendront les droits d'accès par défaut.</li><li>Le dépot courant deviendra un miroir de la référence sur Gerrit.</li></ul>
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
 plugin_git	gerrit_server_is_on	Ce dépot est hébergé sur le serveur suivant :
 plugin_git	permissions_on_remote_server	Vous ne pouvez pas modifier les permissions, car elles sont gérés sur un serveur distant
