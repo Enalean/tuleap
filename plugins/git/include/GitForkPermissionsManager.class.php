@@ -45,6 +45,13 @@ class GitForkPermissionsManager {
         return Codendi_HTMLPurifier::instance();
     }
 
+    /**
+     * Prepare fork destination message according to the fork scope
+     *
+     * @param Array $params Request params
+     *
+     * @return String
+     */
     private function displayForkDestinationMessage($params) {
         if ($params['scope'] == 'project') {
             $project         = $this->getProjectManager()->getProject($params['group_id']);
@@ -55,6 +62,13 @@ class GitForkPermissionsManager {
         return $destinationHTML;
     }
 
+    /**
+     * Prepare fork repository message
+     *
+     * @param String $repos Comma separated repositories Ids selected for fork
+     *
+     * @return String
+     */
     private function displayForkSourceRepositories($repos) {
         $dao             = new GitDao();
         $repoFactory     = new GitRepositoryFactory($dao, $this->getProjectManager());
@@ -68,6 +82,15 @@ class GitForkPermissionsManager {
         return $sourceReposHTML;
     }
 
+    /**
+     * Fetch the html code to display permissions form when forking repositories
+     *
+     * @param Array   $params   Request params
+     * @param Integer $groupId  Project Id
+     * @param String  $userName User name
+     *
+     * @return String
+     */
     public function displayRepositoriesPermissionsForm($params, $groupId, $userName) {
         $sourceReposHTML = $this->displayForkSourceRepositories($params['repos']);
         $form  = '<h2>'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'</h2>';
@@ -92,6 +115,8 @@ class GitForkPermissionsManager {
 
     /**
      * Display access control management for gitolite backend
+     *
+     * @param Integer $projectId Project Id, to manage permissions when performing a cross project fork
      *
      * @return String
      */
