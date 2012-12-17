@@ -28,6 +28,69 @@ class GitForkPermissionsManager {
     }
 
     /**
+     * Wrapper
+     *
+     * @return ProjectManager
+     */
+    function getProjectManager() {
+        return ProjectManager::instance();
+    }
+
+    /**
+     * Wrapper
+     *
+     * @return Codendi_HTMLPurifier
+     */
+    function getPurifier() {
+        return Codendi_HTMLPurifier::instance();
+    }
+
+    private function displayForkDestinationMessage($params) {
+        if ($params['scope'] == 'project') {
+            $project         = $this->getProjectManager()->getProject($params['group_id']);
+            $destinationHTML = $GLOBALS['Language']->getText('plugin_git', 'fork_destination_project_message',  array($project->getPublicName()));
+        } else {
+            $destinationHTML = $GLOBALS['Language']->getText('plugin_git', 'fork_destination_personal_message');
+        }
+        return $destinationHTML;
+    }
+
+    private function displayForkSourceRepositories($repos) {
+        $dao             = new GitDao();
+        $repoFactory     = new GitRepositoryFactory($dao, $this->getProjectManager());
+        $sourceReposHTML = '';
+        $repositories    = explode(',', $repos);
+
+        foreach ($repositories as $repositoryId) {
+            $repository       = $repoFactory->getRepositoryById($repositoryId);
+            $sourceReposHTML .= '"'.$this->getPurifier()->purify($repository->getFullName()).'" ';
+        }
+        return $sourceReposHTML;
+    }
+
+    public function displayRepositoriesPermissionsForm($params, $groupId, $userName) {
+        $sourceReposHTML = $this->displayForkSourceRepositories($params['repos']);
+        $form  = '<h2>'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'</h2>';
+        $form .= $GLOBALS['Language']->getText('plugin_git', 'fork_repository_message', array($sourceReposHTML));
+        $form .= $this->displayForkDestinationMessage($params);
+        $form .= '<h3>Set permissions for the repository to be created</h3>';
+        $form .= '<form action="" method="POST">';
+        $form .= '<input type="hidden" name="group_id" value="'.(int)$groupId.'" />';
+        $form .= '<input type="hidden" name="action" value="do_fork_repositories" />';
+        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='.(int)$groupId.'&action=fork_repositories');
+        $form .= $token->fetchHTMLInput();
+        $form .= '<input id="fork_repositories_repo" type="hidden" name="repos" value="'.$this->getPurifier()->purify($params['repos']).'" />';
+        $form .= '<input id="choose_personal" type="hidden" name="choose_destination" value="'.$this->getPurifier()->purify($params['scope']).'" />';
+        $form .= '<input id="to_project" type="hidden" name="to_project" value="'.$this->getPurifier()->purify($params['group_id']).'" />';
+        $form .= '<input type="hidden" id="fork_repositories_path" name="path" value="'.$this->getPurifier()->purify($params['namespace']).'" />';
+        $form .= '<input type="hidden" id="fork_repositories_prefix" value="u/'. $userName .'" />';
+        $form .= $this->displayAccessControl($groupId);
+        $form .= '<input type="submit" value="'.$GLOBALS['Language']->getText('plugin_git', 'fork_repositories').'" />';
+        $form .= '</form>';
+        return $form;
+    }
+
+    /**
      * Display access control management for gitolite backend
      *
      * @return String

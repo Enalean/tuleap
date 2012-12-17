@@ -486,49 +486,24 @@ class GitViews extends PluginViews {
      * @return void
      */
     protected function forkRepositoriesPermissions() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $pm       = ProjectManager::instance();
-        $params   = $this->getData();
+        $params = $this->getData();
+        $this->_getBreadCrumb();
 
         if ($params['scope'] == 'project') {
             $groupId = $params['group_id'];
-            $project = $pm->getProject($groupId);
-            $destinationHTML = $this->getText('fork_destination_project_message', array($project->getPublicName()));
         } else {
             $groupId = (int)$this->groupId;
-            $destinationHTML = $this->getText('fork_destination_personal_message');
         }
-        $dao         = new GitDao();
-        $request     = new Codendi_Request($params);
-        $repoFactory = new GitRepositoryFactory($dao, $pm);
-
-        $sourceReposHTML = '';
-        $repositories    = explode(',', $params['repos']);
-        foreach ($repositories as $repositoryId) {
-            $repository       = $repoFactory->getRepositoryById($repositoryId);
-            $sourceReposHTML .= '"'.$purifier->purify($repository->getFullName()).'" ';
-        }
-        $this->_getBreadCrumb();
-        echo '<h2>'.$this->getText('fork_repositories').'</h2>';
-        echo $this->getText('fork_repository_message', array($sourceReposHTML));
-        echo $destinationHTML;
-        echo '<h3>Set permissions for the repository to be created</h3>';
-        echo '<form action="" method="POST">';
-        echo '<input type="hidden" name="group_id" value="'.(int)$this->groupId.'" />';
-        echo '<input type="hidden" name="action" value="do_fork_repositories" />';
-        $token = new CSRFSynchronizerToken('/plugins/git/?group_id='.(int)$this->groupId.'&action=fork_repositories');
-        echo $token->fetchHTMLInput();
-        echo '<input id="fork_repositories_repo" type="hidden" name="repos" value="'.$purifier->purify($params['repos']).'" />';
-        echo '<input id="choose_personal" type="hidden" name="choose_destination" value="'.$purifier->purify($params['scope']).'" />';
-        echo '<input id="to_project" type="hidden" name="to_project" value="'.$purifier->purify($params['group_id']).'" />';
-        echo '<input type="hidden" id="fork_repositories_path" name="path" value="'.$purifier->purify($params['namespace']).'" />';
-        echo '<input type="hidden" id="fork_repositories_prefix" value="u/'. $this->user->getName() .'" />';
+        $repositories = explode(',', $params['repos']);
+        $pm           = ProjectManager::instance();
+        $dao          = new GitDao();
+        $repoFactory  = new GitRepositoryFactory($dao, $pm);
+        $repository   = $repoFactory->getRepositoryById($repositories[0]);
         if (!empty($repository)) {
             $forkPermissionsManager = new GitForkPermissionsManager($repository);
-            echo $forkPermissionsManager->displayAccessControl($groupId);
+            $userName               = $this->user->getName();
+            echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
         }
-        echo '<input type="submit" value="'.$this->getText('fork_repositories').'" />';
-        echo '</form>';
     }
 
     private function fetchCopyToAnotherProject() {
