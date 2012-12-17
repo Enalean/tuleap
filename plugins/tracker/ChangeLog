@@ -1,3 +1,6 @@
+Version 5.56 - Tuleap 5.8
+    * Fix bug when user submit an artifact but don't have permissions on all fields involved in rules
+
 Version 5.55 - Tuleap 5.8
     * Follow-up version 5.53: finish refactoring
 
