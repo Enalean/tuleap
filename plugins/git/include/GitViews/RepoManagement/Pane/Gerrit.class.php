@@ -38,7 +38,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      * @return bool true if the pane can be displayed
      */
     public function canBeDisplayed() {
-        return ($GLOBALS['sys_auth_type'] === Git::SYS_AUTH_TYPE_LDAP &&
+        return (Config::get('sys_auth_type') === Git::SYS_AUTH_TYPE_LDAP &&
                 count($this->gerrit_servers) > 0);
     }
 

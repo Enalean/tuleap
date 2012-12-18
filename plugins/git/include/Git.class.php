@@ -39,7 +39,6 @@ class Git extends PluginController {
 
     const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
     const SYS_AUTH_TYPE_LDAP = 'ldap';
-    const SYS_AUTH_TYPE_CODENDI = 'codendi';
 
     /**
      * Lists all git-related permission types.
@@ -402,7 +401,7 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
-                if ($GLOBALS['sys_auth_type'] !== self::SYS_AUTH_TYPE_LDAP) {
+                if (Config::get('sys_auth_type') !== Git::SYS_AUTH_TYPE_LDAP) {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                     break;
                 }

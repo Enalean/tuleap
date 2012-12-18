@@ -106,10 +106,10 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $GLOBALS['sys_auth_type'] = Git::SYS_AUTH_TYPE_LDAP;
+        Config::set('sys_auth_type', Git::SYS_AUTH_TYPE_LDAP);
     }
 
-        public function itDispatchesTo_migrateToGerrit_withRepoManagementView() {
+    public function itDispatchesTo_migrateToGerrit_withRepoManagementView() {
         $group_id    = 101;
         $user        = stub('User')->isMember($group_id, 'A')->returns(true);
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
@@ -188,7 +188,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     }
 
     public function itForbidsGerritMigrationIfTuleapIsNotConnectedToLDAP() {
-        $GLOBALS['sys_auth_type'] = Git::SYS_AUTH_TYPE_CODENDI;
+        Config::set('sys_auth_type', 'not_ldap');
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         $group_id    = 101;
         $user        = stub('User')->isMember($group_id, 'A')->returns(true);
@@ -206,7 +206,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
     }
     
     public function itAllowsGerritMigrationIfTuleapIsConnectedToLDAP() {
-        $GLOBALS['sys_auth_type'] = Git::SYS_AUTH_TYPE_LDAP;
+        Config::set('sys_auth_type', Git::SYS_AUTH_TYPE_LDAP);
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         $group_id    = 101;
         $user        = stub('User')->isMember($group_id, 'A')->returns(true);
