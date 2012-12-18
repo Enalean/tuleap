@@ -33,7 +33,7 @@ class GitForkPermissionsManager {
      * @return ProjectManager
      */
     function getProjectManager() {
-        return ProjectManager::instance();
+        return $this->repository->_getProjectManager();
     }
 
     /**
