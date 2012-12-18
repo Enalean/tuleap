@@ -1,3 +1,12 @@
+Version 2.7.18 - Tuleap 5.8
+    * Fix link between Jenkins and gitphp (to display diff in the right sense)
+
+Version 2.7.17 - Tuleap 5.8
+    * Allow anonymous browsing of repositories
+
+Version 2.7.16 - Tuleap 5.7
+    * Fix fatal error on project access logs page
+
 Version 2.7.15 - Tuleap 5.7
     * First step to allow one to migrate a tuleap repository to a gerrit remote server
 

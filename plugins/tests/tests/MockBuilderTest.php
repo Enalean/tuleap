@@ -1,7 +1,5 @@
 <?php
 
-require_once dirname(__FILE__) .'/../www/MockBuilder.php';
-
 abstract class MockBuilderBaseTest extends TuleapTestCase {
 
     public function setUp() {

@@ -380,8 +380,9 @@ class Tracker_Artifact_Changeset {
         reset($used_fields);
         while (!$has_changes && (list(,$field) = each($used_fields))) {
             if (!is_a($field, 'Tracker_FormElement_Field_ReadOnly')) {
-                if (isset($fields_data[$field->id])) {
-                    if ($current_value = $this->getValue($field)) {
+               if (array_key_exists($field->id, $fields_data)) {
+                   $current_value = $this->getValue($field);
+                    if ($current_value) {
                         $has_changes = $field->hasChanges($current_value, $fields_data[$field->id]);
                     } else {
                         //There is no current value in the changeset for the submitted field

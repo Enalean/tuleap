@@ -1308,6 +1308,8 @@ function util_translate_desc_ugroup($desc) {
 }
 
 function util_make_return_to_url($url) {
+    $request = HTTPRequest::instance();
+
     $urlToken = parse_url($url);
 
     $finaleUrl = '';
@@ -1336,8 +1338,8 @@ function util_make_return_to_url($url) {
         $finaleUrl .= $urlToken['path'];
     }
     
-    if(array_key_exists('return_to', $_REQUEST) && $_REQUEST['return_to']) {
-        $rt = 'return_to='.urlencode($_REQUEST['return_to']);
+    if($request->existAndNonEmpty('return_to')) {
+        $rt = 'return_to='.urlencode($request->get('return_to'));
     
         if(array_key_exists('query', $urlToken) && $urlToken['query']) {
             $finaleUrl .= '?'.$urlToken['query'].'&amp;'.$rt;
@@ -1473,5 +1475,33 @@ foreach($times as $key => $time) {
     echo $key ."\t\t\t". util_time_ago_in_words($time, false) ."\t\t\t". util_time_ago_in_words($time, true) ."\n";
 }
 */
+
+
+/**
+ * TODO: Enter description here ...
+ * @param unknown_type $script
+ * @param unknown_type $default_content_type
+ * @return Ambiguous
+ */
+function util_negociate_alternate_content_types($script, $default_content_type) {
+    $accepted_types = array($default_content_type);
+    $content_type   = $default_content_type;
+
+	// Invoke plugins' hooks 'script_accepted_types' to discover which alternate content types they would accept for /users/...
+	$hook_params = array(
+	    'script'         => $script,
+	    'accepted_types' => &$accepted_types,
+	);
+	EventManager::instance()->processEvent('script_accepted_types', $hook_params);
+	if (count($accepted_types) > 1) {
+		// PEAR::HTTP (for negotiateMimeType())
+		require_once('HTTP.php');
+
+		// negociate accepted content-type depending on the preferred ones declared by client
+		$http=new HTTP();
+		$content_type = $http->negotiateMimeType($accepted_types, false);
+	}
+	return $content_type;
+}
 
 ?>

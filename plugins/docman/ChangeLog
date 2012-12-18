@@ -1,3 +1,6 @@
+Version 2.26.10 - Tuleap 5.7
+    * Files (docman & FRS) can now be archived in a dedicated place before being purged
+
 Version 2.26.9 - Tuleap 5.5.1
     * Adjust look 'n feel of the lock icon
 

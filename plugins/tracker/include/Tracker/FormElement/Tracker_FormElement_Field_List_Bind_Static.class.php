@@ -21,11 +21,16 @@
 require_once('Tracker_FormElement_Field_List_Bind.class.php');
 require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
+require_once('Tracker_FormElement_Field_List_Bind_StaticValue_Null.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind {
 
+    /**
+     * @var Array of Tracker_FormElement_Field_List_Bind_StaticValue
+     */
     protected $values;
     protected $is_rank_alpha;
+    
     public function __construct($field, $is_rank_alpha, $values, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
         $this->is_rank_alpha = $is_rank_alpha;
@@ -94,8 +99,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      */
     public function formatChangesetValue($value) {
         // Should receive only valid value object but keep it as is for compatibility reasons
-        if (is_array($value) && isset($this->values[$value['id']])) {
-            $value = $this->values[$value['id']];
+        if (is_array($value)) {
+            if (isset($this->values[$value['id']])) {
+                $value = $this->values[$value['id']];
+            } elseif ($value['id'] == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE_ID) {
+                $value = new Tracker_FormElement_Field_List_Bind_StaticValue_Null();
+            }
         }
         if ($value) {
             return $this->formatChangesetValueObject($value);

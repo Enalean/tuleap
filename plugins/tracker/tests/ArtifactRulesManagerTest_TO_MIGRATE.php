@@ -1,10 +1,10 @@
 <?php
 /* OBSOLETE 
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
-Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('_getTracker_RuleFactory', '_getSelectedValuesForField'));
+Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('getRuleFactory', '_getSelectedValuesForField'));
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_Rule_Value.class.php');
-Mock::generate('Tracker_Rule_Value');
+require_once(dirname(__FILE__).'/../include/Tracker/Rule/List/List.class.php');
+Mock::generate('Tracker_Rule_List');
 
 require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RuleFactory.class.php');
 Mock::generate('Tracker_RuleFactory');
@@ -70,13 +70,13 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         // S5 => A1, (B1, B3), C1, D1 should be valid
         // S6 => A1, (B1, B2), C1, D1 should *not* be valid (A1 or C1 cannot access to B2)
         
-        $r1 = new Tracker_Rule_Value(1, 1, 'F1', 'A1', 'F2', 'B1');
-        $r2 = new Tracker_Rule_Value(2, 1, 'F1', 'A1', 'F2', 'B3');
-        $r3 = new Tracker_Rule_Value(3, 1, 'F1', 'A2', 'F2', 'B2');
-        $r4 = new Tracker_Rule_Value(4, 1, 'F1', 'A2', 'F2', 'B3');
-        $r5 = new Tracker_Rule_Value(5, 1, 'F3', 'C1', 'F2', 'B1');
-        $r6 = new Tracker_Rule_Value(6, 1, 'F3', 'C1', 'F2', 'B3');
-        $r7 = new Tracker_Rule_Value(7, 1, 'F3', 'C2', 'F2', 'B2');
+        $r1 = new Tracker_Rule_List(1, 1, 'F1', 'A1', 'F2', 'B1');
+        $r2 = new Tracker_Rule_List(2, 1, 'F1', 'A1', 'F2', 'B3');
+        $r3 = new Tracker_Rule_List(3, 1, 'F1', 'A2', 'F2', 'B2');
+        $r4 = new Tracker_Rule_List(4, 1, 'F1', 'A2', 'F2', 'B3');
+        $r5 = new Tracker_Rule_List(5, 1, 'F3', 'C1', 'F2', 'B1');
+        $r6 = new Tracker_Rule_List(6, 1, 'F3', 'C1', 'F2', 'B3');
+        $r7 = new Tracker_Rule_List(7, 1, 'F3', 'C2', 'F2', 'B2');
         
         
         $arf = new MockTracker_RuleFactory($this);
@@ -109,7 +109,7 @@ class Tracker_RulesManagerTest extends UnitTestCase {
         $aff->setReturnReference('getFieldFromName', $f4, array('f_4'));
         
         $arm = new Tracker_RulesManagerTestVersion($this);
-        $arm->setReturnReference('_getTracker_RuleFactory', $arf);
+        $arm->setReturnReference('getRuleFactory', $arf);
         $arm->setReturnValue('_getSelectedValuesForField', array('a_1'), array(null, 'F1', 'A1'));
         $arm->setReturnValue('_getSelectedValuesForField', array('a_2'), array(null, 'F1', 'A2'));
         $arm->setReturnValue('_getSelectedValuesForField', array('b_1'), array(null, 'F2', 'B1'));

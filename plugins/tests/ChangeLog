@@ -1,3 +1,19 @@
+Version 5.11 - Tuleap 5.8
+    * Apply global validation rules on
+* CSV Import
+* SOAP create/update artifact
+* Tracker clone
+* XML Import/Export
+
+Version 5.10 - Tuleap 5.8
+    * Kickass unit test runner interface
+
+Version 5.9 - Tuleap 5.8
+    * Add adms plugin
+
+Version 5.8 - Tuleap 5.7
+    * Convert tracker v3 structure to a tracker v5
+
 Version 5.7 - Tuleap 5.7
     * add expect helper: expect($mock)->aMethod()->once();
     * add assertArrayEmpty()

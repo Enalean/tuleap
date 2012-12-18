@@ -15,8 +15,9 @@ require_once('common/frs/ServiceFile.class.php');
 require_once('common/svn/ServiceSVN.class.php');
 
 require_once('ProjectManager.class.php');
-
 require_once('ServiceNotAllowedForProjectException.class.php');
+
+require_once 'UGroupManager.class.php';
 
 /*
 
@@ -63,7 +64,7 @@ function getProjectsDescFieldsInfos(){
 }	
 
 
-class Project extends Group {
+class Project extends Group implements PFO_Project {
 
     /**
      * The project is active
@@ -99,8 +100,6 @@ class Project extends Group {
                 and set up services arrays
     */
     function Project($param) {
-        global $Language;
-        
         $this->Group($param);
         
         //for right now, just point our prefs array at Group's data array
@@ -129,17 +128,17 @@ class Project extends Group {
             // needed for localisation
             $matches = array();
             if ($res_row['description'] == "service_" . $short_name . "_desc_key") {
-                $res_row['description'] = $Language->getText('project_admin_editservice', $res_row['description']);
+                $res_row['description'] = $GLOBALS['Language']->getText('project_admin_editservice', $res_row['description']);
             } elseif (preg_match('/(.*):(.*)/', $res_row['description'], $matches)) {
-                if ($Language->hasText($matches[1], $matches[2])) {
-                    $res_row['description'] = $Language->getText($matches[1], $matches[2]);
+                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                    $res_row['description'] = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
             }
             if ($res_row['label'] == "service_" . $short_name . "_lbl_key") {
-                $res_row['label'] = $Language->getText('project_admin_editservice', $res_row['label']);
+                $res_row['label'] = $GLOBALS['Language']->getText('project_admin_editservice', $res_row['label']);
             } elseif (preg_match('/(.*):(.*)/', $res_row['label'], $matches)) {
-                if ($Language->hasText($matches[1], $matches[2])) {
-                    $res_row['label'] = $Language->getText($matches[1], $matches[2]);
+                if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                    $res_row['label'] = $GLOBALS['Language']->getText($matches[1], $matches[2]);
                 }
             }
             
@@ -258,7 +257,7 @@ class Project extends Group {
         The URL for this project's home page
     */
     function getHomePage() {
-        return $this->service_data_array['homepage']['link'];
+        return $this->usesHomePage() ? $this->service_data_array['homepage']['link'] : '';
     }
     
     function getWikiPage(){
@@ -368,7 +367,6 @@ class Project extends Group {
     	$descfieldsvalue=$this->getProjectsDescFieldsValue();
     	$descfields = getProjectsDescFieldsInfos();
     	$hp = Codendi_HTMLPurifier::instance();
-    	global $Language;
     	
     	for($i=0;$i<sizeof($descfields);$i++){
 	
@@ -382,19 +380,44 @@ class Project extends Group {
 			}
 			
 			$descname=$displayfieldname[$i];
-			if(preg_match('/(.*):(.*)/', $descname, $matches)) {		
-        		if ($Language->hasText($matches[1], $matches[2])) {
-            		$descname = $Language->getText($matches[1], $matches[2]);
-        		}
-    		}
+                        if (preg_match('/(.*):(.*)/', $descname, $matches)) {
+                            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
+                                $descname = $GLOBALS['Language']->getText($matches[1], $matches[2]);
+                            }
+                        }
 			
 			echo "<h3>".$hp->purify($descname,CODENDI_PURIFIER_LIGHT,$this->getGroupId())."</h3>";
 			echo "<p>";
-			echo ($displayfieldvalue[$i] == '') ? $Language->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT,$this->getGroupId())  ;
+			echo ($displayfieldvalue[$i] == '') ? $GLOBALS['Language']->getText('global','none') : $hp->purify($displayfieldvalue[$i], CODENDI_PURIFIER_LIGHT,$this->getGroupId())  ;
 			echo "</p>";
 			
 		}
     	
+    }
+
+    private function getUGroupManager() {
+        return new UGroupManager();
+    }
+
+    /**
+     * @return array of User admin of the project
+     */
+    public function getAdmins() {
+        return $this->getUGroupManager()->getDynamicUGroupsMembers(Ugroup::PROJECT_ADMIN, $this->getID());
+    }
+
+    /**
+     * @return array of User members of the project
+     */
+    public function getMembers() {
+        return $this->getUGroupManager()->getDynamicUGroupsMembers(Ugroup::PROJECT_MEMBERS, $this->getID());
+    }
+
+    /**
+     * Alias of @see getMembers()
+     */
+    public function getUsers() {
+        return $this->getMembers();
     }
 }
 ?>

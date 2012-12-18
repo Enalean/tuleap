@@ -116,6 +116,22 @@ class Tracker_ReportFactory extends Error {
     }
     
     /**
+     * Return the list of Report the user can run on a Tracker in SOAP format.
+     *
+     * @param Tracker $tracker The Tracker to pick report from
+     * @param User    $user    The user who does the request
+     *
+     * @return Array of soap report
+     */
+    public function exportToSoap(Tracker $tracker, User $user) {
+        $soap_tracker_reports = array();
+        foreach ($this->getReportsByTrackerId($tracker->getId(), $user->getId()) as $report) {
+            $soap_tracker_reports[] = $report->exportToSoap();
+        }
+        return $soap_tracker_reports;
+    }
+
+    /**
      * Save a report
      *
      * @param Report $report the report to save

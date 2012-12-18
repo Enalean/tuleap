@@ -75,6 +75,7 @@ INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
 VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_READ', 3, 0),
        ('PLUGIN_GIT_READ', 4, 0),
+       ('PLUGIN_GIT_READ', 1, 0),
        ('PLUGIN_GIT_WRITE', 2, 0),
        ('PLUGIN_GIT_WRITE', 3, 1),
        ('PLUGIN_GIT_WRITE', 4, 0),

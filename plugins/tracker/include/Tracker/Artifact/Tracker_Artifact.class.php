@@ -18,11 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../../constants.php');
 require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Redirect.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Tracker_History.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Tracker_Dispatchable_Interface.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/NoChangeException.class.php';
 require_once('Tracker_Artifact_Changeset.class.php');
 require_once('Tracker_Artifact_Changeset_Null.class.php');
 require_once('dao/Tracker_Artifact_ChangesetDao.class.php');
@@ -428,8 +430,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         //$html .= $this->_fetchHistory();
 
         $html .= '</form>';
-
-        $trm = new Tracker_RulesManager($tracker);
+        $trm = new Tracker_RulesManager($tracker, $this->getFormElementFactory());
         $html .= $trm->displayRulesAsJavascript();
 
         echo $html;
@@ -729,21 +730,29 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 $GLOBALS['Response']->redirect('?aid='. $this->id);
                 break;
             case 'artifact-update':
-
                 //TODO : check permissions on this action?
                 $fields_data   = $request->get('artifact');
                 $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
                 $this->getTracker()->augmentDataFromRequest($fields_data);
-                if ($this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format)) {
+                try {
+                    $this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format);
+                    
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
 
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
-                    $GLOBALS['Response']->redirect($redirect->toUrl());
-                    //die();
-                } else {
+                    if ($request->isAjax()) {
+                        $this->sendAjaxCardsUpdateInfo($current_user);
+                    } else {
+                        $GLOBALS['Response']->redirect($redirect->toUrl());
+                    }
+                } catch (Tracker_NoChangeException $e) {
+                    $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                    $this->display($layout, $request, $current_user);
+                } catch (Tracker_Exception $e) {
+                    $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                     $this->display($layout, $request, $current_user);
                 }
                 break;
@@ -783,6 +792,36 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
         }
     }
+
+    private function sendAjaxCardsUpdateInfo(User $current_user) {
+        $cards_info = $this->getCardUpdateInfo($this, $current_user);
+        $parent = $this->getParent($current_user);
+        if ($parent) {
+            $cards_info = $cards_info + $this->getCardUpdateInfo($parent, $current_user);
+        }
+
+        $GLOBALS['Response']->sendJSON($cards_info);
+    }
+
+    private function getCardUpdateInfo(Tracker_Artifact $artifact, User $current_user) {
+        $card_info               = array();
+        $tracker_id              = $artifact->getTracker()->getId();
+        $form_element_factory    = $this->getFormElementFactory();
+        $remaining_effort_field  = $form_element_factory->getComputableFieldByNameForUser(
+            $tracker_id,
+            Tracker::REMAINING_EFFORT_FIELD_NAME,
+            $current_user
+        );
+
+        if ($remaining_effort_field) {
+            $remaining_effort = $remaining_effort_field->fetchCardValue($artifact);
+            $card_info[$artifact->getId()] = array(
+                Tracker::REMAINING_EFFORT_FIELD_NAME => $remaining_effort
+            );
+        }
+        return $card_info;
+    }
+
 
     /**
      * @return string html
@@ -880,7 +919,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                 $workflow = $this->getWorkflow();
                 if ($workflow) {
-                    $workflow->before($fields_data, $submitter);
+                    $workflow->before($fields_data, $submitter, $this);
+                    $augmented_data = $this->addDatesToRequestData($fields_data);
+                    if (! $workflow->validateGlobalRules($augmented_data, $this->getFormElementFactory())) {
+                        return false;
+                    }
                 }
                 if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
 
@@ -939,8 +982,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if (!(!$last_changeset && $field->isRequired() && !$field->userCanSubmit())) {
                 $is_valid = $field->validateField($this, $submitted_value, $last_changeset_value, $is_submission) && $is_valid;
             }
-            $is_valid = $this->getTracker()->getRulesManager()->validate($this->tracker_id, $fields_data, $this->getFormElementFactory()) && $is_valid;
         }
+
+        if($is_valid) {
+            //validate workflow
+             $workflow = $this->getWorkflow();
+             if ($workflow) {
+                 $is_valid = $workflow->validate($fields_data, $this);
+             }
+        }
+
         return $is_valid;
     }
 
@@ -967,71 +1018,107 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param boolean $send_notification true if a notification must be sent, false otherwise
      * @param string  $comment_format     The comment (follow-up) type ("text" | "html")
      *
+     * @throws Tracker_Exception In the validation
+     * @throws Tracker_NoChangeException In the validation
      * @return boolean True if update is done without error, false otherwise
      */
     public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
-        $is_valid = true;
-        $is_submission = false;
-
-        if ( ! $submitter->isAnonymous() || $email != null) {
-            if ($this->validateFields($fields_data, false)) {
-                $comment = trim($comment);
-                $last_changeset = $this->getLastChangeset();
-                $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
-                if ($comment || $last_changeset->hasChanges($fields_data)) {
-                    //There is a comment or some change in fields: create a changeset
-
-                    $workflow = $this->getWorkflow();
-                    if ($workflow) {
-                        $workflow->before($fields_data, $submitter);
-                    }
-                    if ($changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email)) {
-                        //Store the comment
-                        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
-
-                        //extract references from the comment
-                        $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupID(), $submitter->getId(), $this->getTracker()->getItemName());
-
-                        //Store the value(s) of the fields
-                        $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
-                        foreach ($used_fields as $field) {
-                            if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
-                            } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
-                                $bypass_perms  = true;
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
-                            } else {
-                                $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, $submitter, $is_submission);
-                            }
-                        }
-
-                        //Save the artifact
-                        $this->getArtifactFactory()->save($this);
-
-                        if ($send_notification) {
-                            // Send notifications
-                            $this->getChangeset($changeset_id)->notify();
-                        }
-
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
-                        $is_valid = false; //TODO To be removed
-                    }
-                } else {
-                    $art_link = '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?aid=' . $this->getId() . '">' . $this->getXRef() . '</a>';
-                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'no_changes', array($art_link)), CODENDI_PURIFIER_LIGHT);
-                    $is_valid = false;
-                }
-            } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid'));
-                $is_valid = false;
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required'));
-            $is_valid = false;
+        $this->validateNewChangeset($fields_data, $comment, $submitter);
+        
+        /*
+         * Post actions were run by validateNewChangeset but they modified a 
+         * different set of $fields_data in the case of massChange or soap requests;
+         * we run them again for the current $fields_data
+         * 
+         */
+        $this->getWorkflow()->before($fields_data, $submitter, $this);
+        $changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email);
+        if(! $changeset_id) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
+            return false;
         }
-        return $is_valid;
+        
+        $comment = trim($comment);
+        $last_changeset = $this->getLastChangeset();
+        $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
+        $workflow = $this->getWorkflow();
+       
+        $is_submission = false;
+        //Store the comment
+        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
+
+        //extract references from the comment
+        $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupID(), $submitter->getId(), $this->getTracker()->getItemName());
+
+        //Store the value(s) of the fields
+        $used_fields = $this->getFormElementFactory()->getUsedFields($this->getTracker());
+        foreach ($used_fields as $field) {
+            if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
+
+                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
+            } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
+                $bypass_perms  = true;
+                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+            } else {
+                $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, $submitter, $is_submission);
+            }
+        }
+
+        //Save the artifact
+        $this->getArtifactFactory()->save($this);
+
+        if ($send_notification) {
+            // Send notifications
+            $this->getChangeset($changeset_id)->notify();
+        }
+
+        return true;
     }
+
+    /**
+     * 
+     * @param array $fields_data
+     * @param string $comment
+     * @param User $submitter
+     * @param string $email
+     * @return boolean
+     * @throws Tracker_Exception
+     * @throws Tracker_NoChangeException
+     */
+    private function validateNewChangeset($fields_data, $comment, $submitter, $email = null) {
+        if ($submitter->isAnonymous() && ($email == null || $email == '')) {
+            $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'email_required');
+            throw new Tracker_Exception($message);
+        }
+
+        if (! $this->validateFields($fields_data, false)) {
+            $message = $GLOBALS['Language']->getText('plugin_tracker_artifact', 'fields_not_valid');
+            throw new Tracker_Exception($message);
+        }
+
+        $comment = trim($comment);
+        $last_changeset = $this->getLastChangeset();
+
+        if (! $comment && ! $last_changeset->hasChanges($fields_data)) {
+            throw new Tracker_NoChangeException($this->getId(), $this->getXRef());
+        }
+
+        $workflow = $this->getWorkflow();
+        $fields_data = $this->addDatesToRequestData($fields_data);
+        if ($workflow) {
+            /*
+             * We need to run the post actions to validate the data
+             */
+            $workflow->before($fields_data, $submitter, $this);
+            if (! $workflow->validateGlobalRules($fields_data, $this->getFormElementFactory())) {
+                throw new Tracker_Exception();
+            }
+        }
+        
+        return true;
+    }
+
+            
 
     /**
      * @return ReferenceManager
@@ -1280,10 +1367,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Workflow
      */
     public function getWorkflow() {
-        $workflow = WorkflowFactory::instance()->getWorkflowByTrackerId($this->getTrackerId());
-        if ($workflow) {
-            $workflow->setArtifact($this);
-        }
+        $workflow = $this->getTracker()->getWorkflow();
+        $workflow->setArtifact($this);
         return $workflow;
     }
 
@@ -1305,14 +1390,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return bool true if success false otherwise
      */
     public function linkArtifact($linked_artifact_id, User $current_user) {
-        $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
+        $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());  
         if (count($artlink_fields)) {
             $comment       = '';
             $email         = '';
             $artlink_field = $artlink_fields[0];
             $fields_data   = array();
             $fields_data[$artlink_field->getId()]['new_values'] = $linked_artifact_id;
-            return $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+
+            try {
+                $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+                return true;
+            } catch (Tracker_NoChangeException $e) {
+                $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                return false;
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                return false;
+            }
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field'));
         }
@@ -1353,12 +1448,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $artifact_links;
     }
-    
+
     /**
      * Get artifacts linked to the current artifact if they belongs to the hierarchy
-     * 
+     *
      * @param User $user The user who should see the artifacts
-     * 
+     *
      * @return Array of Tracker_Artifact
      */
     public function getHierarchyLinkedArtifacts(User $user) {
@@ -1371,14 +1466,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $artifact_links;
     }
-    
+
     /**
      * @return array of Tracker
      */
     public function getAllowedChildrenTypes() {
         return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
     }
-    
+
     /**
      * Get artifacts linked to the current artifact if
      * they are not in children.
@@ -1396,7 +1491,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         array_filter($grandchild_artifacts);
         return array_diff($sub_artifacts, $grandchild_artifacts);
     }
-    
+
     public function __toString() {
         return __CLASS__." #$this->id";
     }
@@ -1414,7 +1509,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         return $this->ancestors;
     }
-    
+
     public function setAllAncestors(array $ancestors) {
         $this->ancestors = $ancestors;
     }
@@ -1423,7 +1518,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Return the parent artifact of current artifact if any
      *
      * @param User $user
-     * 
+     *
      * @return Tracker_Artifact
      */
     public function getParent(User $user) {
@@ -1432,7 +1527,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /**
      * Get artifacts
-     * 
+     *
      * @param User $user
      *
      * @return Array of Tracker_Artifact
@@ -1482,6 +1577,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $this->getFormElementFactory()->getAnArtifactLinkField($user, $this->getTracker());
     }
 
+    /**
+     * Return the first BurndownField (if any)
+     *
+     * @return Tracker_FormElement_Field_Burndown
+     */
+    public function getABurndownField(User $user) {
+        return $this->getFormElementFactory()->getABurndownField($user, $this->getTracker());
+    }
+
     private function unlinkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
         $comment       = '';
         $email         = '';
@@ -1489,7 +1593,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $fields_data   = array();
         $fields_data[$artlink_field->getId()]['new_values'] = '';
         $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
-        $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+        
+        try {
+            $this->createNewChangeset($fields_data, $comment, $current_user, $email);
+        } catch (Tracker_NoChangeException $e) {
+            $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+        } catch (Tracker_Exception $e) {
+            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+        }
     }
 
     protected function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {
@@ -1576,7 +1687,50 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getCrossReferenceManager() {
         return new CrossReferenceManager();
     }
+    
+    /**
+     * Used when validating the rules of a new/ initial changset creating.
+     * 
+     * @param array $fields_data
+     * @return array
+     */
+    private function addDatesToRequestData(array $fields_data) {
+        $tracker_data = array();
 
+        //only when a previous changeset exists
+        if(! $this->getLastChangeset() instanceof Tracker_Artifact_Changeset_Null) {
+            foreach ($this->getLastChangeset()->getValues() as $key => $field) {
+                if($field instanceof Tracker_Artifact_ChangesetValue_Date){
+                    $tracker_data[$key] = $field->getValue();
+                }
+            }
+        }
+        
+        //replace where appropriate with submitted values
+        foreach ($fields_data as $key => $value) {
+            $tracker_data[$key] = $value;
+        }
+
+        $elements = $this->getFormElementFactory()->getAllFormElementsForTracker($this->getTracker());
+        
+        //addlastUpdateDate and submitted on if available 
+        foreach ($elements as $elm ) {      
+            if($elm instanceof Tracker_FormElement_Field_LastUpdateDate ) {
+                 $tracker_data[$elm->getId()] = date("Y-m-d");
+            }
+            if($elm instanceof Tracker_FormElement_Field_SubmittedOn ) {
+                 $tracker_data[$elm->getId()] = $this->getSubmittedOn();
+            } 
+            
+            if($elm instanceof Tracker_FormElement_Field_Date &&
+                    ! array_key_exists($elm->getId(), $tracker_data)) {
+                //user doesn't have access to field
+                $tracker_data[$elm->getId()] = $elm->getValue();
+            }
+        }
+
+        return $tracker_data;
+    }
 }
 
 ?>

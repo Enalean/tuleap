@@ -554,7 +554,7 @@ class GitPlugin extends Plugin {
         $project = $pm->getProject($params['group_id']);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             require_once('Git.class.php');
-            $controler = new Git($this);
+            $controler = new Git($this, $this->getGerritServerFactory());
             $controler->logsDaily($params);
         }
     }

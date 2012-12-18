@@ -37,6 +37,7 @@ href="file:/C:/Program Files/XMLmind_XML_Editor/css/docbook.css"
 <!ENTITY ChapterCommunicationServices SYSTEM "CommunicationServices.xml">
 <!ENTITY ChapterSurveyManager SYSTEM "SurveyManager.xml">
 <!ENTITY ChapterProjectWebSite SYSTEM "ProjectWebSite.xml">
+<!ENTITY ChapterProjectLinks SYSTEM "ProjectLinks.xml">
 <!ENTITY ChapterOtherServices SYSTEM "OtherServices.xml">
 <!ENTITY Chapterlegalnotice SYSTEM "LegalNotice.xml">
 
@@ -71,6 +72,7 @@ an entity cannot be redefined. Hence this particular order  -->
   &ChapterCommunicationServices;
   &ChapterSurveyManager;
   &ChapterProjectWebSite;
+  &ChapterProjectLinks;
   &ChapterOtherServices;
   &ChapterTracker;
   &Chapterlegalnotice;

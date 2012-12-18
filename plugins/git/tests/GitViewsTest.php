@@ -27,66 +27,66 @@ Mock::generate('ProjectManager');
 
 
 class GitViewsTest extends UnitTestCase {
-    
+
     public function testCanReturnOptionsListOfProjectsTheUserIsAdminOf() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $output = $view->getUserProjectsAsOptions($user, $manager, '50');
         $this->assertPattern('/<option value="123"/', $output);
         $this->assertNoPattern('/<option value="456"/', $output);
     }
-    
+
     public function testOptionsShouldContainThePublicNameOfTheProject() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
-    
+
     public function testOptionsShouldContainTheUnixNameOfTheProjectAsTitle() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea Pig', 'gpig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertPattern('/title="gpig"/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
-    
+
     public function testOptionsShouldPurifyThePublicNameOfTheProject() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea < Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertPattern('/Guinea &lt; Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
     }
-    
+
     public function testCurrentProjectMustNotBeInProjectList() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProject('123', 'Guinea Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '123'));
-        
-        
+
+
     }
-    
+
     public function testProjectListMustContainsOnlyProjectsWithGitEnabled() {
         $user    = $this->GivenAUserWithProjects();
         $project = $this->GivenAProjectWithoutGitService('123', 'Guinea Pig');
         $manager = $this->GivenAProjectManager($project);
-        
+
         $view = TestHelper::getPartialMock('GitViews', array());
         $this->assertNoPattern('/Guinea Pig/', $view->getUserProjectsAsOptions($user, $manager, '50'));
-        
+
     }
-    
+
     private function GivenAProject($id, $name, $unixName = null, $useGit = true) {
         $project = new MockProject();
         $project->setReturnValue('getId', $id);
@@ -95,18 +95,18 @@ class GitViewsTest extends UnitTestCase {
         $project->setReturnValue('usesService', $useGit, array(GitPlugin::SERVICE_SHORTNAME));
         return $project;
     }
-    
+
     private function GivenAProjectWithoutGitService($id, $name) {
         return $this->GivenAProject($id, $name, null, false);
     }
-    
+
     private function GivenAProjectManager($project) {
         $manager = new MockProjectManager();
         $manager->setReturnValue('getProject', $project, array($project->getId()));
-        
+
         return $manager;
     }
-    
+
     private function GivenAUserWithProjects() {
         $user = new MockUser();
         $user->setReturnValue('getAllProjects', array('123', '456'));
@@ -114,6 +114,64 @@ class GitViewsTest extends UnitTestCase {
         $user->setReturnValue('isMember', false, array('456', 'A'));
         return $user;
     }
+
+}
+
+class GitView_DiffViewTest extends TuleapTestCase {
+
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    public function setUp() {
+        parent::setUp();
+        $this->project_manager = mock('ProjectManager');
+        ProjectManager::setInstance($this->project_manager);
+
+        $controller    = mock('Git');
+        $request       = mock('HTTPRequest');
+        $user          = mock('User');
+        $this->project = mock('Project');
+        $plugin        = mock('GitPlugin');
+
+        stub($plugin)->getConfigurationParameter()->returns(GIT_BASE_DIR.'/../tests/_fixtures/fakeGitPHP');
+        stub($this->project)->getUnixName()->returns('project');
+        stub($controller)->getRequest()->returns($request);
+        stub($controller)->getUser()->returns($user);
+        stub($controller)->getPlugin()->returns($plugin);
+
+        stub($this->project_manager)->getProject()->returns($this->project);
+
+        $this->view = new GitViews($controller);
+    }
+
+    public function tearDown() {
+        ProjectManager::clearInstance();
+        parent::tearDown();
+    }
+
+    public function testGetViewInverseURLArgumentIfActionIsBlobdiff() {
+        $_REQUEST['a'] = 'blobdiff';
+        $src_initial   = 'src';
+        $dest_initial  = 'dest';
+        $_GET['h']     = $src_initial;
+        $_GET['hp']    = $dest_initial;
+
+        $repository = mock('GitRepository');
+
+        stub($repository)->getId()->returns(148);
+        stub($repository)->getFullName()->returns('abcd');
+        stub($repository)->getProject()->returns($this->project);
+        stub($repository)->getGitRootPath()->returns('/home/abcd');
+
+        $this->view->getView($repository);
+
+        $this->assertEqual($_GET['h'], $dest_initial);
+        $this->assertEqual($_GET['hp'], $src_initial);
+
+    }
+
 }
 
 ?>

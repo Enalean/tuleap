@@ -1,5 +1,6 @@
 DROP TABLE IF EXISTS tracker_workflow;
 DROP TABLE IF EXISTS tracker_workflow_transition;
+DROP TABLE IF EXISTS tracker_workflow_transition_condition_field_notempty;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_date;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_int;
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_field_float;
@@ -67,6 +68,8 @@ DROP TABLE IF EXISTS tracker_semantic_status;
 DROP TABLE IF EXISTS tracker_semantic_contributor;
 DROP TABLE IF EXISTS tracker_perm;
 DROP TABLE IF EXISTS tracker_rule;
+DROP TABLE IF EXISTS tracker_rule_list;
+DROP TABLE IF EXISTS tracker_rule_date;
 DROP TABLE IF EXISTS tracker_reminder;
 
 DELETE FROM permissions WHERE permission_type LIKE 'PLUGIN_TRACKER_%';
