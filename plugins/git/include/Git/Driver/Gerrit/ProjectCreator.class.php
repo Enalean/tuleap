@@ -123,8 +123,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         // project.
         $this->addToSection('refs', 'owner', "group $owners");
 
-        if ($repository->getProject()->isPublic()) {
-            // TODO: if (it is a public project && RegisteredUsers = Read)
+        if ($this->shouldAddRegisteredUsers($repository)) {
             $this->addToSection('refs/heads', 'Read', "group Registered Users");
         }
         $this->addToSection('refs/heads', 'Read', "group $contributors");
@@ -151,6 +150,10 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/tags', 'read', "group $contributors");
         $this->addToSection('refs/tags', 'read', "group $integrators");
         $this->addToSection('refs/tags', 'pushTag', "group $integrators");
+    }
+
+    private function shouldAddRegisteredUsers(GitRepository $repository) {
+        return $repository->getProject()->isPublic() && $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $repository);
     }
 
     private function addToSection($section, $permission, $value) {

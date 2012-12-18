@@ -46,6 +46,9 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         stub($this->repository)->getProjectId()->returns($this->project_id);
 
     }
+}
+
+class Git_Driver_Gerrit_UserFinder_getUsersForPermissionTest extends Git_Driver_Gerrit_UserFinderTest {
 
     public function itReturnsNothingWhenNoGroupsHaveTheGivenPermission() {
         $permission_level = Git::PERM_WPLUS;
@@ -207,6 +210,32 @@ class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
         }
         return TestHelper::argListToDar($result);
 
+    }
+}
+
+class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_Driver_Gerrit_UserFinderTest {
+
+    public function itReturnsFalseForSpecialAdminPerms() {
+        $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::SPECIAL_PERM_ADMIN, $this->repository);
+        $this->assertFalse($allowed);
+    }
+
+    public function itReturnsFalseIfRegisteredUsersGroupIsNotContainedInTheAllowedOnes() {
+        stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
+            array('ugroup_id' => UGroup::PROJECT_MEMBERS),
+            array('ugroup_id' => UGroup::PROJECT_ADMIN),
+        ));
+        $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
+        $this->assertFalse($allowed);
+    }
+
+    public function itReturnsTrueIfRegisteredUsersGroupIsContainedInTheAllowedOnes() {
+        stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
+            array('ugroup_id' => UGroup::PROJECT_MEMBERS),
+            array('ugroup_id' => UGroup::REGISTERED),
+        ));
+        $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
+        $this->assertTrue($allowed);
     }
 }
 ?>
