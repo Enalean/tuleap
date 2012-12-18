@@ -536,9 +536,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return array
      */
     public function getValue($value_id) {
-        if($value_id == null) {
-            return null;
-        }
         return $this->getValueDao()->searchById($value_id, $this->id)->getRow();
     }
 
