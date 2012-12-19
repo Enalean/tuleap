@@ -1,3 +1,6 @@
+Version 5.57 - Tuleap 5.8
+    * Fix bugs #1997: Warning & notice in the log
+
 Version 5.56 - Tuleap 5.8
     * Fix bug when user submit an artifact but don't have permissions on all fields involved in rules
 

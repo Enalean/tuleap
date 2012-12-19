@@ -1745,7 +1745,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             if($elm instanceof Tracker_FormElement_Field_Date &&
                     ! array_key_exists($elm->getId(), $tracker_data)) {
                 //user doesn't have access to field
-                $tracker_data[$elm->getId()] = $elm->getValue();
+                $tracker_data[$elm->getId()] = $elm->getValue($elm->getId());
             }
         }
 
