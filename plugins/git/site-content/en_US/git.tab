@@ -55,7 +55,7 @@ plugin_git	gerrit_migrated_more_description	As a reminder, the management of the
 plugin_git	gerrit_migrate_to	Migrate repo to Gerrit
 plugin_git	gerrit_server_already_migrated	The repository <em>$1</em> has already been migrated to the Gerrit project: <a href="$3">$2</a>.
 plugin_git	permissions_on_remote_server	You cannot change permissions since this repository is on a remote server
-plugin_git	gerrit_migration_ongoing	The migration of this repository to Gerrit server is on going, please wait for a few minutes (this message will disappear once completed).
+plugin_git	gerrit_migration_ongoing	The migration of this repository to Gerrit server is on going, please wait for a few minutes.
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 
