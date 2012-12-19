@@ -223,5 +223,20 @@ class Tracker_Artifact_Changeset_Comment {
 
         return $comment_format;
     }
+
+    public function exportToSOAP() {
+        $soap_comment                 = array();
+        $soap_comment['submitted_by'] = $this->submitted_by;
+        $soap_comment['email']        = null;
+
+        if($this->submitted_by == null){
+            $soap_comment['email'] = $this->changeset->getEmail();
+        }
+
+        $soap_comment['submitted_on'] = $this->submitted_on;
+        $soap_comment['body']         = $this->body;
+
+        return $soap_comment;
+    }
 }
 ?>
