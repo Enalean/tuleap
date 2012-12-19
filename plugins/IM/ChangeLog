@@ -1,3 +1,6 @@
+Version 1.5.5 - Tuleap 5.8
+    * Fix font compatibility with IE9
+
 Version 1.5.4 - Tuleap 5.5
     * Various permissions cleanups and POSIX compatibility for shell scripts (Contrib Raphaël Hertzog)
 
