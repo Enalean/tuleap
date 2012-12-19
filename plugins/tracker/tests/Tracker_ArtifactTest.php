@@ -2063,21 +2063,34 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
     private $changeset_with_submitted_by2;
     private $changeset_without_submitted_by;
 
-    private $tracker_id    = 123;
-    private $email         = 'martin.goyot@enalean.com';
+    private $tracker_id;
+    private $email;
 
-    private $timestamp1    = 1355896800;
-    private $timestamp2    = 1355896802;
-    private $timestamp3    = 1355896805;
+    private $timestamp1;
+    private $timestamp2;
+    private $timestamp3;
 
-    private $body1         = 'coucou';
-    private $body2         = 'hibou';
-    private $body3         = 'forêt';
+    private $body1;
+    private $body2;
+    private $body3;
 
-    private $submitted_by1 = 101;
-    private $submitted_by2 = 102;
+    private $submitted_by1;
+    private $submitted_by2;
 
     public function setUp() {
+        $this->tracker_id    = 123;
+        $this->email         = 'martin.goyot@enalean.com';
+
+        $this->timestamp1    = 1355896800;
+        $this->timestamp2    = 1355896802;
+        $this->timestamp3    = 1355896805;
+
+        $this->body1         = 'coucou';
+        $this->body2         = 'hibou';
+        $this->body3         = 'forêt';
+
+        $this->submitted_by1 = 101;
+        $this->submitted_by2 = 102;
         $this->changeset_with_submitted_by1 = mock('Tracker_Artifact_Changeset');
         $this->changeset_with_submitted_by2 = mock('Tracker_Artifact_Changeset');
         $this->changeset_without_submitted_by = mock('Tracker_Artifact_Changeset');
