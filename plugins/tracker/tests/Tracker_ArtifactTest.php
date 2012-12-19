@@ -2055,4 +2055,110 @@ class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
         $this->assertEqual($workflow->getArtifact(), $this->artifact);
     }
 }
+
+class Tracker_Artifact_SOAPTest extends TuleapTestCase {
+
+    private $changeset_without_comments;
+    private $changeset_with_submitted_by1;
+    private $changeset_with_submitted_by2;
+    private $changeset_without_submitted_by;
+
+    private $tracker_id    = 123;
+    private $email         = 'martin.goyot@enalean.com';
+
+    private $timestamp1    = 1355896800;
+    private $timestamp2    = 1355896802;
+    private $timestamp3    = 1355896805;
+
+    private $body1         = 'coucou';
+    private $body2         = 'hibou';
+    private $body3         = 'forêt';
+
+    private $submitted_by1 = 101;
+    private $submitted_by2 = 102;
+
+    public function setUp() {
+        $this->changeset_with_submitted_by1 = mock('Tracker_Artifact_Changeset');
+        $this->changeset_with_submitted_by2 = mock('Tracker_Artifact_Changeset');
+        $this->changeset_without_submitted_by = mock('Tracker_Artifact_Changeset');
+
+        $comment1 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_with_submitted_by1, 2, 3, $this->submitted_by1,  $this->timestamp1, $this->body1, 'text', 0);
+        $comment2 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body2, 'text', 0);
+        $comment3 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_without_submitted_by, 2, 3, null,  $this->timestamp3, $this->body3, 'text', 0);
+
+        stub($this->changeset_with_submitted_by1)->getComment()->returns($comment1);
+        stub($this->changeset_with_submitted_by2)->getComment()->returns($comment2);
+        stub($this->changeset_without_submitted_by)->getComment()->returns($comment3);
+
+        stub($this->changeset_without_submitted_by)->getEmail()->returns($this->email);
+
+        $this->changeset_without_comments = stub('Tracker_Artifact_Changeset')->getComment()->returns(null);
+    }
+
+    private function getBuiltArtifact(array $changesets) {
+        $artifact = anArtifact()->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
+        return $artifact;
+    }
+
+    public function itReturnsAnEmptySoapArrayWhenThereIsNoComments() {
+        $changesets = array($this->changeset_without_comments);
+        $artifact   = $this->getBuiltArtifact($changesets);
+
+        $result = $artifact->exportCommentsToSOAP();
+        $this->assertArrayEmpty($result);
+    }
+
+    public function itReturnsASOAPArrayWhenThereIsOneCommentButTwoChangesets() {
+        $changesets = array($this->changeset_without_comments, $this->changeset_with_submitted_by1);
+        $artifact   = $this->getBuiltArtifact($changesets);
+
+        $result = $artifact->exportCommentsToSOAP();
+        $expected = array(array(
+            'submitted_by' => $this->submitted_by1,
+            'email'        => null,
+            'submitted_on' => $this->timestamp1,
+            'body'         => $this->body1,
+        ));
+
+        $this->assertEqual($expected, $result);
+    }
+
+    public function itReturnsASOAPArrayWhenThereAreTwoComments() {
+        $changesets = array($this->changeset_with_submitted_by1, $this->changeset_with_submitted_by2);
+        $artifact   = $this->getBuiltArtifact($changesets);
+
+        $result = $artifact->exportCommentsToSOAP();
+        $expected = array(
+            array(
+                'submitted_by' => $this->submitted_by1,
+                'email'        => null,
+                'submitted_on' => $this->timestamp1,
+                'body'         => $this->body1,
+            ),
+            array(
+                'submitted_by' => $this->submitted_by2,
+                'email'        => null,
+                'submitted_on' => $this->timestamp2,
+                'body'         => $this->body2,
+            )
+        );
+
+        $this->assertEqual($expected, $result);
+    }
+
+    public function itReturnsAnEmailInTheSOAPArrayWhenThereIsNoSubmittedBy() {
+        $changesets = array($this->changeset_without_submitted_by);
+        $artifact   = $this->getBuiltArtifact($changesets);
+
+        $result = $artifact->exportCommentsToSOAP();
+        $expected = array(array(
+            'submitted_by' => null,
+            'email'        => $this->email,
+            'submitted_on' => $this->timestamp3,
+            'body'         => $this->body3,
+        ));
+
+        $this->assertEqual($expected, $result);
+    }
+}
 ?>

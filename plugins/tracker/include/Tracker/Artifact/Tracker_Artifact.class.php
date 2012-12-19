@@ -1307,6 +1307,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $comments;
     }
 
+    public function exportCommentsToSOAP() {
+        $comments = $this->getComments();
+        $soap_comments = array();
+
+        foreach ($comments as $comment) {
+            $soap_comment = array();
+            $soap_comment['submitted_by'] = $comment->submitted_by;
+            $soap_comment['email'] = null;
+            if($comment->submitted_by == null){
+                $soap_comment['email'] = $comment->changeset->getEmail();
+            }
+            $soap_comment['submitted_on'] = $comment->submitted_on;
+            $soap_comment['body'] = $comment->body;
+
+            $soap_comments[] = $soap_comment;
+        }
+
+        return $soap_comments;
+    }
+
     /**
      * Get the Id of this artifact
      *
