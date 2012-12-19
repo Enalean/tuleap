@@ -822,21 +822,38 @@ class Tracker_SOAPServer_AppendTemporaryAttachments_Test extends Tracker_SOAPSer
 
 class Tracker_SOAPServer_GetArtifactComments_Test extends Tracker_SOAPServer_BaseTest {
 
+    private $artifact_68;
+    private $artifact_67;
+
     public function setUp() {
         parent::setUp();
-        $artifact_68   = stub('Tracker_Artifact')->getId()->returns(68);
-        stub($this->artifact_factory)->getArtifactById(68)->returns($artifact_68);
+
+        $this->artifact_68   = stub('Tracker_Artifact')->getId()->returns(68);
+        stub($this->artifact_68)->userCanView()->returns(true);
+        stub($this->artifact_factory)->getArtifactById(68)->returns($this->artifact_68);
+
+        $this->artifact_67   = stub('Tracker_Artifact')->getId()->returns(67);
+        stub($this->artifact_67)->userCanView()->returns(false);
+        stub($this->artifact_factory)->getArtifactById(67)->returns($this->artifact_67);
+
+        stub($this->artifact_68)->getTracker()->returns($this->tracker);
+        stub($this->artifact_67)->getTracker()->returns($this->tracker);
+
     }
 
     public function itCallsTheExportCommentsToSoapFunctionOfTheArtifact() {
-        $artifact = $this->artifact_factory->getArtifactById(68);
-
-        expect($artifact)->exportCommentsToSOAP()->once();
-        $this->server->getArtifactComments($this->session_key, $artifact->getId());
+        expect($this->artifact_68)->exportCommentsToSOAP()->once();
+        $this->server->getArtifactComments($this->session_key, $this->artifact_68->getId());
     }
 
-    public function _itRaisesASOAPErrorWhenArtifactDoesNotExist() {
+    public function itRaisesASOAPErrorWhenArtifactDoesNotExist() {
+        $return = $this->server->getArtifactComments($this->session_key, 'some_erroneous_id');
+        $this->assertIsA($return, 'SOAPFault');
+    }
 
+    public function itRaisesASOAPErrorWhenArtifactIsNotReadable() {
+        $return = $this->server->getArtifactComments($this->session_key, $this->artifact_67->getId());
+        $this->assertIsA($return, 'SOAPFault');
     }
 }
 ?>

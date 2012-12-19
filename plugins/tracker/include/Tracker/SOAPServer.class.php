@@ -55,6 +55,7 @@ define('invalid_file_field_format', Tracker_FormElement_Field_File::SOAP_FAULT_I
 define('nb_max_temp_files', '3030');
 define('temp_file_invalid', '3031');
 define('uploaded_file_too_big', '3032');
+define('artifact_does_not_exist', '3033');
 
 class Tracker_SOAPServer {
     /**
@@ -680,8 +681,8 @@ class Tracker_SOAPServer {
     public function getArtifactComments($session_key, $artifact_id) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            $artifact     = $this->artifact_factory->getArtifactById($artifact_id);
-
+            $artifact     = $this->getArtifactById($artifact_id, __FUNCTION__);
+            $this->checkUserCanViewArtifact($artifact, $current_user);
             return $artifact->exportCommentsToSOAP();
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
