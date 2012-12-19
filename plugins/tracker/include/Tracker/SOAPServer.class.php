@@ -325,8 +325,7 @@ class Tracker_SOAPServer {
     public function getArtifact($session_key, $group_id, $tracker_id, $artifact_id) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            $artifact     = $this->getArtifactById($artifact_id, 'getArtifact');
-            $this->checkUserCanViewArtifact($artifact, $current_user);
+            $artifact     = $this->getArtifactById($artifact_id, $current_user, 'getArtifact');
             return $this->artifact_to_soap($current_user, $artifact);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -508,8 +507,7 @@ class Tracker_SOAPServer {
     public function updateArtifact($session_key, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format) {
         try {
             $user = $this->soap_request_validator->continueSession($session_key);
-            $artifact = $this->getArtifactById($artifact_id, 'updateArtifact');
-            $this->checkUserCanViewArtifact($artifact, $user);
+            $artifact = $this->getArtifactById($artifact_id, $user, 'updateArtifact');
 
             $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value);
             try {
@@ -599,9 +597,7 @@ class Tracker_SOAPServer {
     public function getArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $offset, $size) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            $artifact     = $this->getArtifactById($artifact_id, 'getArtifactAttachmentChunk');
-            $tracker      = $artifact->getTracker();
-            $this->checkUserCanViewTracker($tracker, $current_user);
+            $artifact     = $this->getArtifactById($artifact_id, $current_user, 'getArtifactAttachmentChunk');
 
             $file_info = $this->fileinfo_factory->getById($attachment_id);
             if ($file_info && $file_info->fileExists()) {
@@ -681,8 +677,7 @@ class Tracker_SOAPServer {
     public function getArtifactComments($session_key, $artifact_id) {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
-            $artifact     = $this->getArtifactById($artifact_id, __FUNCTION__);
-            $this->checkUserCanViewArtifact($artifact, $current_user);
+            $artifact     = $this->getArtifactById($artifact_id, $current_user, __FUNCTION__);
             return $artifact->exportCommentsToSOAP();
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
@@ -708,11 +703,12 @@ class Tracker_SOAPServer {
         return $tracker;
     }
 
-    private function getArtifactById($artifact_id, $method_name) {
+    private function getArtifactById($artifact_id, $user, $method_name) {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if (!$artifact) {
             throw new SoapFault(get_artifact_fault, 'Could Not Get Artifact', $method_name);
         }
+        $this->checkUserCanViewArtifact($artifact, $user);
         return $artifact;
     }
 
