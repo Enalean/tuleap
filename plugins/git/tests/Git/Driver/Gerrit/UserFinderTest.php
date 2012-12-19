@@ -237,5 +237,13 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
         $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
         $this->assertTrue($allowed);
     }
+
+    public function itReturnsTrueIfAllUsersIsContainedInTheAllowedOnes() {
+        stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
+            array('ugroup_id' => UGroup::ANONYMOUS),
+        ));
+        $allowed = $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository);
+        $this->assertTrue($allowed);
+    }
 }
 ?>
