@@ -148,11 +148,10 @@ class GitPlugin extends Plugin {
                 $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
                 $params['dependencies'] = array(
                     $this->getGitDao(),
-                    $this->getGerritDriver(),
                     $this->getRepositoryFactory(),
                     $this->getGerritServerFactory(),
                     new BackendLogger(),
-                    $this->getUserFinder(),
+                    $this->getProjectCreator(),
                 );
                 break;
             default:
@@ -190,7 +189,7 @@ class GitPlugin extends Plugin {
 
     public function process() {
         require_once('Git.class.php');
-        $controler = new Git($this, $this->getGerritServerFactory());
+        $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
         $controler->process();
     }
 
@@ -425,7 +424,7 @@ class GitPlugin extends Plugin {
     private function getGerritDriver() {
         require_once 'Git/Driver/Gerrit.class.php';
         return new Git_Driver_Gerrit(
-            new Git_Driver_Gerrit_RemoteSSHCommand(),
+            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
             new BackendLogger()
         );
     }
@@ -605,8 +604,12 @@ class GitPlugin extends Plugin {
         }
     }
 
-    private function getUserFinder() {
-        return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
+    private function getProjectCreator() {
+        require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/UserFinder.class.php';
+        $user_finder = new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
+        //$dir, Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_UserFinder $user_finder
+        $tmp_dir = Config::get('tmp_dir') .'/'. uniqid();
+        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $user_finder);
     }
 }
 

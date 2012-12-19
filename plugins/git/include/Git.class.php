@@ -36,7 +36,9 @@ class Git extends PluginController {
     const PERM_READ  = 'PLUGIN_GIT_READ';
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
-    
+
+    const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
+
     /**
      * Lists all git-related permission types.
      * 
@@ -76,13 +78,17 @@ class Git extends PluginController {
      */
     private $gerrit_server_factory;
 
-    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory) {
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
+    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory, Git_Driver_Gerrit $driver) {
         parent::__construct();
         
         $this->userManager           = UserManager::instance();
         $this->projectManager        = ProjectManager::instance();
         $this->factory               = new GitRepositoryFactory(new GitDao(), $this->projectManager);
         $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->driver                = $driver;
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -252,7 +258,7 @@ class Git extends PluginController {
 
     }
     
-    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
+    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) { 
         $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
@@ -317,7 +323,8 @@ class Git extends PluginController {
                 break;
             #repo_management
             case 'repo_management':
-                $this->addAction('repoManagement', array($this->groupId, $repoId));
+                $repository = $this->factory->getRepositoryById($repoId);
+                $this->addAction('repoManagement', array($repository));
                 $this->addView('repoManagement');
                 break;
             case 'mail':
@@ -393,6 +400,11 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
+                if (Config::get('sys_auth_type') !== Config::AUTH_TYPE_LDAP) {
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                    break;
+                }
+                
                 $repo = $this->factory->getRepositoryById($repoId);
                 $remote_server_id = $this->request->getValidated('remote_server_id', 'uint');
                 if (empty($repo) || empty($remote_server_id)) {
@@ -405,7 +417,7 @@ class Git extends PluginController {
                 break;
             #LIST
             default:
-                
+               
                 $user_id = null;
                 $valid = new Valid_UInt('user');
                 $valid->required();
@@ -505,7 +517,7 @@ class Git extends PluginController {
     protected function instantiateAction($action) {
         $system_event_manager   = SystemEventManager::instance();
         $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
-        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory);
+        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory, $this->driver);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {

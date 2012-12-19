@@ -25,16 +25,20 @@ require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
  */
 class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
+    const DEFAULT_HTTP_PORT = 80;
+
     private $id;
     private $host;
-    private $port;
+    private $ssh_port;
+    private $http_port;
     private $login;
     private $identity_file;
 
-    public function __construct($id, $host, $port, $login, $identity_file) {
+    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file) {
         $this->id            = $id;
         $this->host          = $host;
-        $this->port          = $port;
+        $this->ssh_port      = $ssh_port;
+        $this->http_port     = $http_port;
         $this->login         = $login;
         $this->identity_file = $identity_file;
     }
@@ -55,8 +59,12 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $this->login;
     }
 
-    public function getPort() {
-        return $this->port;
+    public function getSSHPort() {
+        return $this->ssh_port;
+    }
+
+    public function getHTTPPort() {
+        return $this->http_port;
     }
 
     public function setHost($host) {
@@ -74,9 +82,27 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $this;
     }
 
-    public function setPort($port) {
-        $this->port = $port;
+    public function setSSHPort($ssh_port) {
+        $this->ssh_port = $ssh_port;
         return $this;
+    }
+
+    public function setHTTPPort($http_port) {
+        $this->http_port = $http_port;
+        return $this;
+    }
+
+    public function getCloneSSHUrl($gerrit_project) {
+        return "ext::ssh -p $this->ssh_port -i $this->identity_file $this->login@$this->host %S $gerrit_project";
+    }
+
+    public function getProjectAdminUrl($gerrit_project) {
+        $url = "http://$this->host";
+        if ($this->http_port != self::DEFAULT_HTTP_PORT) {
+            $url .= ":$this->http_port";
+        }
+        $url .= "/#/admin/projects/$gerrit_project";
+        return $url;
     }
 }
 ?>

@@ -38,39 +38,55 @@ class Git_Driver_Gerrit_UserFinder {
 
     /**
      *
-     * Get a unique list of users with the given permission
+     * Get a unique list of user names with the given permission
      *
      * @param string $permission_type
-     * @param int    $repository_id
+     * @param GitRepository $repository_id
      *
      * @return array of User
      */
-    public function getUsersForPermission($permission_type, $repository_id){
+    public function getUsersForPermission($permission_type, GitRepository $repository){
         $ugroups_members = array();
-        foreach ($this->getUgroups($repository_id, $permission_type) as $ugroup_id) {
+        $group_id = $repository->getProjectId();
+        foreach ($this->getUgroups($repository->getId(), $permission_type) as $ugroup_id) {
             $ugroup = $this->ugroup_manager->getById($ugroup_id);
             if ($ugroup) {
-                $ugroups_members = array_merge($ugroup->getMembers(), $ugroups_members);
+                $ugroups_members = array_merge($ugroup->getUserLdapIds($group_id), $ugroups_members);
             }
         }
-        return $this->uniqueUsers($ugroups_members);
+        return array_filter(array_unique($ugroups_members));
+    }
+
+    /** @return bool */
+    public function areRegisteredUsersAllowedTo($permission_type, GitRepository $repository) {
+        if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
+            return false;
+        }
+        foreach ($this->permissions_manager->getAuthorizedUgroups($repository->getId(), $permission_type) as $row) {
+            if ($row['ugroup_id'] == Ugroup::REGISTERED) {
+                return true;
+            }
+        }
     }
 
     private function getUgroups($repository_id, $permission_type) {
-        $ugroup_ids = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($repository_id, $permission_type);
-        return array_filter($ugroup_ids, array($this, 'removeRegisteredAndAnonymous'));
+        if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
+            return array(UGroup::PROJECT_ADMIN);
+        }
+        $ugroup_ids = $this->permissions_manager->getAuthorizedUgroups($repository_id, $permission_type);
+        $result = array();
+        foreach ($ugroup_ids as $row) {
+            $id = $row['ugroup_id'];
+            if ($this->isNeitherRegisteredNorAnonymous($id)) {
+                $result[] = $id;
+            }
+        }
+        return $result;
     }
 
-    private function removeRegisteredAndAnonymous($ugroup_id) {
+    private function isNeitherRegisteredNorAnonymous($ugroup_id) {
         return ! in_array($ugroup_id, array(Ugroup::REGISTERED, UGroup::ANONYMOUS));
     }
 
-    private function uniqueUsers($ugroups_members) {
-        $ret = array();
-        foreach ($ugroups_members as $member) {
-            $ret[$member->getId()] = $member;
-        }
-        return array_values($ret);
-    }
 }
 ?>

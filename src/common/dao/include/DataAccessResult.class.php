@@ -88,14 +88,17 @@ class DataAccessResult implements IProvideDataAccessResult {
      * @return mixed
      */
     public function isError() {
-        $error=$this->da->isError();
+        $error= $this->daIsError();
         if (!empty($error))
             return $error;
         else
             return false;
     }
-    
-    
+
+    protected function daIsError() {
+        return $this->da->isError();
+    }
+
     // {{{ Iterator
     /**
      * @return array Return the current element
@@ -115,7 +118,11 @@ class DataAccessResult implements IProvideDataAccessResult {
      */
     public function next() {
         $this->_current++;
-        $this->_row = $this->da->fetch($this->result);
+        $this->_row = $this->daFetch();
+    }
+
+    protected function daFetch() {
+        return $this->da->fetch($this->result);
     }
     
     /**
@@ -134,12 +141,16 @@ class DataAccessResult implements IProvideDataAccessResult {
      */
     public function rewind() {
         if ($this->rowCount() > 0) {
-            $this->da->dataSeek($this->result, 0);
+            $this->daSeek();
             $this->next();
             $this->_current = 0;
         }
     }
-    
+
+    protected function daSeek() {
+        $this->da->dataSeek($this->result, 0);
+    }
+
     /**
      * Return the key of the current element. 
      * 
@@ -157,6 +168,7 @@ class DataAccessResult implements IProvideDataAccessResult {
     public function count() {
         return $this->rowCount();
     }
+
     //}}}
 }
 ?>

@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2012. All Rights Reserved.
  *
@@ -19,14 +18,21 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Provides the information necessary to connect to a distant machine using ssh.
- */
-interface Git_Driver_Gerrit_RemoteSSHConfig {
-    function getSSHPort();
-    function getHost();
-    function getLogin();
-    function getIdentityFile();
-}
+require_once 'common/user/Users.class.php';
 
+class Users_Test extends TuleapTestCase {
+
+    public function itProvidesTheBareDAR() {
+        $dar = TestHelper::arrayToDar('hej', 'hopp', 'trallalalala');
+        $users = new Users($dar);
+        $this->assertEqual($users->getDar(), $dar);
+        $this->assertEqual($users->reify(), array('hej', 'hopp', 'trallalalala'));
+    }
+
+    public function itProvidesTheUserNames() {
+        $dar = TestHelper::arrayToDar(aUser()->withUserName('Nicolas')->build(), aUser()->withUserName('Johan')->build());
+        $users = new Users($dar);
+        $this->assertEqual($users->getNames(), array('Nicolas', 'Johan'));
+    }
+}
 ?>

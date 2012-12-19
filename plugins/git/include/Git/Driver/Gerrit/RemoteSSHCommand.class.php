@@ -25,13 +25,23 @@ require_once 'RemoteSSHCommandFailure.class.php';
 class Git_Driver_Gerrit_RemoteSSHCommand {
 
     const SUCCESS = 0;
+    
+    /** Logger */
+    private $logger;
 
+    public function __construct(Logger $logger) {
+        $this->logger = $logger;
+    }
+    
     public function execute(Git_Driver_Gerrit_RemoteSSHConfig $config, $cmd) {
-        $port          = $config->getPort();
+        $port          = $config->getSSHPort();
         $host          = $config->getHost();
         $login         = $config->getLogin();
         $identity_file = $config->getIdentityFile();
-        $result = $this->sshExec("-p $port -i $identity_file $login@$host $cmd");
+        $full_cmd      = "-p $port -i $identity_file $login@$host $cmd";
+        $this->logger->info("executing $full_cmd");
+        $result = $this->sshExec($full_cmd);
+        $this->logger->debug('Result: '. var_export($result, 1));
         $exit_code = $result['exit_code'];
         $std_out = $result['std_out'];
         if ($exit_code != self::SUCCESS) {

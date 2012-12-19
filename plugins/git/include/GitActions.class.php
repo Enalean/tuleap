@@ -62,6 +62,9 @@ class GitActions extends PluginActions {
      */
     private $gerrit_server_factory;
 
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
     /**
      * Constructor
      *
@@ -75,13 +78,15 @@ class GitActions extends PluginActions {
         SystemEventManager $systemEventManager,
         GitRepositoryFactory $factory,
         GitRepositoryManager $manager,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        Git_Driver_Gerrit $driver
     ) {
         parent::__construct($controller);
         $this->systemEventManager    = $systemEventManager;
         $this->factory               = $factory;
         $this->manager               = $manager;
         $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->driver                = $driver;
 
     }
 
@@ -204,14 +209,15 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function repoManagement($projectId, $repositoryId) {
-        $c = $this->getController();
-        if (empty($repositoryId)) {
-            $this->addError('actions_params_error');
-            return false;
+    public function repoManagement(GitRepository $repository) {
+        $this->addData(array('repository'=>$repository));
+        if ($this->systemEventManager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, $repository->getId())) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
         }
-        $this->_loadRepository($projectId, $repositoryId);
-        $this->addData(array('gerrit_servers' => $this->gerrit_server_factory->getServers()));
+        $this->addData(array(
+            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
+            'driver'         => $this->driver,
+        ));
         return true;
     }
 

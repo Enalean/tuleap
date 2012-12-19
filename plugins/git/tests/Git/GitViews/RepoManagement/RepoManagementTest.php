@@ -1,7 +1,6 @@
 <?php
-
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2012. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -12,21 +11,13 @@
  *
  * Tuleap is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
+ * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-/**
- * Provides the information necessary to connect to a distant machine using ssh.
- */
-interface Git_Driver_Gerrit_RemoteSSHConfig {
-    function getSSHPort();
-    function getHost();
-    function getLogin();
-    function getIdentityFile();
+class GitViews_RepoManagementTest extends TuleapTestCase {
 }
-
 ?>
