@@ -148,7 +148,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     public function itCreatesGroupsWithMembers() {
         $project_name = $this->host."-firefox/jean-claude/dusse";
         $group_name = $project_name."-contributors";
-        $create_group_command = "gerrit create-group $group_name --member johan --member goyotm";
+        $create_group_command = "gerrit create-group $group_name --member ''\''johan'\''' --member ''\''goyotm'\'''";
         $user_list = array('johan', 'goyotm');
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
         $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', $user_list);
@@ -164,7 +164,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
 
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
         $std_err = 'fatal: group "somegroup" already exists';
-        $command = "gerrit create-group tuleap.example.com-firefox/jean-claude/dusse-contributors --member johan";
+        $command = "gerrit create-group tuleap.example.com-firefox/jean-claude/dusse-contributors --member ''\''johan'\'''";
         $user_list = array('johan');
 
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
@@ -175,6 +175,15 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->assertEqual($e->getMessage(), "Command: $command" . PHP_EOL . "Error: $std_err");
         }
+    }
+
+    public function itEscapesTwiceUsernameInCommandLine() {
+        $project_name         = $this->host."-firefox/jean-claude/dusse";
+        $group_name           = $project_name."-contributors";
+        $create_group_command = "gerrit create-group $group_name --member ''\''Johan Martinsson'\'''";
+        $user_list            = array('Johan Martinsson',);
+        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
+        $this->driver->createGroup($this->gerrit_server, $this->repository, 'contributors', $user_list);
     }
 
 }
