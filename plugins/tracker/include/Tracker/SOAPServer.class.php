@@ -671,6 +671,24 @@ class Tracker_SOAPServer {
         }
     }
 
+    /**
+     * Returns comments of a given artifact
+     *
+     * @param String $session_key
+     * @param int $artifact_id
+     */
+    public function getArtifactComments($session_key, $artifact_id) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $artifact     = $this->artifact_factory->getArtifactById($artifact_id);
+
+            return $artifact->exportCommentsToSOAP();
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+
+    }
+
     private function getProjectById($group_id, $method_name) {
         $project = $this->soap_request_validator->getProjectById($group_id, $method_name);
         if (! $project->usesService('plugin_tracker')) {

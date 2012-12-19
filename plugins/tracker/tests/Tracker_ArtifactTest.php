@@ -2078,6 +2078,7 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
     private $submitted_by2;
 
     public function setUp() {
+        parent::setUp();
         $this->tracker_id    = 123;
         $this->email         = 'martin.goyot@enalean.com';
 

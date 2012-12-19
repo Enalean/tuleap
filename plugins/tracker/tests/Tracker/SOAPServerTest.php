@@ -820,4 +820,23 @@ class Tracker_SOAPServer_AppendTemporaryAttachments_Test extends Tracker_SOAPSer
     }
 }
 
+class Tracker_SOAPServer_GetArtifactComments_Test extends Tracker_SOAPServer_BaseTest {
+
+    public function setUp() {
+        parent::setUp();
+        $artifact_68   = stub('Tracker_Artifact')->getId()->returns(68);
+        stub($this->artifact_factory)->getArtifactById(68)->returns($artifact_68);
+    }
+
+    public function itCallsTheExportCommentsToSoapFunctionOfTheArtifact() {
+        $artifact = $this->artifact_factory->getArtifactById(68);
+
+        expect($artifact)->exportCommentsToSOAP()->once();
+        $this->server->getArtifactComments($this->session_key, $artifact->getId());
+    }
+
+    public function _itRaisesASOAPErrorWhenArtifactDoesNotExist() {
+
+    }
+}
 ?>
