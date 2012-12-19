@@ -1,40 +1,27 @@
 Version 5.8 (Not Released Yet)
 
    == Enhancement ==
-	* Tuleap can respond with several names
 	* Better documentation of SOAP API
 
    == Bug fix ==
 	* Use reliable method to detect if we are running in CLI
 	* Fix setup script: Replace localhost reference by the mysql_host value to be able to install the db on a dedicated server (Contrib STMicroelectronics)
 	* Add missing lib in stats script (sla #1644)
+	* Fix font compatibility with IE9 (Contrib STMicroelectronics)
 
-  == Tracker ==
+  == Plugins ==
 	* cardwall: 0.9.9
-	* tests: 5.9
-	* tracker: 5.46
-
-  == Development ==
-	* PHP 5.3 compatibility: persist tracker_ids across instance of test
-	* tracker: 5.47
-	* tracker: 5.48
-	* tests: 5.10
-	* tracker: 5.49
 	* agiledashboard: 0.60
-	* tracker: 5.50
-	* tracker: 5.51
 	* tests: 5.11
-	* tracker: 5.52
-	* tracker: 5.53
-	* tracker: 5.54
-	* tracker: 5.55
-	* git: 2.7.17
 	* git: 2.7.18
-	* forumml: 2.6.5
-	* tracker: 5.56
 	* tracker: 5.57
 	* IM: 1.5.5
 	* forumml: 2.6.6
+
+	== Development ==
+	* Tuleap can respond with several names
+	* PHP 5.3 compatibility: persist tracker_ids across instance of test
+
 
 Version 5.7 (Thursday, November 22nd 2012)
 
