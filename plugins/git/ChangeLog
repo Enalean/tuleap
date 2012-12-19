@@ -1,3 +1,6 @@
+Version 2.7.19 - Tuleap 5.9
+    * Continue migration of a git repository from Tuleap to Gerrit
+
 Version 2.7.18 - Tuleap 5.8
     * Fix link between Jenkins and gitphp (to display diff in the right sense)
 

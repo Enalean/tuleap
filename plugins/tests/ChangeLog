@@ -1,3 +1,7 @@
+Version 5.12 - Tuleap 5.9
+    * Display a diff for strings differences
+    * Helper for exception at a specific time (throwAt)
+
 Version 5.11 - Tuleap 5.8
     * Fix display of tree nodes when errors (Follow-up to Version 5.10)
 

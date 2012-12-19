@@ -1,3 +1,6 @@
+Version 5.58 - Tuleap 5.9
+    * Fix some isolated tests
+
 Version 5.57 - Tuleap 5.8
     * Fix bugs #1997: Warning & notice in the log
 
