@@ -37,7 +37,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
     
     public function testCanBeDisplayedReturnsFalseIfAuthTypeLdapAndGerritServersNotSet() {
         //set of type ldap
-        Config::set('sys_auth_type', Git::SYS_AUTH_TYPE_LDAP);
+        Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
                 
         $repository = new GitRepository();
         $request = mock('Codendi_Request');
@@ -51,7 +51,7 @@ class GitViews_RepoManagement_Pane_GerritTest extends TuleapTestCase {
     
     public function testCanBeDisplayedReturnsTrueIfAuthTypeLdapAndGerritServersSet() {
         //set of type ldap
-        Config::set('sys_auth_type', Git::SYS_AUTH_TYPE_LDAP);
+        Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
                 
         $repository = new GitRepository();
         $request = mock('Codendi_Request');
