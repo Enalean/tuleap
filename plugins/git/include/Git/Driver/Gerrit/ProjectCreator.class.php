@@ -72,7 +72,17 @@ class Git_Driver_Gerrit_ProjectCreator {
             $gerrit_project.'-'.self::GROUP_SUPERMEN,
             $gerrit_project.'-'.self::GROUP_OWNERS
         );
+
+        $this->exportGitBranches($gerrit_server, $gerrit_project, $repository);
+
         return $gerrit_project;
+    }
+
+    private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
+        $gerrit_project_url = escapeshellarg($gerrit_server->getCloneSSHUrl($gerrit_project));
+        $cmd                = "cd ".$repository->getFullPath()."; git push $gerrit_project_url refs/heads/*:refs/heads/*; git push $gerrit_project_url refs/tags/*:refs/tags/*";
+        //$cmd                = "cd ".$repository->getFullPath()."; git push $gerrit_project_url refs/heads/master:refs/heads/master";
+        `$cmd`;
     }
 
     private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners) {
@@ -81,6 +91,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addGroupToGroupFile($gerrit_server, $integrators);
         $this->addGroupToGroupFile($gerrit_server, $supermen);
         $this->addGroupToGroupFile($gerrit_server, $owners);
+        $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();
         $this->addPermissionsToProjectConf($repository, $contributors, $integrators, $supermen, $owners);
         $this->pushToServer();
@@ -122,6 +133,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         // means they can modify the permissions for any reference in the
         // project.
         $this->addToSection('refs', 'owner', "group $owners");
+        //$this->addToSection('refs', 'owner', "group Administrators");
 
         if ($this->shouldAddRegisteredUsers($repository)) {
             $this->addToSection('refs/heads', 'Read', "group Registered Users");
@@ -138,6 +150,11 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/heads', 'push', "+force group $supermen");
         $this->addToSection('refs/heads', 'pushMerge', "group $integrators");
 
+        $this->addToSection('refs/heads', 'create', "group Administrators");  // push initial ref
+        $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators"); // push initial ref
+        $this->addToSection('refs/heads', 'forgeAuthor', "group Administrators"); // push initial ref
+        $this->addToSection('refs/heads', 'pushMerge', "group Administrators");
+
         $this->addToSection('refs/changes', 'push', "group $contributors");
         $this->addToSection('refs/changes', 'push', "group $integrators");
         $this->addToSection('refs/changes', 'push', "+force group $supermen");
@@ -147,9 +164,15 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/for/refs/heads', 'push', "group $integrators");
         $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $integrators");
 
+        // To be able to push merge commit on master, we need pushMerge on refs/for/*
+        // http://code.google.com/p/gerrit/issues/detail?id=1072
+        $this->addToSection('refs/for', 'pushMerge', "group Administrators");
+
         $this->addToSection('refs/tags', 'read', "group $contributors");
         $this->addToSection('refs/tags', 'read', "group $integrators");
         $this->addToSection('refs/tags', 'pushTag', "group $integrators");
+
+        $this->addToSection('refs/tags', 'pushTag', "group Administrators");
     }
 
     private function shouldAddRegisteredUsers(GitRepository $repository) {
