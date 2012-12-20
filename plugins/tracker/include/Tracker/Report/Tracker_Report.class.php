@@ -511,19 +511,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
             $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
         }
-        $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched) . '</ul>';
-        //$html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
-        //$html .= '</form>';
 
+        //@todo Find a better way to manage search in followup thru Tracker report
         $followupSearchForm = '';
         $params = array('html' => &$followupSearchForm, 'report_id' => $this->id, 'request' => $request);
         EventManager::instance()->processEvent('tracker_report_followup_search', $params);
-        $html .= $followupSearchForm;
+        $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
 
-        $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
+        $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
+
+        $html .= '<div align="center">';
+        $html .= '<input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
         $html .= '</form>';
-
-        $html .= '</div>';
         return $html;
     }
 
