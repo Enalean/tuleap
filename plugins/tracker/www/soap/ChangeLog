@@ -1,3 +1,6 @@
+2.0.1 - Tuleap 5.9
+	* Enhancement: add getArtifactComments() method
+
 2.0 - Tuleap 5.8
     == /!\ Backward compatibility break /!\ ==
     * On type ArtifactFieldValue field_value changes from 'string' to complex type
