@@ -215,7 +215,7 @@ class fulltextsearchPlugin extends Plugin {
             $params['html'] .= '<h3 class="' . Toggler::getClassname('followups_search') . '" id="followups_search" >'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search').'</h3>';
             $params['html'] .= '<input type="hidden" value="'.$params['report_id'].'" name="report">';
             $params['html'] .= '<input type="hidden" value="followup_search" name="func">';
-            $params['html'] .= '<input name="search_followups" value="'.$filter.'" /></span> ';
+            $params['html'] .= '<input id="tracker_report_crit_followup_search" name="search_followups" value="'.$filter.'" />';
             $params['html'] .= '</div>';
         }
     }
