@@ -260,13 +260,22 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
      private function assertAllGitBranchsPushedToTheServer() {
         $cwd = getcwd();
         chdir("$this->tmpdir");
+
+        exec("git show-ref", $refs_cmd, $ret_val);
+
+        $expected_result = array("To $this->gerrit_git_url");
+
+        foreach ($refs_cmd as $ref) {
+            $ref               = substr($ref, strpos($ref, ' ') + 1);
+            $expected_result[] = "=\t$ref:$ref\t[up to date]";
+        }
+
+        $expected_result[] = "Done";
+
         exec("git push $this->gerrit_git_url refs/heads/*:refs/heads/* --porcelain", $output, $ret_val);
         chdir($cwd);
-        $this->assertEqual($output, array(
-            "To $this->gerrit_git_url",
-            "=\trefs/heads/master:refs/heads/master\t[up to date]",
-            "Done")
-        );
+
+        $this->assertEqual($output, $expected_result);
         $this->assertEqual($ret_val, 0);
     }
 }
