@@ -2109,8 +2109,7 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
         stub($this->changeset_with_comment_with_empty_body)->getComment()->returns($comment4);
         
         stub($this->changeset_without_submitted_by)->getEmail()->returns($this->email);
-
-        $this->changeset_without_comments = stub('Tracker_Artifact_Changeset')->getComment()->returns(null);
+        
     }
 
     private function getBuiltArtifact(array $changesets) {
@@ -2119,26 +2118,11 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
     }
 
     public function itReturnsAnEmptySoapArrayWhenThereIsNoComments() {
-        $changesets = array($this->changeset_without_comments);
+        $changesets = array($this->changeset_with_comment_with_empty_body);
         $artifact   = $this->getBuiltArtifact($changesets);
 
         $result = $artifact->exportCommentsToSOAP();
         $this->assertArrayEmpty($result);
-    }
-
-    public function itReturnsASOAPArrayWhenThereIsOneCommentButTwoChangesets() {
-        $changesets = array($this->changeset_without_comments, $this->changeset_with_submitted_by1);
-        $artifact   = $this->getBuiltArtifact($changesets);
-
-        $result = $artifact->exportCommentsToSOAP();
-        $expected = array(array(
-            'submitted_by' => $this->submitted_by1,
-            'email'        => null,
-            'submitted_on' => $this->timestamp1,
-            'body'         => $this->body1,
-        ));
-
-        $this->assertEqual($expected, $result);
     }
 
     public function itReturnsASOAPArrayWhenThereAreTwoComments() {
