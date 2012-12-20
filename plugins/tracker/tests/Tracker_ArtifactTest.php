@@ -2093,43 +2093,38 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
 
         $this->submitted_by1 = 101;
         $this->submitted_by2 = 102;
-        $this->changeset_with_submitted_by1 = mock('Tracker_Artifact_Changeset');
-        $this->changeset_with_submitted_by2 = mock('Tracker_Artifact_Changeset');
-        $this->changeset_without_submitted_by = mock('Tracker_Artifact_Changeset');
-        $this->changeset_with_comment_with_empty_body = mock('Tracker_Artifact_Changeset');
+
+        $this->artifact = anArtifact()->withTrackerId($this->tracker_id)->build();
+
+        $this->changeset_with_submitted_by1 = new Tracker_Artifact_Changeset(1, $this->artifact, $this->submitted_by1,  $this->timestamp1, null);
+        $this->changeset_with_submitted_by2 = new Tracker_Artifact_Changeset(2, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
+        $this->changeset_without_submitted_by = new Tracker_Artifact_Changeset(3, $this->artifact, null,  $this->timestamp3, $this->email);
+        $this->changeset_with_comment_with_empty_body = new Tracker_Artifact_Changeset(4, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
         
         $comment1 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_with_submitted_by1, 2, 3, $this->submitted_by1,  $this->timestamp1, $this->body1, 'text', 0);
         $comment2 = new Tracker_Artifact_Changeset_Comment(2, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body2, 'text', 0);
         $comment3 = new Tracker_Artifact_Changeset_Comment(3, $this->changeset_without_submitted_by, 2, 3, null,  $this->timestamp3, $this->body3, 'text', 0);
         $comment4 = new Tracker_Artifact_Changeset_Comment(4, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body4, 'text', 0);
 
-        stub($this->changeset_without_submitted_by)->getEmail()->returns($this->email);
-
-        stub($this->changeset_with_submitted_by1)->exportCommentToSOAP()->returns($comment1->exportToSOAP());
-        stub($this->changeset_with_submitted_by2)->exportCommentToSOAP()->returns($comment2->exportToSOAP());
-        stub($this->changeset_without_submitted_by)->exportCommentToSOAP()->returns($comment3->exportToSOAP());
-        stub($this->changeset_with_comment_with_empty_body)->exportCommentToSOAP()->returns($comment4->exportToSOAP());
-
-    }
-
-    private function getBuiltArtifact(array $changesets) {
-        $artifact = anArtifact()->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
-        return $artifact;
+        $this->changeset_with_submitted_by1->setLatestComment($comment1);
+        $this->changeset_with_submitted_by2->setLatestComment($comment2);
+        $this->changeset_without_submitted_by->setLatestComment($comment3);
+        $this->changeset_with_comment_with_empty_body->setLatestComment($comment4);
     }
 
     public function itReturnsAnEmptySoapArrayWhenThereIsNoComments() {
         $changesets = array($this->changeset_with_comment_with_empty_body);
-        $artifact   = $this->getBuiltArtifact($changesets);
+        $this->artifact->setChangesets($changesets);
 
-        $result = $artifact->exportCommentsToSOAP();
+        $result = $this->artifact->exportCommentsToSOAP();
         $this->assertArrayEmpty($result);
     }
 
     public function itReturnsASOAPArrayWhenThereAreTwoComments() {
         $changesets = array($this->changeset_with_submitted_by1, $this->changeset_with_submitted_by2);
-        $artifact   = $this->getBuiltArtifact($changesets);
+        $this->artifact->setChangesets($changesets);
 
-        $result = $artifact->exportCommentsToSOAP();
+        $result = $this->artifact->exportCommentsToSOAP();
         $expected = array(
             array(
                 'submitted_by' => $this->submitted_by1,
@@ -2150,9 +2145,9 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
 
     public function itReturnsAnEmailInTheSOAPArrayWhenThereIsNoSubmittedBy() {
         $changesets = array($this->changeset_without_submitted_by);
-        $artifact   = $this->getBuiltArtifact($changesets);
+        $this->artifact->setChangesets($changesets);
 
-        $result = $artifact->exportCommentsToSOAP();
+        $result = $this->artifact->exportCommentsToSOAP();
         $expected = array(array(
             'submitted_by' => null,
             'email'        => $this->email,
@@ -2165,9 +2160,9 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
 
     public function itDoesNotReturnAnArrayWhenCommentHasAnEmptyBody() {
         $changesets = array($this->changeset_with_comment_with_empty_body);
-        $artifact   = $this->getBuiltArtifact($changesets);
+        $this->artifact->setChangesets($changesets);
 
-        $result = $artifact->exportCommentsToSOAP();
+        $result = $this->artifact->exportCommentsToSOAP();
         $this->assertArrayEmpty($result);
     }
 }

@@ -349,6 +349,10 @@ class Tracker_Artifact_Changeset {
         return $this->latest_comment;
     }
 
+    public function setLatestComment(Tracker_Artifact_Changeset_Comment $comment) {
+        $this->latest_comment = $comment;
+    }
+
     /**
      * Return the ChangesetDao
      *
