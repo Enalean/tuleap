@@ -73,10 +73,15 @@ class Git_Driver_Gerrit_ProjectCreator {
             $gerrit_project.'-'.self::GROUP_OWNERS
         );
 
-//        $gerrit_project_url = escapeshellarg($gerrit_server->getCloneSSHUrl($gerrit_project));
-//        $cmd = "cd ".$repository->getFullPath()."; git push $gerrit_project_url refs/heads/master:refs/heads/master";
-//        `$cmd`;
+        $this->exportGitBranchs($gerrit_server, $gerrit_project, $repository);
+
         return $gerrit_project;
+    }
+
+    private function exportGitBranchs(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
+        $gerrit_project_url = escapeshellarg($gerrit_server->getCloneSSHUrl($gerrit_project));
+        $cmd                = "cd ".$repository->getFullPath()."; git push $gerrit_project_url refs/heads/*:refs/heads/*";
+        `$cmd`;
     }
 
     private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners) {

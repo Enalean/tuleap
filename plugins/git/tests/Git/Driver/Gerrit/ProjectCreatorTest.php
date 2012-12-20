@@ -60,6 +60,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns($this->gerrit_git_url);
 
         $this->repository                      = mock('GitRepository');
+        stub($this->repository)->getFullPath()->returns($host);
         $this->repository_in_a_private_project = mock('GitRepository');
         $this->repository_without_registered   = mock('GitRepository');
         $this->driver = mock('Git_Driver_Gerrit');
@@ -195,11 +196,13 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 
 class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
 
-    public function itCreatesAProject() {
+    public function itCreatesAProjectAndExportGitBranchs() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
         expect($this->driver)->createProject($this->server, $this->repository)->once();
         $project_name = $this->project_creator->createProject($this->server, $this->repository);
         $this->assertEqual($this->gerrit_project, $project_name);
+
+        $this->assertAllGitBranchsPushedToTheServer();
     }
 
     public function itCreatesContributorsGroup() {
@@ -252,6 +255,19 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         $this->driver->expectCallCount('createGroup', 4);
 
         $this->project_creator->createProject($this->server, $this->repository);
+    }
+
+     private function assertAllGitBranchsPushedToTheServer() {
+        $cwd = getcwd();
+        chdir("$this->tmpdir");
+        exec("git push $this->gerrit_git_url refs/heads/*:refs/heads/* --porcelain", $output, $ret_val);
+        chdir($cwd);
+        $this->assertEqual($output, array(
+            "To $this->gerrit_git_url",
+            "=\trefs/heads/master:refs/heads/master\t[up to date]",
+            "Done")
+        );
+        $this->assertEqual($ret_val, 0);
     }
 }
 ?>
