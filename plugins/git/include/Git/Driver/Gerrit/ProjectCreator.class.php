@@ -164,6 +164,8 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/for/refs/heads', 'push', "group $integrators");
         $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $integrators");
 
+        // To be able to push merge commit on master, we need pushMerge on refs/for/*
+        // http://code.google.com/p/gerrit/issues/detail?id=1072
         $this->addToSection('refs/for', 'pushMerge', "group Administrators");
 
         $this->addToSection('refs/tags', 'read', "group $contributors");
