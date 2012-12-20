@@ -81,6 +81,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
         $gerrit_project_url = escapeshellarg($gerrit_server->getCloneSSHUrl($gerrit_project));
         $cmd                = "cd ".$repository->getFullPath()."; git push $gerrit_project_url refs/heads/*:refs/heads/*; git push $gerrit_project_url refs/tags/*:refs/tags/*";
+        //$cmd                = "cd ".$repository->getFullPath()."; git push $gerrit_project_url refs/heads/master:refs/heads/master";
         `$cmd`;
     }
 
@@ -132,6 +133,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         // means they can modify the permissions for any reference in the
         // project.
         $this->addToSection('refs', 'owner', "group $owners");
+        //$this->addToSection('refs', 'owner', "group Administrators");
 
         if ($this->shouldAddRegisteredUsers($repository)) {
             $this->addToSection('refs/heads', 'Read', "group Registered Users");
@@ -151,6 +153,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/heads', 'create', "group Administrators");  // push initial ref
         $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators"); // push initial ref
         $this->addToSection('refs/heads', 'forgeAuthor', "group Administrators"); // push initial ref
+        $this->addToSection('refs/heads', 'pushMerge', "group Administrators");
 
         $this->addToSection('refs/changes', 'push', "group $contributors");
         $this->addToSection('refs/changes', 'push', "group $integrators");
@@ -161,9 +164,13 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/for/refs/heads', 'push', "group $integrators");
         $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $integrators");
 
+        $this->addToSection('refs/for', 'pushMerge', "group Administrators");
+
         $this->addToSection('refs/tags', 'read', "group $contributors");
         $this->addToSection('refs/tags', 'read', "group $integrators");
         $this->addToSection('refs/tags', 'pushTag', "group $integrators");
+
+        $this->addToSection('refs/tags', 'pushTag', "group Administrators");
     }
 
     private function shouldAddRegisteredUsers(GitRepository $repository) {
