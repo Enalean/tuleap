@@ -358,5 +358,19 @@ class Event {
      */
     const  UGROUP_UPDATE_USERS_ALLOWED = 'ugroup_update_users_allowed';
 
+    /**
+     * Display information about SOAP end points
+     *
+     * Parameters:
+     *    None
+     * Expected results
+     *    'end_points' => array of array(
+     *        'title'       => '',
+     *        'wsdl'        => '',
+     *        'wsdl_viewer' => '',
+     *        'description' => '',
+     *    );
+     */
+    const SOAP_DESCRIPTION = 'soap_description';
 }
 ?>

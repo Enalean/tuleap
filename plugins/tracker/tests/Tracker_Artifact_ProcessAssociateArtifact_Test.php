@@ -36,32 +36,48 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
             'func'               => 'unassociate-artifact-to',
             'linked-artifact-id' => 987));
 
-        $tracker = aTracker()->withId(456)->build();
-
-        $artifact = $this->GivenAnArtifact($tracker);
-
+        $artifact = partial_mock('Tracker_Artifact', 
+                array(
+                    'getFormElementFactory', 
+                    'getTracker',
+                    'createNewChangeset',
+                    )
+                );
+        
+        $factory  = mock('Tracker_FormElementFactory');
+        stub($artifact)->getFormElementFactory()->returns($factory);
+        
         $field = anArtifactLinkField()->withId(1002)->build();
+        stub($factory)->getUsedArtifactLinkFields()->returns(array($field));
 
-        $factory = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields($tracker)->returns(array($field));
-        $artifact->setFormElementFactory($factory);
-
-        $expected_field_data = array($field->getId() => array('new_values' => '',
-            'removed_values' => array(987 => 1)));
+        $expected_field_data = array(
+            $field->getId() => array(
+                'new_values' => '',
+                'removed_values' => array(987 => 1),
+                ),
+            );
         $no_comment = $no_email = '';
 
-        $artifact->expectOnce('createNewChangeset', array($expected_field_data, $no_comment, $this->user, $no_email));
-
+        stub($artifact)->createNewChangeset($expected_field_data, $no_comment, $this->user, $no_email)->once();      
+ 
         $artifact->process(new MockTrackerManager(), $this->request, $this->user);
     }
 
     public function itCreatesANewChangesetWithANewAssociation() {
-        $tracker  = aTracker()->withId(456)->build();
+        $artifact = partial_mock('Tracker_Artifact', 
+                array(
+                    'getFormElementFactory', 
+                    'getTracker',
+                    'createNewChangeset',
+                    )
+                );
 
-        $artifact = $this->GivenAnArtifact($tracker);
-
-        $field    = anArtifactLinkField()->withId(1002)->build();
-        $factory  = stub('Tracker_FormElementFactory')->getUsedArtifactLinkFields($tracker)->returns(array($field));
-        $artifact->setFormElementFactory($factory);
+        
+        $factory  = mock('Tracker_FormElementFactory');
+        stub($artifact)->getFormElementFactory()->returns($factory);
+        
+        $field = anArtifactLinkField()->withId(1002)->build();
+        stub($factory)->getUsedArtifactLinkFields()->returns(array($field));
 
         $expected_field_data = array($field->getId() => array('new_values' => 987));
         $no_comment = $no_email = '';

@@ -296,9 +296,16 @@ class UGroupBinding {
             $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
             switch($func) {
                 case 'add_binding':
-                    $sourceId = $request->get('source_ugroup');
-                    if ($this->addBinding($ugroupId, $sourceId)) {
-                        $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
+                    $projectSourceId   = $request->getValidated('source_project', 'GroupId');
+                    $sourceId          = $request->get('source_ugroup');
+                    $validSourceUgroup = $this->checkUGroupValidity($projectSourceId, $sourceId);
+                    $projectSource     = ProjectManager::instance()->getProject($projectSourceId);
+                    if ($validSourceUgroup && $projectSource->userIsAdmin()) {
+                        if ($this->addBinding($ugroupId, $sourceId)) {
+                            $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
+                        }
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
                     }
                     break;
                 case 'remove_binding':

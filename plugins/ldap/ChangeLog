@@ -1,3 +1,6 @@
+Version 3.22 - Tuleap 5.7
+    * Fix art #1679: Not redirected to Personal Page after log in from Tuleap Home page
+
 Version 3.21 - Tuleap 5.6
     * User groups can be bound to a group of another project (Contrib STMicroelectronics)
 

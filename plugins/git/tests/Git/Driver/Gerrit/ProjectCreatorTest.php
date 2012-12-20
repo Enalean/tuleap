@@ -59,7 +59,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $this->gerrit_git_url = "$host/$this->gerrit_project";
         stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns($this->gerrit_git_url);
 
-        $this->repository = mock('GitRepository');
+        $this->repository                      = mock('GitRepository');
+        $this->repository_in_a_private_project = mock('GitRepository');
+        $this->repository_without_registered   = mock('GitRepository');
         $this->driver = mock('Git_Driver_Gerrit');
         stub($this->driver)->createProject($this->server, $this->repository)->returns($this->gerrit_project);
 
@@ -71,6 +73,15 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $this->userfinder = mock('Git_Driver_Gerrit_UserFinder');
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator($this->tmpdir, $this->driver, $this->userfinder);
 
+        $public_project  = stub('Project')->isPublic()->returns(true);
+        $private_project = stub('Project')->isPublic()->returns(false);
+        stub($this->repository)->getProject()->returns($public_project);
+        stub($this->repository_in_a_private_project)->getProject()->returns($private_project);
+        stub($this->repository_without_registered)->getProject()->returns($public_project);
+
+        stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository)->returns(true);
+        stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository_in_a_private_project)->returns(true);
+        stub($this->userfinder)->areRegisteredUsersAllowedTo(Git::PERM_READ, $this->repository_without_registered)->returns(false);
     }
 
     public function tearDown() {
@@ -94,6 +105,18 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertEverythingIsCommitted();
         $this->assertEverythingIsPushedToTheServer();
         $this->assertSetUpPeriodicalFetchAddsRemoteForGit();
+    }
+
+    public function itDoesNotSetPermsOnRegisteredUsersIfProjectIsPrivate() {
+        $this->project_creator->createProject($this->server, $this->repository_in_a_private_project);
+
+        $this->assertNoPattern('/Registered Users/', file_get_contents("$this->tmpdir/project.config"));
+    }
+
+    public function itDoesNotSetPermsOnRegisteredUsersIfRepoHasNoReadForRegistered() {
+        $this->project_creator->createProject($this->server, $this->repository_without_registered);
+
+        $this->assertNoPattern('/Registered Users/', file_get_contents("$this->tmpdir/project.config"));
     }
 
     private function assertItClonesTheDistantRepo() {

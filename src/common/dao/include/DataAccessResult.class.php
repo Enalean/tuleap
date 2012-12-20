@@ -49,6 +49,10 @@ class DataAccessResult implements IProvideDataAccessResult {
         }
     }
 
+    public function getResult() {
+        return $this->result;
+    }
+
     /**
      * Allow to create an object instead of an array when iterating over results
      *

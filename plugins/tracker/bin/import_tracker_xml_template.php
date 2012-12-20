@@ -56,9 +56,14 @@ if ( empty($item_name) ) {
 $output = '';
 ob_start();
 $tf      = TrackerFactory::instance();
-$tracker = $tf->createFromXML( $xmlFile, $group_id, $name, $description, $item_name, null );
-$output = ob_get_contents();
-ob_end_flush();
+if (($xml_element = simplexml_load_file($xmlFile)) !== false) {
+    $tracker = $tf->createFromXML($xml_element, $group_id, $name, $description, $item_name, null );
+    $output = ob_get_contents();
+    ob_end_flush();
+} else {
+    echo 'Invalid File'.PHP_EOL;
+    exit(1);
+}
 
 #WARN AND ERRORS PARSING
 $matches = array();

@@ -18,12 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/UGroupDao.class.php');
-require_once('common/dao/UGroupUserDao.class.php');
-require_once('common/dao/UserGroupDao.class.php');
-require_once('common/user/User.class.php');
-require_once('www/project/admin/ugroup_utils.php');
-require_once('UGroup_Invalid_Exception.class.php');
+require_once 'common/dao/UGroupDao.class.php';
+require_once 'common/dao/UGroupUserDao.class.php';
+require_once 'common/dao/UserGroupDao.class.php';
+require_once 'common/user/User.class.php';
+require_once 'www/project/admin/ugroup_utils.php';
+require_once 'UGroup_Invalid_Exception.class.php';
+require_once 'common/user/Users.class.php';
 
 /**
  * UGroup object
@@ -422,47 +423,5 @@ class UGroup {
             return false;
         }
     }
-
-
-
 }
-
-class Users {
-
-    /** @var DataAccessResult */
-    private $dar;
-
-    public function __construct(DataAccessResult $dar = null) {
-        $this->dar = $dar;
-    }
-
-    public function getDar() {
-        return $this->dar;
-    }
-
-    public function reify() {
-        $result = array();
-        foreach ($this->dar as $row) {
-            $result[] = $row;
-        }
-        return $result;
-    }
-
-    public function getNames() {
-        $result = array();
-        foreach ($this->dar as $user) {
-            $result[] = $user->getUserName();
-        }
-        return $result;
-    }
-
-    public function getLdapIds() {
-        $result = array();
-        foreach ($this->dar as $user) {
-            $result[] = $user->getLdapId();
-        }
-        return $result;
-    }
-}
-
 ?>

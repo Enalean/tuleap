@@ -39,6 +39,9 @@ class URLRedirect {
                 $returnTo .= "&pv=2";
             }
         }
+        if (strpos($url['path'], '/projects') === 0) {
+            $GLOBALS['Response']->send401UnauthorizedHeader();
+        }
 
         $url = '/account/login.php?return_to=' . $returnTo;
         return $url;

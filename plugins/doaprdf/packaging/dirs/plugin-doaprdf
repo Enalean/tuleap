@@ -1,0 +1,5 @@
+etc/gforge/httpd.d
+etc/gforge/plugins/doaprdf
+usr/share/gforge/plugins/doaprdf/cgi-bin
+usr/share/gforge/plugins/doaprdf/common
+usr/share/gforge/plugins/doaprdf/www

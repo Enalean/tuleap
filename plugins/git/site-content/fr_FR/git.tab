@@ -115,7 +115,7 @@ plugin_git	gerrit_migrated_more_description	Pour rappel, la gestion du dépôt (
 plugin_git	gerrit_migrate_to	Migrer repo vers Gerrit
 plugin_git	gerrit_server_already_migrated	Le dépôt <em>$1</em> a déjà été migré sur le projet Gerrit : <a href="$3">$2</a>.
 plugin_git	permissions_on_remote_server	Vous ne pouvez pas modifier les permissions, car elles sont gérés sur un serveur distant
-plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes (ce message disparaitra une fois la conversion achevée).
+plugin_git	gerrit_migration_ongoing	La migration de ce dépôt vers le serveur Gerrit est en cours, merci de patienter quelques minutes.
 
 plugin_git	mail_prefix_label	Préfixe de notification
 plugin_git	mail_prefix_title	Mettre a jour le préfixe du mail de notification

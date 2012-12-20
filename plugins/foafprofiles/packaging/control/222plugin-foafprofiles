@@ -1,0 +1,4 @@
+Package: @PACKAGE@-plugin-foafprofiles
+Architecture: all
+Depends: @OLDPACKAGE@-common, @OLDPACKAGE@-db-postgresql | @OLDPACKAGE@-db, @OLDPACKAGE@-web-apache2 | @OLDPACKAGE@-web, ${misc:Depends}
+Description: collaborative development tool - FOAF Profiles plugin

@@ -1,46 +1,12 @@
-body {
-    margin: 0;
-    padding: 0;
-    background:white;
+#menu {
+    margin-left: 0;
 }
-
-body,th,td {
-    font-family: Verdana, Arial, sans-serif;
-    font-size: 10pt;
-}
-
 #menu,#menu ul {
     list-style-type: none;
     padding-left: 0px;
 }
 
-#menu ul li {
-    padding-left: 40px;
-}
-
 #menu ul li.categ {
-    padding-left: 24px;
-}
-
-#submit_panel {
-    text-align: center;
-}
-
-#submit_panel input {
-    width: 96px;
-    font-size: 2em;
-    height: 100%;
-    border: 1px solid #ccc;
-    background-image: url('../images/bg.png');
-    color: transparent;
-}
-
-#submit_panel input:hover {
-    background-image: url('../images/bg-hover.png');
-}
-
-tr {
-    vertical-align: top;
 }
 
 .fail {
@@ -53,32 +19,10 @@ tr {
 
 pre {
     background-color: ivory;
-    border: 1px solid #d2d2d2;
-    padding: 1em 0.5em;
-    white-space: pre-wrap; /* css-3 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
 }
-
-a img {
-    border: none;
-}
-
-.testsRunner {
-    width:100%;
-}
-
+.brand,
 .testsControl {
-    width:10%;
     white-space:nowrap;
-}
-.testsLauncher {
-    width:5%;
-}
-.testsResult {
-    width:90%;
 }
 
 .results-elapsed-time {
@@ -119,3 +63,39 @@ a img {
     font-weight:bold;
 }
 /* }}} */
+
+.shortcuts {
+    float: right;
+}
+
+
+
+.tree-blank, .tree-node, .tree-pipe, .tree-last {
+    width: 16px;
+    height: 100%;
+    display: inline-block;
+    background-image: url('../images/TreeNodeSprites.png');
+    background-repeat: repeat-y;
+
+    /*Dirty IE Hack*/
+      zoom: 1;
+      *display: inline;
+}
+
+.tree-last {
+    background-position:-48px 0px;
+}
+ .tree-node {
+    background-position:-32px 0px;
+}
+.tree-pipe {
+    background-position:-16px 0px;
+}
+
+.tree-node, .tree-last {
+    margin-right: 0.25em;
+}
+
+.tree-collapsable {
+    cursor: pointer;
+}

@@ -145,18 +145,14 @@ class URLVerification {
     }
 
     /**
-     * Always permit requests for localhost, or for api or soap scripts
+     * Should we treat current request as an exception
      *
-     * @param Array $server
+     * @param array $server
      *
      * @return Boolean
      */
     function isException($server) {
-        return (($server['SERVER_NAME'] == 'localhost')
-             || (strcmp(substr($server['SCRIPT_NAME'], 0, 5), '/api/') == 0)
-             || (strcmp(substr($server['SCRIPT_NAME'], 0, 6), '/soap/') == 0))
-             || preg_match('`^/plugins/[^/]+/soap/`', $server['SCRIPT_NAME']);
-
+        return preg_match('`^(?:/plugins/[^/]+)?/(?:soap|api)/`', $server['SCRIPT_NAME']);
     }
 
     /**
@@ -234,16 +230,8 @@ class URLVerification {
      *
      */
     public function verifyHost($server) {
-        if (!$this->isException($server)) {
-            if ($this->isUsingSSL($server)) {
-                if (!$this->isValidServerName($server, $GLOBALS['sys_https_host'])) {
-                    $this->urlChunks['host'] = $GLOBALS['sys_https_host'];
-                }
-            } elseif ($GLOBALS['sys_force_ssl'] == 1) {
-                $this->urlChunks['host'] = $GLOBALS['sys_https_host'];
-            } elseif (!$this->isValidServerName($server, $GLOBALS['sys_default_domain'])) {
-                $this->urlChunks['host'] = $GLOBALS['sys_default_domain'];
-            }
+        if (!$this->isUsingSSL($server) && $GLOBALS['sys_force_ssl'] == 1) {
+            $this->urlChunks['host'] = $GLOBALS['sys_https_host'];
         }
     }
 
@@ -500,6 +488,7 @@ class URLVerification {
      * @return void
      */
     function displayPrivateProjectError($url) {
+        $GLOBALS['Response']->send401UnauthorizedHeader();
         $sendMail = new Error_PermissionDenied_PrivateProject($url);
         $sendMail->buildInterface();
         exit;

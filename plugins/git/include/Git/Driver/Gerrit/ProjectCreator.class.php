@@ -64,6 +64,7 @@ class Git_Driver_Gerrit_ProjectCreator {
             }
         }
         $this->initiatePermissions(
+            $repository,
             $gerrit_server,
             $gerrit_server->getCloneSSHUrl($gerrit_project),
             $gerrit_project.'-'.self::GROUP_CONTRIBUTORS,
@@ -77,14 +78,14 @@ class Git_Driver_Gerrit_ProjectCreator {
         return $gerrit_project;
     }
 
-    private function initiatePermissions(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners) {
+    private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners) {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         $this->addGroupToGroupFile($gerrit_server, $contributors);
         $this->addGroupToGroupFile($gerrit_server, $integrators);
         $this->addGroupToGroupFile($gerrit_server, $supermen);
         $this->addGroupToGroupFile($gerrit_server, $owners);
         $this->addRegisteredUsersGroupToGroupFile();
-        $this->addPermissionsToProjectConf($contributors, $integrators, $supermen, $owners);
+        $this->addPermissionsToProjectConf($repository, $contributors, $integrators, $supermen, $owners);
         $this->pushToServer();
     }
 
@@ -118,16 +119,16 @@ class Git_Driver_Gerrit_ProjectCreator {
         file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
-    private function addPermissionsToProjectConf($contributors, $integrators, $supermen, $owners) {
+    private function addPermissionsToProjectConf(GitRepository $repository, $contributors, $integrators, $supermen, $owners) {
         // https://groups.google.com/d/msg/repo-discuss/jTAY2ApcTGU/DPZz8k0ZoUMJ
         // Project owners are those who own refs/* within that project... which
         // means they can modify the permissions for any reference in the
         // project.
         $this->addToSection('refs', 'owner', "group $owners");
 
-        // TODO: if (it is a public project && RegisteredUsers = Read) {
-        $this->addToSection('refs/heads', 'Read', "group Registered Users");
-        // }
+        if ($this->shouldAddRegisteredUsers($repository)) {
+            $this->addToSection('refs/heads', 'Read', "group Registered Users");
+        }
         $this->addToSection('refs/heads', 'Read', "group $contributors");
         $this->addToSection('refs/heads', 'Read', "group $integrators");
         $this->addToSection('refs/heads', 'create', "group $integrators");
@@ -152,6 +153,10 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addToSection('refs/tags', 'read', "group $contributors");
         $this->addToSection('refs/tags', 'read', "group $integrators");
         $this->addToSection('refs/tags', 'pushTag', "group $integrators");
+    }
+
+    private function shouldAddRegisteredUsers(GitRepository $repository) {
+        return $repository->getProject()->isPublic() && $this->user_finder->areRegisteredUsersAllowedTo(Git::PERM_READ, $repository);
     }
 
     private function addToSection($section, $permission, $value) {

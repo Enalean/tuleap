@@ -100,6 +100,37 @@
         </element>
       </optional>
       <optional>
+        <element name="dependencies">
+          <zeroOrMore>
+            <element name="rule">
+              <ref name="listRuleContent"/>
+            </element>
+          </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="rules">
+          <optional>
+            <element name="date_rules">
+              <zeroOrMore>
+                <element name="rule">
+                  <ref name="dateRuleContent"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+          <optional>
+            <element name="list_rules">
+              <zeroOrMore>
+                <element name="rule">
+                  <ref name="listRuleContent"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+        </element>
+      </optional>
+      <optional>
         <element name="reports">
           <zeroOrMore>
             <element name="report">
@@ -409,7 +440,7 @@
         <data type="string"/>
       </attribute>
     </element>
-    <zeroOrMore>
+    <optional>
       <element name="postactions">
         <zeroOrMore>
           <element name="postaction_field_date">
@@ -448,18 +479,87 @@
           </element>
         </zeroOrMore>
       </element>
-    </zeroOrMore>
-    <zeroOrMore>
-      <element name="permissions">
-        <zeroOrMore>
-          <element name="permission">
-            <attribute name="ugroup">
-              <data type="string"/>
-            </attribute>
-          </element>
-        </zeroOrMore>
-      </element>
-    </zeroOrMore>
+    </optional>
+    <choice>
+      <ref name="conditionPermissionsContent"/>
+      <optional>
+        <element name="conditions">
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>perms</value>
+              </attribute>
+              <ref name="conditionPermissionsContent"/>
+            </element>
+          </optional>
+          <optional>
+            <element name="condition">
+              <attribute name="type">
+                <value>notempty</value>
+              </attribute>
+              <ref name="conditionFieldNotEmptyContent"/>
+            </element>
+          </optional>
+        </element>
+      </optional>
+    </choice>
+  </define>
+  <define name="conditionPermissionsContent">
+    <element name="permissions">
+      <zeroOrMore>
+        <element name="permission">
+          <attribute name="ugroup">
+            <data type="string"/>
+          </attribute>
+        </element>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="conditionFieldNotEmptyContent">
+    <element name="field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="listRuleContent">
+    <element name="source_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="source_value">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_value">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="dateRuleContent">
+    <element name="source_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="comparator">
+      <attribute name="type">
+        <data type="string"/>
+      </attribute>
+    </element>
   </define>
   <define name="semanticContent">
     <choice>
@@ -565,7 +665,7 @@
     <optional>
       <!--
         defaout is true
-        these ids are initial ids of the exported report 
+        these ids are initial ids of the exported report
       -->
       <attribute name="id">
         <data type="int"/>

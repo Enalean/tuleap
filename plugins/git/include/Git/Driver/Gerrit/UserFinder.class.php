@@ -57,6 +57,18 @@ class Git_Driver_Gerrit_UserFinder {
         return array_filter(array_unique($ugroups_members));
     }
 
+    /** @return bool */
+    public function areRegisteredUsersAllowedTo($permission_type, GitRepository $repository) {
+        if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
+            return false;
+        }
+        foreach ($this->permissions_manager->getAuthorizedUgroups($repository->getId(), $permission_type) as $row) {
+            if ($row['ugroup_id'] == Ugroup::REGISTERED || $row['ugroup_id'] == Ugroup::ANONYMOUS) {
+                return true;
+            }
+        }
+    }
+
     private function getUgroups($repository_id, $permission_type) {
         if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
             return array(UGroup::PROJECT_ADMIN);

@@ -1,0 +1,5 @@
+etc/gforge/httpd.d
+etc/gforge/plugins/foafprofiles
+usr/share/gforge/plugins/foafprofiles/cgi-bin
+usr/share/gforge/plugins/foafprofiles/common
+usr/share/gforge/plugins/foafprofiles/www

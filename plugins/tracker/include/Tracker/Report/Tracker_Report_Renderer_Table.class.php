@@ -171,10 +171,10 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
         if (isset($this->report_session)) {
             $session_renderer_table_columns = $this->report_session->get("{$this->id}.columns");
         }
-        
         if ( $session_renderer_table_columns ) {            
                 $columns = $session_renderer_table_columns;
                 $ff = $this->report->getFormElementFactory();
+                $this->_columns = array();
                 foreach ($columns as $key => $column) {
                     if ($formElement = $ff->getFormElementById($key)) {
                         if ($formElement->userCanRead()) {
@@ -189,16 +189,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
                 }
         } else {
             if (empty($this->_columns)) {
-                $ff = $this->getFieldFactory();
-                $this->_columns = array();
-                foreach($this->getColumnsDao()->searchByRendererId($this->id) as $row) {
-                    if ($field = $ff->getUsedFormElementById($row['field_id'])) {
-                        if ($field->userCanRead()) {
-                            $this->_columns[$row['field_id']] = $row;
-                            $this->_columns[$row['field_id']]['field'] = $field;
-                        }
-                    }
-                }
+                $this->_columns = $this->getColumnsFromDb();
             }
         }
         return $this->_columns;

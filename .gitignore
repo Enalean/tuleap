@@ -5,3 +5,5 @@ src/utils/svn/*.pyc
 tests/simpletest/common/include/_fixtures/big_file
 documentation/user_guide/html/*
 .vagrant
+*.box
+nbproject

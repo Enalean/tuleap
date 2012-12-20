@@ -1,4 +1,5 @@
 <?php
+require_once('database.php');
 require_once('common/include/Error.class.php');
 require_once('www/include/utils.php');
 
@@ -64,7 +65,20 @@ Mock::generate('ArtifactType');
  *
  * Tests the class ArtifactImport
  */
-class ArtifactImportTest extends UnitTestCase {
+class ArtifactImportTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->da  = mock('DataAccess');
+        $this->dar = mock('DataAccessResult');
+        stub($this->da)->query()->returns($this->dar);
+        CodendiDataAccess::setInstance($this->da);
+        db_connect();
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+        CodendiDataAccess::clearInstance();
+    }
 
     function testALL() {
 
@@ -502,6 +516,9 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
     }
 
     function testCheckCommentExistInLegacyFormat() {
+        stub($this->da)->numRows()->returns(1);
+        stub($this->da)->fetchArray()->returns(array ('new_value' => '<pre> testing issue </pre>'));
+        stub($this->dar)->getResult()->returns(true);
         $artImp = new ArtifactImportTestVersion($this);
         $artId = 12237;
         $parsedFollow = array('comment' => '<pre> testing issue </pre>');
@@ -515,11 +532,11 @@ Problem also occurs for new bugs posted to a project *with* a New Bugs address. 
 //function user_ismember() {return true;}
 
 //function user_getname() {return 'schneide2';}
-
+/*
 function db_query($string) {return true;}
 function db_numrows($string) {return 1;}
 function db_fetch_array($string) {return array ('new_value' => '<pre> testing issue </pre>');}
 function db_ei($string) {return false;}
 function db_es($string) {return false;}
-
+*/
 ?>

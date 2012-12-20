@@ -36,7 +36,12 @@ class MockTrackerBuilder {
         stub($this->tracker)->getGroupId()->returns($id);
         return $this;
     }
-    
+
+    public function withProject(Project $project) {
+        stub($this->tracker)->getProject()->returns($project);
+        return $this;
+    }
+
     public function withName($name) {
         stub($this->tracker)->getName()->returns($name);
         return $this;

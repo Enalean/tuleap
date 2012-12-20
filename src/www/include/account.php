@@ -309,10 +309,11 @@ function account_create_mypage($user_id) {
 function account_redirect_after_login() {
     global $pv;  
 
-    $em =& EventManager::instance();
-    $em->processEvent('account_redirect_after_login', null);
-
     $request = HTTPRequest::instance();
+
+    $em = EventManager::instance();
+    $em->processEvent('account_redirect_after_login', array('request' => $request));
+
     if($request->existAndNonEmpty('return_to')) {
         $returnToToken = parse_url($request->get('return_to'));
         if(preg_match('{/my(/|/index.php|)}i', $returnToToken['path'])) {

@@ -1,0 +1,3 @@
+plugins/doaprdf/common/*                  usr/share/@OLDPACKAGE@/plugins/doaprdf/common/
+plugins/doaprdf/include/*                 usr/share/@OLDPACKAGE@/plugins/doaprdf/include/
+plugins/doaprdf/etc/doaprdf.ini	             etc/@PACKAGE@/config.ini.d/

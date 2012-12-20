@@ -761,12 +761,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             $date_array = explode('-', $soap_value);
             if (count($date_array) == 3 && checkdate($date_array[1], $date_array[2], $date_array[0]) && $this->_nbDigits($date_array[0])) {
                 return $soap_value;
-            }else {
+            } else {
                 return null;
             }
-        } else {
-            return null;
+        } elseif(intval($soap_value) == $soap_value) {
+            // Assume it's a timestamp
+            return date('Y-m-d', (int) $soap_value);
         }
+        return null;
     }
 
     /**

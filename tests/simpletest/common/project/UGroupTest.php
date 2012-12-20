@@ -328,20 +328,4 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 0");
     }
 }
-
-class Users_Test extends TuleapTestCase { //TODO to be moved
-
-    public function itProvidesTheBareDAR() {
-        $dar = TestHelper::arrayToDar('hej', 'hopp', 'trallalalala');
-        $users = new Users($dar);
-        $this->assertEqual($users->getDar(), $dar);
-        $this->assertEqual($users->reify(), array('hej', 'hopp', 'trallalalala'));
-    }
-
-    public function itProvidesTheUserNames() {
-        $dar = TestHelper::arrayToDar(aUser()->withUserName('Nicolas')->build(), aUser()->withUserName('Johan')->build());
-        $users = new Users($dar);
-        $this->assertEqual($users->getNames(), array('Nicolas', 'Johan'));
-    }
-}
 ?>
