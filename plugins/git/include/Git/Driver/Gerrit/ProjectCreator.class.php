@@ -71,6 +71,9 @@ class Git_Driver_Gerrit_ProjectCreator {
             $gerrit_project.'-'.self::GROUP_SUPERMEN,
             $gerrit_project.'-'.self::GROUP_OWNERS
         );
+        
+        $this->setUpPeriodicalFetch($repository, $gerrit_server);
+        
         return $gerrit_project;
     }
 
@@ -158,6 +161,21 @@ class Git_Driver_Gerrit_ProjectCreator {
         `cd $this->dir; git add project.config groups`;
         `cd $this->dir; git commit -m 'Updated project config and access rights'`; //TODO: what about author name?
         `cd $this->dir; git push origin HEAD:refs/meta/config`;
+    }
+    
+    private function setUpPeriodicalFetch(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server) {
+        //*add remote server gerrit:
+        //git remote add gerrit "ext::ssh -p 29418 -i $HOME/.ssh/id_rsa-gerrit admin-shunt.cro.enalean.com@gerrit-shunt.cro.enalean.com %S shunt.cro.enalean.com-gerrit-devs/funky"
+        //WHERE
+        // $HOME/.ssh/id_rsa-gerrit
+        //     = $gerrit_server->identity_file
+        // 29418
+        //     = $gerrit_server->ssh_port
+        // admin-shunt.cro.enalean.com@gerrit-shunt.cro.enalean.com
+        //     = $gerrit_server->login @ $gerrit_server->host
+        // shunt.cro.enalean.com-gerrit-devs/funky 
+        //     = $this->driver->getGerritProjectName($repository);
+
     }
 }
 

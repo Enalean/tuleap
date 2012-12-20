@@ -93,6 +93,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertPermissionsFileHasEverything();
         $this->assertEverythingIsCommitted();
         $this->assertEverythingIsPushedToTheServer();
+        $this->assertSetUpPeriodicalFetchAddsRemoteForGit();
     }
 
     private function assertItClonesTheDistantRepo() {
@@ -167,6 +168,10 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     private function itLogsEachMethodsCall() {
+    }
+    
+    private function assertSetUpPeriodicalFetchAddsRemoteForGit() {
+        
     }
 }
 
