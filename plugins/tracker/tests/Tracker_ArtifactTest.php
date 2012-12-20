@@ -2080,7 +2080,7 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->tracker_id    = 123;
-        $this->email         = 'martin.goyot@enalean.com';
+        $this->email         = 'martin.goyot@example.com';
 
         $this->timestamp1    = 1355896800;
         $this->timestamp2    = 1355896802;
@@ -2090,7 +2090,7 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
         $this->body2         = 'hibou';
         $this->body3         = 'forêt';
         $this->body4         = '';
-        
+
         $this->submitted_by1 = 101;
         $this->submitted_by2 = 102;
         $this->changeset_with_submitted_by1 = mock('Tracker_Artifact_Changeset');
@@ -2099,17 +2099,17 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
         $this->changeset_with_comment_with_empty_body = mock('Tracker_Artifact_Changeset');
         
         $comment1 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_with_submitted_by1, 2, 3, $this->submitted_by1,  $this->timestamp1, $this->body1, 'text', 0);
-        $comment2 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body2, 'text', 0);
-        $comment3 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_without_submitted_by, 2, 3, null,  $this->timestamp3, $this->body3, 'text', 0);
-        $comment4 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body4, 'text', 0);
-        
-        stub($this->changeset_with_submitted_by1)->getComment()->returns($comment1);
-        stub($this->changeset_with_submitted_by2)->getComment()->returns($comment2);
-        stub($this->changeset_without_submitted_by)->getComment()->returns($comment3);
-        stub($this->changeset_with_comment_with_empty_body)->getComment()->returns($comment4);
-        
+        $comment2 = new Tracker_Artifact_Changeset_Comment(2, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body2, 'text', 0);
+        $comment3 = new Tracker_Artifact_Changeset_Comment(3, $this->changeset_without_submitted_by, 2, 3, null,  $this->timestamp3, $this->body3, 'text', 0);
+        $comment4 = new Tracker_Artifact_Changeset_Comment(4, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body4, 'text', 0);
+
         stub($this->changeset_without_submitted_by)->getEmail()->returns($this->email);
-        
+
+        stub($this->changeset_with_submitted_by1)->exportCommentToSOAP()->returns($comment1->exportToSOAP());
+        stub($this->changeset_with_submitted_by2)->exportCommentToSOAP()->returns($comment2->exportToSOAP());
+        stub($this->changeset_without_submitted_by)->exportCommentToSOAP()->returns($comment3->exportToSOAP());
+        stub($this->changeset_with_comment_with_empty_body)->exportCommentToSOAP()->returns($comment4->exportToSOAP());
+
     }
 
     private function getBuiltArtifact(array $changesets) {
@@ -2162,20 +2162,13 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
 
         $this->assertEqual($expected, $result);
     }
-    
+
     public function itDoesNotReturnAnArrayWhenCommentHasAnEmptyBody() {
-        $changesets = array($this->changeset_with_comment_with_empty_body, $this->changeset_without_submitted_by);
+        $changesets = array($this->changeset_with_comment_with_empty_body);
         $artifact   = $this->getBuiltArtifact($changesets);
 
         $result = $artifact->exportCommentsToSOAP();
-        $expected = array(array(
-            'submitted_by' => null,
-            'email'        => $this->email,
-            'submitted_on' => $this->timestamp3,
-            'body'         => $this->body3,
-        ));
-
-        $this->assertEqual($expected, $result);
+        $this->assertArrayEmpty($result);
     }
 }
 ?>

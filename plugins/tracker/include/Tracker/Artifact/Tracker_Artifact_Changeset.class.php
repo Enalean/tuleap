@@ -781,5 +781,9 @@ class Tracker_Artifact_Changeset {
     public function getId() {
         return $this->id;
     }
+
+    public function exportCommentToSOAP() {
+        return $this->getComment()->exportToSOAP();
+    }
 }
 ?>

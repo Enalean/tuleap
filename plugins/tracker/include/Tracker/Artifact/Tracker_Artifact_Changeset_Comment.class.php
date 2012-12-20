@@ -225,18 +225,22 @@ class Tracker_Artifact_Changeset_Comment {
     }
 
     public function exportToSOAP() {
-        $soap_comment                 = array();
-        $soap_comment['submitted_by'] = $this->submitted_by;
-        $soap_comment['email']        = null;
-
-        if($this->submitted_by == null){
-            $soap_comment['email'] = $this->changeset->getEmail();
+        if (! $this->body) {
+            return null;
         }
 
-        $soap_comment['submitted_on'] = $this->submitted_on;
-        $soap_comment['body']         = $this->body;
+        return array(
+            'submitted_by' => $this->submitted_by,
+            'email'        => $this->getEmailForUndefinedSubmitter(),
+            'submitted_on' => $this->submitted_on,
+            'body'         => $this->body,
+        );
+    }
 
-        return $soap_comment;
+    private function getEmailForUndefinedSubmitter() {
+        if (! $this->submitted_by) {
+            return $this->changeset->getEmail();
+        }
     }
 }
 ?>

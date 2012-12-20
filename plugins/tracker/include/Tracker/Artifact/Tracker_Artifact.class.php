@@ -1289,34 +1289,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $previous;
     }
 
-    /**
-     * Returns the comments of an artifact
-     * If the comment has several versions, it returns only the latests version
-     *
-     * @return array of Tracker_Artifact_Changeset_Comment, or array() if artifact has no comment.
-     */
-    public function getComments() {
-        $comments = array();
-        $changesets = $this->getChangesets();
-        foreach ($changesets as $changeset_id => $changeset) {
-            $comment = $changeset->getComment();
-            if ($comment !== null) {
-                $comments[] = $comment;
-            }
-        }
-        return $comments;
-    }
-
     public function exportCommentsToSOAP() {
-        $comments      = $this->getComments();
         $soap_comments = array();
-
-        foreach ($comments as $comment) {
-            if ($comment->body != '') {
-                $soap_comments[] = $comment->exportToSOAP();
+        foreach ($this->getChangesets() as $changeset) {
+            $changeset_comment = $changeset->exportCommentToSOAP();
+            if ($changeset_comment) {
+                $soap_comments[] = $changeset_comment;
             }
         }
-
         return $soap_comments;
     }
 
