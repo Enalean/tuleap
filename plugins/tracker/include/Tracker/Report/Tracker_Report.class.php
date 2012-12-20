@@ -512,13 +512,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
         }
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched) . '</ul>';
-        $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
-        $html .= '</form>';
-        $html .= '</div>';
+        //$html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
+        //$html .= '</form>';
+
         $followupSearchForm = '';
         $params = array('html' => &$followupSearchForm, 'report_id' => $this->id, 'request' => $request);
         EventManager::instance()->processEvent('tracker_report_followup_search', $params);
         $html .= $followupSearchForm;
+
+        $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
+        $html .= '</form>';
+
+        $html .= '</div>';
         return $html;
     }
 
