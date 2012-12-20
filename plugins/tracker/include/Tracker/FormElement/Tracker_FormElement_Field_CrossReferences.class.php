@@ -282,7 +282,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 }
                 break;
             default:
-                $refs = $crf->getMailCrossRefs('text');
+                $refs = $crf->getCrossReferencesByDirection('text');
                 $src  = '';
                 $tgt  = '';
                 $both = '';
@@ -431,6 +431,9 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
      public function fetchSubmitMasschange() {
          $html = $this->fetchSubmitValueMassChange();
          return $html;
+     }
+
+     public function getSOAPValue(Tracker_Artifact $artifact) {
      }
 }
 ?>
