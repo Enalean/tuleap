@@ -1312,7 +1312,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $soap_comments = array();
 
         foreach ($comments as $comment) {
-            $soap_comments[] = $comment->exportToSOAP();
+            if ($comment->body != '') {
+                $soap_comments[] = $comment->exportToSOAP();
+            }
         }
 
         return $soap_comments;
