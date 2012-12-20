@@ -230,7 +230,7 @@ class Tracker_Artifact_Changeset_Comment {
         }
 
         return array(
-            'submitted_by' => $this->submitted_by,
+            'submitted_by' => $this->changeset->getSubmittedBy(),
             'email'        => $this->getEmailForUndefinedSubmitter(),
             'submitted_on' => $this->submitted_on,
             'body'         => $this->body,
@@ -238,7 +238,7 @@ class Tracker_Artifact_Changeset_Comment {
     }
 
     private function getEmailForUndefinedSubmitter() {
-        if (! $this->submitted_by) {
+        if (! $this->changeset->getSubmittedBy()) {
             return $this->changeset->getEmail();
         }
     }
