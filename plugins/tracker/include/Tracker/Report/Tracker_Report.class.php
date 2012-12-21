@@ -519,7 +519,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
 
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
-
+ 
         $html .= '<div align="center">';
         $html .= '<input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
         $html .= '</form>';
@@ -783,6 +783,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
+                }
+                //@todo Properly manage warning about Global Full text in Tracker Report...
+                if ($request->get('search_followups')) {
+                    $html .= '<p Style="background-color: #FFFFCC;border: 2px solid #FFF380;padding: 0.25em 0.5em;">
+                                Global Full Text Search is still in beta<br>
+                                <img border="0" alt="/themes/Tuleap/images/ic/warning.png" style="vertical-align:top;" src="/themes/Tuleap/images/ic/warning.png">
+                                <strong>Only part of comments are indexed (The first comment indexed for this tracker was on 21/12/2012)
+                                </strong></p>';
                 }
                 $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
