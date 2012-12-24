@@ -786,10 +786,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
                 //@todo Properly manage warning about Global Full text in Tracker Report...
                 if ($request->get('search_followups')) {
-                    $html .= '<p Style="background-color: #FFFFCC;border: 2px solid #FFF380;padding: 0.25em 0.5em;">';
+                    $html .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="position: relative;">';
                     $html .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
-                    $html .= '<strong>Only part of comments are indexed for this tracker.
-                              </strong><br>Global Full Text Search is still in beta.</p>';
+                    $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'global_full_text_warning_search');
+                    $html .= '</div>';
                 }
                 $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';

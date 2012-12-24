@@ -1253,6 +1253,7 @@ plugin_tracker_report	isobsolete_explanations	$1 Le rapport a été modifié par
 plugin_tracker_report	haschanged_isobsolete_explanations	$1 Le rapport a été modifié par <span class="tracker_report_updated_by">$2</span>. Si vous êtes satisfait des modifications que vous avez faites au rapport, n'oubliez pas de le sauvegarder ou <a id="tracker_report_clean_session" href="?tracker=$3&amp;func=clean-session">d'annuler vos modifications et de charger le nouveau rapport</a>.
 plugin_tracker_report	renderer_name_mandatory	Le nom est obligatoire.
 plugin_tracker_report	set_default_report	Mettre ce rapport par défaut
+plugin_tracker_report	global_full_text_warning_search	<strong>Uniquement une partie des commentaires a été indexée pour cet outil de suivi.</strong><br>La recherche globale est encore en beta.
 
 plugin_tracker_report_widget	go_to_report	Voir le rapport
 
