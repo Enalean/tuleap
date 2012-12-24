@@ -786,11 +786,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
                 //@todo Properly manage warning about Global Full text in Tracker Report...
                 if ($request->get('search_followups')) {
-                    $html .= '<p Style="background-color: #FFFFCC;border: 2px solid #FFF380;padding: 0.25em 0.5em;">
-                                Global Full Text Search is still in beta<br>
-                                <img border="0" alt="/themes/Tuleap/images/ic/warning.png" style="vertical-align:top;" src="/themes/Tuleap/images/ic/warning.png">
-                                <strong>Only part of comments are indexed (The first comment indexed for this tracker was on 21/12/2012)
-                                </strong></p>';
+                    $html .= '<p Style="background-color: #FFFFCC;border: 2px solid #FFF380;padding: 0.25em 0.5em;">';
+                    $html .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
+                    $html .= '<strong>Only part of comments are indexed for this tracker.
+                              </strong><br>Global Full Text Search is still in beta.</p>';
                 }
                 $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
