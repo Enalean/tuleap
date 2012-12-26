@@ -112,162 +112,169 @@ if (($func=='edit')||($func=='do_create')) {
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
     print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
 
+    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'permissions', 'usage'));
+    $vPane->required();
+    $pane  = $request->getValidated('pane', $vPane, 'settings');
+
     // @TODO: i18n
     echo '<div class="tabbable tabs-left">';
     echo '<ul class="nav nav-tabs">';
-    echo '<li class="active">';
-    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit">Settings</a></li>';
-    echo '<li class="">';
-    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit">Members</a></li>';
-    echo '<li class="">';
-    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit">Permissions</a></li>';
-    echo '<li class="">';
-    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit">Usage</a></li>';
+    echo '<li class="'. ($pane == 'settings' ? 'active' : '') .'">';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=settings">Settings</a></li>';
+    echo '<li class="'. ($pane == 'members' ? 'active' : '') .'">';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=members">Members</a></li>';
+    echo '<li class="'. ($pane == 'permissions' ? 'active' : '') .'">';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=permissions">Permissions</a></li>';
+    echo '<li class="'. ($pane == 'usage' ? 'active' : '') .'">';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=usage">Usage</a></li>';
     echo '</ul>';
     echo '<div class="tab-content">';
     echo '<div class="tab-pane active">';
 
-    // @TODO: make this dinamic content depending on the pane
-    echo '<p>'.$Language->getText('project_admin_editugroup', 'upd_ug_name').'</p>';
-    echo '<form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$group_id.'" onSubmit="return selIt();">
-    <input type="hidden" name="func" value="do_update">
-    <input type="hidden" name="group_id" value="'.$group_id.'">
-    <input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
-    display_name_and_desc_form($ugroup_name, $ugroup_description);
-    echo '<tr><td></td><td><input type="submit" value="'.$Language->getText('global', 'btn_submit').'" /></td></tr>';
-    echo '</table>';
-    echo '</form>';
-
-    $uGroupMgr                = new UGroupManager();
-    $uGroup                   = new UGroup(array('ugroup_id' => $ugroup_id));
-    $ugroupUpdateUsersAllowed = !$uGroup->isBound();
-    $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
-
-    echo '<hr /><p><b>'.$Language->getText('project_admin_editugroup', 'group_members').'</b></p>';
-    echo '<div style="padding-left:10px">';
-
-    // Get existing members from group
-    $uGroup  = $uGroupMgr->getById($request->get('ugroup_id'));
-    $members = $uGroup->getMembers();
-    if (count($members) > 0) {
-        echo '<form action="ugroup_remove_user.php" method="POST">';
-        echo '<input type="hidden" name="group_id" value="'.$group_id.'">';
-        echo '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
-        echo '<table>';
-        $i = 0;
-        $userHelper = UserHelper::instance();
-        foreach ($members as $user) {
-            echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
-            echo '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
-            if ($ugroupUpdateUsersAllowed) {
-                echo '<td>';
-                project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
-                echo '</td>';
-            }
-            echo '</tr>';
-        }
+    switch ($pane) {
+    case 'settings':
+        echo '<p>'.$Language->getText('project_admin_editugroup', 'upd_ug_name').'</p>';
+        echo '<form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$group_id.'" onSubmit="return selIt();">
+        <input type="hidden" name="func" value="do_update">
+        <input type="hidden" name="group_id" value="'.$group_id.'">
+        <input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
+        display_name_and_desc_form($ugroup_name, $ugroup_description);
+        echo '<tr><td></td><td><input type="submit" value="'.$Language->getText('global', 'btn_submit').'" /></td></tr>';
         echo '</table>';
         echo '</form>';
-    } else {
-        echo $Language->getText('project_admin_editugroup', 'nobody_yet');
-    }
+    break;
+    case 'members':
+        $uGroupMgr                = new UGroupManager();
+        $uGroup                   = new UGroup(array('ugroup_id' => $ugroup_id));
+        $ugroupUpdateUsersAllowed = !$uGroup->isBound();
+        $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
 
-    if ($ugroupUpdateUsersAllowed) {
-        echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup', 'add_user').'</a></p>';
-        echo '</div>';
-    }
+        echo '<p><b>'.$Language->getText('project_admin_editugroup', 'group_members').'</b></p>';
+        echo '<div style="padding-left:10px">';
 
-    echo '<p><a href="/project/admin/ugroup.php?group_id='. $group_id .'">&laquo; '.$Language->getText('project_admin_editugroup', 'go_back').'</a></p>';
-        
-    // Display associated permissions
-    $sql = "SELECT * FROM permissions WHERE ugroup_id=".db_ei($ugroup_id)." ORDER BY permission_type";
-    $res = db_query($sql);
-    if (db_numrows($res)>0) {
-        echo '
-<hr><p><b>'.$Language->getText('project_admin_editugroup', 'ug_perms').'</b>
-<p>';
-        
-        $title_arr = array();
-        $title_arr[] = $Language->getText('project_admin_editugroup', 'permission');
-        $title_arr[] = $Language->getText('project_admin_editugroup', 'resource_name');
-        echo html_build_list_table_top($title_arr, false, false, false);
-        $row_num = 0;
-        
-        while ($row = db_fetch_array($res)) {
-            if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
-                $atid = permission_extract_atid($row['object_id']);
-                if (isset($tracker_field_displayed[$atid])) {
-                    continue;
+        // Get existing members from group
+        $uGroup  = $uGroupMgr->getById($request->get('ugroup_id'));
+        $members = $uGroup->getMembers();
+        if (count($members) > 0) {
+            echo '<form action="ugroup_remove_user.php" method="POST">';
+            echo '<input type="hidden" name="group_id" value="'.$group_id.'">';
+            echo '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
+            echo '<table>';
+            $i = 0;
+            $userHelper = UserHelper::instance();
+            foreach ($members as $user) {
+                echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
+                echo '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
+                if ($ugroupUpdateUsersAllowed) {
+                    echo '<td>';
+                    project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
+                    echo '</td>';
                 }
-                $objname = permission_get_object_name('TRACKER_ACCESS_FULL', $atid);
-            } else {
-                $objname = permission_get_object_name($row['permission_type'], $row['object_id']);
+                echo '</tr>';
             }
-            echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
-            echo '<TD>'.permission_get_name($row['permission_type']).'</TD>';
-            if ($row['permission_type'] == 'PACKAGE_READ') {
-                echo '<TD>'.$Language->getText('project_admin_editugroup', 'package')
-                    .' <a href="/file/admin/editpackagepermissions.php?package_id='
-                    .$row['object_id'].'&group_id='.$group_id.'">'
-                    .$objname.'</a></TD>';
-            } else if ($row['permission_type'] == 'RELEASE_READ') {
-                $package_id=file_get_package_id_from_release_id($row['object_id']);
-                echo '<TD>'.$Language->getText('project_admin_editugroup', 'release')
-                    .' <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'
-                    .file_get_release_name_from_id($row['object_id']).'</a> ('
-                    .$Language->getText('project_admin_editugroup', 'from_package')
-                    .' <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'
-                    .$objname.'</a></TD>';
-            } else if ($row['permission_type'] == 'DOCUMENT_READ') {
-                echo '<TD>'.$Language->getText('project_admin_editugroup', 'document')
-                    .' <a href="/docman/admin/editdocpermissions.php?docid='.$row['object_id'].'&group_id='.$group_id.'">'
-                    .$objname.'</a></TD>';
-            } else if ($row['permission_type'] == 'DOCGROUP_READ') {
-                echo '<TD>'.$Language->getText('project_admin_editugroup', 'document_group')
-                    .' <a href="/docman/admin/editdocgrouppermissions.php?doc_group='.$row['object_id'].'&group_id='.$group_id.'">'
-                    .$objname.'</a></TD>';
-            } else if ($row['permission_type'] == 'WIKI_READ') {
-                echo '<TD>'.$Language->getText('project_admin_editugroup', 'wiki')
-                    .' <a href="/wiki/admin/index.php?view=wikiPerms&group_id='.$group_id.'">'
-                    .$objname.'</a></TD>';
-            } else if ($row['permission_type'] == 'WIKIPAGE_READ') {
-                echo '<TD>'.$Language->getText('project_admin_editugroup', 'wiki_page')
-                    .' <a href="/wiki/admin/index.php?group_id='.$group_id.'&view=pagePerms&id='.$row['object_id'].'">'
-                    .$objname.'</a></TD>';
-            } else if (strpos($row['permission_type'], 'TRACKER_ACCESS') === 0) {
-                echo '<TD>'.$Language->getText('project_admin_editugroup', 'tracker') 
-                    .' <a href="/tracker/admin/?func=permissions&perm_type=tracker&group_id='.$group_id.'&atid='.$row['object_id'].'">'
-                    .$objname.'</a></TD>';
-            } else if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
-                $tracker_field_displayed[$atid]=1;
-                $atid =permission_extract_atid($row['object_id']);
-                echo '<TD>'.$Language->getText('project_admin_editugroup', 'tracker_field')
-                    .' <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$ugroup_id.'">' 
-                    .$objname.'</a></TD>';
-            } else if ($row['permission_type'] == 'TRACKER_ARTIFACT_ACCESS') {
-                echo '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
-            } else {
-                $results = false;
-                $em =& EventManager::instance();
-                $em->processEvent('permissions_for_ugroup', array(
-                    'permission_type' => $row['permission_type'],
-                    'object_id'       => $row['object_id'],
-                    'objname'         => $objname,
-                    'group_id'        => $group_id,
-                    'ugroup_id'       => $ugroup_id,
-                    'results'         => &$results
-                ));
-                if ($results) {
-                    echo '<TD>'.$results.'</TD>';
-                } else {
-                    echo '<TD>'.$row['object_id'].'</TD>';
-                }
-            }
-
-            echo '</TR>';
-            $row_num++;
+            echo '</table>';
+            echo '</form>';
+        } else {
+            echo $Language->getText('project_admin_editugroup', 'nobody_yet');
         }
-        echo '</table><p>';
+
+        if ($ugroupUpdateUsersAllowed) {
+            echo '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup', 'add_user').'</a></p>';
+            echo '</div>';
+        }
+
+        echo '<p><a href="/project/admin/ugroup.php?group_id='. $group_id .'">&laquo; '.$Language->getText('project_admin_editugroup', 'go_back').'</a></p>';
+    break;
+    case 'permissions':
+        // Display associated permissions
+        $sql = "SELECT * FROM permissions WHERE ugroup_id=".db_ei($ugroup_id)." ORDER BY permission_type";
+        $res = db_query($sql);
+        if (db_numrows($res)>0) {
+            echo '<p><b>'.$Language->getText('project_admin_editugroup', 'ug_perms').'</b><p>';
+
+            $title_arr = array();
+            $title_arr[] = $Language->getText('project_admin_editugroup', 'permission');
+            $title_arr[] = $Language->getText('project_admin_editugroup', 'resource_name');
+            echo html_build_list_table_top($title_arr, false, false, false);
+            $row_num = 0;
+
+            while ($row = db_fetch_array($res)) {
+                if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
+                    $atid = permission_extract_atid($row['object_id']);
+                    if (isset($tracker_field_displayed[$atid])) {
+                        continue;
+                    }
+                    $objname = permission_get_object_name('TRACKER_ACCESS_FULL', $atid);
+                } else {
+                    $objname = permission_get_object_name($row['permission_type'], $row['object_id']);
+                }
+                echo '<TR class="'. util_get_alt_row_color($row_num) .'">';
+                echo '<TD>'.permission_get_name($row['permission_type']).'</TD>';
+                if ($row['permission_type'] == 'PACKAGE_READ') {
+                    echo '<TD>'.$Language->getText('project_admin_editugroup', 'package')
+                        .' <a href="/file/admin/editpackagepermissions.php?package_id='
+                        .$row['object_id'].'&group_id='.$group_id.'">'
+                        .$objname.'</a></TD>';
+                } else if ($row['permission_type'] == 'RELEASE_READ') {
+                    $package_id=file_get_package_id_from_release_id($row['object_id']);
+                    echo '<TD>'.$Language->getText('project_admin_editugroup', 'release')
+                        .' <a href="/file/admin/editreleasepermissions.php?release_id='.$row['object_id'].'&group_id='.$group_id.'&package_id='.$package_id.'">'
+                        .file_get_release_name_from_id($row['object_id']).'</a> ('
+                        .$Language->getText('project_admin_editugroup', 'from_package')
+                        .' <a href="/file/admin/editreleases.php?package_id='.$package_id.'&group_id='.$group_id.'">'
+                        .$objname.'</a></TD>';
+                } else if ($row['permission_type'] == 'DOCUMENT_READ') {
+                    echo '<TD>'.$Language->getText('project_admin_editugroup', 'document')
+                        .' <a href="/docman/admin/editdocpermissions.php?docid='.$row['object_id'].'&group_id='.$group_id.'">'
+                        .$objname.'</a></TD>';
+                } else if ($row['permission_type'] == 'DOCGROUP_READ') {
+                    echo '<TD>'.$Language->getText('project_admin_editugroup', 'document_group')
+                        .' <a href="/docman/admin/editdocgrouppermissions.php?doc_group='.$row['object_id'].'&group_id='.$group_id.'">'
+                        .$objname.'</a></TD>';
+                } else if ($row['permission_type'] == 'WIKI_READ') {
+                    echo '<TD>'.$Language->getText('project_admin_editugroup', 'wiki')
+                        .' <a href="/wiki/admin/index.php?view=wikiPerms&group_id='.$group_id.'">'
+                        .$objname.'</a></TD>';
+                } else if ($row['permission_type'] == 'WIKIPAGE_READ') {
+                    echo '<TD>'.$Language->getText('project_admin_editugroup', 'wiki_page')
+                        .' <a href="/wiki/admin/index.php?group_id='.$group_id.'&view=pagePerms&id='.$row['object_id'].'">'
+                        .$objname.'</a></TD>';
+                } else if (strpos($row['permission_type'], 'TRACKER_ACCESS') === 0) {
+                    echo '<TD>'.$Language->getText('project_admin_editugroup', 'tracker') 
+                        .' <a href="/tracker/admin/?func=permissions&perm_type=tracker&group_id='.$group_id.'&atid='.$row['object_id'].'">'
+                        .$objname.'</a></TD>';
+                } else if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
+                    $tracker_field_displayed[$atid]=1;
+                    $atid =permission_extract_atid($row['object_id']);
+                    echo '<TD>'.$Language->getText('project_admin_editugroup', 'tracker_field')
+                        .' <a href="/tracker/admin/?group_id='.$group_id.'&atid='.$atid.'&func=permissions&perm_type=fields&group_first=1&selected_id='.$ugroup_id.'">' 
+                        .$objname.'</a></TD>';
+                } else if ($row['permission_type'] == 'TRACKER_ARTIFACT_ACCESS') {
+                    echo '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
+                } else {
+                    $results = false;
+                    $em =& EventManager::instance();
+                    $em->processEvent('permissions_for_ugroup', array(
+                        'permission_type' => $row['permission_type'],
+                        'object_id'       => $row['object_id'],
+                        'objname'         => $objname,
+                        'group_id'        => $group_id,
+                        'ugroup_id'       => $ugroup_id,
+                        'results'         => &$results
+                    ));
+                    if ($results) {
+                        echo '<TD>'.$results.'</TD>';
+                    } else {
+                        echo '<TD>'.$row['object_id'].'</TD>';
+                    }
+                }
+
+                echo '</TR>';
+                $row_num++;
+            }
+            echo '</table><p>';
+        }
+    break;
     }
 
     echo '</div>';
