@@ -111,6 +111,23 @@ if (($func=='edit')||($func=='do_create')) {
 
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
     print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
+
+    // @TODO: i18n
+    echo '<div class="tabbable tabs-left">';
+    echo '<ul class="nav nav-tabs">';
+    echo '<li class="active">';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit">Settings</a></li>';
+    echo '<li class="">';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit">Members</a></li>';
+    echo '<li class="">';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit">Permissions</a></li>';
+    echo '<li class="">';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit">Usage</a></li>';
+    echo '</ul>';
+    echo '<div class="tab-content">';
+    echo '<div class="tab-pane active">';
+
+    // @TODO: make this dinamic content depending on the pane
     echo '<p>'.$Language->getText('project_admin_editugroup', 'upd_ug_name').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$group_id.'" onSubmit="return selIt();">
     <input type="hidden" name="func" value="do_update">
@@ -252,6 +269,9 @@ if (($func=='edit')||($func=='do_create')) {
         }
         echo '</table><p>';
     }
+
+    echo '</div>';
+    echo '</div>';
 
 }
 
