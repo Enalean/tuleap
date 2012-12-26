@@ -116,17 +116,16 @@ if (($func=='edit')||($func=='do_create')) {
     $vPane->required();
     $pane  = $request->getValidated('pane', $vPane, 'settings');
 
-    // @TODO: i18n
     echo '<div class="tabbable tabs-left">';
     echo '<ul class="nav nav-tabs">';
     echo '<li class="'. ($pane == 'settings' ? 'active' : '') .'">';
-    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=settings">Settings</a></li>';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=settings">'.$Language->getText('global', 'settings').'</a></li>';
     echo '<li class="'. ($pane == 'members' ? 'active' : '') .'">';
-    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=members">Members</a></li>';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=members">'.$Language->getText('admin_grouplist', 'members').'</a></li>';
     echo '<li class="'. ($pane == 'permissions' ? 'active' : '') .'">';
-    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=permissions">Permissions</a></li>';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=permissions">'.$Language->getText('project_admin_utils', 'event_permission').'</a></li>';
     echo '<li class="'. ($pane == 'usage' ? 'active' : '') .'">';
-    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=usage">Usage</a></li>';
+    echo '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=usage">'.$Language->getText('global', 'usage').'</a></li>';
     echo '</ul>';
     echo '<div class="tab-content">';
     echo '<div class="tab-pane active">';
