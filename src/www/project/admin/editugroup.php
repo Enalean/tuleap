@@ -275,6 +275,9 @@ if (($func=='edit')||($func=='do_create')) {
             echo '</table><p>';
         }
     break;
+    case 'usage':
+        
+    break;
     }
 
     echo '</div>';

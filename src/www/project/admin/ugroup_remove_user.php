@@ -35,14 +35,14 @@ if ($ugroup_id) {
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'missing_parameters'));
             }
-            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $group_id .'&ugroup_id='. $ugroup_id .'&func=edit');
+            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $group_id .'&ugroup_id='. $ugroup_id .'&func=edit&pane=members');
         } else {
             $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editugroup','ug_not_found',array($ugroup_id,db_error())));
             $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $group_id);
         }
     } else {
         $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
-        $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $group_id .'&ugroup_id='. $ugroup_id .'&func=edit');
+        $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $group_id .'&ugroup_id='. $ugroup_id .'&func=edit&pane=members');
     }
 } else {
     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'missing_parameters'));
