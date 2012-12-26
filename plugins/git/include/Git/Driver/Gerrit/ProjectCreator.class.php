@@ -174,6 +174,7 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $this->addToSection('refs/tags', 'pushTag', "group Administrators");
         $this->addToSection('refs/tags', 'create', "group Administrators");  // push initial ref
+        $this->addToSection('refs/tags', 'forgeCommitter', "group Administrators");  // push initial ref
     }
 
     private function shouldAddRegisteredUsers(GitRepository $repository) {
