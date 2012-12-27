@@ -15,6 +15,22 @@ require_once 'common/project/UGroupManager.class.php';
 
 $hp      = Codendi_HTMLPurifier::instance();
 $request = HTTPRequest::instance();
+function _breadCrumbs($project, $groupId, $ugroupId = NULL, $ugroupName = NULL) {
+    $breadcrumbs['/projects/'. $project->getUnixName(true)] = $project->getPublicName();
+    $breadcrumbs['/project/admin/?group_id='. (int)$groupId]= 'Admin';
+    $breadcrumbs['/project/admin/ugroup.php?group_id='.(int)$groupId] = 'Users groups';
+    if (isset($ugroupId) && ($ugroupId)) {
+        $breadcrumbs['/project/admin/editugroup.php?func=edit&group_id='.(int)$groupId.'&ugroup_id='.(int)$ugroupId] = $ugroupName;
+    }
+
+    echo '<p><table border="0" width="100%">
+            <tr>
+                <td align="left">';
+    foreach($breadcrumbs as $url => $title) {
+        echo '&nbsp;<a href="'. get_server_url() .$url.'" />'.$title.'</a>&nbsp;>>';
+    }
+    echo'</td></table></p>';
+}
 
 function display_name_and_desc_form($ugroup_name, $ugroup_description) {
     global $Language;
@@ -39,6 +55,8 @@ function display_name_and_desc_form($ugroup_name, $ugroup_description) {
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
+$pm = ProjectManager::instance();
+$project=$pm->getProject($group_id);
 
 $vFunc = new Valid_WhiteList('func', array('create', 'do_create', 'edit'));
 $func = $request->getValidated('func', $vFunc, 'create');
@@ -53,10 +71,8 @@ if ($request->isPost() && $func == 'do_create') {
 
 if ($func=='create') {
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'create_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
-    $pm = ProjectManager::instance();
-    $project=$pm->getProject($group_id);
-
-    print '<P><h2>'.$Language->getText('project_admin_editugroup', 'create_ug_for', $project->getPublicName()).'</h2>';
+    _breadCrumbs($project, $group_id);
+    //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'create_ug_for', $project->getPublicName()).'</h2>';
     echo '<p>'.$Language->getText('project_admin_editugroup', 'fill_ug_desc').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/editugroup.php?group_id='.$group_id.'">
     <input type="hidden" name="func" value="do_create">
@@ -110,12 +126,13 @@ if (($func=='edit')||($func=='do_create')) {
     }
 
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
-    print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
+    //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
+    print '<P><h2>'._breadCrumbs($project,$group_id, $ugroup_id, $ugroup_name).'</h2>';
+
 
     $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'permissions', 'usage'));
     $vPane->required();
     $pane  = $request->getValidated('pane', $vPane, 'settings');
-
     echo '<div class="tabbable tabs-left">';
     echo '<ul class="nav nav-tabs">';
     echo '<li class="'. ($pane == 'settings' ? 'active' : '') .'">';
