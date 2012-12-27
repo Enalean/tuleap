@@ -226,6 +226,50 @@ class UGroupManager {
         }
         return array();
     }
+
+
+    public function displayUgroupMembers($groupId, $ugroupId) {
+        $hp                       = Codendi_HTMLPurifier::instance();
+        $uGroup                   = $this->getById($ugroupId);
+        $ugroupUpdateUsersAllowed = !$uGroup->isBound();
+        $em                       = EventManager::instance();
+        $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
+
+        $content .= '<p><b>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</b></p>';
+        $content .= '<div style="padding-left:10px">';
+
+        // Get existing members from group
+        $members = $uGroup->getMembers();
+        if (count($members) > 0) {
+            $content .= '<form action="ugroup_remove_user.php" method="POST">';
+            $content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';
+            $content .= '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'">';
+            $content .= '<table>';
+            $i = 0;
+            $userHelper = UserHelper::instance();
+            foreach ($members as $user) {
+                $content .= '<tr class="'. html_get_alt_row_color(++$i) .'">';
+                $content .= '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
+                if ($ugroupUpdateUsersAllowed) {
+                    $content .= '<td>';
+                    $content .= project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $groupId. '&ugroup_id='. $ugroupId .'&user_id='. $user->getId());
+                    $content .= '</td>';
+                }
+                $content .= '</tr>';
+            }
+            $content .= '</table>';
+            $content .= '</form>';
+        } else {
+            $content .= $GLOBALS['Language']->getText('project_admin_editugroup', 'nobody_yet');
+        }
+
+        if ($ugroupUpdateUsersAllowed) {
+            $content .= '<p><a href="ugroup_add_users.php?group_id='. $groupId .'&amp;ugroup_id='. $ugroupId .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$GLOBALS['Language']->getText('project_admin_editugroup', 'add_user').'</a></p>';
+            $content .= '</div>';
+        }
+        return $content;
+    }
+
 }
 
 ?>

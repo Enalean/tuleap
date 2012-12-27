@@ -170,43 +170,7 @@ if (($func=='edit')||($func=='do_create')) {
     break;
     case 'members':
         $uGroupMgr                = new UGroupManager();
-        $uGroup                   = new UGroup(array('ugroup_id' => $ugroup_id));
-        $ugroupUpdateUsersAllowed = !$uGroup->isBound();
-        $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
-
-        $content .= '<p><b>'.$Language->getText('project_admin_editugroup', 'group_members').'</b></p>';
-        $content .= '<div style="padding-left:10px">';
-
-        // Get existing members from group
-        $uGroup  = $uGroupMgr->getById($request->get('ugroup_id'));
-        $members = $uGroup->getMembers();
-        if (count($members) > 0) {
-            $content .= '<form action="ugroup_remove_user.php" method="POST">';
-            $content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';
-            $content .= '<input type="hidden" name="ugroup_id" value="'.$ugroup_id.'">';
-            $content .= '<table>';
-            $i = 0;
-            $userHelper = UserHelper::instance();
-            foreach ($members as $user) {
-                $content .= '<tr class="'. html_get_alt_row_color(++$i) .'">';
-                $content .= '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
-                if ($ugroupUpdateUsersAllowed) {
-                    $content .= '<td>';
-                    $content .= project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
-                    $content .= '</td>';
-                }
-                $content .= '</tr>';
-            }
-            $content .= '</table>';
-            $content .= '</form>';
-        } else {
-            $content .= $Language->getText('project_admin_editugroup', 'nobody_yet');
-        }
-
-        if ($ugroupUpdateUsersAllowed) {
-            $content .= '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup', 'add_user').'</a></p>';
-            $content .= '</div>';
-        }
+        $content .= $uGroupMgr->displayUgroupMembers($group_id, $ugroup_id);
     break;
     case 'permissions':
         // Display associated permissions
@@ -276,7 +240,6 @@ if (($func=='edit')||($func=='do_create')) {
                     $content .= '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
                 } else {
                     $results = false;
-                    $em = EventManager::instance();
                     $em->processEvent('permissions_for_ugroup', array(
                         'permission_type' => $row['permission_type'],
                         'object_id'       => $row['object_id'],
