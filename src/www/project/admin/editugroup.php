@@ -210,9 +210,9 @@ if (($func=='edit')||($func=='do_create')) {
     break;
     case 'permissions':
         // Display associated permissions
-        $sql = "SELECT * FROM permissions WHERE ugroup_id=".db_ei($ugroup_id)." ORDER BY permission_type";
-        $res = db_query($sql);
-        if (db_numrows($res)>0) {
+        $pm = PermissionsManager::instance();
+        $dar = $pm->searchByUgroupId($ugroup_id);
+        if ($dar && !$dar->isError() && $dar->rowCount() >0) {
             $content .= '<p><b>'.$Language->getText('project_admin_editugroup', 'ug_perms').'</b><p>';
 
             $title_arr = array();
@@ -221,7 +221,7 @@ if (($func=='edit')||($func=='do_create')) {
             $content .= html_build_list_table_top($title_arr, false, false, false);
             $row_num = 0;
 
-            while ($row = db_fetch_array($res)) {
+            foreach ($dar as $row) {
                 if (strpos($row['permission_type'], 'TRACKER_FIELD') === 0) {
                     $atid = permission_extract_atid($row['object_id']);
                     if (isset($tracker_field_displayed[$atid])) {
@@ -276,7 +276,7 @@ if (($func=='edit')||($func=='do_create')) {
                     $content .= '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
                 } else {
                     $results = false;
-                    $em =& EventManager::instance();
+                    $em = EventManager::instance();
                     $em->processEvent('permissions_for_ugroup', array(
                         'permission_type' => $row['permission_type'],
                         'object_id'       => $row['object_id'],
