@@ -29,8 +29,14 @@ function _breadCrumbs($project, $ugroupId = NULL, $ugroupName = NULL) {
     echo '<p><table border="0" width="100%">
             <tr>
                 <td align="left">';
+    $firstItem = true;
     foreach($breadcrumbs as $url => $title) {
-        echo '&nbsp;<a href="'. get_server_url() .$url.'" />'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</a>&nbsp;>>';
+        if (!$firstItem) {
+            echo '>>';
+        } else {
+            $firstItem = false;
+        }
+        echo '&nbsp;<a href="'. get_server_url() .$url.'" />'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</a>&nbsp;';
     }
     echo'</td></table></p>';
 }
