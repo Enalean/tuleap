@@ -512,8 +512,9 @@ function project_admin_display_bullet_user($user_id, $action, $url = null) {
     if (!$url) {
         $url = $_SERVER['REQUEST_URI'] .'&user['. $user_id .']='. $action;
     }
-    echo '<a href="'. $url .'">';
-    echo '<img alt="'. $action .'" src="'. util_get_dir_image_theme() . $icon .'" />';
-    echo '</a>';
+    $html = '<a href="'. $url .'">';
+    $html .= '<img alt="'. $action .'" src="'. util_get_dir_image_theme() . $icon .'" />';
+    $html .= '</a>';
+    return $html;
 }
 ?>

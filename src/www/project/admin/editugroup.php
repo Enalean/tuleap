@@ -186,7 +186,7 @@ if (($func=='edit')||($func=='do_create')) {
                 $content .= '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
                 if ($ugroupUpdateUsersAllowed) {
                     $content .= '<td>';
-                    project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
+                    $content .= project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $group_id. '&ugroup_id='. $ugroup_id .'&user_id='. $user->getId());
                     $content .= '</td>';
                 }
                 $content .= '</tr>';
@@ -201,8 +201,6 @@ if (($func=='edit')||($func=='do_create')) {
             $content .= '<p><a href="ugroup_add_users.php?group_id='. $group_id .'&amp;ugroup_id='. $ugroup_id .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$Language->getText('project_admin_editugroup', 'add_user').'</a></p>';
             $content .= '</div>';
         }
-
-        $content .= '<p><a href="/project/admin/ugroup.php?group_id='. $group_id .'">&laquo; '.$Language->getText('project_admin_editugroup', 'go_back').'</a></p>';
     break;
     case 'permissions':
         // Display associated permissions

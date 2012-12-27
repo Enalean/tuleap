@@ -43,7 +43,7 @@ function display_user_result_table($res) {
             echo '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
             echo '<table width="100%"><tr><td><a href="/users/'. $hp->purify($data['user_name']) .'/">'. $hp->purify($user_helper->getDisplayName($data['user_name'], $data['realname'])) .'</a></td>';
             echo '<td style="text-align:right;">';
-            project_admin_display_bullet_user($data['user_id'], $action);
+            echo project_admin_display_bullet_user($data['user_id'], $action);
             echo '</td></tr></table>';
             echo '<div style="color:#666; ">'. $data['email'] .'</div>';
             echo '</div>';
@@ -152,7 +152,7 @@ if ($ugroup_id) {
                     echo '<tr class="'. html_get_alt_row_color(++$i) .'">';
                     echo '<td style="white-space:nowrap">'. $hp->purify($user_helper->getDisplayNameFromUser($user)) .'</td>';
                     echo '<td>';
-                    project_admin_display_bullet_user($user->getId(), 'remove');
+                    echo project_admin_display_bullet_user($user->getId(), 'remove');
                     echo '</td>';
                     echo '</tr>';
                 }
