@@ -169,8 +169,8 @@ if (($func=='edit')||($func=='do_create')) {
         $content .= '</form>';
     break;
     case 'members':
-        $uGroupMgr                = new UGroupManager();
-        $content .= $uGroupMgr->displayUgroupMembers($group_id, $ugroup_id);
+        $uGroupMgr = new UGroupManager();
+        $content  .= $uGroupMgr->displayUgroupMembers($group_id, $ugroup_id, $request);
     break;
     case 'permissions':
         // Display associated permissions

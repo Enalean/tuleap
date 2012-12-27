@@ -228,7 +228,7 @@ class UGroupManager {
     }
 
 
-    public function displayUgroupMembers($groupId, $ugroupId) {
+    public function displayUgroupMembers($groupId, $ugroupId, $request) {
         $hp                       = Codendi_HTMLPurifier::instance();
         $uGroup                   = $this->getById($ugroupId);
         $ugroupUpdateUsersAllowed = !$uGroup->isBound();
@@ -242,7 +242,7 @@ class UGroupManager {
         $members = $uGroup->getMembers();
         if (count($members) > 0) {
             $content .= '<form action="ugroup_remove_user.php" method="POST">';
-            $content .= '<input type="hidden" name="group_id" value="'.$group_id.'">';
+            $content .= '<input type="hidden" name="group_id" value="'.$groupId.'">';
             $content .= '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'">';
             $content .= '<table>';
             $i = 0;
@@ -267,7 +267,251 @@ class UGroupManager {
             $content .= '<p><a href="ugroup_add_users.php?group_id='. $groupId .'&amp;ugroup_id='. $ugroupId .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$GLOBALS['Language']->getText('project_admin_editugroup', 'add_user').'</a></p>';
             $content .= '</div>';
         }
+
+        if ($ugroupUpdateUsersAllowed) {
+            $res = ugroup_db_get_ugroup($ugroupId);
+            if ($res) {
+                $ugroup_name = db_result($res, 0, 'name');
+
+                //define capitals
+                $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
+                    FROM user
+                    WHERE status in ('A', 'R')
+                    UNION
+                    SELECT DISTINCT UPPER(LEFT(user.realname,1)) as capital
+                    FROM user
+                    WHERE status in ('A', 'R')
+                    UNION
+                    SELECT DISTINCT UPPER(LEFT(user.user_name,1)) as capital
+                    FROM user
+                    WHERE status in ('A', 'R')
+                    ORDER BY capital";
+                $res = db_query($sql);
+                $allowed_begin_values = array();
+                while($data = db_fetch_array($res)) {
+                    $allowed_begin_values[] = $data['capital'];
+                }
+
+                $valid_begin = new Valid_WhiteList('begin', $allowed_begin_values);
+                $valid_begin->required();
+                
+                $valid_in_project = new Valid_UInt('in_project');
+                $valid_in_project->required();
+                
+                $offset           = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
+                $number_per_page  = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
+                $search           = $request->getValidated('search', 'string', '');
+                $begin            = $request->getValidated('begin', $valid_begin, '');
+                $in_project       = $request->getValidated('in_project', $valid_in_project, $groupId);
+                
+                $user = $request->get('user');
+                if ($user && is_array($user)) {
+                    list($user_id, $action) = each($user);
+                    $user_id = (int)$user_id;
+                    if ($user_id) {
+                        switch($action) {
+                        case 'add':
+                            ugroup_add_user_to_ugroup($groupId, $ugroupId, $user_id);
+                            break;
+                        case 'remove':
+                            ugroup_remove_user_from_ugroup($groupId, $ugroupId, $user_id);
+                            break;
+                        default:
+                            break;
+                        }
+                        $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
+                            '&ugroup_id='. (int)$ugroupId .
+                            '&offset='. (int)$offset .
+                            '&number_per_page='. (int)$number_per_page .
+                            '&search='. urlencode($search) .
+                            '&begin='. urlencode($begin) .
+                            '&in_project='. (int)$in_project
+                        );
+                    }
+                }
+                $content .= '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($ugroup_name, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
+                
+                //Display the form
+                $selected = 'selected="selected"';
+                $content .= '<form action="" method="GET">';
+                $content .= '<table><tr valign="top"><td>';
+                
+                //Display existing members
+                $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('project_admin_editugroup','members').'</legend>';
+                $members   = $uGroup->getMembers();
+                if (count($members) > 0) {
+                    $content .= '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
+                    $i = 0;
+                    $hp = Codendi_HTMLPurifier::instance();
+                    foreach ($members as $user) {
+                        $content .= '<tr class="'. html_get_alt_row_color(++$i) .'">';
+                        $content .= '<td style="white-space:nowrap">'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
+                        $content .= '<td>';
+                        $content .= project_admin_display_bullet_user($user->getId(), 'remove');
+                        $content .= '</td>';
+                        $content .= '</tr>';
+                    }
+                    $content .= '</tbody></table>';
+                    $content .= '</fieldset>';
+                } else {
+                    $content .= $GLOBALS['Language']->getText('project_admin_editugroup','group_empty');
+                }
+                
+                $content .= '</td><td>';
+
+                $content .= '<input type="hidden" name="group_id" value="'. (int)$groupId .'" />';
+                $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
+                $content .= '<input type="hidden" name="offset" value="'. (int)$offset .'" />';
+
+                //Filter
+                $content .= '<fieldset><legend>'.$GLOBALS['Language']->getText('project_admin_editugroup','users').'</legend>';
+                $content .= '<p>'. $GLOBALS['Language']->getText('project_admin_editugroup','search_in').' ';
+                $content .= '<select name="in_project">';
+                $content .= '<option value="0" '. ( !$in_project ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
+                $content .= '<option value="'. (int)$groupId .'" '. ($in_project == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
+                $content .= '</select>';
+                $content .= $GLOBALS['Language']->getText('project_admin_editugroup','name_contains').' ';
+                
+                //contains
+                $content .= '<input type="text" name="search" value="'.  $hp->purify($search, CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
+                //begin
+                $content .= $GLOBALS['Language']->getText('project_admin_editugroup','begins').' ';
+                $content .= '<select name="begin">';
+                $content .= '<option value="" '. (in_array($begin, $allowed_begin_values) ? $selected : '') .'></option>';
+                foreach($allowed_begin_values as $b) {
+                    $content .= '<option value="'. $b .'" '. ($b == $begin ? $selected : '') .'>'. $b .'</option>';
+                }
+                $content .= '</select>. ';
+                
+                //Display
+                $content .= '<span style="white-space:nowrap;">'.$GLOBALS['Language']->getText('project_admin_editugroup','show').' ';
+                //number per page
+                $content .= '<select name="number_per_page">';
+                $content .= '<option '. ($number_per_page == 15 ? $selected : '') .'>15</option>';
+                $content .= '<option '. ($number_per_page == 30 ? $selected : '') .'>30</option>';
+                $content .= '<option '. ($number_per_page == 60 ? $selected : '') .'>60</option>';
+                if (!in_array($number_per_page, array(15, 30, 60))) {
+                    $content .= '<option '. $selected .'>'. (int)$number_per_page .'</option>';
+                }
+                $content .= '</select> ';
+                $content .= $GLOBALS['Language']->getText('project_admin_editugroup','users_per_page').' ';
+                
+                
+                $content .= '<input type="submit" name="browse" value="Browse" /></span>';
+                $content .= '</p>';
+                
+                $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, realname, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
+                        FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". db_ei($ugroupId) .") AS R
+                        ";
+                if ($in_project) {
+                    $sql .= " INNER JOIN user_group USING ( user_id ) ";
+                }
+                $sql .= "
+                        WHERE status in ('A', 'R') ";
+                if ($in_project) {
+                    $sql .= " AND user_group.group_id = ". db_ei($in_project) ." ";
+                }
+                if ($search || $begin) {
+                    $sql .= ' AND ( ';
+                    if ($search) {
+                        $sql .= " user.realname LIKE '%". db_es($search) ."%' OR user.user_name LIKE '%". db_es($search) ."%' OR user.email LIKE '%". db_es($search) ."%' ";
+                        if ($begin) {
+                            $sql .= " OR ";
+                        }
+                    }
+                    if ($begin) {
+                        $sql .= " user.realname LIKE '". db_es($begin) ."%' OR user.user_name LIKE '". db_es($begin) ."%' OR user.email LIKE '". db_es($begin) ."%' ";
+                    }
+                    $sql .= " ) ";
+                }
+                $sql .= "ORDER BY ". (user_get_preference("username_display") > 1 ? 'realname' : 'user_name') ."
+                        LIMIT ". db_ei($offset) .", ". db_ei($number_per_page);
+                $res = db_query($sql);
+                $res2 = db_query('SELECT FOUND_ROWS() as nb');
+                $num_total_rows = db_result($res2, 0, 'nb');
+                $content .= $this->displayUserResultTable($res);
+                
+                //Jump to page
+                $nb_of_pages = ceil($num_total_rows / $number_per_page);
+                $current_page = round($offset / $number_per_page);
+                $content .= '<div style="font-family:Verdana">Page: ';
+                $width = 10;
+                for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
+                    if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
+                        $content .= '<a href="?'.
+                            'group_id='. (int)$groupId .
+                            '&amp;ugroup_id='. (int)$ugroupId .
+                            '&amp;offset='. (int)($i * $number_per_page) .
+                            '&amp;number_per_page='. (int)$number_per_page .
+                            '&amp;search='. urlencode($search) .
+                            '&amp;begin='. urlencode($begin) .
+                            '&amp;in_project='. (int)$in_project .
+                            '">';
+                        if ($i == $current_page) {
+                            $content .= '<b>'. ($i + 1) .'</b>';
+                        } else {
+                            $content .= $i + 1;
+                        }
+                        $content .= '</a>&nbsp;';
+                    } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
+                        $content .= '...&nbsp;';
+                    }
+                }
+                $content .= '</div>';
+                
+                $content .= '</fieldset>';
+
+                $content .= '</td></tr></table>';
+                
+                $content .= '</form>';
+                $content .= '<p><a href="/project/admin/editugroup.php?group_id='. $groupId .'&amp;ugroup_id='. $ugroupId .'&amp;func=edit">&laquo;'.$GLOBALS['Language']->getText('project_admin_editugroup','go_back').'</a></p>';
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
+                $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $groupId);
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
+            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $groupId .'&ugroup_id='. $ugroupId .'&func=edit');
+        }
+
         return $content;
+    }
+
+    public function displayUserResultTable($res) {
+        $userHelper = UserHelper::instance();
+        $hp = Codendi_HTMLPurifier::instance();
+        $nb_cols = 3;
+        if (db_numrows($res)) {
+            $output = '<table><tr>';
+            $i = 0;
+            while($data = db_fetch_array($res)) {
+                if ($i++ % $nb_cols == 0) {
+                    $output .= '</tr><tr>';
+                }
+                $action     = 'add';
+                $background = 'eee';
+                if ($data['is_on']) {
+                    $action     = 'remove';
+                    $background = 'dcf7c4';
+                }
+                $output .= '<td width="'. round(100/$nb_cols) .'%">';
+                $output .= '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
+                $output .= '<table width="100%"><tr><td><a href="/users/'. $hp->purify($data['user_name']) .'/">'. $hp->purify($userHelper->getDisplayName($data['user_name'], $data['realname'])) .'</a></td>';
+                $output .= '<td style="text-align:right;">';
+                $output .= project_admin_display_bullet_user($data['user_id'], $action);
+                $output .= '</td></tr></table>';
+                $output .= '<div style="color:#666; ">'. $data['email'] .'</div>';
+                $output .= '</div>';
+                $output .= '</td>';
+            }
+            while($i++ % $nb_cols != 0) {
+                $output .= '<td width="'. round(100/$nb_cols) .'%"></td>';
+            }
+            $output .= '</tr></table>';
+        } else {
+            $output .= 'No user match';
+            $output .= db_error();
+        }
     }
 
 }
