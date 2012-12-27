@@ -17,6 +17,7 @@ $hp      = Codendi_HTMLPurifier::instance();
 $request = HTTPRequest::instance();
 
 function _breadCrumbs($project, $ugroupId = NULL, $ugroupName = NULL) {
+    $hp      = Codendi_HTMLPurifier::instance();
     $breadcrumbs['/projects/'. $project->getUnixName(true)] = $project->getPublicName();
     $breadcrumbs['/project/admin/?group_id='. (int)$project->getId()]= 'Admin';
     $breadcrumbs['/project/admin/ugroup.php?group_id='.(int)$project->getId()] = 'Users groups';
@@ -28,7 +29,7 @@ function _breadCrumbs($project, $ugroupId = NULL, $ugroupName = NULL) {
             <tr>
                 <td align="left">';
     foreach($breadcrumbs as $url => $title) {
-        echo '&nbsp;<a href="'. get_server_url() .$url.'" />'.$title.'</a>&nbsp;>>';
+        echo '&nbsp;<a href="'. get_server_url() .$url.'" />'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</a>&nbsp;>>';
     }
     echo'</td></table></p>';
 }
