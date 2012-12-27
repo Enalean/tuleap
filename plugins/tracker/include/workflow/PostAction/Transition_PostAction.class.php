@@ -110,6 +110,16 @@ abstract class Transition_PostAction {
      */
     public function before(array &$fields_data, User $current_user) {
     }
+
+    /**
+     * Execute actions after transition happens and tracker rules validated
+     *
+     * @param User  $current_user The user who are performing the update
+     *
+     * @return void
+     */
+    public function after(User $current_user) {
+    }
     
     /**
      * Get the shortname of the post action
