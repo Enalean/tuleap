@@ -152,8 +152,6 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $this->addToSection('refs/heads', 'create', "group Administrators");  // push initial ref
         $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators"); // push initial ref
-        $this->addToSection('refs/heads', 'forgeAuthor', "group Administrators"); // push initial ref
-        $this->addToSection('refs/heads', 'pushMerge', "group Administrators");
 
         $this->addToSection('refs/changes', 'push', "group $contributors");
         $this->addToSection('refs/changes', 'push', "group $integrators");
