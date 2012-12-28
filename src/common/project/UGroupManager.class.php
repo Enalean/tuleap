@@ -447,7 +447,6 @@ class UGroupManager {
                 $content .= '</td></tr></table>';
                 
                 $content .= '</form>';
-                $content .= '<p><a href="/project/admin/editugroup.php?group_id='. $groupId .'&amp;ugroup_id='. $ugroupId .'&amp;func=edit">&laquo;'.$GLOBALS['Language']->getText('project_admin_editugroup','go_back').'</a></p>';
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
                 $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $groupId);
@@ -456,6 +455,7 @@ class UGroupManager {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
             $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $groupId .'&ugroup_id='. $ugroupId .'&func=edit');
         }
+        $content .= '</div>';
 
         return $content;
     }
