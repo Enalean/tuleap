@@ -58,13 +58,6 @@ class Transition_PostActionFactory_AddPostActionTest extends TuleapTestCase {
         $factory->addPostAction($this->transition, 'field_float');
     }
 
-    public function itCanAddAJenkinsBuildPostAction() {
-        $dao     = mock('Transition_PostAction_Jenkins_BuildDao');
-        $factory = aPostActionFactory()->withJenkinsBuildDao($dao)->build();
-
-        $dao->expectOnce('create', array($this->transition_id));
-        $factory->addPostAction($this->transition, 'jenkins_build');
-    }
 }
 
 class Transition_PostActionFactory_LoadPostActionsTest extends TuleapTestCase {
@@ -261,10 +254,12 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
         $this->date_dao          = mock('Transition_PostAction_Field_DateDao');
         $this->int_dao           = mock('Transition_PostAction_Field_IntDao');
         $this->float_dao         = mock('Transition_PostAction_Field_FloatDao');
+        $this->jenkins_build_dao = mock('Transition_PostAction_Jenkins_BuildDao');
 
         stub($this->factory)->getDao('field_date')->returns($this->date_dao);
         stub($this->factory)->getDao('field_int')->returns($this->int_dao);
-        stub($this->factory)->getDao('field_float')->returns($this->float_dao);  
+        stub($this->factory)->getDao('field_float')->returns($this->float_dao);
+        stub($this->factory)->getDao('jenkins_build')->returns($this->jenkins_build_dao);
 
         $this->workflow_id = 1;
     }
@@ -273,7 +268,8 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
         $this->date_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
         $this->int_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
         $this->float_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
-        
+        $this->jenkins_build_dao->expectOnce('deletePostActionsByWorkflowId', array($this->workflow_id));
+
         $this->factory->deleteWorkflow($this->workflow_id);
     }
     
@@ -281,6 +277,7 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
         stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
         stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(true);
         stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
+        stub($this->jenkins_build_dao)->deletePostActionsByWorkflowId('*')->returns(true);
 
         $this->assertTrue($this->factory->deleteWorkflow($this->workflow_id));
     }
@@ -351,6 +348,50 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends TuleapTe
         
         $this->assertFalse($this->factory->isFieldUsedInPostActions($this->field));
     }
+
 }
 
+class Transition_PostActionFactory_PostActions_After_Test extends TuleapTestCase {
+
+    public function itCanAddAJenkinsBuildPostAction() {
+        $transition_id = 123;
+        $transition    = stub('Transition')->getTransitionId()->returns($transition_id);
+
+        $dao     = mock('Transition_PostAction_Jenkins_BuildDao');
+        $factory = aPostActionFactory()->withJenkinsBuildDao($dao)->build();
+
+        $dao->expectOnce('create', array($transition_id));
+        $factory->addPostAction($transition, 'jenkins_build');
+    }
+
+    public function itDeletesJenkinsBuildPostActionIfWorkflowIsDeleted() {
+        $workflow_id = 123;
+
+        $dao     = mock('Transition_PostAction_Jenkins_BuildDao');
+        $factory = aPostActionFactory()->withJenkinsBuildDao($dao)->build();
+
+        $dao->expectOnce('deletePostActionsByWorkflowId', array($workflow_id));
+        $factory->deleteWorkflow($workflow_id);
+    }
+
+    public function itSavesTheJenkinsBuildPostAction() {
+        $transition_id = 123;
+        $transition    = stub('Transition')->getTransitionId()->returns($transition_id);
+        $host          = 'example.org';
+        $job_name      = 'jobExample';
+
+        $jenkins_build_post_action = mock('Transition_PostAction_Jenkins_Build');
+        stub($jenkins_build_post_action)->getTransition()->returns($transition);
+        stub($jenkins_build_post_action)->getHost()->returns($host);
+        stub($jenkins_build_post_action)->getJobName()->returns($job_name);
+        stub($jenkins_build_post_action)->getShortName()->returns('jenkins_build');
+
+        $dao     = mock('Transition_PostAction_Jenkins_BuildDao');
+        $factory = new Transition_PostActionFactoryTestVersion();
+        stub($factory)->getDao('jenkins_build')->returns($dao);
+
+        $dao->expectOnce('save', array($transition_id, $host, $job_name));
+        $factory->saveObject($jenkins_build_post_action);
+    }
+}
 ?>

@@ -283,11 +283,21 @@ class Transition_PostActionFactory {
     * @return void
     */
     public function saveObject($post_action) {
+        $short_name = $post_action->getShortName();
         $dao   = $this->getDao($post_action->getShortName());
-        
-        $dao->save($post_action->getTransition()->getTransitionId(),
+        switch($short_name) {
+            case 'jenkins_build':
+                $dao->save($post_action->getTransition()->getTransitionId(),
+                   $post_action->getHost(),
+                   $post_action->getJobName()
+                );
+                break;
+
+            default :
+                $dao->save($post_action->getTransition()->getTransitionId(),
                    $post_action->getFieldId(),
                    $this->getValue($post_action));
+        }
     }
     
     /**
@@ -340,6 +350,10 @@ class Transition_PostActionFactory {
         $result = true;
         
         foreach ($this->post_actions_classes as $shortname => $klass) {
+            $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
+        }
+
+        foreach ($this->post_actions_classes_after as $shortname => $klass) {
             $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
         }
         

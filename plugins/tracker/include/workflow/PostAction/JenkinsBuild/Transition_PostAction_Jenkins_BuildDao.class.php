@@ -37,6 +37,10 @@ class Transition_PostAction_Jenkins_BuildDao extends DataAccessObject {
 
     }
 
+    public function save() {
+
+    }
+
 }
 
 ?>

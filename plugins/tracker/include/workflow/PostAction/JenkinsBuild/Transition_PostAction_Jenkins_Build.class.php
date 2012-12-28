@@ -49,6 +49,14 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
         $this->job_name = $job_name;
     }
 
+    public function getHost() {
+        return $this->host;
+    }
+
+    public function getJobName() {
+        return $this->job_name;
+    }
+
     /**
      * Get the shortname of the post action
      *
