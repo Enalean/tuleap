@@ -319,7 +319,7 @@ class UGroupManager {
                         default:
                             break;
                         }
-                        $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
+                        /*$GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
                             '&ugroup_id='. (int)$ugroupId .
                             '&func=edit'.
                             '&pane=members'.
@@ -328,7 +328,7 @@ class UGroupManager {
                             '&search='. urlencode($search) .
                             '&begin='. urlencode($begin) .
                             '&in_project='. (int)$in_project
-                        );
+                        );*/
                     }
                 }
 
