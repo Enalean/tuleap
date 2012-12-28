@@ -444,17 +444,14 @@ class UGroupManager {
                 
                 $content .= '</fieldset>';
 
-                $content .= '</td></tr></table>';
-                
                 $content .= '</form>';
             } else {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
-                $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='. $groupId);
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
-            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='. $groupId .'&ugroup_id='. $ugroupId .'&func=edit');
         }
+        $content .= '</td></tr></table>';
         $content .= '</div>';
 
         return $content;
