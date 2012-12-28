@@ -42,6 +42,11 @@ class Transition {
     protected $post_actions = array();
 
     /**
+     * @var Array of Transition_PostAction runned after fields validation
+     */
+    protected $post_actions_after = array();
+
+    /**
      * @var Array of Workflow_Transition_Condition
      */
     private $conditions = array();
