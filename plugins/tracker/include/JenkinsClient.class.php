@@ -33,8 +33,16 @@ class JenkinsClient {
         $this->host = $host;
     }
 
-    public function BuildURLJobBuild($job_name) {
+    private function BuildURLJobBuild($job_name) {
+        if ($job_name === null) {
+            return false;
+        }
         return "http://$this->host/job/$job_name/build";
+    }
+
+    public function lunchJobBuild($job_name) {
+        $url = $this->BuildURLJobBuild($job_name);
+        return $url;
     }
 
 }

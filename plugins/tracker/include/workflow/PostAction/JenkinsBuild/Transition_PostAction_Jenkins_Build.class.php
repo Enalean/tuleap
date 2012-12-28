@@ -76,7 +76,7 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
 
     public function after() {
         $jenkins_client = new JenkinsClient($this->host);
-        return $jenkins_client->BuildURLJobBuild($this->job_name);
+        return $jenkins_client->lunchJobBuild($this->job_name);
     }
 }
 

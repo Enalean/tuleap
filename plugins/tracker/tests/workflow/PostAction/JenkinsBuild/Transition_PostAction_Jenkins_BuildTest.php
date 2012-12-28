@@ -22,17 +22,27 @@ require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/Jenkins
 
 class Transition_PostAction_Jenkins_BuildTest extends TuleapTestCase {
 
-    public function itReturnsTheGoodBuildedURL() {
-        $transition     = mock('Transition');
-        $post_action_id = 259;
-        $host           = 'example.com';
+    public function setUp() {
+        parent::setUp();
+        $this->post_action_id = 259;
+        $this->transition     = mock('Transition');
+        $this->host           = 'example.com';
+
+    }
+
+    public function itReturnsTrueifTheURLIsBuilded() {
         $job_name       = 'job_example';
 
-        $jenkins_post_action = new Transition_PostAction_Jenkins_Build($transition, $post_action_id, $host, $job_name);
-        $expected = 'http://example.com/job/job_example/build';
-        $this->assertEqual($jenkins_post_action->after(), $expected);
+        $jenkins_post_action = new Transition_PostAction_Jenkins_Build($this->transition, $this->post_action_id, $this->host, $job_name);
+        $this->assertTrue($jenkins_post_action->after());
+    }
+
+    public function itReturnsFalseIfThereIsNoJobNameSet() {
+        $job_name       = null;
+
+        $jenkins_post_action = new Transition_PostAction_Jenkins_Build($this->transition, $this->post_action_id, $this->host, $job_name);
+        $this->assertFalse($jenkins_post_action->after());
     }
 
 }
-
 ?>
