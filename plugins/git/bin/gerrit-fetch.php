@@ -23,7 +23,7 @@ ini_set('memory_limit', -1);
 require_once('pre.php');
 
 $repository = new GitRepository();
-$repository->getFullPath();
+$repository->getFullPath(); //method on Yannis machine
         //
         //get all repos migrated to gerrit
         //
