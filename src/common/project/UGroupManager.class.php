@@ -242,12 +242,12 @@ class UGroupManager {
         $content .= '<table><tr valign="top"><td>';
 
         // Get existing members from group
+        $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('project_admin_editugroup','members').'</legend>';
         $members = $uGroup->getMembers();
         if (count($members) > 0) {
             $content .= '<form action="ugroup_remove_user.php" method="POST">';
             $content .= '<input type="hidden" name="group_id" value="'.$groupId.'">';
             $content .= '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'">';
-            $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('project_admin_editugroup','members').'</legend>';
             $content .= '<table>';
             $i = 0;
             $userHelper = UserHelper::instance();
@@ -262,11 +262,11 @@ class UGroupManager {
                 $content .= '</tr>';
             }
             $content .= '</table>';
-            $content .= '</fieldset>';
             $content .= '</form>';
         } else {
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup', 'nobody_yet');
         }
+        $content .= '</fieldset>';
 
         if ($ugroupUpdateUsersAllowed) {
             $res = ugroup_db_get_ugroup($ugroupId);
