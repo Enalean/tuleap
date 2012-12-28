@@ -69,6 +69,7 @@ $pm = ProjectManager::instance();
 $project=$pm->getProject($group_id);
 
 $vFunc = new Valid_WhiteList('func', array('create', 'do_create', 'edit'));
+$vFunc->required();
 $func = $request->getValidated('func', $vFunc, 'create');
 
 if ($request->isPost() && $func == 'do_create') {

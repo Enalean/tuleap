@@ -235,8 +235,11 @@ class UGroupManager {
         $em                       = EventManager::instance();
         $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
 
+        $content .= '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($ugroup_name, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
+
         $content .= '<p><b>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</b></p>';
         $content .= '<div style="padding-left:10px">';
+        $content .= '<table><tr valign="top"><td>';
 
         // Get existing members from group
         $members = $uGroup->getMembers();
@@ -244,6 +247,7 @@ class UGroupManager {
             $content .= '<form action="ugroup_remove_user.php" method="POST">';
             $content .= '<input type="hidden" name="group_id" value="'.$groupId.'">';
             $content .= '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'">';
+            $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('project_admin_editugroup','members').'</legend>';
             $content .= '<table>';
             $i = 0;
             $userHelper = UserHelper::instance();
@@ -258,14 +262,10 @@ class UGroupManager {
                 $content .= '</tr>';
             }
             $content .= '</table>';
+            $content .= '</fieldset>';
             $content .= '</form>';
         } else {
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup', 'nobody_yet');
-        }
-
-        if ($ugroupUpdateUsersAllowed) {
-            $content .= '<p><a href="ugroup_add_users.php?group_id='. $groupId .'&amp;ugroup_id='. $ugroupId .'">'. $GLOBALS['HTML']->getimage('/ic/add.png') .$GLOBALS['Language']->getText('project_admin_editugroup', 'add_user').'</a></p>';
-            $content .= '</div>';
         }
 
         if ($ugroupUpdateUsersAllowed) {
@@ -329,38 +329,17 @@ class UGroupManager {
                         );
                     }
                 }
-                $content .= '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($ugroup_name, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
-                
+
                 //Display the form
                 $selected = 'selected="selected"';
                 $content .= '<form action="" method="GET">';
-                $content .= '<table><tr valign="top"><td>';
-                
-                //Display existing members
-                $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('project_admin_editugroup','members').'</legend>';
-                $members   = $uGroup->getMembers();
-                if (count($members) > 0) {
-                    $content .= '<table border="0" cellspacing="0" cellpadding="0" width="100%"><tbody>';
-                    $i = 0;
-                    $hp = Codendi_HTMLPurifier::instance();
-                    foreach ($members as $user) {
-                        $content .= '<tr class="'. html_get_alt_row_color(++$i) .'">';
-                        $content .= '<td style="white-space:nowrap">'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
-                        $content .= '<td>';
-                        $content .= project_admin_display_bullet_user($user->getId(), 'remove');
-                        $content .= '</td>';
-                        $content .= '</tr>';
-                    }
-                    $content .= '</tbody></table>';
-                    $content .= '</fieldset>';
-                } else {
-                    $content .= $GLOBALS['Language']->getText('project_admin_editugroup','group_empty');
-                }
-                
+
                 $content .= '</td><td>';
 
                 $content .= '<input type="hidden" name="group_id" value="'. (int)$groupId .'" />';
                 $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
+                $content .= '<input type="hidden" name="func" value="edit" />';
+                $content .= '<input type="hidden" name="pane" value="members" />';
                 $content .= '<input type="hidden" name="offset" value="'. (int)$offset .'" />';
 
                 //Filter
@@ -441,6 +420,8 @@ class UGroupManager {
                         $content .= '<a href="?'.
                             'group_id='. (int)$groupId .
                             '&amp;ugroup_id='. (int)$ugroupId .
+                            '&amp;func=edit'.
+                            '&amp;pane=members'.
                             '&amp;offset='. (int)($i * $number_per_page) .
                             '&amp;number_per_page='. (int)$number_per_page .
                             '&amp;search='. urlencode($search) .
@@ -498,7 +479,7 @@ class UGroupManager {
                 $output .= '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
                 $output .= '<table width="100%"><tr><td><a href="/users/'. $hp->purify($data['user_name']) .'/">'. $hp->purify($userHelper->getDisplayName($data['user_name'], $data['realname'])) .'</a></td>';
                 $output .= '<td style="text-align:right;">';
-                $output .= project_admin_display_bullet_user($data['user_id'], $action);
+                $output .= project_admin_display_bullet_user($data['user_id'], $action, 'ugroup_add_users.php?'.$_SERVER['QUERY_STRING'].'&user['. $data['user_id'] .']='. $action);
                 $output .= '</td></tr></table>';
                 $output .= '<div style="color:#666; ">'. $data['email'] .'</div>';
                 $output .= '</div>';
@@ -512,6 +493,7 @@ class UGroupManager {
             $output .= 'No user match';
             $output .= db_error();
         }
+        return $output;
     }
 
 }
