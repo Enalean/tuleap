@@ -34,9 +34,11 @@ class Test_Transition_PostActionFactoryBuilder {
         
         $this->form_element_factory = mock('Tracker_FormElementFactory');
                 
-        $this->daos = array('field_date'  => mock('Transition_PostAction_Field_DateDao'),
-                            'field_int'   => mock('Transition_PostAction_Field_IntDao'),
-                            'field_float' => mock('Transition_PostAction_Field_FloatDao'));
+        $this->daos = array('field_date'    => mock('Transition_PostAction_Field_DateDao'),
+                            'field_int'     => mock('Transition_PostAction_Field_IntDao'),
+                            'field_float'   => mock('Transition_PostAction_Field_FloatDao'),
+                            'jenkins_build' => mock('Transition_PostAction_Jenkins_BuildDao'),
+                      );
         
         foreach($this->daos as $short_name => $dao) {
             stub($dao)->searchByTransitionId('*')->returns(array());
@@ -60,6 +62,11 @@ class Test_Transition_PostActionFactoryBuilder {
     
     public function withFieldFloatDao(Transition_PostAction_Field_FloatDao $dao) {
         $this->daos['field_float'] = $dao;
+        return $this;
+    }
+
+    public function withJenkinsBuildDao(Transition_PostAction_Jenkins_BuildDao $dao) {
+        $this->daos['jenkins_build'] = $dao;
         return $this;
     }
     

@@ -21,9 +21,11 @@
 require_once('Field/Transition_PostAction_Field_Date.class.php');
 require_once('Field/Transition_PostAction_Field_Int.class.php');
 require_once('Field/Transition_PostAction_Field_Float.class.php');
+require_once('JenkinsBuild/Transition_PostAction_Jenkins_Build.class.php');
 require_once('Field/dao/Transition_PostAction_Field_DateDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_FloatDao.class.php');
+require_once('JenkinsBuild/Transition_PostAction_Jenkins_BuildDao.class.php');
 require_once 'Transition_PostAction_NotFoundException.class.php';
 
 /**
@@ -36,9 +38,10 @@ class Transition_PostActionFactory {
      * @var Array of available post actions classes
      */
     protected $post_actions_classes = array(
-        'field_date'  => 'Transition_PostAction_Field_Date',
-        'field_int'   => 'Transition_PostAction_Field_Int',
-        'field_float' => 'Transition_PostAction_Field_Float',
+        'field_date'    => 'Transition_PostAction_Field_Date',
+        'field_int'     => 'Transition_PostAction_Field_Int',
+        'field_float'   => 'Transition_PostAction_Field_Float',
+        'jenkins_build' => 'Transition_PostAction_Jenkins_Build',
     );
     
     /**
@@ -90,6 +93,7 @@ class Transition_PostActionFactory {
             case 'field_date':  return new Transition_PostAction_Field_DateDao();
             case 'field_int':   return new Transition_PostAction_Field_IntDao();
             case 'field_float': return new Transition_PostAction_Field_FloatDao();
+            case 'jenkins_build': return new Transition_PostAction_Jenkins_BuildDao();
             default:            throw new Transition_PostAction_NotFoundException();
         }
     }
@@ -304,7 +308,7 @@ class Transition_PostActionFactory {
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
         foreach ($this->post_actions_classes as $shortname => $klass) {
-            if ($this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
+            if ($shortname !== 'jenkins_build' && $this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
                 return true;
             }
         }
