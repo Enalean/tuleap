@@ -321,6 +321,8 @@ class UGroupManager {
                         }
                         $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
                             '&ugroup_id='. (int)$ugroupId .
+                            '&func=edit'.
+                            '&pane=members'.
                             '&offset='. (int)$offset .
                             '&number_per_page='. (int)$number_per_page .
                             '&search='. urlencode($search) .
@@ -479,7 +481,7 @@ class UGroupManager {
                 $output .= '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
                 $output .= '<table width="100%"><tr><td><a href="/users/'. $hp->purify($data['user_name']) .'/">'. $hp->purify($userHelper->getDisplayName($data['user_name'], $data['realname'])) .'</a></td>';
                 $output .= '<td style="text-align:right;">';
-                $output .= project_admin_display_bullet_user($data['user_id'], $action, 'ugroup_add_users.php?'.$_SERVER['QUERY_STRING'].'&user['. $data['user_id'] .']='. $action);
+                $output .= project_admin_display_bullet_user($data['user_id'], $action);
                 $output .= '</td></tr></table>';
                 $output .= '<div style="color:#666; ">'. $data['email'] .'</div>';
                 $output .= '</div>';
