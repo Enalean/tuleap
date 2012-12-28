@@ -94,6 +94,13 @@ class UGroupBindingViewer {
         return $html;
     }
 
+    public function getUsagePaneContent($groupId, $ugroupId) {
+        $clones = $this->ugroupBinding->getUGroupsByBindingSource($ugroupId);
+        $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
+        $html .= $this->getClonesHTML($clones);
+        return $html;
+    }
+
     /**
      * Get the HTML output for current binding
      *
