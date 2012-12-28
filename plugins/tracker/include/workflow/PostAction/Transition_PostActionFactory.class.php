@@ -41,6 +41,13 @@ class Transition_PostActionFactory {
         'field_date'    => 'Transition_PostAction_Field_Date',
         'field_int'     => 'Transition_PostAction_Field_Int',
         'field_float'   => 'Transition_PostAction_Field_Float',
+    );
+
+    /**
+     * @var Array of available post actions classes runned after fields validation
+     */
+
+    protected $post_actions_classes_after = array(
         'jenkins_build' => 'Transition_PostAction_Jenkins_Build',
     );
     
@@ -62,6 +69,14 @@ class Transition_PostActionFactory {
             $html .= $label;
             $html .= '</option>';
         }
+
+         foreach ($this->post_actions_classes_after as $shortname => $klass) {
+            //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
+            eval("\$label = $klass::getLabel();");
+            $html .= '<option value="'. $shortname .'">';
+            $html .= $label;
+            $html .= '</option>';
+        }
         
         $html .= '</select></p>';
         return $html;
@@ -76,7 +91,7 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function addPostAction(Transition $transition, $requested_postaction) {
-        if (isset($this->post_actions_classes[$requested_postaction])) {
+        if (isset($this->post_actions_classes[$requested_postaction]) || isset($this->post_actions_classes_after[$requested_postaction])) {
             $this->getDao($requested_postaction)->create($transition->getTransitionId());
         }
     }
@@ -308,7 +323,7 @@ class Transition_PostActionFactory {
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
         foreach ($this->post_actions_classes as $shortname => $klass) {
-            if ($shortname !== 'jenkins_build' && $this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
+            if ($this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
                 return true;
             }
         }

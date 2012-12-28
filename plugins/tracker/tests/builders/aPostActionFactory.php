@@ -37,10 +37,15 @@ class Test_Transition_PostActionFactoryBuilder {
         $this->daos = array('field_date'    => mock('Transition_PostAction_Field_DateDao'),
                             'field_int'     => mock('Transition_PostAction_Field_IntDao'),
                             'field_float'   => mock('Transition_PostAction_Field_FloatDao'),
-                            'jenkins_build' => mock('Transition_PostAction_Jenkins_BuildDao'),
                       );
+
+        $this->daos_after = array('jenkins_build' => mock('Transition_PostAction_Jenkins_BuildDao'));
         
         foreach($this->daos as $short_name => $dao) {
+            stub($dao)->searchByTransitionId('*')->returns(array());
+        }
+
+        foreach($this->daos_after as $short_name => $dao) {
             stub($dao)->searchByTransitionId('*')->returns(array());
         }
     }
@@ -66,13 +71,16 @@ class Test_Transition_PostActionFactoryBuilder {
     }
 
     public function withJenkinsBuildDao(Transition_PostAction_Jenkins_BuildDao $dao) {
-        $this->daos['jenkins_build'] = $dao;
+        $this->daos_after['jenkins_build'] = $dao;
         return $this;
     }
     
     public function build() {
         stub($this->factory)->getFormElementFactory()->returns($this->form_element_factory);
         foreach($this->daos as $short_name => $dao) {
+            stub($this->factory)->getDao($short_name)->returns($dao);
+        }
+        foreach($this->daos_after as $short_name => $dao) {
             stub($this->factory)->getDao($short_name)->returns($dao);
         }
         return $this->factory;

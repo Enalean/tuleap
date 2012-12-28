@@ -261,12 +261,10 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
         $this->date_dao          = mock('Transition_PostAction_Field_DateDao');
         $this->int_dao           = mock('Transition_PostAction_Field_IntDao');
         $this->float_dao         = mock('Transition_PostAction_Field_FloatDao');
-        $this->jenkins_build_dao = mock('Transition_PostAction_Jenkins_BuildDao');
 
         stub($this->factory)->getDao('field_date')->returns($this->date_dao);
         stub($this->factory)->getDao('field_int')->returns($this->int_dao);
         stub($this->factory)->getDao('field_float')->returns($this->float_dao);  
-        stub($this->factory)->getDao('jenkins_build')->returns($this->jenkins_build_dao);
 
         $this->workflow_id = 1;
     }
@@ -283,7 +281,6 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
         stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
         stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(true);
         stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
-        stub($this->jenkins_build_dao)->deletePostActionsByWorkflowId('*')->returns(true);
 
         $this->assertTrue($this->factory->deleteWorkflow($this->workflow_id));
     }
@@ -292,8 +289,6 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
         stub($this->date_dao)->deletePostActionsByWorkflowId('*')->returns(true);
         stub($this->int_dao)->deletePostActionsByWorkflowId('*')->returns(false);
         stub($this->float_dao)->deletePostActionsByWorkflowId('*')->returns(true);
-        stub($this->jenkins_build_dao)->deletePostActionsByWorkflowId('*')->returns(true);
-
 
         $this->assertFalse($this->factory->deleteWorkflow($this->workflow_id));
     }
@@ -309,12 +304,10 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends TuleapTe
         $this->date_dao          = mock('Transition_PostAction_Field_DateDao');
         $this->int_dao           = mock('Transition_PostAction_Field_IntDao');
         $this->float_dao         = mock('Transition_PostAction_Field_FloatDao');
-        $this->jenkins_build_dao = mock('Transition_PostAction_Jenkins_BuildDao');
         
         stub($this->factory)->getDao('field_date')->returns($this->date_dao);
         stub($this->factory)->getDao('field_int')->returns($this->int_dao);
-        stub($this->factory)->getDao('field_float')->returns($this->float_dao);        
-        stub($this->factory)->getDao('jenkins_build')->returns($this->jenkins_build_dao);
+        stub($this->factory)->getDao('field_float')->returns($this->float_dao);
         
         $this->field_id = 45617;
         $this->field    = aMockField()->withId($this->field_id)->build();
