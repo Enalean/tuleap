@@ -248,7 +248,7 @@ class TransitionFactory {
         $transition->setTransitionId($transition_id);
 
         //Save postactions
-        $postactions = $transition->getPostActions();
+        $postactions = $transition->getAllPostActions();
         foreach ($postactions as $postaction) {
             $tpaf = new Transition_PostActionFactory();
             $tpaf->saveObject($postaction);

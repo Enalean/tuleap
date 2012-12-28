@@ -25,6 +25,18 @@
  */
 class Transition_PostAction_Jenkins_BuildDao extends DataAccessObject {
 
+    /*
+     * Transition_PostAction_Jenkins_Build table before made the forge upgrade script
+     *
+     *  CREATE TABLE tracker_workflow_transition_postactions_jenkins_build (
+     *      id ,
+     *      transition_id,
+     *      host,
+     *      job_name,
+     *  )
+     *
+     */
+
     public function create() {
 
     }

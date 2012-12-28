@@ -220,6 +220,24 @@ class Transition {
     }
 
     /**
+     * Get Post Actions for the transition
+     *
+     * @return Array
+     */
+    public function getAllPostActions() {
+        return array_merge($this->post_actions, $this->post_actions_after);
+    }
+
+    /**
+     * Get Post Actions for the transition
+     *
+     * @return Array
+     */
+    public function getPostActionsAfter() {
+        return $this->post_actions_after;
+    }
+
+    /**
      * Get the html code needed to display the post actions in workflow admin
      *
      * @return string html
@@ -227,7 +245,7 @@ class Transition {
     public function fetchPostActions() {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
-        if ($post_actions = $this->getPostActions()) {
+        if ($post_actions = $this->getAllPostActions()) {
             $html .= '<table class="workflow_actions" width="100%" cellpadding="0" cellspacing="10">';
             foreach ($post_actions as $pa) {
                 $classnames = $pa->getCssClasses();
