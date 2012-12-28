@@ -56,7 +56,8 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $host  = $this->tmpdir;
         $login = $this->gerrit_admin_instance;
         $id = $ssh_port = $http_port = $identity_file = 0;
-        $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), array($id, $host, $ssh_port, $http_port, $login, $identity_file));
+        $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), 
+                array($id, $host, $ssh_port, $http_port, $login, $identity_file));
 
         $this->gerrit_git_url = "$host/$this->gerrit_project";
         stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns($this->gerrit_git_url);
@@ -112,7 +113,6 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertPermissionsFileHasEverything();
         $this->assertEverythingIsCommitted();
         $this->assertEverythingIsPushedToTheServer();
-        $this->assertSetUpPeriodicalFetchAddsRemoteForGit();
     }
 
     public function itDoesNotSetPermsOnRegisteredUsersIfProjectIsPrivate() {
@@ -144,9 +144,17 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         chdir("$this->tmpdir");
         exec('git remote -v', $output, $ret_val);
         chdir($cwd);
+        
+        $port          = $this->server->getSSHPort();
+        $identity_file = $this->server->getIdentityFile();
+        $host_login    = $this->server->getLogin() . '@' . $this->server->getHost();
+        
         $this->assertEqual($output, array(
+            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (fetch)",
+            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (push)",
             "origin\t$this->gerrit_git_url (fetch)",
-            "origin\t$this->gerrit_git_url (push)")
+            "origin\t$this->gerrit_git_url (push)",
+            )
         );
         $this->assertEqual($ret_val, 0);
     }
@@ -194,19 +202,6 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertPattern("%global:Registered-Users\tRegistered Users\n%",     $group_file_contents);
     }
 
-    private function itThrowsAnExceptionWhenSomethingGoneBad() {
-        // remote git repo doesn't exist
-        // add permissions doesn't work
-        // cannot commit
-        // ...
-    }
-
-    private function itLogsEachMethodsCall() {
-    }
-    
-    private function assertSetUpPeriodicalFetchAddsRemoteForGit() {
-        
-    }
 }
 
 class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {

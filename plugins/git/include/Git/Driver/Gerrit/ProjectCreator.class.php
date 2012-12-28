@@ -72,12 +72,9 @@ class Git_Driver_Gerrit_ProjectCreator {
             $gerrit_project.'-'.self::GROUP_SUPERMEN,
             $gerrit_project.'-'.self::GROUP_OWNERS
         );
-
         
-        $this->setUpPeriodicalFetch($repository, $gerrit_server);
-
-
         $this->exportGitBranches($gerrit_server, $gerrit_project, $repository);
+        $this->addRemoteGerritServer($repository, $gerrit_server);
 
         return $gerrit_project;
     }
@@ -192,19 +189,19 @@ class Git_Driver_Gerrit_ProjectCreator {
         `cd $this->dir; git push origin HEAD:refs/meta/config`;
     }
     
-    private function setUpPeriodicalFetch(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server) {
-        //*add remote server gerrit:
-        //git remote add gerrit "ext::ssh -p 29418 -i $HOME/.ssh/id_rsa-gerrit admin-shunt.cro.enalean.com@gerrit-shunt.cro.enalean.com %S shunt.cro.enalean.com-gerrit-devs/funky"
-        //WHERE
-        // $HOME/.ssh/id_rsa-gerrit
-        //     = $gerrit_server->identity_file
-        // 29418
-        //     = $gerrit_server->ssh_port
-        // admin-shunt.cro.enalean.com@gerrit-shunt.cro.enalean.com
-        //     = $gerrit_server->login @ $gerrit_server->host
-        // shunt.cro.enalean.com-gerrit-devs/funky 
-        //     = $this->driver->getGerritProjectName($repository);
+    /**
+     * 
+     * @param GitRepository $repository
+     * @param Git_RemoteServer_GerritServer $gerrit_server
+     */
+    private function addRemoteGerritServer(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server) {
+        $port          = $gerrit_server->getSSHPort();
+        $identity_file = $gerrit_server->getIdentityFile();
+        $host_login    = $gerrit_server->getLogin() . '@' . $gerrit_server->getHost();
+        $gerrit_repo   = $this->driver->getGerritProjectName($repository);
 
+        // e.g git remote add gerrit "ext::ssh -p 29418 -i $HOME/.ssh/id_rsa-gerrit admin-shunt.cro.enalean.com@gerrit-shunt.cro.enalean.com %S shunt.cro.enalean.com-gerrit-devs/funky"
+        `cd $this->dir; git remote add gerrit "ext:ssh -p $port -i $identity_file $host_login %S $gerrit_repo"`;
     }
 }
 
