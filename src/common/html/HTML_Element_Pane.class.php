@@ -23,6 +23,15 @@ require_once('HTML_Element.class.php');
  */
 class HTML_Element_Pane extends HTML_Element {
 
+    /**
+     * Constructor of the class
+     *
+     * @param Array  $panes   List of panes
+     * @param String $active  Active pane
+     * @param String $content Content of the active pane
+     *
+     * @return Void
+     */
     public function __construct($panes, $active, $content) {
         parent::__construct('', '', '', '');
         $this->panes  = $panes;
@@ -30,6 +39,11 @@ class HTML_Element_Pane extends HTML_Element {
         $this->content = $content;
     }
 
+    /**
+     * Dispaly the pane
+     *
+     * @return String
+     */
     public function renderValue() {
         $html = '<div class="tabbable tabs-left">';
         $html .= '<ul class="nav nav-tabs">';
