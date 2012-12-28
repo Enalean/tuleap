@@ -268,7 +268,7 @@ if (($func=='edit')||($func=='do_create')) {
         $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
 
         $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
-        $content .= $bindingiewer->getUsagePaneContent($groupId, $ugroupId);
+        $content .= $bindingiewer->getUsagePaneContent($group_id, $ugroup_id);
     break;
     }
 
