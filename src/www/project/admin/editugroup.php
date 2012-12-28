@@ -13,6 +13,7 @@ require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
 require_once 'common/project/UGroupManager.class.php';
 require_once('common/html/HTML_Element_Pane.class.php');
+require_once('common/project/UGroupBindingViewer.class.php');
 
 $hp      = Codendi_HTMLPurifier::instance();
 $request = HTTPRequest::instance();
@@ -262,7 +263,12 @@ if (($func=='edit')||($func=='do_create')) {
         }
     break;
     case 'usage':
-        
+        $ugroupUserDao = new UGroupUserDao();
+        $ugroupManager = new UGroupManager(new UGroupDao());
+        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
+
+        $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
+        $content .= $bindingiewer->getUsagePaneContent($groupId, $ugroupId);
     break;
     }
 
