@@ -18,21 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/JenkinsBuild/Transition_PostAction_Jenkins_Build.class.php');
+require_once(dirname(__FILE__).'/../include/JenkinsClient.class.php');
 
-class Transition_PostAction_Jenkins_BuildTest extends TuleapTestCase {
+class JenkinsClientTest extends TuleapTestCase {
 
     public function itReturnsTheGoodBuildedURL() {
-        $transition     = mock('Transition');
-        $post_action_id = 259;
         $host           = 'example.com';
         $job_name       = 'job_example';
 
-        $jenkins_post_action = new Transition_PostAction_Jenkins_Build($transition, $post_action_id, $host, $job_name);
+        $jenkins_client = new JenkinsClient($host);
         $expected = 'http://example.com/job/job_example/build';
-        $this->assertEqual($jenkins_post_action->after(), $expected);
+        $this->assertEqual($jenkins_client->BuildURLJobBuild($job_name), $expected);
     }
 
 }
-
 ?>

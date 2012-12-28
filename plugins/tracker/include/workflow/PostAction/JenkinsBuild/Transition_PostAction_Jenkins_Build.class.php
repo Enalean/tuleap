@@ -19,6 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once(dirname(__FILE__).'/../../../../include/JenkinsClient.class.php');
+
 class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
 
     /**
@@ -61,7 +63,7 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
     }
 
     public function isDefined() {
-
+        return true;
     }
 
     public function process(Codendi_Request $request) {
@@ -72,13 +74,9 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
         return 'lunch jenkins build';
     }
 
-    public function getBuildURL() {
-        return "http://$this->host/job/$this->job_name/build";
-    }
-
-    public function after(User $current_user) {
-        parent::after($current_user);
-
+    public function after() {
+        $jenkins_client = new JenkinsClient($this->host);
+        return $jenkins_client->BuildURLJobBuild($this->job_name);
     }
 }
 
