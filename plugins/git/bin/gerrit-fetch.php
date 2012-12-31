@@ -40,30 +40,17 @@ $paths = $gitDao->getRepositoryPathsWithRemoteServersForAllProjects();
 foreach ($paths as $path) {
 
     $repository_path = $repository_dir . $path['repository_path'];
-    $heads_directory = $repository_path . '/refs/heads/';
-    if (! is_dir($repository_path) || ! is_dir($heads_directory)) {
+    if (! is_dir($repository_path)) {
         continue;
     }
     
     //get a list of remote heads
     $remote_heads = array();        
     exec("cd $repository_path && git-ls-remote --heads $remote_name", $remote_heads);
-    foreach ($remote_heads as $key => $remote_head) {
-        //wipe-out the sha1 of the branch from the data
-        $remote_heads[$key] = substr($remote_head, 41);
-    }
-    
-    //looping through directories- assuming everything that is not a dot or dotdot is a branch name
-    $dh = opendir($heads_directory);
-    while(($branch_name = readdir($dh)) !== false) {
-        if($branch_name === '.' || $branch_name === '..') {
-            continue;
-        }
-        
-        //check the branch exists as a remote head. This will not be the case if the repo is empty.
-        if(!in_array('refs/heads/' . $branch_name, $remote_heads)) {
-            continue;
-        }
+
+    foreach ($remote_heads as $remote_head) {
+        //extract the branch name- maybe use a regex
+        $branch_name = substr($remote_head, 52);
         
         //updating the local repository with the remote content
         `cd $repository_path && git fetch $remote_name -q && git update-ref refs/heads/$branch_name refs/remotes/$remote_name/$branch_name`;  
