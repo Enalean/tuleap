@@ -136,6 +136,9 @@ if (($func=='edit')||($func=='do_create')) {
         $ugroup_description = stripslashes($ugroup_description);
     }
 
+    $uGroupMgr = new UGroupManager();
+    $uGroupMgr->processEditMembersAction($group_id, $ugroup_id, $request);
+
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
     //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
     _breadCrumbs($project, $ugroup_id, $ugroup_name);
@@ -171,7 +174,6 @@ if (($func=='edit')||($func=='do_create')) {
         $content .= '</form>';
     break;
     case 'members':
-        $uGroupMgr = new UGroupManager();
         $content  .= $uGroupMgr->displayUgroupMembers($group_id, $ugroup_id, $request);
     break;
     case 'permissions':

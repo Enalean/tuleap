@@ -227,6 +227,49 @@ class UGroupManager {
         return array();
     }
 
+    public function processEditMembersAction($groupId, $ugroupId, $request) {
+        $uGroup                   = $this->getById($ugroupId);
+        $ugroupUpdateUsersAllowed = !$uGroup->isBound();
+        if ($ugroupUpdateUsersAllowed) {
+            $valid_begin = new Valid_WhiteList('begin', $allowed_begin_values);
+            $valid_begin->required();
+            $valid_in_project = new Valid_UInt('in_project');
+            $valid_in_project->required();
+            $offset          = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
+            $number_per_page = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
+            $search          = $request->getValidated('search', 'string', '');
+            $begin           = $request->getValidated('begin', $valid_begin, '');
+            $in_project      = $request->getValidated('in_project', $valid_in_project, $groupId);
+
+            $user = $request->get('user');
+            if ($user && is_array($user)) {
+                list($user_id, $action) = each($user);
+                $user_id = (int)$user_id;
+                if ($user_id) {
+                    switch($action) {
+                    case 'add':
+                        ugroup_add_user_to_ugroup($groupId, $ugroupId, $user_id);
+                        break;
+                    case 'remove':
+                        ugroup_remove_user_from_ugroup($groupId, $ugroupId, $user_id);
+                        break;
+                    default:
+                        break;
+                    }
+                    $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
+                        '&ugroup_id='. (int)$ugroupId .
+                        '&func=edit'.
+                        '&pane=members'.
+                        '&offset='. (int)$offset .
+                        '&number_per_page='. (int)$number_per_page .
+                        '&search='. urlencode($search) .
+                        '&begin='. urlencode($begin) .
+                        '&in_project='. (int)$in_project
+                    );
+                }
+            }
+        }
+    }
 
     public function displayUgroupMembers($groupId, $ugroupId, $request) {
         $hp                       = Codendi_HTMLPurifier::instance();
@@ -303,34 +346,6 @@ class UGroupManager {
                 $search           = $request->getValidated('search', 'string', '');
                 $begin            = $request->getValidated('begin', $valid_begin, '');
                 $in_project       = $request->getValidated('in_project', $valid_in_project, $groupId);
-                
-                $user = $request->get('user');
-                if ($user && is_array($user)) {
-                    list($user_id, $action) = each($user);
-                    $user_id = (int)$user_id;
-                    if ($user_id) {
-                        switch($action) {
-                        case 'add':
-                            ugroup_add_user_to_ugroup($groupId, $ugroupId, $user_id);
-                            break;
-                        case 'remove':
-                            ugroup_remove_user_from_ugroup($groupId, $ugroupId, $user_id);
-                            break;
-                        default:
-                            break;
-                        }
-                        /*$GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
-                            '&ugroup_id='. (int)$ugroupId .
-                            '&func=edit'.
-                            '&pane=members'.
-                            '&offset='. (int)$offset .
-                            '&number_per_page='. (int)$number_per_page .
-                            '&search='. urlencode($search) .
-                            '&begin='. urlencode($begin) .
-                            '&in_project='. (int)$in_project
-                        );*/
-                    }
-                }
 
                 //Display the form
                 $selected = 'selected="selected"';
