@@ -288,9 +288,6 @@ class UGroupManager {
         $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('project_admin_editugroup','members').'</legend>';
         $members = $uGroup->getMembers();
         if (count($members) > 0) {
-            $content .= '<form action="ugroup_remove_user.php" method="POST">';
-            $content .= '<input type="hidden" name="group_id" value="'.$groupId.'">';
-            $content .= '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'">';
             $content .= '<table>';
             $i = 0;
             $userHelper = UserHelper::instance();
@@ -299,13 +296,12 @@ class UGroupManager {
                 $content .= '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
                 if ($ugroupUpdateUsersAllowed) {
                     $content .= '<td>';
-                    $content .= project_admin_display_bullet_user($user->getId(), 'remove', 'ugroup_remove_user.php?group_id='. $groupId. '&ugroup_id='. $ugroupId .'&user_id='. $user->getId());
+                    $content .= project_admin_display_bullet_user($user->getId(), 'remove');
                     $content .= '</td>';
                 }
                 $content .= '</tr>';
             }
             $content .= '</table>';
-            $content .= '</form>';
         } else {
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup', 'nobody_yet');
         }
