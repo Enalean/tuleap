@@ -31,7 +31,7 @@ require_once(dirname(__FILE__) . '/../include/Git/Driver/Gerrit/ProjectCreator.c
 $remote_name = Git_Driver_Gerrit_ProjectCreator::GERRIT_REMOTE_NAME;
 
 $repository = new GitRepository();
-//semi_hardcoding this as I don't know how else to get the path
+//semi_hardcoding this as I don't know how else to get the path without using a project
 $repository_dir = $repository->getGitRootPath() . '../gitolite/repositories/';
 
 $gitDao = new GitDao();
@@ -49,11 +49,16 @@ foreach ($paths as $path) {
     exec("cd $repository_path && git-ls-remote --heads $remote_name", $remote_heads);
 
     foreach ($remote_heads as $remote_head) {
-        //extract the branch name- maybe use a regex
-        $branch_name = substr($remote_head, 52);
+        //extract the branch name
+        preg_match('/refs\/heads\/(.*)/', $remote_head, $matches);
+        if(! isset($matches[1])) {
+            continue;
+        }
         
+        $branch_name =  $matches[1];
         //updating the local repository with the remote content
-        `cd $repository_path && git fetch $remote_name -q && git update-ref refs/heads/$branch_name refs/remotes/$remote_name/$branch_name`;  
+        `cd $repository_path && git fetch $remote_name -q && git update-ref refs/heads/$branch_name refs/remotes/$remote_name/$branch_name`;
+        unset($matches);
     }
 }
 ?>
