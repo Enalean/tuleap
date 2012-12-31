@@ -150,8 +150,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $host_login    = $this->server->getLogin() . '@' . $this->server->getHost();
         
         $this->assertEqual($output, array(
-            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (fetch)",
-            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (push)",
+//            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (fetch)",
+//            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (push)",
             "origin\t$this->gerrit_git_url (fetch)",
             "origin\t$this->gerrit_git_url (push)",
             )

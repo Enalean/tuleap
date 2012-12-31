@@ -551,7 +551,12 @@ class GitRepository implements DVCSRepository {
      * @return String
      */
     public function getFullPath() {
-        return $this->getGitRootPath().DIRECTORY_SEPARATOR.$this->getPathWithoutLazyLoading();
+        $root_path = $this->getGitRootPath();
+        if(is_string($root_path) && strlen($root_path) > 0) {
+            $root_path = ($root_path[strlen($root_path) - 1] === DIRECTORY_SEPARATOR) ? $root_path : $root_path.DIRECTORY_SEPARATOR ;
+        }
+        
+        return $root_path . $this->getPathWithoutLazyLoading();
     }
 
     /**
