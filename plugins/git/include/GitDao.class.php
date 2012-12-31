@@ -262,6 +262,17 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
+    
+    /**
+     * 
+     * @return DataAccessResult
+     */
+    public function getRepositoryPathsWithRemoteServersForAllProjects() {
+        $sql = "SELECT repository_path FROM $this->tableName
+                WHERE remote_server_id IS NOT NULL";
+        
+        return $this->retrieve($sql);
+    }
 
     /**
      * Return the list of users that owns repositories in the project $projectId

@@ -29,6 +29,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     const GROUP_INTEGRATORS  = 'integrators';
     const GROUP_SUPERMEN     = 'supermen';
     const GROUP_OWNERS       = 'owners';
+    const GERRIT_REMOTE_NAME = 'gerrit';
 
     /** @var Git_Driver_Gerrit */
     private $driver;
@@ -199,9 +200,12 @@ class Git_Driver_Gerrit_ProjectCreator {
         $identity_file = $gerrit_server->getIdentityFile();
         $host_login    = $gerrit_server->getLogin() . '@' . $gerrit_server->getHost();
         $gerrit_repo   = $this->driver->getGerritProjectName($repository);
+        $remote        = self::GERRIT_REMOTE_NAME;
 
         // e.g git remote add gerrit "ext::ssh -p 29418 -i $HOME/.ssh/id_rsa-gerrit admin-shunt.cro.enalean.com@gerrit-shunt.cro.enalean.com %S shunt.cro.enalean.com-gerrit-devs/funky"
-        `cd $this->dir; git remote add gerrit "ext:ssh -p $port -i $identity_file $host_login %S $gerrit_repo"`;
+        // e.g git remote add gerrit "ext::ssh -p 29418 -i /home/codendiadm/.ssh/id_rsa-gerrit  admin-chamoix.cro.enalean.com@chamoix %S chamoix.cro.enalean.com-cod/depot2"
+
+        `cd $this->dir; git remote add $remote "ext:ssh -p $port -i $identity_file $host_login %S $gerrit_repo"`;  
     }
 }
 
