@@ -227,21 +227,47 @@ class UGroupManager {
         return array();
     }
 
+    public function validateRequest($groupId, $request) {
+        $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                UNION
+                SELECT DISTINCT UPPER(LEFT(user.realname,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                UNION
+                SELECT DISTINCT UPPER(LEFT(user.user_name,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                ORDER BY capital";
+        $res = db_query($sql);
+        $allowedBeginValues = array();
+        while($data = db_fetch_array($res)) {
+            $allowedBeginValues[] = $data['capital'];
+        }
+        $result['allowed_begin_values'] = $allowedBeginValues;
+
+        $validBegin = new Valid_WhiteList('begin', $allowedBeginValues);
+        $validBegin->required();
+        
+        $validInProject = new Valid_UInt('in_project');
+        $validInProject->required();
+        
+        $result['offset']          = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
+        $result['number_per_page'] = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
+        $result['search']          = $request->getValidated('search', 'string', '');
+        $result['begin']           = $request->getValidated('begin', $validBegin, '');
+        $result['in_project']      = $request->getValidated('in_project', $validInProject, $groupId);
+        $result['user']            = $request->get('user');
+        return $result;
+    }
+
     public function processEditMembersAction($groupId, $ugroupId, $request) {
         $uGroup                   = $this->getById($ugroupId);
         $ugroupUpdateUsersAllowed = !$uGroup->isBound();
         if ($ugroupUpdateUsersAllowed) {
-            $valid_begin = new Valid_WhiteList('begin', $allowed_begin_values);
-            $valid_begin->required();
-            $valid_in_project = new Valid_UInt('in_project');
-            $valid_in_project->required();
-            $offset          = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
-            $number_per_page = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
-            $search          = $request->getValidated('search', 'string', '');
-            $begin           = $request->getValidated('begin', $valid_begin, '');
-            $in_project      = $request->getValidated('in_project', $valid_in_project, $groupId);
-
-            $user = $request->get('user');
+            $validRequest = $this->validateRequest($groupId, $request);
+            $user = $validRequest['user'];
             if ($user && is_array($user)) {
                 list($user_id, $action) = each($user);
                 $user_id = (int)$user_id;
@@ -260,11 +286,11 @@ class UGroupManager {
                         '&ugroup_id='. (int)$ugroupId .
                         '&func=edit'.
                         '&pane=members'.
-                        '&offset='. (int)$offset .
-                        '&number_per_page='. (int)$number_per_page .
-                        '&search='. urlencode($search) .
-                        '&begin='. urlencode($begin) .
-                        '&in_project='. (int)$in_project
+                        '&offset='. (int)$validRequest['offset'] .
+                        '&number_per_page='. (int)$validRequest['number_per_page'] .
+                        '&search='. urlencode($validRequest['search']) .
+                        '&begin='. urlencode($validRequest['begin)']) .
+                        '&in_project='. (int)$validRequest['in_project']
                     );
                 }
             }
@@ -312,36 +338,7 @@ class UGroupManager {
             if ($res) {
                 $ugroup_name = db_result($res, 0, 'name');
 
-                //define capitals
-                $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
-                    FROM user
-                    WHERE status in ('A', 'R')
-                    UNION
-                    SELECT DISTINCT UPPER(LEFT(user.realname,1)) as capital
-                    FROM user
-                    WHERE status in ('A', 'R')
-                    UNION
-                    SELECT DISTINCT UPPER(LEFT(user.user_name,1)) as capital
-                    FROM user
-                    WHERE status in ('A', 'R')
-                    ORDER BY capital";
-                $res = db_query($sql);
-                $allowed_begin_values = array();
-                while($data = db_fetch_array($res)) {
-                    $allowed_begin_values[] = $data['capital'];
-                }
-
-                $valid_begin = new Valid_WhiteList('begin', $allowed_begin_values);
-                $valid_begin->required();
-                
-                $valid_in_project = new Valid_UInt('in_project');
-                $valid_in_project->required();
-                
-                $offset           = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
-                $number_per_page  = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
-                $search           = $request->getValidated('search', 'string', '');
-                $begin            = $request->getValidated('begin', $valid_begin, '');
-                $in_project       = $request->getValidated('in_project', $valid_in_project, $groupId);
+                $validRequest = $this->validateRequest($groupId, $request);
 
                 //Display the form
                 $selected = 'selected="selected"';
@@ -353,25 +350,25 @@ class UGroupManager {
                 $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
                 $content .= '<input type="hidden" name="func" value="edit" />';
                 $content .= '<input type="hidden" name="pane" value="members" />';
-                $content .= '<input type="hidden" name="offset" value="'. (int)$offset .'" />';
+                $content .= '<input type="hidden" name="offset" value="'. (int)$validRequest['offset'] .'" />';
 
                 //Filter
                 $content .= '<fieldset><legend>'.$GLOBALS['Language']->getText('project_admin_editugroup','users').'</legend>';
                 $content .= '<p>'. $GLOBALS['Language']->getText('project_admin_editugroup','search_in').' ';
                 $content .= '<select name="in_project">';
-                $content .= '<option value="0" '. ( !$in_project ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
-                $content .= '<option value="'. (int)$groupId .'" '. ($in_project == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
+                $content .= '<option value="0" '. ( !$validRequest['in_project'] ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
+                $content .= '<option value="'. (int)$groupId .'" '. ($validRequest['in_project'] == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
                 $content .= '</select>';
                 $content .= $GLOBALS['Language']->getText('project_admin_editugroup','name_contains').' ';
                 
                 //contains
-                $content .= '<input type="text" name="search" value="'.  $hp->purify($search, CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
+                $content .= '<input type="text" name="search" value="'.  $hp->purify($validRequest['search'], CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
                 //begin
                 $content .= $GLOBALS['Language']->getText('project_admin_editugroup','begins').' ';
                 $content .= '<select name="begin">';
-                $content .= '<option value="" '. (in_array($begin, $allowed_begin_values) ? $selected : '') .'></option>';
-                foreach($allowed_begin_values as $b) {
-                    $content .= '<option value="'. $b .'" '. ($b == $begin ? $selected : '') .'>'. $b .'</option>';
+                $content .= '<option value="" '. (in_array($validRequest['begin)'], $validRequest['allowed_begin_values']) ? $selected : '') .'></option>';
+                foreach($validRequest['allowed_begin_values'] as $b) {
+                    $content .= '<option value="'. $b .'" '. ($b == $validRequest['begin)'] ? $selected : '') .'>'. $b .'</option>';
                 }
                 $content .= '</select>. ';
                 
@@ -379,11 +376,11 @@ class UGroupManager {
                 $content .= '<span style="white-space:nowrap;">'.$GLOBALS['Language']->getText('project_admin_editugroup','show').' ';
                 //number per page
                 $content .= '<select name="number_per_page">';
-                $content .= '<option '. ($number_per_page == 15 ? $selected : '') .'>15</option>';
-                $content .= '<option '. ($number_per_page == 30 ? $selected : '') .'>30</option>';
-                $content .= '<option '. ($number_per_page == 60 ? $selected : '') .'>60</option>';
-                if (!in_array($number_per_page, array(15, 30, 60))) {
-                    $content .= '<option '. $selected .'>'. (int)$number_per_page .'</option>';
+                $content .= '<option '. ($validRequest['number_per_page'] == 15 ? $selected : '') .'>15</option>';
+                $content .= '<option '. ($validRequest['number_per_page'] == 30 ? $selected : '') .'>30</option>';
+                $content .= '<option '. ($validRequest['number_per_page'] == 60 ? $selected : '') .'>60</option>';
+                if (!in_array($validRequest['number_per_page'], array(15, 30, 60))) {
+                    $content .= '<option '. $selected .'>'. (int)$validRequest['number_per_page'] .'</option>';
                 }
                 $content .= '</select> ';
                 $content .= $GLOBALS['Language']->getText('project_admin_editugroup','users_per_page').' ';
@@ -395,37 +392,37 @@ class UGroupManager {
                 $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, realname, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
                         FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". db_ei($ugroupId) .") AS R
                         ";
-                if ($in_project) {
+                if ($validRequest['in_project']) {
                     $sql .= " INNER JOIN user_group USING ( user_id ) ";
                 }
                 $sql .= "
                         WHERE status in ('A', 'R') ";
-                if ($in_project) {
-                    $sql .= " AND user_group.group_id = ". db_ei($in_project) ." ";
+                if ($validRequest['in_project']) {
+                    $sql .= " AND user_group.group_id = ". db_ei($validRequest['in_project']) ." ";
                 }
-                if ($search || $begin) {
+                if ($validRequest['search'] || $validRequest['begin)']) {
                     $sql .= ' AND ( ';
-                    if ($search) {
-                        $sql .= " user.realname LIKE '%". db_es($search) ."%' OR user.user_name LIKE '%". db_es($search) ."%' OR user.email LIKE '%". db_es($search) ."%' ";
-                        if ($begin) {
+                    if ($validRequest['search']) {
+                        $sql .= " user.realname LIKE '%". db_es($validRequest['search']) ."%' OR user.user_name LIKE '%". db_es($validRequest['search']) ."%' OR user.email LIKE '%". db_es($validRequest['search']) ."%' ";
+                        if ($validRequest['begin)']) {
                             $sql .= " OR ";
                         }
                     }
-                    if ($begin) {
-                        $sql .= " user.realname LIKE '". db_es($begin) ."%' OR user.user_name LIKE '". db_es($begin) ."%' OR user.email LIKE '". db_es($begin) ."%' ";
+                    if ($validRequest['begin)']) {
+                        $sql .= " user.realname LIKE '". db_es($validRequest['begin)']) ."%' OR user.user_name LIKE '". db_es($validRequest['begin)']) ."%' OR user.email LIKE '". db_es($validRequest['begin)']) ."%' ";
                     }
                     $sql .= " ) ";
                 }
                 $sql .= "ORDER BY ". (user_get_preference("username_display") > 1 ? 'realname' : 'user_name') ."
-                        LIMIT ". db_ei($offset) .", ". db_ei($number_per_page);
+                        LIMIT ". db_ei($validRequest['offset']) .", ". db_ei($validRequest['number_per_page']);
                 $res = db_query($sql);
                 $res2 = db_query('SELECT FOUND_ROWS() as nb');
                 $num_total_rows = db_result($res2, 0, 'nb');
                 $content .= $this->displayUserResultTable($res);
                 
                 //Jump to page
-                $nb_of_pages = ceil($num_total_rows / $number_per_page);
-                $current_page = round($offset / $number_per_page);
+                $nb_of_pages = ceil($num_total_rows / $validRequest['number_per_page']);
+                $current_page = round($validRequest['offset'] / $validRequest['number_per_page']);
                 $content .= '<div style="font-family:Verdana">Page: ';
                 $width = 10;
                 for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
@@ -435,11 +432,11 @@ class UGroupManager {
                             '&amp;ugroup_id='. (int)$ugroupId .
                             '&amp;func=edit'.
                             '&amp;pane=members'.
-                            '&amp;offset='. (int)($i * $number_per_page) .
-                            '&amp;number_per_page='. (int)$number_per_page .
-                            '&amp;search='. urlencode($search) .
-                            '&amp;begin='. urlencode($begin) .
-                            '&amp;in_project='. (int)$in_project .
+                            '&amp;offset='. (int)($i * $validRequest['number_per_page']) .
+                            '&amp;number_per_page='. (int)$validRequest['number_per_page'] .
+                            '&amp;search='. urlencode($validRequest['search']) .
+                            '&amp;begin='. urlencode($validRequest['begin)']) .
+                            '&amp;in_project='. (int)$validRequest['in_project'] .
                             '">';
                         if ($i == $current_page) {
                             $content .= '<b>'. ($i + 1) .'</b>';
@@ -470,13 +467,13 @@ class UGroupManager {
 
     public function displayUserResultTable($res) {
         $userHelper = UserHelper::instance();
-        $hp = Codendi_HTMLPurifier::instance();
-        $nb_cols = 3;
+        $hp         = Codendi_HTMLPurifier::instance();
+        $nbCols    = 3;
         if (db_numrows($res)) {
             $output = '<table><tr>';
-            $i = 0;
+            $i      = 0;
             while($data = db_fetch_array($res)) {
-                if ($i++ % $nb_cols == 0) {
+                if ($i++ % $nbCols == 0) {
                     $output .= '</tr><tr>';
                 }
                 $action     = 'add';
@@ -485,7 +482,7 @@ class UGroupManager {
                     $action     = 'remove';
                     $background = 'dcf7c4';
                 }
-                $output .= '<td width="'. round(100/$nb_cols) .'%">';
+                $output .= '<td width="'. round(100/$nbCols) .'%">';
                 $output .= '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
                 $output .= '<table width="100%"><tr><td><a href="/users/'. $hp->purify($data['user_name']) .'/">'. $hp->purify($userHelper->getDisplayName($data['user_name'], $data['realname'])) .'</a></td>';
                 $output .= '<td style="text-align:right;">';
@@ -495,8 +492,8 @@ class UGroupManager {
                 $output .= '</div>';
                 $output .= '</td>';
             }
-            while($i++ % $nb_cols != 0) {
-                $output .= '<td width="'. round(100/$nb_cols) .'%"></td>';
+            while($i++ % $nbCols != 0) {
+                $output .= '<td width="'. round(100/$nbCols) .'%"></td>';
             }
             $output .= '</tr></table>';
         } else {
