@@ -1,0 +1,32 @@
+ #!/bin/sh
+CODENDI_HOME=/usr/share/codendi
+SRC_GERRIT_FETCH_SCRIPT=$CODENDI_HOME/plugins/git/bin/gerrit-fetch.php
+
+#creating temp files for data manipulation
+tmpfile1=/tmp/cronTabGerritStop1.tmp
+tmpfile2=/tmp/cronTabGerritStop2.tmp
+if [ -f "$tmpfile1" ]; then
+        rm $tmpfile1
+fi
+if [ -f "$tmpfile2" ]; then
+        rm $tmpfile2
+fi
+
+#dump contents of crontab into temp file 1
+crontab -l > $tmpfile1
+
+#loop through cronjobs and copy any that are not the gerrit fetch script into temp file 2 
+exec < $tmpfile1
+while read line
+do
+  if [ "$line" != "* * * * * php $SRC_GERRIT_FETCH_SCRIPT" ]; then
+        echo "$line" >> $tmpfile2
+  fi
+done
+
+#updating crontab with contents of temp file 2
+crontab $tmpfile2
+
+#cleaning up
+rm $tmpfile1
+rm $tmpfile2
