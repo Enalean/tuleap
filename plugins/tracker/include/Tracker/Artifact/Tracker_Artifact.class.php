@@ -1680,6 +1680,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getCrossReferenceManager() {
         return new CrossReferenceManager();
     }
+
+    protected function getCrossReferenceFactory() {
+        return new CrossReferenceFactory($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+    }
     
     /**
      * Used when validating the rules of a new/ initial changset creating.
