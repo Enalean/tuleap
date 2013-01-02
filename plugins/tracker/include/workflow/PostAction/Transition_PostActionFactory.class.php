@@ -115,18 +115,33 @@ class Transition_PostActionFactory {
      */
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
-        $post_actions_classes = array_merge($this->post_actions_classes, $this->post_actions_classes_after);
+        $post_actions = array_merge($this->loadPostActionsClasses($transition), $this->loadPostActionsClassesAfter($transition));
+        $transition->setPostActions($post_actions);
+    }
+    
+   private function loadPostActionsClasses(Transition $transition) {
+        $post_actions_classes = $this->post_actions_classes;
         
         foreach ($post_actions_classes as $shortname => $klass) {
             foreach($this->loadPostActionRows($transition, $shortname) as $row) {
                 $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
             }
         }
+        return $post_actions;
+   }
+   
+   private function loadPostActionsClassesAfter(Transition $transition) {
+        $post_actions_classes = $this->post_actions_classes_after;
         
-        $transition->setPostActions($post_actions);
-    }
-    
-    /**
+        foreach ($post_actions_classes as $shortname => $klass) {
+            foreach($this->loadPostActionRows($transition, $shortname) as $row) {
+                $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
+            }
+        }
+        return $post_actions;
+   }  
+   
+    /**   
      * Reconstitute a PostAction from database
      * 
      * @param Transition $transition The transition to which this PostAction is associated
@@ -281,10 +296,10 @@ class Transition_PostActionFactory {
         $short_name = $post_action->getShortName();
         $dao   = $this->getDao($post_action->getShortName());
         switch($short_name) {
+            //TODO
             case 'jenkins_build':
-                $dao->save($post_action->getTransition()->getTransitionId(),
-                   $post_action->getHost(),
-                   $post_action->getJobName()
+                $dao->save($post_action->getTransition()->getTransitionId(), 
+                   $post_action->getJobUrl()
                 );
                 break;
 
@@ -345,14 +360,10 @@ class Transition_PostActionFactory {
     public function deleteWorkflow($workflow_id) {
         $result = true;
         
-        foreach ($this->post_actions_classes as $shortname => $klass) {
+        $post_actions_classes = array_merge($this->post_actions_classes, $this->post_actions_classes_after);
+        foreach ($post_actions_classes as $shortname => $klass) {
             $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
-        }
-
-        foreach ($this->post_actions_classes_after as $shortname => $klass) {
-            $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
-        }
-        
+        }        
         return $result;
     }
     
