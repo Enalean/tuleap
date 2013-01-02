@@ -396,12 +396,12 @@ class UGroupManager {
             $content .= $this->displayUserResultTable($res);
 
             //Jump to page
-            $nb_of_pages = ceil($numTotalRows / $validRequest['number_per_page']);
-            $current_page = round($validRequest['offset'] / $validRequest['number_per_page']);
+            $nbOfPages = ceil($numTotalRows / $validRequest['number_per_page']);
+            $currentPage = round($validRequest['offset'] / $validRequest['number_per_page']);
             $content .= '<div style="font-family:Verdana">Page: ';
             $width = 10;
-            for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
-                if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
+            for ($i = 0 ; $i < $nbOfPages ; ++$i) {
+                if ($i == 0 || $i == $nbOfPages - 1 || ($currentPage - $width / 2 <= $i && $i <= $width / 2 + $currentPage)) {
                     $content .= '<a href="?'.
                         'group_id='. (int)$groupId .
                         '&amp;ugroup_id='. (int)$ugroupId .
@@ -419,7 +419,7 @@ class UGroupManager {
                         $content .= $i + 1;
                     }
                     $content .= '</a>&nbsp;';
-                } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
+                } else if ($currentPage - $width / 2 - 1 == $i || $currentPage + $width / 2 + 1 == $i) {
                     $content .= '...&nbsp;';
                 }
             }
@@ -470,15 +470,15 @@ class UGroupManager {
             $output .= '</tr></table>';
         } else {
             $output .= 'No user match';
-            $output .= db_error();
         }
         return $output;
     }
 
     public function displayUgroupBinding($groupId, $ugroupId) {
         $em = EventManager::instance();
-        // @TODO
-        return '';
+        $html = '';
+        $em->processEvent('ugroup_table_row', array('row' => array('group_id' => $groupId, 'ugroup_id' => $ugroupId), 'html' => &$html));
+        return $html;
     }
 
 }
