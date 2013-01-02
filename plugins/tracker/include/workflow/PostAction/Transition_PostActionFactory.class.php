@@ -62,15 +62,8 @@ class Transition_PostActionFactory {
         $html .= '<select name="add_postaction">';
         $html .= '<option value="" selected>--</option>';
         
-        foreach ($this->post_actions_classes as $shortname => $klass) {
-            //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
-            eval("\$label = $klass::getLabel();");
-            $html .= '<option value="'. $shortname .'">';
-            $html .= $label;
-            $html .= '</option>';
-        }
-
-         foreach ($this->post_actions_classes_after as $shortname => $klass) {
+        $post_actions_classes = array_merge($this->post_actions_classes, $this->post_actions_classes_after);
+        foreach ($post_actions_classes as $shortname => $klass) {
             //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
             eval("\$label = $klass::getLabel();");
             $html .= '<option value="'. $shortname .'">';
@@ -122,8 +115,9 @@ class Transition_PostActionFactory {
      */
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
+        $post_actions_classes = array_merge($this->post_actions_classes, $this->post_actions_classes_after);
         
-        foreach ($this->post_actions_classes as $shortname => $klass) {
+        foreach ($post_actions_classes as $shortname => $klass) {
             foreach($this->loadPostActionRows($transition, $shortname) as $row) {
                 $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
             }
@@ -184,9 +178,9 @@ class Transition_PostActionFactory {
      */
     private function getValueFromRow($row, $shortname) {
         switch ($shortname) {
-            case 'field_date':  return (int) $row['value_type'];
-            case 'field_int':   return (int) $row['value'];
-            case 'field_float': return (float) $row['value'];
+            case 'field_date':    return (int) $row['value_type'];
+            case 'field_int':     return (int) $row['value'];
+            case 'field_float':   return (float) $row['value'];
             case 'jenkins_build': return (string) $row['value'];
             default: throw new Transition_PostAction_NotFoundException($shortname);
         }

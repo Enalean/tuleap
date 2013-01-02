@@ -68,7 +68,7 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
 
     public function fetch() {
         $html = '';
-        $html = '<input type="text" name="postaction_launch_job" maxsize="255"/>';
+        $text_field = '<input type="text" name="postaction_launch_job" maxsize="255"/>';
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'launch_job', array($text_field));
         return $html;
     }
