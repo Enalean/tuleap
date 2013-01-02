@@ -238,7 +238,7 @@ class Git_Driver_Gerrit_UserFinder_areRegisteredUsersAllowedToTest extends Git_D
         $this->assertTrue($allowed);
     }
 
-    public function itReturnsTrueIfAllUsersIsContainedInTheAllowedOnes() {
+    public function itReturnsTrueIfAllUsersAreContainedInTheAllowedOnes() {
         stub($this->permissions_manager)->getAuthorizedUgroups()->returns(array(
             array('ugroup_id' => UGroup::ANONYMOUS),
         ));
