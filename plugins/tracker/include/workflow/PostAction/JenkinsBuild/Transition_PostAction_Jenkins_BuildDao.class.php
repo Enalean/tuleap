@@ -67,7 +67,26 @@ class Transition_PostAction_Jenkins_BuildDao extends DataAccessObject {
         
         return $this->retrieve($sql);
     }
-
+    
+        /**
+     * Update postaction entry
+     *
+     * @param int   $id       The id of the postaction 
+     * @param mixed $value    The job url.
+     *
+     * @return bool true if success false otherwise
+     */
+    public function updatePostAction($id, $value) {
+        $id       = $this->da->escapeInt($id);
+        $field_id = $this->da->escapeInt($field_id);
+        $value    = $this->da->quoteSmart($value);
+        
+        $sql = "UPDATE $this->table_name
+                SET job_url = $value
+                WHERE id = $id";
+        return $this->update($sql);
+    }
+    
     public function deletePostActionsByWorkflowId() {
 
     }

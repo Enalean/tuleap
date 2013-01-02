@@ -44,7 +44,7 @@ class Transition_PostActionFactory {
     );
 
     /**
-     * @var Array of available post actions classes runned after fields validation
+     * @var Array of available post actions classes run after fields validation
      */
 
     protected $post_actions_classes_after = array(

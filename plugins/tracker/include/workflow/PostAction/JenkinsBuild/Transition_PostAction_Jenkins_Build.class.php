@@ -25,15 +25,9 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
 
     /**
      *
-     * @var String : host of the jenkins server
-     */
-    private $host;
-
-    /**
-     *
      * @var String job_name : name of the job to build
      */
-    private $job_name;
+    private $job_url;
 
     /**
      * Constructor
@@ -41,20 +35,16 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
      * @param Transition                   $transition The transition the post action belongs to
      * @param Integer                      $id         Id of the post action
      * @param String                       $host       host of the jenkins server
-     * @param String                       $job_name   name of the job
+     * @param String                       $job_url   name of the job
      */
-    public function __construct(Transition $transition, $id, $host, $job_name) {
+    public function __construct(Transition $transition, $id, $job_url) {
         parent::__construct($transition, $id);
-        $this->host     = $host;
-        $this->job_name = $job_name;
+        $this->job_url = $job_url;
     }
 
-    public function getHost() {
-        return $this->host;
-    }
-
-    public function getJobName() {
-        return $this->job_name;
+    
+    public function getJobUrl() {
+        return $this->job_url;
     }
 
     /**
@@ -68,7 +58,7 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
 
     public function fetch() {
         $html = '';
-        $text_field = '<input type="text" name="postaction_launch_job" maxsize="255"/>';
+        $text_field = '<input type="text" name="workflow_postaction_launch_job['.$this->id.']" value="'.$this->getJobUrl().'" size="50" maxsize="255"/>';
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'launch_job', array($text_field));
         return $html;
     }
@@ -78,7 +68,15 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
     }
 
     public function process(Codendi_Request $request) {
-
+        if ($request->getInArray('remove_postaction', $this->id)) {
+            //$this->getDao()->deletePostAction($this->id);
+        } else {
+            $value    = $request->getInArray('workflow_postaction_launch_job', $this->id);
+            // Update if something changed
+            if ($value != $this->job_url) {
+                $this->getDao()->updatePostAction($this->id, $value);
+            }
+        }
     }
 
     public static function getLabel() {
@@ -88,6 +86,10 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
     public function after() {
         $jenkins_client = new JenkinsClient($this->host);
         return $jenkins_client->launchJobBuild($this->job_name);
+    }
+    
+    public function getDao() {
+        return new Transition_PostAction_Jenkins_BuildDao();
     }
 }
 
