@@ -163,6 +163,32 @@ $GLOBALS['server']->wsdl->addComplexType(
     ),
     'tns:ArtifactFieldValue'
 );
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArtifactCrossReferences',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'ref' => array('name' => 'ref', 'type' => 'xsd:string'),
+        'url' => array('name' => 'url', 'type' => 'xsd:string'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfArtifactCrossReferences',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(
+        array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactCrossReferences[]')
+    ),
+    'tns:ArtifactCrossReferences'
+);
+
 $GLOBALS['server']->wsdl->addComplexType(
     'Artifact',
     'complexType',
@@ -174,6 +200,7 @@ $GLOBALS['server']->wsdl->addComplexType(
         'tracker_id'       => array('name' => 'tracker_id', 'type' => 'xsd:int'),
         'submitted_by'     => array('name' => 'submitted_by', 'type' => 'xsd:int'),
         'submitted_on'     => array('name' => 'submitted_on', 'type' => 'xsd:int'),
+        'cross_references' => array('name' => 'cross_references', 'type' => 'tns:ArrayOfArtifactCrossReferences'),
         'last_update_date' => array('name' => 'last_update_date', 'type' => 'xsd:int'),
         'value'            => array('name' => 'value', 'type' => 'tns:ArrayOfArtifactFieldValue')
     )

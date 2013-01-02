@@ -1684,7 +1684,26 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getCrossReferenceFactory() {
         return new CrossReferenceFactory($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
     }
-    
+
+    public function getCrossReferencesSOAPValues() {
+         $soap_value = array();
+         $cross_reference_factory = $this->getCrossReferenceFactory();
+         $cross_reference_factory->fetchDatas();
+
+         $cross_references = $cross_reference_factory->getCrossReferencesByDirection();
+         foreach ($cross_references as $array_of_references_by_direction) {
+             foreach ($array_of_references_by_direction as $reference) {
+                $soap_value[] = array(
+                    'ref' => $reference['ref'],
+                    'url' => $reference['url'],
+                );
+             }
+         }
+
+         error_log("saop value : ". var_export($soap_value,1));
+         return $soap_value;
+    }
+
     /**
      * Used when validating the rules of a new/ initial changset creating.
      * 

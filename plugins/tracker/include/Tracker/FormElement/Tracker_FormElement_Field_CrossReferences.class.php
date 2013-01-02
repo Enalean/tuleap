@@ -436,22 +436,5 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
          $html = $this->fetchSubmitValueMassChange();
          return $html;
      }
-
-     public function getSOAPValue(Tracker_Artifact $artifact) {
-         $soap_value = array();
-         $cross_reference_factory = $this->getCrossReferenceFactory($artifact);
-         $cross_references = $cross_reference_factory->getCrossReferencesByDirection();
-
-         foreach ($cross_references as $array_of_references_by_direction) {
-             foreach ($array_of_references_by_direction as $reference) {
-                $soap_value[] = array(
-                    'ref' => $reference['ref'],
-                    'url' => $reference['url'],
-                );
-             }
-         }
-
-         return $soap_value;
-     }
 }
 ?>
