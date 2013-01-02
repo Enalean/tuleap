@@ -1,22 +1,7 @@
 #!/bin/sh
 # location: /usr/share/codendi/plugins/git/bin/cron-start
 # script name: crontab script
-tmpfile=/tmp/cronTabGerritStart.tmp
-CODENDI_HOME=/usr/share/codendi
-SRC_GERRIT_FETCH_SCRIPT=$CODENDI_HOME/plugins/git/bin/gerrit-fetch.php
-
-if [ -f "$tmpfile" ]; then
-        rm $tmpfile
-fi
-
-# read crontab and store in temp file
-crontab -l > $tmpfile
+SRC_GERRIT_FETCH_SCRIPT=/usr/share/codendi/plugins/git/bin/gerrit-fetch.php
 
 # add custom entries to crontab
-echo "* * * * * php $SRC_GERRIT_FETCH_SCRIPT" >> $tmpfile
-
-#load crontab from file
-crontab $tmpfile
-
-#remove temp file
-rm $tmpfile
+0,15,30,45 * * * * codendiadm php $SRC_GERRIT_FETCH_SCRIPT

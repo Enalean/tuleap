@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Codendi    This shell script starts and stops Codendi backend
+# Tuleap    This shell script starts and stops Tuleap backend
 #
 # This file is a copy/modify/paste of mailman equivalent. Thanks to
 # them!
@@ -52,14 +52,22 @@ DST_GERRIT_CRON_SCRIPT=/etc/cron.d/gerrit-fetch
 InstallCron()
 {
     install -m644 -o root -g root $SRC_CRON_SCRIPT_ON $DST_CRON_SCRIPT
-    if [ -f "$SRC_GERRIT_CRON_SCRIPT_ON" ]; then
-        install -m644 -o root -g root $SRC_GERRIT_CRON_SCRIPT_ON $DST_GERRIT_CRON_SCRIPT
-    fi
 }
 
 RemoveCron()
 {
     install -m644 -o root -g root $SRC_CRON_SCRIPT_OFF $DST_CRON_SCRIPT
+}
+
+InstallGerritCron()
+{
+    if [ -f "$SRC_GERRIT_CRON_SCRIPT_ON" ]; then
+        install -m644 -o root -g root $SRC_GERRIT_CRON_SCRIPT_ON $DST_GERRIT_CRON_SCRIPT
+    fi
+}
+
+RemoveGerritCron()
+{
     if [ -f "$SRC_GERRIT_CRON_SCRIPT_OFF" ]; then
         install -m644 -o root -g root $SRC_GERRIT_CRON_SCRIPT_OFF $DST_GERRIT_CRON_SCRIPT
     fi
@@ -69,12 +77,18 @@ RemoveCron()
 #. /etc/rc.d/init.d/functions
 
 RETVAL=0
-prog="codendi"
+prog="Tuleap"
 
 start()
 {
+    if [ "$1" == "gerrit" ]; then
+        InstallGerritCron
+        RETVAL=$?
+        return $RETVAL
+    fi
     echo -n "Starting $prog: "
     InstallCron
+    InstallGerritCron
     echo "[OK]"
     RETVAL=$?
     return $RETVAL
@@ -82,8 +96,14 @@ start()
 
 stop()
 {
+    if [ "$1" == "gerrit" ]; then
+        RemoveGerritCron
+        RETVAL=$?
+        return $RETVAL
+    fi
     echo -n "Shutting down $prog: "
     RemoveCron
+    RemoveGerritCron
     echo "[OK]"
     RETVAL=$?
     return $RETVAL
@@ -106,12 +126,14 @@ status()
 
 case "$1" in
 'start')
-    start
+    shift
+    start $@
     RETVAL=$?
     ;;
 
 'stop')
-    stop
+    shift
+    stop $@
     RETVAL=$?
     ;;
 
