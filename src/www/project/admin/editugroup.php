@@ -143,7 +143,7 @@ if (($func=='edit')||($func=='do_create')) {
     //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
     _breadCrumbs($project, $ugroup_id, $ugroup_name);
 
-    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'permissions', 'usage'));
+    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage'));
     $vPane->required();
     $pane  = $request->getValidated('pane', $vPane, 'settings');
 
@@ -161,6 +161,7 @@ if (($func=='edit')||($func=='do_create')) {
                          'title' =>  $Language->getText('global', 'usage')));
 
     $content = '';
+    $activePane = $pane;
     switch ($pane) {
     case 'settings':
         $content .= '<p>'.$Language->getText('project_admin_editugroup', 'upd_ug_name').'</p>';
@@ -174,7 +175,11 @@ if (($func=='edit')||($func=='do_create')) {
         $content .= '</form>';
     break;
     case 'members':
-        $content  .= $uGroupMgr->displayUgroupMembers($group_id, $ugroup_id, $request);
+        $content .= $uGroupMgr->displayUgroupMembers($group_id, $ugroup_id, $request);
+    break;
+    case 'bind':
+        $activePane = 'members';
+        $content .= $uGroupMgr->displayUgroupBinding($group_id, $ugroup_id);
     break;
     case 'permissions':
         // Display associated permissions
@@ -275,7 +280,7 @@ if (($func=='edit')||($func=='do_create')) {
     break;
     }
 
-    $HTMLPane = new HTML_Element_Pane($panes, $pane, $content);
+    $HTMLPane = new HTML_Element_Pane($panes, $activePane, $content);
     echo $HTMLPane->renderValue();
 
 }

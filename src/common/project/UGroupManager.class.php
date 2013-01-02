@@ -269,15 +269,15 @@ class UGroupManager {
             $validRequest = $this->validateRequest($groupId, $request);
             $user = $validRequest['user'];
             if ($user && is_array($user)) {
-                list($user_id, $action) = each($user);
-                $user_id = (int)$user_id;
+                list($userId, $action) = each($user);
+                $userId = (int)$userId;
                 if ($user_id) {
                     switch($action) {
                     case 'add':
-                        ugroup_add_user_to_ugroup($groupId, $ugroupId, $user_id);
+                        ugroup_add_user_to_ugroup($groupId, $ugroupId, $userId);
                         break;
                     case 'remove':
-                        ugroup_remove_user_from_ugroup($groupId, $ugroupId, $user_id);
+                        ugroup_remove_user_from_ugroup($groupId, $ugroupId, $userId);
                         break;
                     default:
                         break;
@@ -304,10 +304,10 @@ class UGroupManager {
         $em                       = EventManager::instance();
         $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
 
-        $content .= '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($ugroup_name, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
+        $content .= '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($uGroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
         //ugroup binding link
-        $content .= '<P> You can also choose to bind to another group </p>';
+        $content .= '<P> You can also choose to <a href="editugroup.php?group_id='.$groupId.'&ugroup_id='.$ugroupId.'&func=edit&pane=bind"><b>bind to another group</b></a></p>';
 
         $content .= '<p><b>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</b></p>';
         $content .= '<div style="padding-left:10px">';
@@ -337,104 +337,97 @@ class UGroupManager {
         $content .= '</fieldset>';
 
         if ($ugroupUpdateUsersAllowed) {
-            $res = ugroup_db_get_ugroup($ugroupId);
-            if ($res) {
-                $ugroup_name = db_result($res, 0, 'name');
+            $validRequest = $this->validateRequest($groupId, $request);
 
-                $validRequest = $this->validateRequest($groupId, $request);
+            //Display the form
+            $selected = 'selected="selected"';
+            $content .= '<form action="" method="GET">';
 
-                //Display the form
-                $selected = 'selected="selected"';
-                $content .= '<form action="" method="GET">';
+            $content .= '</td><td>';
 
-                $content .= '</td><td>';
+            $content .= '<input type="hidden" name="group_id" value="'. (int)$groupId .'" />';
+            $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
+            $content .= '<input type="hidden" name="func" value="edit" />';
+            $content .= '<input type="hidden" name="pane" value="members" />';
+            $content .= '<input type="hidden" name="offset" value="'. (int)$validRequest['offset'] .'" />';
 
-                $content .= '<input type="hidden" name="group_id" value="'. (int)$groupId .'" />';
-                $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
-                $content .= '<input type="hidden" name="func" value="edit" />';
-                $content .= '<input type="hidden" name="pane" value="members" />';
-                $content .= '<input type="hidden" name="offset" value="'. (int)$validRequest['offset'] .'" />';
-
-                //Filter
-                $content .= '<fieldset><legend>'.$GLOBALS['Language']->getText('project_admin_editugroup','users').'</legend>';
-                $content .= '<p>'. $GLOBALS['Language']->getText('project_admin_editugroup','search_in').' ';
-                $content .= '<select name="in_project">';
-                $content .= '<option value="0" '. ( !$validRequest['in_project'] ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
-                $content .= '<option value="'. (int)$groupId .'" '. ($validRequest['in_project'] == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
-                $content .= '</select>';
-                $content .= $GLOBALS['Language']->getText('project_admin_editugroup','name_contains').' ';
-                
-                //contains
-                $content .= '<input type="text" name="search" value="'.  $hp->purify($validRequest['search'], CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
-                //begin
-                $content .= $GLOBALS['Language']->getText('project_admin_editugroup','begins').' ';
-                $content .= '<select name="begin">';
-                $content .= '<option value="" '. (in_array($validRequest['begin'], $validRequest['allowed_begin_values']) ? $selected : '') .'></option>';
-                foreach($validRequest['allowed_begin_values'] as $b) {
-                    $content .= '<option value="'. $b .'" '. ($b == $validRequest['begin'] ? $selected : '') .'>'. $b .'</option>';
-                }
-                $content .= '</select>. ';
-
-                //Display
-                $content .= '<span style="white-space:nowrap;">'.$GLOBALS['Language']->getText('project_admin_editugroup','show').' ';
-                //number per page
-                $content .= '<select name="number_per_page">';
-                $content .= '<option '. ($validRequest['number_per_page'] == 15 ? $selected : '') .'>15</option>';
-                $content .= '<option '. ($validRequest['number_per_page'] == 30 ? $selected : '') .'>30</option>';
-                $content .= '<option '. ($validRequest['number_per_page'] == 60 ? $selected : '') .'>60</option>';
-                if (!in_array($validRequest['number_per_page'], array(15, 30, 60))) {
-                    $content .= '<option '. $selected .'>'. (int)$validRequest['number_per_page'] .'</option>';
-                }
-                $content .= '</select> ';
-                $content .= $GLOBALS['Language']->getText('project_admin_editugroup','users_per_page').' ';
-
-                $content .= '<input type="submit" name="browse" value="Browse" /></span>';
-                $content .= '</p>';
-
-                $dao          = new UGroupUserDao();
-                $result       = $dao->searchUsersToAdd($ugroupId, $validRequest);
-                $res          = $result['result'];
-                $res          = $result['result'];
-                $numTotalRows = $result['num_total_rows'];
-
-                $content .= $this->displayUserResultTable($res);
-
-                //Jump to page
-                $nb_of_pages = ceil($numTotalRows / $validRequest['number_per_page']);
-                $current_page = round($validRequest['offset'] / $validRequest['number_per_page']);
-                $content .= '<div style="font-family:Verdana">Page: ';
-                $width = 10;
-                for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
-                    if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
-                        $content .= '<a href="?'.
-                            'group_id='. (int)$groupId .
-                            '&amp;ugroup_id='. (int)$ugroupId .
-                            '&amp;func=edit'.
-                            '&amp;pane=members'.
-                            '&amp;offset='. (int)($i * $validRequest['number_per_page']) .
-                            '&amp;number_per_page='. (int)$validRequest['number_per_page'] .
-                            '&amp;search='. urlencode($validRequest['search']) .
-                            '&amp;begin='. urlencode($validRequest['begin']) .
-                            '&amp;in_project='. (int)$validRequest['in_project'] .
-                            '">';
-                        if ($i == $current_page) {
-                            $content .= '<b>'. ($i + 1) .'</b>';
-                        } else {
-                            $content .= $i + 1;
-                        }
-                        $content .= '</a>&nbsp;';
-                    } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
-                        $content .= '...&nbsp;';
-                    }
-                }
-                $content .= '</div>';
-
-                $content .= '</fieldset>';
-
-                $content .= '</form>';
-            } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
+            //Filter
+            $content .= '<fieldset><legend>'.$GLOBALS['Language']->getText('project_admin_editugroup','users').'</legend>';
+            $content .= '<p>'. $GLOBALS['Language']->getText('project_admin_editugroup','search_in').' ';
+            $content .= '<select name="in_project">';
+            $content .= '<option value="0" '. ( !$validRequest['in_project'] ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
+            $content .= '<option value="'. (int)$groupId .'" '. ($validRequest['in_project'] == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
+            $content .= '</select>';
+            $content .= $GLOBALS['Language']->getText('project_admin_editugroup','name_contains').' ';
+            
+            //contains
+            $content .= '<input type="text" name="search" value="'.  $hp->purify($validRequest['search'], CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
+            //begin
+            $content .= $GLOBALS['Language']->getText('project_admin_editugroup','begins').' ';
+            $content .= '<select name="begin">';
+            $content .= '<option value="" '. (in_array($validRequest['begin'], $validRequest['allowed_begin_values']) ? $selected : '') .'></option>';
+            foreach($validRequest['allowed_begin_values'] as $b) {
+                $content .= '<option value="'. $b .'" '. ($b == $validRequest['begin'] ? $selected : '') .'>'. $b .'</option>';
             }
+            $content .= '</select>. ';
+
+            //Display
+            $content .= '<span style="white-space:nowrap;">'.$GLOBALS['Language']->getText('project_admin_editugroup','show').' ';
+            //number per page
+            $content .= '<select name="number_per_page">';
+            $content .= '<option '. ($validRequest['number_per_page'] == 15 ? $selected : '') .'>15</option>';
+            $content .= '<option '. ($validRequest['number_per_page'] == 30 ? $selected : '') .'>30</option>';
+            $content .= '<option '. ($validRequest['number_per_page'] == 60 ? $selected : '') .'>60</option>';
+            if (!in_array($validRequest['number_per_page'], array(15, 30, 60))) {
+                $content .= '<option '. $selected .'>'. (int)$validRequest['number_per_page'] .'</option>';
+            }
+            $content .= '</select> ';
+            $content .= $GLOBALS['Language']->getText('project_admin_editugroup','users_per_page').' ';
+
+            $content .= '<input type="submit" name="browse" value="Browse" /></span>';
+            $content .= '</p>';
+
+            $dao          = new UGroupUserDao();
+            $result       = $dao->searchUsersToAdd($ugroupId, $validRequest);
+            $res          = $result['result'];
+            $res          = $result['result'];
+            $numTotalRows = $result['num_total_rows'];
+
+            $content .= $this->displayUserResultTable($res);
+
+            //Jump to page
+            $nb_of_pages = ceil($numTotalRows / $validRequest['number_per_page']);
+            $current_page = round($validRequest['offset'] / $validRequest['number_per_page']);
+            $content .= '<div style="font-family:Verdana">Page: ';
+            $width = 10;
+            for ($i = 0 ; $i < $nb_of_pages ; ++$i) {
+                if ($i == 0 || $i == $nb_of_pages - 1 || ($current_page - $width / 2 <= $i && $i <= $width / 2 + $current_page)) {
+                    $content .= '<a href="?'.
+                        'group_id='. (int)$groupId .
+                        '&amp;ugroup_id='. (int)$ugroupId .
+                        '&amp;func=edit'.
+                        '&amp;pane=members'.
+                        '&amp;offset='. (int)($i * $validRequest['number_per_page']) .
+                        '&amp;number_per_page='. (int)$validRequest['number_per_page'] .
+                        '&amp;search='. urlencode($validRequest['search']) .
+                        '&amp;begin='. urlencode($validRequest['begin']) .
+                        '&amp;in_project='. (int)$validRequest['in_project'] .
+                        '">';
+                    if ($i == $current_page) {
+                        $content .= '<b>'. ($i + 1) .'</b>';
+                    } else {
+                        $content .= $i + 1;
+                    }
+                    $content .= '</a>&nbsp;';
+                } else if ($current_page - $width / 2 - 1 == $i || $current_page + $width / 2 + 1 == $i) {
+                    $content .= '...&nbsp;';
+                }
+            }
+            $content .= '</div>';
+
+            $content .= '</fieldset>';
+
+            $content .= '</form>';
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
         }
@@ -480,6 +473,12 @@ class UGroupManager {
             $output .= db_error();
         }
         return $output;
+    }
+
+    public function displayUgroupBinding($groupId, $ugroupId) {
+        $em = EventManager::instance();
+        // @TODO
+        return '';
     }
 
 }
