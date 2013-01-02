@@ -24,7 +24,7 @@ class CrossReferenceFactory {
     var $source_refs_datas;
     
     /**
-     * array of references {Object CrossReference} made by the current CrossReferenceFaxtory
+     * array of references {Object CrossReference} made by the current CrossReferenceFactory
      * In other words, Items in this array are referenced by the current Item
      * @var array
      */

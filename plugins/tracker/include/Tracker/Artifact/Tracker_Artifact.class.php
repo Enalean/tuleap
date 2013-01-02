@@ -1685,6 +1685,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return new CrossReferenceFactory($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
     }
 
+    /**
+     * Get the cross references from/to this artifact.
+     *
+     * Note: the direction of cross references is not returned
+     *
+     * @return array of references info to be sent in soap format: array('ref' => ..., 'url' => ...)
+     */
     public function getCrossReferencesSOAPValues() {
          $soap_value = array();
          $cross_reference_factory = $this->getCrossReferenceFactory();
