@@ -2209,7 +2209,7 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
         );
 
         stub($artifact)->getCrossReferenceFactory()->returns($factory);
-        stub($factory)->getCrossReferencesByDirection()->returns(
+        stub($factory)->getCrossReferencesGroupByDirection()->returns(
             array(
                 'source' => array($wiki_ref, $file_ref),
                 'target' => array($art_ref),

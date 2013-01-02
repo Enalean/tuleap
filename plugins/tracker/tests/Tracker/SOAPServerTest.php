@@ -139,7 +139,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $artifact->setChangesets($changesets);
         $cross_reference_factory = mock('CrossReferenceFactory');
         stub($artifact)->getCrossReferenceFactory()->returns($cross_reference_factory);
-        stub($cross_reference_factory)->getCrossReferencesByDirection()->returns(array());
+        stub($cross_reference_factory)->getCrossReferencesGroupByDirection()->returns(array());
         return $artifact;
     }
     private function setUpArtifacts(Tracker_ArtifactFactory $artifact_factory) {

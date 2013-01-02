@@ -112,7 +112,7 @@ class CrossReferenceFactory {
         return $params;
     }
     
-    function getCrossReferencesByDirection($format='text') {
+    function getCrossReferencesGroupByDirection($format='text') {
         $crossRefArray = $this->getCrossReferences();
         $refs = array();
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {

@@ -282,7 +282,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 }
                 break;
             default:
-                $refs = $crf->getCrossReferencesByDirection('text');
+                $refs = $crf->getCrossReferencesGroupByDirection('text');
                 $src  = '';
                 $tgt  = '';
                 $both = '';
