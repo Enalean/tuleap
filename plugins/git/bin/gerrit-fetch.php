@@ -21,41 +21,12 @@ ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
 //Bootstrapping
-require_once('pre.php');
-require_once(dirname(__FILE__) . '/../include/GitRepository.class.php');
-require_once(dirname(__FILE__) . '/../include/Git/Driver/Gerrit/ProjectCreator.class.php');
+require_once 'pre.php';
+require_once dirname(__FILE__) . '/../include/constants.php';
+require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RepositoryFetcher.class.php';
 
-$remote_name = Git_Driver_Gerrit_ProjectCreator::GERRIT_REMOTE_NAME;
+$repository_factory = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+$fetcher = new Git_Driver_Gerrit_RepositoryFetcher($repository_factory);
+$fetcher->process();
 
-$repository = new GitRepository();
-//semi_hardcoding this as I don't know how else to get the path without using a project
-$repository_dir = $repository->getGitRootPath() . '../gitolite/repositories/';
-
-$gitDao = new GitDao();
-$paths = $gitDao->getRepositoryPathsWithRemoteServersForAllProjects();
-
-foreach ($paths as $path) {
-
-    $repository_path = $repository_dir . $path['repository_path'];
-    if (! is_dir($repository_path)) {
-        continue;
-    }
-    
-    //get a list of remote heads
-    $remote_heads = array();        
-    exec("cd $repository_path && git-ls-remote --heads $remote_name", $remote_heads);
-
-    foreach ($remote_heads as $remote_head) {
-        //extract the branch name
-        preg_match('/refs\/heads\/(.*)/', $remote_head, $matches);
-        if(! isset($matches[1])) {
-            continue;
-        }
-        
-        $branch_name =  $matches[1];
-        //updating the local repository with the remote content
-        `cd $repository_path && git fetch $remote_name -q && git update-ref refs/heads/$branch_name refs/remotes/$remote_name/$branch_name`;
-        unset($matches);
-    }
-}
 ?>

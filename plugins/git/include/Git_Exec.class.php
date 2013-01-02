@@ -128,12 +128,12 @@ class Git_Exec {
         return false;
     }
 
-    private function gitCmd($cmd) {
+    protected function gitCmd($cmd) {
         $output = array();
         return $this->execInPath($cmd, $output);
     }
 
-    private function execInPath($cmd, &$output) {
+    protected function execInPath($cmd, &$output) {
         $cwd = getcwd();
         chdir($this->path);
         exec("$cmd 2>&1", $output, $retVal);

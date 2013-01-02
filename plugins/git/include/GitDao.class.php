@@ -268,7 +268,7 @@ class GitDao extends DataAccessObject {
      * @return DataAccessResult
      */
     public function getRepositoryPathsWithRemoteServersForAllProjects() {
-        $sql = "SELECT repository_path FROM $this->tableName
+        $sql = "SELECT * FROM $this->tableName
                 WHERE remote_server_id IS NOT NULL";
         
         return $this->retrieve($sql);
