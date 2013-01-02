@@ -23,7 +23,7 @@ $urls = array(
     '/themes/common/images/',    // D
 );
 
-$repos = array(
+$paths = array(
     $sys_custom_themeroot .'/Tuleap/images/',    // 1
     $sys_custom_themeroot .'/common/images/',    // 2
     $sys_themeroot .'/Tuleap/images/',           // 3
@@ -81,11 +81,11 @@ if ($create) {
     echo '<pre>';
 }
 foreach ($urls as $ku => $url) {
-    foreach ($repos as $kp => $path) {
+    foreach ($paths as $kp => $path) {
         if (!is_dir($path)) {
             mkdir($path, 0777, true);
         }
-        foreach ($repos as $kp2 => $path2) {
+        foreach ($paths as $kp2 => $path2) {
             if ($kp2 > $kp) {
                 $fail = $path2 . get_filename($ku, $kp);
                 @unlink($fail);
@@ -95,7 +95,7 @@ foreach ($urls as $ku => $url) {
                 }
             }
         }
-        $pass = $repos[$expected[chr(65 + $ku)][$kp + 1] - 1] . get_filename($ku, $kp);
+        $pass = $paths[$expected[chr(65 + $ku)][$kp + 1] - 1] . get_filename($ku, $kp);
         @unlink($pass);
         print_r($pass .' => pass.png'."\n");
         if ($create) {
@@ -113,7 +113,7 @@ if ($create) {
 echo '<table>';
 foreach ($urls as $ku => $url) {
     echo '<tr>';
-    foreach ($repos as $kp => $path) {
+    foreach ($paths as $kp => $path) {
         $filename = get_filename($ku, $kp);
         echo '<td>';
         echo '<img src="'. $url . $filename .'" />';
