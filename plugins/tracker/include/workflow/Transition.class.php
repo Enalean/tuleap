@@ -261,6 +261,8 @@ class Transition {
                 if (!$pa->isDefined()) {
                     $html .= '<div class="alert-message block-message warning">'. $GLOBALS['Language']->getText('workflow_admin', 'post_action_not_defined') .'</div>';
                 }
+                var_dump($pa);
+                die();
                 $html .= $pa->fetch();
                 $html .= '</div>';
                 $html .= '</td><td>';

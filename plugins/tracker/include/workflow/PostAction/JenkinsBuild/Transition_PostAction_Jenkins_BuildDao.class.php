@@ -36,13 +36,36 @@ class Transition_PostAction_Jenkins_BuildDao extends DataAccessObject {
      *  )
      *
      */
-
-    public function create() {
-
+    public function __construct() {
+        parent::__construct();
+        $this->table_name        = 'tracker_workflow_transition_postactions_launch_build';
+    }
+    
+    /**
+     * Create a new postaction entry
+     *
+     * @param int $transition_id The transition the post action belongs to
+     *
+     * @return bool true if success false otherwise
+     */
+    public function create($transition_id) {
+        $transition_id = $this->da->escapeInt($transition_id);
+        
+        $sql = "INSERT INTO $this->table_name (transition_id) 
+                VALUES ($transition_id)";
+        
+        return $this->updateAndGetLastId($sql);
     }
 
-    public function searchByTransitionId() {
-
+    public function searchByTransitionId($transition_id) {
+        $transition_id = $this->da->escapeInt($transition_id);
+        
+        $sql = "SELECT * 
+                FROM $this->table_name
+                WHERE transition_id = $transition_id
+                ORDER BY id";
+        
+        return $this->retrieve($sql);
     }
 
     public function deletePostActionsByWorkflowId() {

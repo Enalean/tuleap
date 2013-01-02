@@ -187,6 +187,7 @@ class Transition_PostActionFactory {
             case 'field_date':  return (int) $row['value_type'];
             case 'field_int':   return (int) $row['value'];
             case 'field_float': return (float) $row['value'];
+            case 'jenkins_build': return (string) $row['value'];
             default: throw new Transition_PostAction_NotFoundException($shortname);
         }
     }
@@ -311,6 +312,7 @@ class Transition_PostActionFactory {
             case 'field_date':  return $post_action->getValueType();
             case 'field_int':
             case 'field_float': return $post_action->getValue();
+            case 'jenkins_build': return $post_action->getValue();
             default: throw new Transition_PostAction_NotFoundException($short_name);
         }
     }

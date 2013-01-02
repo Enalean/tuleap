@@ -1335,6 +1335,7 @@ workflow_admin	new_artifact	Nouvel artefact
 workflow_admin	change_value_date_field_to	Le champ date $1 prend pour valeur $2
 workflow_admin	change_value_int_field_to	Le champ entier $1 prend pour valeur $2
 workflow_admin	change_value_float_field_to	Le champ flottant $1 prend pour valeur $2
+workflow_admin	launch_job	Le job $1 sera automatiquement lancé
 workflow_admin	post_action_change_value_date_field	Mettre à jour la valeur d'un champ date
 workflow_admin	post_action_change_value_int_field	Mettre à jour la valeur d'un champ de type entier
 workflow_admin	post_action_change_value_float_field	Mettre à jour la valeur d'un champ de type flottant
