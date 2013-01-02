@@ -2,9 +2,9 @@ Version 5.9 (Not Released Yet)
 
    == Plugins ==
     * cardwall: 0.9.10
-    * git: 2.7.19
+	* git: 2.7.20
     * tests: 5.12
-	* tracker: 5.59
+	* tracker: 5.60
 	* docman: 2.26.11
 	* graphontrackers: 1.7
 

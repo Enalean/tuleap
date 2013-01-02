@@ -1,3 +1,6 @@
+Version 5.60 - Tuleap 5.9
+    * Development: Fix tests builders, ID of a tracker should a numeric.
+
 Version 5.59 - Tuleap 5.9
     * SOAP API: export artifact comments
 
