@@ -26,7 +26,7 @@ require_once dirname(__FILE__) . '/../include/constants.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RepositoryFetcher.class.php';
 
 $repository_factory = new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
-$fetcher = new Git_Driver_Gerrit_RepositoryFetcher($repository_factory);
+$fetcher = new Git_Driver_Gerrit_RepositoryFetcher($repository_factory, new BackendLogger());
 $fetcher->process();
 
 ?>

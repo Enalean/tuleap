@@ -71,6 +71,14 @@ class Git_Driver_Gerrit_RepositoryFetcher_WithOneRepoTest extends Git_Driver_Ger
         $this->fetcher->process();
     }
 
+    public function itLogsTheRepositoryItAttemptsToProcess() {
+        expect($this->logger)->info()->count(3);
+        expect($this->logger)->info("Gerrit fetch all repositories...")->at(0);
+        expect($this->logger)->info("Gerrit fetch $this->repository_path (id: $this->repository_id)")->at(1);
+        expect($this->logger)->info("Gerrit fetch all repositories done")->at(2);
+        $this->fetcher->process();
+    }
+
     public function itLogsTheGitExceptionsWithMeaningFullMessage() {
         $exception = new Git_Command_Exception('git fetch gerrit -q', array('Some nasty', 'error'), 244);
         stub($this->git_exec)->updateRef()->throws($exception);

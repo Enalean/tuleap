@@ -42,9 +42,11 @@ class Git_Driver_Gerrit_RepositoryFetcher {
      */
     public function process() {
         try {
+            $this->logger->info('Gerrit fetch all repositories...');
             foreach ($this->repository_factory->getRepositoriesWithRemoteServersForAllProjects() as $repository) {
                 $this->updateRepositoryFromRemote($repository);
             }
+            $this->logger->info('Gerrit fetch all repositories done');
         }
         catch (Git_Command_Exception $exception) {
             $this->logger->error('Error raised while updating repository '.$repository->getFullPath().' (id: '.$repository->getId().')', $exception);
@@ -55,6 +57,7 @@ class Git_Driver_Gerrit_RepositoryFetcher {
     }
 
     private function updateRepositoryFromRemote(GitRepository $repository) {
+        $this->logger->info('Gerrit fetch '.$repository->getFullPath().' (id: '.$repository->getId().')');
         $git_exec = $this->getGitExecForRepository($repository->getFullPath(), Git_Driver_Gerrit_ProjectCreator::GERRIT_REMOTE_NAME);
         $git_exec->fetch();
         $remote_heads = $git_exec->lsRemoteHeads();
