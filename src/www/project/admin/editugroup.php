@@ -289,10 +289,9 @@ if (($func=='edit')||($func=='do_create')) {
 
         $ugroupBinding->processRequest($ugroupId, $request);
 
-
         $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
 
-        $content .= $bindingiewer->getHTMLContent($groupId, $ugroupId, $sourceProject);
+        $content .= $bindingiewer->getUgtoupBindingPaneContent($groupId, $ugroupId, $sourceProject);
 
     }
 
