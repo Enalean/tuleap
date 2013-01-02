@@ -41,6 +41,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     protected $gerrit_git_url;
     protected $gerrit_admin_instance = 'admin-tuleap.example.com';
     protected $tuleap_instance       = 'tuleap.example.com';
+    protected $gitolite_project = 'gitolite_firefox.git';
 
     public function setUp() {
         parent::setUp();
@@ -50,20 +51,28 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $this->fixtures = dirname(__FILE__) .'/_fixtures';
         $this->tmpdir   = Config::get('tmp_dir') .'/'. md5(uniqid(rand(), true));
         `unzip $this->fixtures/firefox.zip -d $this->tmpdir`;
+        `tar -xzf $this->fixtures/gitolite_firefox.git.tgz --directory $this->tmpdir`;
 
         $host  = $this->tmpdir;
         $login = $this->gerrit_admin_instance;
         $id = $ssh_port = $http_port = $identity_file = 0;
-        $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), array($id, $host, $ssh_port, $http_port, $login, $identity_file));
+        $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), 
+                array($id, $host, $ssh_port, $http_port, $login, $identity_file));
 
         $this->gerrit_git_url = "$host/$this->gerrit_project";
         stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns($this->gerrit_git_url);
 
         $this->repository                      = mock('GitRepository');
+        stub($this->repository)->getFullPath()->returns($this->tmpdir.'/'.$this->gitolite_project);
         $this->repository_in_a_private_project = mock('GitRepository');
+        stub($this->repository_in_a_private_project)->getFullPath()->returns($this->tmpdir.'/'.$this->gitolite_project);
         $this->repository_without_registered   = mock('GitRepository');
+        stub($this->repository_without_registered)->getFullPath()->returns($this->tmpdir.'/'.$this->gitolite_project);
+        
         $this->driver = mock('Git_Driver_Gerrit');
         stub($this->driver)->createProject($this->server, $this->repository)->returns($this->gerrit_project);
+        stub($this->driver)->createProject($this->server, $this->repository_in_a_private_project)->returns($this->gerrit_project);
+        stub($this->driver)->createProject($this->server, $this->repository_without_registered)->returns($this->gerrit_project);
 
         stub($this->driver)->getGroupUUID($this->server, $this->contributors)->returns($this->contributors_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->integrators)->returns($this->integrators_uuid);
@@ -93,6 +102,11 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 }
 
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
+
+    public function tearDown() {
+        parent::tearDown();
+        $this->project_creator->removeTemporaryDirectory();
+    }
 
     public function itPushesTheUpdatedConfigToTheServer() {
         $this->project_creator->createProject($this->server, $this->repository);
@@ -135,9 +149,17 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         chdir("$this->tmpdir");
         exec('git remote -v', $output, $ret_val);
         chdir($cwd);
+        
+        $port          = $this->server->getSSHPort();
+        $identity_file = $this->server->getIdentityFile();
+        $host_login    = $this->server->getLogin() . '@' . $this->server->getHost();
+        
         $this->assertEqual($output, array(
+//            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (fetch)",
+//            "gerrit\text:ssh -p $port -i $identity_file $host_login %S  (push)",
             "origin\t$this->gerrit_git_url (fetch)",
-            "origin\t$this->gerrit_git_url (push)")
+            "origin\t$this->gerrit_git_url (push)",
+            )
         );
         $this->assertEqual($ret_val, 0);
     }
@@ -160,7 +182,10 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         chdir("$this->tmpdir");
         exec('git status --porcelain', $output, $ret_val);
         chdir($cwd);
-        $this->assertEqual($output, array('?? tuleap-localhost-mozilla/'));
+        $this->assertEqual($output, array(
+            '?? gitolite_firefox.git/',
+            '?? tuleap-localhost-mozilla/')
+        );
         $this->assertEqual($ret_val, 0);
     }
 
@@ -182,24 +207,23 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertPattern("%global:Registered-Users\tRegistered Users\n%",     $group_file_contents);
     }
 
-    private function itThrowsAnExceptionWhenSomethingGoneBad() {
-        // remote git repo doesn't exist
-        // add permissions doesn't work
-        // cannot commit
-        // ...
-    }
-
-    private function itLogsEachMethodsCall() {
-    }
 }
 
 class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
 
-    public function itCreatesAProject() {
+    public function tearDown() {
+        parent::tearDown();
+        $this->project_creator->removeTemporaryDirectory();
+    }
+
+    public function itCreatesAProjectAndExportGitBranchesAndTags() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
         expect($this->driver)->createProject($this->server, $this->repository)->once();
         $project_name = $this->project_creator->createProject($this->server, $this->repository);
         $this->assertEqual($this->gerrit_project, $project_name);
+
+        $this->assertAllGitBranchesPushedToTheServer();
+        $this->assertAllGitTagsPushedToTheServer();
     }
 
     public function itCreatesContributorsGroup() {
@@ -252,6 +276,49 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         $this->driver->expectCallCount('createGroup', 4);
 
         $this->project_creator->createProject($this->server, $this->repository);
+    }
+
+     private function assertAllGitBranchesPushedToTheServer() {
+        $cwd = getcwd();
+        chdir("$this->tmpdir/$this->gitolite_project");
+
+        exec("git show-ref --heads", $refs_cmd, $ret_val);
+
+        $expected_result = array("To $this->gerrit_git_url");
+
+        foreach ($refs_cmd as $ref) {
+            $ref               = substr($ref, strpos($ref, ' ') + 1);
+            $expected_result[] = "=\t$ref:$ref\t[up to date]";
+        }
+
+        $expected_result[] = "Done";
+
+        exec("git push $this->gerrit_git_url refs/heads/*:refs/heads/* --porcelain", $output, $ret_val);
+        chdir($cwd);
+
+        $this->assertEqual($output, $expected_result);
+        $this->assertEqual($ret_val, 0);
+    }
+
+    private function assertAllGitTagsPushedToTheServer() {
+        $cwd = getcwd();
+        chdir("$this->tmpdir/$this->gitolite_project");
+
+        exec("git show-ref --tags", $refs_cmd, $ret_val);
+        $expected_result = array("To $this->gerrit_git_url");
+
+        foreach ($refs_cmd as $ref) {
+            $ref               = substr($ref, strpos($ref, ' ') + 1);
+            $expected_result[] = "=\t$ref:$ref\t[up to date]";
+        }
+
+        $expected_result[] = "Done";
+
+        exec("git push $this->gerrit_git_url refs/tags/*:refs/tags/* --porcelain", $output, $ret_val);
+        chdir($cwd);
+
+        $this->assertEqual($output, $expected_result);
+        $this->assertEqual($ret_val, 0);
     }
 }
 ?>
