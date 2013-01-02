@@ -79,7 +79,7 @@ class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
     }
 
     public static function getLabel() {
-        return 'lunch jenkins build';
+        return 'Launch a jenkins build';
     }
 
     public function after() {

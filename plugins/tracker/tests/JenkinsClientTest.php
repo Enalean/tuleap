@@ -28,7 +28,7 @@ class JenkinsClientTest extends TuleapTestCase {
 
         $jenkins_client = new JenkinsClient($host);
         $expected = 'http://example.com/job/job_example/build';
-        $this->assertEqual($jenkins_client->lunchJobBuild($job_name), $expected);
+        $this->assertEqual($jenkins_client->launchJobBuild($job_name), $expected);
     }
 
 }

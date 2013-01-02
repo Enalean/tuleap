@@ -40,7 +40,7 @@ class JenkinsClient {
         return "http://$this->host/job/$job_name/build";
     }
 
-    public function lunchJobBuild($job_name) {
+    public function launchJobBuild($job_name) {
         $url = $this->BuildURLJobBuild($job_name);
         return $url;
     }
