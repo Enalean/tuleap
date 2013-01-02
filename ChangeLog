@@ -8,6 +8,9 @@ Version 5.9 (Not Released Yet)
 	* docman: 2.26.11
 	* graphontrackers: 1.7
 
+  == Bug Fix ==
+    * Do not rely on SimplePie escaping
+
 Version 5.8 (Wednesday, December 19th 2012)
 
    == Enhancement ==
