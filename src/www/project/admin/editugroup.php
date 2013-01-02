@@ -143,7 +143,7 @@ if (($func=='edit')||($func=='do_create')) {
     //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
     _breadCrumbs($project, $ugroup_id, $ugroup_name);
 
-    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage'));
+    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding'));
     $vPane->required();
     $pane  = $request->getValidated('pane', $vPane, 'settings');
 
@@ -278,6 +278,22 @@ if (($func=='edit')||($func=='do_create')) {
         $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
         $content .= $bindingiewer->getUsagePaneContent($group_id, $ugroup_id);
     break;
+    case 'ugroup_binding':
+        $groupId       = $request->getValidated('group_id', 'GroupId', 0);
+        $ugroupId      = $request->getValidated('ugroup_id', 'uint', 0);
+        $sourceProject = $request->getValidated('source_project', 'GroupId', 0);
+
+        $ugroupUserDao = new UGroupUserDao();
+        $ugroupManager = new UGroupManager(new UGroupDao());
+        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
+
+        $ugroupBinding->processRequest($ugroupId, $request);
+
+
+        $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
+
+        $content .= $bindingiewer->getHTMLContent($groupId, $ugroupId, $sourceProject);
+
     }
 
     $HTMLPane = new HTML_Element_Pane($panes, $activePane, $content);
