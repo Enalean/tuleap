@@ -249,10 +249,10 @@ class UGroupManager {
 
         $validBegin = new Valid_WhiteList('begin', $allowedBeginValues);
         $validBegin->required();
-        
+
         $validInProject = new Valid_UInt('in_project');
         $validInProject->required();
-        
+
         $result['offset']          = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
         $result['number_per_page'] = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
         $result['search']          = $request->getValidated('search', 'string', '');
@@ -371,7 +371,7 @@ class UGroupManager {
                     $content .= '<option value="'. $b .'" '. ($b == $validRequest['begin)'] ? $selected : '') .'>'. $b .'</option>';
                 }
                 $content .= '</select>. ';
-                
+
                 //Display
                 $content .= '<span style="white-space:nowrap;">'.$GLOBALS['Language']->getText('project_admin_editugroup','show').' ';
                 //number per page
@@ -384,11 +384,10 @@ class UGroupManager {
                 }
                 $content .= '</select> ';
                 $content .= $GLOBALS['Language']->getText('project_admin_editugroup','users_per_page').' ';
-                
-                
+
                 $content .= '<input type="submit" name="browse" value="Browse" /></span>';
                 $content .= '</p>';
-                
+
                 $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, realname, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
                         FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". db_ei($ugroupId) .") AS R
                         ";
@@ -419,7 +418,7 @@ class UGroupManager {
                 $res2 = db_query('SELECT FOUND_ROWS() as nb');
                 $num_total_rows = db_result($res2, 0, 'nb');
                 $content .= $this->displayUserResultTable($res);
-                
+
                 //Jump to page
                 $nb_of_pages = ceil($num_total_rows / $validRequest['number_per_page']);
                 $current_page = round($validRequest['offset'] / $validRequest['number_per_page']);
@@ -449,7 +448,7 @@ class UGroupManager {
                     }
                 }
                 $content .= '</div>';
-                
+
                 $content .= '</fieldset>';
 
                 $content .= '</form>';
