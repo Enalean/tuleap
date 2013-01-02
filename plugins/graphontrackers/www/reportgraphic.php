@@ -19,6 +19,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('pre.php');
 require_once('common/plugin/PluginManager.class.php');
 require_once(dirname(__FILE__).'/../include/common/GraphicEngineUserPrefs.class.php');
 require_once(dirname(__FILE__).'/../include/data-access/GraphOnTrackers_Report.class.php');
