@@ -21,27 +21,37 @@
 require_once dirname(__FILE__).'/../../../../include/constants.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RepositoryFetcher.class.php';
 
-class RepositoryFetcherTest extends TuleapTestCase {
+class Git_Driver_Gerrit_RepositoryFetcher_BaseTest extends TuleapTestCase {
 
-    private $repository_factory;
-    private $git_exec;
-    private $fetcher;
+    protected $repository_factory;
+    protected $git_exec;
+    protected $fetcher;
 
     public function setUp() {
         parent::setUp();
         $this->repository_factory = mock('GitRepositoryFactory');
         $this->git_exec = mock('Git_Driver_Gerrit_ExecFetch');
-        $this->fetcher = partial_mock('Git_Driver_Gerrit_RepositoryFetcher', array('getGitExecForRepository'), array($this->repository_factory));
+        $this->logger  = mock('BackendLogger');
+        $this->fetcher = partial_mock('Git_Driver_Gerrit_RepositoryFetcher', array('getGitExecForRepository'), array($this->repository_factory, $this->logger));
     }
+}
 
+class Git_Driver_Gerrit_RepositoryFetcher_WithoutDataTest extends Git_Driver_Gerrit_RepositoryFetcher_BaseTest {
     public function itDoesNothingWhenThereAreNoMatchingRepositories() {
         stub($this->repository_factory)->getRepositoriesWithRemoteServersForAllProjects()->returns(array());
         $this->fetcher->process();
     }
+}
 
-    public function itLoopsOverHeadsAndUpdate() {
-        $repository_path = '/var/lib/tuleap/gitolite/repositories/gpig/shark.git';
-        $repository = stub('GitRepository')->getFullPath()->returns($repository_path);
+class Git_Driver_Gerrit_RepositoryFetcher_WithOneRepoTest extends Git_Driver_Gerrit_RepositoryFetcher_BaseTest {
+    public function setUp() {
+        parent::setUp();
+
+        $this->repository_id   = 124;
+        $this->repository_path = '/var/lib/tuleap/gitolite/repositories/gpig/shark.git';
+        $repository = mock('GitRepository');
+        stub($repository)->getFullPath()->returns($this->repository_path);
+        stub($repository)->getId()->returns($this->repository_id);
         stub($this->repository_factory)->getRepositoriesWithRemoteServersForAllProjects()->returns(array($repository));
 
 
@@ -50,11 +60,31 @@ class RepositoryFetcherTest extends TuleapTestCase {
             "881d0c6a23ffb054713ba6650271247880d04d37\trefs/heads/tuleap_integration"
         ));
 
+        stub($this->fetcher)->getGitExecForRepository($this->repository_path, Git_Driver_Gerrit_ProjectCreator::GERRIT_REMOTE_NAME)->returns($this->git_exec);
+    }
+
+    public function itLoopsOverHeadsAndUpdate() {
         expect($this->git_exec)->updateRef()->count(2);
         expect($this->git_exec)->updateRef('master')->at(0);
         expect($this->git_exec)->updateRef('tuleap_integration')->at(1);
 
-        stub($this->fetcher)->getGitExecForRepository($repository_path, Git_Driver_Gerrit_ProjectCreator::GERRIT_REMOTE_NAME)->returns($this->git_exec);
+        $this->fetcher->process();
+    }
+
+    public function itLogsTheGitExceptionsWithMeaningFullMessage() {
+        $exception = new Git_Command_Exception('git fetch gerrit -q', array('Some nasty', 'error'), 244);
+        stub($this->git_exec)->updateRef()->throws($exception);
+
+        expect($this->logger)->error("Error raised while updating repository $this->repository_path (id: $this->repository_id)", $exception)->once();
+
+        $this->fetcher->process();
+    }
+
+    public function itLogsOtherExceptionWithADummyMessage() {
+        $exception = new Exception('Zorglub');
+        stub($this->git_exec)->updateRef()->throws($exception);
+
+        expect($this->logger)->error("Unknown error", $exception)->once();
 
         $this->fetcher->process();
     }

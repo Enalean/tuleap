@@ -27,33 +27,53 @@ class Git_Driver_Gerrit_RepositoryFetcher {
      */
     private $repository_factory;
 
-    public function __construct(GitRepositoryFactory $repository_factory) {
+    /**
+     * @var BackendLogger
+     */
+    private $logger;
+
+    public function __construct(GitRepositoryFactory $repository_factory, BackendLogger $logger) {
         $this->repository_factory = $repository_factory;
+        $this->logger = $logger;
     }
 
     /**
      * Update all repositories from their remote references
      */
     public function process() {
-        foreach ($this->repository_factory->getRepositoriesWithRemoteServersForAllProjects() as $repository) {
-            /* @var $repository GitRepository */
-            $git_exec = $this->getGitExecForRepository($repository->getFullPath(), Git_Driver_Gerrit_ProjectCreator::GERRIT_REMOTE_NAME);
-            $git_exec->fetch();
-            $remote_heads = $git_exec->lsRemoteHeads();
-            foreach ($remote_heads as $remote_head) {
-                $matches = array();
-                //extract the branch name
-                preg_match('/refs\/heads\/(.*)/', $remote_head, $matches);
-                if(! isset($matches[1])) {
-                    continue;
-                }
-
-                $branch_name =  $matches[1];
-                //updating the local repository with the remote content
-                //`cd $repository_path && git fetch $remote_name -q && git update-ref refs/heads/$branch_name refs/remotes/$remote_name/$branch_name`;
-                $git_exec->updateRef($branch_name);
+        try {
+            foreach ($this->repository_factory->getRepositoriesWithRemoteServersForAllProjects() as $repository) {
+                $this->updateRepositoryFromRemote($repository);
             }
         }
+        catch (Git_Command_Exception $exception) {
+            $this->logger->error('Error raised while updating repository '.$repository->getFullPath().' (id: '.$repository->getId().')', $exception);
+        }
+        catch (Exception $exception) {
+            $this->logger->error('Unknown error', $exception);
+        }
+    }
+
+    private function updateRepositoryFromRemote(GitRepository $repository) {
+        $git_exec = $this->getGitExecForRepository($repository->getFullPath(), Git_Driver_Gerrit_ProjectCreator::GERRIT_REMOTE_NAME);
+        $git_exec->fetch();
+        $remote_heads = $git_exec->lsRemoteHeads();
+        foreach ($remote_heads as $remote_head) {
+            $this->alignLocalHeadsWithRemoteOnes($git_exec, $remote_head);
+        }
+    }
+
+    private function alignLocalHeadsWithRemoteOnes(Git_Driver_Gerrit_ExecFetch $git_exec, $remote_head) {
+        $matches = array();
+        //extract the branch name
+        preg_match('/refs\/heads\/(.*)/', $remote_head, $matches);
+        if(! isset($matches[1])) {
+            return;
+        }
+
+        $branch_name = $matches[1];
+        //updating the local repository with the remote content
+        $git_exec->updateRef($branch_name);
     }
 
     protected function getGitExecForRepository($repository_path, $remote_name) {
