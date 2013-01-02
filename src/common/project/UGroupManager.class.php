@@ -289,7 +289,7 @@ class UGroupManager {
                         '&offset='. (int)$validRequest['offset'] .
                         '&number_per_page='. (int)$validRequest['number_per_page'] .
                         '&search='. urlencode($validRequest['search']) .
-                        '&begin='. urlencode($validRequest['begin)']) .
+                        '&begin='. urlencode($validRequest['begin']) .
                         '&in_project='. (int)$validRequest['in_project']
                     );
                 }
@@ -366,9 +366,9 @@ class UGroupManager {
                 //begin
                 $content .= $GLOBALS['Language']->getText('project_admin_editugroup','begins').' ';
                 $content .= '<select name="begin">';
-                $content .= '<option value="" '. (in_array($validRequest['begin)'], $validRequest['allowed_begin_values']) ? $selected : '') .'></option>';
+                $content .= '<option value="" '. (in_array($validRequest['begin'], $validRequest['allowed_begin_values']) ? $selected : '') .'></option>';
                 foreach($validRequest['allowed_begin_values'] as $b) {
-                    $content .= '<option value="'. $b .'" '. ($b == $validRequest['begin)'] ? $selected : '') .'>'. $b .'</option>';
+                    $content .= '<option value="'. $b .'" '. ($b == $validRequest['begin'] ? $selected : '') .'>'. $b .'</option>';
                 }
                 $content .= '</select>. ';
 
@@ -399,16 +399,16 @@ class UGroupManager {
                 if ($validRequest['in_project']) {
                     $sql .= " AND user_group.group_id = ". db_ei($validRequest['in_project']) ." ";
                 }
-                if ($validRequest['search'] || $validRequest['begin)']) {
+                if ($validRequest['search'] || $validRequest['begin']) {
                     $sql .= ' AND ( ';
                     if ($validRequest['search']) {
                         $sql .= " user.realname LIKE '%". db_es($validRequest['search']) ."%' OR user.user_name LIKE '%". db_es($validRequest['search']) ."%' OR user.email LIKE '%". db_es($validRequest['search']) ."%' ";
-                        if ($validRequest['begin)']) {
+                        if ($validRequest['begin']) {
                             $sql .= " OR ";
                         }
                     }
-                    if ($validRequest['begin)']) {
-                        $sql .= " user.realname LIKE '". db_es($validRequest['begin)']) ."%' OR user.user_name LIKE '". db_es($validRequest['begin)']) ."%' OR user.email LIKE '". db_es($validRequest['begin)']) ."%' ";
+                    if ($validRequest['begin']) {
+                        $sql .= " user.realname LIKE '". db_es($validRequest['begin']) ."%' OR user.user_name LIKE '". db_es($validRequest['begin']) ."%' OR user.email LIKE '". db_es($validRequest['begin']) ."%' ";
                     }
                     $sql .= " ) ";
                 }
@@ -434,7 +434,7 @@ class UGroupManager {
                             '&amp;offset='. (int)($i * $validRequest['number_per_page']) .
                             '&amp;number_per_page='. (int)$validRequest['number_per_page'] .
                             '&amp;search='. urlencode($validRequest['search']) .
-                            '&amp;begin='. urlencode($validRequest['begin)']) .
+                            '&amp;begin='. urlencode($validRequest['begin']) .
                             '&amp;in_project='. (int)$validRequest['in_project'] .
                             '">';
                         if ($i == $current_page) {
