@@ -66,6 +66,17 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
   INDEX idx_wf_transition_id( transition_id )
 ) ENGINE=InnoDB;
 
+--  
+--  Table structure for tracker_workflow_transition_postactions_launch_build
+-- 
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_launch_build;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_launch_build (
+  id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
+  transition_id int(11) NOT NULL,
+  job_url varchar(255) default NULL,
+  INDEX idx_wf_transition_id( transition_id )
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_widget_renderer;
 CREATE TABLE tracker_widget_renderer (
    id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
