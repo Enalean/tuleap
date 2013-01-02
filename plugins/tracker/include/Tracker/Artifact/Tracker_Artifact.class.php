@@ -1699,8 +1699,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 );
              }
          }
-
-         error_log("saop value : ". var_export($soap_value,1));
          return $soap_value;
     }
 

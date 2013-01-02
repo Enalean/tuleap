@@ -68,10 +68,6 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                  )
         ";
     }
-
-    public function getCrossReferenceFactory(Tracker_Artifact $artifact) {
-        return $artifact->getCrossReferenceFactory();
-    }
     
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
         $html = '';
