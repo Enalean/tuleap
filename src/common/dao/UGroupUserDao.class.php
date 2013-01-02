@@ -82,6 +82,47 @@ class UGroupUserDao extends DataAccessObject {
     }
 
     /**
+     * Search users to add to ugroup
+     *
+     * @param Integer $ugroupId Id of the uGroup
+     * @param Array   $filters  List of filters
+     *
+     * @return Array
+     */
+    public function searchUsersToAdd($ugroupId, $filters) {
+        $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, realname, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
+                FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". $this->da->escapeInt($ugroupId) .") AS R
+                ";
+        if ($filters['in_project']) {
+            $sql .= " INNER JOIN user_group USING ( user_id ) ";
+        }
+        $sql .= "
+                WHERE status in ('A', 'R') ";
+        if ($filters['in_project']) {
+            $sql .= " AND user_group.group_id = ". $this->da->escapeInt($filters['in_project']) ." ";
+        }
+        if ($filters['search'] || $filters['begin']) {
+            $sql .= ' AND ( ';
+            if ($filters['search']) {
+                $sql .= " user.realname LIKE ". $this->da->quoteSmart("%".$filters['search']."%") ." OR user.user_name LIKE ". $this->da->quoteSmart("%".$filters['search']."%") ." OR user.email LIKE ". $this->da->quoteSmart("%".$filters['search']."%") ." ";
+                if ($filters['begin']) {
+                    $sql .= " OR ";
+                }
+            }
+            if ($filters['begin']) {
+                $sql .= " user.realname LIKE ". $this->da->quoteSmart($filters['begin']."%") ." OR user.user_name LIKE ". $this->da->quoteSmart($filters['begin']."%") ." OR user.email LIKE ". $this->da->quoteSmart($filters['begin']."%") ." ";
+            }
+            $sql .= " ) ";
+        }
+        $sql .= "ORDER BY ". (user_get_preference("username_display") > 1 ? 'realname' : 'user_name') ."
+                LIMIT ". $this->da->escapeInt($filters['offset']) .", ". $this->da->escapeInt($filters['number_per_page']);
+        $res  = $this->retrieve($sql);
+        $res2 = $this->retrieve('SELECT FOUND_ROWS() as nb');
+        $numTotalRows = $res2->getRow();
+        return array('result' => $res, 'num_total_rows' => $numTotalRows['nb']);
+    }
+
+    /**
      * Clone a given user group from another one
      *
      * @param Integer $sourceUgroupId Id of the user group from which we will copy users

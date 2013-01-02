@@ -391,39 +391,16 @@ class UGroupManager {
                 $content .= '<input type="submit" name="browse" value="Browse" /></span>';
                 $content .= '</p>';
 
-                $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, realname, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
-                        FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". db_ei($ugroupId) .") AS R
-                        ";
-                if ($validRequest['in_project']) {
-                    $sql .= " INNER JOIN user_group USING ( user_id ) ";
-                }
-                $sql .= "
-                        WHERE status in ('A', 'R') ";
-                if ($validRequest['in_project']) {
-                    $sql .= " AND user_group.group_id = ". db_ei($validRequest['in_project']) ." ";
-                }
-                if ($validRequest['search'] || $validRequest['begin']) {
-                    $sql .= ' AND ( ';
-                    if ($validRequest['search']) {
-                        $sql .= " user.realname LIKE '%". db_es($validRequest['search']) ."%' OR user.user_name LIKE '%". db_es($validRequest['search']) ."%' OR user.email LIKE '%". db_es($validRequest['search']) ."%' ";
-                        if ($validRequest['begin']) {
-                            $sql .= " OR ";
-                        }
-                    }
-                    if ($validRequest['begin']) {
-                        $sql .= " user.realname LIKE '". db_es($validRequest['begin']) ."%' OR user.user_name LIKE '". db_es($validRequest['begin']) ."%' OR user.email LIKE '". db_es($validRequest['begin']) ."%' ";
-                    }
-                    $sql .= " ) ";
-                }
-                $sql .= "ORDER BY ". (user_get_preference("username_display") > 1 ? 'realname' : 'user_name') ."
-                        LIMIT ". db_ei($validRequest['offset']) .", ". db_ei($validRequest['number_per_page']);
-                $res = db_query($sql);
-                $res2 = db_query('SELECT FOUND_ROWS() as nb');
-                $num_total_rows = db_result($res2, 0, 'nb');
+                $dao          = new UGroupUserDao();
+                $result       = $dao->searchUsersToAdd($ugroupId, $validRequest);
+                $res          = $result['result'];
+                $res          = $result['result'];
+                $numTotalRows = $result['num_total_rows'];
+
                 $content .= $this->displayUserResultTable($res);
 
                 //Jump to page
-                $nb_of_pages = ceil($num_total_rows / $validRequest['number_per_page']);
+                $nb_of_pages = ceil($numTotalRows / $validRequest['number_per_page']);
                 $current_page = round($validRequest['offset'] / $validRequest['number_per_page']);
                 $content .= '<div style="font-family:Verdana">Page: ';
                 $width = 10;
@@ -470,11 +447,11 @@ class UGroupManager {
     public function displayUserResultTable($res) {
         $userHelper = UserHelper::instance();
         $hp         = Codendi_HTMLPurifier::instance();
-        $nbCols    = 3;
-        if (db_numrows($res)) {
+        $nbCols     = 3;
+        if ($res->rowCount()) {
             $output = '<table><tr>';
             $i      = 0;
-            while($data = db_fetch_array($res)) {
+            foreach ($res as $data) {
                 if ($i++ % $nbCols == 0) {
                     $output .= '</tr><tr>';
                 }
