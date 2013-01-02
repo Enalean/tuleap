@@ -20,11 +20,8 @@
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 
-//Bootstrapping- there's probably a better way to do this!
-set_include_path(get_include_path() . ':' . dirname(__FILE__).'/../../../src');
-set_include_path(get_include_path() . ':' . dirname(__FILE__).'/../../../src/www/include');
+//Bootstrapping
 require_once('pre.php');
-require_once('common/plugin/PluginManager.class.php');
 require_once(dirname(__FILE__) . '/../include/GitRepository.class.php');
 require_once(dirname(__FILE__) . '/../include/Git/Driver/Gerrit/ProjectCreator.class.php');
 
