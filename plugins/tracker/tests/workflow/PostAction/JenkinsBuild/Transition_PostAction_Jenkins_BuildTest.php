@@ -21,28 +21,5 @@
 require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/JenkinsBuild/Transition_PostAction_Jenkins_Build.class.php');
 
 class Transition_PostAction_Jenkins_BuildTest extends TuleapTestCase {
-
-    public function setUp() {
-        parent::setUp();
-        $this->post_action_id = 259;
-        $this->transition     = mock('Transition');
-        $this->host           = 'example.com';
-
-    }
-
-    public function itReturnsTrueifTheURLIsBuilded() {
-        $job_name       = 'job_example';
-
-        $jenkins_post_action = new Transition_PostAction_Jenkins_Build($this->transition, $this->post_action_id, $this->host, $job_name);
-        $this->assertTrue($jenkins_post_action->after());
-    }
-
-    public function itReturnsFalseIfThereIsNoJobNameSet() {
-        $job_name       = null;
-
-        $jenkins_post_action = new Transition_PostAction_Jenkins_Build($this->transition, $this->post_action_id, $this->host, $job_name);
-        $this->assertFalse($jenkins_post_action->after());
-    }
-
 }
 ?>
