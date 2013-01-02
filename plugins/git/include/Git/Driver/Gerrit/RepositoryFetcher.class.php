@@ -62,11 +62,11 @@ class Git_Driver_Gerrit_RepositoryFetcher {
         $git_exec->fetch();
         $remote_heads = $git_exec->lsRemoteHeads();
         foreach ($remote_heads as $remote_head) {
-            $this->alignLocalHeadsWithRemoteOnes($git_exec, $remote_head);
+            $this->alignLocalHeadWithRemoteOne($git_exec, $remote_head);
         }
     }
 
-    private function alignLocalHeadsWithRemoteOnes(Git_Driver_Gerrit_ExecFetch $git_exec, $remote_head) {
+    private function alignLocalHeadWithRemoteOne(Git_Driver_Gerrit_ExecFetch $git_exec, $remote_head) {
         $matches = array();
         //extract the branch name
         preg_match('/refs\/heads\/(.*)/', $remote_head, $matches);
