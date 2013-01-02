@@ -205,6 +205,12 @@ class Git_Driver_Gerrit_ProjectCreator {
         // e.g git remote add gerrit "ext::ssh -p 29418 -i /home/codendiadm/.ssh/id_rsa-gerrit  admin-chamoix.cro.enalean.com@chamoix %S chamoix.cro.enalean.com-cod/depot2"
         `cd $repository_path && git remote add $remote "ext::ssh -p $port -i $identity_file $host_login %S $gerrit_repo"`;  
     }
+
+    public function removeTemporaryDirectory() {
+        $backend = Backend::instance('System');
+        $backend->recurseDeleteInDir($this->dir);
+        rmdir($this->dir);
+    }
 }
 
 ?>

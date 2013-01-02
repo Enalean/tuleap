@@ -103,6 +103,11 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
 
+    public function tearDown() {
+        parent::tearDown();
+        $this->project_creator->removeTemporaryDirectory();
+    }
+
     public function itPushesTheUpdatedConfigToTheServer() {
         $this->project_creator->createProject($this->server, $this->repository);
 
@@ -205,6 +210,11 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 }
 
 class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
+
+    public function tearDown() {
+        parent::tearDown();
+        $this->project_creator->removeTemporaryDirectory();
+    }
 
     public function itCreatesAProjectAndExportGitBranchesAndTags() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
