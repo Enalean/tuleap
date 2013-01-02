@@ -306,6 +306,9 @@ class UGroupManager {
 
         $content .= '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($ugroup_name, CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
+        //ugroup binding link
+        $content .= '<P> You can also choose to bind to another group </p>';
+
         $content .= '<p><b>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</b></p>';
         $content .= '<div style="padding-left:10px">';
         $content .= '<table><tr valign="top"><td>';
