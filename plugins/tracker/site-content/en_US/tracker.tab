@@ -1354,9 +1354,12 @@ workflow_admin	post_action_field_date_current_time	the current time
 workflow_admin	post_action_not_defined	This action will be inactive until it is completely configured
 workflow_admin	the_field	The field
 workflow_admin	field_not_empty	must not be empty
+workflow_admin	ci_url	Hudson or Jenkins job url: http://CI_URL/job/JOBNAME
 
 workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
 workflow_postaction	field_clear	The field '$1' will be automatically cleared
+workflow_postaction	invalid_job_url	The continuous integration job URL '$1' is not valid.
+workflow_postaction	launch_job	Launch a continuous integration build
 
 workflow_condition	invalid_condition	Invalid condition: the field '$1'must not be empty
 

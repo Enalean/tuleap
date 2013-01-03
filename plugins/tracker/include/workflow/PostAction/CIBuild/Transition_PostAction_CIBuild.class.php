@@ -63,7 +63,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     public function fetch() {
         $html  = '';
-        $title = 'Hudson or Jenkins job url: http://JENKINS_URL/job/JOBNAME'; //TODO i18n
+        $title = $GLOBALS['Language']->getText('workflow_admin','ci_url');
         $text_field = '<input type="text"
             title="'. $title .'"
             required
@@ -95,13 +95,13 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
             if ($this->urlIsValid($new_job_url)) {
                 $this->getDao()->updatePostAction($this->id, $new_job_url);
             } else {
-                $GLOBALS['Response']->addFeedback('error', 'The continuous integration job URL "'. $new_job_url .'" is not valid.');
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_postaction', 'invalid_job_url', array($new_job_url)));
             }
         }
     }
 
     public static function getLabel() {
-        return 'Launch a jenkins build';
+        return $GLOBALS['Language']->getText('workflow_postaction', 'launch_job');
     }
 
     public function after() {
