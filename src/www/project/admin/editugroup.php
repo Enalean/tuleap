@@ -143,7 +143,7 @@ if (($func=='edit')||($func=='do_create')) {
     //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
     echo _breadCrumbs($project, $ugroup_id, $ugroup_name);
 
-    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding', 'ldap_binding'));
+    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding'));
     $vPane->required();
     $pane  = $request->getValidated('pane', $vPane, 'settings');
 
@@ -179,7 +179,11 @@ if (($func=='edit')||($func=='do_create')) {
     break;
     case 'bind':
         $activePane = 'members';
-        $content .= $uGroupMgr->displayUgroupBinding($group_id, $ugroup_id);
+        if ($ldapBinding = $uGroupMgr->displayUgroupBinding($group_id, $ugroup_id)) {
+            $content .= $ldapBinding;
+        } else {
+            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=ugroup_binding');
+        }
     break;
     case 'permissions':
         // Display associated permissions
@@ -277,13 +281,6 @@ if (($func=='edit')||($func=='do_create')) {
 
         $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
         $content .= $bindingiewer->getUsagePaneContent($group_id, $ugroup_id);
-    break;
-    case 'ldap_binding':
-        $activePane = 'members';
-        $em         = EventManager::instance();
-        $params     = array('request' => $request);
-        $content   .= $em->processEvent('display_ldap_binding_pane', $params);
-
     break;
     case 'ugroup_binding':
         $activePane = 'members';
