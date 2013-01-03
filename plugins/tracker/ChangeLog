@@ -1,3 +1,6 @@
+Version 5.61 - Tuleap 5.9
+    * SOAP API (v2.0.2): artifacts now contains their cross references.
+
 Version 5.60 - Tuleap 5.9
     * Development: Fix tests builders, ID of a tracker should a numeric.
 
