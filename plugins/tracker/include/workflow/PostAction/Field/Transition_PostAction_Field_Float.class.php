@@ -25,6 +25,8 @@ require_once 'Transition_PostAction_Field_Numeric.class.php';
  * Set the date of a field
  */
 class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Numeric {
+
+    const SHORT_NAME = 'field_float';
     
     /**
      * Get the shortname of the post action
@@ -32,7 +34,7 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
      * @return string
      */
     public function getShortName() {
-        return 'field_float';
+        return self::SHORT_NAME;
     }
     
     /**
