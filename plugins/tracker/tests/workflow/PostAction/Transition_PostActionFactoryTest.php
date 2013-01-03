@@ -60,67 +60,6 @@ class Transition_PostActionFactory_AddPostActionTest extends TuleapTestCase {
 
 }
 
-class Transition_PostActionFactory_LoadPostActionsTest extends TuleapTestCase {
-    
-    public function setUp() {
-        parent::setUp();
-        
-        $this->transition_id  = 123;
-        $this->field_id       = 456;
-        $this->post_action_id = 789;
-        
-        $this->transition = aTransition()->withId($this->transition_id)->build();
-    }
-    
-    public function itLoadsIntFieldPostActions() {
-        $post_action_value = 12;
-        $post_action_rows  = array(array('id'       => $this->post_action_id,
-                                         'field_id' => $this->field_id,
-                                         'value'    => $post_action_value));
-        
-        $int_dao             = stub('Transition_PostAction_Field_IntDao')->searchByTransitionId($this->transition_id)->returns($post_action_rows);
-        $field               = mock('Tracker_FormElement_Field_Integer');
-        $formelement_factory = stub('Tracker_FormElementFactory')->getFormElementById($this->field_id)->returns($field);
-        
-        $factory = aPostActionFactory()->withFieldIntDao($int_dao)
-                                       ->withFormElementFactory($formelement_factory)
-                                       ->build();
-        
-        $factory->loadPostActions($this->transition);
-        
-        $this->assertEqual($this->transition->getPostActions(),
-                           array(anIntFieldPostAction()->withId($this->post_action_id)
-                                                       ->withField($field)
-                                                       ->withTransition($this->transition)
-                                                       ->withValue($post_action_value)
-                                                       ->build()));
-    }
-    
-    public function itLoadsFloatFieldPostActions() {
-        $post_action_value = 3.45;
-        $post_action_rows  = array(array('id'       => $this->post_action_id,
-                                         'field_id' => $this->field_id,
-                                         'value'    => $post_action_value));
-        
-        $float_dao            = stub('Transition_PostAction_Field_FloatDao')->searchByTransitionId($this->transition_id)->returns($post_action_rows);
-        $field                = mock('Tracker_FormElement_Field_Float');
-        $form_element_factory = stub('Tracker_FormElementFactory')->getFormElementById($this->field_id)->returns($field);
-        
-        $factory = aPostActionFactory()->withFieldFloatDao($float_dao)
-                                       ->withFormElementFactory($form_element_factory)
-                                       ->build();
-        
-        $factory->loadPostActions($this->transition);
-        
-        $this->assertEqual($this->transition->getPostActions(),
-                           array(aFloatFieldPostAction()->withId($this->post_action_id)
-                                                        ->withField($field)
-                                                        ->withTransition($this->transition)
-                                                        ->withValue($post_action_value)
-                                                        ->build()));
-    }
-}
-
 class Transition_PostActionFactory_DuplicateTest extends TuleapTestCase {
     
     public function itDelegatesDuplicationToTheCorrespondingDao() {
@@ -349,49 +288,5 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends TuleapTe
         $this->assertFalse($this->factory->isFieldUsedInPostActions($this->field));
     }
 
-}
-
-class Transition_PostActionFactory_PostActions_After_Test extends TuleapTestCase {
-
-    public function itCanAddAJenkinsBuildPostAction() {
-        $transition_id = 123;
-        $transition    = stub('Transition')->getTransitionId()->returns($transition_id);
-
-        $dao     = mock('Transition_PostAction_Jenkins_BuildDao');
-        $factory = aPostActionFactory()->withJenkinsBuildDao($dao)->build();
-
-        $dao->expectOnce('create', array($transition_id));
-        $factory->addPostAction($transition, 'jenkins_build');
-    }
-
-    public function itDeletesJenkinsBuildPostActionIfWorkflowIsDeleted() {
-        $workflow_id = 123;
-
-        $dao     = mock('Transition_PostAction_Jenkins_BuildDao');
-        $factory = aPostActionFactory()->withJenkinsBuildDao($dao)->build();
-
-        $dao->expectOnce('deletePostActionsByWorkflowId', array($workflow_id));
-        $factory->deleteWorkflow($workflow_id);
-    }
-
-    public function itSavesTheJenkinsBuildPostAction() {
-        $transition_id = 123;
-        $transition    = stub('Transition')->getTransitionId()->returns($transition_id);
-        $host          = 'example.org';
-        $job_name      = 'jobExample';
-
-        $jenkins_build_post_action = mock('Transition_PostAction_Jenkins_Build');
-        stub($jenkins_build_post_action)->getTransition()->returns($transition);
-        stub($jenkins_build_post_action)->getHost()->returns($host);
-        stub($jenkins_build_post_action)->getJobName()->returns($job_name);
-        stub($jenkins_build_post_action)->getShortName()->returns('jenkins_build');
-
-        $dao     = mock('Transition_PostAction_Jenkins_BuildDao');
-        $factory = new Transition_PostActionFactoryTestVersion();
-        stub($factory)->getDao('jenkins_build')->returns($dao);
-
-        $dao->expectOnce('save', array($transition_id, $host, $job_name));
-        $factory->saveObject($jenkins_build_post_action);
-    }
 }
 ?>

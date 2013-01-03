@@ -27,6 +27,8 @@ require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_FloatDao.class.php');
 require_once('JenkinsBuild/Transition_PostAction_Jenkins_BuildDao.class.php');
 require_once 'Transition_PostAction_NotFoundException.class.php';
+require_once 'Field/Transition_PostAction_FieldFactory.class.php';
+require_once 'JenkinsBuild/Transition_PostAction_Jenkins_BuildFactory.class.php';
 
 /**
  * class Transition_PostActionFactory
@@ -37,7 +39,7 @@ class Transition_PostActionFactory {
     /**
      * @var Array of available post actions classes
      */
-    protected $post_actions_classes = array(
+    protected $post_actions_classes_field = array(
         'field_date'    => 'Transition_PostAction_Field_Date',
         'field_int'     => 'Transition_PostAction_Field_Int',
         'field_float'   => 'Transition_PostAction_Field_Float',
@@ -47,7 +49,7 @@ class Transition_PostActionFactory {
      * @var Array of available post actions classes run after fields validation
      */
 
-    protected $post_actions_classes_after = array(
+    protected $post_actions_classes_ci = array(
         'jenkins_build' => 'Transition_PostAction_Jenkins_Build',
     );
     
@@ -62,7 +64,7 @@ class Transition_PostActionFactory {
         $html .= '<select name="add_postaction">';
         $html .= '<option value="" selected>--</option>';
         
-        $post_actions_classes = array_merge($this->post_actions_classes, $this->post_actions_classes_after);
+        $post_actions_classes = array_merge($this->post_actions_classes_field, $this->post_actions_classes_ci);
         foreach ($post_actions_classes as $shortname => $klass) {
             //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
             eval("\$label = $klass::getLabel();");
@@ -84,7 +86,7 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function addPostAction(Transition $transition, $requested_postaction) {
-        if (isset($this->post_actions_classes[$requested_postaction]) || isset($this->post_actions_classes_after[$requested_postaction])) {
+        if (isset($this->post_actions_classes_field[$requested_postaction]) || isset($this->post_actions_classes_ci[$requested_postaction])) {
             $this->getDao($requested_postaction)->create($transition->getTransitionId());
         }
     }
@@ -106,6 +108,14 @@ class Transition_PostActionFactory {
         }
     }
     
+    public function getPostActionFieldFactory() {
+        return new Transition_PostAction_FieldFactory();
+    }
+    
+    public function getPostActionCIBuildFactory() {
+        return new Transition_PostAction_Jenkins_BuildFactory();
+    }
+    
     /**
      * Load the post actions that belong to a transition
      * 
@@ -115,31 +125,13 @@ class Transition_PostActionFactory {
      */
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
-        $post_actions = array_merge($this->loadPostActionsClasses($transition), $this->loadPostActionsClassesAfter($transition));
+        $postaction_field_factory   = $this->getPostActionFieldFactory();
+        $postaction_cibuild_factory = $this->getPostActionCIBuildFactory();
+        
+        
+        $post_actions = array_merge($postaction_field_factory->loadPostActions($transition), $postaction_cibuild_factory->loadPostActions($transition));
         $transition->setPostActions($post_actions);
     }
-    
-   private function loadPostActionsClasses(Transition $transition) {
-        $post_actions_classes = $this->post_actions_classes;
-        
-        foreach ($post_actions_classes as $shortname => $klass) {
-            foreach($this->loadPostActionRows($transition, $shortname) as $row) {
-                $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
-            }
-        }
-        return $post_actions;
-   }
-   
-   private function loadPostActionsClassesAfter(Transition $transition) {
-        $post_actions_classes = $this->post_actions_classes_after;
-        
-        foreach ($post_actions_classes as $shortname => $klass) {
-            foreach($this->loadPostActionRows($transition, $shortname) as $row) {
-                $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
-            }
-        }
-        return $post_actions;
-   }  
    
     /**   
      * Reconstitute a PostAction from database
@@ -166,20 +158,10 @@ class Transition_PostActionFactory {
      * 
      * @return int
      */
-    private function getIdFromRow($row) {
+    public function getIdFromRow($row) {
         return (int)$row['id'];
     }
     
-    /**
-     * Retrieves the field from the given PostAction database row.
-     * 
-     * @param array $row
-     * 
-     * @return Tracker_FormElement_Field
-     */
-    private function getFieldFromRow($row) {
-        return $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
-    }
     
     /**
      * Retrieves the value (or value type) from the given PostAction database row.
@@ -209,7 +191,7 @@ class Transition_PostActionFactory {
      * 
      * @return DataAccessResult
      */
-    private function loadPostActionRows(Transition $transition, $shortname) {
+    public function loadPostActionRows(Transition $transition, $shortname) {
         $dao = $this->getDao($shortname);
         return $dao->searchByTransitionId($transition->getTransitionId());
     }
@@ -258,11 +240,11 @@ class Transition_PostActionFactory {
     private function getPostActionClassFromXmlTagName($xml_tag_name) {
         $short_name = $this->getShortNameFromXmlTagName($xml_tag_name);
         
-        if (! key_exists($short_name, $this->post_actions_classes)) {
+        if (! key_exists($short_name, $this->post_actions_classes_field)) {
             throw new Transition_PostAction_NotFoundException($short_name);
         }
         
-        return $this->post_actions_classes[$short_name];
+        return $this->post_actions_classes_field[$short_name];
     }
     
     /**
@@ -343,7 +325,7 @@ class Transition_PostActionFactory {
      * @return bool
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
-        foreach ($this->post_actions_classes as $shortname => $klass) {
+        foreach ($this->post_actions_classes_field as $shortname => $klass) {
             if ($this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
                 return true;
             }
@@ -360,7 +342,7 @@ class Transition_PostActionFactory {
     public function deleteWorkflow($workflow_id) {
         $result = true;
         
-        $post_actions_classes = array_merge($this->post_actions_classes, $this->post_actions_classes_after);
+        $post_actions_classes = array_merge($this->post_actions_classes_field, $this->post_actions_classes_ci);
         foreach ($post_actions_classes as $shortname => $klass) {
             $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
         }        
