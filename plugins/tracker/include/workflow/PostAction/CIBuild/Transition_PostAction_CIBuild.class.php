@@ -64,7 +64,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
     }
 
     public function isDefined() {
-        return true;
+        return !empty($this->job_url);
     }
 
     public function process(Codendi_Request $request) {

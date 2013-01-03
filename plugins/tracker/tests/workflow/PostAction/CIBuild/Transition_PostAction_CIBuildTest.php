@@ -37,5 +37,23 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         expect($ci_build_dao)->deletePostAction($id)->once();
         $post_action_ci_build->process($condendi_request);
     }
+
+    public function itIsNotDefinedWhenJobUrlIsEmpty() {
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = null;
+
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
+        $this->assertFalse($post_action_ci_build->isDefined());
+    }
+
+    public function itIsDefinedWhenJobUrlIsFilled() {
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = 'http://example.com/job';
+
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
+        $this->assertTrue($post_action_ci_build->isDefined());
+    }
 }
 ?>
