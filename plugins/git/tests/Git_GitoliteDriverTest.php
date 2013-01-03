@@ -99,7 +99,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         );
     }
 
-    public function ________________itAddsTheDescriptionToTheConfFile() {
+    public function itAddsTheDescriptionToTheConfFile() {
         $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
         //$driver->setAdminPath($this->_glAdmDir);
         $repo_description = 'Vive tuleap';
@@ -137,7 +137,7 @@ class Git_GitoliteDriverTest extends Git_GitoliteTestCase {
         $this->assertPattern("%$project_name/$repo_name = \"$repo_description\"%", $result);
     }
     
-    public function ________________itReplacesNewlinesBySpaces() {
+    public function itReplacesNewlinesBySpaces() {
         $driver = partial_mock('Git_GitoliteDriver', array('getDao', 'getPostReceiveMailManager'), array($this->_glAdmDir));
         //$driver->setAdminPath($this->_glAdmDir);
         $repo_description = 'Vive 
