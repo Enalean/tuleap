@@ -19,26 +19,29 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once dirname(__FILE__).'/../../../builders/aPostActionCIBuildFactory.php';
+require_once dirname(__FILE__).'/../../../builders/aCIBuildPostAction.php';
+
 class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
-    
+
     public function setUp() {
         parent::setUp();
-        
+
         $this->transition_id  = 123;
         $this->post_action_id = 789;
-        
+
         $this->transition = aTransition()->withId($this->transition_id)->build();
     }
-    
+
     public function itLoadsCIBuildPostActions() {
         $post_action_value = 12;
         $post_action_rows  = array(array('id'         => $this->post_action_id,
                                          'job_url'    => $post_action_value));
-        
+
         $ci_build_dao        = stub('Transition_PostAction_CIBuildDao')->searchByTransitionId($this->transition_id)->returns($post_action_rows);
         $factory = aPostActionCIBuildFactory()->withCIBuildDao($ci_build_dao)
                                        ->build();
-        
+
         $this->assertEqual($factory->loadPostActions($this->transition),
                            array(aCIBuildPostAction()->withId($this->post_action_id)
                                                        ->withTransition($this->transition)

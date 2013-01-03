@@ -25,6 +25,11 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     const SHORT_NAME = 'ci_build';
     /**
+     * @var string Pattern to validate a job url
+     */
+    private $job_url_pattern = 'https?://.+';
+
+    /**
      *
      * @var String job_name : name of the job to build
      */
@@ -58,24 +63,40 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
     }
 
     public function fetch() {
-        $html = '';
-        $text_field = '<input type="text" name="workflow_postaction_launch_job['.$this->id.']" value="'.$this->getJobUrl().'" size="50" maxsize="255"/>';
+        $html  = '';
+        $title = 'Hudson or Jenkins job url: http://JENKINS_URL/job/JOBNAME'; //TODO i18n
+        $text_field = '<input type="text"
+            title="'. $title .'"
+            required
+            class="required"
+            pattern="'. $this->job_url_pattern .'"
+            name="workflow_postaction_launch_job['.$this->id.']"
+            value="'. $this->getJobUrl() .'"
+            size="50"
+            maxsize="255" />';
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'launch_job', array($text_field));
         return $html;
     }
 
     public function isDefined() {
-        return true;
+        return !empty($this->job_url);
     }
 
     public function process(Codendi_Request $request) {
         if ($request->getInArray('remove_postaction', $this->id)) {
-            //$this->getDao()->deletePostAction($this->id);
+            $this->getDao()->deletePostAction($this->id);
         } else {
-            $value    = $request->getInArray('workflow_postaction_launch_job', $this->id);
-            // Update if something changed
-            if ($value != $this->job_url) {
-                $this->getDao()->updatePostAction($this->id, $value);
+            $value = $request->getInArray('workflow_postaction_launch_job', $this->id);
+            $this->updateJobUrl($value);
+        }
+    }
+
+    private function updateJobUrl($new_job_url) {
+        if ($new_job_url != $this->job_url) {
+            if ($this->urlIsValid($new_job_url)) {
+                $this->getDao()->updatePostAction($this->id, $new_job_url);
+            } else {
+                $GLOBALS['Response']->addFeedback('error', 'The continuous integration job URL "'. $new_job_url .'" is not valid.');
             }
         }
     }
@@ -91,6 +112,10 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
     
     public function getDao() {
         return new Transition_PostAction_CIBuildDao();
+    }
+
+    private function urlIsValid($url) {
+        return preg_match("#$this->job_url_pattern#", $url) > 0;
     }
 }
 

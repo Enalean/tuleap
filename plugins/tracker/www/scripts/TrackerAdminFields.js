@@ -311,9 +311,11 @@ document.observe('dom:loaded', function () {
             if (elem.checked) {
                 elem.up('tr').down('div').addClassName('deleted');
                 elem.up('tr').select('select').each(function (e) { e.disabled = true; e.readOnly = true; });
+                elem.up('tr').select('input').each(function (e) { e.required = false; });
             } else {
                 elem.up('tr').down('div').removeClassName('deleted');
                 elem.up('tr').select('select').each(function (e) { e.disabled = false; e.readOnly = false; });
+                elem.up('tr').select('input').each(function (e) { if (e.hasClassName('required')) e.required = true; });
             }
         });
     });
