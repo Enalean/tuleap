@@ -1339,6 +1339,7 @@ workflow_admin	new_artifact	New artifact
 workflow_admin	change_value_date_field_to	The date field $1 is set to $2
 workflow_admin	change_value_int_field_to	The integer field $1 is set to $2
 workflow_admin	change_value_float_field_to	The float field $1 is set to $2
+workflow_admin	launch_job	The following job $1 will be launched
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	post_action_change_value_int_field	Change the value of an int field
 workflow_admin	post_action_change_value_float_field	Change the value of a float field

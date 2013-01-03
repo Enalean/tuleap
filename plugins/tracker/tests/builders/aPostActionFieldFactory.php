@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -21,14 +21,14 @@
 require_once dirname(__FILE__).'/../../include/workflow/PostAction/Transition_PostActionFactory.class.php';
 require_once dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 
-function aPostActionFactory() {
-    return new Test_Transition_PostActionFactoryBuilder();
+function aPostActionFieldFactory() {
+    return new Test_Transition_PostAction_FieldFactoryBuilder();
 }
 
-class Test_Transition_PostActionFactoryBuilder {
+class Test_Transition_PostAction_FieldFactoryBuilder {
     
     public function __construct() {
-        $this->factory = TestHelper::getPartialMock('Transition_PostActionFactory',
+        $this->factory = TestHelper::getPartialMock('Transition_PostAction_FieldFactory',
                                                     array('getDao',
                                                           'getFormElementFactory'));
         

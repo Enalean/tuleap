@@ -42,7 +42,7 @@ class Transition {
     protected $post_actions = array();
 
     /**
-     * @var Array of Transition_PostAction runned after fields validation
+     * @var Array of Transition_PostAction run after fields validation
      */
     protected $post_actions_after = array();
 
