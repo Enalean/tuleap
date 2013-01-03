@@ -279,6 +279,7 @@ if (($func=='edit')||($func=='do_create')) {
         $content .= $bindingiewer->getUsagePaneContent($group_id, $ugroup_id);
     break;
     case 'ugroup_binding':
+        $activePane = 'members';
         $groupId       = $request->getValidated('group_id', 'GroupId', 0);
         $ugroupId      = $request->getValidated('ugroup_id', 'uint', 0);
         $sourceProject = $request->getValidated('source_project', 'GroupId', 0);
