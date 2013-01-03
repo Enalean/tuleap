@@ -20,12 +20,11 @@
  */
 
 /**
- * class Transition_PostAction_Jenkins_BuildFactory
+ * class Transition_PostAction_CIBuildFactory
  * 
  */
 
-
-class Transition_PostAction_Jenkins_BuildFactory extends Transition_PostActionFactory {    
+class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory {    
    
     /**
      * Returns the corresponding DAO given a post action short name.

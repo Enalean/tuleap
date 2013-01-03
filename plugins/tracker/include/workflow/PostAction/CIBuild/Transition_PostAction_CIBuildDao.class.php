@@ -23,7 +23,7 @@
 /**
  * Base class for field post action DAOs.
  */
-class Transition_PostAction_Jenkins_BuildDao extends DataAccessObject {
+class Transition_PostAction_CIBuildDao extends DataAccessObject {
 
     /*
      * Transition_PostAction_Jenkins_Build table before made the forge upgrade script

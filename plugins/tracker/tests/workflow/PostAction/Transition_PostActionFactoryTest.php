@@ -20,7 +20,7 @@
 
 require_once dirname(__FILE__).'/../../../include/workflow/PostAction/Transition_PostActionFactory.class.php';
 require_once dirname(__FILE__).'/../../../include/workflow/PostAction/Field/dao/Transition_PostAction_Field_DateDao.class.php';
-require_once dirname(__FILE__).'/../../../include/workflow/PostAction/JenkinsBuild/Transition_PostAction_Jenkins_BuildDao.class.php';
+require_once dirname(__FILE__).'/../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuildDao.class.php';
 require_once dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php';
 require_once dirname(__FILE__).'/../../builders/aMockField.php';
 require_once dirname(__FILE__).'/../../builders/aTransition.php';
@@ -193,7 +193,7 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
         $this->date_dao          = mock('Transition_PostAction_Field_DateDao');
         $this->int_dao           = mock('Transition_PostAction_Field_IntDao');
         $this->float_dao         = mock('Transition_PostAction_Field_FloatDao');
-        $this->jenkins_build_dao = mock('Transition_PostAction_Jenkins_BuildDao');
+        $this->jenkins_build_dao = mock('Transition_PostAction_CIBuildDao');
 
         stub($this->factory)->getDao('field_date')->returns($this->date_dao);
         stub($this->factory)->getDao('field_int')->returns($this->int_dao);

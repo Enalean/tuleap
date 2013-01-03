@@ -21,7 +21,7 @@
 
 require_once(dirname(__FILE__).'/../../../../include/JenkinsClient.class.php');
 
-class Transition_PostAction_Jenkins_Build extends Transition_PostAction {
+class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     /**
      *

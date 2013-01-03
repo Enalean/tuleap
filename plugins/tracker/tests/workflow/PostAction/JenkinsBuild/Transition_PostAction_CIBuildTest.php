@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/JenkinsBuild/Transition_PostAction_Jenkins_Build.class.php');
+require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php');
 
-class Transition_PostAction_Jenkins_BuildTest extends TuleapTestCase {
+class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 }
 ?>
