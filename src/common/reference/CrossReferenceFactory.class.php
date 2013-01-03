@@ -111,8 +111,13 @@ class CrossReferenceFactory {
         $params.= "&source_key=".$currRef->getRefSourceKey() ;
         return $params;
     }
-    
-    function getCrossReferencesGroupByDirection($format='text') {
+
+    /**
+     * Returns the cross references grouped by 'source', 'target' and
+     * 'both' types with their URLs and tags.
+     * @return array The formatted cross references
+     */
+    public function getFormattedCrossReferences() {
         $crossRefArray = $this->getCrossReferences();
         $refs = array();
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {

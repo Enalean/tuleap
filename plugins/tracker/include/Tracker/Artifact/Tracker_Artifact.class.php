@@ -1697,7 +1697,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
          $cross_reference_factory = $this->getCrossReferenceFactory();
          $cross_reference_factory->fetchDatas();
 
-         $cross_references = $cross_reference_factory->getCrossReferencesGroupByDirection();
+         $cross_references = $cross_reference_factory->getFormattedCrossReferences();
          foreach ($cross_references as $array_of_references_by_direction) {
              foreach ($array_of_references_by_direction as $reference) {
                 $soap_value[] = array(
