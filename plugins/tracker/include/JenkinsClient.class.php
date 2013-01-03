@@ -18,33 +18,35 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+require_once 'HttpCurlClient.class.php';
+require_once 'JenkinsClientUnableToLaunchBuildException.class.php';
 
 /**
  * A class to be able to work with the jenkins server
  */
-class JenkinsClient {
-
+class JenkinsClient extends HttpCurlClient {
+    
     /**
-     * @var String : the server host
+     * 
+     * @param string $job_name
+     * @param array $options curl options
+     * @throws Tracker_Exception
      */
-    private $host;
-
-    public function __construct($host) {
-        $this->host = $host;
-    }
-
-    private function BuildURLJobBuild($job_name) {
-        if ($job_name === null) {
-            return false;
+    public function launchJobBuild($job_url) {
+        $url = $job_url . '/build';
+        $options = array(
+            CURLOPT_HTTPGET         => true,
+            CURLOPT_URL             => $url,
+            CURLOPT_SSL_VERIFYPEER  => false,
+        );
+        $this->addOptions($options);
+        
+        try {
+            $this->doRequest();
+        } catch (HttpCurlClientException $e) {
+            throw new JenkinsClientUnableToLaunchBuildException('Job: ' . $job_url . ' ;Message: ' . $e->getMessage());
         }
-        return "http://$this->host/job/$job_name/build";
     }
-
-    public function launchJobBuild($job_name) {
-        $url = $this->BuildURLJobBuild($job_name);
-        return $url;
-    }
-
 }
 
 ?>

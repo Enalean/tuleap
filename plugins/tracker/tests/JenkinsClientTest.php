@@ -22,14 +22,42 @@ require_once(dirname(__FILE__).'/../include/JenkinsClient.class.php');
 
 class JenkinsClientTest extends TuleapTestCase {
 
-    public function itReturnsTheGoodBuildedURL() {
-        $host           = 'example.com';
-        $job_name       = 'job_example';
-
-        $jenkins_client = new JenkinsClient($host);
-        $expected = 'http://example.com/job/job_example/build';
-        $this->assertEqual($jenkins_client->launchJobBuild($job_name), $expected);
+    public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest() 
+    {
+        $job_url = 'http://some.url.com/my_job';
+        $mocked_methods = array('execute', 'getErrorCode', 'getLastError');
+        $jenkins_client = partial_mock('JenkinsClient', $mocked_methods);
+        
+        stub($jenkins_client)->execute()->once()->returns(false);
+        stub($jenkins_client)->getErrorCode()->once()->returns(666);
+        
+        $this->expectException('JenkinsClientUnableToLaunchBuildException');
+        $jenkins_client->launchJobBuild($job_url); 
     }
+    
+    public function testLaunchJobBuildDoesNotThrowAnExceptionOnValidRequest() 
+    {
+        $job_url = 'http://some.url.com/my_job';
+        $mocked_methods = array('execute', 'getErrorCode', 'getLastError');
+        $jenkins_client = partial_mock('JenkinsClient', $mocked_methods);
+        
+        stub($jenkins_client)->execute()->once()->returns(true);
+        stub($jenkins_client)->getErrorCode()->once()->returns(null);
+
+        $jenkins_client->launchJobBuild($job_url); 
+     }
+     
+     public function testLaunchJobSetsCorrectOptions() {
+         $job_url = 'http://some.url.com/my_job';
+         $mocked_methods = array('execute', 'getErrorCode', 'getLastError');
+         $jenkins_client = partial_mock('JenkinsClient', $mocked_methods);
+         
+         $jenkins_client->launchJobBuild($job_url);
+         
+         $this->assertEqual($job_url . '/build', $jenkins_client->getOption(CURLOPT_URL));
+         $this->assertEqual(true, $jenkins_client->getOption(CURLOPT_HTTPGET));
+         $this->assertEqual(false, $jenkins_client->getOption(CURLOPT_SSL_VERIFYPEER));
+     }
 
 }
 ?>
