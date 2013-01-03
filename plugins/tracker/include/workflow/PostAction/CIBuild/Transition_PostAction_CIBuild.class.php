@@ -58,7 +58,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      * @return string
      */
     public function getShortName() {
-        return 'jenkins_build';
+        return 'ci_build';
     }
 
     public function fetch() {
