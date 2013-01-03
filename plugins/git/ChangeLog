@@ -1,3 +1,6 @@
+Version 2.7.20 - Tuleap 5.9
+    * On conversion of a Tuleap repository to gerrit, push the content of the tuleap repo and keep it synchronized afterward
+
 Version 2.7.19 - Tuleap 5.9
     * Continue migration of a git repository from Tuleap to Gerrit
 
