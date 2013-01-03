@@ -35,7 +35,7 @@ class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory 
      */
     protected function getDao($post_action_short_name) {
         switch ($post_action_short_name) {            
-            case 'jenkins_build': return new Transition_PostAction_Jenkins_BuildDao();
+            case 'ci_build': return new Transition_PostAction_CIBuildDao();
             default:            throw new Transition_PostAction_NotFoundException();
         }
     }
@@ -80,7 +80,7 @@ class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory 
     */
     private function getValueFromRow($row, $shortname) {
         switch ($shortname) {
-            case 'jenkins_build': return (string) $row['job_url'];
+            case 'ci_build': return (string) $row['job_url'];
             default: throw new Transition_PostAction_NotFoundException($shortname);
         }
     }

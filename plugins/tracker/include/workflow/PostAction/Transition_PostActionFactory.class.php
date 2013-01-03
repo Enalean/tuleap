@@ -50,7 +50,7 @@ class Transition_PostActionFactory {
      */
 
     protected $post_actions_classes_ci = array(
-        'jenkins_build' => 'Transition_PostAction_Jenkins_Build',
+        'ci_build' => 'Transition_PostAction_CIBuild',
     );
     
     /**
@@ -103,7 +103,7 @@ class Transition_PostActionFactory {
             case 'field_date':  return new Transition_PostAction_Field_DateDao();
             case 'field_int':   return new Transition_PostAction_Field_IntDao();
             case 'field_float': return new Transition_PostAction_Field_FloatDao();
-            case 'jenkins_build': return new Transition_PostAction_Jenkins_BuildDao();
+            case 'ci_build': return new Transition_PostAction_CIBuildDao();
             default:            throw new Transition_PostAction_NotFoundException();
         }
     }
@@ -178,7 +178,7 @@ class Transition_PostActionFactory {
             case 'field_date':    return (int) $row['value_type'];
             case 'field_int':     return (int) $row['value'];
             case 'field_float':   return (float) $row['value'];
-            case 'jenkins_build': return (string) $row['value'];
+            case 'ci_build': return (string) $row['value'];
             default: throw new Transition_PostAction_NotFoundException($shortname);
         }
     }
@@ -279,7 +279,7 @@ class Transition_PostActionFactory {
         $dao   = $this->getDao($post_action->getShortName());
         switch($short_name) {
             //TODO
-            case 'jenkins_build':
+            case 'ci_build':
                 $dao->save($post_action->getTransition()->getTransitionId(), 
                    $post_action->getJobUrl()
                 );
@@ -303,7 +303,7 @@ class Transition_PostActionFactory {
             case 'field_date':  return $post_action->getValueType();
             case 'field_int':
             case 'field_float': return $post_action->getValue();
-            case 'jenkins_build': return $post_action->getValue();
+            case 'ci_build': return $post_action->getValue();
             default: throw new Transition_PostAction_NotFoundException($short_name);
         }
     }

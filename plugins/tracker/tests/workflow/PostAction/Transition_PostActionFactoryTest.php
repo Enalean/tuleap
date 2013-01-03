@@ -198,7 +198,7 @@ class Transition_PostActionFactory_DeleteWorkflowTest extends TuleapTestCase {
         stub($this->factory)->getDao('field_date')->returns($this->date_dao);
         stub($this->factory)->getDao('field_int')->returns($this->int_dao);
         stub($this->factory)->getDao('field_float')->returns($this->float_dao);
-        stub($this->factory)->getDao('jenkins_build')->returns($this->jenkins_build_dao);
+        stub($this->factory)->getDao('ci_build')->returns($this->jenkins_build_dao);
 
         $this->workflow_id = 1;
     }
