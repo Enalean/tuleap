@@ -19,7 +19,7 @@ $hp      = Codendi_HTMLPurifier::instance();
 $request = HTTPRequest::instance();
 
 function _breadCrumbs($project, $ugroupId = NULL, $ugroupName = NULL) {
-    $hp      = Codendi_HTMLPurifier::instance();
+    $hp = Codendi_HTMLPurifier::instance();
     $breadcrumbs['/projects/'. $project->getUnixName(true)] = $project->getPublicName();
     $breadcrumbs['/project/admin/?group_id='. (int)$project->getId()]= 'Admin';
     $breadcrumbs['/project/admin/ugroup.php?group_id='.(int)$project->getId()] = 'Users groups';
@@ -27,19 +27,19 @@ function _breadCrumbs($project, $ugroupId = NULL, $ugroupName = NULL) {
         $breadcrumbs['/project/admin/editugroup.php?func=edit&group_id='.(int)$project->getId().'&ugroup_id='.(int)$ugroupId] = $ugroupName;
     }
 
-    echo '<p><table border="0" width="100%">
-            <tr>
-                <td align="left">';
+    $content = '<ul class="breadcrumb" >';
     $firstItem = true;
     foreach($breadcrumbs as $url => $title) {
+        $content .= '<li>';
         if (!$firstItem) {
-            echo '>>';
-        } else {
-            $firstItem = false;
+            $content .= '<span class="breadcrumb-sep">»</span>';
         }
-        echo '&nbsp;<a href="'. get_server_url() .$url.'" />'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</a>&nbsp;';
+        $firstItem = false;
+        $content .= '<a href="'. get_server_url() .$url.'" />'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
+        $content .= '</li>';
     }
-    echo'</td></table></p>';
+    $content .= '</ul>';
+    return $content;
 }
 
 function display_name_and_desc_form($ugroup_name, $ugroup_description) {
@@ -82,7 +82,7 @@ if ($request->isPost() && $func == 'do_create') {
 
 if ($func=='create') {
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'create_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
-    _breadCrumbs($project);
+    echo _breadCrumbs($project);
     //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'create_ug_for', $project->getPublicName()).'</h2>';
     echo '<p>'.$Language->getText('project_admin_editugroup', 'fill_ug_desc').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/editugroup.php?group_id='.$group_id.'">
@@ -141,7 +141,7 @@ if (($func=='edit')||($func=='do_create')) {
 
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
     //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
-    _breadCrumbs($project, $ugroup_id, $ugroup_name);
+    echo _breadCrumbs($project, $ugroup_id, $ugroup_name);
 
     $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding'));
     $vPane->required();
