@@ -89,7 +89,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
     }
     
     public function getDao() {
-        return new Transition_PostAction_Jenkins_BuildDao();
+        return new Transition_PostAction_CIBuildDao();
     }
 }
 

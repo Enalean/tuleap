@@ -42,6 +42,7 @@ class Transition_PostAction_FieldFactory extends Transition_PostActionFactory {
     }
     
     public function loadPostActions(Transition $transition) {
+        $post_actions = array();
         $post_actions_classes = $this->post_actions_classes_field;
         
         foreach ($post_actions_classes as $shortname => $klass) {

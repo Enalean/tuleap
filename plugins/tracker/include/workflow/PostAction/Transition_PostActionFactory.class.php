@@ -113,7 +113,7 @@ class Transition_PostActionFactory {
     }
     
     public function getPostActionCIBuildFactory() {
-        return new Transition_PostAction_Jenkins_BuildFactory();
+        return new Transition_PostAction_CIBuildFactory();
     }
     
     /**

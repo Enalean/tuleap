@@ -41,6 +41,7 @@ class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory 
     }
     
     public function loadPostActions(Transition $transition) {
+        $post_actions = array();
         $post_actions_classes = $this->post_actions_classes_ci;
         
         foreach ($post_actions_classes as $shortname => $klass) {
