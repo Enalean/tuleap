@@ -24,10 +24,24 @@ require_once 'JenkinsClientUnableToLaunchBuildException.class.php';
 /**
  * A class to be able to work with the jenkins server
  */
-class JenkinsClient extends HttpCurlClient {
-    
+class JenkinsClient {
+
     /**
-     * 
+     *
+     * @var HttpCurlClient
+     */
+    private $http_curl_client;
+
+    /**
+     *
+     * @param HttpCurlClient $http_curl_client Any instance of HttpCurlClient
+     */
+    public function __construct(HttpCurlClient $http_curl_client) {
+        $this->http_curl_client = $http_curl_client;
+    }
+
+    /**
+     *
      * @param string $job_name
      * @param array $options curl options
      * @throws Tracker_Exception
@@ -39,10 +53,10 @@ class JenkinsClient extends HttpCurlClient {
             CURLOPT_URL             => $url,
             CURLOPT_SSL_VERIFYPEER  => false,
         );
-        $this->addOptions($options);
-        
+        $this->http_curl_client->addOptions($options);
+
         try {
-            $this->doRequest();
+            $this->http_curl_client->doRequest();
         } catch (HttpCurlClientException $e) {
             throw new JenkinsClientUnableToLaunchBuildException('Job: ' . $job_url . ' ;Message: ' . $e->getMessage());
         }

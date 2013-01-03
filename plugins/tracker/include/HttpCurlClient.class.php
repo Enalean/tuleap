@@ -22,22 +22,22 @@ require_once 'HttpCurlClientException.class.php';
 class HttpCurlClient
 {
     /**
-     * 
+     *
      */
     private $curl_handle;
-        
+
     /**
      *
-     * @var type 
+     * @var type
      */
     private $curl_response;
-    
+
     /**
      *
-     * @var array 
+     * @var array
      */
     private $curl_options = array();
-    
+
     /**
      * Initiates a curl handle.
      */
@@ -45,15 +45,15 @@ class HttpCurlClient
         $this->curl_handle = curl_init();
         $this->setOption(CURLINFO_HEADER_OUT, true);
     }
-    
+
     /**
-     * 
+     *
      * @return null | array
      */
     public function getLastRequest() {
         return curl_getinfo($this->curl_handle);
     }
-    
+
     /**
      * If the option CURLOPT_RETURNTRANSFER is not set or set to FALSE, then
      * this will return a boolean.
@@ -64,17 +64,17 @@ class HttpCurlClient
     public function getLastResponse() {
         return $this->curl_response;
     }
-    
+
     /**
-     * 
+     *
      * @return string | null
      */
     public function getLastError() {
         return curl_error($this->curl_handle);
     }
-    
+
     /**
-     * 
+     *
      * @return int
      */
     public function getErrorCode() {
@@ -82,16 +82,16 @@ class HttpCurlClient
     }
 
     /**
-     * 
+     *
      * @param string $name A valid curl option
      * @param multiple $value The curloption value
      */
     public function setOption($name, $value) {
         $this->curl_options[$name] = $value;
     }
-    
+
     /**
-     * 
+     *
      * @param string $name
      * @return multiple The curloption value
      */
@@ -100,23 +100,23 @@ class HttpCurlClient
     }
 
     /**
-     * 
+     *
      * @param array $options
      */
     public function setOptions(array $options) {
         $this->curl_options = $options;
     }
-    
+
     /**
-     * 
+     *
      * @return array
      */
     public function getOptions() {
         return $this->curl_options;
     }
-    
+
     /**
-     * 
+     *
      * @param array $options
      */
     public function addOptions(array $options) {
@@ -125,21 +125,8 @@ class HttpCurlClient
         }
     }
 
-
     /**
-     * If the option CURLOPT_RETURNTRANSFER is not set or set to FALSE, then
-     * this will return a boolean.
-     * If no request has been made then this will return NULL.
-     * If CURLOPT_RETURNTRANSFER is set to TRUE, then all values will be returned as an array.
-     * @return bool | null | array
-     */
-    public function execute() {
-        curl_setopt_array($this->curl_handle, $this->curl_options);
-        return curl_exec($this->curl_handle);
-    }
-
-    /**
-     * 
+     *
      * @param string $name
      * @return string
      */
@@ -153,20 +140,31 @@ class HttpCurlClient
     public function close() {
         curl_close($this->curl_handle);
     }
-    
+
     /**
-     * Protected method to execute requests.
-     * Should be called indirectly through specific methods.
-     * 
+     * Method to execute requests..
+     *
      * @param array $options curl options
      * @throws Tracker_Exception
      */
-    protected function doRequest() {
+    public function doRequest() {
         $this->curl_response = $this->execute();
-        
+
         if ($this->getErrorCode()) {
             throw new HttpCurlClientException($this->getLastError());
         }
+    }
+
+    /**
+     * If the option CURLOPT_RETURNTRANSFER is not set or set to FALSE, then
+     * this will return a boolean.
+     * If no request has been made then this will return NULL.
+     * If CURLOPT_RETURNTRANSFER is set to TRUE, then all values will be returned as an array.
+     * @return bool | null | array
+     */
+    private function execute() {
+        curl_setopt_array($this->curl_handle, $this->curl_options);
+        return curl_exec($this->curl_handle);
     }
 }
 ?>

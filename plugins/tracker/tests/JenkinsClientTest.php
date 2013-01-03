@@ -22,42 +22,31 @@ require_once(dirname(__FILE__).'/../include/JenkinsClient.class.php');
 
 class JenkinsClientTest extends TuleapTestCase {
 
-    public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest() 
-    {
+    public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest() {
         $job_url = 'http://some.url.com/my_job';
-        $mocked_methods = array('execute', 'getErrorCode', 'getLastError');
-        $jenkins_client = partial_mock('JenkinsClient', $mocked_methods);
-        
-        stub($jenkins_client)->execute()->once()->returns(false);
-        stub($jenkins_client)->getErrorCode()->once()->returns(666);
-        
+        $http_client = mock('HttpCurlClient');
+        stub($http_client)->doRequest()->throws(new HttpCurlClientException());
+
+        $jenkins_client = new JenkinsClient($http_client);
         $this->expectException('JenkinsClientUnableToLaunchBuildException');
-        $jenkins_client->launchJobBuild($job_url); 
+        $jenkins_client->launchJobBuild($job_url);
     }
-    
-    public function testLaunchJobBuildDoesNotThrowAnExceptionOnValidRequest() 
-    {
+
+    public function testLaunchJobSetsCorrectOptions() {
         $job_url = 'http://some.url.com/my_job';
-        $mocked_methods = array('execute', 'getErrorCode', 'getLastError');
-        $jenkins_client = partial_mock('JenkinsClient', $mocked_methods);
-        
-        stub($jenkins_client)->execute()->once()->returns(true);
-        stub($jenkins_client)->getErrorCode()->once()->returns(null);
 
-        $jenkins_client->launchJobBuild($job_url); 
-     }
-     
-     public function testLaunchJobSetsCorrectOptions() {
-         $job_url = 'http://some.url.com/my_job';
-         $mocked_methods = array('execute', 'getErrorCode', 'getLastError');
-         $jenkins_client = partial_mock('JenkinsClient', $mocked_methods);
-         
-         $jenkins_client->launchJobBuild($job_url);
-         
-         $this->assertEqual($job_url . '/build', $jenkins_client->getOption(CURLOPT_URL));
-         $this->assertEqual(true, $jenkins_client->getOption(CURLOPT_HTTPGET));
-         $this->assertEqual(false, $jenkins_client->getOption(CURLOPT_SSL_VERIFYPEER));
-     }
+        $http_client = mock('HttpCurlClient');
+        stub($http_client)->doRequest()->once();
 
+        $expected_options = array(
+            CURLOPT_HTTPGET         => true,
+            CURLOPT_URL             => $job_url . '/build',
+            CURLOPT_SSL_VERIFYPEER  => false,
+        );
+        stub($http_client)->addOptions($expected_options)->once();
+
+        $jenkins_client = new JenkinsClient($http_client);
+        $jenkins_client->launchJobBuild($job_url);
+    }
 }
 ?>
