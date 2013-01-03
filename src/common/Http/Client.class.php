@@ -18,8 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once 'HttpCurlClientException.class.php';
-class HttpCurlClient
+require_once 'common/Http/ClientException.class.php';
+class Http_Client
 {
     /**
      *
@@ -151,7 +151,7 @@ class HttpCurlClient
         $this->curl_response = $this->execute();
 
         if ($this->getErrorCode()) {
-            throw new HttpCurlClientException($this->getLastError());
+            throw new Http_ClientException($this->getLastError());
         }
     }
 

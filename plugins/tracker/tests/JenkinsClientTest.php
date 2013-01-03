@@ -18,24 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/JenkinsClient.class.php');
+require_once 'common/Jenkins/Client.class.php';
 
-class JenkinsClientTest extends TuleapTestCase {
+class Jenkins_ClientTest extends TuleapTestCase {
 
     public function testLaunchJobBuildThrowsAnExceptionOnFailedRequest() {
         $job_url = 'http://some.url.com/my_job';
-        $http_client = mock('HttpCurlClient');
-        stub($http_client)->doRequest()->throws(new HttpCurlClientException());
+        $http_client = mock('Http_Client');
+        stub($http_client)->doRequest()->throws(new Http_ClientException());
 
-        $jenkins_client = new JenkinsClient($http_client);
-        $this->expectException('JenkinsClientUnableToLaunchBuildException');
+        $jenkins_client = new Jenkins_Client($http_client);
+        $this->expectException('Jenkins_ClientUnableToLaunchBuildException');
         $jenkins_client->launchJobBuild($job_url);
     }
 
     public function testLaunchJobSetsCorrectOptions() {
         $job_url = 'http://some.url.com/my_job';
 
-        $http_client = mock('HttpCurlClient');
+        $http_client = mock('Http_Client');
         stub($http_client)->doRequest()->once();
 
         $expected_options = array(
@@ -45,7 +45,7 @@ class JenkinsClientTest extends TuleapTestCase {
         );
         stub($http_client)->addOptions($expected_options)->once();
 
-        $jenkins_client = new JenkinsClient($http_client);
+        $jenkins_client = new Jenkins_Client($http_client);
         $jenkins_client->launchJobBuild($job_url);
     }
 }

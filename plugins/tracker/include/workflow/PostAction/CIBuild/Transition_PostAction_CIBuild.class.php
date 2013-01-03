@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../../../../include/JenkinsClient.class.php');
+require_once 'common/Jenkins/Client.class.php';
 
 class Transition_PostAction_CIBuild extends Transition_PostAction {
 
@@ -84,7 +84,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
     }
 
     public function after() {
-        $jenkins_client = new JenkinsClient($this->host);
+        $jenkins_client = new Jenkins_Client($this->host);
         return $jenkins_client->launchJobBuild($this->job_name);
     }
     

@@ -19,5 +19,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class HttpCurlClientException extends Exception{}
+class Http_ClientException extends Exception{}
 ?>
