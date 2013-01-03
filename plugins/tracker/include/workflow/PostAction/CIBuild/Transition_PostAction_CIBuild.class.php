@@ -57,8 +57,9 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
     }
 
     public function fetch() {
-        $html = '';
-        $text_field = '<input type="text" name="workflow_postaction_launch_job['.$this->id.']" value="'.$this->getJobUrl().'" size="50" maxsize="255"/>';
+        $html  = '';
+        $title = 'Enter your Hudson/Jenkins job url: <code>http://JENKINS_URL/job/JOBNAME</code>.'; //TODO i18n
+        $text_field = '<input type="text" title="'. $title .'" name="workflow_postaction_launch_job['.$this->id.']" value="'.$this->getJobUrl().'" size="50" maxsize="255"/>';
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'launch_job', array($text_field));
         return $html;
     }
