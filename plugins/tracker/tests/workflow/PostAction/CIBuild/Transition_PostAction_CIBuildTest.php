@@ -21,5 +21,21 @@
 require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php');
 
 class Transition_PostAction_CIBuildTest extends TuleapTestCase {
+
+    public function itCallsDeleteFunctionInDaoWhenDeleteisProcess() {
+
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = 'http://www.example.com';
+        $condendi_request = aRequest()->with('remove_postaction', array(123 => 1))->build();
+
+        $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
+
+        $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url));
+        stub($post_action_ci_build)->getDao()->returns($ci_build_dao);
+
+        expect($ci_build_dao)->deletePostAction($id)->once();
+        $post_action_ci_build->process($condendi_request);
+    }
 }
 ?>

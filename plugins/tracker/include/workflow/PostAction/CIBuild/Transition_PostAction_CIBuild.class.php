@@ -69,7 +69,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     public function process(Codendi_Request $request) {
         if ($request->getInArray('remove_postaction', $this->id)) {
-            //$this->getDao()->deletePostAction($this->id);
+            $this->getDao()->deletePostAction($this->id);
         } else {
             $value    = $request->getInArray('workflow_postaction_launch_job', $this->id);
             // Update if something changed

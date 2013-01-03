@@ -38,7 +38,7 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
      */
     public function __construct() {
         parent::__construct();
-        $this->table_name        = 'tracker_workflow_transition_postactions_cibuild';
+        $this->table_name = 'tracker_workflow_transition_postactions_cibuild';
     }
     
     /**
@@ -78,7 +78,6 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
      */
     public function updatePostAction($id, $value) {
         $id       = $this->da->escapeInt($id);
-        $field_id = $this->da->escapeInt($field_id);
         $value    = $this->da->quoteSmart($value);
         
         $sql = "UPDATE $this->table_name
@@ -86,8 +85,16 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
                 WHERE id = $id";
         return $this->update($sql);
     }
+
+    public function deletePostAction($id) {
+        $id = $this->da->escapeInt($id);
+
+        $sql = "DELETE FROM tracker_workflow_transition_postactions_cibuild
+                WHERE id = $id";
+        return $this->update($sql);
+    }
     
-    public function deletePostActionsByWorkflowId() {
+    public function deletePostActionsByWorkflowId($workflow_id) {
 
     }
 
