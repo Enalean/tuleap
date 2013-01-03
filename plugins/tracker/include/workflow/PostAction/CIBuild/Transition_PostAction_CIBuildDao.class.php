@@ -38,7 +38,7 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
      */
     public function __construct() {
         parent::__construct();
-        $this->table_name        = 'tracker_workflow_transition_postactions_launch_build';
+        $this->table_name        = 'tracker_workflow_transition_postactions_cibuild';
     }
     
     /**

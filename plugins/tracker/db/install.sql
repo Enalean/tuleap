@@ -69,8 +69,8 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
 --  
 --  Table structure for tracker_workflow_transition_postactions_launch_build
 -- 
-DROP TABLE IF EXISTS tracker_workflow_transition_postactions_launch_build;
-CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_launch_build (
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_cibuild;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_cibuild (
   id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
   transition_id int(11) NOT NULL,
   job_url varchar(255) default NULL,
