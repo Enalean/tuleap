@@ -1680,7 +1680,35 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     protected function getCrossReferenceManager() {
         return new CrossReferenceManager();
     }
-    
+
+    protected function getCrossReferenceFactory() {
+        return new CrossReferenceFactory($this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupId());
+    }
+
+    /**
+     * Get the cross references from/to this artifact.
+     *
+     * Note: the direction of cross references is not returned
+     *
+     * @return array of references info to be sent in soap format: array('ref' => ..., 'url' => ...)
+     */
+    public function getCrossReferencesSOAPValues() {
+         $soap_value = array();
+         $cross_reference_factory = $this->getCrossReferenceFactory();
+         $cross_reference_factory->fetchDatas();
+
+         $cross_references = $cross_reference_factory->getFormattedCrossReferences();
+         foreach ($cross_references as $array_of_references_by_direction) {
+             foreach ($array_of_references_by_direction as $reference) {
+                $soap_value[] = array(
+                    'ref' => $reference['ref'],
+                    'url' => $reference['url'],
+                );
+             }
+         }
+         return $soap_value;
+    }
+
     /**
      * Used when validating the rules of a new/ initial changset creating.
      * 

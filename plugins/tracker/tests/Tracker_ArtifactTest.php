@@ -2186,5 +2186,43 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
 
         $this->assertEqual($result, $expected);
     }
+
+     public function itReturnsTheReferencesInSOAPFormat() {
+        $id       = $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = 0;
+        $factory  = mock('CrossReferenceFactory');
+        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'));
+        $wiki_ref = array(
+            'ref' => 'wiki #toto',
+            'url' => 'http://example.com/le_link_to_teh_wiki'
+        );
+        $file_ref = array(
+            'ref' => 'file #chapeau',
+            'url' => 'http://example.com/files/chapeau'
+        );
+        $art_ref = array(
+            'ref' => 'art #123',
+            'url' => 'http://example.com/tracker/123'
+        );
+        $doc_ref = array(
+            'ref' => 'doc #42',
+            'url' => 'http://example.com/docman/42'
+        );
+
+        stub($artifact)->getCrossReferenceFactory()->returns($factory);
+        stub($factory)->getCrossReferencesGroupByDirection()->returns(
+            array(
+                'source' => array($wiki_ref, $file_ref),
+                'target' => array($art_ref),
+                'both'   => array($doc_ref),
+            )
+        );
+        $soap = $artifact->getCrossReferencesSOAPValues();
+        $this->assertEqual($soap, array(
+            $wiki_ref,
+            $file_ref,
+            $art_ref,
+            $doc_ref
+        ));
+    }
 }
 ?>

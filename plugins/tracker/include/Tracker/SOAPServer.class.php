@@ -393,6 +393,7 @@ class Tracker_SOAPServer {
             $soap_artifact['tracker_id']       = $artifact->getTrackerId();
             $soap_artifact['submitted_by']     = $artifact->getSubmittedBy();
             $soap_artifact['submitted_on']     = $artifact->getSubmittedOn();
+            $soap_artifact['cross_references'] = $artifact->getCrossReferencesSOAPValues();
             $soap_artifact['last_update_date'] = $last_changeset->getSubmittedOn();
 
             $soap_artifact['value'] = array();
