@@ -43,9 +43,10 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      * @param String                       $host       host of the jenkins server
      * @param String                       $job_url   name of the job
      */
-    public function __construct(Transition $transition, $id, $job_url) {
+    public function __construct(Transition $transition, $id, $job_url, Jenkins_Client $client) {
         parent::__construct($transition, $id);
-        $this->job_url = $job_url;
+        $this->job_url   = $job_url;
+        $this->ci_client = $client;
     }
 
 
@@ -121,8 +122,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
     }
 
     public function after() {
-        $jenkins_client = new Jenkins_Client($this->host);
-        return $jenkins_client->launchJobBuild($this->job_name);
+        return $this->ci_client->launchJobBuild($this->job_url);
     }
 
     public function getDao() {

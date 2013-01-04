@@ -38,15 +38,20 @@ class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
         $post_action_rows  = array(array('id'         => $this->post_action_id,
                                          'job_url'    => $post_action_value));
 
-        $ci_build_dao        = stub('Transition_PostAction_CIBuildDao')->searchByTransitionId($this->transition_id)->returns($post_action_rows);
-        $factory = aPostActionCIBuildFactory()->withCIBuildDao($ci_build_dao)
-                                       ->build();
+        $ci_build_dao = stub('Transition_PostAction_CIBuildDao')->searchByTransitionId($this->transition_id)->returns($post_action_rows);
+        $ci_client    = new Jenkins_Client(new Http_Client());
+        $factory = aPostActionCIBuildFactory()
+            ->withCIBuildDao($ci_build_dao)
+            ->withCIClient($ci_client)
+            ->build();
+        $expected = array(aCIBuildPostAction()
+            ->withId($this->post_action_id)
+            ->withTransition($this->transition)
+            ->withValue($post_action_value)
+            ->withCIClient($ci_client)
+            ->build());
 
-        $this->assertEqual($factory->loadPostActions($this->transition),
-                           array(aCIBuildPostAction()->withId($this->post_action_id)
-                                                       ->withTransition($this->transition)
-                                                       ->withValue($post_action_value)
-                                                       ->build()));
+        $this->assertEqual($factory->loadPostActions($this->transition), $expected);
     }
 }
 ?>

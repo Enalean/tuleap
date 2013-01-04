@@ -28,8 +28,6 @@ function aPostActionCIBuildFactory() {
 class Test_Transition_PostAction_CIBuildFactoryBuilder {
     
     public function __construct() {
-        $this->factory = TestHelper::getPartialMock('Transition_PostAction_CIBuildFactory',
-                                                    array('getDao'));
                 
         $this->daos = array('ci_build'    => mock('Transition_PostAction_CIBuildDao'));
         
@@ -43,7 +41,17 @@ class Test_Transition_PostAction_CIBuildFactoryBuilder {
         return $this;
     }
     
+    public function withCIClient($ci_client) {
+        $this->ci_client = $ci_client;
+        return $this;
+    }
+
     public function build() {
+        $this->factory = partial_mock(
+            'Transition_PostAction_CIBuildFactory',
+            array('getDao'),
+            array($this->ci_client)
+        );
         foreach($this->daos as $short_name => $dao) {
             stub($this->factory)->getDao($short_name)->returns($dao);
         }
