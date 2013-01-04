@@ -106,7 +106,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $array_xml_mapping = array();
 
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);
-        $this->assertEqual((string)$root->postaction_cibuild['job_url'], $job_url);
+        $this->assertEqual((string)$root->postaction_ci_build['job_url'], $job_url);
     }
 
     public function itDoesNotExportThePostActionIfJobUrlIsNotSet() {
@@ -120,7 +120,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $array_xml_mapping = array();
 
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);
-        $this->assertFalse(isset($root->postaction_cibuild));
+        $this->assertFalse(isset($root->postaction_ci_build));
     }
 }
 ?>
