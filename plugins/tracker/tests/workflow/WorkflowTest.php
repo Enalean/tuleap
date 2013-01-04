@@ -224,93 +224,73 @@ class WorkflowTest extends UnitTestCase {
         $field_value = array();
         $this->assertTrue($workflow->isTransitionExist($field_value, $field_value));
     }
+}
 
-    function testBeforeShouldTriggerTransitionActions() {
-        $current_user = new MockUser();
+class Workflow_BeforeAfterTest extends TuleapTestCase {
 
-        $f = new MockTracker_FormElement_Field_List();
-        $f->setReturnValue('getId', 103);
+    private $transition_null_to_open;
+    private $transition_open_to_close;
+    private $open_value_id = 801;
+    private $close_value_id = 802;
+    public function setUp() {
+        parent::setUp();
 
-        $v1 = new MockTracker_FormElement_Field_List_Value();
-        $v2 = new MockTracker_FormElement_Field_List_Value();
+        $this->status_field = new MockTracker_FormElement_Field_List();
+        $this->status_field->setReturnValue('getId', 103);
 
-        $v1->setReturnValue('getId', 801);
-        $v2->setReturnValue('getId', 802);
+        $open_value  = new MockTracker_FormElement_Field_List_Value();
+        $close_value = new MockTracker_FormElement_Field_List_Value();
 
-        $t1 = new MockTransition();
-        $t2 = new MockTransition();
+        $open_value->setReturnValue('getId', $this->open_value_id);
+        $close_value->setReturnValue('getId', $this->close_value_id);
+        $this->current_user = new MockUser();
 
-        $t1->setReturnValue('getFieldValueFrom',     null);
-        $t1->setReturnReference('getFieldValueTo',   $v1);
-        $t2->setReturnReference('getFieldValueFrom', $v1);
-        $t2->setReturnReference('getFieldValueTo',   $v2);
+        $this->transition_null_to_open = new MockTransition();
+        $this->transition_open_to_close = new MockTransition();
 
-        $cvl = new MockTracker_Artifact_ChangesetValue_List();
-        $cvl->setReturnValue('getValue', array(801));
-
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValue', $cvl, array($f));
-
-        $a = new MockTracker_Artifact();
-        $a->setReturnValue('getLastChangeset', $changeset);
+        $this->transition_null_to_open->setReturnValue('getFieldValueFrom',      null);
+        $this->transition_null_to_open->setReturnReference('getFieldValueTo',    $open_value);
+        $this->transition_open_to_close->setReturnReference('getFieldValueFrom', $open_value);
+        $this->transition_open_to_close->setReturnReference('getFieldValueTo',   $close_value);
 
         $workflow_id = 1;
         $tracker_id  = 2;
         $field_id    = 103;
         $is_used     = 1;
-        $transitions = array($t1, $t2);
-        $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
+        $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
+        $this->workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
+        $this->workflow->setField($this->status_field);
 
-        $workflow->setField($f);
+        $this->artifact = new MockTracker_Artifact();
+    }
+
+    function testBeforeShouldTriggerTransitionActions() {
+        $changeset_value_list = new MockTracker_Artifact_ChangesetValue_List();
+        $changeset_value_list->setReturnValue('getValue', array($this->open_value_id));
+
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValue', $changeset_value_list, array($this->status_field));
+
+        $this->artifact->setReturnValue('getLastChangeset', $changeset);
 
         $fields_data = array(
-            '103' => '802',
+            '103' => "$this->close_value_id",
         );
-        $t1->expectNever('before');
-        $t2->expectOnce('before', array($fields_data, $current_user));
-        $workflow->before($fields_data, $current_user, $a);
+        $this->transition_null_to_open->expectNever('before');
+        $this->transition_open_to_close->expectOnce('before', array($fields_data, $this->current_user));
+        $this->workflow->before($fields_data, $this->current_user, $this->artifact);
     }
 
     function testBeforeShouldTriggerTransitionActionsForNewArtifact() {
-        $current_user = new MockUser();
+        $changeset = new MockTracker_Artifact_Changeset_Null();
+        $this->artifact->setReturnValue('getLastChangeset', $changeset);
 
-        $f = new MockTracker_FormElement_Field_List();
-        $f->setReturnValue('getId', 103);
-
-        $v1 = new MockTracker_FormElement_Field_List_Value();
-        $v2 = new MockTracker_FormElement_Field_List_Value();
-
-        $v1->setReturnValue('getId', 801);
-        $v2->setReturnValue('getId', 802);
-
-        $t1 = new MockTransition();
-        $t2 = new MockTransition();
-
-        $t1->setReturnValue('getFieldValueFrom',     null);
-        $t1->setReturnReference('getFieldValueTo',   $v1);
-        $t2->setReturnReference('getFieldValueFrom', $v1);
-        $t2->setReturnReference('getFieldValueTo',   $v2);
-
-        $c = new MockTracker_Artifact_Changeset_Null();
-
-        $a = new MockTracker_Artifact();
-        $a->setReturnValue('getLastChangeset', $c);
-
-        $workflow_id = 1;
-        $tracker_id  = 2;
-        $field_id    = 103;
-        $is_used     = 1;
-        $transitions = array($t1, $t2);
-        $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
-
-        $workflow->setField($f);
-
-       $fields_data = array(
-            '103' => '801',
+        $fields_data = array(
+            '103' => "$this->open_value_id",
         );
-        $t1->expectOnce('before');
-        $t2->expectNever('before', array($fields_data, $current_user));
-        $workflow->before($fields_data, $current_user, $a);
+        $this->transition_null_to_open->expectOnce('before', array($fields_data, $this->current_user));
+        $this->transition_open_to_close->expectNever('before');
+        $this->workflow->before($fields_data, $this->current_user, $this->artifact);
     }
 
 }
