@@ -41,8 +41,8 @@ class TransitionFactory_BaseTest extends TuleapTestCase {
         parent::setUp();
         $this->condition_factory  = mock('Workflow_Transition_ConditionFactory');
         $this->postaction_factory = mock('Transition_PostActionFactory');
-        $this->factory            = partial_mock('TransitionFactory', 
-                array('getPostActionFactory'), 
+        $this->factory            = partial_mock('TransitionFactory',
+                array('getPostActionFactory'),
                 array($this->condition_factory));
         stub($this->factory)->getPostActionFactory()->returns($this->postaction_factory);
     }

@@ -28,6 +28,7 @@ require_once dirname(__FILE__).'/../../builders/aDateFieldPostAction.php';
 require_once dirname(__FILE__).'/../../builders/anIntFieldPostAction.php';
 require_once dirname(__FILE__).'/../../builders/aFloatFieldPostAction.php';
 require_once dirname(__FILE__).'/../../builders/aPostActionFactory.php';
+require_once dirname(__FILE__).'/../../builders/aCIBuildPostAction.php';
 
 Mock::generatePartial('Transition_PostActionFactory',
                       'Transition_PostActionFactoryTestVersion',
@@ -45,13 +46,13 @@ class Transition_PostActionFactory_AddPostActionTest extends TuleapTestCase {
         
         $this->transition_id = 123;
         $this->transition    = stub('Transition')->getTransitionId()->returns($this->transition_id);
-        
+
         $mocked_methods = array('getFieldFactory', 'getCIBuildFactory');
         $this->factory = partial_mock('Transition_PostActionFactory', $mocked_methods);
-        
+
         $this->field_factory = mock('Transition_PostAction_FieldFactory');
         $this->cibuild_factory = mock('Transition_PostAction_CIBuildFactory');
-        
+
         stub($this->field_factory)->getTypes()->returns(
             array(
                 Transition_PostAction_Field_Date::SHORT_NAME,
@@ -59,13 +60,13 @@ class Transition_PostActionFactory_AddPostActionTest extends TuleapTestCase {
                 Transition_PostAction_Field_Float::SHORT_NAME,
             )
         );
-        
+
         stub($this->cibuild_factory)->getTypes()->returns(
             array(
                 Transition_PostAction_CIBuild::SHORT_NAME
             )
         );
-        
+
         stub($this->factory)->getFieldFactory()->returns($this->field_factory);
         stub($this->factory)->getCIBuildFactory()->returns($this->cibuild_factory);
     }
@@ -143,7 +144,6 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_Pos
         $this->assertIsA($post_action, 'Transition_PostAction_CIBuild');
     }
 }
-
 class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionFactory_AddPostActionTest {
     
     public function itSavesDateFieldPostActions() {

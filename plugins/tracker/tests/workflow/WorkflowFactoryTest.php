@@ -57,14 +57,14 @@ class WorkflowFactoryTest extends TuleapTestCase {
         $condition_factory  = mock('Workflow_Transition_ConditionFactory');
         stub($condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
         $transition_factory = mock('TransitionFactory');
-        
+
         $third_transition = mock('Transition');
         stub($third_transition)->getPostActions()->returns(array(mock('Transition_PostAction_Field')));
-        
+
         stub($transition_factory)->getInstanceFromXML()->at(0)->returns(mock('Transition'));
         stub($transition_factory)->getInstanceFromXML()->at(1)->returns(mock('Transition'));
         stub($transition_factory)->getInstanceFromXML()->at(2)->returns($third_transition);
-        
+
         $workflow_factory   = new WorkflowFactory($transition_factory);
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker);

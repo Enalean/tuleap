@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../../../builders/aFloatFieldPostAction.php';
 class Transition_PostAction_FieldFactoryTest extends TuleapTestCase {
 
     protected $factory;
-    
+
     public function setUp() {
         parent::setUp();
 
@@ -39,7 +39,7 @@ class Transition_PostAction_FieldFactoryTest extends TuleapTestCase {
 
     public function itLoadsIntFieldPostActions() {
         $factory = aPostActionFieldFactory(array('loadPostActionRows'))->build();
-        
+
         $post_action_value = 12;
         $post_action_rows  = array(
             array(
@@ -58,11 +58,11 @@ class Transition_PostAction_FieldFactoryTest extends TuleapTestCase {
         stub($factory)
             ->loadPostActionRows($this->transition, Transition_PostAction_Field_Date::SHORT_NAME)
             ->returns(array());
-        
-        
+
+
         $post_action_array = $factory->loadPostActions($this->transition);
         $this->assertCount($post_action_array, 1);
-  
+
         $first_pa = $post_action_array[0];
         $this->assertEqual($first_pa->getId(), $this->post_action_id);
         $this->assertEqual($first_pa->getTransition(), $this->transition);
@@ -71,7 +71,7 @@ class Transition_PostAction_FieldFactoryTest extends TuleapTestCase {
 
     public function itLoadsFloatFieldPostActions() {
         $factory = aPostActionFieldFactory(array('loadPostActionRows'))->build();
-        
+
         $post_action_value = 12;
         $post_action_rows  = array(
             array(
@@ -90,20 +90,20 @@ class Transition_PostAction_FieldFactoryTest extends TuleapTestCase {
         stub($factory)
             ->loadPostActionRows($this->transition, Transition_PostAction_Field_Date::SHORT_NAME)
             ->returns(array());
-        
-        
+
+
         $post_action_array = $factory->loadPostActions($this->transition);
         $this->assertCount($post_action_array, 1);
-  
+
         $first_pa = $post_action_array[0];
         $this->assertEqual($first_pa->getId(), $this->post_action_id);
         $this->assertEqual($first_pa->getTransition(), $this->transition);
         $this->assertEqual($first_pa->getValue(), $post_action_value);
     }
-    
+
     public function itLoadsDateFieldPostActions() {
         $factory = aPostActionFieldFactory(array('loadPostActionRows'))->build();
-        
+
         $post_action_value = 12;
         $post_action_rows  = array(
             array(
@@ -122,11 +122,11 @@ class Transition_PostAction_FieldFactoryTest extends TuleapTestCase {
         stub($factory)
             ->loadPostActionRows($this->transition, Transition_PostAction_Field_Date::SHORT_NAME)
             ->returns($post_action_rows);
-        
-        
+
+
         $post_action_array = $factory->loadPostActions($this->transition);
         $this->assertCount($post_action_array, 1);
-  
+
         $first_pa = $post_action_array[0];
         $this->assertEqual($first_pa->getId(), $this->post_action_id);
         $this->assertEqual($first_pa->getTransition(), $this->transition);

@@ -21,9 +21,10 @@
 
 require_once dirname(__FILE__).'/../../../builders/aPostActionCIBuildFactory.php';
 require_once dirname(__FILE__).'/../../../builders/aCIBuildPostAction.php';
+require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php';
 
 class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
-    
+
     protected $factory;
     protected $dao;
 
@@ -36,7 +37,7 @@ class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
         $this->transition = aTransition()->withId($this->transition_id)->build();
         $this->factory = partial_mock('Transition_PostAction_CIBuildFactory', array('getDao', 'loadPostActionRows'));
         $this->dao = mock('Transition_PostAction_CIBuildDao');
-        
+
         stub($this->factory)->getDao()->returns($this->dao);
     }
 
@@ -52,13 +53,37 @@ class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
         stub($this->factory)->loadPostActionRows($this->transition)->returns($post_action_rows);
 
         $this->assertCount($this->factory->loadPostActions($this->transition), 1);
-        
+
         $post_action_array = $this->factory->loadPostActions($this->transition);
         $first_pa = $post_action_array[0];
-        
+
         $this->assertEqual($first_pa->getJobUrl(), $post_action_value);
         $this->assertEqual($first_pa->getId(), $this->post_action_id);
         $this->assertEqual($first_pa->getTransition(), $this->transition);
+    }
+}
+
+class Transition_CIBuildFactory_GetInstanceFromXmlTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $ci_client    = new Jenkins_Client(new Http_Client());
+        $this->factory    = aPostActionCIBuildFactory()
+                ->build();
+        $this->mapping    = array('F1' => 62334);
+        $this->transition = aTransition()->build();
+    }
+
+    public function itReconstitutesCIBuildPostActionsFromXML() {
+        $xml = new SimpleXMLElement('
+            <postaction_ci_build job_url="http://www"/>
+        ');
+
+        $post_action = $this->factory->getInstanceFromXML($xml, $this->mapping, $this->transition);
+
+        $this->assertIsA($post_action, 'Transition_PostAction_CIBuild');
+        $this->assertEqual($post_action->getJobUrl(),"http://www" );
+        $this->assertTrue($post_action->isDefined());
     }
 }
 ?>

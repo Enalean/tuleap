@@ -1035,8 +1035,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return boolean True if update is done without error, false otherwise
      */
     public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
-        $this->validateNewChangeset($fields_data, $comment, $submitter);
-        
+        $this->validateNewChangeset($fields_data, $comment, $submitter, $email);
         /*
          * Post actions were run by validateNewChangeset but they modified a 
          * different set of $fields_data in the case of massChange or soap requests;
@@ -1077,7 +1076,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         //Save the artifact
-        $this->getArtifactFactory()->save($this);
+        if ($this->getArtifactFactory()->save($this)) {
+            $this->getWorkflow()->after();
+        }
 
         if ($send_notification) {
             // Send notifications

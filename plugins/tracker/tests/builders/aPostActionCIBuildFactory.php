@@ -41,9 +41,9 @@ class Test_Transition_PostAction_CIBuildFactoryBuilder {
             'Transition_PostAction_CIBuildFactory',
             array('getDao')
         );
-        
+
         stub($this->factory)->getDao()->returns(mock('Transition_PostAction_CIBuildDao'));
-        
+
         return $this->factory;
     }
 }

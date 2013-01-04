@@ -33,8 +33,8 @@ class Test_Transition_PostAction_FieldFactoryBuilder {
     
     public function __construct(array $mocked_methods) {
         $mocked_methods = array_merge($mocked_methods, array('getDao', 'getFormElementFactory',));
-        
-        
+
+
         $this->factory = TestHelper::getPartialMock('Transition_PostAction_FieldFactory',
                                                     $mocked_methods);
         

@@ -37,15 +37,15 @@ require_once 'CIBuild/Transition_PostAction_CIBuildFactory.class.php';
 class Transition_PostActionFactory {
     
     /**
-     * 
+     *
      * @return \Transition_PostAction_FieldFactory
      */
     public function getFieldFactory() {
         return new Transition_PostAction_FieldFactory();
     }
-    
+
     /**
-     * 
+     *
      * @return \Transition_PostAction_CIBuildFactory
      */
     public function getCIBuildFactory() {
@@ -97,7 +97,7 @@ class Transition_PostActionFactory {
      */
     public function loadPostActions(Transition $transition) {
         $post_actions = array_merge(
-            $this->getFieldFactory()->loadPostActions($transition), 
+            $this->getFieldFactory()->loadPostActions($transition),
             $this->getCIBuildFactory()->loadPostActions($transition)
         );
         $transition->setPostActions($post_actions);
@@ -140,7 +140,7 @@ class Transition_PostActionFactory {
      * 
      */
     public function deleteWorkflow($workflow_id) {
-        return $this->getCIBuildFactory()->deleteWorkflow($workflow_id) 
+        return $this->getCIBuildFactory()->deleteWorkflow($workflow_id)
                 && $this->getFieldFactory()->deleteWorkflow($workflow_id);
     }
     
@@ -157,26 +157,26 @@ class Transition_PostActionFactory {
         $this->getCIBuildFactory()->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
         $this->getFieldFactory()->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
     }
-    
-        
+
+
     /**
      * Creates a postaction Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported postaction
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Transition       $transition     to which the postaction is attached
-     * 
+     *
      * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
         if($this->getFieldFactory()->getInstanceFromXML($xml, $xmlMapping, $transition) instanceof Transition_PostAction_Field) {
             return $this->getFieldFactory()->getInstanceFromXML($xml, $xmlMapping, $transition);
         }
-        
+
         if($this->getCIBuildFactory()->getInstanceFromXML($xml, $xmlMapping, $transition) instanceof Transition_PostAction_CIBuild) {
             return $this->getCIBuildFactory()->getInstanceFromXML($xml, $xmlMapping, $transition);
         }
-        
+
         return null;
     }
 }
