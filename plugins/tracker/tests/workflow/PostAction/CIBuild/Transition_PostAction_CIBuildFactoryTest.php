@@ -21,6 +21,7 @@
 
 require_once dirname(__FILE__).'/../../../builders/aPostActionCIBuildFactory.php';
 require_once dirname(__FILE__).'/../../../builders/aCIBuildPostAction.php';
+require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php';
 
 class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
 
@@ -52,6 +53,31 @@ class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
             ->build());
 
         $this->assertEqual($factory->loadPostActions($this->transition), $expected);
+    }
+}
+
+class Transition_CIBuildFactory_GetInstanceFromXmlTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $ci_client    = new Jenkins_Client(new Http_Client());
+        $this->factory    = aPostActionCIBuildFactory()
+                ->withCIClient($ci_client)
+                ->build();
+        $this->mapping    = array('F1' => 62334);
+        $this->transition = aTransition()->build();
+    }
+
+    public function itReconstitutesCIBuildPostActionsFromXML() {
+        $xml = new SimpleXMLElement('
+            <postaction_ci_build job_url="http://www"/>
+        ');
+
+        $post_action = $this->factory->getInstanceFromXML($xml, $this->mapping, $this->transition);
+
+        $this->assertIsA($post_action, 'Transition_PostAction_CIBuild');
+        $this->assertEqual($post_action->getJobUrl(),"http://www" );
+        $this->assertTrue($post_action->isDefined());
     }
 }
 ?>

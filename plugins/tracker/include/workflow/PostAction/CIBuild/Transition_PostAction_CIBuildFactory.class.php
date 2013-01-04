@@ -108,7 +108,7 @@ class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory 
         $postaction_attributes = $xml->attributes();
         $job_url               = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
 
-        return new Transition_PostAction_CIBuild($transition, 0, $job_url);
+        return new Transition_PostAction_CIBuild($transition, 0, $job_url, $this->ci_client);
     }
 
      private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {

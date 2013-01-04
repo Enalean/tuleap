@@ -28,6 +28,7 @@ require_once dirname(__FILE__).'/../../builders/aDateFieldPostAction.php';
 require_once dirname(__FILE__).'/../../builders/anIntFieldPostAction.php';
 require_once dirname(__FILE__).'/../../builders/aFloatFieldPostAction.php';
 require_once dirname(__FILE__).'/../../builders/aPostActionFactory.php';
+require_once dirname(__FILE__).'/../../builders/aCIBuildPostAction.php';
 
 Mock::generatePartial('Transition_PostActionFactory',
                       'Transition_PostActionFactoryTestVersion',
@@ -146,13 +147,15 @@ class Transition_PostActionFactory_SaveObjectTest extends TuleapTestCase {
         
         $this->factory = new Transition_PostActionFactoryTestVersion();
         
-        $this->date_dao  = mock('Transition_PostAction_Field_DateDao');
-        $this->int_dao   = mock('Transition_PostAction_Field_IntDao');
-        $this->float_dao = mock('Transition_PostAction_Field_FloatDao');
+        $this->date_dao     = mock('Transition_PostAction_Field_DateDao');
+        $this->int_dao      = mock('Transition_PostAction_Field_IntDao');
+        $this->float_dao    = mock('Transition_PostAction_Field_FloatDao');
+        $this->ci_build_dao = mock('Transition_PostAction_CIBuildDao');
         
         stub($this->factory)->getDao('field_date')->returns($this->date_dao);
         stub($this->factory)->getDao('field_int')->returns($this->int_dao);
-        stub($this->factory)->getDao('field_float')->returns($this->float_dao);        
+        stub($this->factory)->getDao('field_float')->returns($this->float_dao);
+        stub($this->factory)->getDao('ci_build')->returns($this->ci_build_dao);
     }
     
     public function itSavesDateFieldPostActions() {
@@ -179,6 +182,16 @@ class Transition_PostActionFactory_SaveObjectTest extends TuleapTestCase {
                                                ->withValue(0)
                                                ->build();
         $this->float_dao->expectOnce('save', array(123, 456, 0));
+        $this->factory->saveObject($post_action);
+    }
+
+    public function itSavesCIBuildPostActions() {
+        $ci_client = mock('Jenkins_Client');
+        $post_action = aCIBuildPostAction()->withTransitionId(123)
+                                           ->withValue('http://www')
+                                           ->withCIClient($ci_client)
+                                           ->build();
+        $this->ci_build_dao->expectOnce('save', array(123, 'http://www'));
         $this->factory->saveObject($post_action);
     }
 }
