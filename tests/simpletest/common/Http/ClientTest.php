@@ -53,5 +53,10 @@ class Http_ClientTest extends TuleapTestCase {
         $client = new Http_Client();
         $this->assertTrue($client->getOption(CURLOPT_RETURNTRANSFER));
     }
+
+    public function itFailsOnError() {
+        $client = new Http_Client();
+        $this->assertTrue($client->getOption(CURLOPT_FAILONERROR));
+    }
 }
 ?>
