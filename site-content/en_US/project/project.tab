@@ -118,6 +118,7 @@ project_admin_editugroup	sel01	Selection 01 - please ignore
 project_admin_editugroup	please_wait	Please wait...
 project_admin_editugroup	filter	Filter:
 project_admin_editugroup	ug_perms	This user group is granted the following permissions:
+project_admin_editugroup	no_perms	This user group is not granted any permissions yet
 project_admin_editugroup	permission	Permission
 project_admin_editugroup	resource_name	Resource Name
 project_admin_editugroup	release	Release

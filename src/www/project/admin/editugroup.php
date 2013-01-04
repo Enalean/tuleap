@@ -272,6 +272,8 @@ if (($func=='edit')||($func=='do_create')) {
                 $row_num++;
             }
             $content .= '</table><p>';
+        } else {
+            $content .= '<p>'.$Language->getText('project_admin_editugroup', 'no_perms').'.</p>';
         }
     break;
     case 'usage':

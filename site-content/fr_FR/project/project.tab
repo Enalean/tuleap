@@ -118,6 +118,7 @@ project_admin_editugroup	sel01	Sélection 01 - veuillez ignorer
 project_admin_editugroup	please_wait	Veuillez patienter...
 project_admin_editugroup	filter	Filtre&nbsp;:
 project_admin_editugroup	ug_perms	Ce groupe d'utilisateurs possède les permissions suivantes&nbsp;:
+project_admin_editugroup	no_perms	Ce groupe d'utilisateurs ne possède pas encore des permissions
 project_admin_editugroup	permission	Permission
 project_admin_editugroup	resource_name	Nom de la ressource
 project_admin_editugroup	release		Version
