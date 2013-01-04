@@ -27,11 +27,12 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://www.example.com';
+        $client           = mock('Jenkins_Client');
         $condendi_request = aRequest()->with('remove_postaction', array($id => 1))->build();
 
         $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
 
-        $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url));
+        $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url, $client));
         stub($post_action_ci_build)->getDao()->returns($ci_build_dao);
 
         expect($ci_build_dao)->deletePostAction($id)->once();
@@ -43,6 +44,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $id               = 123;
         $job_url          = 'http://www.example.com';
         $new_job_url      = 'not_an_url';
+        $client           = mock('Jenkins_Client');
         $condendi_request = aRequest()
             ->with('remove_postaction', array())
             ->with('workflow_postaction_launch_job', array($id => $new_job_url))
@@ -50,7 +52,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
         $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
 
-        $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url));
+        $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url, $client));
         stub($post_action_ci_build)->getDao()->returns($ci_build_dao);
 
         expect($ci_build_dao)->updatePostAction()->never();
@@ -62,6 +64,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://www.example.com';
+        $client           = mock('Jenkins_Client');
         $condendi_request = aRequest()
             ->with('remove_postaction', array())
             ->with('workflow_postaction_launch_job', array($id => $job_url))
@@ -69,7 +72,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
         $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
 
-        $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url));
+        $post_action_ci_build = partial_mock('Transition_PostAction_CIBuild', array('getDao'), array($transition, $id, $job_url, $client));
         stub($post_action_ci_build)->getDao()->returns($ci_build_dao);
 
         expect($ci_build_dao)->updatePostAction()->never();
@@ -81,8 +84,9 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = null;
+        $client           = mock('Jenkins_Client');
 
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
         $this->assertFalse($post_action_ci_build->isDefined());
     }
 
@@ -90,8 +94,9 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://example.com/job';
+        $client           = mock('Jenkins_Client');
 
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
         $this->assertTrue($post_action_ci_build->isDefined());
     }
 
@@ -99,8 +104,9 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://example.com';
+        $client           = mock('Jenkins_Client');
 
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
 
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
         $array_xml_mapping = array();
@@ -113,14 +119,28 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = '';
+        $client           = mock('Jenkins_Client');
 
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
 
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
         $array_xml_mapping = array();
 
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);
         $this->assertFalse(isset($root->postaction_ci_build));
+    }
+
+    public function itLaunchTheCIBuildOnAfter() {
+
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = 'http://example.com/job';
+        $client           = mock('Jenkins_Client');
+
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+
+        expect($client)->launchJobBuild($job_url)->once();
+        $post_action_ci_build->after();
     }
 }
 ?>

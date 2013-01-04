@@ -24,8 +24,14 @@
  * 
  */
 
-class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory {    
-   
+class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory {
+
+    /** @var Jenkins_Client */
+    private $ci_client;
+
+    public function __construct(Jenkins_Client $ci_client) {
+        $this->ci_client = $ci_client;
+    }
     /**
      * Returns the corresponding DAO given a post action short name.
      *
@@ -43,7 +49,6 @@ class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory 
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
         $post_actions_classes = $this->post_actions_classes_ci;
-        
         foreach ($post_actions_classes as $shortname => $klass) {
             foreach($this->loadPostActionRows($transition, $shortname) as $row) {
                 $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
@@ -65,8 +70,7 @@ class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory 
     private function buildPostAction(Transition $transition, $row, $shortname, $klass) {
         $id    = $this->getIdFromRow($row);
         $value = $this->getValueFromRow($row, $shortname);
-        
-        return new $klass($transition, $id, $value);
+        return new $klass($transition, $id, $value, $this->ci_client);
     }
     
    /**
