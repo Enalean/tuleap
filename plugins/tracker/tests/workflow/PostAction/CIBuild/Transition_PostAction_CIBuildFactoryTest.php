@@ -33,7 +33,7 @@ class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
         $this->transition = aTransition()->withId($this->transition_id)->build();
     }
 
-    public function itLoadsCIBuildPostActions() {
+    public function _itLoadsCIBuildPostActions() {
         $post_action_value = 12;
         $post_action_rows  = array(array('id'         => $this->post_action_id,
                                          'job_url'    => $post_action_value));

@@ -24,7 +24,7 @@
  * 
  */
 
-class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory {    
+class Transition_PostAction_CIBuildFactory {    
         
     /**
      * @var Array of available post actions classes run after fields validation
@@ -139,6 +139,25 @@ class Transition_PostAction_CIBuildFactory extends Transition_PostActionFactory 
         }
         
         return false;
+    }
+      
+    /**
+     * Creates a postaction Object
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
+     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param Transition       $transition     to which the postaction is attached
+     * 
+     * @return Transition_PostAction The  Transition_PostAction object, or null if error
+     */
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+        $field_id              = $xmlMapping[(string)$xml->field_id['REF']];
+        $postaction_attributes = $xml->attributes();
+        $value                 = $postaction_attributes['value'];
+        
+        if ($field_id) {
+            return new Transition_PostAction_CIBuild($transition, 0, $field_id, $value);
+        }
     }
     
    /**   

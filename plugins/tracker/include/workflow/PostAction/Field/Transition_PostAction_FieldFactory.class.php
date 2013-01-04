@@ -164,8 +164,78 @@ class Transition_PostAction_FieldFactory {
         }
         return false;
     }
+        
+    /**
+     * Creates a postaction Object
+     * 
+     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
+     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param Transition       $transition     to which the postaction is attached
+     * 
+     * @return Transition_PostAction The  Transition_PostAction object, or null if error
+     */
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+        $xml_tag_name          = $xml->getName();
+        $post_action_class     = $this->getPostActionClassFromXmlTagName($xml_tag_name);
+        $field_id              = $xmlMapping[(string)$xml->field_id['REF']];
+        $postaction_attributes = $xml->attributes();
+        $value                 = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
+        
+        if ($field_id) {
+            return new $post_action_class($transition, 0, $field_id, $value);
+        }
+    }
     
-   
+    /**
+     * Return the PostAction short name, given an XML tag name.
+     * 
+     * @param string $xml_tag_name
+     * 
+     * @return string
+     */
+    private function getShortNameFromXmlTagName($xml_tag_name) {
+        return str_replace('postaction_', '', $xml_tag_name);
+    }
+    
+    /**
+     * Return the PostAction class, given an XML tag name.
+     * 
+     * @param string $xml_tag_name
+     * 
+     * @return string
+     * 
+     * @throws Transition_PostAction_NotFoundException
+     */
+    private function getPostActionClassFromXmlTagName($xml_tag_name) {
+        $short_name = $this->getShortNameFromXmlTagName($xml_tag_name);
+        
+        if (! key_exists($short_name, $this->post_actions_classes_field)) {
+            throw new Transition_PostAction_NotFoundException($short_name);
+        }
+        
+        return $this->post_actions_classes_field[$short_name];
+    }
+    
+    /**
+     * Extract the PostAction value from the attributes,
+     * deducing the PostAction type from the XML tag name.
+     * 
+     * @param string $xml_tag_name
+     * @param array $postaction_attributes
+     * 
+     * @return mixed
+     * 
+     * @throws Transition_PostAction_NotFoundException 
+     */
+    private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
+        switch($xml_tag_name) {
+            case 'postaction_field_date':  return (int) $postaction_attributes['valuetype'];
+            case 'postaction_field_int':   return (int) $postaction_attributes['value'];
+            case 'postaction_field_float': return (float) $postaction_attributes['value'];
+            default: throw new Transition_PostAction_NotFoundException($xml_tag_name);
+        }
+    }
+    
    /**   
     * Reconstitute a PostAction from database
     * 
@@ -203,6 +273,8 @@ class Transition_PostAction_FieldFactory {
                 throw new Transition_PostAction_NotFoundException();
         }
     }
+    
+    
     
     /**
      * Retrieves the field from the given PostAction database row.
