@@ -45,7 +45,7 @@ function _breadCrumbs($project, $ugroupId = NULL, $ugroupName = NULL) {
 function display_name_and_desc_form($ugroup_name, $ugroup_description) {
     global $Language;
 
-    return '  <table width="100%" border="0" cellpadding="5">
+    return ' <table width="100%" border="0" cellpadding="5">
     <tr>
       <td width="21%"><b>'.$Language->getText('project_admin_editugroup', 'name').'</b>:</td>
       <td width="79%"> 
@@ -179,11 +179,14 @@ if (($func=='edit')||($func=='do_create')) {
     break;
     case 'bind':
         $activePane = 'members';
+        $urlAdd     = '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=ugroup_binding';
+        $linkAdd    = '<br/><a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
         if ($ldapBinding = $uGroupMgr->displayUgroupBinding($group_id, $ugroup_id)) {
             $content .= $ldapBinding;
         } else {
             $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=ugroup_binding');
         }
+        $content .= $linkAdd;
     break;
     case 'permissions':
         // Display associated permissions
