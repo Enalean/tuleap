@@ -112,6 +112,14 @@ abstract class Transition_PostAction {
     }
 
     /**
+     * Execute actions after transition happens
+     *
+     * @return void
+     */
+    public function after() {
+    }
+
+    /**
      * Get the shortname of the post action
      *
      * @return string

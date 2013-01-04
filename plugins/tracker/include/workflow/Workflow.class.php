@@ -266,6 +266,7 @@ class Workflow {
      *
      * @param Array $fields_data  Request field data (array[field_id] => data)
      * @param User  $current_user The user who are performing the update
+     * @param Tracker_Artifact  $artifact The artifact
      *
      * @return void
      */
@@ -278,6 +279,15 @@ class Workflow {
         }
     }
 
+
+    /**
+     * Execute actions after transition happens (if there is one)
+     *
+     * @param Array $fields_data  Request field data (array[field_id] => data)
+     * @param Tracker_Artifact  $artifact The artifact
+     *
+     * @return void
+     */
     public function after(array $fields_data, Tracker_Artifact $artifact) {
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $artifact);
