@@ -140,16 +140,14 @@ class Transition_PostAction_FieldFactory {
      * 
      */
     public function deleteWorkflow($workflow_id) {
+        $result = true;
         $post_actions_classes = $this->post_actions_classes_field;
         foreach (array_keys($post_actions_classes) as $shortname) {
-            if(! $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id)) {
-                return false;
-            }
-        }        
-        return true;
-    }
-    
+            $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
+        }
         
+        return $result;
+    }
     /**
      * Say if a field is used in its tracker workflow transitions post actions
      *

@@ -21,7 +21,11 @@
 require_once dirname(__FILE__).'/../../include/workflow/PostAction/Transition_PostActionFactory.class.php';
 require_once dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 
-function aPostActionFieldFactory(array $mocked_methods) {
+function aPostActionFieldFactory($mocked_methods = null) {
+    if(!is_array($mocked_methods)) {
+        $mocked_methods = array();
+    }
+    
     return new Test_Transition_PostAction_FieldFactoryBuilder($mocked_methods);
 }
 
