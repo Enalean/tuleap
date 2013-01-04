@@ -71,6 +71,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     private $title;
 
+    /**@var Tracker_ArtifactFactory */
+    private $artifact_factory;
     /**
      * Constructor
      *
@@ -895,7 +897,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_ArtifactFactory
      */
     protected function getArtifactFactory() {
+        if($this->artifact_factory) {
+            return $this->artifact_factory;
+        }
         return Tracker_ArtifactFactory::instance();
+    }
+
+    public function setArtifactFactory($artifact_factory) {
+        $this->artifact_factory = $artifact_factory;
     }
 
     /**
@@ -940,8 +949,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                         }
                     }
+
                     //Save the artifact
-                    $this->getArtifactFactory()->save($this);
+                    if ($this->getArtifactFactory()->save($this)) {
+                        $workflow->after();
+                    }
 
                     // Clear fake changeset so subsequent call to getChangesets will load a fresh & complete one from the DB
                     $this->changesets = null;
