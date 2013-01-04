@@ -42,7 +42,7 @@ class WorkflowFactoryTest extends TuleapTestCase {
         parent::tearDown();
     }
 
-     public function _testImport() {
+     public function testImport() {
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/importWorkflow.xml');
         
         $tracker = new MockTracker();
@@ -59,15 +59,20 @@ class WorkflowFactoryTest extends TuleapTestCase {
         $transition_factory = mock('TransitionFactory');
 
         $third_transition = mock('Transition');
-        stub($third_transition)->getPostActions()->returns(array(mock('Transition_PostAction_Field')));
+        $date_post_action = mock('Transition_PostAction_Field_Date');
+        stub($date_post_action)->getField()->returns(110);
+        stub($date_post_action)->getValueType()->returns(1);
+        
+        stub($third_transition)->getPostActions()->returns(array($date_post_action));
 
-        stub($transition_factory)->getInstanceFromXML()->at(0)->returns(mock('Transition'));
-        stub($transition_factory)->getInstanceFromXML()->at(1)->returns(mock('Transition'));
-        stub($transition_factory)->getInstanceFromXML()->at(2)->returns($third_transition);
+        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[0], $mapping)->at(0)->returns(mock('Transition'));
+        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[1], $mapping)->at(1)->returns(mock('Transition'));
+        stub($transition_factory)->getInstanceFromXML($xml->transitions->transition[2], $mapping)->at(2)->returns($third_transition);
 
         $workflow_factory   = new WorkflowFactory($transition_factory);
 
         $workflow = $workflow_factory->getInstanceFromXML($xml, $mapping, $tracker);
+
         $this->assertEqual($workflow->getIsUsed(), 1);
         $this->assertEqual($workflow->getFieldId(), 111);
         $this->assertEqual(count($workflow->getTransitions()), 3);
@@ -83,9 +88,7 @@ class WorkflowFactoryTest extends TuleapTestCase {
         $this->assertEqual($postactions[0]->getField(), 110);
         $this->assertEqual($postactions[0]->getValueType(), 1);
         
-        //TODO: test conditions
-        $conditions = $transitions[2]->getConditions();
-        $this->assertCount($conditions, 1);
+        $this->assertEqual($third_transition, $transitions[2]);
         
     }
 }
