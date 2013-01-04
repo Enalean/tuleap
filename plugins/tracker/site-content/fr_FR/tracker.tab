@@ -1351,9 +1351,12 @@ workflow_admin	no_postaction	Il n'y a pas encore d'action définie pour cette tr
 workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	la date courante
 workflow_admin	post_action_not_defined	Cette action sera inactive tant qu'elle ne sera pas complètement définie
+workflow_admin	ci_url	Adresse du job Jenkins ou Hudson: http://CI_URL/job/JOBNAME
 
 workflow_postaction	field_value_set	Le champ '$1' sera automatiquement valué à $2
 workflow_postaction	field_clear	Le valeur du champs '$1' sera automatiquement effacée
+workflow_postaction	invalid_job_url	L'adresse du job '$1' de l'intégration continue est invalide.
+workflow_postaction	launch_job	Lancer un build de l'intégration continue
 
 workflow_condition	invalid_condition	Condition invalide : le champ '$1' doit être rempli
 

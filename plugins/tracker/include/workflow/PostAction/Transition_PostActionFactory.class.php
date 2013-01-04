@@ -79,6 +79,16 @@ class Transition_PostActionFactory {
         }
     }
     
+
+    public function getPostActionFieldFactory() {
+        return new Transition_PostAction_FieldFactory();
+    }
+    
+    public function getPostActionCIBuildFactory() {
+        $ci_client = new Jenkins_Client(new Http_Client());
+        return new Transition_PostAction_CIBuildFactory($ci_client);
+    }
+    
     /**
      * Load the post actions that belong to a transition
      * 
