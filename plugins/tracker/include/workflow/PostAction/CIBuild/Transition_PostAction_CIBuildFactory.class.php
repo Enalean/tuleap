@@ -185,9 +185,7 @@ class Transition_PostAction_CIBuildFactory {
         return new Transition_PostAction_CIBuildDao();
     }
 
-
-
-     private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
+    private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
         switch($xml_tag_name) {
             case 'postaction_ci_build':  return (string) $postaction_attributes['job_url'];
             default: throw new Transition_PostAction_NotFoundException($xml_tag_name);
