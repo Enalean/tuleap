@@ -154,7 +154,7 @@ class Transition_PostAction_CIBuildFactory {
         $postaction_attributes = $xml->attributes();
         $job_url               = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
 
-        return new Transition_PostAction_CIBuild($transition, 0, $job_url, $this->ci_client);
+        return new Transition_PostAction_CIBuild($transition, 0, $job_url, new Jenkins_Client(new Http_Client()));
     }
 
    /**

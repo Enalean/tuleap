@@ -69,7 +69,6 @@ class Transition_CIBuildFactory_GetInstanceFromXmlTest extends TuleapTestCase {
         parent::setUp();
         $ci_client    = new Jenkins_Client(new Http_Client());
         $this->factory    = aPostActionCIBuildFactory()
-                ->withCIClient($ci_client)
                 ->build();
         $this->mapping    = array('F1' => 62334);
         $this->transition = aTransition()->build();
