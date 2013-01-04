@@ -25,20 +25,10 @@
  */
 
 class Transition_PostAction_CIBuildFactory {    
-        
-
-
-    /** @var Jenkins_Client */
-    private $ci_client;
-
-    public function __construct(Jenkins_Client $ci_client) {
-        $this->ci_client = $ci_client;
-    }
 
     /**
      * @var Array of available post actions classes run after fields validation
      */
-
     protected $post_actions_classes_ci = array(
         Transition_PostAction_CIBuild::SHORT_NAME => 'Transition_PostAction_CIBuild',
     );
@@ -58,7 +48,6 @@ class Transition_PostAction_CIBuildFactory {
 
         foreach($this->loadPostActionRows($transition) as $row) {
             $post_actions[] = $this->buildPostAction($transition, $row);
-
         }
 
         return $post_actions;
@@ -183,8 +172,9 @@ class Transition_PostAction_CIBuildFactory {
     private function buildPostAction(Transition $transition, $row) {
         $id    = (int) $row['id'];
         $value = (string) $row['job_url'];
+        $ci_client = new Jenkins_Client(new Http_Client());
         
-        return new Transition_PostAction_CIBuild($transition, $id, $value, $this->ci_client);
+        return new Transition_PostAction_CIBuild($transition, $id, $value, $ci_client);
     }
        
     /**

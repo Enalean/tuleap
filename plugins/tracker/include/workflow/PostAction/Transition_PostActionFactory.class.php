@@ -85,8 +85,7 @@ class Transition_PostActionFactory {
     }
     
     public function getPostActionCIBuildFactory() {
-        $ci_client = new Jenkins_Client(new Http_Client());
-        return new Transition_PostAction_CIBuildFactory($ci_client);
+        return new Transition_PostAction_CIBuildFactory();
     }
     
     /**

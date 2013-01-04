@@ -85,9 +85,10 @@ class Transition_PostAction_FieldFactory {
     }
     
     public function loadPostActions(Transition $transition) {
+        
         $post_actions = array();
         $post_actions_classes = $this->post_actions_classes_field;
-        
+
         foreach ($post_actions_classes as $shortname => $klass) {
             foreach($this->loadPostActionRows($transition, $shortname) as $row) {
                 $post_actions[] = $this->buildPostAction($transition, $row, $shortname, $klass);
@@ -261,7 +262,7 @@ class Transition_PostAction_FieldFactory {
      * @return Transition_PostAction_FieldDao
      * @throws Transition_PostAction_NotFoundException
      */
-    private function getDao($post_action_short_name) {
+    public function getDao($post_action_short_name) {
         switch ($post_action_short_name) {
             case Transition_PostAction_Field_Date::SHORT_NAME:  
                 return new Transition_PostAction_Field_DateDao();
@@ -293,7 +294,7 @@ class Transition_PostAction_FieldFactory {
      *
      * @return Tracker_FormElementFactory
      */
-    private function getFormElementFactory() {
+    public function getFormElementFactory() {
         return Tracker_FormElementFactory::instance();
     }
     
