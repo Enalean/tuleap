@@ -236,22 +236,22 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         parent::setUp();
 
         $this->status_field = new MockTracker_FormElement_Field_List();
-        $this->status_field->setReturnValue('getId', 103);
+        stub($this->status_field)->getId()->returns(103);
 
-        $open_value  = new MockTracker_FormElement_Field_List_Value();
-        $close_value = new MockTracker_FormElement_Field_List_Value();
+        $open_value  = mock('Tracker_FormElement_Field_List_Value');
+        $close_value = mock('Tracker_FormElement_Field_List_Value');
 
-        $open_value->setReturnValue('getId', $this->open_value_id);
-        $close_value->setReturnValue('getId', $this->close_value_id);
-        $this->current_user = new MockUser();
+        stub($open_value)->getId()->returns($this->open_value_id);
+        stub($close_value)->getId()->returns($this->close_value_id);
+        $this->current_user = mock('User');
 
-        $this->transition_null_to_open = new MockTransition();
-        $this->transition_open_to_close = new MockTransition();
+        $this->transition_null_to_open  = mock('Transition');
+        $this->transition_open_to_close = mock('Transition');
 
-        $this->transition_null_to_open->setReturnValue('getFieldValueFrom',      null);
-        $this->transition_null_to_open->setReturnReference('getFieldValueTo',    $open_value);
-        $this->transition_open_to_close->setReturnReference('getFieldValueFrom', $open_value);
-        $this->transition_open_to_close->setReturnReference('getFieldValueTo',   $close_value);
+        stub($this->transition_null_to_open)->getFieldValueFrom()->returns(null);
+        stub($this->transition_null_to_open)->getFieldValueTo()->returns($open_value);
+        stub($this->transition_open_to_close)->getFieldValueFrom()->returns($open_value);
+        stub($this->transition_open_to_close)->getFieldValueTo()->returns($close_value);
 
         $workflow_id = 1;
         $tracker_id  = 2;
@@ -293,6 +293,34 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $this->workflow->before($fields_data, $this->current_user, $this->artifact);
     }
 
+    public function testAfterShouldTriggerTransitionActions() {
+        $changeset_value_list = new MockTracker_Artifact_ChangesetValue_List();
+        $changeset_value_list->setReturnValue('getValue', array($this->open_value_id));
+
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValue', $changeset_value_list, array($this->status_field));
+
+        $this->artifact->setReturnValue('getLastChangeset', $changeset);
+
+        $fields_data = array(
+            '103' => "$this->close_value_id",
+        );
+        $this->transition_null_to_open->expectNever('after');
+        $this->transition_open_to_close->expectOnce('after');
+        $this->workflow->after($fields_data, $this->artifact);
+    }
+
+    function testAfterShouldTriggerTransitionActionsForNewArtifact() {
+        $changeset = new MockTracker_Artifact_Changeset_Null();
+        $this->artifact->setReturnValue('getLastChangeset', $changeset);
+
+        $fields_data = array(
+            '103' => "$this->open_value_id",
+        );
+        $this->transition_null_to_open->expectOnce('after');
+        $this->transition_open_to_close->expectNever('after');
+        $this->workflow->after($fields_data, $this->artifact);
+    }
 }
 
 class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {

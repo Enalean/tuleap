@@ -278,7 +278,13 @@ class Workflow {
         }
     }
 
-    public function after() {
+    public function after(array $fields_data, Tracker_Artifact $artifact) {
+        if (isset($fields_data[$this->getFieldId()])) {
+            $transition = $this->getCurrentTransition($fields_data, $artifact);
+            if ($transition) {
+                $transition->after();
+            }
+        }
     }
 
     public function validate($fields_data, Tracker_Artifact $artifact) {
