@@ -58,5 +58,10 @@ class Http_ClientTest extends TuleapTestCase {
         $client = new Http_Client();
         $this->assertTrue($client->getOption(CURLOPT_FAILONERROR));
     }
+
+    public function itTimeoutsInFiveSeconds() {
+        $client = new Http_Client();
+        $this->assertEqual($client->getOption(CURLOPT_TIMEOUT), 5);
+    }
 }
 ?>

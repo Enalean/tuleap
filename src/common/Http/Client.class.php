@@ -46,6 +46,7 @@ class Http_Client
         $this->setOption(CURLINFO_HEADER_OUT, true);
         $this->setOption(CURLOPT_RETURNTRANSFER, true);
         $this->setOption(CURLOPT_FAILONERROR, true);
+        $this->setOption(CURLOPT_TIMEOUT, 5);
         $this->setOption(CURLOPT_PROXY, Config::get('sys_proxy'));
     }
 
