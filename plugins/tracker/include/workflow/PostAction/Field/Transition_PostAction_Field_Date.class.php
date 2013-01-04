@@ -36,6 +36,8 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
      */
     const FILL_CURRENT_TIME = 2;
     
+    const SHORT_NAME = 'field_date';
+
     /**
      * @var Integer the type of the value. CLEAR_DATE | FILL_CURRENT_TIME
      */
@@ -60,7 +62,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
      * @return string
      */
     public function getShortName() {
-        return 'field_date';
+        return self::SHORT_NAME;
     }
     
     /**

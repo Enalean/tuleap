@@ -25,6 +25,9 @@ require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/CIBuild
 
 class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
 
+    protected $factory;
+    protected $dao;
+
     public function setUp() {
         parent::setUp();
 
@@ -32,27 +35,31 @@ class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
         $this->post_action_id = 789;
 
         $this->transition = aTransition()->withId($this->transition_id)->build();
+        $this->factory = partial_mock('Transition_PostAction_CIBuildFactory', array('getDao', 'loadPostActionRows'));
+        $this->dao = mock('Transition_PostAction_CIBuildDao');
+
+        stub($this->factory)->getDao()->returns($this->dao);
     }
 
     public function itLoadsCIBuildPostActions() {
-        $post_action_value = 12;
-        $post_action_rows  = array(array('id'         => $this->post_action_id,
-                                         'job_url'    => $post_action_value));
+        $post_action_value = 'http://ww.myjenks.com/job';
+        $post_action_rows  = array(
+            array(
+                'id'         => $this->post_action_id,
+                'job_url'    => $post_action_value,
+                )
+            );
 
-        $ci_build_dao = stub('Transition_PostAction_CIBuildDao')->searchByTransitionId($this->transition_id)->returns($post_action_rows);
-        $ci_client    = new Jenkins_Client(new Http_Client());
-        $factory = aPostActionCIBuildFactory()
-            ->withCIBuildDao($ci_build_dao)
-            ->withCIClient($ci_client)
-            ->build();
-        $expected = array(aCIBuildPostAction()
-            ->withId($this->post_action_id)
-            ->withTransition($this->transition)
-            ->withValue($post_action_value)
-            ->withCIClient($ci_client)
-            ->build());
+        stub($this->factory)->loadPostActionRows($this->transition)->returns($post_action_rows);
 
-        $this->assertEqual($factory->loadPostActions($this->transition), $expected);
+        $this->assertCount($this->factory->loadPostActions($this->transition), 1);
+
+        $post_action_array = $this->factory->loadPostActions($this->transition);
+        $first_pa = $post_action_array[0];
+
+        $this->assertEqual($first_pa->getJobUrl(), $post_action_value);
+        $this->assertEqual($first_pa->getId(), $this->post_action_id);
+        $this->assertEqual($first_pa->getTransition(), $this->transition);
     }
 }
 

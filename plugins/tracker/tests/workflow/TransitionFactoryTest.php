@@ -41,7 +41,9 @@ class TransitionFactory_BaseTest extends TuleapTestCase {
         parent::setUp();
         $this->condition_factory  = mock('Workflow_Transition_ConditionFactory');
         $this->postaction_factory = mock('Transition_PostActionFactory');
-        $this->factory            = partial_mock('TransitionFactory', array('getPostActionFactory'), array($this->condition_factory));
+        $this->factory            = partial_mock('TransitionFactory',
+                array('getPostActionFactory'),
+                array($this->condition_factory));
         stub($this->factory)->getPostActionFactory()->returns($this->postaction_factory);
     }
 }
@@ -150,7 +152,7 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
         stub($this->condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
     }
 
-    public function itReconstitutesDatePostActions() {
+    public function _itReconstitutesDatePostActions() {
 
         $xml = new SimpleXMLElement('
             <transition>
@@ -171,7 +173,7 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Date');
     }
 
-    public function itReconstitutesIntPostActions() {
+    public function _itReconstitutesIntPostActions() {
 
         $xml = new SimpleXMLElement('
             <transition>
@@ -192,7 +194,7 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
         $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Int');
     }
 
-    public function itReconstitutesFloatPostActions() {
+    public function _itReconstitutesFloatPostActions() {
 
         $xml = new SimpleXMLElement('
             <transition>

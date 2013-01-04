@@ -24,6 +24,7 @@ require_once 'common/Jenkins/Client.class.php';
 
 class Transition_PostAction_CIBuild extends Transition_PostAction {
 
+    const SHORT_NAME = 'ci_build';
     /**
      * @var string Pattern to validate a job url
      */
@@ -60,7 +61,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      * @return string
      */
     public function getShortName() {
-        return 'ci_build';
+        return self::SHORT_NAME;
     }
 
     public function fetch() {

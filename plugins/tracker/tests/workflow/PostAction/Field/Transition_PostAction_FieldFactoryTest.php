@@ -25,6 +25,8 @@ require_once dirname(__FILE__).'/../../../builders/aFloatFieldPostAction.php';
 
 class Transition_PostAction_FieldFactoryTest extends TuleapTestCase {
 
+    protected $factory;
+
     public function setUp() {
         parent::setUp();
 
@@ -36,47 +38,99 @@ class Transition_PostAction_FieldFactoryTest extends TuleapTestCase {
     }
 
     public function itLoadsIntFieldPostActions() {
+        $factory = aPostActionFieldFactory(array('loadPostActionRows'))->build();
+
         $post_action_value = 12;
-        $post_action_rows  = array(array('id'       => $this->post_action_id,
-                                         'field_id' => $this->field_id,
-                                         'value'    => $post_action_value));
+        $post_action_rows  = array(
+            array(
+                'id'       => $this->post_action_id,
+                'field_id' => $this->field_id,
+                'value'    => $post_action_value
+                )
+            );
 
-        $int_dao             = stub('Transition_PostAction_Field_IntDao')->searchByTransitionId($this->transition_id)->returns($post_action_rows);
-        $field               = mock('Tracker_FormElement_Field_Integer');
-        $formelement_factory = stub('Tracker_FormElementFactory')->getFormElementById($this->field_id)->returns($field);
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Int::SHORT_NAME)
+            ->returns($post_action_rows);
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Float::SHORT_NAME)
+            ->returns(array());
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Date::SHORT_NAME)
+            ->returns(array());
 
-        $factory = aPostActionFieldFactory()->withFieldIntDao($int_dao)
-                                       ->withFormElementFactory($formelement_factory)
-                                       ->build();
 
-        $this->assertEqual($factory->loadPostActions($this->transition),
-                           array(anIntFieldPostAction()->withId($this->post_action_id)
-                                                       ->withField($field)
-                                                       ->withTransition($this->transition)
-                                                       ->withValue($post_action_value)
-                                                       ->build()));
+        $post_action_array = $factory->loadPostActions($this->transition);
+        $this->assertCount($post_action_array, 1);
+
+        $first_pa = $post_action_array[0];
+        $this->assertEqual($first_pa->getId(), $this->post_action_id);
+        $this->assertEqual($first_pa->getTransition(), $this->transition);
+        $this->assertEqual($first_pa->getValue(), $post_action_value);
     }
 
     public function itLoadsFloatFieldPostActions() {
-        $post_action_value = 3.45;
-        $post_action_rows  = array(array('id'       => $this->post_action_id,
-                                         'field_id' => $this->field_id,
-                                         'value'    => $post_action_value));
+        $factory = aPostActionFieldFactory(array('loadPostActionRows'))->build();
 
-        $float_dao            = stub('Transition_PostAction_Field_FloatDao')->searchByTransitionId($this->transition_id)->returns($post_action_rows);
-        $field                = mock('Tracker_FormElement_Field_Float');
-        $form_element_factory = stub('Tracker_FormElementFactory')->getFormElementById($this->field_id)->returns($field);
+        $post_action_value = 12;
+        $post_action_rows  = array(
+            array(
+                'id'       => $this->post_action_id,
+                'field_id' => $this->field_id,
+                'value'    => $post_action_value
+                )
+            );
 
-        $factory = aPostActionFieldFactory()->withFieldFloatDao($float_dao)
-                                       ->withFormElementFactory($form_element_factory)
-                                       ->build();
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Int::SHORT_NAME)
+            ->returns(array());
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Float::SHORT_NAME)
+            ->returns($post_action_rows);
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Date::SHORT_NAME)
+            ->returns(array());
 
-        $this->assertEqual($factory->loadPostActions($this->transition),
-                           array(aFloatFieldPostAction()->withId($this->post_action_id)
-                                                        ->withField($field)
-                                                        ->withTransition($this->transition)
-                                                        ->withValue($post_action_value)
-                                                        ->build()));
+
+        $post_action_array = $factory->loadPostActions($this->transition);
+        $this->assertCount($post_action_array, 1);
+
+        $first_pa = $post_action_array[0];
+        $this->assertEqual($first_pa->getId(), $this->post_action_id);
+        $this->assertEqual($first_pa->getTransition(), $this->transition);
+        $this->assertEqual($first_pa->getValue(), $post_action_value);
+    }
+
+    public function itLoadsDateFieldPostActions() {
+        $factory = aPostActionFieldFactory(array('loadPostActionRows'))->build();
+
+        $post_action_value = 12;
+        $post_action_rows  = array(
+            array(
+                'id'       => $this->post_action_id,
+                'field_id' => $this->field_id,
+                'value_type'    => $post_action_value
+                )
+            );
+
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Int::SHORT_NAME)
+            ->returns(array());
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Float::SHORT_NAME)
+            ->returns(array());
+        stub($factory)
+            ->loadPostActionRows($this->transition, Transition_PostAction_Field_Date::SHORT_NAME)
+            ->returns($post_action_rows);
+
+
+        $post_action_array = $factory->loadPostActions($this->transition);
+        $this->assertCount($post_action_array, 1);
+
+        $first_pa = $post_action_array[0];
+        $this->assertEqual($first_pa->getId(), $this->post_action_id);
+        $this->assertEqual($first_pa->getTransition(), $this->transition);
+        $this->assertEqual($first_pa->getValueType(), $post_action_value);
     }
 }
 ?>

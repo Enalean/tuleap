@@ -29,32 +29,21 @@ class Test_Transition_PostAction_CIBuildFactoryBuilder {
     
     public function __construct() {
                 
-        $this->daos = array('ci_build'    => mock('Transition_PostAction_CIBuildDao'));
-        
-        foreach($this->daos as $short_name => $dao) {
-            stub($dao)->searchByTransitionId('*')->returns(array());
-        }
     }
     
     public function withCIBuildDao(Transition_PostAction_CIBuildDao $dao) {
         $this->daos['ci_build'] = $dao;
         return $this;
     }
-    
-    public function withCIClient($ci_client) {
-        $this->ci_client = $ci_client;
-        return $this;
-    }
 
     public function build() {
         $this->factory = partial_mock(
             'Transition_PostAction_CIBuildFactory',
-            array('getDao'),
-            array($this->ci_client)
+            array('getDao')
         );
-        foreach($this->daos as $short_name => $dao) {
-            stub($this->factory)->getDao($short_name)->returns($dao);
-        }
+
+        stub($this->factory)->getDao()->returns(mock('Transition_PostAction_CIBuildDao'));
+
         return $this->factory;
     }
 }

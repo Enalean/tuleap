@@ -21,27 +21,26 @@
 require_once dirname(__FILE__).'/../../include/workflow/PostAction/Transition_PostActionFactory.class.php';
 require_once dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 
-function aPostActionFieldFactory() {
-    return new Test_Transition_PostAction_FieldFactoryBuilder();
+function aPostActionFieldFactory(array $mocked_methods) {
+    return new Test_Transition_PostAction_FieldFactoryBuilder($mocked_methods);
 }
 
 class Test_Transition_PostAction_FieldFactoryBuilder {
     
-    public function __construct() {
+    public function __construct(array $mocked_methods) {
+        $mocked_methods = array_merge($mocked_methods, array('getDao', 'getFormElementFactory',));
+
+
         $this->factory = TestHelper::getPartialMock('Transition_PostAction_FieldFactory',
-                                                    array('getDao',
-                                                          'getFormElementFactory'));
+                                                    $mocked_methods);
         
         $this->form_element_factory = mock('Tracker_FormElementFactory');
                 
-        $this->daos = array('field_date'    => mock('Transition_PostAction_Field_DateDao'),
-                            'field_int'     => mock('Transition_PostAction_Field_IntDao'),
-                            'field_float'   => mock('Transition_PostAction_Field_FloatDao'),
-                      );
-        
-        foreach($this->daos as $short_name => $dao) {
-            stub($dao)->searchByTransitionId('*')->returns(array());
-        }
+        $this->daos = array(
+            'field_date'    => mock('Transition_PostAction_Field_DateDao'),
+            'field_int'     => mock('Transition_PostAction_Field_IntDao'),
+            'field_float'   => mock('Transition_PostAction_Field_FloatDao'),
+      );
     }
     
     public function withFormElementFactory(Tracker_FormElementFactory $form_element_factory) {

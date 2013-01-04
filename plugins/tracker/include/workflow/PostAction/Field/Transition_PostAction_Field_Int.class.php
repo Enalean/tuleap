@@ -26,13 +26,15 @@ require_once 'Transition_PostAction_Field_Numeric.class.php';
  */
 class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeric {
     
+    const SHORT_NAME = 'field_int';
+
     /**
      * Get the shortname of the post action
      *
      * @return string
      */
     public function getShortName() {
-        return 'field_int';
+        return self::SHORT_NAME;
     }
     
     /**

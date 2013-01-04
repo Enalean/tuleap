@@ -52,6 +52,7 @@ class Test_Transition_PostAction_CIBuild_Builder {
         $this->value = $value;
         return $this;
     }
+
     public function withCIClient($ci_client) {
         $this->ci_client = $ci_client;
         return $this;

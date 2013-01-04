@@ -37,21 +37,20 @@ require_once 'CIBuild/Transition_PostAction_CIBuildFactory.class.php';
 class Transition_PostActionFactory {
     
     /**
-     * @var Array of available post actions classes
+     *
+     * @return \Transition_PostAction_FieldFactory
      */
-    protected $post_actions_classes_field = array(
-        'field_date'    => 'Transition_PostAction_Field_Date',
-        'field_int'     => 'Transition_PostAction_Field_Int',
-        'field_float'   => 'Transition_PostAction_Field_Float',
-    );
+    public function getFieldFactory() {
+        return new Transition_PostAction_FieldFactory();
+    }
 
     /**
-     * @var Array of available post actions classes run after fields validation
+     *
+     * @return \Transition_PostAction_CIBuildFactory
      */
-
-    protected $post_actions_classes_ci = array(
-        'ci_build' => 'Transition_PostAction_CIBuild',
-    );
+    public function getCIBuildFactory() {
+        return new Transition_PostAction_CIBuildFactory();
+    }
     
     /**
      * Get html code to let someone choose a post action for a transition
@@ -59,22 +58,7 @@ class Transition_PostActionFactory {
      * @return string html
      */
     public function fetchPostActions() {
-        $html = '';
-        $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
-        $html .= '<select name="add_postaction">';
-        $html .= '<option value="" selected>--</option>';
-        
-        $post_actions_classes = array_merge($this->post_actions_classes_field, $this->post_actions_classes_ci);
-        foreach ($post_actions_classes as $shortname => $klass) {
-            //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
-            eval("\$label = $klass::getLabel();");
-            $html .= '<option value="'. $shortname .'">';
-            $html .= $label;
-            $html .= '</option>';
-        }
-        
-        $html .= '</select></p>';
-        return $html;
+        return $this->getFieldFactory()->fetchPostActions() . $this->getCIBuildFactory()->fetchPostActions();
     }
     
     /**
@@ -86,35 +70,22 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function addPostAction(Transition $transition, $requested_postaction) {
-        if (isset($this->post_actions_classes_field[$requested_postaction]) || isset($this->post_actions_classes_ci[$requested_postaction])) {
-            $this->getDao($requested_postaction)->create($transition->getTransitionId());
+        if($requested_postaction === Transition_PostAction_CIBuild::SHORT_NAME) {
+            $this->getCIBuildFactory()->addPostAction($transition, $requested_postaction);
+        } elseif (in_array($requested_postaction, $this->getFieldFactory()->getTypes())) {
+            $this->getFieldFactory()->addPostAction($transition, $requested_postaction);
+        } else {
+            throw new Transition_PostAction_NotFoundException('Invalid Post Action type');
         }
     }
     
-    /**
-     * Returns the corresponding DAO given a post action short name.
-     *
-     * @param string $post_action_short_name
-     * 
-     * @return Transition_PostAction_FieldDao
-     */
-    protected function getDao($post_action_short_name) {
-        switch ($post_action_short_name) {
-            case 'field_date':  return new Transition_PostAction_Field_DateDao();
-            case 'field_int':   return new Transition_PostAction_Field_IntDao();
-            case 'field_float': return new Transition_PostAction_Field_FloatDao();
-            case 'ci_build': return new Transition_PostAction_CIBuildDao();
-            default:            throw new Transition_PostAction_NotFoundException();
-        }
-    }
-    
+
     public function getPostActionFieldFactory() {
         return new Transition_PostAction_FieldFactory();
     }
     
     public function getPostActionCIBuildFactory() {
-        $ci_client = new Jenkins_Client(new Http_Client());
-        return new Transition_PostAction_CIBuildFactory($ci_client);
+        return new Transition_PostAction_CIBuildFactory();
     }
     
     /**
@@ -125,148 +96,14 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function loadPostActions(Transition $transition) {
-        $post_actions = array();
-        $postaction_field_factory   = $this->getPostActionFieldFactory();
-        $postaction_cibuild_factory = $this->getPostActionCIBuildFactory();
-        
-        
-        $post_actions = array_merge($postaction_field_factory->loadPostActions($transition), $postaction_cibuild_factory->loadPostActions($transition));
+        $post_actions = array_merge(
+            $this->getFieldFactory()->loadPostActions($transition),
+            $this->getCIBuildFactory()->loadPostActions($transition)
+        );
         $transition->setPostActions($post_actions);
     }
-   
-    /**   
-     * Reconstitute a PostAction from database
-     * 
-     * @param Transition $transition The transition to which this PostAction is associated
-     * @param mixed      $row        The raw data (array-like)
-     * @param string     $shortname  The PostAction short name
-     * @param string     $klass      The PostAction class name
-     * 
-     * @return Transition_PostAction
-     */
-    private function buildPostAction(Transition $transition, $row, $shortname, $klass) {
-        $id    = $this->getIdFromRow($row);
-        $field = $this->getFieldFromRow($row);
-        $value = $this->getValueFromRow($row, $shortname);
-        
-        return new $klass($transition, $id, $field, $value);
-    }
     
-    /**
-     * Retrieves the id from the given PostAction database row.
-     * 
-     * @param array $row
-     * 
-     * @return int
-     */
-    public function getIdFromRow($row) {
-        return (int)$row['id'];
-    }
-    
-    
-    /**
-     * Retrieves the value (or value type) from the given PostAction database row.
-     * 
-     * @param array $row
-     * @param string $shortname
-     * 
-     * @return mixed
-     * 
-     * @throws Transition_PostAction_NotFoundException 
-     */
-    private function getValueFromRow($row, $shortname) {
-        switch ($shortname) {
-            case 'field_date':    return (int) $row['value_type'];
-            case 'field_int':     return (int) $row['value'];
-            case 'field_float':   return (float) $row['value'];
-            case 'ci_build': return (string) $row['value'];
-            default: throw new Transition_PostAction_NotFoundException($shortname);
-        }
-    }
-    
-    /**
-     * Retrieves matching PostAction database records.
-     * 
-     * @param Transition $transition The Transition to which the PostActions must be associated
-     * @param string     $shortname  The PostAction type (short name, not class name)
-     * 
-     * @return DataAccessResult
-     */
-    public function loadPostActionRows(Transition $transition, $shortname) {
-        $dao = $this->getDao($shortname);
-        return $dao->searchByTransitionId($transition->getTransitionId());
-    }
-    
-    /**
-     * Creates a postaction Object
-     * 
-     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Transition       $transition     to which the postaction is attached
-     * 
-     * @return Transition_PostAction The  Transition_PostAction object, or null if error
-     */
-    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
-        $xml_tag_name          = $xml->getName();
-        $post_action_class     = $this->getPostActionClassFromXmlTagName($xml_tag_name);
-        $field_id              = $xmlMapping[(string)$xml->field_id['REF']];
-        $postaction_attributes = $xml->attributes();
-        $value                 = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
-        
-        if ($field_id) {
-            return new $post_action_class($transition, 0, $field_id, $value);
-        }
-    }
-    
-    /**
-     * Return the PostAction short name, given an XML tag name.
-     * 
-     * @param string $xml_tag_name
-     * 
-     * @return string
-     */
-    private function getShortNameFromXmlTagName($xml_tag_name) {
-        return str_replace('postaction_', '', $xml_tag_name);
-    }
-    
-    /**
-     * Return the PostAction class, given an XML tag name.
-     * 
-     * @param string $xml_tag_name
-     * 
-     * @return string
-     * 
-     * @throws Transition_PostAction_NotFoundException
-     */
-    private function getPostActionClassFromXmlTagName($xml_tag_name) {
-        $short_name = $this->getShortNameFromXmlTagName($xml_tag_name);
-        
-        if (! key_exists($short_name, $this->post_actions_classes_field)) {
-            throw new Transition_PostAction_NotFoundException($short_name);
-        }
-        
-        return $this->post_actions_classes_field[$short_name];
-    }
-    
-    /**
-     * Extract the PostAction value from the attributes,
-     * deducing the PostAction type from the XML tag name.
-     * 
-     * @param string $xml_tag_name
-     * @param array $postaction_attributes
-     * 
-     * @return mixed
-     * 
-     * @throws Transition_PostAction_NotFoundException 
-     */
-    private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
-        switch($xml_tag_name) {
-            case 'postaction_field_date':  return (int) $postaction_attributes['valuetype'];
-            case 'postaction_field_int':   return (int) $postaction_attributes['value'];
-            case 'postaction_field_float': return (float) $postaction_attributes['value'];
-            default: throw new Transition_PostAction_NotFoundException($xml_tag_name);
-        }
-    }
+
     
    /**
     * Save a postaction object
@@ -275,47 +112,13 @@ class Transition_PostActionFactory {
     *
     * @return void
     */
-    public function saveObject($post_action) {
-        $short_name = $post_action->getShortName();
-        $dao   = $this->getDao($post_action->getShortName());
-        switch($short_name) {
-            //TODO
-            case 'ci_build':
-                $dao->save($post_action->getTransition()->getTransitionId(), 
-                   $post_action->getJobUrl()
-                );
-                break;
-
-            default :
-                $dao->save($post_action->getTransition()->getTransitionId(),
-                   $post_action->getFieldId(),
-                   $this->getValue($post_action));
-        }
-    }
-    
-    /**
-     * XXX: PostAction value / value type should be an object representing
-     * the PostAction configuration, allowing DAOs to share the same API.
-     */
-    private function getValue(Transition_PostAction $post_action) {
-        $short_name = $post_action->getShortName();
+    public function saveObject(Transition_PostAction $post_action) {
         
-        switch($short_name) {
-            case 'field_date':  return $post_action->getValueType();
-            case 'field_int':
-            case 'field_float': return $post_action->getValue();
-            case 'ci_build': return $post_action->getValue();
-            default: throw new Transition_PostAction_NotFoundException($short_name);
+        if($post_action instanceof Transition_PostAction_Field) {
+            $this->getFieldFactory()->saveObject($post_action);
+        } else {
+            $this->getCIBuildFactory()->saveObject($post_action);
         }
-    }
-    
-    /**
-     * Wrapper for Tracker_FormElementFactory
-     *
-     * @return Tracker_FormElementFactory
-     */
-    protected function getFormElementFactory() {
-        return Tracker_FormElementFactory::instance();
     }
     
     /**
@@ -326,12 +129,8 @@ class Transition_PostActionFactory {
      * @return bool
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
-        foreach ($this->post_actions_classes_field as $shortname => $klass) {
-            if ($this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
-                return true;
-            }
-        }
-        return false;
+        return $this->getCIBuildFactory()->isFieldUsedInPostActions($field)
+                || $this->getFieldFactory()->isFieldUsedInPostActions($field);
     }
     
     /**
@@ -341,13 +140,8 @@ class Transition_PostActionFactory {
      * 
      */
     public function deleteWorkflow($workflow_id) {
-        $result = true;
-        
-        $post_actions_classes = array_merge($this->post_actions_classes_field, $this->post_actions_classes_ci);
-        foreach ($post_actions_classes as $shortname => $klass) {
-            $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
-        }        
-        return $result;
+        return $this->getCIBuildFactory()->deleteWorkflow($workflow_id)
+                && $this->getFieldFactory()->deleteWorkflow($workflow_id);
     }
     
    /**
@@ -360,16 +154,30 @@ class Transition_PostActionFactory {
     * 
     */
     public function duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping) {
-        foreach ($postactions as $postaction) {
-            $from_field_id = $postaction->getFieldId();
-            
-            foreach ($field_mapping as $mapping) {
-                if ($mapping['from'] == $from_field_id) {
-                    $to_field_id = $mapping['to'];
-                    $this->getDao($postaction->getShortname())->duplicate($from_transition_id, $to_transition_id, $from_field_id, $to_field_id);
-                }
-            }
+        $this->getCIBuildFactory()->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
+        $this->getFieldFactory()->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
+    }
+
+
+    /**
+     * Creates a postaction Object
+     *
+     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
+     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
+     * @param Transition       $transition     to which the postaction is attached
+     *
+     * @return Transition_PostAction The  Transition_PostAction object, or null if error
+     */
+    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
+        if($this->getFieldFactory()->getInstanceFromXML($xml, $xmlMapping, $transition) instanceof Transition_PostAction_Field) {
+            return $this->getFieldFactory()->getInstanceFromXML($xml, $xmlMapping, $transition);
         }
+
+        if($this->getCIBuildFactory()->getInstanceFromXML($xml, $xmlMapping, $transition) instanceof Transition_PostAction_CIBuild) {
+            return $this->getCIBuildFactory()->getInstanceFromXML($xml, $xmlMapping, $transition);
+        }
+
+        return null;
     }
 }
 ?>
