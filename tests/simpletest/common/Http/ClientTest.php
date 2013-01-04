@@ -48,5 +48,10 @@ class Http_ClientTest extends TuleapTestCase {
         $client = new Http_Client();
         $this->assertEqual($client->getOption(CURLOPT_PROXY), '');
     }
+
+    public function itDoesNotOutputDirectlyTheResponse() {
+        $client = new Http_Client();
+        $this->assertTrue($client->getOption(CURLOPT_RETURNTRANSFER));
+    }
 }
 ?>
