@@ -106,8 +106,18 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
 
     }
 
-    public function save() {
-
+        /**
+     * Create a full-featured postaction.
+     *
+     * @param int   $transition_id
+     * @param mixed $job_url
+     *
+     * @return bool
+     */
+    public function save($transition_id, $job_url) {
+        if (($post_action_id = $this->create($transition_id)) > 0) {
+            $this->updatePostAction($post_action_id, $job_url);
+        }
     }
 
 }

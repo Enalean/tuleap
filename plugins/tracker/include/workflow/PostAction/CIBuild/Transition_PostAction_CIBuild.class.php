@@ -113,7 +113,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      */
      public function exportToXml(&$root, $xmlMapping) {
          if ($this->isDefined()) {
-             $child = $root->addChild('postaction_cibuild');
+             $child = $root->addChild('postaction_ci_build');
              $child->addAttribute('job_url', $this->getJobUrl());
          }
      }

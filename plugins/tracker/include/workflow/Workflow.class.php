@@ -278,6 +278,9 @@ class Workflow {
         }
     }
 
+    public function after() {
+    }
+
     public function validate($fields_data, Tracker_Artifact $artifact) {
         if (! $this->is_used) {
             return true;

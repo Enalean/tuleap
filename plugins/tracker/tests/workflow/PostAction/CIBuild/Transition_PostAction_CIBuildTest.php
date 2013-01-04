@@ -18,8 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../../../../include/Tracker/TrackerManager.class.php');
-require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php');
+require_once TRACKER_BASE_DIR .'/Tracker/TrackerManager.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php';
 
 class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
@@ -112,7 +112,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $array_xml_mapping = array();
 
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);
-        $this->assertEqual((string)$root->postaction_cibuild['job_url'], $job_url);
+        $this->assertEqual((string)$root->postaction_ci_build['job_url'], $job_url);
     }
 
     public function itDoesNotExportThePostActionIfJobUrlIsNotSet() {
@@ -127,7 +127,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $array_xml_mapping = array();
 
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);
-        $this->assertFalse(isset($root->postaction_cibuild));
+        $this->assertFalse(isset($root->postaction_ci_build));
     }
 
     public function itLaunchTheCIBuildOnAfter() {

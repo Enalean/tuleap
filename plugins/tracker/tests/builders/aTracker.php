@@ -77,6 +77,11 @@ class Test_Tracker_Builder {
         }
         return $tracker;
     }
+
+    public function withWorkflow($workflow) {
+        $this->workflow = $workflow;
+        return $this;
+    }
 }
 
 ?>
