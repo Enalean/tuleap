@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once(dirname(__FILE__).'/../../../../include/Tracker/TrackerManager.class.php');
 require_once(dirname(__FILE__).'/../../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php');
 
 class Transition_PostAction_CIBuildTest extends TuleapTestCase {
@@ -92,6 +93,34 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
         $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
         $this->assertTrue($post_action_ci_build->isDefined());
+    }
+
+    public function itExportsInXMLFormatTheJobUrl() {
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = 'http://example.com';
+
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
+
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $array_xml_mapping = array();
+
+        $post_action_ci_build->exportToXml($root, $array_xml_mapping);
+        $this->assertEqual((string)$root->postaction_cibuild['job_url'], $job_url);
+    }
+
+    public function itDoesNotExportThePostActionIfJobUrlIsNotSet() {
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = '';
+
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url);
+
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $array_xml_mapping = array();
+
+        $post_action_ci_build->exportToXml($root, $array_xml_mapping);
+        $this->assertFalse(isset($root->postaction_cibuild));
     }
 }
 ?>

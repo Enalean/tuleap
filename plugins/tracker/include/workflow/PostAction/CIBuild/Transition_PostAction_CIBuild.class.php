@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
 require_once 'common/Jenkins/Client.class.php';
 
 class Transition_PostAction_CIBuild extends Transition_PostAction {
@@ -47,7 +48,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         $this->job_url = $job_url;
     }
 
-    
+
     public function getJobUrl() {
         return $this->job_url;
     }
@@ -100,6 +101,21 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         }
     }
 
+    /**
+     * Export postactions to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+     public function exportToXml(&$root, $xmlMapping) {
+         if ($this->isDefined()) {
+             $child = $root->addChild('postaction_cibuild');
+             $child->addAttribute('job_url', $this->getJobUrl());
+         }
+     }
+
     public static function getLabel() {
         return $GLOBALS['Language']->getText('workflow_postaction', 'launch_job');
     }
@@ -108,7 +124,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         $jenkins_client = new Jenkins_Client($this->host);
         return $jenkins_client->launchJobBuild($this->job_name);
     }
-    
+
     public function getDao() {
         return new Transition_PostAction_CIBuildDao();
     }
