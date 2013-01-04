@@ -44,6 +44,7 @@ class Http_Client
     public function __construct() {
         $this->curl_handle = curl_init();
         $this->setOption(CURLINFO_HEADER_OUT, true);
+        $this->setOption(CURLOPT_PROXY, Config::get('sys_proxy'));
     }
 
     /**
