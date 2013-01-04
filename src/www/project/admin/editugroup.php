@@ -139,10 +139,6 @@ if (($func=='edit')||($func=='do_create')) {
     $uGroupMgr = new UGroupManager();
     $uGroupMgr->processEditMembersAction($group_id, $ugroup_id, $request);
 
-    project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
-    //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
-    echo _breadCrumbs($project, $ugroup_id, $ugroup_name);
-
     $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding'));
     $vPane->required();
     $pane  = $request->getValidated('pane', $vPane, 'settings');
@@ -304,6 +300,10 @@ if (($func=='edit')||($func=='do_create')) {
         $content .= $bindingiewer->getUgtoupBindingPaneContent($groupId, $ugroupId, $sourceProject);
     break;
     }
+
+    project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
+    //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
+    echo _breadCrumbs($project, $ugroup_id, $ugroup_name);
 
     $HTMLPane = new HTML_Element_Pane($panes, $activePane, $content);
     echo $HTMLPane->renderValue();

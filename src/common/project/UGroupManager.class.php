@@ -428,8 +428,6 @@ class UGroupManager {
             $content .= '</fieldset>';
 
             $content .= '</form>';
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'operation_not_allowed'));
         }
         $content .= '</td></tr></table>';
         $content .= '</div>';
