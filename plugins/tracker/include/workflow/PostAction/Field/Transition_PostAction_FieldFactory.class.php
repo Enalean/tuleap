@@ -51,8 +51,6 @@ class Transition_PostAction_FieldFactory {
      */
     public function fetchPostActions() {
         $html = '';
-        $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
-        $html .= '<select name="add_postaction">';
         $html .= '<option value="" selected>--</option>';
 
         $post_actions_classes = $this->post_actions_classes_field;
@@ -63,8 +61,6 @@ class Transition_PostAction_FieldFactory {
             $html .= $label;
             $html .= '</option>';
         }
-
-        $html .= '</select></p>';
         return $html;
     }
 

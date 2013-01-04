@@ -103,13 +103,10 @@ class Transition_PostAction_CIBuildFactory {
      */
     public function fetchPostActions() {
         $html = '';
-        $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
-        $html .= '<select name="add_postaction">';
         $html .= '<option value="" selected>--</option>';
         $html .= '<option value="'. Transition_PostAction_CIBuild::SHORT_NAME .'">';
         $html .= Transition_PostAction_CIBuild::getLabel();
         $html .= '</option>';
-        $html .= '</select></p>';
 
         return $html;
     }

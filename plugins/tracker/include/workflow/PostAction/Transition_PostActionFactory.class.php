@@ -58,7 +58,12 @@ class Transition_PostActionFactory {
      * @return string html
      */
     public function fetchPostActions() {
-        return $this->getFieldFactory()->fetchPostActions() . $this->getCIBuildFactory()->fetchPostActions();
+        $html ='';
+        $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
+        $html .= '<select name="add_postaction">';
+        $html .= $this->getFieldFactory()->fetchPostActions() . $this->getCIBuildFactory()->fetchPostActions();
+        $html .= '</select>';
+        return $html;
     }
     
     /**
