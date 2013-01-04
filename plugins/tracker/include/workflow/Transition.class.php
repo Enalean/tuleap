@@ -186,15 +186,24 @@ class Transition {
      * @return void
      */
     public function before(&$fields_data, User $current_user) {
-
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->before($fields_data, $current_user);
         }
     }
 
+    /**
+     * Execute actions after transition happens
+     *
+     * @return void
+     */
     public function after() {
+        $post_actions = $this->getPostActions();
+        foreach ($post_actions as $post_action) {
+            $post_action->after();
+        }
     }
+
     /**
      * Validate that transition can occur
      *
