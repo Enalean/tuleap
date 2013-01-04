@@ -142,21 +142,19 @@ class Transition_PostAction_CIBuildFactory {
       
     /**
      * Creates a postaction Object
-     * 
+     *
      * @param SimpleXMLElement $xml         containing the structure of the imported postaction
      * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
      * @param Transition       $transition     to which the postaction is attached
-     * 
+     *
      * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
-        $field_id              = $xmlMapping[(string)$xml->field_id['REF']];
+        $xml_tag_name          = $xml->getName();
         $postaction_attributes = $xml->attributes();
-        $value                 = $postaction_attributes['value'];
-        
-        if ($field_id) {
-            return new Transition_PostAction_CIBuild($transition, 0, $field_id, $value);
-        }
+        $job_url               = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
+
+        return new Transition_PostAction_CIBuild($transition, 0, $job_url);
     }
     
    /**   
@@ -187,22 +185,7 @@ class Transition_PostAction_CIBuildFactory {
         return new Transition_PostAction_CIBuildDao();
     }
 
-     /**
-     * Creates a postaction Object
-     *
-     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Transition       $transition     to which the postaction is attached
-     *
-     * @return Transition_PostAction The  Transition_PostAction object, or null if error
-     */
-    public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
-        $xml_tag_name          = $xml->getName();
-        $postaction_attributes = $xml->attributes();
-        $job_url               = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
-
-        return new Transition_PostAction_CIBuild($transition, 0, $job_url);
-    }
+     
 
      private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
         switch($xml_tag_name) {
