@@ -58,7 +58,7 @@ class Jenkins_Client {
         try {
             $this->http_curl_client->doRequest();
         } catch (Http_ClientException $e) {
-            throw new Jenkins_ClientUnableToLaunchBuildException('Job: ' . $job_url . ' ;Message: ' . $e->getMessage());
+            throw new Jenkins_ClientUnableToLaunchBuildException('Job: ' . $job_url . '; Message: ' . $e->getMessage());
         }
     }
 }

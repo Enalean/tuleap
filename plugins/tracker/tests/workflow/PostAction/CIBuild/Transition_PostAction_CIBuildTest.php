@@ -131,7 +131,6 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
     }
 
     public function itLaunchTheCIBuildOnAfter() {
-
         $transition       = mock('Transition');
         $id               = 123;
         $job_url          = 'http://example.com/job';
@@ -140,6 +139,33 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
 
         expect($client)->launchJobBuild($job_url)->once();
+        $post_action_ci_build->after();
+    }
+
+    public function itDisplayInfoFeedbackIfLaunchSucceed() {
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = 'http://example.com/job';
+        $client           = mock('Jenkins_Client');
+
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+
+        expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
+        $post_action_ci_build->after();
+    }
+
+    public function itDisplayErrorFeedbackIfLaunchFailed() {
+        $transition       = mock('Transition');
+        $id               = 123;
+        $job_url          = 'http://example.com/job';
+        $client           = mock('Jenkins_Client');
+
+        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+
+        $error_message = 'Oops';
+        stub($client)->launchJobBuild($job_url)->throws(new Jenkins_ClientUnableToLaunchBuildException($error_message));
+
+        expect($GLOBALS['Response'])->addFeedback('error', $error_message)->once();
         $post_action_ci_build->after();
     }
 }
