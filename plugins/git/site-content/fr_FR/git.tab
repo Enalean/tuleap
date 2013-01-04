@@ -167,6 +167,9 @@ plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
 plugin_git	fork_choose_destination_project	Copier vers un autre projet
 plugin_git	fork_choose_destination_personal	Créer les dépôts personnels dans ce projet
 plugin_git	successfully_forked	Fork créé avec succès
+plugin_git	fork_destination_project_message	Dans le projet <b>$1</b>
+plugin_git	fork_destination_personal_message	en tant que fork personnel
+plugin_git	fork_repository_message	Vous êtes sur le point de créer un fork du dépôt: $1
 
 plugin_git	tree_view_project	Projet
 plugin_git	tree_view_repository	Dépôt
@@ -206,4 +209,3 @@ plugin_git	widget_project_pushes_error	Pas de push pour la/les dernière(s) $1 s
 
 plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git push
-

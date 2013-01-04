@@ -26,6 +26,7 @@ require_once GIT_BASE_DIR .'/Git_LogDao.class.php';
 require_once GIT_BASE_DIR .'/GitBackend.class.php';
 require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Selectbox.class.php';
 require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
+require_once GIT_BASE_DIR .'/GitForkPermissionsManager.class.php';
 require_once 'www/project/admin/permissions.php';
 require_once 'common/include/CSRFSynchronizerToken.class.php';
 require_once 'GitViews/RepoManagement/RepoManagement.class.php';
@@ -435,7 +436,7 @@ class GitViews extends PluginViews {
         if ( !empty($params['repository_list']) ) {
             echo '<form action="" method="POST">';
             echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
-            echo '<input type="hidden" name="action" value="do_fork_repositories" />';
+            echo '<input type="hidden" name="action" value="fork_repositories_permissions" />';
             $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
             echo $token->fetchHTMLInput();
 
@@ -491,7 +492,33 @@ class GitViews extends PluginViews {
         }
         echo '<br />';
     }
-    
+
+    /**
+     * Creates form to set permissions when fork repositories is performed
+     *
+     * @return void
+     */
+    protected function forkRepositoriesPermissions() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+
+        if ($params['scope'] == 'project') {
+            $groupId = $params['group_id'];
+        } else {
+            $groupId = (int)$this->groupId;
+        }
+        $repositories = explode(',', $params['repos']);
+        $pm           = ProjectManager::instance();
+        $dao          = new GitDao();
+        $repoFactory  = new GitRepositoryFactory($dao, $pm);
+        $repository   = $repoFactory->getRepositoryById($repositories[0]);
+        if (!empty($repository)) {
+            $forkPermissionsManager = new GitForkPermissionsManager($repository);
+            $userName               = $this->user->getName();
+            echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
+        }
+    }
+
     private function fetchCopyToAnotherProject() {
         $html = '';
         $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
@@ -511,7 +538,7 @@ class GitViews extends PluginViews {
         }
         return $html;
     }
-    
+
     public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';

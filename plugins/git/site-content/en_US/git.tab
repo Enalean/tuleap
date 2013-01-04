@@ -170,6 +170,9 @@ plugin_git	fork_malformed_path	Path cannot contain double dots (..)
 plugin_git	fork_choose_destination_project	Copy to another project
 plugin_git	fork_choose_destination_personal	Create personal repositories in this project
 plugin_git	successfully_forked	Successfully forked
+plugin_git	fork_destination_project_message	Into project <b>$1</b>
+plugin_git	fork_destination_personal_message	As personal fork
+plugin_git	fork_repository_message	You are going to fork repository: $1
 
 plugin_git	tree_view_project	Project
 plugin_git	tree_view_repository	Repository
