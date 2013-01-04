@@ -475,9 +475,14 @@ class UGroupManager {
     }
 
     public function displayUgroupBinding($groupId, $ugroupId) {
-        $em = EventManager::instance();
         $html = '';
-        $em->processEvent('ugroup_table_row', array('row' => array('group_id' => $groupId, 'ugroup_id' => $ugroupId), 'html' => &$html));
+        $uGroup                   = $this->getById($ugroupId);
+        $ugroupUpdateUsersAllowed = !$uGroup->isBound();
+        if ($ugroupUpdateUsersAllowed) {
+            $em   = EventManager::instance();
+            $html = '';
+            $em->processEvent('ugroup_table_row', array('row' => array('group_id' => $groupId, 'ugroup_id' => $ugroupId), 'html' => &$html));
+        }
         return $html;
     }
 
