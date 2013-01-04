@@ -181,7 +181,7 @@ class TransitionFactory {
                 }
             }
 
-            $ci_build_factory = new Transition_PostAction_CIBuildFactory();
+            $ci_build_factory = new Transition_PostAction_CIBuildFactory(new Jenkins_Client(new Http_Client()));
             foreach(array('postaction_ci_build') as $post_action_type) {
                 foreach ($xml->postactions->$post_action_type as $p) {
                     $postactions[] = $ci_build_factory->getInstanceFromXML($p, $xmlMapping, $transition);
