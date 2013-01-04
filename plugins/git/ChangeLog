@@ -1,3 +1,6 @@
+Version 2.7.21 - Tuleap 5.9
+    * One can choose permissions when forking repositories from one project to another
+
 Version 2.7.20 - Tuleap 5.9
     * On conversion of a Tuleap repository to gerrit, push the content of the tuleap repo and keep it synchronized afterward
 
