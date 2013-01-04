@@ -193,6 +193,8 @@ class Transition {
         }
     }
 
+    public function after() {
+    }
     /**
      * Validate that transition can occur
      *
