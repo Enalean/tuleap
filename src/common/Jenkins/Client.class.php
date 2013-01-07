@@ -46,7 +46,7 @@ class Jenkins_Client {
      * @param array $options curl options
      * @throws Tracker_Exception
      */
-    public function launchJobBuild($job_url) {
+    public function launchJobBuild($job_url, array $build_paramters = array()) {
         $url = $job_url . '/build';
         $options = array(
             CURLOPT_HTTPGET         => true,

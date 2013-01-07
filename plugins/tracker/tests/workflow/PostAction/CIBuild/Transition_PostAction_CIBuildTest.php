@@ -129,47 +129,79 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $post_action_ci_build->exportToXml($root, $array_xml_mapping);
         $this->assertFalse(isset($root->postaction_ci_build));
     }
+}
 
+
+class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
+    
+    protected $parameters;
+    protected $tracker;
+    protected $artifact;
+    protected $project;
+    protected $transition;
+    protected $changeset;
+    protected $field;
+    protected $client;
+    protected $post_action_ci_build;
+    protected $job_url;
+    
+    public function setUp() {
+        parent::setUp();
+        
+        $build_user = 'mickey mooouse';
+        $project_id = 9852614;
+        $artifact_id = 333558899;
+        $field_triggering_build = 'the fat field';
+        
+        $this->parameters = array(
+            'user'              => $build_user,
+            'project_id'        => $project_id,
+            'artifact_id'       => $artifact_id,
+            'field_triggered'   => $field_triggering_build,
+        );
+        
+        $this->transition   = mock('Transition');
+        $id                 = 123;
+        $this->job_url      = 'http://example.com/job';
+        $this->client       = mock('Jenkins_Client');
+
+        $this->post_action_ci_build = new Transition_PostAction_CIBuild($this->transition, $id, $this->job_url, $this->client);
+        
+        $this->tracker = mock('Tracker');
+        $this->project = mock('Project');
+        $this->artifact = mock('Tracker_Artifact');
+        $this->changeset = mock('Tracker_Artifact_Changeset');
+        $this->field = mock('Tracker_FormElement_Field');
+        
+        stub($this->changeset)->getSubmittedBy()->once()->returns($build_user);
+        
+        stub($this->changeset)->getArtifact()->returns($this->artifact);
+        stub($this->artifact)->getTracker()->once()->returns($this->tracker);
+        stub($this->tracker)->getProject()->once()->returns($this->project);
+        stub($this->project)->getId()->once()->returns($project_id);
+        
+        stub($this->artifact)->getId()->once()->returns($artifact_id);
+        
+        stub($this->transition)->getFieldValueFrom()->once()->returns($this->field);
+        stub($this->field)->getLabel()->once()->returns($field_triggering_build);
+    }
+    
     public function itLaunchTheCIBuildOnAfter() {
-        $transition       = mock('Transition');
-        $id               = 123;
-        $job_url          = 'http://example.com/job';
-        $client           = mock('Jenkins_Client');
-
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
-        $changeset = mock('Tracker_Artifact_Changeset');
-
-        expect($client)->launchJobBuild($job_url)->once();
-        $post_action_ci_build->after($changeset);
+        expect($this->client)->launchJobBuild($this->job_url, $this->parameters)->once();
+        $this->post_action_ci_build->after($this->changeset);
     }
 
     public function itDisplayInfoFeedbackIfLaunchSucceed() {
-        $transition       = mock('Transition');
-        $id               = 123;
-        $job_url          = 'http://example.com/job';
-        $client           = mock('Jenkins_Client');
-
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
-        $changeset = mock('Tracker_Artifact_Changeset');
-
         expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
-        $post_action_ci_build->after($changeset);
+        $this->post_action_ci_build->after($this->changeset);
     }
 
     public function itDisplayErrorFeedbackIfLaunchFailed() {
-        $transition       = mock('Transition');
-        $id               = 123;
-        $job_url          = 'http://example.com/job';
-        $client           = mock('Jenkins_Client');
-
-        $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
-
         $error_message = 'Oops';
-        stub($client)->launchJobBuild($job_url)->throws(new Jenkins_ClientUnableToLaunchBuildException($error_message));
-        $changeset = mock('Tracker_Artifact_Changeset');
+        stub($this->client)->launchJobBuild($this->job_url, $this->parameters)->throws(new Jenkins_ClientUnableToLaunchBuildException($error_message));
         
         expect($GLOBALS['Response'])->addFeedback('error', $error_message)->once();
-        $post_action_ci_build->after($changeset);
+        $this->post_action_ci_build->after($this->changeset);
     }
 }
 ?>

@@ -127,8 +127,14 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      * @param Tracker_Artifact_Changeset $changeset
      */
     public function after(Tracker_Artifact_Changeset $changeset) {
+        $build_parameters = array(
+            'user'              => $changeset->getSubmittedBy(),
+            'project_id'        => $changeset->getArtifact()->getTracker()->getProject()->getID(),
+            'artifact_id'       => $changeset->getArtifact()->getId(),
+            'field_triggered'   => $this->getTransition()->getFieldValueFrom()->getLabel(),
+        );
         try {
-            $this->ci_client->launchJobBuild($this->job_url);
+            $this->ci_client->launchJobBuild($this->job_url, $build_parameters);
             $GLOBALS['Response']->addFeedback('info', 'Job build launch succeeded ('.$this->job_url.')'); //TODO i18n
         } catch (Jenkins_ClientUnableToLaunchBuildException $exception) {
             $GLOBALS['Response']->addFeedback('error', $exception->getMessage());
