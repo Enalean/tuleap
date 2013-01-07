@@ -101,42 +101,105 @@ class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFa
 
 class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_PostActionFactory_BaseTest {
 
-    public function itreturnsAFieldPostActionIfXmlCorrespondsToField() {
+    public function itreturnsAFieldDatePostActionIfXmlCorrespondsToADate() {
         $xml = new SimpleXMLElement('
-            <postaction_field_date valuetype="1">
-                <field_id REF="F1"/>
-            </postaction_field_date>
+            <postactions>
+                <postaction_field_date valuetype="1">
+                    <field_id REF="F1"/>
+                </postaction_field_date>
+            </postactions>
         ');
 
         $mapping = array('F1' => 62334);
 
         stub($this->field_factory)
-            ->getInstanceFromXML($xml, $mapping, $this->transition)
+            ->getInstanceFromXML($xml->postaction_field_date, $mapping, $this->transition)
             ->returns(mock('Transition_PostAction_Field_Date'));
 
-        $post_action = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
-        $this->assertIsA($post_action, 'Transition_PostAction_Field_Date');
+        $post_actions = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Date');
+    }
+
+    public function itreturnsAFieldIntPostActionIfXmlCorrespondsToAInt() {
+        $xml = new SimpleXMLElement('
+            <postactions>
+                <postaction_field_int valuetype="1">
+                    <field_id REF="F1"/>
+                </postaction_field_int>
+            </postactions>
+        ');
+
+        $mapping = array('F1' => 62334);
+
+        stub($this->field_factory)
+            ->getInstanceFromXML($xml->postaction_field_int, $mapping, $this->transition)
+            ->returns(mock('Transition_PostAction_Field_Int'));
+
+        $post_actions = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Int');
+    }
+
+    public function itreturnsAFieldFloatPostActionIfXmlCorrespondsToAFloat() {
+        $xml = new SimpleXMLElement('
+            <postactions>
+                <postaction_field_float valuetype="3.14">
+                    <field_id REF="F1"/>
+                </postaction_field_float>
+            </postactions>
+        ');
+
+        $mapping = array('F1' => 62334);
+
+        stub($this->field_factory)
+            ->getInstanceFromXML($xml->postaction_field_float, $mapping, $this->transition)
+            ->returns(mock('Transition_PostAction_Field_Float'));
+
+        $post_actions = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Float');
     }
 
     public function itreturnsACIBuildPostActionIfXmlCorrespondsToACIBuild() {
         $xml = new SimpleXMLElement('
-            <postaction_ci_build valuetype="1">
-                <field_id REF="F1"/>
-            </postaction_ci_build>
+            <postactions>
+                <postaction_ci_build job_url="http://www">
+                </postaction_ci_build>
+            </postactions>
+        ');
+
+        $mapping = array('F1' => 62334);
+
+        stub($this->cibuild_factory)
+            ->getInstanceFromXML($xml->postaction_ci_build, $mapping, $this->transition)
+            ->returns(mock('Transition_PostAction_CIBuild'));
+
+        $post_actions = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_CIBuild');
+    }
+
+    public function itLoadsAllPostActionsFromXML() {
+        $xml = new SimpleXMLElement('
+            <postactions>
+                <postaction_field_date valuetype="1">
+                    <field_id REF="F1"/>
+                </postaction_field_date>
+                <postaction_ci_build job_url="http://www">
+                </postaction_ci_build>
+            </postactions>
         ');
 
         $mapping = array('F1' => 62334);
 
         stub($this->field_factory)
-            ->getInstanceFromXML($xml, $mapping, $this->transition)
-            ->returns(null);
+            ->getInstanceFromXML()
+            ->returns(mock('Transition_PostAction_Field_Date'));
 
         stub($this->cibuild_factory)
-            ->getInstanceFromXML($xml, $mapping, $this->transition)
+            ->getInstanceFromXML()
             ->returns(mock('Transition_PostAction_CIBuild'));
 
-        $post_action = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
-        $this->assertIsA($post_action, 'Transition_PostAction_CIBuild');
+        $post_actions = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
+        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Date');
+        $this->assertIsA($post_actions[1], 'Transition_PostAction_CIBuild');
     }
 }
 class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionFactory_BaseTest {

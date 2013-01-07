@@ -162,15 +162,18 @@ class Transition_PostActionFactory {
      * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
-        if($this->getFieldFactory()->getInstanceFromXML($xml, $xmlMapping, $transition) instanceof Transition_PostAction_Field) {
-            return $this->getFieldFactory()->getInstanceFromXML($xml, $xmlMapping, $transition);
+        $post_actions  = array();
+        $field_factory = $this->getFieldFactory();
+        $factories     = array(
+            'postaction_field_date'  => $field_factory,
+            'postaction_field_int'   => $field_factory,
+            'postaction_field_float' => $field_factory,
+            'postaction_ci_build'    => $this->getCIBuildFactory(),
+        );
+        foreach ($xml->children() as $child) {
+            $post_actions[] = $factories[$child->getName()]->getInstanceFromXML($child, $xmlMapping, $transition);
         }
-
-        if($this->getCIBuildFactory()->getInstanceFromXML($xml, $xmlMapping, $transition) instanceof Transition_PostAction_CIBuild) {
-            return $this->getCIBuildFactory()->getInstanceFromXML($xml, $xmlMapping, $transition);
-        }
-
-        return null;
+        return $post_actions;
     }
 }
 ?>
