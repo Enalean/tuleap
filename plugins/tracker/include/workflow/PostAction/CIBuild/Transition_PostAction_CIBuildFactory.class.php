@@ -91,16 +91,7 @@ class Transition_PostAction_CIBuildFactory {
      *
      */
     public function duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping) {
-        foreach ($postactions as $postaction) {
-            $from_field_id = $postaction->getFieldId();
-
-            foreach ($field_mapping as $mapping) {
-                if ($mapping['from'] == $from_field_id) {
-                    $to_field_id = $mapping['to'];
-                    $this->getDao()->duplicate($from_transition_id, $to_transition_id, $from_field_id, $to_field_id);
-                }
-            }
-        }
+        $this->dao->duplicate($from_transition_id, $to_transition_id);
     }
 
     /**
