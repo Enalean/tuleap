@@ -98,10 +98,30 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
      *
      * @return bool
      */
-    public function save($transition_id, $job_url) {
+     public function save($transition_id, $job_url) { //TODO: what about create() ?
         if (($post_action_id = $this->create($transition_id)) > 0) {
             $this->updatePostAction($post_action_id, $job_url);
         }
+    }
+
+    /**
+     * Duplicate a postaction
+     *
+     * @param int $from_transition_id The id of the template transition
+     * @param int $to_transition_id The id of the transition
+     *
+     * @return bool true if success false otherwise
+     */
+    public function duplicate($from_transition_id, $to_transition_id) {
+        $from_transition_id = $this->da->escapeInt($from_transition_id);
+        $to_transition_id   = $this->da->escapeInt($to_transition_id);
+
+        $sql = "INSERT INTO tracker_workflow_transition_postactions_cibuild(transition_id, job_url)
+                SELECT $to_transition_id, job_url
+                FROM tracker_workflow_transition_postactions_cibuild
+                WHERE transition_id = $from_transition_id";
+
+        return $this->update($sql);
     }
 
 }
