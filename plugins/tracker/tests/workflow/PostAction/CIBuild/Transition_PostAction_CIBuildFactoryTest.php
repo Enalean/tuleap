@@ -67,13 +67,11 @@ class Transition_PostAction_CIBuildFactory_LoadPostActionsTest extends Transitio
 class Transition_PostAction_CIBuildFactory_DuplicateTest extends Transition_PostAction_CIBuildFactory_BaseTest {
 
     public function itDelegatesTheDuplicationToTheDao() {
-        $from_transition_id = 1;
         $to_transition_id   = 2;
-        $postactions        = array();
         $field_mapping      = array();
 
-        expect($this->dao)->duplicate($from_transition_id, $to_transition_id)->once();
-        $this->factory->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
+        expect($this->dao)->duplicate($this->transition_id, $to_transition_id)->once();
+        $this->factory->duplicate($this->transition, $to_transition_id, $field_mapping);
     }
 }
 

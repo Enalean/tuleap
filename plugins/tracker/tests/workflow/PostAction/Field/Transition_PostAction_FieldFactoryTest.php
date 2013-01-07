@@ -19,9 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../../../builders/aPostActionFieldFactory.php';
-require_once dirname(__FILE__).'/../../../builders/anIntFieldPostAction.php';
-require_once dirname(__FILE__).'/../../../builders/aFloatFieldPostAction.php';
+require_once dirname(__FILE__).'/../../../builders/all.php';
 
 class Transition_PostAction_FieldFactory_BaseTest extends TuleapTestCase {
 
@@ -37,8 +35,6 @@ class Transition_PostAction_FieldFactory_BaseTest extends TuleapTestCase {
 }
 
 class Transition_PostAction_FieldFactoryTest extends Transition_PostAction_FieldFactory_BaseTest {
-
-    protected $factory;
 
     public function setUp() {
         parent::setUp();
@@ -174,15 +170,45 @@ class Transition_PostActionFieldFactory_AddPostActionTest extends Transition_Pos
 
 class Transition_PostActionFieldFactory_DuplicateTest extends Transition_PostAction_FieldFactory_BaseTest {
 
+    public function setUp() {
+        parent::setUp();
+        $this->transition_id = 123;
+        $this->transition    = stub('Transition')->getId()->returns($this->transition_id);
+
+        stub($this->element_factory)->getFormElementById(2065)->returns(aSelectBoxField()->withId(2065)->build());
+        stub($this->element_factory)->getFormElementById(2066)->returns(aSelectBoxField()->withId(2066)->build());
+        stub($this->element_factory)->getFormElementById(2067)->returns(aSelectBoxField()->withId(2067)->build());
+
+        stub($this->date_dao)->searchByTransitionId($this->transition_id)->returnsEmptyDar();
+        stub($this->float_dao)->searchByTransitionId($this->transition_id)->returnsDar(
+            array(
+                'id'       => 1,
+                'field_id' => 2065,
+                'value'    => 0
+            )
+        );
+        stub($this->int_dao)->searchByTransitionId($this->transition_id)->returnsDar(
+            array(
+                'id'       => 1,
+                'field_id' => 2066,
+                'value'    => 666
+            ),
+            array(
+                'id'       => 2,
+                'field_id' => 2067,
+                'value'    => 42
+            )
+        );
+    }
+
     public function itDelegatesDuplicationToTheCorrespondingDao() {
-        $post_actions = array(aDateFieldPostAction()->withFieldId(2066)->build(),
-                              aDateFieldPostAction()->withFieldId(2067)->build());
-
         $field_mapping = array(1 => array('from'=>2066, 'to'=>3066),
-                               2 => array('from'=>2067, 'to'=>3067));
+                               2 => array('from'=>2067, 'to'=>3067),
+                               3 => array('from'=>2065, 'to'=>3065),);
 
-        $this->date_dao->expectCallCount('duplicate', 2, 'Method getDao should be called 2 times.');
-        $this->factory->duplicate(1, 2, $post_actions, $field_mapping);
+        expect($this->float_dao)->duplicate(123, 124, 2065, 3065)->once();
+        expect($this->int_dao)->duplicate()->count(2);
+        $this->factory->duplicate($this->transition, 124, $field_mapping);
     }
 }
 

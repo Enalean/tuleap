@@ -139,18 +139,16 @@ class Transition_PostActionFactory {
                 && $this->getFieldFactory()->deleteWorkflow($workflow_id);
     }
     
-   /**
-    * Duplicate postactions of a transition
-    *
-    * @param int $from_transition_id the id of the template transition
-    * @param int $to_transition_id the id of the transition
-    * @param Array $postactions 
-    * @param Array $field_mapping the field mapping
-    * 
-    */
-    public function duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping) {
-        $this->getCIBuildFactory()->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
-        $this->getFieldFactory()->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
+    /**
+     * Duplicate postactions of a transition
+     *
+     * @param Transition $from_transition the template transition
+     * @param int $to_transition_id the id of the transition
+     * @param Array $field_mapping the field mapping
+     */
+    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping) {
+        $this->getCIBuildFactory()->duplicate($from_transition, $to_transition_id, $field_mapping);
+        $this->getFieldFactory()->duplicate($from_transition, $to_transition_id, $field_mapping);
     }
 
 
