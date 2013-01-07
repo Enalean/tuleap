@@ -34,19 +34,25 @@ class Jenkins_ClientTest extends TuleapTestCase {
 
     public function testLaunchJobSetsCorrectOptions() {
         $job_url = 'http://some.url.com/my_job';
-
+        $build_parameters = array(
+            'my_param' => 'mickey mooouse',
+        );
+        
         $http_client = mock('Http_Client');
         stub($http_client)->doRequest()->once();
+        
+        $json_params = '{"parameter":[{"name":"my_param","value":"mickey mooouse"}]}';
+        $expected_url_params = urlencode($json_params);
 
         $expected_options = array(
             CURLOPT_HTTPGET         => true,
-            CURLOPT_URL             => $job_url . '/build',
+            CURLOPT_URL             => $job_url . '/build?json=' . $expected_url_params,
             CURLOPT_SSL_VERIFYPEER  => false,
         );
         stub($http_client)->addOptions($expected_options)->once();
 
         $jenkins_client = new Jenkins_Client($http_client);
-        $jenkins_client->launchJobBuild($job_url);
+        $jenkins_client->launchJobBuild($job_url, $build_parameters);
     }
 }
 ?>

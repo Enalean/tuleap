@@ -46,8 +46,8 @@ class Jenkins_Client {
      * @param array $options curl options
      * @throws Tracker_Exception
      */
-    public function launchJobBuild($job_url, array $build_paramters = array()) {
-        $url = $job_url . '/build';
+    public function launchJobBuild($job_url, array $build_parameters = array()) {
+        $url = $job_url . '/build?json=' . $this->generateBuildParameters($build_parameters);
         $options = array(
             CURLOPT_HTTPGET         => true,
             CURLOPT_URL             => $url,
@@ -60,6 +60,23 @@ class Jenkins_Client {
         } catch (Http_ClientException $e) {
             throw new Jenkins_ClientUnableToLaunchBuildException('Job: ' . $job_url . '; Message: ' . $e->getMessage());
         }
+    }
+    
+    /**
+     * 
+     * @param array $build_parameters
+     * @return string
+     */
+    private function generateBuildParameters(array $build_parameters) {
+        $parameters = array();
+        foreach ($build_parameters as $name => $value) {
+            $parameters['parameter'][] = array(
+                'name'  => $name,
+                'value' => $value
+            );
+        }
+
+        return urlencode(json_encode($parameters));
     }
 }
 

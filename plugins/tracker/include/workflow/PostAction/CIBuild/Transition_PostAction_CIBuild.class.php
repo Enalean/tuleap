@@ -24,7 +24,13 @@ require_once 'common/Jenkins/Client.class.php';
 
 class Transition_PostAction_CIBuild extends Transition_PostAction {
 
-    const SHORT_NAME = 'ci_build';
+    const SHORT_NAME                    = 'ci_build';
+    const BUILD_PARAMETER_USER          = 'user';
+    const BUILD_PARAMETER_PROJECT_ID    = 'projectId';
+    const BUILD_PARAMETER_ARTIFACT_ID   = 'artifactId';
+    const BUILD_PARAMETER_TRACKER_ID    = 'trackerId';
+    const BUILD_PARAMETER_TRIGGER_FIELD = 'triggerField';
+    
     /**
      * @var string Pattern to validate a job url
      */
@@ -128,11 +134,13 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      */
     public function after(Tracker_Artifact_Changeset $changeset) {
         $build_parameters = array(
-            'user'              => $changeset->getSubmittedBy(),
-            'project_id'        => $changeset->getArtifact()->getTracker()->getProject()->getID(),
-            'artifact_id'       => $changeset->getArtifact()->getId(),
-            'field_triggered'   => $this->getTransition()->getFieldValueFrom()->getLabel(),
+            self::BUILD_PARAMETER_USER          => $changeset->getSubmittedBy(),
+            self::BUILD_PARAMETER_PROJECT_ID    => $changeset->getArtifact()->getTracker()->getProject()->getID(),
+            self::BUILD_PARAMETER_ARTIFACT_ID   => $changeset->getArtifact()->getId(),
+            self::BUILD_PARAMETER_TRACKER_ID    => $changeset->getArtifact()->getTracker()->getId(),
+            self::BUILD_PARAMETER_TRIGGER_FIELD => $this->getTransition()->getFieldValueFrom()->getLabel(),
         );
+        
         try {
             $this->ci_client->launchJobBuild($this->job_url, $build_parameters);
             $GLOBALS['Response']->addFeedback('info', 'Job build launch succeeded ('.$this->job_url.')'); //TODO i18n

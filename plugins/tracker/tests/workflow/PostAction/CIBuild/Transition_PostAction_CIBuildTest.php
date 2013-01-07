@@ -151,13 +151,15 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
         $build_user = 'mickey mooouse';
         $project_id = 9852614;
         $artifact_id = 333558899;
+        $tracker_id = 5245;
         $field_triggering_build = 'the fat field';
         
         $this->parameters = array(
-            'user'              => $build_user,
-            'project_id'        => $project_id,
-            'artifact_id'       => $artifact_id,
-            'field_triggered'   => $field_triggering_build,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_USER          => $build_user,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_PROJECT_ID    => $project_id,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_ARTIFACT_ID   => $artifact_id,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_TRACKER_ID    => $tracker_id,
+            Transition_PostAction_CIBuild::BUILD_PARAMETER_TRIGGER_FIELD => $field_triggering_build,
         );
         
         $this->transition   = mock('Transition');
@@ -176,11 +178,13 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
         stub($this->changeset)->getSubmittedBy()->once()->returns($build_user);
         
         stub($this->changeset)->getArtifact()->returns($this->artifact);
-        stub($this->artifact)->getTracker()->once()->returns($this->tracker);
+        stub($this->artifact)->getTracker()->returns($this->tracker);
         stub($this->tracker)->getProject()->once()->returns($this->project);
         stub($this->project)->getId()->once()->returns($project_id);
         
         stub($this->artifact)->getId()->once()->returns($artifact_id);
+        
+        stub($this->tracker)->getId()->once()->returns($tracker_id);
         
         stub($this->transition)->getFieldValueFrom()->once()->returns($this->field);
         stub($this->field)->getLabel()->once()->returns($field_triggering_build);
