@@ -152,7 +152,7 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
         stub($this->condition_factory)->getAllInstancesFromXML()->returns(new Workflow_Transition_ConditionsCollection());
     }
 
-    public function _itReconstitutesDatePostActions() {
+    public function itReconstitutesPostActions() {
 
         $xml = new SimpleXMLElement('
             <transition>
@@ -166,53 +166,8 @@ class TransitionFactory_GetInstanceFromXmlTest extends TransitionFactory_BaseTes
             </transition>
         ');
 
-        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
-        $post_actions = $transition->getPostActions();
-
-        $this->assertCount($post_actions, 1);
-        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Date');
-    }
-
-    public function _itReconstitutesIntPostActions() {
-
-        $xml = new SimpleXMLElement('
-            <transition>
-                <from_id REF="F32-V1"/>
-                <to_id REF="F32-V0"/>
-                <postactions>
-                    <postaction_field_int value="1">
-                        <field_id REF="F1"/>
-                    </postaction_field_int>
-                </postactions>
-            </transition>
-        ');
-
-        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
-        $post_actions = $transition->getPostActions();
-
-        $this->assertCount($post_actions, 1);
-        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Int');
-    }
-
-    public function _itReconstitutesFloatPostActions() {
-
-        $xml = new SimpleXMLElement('
-            <transition>
-                <from_id REF="F32-V1"/>
-                <to_id REF="F32-V0"/>
-                <postactions>
-                    <postaction_field_float value="1.2">
-                        <field_id REF="F1"/>
-                    </postaction_field_float>
-                </postactions>
-            </transition>
-        ');
-
-        $transition   = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
-        $post_actions = $transition->getPostActions();
-
-        $this->assertCount($post_actions, 1);
-        $this->assertIsA($post_actions[0], 'Transition_PostAction_Field_Float');
+        expect($this->postaction_factory)->getInstanceFromXML($xml->postactions, $this->xml_mapping, '*')->once();
+        $transition = $this->factory->getInstanceFromXML($xml, $this->xml_mapping);
     }
 
     public function itReconsititutesPermissions() {
