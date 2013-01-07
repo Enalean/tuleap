@@ -36,20 +36,19 @@ require_once 'CIBuild/Transition_PostAction_CIBuildFactory.class.php';
  */
 class Transition_PostActionFactory {
     
-    /**
-     *
-     * @return \Transition_PostAction_FieldFactory
-     */
+    /** @return \Transition_PostAction_FieldFactory */
     public function getFieldFactory() {
-        return new Transition_PostAction_FieldFactory();
+        return new Transition_PostAction_FieldFactory(
+            Tracker_FormElementFactory::instance(),
+            new Transition_PostAction_Field_DateDao(),
+            new Transition_PostAction_Field_IntDao(),
+            new Transition_PostAction_Field_FloatDao()
+        );
     }
 
-    /**
-     *
-     * @return \Transition_PostAction_CIBuildFactory
-     */
+    /** @return \Transition_PostAction_CIBuildFactory */
     public function getCIBuildFactory() {
-        return new Transition_PostAction_CIBuildFactory();
+        return new Transition_PostAction_CIBuildFactory(new Transition_PostAction_CIBuildDao());
     }
     
     /**
@@ -83,16 +82,7 @@ class Transition_PostActionFactory {
             throw new Transition_PostAction_NotFoundException('Invalid Post Action type');
         }
     }
-    
 
-    public function getPostActionFieldFactory() {
-        return new Transition_PostAction_FieldFactory();
-    }
-    
-    public function getPostActionCIBuildFactory() {
-        return new Transition_PostAction_CIBuildFactory();
-    }
-    
     /**
      * Load the post actions that belong to a transition
      * 
@@ -149,18 +139,16 @@ class Transition_PostActionFactory {
                 && $this->getFieldFactory()->deleteWorkflow($workflow_id);
     }
     
-   /**
-    * Duplicate postactions of a transition
-    *
-    * @param int $from_transition_id the id of the template transition
-    * @param int $to_transition_id the id of the transition
-    * @param Array $postactions 
-    * @param Array $field_mapping the field mapping
-    * 
-    */
-    public function duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping) {
-        $this->getCIBuildFactory()->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
-        $this->getFieldFactory()->duplicate($from_transition_id, $to_transition_id, $postactions, $field_mapping);
+    /**
+     * Duplicate postactions of a transition
+     *
+     * @param Transition $from_transition the template transition
+     * @param int $to_transition_id the id of the transition
+     * @param Array $field_mapping the field mapping
+     */
+    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping) {
+        $this->getCIBuildFactory()->duplicate($from_transition, $to_transition_id, $field_mapping);
+        $this->getFieldFactory()->duplicate($from_transition, $to_transition_id, $field_mapping);
     }
 
 

@@ -129,9 +129,9 @@ class TransitionFactory_duplicateTest extends TransitionFactory_BaseTest {
 
         $tpaf = new MockTransition_PostActionFactory();
         $tpaf->expectCallCount('duplicate', 3, 'Method duplicate should be called 3 times.');
-        $tpaf->expectAt(0, 'duplicate', array(1, 101, array(), array()));
-        $tpaf->expectAt(1, 'duplicate', array(2, 102, array(), array()));
-        $tpaf->expectAt(2, 'duplicate', array(3, 103, array(), array()));
+        $tpaf->expectAt(0, 'duplicate', array($t1, 101, array()));
+        $tpaf->expectAt(1, 'duplicate', array($t2, 102, array()));
+        $tpaf->expectAt(2, 'duplicate', array($t3, 103, array()));
         $tf->setReturnValue('getPostActionFactory', $tpaf);
 
         $tf->duplicate($values, 1, $transitions, array(), false, false);

@@ -327,10 +327,8 @@ class TransitionFactory {
                 $this->condition_factory->duplicate($transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
 
                 // Duplicate postactions
-                $from_transition_id = $transition->getTransitionId();
-                $postactions = $transition->getPostActions();
                 $tpaf = $this->getPostActionFactory();
-                $tpaf->duplicate($from_transition_id, $new_transition_id, $postactions, $field_mapping);
+                $tpaf->duplicate($transition, $new_transition_id, $field_mapping);
             }
         }
     }
