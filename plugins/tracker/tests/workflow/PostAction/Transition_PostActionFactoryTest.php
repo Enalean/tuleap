@@ -18,24 +18,18 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../include/workflow/PostAction/Transition_PostActionFactory.class.php';
-require_once dirname(__FILE__).'/../../../include/workflow/PostAction/Field/dao/Transition_PostAction_Field_DateDao.class.php';
-require_once dirname(__FILE__).'/../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuildDao.class.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php';
-require_once dirname(__FILE__).'/../../builders/aMockField.php';
-require_once dirname(__FILE__).'/../../builders/aTransition.php';
-require_once dirname(__FILE__).'/../../builders/aDateFieldPostAction.php';
-require_once dirname(__FILE__).'/../../builders/anIntFieldPostAction.php';
-require_once dirname(__FILE__).'/../../builders/aFloatFieldPostAction.php';
-require_once dirname(__FILE__).'/../../builders/aPostActionFactory.php';
-require_once dirname(__FILE__).'/../../builders/aCIBuildPostAction.php';
+require_once dirname(__FILE__).'/../../builders/all.php';
+require_once TRACKER_BASE_DIR .'/workflow/PostAction/Transition_PostActionFactory.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/PostAction/Field/dao/Transition_PostAction_Field_DateDao.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/PostAction/CIBuild/Transition_PostAction_CIBuildDao.class.php';
+require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php';
 
 Mock::generatePartial('Transition_PostActionFactory',
                       'Transition_PostActionFactoryTestVersion',
                       array('getDao', 'getFormElementFactory'));
 
 class Transition_PostActionFactory_AddPostActionTest extends TuleapTestCase {
-    
+
     protected $factory;
     protected $field_factory;
     protected $cibuild_factory;
@@ -43,7 +37,7 @@ class Transition_PostActionFactory_AddPostActionTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        
+
         $this->transition_id = 123;
         $this->transition    = stub('Transition')->getTransitionId()->returns($this->transition_id);
 
@@ -70,33 +64,33 @@ class Transition_PostActionFactory_AddPostActionTest extends TuleapTestCase {
         stub($this->factory)->getFieldFactory()->returns($this->field_factory);
         stub($this->factory)->getCIBuildFactory()->returns($this->cibuild_factory);
     }
-    
+
     public function itCanAddAPostActionToAnIntField() {
         stub($this->field_factory)->addPostAction()->once();
         stub($this->factory)->getCIBuildFactory()->never();
-        
+
         $this->factory->addPostAction($this->transition, Transition_PostAction_Field_Int::SHORT_NAME);
     }
-    
+
     public function itCanAddAPostActionToAFloatField() {
         stub($this->field_factory)->addPostAction()->once();
         stub($this->factory)->getCIBuildFactory()->never();
-        
+
         $this->factory->addPostAction($this->transition, Transition_PostAction_Field_Float::SHORT_NAME);
     }
 
 }
 
 class Transition_PostActionFactory_DuplicateTest extends Transition_PostActionFactory_AddPostActionTest {
-    
+
     public function itDelegatesDuplicationToTheOtherPostActionFactories() {
         $post_actions = array();
-        
+
         $field_mapping = array(
             1 => array('from'=>2066, 'to'=>3066),
             2 => array('from'=>2067, 'to'=>3067),
         );
-        
+
         stub($this->field_factory)->duplicate(1, 2, $post_actions, $field_mapping)->once();
         stub($this->cibuild_factory)->duplicate(1, 2, $post_actions, $field_mapping)->once();
 
@@ -112,40 +106,40 @@ class Transition_PostActionFactory_GetInstanceFromXmlTest extends Transition_Pos
                 <field_id REF="F1"/>
             </postaction_field_date>
         ');
-        
+
         $mapping = array('F1' => 62334);
-        
+
         stub($this->field_factory)
             ->getInstanceFromXML($xml, $mapping, $this->transition)
             ->returns(mock('Transition_PostAction_Field_Date'));
-        
+
         $post_action = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
         $this->assertIsA($post_action, 'Transition_PostAction_Field_Date');
     }
-    
+
     public function itreturnsACIBuildPostActionIfXmlCorrespondsToACIBuild() {
         $xml = new SimpleXMLElement('
             <postaction_ci_build valuetype="1">
                 <field_id REF="F1"/>
             </postaction_ci_build>
         ');
-        
+
         $mapping = array('F1' => 62334);
-        
+
         stub($this->field_factory)
             ->getInstanceFromXML($xml, $mapping, $this->transition)
             ->returns(null);
-        
+
         stub($this->cibuild_factory)
             ->getInstanceFromXML($xml, $mapping, $this->transition)
             ->returns(mock('Transition_PostAction_CIBuild'));
-        
+
         $post_action = $this->factory->getInstanceFromXML($xml, $mapping, $this->transition);
         $this->assertIsA($post_action, 'Transition_PostAction_CIBuild');
     }
 }
 class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionFactory_AddPostActionTest {
-    
+
     public function itSavesDateFieldPostActions() {
         $post_action = mock('Transition_PostAction_Field_Date');
         stub($this->cibuild_factory)->saveObject()->never();
@@ -153,7 +147,7 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
 
         $this->factory->saveObject($post_action);
     }
-    
+
     public function itSavesIntFieldPostActions() {
         $post_action = mock('Transition_PostAction_Field_Int');
         stub($this->cibuild_factory)->saveObject()->never();
@@ -161,7 +155,7 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
 
         $this->factory->saveObject($post_action);
     }
-    
+
     public function itSavesFloatFieldPostActions() {
         $post_action = mock('Transition_PostAction_Field_Float');
         stub($this->cibuild_factory)->saveObject()->never();
@@ -169,7 +163,7 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
 
         $this->factory->saveObject($post_action);
     }
-    
+
     public function itSavesCIBuildPostActions() {
         $post_action = mock('Transition_PostAction_CIBuild');
         stub($this->field_factory)->saveObject()->never();
@@ -177,29 +171,29 @@ class Transition_PostActionFactory_SaveObjectTest extends Transition_PostActionF
 
         $this->factory->saveObject($post_action);
     }
-    
+
 }
 
 class Transition_PostActionFactory_DeleteWorkflowTest extends Transition_PostActionFactory_AddPostActionTest {
-    
+
     public function itDeletesAllPostActions() {
         $workflow_id = 10;
         stub($this->field_factory)->deleteWorkflow($workflow_id)->once()->returns(true);
         stub($this->cibuild_factory)->deleteWorkflow($workflow_id)->once()->returns(true);
-        
+
         $this->factory->deleteWorkflow($workflow_id);
     }
-    
+
 }
 
 class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transition_PostActionFactory_AddPostActionTest {
-    
+
     public function itChecksFieldIsUsedInEachTypeOfPostAction() {
-        $field = mock('Tracker_FormElement_Field');
-        
+        $field = mock('Tracker_FormElement_Field_Selectbox');
+
         stub($this->cibuild_factory)->isFieldUsedInPostActions($field)->once()->returns(false);
         stub($this->field_factory)->isFieldUsedInPostActions($field)->once()->returns(true);
-        
+
         $this->factory->isFieldUsedInPostActions($field);
     }
 }

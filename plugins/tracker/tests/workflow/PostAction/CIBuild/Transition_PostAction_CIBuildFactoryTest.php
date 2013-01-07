@@ -19,11 +19,11 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../../../builders/aPostActionCIBuildFactory.php';
 require_once dirname(__FILE__).'/../../../builders/aCIBuildPostAction.php';
-require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php';
+require_once dirname(__FILE__) .'/../../../../include/constants.php';
+require_once TRACKER_BASE_DIR .'/workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php';
 
-class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
+class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase {
 
     protected $factory;
     protected $dao;
@@ -35,11 +35,12 @@ class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
         $this->post_action_id = 789;
 
         $this->transition = aTransition()->withId($this->transition_id)->build();
-        $this->factory = partial_mock('Transition_PostAction_CIBuildFactory', array('getDao', 'loadPostActionRows'));
-        $this->dao = mock('Transition_PostAction_CIBuildDao');
-
-        stub($this->factory)->getDao()->returns($this->dao);
+        $this->dao        = mock('Transition_PostAction_CIBuildDao');
+        $this->factory = partial_mock('Transition_PostAction_CIBuildFactory', array('loadPostActionRows'), array($this->dao));
     }
+}
+
+class Transition_PostAction_CIBuildFactory_LoadPostActionsTest extends Transition_PostAction_CIBuildFactory_BaseTest {
 
     public function itLoadsCIBuildPostActions() {
         $post_action_value = 'http://ww.myjenks.com/job';
@@ -63,22 +64,14 @@ class Transition_PostAction_CIBuildFactoryTest extends TuleapTestCase {
     }
 }
 
-class Transition_CIBuildFactory_GetInstanceFromXmlTest extends TuleapTestCase {
 
-    public function setUp() {
-        parent::setUp();
-        $ci_client    = new Jenkins_Client(new Http_Client());
-        $this->factory    = aPostActionCIBuildFactory()
-                ->build();
-        $this->mapping    = array('F1' => 62334);
-        $this->transition = aTransition()->build();
-    }
+class Transition_CIBuildFactory_GetInstanceFromXmlTest extends Transition_PostAction_CIBuildFactory_BaseTest {
 
     public function itReconstitutesCIBuildPostActionsFromXML() {
         $xml = new SimpleXMLElement('
             <postaction_ci_build job_url="http://www"/>
         ');
-
+        $mapping     = array('F1' => 62334);
         $post_action = $this->factory->getInstanceFromXML($xml, $this->mapping, $this->transition);
 
         $this->assertIsA($post_action, 'Transition_PostAction_CIBuild');

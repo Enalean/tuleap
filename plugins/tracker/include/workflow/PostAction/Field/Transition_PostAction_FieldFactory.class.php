@@ -21,18 +21,36 @@
 
 /**
  * class Transition_PostAction_FieldFactory
- * 
+ *
  */
 class Transition_PostAction_FieldFactory {
 
-        /**
-     * @var Array of available post actions classes
-     */
+    /** @var Array of available post actions classes */
     protected $post_actions_classes_field = array(
-        Transition_PostAction_Field_Date::SHORT_NAME    => 'Transition_PostAction_Field_Date',
-        Transition_PostAction_Field_Int::SHORT_NAME     => 'Transition_PostAction_Field_Int',
-        Transition_PostAction_Field_Float::SHORT_NAME   => 'Transition_PostAction_Field_Float',
+        Transition_PostAction_Field_Date::SHORT_NAME  => 'Transition_PostAction_Field_Date',
+        Transition_PostAction_Field_Int::SHORT_NAME   => 'Transition_PostAction_Field_Int',
+        Transition_PostAction_Field_Float::SHORT_NAME => 'Transition_PostAction_Field_Float',
     );
+
+    /** @var array of Transition_PostAction_FieldDao */
+    private $daos;
+
+    /** @var Tracker_FormElementFactory */
+    private $element_factory;
+
+    public function __construct(
+        Tracker_FormElementFactory $element_factory,
+        Transition_PostAction_Field_DateDao $date_dao,
+        Transition_PostAction_Field_IntDao $int_dao,
+        Transition_PostAction_Field_FloatDao $float_dao
+    ) {
+        $this->element_factory = $element_factory;
+        $this->daos            = array(
+            Transition_PostAction_Field_Date::SHORT_NAME  => $date_dao,
+            Transition_PostAction_Field_Int::SHORT_NAME   => $int_dao,
+            Transition_PostAction_Field_Float::SHORT_NAME => $float_dao,
+        );
+    }
 
     public function getTypes() {
         return array_keys($this->post_actions_classes_field);
@@ -43,7 +61,7 @@ class Transition_PostAction_FieldFactory {
             $this->getDao($requested_postaction)->create($transition->getTransitionId());
         }
     }
-    
+
     /**
      * Get html code to let someone choose a post action for a transition
      *
@@ -79,7 +97,7 @@ class Transition_PostAction_FieldFactory {
            $this->getValue($post_action)
         );
     }
-    
+
     public function loadPostActions(Transition $transition) {
 
         $post_actions = array();
@@ -91,8 +109,8 @@ class Transition_PostAction_FieldFactory {
             }
         }
         return $post_actions;
-   }
-   
+    }
+
     /**
      * Retrieves matching PostAction database records.
      *
@@ -105,7 +123,6 @@ class Transition_PostAction_FieldFactory {
         $dao = $this->getDao($shortname);
         return $dao->searchByTransitionId($transition->getTransitionId());
     }
-
 
    /**
     * Duplicate postactions of a transition
@@ -141,7 +158,7 @@ class Transition_PostAction_FieldFactory {
         foreach (array_keys($post_actions_classes) as $shortname) {
             $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
         }
-        
+
         return $result;
     }
 
@@ -232,14 +249,14 @@ class Transition_PostAction_FieldFactory {
         }
     }
 
-   /**   
+   /**
     * Reconstitute a PostAction from database
-    * 
+    *
     * @param Transition $transition The transition to which this PostAction is associated
     * @param mixed      $row        The raw data (array-like)
     * @param string     $shortname  The PostAction short name
     * @param string     $klass      The PostAction class name
-    * 
+    *
     * @return Transition_PostAction
     */
     private function buildPostAction(Transition $transition, $row, $shortname, $klass) {
@@ -258,50 +275,34 @@ class Transition_PostAction_FieldFactory {
      * @throws Transition_PostAction_NotFoundException
      */
     public function getDao($post_action_short_name) {
-        switch ($post_action_short_name) {
-            case Transition_PostAction_Field_Date::SHORT_NAME:
-                return new Transition_PostAction_Field_DateDao();
-            case Transition_PostAction_Field_Int::SHORT_NAME:
-                return new Transition_PostAction_Field_IntDao();
-            case Transition_PostAction_Field_Float::SHORT_NAME:
-                return new Transition_PostAction_Field_FloatDao();
-            default:
-                throw new Transition_PostAction_NotFoundException();
+        if (isset($this->daos[$post_action_short_name])) {
+            return $this->daos[$post_action_short_name];
         }
+        throw new Transition_PostAction_NotFoundException();
     }
 
 
-    
+
     /**
      * Retrieves the field from the given PostAction database row.
-     * 
+     *
      * @param array $row
-     * 
+     *
      * @return Tracker_FormElement_Field
      */
     private function getFieldFromRow($row) {
-        return $this->getFormElementFactory()->getFormElementById((int)$row['field_id']);
-    }
-    
-
-    /**
-     * Wrapper for Tracker_FormElementFactory
-     *
-     * @return Tracker_FormElementFactory
-     */
-    public function getFormElementFactory() {
-        return Tracker_FormElementFactory::instance();
+        return $this->element_factory->getFormElementById((int)$row['field_id']);
     }
 
    /**
     * Retrieves the value (or value type) from the given PostAction database row.
-    * 
+    *
     * @param array $row
     * @param string $shortname
-    * 
+    *
     * @return mixed
-    * 
-    * @throws Transition_PostAction_NotFoundException 
+    *
+    * @throws Transition_PostAction_NotFoundException
     */
     private function getValueFromRow($row, $shortname) {
         switch ($shortname) {
@@ -315,14 +316,14 @@ class Transition_PostAction_FieldFactory {
                 throw new Transition_PostAction_NotFoundException($shortname);
         }
     }
-   
+
    /**
     * XXX: PostAction value / value type should be an object representing
     * the PostAction configuration, allowing DAOs to share the same API.
     */
     private function getValue(Transition_PostAction $post_action) {
         $short_name = $post_action->getShortName();
-        
+
         switch($short_name) {
             case Transition_PostAction_Field_Date::SHORT_NAME:
                 return $post_action->getValueType();
