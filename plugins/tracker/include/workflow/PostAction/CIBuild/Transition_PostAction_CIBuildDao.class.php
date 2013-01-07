@@ -25,22 +25,6 @@
  */
 class Transition_PostAction_CIBuildDao extends DataAccessObject {
 
-    /*
-     * Transition_PostAction_Jenkins_Build table before made the forge upgrade script
-     *
-     *  CREATE TABLE tracker_workflow_transition_postactions_jenkins_build (
-     *      id ,
-     *      transition_id,
-     *      host,
-     *      job_name,
-     *  )
-     *
-     */
-    public function __construct() {
-        parent::__construct();
-        $this->table_name = 'tracker_workflow_transition_postactions_cibuild';
-    }
-    
     /**
      * Create a new postaction entry
      *
@@ -50,28 +34,28 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
      */
     public function create($transition_id) {
         $transition_id = $this->da->escapeInt($transition_id);
-        
-        $sql = "INSERT INTO $this->table_name (transition_id) 
+
+        $sql = "INSERT INTO tracker_workflow_transition_postactions_cibuild (transition_id)
                 VALUES ($transition_id)";
-        
+
         return $this->updateAndGetLastId($sql);
     }
 
     public function searchByTransitionId($transition_id) {
         $transition_id = $this->da->escapeInt($transition_id);
-        
-        $sql = "SELECT * 
-                FROM $this->table_name
+
+        $sql = "SELECT *
+                FROM tracker_workflow_transition_postactions_cibuild
                 WHERE transition_id = $transition_id
                 ORDER BY id";
-        
+
         return $this->retrieve($sql);
     }
-    
+
         /**
      * Update postaction entry
      *
-     * @param int   $id       The id of the postaction 
+     * @param int   $id       The id of the postaction
      * @param mixed $value    The job url.
      *
      * @return bool true if success false otherwise
@@ -79,8 +63,8 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
     public function updatePostAction($id, $value) {
         $id       = $this->da->escapeInt($id);
         $value    = $this->da->quoteSmart($value);
-        
-        $sql = "UPDATE $this->table_name
+
+        $sql = "UPDATE tracker_workflow_transition_postactions_cibuild
                 SET job_url = $value
                 WHERE id = $id";
         return $this->update($sql);
@@ -93,12 +77,12 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
                 WHERE id = $id";
         return $this->update($sql);
     }
-    
+
     public function deletePostActionsByWorkflowId($workflow_id) {
         $workflow_id = $this->da->escapeInt($workflow_id);
 
         $sql = "DELETE P
-                FROM  tracker_workflow_transition_postactions_cibuild  AS P
+                FROM  tracker_workflow_transition_postactions_cibuild AS P
                 INNER JOIN tracker_workflow_transition AS T ON P.transition_id = T.transition_id
                 WHERE T.workflow_id = $workflow_id";
 
@@ -106,7 +90,7 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
 
     }
 
-        /**
+    /**
      * Create a full-featured postaction.
      *
      * @param int   $transition_id
