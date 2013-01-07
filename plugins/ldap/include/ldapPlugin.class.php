@@ -116,9 +116,6 @@ class LdapPlugin extends Plugin {
         // SystemEvent
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
-
-        // Display ldap binding pane at Ugroup manager level
-        $this->_addHook('display_ldap_binding_pane', 'display_ldap_binding_pane', false);
     }
     
     /**
@@ -909,18 +906,6 @@ class LdapPlugin extends Plugin {
                 $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
                 break;
         }
-    }
-
-    /**
-     * Hook
-     *
-     * @param Array $params
-     *
-     * @return void
-     */
-    function display_ldap_binding_pane($params) {
-
-        echo "*********<br>********** display_ldap_binding_pane ******";
     }
 }
 
