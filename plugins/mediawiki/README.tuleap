@@ -1,6 +1,16 @@
 == How to set up ==
 * Read plugins/mediawiki/INSTALL.tuleap
 
+== How it works ==
+It's mainly a wrapper around mediawiki:
+-> in plugins/mediawiki/www there are links to the mediawiki installation (not modified).
+-> in addition to that there is a LocalSettings.php (in plugins/mediawiki/www)
+   that does the glue between Tuleap and Mediawiki (manage authentication, permissions and stuff).
+
+== Resources ==
+* Log in mediawiki : LocalSettings.php : $wgDebugLogFile         = '/tmp/wiki.log';
+* Permissions management in mediawiki: http://www.mediawiki.org/wiki/Manual:User_rights
+
 == Version to use ==
 
 * Current integration was tested with mediawiki 1.15.
@@ -26,15 +36,23 @@
   * Reading
     * http://www.mediawiki.org/wiki/Manual:Upgrading
     * https://gerrit.wikimedia.org/r/gitweb?p=mediawiki/core.git;a=blob;f=UPGRADE;hb=REL1_20
+  ==> MV: I managed to upgrade from 1.15 to 1.20 by tweaking a bit LocalSettings.php (I disabled
+      the discovery of '$fusionforgeproject' at the beginning of the script to set the name of
+      the project I wanted to upgrade. Then I ran
+      $> /usr/share/codendi/src/utils/php-launcher.sh update.php --conf /usr/share/codendi/plugins/mediawiki/www/LocalSettings.php --quick
+      This does the upgrade for one project. I suppose this should be done for all projects.
+      It seems to be the recommended way to do it: http://www.mediawiki.org/wiki/Wiki_farm#Updating_wikifarm_from_the_commandline
+
+      I also needed to re-create all links in plugins/mediawiki/www and to add a RewriteRule in plugin-mediawiki.inc (apache config) for 'load.php'
+      -> symptom: the wiki pages are displayed without any CSS.
+
 
 -> How to graphically integrate MW ?
   * As of today, we browse the mediawiki instance without Tuleap integration (no header/footer).
   * We should find a way to integrate visually things together.
+  * It will probably be done with a "Tuleap" skin for mediawiki (as done in fusionforge).
 
-
-== Resources ==
-* Log in mediawiki : LocalSettings.php : $wgDebugLogFile         = '/tmp/wiki.log';
-* Permissions management in mediawiki: http://www.mediawiki.org/wiki/Manual:User_rights
+-> Fix upload of images (need to activate enable_uploads in LocalSettings)
 
 
 == Differences between Codendi/Mediawiki & Tuleap == 

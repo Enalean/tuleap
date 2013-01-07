@@ -33,7 +33,7 @@ class DatabaseForge extends DataBase{
 	function tableName($name) {
 		switch ($name) {
 		case 'interwiki':
-			return 'public.plugin_mediawiki_interwiki';
+			return Config::get('sys_dbname').'.plugin_mediawiki_interwiki';
 		default:
 			return Database::tableName($name);
 		}
