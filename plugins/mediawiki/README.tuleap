@@ -1,55 +1,69 @@
-# Must create /var/lib/codendi/plugins/mediawiki/master
-# Done in /usr/share/gforge/plugins/mediawiki/cronjobs/create-wikis.php
-# Theme
-# ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php /usr/share/mediawiki115/skins/
-# ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/fusionforge /usr/share/mediawiki115/skins/
+== How to set up ==
+* Read plugins/mediawiki/INSTALL.tuleap
 
-# create view group_plugin as (select service.service_id group_plugin_id,service.group_id,plugin.id plugin_id,service.short_name from service,plugin where service.short_name=CONCAT('plugin_', plugin.name) and service.is_active=1 and service.is_used=1 and service.group_id != 100);
-# create view plugins as (select id plugin_id, name plugin_name, name plugin_desc from plugin );
+== Version to use ==
 
-# modify /etc/httpd/conf.d/codendi_aliases.conf to add plugin-mediawiki.inc
+* Current integration was tested with mediawiki 1.15.
+* Latest version integrated with FusionForge is 1.19.
+* Latest version available 1.20 but requires PHP 5.3
 
-# add conf param in local.inc
-// Mediawiki
-$master_path = "/var/lib/codendi/plugins/mediawiki/master" ;
-$mwdata_path = "/var/lib/codendi/plugins/mediawiki";
-$mw_dbtype = "mysql";
-$projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
-$config_path = "/etc/codendi";
-$src_path = "/usr/share/mediawiki115";
+-> our recommendation is to start with the latest version to avoid "starting late".
 
-/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
+== Issues ==
+-> the view in README.codendi is supposed to get a table of projects where a plugin is activated.
+   It's done with a join between "service" and "plugin" tables but the issue is that service.short_name and plugin.name
+   doesn't match. Example:
+   * docman: service.short_name = 'docman' && plugin.name = 'docman'
+   * tracker: service.short_name = 'plugin_tracker' && plugin.name = 'tracker'
+
+-> Name clashes
+  Some classes exists both on Tuleap and Mediawiki
+  * User
+  * Sanitizer
+
+-> How to update
+  * When there is a new version of mediawiki, how do we update the code & the DBs ?
+  * Reading
+    * http://www.mediawiki.org/wiki/Manual:Upgrading
+    * https://gerrit.wikimedia.org/r/gitweb?p=mediawiki/core.git;a=blob;f=UPGRADE;hb=REL1_20
+
+-> How to graphically integrate MW ?
+  * As of today, we browse the mediawiki instance without Tuleap integration (no header/footer).
+  * We should find a way to integrate visually things together.
 
 
-You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
-
-============================= TO CHECK LATER ============================= 
-
-Is there a need for bin/create_links.sh??? as of today the links are commited
-into git
+== Resources ==
+* Log in mediawiki : LocalSettings.php : $wgDebugLogFile         = '/tmp/wiki.log';
+* Permissions management in mediawiki: http://www.mediawiki.org/wiki/Manual:User_rights
 
 
-FFDIR=/usr/share/codendi
-MWCRON=/usr/share/codendi/plugins/mediawiki/cronjobs
-FFUSER=gforge
-
-# You may need to change the pathname to php CLI (command line interface)
-PHP="/usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins"
-PHP="/usr/bin/php -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins"
-
-# Don't mail command output to anyone.
-MAILTO=""
-
-#
-# Regular cron jobs for the plugin-mediawiki package
-#
-
-echo "Running $PHP $MWCRON/create-wikis.php"
-$PHP $MWCRON/create-wikis-mysql.php
-
-# Create new mediawikis four times an hour
-#0,15,30,45 * * * * root [ -x $MWCRON/create-wikis.php ] && $PHP $MWCRON/create-wikis.php
-#,16,31,46 * * * * root [ -x $MWCRON/create-imagedirs.php ] && $PHP $MWCRON/create-imagedirs.php
-
-# Create wiki XML dumps every night
-#5 1 * * * root [ -x $MWCRON/dump-wikis.php ] && $PHP $MWCRON/dump-wikis.php
+== Differences between Codendi/Mediawiki & Tuleap == 
+*src/common/include/PFO-RBAC.interface.php
+*src/common/include/RBAC.php
+*src/common/include/RBACEngine.class.php
+layout::BodyHeader() ??
+*Project::getRolesId()
+*Project::getRoles()
+Ugroup/UserManager  ->  new PFUser($row) (renommage User -> PFUser) => won't be modified on Tuleap side
+SystemEventManager::fetchEvents() => not used
+*database_pforole.sql
+*codendi_aliases.conf.dist -> Include /usr/share/codendi/plugins/mediawiki/etc/plugin-mediawiki.inc
+*local.inc.dist ->  $master_path $mwdata_path $mw_dbtype  $projects_path $config_path $src_path
+*database.php -> db_query_from_file (+ db_begin, db_commit, db_rollback qui ne font rien)
+*src/www/include/env.inc.php (vide)
+*src/www/include/plugins_utils.php
+*/src/www/include/preplugins.php (vide)
+*/src/www/env.inc.php ($gfcommon)
+*/FusionForge.php
+*/cron_utils.php
+*/externals.txt
+*/LocalSettings.php
+*/Makefile.extraplugins
+*/Makefile.mediawiki
+*/mediawikiactivate.sql
+*/mediawikiviews.sql
+*/pfo.sql
+*/plugin-mediawiki.inc
+*/plugins/mediaawiki
+/3rd-party/mediawiki/Makefile
+/tests/func/PluginsMediawiki/mediawikiTest.php
