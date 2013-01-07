@@ -285,14 +285,16 @@ class Workflow {
      *
      * @param Array $fields_data  Request field data (array[field_id] => data)
      * @param Tracker_Artifact  $artifact The artifact
+     * @param Tracker_Artifact_Changeset $changeset
      *
      * @return void
      */
     public function after(array $fields_data, Tracker_Artifact $artifact) {
         if (isset($fields_data[$this->getFieldId()])) {
             $transition = $this->getCurrentTransition($fields_data, $artifact);
+            $changeset = $artifact->getLastChangeset();
             if ($transition) {
-                $transition->after();
+                $transition->after($changeset);
             }
         }
     }

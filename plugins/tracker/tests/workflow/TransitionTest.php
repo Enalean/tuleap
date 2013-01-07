@@ -142,8 +142,10 @@ class Transition_AfterTest extends Transition_baseTest {
 
         $post_action_1->expectOnce('after');
         $post_action_2->expectOnce('after');
+        
+        $changeset = mock('Tracker_Artifact_Changeset');
 
-        $transition->after();
+        $transition->after($changeset);
     }
 }
 

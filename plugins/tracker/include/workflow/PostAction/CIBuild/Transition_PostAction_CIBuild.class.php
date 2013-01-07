@@ -124,8 +124,9 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     /**
      * @see Transition_PostAction::after()
+     * @param Tracker_Artifact_Changeset $changeset
      */
-    public function after() {
+    public function after(Tracker_Artifact_Changeset $changeset) {
         try {
             $this->ci_client->launchJobBuild($this->job_url);
             $GLOBALS['Response']->addFeedback('info', 'Job build launch succeeded ('.$this->job_url.')'); //TODO i18n

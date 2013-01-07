@@ -137,9 +137,10 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $client           = mock('Jenkins_Client');
 
         $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+        $changeset = mock('Tracker_Artifact_Changeset');
 
         expect($client)->launchJobBuild($job_url)->once();
-        $post_action_ci_build->after();
+        $post_action_ci_build->after($changeset);
     }
 
     public function itDisplayInfoFeedbackIfLaunchSucceed() {
@@ -149,9 +150,10 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $client           = mock('Jenkins_Client');
 
         $post_action_ci_build = new Transition_PostAction_CIBuild($transition, $id, $job_url, $client);
+        $changeset = mock('Tracker_Artifact_Changeset');
 
         expect($GLOBALS['Response'])->addFeedback('info', '*')->once();
-        $post_action_ci_build->after();
+        $post_action_ci_build->after($changeset);
     }
 
     public function itDisplayErrorFeedbackIfLaunchFailed() {
@@ -164,9 +166,10 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
         $error_message = 'Oops';
         stub($client)->launchJobBuild($job_url)->throws(new Jenkins_ClientUnableToLaunchBuildException($error_message));
-
+        $changeset = mock('Tracker_Artifact_Changeset');
+        
         expect($GLOBALS['Response'])->addFeedback('error', $error_message)->once();
-        $post_action_ci_build->after();
+        $post_action_ci_build->after($changeset);
     }
 }
 ?>

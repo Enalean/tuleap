@@ -193,14 +193,15 @@ class Transition {
     }
 
     /**
-     * Execute actions after transition happens
-     *
+     * Execute actions after transition happenstype
+     * 
+     * @param Tracker_Artifact_Changeset $changeset
      * @return void
      */
-    public function after() {
+    public function after(Tracker_Artifact_Changeset $changeset) {
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
-            $post_action->after();
+            $post_action->after($changeset);
         }
     }
 
