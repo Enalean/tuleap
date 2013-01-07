@@ -143,9 +143,8 @@ class Transition_PostAction_CIBuildFactory {
      * @return Transition_PostAction The  Transition_PostAction object, or null if error
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
-        $xml_tag_name          = $xml->getName();
         $postaction_attributes = $xml->attributes();
-        $job_url               = $this->getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes);
+        $job_url               = (string) $postaction_attributes['job_url'];
 
         return new Transition_PostAction_CIBuild($transition, 0, $job_url, new Jenkins_Client(new Http_Client()));
     }
@@ -167,13 +166,6 @@ class Transition_PostAction_CIBuildFactory {
 
         return new Transition_PostAction_CIBuild($transition, $id, $value, $ci_client);
     }
-
-    private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
-        switch($xml_tag_name) {
-            case 'postaction_ci_build':  return (string) $postaction_attributes['job_url'];
-            default: throw new Transition_PostAction_NotFoundException($xml_tag_name);
-        }
-     }
 }
 
 ?>
