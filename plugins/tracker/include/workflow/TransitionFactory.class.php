@@ -174,7 +174,7 @@ class TransitionFactory {
         $transition = new Transition(0, 0, $from, $to);
         $postactions = array();
         if ($xml->postactions) {
-            $tpaf = new Transition_PostActionFactory();
+            $tpaf = $this->getPostActionFactory();
             foreach(array('postaction_field_date', 'postaction_field_int', 'postaction_field_float') as $post_action_type) {
                 foreach ($xml->postactions->$post_action_type as $p) {
                     $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
@@ -257,7 +257,7 @@ class TransitionFactory {
         //Save postactions
         $postactions = $transition->getAllPostActions();
         foreach ($postactions as $postaction) {
-            $tpaf = new Transition_PostActionFactory();
+            $tpaf = $this->getPostActionFactory();
             $tpaf->saveObject($postaction);
         }
 
