@@ -41,14 +41,13 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
         $this->transition_id = 123;
         $this->transition    = stub('Transition')->getTransitionId()->returns($this->transition_id);
 
-        $mocked_methods = array('getFieldFactory', 'getCIBuildFactory');
-        $this->factory = partial_mock('Transition_PostActionFactory', $mocked_methods);
+        $this->factory = new Transition_PostActionFactory();
 
-        $this->field_factory = mock('Transition_PostAction_FieldFactory');
+        $this->field_factory   = mock('Transition_PostAction_FieldFactory');
         $this->cibuild_factory = mock('Transition_PostAction_CIBuildFactory');
 
-        stub($this->factory)->getFieldFactory()->returns($this->field_factory);
-        stub($this->factory)->getCIBuildFactory()->returns($this->cibuild_factory);
+        $this->factory->setFieldFactory($this->field_factory);
+        $this->factory->setCIBuildFactory($this->cibuild_factory);
     }
 }
 

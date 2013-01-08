@@ -35,20 +35,44 @@ require_once 'CIBuild/Transition_PostAction_CIBuildFactory.class.php';
  * Collection of subfactories to CRUD postactions. Uniq entry point from the transition point of view.
  */
 class Transition_PostActionFactory {
-    
-    /** @return \Transition_PostAction_FieldFactory */
-    public function getFieldFactory() {
-        return new Transition_PostAction_FieldFactory(
-            Tracker_FormElementFactory::instance(),
-            new Transition_PostAction_Field_DateDao(),
-            new Transition_PostAction_Field_IntDao(),
-            new Transition_PostAction_Field_FloatDao()
-        );
+
+    /** @var Transition_PostAction_FieldFactory */
+    private $postaction_field_factory;
+
+    /** @var Transition_PostAction_CIBuildFactory */
+    private $postaction_cibuild_factory;
+
+    /** For testing purpose */
+    public function setFieldFactory(Transition_PostAction_FieldFactory $postaction_field_factory) {
+        $this->postaction_field_factory = $postaction_field_factory;
     }
 
-    /** @return \Transition_PostAction_CIBuildFactory */
-    public function getCIBuildFactory() {
-        return new Transition_PostAction_CIBuildFactory(new Transition_PostAction_CIBuildDao());
+    /** For testing purpose */
+    public function setCIBuildFactory(Transition_PostAction_CIBuildFactory $postaction_cibuild_factory) {
+        $this->postaction_cibuild_factory = $postaction_cibuild_factory;
+    }
+
+    /** @return Transition_PostAction_FieldFactory */
+    private function getFieldFactory() {
+        if (!$this->postaction_field_factory) {
+            $this->postaction_field_factory = new Transition_PostAction_FieldFactory(
+                Tracker_FormElementFactory::instance(),
+                new Transition_PostAction_Field_DateDao(),
+                new Transition_PostAction_Field_IntDao(),
+                new Transition_PostAction_Field_FloatDao()
+            );
+        }
+        return $this->postaction_field_factory;
+    }
+
+    /** @return Transition_PostAction_CIBuildFactory */
+    private function getCIBuildFactory() {
+        if (!$this->postaction_cibuild_factory) {
+            $this->postaction_cibuild_factory = new Transition_PostAction_CIBuildFactory(
+                new Transition_PostAction_CIBuildDao()
+            );
+        }
+        return $this->postaction_cibuild_factory;
     }
 
     /** @return Transition_PostActionSubFactory */
@@ -65,7 +89,7 @@ class Transition_PostActionFactory {
         }
         throw new Transition_PostAction_NotFoundException('Invalid Post Action type');
     }
-    
+
     /**
      * Get html code to let someone choose a post action for a transition
      *
@@ -75,11 +99,12 @@ class Transition_PostActionFactory {
         $html ='';
         $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
         $html .= '<select name="add_postaction">';
-        $html .= $this->getFieldFactory()->fetchPostActions() . $this->getCIBuildFactory()->fetchPostActions();
+        $html .= $this->getFieldFactory()->fetchPostActions();
+        $html .= $this->getCIBuildFactory()->fetchPostActions();
         $html .= '</select>';
         return $html;
     }
-    
+
     /**
      * Create a new post action for the transition
      *
@@ -94,7 +119,7 @@ class Transition_PostActionFactory {
 
     /**
      * Load the post actions that belong to a transition
-     * 
+     *
      * @param Transition $transition The transition
      *
      * @return void
@@ -115,14 +140,14 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function saveObject(Transition_PostAction $post_action) {
-        
+
         if($post_action instanceof Transition_PostAction_Field) {
             $this->getFieldFactory()->saveObject($post_action);
         } else {
             $this->getCIBuildFactory()->saveObject($post_action);
         }
     }
-    
+
     /**
      * Say if a field is used in its tracker workflow transitions post actions
      *
@@ -132,20 +157,20 @@ class Transition_PostActionFactory {
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
         return $this->getCIBuildFactory()->isFieldUsedInPostActions($field)
-                || $this->getFieldFactory()->isFieldUsedInPostActions($field);
+            || $this->getFieldFactory()->isFieldUsedInPostActions($field);
     }
-    
+
     /**
      * Delete a workflow
      *
      * @param int $workflow_id the id of the workflow
-     * 
+     *
      */
     public function deleteWorkflow($workflow_id) {
         return $this->getCIBuildFactory()->deleteWorkflow($workflow_id)
-                && $this->getFieldFactory()->deleteWorkflow($workflow_id);
+            && $this->getFieldFactory()->deleteWorkflow($workflow_id);
     }
-    
+
     /**
      * Duplicate postactions of a transition
      *
