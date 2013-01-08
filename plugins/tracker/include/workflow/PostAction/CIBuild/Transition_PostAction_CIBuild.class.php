@@ -57,7 +57,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         $this->ci_client = $client;
     }
 
-
+    /** @return string */
     public function getJobUrl() {
         return $this->job_url;
     }
@@ -71,6 +71,12 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         return self::SHORT_NAME;
     }
 
+    /** @return string */
+    public static function getLabel() {
+        return $GLOBALS['Language']->getText('workflow_postaction', 'launch_job');
+    }
+
+    /** @return string html */
     public function fetch() {
         $html  = '';
         $title = $GLOBALS['Language']->getText('workflow_admin','ci_url');
@@ -87,6 +93,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         return $html;
     }
 
+    /** @return bool */
     public function isDefined() {
         return !empty($this->job_url);
     }
@@ -100,16 +107,6 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         }
     }
 
-    private function updateJobUrl($new_job_url) {
-        if ($new_job_url != $this->job_url) {
-            if ($this->urlIsValid($new_job_url)) {
-                $this->getDao()->updatePostAction($this->id, $new_job_url);
-            } else {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_postaction', 'invalid_job_url', array($new_job_url)));
-            }
-        }
-    }
-
     /**
      * Export postactions to XML
      *
@@ -118,15 +115,11 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      *
      * @return void
      */
-     public function exportToXml(&$root, $xmlMapping) {
-         if ($this->isDefined()) {
-             $child = $root->addChild(Transition_PostAction_CIBuild::XML_TAG_NAME);
-             $child->addAttribute('job_url', $this->getJobUrl());
-         }
-     }
-
-    public static function getLabel() {
-        return $GLOBALS['Language']->getText('workflow_postaction', 'launch_job');
+    public function exportToXml(&$root, $xmlMapping) {
+        if ($this->isDefined()) {
+            $child = $root->addChild(Transition_PostAction_CIBuild::XML_TAG_NAME);
+            $child->addAttribute('job_url', $this->getJobUrl());
+        }
     }
 
     /**
@@ -150,12 +143,23 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         }
     }
 
-    public function getDao() {
+    /** @return Transition_PostAction_CIBuildDao */
+    protected function getDao() {
         return new Transition_PostAction_CIBuildDao();
     }
 
     private function urlIsValid($url) {
         return preg_match("#$this->job_url_pattern#", $url) > 0;
+    }
+
+    private function updateJobUrl($new_job_url) {
+        if ($new_job_url != $this->job_url) {
+            if ($this->urlIsValid($new_job_url)) {
+                $this->getDao()->updatePostAction($this->id, $new_job_url);
+            } else {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('workflow_postaction', 'invalid_job_url', array($new_job_url)));
+            }
+        }
     }
 }
 

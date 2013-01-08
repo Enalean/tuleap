@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php';
+require_once TRACKER_BASE_DIR .'/workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php';
 require_once 'aTransition.php';
 
 function aCIBuildPostAction() {
@@ -59,10 +59,12 @@ class Test_Transition_PostAction_CIBuild_Builder {
     }
     
     public function build() {
-        return new Transition_PostAction_CIBuild($this->transition,
-                                                   $this->id,
-                                                   $this->value,
-                                                   $this->ci_client);
+        return new Transition_PostAction_CIBuild(
+            $this->transition,
+            $this->id,
+            $this->value,
+            $this->ci_client
+        );
     }
 }
 

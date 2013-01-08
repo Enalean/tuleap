@@ -73,6 +73,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /**@var Tracker_ArtifactFactory */
     private $artifact_factory;
+
     /**
      * Constructor
      *
@@ -897,13 +898,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_ArtifactFactory
      */
     protected function getArtifactFactory() {
-        if($this->artifact_factory) {
+        if ($this->artifact_factory) {
             return $this->artifact_factory;
         }
         return Tracker_ArtifactFactory::instance();
     }
 
-    public function setArtifactFactory($artifact_factory) {
+    public function setArtifactFactory(Tracker_ArtifactFactory $artifact_factory) {
         $this->artifact_factory = $artifact_factory;
     }
 
@@ -949,7 +950,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             $field->saveNewChangeset($this, null, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
                         }
                     }
-
                     //Save the artifact
                     if ($this->getArtifactFactory()->save($this)) {
                         $this->changesets[$changeset_id] = $this->getChangeset($changeset_id);
@@ -1037,6 +1037,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
         $this->validateNewChangeset($fields_data, $comment, $submitter, $email);
+        
         /*
          * Post actions were run by validateNewChangeset but they modified a 
          * different set of $fields_data in the case of massChange or soap requests;

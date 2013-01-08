@@ -41,9 +41,9 @@ class Jenkins_Client {
     }
 
     /**
+     * @param string $job_url
+     * @param array $parameters
      *
-     * @param string $job_name
-     * @param array $options curl options
      * @throws Tracker_Exception
      */
     public function launchJobBuild($job_url, array $build_parameters = array()) {
@@ -52,7 +52,7 @@ class Jenkins_Client {
             CURLOPT_SSL_VERIFYPEER  => false,
         );
         
-        if(count($build_parameters) === 0) {
+        if (count($build_parameters) === 0) {
             $options[CURLOPT_HTTPGET] = true;
         } else {
             $options[CURLOPT_POST] = true;

@@ -2223,6 +2223,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         stub($this->artifact)->getReferenceManager()->returns(mock('ReferenceManager'));
 
     }
+
     public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(true);

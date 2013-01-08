@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
 ) ENGINE=InnoDB;
 
 --  
---  Table structure for tracker_workflow_transition_postactions_launch_build
+--  Table structure for tracker_workflow_transition_postactions_cibuild
 -- 
 DROP TABLE IF EXISTS tracker_workflow_transition_postactions_cibuild;
 CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_cibuild (

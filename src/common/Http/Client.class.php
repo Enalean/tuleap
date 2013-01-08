@@ -22,7 +22,7 @@ require_once 'common/Http/ClientException.class.php';
 class Http_Client
 {
     /**
-     *
+     * @var resource
      */
     private $curl_handle;
 
