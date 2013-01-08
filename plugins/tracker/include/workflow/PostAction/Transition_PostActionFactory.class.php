@@ -50,64 +50,6 @@ class Transition_PostActionFactory {
     /** @var Transition_PostAction_CIBuildFactory */
     private $postaction_cibuild_factory;
 
-    /** For testing purpose */
-    public function setFieldFactory(Transition_PostAction_FieldFactory $postaction_field_factory) {
-        $this->postaction_field_factory = $postaction_field_factory;
-    }
-
-    /** For testing purpose */
-    public function setCIBuildFactory(Transition_PostAction_CIBuildFactory $postaction_cibuild_factory) {
-        $this->postaction_cibuild_factory = $postaction_cibuild_factory;
-    }
-
-    /** @return Transition_PostAction_FieldFactory */
-    private function getFieldFactory() {
-        if (!$this->postaction_field_factory) {
-            $this->postaction_field_factory = new Transition_PostAction_FieldFactory(
-                Tracker_FormElementFactory::instance(),
-                new Transition_PostAction_Field_DateDao(),
-                new Transition_PostAction_Field_IntDao(),
-                new Transition_PostAction_Field_FloatDao()
-            );
-        }
-        return $this->postaction_field_factory;
-    }
-
-    /** @return Transition_PostAction_CIBuildFactory */
-    private function getCIBuildFactory() {
-        if (!$this->postaction_cibuild_factory) {
-            $this->postaction_cibuild_factory = new Transition_PostAction_CIBuildFactory(
-                new Transition_PostAction_CIBuildDao()
-            );
-        }
-        return $this->postaction_cibuild_factory;
-    }
-
-    /** @return Transition_PostActionSubFactories */
-    private function getSubFactories() {
-        return new Transition_PostActionSubFactories(
-            array(
-                $this->getFieldFactory(),
-                $this->getCIBuildFactory(),
-            )
-        );
-    }
-
-    /** @return Transition_PostActionSubFactory */
-    private function getSubFactory($post_action_short_name) {
-        $field_factory = $this->getFieldFactory();
-        $factories     = array(
-            Transition_PostAction_Field_Float::SHORT_NAME => $field_factory,
-            Transition_PostAction_Field_Int::SHORT_NAME   => $field_factory,
-            Transition_PostAction_Field_Date::SHORT_NAME  => $field_factory,
-            Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
-        );
-        if (isset($factories[$post_action_short_name])) {
-            return $factories[$post_action_short_name];
-        }
-        throw new Transition_PostAction_NotFoundException('Invalid Post Action type');
-    }
-
     /**
      * Get html code to let someone choose a post action for a transition
      *
@@ -209,6 +151,64 @@ class Transition_PostActionFactory {
             $post_actions[] = $subfactory->getInstanceFromXML($child, $xmlMapping, $transition);
         }
         return $post_actions;
+    }
+
+    /** For testing purpose */
+    public function setCIBuildFactory(Transition_PostAction_CIBuildFactory $postaction_cibuild_factory) {
+        $this->postaction_cibuild_factory = $postaction_cibuild_factory;
+    }
+
+    /** For testing purpose */
+    public function setFieldFactory(Transition_PostAction_FieldFactory $postaction_field_factory) {
+        $this->postaction_field_factory = $postaction_field_factory;
+    }
+
+    /** @return Transition_PostActionSubFactory */
+    private function getSubFactory($post_action_short_name) {
+        $field_factory = $this->getFieldFactory();
+        $factories     = array(
+            Transition_PostAction_Field_Float::SHORT_NAME => $field_factory,
+            Transition_PostAction_Field_Int::SHORT_NAME   => $field_factory,
+            Transition_PostAction_Field_Date::SHORT_NAME  => $field_factory,
+            Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
+        );
+        if (isset($factories[$post_action_short_name])) {
+            return $factories[$post_action_short_name];
+        }
+        throw new Transition_PostAction_NotFoundException('Invalid Post Action type');
+    }
+
+    /** @return Transition_PostAction_FieldFactory */
+    private function getFieldFactory() {
+        if (!$this->postaction_field_factory) {
+            $this->postaction_field_factory = new Transition_PostAction_FieldFactory(
+                Tracker_FormElementFactory::instance(),
+                new Transition_PostAction_Field_DateDao(),
+                new Transition_PostAction_Field_IntDao(),
+                new Transition_PostAction_Field_FloatDao()
+            );
+        }
+        return $this->postaction_field_factory;
+    }
+
+    /** @return Transition_PostAction_CIBuildFactory */
+    private function getCIBuildFactory() {
+        if (!$this->postaction_cibuild_factory) {
+            $this->postaction_cibuild_factory = new Transition_PostAction_CIBuildFactory(
+                new Transition_PostAction_CIBuildDao()
+            );
+        }
+        return $this->postaction_cibuild_factory;
+    }
+
+    /** @return Transition_PostActionSubFactories */
+    private function getSubFactories() {
+        return new Transition_PostActionSubFactories(
+            array(
+                $this->getFieldFactory(),
+                $this->getCIBuildFactory(),
+            )
+        );
     }
 
     /** @return string */
