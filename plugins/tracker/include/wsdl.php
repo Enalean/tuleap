@@ -425,7 +425,7 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
-    'TrackerWorkflowRules',
+    'TrackerWorkflowRuleArray',
     'complexType',
     'struct',
     'choice',
