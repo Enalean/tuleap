@@ -22,7 +22,6 @@
 
 require_once('common/valid/Rule.class.php');
 
-require_once('Artifact/Tracker_ArtifactFactory.class.php');
 
 /**
  * Check that given value is a valid artifact id

@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_Semantic_Title.class.php');
-require_once('Tracker_Semantic_Status.class.php');
-require_once('Tracker_Semantic_Contributor.class.php');
 
 class Tracker_SemanticManager {
 

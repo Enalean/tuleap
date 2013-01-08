@@ -17,8 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once('Tracker_FormElement_Field_List_Bind.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_UgroupsValue.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Field_List_Bind {
     /**

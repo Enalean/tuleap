@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_FileInfoDao.class.php');
 
 class Tracker_FileInfo {
     const THUMBNAILS_MAX_WIDTH  = 150;

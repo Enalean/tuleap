@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_FormElement_Field_Shareable.class.php';
 
 abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
 

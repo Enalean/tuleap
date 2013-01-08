@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../Widget/Tracker_Widget_MyRenderer.class.php';
-require_once dirname(__FILE__).'/../Widget/Tracker_Widget_ProjectRenderer.class.php';
 
 abstract class Tracker_Report_Renderer {
     

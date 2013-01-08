@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_HistoryDao.class.php');
 require_once('common/include/Codendi_Diff.class.php');
 
 class Tracker_History {

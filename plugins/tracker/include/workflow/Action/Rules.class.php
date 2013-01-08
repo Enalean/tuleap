@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR .'/workflow/Action.class.php';
 
 /**
  * Action that manage rules of a workflow

@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_StaticDao.class.php');
-require_once('Tracker_FormElement_Field_List.class.php');
 
 class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List {
     

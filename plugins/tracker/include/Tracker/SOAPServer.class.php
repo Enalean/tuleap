@@ -17,10 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once 'common/soap/SOAP_RequestValidator.class.php';
-require_once 'Report/Tracker_Report_SOAP.class.php';
-require_once 'Report/Tracker_ReportFactory.class.php';
-require_once 'NoChangeException.class.php';
-require_once 'FileInfoFactory.class.php';
 
 
 //define fault code constants

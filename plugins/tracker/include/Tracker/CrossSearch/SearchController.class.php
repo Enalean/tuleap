@@ -18,13 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SearchView.class.php';
-require_once 'ServiceNotUsedException.class.php';
-require_once 'ProjectNotFoundException.class.php';
-require_once 'Search.class.php';
-require_once 'Query.class.php';
-require_once dirname(__FILE__) .'/../Hierarchy/HierarchyFactory.class.php';
-require_once dirname(__FILE__) .'/../HomeNavPresenter.class.php';
 
 class Tracker_CrossSearch_SearchController {
     /**

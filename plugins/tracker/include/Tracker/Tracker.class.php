@@ -18,25 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/TrackerDao.class.php');
-require_once('dao/Tracker_PermDao.class.php');
-require_once('Semantic/Tracker_SemanticManager.class.php');
-require_once('Tooltip/Tracker_Tooltip.class.php');
-require_once('Tracker_NotificationsManager.class.php');
-require_once('CannedResponse/Tracker_CannedResponseManager.class.php');
-require_once('DateReminder/Tracker_DateReminderManager.class.php');
-require_once('Rule/Tracker_RulesManager.class.php');
-require_once(dirname(__FILE__).'/../workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
-require_once(dirname(__FILE__).'/../tracker_permissions.php');
-require_once('Tracker_Dispatchable_Interface.class.php');
-require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
-require_once('Hierarchy/Controller.class.php');
-require_once('Hierarchy/HierarchyFactory.class.php');
-require_once 'IFetchTrackerSwitcher.class.php';
-require_once 'Action/CreateArtifact.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/NoChangeException.class.php';
 
 require_once('json.php');
 
@@ -2729,7 +2712,6 @@ EOS;
                 $key = array_search($field->getName(), $header_line);
                 if ($key === false) {
                     //search if field  is in the CSV file header line
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_required_field', array($field->getName())));
                     $is_missing = true;
                 } else {
                     //search if there is a value at each line for that field

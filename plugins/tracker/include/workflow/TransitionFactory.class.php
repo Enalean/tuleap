@@ -18,13 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Workflow.class.php');
-require_once('Transition.class.php');
-require_once('Workflow_Dao.class.php');
-require_once('Workflow_TransitionDao.class.php');
 require_once('common/permission/PermissionsManager.class.php');
-require_once('PostAction/Transition_PostActionFactory.class.php');
-require_once 'Transition/ConditionFactory.class.php';
 
 class TransitionFactory {
 

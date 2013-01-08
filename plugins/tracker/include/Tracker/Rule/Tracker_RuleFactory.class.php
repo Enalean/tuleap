@@ -18,14 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/dao/Tracker_RuleDao.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/List/Dao.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/List/Factory.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/Date/Dao.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/Date/Factory.class.php';
 
-require_once 'List.class.php';
-require_once 'Tracker_Rule.class.php';
 
 /**
 * Factory of rules

@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'PostAction/Transition_PostAction.class.php';
-require_once 'Transition/Condition/Permissions.class.php';
-require_once 'Transition/Condition/FieldNotEmpty.class.php';
 
 class Transition {
     public $transition_id;

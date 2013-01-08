@@ -18,16 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_Report_Session.class.php');
-require_once('Tracker_Report_Renderer.class.php');
-require_once('Tracker_Report_Renderer_ArtifactLinkable_Interface.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-
 require_once('common/include/Codendi_HTTPPurifier.class.php');
-
-require_once('dao/Tracker_Report_Renderer_Table_SortDao.class.php');
-require_once('dao/Tracker_Report_Renderer_Table_ColumnsDao.class.php');
-require_once('dao/Tracker_Report_Renderer_Table_FunctionsAggregatesDao.class.php');
 
 class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements Tracker_Report_Renderer_ArtifactLinkable {
     

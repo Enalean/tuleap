@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once(dirname(__FILE__).'/../Tracker.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElement_Field_List.class.php');
-require_once('Tracker_Semantic.class.php');
-require_once('dao/Tracker_Semantic_ContributorDao.class.php');
 
 class Tracker_Semantic_Contributor extends Tracker_Semantic {
     

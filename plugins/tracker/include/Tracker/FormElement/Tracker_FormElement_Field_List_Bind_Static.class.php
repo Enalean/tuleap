@@ -18,10 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_List_Bind.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
 require_once('common/html/HTML_Element_Input_Checkbox.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_StaticValue_Null.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind {
 

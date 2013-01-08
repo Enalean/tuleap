@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker.class.php');
-require_once('dao/TrackerDao.class.php');
-require_once('CannedResponse/Tracker_CannedResponseFactory.class.php');
-require_once('Semantic/Tracker_SemanticFactory.class.php');
-require_once dirname(__FILE__).'/../constants.php';
 
 class TrackerFactory {
 
@@ -931,7 +926,6 @@ class TrackerFactory {
      * @return Tracker
      */
     public function createFromTV3($atid, Project $project, $name, $description, $itemname) {
-        require_once 'Migration/V3.class.php'; //we don't want to load all trackers v3 for each requests
         require_once 'common/tracker/ArtifactType.class.php';
         $tv3 = new ArtifactType($project, $atid);
         if (!$tv3 || !is_object($tv3)) {
