@@ -337,7 +337,10 @@ class PermissionsManager {
     }
 
     /**
-    * Searches Permissions by UgroupId 
+    * Searches Permissions by UgroupId
+    *
+    * @param Integer $ugroupId Id of the user group
+    *
     * @return DataAccessResult
     */
     public function searchByUgroupId($ugroupId) {

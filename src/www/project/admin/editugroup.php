@@ -137,7 +137,6 @@ if (($func=='edit')||($func=='do_create')) {
     }
 
     $uGroupMgr = new UGroupManager();
-    $uGroupMgr->processEditMembersAction($group_id, $ugroup_id, $request);
 
     $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding'));
     $vPane->required();
@@ -171,6 +170,7 @@ if (($func=='edit')||($func=='do_create')) {
         $content .= '</form>';
     break;
     case 'members':
+        $uGroupMgr->processEditMembersAction($group_id, $ugroup_id, $request);
         $content .= $uGroupMgr->displayUgroupMembers($group_id, $ugroup_id, $request);
     break;
     case 'bind':

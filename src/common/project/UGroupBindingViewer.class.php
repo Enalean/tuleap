@@ -78,7 +78,6 @@ class UGroupBindingViewer {
         $html .= $this->getCurrentBindingHTML($currentProject, $currentSource);
         $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
         $html .= $this->getClonesHTML($clones);
-
         $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'</h3>';
         $html .= '<table>';
         $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_project').'</td><td><form action="" method="post">'.$this->getProjectsSelect($groupId, $sourceProjectId).'</td>';
@@ -96,6 +95,15 @@ class UGroupBindingViewer {
         return $html;
     }
 
+    /**
+     * Get the HTML content of the user group binding pane
+     *
+     * @param Integer $groupId         Id of the project
+     * @param Integer $ugroupId        Id of the user group
+     * @param Integer $sourceProjectId Id of the source project
+     *
+     * @return String
+     */
     public function getUgtoupBindingPaneContent($groupId, $ugroupId, $sourceProjectId = null) {
         $currentProject = null;
         $currentSource  = null;

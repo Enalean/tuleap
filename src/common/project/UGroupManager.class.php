@@ -227,6 +227,14 @@ class UGroupManager {
         return array();
     }
 
+    /**
+     * Validate the HTTP request for the user members pane
+     *
+     * @param Integer     $groupId Id of the project
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return Array
+     */
     public function validateRequest($groupId, $request) {
         $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
                 FROM user
@@ -262,6 +270,15 @@ class UGroupManager {
         return $result;
     }
 
+    /**
+     * Process the members pane action
+     *
+     * @param Integer     $groupId  Id of the project
+     * @param Integer     $ugroupId Id of the user group
+     * @param HTTPRequest $request  HTTP request
+     *
+     * @return Void
+     */
     public function processEditMembersAction($groupId, $ugroupId, $request) {
         $uGroup                   = $this->getById($ugroupId);
         $ugroupUpdateUsersAllowed = !$uGroup->isBound();
@@ -297,6 +314,15 @@ class UGroupManager {
         }
     }
 
+    /**
+     * Display the content of the members pane
+     *
+     * @param Integer     $groupId  Id of the project
+     * @param Integer     $ugroupId Id of the user group
+     * @param HTTPRequest $request  HTTP request
+     *
+     * @return String
+     */
     public function displayUgroupMembers($groupId, $ugroupId, $request) {
         $hp                       = Codendi_HTMLPurifier::instance();
         $uGroup                   = $this->getById($ugroupId);
@@ -435,6 +461,13 @@ class UGroupManager {
         return $content;
     }
 
+    /**
+     * Display the user search result
+     *
+     * @param DataAccessResult $res result of the user search
+     *
+     * @return String
+     */
     public function displayUserResultTable($res) {
         $userHelper = UserHelper::instance();
         $hp         = Codendi_HTMLPurifier::instance();
@@ -472,6 +505,14 @@ class UGroupManager {
         return $output;
     }
 
+    /**
+     * Display the binding pane content
+     *
+     * @param Integer     $groupId  Id of the project
+     * @param Integer     $ugroupId Id of the user group
+     *
+     * @return String
+     */
     public function displayUgroupBinding($groupId, $ugroupId) {
         $html = '';
         $uGroup                   = $this->getById($ugroupId);
