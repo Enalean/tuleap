@@ -47,12 +47,18 @@ class Jenkins_Client {
      * @throws Tracker_Exception
      */
     public function launchJobBuild($job_url, array $build_parameters = array()) {
-        $url = $job_url . '/build?json=' . $this->generateBuildParameters($build_parameters);
         $options = array(
-            CURLOPT_HTTPGET         => true,
-            CURLOPT_URL             => $url,
+            CURLOPT_URL             => $job_url . '/build',
             CURLOPT_SSL_VERIFYPEER  => false,
         );
+        
+        if(count($build_parameters) === 0) {
+            $options[CURLOPT_HTTPGET] = true;
+        } else {
+            $options[CURLOPT_POST] = true;
+            $options[CURLOPT_POSTFIELDS] = $this->generateBuildParameters($build_parameters);
+        }
+
         $this->http_curl_client->addOptions($options);
 
         try {
@@ -76,7 +82,7 @@ class Jenkins_Client {
             );
         }
 
-        return urlencode(json_encode($parameters));
+        return 'json=' . urlencode(json_encode($parameters));
     }
 }
 

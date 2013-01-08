@@ -33,22 +33,23 @@ class Jenkins_ClientTest extends TuleapTestCase {
     }
 
     public function testLaunchJobSetsCorrectOptions() {
-        $job_url = 'http://some.url.com/my_job';
+        $job_url = 'http://degaine:8080/job/dylanJob';
         $build_parameters = array(
             'my_param' => 'mickey mooouse',
         );
-        
-        $http_client = mock('Http_Client');
-        stub($http_client)->doRequest()->once();
-        
+
         $json_params = '{"parameter":[{"name":"my_param","value":"mickey mooouse"}]}';
         $expected_url_params = urlencode($json_params);
 
         $expected_options = array(
-            CURLOPT_HTTPGET         => true,
-            CURLOPT_URL             => $job_url . '/build?json=' . $expected_url_params,
+            CURLOPT_URL             => $job_url . '/build',
             CURLOPT_SSL_VERIFYPEER  => false,
+            CURLOPT_POST            => true,
+            CURLOPT_POSTFIELDS      => 'json='. $expected_url_params,
         );
+
+        $http_client = mock('Http_Client');
+        stub($http_client)->doRequest()->once();
         stub($http_client)->addOptions($expected_options)->once();
 
         $jenkins_client = new Jenkins_Client($http_client);
