@@ -36,7 +36,7 @@ class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase {
 
         $this->transition = aTransition()->withId($this->transition_id)->build();
         $this->dao        = mock('Transition_PostAction_CIBuildDao');
-        $this->factory = partial_mock('Transition_PostAction_CIBuildFactory', array('loadPostActionRows'), array($this->dao));
+        $this->factory    = new Transition_PostAction_CIBuildFactory($this->dao);
     }
 }
 
@@ -45,13 +45,11 @@ class Transition_PostAction_CIBuildFactory_LoadPostActionsTest extends Transitio
     public function itLoadsCIBuildPostActions() {
         $post_action_value = 'http://ww.myjenks.com/job';
         $post_action_rows  = array(
-            array(
-                'id'         => $this->post_action_id,
-                'job_url'    => $post_action_value,
-                )
-            );
+            'id'         => $this->post_action_id,
+            'job_url'    => $post_action_value,
+        );
 
-        stub($this->factory)->loadPostActionRows($this->transition)->returns($post_action_rows);
+        stub($this->dao)->searchByTransitionId($this->transition_id)->returnsDar($post_action_rows);
 
         $this->assertCount($this->factory->loadPostActions($this->transition), 1);
 

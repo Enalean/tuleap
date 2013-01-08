@@ -44,7 +44,7 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
      * @see Transition_PostActionSubFactory::addPostAction()
      */
     public function addPostAction(Transition $transition, $requested_postaction) {
-        $this->dao->create($transition->getTransitionId());
+        $this->dao->create($transition->getId());
     }
 
     /**
@@ -68,15 +68,15 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
      *
      * @return DataAccessResult
      */
-    public function loadPostActionRows(Transition $transition) {
-        return $this->dao->searchByTransitionId($transition->getTransitionId());
+    private function loadPostActionRows(Transition $transition) {
+        return $this->dao->searchByTransitionId($transition->getId());
     }
 
     /**
      * @see Transition_PostActionSubFactory::saveObject()
      */
     public function saveObject(Transition_PostAction $post_action) {
-        $this->dao->save($post_action->getTransition()->getTransitionId(), $post_action->getJobUrl());
+        $this->dao->save($post_action->getTransition()->getId(), $post_action->getJobUrl());
     }
 
     /**

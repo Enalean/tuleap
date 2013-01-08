@@ -57,7 +57,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      */
     public function addPostAction(Transition $transition, $requested_postaction) {
         if (isset($this->post_actions_classes_field[$requested_postaction])) {
-            $this->getDao($requested_postaction)->create($transition->getTransitionId());
+            $this->getDao($requested_postaction)->create($transition->getId());
         }
     }
 
@@ -86,7 +86,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         $short_name = $post_action->getShortName();
         $dao = $this->getDao($short_name);
 
-        $dao->save($post_action->getTransition()->getTransitionId(),
+        $dao->save($post_action->getTransition()->getId(),
            $post_action->getFieldId(),
            $this->getValue($post_action)
         );
@@ -115,7 +115,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      *
      * @return DataAccessResult
      */
-    public function loadPostActionRows(Transition $transition, $shortname) {
+    private function loadPostActionRows(Transition $transition, $shortname) {
         $dao = $this->getDao($shortname);
         return $dao->searchByTransitionId($transition->getId());
     }
