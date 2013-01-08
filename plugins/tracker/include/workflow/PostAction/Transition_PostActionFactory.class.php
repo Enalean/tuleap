@@ -36,6 +36,13 @@ require_once 'CIBuild/Transition_PostAction_CIBuildFactory.class.php';
  */
 class Transition_PostActionFactory {
 
+    private $shortnames_by_xml_tag_name = array(
+        Transition_PostAction_Field_Float::XML_TAG_NAME => Transition_PostAction_Field_Float::SHORT_NAME,
+        Transition_PostAction_Field_Int::XML_TAG_NAME   => Transition_PostAction_Field_Int::SHORT_NAME,
+        Transition_PostAction_Field_Date::XML_TAG_NAME  => Transition_PostAction_Field_Date::SHORT_NAME,
+        Transition_PostAction_CIBuild::XML_TAG_NAME     => Transition_PostAction_CIBuild::SHORT_NAME,
+    );
+
     /** @var Transition_PostAction_FieldFactory */
     private $postaction_field_factory;
 
@@ -96,7 +103,7 @@ class Transition_PostActionFactory {
      * @return string html
      */
     public function fetchPostActions() {
-        $html ='';
+        $html  = '';
         $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
         $html .= '<select name="add_postaction">';
         $html .= $this->getFieldFactory()->fetchPostActions();
@@ -140,8 +147,7 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function saveObject(Transition_PostAction $post_action) {
-
-        if($post_action instanceof Transition_PostAction_Field) {
+        if ($post_action instanceof Transition_PostAction_Field) {
             $this->getFieldFactory()->saveObject($post_action);
         } else {
             $this->getCIBuildFactory()->saveObject($post_action);
@@ -195,17 +201,19 @@ class Transition_PostActionFactory {
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
         $post_actions  = array();
-        $field_factory = $this->getFieldFactory();
-        $factories     = array(
-            Transition_PostAction_Field_Date::XML_TAG_NAME  => $field_factory,
-            Transition_PostAction_Field_Int::XML_TAG_NAME   => $field_factory,
-            Transition_PostAction_Field_Float::XML_TAG_NAME => $field_factory,
-            Transition_PostAction_CIBuild::XML_TAG_NAME     => $this->getCIBuildFactory(),
-        );
         foreach ($xml->children() as $child) {
-            $post_actions[] = $factories[$child->getName()]->getInstanceFromXML($child, $xmlMapping, $transition);
+            $short_name = $this->deductPostActionShortNameFromXmlTagName($child->getName());
+            $subfactory = $this->getSubFactory($short_name);
+            $post_actions[] = $subfactory->getInstanceFromXML($child, $xmlMapping, $transition);
         }
         return $post_actions;
+    }
+
+    /** @return string */
+    private function deductPostActionShortNameFromXmlTagName($xml_tag_name) {
+        if (isset($this->shortnames_by_xml_tag_name[$xml_tag_name])) {
+            return $this->shortnames_by_xml_tag_name[$xml_tag_name];
+        }
     }
 }
 ?>
