@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
@@ -19,11 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once TRACKER_BASE_DIR .'/workflow/PostAction/PostActionSubFactory.class.php';
+
 /**
- * class Transition_PostAction_FieldFactory
- *
+ * Loads and saves Field post actions
  */
-class Transition_PostAction_FieldFactory {
+class Transition_PostAction_FieldFactory implements Transition_PostActionSubFactory {
 
     /** @var Array of available post actions classes */
     protected $post_actions_classes_field = array(
@@ -52,10 +52,9 @@ class Transition_PostAction_FieldFactory {
         );
     }
 
-    public function getTypes() {
-        return array_keys($this->post_actions_classes_field);
-    }
-
+    /**
+     * @see Transition_PostActionSubFactory::addPostAction()
+     */
     public function addPostAction(Transition $transition, $requested_postaction) {
         if (isset($this->post_actions_classes_field[$requested_postaction])) {
             $this->getDao($requested_postaction)->create($transition->getTransitionId());
@@ -63,9 +62,7 @@ class Transition_PostAction_FieldFactory {
     }
 
     /**
-     * Get html code to let someone choose a post action for a transition
-     *
-     * @return string html
+     * @see Transition_PostActionSubFactory::fetchPostActions()
      */
     public function fetchPostActions() {
         $html = '';
@@ -83,11 +80,8 @@ class Transition_PostAction_FieldFactory {
     }
 
     /**
-    * Save a postaction object
-    *
-    * @param Transition_PostAction $post_action  the object to save
-    * @return void
-    */
+     * @see Transition_PostActionSubFactory::saveObject()
+     */
     public function saveObject(Transition_PostAction $post_action) {
         $short_name = $post_action->getShortName();
         $dao = $this->getDao($short_name);
@@ -98,6 +92,9 @@ class Transition_PostAction_FieldFactory {
         );
     }
 
+    /**
+     * @see Transition_PostActionSubFactory::loadPostActions()
+     */
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
         $post_actions_classes = $this->post_actions_classes_field;
@@ -124,14 +121,9 @@ class Transition_PostAction_FieldFactory {
     }
 
     /**
-     * Duplicate postactions of a transition
-     *
-     * @param Transition $from_transition the template transition
-     * @param int $to_transition_id the id of the transition
-     * @param Array $field_mapping the field mapping
-     *
+     * @see Transition_PostActionSubFactory::duplicate()
      */
-    public function duplicate(Transition $from_transition, $to_transition_id, $field_mapping) {
+    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping) {
         $postactions = $this->loadPostActions($from_transition);
         foreach ($postactions as $postaction) {
             $from_field_id = $postaction->getFieldId();
@@ -146,10 +138,7 @@ class Transition_PostAction_FieldFactory {
     }
 
     /**
-     * Delete a workflow
-     *
-     * @param int $workflow_id the id of the workflow
-     *
+     * @see Transition_PostActionSubFactory::deleteWorkflow()
      */
     public function deleteWorkflow($workflow_id) {
         $result = true;
@@ -162,11 +151,7 @@ class Transition_PostAction_FieldFactory {
     }
 
     /**
-     * Say if a field is used in its tracker workflow transitions post actions
-     *
-     * @param Tracker_FormElement_Field $field The field
-     *
-     * @return bool
+     * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
         foreach (array_keys($this->post_actions_classes_field) as $shortname) {
@@ -178,13 +163,7 @@ class Transition_PostAction_FieldFactory {
     }
 
     /**
-     * Creates a postaction Object
-     *
-     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Transition       $transition     to which the postaction is attached
-     *
-     * @return Transition_PostAction The  Transition_PostAction object, or null if error
+     * @see Transition_PostActionSubFactory::getInstanceFromXML()
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
         $xml_tag_name          = $xml->getName();

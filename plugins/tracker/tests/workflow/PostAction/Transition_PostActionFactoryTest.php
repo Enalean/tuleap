@@ -47,20 +47,6 @@ class Transition_PostActionFactory_BaseTest extends TuleapTestCase {
         $this->field_factory = mock('Transition_PostAction_FieldFactory');
         $this->cibuild_factory = mock('Transition_PostAction_CIBuildFactory');
 
-        stub($this->field_factory)->getTypes()->returns(
-            array(
-                Transition_PostAction_Field_Date::SHORT_NAME,
-                Transition_PostAction_Field_Int::SHORT_NAME,
-                Transition_PostAction_Field_Float::SHORT_NAME,
-            )
-        );
-
-        stub($this->cibuild_factory)->getTypes()->returns(
-            array(
-                Transition_PostAction_CIBuild::SHORT_NAME
-            )
-        );
-
         stub($this->factory)->getFieldFactory()->returns($this->field_factory);
         stub($this->factory)->getCIBuildFactory()->returns($this->cibuild_factory);
     }
@@ -70,14 +56,14 @@ class Transition_PostActionFactory_AddPostActionTest extends Transition_PostActi
 
     public function itCanAddAPostActionToAnIntField() {
         stub($this->field_factory)->addPostAction()->once();
-        stub($this->factory)->getCIBuildFactory()->never();
+        stub($this->cibuild_factory)->addPostAction()->never();
 
         $this->factory->addPostAction($this->transition, Transition_PostAction_Field_Int::SHORT_NAME);
     }
 
     public function itCanAddAPostActionToAFloatField() {
         stub($this->field_factory)->addPostAction()->once();
-        stub($this->factory)->getCIBuildFactory()->never();
+        stub($this->cibuild_factory)->addPostAction()->never();
 
         $this->factory->addPostAction($this->transition, Transition_PostAction_Field_Float::SHORT_NAME);
     }

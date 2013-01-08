@@ -27,12 +27,12 @@ require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_FloatDao.class.php');
 require_once('CIBuild/Transition_PostAction_CIBuildDao.class.php');
 require_once 'Transition_PostAction_NotFoundException.class.php';
+require_once 'PostActionSubFactory.class.php';
 require_once 'Field/Transition_PostAction_FieldFactory.class.php';
 require_once 'CIBuild/Transition_PostAction_CIBuildFactory.class.php';
 
 /**
- * class Transition_PostActionFactory
- * 
+ * Collection of subfactories to CRUD postactions. Uniq entry point from the transition point of view.
  */
 class Transition_PostActionFactory {
     
@@ -49,6 +49,21 @@ class Transition_PostActionFactory {
     /** @return \Transition_PostAction_CIBuildFactory */
     public function getCIBuildFactory() {
         return new Transition_PostAction_CIBuildFactory(new Transition_PostAction_CIBuildDao());
+    }
+
+    /** @return Transition_PostActionSubFactory */
+    private function getSubFactory($post_action_short_name) {
+        $field_factory = $this->getFieldFactory();
+        $factories     = array(
+            Transition_PostAction_Field_Float::SHORT_NAME => $field_factory,
+            Transition_PostAction_Field_Int::SHORT_NAME   => $field_factory,
+            Transition_PostAction_Field_Date::SHORT_NAME  => $field_factory,
+            Transition_PostAction_CIBuild::SHORT_NAME     => $this->getCIBuildFactory(),
+        );
+        if (isset($factories[$post_action_short_name])) {
+            return $factories[$post_action_short_name];
+        }
+        throw new Transition_PostAction_NotFoundException('Invalid Post Action type');
     }
     
     /**
@@ -74,13 +89,7 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function addPostAction(Transition $transition, $requested_postaction) {
-        if($requested_postaction === Transition_PostAction_CIBuild::SHORT_NAME) {
-            $this->getCIBuildFactory()->addPostAction($transition, $requested_postaction);
-        } elseif (in_array($requested_postaction, $this->getFieldFactory()->getTypes())) {
-            $this->getFieldFactory()->addPostAction($transition, $requested_postaction);
-        } else {
-            throw new Transition_PostAction_NotFoundException('Invalid Post Action type');
-        }
+        $this->getSubFactory($requested_postaction)->addPostAction($transition, $requested_postaction);
     }
 
     /**
@@ -97,16 +106,14 @@ class Transition_PostActionFactory {
         );
         $transition->setPostActions($post_actions);
     }
-    
 
-    
-   /**
-    * Save a postaction object
-    * 
-    * @param Transition_PostAction $post_action  the object to save
-    *
-    * @return void
-    */
+    /**
+     * Save a postaction object
+     *
+     * @param Transition_PostAction $post_action  the object to save
+     *
+     * @return void
+     */
     public function saveObject(Transition_PostAction $post_action) {
         
         if($post_action instanceof Transition_PostAction_Field) {

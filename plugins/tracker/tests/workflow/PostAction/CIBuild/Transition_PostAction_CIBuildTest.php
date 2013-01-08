@@ -174,7 +174,7 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
         $this->project = mock('Project');
         $this->artifact = mock('Tracker_Artifact');
         $this->changeset = mock('Tracker_Artifact_Changeset');
-        $this->field = mock('Tracker_FormElement_Field');
+        $this->field = mock('Tracker_FormElement_Field_Selectbox');
         
         stub($this->changeset)->getSubmittedBy()->once()->returns($build_user);
         

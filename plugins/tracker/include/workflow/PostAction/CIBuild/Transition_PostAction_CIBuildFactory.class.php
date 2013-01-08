@@ -19,12 +19,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * class Transition_PostAction_CIBuildFactory
- *
- */
+require_once TRACKER_BASE_DIR .'/workflow/PostAction/PostActionSubFactory.class.php';
 
-class Transition_PostAction_CIBuildFactory {
+/**
+ * Loads and saves CIBuild post actions
+ */
+class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFactory {
 
     /**
      * @var Array of available post actions classes run after fields validation
@@ -40,15 +40,16 @@ class Transition_PostAction_CIBuildFactory {
         $this->dao = $dao;
     }
 
-    public function getTypes() {
-        return array_keys($this->post_actions_classes_ci);
-    }
-
-    public function addPostAction(Transition $transition) {
+    /**
+     * @see Transition_PostActionSubFactory::addPostAction()
+     */
+    public function addPostAction(Transition $transition, $requested_postaction) {
         $this->dao->create($transition->getTransitionId());
     }
 
-
+    /**
+     * @see Transition_PostActionSubFactory::loadPostActions()
+     */
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
 
@@ -72,31 +73,21 @@ class Transition_PostAction_CIBuildFactory {
     }
 
     /**
-     * Save a postaction object
-     *
-     * @param Transition_PostAction $post_action  the object to save
-     * @return void
+     * @see Transition_PostActionSubFactory::saveObject()
      */
     public function saveObject(Transition_PostAction $post_action) {
         $this->dao->save($post_action->getTransition()->getTransitionId(), $post_action->getJobUrl());
     }
 
     /**
-     * Duplicate postactions of a transition
-     *
-     * @param Transition $from_transition the template transition
-     * @param int $to_transition_id the id of the transition
-     * @param Array $field_mapping the field mapping
-     *
+     * @see Transition_PostActionSubFactory::duplicate()
      */
-    public function duplicate(Transition $from_transition, $to_transition_id, $field_mapping) {
+    public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping) {
         $this->dao->duplicate($from_transition->getId(), $to_transition_id);
     }
 
     /**
-     * Get html code to let someone choose a post action for a transition
-     *
-     * @return string html
+     * @see Transition_PostActionSubFactory::fetchPostActions()
      */
     public function fetchPostActions() {
         $html = '';
@@ -109,21 +100,14 @@ class Transition_PostAction_CIBuildFactory {
     }
 
     /**
-     * Delete a workflow
-     *
-     * @param int $workflow_id the id of the workflow
-     *
+     * @see Transition_PostActionSubFactory::deleteWorkflow()
      */
     public function deleteWorkflow($workflow_id) {
         return $this->dao->deletePostActionsByWorkflowId($workflow_id);
     }
 
     /**
-     * Say if a field is used in its tracker workflow transitions post actions
-     *
-     * @param Tracker_FormElement_Field $field The field
-     *
-     * @return bool
+     * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
         if ($this->dao->countByFieldId($field->getId()) > 0) {
@@ -134,13 +118,7 @@ class Transition_PostAction_CIBuildFactory {
     }
 
     /**
-     * Creates a postaction Object
-     *
-     * @param SimpleXMLElement $xml         containing the structure of the imported postaction
-     * @param array            &$xmlMapping containig the newly created formElements idexed by their XML IDs
-     * @param Transition       $transition     to which the postaction is attached
-     *
-     * @return Transition_PostAction The  Transition_PostAction object, or null if error
+     * @see Transition_PostActionSubFactory::getInstanceFromXML()
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
         $postaction_attributes = $xml->attributes();
