@@ -26,7 +26,8 @@ require_once 'Transition_PostAction_Field_Numeric.class.php';
  */
 class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Numeric {
 
-    const SHORT_NAME = 'field_float';
+    const XML_TAG_NAME = 'postaction_field_float';
+    const SHORT_NAME   = 'field_float';
     
     /**
      * Get the shortname of the post action
@@ -118,7 +119,7 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
      */
     public function exportToXml(&$root, $xmlMapping) {
         if ($this->getFieldId()) {
-             $child = $root->addChild('postaction_field_float');
+            $child = $root->addChild(Transition_PostAction_Field_Float::XML_TAG_NAME);
              $child->addAttribute('value', $this->getValue());
              $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
          }

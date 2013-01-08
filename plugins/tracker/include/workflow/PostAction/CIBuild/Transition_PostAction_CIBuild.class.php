@@ -25,6 +25,7 @@ require_once 'common/Jenkins/Client.class.php';
 class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     const SHORT_NAME                    = 'ci_build';
+    const XML_TAG_NAME                  = 'postaction_ci_build';
     const BUILD_PARAMETER_USER          = 'user';
     const BUILD_PARAMETER_PROJECT_ID    = 'projectId';
     const BUILD_PARAMETER_ARTIFACT_ID   = 'artifactId';
@@ -119,7 +120,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      */
      public function exportToXml(&$root, $xmlMapping) {
          if ($this->isDefined()) {
-             $child = $root->addChild('postaction_ci_build');
+             $child = $root->addChild(Transition_PostAction_CIBuild::XML_TAG_NAME);
              $child->addAttribute('job_url', $this->getJobUrl());
          }
      }

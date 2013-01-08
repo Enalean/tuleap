@@ -197,10 +197,10 @@ class Transition_PostActionFactory {
         $post_actions  = array();
         $field_factory = $this->getFieldFactory();
         $factories     = array(
-            'postaction_field_date'  => $field_factory,
-            'postaction_field_int'   => $field_factory,
-            'postaction_field_float' => $field_factory,
-            'postaction_ci_build'    => $this->getCIBuildFactory(),
+            Transition_PostAction_Field_Date::XML_TAG_NAME  => $field_factory,
+            Transition_PostAction_Field_Int::XML_TAG_NAME   => $field_factory,
+            Transition_PostAction_Field_Float::XML_TAG_NAME => $field_factory,
+            Transition_PostAction_CIBuild::XML_TAG_NAME     => $this->getCIBuildFactory(),
         );
         foreach ($xml->children() as $child) {
             $post_actions[] = $factories[$child->getName()]->getInstanceFromXML($child, $xmlMapping, $transition);

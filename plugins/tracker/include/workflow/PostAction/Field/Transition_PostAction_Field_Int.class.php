@@ -25,8 +25,9 @@ require_once 'Transition_PostAction_Field_Numeric.class.php';
  * Set the date of a field
  */
 class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeric {
-    
-    const SHORT_NAME = 'field_int';
+
+    const XML_TAG_NAME = 'postaction_field_int';
+    const SHORT_NAME   = 'field_int';
 
     /**
      * Get the shortname of the post action
@@ -118,7 +119,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      */
     public function exportToXml(&$root, $xmlMapping) {
         if ($this->getFieldId()) {
-             $child = $root->addChild('postaction_field_int');
+            $child = $root->addChild(Transition_PostAction_Field_Int::XML_TAG_NAME);
              $child->addAttribute('value', $this->getValue());
              $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
          }
