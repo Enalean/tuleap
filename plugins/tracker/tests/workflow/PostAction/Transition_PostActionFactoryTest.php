@@ -239,11 +239,46 @@ class Transition_PostActionFactory_IsFieldUsedInPostActionsTest extends Transiti
 
     public function itChecksFieldIsUsedInEachTypeOfPostAction() {
         $field = mock('Tracker_FormElement_Field_Selectbox');
-
         stub($this->cibuild_factory)->isFieldUsedInPostActions($field)->once()->returns(false);
-        stub($this->field_factory)->isFieldUsedInPostActions($field)->once()->returns(true);
+        stub($this->field_factory)->isFieldUsedInPostActions($field)->once()->returns(false);
 
-        $this->factory->isFieldUsedInPostActions($field);
+        expect($this->cibuild_factory)->isFieldUsedInPostActions($field)->once();
+        expect($this->field_factory)->isFieldUsedInPostActions($field)->once();
+
+        $this->assertFalse($this->factory->isFieldUsedInPostActions($field));
+    }
+
+    public function itReturnsTrueIfAtLeastOneOfTheSubFactoryReturnsTrue() {
+        $field = mock('Tracker_FormElement_Field_Selectbox');
+
+        stub($this->field_factory)->isFieldUsedInPostActions($field)->returns(true);
+
+        $this->assertTrue($this->factory->isFieldUsedInPostActions($field));
+    }
+}
+
+class Transition_PostActionFactory_loadPostActionsTest extends Transition_PostActionFactory_BaseTest {
+
+    public function setUp() {
+        parent::setUp();
+        $this->post_action_1 = mock('Transition_PostAction');
+        $this->post_action_2 = mock('Transition_PostAction');
+        stub($this->cibuild_factory)->loadPostActions($this->transition)->returns(array($this->post_action_1));
+        stub($this->field_factory)->loadPostActions($this->transition)->returns(array($this->post_action_2));
+    }
+
+    public function itLoadsPostActionFromAllSubFactories() {
+        expect($this->cibuild_factory)->loadPostActions($this->transition)->once();
+        expect($this->field_factory)->loadPostActions($this->transition)->once();
+
+        $this->factory->loadPostActions($this->transition);
+    }
+
+    public function itInjectsPostActionsIntoTheTransition() {
+        $expected     = array($this->post_action_1, $this->post_action_2);
+        expect($this->transition)->setPostActions($expected)->once();
+
+        $this->factory->loadPostActions($this->transition);
     }
 }
 ?>

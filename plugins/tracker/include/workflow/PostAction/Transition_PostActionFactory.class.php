@@ -27,6 +27,7 @@ require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
 require_once('Field/dao/Transition_PostAction_Field_FloatDao.class.php');
 require_once('CIBuild/Transition_PostAction_CIBuildDao.class.php');
 require_once 'Transition_PostAction_NotFoundException.class.php';
+require_once 'PostActionSubFactories.class.php';
 require_once 'PostActionSubFactory.class.php';
 require_once 'Field/Transition_PostAction_FieldFactory.class.php';
 require_once 'CIBuild/Transition_PostAction_CIBuildFactory.class.php';
@@ -82,6 +83,16 @@ class Transition_PostActionFactory {
         return $this->postaction_cibuild_factory;
     }
 
+    /** @return Transition_PostActionSubFactories */
+    private function getSubFactories() {
+        return new Transition_PostActionSubFactories(
+            array(
+                $this->getFieldFactory(),
+                $this->getCIBuildFactory(),
+            )
+        );
+    }
+
     /** @return Transition_PostActionSubFactory */
     private function getSubFactory($post_action_short_name) {
         $field_factory = $this->getFieldFactory();
@@ -106,8 +117,7 @@ class Transition_PostActionFactory {
         $html  = '';
         $html .= '<p>'.$GLOBALS['Language']->getText('workflow_admin', 'add_new_action');
         $html .= '<select name="add_postaction">';
-        $html .= $this->getFieldFactory()->fetchPostActions();
-        $html .= $this->getCIBuildFactory()->fetchPostActions();
+        $html .= $this->getSubFactories()->fetchPostActions();
         $html .= '</select>';
         return $html;
     }
@@ -132,11 +142,7 @@ class Transition_PostActionFactory {
      * @return void
      */
     public function loadPostActions(Transition $transition) {
-        $post_actions = array_merge(
-            $this->getFieldFactory()->loadPostActions($transition),
-            $this->getCIBuildFactory()->loadPostActions($transition)
-        );
-        $transition->setPostActions($post_actions);
+        return $this->getSubFactories()->loadPostActions($transition);
     }
 
     /**
@@ -162,8 +168,7 @@ class Transition_PostActionFactory {
      * @return bool
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
-        return $this->getCIBuildFactory()->isFieldUsedInPostActions($field)
-            || $this->getFieldFactory()->isFieldUsedInPostActions($field);
+        return $this->getSubFactories()->isFieldUsedInPostActions($field);
     }
 
     /**
@@ -173,8 +178,7 @@ class Transition_PostActionFactory {
      *
      */
     public function deleteWorkflow($workflow_id) {
-        return $this->getCIBuildFactory()->deleteWorkflow($workflow_id)
-            && $this->getFieldFactory()->deleteWorkflow($workflow_id);
+        return $this->getSubFactories()->deleteWorkflow($workflow_id);
     }
 
     /**
@@ -185,10 +189,8 @@ class Transition_PostActionFactory {
      * @param Array $field_mapping the field mapping
      */
     public function duplicate(Transition $from_transition, $to_transition_id, array $field_mapping) {
-        $this->getCIBuildFactory()->duplicate($from_transition, $to_transition_id, $field_mapping);
-        $this->getFieldFactory()->duplicate($from_transition, $to_transition_id, $field_mapping);
+        $this->getSubFactories()->duplicate($from_transition, $to_transition_id, $field_mapping);
     }
-
 
     /**
      * Creates a postaction Object
