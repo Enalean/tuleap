@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/NullTracker.class.php';
+require_once dirname(__FILE__) .'/../../../tracker/include/autoloader.php';
 
 /**
  * This allows to define a planning
