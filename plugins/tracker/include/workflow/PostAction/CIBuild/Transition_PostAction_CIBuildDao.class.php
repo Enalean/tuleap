@@ -123,7 +123,6 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
 
         return $this->update($sql);
     }
-
 }
 
 ?>

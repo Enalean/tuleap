@@ -26,7 +26,7 @@ require_once TRACKER_BASE_DIR .'/workflow/PostAction/PostActionSubFactory.class.
 class Transition_PostAction_FieldFactory implements Transition_PostActionSubFactory {
 
     /** @var Array of available post actions classes */
-    protected $post_actions_classes_field = array(
+    protected $post_actions_classes = array(
         Transition_PostAction_Field_Date::SHORT_NAME  => 'Transition_PostAction_Field_Date',
         Transition_PostAction_Field_Int::SHORT_NAME   => 'Transition_PostAction_Field_Int',
         Transition_PostAction_Field_Float::SHORT_NAME => 'Transition_PostAction_Field_Float',
@@ -56,7 +56,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      * @see Transition_PostActionSubFactory::addPostAction()
      */
     public function addPostAction(Transition $transition, $requested_postaction) {
-        if (isset($this->post_actions_classes_field[$requested_postaction])) {
+        if (isset($this->post_actions_classes[$requested_postaction])) {
             $this->getDao($requested_postaction)->create($transition->getId());
         }
     }
@@ -68,7 +68,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         $html = '';
         $html .= '<option value="" selected>--</option>';
 
-        $post_actions_classes = $this->post_actions_classes_field;
+        $post_actions_classes = $this->post_actions_classes;
         foreach ($post_actions_classes as $shortname => $klass) {
             //Waiting for PHP5.3 and $klass::staticMethod() and Late Static Binding
             eval("\$label = $klass::getLabel();");
@@ -86,9 +86,10 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         $short_name = $post_action->getShortName();
         $dao = $this->getDao($short_name);
 
-        $dao->save($post_action->getTransition()->getId(),
-           $post_action->getFieldId(),
-           $this->getValue($post_action)
+        $dao->save(
+            $post_action->getTransition()->getId(),
+            $post_action->getFieldId(),
+            $this->getValue($post_action)
         );
     }
 
@@ -97,7 +98,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      */
     public function loadPostActions(Transition $transition) {
         $post_actions = array();
-        $post_actions_classes = $this->post_actions_classes_field;
+        $post_actions_classes = $this->post_actions_classes;
 
         foreach ($post_actions_classes as $shortname => $klass) {
             foreach($this->loadPostActionRows($transition, $shortname) as $row) {
@@ -105,19 +106,6 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
             }
         }
         return $post_actions;
-    }
-
-    /**
-     * Retrieves matching PostAction database records.
-     *
-     * @param Transition $transition The Transition to which the PostActions must be associated
-     * @param string     $shortname  The PostAction type (short name, not class name)
-     *
-     * @return DataAccessResult
-     */
-    private function loadPostActionRows(Transition $transition, $shortname) {
-        $dao = $this->getDao($shortname);
-        return $dao->searchByTransitionId($transition->getId());
     }
 
     /**
@@ -142,7 +130,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      */
     public function deleteWorkflow($workflow_id) {
         $result = true;
-        $post_actions_classes = $this->post_actions_classes_field;
+        $post_actions_classes = $this->post_actions_classes;
         foreach (array_keys($post_actions_classes) as $shortname) {
             $result = $this->getDao($shortname)->deletePostActionsByWorkflowId($workflow_id) && $result;
         }
@@ -154,7 +142,7 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
-        foreach (array_keys($this->post_actions_classes_field) as $shortname) {
+        foreach (array_keys($this->post_actions_classes) as $shortname) {
             if ($this->getDao($shortname)->countByFieldId($field->getId()) > 0) {
                 return true;
             }
@@ -200,11 +188,11 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
     private function getPostActionClassFromXmlTagName($xml_tag_name) {
         $short_name = $this->getShortNameFromXmlTagName($xml_tag_name);
 
-        if (! key_exists($short_name, $this->post_actions_classes_field)) {
+        if (! key_exists($short_name, $this->post_actions_classes)) {
             throw new Transition_PostAction_NotFoundException($short_name);
         }
 
-        return $this->post_actions_classes_field[$short_name];
+        return $this->post_actions_classes[$short_name];
     }
 
     /**
@@ -220,23 +208,23 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
      */
     private function getPostActionValueFromXmlTagName($xml_tag_name, $postaction_attributes) {
         switch($xml_tag_name) {
-            case 'postaction_field_date':  return (int) $postaction_attributes['valuetype'];
-            case 'postaction_field_int':   return (int) $postaction_attributes['value'];
-            case 'postaction_field_float': return (float) $postaction_attributes['value'];
+            case Transition_PostAction_Field_Date::XML_TAG_NAME:  return (int) $postaction_attributes['valuetype'];
+            case Transition_PostAction_Field_Int::XML_TAG_NAME:   return (int) $postaction_attributes['value'];
+            case Transition_PostAction_Field_Float::XML_TAG_NAME: return (float) $postaction_attributes['value'];
             default: throw new Transition_PostAction_NotFoundException($xml_tag_name);
         }
     }
 
-   /**
-    * Reconstitute a PostAction from database
-    *
-    * @param Transition $transition The transition to which this PostAction is associated
-    * @param mixed      $row        The raw data (array-like)
-    * @param string     $shortname  The PostAction short name
-    * @param string     $klass      The PostAction class name
-    *
-    * @return Transition_PostAction
-    */
+    /**
+     * Reconstitute a PostAction from database
+     *
+     * @param Transition $transition The transition to which this PostAction is associated
+     * @param mixed      $row        The raw data (array-like)
+     * @param string     $shortname  The PostAction short name
+     * @param string     $klass      The PostAction class name
+     *
+     * @return Transition_PostAction
+     */
     private function buildPostAction(Transition $transition, $row, $shortname, $klass) {
         $id    = (int)$row['id'];
         $field = $this->getFieldFromRow($row);
@@ -272,16 +260,16 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         return $this->element_factory->getFormElementById((int)$row['field_id']);
     }
 
-   /**
-    * Retrieves the value (or value type) from the given PostAction database row.
-    *
-    * @param array $row
-    * @param string $shortname
-    *
-    * @return mixed
-    *
-    * @throws Transition_PostAction_NotFoundException
-    */
+    /**
+     * Retrieves the value (or value type) from the given PostAction database row.
+     *
+     * @param array $row
+     * @param string $shortname
+     *
+     * @return mixed
+     *
+     * @throws Transition_PostAction_NotFoundException
+     */
     private function getValueFromRow($row, $shortname) {
         switch ($shortname) {
             case Transition_PostAction_Field_Date::SHORT_NAME:
@@ -295,22 +283,35 @@ class Transition_PostAction_FieldFactory implements Transition_PostActionSubFact
         }
     }
 
-   /**
-    * XXX: PostAction value / value type should be an object representing
-    * the PostAction configuration, allowing DAOs to share the same API.
-    */
+    /**
+     * XXX: PostAction value / value type should be an object representing
+     * the PostAction configuration, allowing DAOs to share the same API.
+     */
     private function getValue(Transition_PostAction $post_action) {
-        $short_name = $post_action->getShortName();
+        $shortname = $post_action->getShortName();
 
-        switch($short_name) {
+        switch($shortname) {
             case Transition_PostAction_Field_Date::SHORT_NAME:
                 return $post_action->getValueType();
             case Transition_PostAction_Field_Int::SHORT_NAME:
             case Transition_PostAction_Field_Float::SHORT_NAME:
                 return $post_action->getValue();
             default:
-                throw new Transition_PostAction_NotFoundException($short_name);
+                throw new Transition_PostAction_NotFoundException($shortname);
         }
+    }
+
+    /**
+     * Retrieves matching PostAction database records.
+     *
+     * @param Transition $transition The Transition to which the PostActions must be associated
+     * @param string     $shortname  The PostAction type (short name, not class name)
+     *
+     * @return DataAccessResult
+     */
+    private function loadPostActionRows(Transition $transition, $shortname) {
+        $dao = $this->getDao($shortname);
+        return $dao->searchByTransitionId($transition->getId());
     }
 }
 

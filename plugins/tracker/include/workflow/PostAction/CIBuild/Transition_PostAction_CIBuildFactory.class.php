@@ -61,18 +61,6 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
     }
 
     /**
-     * Retrieves matching PostAction database records.
-     *
-     * @param Transition $transition The Transition to which the PostActions must be associated
-     * @param string     $shortname  The PostAction type (short name, not class name)
-     *
-     * @return DataAccessResult
-     */
-    private function loadPostActionRows(Transition $transition) {
-        return $this->dao->searchByTransitionId($transition->getId());
-    }
-
-    /**
      * @see Transition_PostActionSubFactory::saveObject()
      */
     public function saveObject(Transition_PostAction $post_action) {
@@ -110,10 +98,6 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
      * @see Transition_PostActionSubFactory::isFieldUsedInPostActions()
      */
     public function isFieldUsedInPostActions(Tracker_FormElement_Field $field) {
-        if ($this->dao->countByFieldId($field->getId()) > 0) {
-            return true;
-        }
-
         return false;
     }
 
@@ -122,9 +106,12 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
         $postaction_attributes = $xml->attributes();
-        $job_url               = (string) $postaction_attributes['job_url'];
+        $row = array(
+            'id'      => 0,
+            'job_url' => (string)$postaction_attributes['job_url'],
+        );
 
-        return new Transition_PostAction_CIBuild($transition, 0, $job_url, new Jenkins_Client(new Http_Client()));
+        return $this->buildPostAction($transition, $row);
     }
 
     /**
@@ -138,11 +125,23 @@ class Transition_PostAction_CIBuildFactory implements Transition_PostActionSubFa
       * @return Transition_PostAction
       */
     private function buildPostAction(Transition $transition, $row) {
-        $id    = (int) $row['id'];
-        $value = (string) $row['job_url'];
+        $id      = (int)$row['id'];
+        $job_url = (string)$row['job_url'];
         $ci_client = new Jenkins_Client(new Http_Client());
 
-        return new Transition_PostAction_CIBuild($transition, $id, $value, $ci_client);
+        return new Transition_PostAction_CIBuild($transition, $id, $job_url, $ci_client);
+    }
+
+    /**
+     * Retrieves matching PostAction database records.
+     *
+     * @param Transition $transition The Transition to which the PostActions must be associated
+     * @param string     $shortname  The PostAction type (short name, not class name)
+     *
+     * @return DataAccessResult
+     */
+    private function loadPostActionRows(Transition $transition) {
+        return $this->dao->searchByTransitionId($transition->getId());
     }
 }
 
