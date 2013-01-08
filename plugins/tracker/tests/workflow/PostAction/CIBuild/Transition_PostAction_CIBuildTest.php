@@ -48,7 +48,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $client           = mock('Jenkins_Client');
         $condendi_request = aRequest()
             ->with('remove_postaction', array())
-            ->with('workflow_postaction_launch_job', array($id => $new_job_url))
+            ->with('workflow_postaction_ci_build', array($id => $new_job_url))
             ->build();
 
         $ci_build_dao = mock('Transition_PostAction_CIBuildDao');
@@ -68,7 +68,7 @@ class Transition_PostAction_CIBuildTest extends TuleapTestCase {
         $client           = mock('Jenkins_Client');
         $condendi_request = aRequest()
             ->with('remove_postaction', array())
-            ->with('workflow_postaction_launch_job', array($id => $job_url))
+            ->with('workflow_postaction_ci_build', array($id => $job_url))
             ->build();
 
         $ci_build_dao = mock('Transition_PostAction_CIBuildDao');

@@ -73,7 +73,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     /** @return string */
     public static function getLabel() {
-        return $GLOBALS['Language']->getText('workflow_postaction', 'launch_job');
+        return $GLOBALS['Language']->getText('workflow_postaction', 'ci_build');
     }
 
     /** @return string html */
@@ -85,11 +85,11 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
             required
             class="required"
             pattern="'. $this->job_url_pattern .'"
-            name="workflow_postaction_launch_job['.$this->id.']"
+            name="workflow_postaction_ci_build['.$this->id.']"
             value="'. $this->getJobUrl() .'"
             size="50"
             maxsize="255" />';
-        $html .= $GLOBALS['Language']->getText('workflow_admin', 'launch_job', array($text_field));
+        $html .= $GLOBALS['Language']->getText('workflow_admin', 'ci_build', array($text_field));
         return $html;
     }
 
@@ -102,7 +102,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         if ($request->getInArray('remove_postaction', $this->id)) {
             $this->getDao()->deletePostAction($this->id);
         } else {
-            $value = $request->getInArray('workflow_postaction_launch_job', $this->id);
+            $value = $request->getInArray('workflow_postaction_ci_build', $this->id);
             $this->updateJobUrl($value);
         }
     }
