@@ -174,19 +174,7 @@ class TransitionFactory {
         $transition = new Transition(0, 0, $from, $to);
         $postactions = array();
         if ($xml->postactions) {
-            $tpaf = new Transition_PostActionFactory();
-            foreach(array('postaction_field_date', 'postaction_field_int', 'postaction_field_float') as $post_action_type) {
-                foreach ($xml->postactions->$post_action_type as $p) {
-                    $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
-                }
-            }
-
-            $ci_build_factory = new Transition_PostAction_CIBuildFactory(new Jenkins_Client(new Http_Client()));
-            foreach(array('postaction_ci_build') as $post_action_type) {
-                foreach ($xml->postactions->$post_action_type as $p) {
-                    $postactions[] = $ci_build_factory->getInstanceFromXML($p, $xmlMapping, $transition);
-                }
-            }
+            $postactions = $this->getPostActionFactory()->getInstanceFromXML($xml->postactions, $xmlMapping, $transition);
         }
         $transition->setPostActions($postactions);
 
@@ -257,7 +245,7 @@ class TransitionFactory {
         //Save postactions
         $postactions = $transition->getAllPostActions();
         foreach ($postactions as $postaction) {
-            $tpaf = new Transition_PostActionFactory();
+            $tpaf = $this->getPostActionFactory();
             $tpaf->saveObject($postaction);
         }
 
