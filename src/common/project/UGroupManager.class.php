@@ -385,7 +385,7 @@ class UGroupManager {
             $content .= '<option value="'. (int)$groupId .'" '. ($validRequest['in_project'] == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
             $content .= '</select>';
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup','name_contains').' ';
-            
+
             //contains
             $content .= '<input type="text" name="search" value="'.  $hp->purify($validRequest['search'], CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
             //begin
