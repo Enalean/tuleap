@@ -137,7 +137,8 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
         
         try {
             $this->ci_client->launchJobBuild($this->job_url, $build_parameters);
-            $GLOBALS['Response']->addFeedback('info', 'Job build launch succeeded ('.$this->job_url.')'); //TODO i18n
+            $feedback = $GLOBALS['Language']->getText('workflow_postaction', 'ci_build_succeeded', array($this->job_url));
+            $GLOBALS['Response']->addFeedback('info', $feedback);
         } catch (Jenkins_ClientUnableToLaunchBuildException $exception) {
             $GLOBALS['Response']->addFeedback('error', $exception->getMessage());
         }

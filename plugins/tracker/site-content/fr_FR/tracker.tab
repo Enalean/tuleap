@@ -1357,6 +1357,7 @@ workflow_postaction	field_value_set	Le champ '$1' sera automatiquement valué à
 workflow_postaction	field_clear	Le valeur du champs '$1' sera automatiquement effacée
 workflow_postaction	invalid_job_url	L'adresse du job '$1' de l'intégration continue est invalide.
 workflow_postaction	launch_job	Lancer un build de l'intégration continue
+workflow_postaction	ci_build_succeeded	Le build d'intégration continue a été lancé ($1)
 
 workflow_condition	invalid_condition	Condition invalide : le champ '$1' doit être rempli
 
