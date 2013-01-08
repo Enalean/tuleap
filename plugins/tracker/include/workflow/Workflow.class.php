@@ -272,7 +272,7 @@ class Workflow {
      */
     public function before(array &$fields_data, User $current_user, Tracker_Artifact $artifact) {
         if (isset($fields_data[$this->getFieldId()])) {
-            $transition = $this->getCurrentTransition($fields_data, $artifact);
+            $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
             if ($transition) {
                 $transition->before($fields_data, $current_user);
             }
@@ -283,16 +283,15 @@ class Workflow {
     /**
      * Execute actions after transition happens (if there is one)
      *
-     * @param Array $fields_data  Request field data (array[field_id] => data)
-     * @param Tracker_Artifact  $artifact The artifact
-     * @param Tracker_Artifact_Changeset $changeset
+     * @param Array                      $fields_data Request field data (array[field_id] => data)
+     * @param Tracker_Artifact           $artifact    The artifact
+     * @param Tracker_Artifact_Changeset $changeset   The changeset that has just been created
      *
      * @return void
      */
-    public function after(array $fields_data, Tracker_Artifact $artifact) {
+    public function after(array $fields_data, Tracker_Artifact $artifact, Tracker_Artifact_Changeset $changeset) {
         if (isset($fields_data[$this->getFieldId()])) {
-            $transition = $this->getCurrentTransition($fields_data, $artifact);
-            $changeset = $artifact->getLastChangeset();
+            $transition = $this->getCurrentTransition($fields_data, $changeset);
             if ($transition) {
                 $transition->after($changeset);
             }
@@ -304,17 +303,17 @@ class Workflow {
             return true;
         }
 
-        $transition = $this->getCurrentTransition($fields_data, $artifact);
+        $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
         if (isset($transition)) {
             return $transition->validate($fields_data, $artifact);
         }
         return true;
     }
 
-    private function getCurrentTransition($fields_data, Tracker_Artifact $artifact) {
+    private function getCurrentTransition($fields_data, Tracker_Artifact_Changeset $changeset = null) {
         $oldValues = null;
-        if($artifact->getLastChangeset()) {
-            $oldValues = $artifact->getLastChangeset()->getValue($this->getField());
+        if ($changeset) {
+            $oldValues = $changeset->getValue($this->getField());
         }
         $from      = null;
         if ($oldValues) {

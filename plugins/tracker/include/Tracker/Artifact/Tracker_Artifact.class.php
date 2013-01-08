@@ -952,8 +952,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     }
                     //Save the artifact
                     if ($this->getArtifactFactory()->save($this)) {
-                        $this->changesets[$changeset_id] = $this->getChangeset($changeset_id);
-                        $workflow->after($fields_data, $this);
+                        $workflow->after($fields_data, $this, $this->getChangeset($changeset_id));
                     }
 
                     // Clear fake changeset so subsequent call to getChangesets will load a fresh & complete one from the DB
@@ -1079,8 +1078,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         //Save the artifact
         if ($this->getArtifactFactory()->save($this)) {
-            $this->changesets[$changeset_id] = $this->getChangeset($changeset_id);
-            $this->getWorkflow()->after($fields_data, $this);
+            $this->getWorkflow()->after($fields_data, $this, $this->getChangeset($changeset_id));
         }
 
         if ($send_notification) {

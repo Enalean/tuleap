@@ -300,14 +300,12 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         $changeset = new MockTracker_Artifact_Changeset();
         $changeset->setReturnValue('getValue', $changeset_value_list, array($this->status_field));
 
-        $this->artifact->setReturnValue('getLastChangeset', $changeset);
-
         $fields_data = array(
             '103' => "$this->close_value_id",
         );
         $this->transition_null_to_open->expectNever('after');
         $this->transition_open_to_close->expectOnce('after');
-        $this->workflow->after($fields_data, $this->artifact);
+        $this->workflow->after($fields_data, $this->artifact, $changeset);
     }
 
     function testAfterShouldTriggerTransitionActionsForNewArtifact() {
@@ -319,7 +317,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
         );
         $this->transition_null_to_open->expectOnce('after');
         $this->transition_open_to_close->expectNever('after');
-        $this->workflow->after($fields_data, $this->artifact);
+        $this->workflow->after($fields_data, $this->artifact, $changeset);
     }
 }
 
