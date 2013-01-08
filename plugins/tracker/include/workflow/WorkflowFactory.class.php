@@ -282,7 +282,7 @@ class WorkflowFactory {
             $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping);
         }
 
-        return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions);
+        return new Workflow(0, $tracker, $field_id, (string)$xml->is_used, $transitions);
     }
 
    /**
