@@ -61,7 +61,11 @@ function display_name_and_desc_form($ugroup_name, $ugroup_description) {
     </tr>';
 }
 
-
+    function get_ugroup_binding() {
+        $ugroupUserDao = new UGroupUserDao();
+        $ugroupManager = new UGroupManager(new UGroupDao());
+        return new UGroupBinding($ugroupUserDao, $ugroupManager);
+    }
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
@@ -276,28 +280,20 @@ if (($func=='edit')||($func=='do_create')) {
         }
     break;
     case 'usage':
-        $ugroupUserDao = new UGroupUserDao();
-        $ugroupManager = new UGroupManager(new UGroupDao());
-        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-
-        $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
+        $ugroupBinding = get_ugroup_binding();
+        $bindingiewer  = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
         $content .= $bindingiewer->getUsagePaneContent($group_id, $ugroup_id);
     break;
     case 'ugroup_binding':
-        $activePane = 'members';
+        $activePane    = 'members';
         $groupId       = $request->getValidated('group_id', 'GroupId', 0);
         $ugroupId      = $request->getValidated('ugroup_id', 'uint', 0);
         $sourceProject = $request->getValidated('source_project', 'GroupId', 0);
-
-        $ugroupUserDao = new UGroupUserDao();
-        $ugroupManager = new UGroupManager(new UGroupDao());
-        $ugroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
-
+        $ugroupBinding = get_ugroup_binding();
         $ugroupBinding->processRequest($ugroupId, $request);
 
         $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
-
-        $content .= $bindingiewer->getUgtoupBindingPaneContent($groupId, $ugroupId, $sourceProject);
+        $content     .= $bindingiewer->getUgtoupBindingPaneContent($groupId, $ugroupId, $sourceProject);
     break;
     }
 
