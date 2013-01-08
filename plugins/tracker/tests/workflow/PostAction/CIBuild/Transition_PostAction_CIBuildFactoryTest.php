@@ -87,4 +87,11 @@ class Transition_CIBuildFactory_GetInstanceFromXmlTest extends Transition_PostAc
         $this->assertTrue($post_action->isDefined());
     }
 }
+
+class Transition_CIBuildFactory_isFieldUsedInPostActionsTest extends Transition_PostAction_CIBuildFactory_BaseTest {
+
+    public function itReturnsAlwaysFalseSinceThereIsNoFieldUsedInThisPostAction() {
+        $this->assertFalse($this->factory->isFieldUsedInPostActions(mock('Tracker_FormElement_Field_Selectbox')));
+    }
+}
 ?>
