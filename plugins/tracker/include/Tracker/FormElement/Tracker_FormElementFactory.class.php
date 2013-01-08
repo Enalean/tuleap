@@ -20,7 +20,7 @@
 
 
 
-
+require_once TRACKER_BASE_DIR . '/tracker_permissions.php';
 require_once('common/widget/Widget_Static.class.php');
 
 class Tracker_FormElementFactory {

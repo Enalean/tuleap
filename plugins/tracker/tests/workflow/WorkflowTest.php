@@ -17,18 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(dirname(__FILE__).'/../builders/all.php');
-require_once(dirname(__FILE__).'/../../include/constants.php');
-require_once(dirname(__FILE__).'/../../include/workflow/Workflow.class.php');
-require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+
 Mock::generate('Transition');
-require_once(dirname(__FILE__).'/../../include/workflow/WorkflowManager.class.php');
-require_once(dirname(__FILE__).'/../../include/workflow/WorkflowFactory.class.php');
 
 Mock::generatePartial('Workflow', 'WorkflowTestVersion', array('getTransitions'));
-require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
-require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_FormElement_Field_List_Value');
 
@@ -38,7 +32,6 @@ Mock::generate('Tracker_Artifact_ChangesetValue_List');
 Mock::generate('Tracker_Artifact_Changeset_Null');
 Mock::generate('User');
 
-require_once('common/permission/PermissionsManager.class.php');
 Mock::generate('PermissionsManager');
 
 class WorkflowTest extends UnitTestCase {

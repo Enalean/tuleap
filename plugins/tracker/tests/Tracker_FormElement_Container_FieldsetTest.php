@@ -17,11 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_FormElementFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Container_Fieldset', 
     'Tracker_FormElement_Container_FieldsetTestVersion', 
@@ -40,10 +38,8 @@ Mock::generatePartial(
 );
 
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
 class Tracker_FormElement_Container_FieldsetTest extends UnitTestCase {

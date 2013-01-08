@@ -17,16 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../../include/workflow/PostAction/Transition_PostActionFactory.class.php';
-require_once dirname(__FILE__).'/../../../include/workflow/PostAction/Field/dao/Transition_PostAction_Field_DateDao.class.php';
-require_once dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php';
-require_once dirname(__FILE__).'/../../builders/aMockField.php';
-require_once dirname(__FILE__).'/../../builders/aTransition.php';
-require_once dirname(__FILE__).'/../../builders/aDateFieldPostAction.php';
-require_once dirname(__FILE__).'/../../builders/anIntFieldPostAction.php';
-require_once dirname(__FILE__).'/../../builders/aFloatFieldPostAction.php';
-require_once dirname(__FILE__).'/../../builders/aPostActionFactory.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 Mock::generatePartial('Transition_PostActionFactory',
                       'Transition_PostActionFactoryTestVersion',

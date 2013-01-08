@@ -1,7 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_Report_Session.class.php') ;
-
+require_once('bootstrap.php');
 //Mock::generatePartial('Tracker_Report_Session', 'Mock_Tracker_Report_Session', array('getSessionNamespace') );
 
 

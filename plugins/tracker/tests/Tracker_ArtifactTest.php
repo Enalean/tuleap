@@ -18,10 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+require_once('bootstrap.php');
 require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/builders/all.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generatePartial(
     'Tracker_Artifact',
     'Tracker_ArtifactTestVersion',
@@ -55,23 +53,14 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/dao/Tracker_Artifact_ChangesetDao.class.php');
 Mock::generate('Tracker_Artifact_ChangesetDao');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/dao/Tracker_Artifact_Changeset_CommentDao.class.php');
 Mock::generate('Tracker_Artifact_Changeset_CommentDao');
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field.class.php');
 Mock::generatePartial('Tracker_FormElement_Field', 'MockTracker_FormElement_Field', array(
         'getId',
         'getLabel',
@@ -121,27 +110,19 @@ require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
 Mock::generate('Tracker_ArtifactFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
 Mock::generate('Tracker_RulesManager');
 /*Mock::generatePartial('Tracker_RulesManager', 'MockTracker_RulesManager', array(
         'validate'
     )
 );*/
 
-require_once(dirname(__FILE__).'/builders/aField.php');
-require_once(dirname(__FILE__).'/builders/aTracker.php');
 
 
-require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
-require_once dirname(__FILE__).'/builders/anArtifact.php';
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');
 
-require_once(dirname(__FILE__).'/../include/workflow/Workflow.class.php');
 Mock::generate('Workflow');
 
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {

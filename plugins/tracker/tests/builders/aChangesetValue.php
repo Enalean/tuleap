@@ -17,9 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'aTracker.php';
-require_once 'aField.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 function aChangesetValueArtifactLink() {
     return new Test_Tracker_ChangesetValue_ArtifactLink_Builder();

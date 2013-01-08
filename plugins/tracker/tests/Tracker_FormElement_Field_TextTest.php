@@ -18,25 +18,20 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
-
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Text.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_Text', 
     'Tracker_FormElement_Field_TextTestVersion', 
     array('getValueDao', 'getRuleString', 'isRequired', 'getProperty')
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Text.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Text');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/dao/Tracker_FormElement_Field_Value_TextDao.class.php');
 Mock::generate('Tracker_FormElement_Field_Value_TextDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
 require_once('common/valid/Rule.class.php');

@@ -1,6 +1,5 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/List.class.php');
 
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
@@ -9,6 +8,7 @@ require_once(dirname(__FILE__).'/../include/Tracker/Rule/List.class.php');
  *
  * Tests the class Tracker_RuleValue
  */
+require_once('bootstrap.php');
 class Tracker_Rule_ListTest extends UnitTestCase {
 
     function testApplyTo() {

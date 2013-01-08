@@ -17,14 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../../include/workflow/TransitionFactory.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generate('Transition_PostActionFactory');
 
-require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
 
-require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List_Value.class.php');
 Mock::generate('Tracker_FormElement_Field_List_Value');
 
 

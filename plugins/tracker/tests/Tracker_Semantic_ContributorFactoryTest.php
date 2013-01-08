@@ -17,12 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_ContributorFactory.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 
 class Tracker_Semantic_ContributorFactoryTest extends UnitTestCase {

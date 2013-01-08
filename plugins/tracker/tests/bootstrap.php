@@ -20,4 +20,5 @@
  */
 
 require_once(dirname(__FILE__) . '/../include/autoload.php');
+require_once 'builders/all.php';
 ?>

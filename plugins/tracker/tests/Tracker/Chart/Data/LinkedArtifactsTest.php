@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../../../include/Tracker/Chart/Data/LinkedArtifacts.class.php';
-require_once dirname(__FILE__).'/../../../builders/aTracker.php';
-require_once dirname(__FILE__).'/../../../builders/anArtifact.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Chart_Burndown_Data_LinkedArtifactsTest extends TuleapTestCase {
     const EFFORT_FIELD_TYPE = 'float';

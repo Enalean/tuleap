@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/Tracker/Tracker.class.php';
-require_once dirname(__FILE__).'/../../include/Tracker/Artifact/Tracker_Artifact.class.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generate('Tracker');
 Mock::generate('Tracker_Artifact');
 

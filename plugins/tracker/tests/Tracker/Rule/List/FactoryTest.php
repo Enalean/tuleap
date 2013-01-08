@@ -17,12 +17,7 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-
-require_once dirname(__FILE__).'/../../../builders/all.php';
-require_once dirname(__FILE__).'/../../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/List.class.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/List/Dao.class.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/List/Factory.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
     

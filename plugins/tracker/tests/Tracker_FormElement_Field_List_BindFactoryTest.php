@@ -17,11 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('bootstrap.php');
 
-require_once 'builders/all.php';
-
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_List_BindFactory',
     'Tracker_FormElement_Field_List_BindFactoryTestVersion',
@@ -32,13 +29,10 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindValue');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindDecorator.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindDecorator');
 
 class Tracker_FormElement_Field_List_BindFactoryTest extends TuleapTestCase {
