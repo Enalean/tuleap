@@ -29,14 +29,16 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
      * Create a new postaction entry
      *
      * @param int $transition_id The transition the post action belongs to
+     * @param int $job_url       The job url
      *
      * @return bool true if success false otherwise
      */
-    public function create($transition_id) {
+    public function create($transition_id, $job_url) {
         $transition_id = $this->da->escapeInt($transition_id);
+        $job_url       = $this->da->quoteSmart($job_url);
 
-        $sql = "INSERT INTO tracker_workflow_transition_postactions_cibuild (transition_id)
-                VALUES ($transition_id)";
+        $sql = "INSERT INTO tracker_workflow_transition_postactions_cibuild (transition_id, job_url)
+                VALUES ($transition_id, $job_url)";
 
         return $this->updateAndGetLastId($sql);
     }
@@ -56,16 +58,16 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
      * Update postaction entry
      *
      * @param int   $id       The id of the postaction
-     * @param mixed $value    The job url.
+     * @param string $job_url The job url.
      *
      * @return bool true if success false otherwise
      */
-    public function updatePostAction($id, $value) {
+    public function updatePostAction($id, $job_url) {
         $id       = $this->da->escapeInt($id);
-        $value    = $this->da->quoteSmart($value);
+        $job_url    = $this->da->quoteSmart($job_url);
 
         $sql = "UPDATE tracker_workflow_transition_postactions_cibuild
-                SET job_url = $value
+                SET job_url = $job_url
                 WHERE id = $id";
         return $this->update($sql);
     }
@@ -88,20 +90,6 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
 
         return $this->update($sql);
 
-    }
-
-    /**
-     * Create a full-featured postaction.
-     *
-     * @param int   $transition_id
-     * @param mixed $job_url
-     *
-     * @return bool
-     */
-     public function save($transition_id, $job_url) { //TODO: what about create() ?
-        if (($post_action_id = $this->create($transition_id)) > 0) {
-            $this->updatePostAction($post_action_id, $job_url);
-        }
     }
 
     /**
