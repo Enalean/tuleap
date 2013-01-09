@@ -18,11 +18,22 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * First class collection of PostActionSubFactories.
+ *
+ * It is used internally by the PostActionFactory in order to tend toward
+ * Open/Closed Principle: just add a subfactory to the collection and all
+ * common behaviors (deleteWorkflow, duplicate, ...) are silently aggregated
+ * without having to heavily modify the PostActionFactory.
+ */
 class Transition_PostActionSubFactories {
 
     /** @var array of Transition_PostActionSubFactory */
     private $factories;
 
+    /**
+     * @param array of Transition_PostActionSubFactory
+     */
     public function __construct(array $factories) {
         $this->factories = $factories;
     }

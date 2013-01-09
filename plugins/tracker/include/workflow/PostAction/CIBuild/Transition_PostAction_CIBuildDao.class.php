@@ -52,7 +52,7 @@ class Transition_PostAction_CIBuildDao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
-        /**
+    /**
      * Update postaction entry
      *
      * @param int   $id       The id of the postaction

@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Interface to define the factory for a dedicated type of PostAction.
+ */
 interface Transition_PostActionSubFactory {
 
     /**
@@ -33,7 +36,13 @@ interface Transition_PostActionSubFactory {
      */
     public function addPostAction(Transition $transition, $requested_postaction);
 
-    /** @return array of Transition_PostAction */
+    /**
+     * Instanciate the post actions of a given transition
+     *
+     * @param Transition $transition The transition
+     *
+     * @return array of Transition_PostAction
+     */
     public function loadPostActions(Transition $transition);
 
     /**
