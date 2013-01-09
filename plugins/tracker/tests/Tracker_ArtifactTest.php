@@ -2196,7 +2196,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $this->submitter   = aUser()->build();
         $this->email       = 'toto@example.net';
 
-        $changesets  = array(new Tracker_Artifact_Changeset_Null());
+        $this->changesets  = array(new Tracker_Artifact_Changeset_Null());
         $factory     = mock('Tracker_FormElementFactory');
         stub($factory)->getAllFormElementsForTracker()->returns(array());
         stub($factory)->getUsedFields()->returns(array());
@@ -2215,7 +2215,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $this->artifact = partial_mock('Tracker_Artifact', array('validateFields','getChangesetDao','getChangesetCommentDao', 'getReferenceManager'));
         $this->artifact->setId(42);
         $this->artifact->setTracker($tracker);
-        $this->artifact->setChangesets($changesets);
+        $this->artifact->setChangesets($this->changesets);
         $this->artifact->setFormElementFactory($factory);
         $this->artifact->setArtifactFactory($this->artifact_factory);
         stub($this->artifact)->validateFields()->returns(true);
@@ -2228,7 +2228,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
     public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
         stub($this->changeset_dao)->create()->returns(5667);
         stub($this->artifact_factory)->save()->returns(true);
-        expect($this->workflow)->after($this->fields_data, $this->artifact, new IsAExpectation('Tracker_Artifact_Changeset'))->once();
+        expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
 
         $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
     }
@@ -2251,7 +2251,7 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
     public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {
         stub($this->changeset_dao)->create()->returns(true);
         stub($this->artifact_factory)->save()->returns(true);
-        expect($this->workflow)->after($this->fields_data, $this->artifact, new IsAExpectation('Tracker_Artifact_Changeset'))->once();
+        expect($this->workflow)->after($this->fields_data, end($this->changesets), new IsAExpectation('Tracker_Artifact_Changeset'))->once();
 
         $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
     }

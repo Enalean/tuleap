@@ -294,30 +294,32 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
     }
 
     public function testAfterShouldTriggerTransitionActions() {
-        $changeset_value_list = new MockTracker_Artifact_ChangesetValue_List();
-        $changeset_value_list->setReturnValue('getValue', array($this->open_value_id));
+        $changeset_value_list = mock('Tracker_Artifact_ChangesetValue_List');
+        stub($changeset_value_list)->getValue()->returns(array($this->open_value_id));
 
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValue', $changeset_value_list, array($this->status_field));
+        $previous_changeset = mock('Tracker_Artifact_Changeset');
+        stub($previous_changeset)->getValue($this->status_field)->returns($changeset_value_list);
+
+        $new_changeset = mock('Tracker_Artifact_Changeset');
 
         $fields_data = array(
             '103' => "$this->close_value_id",
         );
-        $this->transition_null_to_open->expectNever('after');
-        $this->transition_open_to_close->expectOnce('after');
-        $this->workflow->after($fields_data, $this->artifact, $changeset);
+        expect($this->transition_null_to_open)->after()->never();
+        expect($this->transition_open_to_close)->after($new_changeset)->once();
+        $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
     }
 
     function testAfterShouldTriggerTransitionActionsForNewArtifact() {
-        $changeset = new MockTracker_Artifact_Changeset_Null();
-        $this->artifact->setReturnValue('getLastChangeset', $changeset);
+        $previous_changeset = null;
+        $new_changeset      = mock('Tracker_Artifact_Changeset');
 
         $fields_data = array(
             '103' => "$this->open_value_id",
         );
-        $this->transition_null_to_open->expectOnce('after');
-        $this->transition_open_to_close->expectNever('after');
-        $this->workflow->after($fields_data, $this->artifact, $changeset);
+        expect($this->transition_null_to_open)->after($new_changeset)->once();
+        expect($this->transition_open_to_close)->after()->never();
+        $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
     }
 }
 
