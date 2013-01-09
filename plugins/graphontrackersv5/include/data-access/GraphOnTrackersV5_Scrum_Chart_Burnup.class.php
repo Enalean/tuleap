@@ -234,7 +234,7 @@ class GraphOnTrackersV5_Scrum_Chart_Burnup extends GraphOnTrackersV5_Chart {
                       'duration' => $this->getDuration());  
     }
     
-    public function exportToXML($root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         parent::exportToXML(&$root, $formsMapping);
         if ($this->start_date) {
             $root->addAttribute('start_date', $this->start_date);

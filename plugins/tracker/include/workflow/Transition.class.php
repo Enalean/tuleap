@@ -293,7 +293,7 @@ class Transition {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $child = $root->addChild('transition');
         if ($this->getFieldValueFrom() == null) {
             $child->addChild('from_id')->addAttribute('REF', 'null');

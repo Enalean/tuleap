@@ -114,7 +114,7 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->getFieldId()) {
              $child = $root->addChild('postaction_field_int');
              $child->addAttribute('value', $this->getValue());
