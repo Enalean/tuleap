@@ -288,7 +288,7 @@ class UGroupManager {
             if ($user && is_array($user)) {
                 list($userId, $action) = each($user);
                 $userId = (int)$userId;
-                if ($user_id) {
+                if ($userId) {
                     switch($action) {
                     case 'add':
                         ugroup_add_user_to_ugroup($groupId, $ugroupId, $userId);
