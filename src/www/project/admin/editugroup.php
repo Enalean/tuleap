@@ -35,7 +35,7 @@ function _breadCrumbs($project, $ugroupId = NULL, $ugroupName = NULL) {
             $content .= '<span class="breadcrumb-sep">»</span>';
         }
         $firstItem = false;
-        $content .= '<a href="'. get_server_url() .$url.'" />'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
+        $content .= '<a href="'.$url.'" />'.$hp->purify($title, CODENDI_PURIFIER_CONVERT_HTML).'</a>';
         $content .= '</li>';
     }
     $content .= '</ul>';
