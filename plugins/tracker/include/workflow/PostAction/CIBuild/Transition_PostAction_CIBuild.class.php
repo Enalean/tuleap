@@ -24,13 +24,13 @@ require_once 'common/Jenkins/Client.class.php';
 
 class Transition_PostAction_CIBuild extends Transition_PostAction {
 
-    const SHORT_NAME                    = 'ci_build';
-    const XML_TAG_NAME                  = 'postaction_ci_build';
-    const BUILD_PARAMETER_USER          = 'user';
-    const BUILD_PARAMETER_PROJECT_ID    = 'projectId';
-    const BUILD_PARAMETER_ARTIFACT_ID   = 'artifactId';
-    const BUILD_PARAMETER_TRACKER_ID    = 'trackerId';
-    const BUILD_PARAMETER_TRIGGER_FIELD = 'triggerField';
+    const SHORT_NAME                          = 'ci_build';
+    const XML_TAG_NAME                        = 'postaction_ci_build';
+    const BUILD_PARAMETER_USER                = 'user';
+    const BUILD_PARAMETER_PROJECT_ID          = 'projectId';
+    const BUILD_PARAMETER_ARTIFACT_ID         = 'artifactId';
+    const BUILD_PARAMETER_TRACKER_ID          = 'trackerId';
+    const BUILD_PARAMETER_TRIGGER_FIELD_VALUE = 'triggerFieldValue';
     
     /**
      * @var string Pattern to validate a job url
@@ -127,12 +127,16 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
      * @param Tracker_Artifact_Changeset $changeset
      */
     public function after(Tracker_Artifact_Changeset $changeset) {
+        if (! $this->isDefined()) {
+            return;
+        }
+
         $build_parameters = array(
-            self::BUILD_PARAMETER_USER          => $changeset->getSubmittedBy(),
-            self::BUILD_PARAMETER_PROJECT_ID    => $changeset->getArtifact()->getTracker()->getProject()->getID(),
-            self::BUILD_PARAMETER_ARTIFACT_ID   => $changeset->getArtifact()->getId(),
-            self::BUILD_PARAMETER_TRACKER_ID    => $changeset->getArtifact()->getTracker()->getId(),
-            self::BUILD_PARAMETER_TRIGGER_FIELD => $this->getTransition()->getFieldValueFrom()->getLabel(),
+            self::BUILD_PARAMETER_USER                => $changeset->getSubmittedBy(),
+            self::BUILD_PARAMETER_PROJECT_ID          => $changeset->getArtifact()->getTracker()->getProject()->getID(),
+            self::BUILD_PARAMETER_ARTIFACT_ID         => $changeset->getArtifact()->getId(),
+            self::BUILD_PARAMETER_TRACKER_ID          => $changeset->getArtifact()->getTracker()->getId(),
+            self::BUILD_PARAMETER_TRIGGER_FIELD_VALUE => $this->getTransition()->getFieldValueFrom()->getLabel(),
         );
         
         try {
