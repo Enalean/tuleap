@@ -187,7 +187,7 @@ class Transition_PostAction_CIBuildAfterTest extends TuleapTestCase {
         
         stub($this->tracker)->getId()->returns($tracker_id);
         
-        stub($this->transition)->getFieldValueFrom()->returns($this->field);
+        stub($this->transition)->getFieldValueTo()->returns($this->field);
         stub($this->field)->getLabel()->returns($value_triggering_build);
     }
     
