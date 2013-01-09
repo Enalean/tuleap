@@ -98,7 +98,7 @@ class Workflow_Transition_ConditionsCollection implements ArrayAccess {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->conditions) {
             $child = $root->addChild('conditions');
             foreach ($this->conditions as $condition) {
