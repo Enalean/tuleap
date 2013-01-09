@@ -1340,6 +1340,12 @@ workflow_admin	change_value_date_field_to	The date field $1 is set to $2
 workflow_admin	change_value_int_field_to	The integer field $1 is set to $2
 workflow_admin	change_value_float_field_to	The float field $1 is set to $2
 workflow_admin	ci_build	The following job $1 will be launched
+workflow_admin	ci_build_help	$1 will automatically pass following parameters to the job:
+workflow_admin	ci_build_help_userid	userId: Identifier (integer) of $1 user who made the transition
+workflow_admin	ci_build_help_projectid	projectId: Identifier (integer) of the current project (ie. $1)
+workflow_admin	ci_build_help_trackerid	trackerId: Identifier (integer) of the current tracker (ie. $1)
+workflow_admin	ci_build_help_artifactid	artifactId: Identifier (integer) of the artifact where the transition happens
+workflow_admin	ci_build_help_trigger_field_value	triggerFieldValue: Value (string) of current transition target (ie. $1)
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	post_action_change_value_int_field	Change the value of an int field
 workflow_admin	post_action_change_value_float_field	Change the value of a float field

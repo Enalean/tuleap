@@ -90,6 +90,14 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
             size="50"
             maxsize="255" />';
         $html .= $GLOBALS['Language']->getText('workflow_admin', 'ci_build', array($text_field));
+        $html .= '<p class="help">'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help', array(Config::get('sys_name'))).'
+            <ul class="help">
+            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_userid', array(Config::get('sys_name'))).'</li>
+            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_projectid', array($this->getTransition()->getGroupId())).'</li>
+            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_trackerid', array($this->getTransition()->getWorkflow()->getTrackerId())).'</li>
+            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_artifactid').'</li>
+            <li>'.$GLOBALS['Language']->getText('workflow_admin', 'ci_build_help_trigger_field_value', array($this->getTransition()->getFieldValueTo()->getLabel())).'</li>
+            </ul></p>';
         return $html;
     }
 
