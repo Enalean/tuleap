@@ -727,7 +727,29 @@ class UserDao extends DataAccessObject {
         } else {
             return false;
         }
-     }
-   
+    }
+
+    /**
+     * Get the list of letters with which user names begin (silly isn't it?)
+     *
+     * @return DataAccessResult
+     */
+    public function firstUsernamesLetters() {
+        $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                UNION
+                SELECT DISTINCT UPPER(LEFT(user.realname,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                UNION
+                SELECT DISTINCT UPPER(LEFT(user.user_name,1)) as capital
+                FROM user
+                WHERE status in ('A', 'R')
+                ORDER BY capital";
+        return $this->retrieve($sql);
+    }
+
 }
+
 ?>

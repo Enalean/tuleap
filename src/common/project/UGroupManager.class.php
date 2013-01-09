@@ -236,21 +236,10 @@ class UGroupManager {
      * @return Array
      */
     public function validateRequest($groupId, $request) {
-        $sql = "SELECT DISTINCT UPPER(LEFT(user.email,1)) as capital
-                FROM user
-                WHERE status in ('A', 'R')
-                UNION
-                SELECT DISTINCT UPPER(LEFT(user.realname,1)) as capital
-                FROM user
-                WHERE status in ('A', 'R')
-                UNION
-                SELECT DISTINCT UPPER(LEFT(user.user_name,1)) as capital
-                FROM user
-                WHERE status in ('A', 'R')
-                ORDER BY capital";
-        $res = db_query($sql);
+        $userDao            = new UserDao();
+        $res                = $userDao->firstUsernamesLetters();
         $allowedBeginValues = array();
-        while($data = db_fetch_array($res)) {
+        foreach ($res as $data) {
             $allowedBeginValues[] = $data['capital'];
         }
         $result['allowed_begin_values'] = $allowedBeginValues;
