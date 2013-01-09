@@ -899,7 +899,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param array            &$xmlMapping The correpondance between real ids and xml IDs
      * @param int              &$index      The index of this form element in the export file
      */
-    public function exportToXML($root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
         parent::exportToXML($root, $xmlMapping, $index);
         if ($this->getBind() && $this->shouldBeBindXML()) {
             $child = $root->addChild('bind');

@@ -219,7 +219,7 @@ class Tracker_Semantic_Contributor extends Tracker_Semantic {
      *
      * @return void
      */
-     public function exportToXML(&$root, $xmlMapping) {
+     public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
          if ($this->getFieldId()) {
              $child = $root->addChild('semantic');
              $child->addAttribute('type', $this->getShortName());

@@ -571,7 +571,7 @@ class Tracker_RulesManager {
      *
      * @return void
      */
-    public function exportToXml($root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $this->getTrackerRuleDateFactory()->exportToXml(
                 $root, 
                 $xmlMapping, 
