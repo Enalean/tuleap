@@ -26,7 +26,7 @@ class Transition_PostAction_CIBuild extends Transition_PostAction {
 
     const SHORT_NAME                          = 'ci_build';
     const XML_TAG_NAME                        = 'postaction_ci_build';
-    const BUILD_PARAMETER_USER                = 'user';
+    const BUILD_PARAMETER_USER                = 'userId';
     const BUILD_PARAMETER_PROJECT_ID          = 'projectId';
     const BUILD_PARAMETER_ARTIFACT_ID         = 'artifactId';
     const BUILD_PARAMETER_TRACKER_ID          = 'trackerId';
