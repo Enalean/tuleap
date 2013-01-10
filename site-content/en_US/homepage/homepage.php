@@ -35,7 +35,14 @@ if ($display_homepage_news) {
 
 <style>
 #homepage .hero-unit {
-    background: white url(subtle_grunge.png);
+    /* background: white url(ecailles.png); */
+    /* background: white url(subtle_grunge.png); */
+    /* background: white url(old_mathematics.png); */
+    /* background: white url(handmadepaper.png); */
+    /* background: white url(white_brick_wall.png); */
+    /* background: white url(gears-green.jpg); */
+    /* background: white url(gears.png); */
+    background: #cae7ec;
 }
 .contenttable {
     width: auto;
