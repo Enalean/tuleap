@@ -319,7 +319,7 @@ class UGroupManager {
         $em                       = EventManager::instance();
         $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
 
-        $content .= '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($uGroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
+        $content = '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($uGroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
         //ugroup binding link
         $content .= '<P> You can also choose to <a href="editugroup.php?group_id='.$groupId.'&ugroup_id='.$ugroupId.'&func=edit&pane=bind"><b>bind to another group</b></a></p>';
