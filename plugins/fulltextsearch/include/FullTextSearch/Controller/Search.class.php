@@ -57,6 +57,7 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
     public function searchFollowups($request) {
         $facets = $this->getFacets();
         $offset = $this->request->getValidated('offset', 'uint', 0);
+        $search_result = array();
         try {
             $search_result = $this->client->searchFollowups($request, $facets, $offset, $this->request->getCurrentUser());
         } catch (ElasticSearchTransportHTTPException $e) {
