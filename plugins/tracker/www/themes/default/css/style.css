@@ -824,6 +824,9 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_action_field {
     background-image: url(../images/ic/ui-text-field-change.png);
 }
+.workflow_action_ci_build {
+    background-image: url(../images/ic/ci_build/server.png);
+}
 .workflow_conditions_perms {
     list-style-image: url(/themes/common/images/ic/lock.png);
 }

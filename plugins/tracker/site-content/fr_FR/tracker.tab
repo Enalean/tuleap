@@ -1335,6 +1335,13 @@ workflow_admin	new_artifact	Nouvel artefact
 workflow_admin	change_value_date_field_to	Le champ date $1 prend pour valeur $2
 workflow_admin	change_value_int_field_to	Le champ entier $1 prend pour valeur $2
 workflow_admin	change_value_float_field_to	Le champ flottant $1 prend pour valeur $2
+workflow_admin	ci_build	Le job $1 sera automatiquement lancé
+workflow_admin	ci_build_help	$1 passera automatiquement les paramètres suivants au job :
+workflow_admin	ci_build_help_userid	userId : identifiant (entier) de l'utilisateur $1 qui a éffectué la transition
+workflow_admin	ci_build_help_projectid	projectId : identifiant (entier) du projet courant (ie. $1)
+workflow_admin	ci_build_help_trackerid	trackerId : identifiant (entier) du tracker courant (ie. $1)
+workflow_admin	ci_build_help_artifactid	artifactId : identifiant (entier) de l'artefact dans lequel s'est déroulée la transition
+workflow_admin	ci_build_help_trigger_field_value	triggerFieldValue: Value (string) de la valeur cible de la transition (ie. $1)
 workflow_admin	post_action_change_value_date_field	Mettre à jour la valeur d'un champ date
 workflow_admin	post_action_change_value_int_field	Mettre à jour la valeur d'un champ de type entier
 workflow_admin	post_action_change_value_float_field	Mettre à jour la valeur d'un champ de type flottant
@@ -1350,9 +1357,13 @@ workflow_admin	no_postaction	Il n'y a pas encore d'action définie pour cette tr
 workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	la date courante
 workflow_admin	post_action_not_defined	Cette action sera inactive tant qu'elle ne sera pas complètement définie
+workflow_admin	ci_url	Adresse du job Jenkins ou Hudson: http://CI_URL/job/JOBNAME
 
 workflow_postaction	field_value_set	Le champ '$1' sera automatiquement valué à $2
 workflow_postaction	field_clear	Le valeur du champs '$1' sera automatiquement effacée
+workflow_postaction	invalid_job_url	L'adresse du job '$1' de l'intégration continue est invalide.
+workflow_postaction	ci_build	Lancer un build de l'intégration continue
+workflow_postaction	ci_build_succeeded	Le build d'intégration continue a été lancé ($1)
 
 workflow_condition	invalid_condition	Condition invalide : le champ '$1' doit être rempli
 

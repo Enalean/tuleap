@@ -191,6 +191,9 @@ grammar {
                 element field_id {
                     attribute REF { xsd:IDREF }
                 }
+            }*,
+            element postaction_ci_build {
+                attribute job_url { xsd:string }
             }*
         }?,
         (

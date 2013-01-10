@@ -42,6 +42,10 @@ class Users {
         return $result;
     }
 
+    /**
+     * 
+     * @return array
+     */
     public function getNames() {
         $result = array();
         foreach ($this->dar as $user) {
