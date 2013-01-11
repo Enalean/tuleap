@@ -47,8 +47,7 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
             <permissions>
                 <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
                 <permission ugroup="UGROUP_PROJECT_ADMIN"/>
-            </permissions>
-        ');
+            </permissions>');
 
         $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition);
 
