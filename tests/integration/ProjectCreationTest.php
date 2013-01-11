@@ -37,11 +37,13 @@ class ProjectCreationTest extends TuleapDbTestCase {
         parent::setUp();
         $GLOBALS['feedback'] = '';
         $GLOBALS['svn_prefix'] = '/tmp';
+        $GLOBALS['cvs_prefix'] = '/tmp';
     }
 
     public function tearDown() {
         $this->mysqli->query('DELETE FROM groups WHERE unix_group_name = "short-name"');
         unset($GLOBALS['svn_prefix']);
+        unset($GLOBALS['cvs_prefix']);
         parent::tearDown();
     }
 

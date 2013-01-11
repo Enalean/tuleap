@@ -31,7 +31,7 @@ abstract class Planning_MilestonePresenter_Common extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->request_uri = $_SERVER['REQUEST_URI'];
+        $this->request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
         $_SERVER['REQUEST_URI'] = 'bla';
     }
 
