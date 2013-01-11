@@ -34,7 +34,7 @@ Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('DataAccessResult');
 
-class GitRepositoryTest extends UnitTestCase {
+class GitRepositoryTest extends TuleapTestCase {
 
     public function setUp() {
         $link =dirname(__FILE__).'/_fixtures/tmp/perms';
@@ -47,42 +47,7 @@ class GitRepositoryTest extends UnitTestCase {
     public function tearDown() {
         unlink(dirname(__FILE__).'/_fixtures/tmp/perms');
     }
-
-    public function test_isNameValid() {
-        $gitolite = new MockGit_Backend_Gitolite();
-        $gitolite->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9/_.-');
-        
-        $gitshell = new MockGitBackend();
-        $gitshell->setReturnValue('getAllowedCharsInNamePattern', 'a-zA-Z0-9_.-');
-        
-        $repo = new GitRepository();
-        
-        $repo->setBackend($gitolite);
-        $this->checkNameValidation($repo);
-        $this->assertTrue($repo->isNameValid('jambon/beurre'));
-        
-        $repo->setBackend($gitshell);
-        $this->checkNameValidation($repo);
-        $this->assertFalse($repo->isNameValid('jambon/beurre'));
-    }
-    
-    private function checkNameValidation(GitRepository $repo) {
-        $this->assertFalse($repo->isNameValid(''));
-        $this->assertFalse($repo->isNameValid('/'));
-        $this->assertFalse($repo->isNameValid('/jambon'));
-        $this->assertFalse($repo->isNameValid('jambon/'));
-        $this->assertTrue($repo->isNameValid('jambon'));
-        $this->assertTrue($repo->isNameValid('jambon.beurre'));
-        $this->assertTrue($repo->isNameValid('jambon-beurre'));
-        $this->assertTrue($repo->isNameValid('jambon_beurre'));
-        $this->assertFalse($repo->isNameValid('jambon/.beurre'));
-        $this->assertFalse($repo->isNameValid('jambon..beurre'));
-        $this->assertFalse($repo->isNameValid('jambon...beurre'));
-        $this->assertFalse($repo->isNameValid(str_pad('name_with_more_than_255_chars_', 256, '_')));
-        $this->assertFalse($repo->isNameValid('repo.git'));
-        $this->assertFalse($repo->isNameValid('u/toto'));
-    }
-    
+   
         
     public function testDeletionPathShouldBeInProjectPath() {
         $repo = new GitRepository();
@@ -215,56 +180,6 @@ class GitRepositoryTest extends UnitTestCase {
         $project->expectNever('getID');
     }
     
-    public function testForkCreatesAnewRepoAndPassesItToTheBackend() {
-        $user = $this->_newUser("sandra");
-        $backend = new MockGit_Backend_Gitolite();
-        $project = new Mockproject();
-        $project->setReturnValue('getUnixName', 'tulip');
-        
-        $repo    = new GitRepository();
-        $repo->setBackend($backend);
-        $repo->setProject($project);
-        
-        $namespace = "toto/tata";
-        $clone = $this->_aGitRepoWith($user, $repo, $namespace, $backend, GitRepository::REPO_SCOPE_INDIVIDUAL);
-        $clone->setProject($repo->getProject());
-        $clone->setPath(unixPathJoin(array($project->getUnixName(), $namespace, $repo->getName())).'.git');
-
-        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($clone)));
-
-        $repo->fork($user, $namespace, GitRepository::REPO_SCOPE_INDIVIDUAL, $project);
-    }
-    public function testForkCrossProjectClonesByChangingTheProjectAndPath() {
-        $user = $this->_newUser("sandra");
-        $backend = new MockGit_Backend_Gitolite();
-        $project = new Mockproject();
-        $project->setReturnValue('getUnixName', 'tulip');
-
-        $to_project = new Mockproject();
-        $to_project->setReturnValue('getUnixName', 'blabla');
-
-        $repo    = new GitRepository();
-        $repo->setBackend($backend);
-        $repo->setProject($project);
-        
-        $expectedRepo = $this->_aGitRepoWith($user, $repo, '', $backend, GitRepository::REPO_SCOPE_PROJECT);
-        $expectedRepo->setProject($to_project);
-        $expectedRepo->setPath(unixPathJoin(array($to_project->getUnixName(), '', $repo->getName())).'.git');
-
-        $backend->expectOnce('fork', array(new EqualExpectation($repo), new EqualExpectation($expectedRepo)));
-        $repo->fork($user, '', GitRepository::REPO_SCOPE_PROJECT, $to_project);
-    }
-    private function _aGitRepoWith($user, $repo, $namespace, $backend, $scope) {
-        $clone = new GitRepository();
-        $clone->setCreator($user);
-        $clone->setNamespace($namespace);
-        $clone->setBackend($backend);
-        $clone->setParent($repo);
-        $clone->setScope($scope);
-        $clone->setName($repo->getName());
-        return $clone;
-    }
-    
     public function _newUser($name) {
         $user = new User(array('language_id' => 1));
         $user->setUserName($name);
@@ -319,6 +234,25 @@ class GitRepositoryTest extends UnitTestCase {
         $repo->setScope(GitRepository::REPO_SCOPE_INDIVIDUAL);
         
         $this->assertFalse($repo->belongsTo($user));
+    }
+    
+    public function itIsMigratableIfItIsAGitoliteRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $this->assertTrue($repo->canMigrateToGerrit());
+    }
+    
+    public function itIsNotMigratableIfItIsAGitshellRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITSHELL);
+        $this->assertFalse($repo->canMigrateToGerrit());
+    }
+    
+    public function itIsNotMigratableIfAlreadyAGerritRepo() {
+        $repo = new GitRepository();
+        $repo->setBackendType(GitDao::BACKEND_GITOLITE);
+        $repo->setRemoteServerId(34);
+        $this->assertFalse($repo->canMigrateToGerrit());
     }
 }
 

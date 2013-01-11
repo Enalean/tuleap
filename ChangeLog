@@ -1,7 +1,99 @@
-Version 5.6 (Not Released Yet)
+Version 5.9 (Not Released Yet)
+
    == Plugins ==
-	* tracker: 5.24
+    * cardwall: 0.9.10
+	* git: 2.7.22
+	* tests: 5.13
+	* tracker: 5.63
+	* docman: 2.26.12
+	* graphontrackers: 1.7
+
+  == Bug Fix ==
+    * Do not rely on SimplePie escaping
+
+  == Development ==
+    * Include fundations for HTTP client and Jenkins job
+
+Version 5.8 (Wednesday, December 19th 2012)
+
+   == Enhancement ==
+	* Better documentation of SOAP API
+
+   == Bug fix ==
+	* Use reliable method to detect if we are running in CLI
+	* Fix setup script: Replace localhost reference by the mysql_host value to be able to install the db on a dedicated server (Contrib STMicroelectronics)
+	* Add missing lib in stats script (sla #1644)
+	* Fix font compatibility with IE9 (Contrib STMicroelectronics)
+
+  == Plugins ==
+	* cardwall: 0.9.9
+	* agiledashboard: 0.60
+	* tests: 5.11
+	* git: 2.7.18
+	* tracker: 5.57
+	* IM: 1.5.5
+	* forumml: 2.6.6
+
+	== Development ==
+	* Tuleap can respond with several names
+	* PHP 5.3 compatibility: persist tracker_ids across instance of test
+
+
+Version 5.7 (Thursday, November 22nd 2012)
+
+   == Bug fix ==
+	* Fix fatal error when user start monitoring a file package
+	* Avoid double posting when body contain special characters. (Contrib STMicroelectronics)
+
+   == Plugins ==
+	* tracker: 5.45
+	* git: 2.7.16
+	* tests: 5.8
+	* ldap: 3.22
+	* projectlinks: 2.2
+	* graphontrackersv5: 5.0.5
+	* agiledashboard: 0.59
+	* cardwall: 0.9.8
+	* docman: 2.26.10
+
+Version 5.6.2 (Tuesday, November 6th 2012)
+   == Enhancements ==
+   * A project administrator can import a user group from another project (contrib STMicroeletronics).
+
+Version 5.6.1 (Friday, November 2nd 2012)
+
+  == Plugins ==
+    * tracker: 5.29.1
+
+Version 5.6 (Friday, October 26th 2012)
+   == Bug Fix ==
+    * Fix bug #1663: Validate user realname on account creation
+
+   == Enhancements ==
+    * Enhance FRS monitoring (Contrib STMicroelectronics)
+    * Adding new option for automatic validation of new projects
+
+   == Plugins ==
+	* tracker: 5.29
 	* tests: 5.6
+	* statistics: 0.22
+	* git: 2.7.14
+	* ldap: 3.21
+	* agiledashboard: 0.57
+	* cardwall: 0.9.7
+
+   == Development ==
+	* Initialize a Vagrant box to ease the build of Tuleap. See ./Vagrantfile
+	and http://vagrantup.com/ for details. This will also help newcomers to
+	install a Tuleap development environment.
+
+Version 5.5.4 (Tuesday, Octobre 16th 2012)
+   * Fix backend warnings about chgrp on ssh key dump
+   * Validate user ssh key on upload (and clean existing ones)
+
+   == Plugins ==
+   * git: 2.7.12
+   * tracker: 5.22
 
 Version 5.5.3 (Thursday, Octobre 3rd 2012)
     == Bug fix ==

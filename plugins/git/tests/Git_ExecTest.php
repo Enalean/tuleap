@@ -86,6 +86,11 @@ class Git_Exec_IsThereAnythingToCommitTest extends TuleapTestCase {
         file_put_contents("$this->fixture_dir/toto", "stuff");
         $this->assertFalse($this->git_exec->isThereAnythingToCommit());
     }
+
+    public function itDoesntRaiseAnErrorWhenTryingToRemoveAnUntrackedFile() {
+        file_put_contents("$this->fixture_dir/toto", "stuff");
+        $this->git_exec->rm("$this->fixture_dir/toto");
+    }
 }
 
 ?>

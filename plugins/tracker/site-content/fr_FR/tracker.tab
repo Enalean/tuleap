@@ -482,6 +482,7 @@ plugin_tracker_include_type	choose_creation	Tout d'abord, selectonnez le patron 
 plugin_tracker_include_type	from_tmpl	A partir de la galerie de patrons
 plugin_tracker_include_type	from_xml	A partir d'un fichier XML
 plugin_tracker_include_type	from_xml_desc	Vous pouvez sauvegarder puis ré-importer la définition d'un outil de suivi d'un serveur à un autre.<br/>Si vous n'avez pas de fichiers XML, des exemples sont disponibles <a href="$1">ici</a>.
+plugin_tracker_include_type	from_tv3	A partir d'un outil de suivi v3
 plugin_tracker_include_type	tmpl_src_prj	Projet source
 plugin_tracker_include_type	tmpl_src_trk	Liste des patrons
 plugin_tracker_include_type	tmpl_src_no_trk	Pas de patron
@@ -966,7 +967,7 @@ plugin_tracker	submit_new_artifact	Soumettre un nouvel artefact
 plugin_tracker	notifications	Notifications
 plugin_tracker	administration	Administration
 plugin_tracker	help	Aide
-plugin_tracker	linked_to	This artifact (of $2) will be linked to $1
+plugin_tracker	linked_to	Cet artefact (de $2) sera lié à $1
 plugin_tracker	tracker_switcher	Sélectionnez un outil de suivi
 
 plugin_tracker_artifact	set_to	à 
@@ -984,6 +985,8 @@ plugin_tracker_artifact	formelement_artifactlink_open_parent	$1 ouvert(es)
 plugin_tracker_artifact	unable_update	Impossible de mettre à jour l'artefact
 plugin_tracker_artifact	no_changes	Aucun changement pour l'artefact $1
 plugin_tracker_artifact	fields_not_valid	Les champs ne sont pas valides
+plugin_tracker_artifact	rules_date_not_valid	Erreur de dates : $1 doit être $2 à $3.
+plugin_tracker_artifact	dependencies_rules_not_valid	Erreur de dépendance entre les champs $1 et $2.
 plugin_tracker_artifact	mail_followup_date	Date :
 plugin_tracker_artifact	mail_followup_by	Par :
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">Vous n'êtes PAS connecté<br />Veuillez <a href="$1">vous connecter,</a> de façon à ce que les notifications de mise à jour puissent vous être envoyées.</span></strong><br />Si vous ne possédez pas de compte utilisateur, veuillez entrer votre adresse e-mail à la place&nbsp;:
@@ -1083,10 +1086,13 @@ plugin_tracker_formelement_admin	select_default_value	Sélectionner la valeur pa
 plugin_tracker_formelement_admin	static_values	Valeurs statiques
 plugin_tracker_formelement_admin	switch_msb	Transformer en boîte de sélections multiples
 plugin_tracker_formelement_admin	switch_sb	Transformer en boîte de sélection simple
+plugin_tracker_formelement_admin	switch_cb	Transformer en ensemble de case à cocher
 plugin_tracker_formelement_admin	switch_type_confirm	Etes-vous certain de vouloir changer le type de ce champ ?
 plugin_tracker_formelement_admin	delete_field_impossible	Impossible de supprimer ce champ (utilisé en sémantique, pour le workflow ou sur une dépendance entre champs)
 plugin_tracker_formelement_admin	hide_value_impossible	Vous ne pouvez pas cacher cette valeur puisqu'elle est utilisée dans la sémantique 'status', dans le workflow ou sur une dépendance entre champs
 plugin_tracker_formelement_admin	hide_value	Afficher/cacher cette valeur
+plugin_tracker_formelement_admin	checkbox	Case à cocher
+plugin_tracker_formelement_admin	checkbox_desc	Case à cocher
 plugin_tracker_formelement_admin	alpha_ranking_updated	Ordre alphabétique mis à jour
 
 plugin_tracker_formelement_property	hint	Indication
@@ -1207,6 +1213,7 @@ plugin_tracker_admin_import	aid_does_not_exist	L'artefact Id $1 n'existe  pas.
 plugin_tracker_admin_import	field_not_taken_account	Le champ "$1" ne sera pas pris en compte.
 plugin_tracker_admin_import	nb_created_import	$1 artefact(s) créé(s)
 plugin_tracker_admin_import	nb_updated_import	$1 artefact(s) mis à jour
+plugin_tracker_admin_import	missing_field_value	Valeur de champ manquant: 
 plugin_tracker_admin_import	date_format_help	Format de date attendu : <strong>$1</strong>. <a href="/account/preferences.php">Changer le format de date pour l'import/export</a>
 plugin_tracker_admin_import	separator_not_found	Séparateur CSV non trouvé ($1). Soit vous tentez d'importer un seul champ, soit vous utilisez le mauvais séparateur.<br />Si c'est le cas, vous pouvez <a href="/account/preferences.php">changer le séparateur CSV pour l'import/export</a>
 
@@ -1297,20 +1304,31 @@ plugin_tracker_search_index	artifact_title	Titre de l'artefact
 # Script: SF/common/workflow/WorkflowManager.class.php
 #
 workflow_admin	title	Gestion du Workflow
+workflow_admin	transitions_deactivated	Les règles de transition ne s'appliquent pas pour l'instant
+workflow_admin	same_field	Les deux champs doivent être différents
+workflow_admin	deleted_rules	Règle(s) supprimée(s) avec succès
+workflow_admin	updated_rules	Règle(s) mise(s) à jour avec succès
+workflow_admin	created_rule	Règle créée avec succès
+workflow_admin	title_define_global_date_rules	Définition des règles globales sur les dates
+workflow_admin	hint_date_rules_definition	Ces règles s'appliqueront à chaque création/modification d'artéfacts.
+workflow_admin	add_new_rule	Ajouter une nouvelle règle
 workflow_admin	title_define_transitions	Definir les transitions
-workflow_admin	field	Champ
-workflow_admin	enabled	Activer
-workflow_admin	delete	Supprimer
+workflow_admin	tab_global_rules	Règles Globales
+workflow_admin	tab_transitions	Transitions
+workflow_admin	field	Champ sur lequel les transitions seront basées :
+workflow_admin	enabled	Appliquer les règles sur les transitions.
+workflow_admin	delete	Supprimer toutes les transitions
 workflow_admin	choose_field	Choisir le champ sur lequel appliquer le workflow :
-workflow_admin	updated	Mis à jour
+workflow_admin	updated	Transitions mises à jour
 workflow_admin	not_updated	Aucune mise à jour effectuée
 workflow_admin	created	Crée
 workflow_admin	deleted	Supprimé
-workflow_admin	workflow_enabled	Le workflow est activé.
-workflow_admin	workflow_disabled	Le workflow est désactivé.
-workflow_admin	delete_workflow	Etes-vous sûr de vouloir supprimer le workflow?
-workflow_admin	title_define_transition_details	Définir  les règles à appliquer sur une transition : de $1 à $2
+workflow_admin	workflow_enabled	À partir de maintenant, les transitions <strong>seront</strong> appliquées.
+workflow_admin	workflow_disabled	À partir de maintenant, les transitions ne seront <strong>pas</strong> appliquées.
+workflow_admin	delete_workflow	Etes-vous sûr de vouloir supprimer toutes les transitions ?
+workflow_admin	title_define_transition_details	Définir  les règles à appliquer sur une transition : de <em>$1</em> à <em>$2</em>
 workflow_admin	label_define_transition_permissions	Groupes autorisés à effectuer la transition :
+workflow_admin	label_define_transition_required_field	Champ qui doit être rempli :
 workflow_admin	permissions_not_updated	Les mises à jour n'ont pas été prises en compte.
 workflow_admin	permissions_updated	Les mises à jour ont été prises en compte.
 workflow_admin	permissions_transition	Peut effectuer la transition
@@ -1318,9 +1336,18 @@ workflow_admin	new_artifact	Nouvel artefact
 workflow_admin	change_value_date_field_to	Le champ date $1 prend pour valeur $2
 workflow_admin	change_value_int_field_to	Le champ entier $1 prend pour valeur $2
 workflow_admin	change_value_float_field_to	Le champ flottant $1 prend pour valeur $2
+workflow_admin	ci_build	Le job $1 sera automatiquement lancé
+workflow_admin	ci_build_help	$1 passera automatiquement les paramètres suivants au job :
+workflow_admin	ci_build_help_userid	userId : identifiant (entier) de l'utilisateur $1 qui a éffectué la transition
+workflow_admin	ci_build_help_projectid	projectId : identifiant (entier) du projet courant (ie. $1)
+workflow_admin	ci_build_help_trackerid	trackerId : identifiant (entier) du tracker courant (ie. $1)
+workflow_admin	ci_build_help_artifactid	artifactId : identifiant (entier) de l'artefact dans lequel s'est déroulée la transition
+workflow_admin	ci_build_help_trigger_field_value	triggerFieldValue: Value (string) de la valeur cible de la transition (ie. $1)
 workflow_admin	post_action_change_value_date_field	Mettre à jour la valeur d'un champ date
 workflow_admin	post_action_change_value_int_field	Mettre à jour la valeur d'un champ de type entier
 workflow_admin	post_action_change_value_float_field	Mettre à jour la valeur d'un champ de type flottant
+workflow_admin	the_field	Le champ
+workflow_admin	field_not_empty	doit être rempli
 
 workflow_admin	under_the_following_condition	Sous les conditions suivantes :
 workflow_admin	following_action_performed	Les actions ci-dessous seront executées :
@@ -1331,9 +1358,15 @@ workflow_admin	no_postaction	Il n'y a pas encore d'action définie pour cette tr
 workflow_admin	post_action_field_date_empty	""
 workflow_admin	post_action_field_date_current_time	la date courante
 workflow_admin	post_action_not_defined	Cette action sera inactive tant qu'elle ne sera pas complètement définie
+workflow_admin	ci_url	Adresse du job Jenkins ou Hudson: http://CI_URL/job/JOBNAME
 
-workflow_postaction	field_value_set	Le champs '$1' a été automatiquement valué à $2
-workflow_postaction	field_clear	Le valeur du champs '$1' a été automatiquement effacée
+workflow_postaction	field_value_set	Le champ '$1' sera automatiquement valué à $2
+workflow_postaction	field_clear	Le valeur du champs '$1' sera automatiquement effacée
+workflow_postaction	invalid_job_url	L'adresse du job '$1' de l'intégration continue est invalide.
+workflow_postaction	ci_build	Lancer un build de l'intégration continue
+workflow_postaction	ci_build_succeeded	Le build d'intégration continue a été lancé ($1)
+
+workflow_condition	invalid_condition	Condition invalide : le champ '$1' doit être rempli
 
 plugin_tracker_permissions	plugin_tracker_artifact_access	Accès à un artefact
 plugin_tracker_permissions	plugin_tracker_full_access	Accès à tous les artefacts du tracker

@@ -7,15 +7,25 @@
 <?php
 
 $content = "
-<H2>Enregistrement terminé !</H2>
-	<P>Votre projet a été soumis aux administrateurs de ".$GLOBALS['sys_name'].". 
-	Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.
-	<P>
-	Merci d'utiliser ".$GLOBALS['sys_name'].".
-	<P>";
+<H2>Enregistrement terminé !</H2>";
+
+if ($auto_approval == 'A') {
+    $content .= "
+    <P>Votre projet a été soumis et validé sur ".$GLOBALS['sys_name'].".
+    Vous pouvez dès à présent utiliser et gérer votre projet.";
+} else {
+    $content .= "
+    <P>Votre projet a été soumis aux administrateurs de ".$GLOBALS['sys_name'].".
+    Vous recevrez une notification de leur décision et des instructions complémentaires dans les 24 heures.";
+}
+$content .= "
+    <P>
+    Merci d'utiliser ".$GLOBALS['sys_name'].".
+    <P>";
 
 // Do not touch this URL, to and From unless you know what you are doing
 $href_approval = get_server_url().'/admin/approve-pending.php';
+$href_siteadmin_project = get_server_url().'/admin/groupedit.php?group_id='.$group_id;
 $to = $GLOBALS['sys_email_admin'];
 list($host,) = explode(':',$GLOBALS['sys_default_domain']);
 $from = $GLOBALS['sys_noreply'];
@@ -24,9 +34,14 @@ $hdrs = 'From: '.$from."\n";
 // subject and body can be customized to your liking
 $subject = "Nouveau projet enregistré : ".$data['project']['form_full_name'];
 $body = "Un nouveau projet vient juste d'être enregistré sur ".$GLOBALS['sys_name']."\n\n".
-"Nom du projet : ".$data['project']['form_full_name']."\n\n".
-"Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
-$href_approval."\n";
+"Nom du projet : ".$data['project']['form_full_name']."\n\n";
+if ($auto_approval == 'P') {
+    $body .= "Veuillez cliquer sur le lien ci-dessous pour approuver l'enregistrement de ce projet :\n".
+    $href_approval."\n";
+}else {
+    $body .= "Veuillez cliquer sur le lien ci-dessous pour gérer ce nouveau projet sur le panneau d'administration du site-admin :\n".
+    $href_siteadmin_project."\n";
+}
 
 // Send a notification message to the Site administrator
 require_once('common/mail/Mail.class.php');

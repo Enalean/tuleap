@@ -19,9 +19,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-$host       = 'http://shunt.cro.enalean.com';
-$user       = 'manuel';
-$pass       = '';
+$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
+$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
+$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+
 $project_id = 0; //not needed
 $tracker_id = 276;
 $offset     = 0;
@@ -62,7 +63,7 @@ $host_tracker = $host .'/plugins/tracker/soap/?wsdl';
 
 // Establish connection to the server
 $client_login = new SoapClient($host_login, $soap_options);
-$session_hash = $client_login->login($user, $pass)->session_hash;
+$session_hash = $client_login->login($login, $password)->session_hash;
 try {
     // Connecting to the soap's tracker api
     $client_tracker = new SoapClient($host_tracker, $soap_options);

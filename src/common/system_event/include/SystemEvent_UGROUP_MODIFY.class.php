@@ -20,6 +20,9 @@
  * 
  */
 
+require_once 'common/project/Project.class.php';
+require_once('common/project/UGroupBinding.class.php');
+require_once 'common/system_event/SystemEvent.class.php';
 
 /**
 * System Event classes
@@ -46,20 +49,28 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
     
     /** 
      * Process stored event
+     *
+     * @return Boolean
      */
     function process() {
         $ugroup_name = null;
         $ugroup_old_name = null;
         // Check parameters
-        if(count($this->getParametersAsArray()) == 4) {
+        if (count($this->getParametersAsArray()) == 4) {
             list($group_id, $ugroup_id, $ugroup_name, $ugroup_old_name) = $this->getParametersAsArray();
         } else {
             list($group_id, $ugroup_id) = $this->getParametersAsArray();
         }
+        // Remove ugroup binding to this user group
+        if (!$this->processUgroupBinding($ugroup_id, $group_id)) {
+            $this->error("Could not process binding to this user group ($ugroup_id)");
+            return false;
+        }
+
         if ($project = $this->getProject($group_id)) {
             // Update SVN access file
             if ($project->usesSVN()) {
-                $backendSVN = Backend::instance('SVN');
+                $backendSVN = $this->getBackend('SVN');
                 if (!$backendSVN->updateSVNAccess($group_id, $ugroup_name, $ugroup_old_name)) {
                     $this->error("Could not update SVN access file ($group_id)");
                     return false;
@@ -69,6 +80,40 @@ class SystemEvent_UGROUP_MODIFY extends SystemEvent {
 
         $this->done();
         return true;
+    }
+
+    /**
+     * Remove all user group bound to a deleted given ugroup
+     *
+     * @param Integer $ugroup_id Id of the deleted user group
+     * @param Integer $group_id  Id of the project
+     *
+     * @return Boolean
+     */
+    protected function processUgroupBinding($ugroup_id, $group_id) {
+        $ugroupBinding = $this->getUgroupBinding();
+        if (!$ugroupBinding->checkUGroupValidity($group_id, $ugroup_id)) {
+            //The user group is removed, we remove all its binding traces
+            return $ugroupBinding->removeAllUGroupsBinding($ugroup_id);
+        } else {
+            if (count($this->getParametersAsArray()) == 2) {
+                //The user group has been updated (user added / user removed), we update all its bound user groups
+                return $ugroupBinding->updateBindedUGroups($ugroup_id);
+            }
+            return true;
+        }
+    }
+
+    /**
+     * Obtain instance of UGroupBinding
+     *
+     * @return UGroupBinding
+     */
+    public function getUgroupBinding() {
+        $ugroupUserDao = new UGroupUserDao();
+        $ugroupManager = new UGroupManager(new UGroupDao());
+        $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
+        return $uGroupBinding;
     }
 
 }

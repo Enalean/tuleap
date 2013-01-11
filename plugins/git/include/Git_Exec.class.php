@@ -69,8 +69,17 @@ class Git_Exec {
      * @throw Git_Command_Exception
      */
     public function rm($file) {
-        $cmd = 'git rm '.escapeshellarg($file);
-        return $this->gitCmd($cmd);
+        if ($this->canRemove($file)) {
+            $cmd = 'git rm '.escapeshellarg($file);
+            return $this->gitCmd($cmd);
+        }
+        return true;
+    }
+
+    private function canRemove($file) {
+        $output = array();
+        $this->execInPath('git status --porcelain '.escapeshellarg($file), $output);
+        return count($output) == 0;
     }
 
     /**
@@ -119,12 +128,12 @@ class Git_Exec {
         return false;
     }
 
-    private function gitCmd($cmd) {
+    protected function gitCmd($cmd) {
         $output = array();
         return $this->execInPath($cmd, $output);
     }
 
-    private function execInPath($cmd, &$output) {
+    protected function execInPath($cmd, &$output) {
         $cwd = getcwd();
         chdir($this->path);
         exec("$cmd 2>&1", $output, $retVal);

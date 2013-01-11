@@ -104,28 +104,128 @@ class UGroupManager {
      *
      * @return UGroupDao
      */
-    private function getDao() {
+    public function getDao() {
         if (!$this->dao) {
-             $this->dao = new UGroupDao();
+            $this->dao = new UGroupDao();
         }
         return $this->dao;
     }
 
     /**
+     * Wrapper for EventManager
+     *
+     * @return EventManager
+     */
+    private function getEventManager() {
+        return EventManager::instance();
+    }
+
+    /**
      * Get Dynamic ugroups members
      *
-     * @param Integer $ugroupId Id of the uGroup
+     * @param Integer $ugroupId Id of the ugroup
      * @param Integer $groupId  Id of the project
+     *
+     * @return array of User
+     */
+    public function getDynamicUGroupsMembers($ugroupId, $groupId) {
+        if ($ugroupId > 100) {
+            return array();
+        }
+        $um = UserManager::instance();
+        $users   = array();
+        $dao     = new UGroupUserDao();
+        $members = $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
+        if ($members && !$members->isError()) {
+            foreach ($members as $member) {
+                $users[] = $um->getUserById($member['user_id']);
+            }
+        }
+        return $users;
+    }
+
+    /**
+     * Check if update users is allowed for a given user group
+     *
+     * @param Integer $ugroupId Id of the user group
+     *
+     * @return boolean
+     */
+    public function isUpdateUsersAllowed($ugroupId) {
+        $ugroupUpdateUsersAllowed = true;
+        $this->getEventManager()->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
+        return $ugroupUpdateUsersAllowed;
+    }
+
+    /**
+     * Wrapper for dao method that checks if the user group is valid
+     *
+     * @param Integer $groupId  Id of the project
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return boolean
+     */
+    public function checkUGroupValidityByGroupId($groupId, $ugroupId) {
+        return $this->getDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
+    }
+
+    /**
+     * Wrapper for dao method that retrieves all Ugroups bound to a given Ugroup
+     *
+     * @param Integer $ugroupId Id of the user goup
      *
      * @return DataAccessResult
      */
-    public function getDynamicUGroupsMembers($ugroupId, $groupId) {
-        if($ugroupId <= 100) {
-            $dao = new UGroupUserDao(CodendiDataAccess::instance());
-            return $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
-        }
+    public function searchUGroupByBindingSource($ugroupId) {
+        return $this->getDao()->searchUGroupByBindingSource($ugroupId);
     }
 
+    /**
+     * Wrapper for dao method that updates binding option for a given UGroup
+     *
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return Boolean
+     */
+    public function updateUgroupBinding($ugroupId, $sourceId = null) {
+        return $this->getDao()->updateUgroupBinding($ugroupId, $sourceId);
+    }
+
+    /**
+     * Wrapper to retrieve the source user group from a given bound ugroup id
+     *
+     * @param Integer $ugroupId The source ugroup id
+     *
+     * @return DataAccessResult
+     */
+    public function getUgroupBindingSource($ugroupId) {
+        return $this->getDao()->getUgroupBindingSource($ugroupId);
+    }
+
+    /**
+     * Wrapper for UserGroupDao
+     *
+     * @return UserGroupDao
+     */
+    public function getUserGroupDao() {
+        return new UserGroupDao();
+    }
+
+    /**
+     * Return name and id of all ugroups belonging to a specific project
+     *
+     * @param Integer $groupId    Id of the project
+     * @param Array   $predefined List of predefined ugroup id
+     *
+     * @return DataAccessResult
+     */
+    public function getExistingUgroups($groupId, $predefined = null) {
+        $dar = $this->getUserGroupDao()->getExistingUgroups($groupId, $predefined);
+        if ($dar && !$dar->isError()) {
+            return $dar;
+        }
+        return array();
+    }
 }
 
 ?>

@@ -1,8 +1,129 @@
+Version 5.63 - Tuleap 5.9
+    * * New post action in workflow: trigger a jenkins build.
+
+Version 5.62 - Tuleap 5.9
+    * Update SOAP API to 2.0.3 (bug fix)
+
+Version 5.61 - Tuleap 5.9
+    * SOAP API (v2.0.2): artifacts now contains their cross references.
+
+Version 5.60 - Tuleap 5.9
+    * Development: Fix tests builders, ID of a tracker should a numeric.
+
+Version 5.59 - Tuleap 5.9
+    * SOAP API: export artifact comments
+
+Version 5.58 - Tuleap 5.9
+    * Fix some isolated tests
+
+Version 5.57 - Tuleap 5.8
+    * Fix bugs #1997: Warning & notice in the log
+
+Version 5.56 - Tuleap 5.8
+    * Fix bug when user submit an artifact but don't have permissions on all fields involved in rules
+
+Version 5.55 - Tuleap 5.8
+    * Follow-up version 5.53: finish refactoring
+
+Version 5.54 - Tuleap 5.8
+    * Complete SOAP API (see plugins/tracker/www/soap/ChangeLog for details)
+
+Version 5.53 - Tuleap 5.8
+    * Cross references field no longer taken into account in CSV import (read-only field)
+
+Version 5.52 - Tuleap 5.8
+    * Apply global validation rules on CSV Import, SOAP create/update artifact, Tracker clone, XML Import/Export
+
+Version 5.51 - Tuleap 5.8
+    * Fix bugs #1905: soap criteria for list fields are not consistance with what is returned getArtifacts
+
+Version 5.50 - Tuleap 5.8
+    * Fix bugs #1537 - Issue with status semantic criteria on cross tracker search
+
+Version 5.49 - Tuleap 5.8
+    * Remove call time pass by reference for unit tests
+
+Version 5.48 - Tuleap 5.8
+    * Workflow global rules have precedence over transitions post-actions
+
+Version 5.47 - Tuleap 5.8
+    * * Tracker admin can define tracker wide rules that applies on dates
+
+Version 5.46 - Tuleap 5.8
+    * Add admssw plugin
+
+Version 5.45 - Tuleap 5.7
+    * Enhancement: add conditions on transition (check that a field is not empty)
+
+Version 5.44 - Tuleap 5.7
+    * Fix bugs #1100: Display of plan part broken on firefox.
+Fix bugs #1780: fix arrow location on cardwall item
+
+Version 5.43 - Tuleap 5.7
+    * Always display remaining effort on card
+
+Version 5.42 - Tuleap 5.7
+    * Fix art #1188 - Refresh issue on Card Wall when moving task to done
+
+Version 5.41 - Tuleap 5.7
+    * Fix bugs #1738: On fresh install cross tracker search (and agile dashboard) show no results
+
+Version 5.40 - Tuleap 5.7
+    * Burndown no longer displayed on agiledashboard homepage
+
+Version 5.39 - Tuleap 5.7
+    * Add a pane in agiledashboard that displays the sprint burndown.
+
+Version 5.38 - Tuleap 5.7
+    * Add integration tests for tv3 -> tv5 migration
+
+Version 5.37 - Tuleap 5.7
+    * Enhancement: Field Dependencies XML export
+
+Version 5.36 - Tuleap 5.7
+    * Fix SOAP API issue: Fix namespace usage
+
+Version 5.35 - Tuleap 5.7
+    * Fix SOAP API issue: Export int instead of string when the wsdl asks for int & replace int[]/string[] by ArrayOfInt/ArrayOfString
+
+Version 5.34 - Tuleap 5.7
+    * Convert tracker v3 structure to a tracker v5
+
+Version 5.33 - Tuleap 5.7
+    * Include permissions into Tracker SOAP API
+
+Version 5.32 - Tuleap 5.7
+    * XML Import/Export all trackers at once
+
+Version 5.31 - Tuleap 5.7
+    * SOAP API Enhancement: export workflow in the tracker structure
+
+Version 5.30 - Tuleap 5.7
+    * SOAP API Enhancement: export semantic definition in the tracker structure
+
+Version 5.29.1 - Tuleap 5.7
+    * Fix defect #1703: If no value for type select box is specified, the first value in the list is saved for the artifact
+
+Version 5.29 - Tuleap 5.6
+    * Add symlink to index.php for backward compability
+
+Version 5.28 - Tuleap 5.6
+    * Add help messages on agile dashboard
+
+Version 5.27 - Tuleap 5.6
+    * Make agile dashboard home page more user friendly
+
+Version 5.26 - Tuleap 5.6
+    * Fix unit test includes
+
+Version 5.25 - Tuleap 5.6
+    * Add new type of field in trackers: checkbox (Contrib JTEKT)
+
 Version 5.24 - Tuleap 5.6
     * SOAP: getArtifacts now returns filtered results
 
 Version 5.23 - Tuleap 5.6
-    * 
+    *
 
 Version 5.22 - Tuleap 5.6
     * SOAP: Add missing info on getArtifact: submitted_on, submitted_by, last_update_date

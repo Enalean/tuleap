@@ -20,10 +20,11 @@
  */
 
 require_once 'Git_Backend_Interface.php';
+require_once 'GitRepositoryCreatorImpl.class.php';
 require_once 'Git.class.php';
 require_once 'exceptions/GitRepositoryAlreadyExistsException.class.php';
 
-class Git_Backend_Gitolite implements Git_Backend_Interface {
+class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backend_Interface {
     /**
      * @var Git_GitoliteDriver
      */
@@ -257,16 +258,6 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     }
 
     /**
-     * Get the regexp pattern to use for name repository validation
-     *
-     * @return string
-     */
-    public function getAllowedCharsInNamePattern() {
-        //alphanums, underscores, slashes and dash
-        return 'a-zA-Z0-9/_.-';
-    }
-    
-    /**
      * Rename a project
      *
      * @param Project $project The project to rename
@@ -346,7 +337,7 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
     /**
      * @throws GitRepositoryAlreadyExistsException 
      */
-    public function fork(GitRepository $old, GitRepository $new) {
+    public function fork(GitRepository $old, GitRepository $new, array $forkPermissions) {
         $name = $old->getName();
         //TODO use $old->getRootPath() (good luck for Unit Tests!)
         $old_namespace = $old->getProject()->getUnixName() .'/'. $old->getNamespace();
@@ -360,7 +351,11 @@ class Git_Backend_Gitolite implements Git_Backend_Interface {
             if ($forkSucceeded) {
                 $id = $this->getDao()->save($new);
                 $new->setId($id);
-                $this->clonePermissions($old, $new);
+                if (empty($forkPermissions)) {
+                    $this->clonePermissions($old, $new);
+                } else {
+                    $this->savePermissions($new, $forkPermissions);
+                }
                 $this->updateRepoConf($new);
             }
         }

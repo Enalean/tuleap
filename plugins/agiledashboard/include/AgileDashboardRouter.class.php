@@ -95,6 +95,13 @@ class AgileDashboardRouter {
             case 'delete':
                 $this->executeAction($controller, 'delete');
                 break;
+            case 'admin':
+                if ($this->userIsAdmin($request)) {
+                    $this->renderAction($controller, 'admin', $request);
+                } else {
+                    $this->renderAction($controller, 'index', $request);
+                }
+                break;
             case 'index':
             default:
                 $this->renderAction($controller, 'index', $request);
@@ -113,7 +120,8 @@ class AgileDashboardRouter {
      */
     private function getHeaderTitle($action_name) {
         $header_title = array(
-            'index' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_index'),
+            'index' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'),
+            'admin' => $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin'),
             'new_'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_new'),
             'edit'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_edit'),
             'show'  => $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_show')
@@ -131,7 +139,7 @@ class AgileDashboardRouter {
      */
     private function getService(Codendi_Request $request) {
         if ($this->service == null) {
-            $project = ProjectManager::instance()->getProject($request->get('group_id'));
+            $project = $request->getProject();
             $this->service = $project->getService('plugin_agiledashboard');
         }
         return $this->service;
@@ -147,9 +155,22 @@ class AgileDashboardRouter {
     private function displayHeader(MVC2_Controller $controller,
                                    Codendi_Request $request,
                                                    $title) {
-        
+        $toolbar     = array();
         $breadcrumbs = $controller->getBreadcrumbs($this->plugin->getPluginPath());
-        $this->getService($request)->displayHeader($title, $breadcrumbs->getCrumbs(), array());
+        if ($this->userIsAdmin($request)) {
+            $toolbar[] = array(
+                'title' => $GLOBALS['Language']->getText('global', 'Admin'),
+                'url'   => AGILEDASHBOARD_BASE_URL .'/?'. http_build_query(array(
+                    'group_id' => $request->get('group_id'),
+                    'action'   => 'admin',
+                ))
+            );
+        }
+        $this->getService($request)->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar);
+    }
+    
+    private function userIsAdmin(Codendi_Request $request) {
+        return $request->getProject()->userIsAdmin($request->getCurrentUser());
     }
     
     /**
@@ -169,10 +190,9 @@ class AgileDashboardRouter {
      * @return Planning_Controller 
      */
     protected function buildController(Codendi_Request $request) {
-        $planning_factory = new PlanningFactory(new PlanningDao(),
-                                                TrackerFactory::instance());
+        $planning_factory = PlanningFactory::build();
         
-        return new Planning_Controller($request, $planning_factory);
+        return new Planning_Controller($request, $planning_factory, $this->milestone_factory, $this->plugin->getThemePath());
     }
 
     /**

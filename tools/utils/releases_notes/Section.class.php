@@ -59,8 +59,17 @@ class Section {
      */
     public function addSectionFromChangeLog($line) {
         $section = Section::buildFromChangeLog($line);
-        $this->sections[] = $section;
+        $this->addSection($section);
         return $section;
+    }
+
+    public function addSection(Section $section) {
+        $this->sections[] = $section;
+        usort($this->sections, array($this, 'sortByLabel'));
+    }
+
+    private function sortByLabel($a, $b) {
+        return strnatcasecmp($a->label, $b->label);
     }
 
     public function addChange($change) {

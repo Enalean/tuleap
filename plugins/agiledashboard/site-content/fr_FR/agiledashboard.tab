@@ -4,7 +4,8 @@ plugin_agiledashboard	descriptor_name	Agile Dashboard
 plugin_agiledashboard	service_lbl_key	Agile Dashboard
 plugin_agiledashboard	service_desc_key	Dashboard agile
 
-plugin_agiledashboard	planning_destination_help	Déplacer les résultats de la recherche à gauche dans cette zone pour associer les artifacts entre eux.
+plugin_agiledashboard	Admin	Administration du dashboard agile
+plugin_agiledashboard	planning_destination_help	Utiliser la flèche gauche d'un élément pour le déplacer dans le backlog ou les flèches haut/bas pour prioriser les éléments entre eux.
 plugin_agiledashboard	planning_title	Plannings
 plugin_agiledashboard	planning_create	Créer un nouveau planning
 plugin_agiledashboard	planning_edit	Éditer
@@ -23,6 +24,9 @@ plugin_agiledashboard	edit_item	Éditer
 plugin_agiledashboard	add_subitem	Ajouter un(e) nouveau(lle) $1
 plugin_agiledashboard	backlog_add	Ajouter
 plugin_agiledashboard	planning_pane_title	Backlog/Planning
+plugin_agiledashboard	access_to_planning	Accéder au planning
+plugin_agiledashboard	backlog_destination_help	Utiliser la flèche droite d'un élément pour le déplacer vers le milestone courant ou les flèches haut/bas pour prioriser les éléments entre eux.
 
 plugin_agiledashboard	capacity	Capacité :
 plugin_agiledashboard	available	$1 disponible(s)
+

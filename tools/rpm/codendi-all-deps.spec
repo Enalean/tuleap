@@ -1,14 +1,14 @@
 # Define variables
 %define PKG_NAME @@PKG_NAME@@
 
-Summary: Codendi dependencies
+Summary: Tuleap dependencies
 Name: %{PKG_NAME}-all-deps
 Version: @@VERSION@@
 Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
-URL: http://codendi.org
+URL: http://tuleap.net
 Source0: README.all-deps
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 

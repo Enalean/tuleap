@@ -276,6 +276,10 @@ abstract class SystemEvent {
         EventManager::instance()->processEvent( $eventName , $this->getParametersAsArray() );
     }
 
+    public function logException(Exception $exception) {
+        $this->error($exception->getMessage());
+    }
+
     /**
      * Private. Use error() | done() | ... instead
      * @param string $status the status

@@ -30,7 +30,7 @@ class ProjectHistoryDao extends DataAccessObject {
      *
      * @return void
      */
-    public function __construct($da) {
+    public function __construct($da = null) {
         parent::__construct($da);
         $this->table_name = 'group_history';
     }

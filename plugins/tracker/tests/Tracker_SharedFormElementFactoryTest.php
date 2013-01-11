@@ -18,6 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'builders/all.php';
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php';
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php';
 require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php';

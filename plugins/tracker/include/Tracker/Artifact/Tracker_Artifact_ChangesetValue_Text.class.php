@@ -89,9 +89,10 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @return string The sentence to add in changeset
      */
     public function nodiff($format='html') {
-        $previous = '';
         $next = $this->getText();
         if ($next != '') {
+            $previous = array('');
+            $next     = explode(PHP_EOL, $this->getText());
             return $this->fetchDiff($previous, $next, $format);
         }
     }

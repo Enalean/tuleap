@@ -50,6 +50,7 @@ class GitDao extends DataAccessObject {
 
     const BACKEND_GITSHELL = 'gitshell';
     const BACKEND_GITOLITE = 'gitolite';
+    const REMOTE_SERVER_ID = 'remote_server_id';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -261,6 +262,17 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
+    
+    /**
+     * 
+     * @return DataAccessResult
+     */
+    public function getRepositoryPathsWithRemoteServersForAllProjects() {
+        $sql = "SELECT * FROM $this->tableName
+                WHERE remote_server_id IS NOT NULL";
+        
+        return $this->retrieve($sql);
+    }
 
     /**
      * Return the list of users that owns repositories in the project $projectId
@@ -450,22 +462,27 @@ class GitDao extends DataAccessObject {
         $repository->setBackendType($result[self::REPOSITORY_BACKEND_TYPE]);
         $repository->setNamespace($result[self::REPOSITORY_NAMESPACE]);
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
+        $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->loadNotifiedMails();
     }
 
     /**
      * Count number of repositories grouped by backend type
      *
-     * @param String  $startDate
-     * @param String  $endDate
-     * @param Integer $projectId
+     * @param String  $startDate   Start date
+     * @param String  $endDate     End date
+     * @param Integer $projectId   Project Id
+     * @param Boolean $stillActive Select only reposirtories that still active
      *
      * @return DataAccessResult
      */
-    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null) {
+    public function getBackendStatistics($backend, $startDate, $endDate, $projectId = null, $stillActive = false) {
         $condition = '';
         if ($projectId) {
             $condition = "AND ".self::FK_PROJECT_ID."=".$this->da->escapeInt($projectId);
+        }
+        if ($stillActive) {
+            $condition .= " AND status = 'A' AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00' ";
         }
         $query = "SELECT count(repository_id) AS count,
                   YEAR(repository_creation_date) AS year,
@@ -475,12 +492,11 @@ class GitDao extends DataAccessObject {
                   WHERE repository_backend_type = ".$this->da->quoteSmart($backend)."
                     AND repository_creation_date BETWEEN CAST(".$this->da->quoteSmart($startDate)." AS DATETIME) AND CAST(".$this->da->quoteSmart($endDate)." AS DATETIME)
                     ".$condition."
-                    AND status = 'A'
-                    AND ".self::REPOSITORY_DELETION_DATE."="."'0000-00-00 00:00:00'
-                  GROUP BY year, month";
+                  GROUP BY year, month
+                  ORDER BY year, STR_TO_DATE(month,'%M')";
         return $this->retrieve($query);
     }
-    
+
     public function isRepositoryExisting($project_id, $path) {
         $project_id = $this->da->escapeInt($project_id);
         $path       = $this->da->quoteSmart($path);
@@ -489,6 +505,34 @@ class GitDao extends DataAccessObject {
                 WHERE repository_path = $path
                   AND project_id = $project_id
                   AND ".self::REPOSITORY_DELETION_DATE." = '0000-00-00 00:00:00'
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
+    }
+    
+    /**
+     * 
+     * @param int $repository_id
+     * @param int $remote_server_id
+     * 
+     * @return Boolean
+     */
+    public function switchToGerrit($repository_id, $remote_server_id) {
+        $repository_id    = $this->da->escapeInt($repository_id);
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $sql = "UPDATE plugin_git
+                SET remote_server_id = $remote_server_id
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+    
+    /**
+     * @return bool
+     */
+    public function isRemoteServerUsed($remote_server_id) {
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE remote_server_id = $remote_server_id
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
     }

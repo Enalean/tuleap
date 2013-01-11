@@ -23,13 +23,13 @@ require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class
 require_once('dao/Tracker_TooltipDao.class.php');
 
 class Tracker_Tooltip extends Tracker_Semantic {
-    
+
     public $fields = array();
-    
+
     public function setFields($fields) {
         $this->fields = $fields;
     }
-    
+
     public function getFields() {
         if(empty($this->fields)) {
             $tf = Tracker_FormElementFactory::instance();
@@ -42,11 +42,11 @@ class Tracker_Tooltip extends Tracker_Semantic {
         }
         return $this->fields;
     }
-    
+
     private function getDao() {
         return new Tracker_TooltipDao();
     }
-    
+
     /**
      * Save this semantic
      *
@@ -59,7 +59,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
         }
         $this->fields = array();
     }
-    
+
     /**
      * Process the form
      *
@@ -74,19 +74,19 @@ class Tracker_Tooltip extends Tracker_Semantic {
         if ($request->get('add-field') && (int)$request->get('field')) {
             //retrieve the field if used
             $f = Tracker_FormElementFactory::instance()->getUsedFormElementById($request->get('field'));
-            
+
             //store the new field
             $this->getDao()->add($this->tracker->id, $f->id, 'end');
         } else if ((int)$request->get('remove')) {
             //retrieve the field if used
             $f = Tracker_FormElementFactory::instance()->getUsedFormElementById($request->get('remove'));
-            
+
             //store the new field
             $this->getDao()->remove($this->tracker->id, $f->id);
         }
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
     }
-    
+
     /**
      * The short name of the semantic: tooltip, title, status, owner, ...
      *
@@ -103,17 +103,17 @@ class Tracker_Tooltip extends Tracker_Semantic {
     public function getLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_label');
     }
-    
+
     /**
      * The description of the semantics. Used for breadcrumbs
-     * 
+     *
      * @return string
      */
     public function getDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_description');
     }
-    
-    
+
+
     /**
      * Display the form to let the admin change the semantic
      *
@@ -127,8 +127,8 @@ class Tracker_Tooltip extends Tracker_Semantic {
     public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
-        
-        
+
+
         $html = '';
         $fields = $this->getFields();
         if (!count($fields)) {
@@ -165,12 +165,12 @@ class Tracker_Tooltip extends Tracker_Semantic {
         } else {
             $html .= '<em>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','tooltip_no_more_field') . '</em>';
         }
-        
+
         $html .= '<p><a href="'.TRACKER_BASE_URL.'/?tracker='. $this->tracker->getId() .'&amp;func=admin-semantic">&laquo; ' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','go_back_overview') . '</a></p>';
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
-    
+
     /**
      * Display the basic info about this semantic
      *
@@ -194,7 +194,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
         $html .= '</p>';
         echo $html;
     }
-    
+
     /**
      * Transforms tooltip into a SimpleXMLElement
      *
@@ -206,11 +206,11 @@ class Tracker_Tooltip extends Tracker_Semantic {
     public function exportToXML(&$root, $xmlMapping) {
         $child = $root->addChild('semantic');
         $child->addAttribute('type', $this->getShortName());
-        foreach($this->getFields() as $field) {            
+        foreach($this->getFields() as $field) {
             $child->addChild('field')->addAttribute('REF', array_search($field->id, $xmlMapping));
         }
     }
-    
+
     /**
      * Is the field used in semantics?
      *
@@ -228,5 +228,14 @@ class Tracker_Tooltip extends Tracker_Semantic {
         return false;
     }
 
+   /**
+    * Export the semantic to SOAP format
+    * In this case, we don't want the tooltip in
+    * the SOAP export
+    * @return null
+    */
+    public function exportToSOAP() {
+        return;
+    }
 }
 ?>

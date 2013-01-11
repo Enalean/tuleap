@@ -26,6 +26,7 @@ require_once GIT_BASE_DIR .'/Git_LogDao.class.php';
 require_once GIT_BASE_DIR .'/GitBackend.class.php';
 require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Selectbox.class.php';
 require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
+require_once GIT_BASE_DIR .'/GitForkPermissionsManager.class.php';
 require_once 'www/project/admin/permissions.php';
 require_once 'common/include/CSRFSynchronizerToken.class.php';
 require_once 'GitViews/RepoManagement/RepoManagement.class.php';
@@ -226,7 +227,7 @@ class GitViews extends PluginViews {
         $this->_getBreadCrumb();
         echo '<h2>'. $this->_getRepositoryPageUrl($repoId, $repoName) .' - '. $this->getText('admin_repo_management') .'</h2>';
 
-        $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest());
+        $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers']);
         $repo_management_view->display();
     }
     
@@ -318,6 +319,8 @@ class GitViews extends PluginViews {
         include_once 'common/include/Codendi_HTMLPurifier.class.php';
         if ( empty($_REQUEST['a']) )  {
             $_REQUEST['a'] = 'summary';
+        } else if ($_REQUEST['a'] === 'blobdiff') {
+            $this->inverseURLArgumentsForGitPhpDiff();
         }
         set_time_limit(300);
         $_GET['a'] = $_REQUEST['a'];        
@@ -339,6 +342,17 @@ class GitViews extends PluginViews {
         if ( empty($_REQUEST['noheader']) ) {
             echo '</div>';
         }
+    }
+    /**
+     * inverse the source and destination params in the URL to match the Git PHP
+     * template
+     */
+    private function inverseURLArgumentsForGitPhpDiff() {
+        $old_src  = $_GET['h'];
+        $old_dest = $_GET['hp'];
+
+        $_GET['h']  = $old_dest;
+        $_GET['hp'] = $old_src;
     }
 
     /**
@@ -422,7 +436,7 @@ class GitViews extends PluginViews {
         if ( !empty($params['repository_list']) ) {
             echo '<form action="" method="POST">';
             echo '<input type="hidden" name="group_id" value="'. (int)$this->groupId .'" />';
-            echo '<input type="hidden" name="action" value="do_fork_repositories" />';
+            echo '<input type="hidden" name="action" value="fork_repositories_permissions" />';
             $token = new CSRFSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
             echo $token->fetchHTMLInput();
 
@@ -478,7 +492,33 @@ class GitViews extends PluginViews {
         }
         echo '<br />';
     }
-    
+
+    /**
+     * Creates form to set permissions when fork repositories is performed
+     *
+     * @return void
+     */
+    protected function forkRepositoriesPermissions() {
+        $params = $this->getData();
+        $this->_getBreadCrumb();
+
+        if ($params['scope'] == 'project') {
+            $groupId = $params['group_id'];
+        } else {
+            $groupId = (int)$this->groupId;
+        }
+        $repositories = explode(',', $params['repos']);
+        $pm           = ProjectManager::instance();
+        $dao          = new GitDao();
+        $repoFactory  = new GitRepositoryFactory($dao, $pm);
+        $repository   = $repoFactory->getRepositoryById($repositories[0]);
+        if (!empty($repository)) {
+            $forkPermissionsManager = new GitForkPermissionsManager($repository);
+            $userName               = $this->user->getName();
+            echo $forkPermissionsManager->displayRepositoriesPermissionsForm($params, $groupId, $userName);
+        }
+    }
+
     private function fetchCopyToAnotherProject() {
         $html = '';
         $userProjectOptions = $this->getUserProjectsAsOptions($this->user, ProjectManager::instance(), $this->groupId);
@@ -498,7 +538,7 @@ class GitViews extends PluginViews {
         }
         return $html;
     }
-    
+
     public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';

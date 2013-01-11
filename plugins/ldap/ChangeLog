@@ -1,3 +1,12 @@
+Version 3.22 - Tuleap 5.7
+    * Fix art #1679: Not redirected to Personal Page after log in from Tuleap Home page
+
+Version 3.21 - Tuleap 5.6
+    * User groups can be bound to a group of another project (Contrib STMicroelectronics)
+
+Version 3.20 - Tuleap 5.6
+    * Improve compatibility with Active Directory: make autocomplete on user names works (contrib Orange).
+
 Version 3.19 - Tuleap 5.5
     * LDAP plugin now includes bind_dn/password in Apache configuration if needed
     * Normalize to lowercase

@@ -4,7 +4,7 @@ namespace xsd = "http://www.w3.org/2001/XMLSchema"
 grammar {
 
     start = element tracker {
-        
+
         # old ids
         attribute id { xsd:int }?,
         attribute group_id { xsd:int }?,
@@ -12,17 +12,17 @@ grammar {
         attribute allow_copy { "0" | "1" }?, # default is false
         attribute instantiate_for_new_projects { "0" | "1" }?, # default is false
         attribute stop_notification { "0" | "1" }?, # default is false
-        
+
         # these elements are not used, they are provided by the user during the import
         element name { xsd:string }?,
         element item_name { xsd:string }?,
         element description { xsd:string }?,
-        
+
         element submit_instructions { xsd:string }?,
         element browse_instructions { xsd:string }?,
-        
-        
-        element cannedResponses { 
+
+
+        element cannedResponses {
             element cannedResponse {
                 attribute id { xsd:int }?,
                 attribute tracker { xsd:int }?,
@@ -30,24 +30,38 @@ grammar {
                 element body { xsd:string }
             }*
         },
-        
+
         formElementsContent,
-        
+
         element semantics {
             element semantic { semanticContent }*
         }?,
-        
-        element reports { 
-            element report { reportContent }* 
+
+        element dependencies {
+            element rule { listRuleContent }*
         }?,
-        
+
+        element rules {
+            element date_rules { 
+                element rule {dateRuleContent }*
+            }?,
+            element list_rules { 
+                element rule {listRuleContent }*
+            }?
+            
+        }?,
+
+        element reports {
+            element report { reportContent }*
+        }?,
+
         element workflow {
             element field_id {
                 attribute REF { xsd:IDREF }
             }?,
             element is_used {xsd:int}?,
-            element transitions { 
-                element transition { transitionContent }*                
+            element transitions {
+                element transition { transitionContent }*
             }?
         }*,
 
@@ -60,17 +74,17 @@ grammar {
             }*
         }?
     }
-    
-    
-    formElementsContent = 
-        element formElements { 
+
+
+    formElementsContent =
+        element formElements {
             element formElement { formElementContent }*
         }?
-    
-    
+
+
     formElementContent =
         # ID is internal to the XML file
-        attribute ID { xsd:ID }, 
+        attribute ID { xsd:ID },
         attribute rank { xsd:int },
         # id is the initial id of the exported field
         attribute id { xsd:int }?,
@@ -81,11 +95,11 @@ grammar {
         attribute scope { "S" | "P" }?, # default is 'P'
         attribute required { "0" | "1" }?, # default is false
         attribute notifications { "0" | "1" }?, # default is false
-        
+
         element name { xsd:string },
         element label { xsd:string },
         element description { xsd:string }?,
-         
+
         element properties {
             attribute maxchars { xsd:int }?,
             attribute size { xsd:int }?,
@@ -96,7 +110,7 @@ grammar {
             attribute hint { xsd:string }?,
             attribute target_field_name { xsd:string }?
         }?,
-        
+
         (
             (
                 attribute type { xsd:string }
@@ -108,19 +122,19 @@ grammar {
             )
         |
             (
-                attribute type { "sb" | "msb" | "tbl" },
+                attribute type { "sb" | "msb" | "tbl" | "cb" },
                 bindContent
             )
         )
-        
-    bindContent = 
+
+    bindContent =
         element bind {
             (
                 (
                     attribute type { "static" },
                     attribute is_rank_alpha { "0" | "1" }
-                ) 
-            | 
+                )
+            |
                 (
                     attribute type { "users" }
                 )
@@ -129,19 +143,19 @@ grammar {
                     attribute type { "ugroups" }
                 )
             ),
-            element items { 
+            element items {
                 element item {
-                    attribute ID { xsd:ID }?, 
-                    attribute label { xsd:string }, 
+                    attribute ID { xsd:ID }?,
+                    attribute label { xsd:string },
                     attribute is_hidden { "0" | "1" }?,
                     element description { xsd:string }?
                 }*
             }?,
-            element decorators { 
+            element decorators {
                 element decorator {
-                    attribute REF { xsd:IDREF }, 
-                    attribute r { xsd:int }, 
-                    attribute g { xsd:int }, 
+                    attribute REF { xsd:IDREF },
+                    attribute r { xsd:int },
+                    attribute g { xsd:int },
                     attribute b { xsd:int }
                 }*
             }?,
@@ -150,8 +164,8 @@ grammar {
                     attribute REF { xsd:IDREF }
                 }*
             }?
-        } 
-        
+        }
+
     transitionContent =
         element from_id {
             attribute REF { xsd:string }
@@ -177,23 +191,77 @@ grammar {
                 element field_id {
                     attribute REF { xsd:IDREF }
                 }
+            }*,
+            element postaction_ci_build {
+                attribute job_url { xsd:string }
             }*
-        }*,
+        }?,
+        (
+            (
+                conditionPermissionsContent
+            )
+        |
+            (
+                element conditions {
+                    element condition {
+                        attribute type { "perms" },
+                        conditionPermissionsContent
+                    }?,
+                    element condition {
+                        attribute type { "notempty" },
+                        conditionFieldNotEmptyContent
+                    }?
+                }?
+            )
+        )
+
+    conditionPermissionsContent =
         element permissions {
             element permission {
                 attribute ugroup { xsd:string }
             }*
-        }*
-        
-        
-    semanticContent = 
+        }
+
+    conditionFieldNotEmptyContent =
+        element field {
+            attribute REF { xsd:IDREF }
+        }
+
+    listRuleContent =
+        (
+            element source_field {
+                attribute REF { xsd:IDREF }
+            },
+            element target_field {
+                attribute REF { xsd:IDREF }
+            },
+            element source_value {
+                attribute REF { xsd:IDREF }
+            },
+            element target_value {
+                attribute REF { xsd:IDREF }
+            }
+        )
+    dateRuleContent =
+        (
+            element source_field {
+                attribute REF { xsd:IDREF }
+            },
+            element target_field {
+                attribute REF { xsd:IDREF }
+            },
+            element comparator {
+                attribute type { xsd:string }
+            }
+        )
+    semanticContent =
         (
             (
                 attribute type { "title" },
                 element shortname {xsd:string},
                 element label {xsd:string},
                 element description {xsd:string},
-                element field { 
+                element field {
                     attribute REF { xsd:IDREF }
                 }
             )
@@ -203,11 +271,11 @@ grammar {
                 element shortname {xsd:string},
                 element label {xsd:string},
                 element description {xsd:string},
-                element field { 
+                element field {
                     attribute REF { xsd:IDREF }
                 },
-                element open_values { 
-                    element open_value { 
+                element open_values {
+                    element open_value {
                         attribute REF { xsd:IDREF }
                     }*
                 }
@@ -218,57 +286,57 @@ grammar {
                 element shortname {xsd:string},
                 element label {xsd:string},
                 element description {xsd:string},
-                element field { 
+                element field {
                     attribute REF { xsd:IDREF }
                 }
             )
          |
             (
                 attribute type { "tooltip" },
-                element field { 
+                element field {
                     attribute REF { xsd:IDREF }
                 }*
             )
         )
-        
-        
-    reportContent = 
+
+
+    reportContent =
         # these attributes should be optional and have  default values
         attribute is_default { "0" | "1" }?, # default is false
         attribute is_query_displayed { "0" | "1" }?, # defaout is true
-        # these ids are initial ids of the exported report 
+        # these ids are initial ids of the exported report
         attribute id { xsd:int }?,
         attribute tracker_id { xsd:int }?,
         attribute current_renderer_id { xsd:int }?,
         attribute user_id { xsd:int }?,
         attribute parent_report_id { xsd:int }?,
-        
+
         element name { xsd:string },
         element description { xsd:string }?,
-        
+
         element criterias {
             element criteria { criteriaContent }*
         },
         element renderers {
             element renderer { rendererContent }*
         }
-        
-    criteriaContent = 
+
+    criteriaContent =
         attribute rank { xsd:int },
         # these attributes should be optional and have  default values
         attribute is_advanced { "0" | "1" }?, # default is false
         # these ids are initial ids of the exported report
         attribute id { xsd:int }?,
-        attribute report { xsd:int }?, 
-        
-        element field { 
+        attribute report { xsd:int }?,
+
+        element field {
             attribute REF { xsd:IDREF }
         }
-    
-    rendererContent = 
-        element name { xsd:string }, 
+
+    rendererContent =
+        element name { xsd:string },
         element description { xsd:string }?,
-        attribute id { xsd:int }?, 
+        attribute id { xsd:int }?,
         attribute report { xsd:int }?,
         attribute rank { xsd:int },
         (
@@ -287,7 +355,7 @@ grammar {
                     }*
                 }?
             )
-        | 
+        |
             (
                 attribute type { "plugin_graphontrackersv5" },
                 element charts {
@@ -309,7 +377,7 @@ grammar {
                                 attribute summary { xsd:IDREF }?,
                                 attribute percentage { xsd:IDREF }?
                             )
-                        | 
+                        |
                             (
                                 attribute type { "pie" },
                                 attribute base { xsd:IDREF }?
@@ -344,5 +412,5 @@ grammar {
                 attribute type { "plugin_cardwall" },
                 attribute field_id { xsd:IDREF }?
             )
-        )        
+        )
 }

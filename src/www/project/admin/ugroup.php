@@ -14,6 +14,8 @@
 require_once('pre.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/CSRFSynchronizerToken.class.php');
+require_once('common/project/UGroupBinding.class.php');
+require_once 'common/project/UGroup.class.php';
 
 function format_html_row($row, &$row_num) {
     echo "<tr class=\"". util_get_alt_row_color($row_num++) ."\">\n";
@@ -88,11 +90,11 @@ echo '
 ';
 
 $title_arr=array();
-$title_arr[100]=$Language->getText('project_admin_ugroup','ug_name');
-$title_arr[200]=$Language->getText('project_admin_editugroup','desc');
-$title_arr[300]=$Language->getText('project_admin_ugroup','members');
-$title_arr[400]=$Language->getText('project_admin_servicebar','del?');
-$em->processEvent('ugroup_table_title', array('html_array' => &$title_arr));
+$title_arr[100] = $Language->getText('project_admin_ugroup', 'ug_name');
+$title_arr[200] = $GLOBALS['Language']->getText('project_ugroup_binding', 'binding');
+$title_arr[300] = $Language->getText('project_admin_editugroup', 'desc');
+$title_arr[400] = $Language->getText('project_admin_ugroup', 'members');
+$title_arr[500] = $Language->getText('project_admin_servicebar', 'del?');
 ksort($title_arr);
 echo "<tr class=\"boxtable\">\n";
 foreach($title_arr as $title) {
@@ -105,10 +107,10 @@ $result = db_query("SELECT * FROM ugroup WHERE group_id=100 ORDER BY ugroup_id")
 while ($row = db_fetch_array($result)) {
     if ($project->usesDocman() || ($row['name'] != 'ugroup_document_tech_name_key' && $row['name'] != 'ugroup_document_admin_name_key')) {
         $ugroupRow[100] = util_translate_name_ugroup($row['name']).' *';
-        $ugroupRow[200] = util_translate_desc_ugroup($row['description']);
-        $ugroupRow[300] = array('value' => '-', 'html_attrs' => 'align="center"');
+        $ugroupRow[200] = array('value' => '-', 'html_attrs' => 'align="center"');
+        $ugroupRow[300] = util_translate_desc_ugroup($row['description']);
         $ugroupRow[400] = array('value' => '-', 'html_attrs' => 'align="center"');
-        $em->processEvent('ugroup_table_row', array('row' => $row, 'html_array' => &$ugroupRow));
+        $ugroupRow[500] = array('value' => '-', 'html_attrs' => 'align="center"');
         ksort($ugroupRow);
         format_html_row($ugroupRow, $row_num);
     }
@@ -119,23 +121,30 @@ while ($row = db_fetch_array($result)) {
 if ($group_id != 100) {
   $result = db_query("SELECT * FROM ugroup WHERE group_id=$group_id ORDER BY name");
   if (db_numrows($result) > 0) {
-    
+    $ugroupUserDao = new UGroupUserDao();
+    $ugroupManager = new UGroupManager(new UGroupDao());
+    $uGroupBinding = new UGroupBinding($ugroupUserDao, $ugroupManager);
     while ($row = db_fetch_array($result)) {
-        $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']);
-        $ugroupRow[200] = util_translate_desc_ugroup($row['description']);
+        $ugroupRow[100] = '<a href="/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=edit">'.util_translate_name_ugroup($row['name']).'</a>';
+        $bindingContent = '<a href="/project/admin/ugroup_binding.php?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'" >'.$uGroupBinding->getLinkTitle($row['ugroup_id']).'</a>';
+        $uGroup         = new UGroup(array('ugroup_id' => $row['ugroup_id']));
+        if (!$uGroup->isBound()) {
+            $em->processEvent('ugroup_table_row', array('row' => $row, 'html' => &$bindingContent));
+        }
+        $ugroupRow[200] = array('value' => $bindingContent, 'html_attrs' => 'align="center"');
+        $ugroupRow[300] = util_translate_desc_ugroup($row['description']);
         $res2=db_query("SELECT count(*) FROM ugroup_user WHERE ugroup_id=".$row['ugroup_id']);
         $nb_members=db_result($res2,0,0);
         if ($nb_members) {
-            $ugroupRow[300] = array('value' => $nb_members, 'html_attrs' => 'align="center"');
+            $ugroupRow[400] = array('value' => $nb_members, 'html_attrs' => 'align="center"');
         } else {
-            $ugroupRow[300] = array('value' => 0, 'html_attrs' => 'align="center"');
+            $ugroupRow[400] = array('value' => 0, 'html_attrs' => 'align="center"');
         }
         $token =  $csrf->getTokenName().'='.$csrf->getToken();
         $link = '?group_id='.$group_id.'&ugroup_id='.$row['ugroup_id'].'&func=delete&'.$token;
         $warn = $Language->getText('project_admin_ugroup','del_ug');
         $alt  = $Language->getText('project_admin_servicebar','del');
-        $ugroupRow[400] = html_trash_link($link, $warn, $alt);
-        $em->processEvent('ugroup_table_row', array('row' => $row, 'html_array' => &$ugroupRow));
+        $ugroupRow[500] = html_trash_link($link, $warn, $alt);
         ksort($ugroupRow);
         format_html_row($ugroupRow, $row_num);
     }

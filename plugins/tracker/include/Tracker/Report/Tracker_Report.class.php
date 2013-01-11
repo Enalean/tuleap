@@ -897,7 +897,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
         return $this->tracker;
     }
-    
+
+    public function setTracker(Tracker $tracker) {
+        $this->tracker    = $tracker;
+        $this->tracker_id = $tracker->getId();
+    }
+
     /**
      * hide or show the criteria
      */
@@ -1291,15 +1296,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         //Delete criteria in the db
         $this->deleteAllCriteria();
 
-        foreach($this->report_session->getCriteria() as $key=>$session_criterion) {
-            if ( !empty($session_criterion['is_removed']) ) {
-                continue;
+        $session_criteria = $this->report_session->getCriteria();
+        if (is_array($session_criteria)) {
+            foreach($session_criteria as $key=>$session_criterion) {
+                if ( !empty($session_criterion['is_removed']) ) {
+                    continue;
+                }
+                $c  = $this->criteria[$key];
+                $id = $this->addCriteria($c);
+                $c->setId($id);
+                $c->updateValue($session_criterion['value']);
             }
-            $c  = $this->criteria[$key];
-            $id = $this->addCriteria($c);
-            $c->setId($id);
-            $c->updateValue($session_criterion['value']);
-        }       
+        }
     }
 
     /**
@@ -1408,7 +1416,22 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $renderer->exportToXML($grandchild, $xmlMapping);
         }
     }
-    
+
+    /**
+     * Convert the current report to its SOAP representation
+     *
+     * @return Array
+     */
+    public function exportToSoap() {
+        return array(
+            'id'          => (int)$this->id,
+            'name'        => (string)$this->name,
+            'description' => (string)$this->description,
+            'user_id'     => (int)$this->user_id,
+            'is_default'  => (bool)$this->is_default,
+        );
+    }
+
     protected $dao;
     /**
      * @return Tracker_ReportDao

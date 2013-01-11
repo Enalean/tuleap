@@ -23,7 +23,8 @@ session_require(array('group'=>$group_id,'admin_flags'=>'A'));
 $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
 
 if ($ugroup_id) {
-    $ugroupUpdateUsersAllowed = true;
+    $uGroup = new UGroup(array('ugroup_id' => $ugroup_id));
+    $ugroupUpdateUsersAllowed = !$uGroup->isBound();
     $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroup_id, 'allowed' => &$ugroupUpdateUsersAllowed));
     if ($ugroupUpdateUsersAllowed) {
         $res = ugroup_db_get_ugroup($ugroup_id);

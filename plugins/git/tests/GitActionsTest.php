@@ -49,20 +49,6 @@ class GitActionsTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
     }
 
-    function testRepoManagement() {
-        $gitAction = new GitActionsTestVersion();
-        $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-        $git = new MockGit($this);
-        $gitAction->setController($git);
-        $gitRepository = new MockGitRepository($this);
-        $gitAction->setReturnValue('getGitRepository', $gitRepository);
-
-        $git->expectOnce('addError', array('actions_params_error'));
-
-        $this->assertFalse($gitAction->repoManagement(1, null));
-        $this->assertTrue($gitAction->repoManagement(1, 1));
-    }
-
     function testNotificationUpdatePrefixFail() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
@@ -460,7 +446,14 @@ class GitActions_Delete_Tests extends TuleapTestCase {
 
         stub($git_repository_factory)->getRepositoryById($this->repository_id)->returns($this->repository);
 
-        $this->git_actions = new GitActions($controler, $this->system_event_manager, $git_repository_factory, mock('GitRepositoryManager'));
+        $this->git_actions = new GitActions(
+            $controler,
+            $this->system_event_manager,
+            $git_repository_factory,
+            mock('GitRepositoryManager'),
+            mock('Git_RemoteServer_GerritServerFactory'),
+            mock('Git_Driver_Gerrit')
+        );
     }
 
     public function itMarksRepositoryAsDeleted() {
@@ -501,7 +494,14 @@ class GitActions_ForkTests extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->manager = mock('GitRepositoryManager');
-        $this->actions = new GitActions(mock('Git'), mock('SystemEventManager'), mock('GitRepositoryFactory'), $this->manager);
+        $this->actions = new GitActions(
+            mock('Git'),
+            mock('SystemEventManager'),
+            mock('GitRepositoryFactory'),
+            $this->manager,
+            mock('Git_RemoteServer_GerritServerFactory'),
+            mock('Git_Driver_Gerrit')
+        );
     }
 
     public function itDelegatesForkToGitManager() {
@@ -512,10 +512,11 @@ class GitActions_ForkTests extends TuleapTestCase {
         $user         = mock('User');
         $response     = mock('Layout');
         $redirect_url = '/stuff';
+        $forkPermissions = array();
 
-        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope));
+        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope, $forkPermissions));
 
-        $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url);
+        $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url, $forkPermissions);
     }
 }
 
@@ -582,6 +583,61 @@ class GitActions_ProjectPrivacyTest extends TuleapTestCase {
     
     private function changeProjectRepositoriesAccess($project_id, $is_private) {
         return GitActions::changeProjectRepositoriesAccess($project_id, $is_private, $this->dao, $this->factory);
+    }
+}
+
+class GitActions_migrateToGerritTest extends TuleapTestCase {
+    /** @var GitActions */
+    private $actions;
+    /** @var SystemEventManager */
+    private $em;
+
+    /** @var int */
+    private $unexsting_server_id = 666;
+
+    /** @var int */
+    private $server_id = 888;
+
+    public function setUp() {
+        parent::setUp();
+        $this->manager        = mock('GitRepositoryManager');
+        $this->em             = mock('SystemEventManager');
+        $this->gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
+        $server               = mock('Git_RemoteServer_GerritServer');
+
+        stub($this->gerrit_factory)->getServerById($this->server_id)->returns($server);
+        stub($this->gerrit_factory)->getServerById($this->unexsting_server_id)
+            ->throws(new Git_RemoteServer_NotFoundException($this->unexsting_server_id));
+
+        $this->actions = new GitActions(
+            mock('Git'),
+            $this->em,
+            mock('GitRepositoryFactory'),
+            $this->manager,
+            $this->gerrit_factory,
+            mock('Git_Driver_Gerrit')
+        );
+    }
+
+    public function itDoesNothingWhenGivenServerDoesNotExist() {
+        $repo = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $this->em->expectNever('createEvent');
+        $this->actions->migrateToGerrit($repo, $this->unexsting_server_id);
+    }
+
+    public function itDoesNothingWhenItIsntMigratable() {
+        $repo = stub('GitRepository')->canMigrateToGerrit()->returns(false);
+        $this->em->expectNever('createEvent');
+        $this->actions->migrateToGerrit($repo, 0);
+    }
+
+    public function itCreatesASystemEvent() {
+        $repo = stub('GitRepository')->canMigrateToGerrit()->returns(true);
+        $server_id = $this->server_id;
+        $repo_id   = 456;
+        stub($repo)->getId()->returns($repo_id);
+        $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, "$repo_id::$server_id", SystemEvent::PRIORITY_HIGH));
+        $this->actions->migrateToGerrit($repo, $server_id);
     }
 }
 ?>

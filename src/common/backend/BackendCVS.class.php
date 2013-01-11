@@ -30,14 +30,6 @@ class BackendCVS extends Backend {
     protected $UseCVSNT;
 
     /**
-     * Constructor
-     */
-    protected function __construct() {
-        parent::__construct();
-    }
-
-
-    /**
      * Return an instance of ServiceDao
      *
      * @return ServiceDao

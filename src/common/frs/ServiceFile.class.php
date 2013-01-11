@@ -44,13 +44,14 @@ class ServiceFile extends Service {
     * @return arr[title], arr[content]
     */
     function getSummaryPageContent() {
-        $hp = Codendi_HTMLPurifier::instance();
-        $ret = array(
+        $hp   = Codendi_HTMLPurifier::instance();
+        $user = UserManager::instance()->getCurrentUser();
+        $ret  = array(
             'title' => $GLOBALS['Language']->getText('include_project_home','latest_file_releases'),
             'content' => ''
         );
         
-        $packages = $this->_getPackagesForUser(user_getid());
+        $packages = $this->_getPackagesForUser($user->getId());
         if (count($packages)) {
             $ret['content'] .= '
                 <table cellspacing="1" cellpadding="5" width="100%" border="0">
@@ -70,7 +71,7 @@ class ServiceFile extends Service {
             $fmmf = new FileModuleMonitorFactory();
             foreach($packages as $package) {
                 // the icon is different whether the package is monitored or not
-                if ($fmmf->isMonitoring($package['package_id'])) {
+                if ($fmmf->isMonitoring($package['package_id'], $user, false)) {
                     $monitor_img = $GLOBALS['HTML']->getImage("ic/notification_stop.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home', 'stop_monitoring'), 'title'=>$GLOBALS['Language']->getText('include_project_home', 'stop_monitoring')));
                 } else {
                     $monitor_img = $GLOBALS['HTML']->getImage("ic/notification_start.png",array('alt'=>$GLOBALS['Language']->getText('include_project_home', 'start_monitoring'), 'title'=>$GLOBALS['Language']->getText('include_project_home', 'start_monitoring')));
@@ -80,7 +81,7 @@ class ServiceFile extends Service {
                   <TR class="boxitem">
                   <TD>
                     <B>' .  $hp->purify(util_unconvert_htmlspecialchars($package['package_name']), CODENDI_PURIFIER_CONVERT_HTML)  . '</B>&nbsp;
-                    <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '">'.
+                    <a HREF="/file/filemodule_monitor.php?filemodule_id=' . $package['package_id'] . '&group_id='.$this->getGroupId().'">'.
                         $monitor_img . '     
                     </a>
                   </TD>';

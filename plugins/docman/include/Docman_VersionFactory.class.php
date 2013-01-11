@@ -147,6 +147,22 @@ class Docman_VersionFactory {
     }
 
     /**
+     * Invoque ''archive deleted item' hook in order to make a backup of a given item version.
+     * This method should be used whithin the deleted docman version purge process
+     *
+     * @param Docman_Version $version Deleted docman item version
+     *
+     * @return Void
+     */
+    public function archiveBeforePurge($version) {
+        $item    = $this->_getItemFactory()->getItemFromDb($version->getItemId(), array('ignore_deleted' => true));
+        $prefix  = $item->getGroupId().'_i'.$version->getItemId().'_v'.$version->getNumber();
+        $params  = array('source_path'    => $version->getPath(),
+                         'archive_prefix' => $prefix);
+        $this->_getEventManager()->processEvent('archive_deleted_item', $params);
+    }
+
+    /**
      * Physically remove the given version from the filesystem
      *
      * @param Docman_Version $version
@@ -154,6 +170,8 @@ class Docman_VersionFactory {
      * @return Boolean
      */
     public function purgeDeletedVersion($version) {
+        $this->archiveBeforePurge($version);
+
         if (file_exists($version->getPath()) && $this->physicalDeleteVersion($version->getPath())) {
             $dao = $this->_getVersionDao();
             return $dao->setPurgeDate($version->getId(), time());

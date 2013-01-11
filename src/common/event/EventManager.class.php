@@ -27,9 +27,14 @@ require_once('Event.class.php');
  */
 class EventManager {
     
+    /**
+     * @const string The callback to call if everything else fail
+     */
+    const DEFAULT_CALLBACK = 'CallHook';
+
     var $listeners;
     
-    function EventManager() {
+    public function EventManager() {
         $this->listeners = new PrioritizedMultiMap();
     }
     
@@ -66,30 +71,37 @@ class EventManager {
         return self::$instance;
     }
     
-    function addListener($event, $listener, $callback, $recallEvent, $priority) {
+    public function addListener($event, $listener, $callback, $recallEvent, $priority) {
         $entry = array();
         $entry['listener']    = $listener;
         $entry['callback']    = $callback;
         $entry['recallEvent'] = $recallEvent;
         $this->listeners->put( $event, $entry, $priority);
     }
-    
-    function processEvent($event, $params) {
-        $listeners = $this->listeners->get( $event);
+
+    public function processEvent($event, $params) {
+        $listeners = $this->listeners->get($event);
         if ($listeners) {
             $it = $listeners->iterator();
             while($it->valid()) {
-                $entry = $it->current();
-                $listener    = $entry['listener'];
-                $callback    = $entry['callback'];
-                $recallEvent = $entry['recallEvent'];
-                if ($recallEvent) {
-                    $listener->$callback($event, $params);
-                } else {
-                    $listener->$callback($params);
-                }
+                $this->processEventOnListener($event, $params, $it->current());
                 $it->next();
             }
+        }
+    }
+
+    private function processEventOnListener($event, $params, array $entry) {
+        $listener = $entry['listener'];
+        $callback = $entry['callback'];
+        $recallEvent = $entry['recallEvent'];
+        if (!method_exists($listener, $callback)) {
+            $callback    = self::DEFAULT_CALLBACK;
+            $recallEvent = true;
+        }
+        if ($recallEvent) {
+            $listener->$callback($event, $params);
+        } else {
+            $listener->$callback($params);
         }
     }
 }

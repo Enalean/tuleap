@@ -71,24 +71,25 @@ class GitRepositoryManager {
      * @param  GitRepository $repository
      * @throws Exception
      */
-    public function create(GitRepository $repository) {
-        if (!$repository->isNameValid($repository->getName())) {
-            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($repository->getBackend()->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
+    public function create(GitRepository $repository, GitRepositoryCreator $creator) {
+        if (!$creator->isNameValid($repository->getName())) {
+            throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_input_format_error', array($creator->getAllowedCharsInNamePattern(), GitDao::REPO_NAME_MAX_LENGTH)));
         }
         $this->assertRepositoryNameNotAlreadyUsed($repository);
-        $repository->getBackend()->createReference($repository);
+        $creator->createReference($repository);
     }
 
     /**
      * Fork a repository
      *
-     * @param GitRepository $repository The repo to fork
-     * @param Project       $to_project The project to create the repo in
-     * @param User          $user       The user who does the fork (she will own the clone)
-     * @param String        $namespace  The namespace to put the repo in (might be emtpy)
-     * @param String        $scope      Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     * @param GitRepository $repository      The repo to fork
+     * @param Project       $to_project      The project to create the repo in
+     * @param User          $user            The user who does the fork (she will own the clone)
+     * @param String        $namespace       The namespace to put the repo in (might be emtpy)
+     * @param String        $scope           Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     * @param Array         $forkPermissions Permissions to be applied for the new repository
      */
-    public function fork(GitRepository $repository, Project $to_project, User $user, $namespace, $scope) {
+    public function fork(GitRepository $repository, Project $to_project, User $user, $namespace, $scope, array $forkPermissions) {
         $clone = clone $repository;
         $clone->setProject($to_project);
         $clone->setCreator($user);
@@ -100,7 +101,8 @@ class GitRepositoryManager {
         $clone->setScope($scope);
 
         $this->assertRepositoryNameNotAlreadyUsed($clone);
-        $repository->getBackend()->fork($repository, $clone);
+        //TODO use creator
+        $repository->getBackend()->fork($repository, $clone, $forkPermissions);
     }
 
     private function assertRepositoryNameNotAlreadyUsed(GitRepository $repository) {
@@ -112,20 +114,21 @@ class GitRepositoryManager {
     /**
      * For several repositories at once
      *
-     * @param array         $repositories Array of GitRepositories to fork
-     * @param Project       $to_project   The project to create the repo in
-     * @param User          $user         The user who does the fork (she will own the clone)
-     * @param String        $namespace    The namespace to put the repo in (might be emtpy)
-     * @param String        $scope        Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     * @param array         $repositories    Array of GitRepositories to fork
+     * @param Project       $to_project      The project to create the repo in
+     * @param User          $user            The user who does the fork (she will own the clone)
+     * @param String        $namespace       The namespace to put the repo in (might be emtpy)
+     * @param String        $scope           Either GitRepository::REPO_SCOPE_INDIVIDUAL or GitRepository::REPO_SCOPE_PROJECT
+     * @param array         $forkPermissions Permissions to be applied for the new repository
      *
      * @return Boolean
      *
      * @throws Exception
      */
-    public function forkRepositories(array $repositories, Project $to_project, User $user, $namespace, $scope) {
+    public function forkRepositories(array $repositories, Project $to_project, User $user, $namespace, $scope, array $forkPermissions) {
         $repos = array_filter($repositories);
         if (count($repos) > 0 && $this->isNamespaceValid($repos[0], $namespace)) {
-            return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project);
+            return $this->forkAllRepositories($repos, $user, $namespace, $scope, $to_project, $forkPermissions);
         }
         throw new Exception($GLOBALS['Language']->getText('plugin_git', 'actions_no_repository_forked'));
     }
@@ -134,7 +137,8 @@ class GitRepositoryManager {
         if ($namespace) {
             $ns_chunk = explode('/', $namespace);
             foreach ($ns_chunk as $chunk) {
-                if (!$repository->isNameValid($chunk)) {
+                //TODO use creator
+                if (!$repository->getBackend()->isNameValid($chunk)) {
                     throw new Exception($GLOBALS['Language']->getText('plugin_git', 'fork_repository_invalid_namespace'));
                 }
             }
@@ -142,12 +146,12 @@ class GitRepositoryManager {
         return true;
     }
 
-    private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project) {
+    private function forkAllRepositories(array $repos, User $user, $namespace, $scope, Project $project, array $forkPermissions) {
         $forked = false;
         foreach ($repos as $repo) {
             try {
                 if ($repo->userCanRead($user)) {
-                    $this->fork($repo, $project, $user, $namespace, $scope);
+                    $this->fork($repo, $project, $user, $namespace, $scope, $forkPermissions);
                     $forked = true;
                 }
             } catch (GitRepositoryAlreadyExistsException $e) {
@@ -203,6 +207,8 @@ class GitRepositoryManager {
     private function stripFinalDotGit($path) {
         return substr($path, 0, strrpos($path, '.git'));
     }
+
+
 }
 
 ?>

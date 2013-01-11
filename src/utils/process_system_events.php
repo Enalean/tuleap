@@ -68,8 +68,18 @@ if (file_put_contents($pathToPidFile,getmypid()) === FALSE) {
 }
 
 // Now start the real script.
-require_once('pre.php');
-$system_event_manager->processEvents();
+require_once 'pre.php';
+require_once 'common/system_event/SystemEventProcessor.class.php';
+
+$processor = new SystemEventProcessor(
+    $system_event_manager,
+    new SystemEventDao(),
+    Backend::instance('Aliases'),
+    Backend::instance('CVS'),
+    Backend::instance('SVN'),
+    Backend::instance('System')
+);
+$processor->process();
 
 // Remove PID file when finished.
 unlink($pathToPidFile);

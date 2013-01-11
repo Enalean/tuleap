@@ -26,6 +26,7 @@ require_once('UserNotExistException.class.php');
 require_once('UserNotAuthorizedException.class.php');
 require_once('UserNotActiveException.class.php');
 require_once('SessionNotCreatedException.class.php');
+require_once('User_SSHKeyValidator.class.php');
 
 class UserManager {
     
@@ -339,7 +340,14 @@ class UserManager {
         }
         return $this->_currentuser;
     }
-    
+
+    /**
+     * @return Array of User
+     */
+    public function getUsersWithSshKey() {
+        return $this->getDao()->searchSSHKeys()->instanciateWith(array($this, 'getUserInstanceFromRow'));
+    }
+
     /**
      * Logout the current user
      * - remove the cookie
@@ -657,24 +665,43 @@ class UserManager {
      * Update db entry of 'user' table with values in object
      * @param User $user
      */
-    function updateDb($user) {
-    	if (!$user->isAnonymous()) {
-    		$userRow = $user->toRow();
-    		if ($user->getPassword() != '') {
+    public function updateDb($user) {
+        if (!$user->isAnonymous()) {
+            $userRow = $user->toRow();
+            if ($user->getPassword() != '') {
                 if (md5($user->getPassword()) != $user->getUserPw()) {
-        			// Update password
-        			$userRow['password'] = $user->getPassword(); 
+                    // Update password
+                    $userRow['password'] = $user->getPassword();
                 }
-    		}
-    		$result = $this->getDao()->updateByRow($userRow);
-    		if ($result && ($user->isSuspended() || $user->isDeleted())) {
-    		    $this->getDao()->deleteAllUserSessions($user->getId());
-    		}
-    		return $result;
-    	}
-    	return false;
+            }
+            $result = $this->getDao()->updateByRow($userRow);
+            if ($result && ($user->isSuspended() || $user->isDeleted())) {
+                $this->getDao()->deleteAllUserSessions($user->getId());
+            }
+            return $result;
+        }
+        return false;
     }
-    
+
+    /**
+     * Update ssh keys for a user
+     *
+     * Should probably be merged with updateDb but I don't know the impact of
+     * validating keys each time we update a user
+     *
+     * @param User $user
+     * @param String $keys
+     */
+    public function updateUserSSHKeys(User $user, $keys) {
+        $ssh_validator = new User_SSHKeyValidator($this, $this->_getEventManager());
+        $valid_keys = $ssh_validator->filterValidKeys($keys);
+        $user->setAuthorizedKeys(implode('###', $valid_keys));
+        if ($this->updateDb($user)) {
+            $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('account_editsshkeys', 'update_filesystem'));
+            $this->_getEventManager()->processEvent(Event::EDIT_SSH_KEYS, array('user_id' => $user->getId()));
+        }
+    }
+
     /**
      * Assign to given user the next available unix_uid
      * 
@@ -852,6 +879,7 @@ class UserManager {
         $nonUserArray = array();
         foreach($mailArray as $key => $ident) {
             $ident = trim($ident);
+            $user  = null;
             if(!empty($ident)) {
                 if (validate_email($ident)) {
                     try {

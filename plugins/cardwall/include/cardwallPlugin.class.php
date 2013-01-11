@@ -47,19 +47,19 @@ class cardwallPlugin extends Plugin {
 
     public function getHooksAndCallbacks() {
         if (defined('TRACKER_BASE_URL')) {
-            $this->_addHook('cssfile',                           'cssFile',                           false);
-            $this->_addHook('javascript_file',                   'jsFile',                            false);
-            $this->_addHook('tracker_report_renderer_types' ,    'tracker_report_renderer_types',     false);
-            $this->_addHook('tracker_report_renderer_instance',  'tracker_report_renderer_instance',  false);
-            $this->_addHook(TRACKER_EVENT_ADMIN_ITEMS,           'tracker_event_admin_items',         false);
-            $this->_addHook(TRACKER_EVENT_PROCESS,               'tracker_event_process',             false);
-            $this->_addHook(TRACKER_EVENT_TRACKERS_DUPLICATED,   'tracker_event_trackers_duplicated', false);
-            $this->_addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION, 'tracker_event_build_artifact_form_action', false);
-            $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
+            $this->addHook('cssfile');
+            $this->addHook('javascript_file');
+            $this->addHook('tracker_report_renderer_types');
+            $this->addHook('tracker_report_renderer_instance');
+            $this->addHook(TRACKER_EVENT_ADMIN_ITEMS);
+            $this->addHook(TRACKER_EVENT_PROCESS);
+            $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
+            $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
+            $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
-                $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
-                $this->_addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT, 'agiledashboard_event_milestone_selector_redirect', false);
+                $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+                $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
             }
         }
         return parent::getHooksAndCallbacks();
@@ -151,7 +151,7 @@ class cardwallPlugin extends Plugin {
         return $this->pluginInfo;
     }
 
-    function cssFile($params) {
+    function cssfile($params) {
         // Only show the stylesheet if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
         if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
@@ -163,7 +163,7 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    function jsFile($params) {
+    function javascript_file($params) {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
         if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
@@ -228,7 +228,12 @@ class cardwallPlugin extends Plugin {
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             require_once 'Pane.class.php';
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);
-            $params['panes'][] = new Cardwall_Pane($params['milestone'], $this->getPluginInfo()->getPropVal('display_qr_code'), $config, $params['user']);
+            $params['panes'][] = new Cardwall_Pane(
+                $params['milestone'],
+                $this->getPluginInfo()->getPropVal('display_qr_code'),
+                $config, $params['user'],
+                $this->getThemePath()
+            );
         }
     }
 

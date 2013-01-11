@@ -36,7 +36,7 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
 
-AutoReqProv: no
+AutoReqProv: no 
 #Prereq: /sbin/chkconfig, /sbin/service
 
 # Package cutting is still a bit a mess so do not force dependency on custmization package yet
@@ -95,7 +95,7 @@ It is meant to be install at the initial setup of the platform and
 recommanded to uninstall it after.
 
 %package core-mailman
-Summary: Mailman component for codendi
+Summary: Mailman component for Tuleap
 Group: Development/Tools
 Version: @@CORE_MAILMAN_VERSION@@
 Release: 1%{?dist}
@@ -112,7 +112,7 @@ Provides: tuleap-core-mailman
 Manage dependencies for Tuleap mailman integration
 
 %package core-subversion
-Summary: Subversion component for codendi
+Summary: Subversion component for Tuleap
 Group: Development/Tools
 Version: @@CORE_SUBVERSION_VERSION@@
 Release: 1%{?dist}
@@ -141,7 +141,7 @@ This module might help server with big subversion usage. mod_mysql + mod_svn
 seems to have memory leak issues.
 
 %package core-cvs
-Summary: CVS component for codendi
+Summary: CVS component for Tuleap
 Group: Development/Tools
 Version: @@CORE_CVS_VERSION@@
 Release: 1%{?dist}
@@ -336,6 +336,58 @@ Requires: %{php_base}-elasticsearch
 %description plugin-fulltextsearch
 Allows documents of the docman to be searched in a full-text manner.
 
+%package plugin-archivedeleteditems
+Summary: Archiving plugin
+Group: Development/Tools
+Version: @@PLUGIN_ARCHIVEDELETEDITEMS_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}
+%if %{PKG_NAME} == codendi_st
+Provides: codendi-plugin-archivedeleteditems = %{version}
+%else
+Provides: tuleap-plugin-archivedeleteditems = %{version}
+%endif
+%description plugin-archivedeleteditems
+Archive deleted items before purging them from filesystem
+
+%package plugin-fusionforge_compat
+Summary: FusionForge Compatibility
+Group: Development/Tools
+Version: @@PLUGIN_FUSIONFORGE_COMPAT_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}
+%description plugin-fusionforge_compat
+Allows some fusionforge plugins to be installed in a Tuleap instance.
+
+%package plugin-doaprdf
+Summary: Doap
+Group: Development/Tools
+Version: @@PLUGIN_DOAPRDF_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}-plugin-fusionforge_compat
+%description plugin-doaprdf
+This plugin provides DOAP RDF documents for projects on /projects URLs with
+content-negociation (application/rdf+xml).
+
+%package plugin-foafprofiles
+Summary: Foaf Profiles
+Group: Development/Tools
+Version: @@PLUGIN_FOAFPROFILES_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}-plugin-fusionforge_compat
+%description plugin-foafprofiles
+This plugin provides FOAFPROFILES for projects user (application/rdf+xml).
+
+%package plugin-admssw
+Summary: Adms.sw
+Group: Development/Tools
+Version: @@PLUGIN_ADMSSW_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}-plugin-doaprdf
+%description plugin-admssw
+This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
+/projects URLs with content-negociation (application/rdf+xml).
+
 #
 ## Themes
 #
@@ -498,6 +550,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} plugins/git/bin/git-ci.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 %{__install} plugins/git/bin/gitolite-suexec-wrapper.sh $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
 
+# Plugin archivedeleteditems
+%{__install} plugins/archivedeleteditems/bin/archive-deleted-items.pl $RPM_BUILD_ROOT/%{APP_LIBBIN_DIR}
+
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 
@@ -607,7 +662,7 @@ fi
 # In any cases fix the context
 /usr/bin/chcon -R root:object_r:httpd_sys_content_t $RPM_BUILD_ROOT/%{APP_DIR} || true
 
-# This adds the proper /etc/rc*.d links for the script that runs the codendi backend
+# This adds the proper /etc/rc*.d links for the script that runs the Tuleap backend
 #/sbin/chkconfig --add %{APP_NAME}
 
 # Restart the services
@@ -897,6 +952,27 @@ fi
 %files plugin-fulltextsearch
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/fulltextsearch
+
+%files plugin-archivedeleteditems
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/archivedeleteditems
+%attr(06755,%{APP_USER},%{APP_USER}) %{APP_LIBBIN_DIR}/archive-deleted-items.pl
+
+%files plugin-fusionforge_compat
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/fusionforge_compat
+
+%files plugin-admssw
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/admssw
+
+%files plugin-doaprdf
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/doaprdf
+
+%files plugin-foafprofiles
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/foafprofiles
 
 #
 # Themes

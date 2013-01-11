@@ -456,6 +456,11 @@ project_admin_utils	verify_dates	Start date must be inferior to end date
 project_admin_utils	from	From
 project_admin_utils	to	To
 project_admin_utils	status	Status changed
+project_admin_utils	ugroup_add_binding	User group binding added
+project_admin_utils	ugroup_remove_binding	Ugroup binding removed
+project_admin_utils	frs_self_add_monitor_package	Add package monitoring to himself
+project_admin_utils	frs_add_monitor_package	Add package monitoring
+project_admin_utils	frs_stop_monitor_package	Stop package monitoring
 #... end of values
 #
 #-----------------------------------------------
@@ -968,3 +973,28 @@ project_privacy	tooltip_public_wo_anon	<p>Project privacy set to <big><strong>pu
 
 project_service	service_not_used	$1 service is not enabled
 project	does_not_exist	The project doesn't exist
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup_binding.php
+#
+project_ugroup_binding	ugroup	User group
+project_ugroup_binding	binding	Binding
+project_ugroup_binding	edit_binding_title	Edit user group binding
+project_ugroup_binding	update_binding	Update binding
+project_ugroup_binding	add_binding	Add binding
+project_ugroup_binding	binding_added	Binding added
+project_ugroup_binding	add_error	Something went wrong when binding user group
+project_ugroup_binding	duplicate_binding_warning	The user group with the id $1 is already defined as binding source
+project_ugroup_binding	binding_removed	User group binding successfully removed
+project_ugroup_binding	remove_error	User group binding not removed
+project_ugroup_binding	current_binding	Current binding
+project_ugroup_binding	binding_sources	User groups bound to this one
+project_ugroup_binding	edit_binding	Edit binding
+project_ugroup_binding	source_project	Source project
+project_ugroup_binding	source_ugroup	Source user group
+project_ugroup_binding	no_binding	This user group is not bound to any other user group
+project_ugroup_binding	remove_binding	Remove current binding
+project_ugroup_binding	current_binded	This user group is bound to $1 in project $2
+project_ugroup_binding	not_source	This user group is not the source of any other user group
+project_ugroup_binding	update_user_not_allowed	Update users is not allowed for the ugroup $1
+project_ugroup_binding	reset_error	Unable to reset ugroup $1
+project_ugroup_binding	clone_error	Unable to clone ugroup $1

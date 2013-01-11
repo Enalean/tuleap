@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'builders/all.php';
+
 require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_File.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_File',
@@ -48,26 +50,38 @@ Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
-    function setUp() {
+abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
+    protected $fixture_dir;
+    protected $attachment_dir;
+    protected $thumbnails_dir;
+    protected $tmp_name;
+    protected $another_tmp_name;
+
+    public function setUp() {
         parent::setUp();
         Config::store();
-        mkdir(dirname(__FILE__) .'/_fixtures/attachments/thumbnails/');
-        $this->tmp_name         = dirname(__FILE__) .'/_fixtures/uploaded_file.txt';
-        $this->another_tmp_name = dirname(__FILE__) .'/_fixtures/another_uploaded_file.txt';
+        $this->fixture_dir    = dirname(__FILE__).'/_fixtures';
+        $this->attachment_dir = $this->fixture_dir.'/attachments';
+        $this->thumbnails_dir = $this->attachment_dir.'/thumbnails';
+        mkdir($this->thumbnails_dir);
+        $this->tmp_name         = $this->fixture_dir.'/uploaded_file.txt';
+        $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
     }
-    
-    function tearDown() {
-        Config::restore();
-        foreach(glob(dirname(__FILE__) .'/_fixtures/attachments/thumbnails/*') as $f) {
+
+    public function tearDown() {
+        foreach(glob($this->thumbnails_dir.'/*') as $f) {
             if ($f != '.' && $f != '..') {
                 unlink($f);
             }
         }
-        rmdir(dirname(__FILE__) .'/_fixtures/attachments/thumbnails');
+        rmdir($this->thumbnails_dir);
+        Config::restore();
         parent::tearDown();
     }
     
+}
+
+class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_BaseTest {
     function testGetChangesetValue() {
         $fileinfo_dao = new MockTracker_FileInfoDao();
         $fi_dar = new MockDataAccessResult();
@@ -143,15 +157,7 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $this->assertNull($f->getSoapAvailableValues());
     }
-    
-    function testGetFieldData() {
-        $file_field = new Tracker_FormElement_Field_FileTestVersion();
-        $this->assertNotNull($file_field->getFieldData('/var/lib/codendi/ftp/users/my_file.iso'));
-        $this->assertIdentical(array(), $file_field->getFieldData('/usr/share/codendi/VERSION'));
-        $this->assertNotNull($file_field->getFieldData(null));
-        $this->assertIdentical(array(), $file_field->getFieldData(null));
-    }
-    
+
     function test_augmentDataFromRequest_null() {
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $f->setReturnValue('getSubmittedInfoFromFILES', null);
@@ -414,54 +420,7 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
         $this->assertNull($f->augmentDataFromRequest($fields_data));
         $this->assertEqual($fields_data[66][0]['description'], 'The description of the file');
     }
-    
-    function test_createThumbnail() {
-        $f = new Tracker_FormElement_Field_FileTestVersion();
-        $thumb_png = dirname(__FILE__) .'/_fixtures/attachments/thumbnails/66';
-        $this->assertFalse(file_exists($thumb_png));
-        $f->createThumbnail(66, dirname(__FILE__) .'/_fixtures/attachments/', dirname(__FILE__) .'/_fixtures/attachments/logo.png');
-        $this->assertTrue(file_exists($thumb_png));
-        $this->assertEqual(getimagesize($thumb_png), array(
-            150,
-            55,
-            IMAGETYPE_PNG,
-            'width="150" height="55"',
-            'bits' => 8,
-            'mime' => 'image/png'
-        ));
-        
-        $thumb_gif = dirname(__FILE__) .'/_fixtures/attachments/thumbnails/111';
-        $this->assertFalse(file_exists($thumb_gif));
-        $f->createThumbnail(111, dirname(__FILE__) .'/_fixtures/attachments/', dirname(__FILE__) .'/_fixtures/attachments/logo.gif');
-        $this->assertTrue(file_exists($thumb_gif));
-        $this->assertEqual(getimagesize($thumb_gif), array(
-            150,
-            55,
-            IMAGETYPE_GIF,
-            'width="150" height="55"',
-            'bits' => 8,
-            'channels' => 3,
-            'mime' => 'image/gif'
-        ));
-        
-        /* TODO: add suport for jpeg 
-        
-        $thumb_jpg = dirname(__FILE__) .'/_fixtures/attachments/thumbnails/421';
-        $this->assertFalse(file_exists($thumb_jpg));
-        $f->createThumbnail(421, dirname(__FILE__) .'/_fixtures/attachments/', dirname(__FILE__) .'/_fixtures/attachments/logo.jpg');
-        $this->assertTrue(file_exists($thumb_jpg));
-        $this->assertEqual(getimagesize($thumb_jpg), array(
-            150,
-            55,
-            IMAGETYPE_JPEG,
-            'width="150" height="55"',
-            'bits' => 8,
-            'channels' => 3,
-            'mime' => 'image/jpg'
-        ));
-        /**/
-    }
-    
+
     function test_isValid_not_filled() {
         $artifact = new MockTracker_Artifact();
         $value = array(
@@ -671,10 +630,362 @@ class Tracker_FormElement_Field_FileTest extends TuleapTestCase {
     }
     
     function testGetRootPath() {
-        Config::load(dirname(__FILE__).'/_fixtures/local.inc');
+        Config::set('sys_data_dir', dirname(__FILE__) .'/data');
         $f = new Tracker_FormElement_Field_FileTestVersion();
         $f->setReturnValue('getId', 123);
         $this->assertEqual($f->getRootPath(), Config::get('sys_data_dir') .'/tracker/123');
     }
 }
+
+
+abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_FormElement_Field_File_BaseTest {
+    /** @var User */
+    protected $current_user;
+    protected $tmp_dir;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tmp_dir = dirname(__FILE__).'/_fixtures/tmp';
+        Config::set('codendi_cache_dir', $this->tmp_dir);
+        mkdir($this->tmp_dir);
+        $this->current_user = aUser()->withId(123)->build();
+        $user_manager = stub('UserManager')->getCurrentUser()->returns($this->current_user);
+        UserManager::setInstance($user_manager);
+    }
+
+    public function tearDown() {
+        $this->recurseDeleteInDir($this->tmp_dir);
+        rmdir($this->tmp_dir);
+        clearstatcache();
+        UserManager::clearInstance();
+        parent::tearDown();
+    }
+}
+
+class Tracker_FormElement_Field_File_FileSystemPersistanceTest  extends Tracker_FormElement_Field_File {
+    public function __construct($id) {
+        $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = null;
+        parent::__construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank);
+    }
+    public function createAttachment(Tracker_FileInfo $attachment, $file_info) {
+        return parent::createAttachment($attachment, $file_info);
+    }
+}
+
+class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement_Field_File_TemporaryFileTest {
+    /** @var Tracker_FormElement_Field_File_FileSystemPersistanceTest */
+    private $field;
+
+    private $storage_dir;
+
+    public function setUp() {
+        parent::setUp();
+        $this->storage_dir = $this->fixture_dir.'/storage';
+        mkdir($this->storage_dir);
+
+        Config::set('sys_data_dir', $this->storage_dir);
+        $this->field_id = 987;
+        $this->field    = new Tracker_FormElement_Field_File_FileSystemPersistanceTest($this->field_id);
+
+        $this->attachment_id = 654;
+        $this->attachment = partial_mock('Tracker_FileInfo', array('save', 'delete', 'postUploadActions'), array(
+            $this->attachment_id, $this->field, null, null, null, null, null
+        ));
+        stub($this->attachment)->save()->returns(true);
+    }
+
+    public function tearDown() {
+        $this->recurseDeleteInDir($this->storage_dir);
+        rmdir($this->storage_dir);
+        parent::tearDown();
+    }
+
+    public function itCreatesAFileWhenItComesFromAsSoapRequest() {
+        $file_id        = 'coucou123';
+        $temp_file      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
+        $temp_file_path = $temp_file->getPath();
+
+        $file_info = array(
+            'tmp_name' => $temp_file_path,
+            'id'       => $file_id,
+        );
+
+        touch($temp_file_path);
+
+        expect($this->attachment)->delete()->never();
+        expect($this->attachment)->postUploadActions()->once();
+
+        $this->assertTrue($this->field->createAttachment($this->attachment, $file_info));
+        $this->assertTrue(file_exists($this->field->getRootPath().'/'.$this->attachment_id));
+        $this->assertFalse(file_exists($temp_file_path));
+    }
+
+    public function itDoesntAcceptToMoveAFileThatIsNotAValidSoapTemporaryFile() {
+        $file_id       = 'coucou123';
+        $file_tmp_path = '/etc/passwd';
+        $file_info     = array(
+            'tmp_name' => $file_tmp_path,
+            'id'  => $file_id,
+        );
+
+        expect($this->attachment)->delete()->once();
+
+        $this->assertFalse($this->field->createAttachment($this->attachment, $file_info));
+        $this->assertFalse(file_exists($this->field->getRootPath().'/'.$this->attachment_id));
+    }
+}
+
+
+
+class Tracker_FormElement_Field_File_GenerateFakeSoapDataTest extends Tracker_FormElement_Field_File_TemporaryFileTest {
+    /** @var Tracker_FormElement_Field_File */
+    private $field;
+
+    public function setUp() {
+        parent::setUp();
+        $this->field = aFileField()->build();
+    }
+
+    private function createFakeSoapFileRequest($id, $description, $filename, $filesize, $filetype, $action = null) {
+        $soap_file = new stdClass();
+        $soap_file->id           = $id;
+        $soap_file->submitted_by = 0;
+        $soap_file->description  = $description;
+        $soap_file->filename     = $filename;
+        $soap_file->filesize     = $filesize;
+        $soap_file->filetype     = $filetype;
+        if ($action) {
+            $soap_file->action = $action;
+        }
+        return $soap_file;
+    }
+
+    private function createFakeSoapFieldValue() {
+        $field_value = new stdClass();
+        $field_value->file_info = func_get_args();
+        return $field_value;
+    }
+
+    public function itRaisesAnErrorWhenThereIsNoData() {
+        $this->expectException();
+        $this->field->getFieldData(null);
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitAnArray() {
+        $this->expectException();
+        $this->field->getFieldData(array());
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitAnStringValue() {
+        $this->expectException();
+        $this->field->getFieldData('bla');
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitStdClassWithValue() {
+        $this->expectException();
+        $field_value = new stdClass();
+        $field_value->value = 'bla';
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitFileInfoThatIsNotAnArray() {
+        $this->expectException();
+        $field_value = new stdClass();
+        $field_value->file_info = 'bla';
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitFileInfoThatIsNotAnArrayOfFileValue() {
+        $this->expectException();
+        $field_value = $this->createFakeSoapFieldValue('bla');
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenTryToSubmitFileInfoHasNotTheRequiredFields() {
+        $this->expectException();
+        $field_value = $this->createFakeSoapFieldValue(new stdClass());
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenNoFileGiven() {
+        $this->expectException();
+
+        $description = "Purchase Order";
+        $filename    = 'my_file.ods';
+        $filesize    = 1234;
+        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest(null, $description, $filename, $filesize, $filetype)
+        );
+
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itRaisesAnErrorWhenFileDoesNotExist() {
+        $this->expectException();
+
+        $description = "Purchase Order";
+        $filename    = 'my_file.ods';
+        $filesize    = 1234;
+        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest(123, $description, $filename, $filesize, $filetype)
+        );
+
+        $this->field->getFieldData($field_value);
+    }
+
+    public function itDoesNothingWhenArrayIsEmpty() {
+        $field_value = $this->createFakeSoapFieldValue();
+        $this->assertEqual(array(), $this->field->getFieldData($field_value));
+    }
+
+    public function itConvertsOneFile() {
+        $description = "Purchase Order";
+        $filename    = 'my_file.ods';
+        $filesize    = 1234;
+        $filetype    = 'application/vnd.oasis.opendocument.spreadsheet';
+        $file_id     = 'coucou123';
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($file_id, $description, $filename, $filesize, $filetype)
+        );
+
+        $temp_file = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id);
+        $temp_file_path = $temp_file->getPath();
+        touch($temp_file_path);
+
+        $field = aFileField()->build();
+        $this->assertEqual(
+            $field->getFieldData($field_value),
+            array(
+                array(
+                    'id'          =>  $file_id,
+                    'description' =>  $description,
+                    'name'        =>  $filename,
+                    'type'        =>  $filetype,
+                    'tmp_name'    =>  $temp_file_path,
+                    'error'       =>  UPLOAD_ERR_OK,
+                    'size'        =>  $filesize,
+                )
+           )
+        );
+    }
+
+    public function itConvertsTwoFiles() {
+        $description1 = "Purchase Order";
+        $filename1    = 'my_file.ods';
+        $filesize1    = 1234;
+        $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
+        $file_id1     = 'sdfsdfaz';
+        $temp_file1      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
+        $temp_file_path1 = $temp_file1->getPath();
+        touch($temp_file_path1);
+
+        $description2 = "Capture d'écran";
+        $filename2    = 'stuff.png';
+        $filesize2    = 5698;
+        $filetype2    = 'image/png';
+        $file_id2     = 'sdfsdfaz';
+        $temp_file2      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id2);
+        $temp_file_path2 = $temp_file2->getPath();
+        touch($temp_file_path2);
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($file_id1, $description1, $filename1, $filesize1, $filetype1),
+            $this->createFakeSoapFileRequest($file_id2, $description2, $filename2, $filesize2, $filetype2)
+        );
+
+        $this->assertEqual(
+            $this->field->getFieldData($field_value),
+            array(
+                array(
+                    'id'          =>  $file_id1,
+                    'description' =>  $description1,
+                    'name'        =>  $filename1,
+                    'type'        =>  $filetype1,
+                    'tmp_name'    =>  $temp_file_path1,
+                    'error'       =>  UPLOAD_ERR_OK,
+                    'size'        =>  $filesize1,
+                ),
+                array(
+                    'id'          =>  $file_id2,
+                    'description' =>  $description2,
+                    'name'        =>  $filename2,
+                    'type'        =>  $filetype2,
+                    'tmp_name'    =>  $temp_file_path2,
+                    'error'       =>  UPLOAD_ERR_OK,
+                    'size'        =>  $filesize2,
+                )
+           )
+        );
+    }
+
+    public function itConvertsForDeletionOfOneFile() {
+        $file_id = 678;
+
+        $soap_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($file_id, '', '', '', '', 'delete')
+        );
+        $this->assertEqual(
+            $this->field->getFieldData($soap_value),
+            array(
+                'delete' => array($file_id)
+            )
+        );
+    }
+
+    public function itConvertsForDeletionOfTwoFiles() {
+        $file_id1 = 678;
+        $file_id2 = 12;
+
+        $soap_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($file_id1, '', '', '', '', 'delete'),
+            $this->createFakeSoapFileRequest($file_id2, '', '', '', '', 'delete')
+        );
+        $this->assertEqual(
+            $this->field->getFieldData($soap_value),
+            array(
+                'delete' => array($file_id1, $file_id2)
+            )
+        );
+    }
+
+    public function itCreatesAndDeleteInTheSameTime() {
+        $description1 = "Purchase Order";
+        $filename1    = 'my_file.ods';
+        $filesize1    = 1234;
+        $filetype1    = 'application/vnd.oasis.opendocument.spreadsheet';
+        $file_id1     = 'sdfsdfaz';
+        $temp_file1      = new Tracker_SOAP_TemporaryFile($this->current_user, $file_id1);
+        $temp_file_path1 = $temp_file1->getPath();
+        touch($temp_file_path1);
+
+        $file_id2 = 12;
+
+        $field_value = $this->createFakeSoapFieldValue(
+            $this->createFakeSoapFileRequest($file_id1, $description1, $filename1, $filesize1, $filetype1),
+            $this->createFakeSoapFileRequest($file_id2, '', '', '', '', 'delete')
+        );
+
+        $this->assertEqual(
+            $this->field->getFieldData($field_value),
+            array(
+                'delete' => array($file_id2),
+                array(
+                    'id'          =>  $file_id1,
+                    'description' =>  $description1,
+                    'name'        =>  $filename1,
+                    'type'        =>  $filetype1,
+                    'tmp_name'    =>  $temp_file_path1,
+                    'error'       =>  UPLOAD_ERR_OK,
+                    'size'        =>  $filesize1,
+                ),
+           )
+        );
+    }
+}
+
 ?>

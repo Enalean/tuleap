@@ -122,15 +122,6 @@ class Service {
     public function displayHeader($title, $breadcrumbs, $toolbar) {
         $GLOBALS['HTML']->setRenderedThroughService(true);
         
-        $breadcrumbs = array_merge(
-            array(
-                array(
-                    'title' => $this->project->getPublicName(),
-                    'url'   => '/projects/'. $this->project->getUnixName() .'/',
-                )
-            ),
-           $breadcrumbs
-        );
         foreach($breadcrumbs as $b) {
             $classname = '';
             if (isset($b['classname'])) {

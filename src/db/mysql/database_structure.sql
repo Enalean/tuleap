@@ -588,6 +588,7 @@ CREATE TABLE filemodule (
 CREATE TABLE filemodule_monitor (
   filemodule_id int(11) NOT NULL default '0',
   user_id int(11) NOT NULL default '0',
+  anonymous TINYINT(1) NOT NULL default '1',
   KEY idx_filemodule_monitor_id (filemodule_id)
 );
 
@@ -669,7 +670,7 @@ CREATE TABLE forum_group_list (
   PRIMARY KEY  (group_forum_id),
   FULLTEXT (description),
   KEY idx_forum_group_list_group_id (group_id)
-);
+) ENGINE=MyISAM;
 
 #
 # Table structure for table 'forum_monitored_forums'
@@ -2419,7 +2420,7 @@ CREATE TABLE svn_commits (
   KEY idx_search (group_id, whoid, id),
   KEY idx_repositoryid_date (repositoryid, date),
   FULLTEXT (description)
-);
+) ENGINe=MyISAM;
 
 CREATE TABLE svn_dirs (
   id int(11) NOT NULL auto_increment,
@@ -2928,6 +2929,7 @@ CREATE TABLE ugroup (
   ugroup_id int(11) NOT NULL auto_increment,
   name text NOT NULL,
   description text NOT NULL,
+  source_id INT(11) DEFAULT NULL,
   group_id int(11) NOT NULL,
   PRIMARY KEY  (ugroup_id)
 );

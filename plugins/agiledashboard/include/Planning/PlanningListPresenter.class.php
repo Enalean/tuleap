@@ -41,10 +41,6 @@ class Planning_ListPresenter {
         return $GLOBALS['HTML']->getImagePath('ic/bin_closed.png');
     }
     
-    public function planningsTitle() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_title');
-    }
-    
     public function createPlanning() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_create');
     }
@@ -55,6 +51,10 @@ class Planning_ListPresenter {
     
     public function getEditIconPath() {
         return $GLOBALS['HTML']->getImagePath('ic/edit.png');
+    }
+    
+    public function adminTitle() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'Admin');
     }
 }
 

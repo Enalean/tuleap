@@ -18,20 +18,19 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/UGroupDao.class.php');
-require_once('common/dao/UGroupUserDao.class.php');
-require_once('common/dao/UserGroupDao.class.php');
-require_once('common/user/User.class.php');
-require_once('www/project/admin/ugroup_utils.php');
-require_once('UGroup_Invalid_Exception.class.php');
+require_once 'common/dao/UGroupDao.class.php';
+require_once 'common/dao/UGroupUserDao.class.php';
+require_once 'common/dao/UserGroupDao.class.php';
+require_once 'common/user/User.class.php';
+require_once 'www/project/admin/ugroup_utils.php';
+require_once 'UGroup_Invalid_Exception.class.php';
+require_once 'common/user/Users.class.php';
 
 /**
- *
  * UGroup object
- * 
  */
 class UGroup {
-    
+
     const NONE               = 100;
     const ANONYMOUS          = 1;
     const REGISTERED         = 2;
@@ -46,7 +45,7 @@ class UGroup {
     const NEWS_ADMIN         = 17;
     const NEWS_EDITOR        = 18;
     const SVN_ADMIN          = 19;
-    
+
     protected $id    = 0;
     protected $group_id     = 0;
     protected $name         = null;
@@ -60,6 +59,13 @@ class UGroup {
     protected $_ugroupuserdao;
     protected $_usergroupdao;
 
+    /**
+     * Constructor of the class
+     *
+     * @param Array $row ugroup row
+     *
+     * @return Void
+     */
     public function __construct($row = null) {
         $this->id          = isset($row['ugroup_id'])   ? $row['ugroup_id']   : 0;
         $this->name        = isset($row['name'])        ? $row['name']        : null;
@@ -68,10 +74,11 @@ class UGroup {
         $this->is_dynamic  = $this->id < 100;
     }
 
-    public function getId() {
-        return $this->id;
-    }
-
+    /**
+     * Get instance of UGroupDao
+     *
+     * @return UGroupDao
+     */
     protected function getUGroupDao() {
         if (!$this->_ugroupdao) {
             $this->_ugroupdao = new UGroupDao();
@@ -79,6 +86,11 @@ class UGroup {
         return $this->_ugroupdao;
     }
 
+    /**
+     * Get instance of UGroupUserDao
+     *
+     * @return UGroupUserDao
+     */
     protected function getUGroupUserDao() {
         if (!$this->_ugroupuserdao) {
             $this->_ugroupuserdao = new UGroupUserDao();
@@ -86,6 +98,15 @@ class UGroup {
         return $this->_ugroupuserdao;
     }
     
+    public function setUGroupUserDao(UGroupUserDao $dao) {
+        $this->_ugroupuserdao = $dao;
+    }
+
+    /**
+     * Get instance of UserGroupDao
+     *
+     * @return UserGroupDao
+     */
     protected function _getUserGroupDao() {
         if (!$this->_usergroupdao) {
             $this->_usergroupdao = new UserGroupDao();
@@ -93,6 +114,11 @@ class UGroup {
         return $this->_usergroupdao;
     }
 
+    /**
+     * Get the ugroup name
+     *
+     * @return String
+     */
     public function getName() {
         return $this->name;
     }
@@ -102,39 +128,90 @@ class UGroup {
     }
 
     /**
-     * Return array of all ugroup members as User objects
-     * WARNING: this does not work currently with dynamic ugroups
+     * Get the ugroup id
+     *
+     * @return Integer
+     */
+    public function getId() {
+        return $this->id;
+    }
+
+    /**
+     * @deprecated user getUsers($group_id)
+     * Return DAR of all ugroup members as User objects
+     *
+     * @return DataAccessResult
      */
     public function getMembers() {
         if (! $this->members) {
-            $this->members = array();
-            $this->members_name = array();
-            $dar           = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
-            foreach($dar as $row) {
-                $currentUser          = new User($row);
-                $this->members[]      = $currentUser;
-                $this->members_name[] = $currentUser->getUserName();
-            }
+            $this->members = $this->getStaticOrDynamicMembers($this->group_id);
         }
         return $this->members;
     }
 
     /**
+     *  
+     * @param int $group_id the group id of the static or dynamic group.
+     * You have to supply this argument as $this->group_id is 100 in the case of a dynamic group
+     *
+     * @return Users
+     */
+    public function getUsers($group_id) {
+        return new Users($this->getStaticOrDynamicMembers($group_id));
+    }
+    
+    /**
+     *  
+     * @param int $group_id the group id of the static or dynamic group.
+     * You have to supply this argument as $this->group_id is 100 in the case of a dynamic group
+     *
+     * @return Array of string
+     */
+    public function getUserNames($group_id) {
+        return $this->getUsers($group_id)->getNames();
+    }
+
+    public function getUserLdapIds($group_id) {
+        return $this->getUsers($group_id)->getLdapIds();
+    }
+
+    /**
      * Return array containing the user_name of all ugroup members
-     * WARNING: this does not work currently with dynamic ugroups
+     *
+     * @return Array
      */
     public function getMembersUserName() {
-        $this->getMembers();
-        return $this->members_name;
+        $names = array();
+        foreach ($this->getMembers() as $member) {
+            $names[] = $member->getUserName();
+        }
+        return $names;
+    }
+
+    private function getStaticOrDynamicMembers($group_id) {
+        if ($this->is_dynamic) {
+            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $group_id);
+            return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
+        }
+        $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+        return $dar->instanciateWith(array($this, 'newUser'));
+    }
+
+    public function newUser($row) {
+        return new User($row);
+    }
+
+    public function newUserFromIncompleteRow($row) {
+        return UserManager::instance()->getUserById($row['user_id']);
     }
 
     /**
     * Check if the ugroup exist for the given project
     *
-    * @param Integer $groupId the group id
-    * @param Integer $ugroupId the ugroup id
+    * @param Integer $groupId  The group id
+    * @param Integer $ugroupId The ugroup id
     *
-    * @return boolean
+    * @return Boolean
     */
     public function exists($groupId, $ugroupId) {
         return $this->getUGroupDao()->checkUGroupValidityByGroupId($groupId, $ugroupId);
@@ -143,23 +220,24 @@ class UGroup {
     /**
      * Return project admins of given static group
      *
-     * @param Integer $groupId
-     * @param Array $ugroups
+     * @param Integer $groupId Id of the project
+     * @param Array   $ugroups list of ugroups
      *
-     * @return Data Access Result
+     * @return DataAccessResult
      */
     public function returnProjectAdminsByStaticUGroupId($groupId, $ugroups) {
         return $this->getUGroupUserDao()->returnProjectAdminsByStaticUGroupId($groupId, $ugroups);
     }
-    
+
     /**
      * Add the given user to the group
-     * 
      * This method can add to any group, either dynamic or static.
-     * 
-     * @param User $user
-     * 
-     * @throws UGroup_Invalid_Exception 
+     *
+     * @param User $user User to add
+     *
+     * @throws UGroup_Invalid_Exception
+     *
+     * @return Void
      */
     public function addUser(User $user) {
         $this->assertProjectUGroupAndUserValidity($user);
@@ -173,7 +251,14 @@ class UGroup {
             }
         }
     }
-    
+
+    /**
+     * Test the status of the ugroup & the user
+     *
+     * @param User $user User to test
+     *
+     * @return Void
+     */
     private function assertProjectUGroupAndUserValidity($user) {
         if (!$this->group_id) {
             throw new Exception('Invalid group_id');
@@ -185,24 +270,40 @@ class UGroup {
             throw new Exception('Invalid user');
         }
     }
-    
+
+    /**
+     * Add user to a static ugroup
+     *
+     * @param Integer $group_id  Id of the project
+     * @param Integer $ugroup_id Id of the ugroup
+     * @param Integer $user_id   Id of the user
+     *
+     * @return Void
+     */
     protected function addUserToStaticGroup($group_id, $ugroup_id, $user_id) {
         ugroup_add_user_to_ugroup($group_id, $ugroup_id, $user_id);
     }
-    
+
+    /**
+     * Add user to a dynamic ugroup
+     *
+     * @param User $user User to add
+     *
+     * @return Void
+     */
     protected function addUserToDynamicGroup(User $user) {
         $dao  = $this->_getUserGroupDao();
         $flag = $this->getAddFlagForUGroupId($this->id);
         $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
     }
-    
+
     /**
      * Convert a dynamic ugroup_id into it's DB table update to add someone to a given group
-     * 
-     * @param Integer $id
      *
-     * @throws UGroup_Invalid_Exception 
-     * 
+     * @param Integer $id Id of the ugroup
+     *
+     * @throws UGroup_Invalid_Exception
+     *
      * @return String
      */
     public function getAddFlagForUGroupId($id) {
@@ -225,14 +326,16 @@ class UGroup {
                 throw new UGroup_Invalid_Exception();
         }
     }
-    
+
     /**
      * Remove given user from user group
-     * 
      * This method can remove from any group, either dynamic or static.
-     * 
+     *
      * @param User $user
-     * @throws UGroup_Invalid_Exception 
+     *
+     * @throws UGroup_Invalid_Exception
+     *
+     * @return Void
      */
     public function removeUser(User $user) {
         $this->assertProjectUGroupAndUserValidity($user);
@@ -246,11 +349,27 @@ class UGroup {
             }
         }
     }
-    
+
+    /**
+     * Remove user from static ugroup
+     *
+     * @param Integer $group_id  Id of the project
+     * @param Integer $ugroup_id Id of the ugroup
+     * @param Integer $user_id   Id of the user
+     *
+     * @return Void
+     */
     protected function removeUserFromStaticGroup($group_id, $ugroup_id, $user_id) {
         ugroup_remove_user_from_ugroup($group_id, $ugroup_id, $user_id);
     }
-    
+
+    /**
+     * Remove user from dynamic ugroup
+     *
+     * @param User $user User to remove
+     *
+     * @return Boolean
+     */
     protected function removeUserFromDynamicGroup(User $user) {
         $dao  = $this->_getUserGroupDao();
         if ($this->id == self::PROJECT_ADMIN && $dao->returnProjectAdminsByGroupId($this->group_id)->rowCount() <= 1) {
@@ -259,13 +378,15 @@ class UGroup {
         $flag = $this->getRemoveFlagForUGroupId($this->id);
         return $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
     }
-    
+
     /**
      * Convert a dynamic ugroup_id into it's DB table update to remove someone from given group
-     * 
-     * @param type $id
-     * @return string
-     * @throws UGroup_Invalid_Exception 
+     *
+     * @param Integer $id Id of the ugroup
+     *
+     * @throws UGroup_Invalid_Exception
+     *
+     * @return String
      */
     public function getRemoveFlagForUGroupId($id) {
         switch ($id) {
@@ -284,6 +405,22 @@ class UGroup {
                  return 'news_flags = 0';
             default:
                 throw new UGroup_Invalid_Exception();
+        }
+    }
+
+    /**
+     * Check if the user group is bound
+     *
+     * @param Integer $ugroupId Id of the user goup
+     *
+     * @return Boolean
+     */
+    public function isBound() {
+        $dar = $this->getUGroupDao()->getUgroupBindingSource($this->id);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return  true;
+        } else {
+            return false;
         }
     }
 }

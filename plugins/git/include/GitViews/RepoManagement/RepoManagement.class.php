@@ -23,6 +23,7 @@ require_once 'Pane/GeneralSettings.class.php';
 require_once 'Pane/AccessControl.class.php';
 require_once 'Pane/Notification.class.php';
 require_once 'Pane/Delete.class.php';
+require_once 'Pane/Gerrit.class.php';
 
 /**
  * Dedicated screen for repo management
@@ -39,11 +40,21 @@ class GitViews_RepoManagement {
      */
     private $request;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request) {
-        $this->repository   = $repository;
-        $this->request      = $request;
-        $this->panes        = $this->buildPanes($repository);
-        $this->current_pane = 'settings';
+    /**
+     * @var array
+     */
+    private $gerrit_servers;
+
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers) {
+        $this->repository     = $repository;
+        $this->request        = $request;
+        $this->driver         = $driver;
+        $this->gerrit_servers = $gerrit_servers;
+        $this->panes          = $this->buildPanes($repository);
+        $this->current_pane   = 'settings';
         if (isset($this->panes[$request->get('pane')])) {
             $this->current_pane = $request->get('pane');
         }
@@ -55,13 +66,16 @@ class GitViews_RepoManagement {
     private function buildPanes(GitRepository $repository) {
         $panes = array(
             new GitViews_RepoManagement_Pane_GeneralSettings($repository, $this->request),
+            new GitViews_RepoManagement_Pane_Gerrit($repository, $this->request, $this->driver, $this->gerrit_servers),
             new GitViews_RepoManagement_Pane_AccessControl($repository, $this->request),
             new GitViews_RepoManagement_Pane_Notification($repository, $this->request),
             new GitViews_RepoManagement_Pane_Delete($repository, $this->request),
         );
         $indexed_panes = array();
         foreach ($panes as $pane) {
-            $indexed_panes[$pane->getIdentifier()] = $pane;
+            if ($pane->canBeDisplayed()) {
+                $indexed_panes[$pane->getIdentifier()] = $pane;
+            }
         }
         return $indexed_panes;
     }

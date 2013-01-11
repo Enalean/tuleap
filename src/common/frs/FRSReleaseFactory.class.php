@@ -420,7 +420,7 @@ class FRSReleaseFactory {
 
             // Body
             $fileUrl  = get_server_url() . "/file/showfiles.php?group_id=".$package->getGroupID()."&release_id=".$release->getReleaseID();
-            $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID();
+            $notifUrl = get_server_url() . "/file/filemodule_monitor.php?filemodule_id=".$package->getPackageID()."&group_id=".$package->getGroupID();
 
             $body  = $GLOBALS['Language']->getText('file_admin_editreleases', 'download_explain_modified_package', array($project->getPublicName(), $package->getName(), $release->getName(), $fileUrl));
 

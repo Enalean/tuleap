@@ -576,6 +576,11 @@ ul.tracker-form-element-artifactlink-list {
     padding-left: 0.5em;
     margin-top: 0;
 }
+ul.tracker-form-element-checkbox {
+    list-style-type:none;
+    padding-left:0.5em; 
+    margin-top: 0px;
+}
 .tracker_alltrackers dd {
     margin-left:1.5em;
     margin-bottom:1.5em;
@@ -776,29 +781,56 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 
 #tracker_workflow_matrix .pc_check_unchecked,
 #tracker_field_dependencies_matrix .pc_check_unchecked {
-   background-image: url(../images/ic/bullet_grey.png);
+    background-image: url(../images/ic/bullet_grey.png);
 }
 #tracker_workflow_matrix .pc_check_checked,
 #tracker_field_dependencies_matrix .pc_check_checked {
-   background-image: url(../images/ic/arrow-turn-090-left.png);
+    background-image: url(../images/ic/arrow-turn-090-left.png);
 }
 
 .workflow_actions .pc_check_unchecked {
-   background-image: url(/themes/common/images/ic/bin_closed.png);
+    background-image: url(/themes/common/images/ic/bin_closed.png);
 }
 .workflow_actions .pc_check_checked {
-   background-image: url(/themes/common/images/ic/bin.png);
+    background-image: url(/themes/common/images/ic/bin.png);
 }
-.workflow_action_deleted {
-   text-decoration: line-through;
+
+.workflow_transitions,
+.workflow_rules {
+    display: inline-block;
+}
+
+.workflow_existing_rules {
+    list-style: none;
+    padding-left: 0;
+}
+.workflow_rule {
+    clear: both;
+    margin: 5px 0px;
+}
+.workflow_existing_rules .pc_check_unchecked {
+    background-image: url(/themes/common/images/ic/bin_closed.png);
+    float: right;
+}
+.workflow_existing_rules .pc_check_checked {
+    background-image: url(/themes/common/images/ic/bin.png);
+    float: right;
+}
+.workflow_action.deleted,
+.workflow_rule.deleted {
+    text-decoration: line-through;
+}
+.add_new_rule {
+    line-height:2em;
 }
 .workflow_actions, .workflow_conditions  {
     list-style-type: none;
 }
+.workflow_rule,
 .workflow_action {
     padding: 1em 2em 1em 3em;
     border: 1px solid #ccc;
-    border-radius: 1em;
+    border-radius: 0.5em;
     background-color: #F6F6F6;
     background-position: 1em 1em;
     background-repeat: no-repeat;
@@ -806,8 +838,14 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_action_field {
     background-image: url(../images/ic/ui-text-field-change.png);
 }
+.workflow_action_ci_build {
+    background-image: url(../images/ic/ci_build/server.png);
+}
 .workflow_conditions_perms {
     list-style-image: url(/themes/common/images/ic/lock.png);
+}
+.workflow_conditions_notempty {
+    list-style-image: url(../images/ic/ui-text-field--exclamation-red.png);
 }
 /* }}} */
 
@@ -1172,6 +1210,7 @@ td.first-column {
     padding-left: 5px;
     color: #333;
     position:relative;
+    min-height: 50px;
 }
 .card-container {
     background: #ffe;
@@ -1236,6 +1275,11 @@ td.first-column {
    text-decoration: line-through;
 }
 
+.help {
+    color: #999;
+    margin-top: 0;
+}
+
 /* {{{ */
 .tracker_confirm_delete {
     width: 50%;
@@ -1254,3 +1298,11 @@ td.first-column {
     margin: 1em auto;
 }
 /* }}} */
+
+.tracker_create_mode {
+    padding-left: 1em;
+}
+
+.workflow_rule_date_comparator {
+    margin: auto 0.5em;
+}

@@ -38,6 +38,7 @@ class GitPlugin extends Plugin {
     public function __construct($id) {
         parent::__construct($id);
         $this->setScope(Plugin::SCOPE_PROJECT);
+        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
         $this->_addHook('cssfile',                                         'cssFile',                                      false);
         $this->_addHook('javascript_file',                                 'jsFile',                                       false);
         $this->_addHook(Event::JAVASCRIPT,                                 'javascript',                                   false);
@@ -76,6 +77,12 @@ class GitPlugin extends Plugin {
         $this->_addHook('logs_daily',                                       'logsDaily',                                   false);
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
+    }
+
+    public function site_admin_option_hook() {
+        $url  = $this->getPluginPath().'/admin/';
+        $name = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
+        echo '<li><a href="', $url, '">', $name, '</a></li>';
     }
 
     public function getPluginInfo() {
@@ -128,10 +135,6 @@ class GitPlugin extends Plugin {
                 require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_CREATE.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_CREATE';
                 break;
-            case 'GIT_REPO_CLONE' :
-                require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_CLONE.class.php');
-                $params['class'] = 'SystemEvent_GIT_REPO_CLONE';
-                break;
             case 'GIT_REPO_DELETE' :
                 require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_DELETE.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
@@ -139,6 +142,17 @@ class GitPlugin extends Plugin {
             case 'GIT_REPO_ACCESS':
                 require_once(dirname(__FILE__).'/events/SystemEvent_GIT_REPO_ACCESS.class.php');
                 $params['class'] = 'SystemEvent_GIT_REPO_ACCESS';
+                break;
+            case 'GIT_GERRIT_MIGRATION':
+                require_once(dirname(__FILE__).'/events/SystemEvent_GIT_GERRIT_MIGRATION.class.php');
+                $params['class'] = 'SystemEvent_GIT_GERRIT_MIGRATION';
+                $params['dependencies'] = array(
+                    $this->getGitDao(),
+                    $this->getRepositoryFactory(),
+                    $this->getGerritServerFactory(),
+                    new BackendLogger(),
+                    $this->getProjectCreator(),
+                );
                 break;
             default:
                 break;
@@ -175,8 +189,18 @@ class GitPlugin extends Plugin {
 
     public function process() {
         require_once('Git.class.php');
-        $controler = new Git($this);
+        $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
         $controler->process();
+    }
+
+    /**
+     * We expect that the check fo access right to this method has already been done by the caller
+     */
+    public function processAdmin(Codendi_Request $request) {
+        require_once GIT_BASE_DIR .'/Git/Admin.class.php';
+        $admin = new Git_Admin($this->getGerritServerFactory(), new CSRFSynchronizerToken('/plugin/git/admin/'));
+        $admin->process($request);
+        $admin->display();
     }
 
     /**
@@ -261,7 +285,7 @@ class GitPlugin extends Plugin {
         if ($retVal == 0) {
             return true;
         } else {
-            throw new Exception('Unable to dump ssh keys (error code: '.$retVal.'): '.implode('%%%', $output));
+            throw new Exception('Unable to dump ssh keys (error code: '.$retVal.'): '.implode("\n", $output));
             return false;
         }
     }
@@ -360,9 +384,9 @@ class GitPlugin extends Plugin {
     
     public function system_event_get_types($params) {
         $params['types'][] = 'GIT_REPO_ACCESS';
-        $params['types'][] = 'GIT_REPO_CLONE';
         $params['types'][] = 'GIT_REPO_CREATE';
         $params['types'][] = 'GIT_REPO_DELETE';
+        $params['types'][] = 'GIT_GERRIT_MIGRATION';
     }
 
     /**
@@ -389,7 +413,25 @@ class GitPlugin extends Plugin {
 
     private function getRepositoryFactory() {
         require_once 'GitRepositoryFactory.class.php';
-        return new GitRepositoryFactory(new GitDao(), ProjectManager::instance());
+        return new GitRepositoryFactory($this->getGitDao(), ProjectManager::instance());
+    }
+
+    private function getGitDao() {
+        require_once 'GitDao.class.php';
+        return new GitDao();
+    }
+
+    private function getGerritDriver() {
+        require_once 'Git/Driver/Gerrit.class.php';
+        return new Git_Driver_Gerrit(
+            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
+            new BackendLogger()
+        );
+    }
+
+    private function getGerritServerFactory() {
+        require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
+        return new Git_RemoteServer_GerritServerFactory(new Git_RemoteServer_Dao(), $this->getGitDao());
     }
 
     /**
@@ -512,7 +554,7 @@ class GitPlugin extends Plugin {
         $project = $pm->getProject($params['group_id']);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             require_once('Git.class.php');
-            $controler = new Git($this);
+            $controler = new Git($this, $this->getGerritServerFactory());
             $controler->logsDaily($params);
         }
     }
@@ -560,6 +602,14 @@ class GitPlugin extends Plugin {
                 $params['codendi_widgets'][] = 'plugin_git_project_pushes';
             }
         }
+    }
+
+    private function getProjectCreator() {
+        require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/UserFinder.class.php';
+        $user_finder = new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
+        //$dir, Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_UserFinder $user_finder
+        $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
+        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $user_finder);
     }
 }
 

@@ -121,13 +121,15 @@ class Group extends Error {
 		return $this->data_array['status'];
 	}
 
-	/*
-		Simple boolean test to see if it's a project or not
-	*/
-	function isProject() {
-	  $template =& TemplateSingleton::instance(); 
-	  return $template->isProject($this->data_array['type']);
-	}
+    /**
+     * Simple boolean test to see if it's a project or not
+     *
+     * @return Boolean
+     */
+    function isProject() {
+        $template = $this->_getTemplateSingleton();
+        return $template->isProject($this->data_array['type']);
+    }
 
 
 	/*
@@ -319,11 +321,14 @@ class Group extends Error {
 	}
 
 
-	/** return true, if this group is a template to create other groups */
-	function isTemplate() {
-	  $template =& TemplateSingleton::instance(); 
-	  return $template->isTemplate($this->data_array['type']);
-	}
+    /**
+     * Return true, if this group is a template to create other groups
+     *
+     * @return Boolean
+     */
+    function isTemplate() {
+        return $this->_getTemplateSingleton()->isTemplate($this->data_array['type']);
+    }
 
 
 	/** return the template id from which this group was built */
@@ -334,6 +339,15 @@ class Group extends Error {
 	function setType($type) {
 	  db_query("UPDATE groups SET type='$type' WHERE group_id='".$this->group_id."'");
 	}
+
+    /**
+     * Get template singleton
+     *
+     * @return TemplateSingleton
+     */
+     private function _getTemplateSingleton() {
+         return TemplateSingleton::instance();
+     }
 
 }
 

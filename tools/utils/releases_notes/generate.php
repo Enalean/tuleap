@@ -21,17 +21,18 @@
 
 require_once 'ChangeLogReader.class.php';
 
-$formats = array('html', 'frs');
-if ($argc != 2 || !in_array($argv[1], $formats)) {
-    echo "\nUsage: {$argv[0]} <format>\n
-    with <format> = html | frs
-
+$formats = array('html', 'frs', 'marketing');
+if ($argc < 2 || !in_array($argv[1], $formats)) {
+    echo "\nUsage: {$argv[0]} <format> [<version>]\n
+    with <format>  = marketing | html | frs
+         <version> = 5.6 (by default it looks into the VERSION file)
     ";
     die();
 }
-$format = $argv[1];
+$format  = $argv[1];
+$version = isset($argv[2]) ? $argv[2] : null;
 
-$reader  = new ChangeLogReader();
+$reader  = new ChangeLogReader($version);
 $release = $reader->parse();
 include 'templates/'. $format .'/index.php';
 

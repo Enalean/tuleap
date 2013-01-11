@@ -38,14 +38,6 @@ class BackendSVN extends Backend {
     protected $SVNApacheConfNeedUpdate;
 
     /**
-     * Constructor
-     */
-    protected function __construct() {
-        parent::__construct();
-    }
-
-
-    /**
      * For mocking (unit tests)
      * 
      * @return UGroupDao

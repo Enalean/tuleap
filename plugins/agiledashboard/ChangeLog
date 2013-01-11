@@ -1,3 +1,22 @@
+Version 0.60 - Tuleap 5.8
+    * The title of the milestones title is not anymore displayed as a tab
+
+Version 0.59 - Tuleap 5.7
+    * Fix bugs #1100: Display of plan part broken on firefox.
+Fix bugs #1780: fix arrow location on cardwall item
+
+Version 0.58 - Tuleap 5.7
+    * Add a pane in agiledashboard that displays the sprint burndown.
+
+Version 0.57 - Tuleap 5.6
+    * Fix: typo
+
+Version 0.56 - Tuleap 5.6
+    * Add help messages on agile dashboard
+
+Version 0.55 - Tuleap 5.6
+    * Make agile dashboard home page more user friendly
+
 Version 0.54 - Tuleap 5.5
     * Fix sla #1444: artifacts with two parents throw an exception
 

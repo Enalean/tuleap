@@ -92,7 +92,7 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      */
     public function changeType($type) {
         // only "sb" available at the moment.
-        if ($type === 'sb') {
+        if ($type === 'sb' || $type === 'cb') {
             // We should remove the entry in msb table
             // However we keep it for the case where admin changes its mind.
             return true;

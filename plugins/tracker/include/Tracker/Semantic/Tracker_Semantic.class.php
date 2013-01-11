@@ -19,12 +19,12 @@
  */
 
 abstract class Tracker_Semantic {
-    
+
     /**
      * @var Tracker
      */
     protected $tracker;
-    
+
     /**
      * Cosntructor
      *
@@ -33,7 +33,7 @@ abstract class Tracker_Semantic {
     public function __construct(Tracker $tracker) {
         $this->tracker = $tracker;
     }
-    
+
     /**
      * Set the tracker of this semantic
      *
@@ -52,35 +52,35 @@ abstract class Tracker_Semantic {
      public function getTracker() {
          return $this->tracker;
      }
-    
+
     /**
      * The short name of the semantic: tooltip, title, status, owner, ...
      *
      * @return string
      */
     public abstract function getShortName();
-    
+
     /**
      * The label of the semantic: Tooltip, ...
      *
      * @return string
      */
     public abstract function getLabel();
-    
+
     /**
      * The description of the semantics. Used for breadcrumbs
-     * 
+     *
      * @return string
      */
     public abstract function getDescription();
-    
+
     /**
      * Display the basic info about this semantic
      *
      * @return string html
      */
     public abstract function display();
-    
+
     /**
      * Display the form to let the admin change the semantic
      *
@@ -92,7 +92,7 @@ abstract class Tracker_Semantic {
      * @return string html
      */
     public abstract function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user);
-    
+
     /**
      * Process the form
      *
@@ -104,7 +104,7 @@ abstract class Tracker_Semantic {
      * @return void
      */
     public abstract function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user);
-    
+
     /**
      * Export semantic to XML
      *
@@ -114,7 +114,7 @@ abstract class Tracker_Semantic {
      * @return void
      */
     public abstract function exportToXML(&$root, $xmlMapping);
-    
+
     /**
      * Is the field used in semantics?
      *
@@ -123,7 +123,7 @@ abstract class Tracker_Semantic {
      * @return boolean returns true if the field is used in semantics, false otherwise
      */
     public abstract function isUsedInSemantics($field);
-    
+
     /**
      * Get the url to this semantic
      *
@@ -137,13 +137,27 @@ abstract class Tracker_Semantic {
             ));
         return TRACKER_BASE_URL.'/?'. $query;
     }
-    
+
     /**
      * Save the semantic in database
      *
      * @return bool true if success, false otherwise
      */
     public abstract function save();
-    
+
+    /**
+    * Export the semantic to SOAP format
+    * @return array the SOAPification of the semantic
+    */
+    public function exportToSOAP() {
+        $field_name = "";
+        $field      = $this->getField();
+        if ($field) {
+            $field_name = $field->getName();
+        }
+
+        return array('field_name' => $field_name);
+    }
+
 }
 ?>

@@ -95,7 +95,16 @@ function ugroup_db_get_members($ugroup_id, $with_display_preferences = false, $k
     return $sql;
 }
 
-// Return name and id (as DB result) of all ugroups belonging to a specific project.
+/**
+ * Return name and id (as DB result) of all ugroups belonging to a specific project.
+ *
+ * @param Integer $groupId    Id of the project
+ * @param Array   $predefined List of predefined ugroup id
+ *
+ * @deprecated Use UGroupManager::getExistingUgroups() instead
+ *
+ * @return DB result set
+ */
 function ugroup_db_get_existing_ugroups($group_id, $predefined=null) {
     $_extra = '';
     if($predefined !== null && is_array($predefined)) {
@@ -158,7 +167,7 @@ function ugroup_db_list_tracker_ugroups_for_user($group_id,$group_artifact_id,$u
 function ugroup_db_list_dynamic_ugroups_for_user($group_id,$instances,$user) {
     
     if (!is_a($user, 'User')) {
-        $user = UserManager::instance()->getUserById($user);
+        $user = ugroup_get_user_manager()->getUserById($user);
     }
   
   if ($user->isAnonymous()) return array($GLOBALS['UGROUP_ANONYMOUS']);
@@ -194,7 +203,7 @@ function ugroup_get_name_from_id($ugroup_id) {
  * @return true if user is member of the ugroup, false otherwise.
  */
 function ugroup_user_is_member($user_id, $ugroup_id, $group_id, $atid=0) {
-    $um =& UserManager::instance();
+    $um = ugroup_get_user_manager();
     $user =& $um->getUserById($user_id);
     // Special Cases
     if ($ugroup_id==$GLOBALS['UGROUP_NONE']) { 

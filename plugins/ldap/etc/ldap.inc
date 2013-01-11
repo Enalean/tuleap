@@ -52,6 +52,14 @@ $sys_ldap_people_dn     = 'ou=people,dc=tuleap,dc=net';
 // login, etc).
 $sys_ldap_search_user='(|(uid=%words%)(cn=%words%)(mail=%words%))';
 
+// By default tooltip search is using ($sys_ldap_cn=%words%*) search filter (Hardcoded)
+// You can change for a more sophisticated search 
+// $sys_ldap_tooltip_search_user='(&(|(sn=%words%*)(givenName=%words%*)(uid=%words%*))(!(givenName=BoiteVocale))(uid=*))';
+
+// By default tooltip search attrs are $sys_ldap_cn and $sys_ldap_uid (Hardcoded)
+// You can choose the attributes the search will retrieve
+// $sys_ldap_tooltip_search_attrs='uid;sn;givenName';
+
 // On account creation, what it the default user status (A, R, ...)
 $sys_ldap_default_user_status = 'A';
 

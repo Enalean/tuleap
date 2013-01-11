@@ -74,7 +74,17 @@ document.observe('dom:loaded', function () {
                         var req = new Ajax.Request(codendi.tracker.base_url, {
                             method: 'POST',
                             parameters: parameters,
-                            onComplete: function () {
+                            onComplete: function (response) {
+                                $H(response.responseJSON).each(function (card) {
+                                    var card_element = $('cardwall_board_postit-' + card.key);
+                                    if (card_element) {
+                                        $H(card.value).each(function (field) {
+                                            card_element.select('.valueOf_' + field.key).each(function (field_element) {
+                                                field_element.update(field.value);
+                                            });
+                                        });
+                                    }
+                                });
                                 //TODO handle errors (perms, workflow, ...)
                                 // eg: change color of the post it
                             }

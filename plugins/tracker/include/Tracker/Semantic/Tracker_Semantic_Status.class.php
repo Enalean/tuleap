@@ -5,7 +5,7 @@
  * This file is a part of Codendi.
  *
  * Codendi is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
+ * it under the terms of the GNU GeLneral Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
  * (at your option) any later version.
  *
@@ -25,12 +25,12 @@ require_once('common/user/User.class.php');
 require_once('dao/Tracker_Semantic_StatusDao.class.php');
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
-    
+
     /**
      * @var Tracker_FormElement_Field_List
      */
     protected $list_field;
-    
+
     /**
      * @var array
      */
@@ -48,7 +48,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         $this->list_field  = $list_field;
         $this->open_values = $open_values;
     }
-    
+
     /**
      * The short name of the semantic: tooltip, title, status, owner, ...
      *
@@ -57,7 +57,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     public function getShortName() {
         return 'status';
     }
-    
+
     /**
      * The label of the semantic: Tooltip, ...
      *
@@ -66,19 +66,19 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     public function getLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_label');
     }
-    
+
     /**
      * The description of the semantics. Used for breadcrumbs
-     * 
+     *
      * @return string
      */
     public function getDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_description');
     }
-    
+
     /**
      * The Id of the (SB) field used for status semantic, or 0 if no field
-     * 
+     *
      * @return int The Id of the (SB) field used for status semantic, or 0 if no field
      */
     public function getFieldId() {
@@ -88,25 +88,25 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             return 0;
         }
     }
-    
+
     /**
      * The (list) field used for status semantic
-     * 
+     *
      * @return Tracker_FormElement_Field_List The (list) field used for status semantic, or null if no field
      */
     public function getField() {
         return $this->list_field;
     }
-    
+
     /**
      * The Ids of open values for this status semantic
-     * 
+     *
      * @return array of int The Id of the open values for this status semantic
      */
     public function getOpenValues() {
         return $this->open_values;
     }
-    
+
     /**
      * Display the basic info about this semantic
      *
@@ -131,7 +131,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             echo $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_no_field');
         }
     }
-    
+
     /**
      * Display the form to let the admin change the semantic
      *
@@ -146,11 +146,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
-        
+
         if ($list_fields = Tracker_FormElementFactory::instance()->getUsedListFields($this->tracker)) {
-            
+
             $html .= '<form method="POST" action="'. $this->geturl() .'">';
-            
+
             // field selectbox
             $field = null;
             $select = '<select name="field_id">';
@@ -170,7 +170,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
                 $select .= '<option value="' . $list_field->getId() . '" ' . $selected . '>' . $hp->purify($list_field->getLabel(), CODENDI_PURIFIER_CONVERT_HTML) . '</option>';
             }
             $select .= '</select>';
-            
+
             // open values selectbox
             $params = '';
             if ($field) {
@@ -189,10 +189,10 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
                 }
             }
             $values .= '</select>';
-            
+
             // submit button
             $submit = '<input type="submit" name="update" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-            
+
             if (!$this->getFieldId()) {
                 $html .= $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','status_no_field');
                 $html .= '<p>' . $GLOBALS['Language']->getText('plugin_tracker_admin_semantic','choose_one_advice') . $select .' '. $submit .'</p>';
@@ -207,7 +207,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         echo $html;
         $sm->displaySemanticFooter($this, $tracker_manager);
     }
-    
+
     /**
      * Process the form
      *
@@ -247,7 +247,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         }
         $this->displayAdmin($sm, $tracker_manager, $request, $current_user);
     }
-    
+
     /**
      * Delete this semantic
      */
@@ -257,11 +257,11 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         $dao = new Tracker_Semantic_StatusDao();
         $dao->delete($this->tracker->getId());
     }
-    
+
     /**
      * Save this semantic
      *
-     * @return bool 
+     * @return bool
      */
     public function save() {
         $dao = new Tracker_Semantic_StatusDao();
@@ -276,7 +276,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         $this->open_values = $open_values;
         return $dao->save($this->tracker->getId(), $this->getFieldId(), $this->open_values);
     }
-    
+
     protected static $_instances;
     /**
      * Load an instance of a Tracker_Semantic_Status
@@ -292,7 +292,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
             $dao = new Tracker_Semantic_StatusDao();
             foreach ($dao->searchByTrackerId($tracker->getId()) as $row) {
                 $field_id      = $row['field_id'];
-                $open_values[] = $row['open_value_id'];
+                $open_values[] = (int)$row['open_value_id'];
             }
             if (!$open_values) {
                 $open_values[] = 100;
@@ -303,7 +303,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
         }
         return self::$_instances[$tracker->getId()];
     }
-    
+
     /**
      * Export semantic to XML
      *
@@ -328,7 +328,7 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
              }
          }
      }
-     
+
      /**
      * Is the field used in semantics?
      *
@@ -339,6 +339,16 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     public function isUsedInSemantics($field) {
         return $this->getFieldId() == $field->getId();
     }
-    
+
+    /**
+     * Export the semantic to SOAP format
+     * @return array the SOAPification of the semantic
+     */
+    public function exportToSOAP() {
+        $SOAP_array = parent::exportToSoap();
+        $SOAP_array['values'] = $this->getOpenValues();
+        return $SOAP_array;
+    }
+
 }
 ?>

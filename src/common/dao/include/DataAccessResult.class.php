@@ -37,6 +37,7 @@ class DataAccessResult implements IProvideDataAccessResult {
 
     protected $_current;
     protected $_row;
+    private $instance_callback = null;
     
     public function __construct($da, $result) {
         $this->da     = $da;
@@ -46,6 +47,22 @@ class DataAccessResult implements IProvideDataAccessResult {
             $this->_row     = false;
             $this->rewind();
         }
+    }
+
+    public function getResult() {
+        return $this->result;
+    }
+
+    /**
+     * Allow to create an object instead of an array when iterating over results
+     *
+     * @param callback $instance_callback The callback to use to create object
+     *
+     * @return \DataAccessResult
+     */
+    public function instanciateWith($instance_callback) {
+        $this->instance_callback = $instance_callback;
+        return $this;
     }
 
     /**
@@ -71,20 +88,27 @@ class DataAccessResult implements IProvideDataAccessResult {
      * @return mixed
      */
     public function isError() {
-        $error=$this->da->isError();
+        $error= $this->daIsError();
         if (!empty($error))
             return $error;
         else
             return false;
     }
-    
-    
+
+    protected function daIsError() {
+        return $this->da->isError();
+    }
+
     // {{{ Iterator
     /**
      * @return array Return the current element
      */
     public function current() {
-        return $this->_row;
+        if ($this->instance_callback) {
+            return call_user_func_array($this->instance_callback, array($this->_row));
+        } else {
+            return $this->_row;
+        }
     }
     
     /**
@@ -94,7 +118,11 @@ class DataAccessResult implements IProvideDataAccessResult {
      */
     public function next() {
         $this->_current++;
-        $this->_row = $this->da->fetch($this->result);
+        $this->_row = $this->daFetch();
+    }
+
+    protected function daFetch() {
+        return $this->da->fetch($this->result);
     }
     
     /**
@@ -113,12 +141,16 @@ class DataAccessResult implements IProvideDataAccessResult {
      */
     public function rewind() {
         if ($this->rowCount() > 0) {
-            $this->da->dataSeek($this->result, 0);
+            $this->daSeek();
             $this->next();
             $this->_current = 0;
         }
     }
-    
+
+    protected function daSeek() {
+        $this->da->dataSeek($this->result, 0);
+    }
+
     /**
      * Return the key of the current element. 
      * 
@@ -136,6 +168,7 @@ class DataAccessResult implements IProvideDataAccessResult {
     public function count() {
         return $this->rowCount();
     }
+
     //}}}
 }
 ?>

@@ -253,6 +253,26 @@ file_filemodule_monitor	turn_monitor_off	Pour arrêter le suivi, cliquer sur l'i
 file_filemodule_monitor	monitor_turned_off	Le suivi de ce paquet est désactivé
 file_filemodule_monitor	no_emails	Vous ne recevrez plus de courrier électronique concernant les nouvelles versions de ce paquet.
 file_filemodule_monitor	choose_p	Erreur - Veuillez d'abord choisir un paquet
+file_filemodule_monitor	no_permission	Vous n'avez pas les permissions pour effectuer cette action
+file_filemodule_monitor	monitoring_people_title	Personnes qui suivent ce paquet
+file_filemodule_monitor	users_monitor	$1 utilisateur(s) suivent ce paquet anonymement.
+file_filemodule_monitor	no_list	Aucun utilisateur ne suit ce paquet publiquement
+file_filemodule_monitor	user	Utilisateur
+file_filemodule_monitor	add_users	Ajouter un utilisateur à la liste
+file_filemodule_monitor	my_monitoring	Mon suivi
+file_filemodule_monitor	anonymous	Suivre anonymement
+file_filemodule_monitor	public	Les administrateurs sauront que vous suivez ce paquet
+file_filemodule_monitor	no_delete	Rien à supprimer
+file_filemodule_monitor	not_monitoring	L'utilisateur "$1" ne suivait pas ce paquet
+file_filemodule_monitor	delete_error	Impossible de supprimer le suivi pour l'utilisateur "$1"
+file_filemodule_monitor	deleted	Suivi supprimé pour l'utilisateur "$1"
+file_filemodule_monitor	no_user	Impossible de trouver l'utilisateur "$1"
+file_filemodule_monitor	user_no_permission	L'utilisateur "$1" ne peut pas accéder en lecture à ce paquet
+file_filemodule_monitor	already_monitoring	L'utilisateur "$1" suivait ce paquet
+file_filemodule_monitor	monitoring_added	Le paquet est maintenant suivi par "$1"
+file_filemodule_monitor	mail_subject	[$1] Suivi du paquet "$2"
+file_filemodule_monitor	add_monitor_mail	Vous suivez désormais le paquet
+file_filemodule_monitor	delete_monitor_mail	Votre suivi a été supprimé du paquet
 #
 #-----------------------------------------------
 # Script: SF/www/file/file_utils.php

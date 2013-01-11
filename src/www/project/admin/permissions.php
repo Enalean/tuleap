@@ -611,7 +611,7 @@ function permission_fetch_selected_ugroups($permission_type, $object_id, $group_
     return $ugroups;
 }
 
-function permission_fetch_selection_field($permission_type, $object_id, $group_id, $htmlname = 'ugroups') {
+function permission_fetch_selection_field($permission_type, $object_id, $group_id, $htmlname = 'ugroups', $disabled = false) {
     $html = '';
     // Get ugroups already defined for this permission_type
     $res_ugroups=permission_db_authorized_ugroups($permission_type, $object_id);
@@ -643,7 +643,7 @@ function permission_fetch_selection_field($permission_type, $object_id, $group_i
             'text' => $name
         );
     }
-    $html .= html_build_multiple_select_box($array, $htmlname."[]", ($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false);
+    $html .= html_build_multiple_select_box($array, $htmlname."[]", ($nb_set?util_result_column_to_array($res_ugroups):$default_values),8, true, util_translate_name_ugroup('ugroup_nobody_name_key'), false, '', false, '',false, CODENDI_PURIFIER_CONVERT_HTML, $disabled);
     return $html;
 }
 

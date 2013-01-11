@@ -7,59 +7,36 @@
 // 
 
 require_once('pre.php');
+require_once('common/frs/FRSPackageFactory.class.php');
 require_once('common/frs/FileModuleMonitorFactory.class.php');
 
 if (user_isloggedin()) {
-	/*
-		User obviously has to be logged in to monitor
-		a file module
-	*/
     $vFilemodule_id = new Valid_UInt('filemodule_id');
     $vFilemodule_id->required();
-    if($request->valid($vFilemodule_id)) {
+    if ($request->valid($vFilemodule_id)) {
         $filemodule_id = $request->get('filemodule_id');
-		/*
-			First check to see if they are already monitoring
-			this thread. If they are, say so and quit.
-			If they are NOT, then insert a row into the db
-		*/
-		$frsfmf = new FileModuleMonitorFactory();
+        $pm            = ProjectManager::instance();
+        $um            = UserManager::instance();
+        $userHelper    = new UserHelper();
+        $currentUser   = $um->getCurrentUser();
+        $frspf         = new FRSPackageFactory();
+        $fmmf          = new FileModuleMonitorFactory();
+        if ($frspf->userCanRead($group_id, $filemodule_id, $currentUser->getId())) {
+            $fmmf->processMonitoringActions($request, $currentUser, $group_id, $filemodule_id, $um, $userHelper);
 
-		if (!$frsfmf->isMonitoring($filemodule_id)) {
-			/*
-				User is not already monitoring this filemodule, so 
-				insert a row so monitoring can begin
-			*/
-            
-			$result = $frsfmf->setMonitor($filemodule_id);
-
-			if (!$result) {
-				$GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','insert_err'));
-			} else {
-			    $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','p_monitored'));
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','now_emails'));
-                $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','turn_monitor_off'), CODENDI_PURIFIER_LIGHT);
-			}
-
-		} else {
-			$result = $frsfmf->stopMonitor($filemodule_id);
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','monitor_turned_off'));
-            $GLOBALS['Response']->addFeedback('info', $Language->getText('file_filemodule_monitor','no_emails'));
-		}
-
-	} else {
-        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor','choose_p'));
-	}
-    
-    // redirect the user to the page she went
-    if (array_key_exists('HTTP_REFERER', $_SERVER)) {
-        $redirection_url = $_SERVER['HTTP_REFERER'];
+            file_utils_header(array('title' => $Language->getText('file_showfiles', 'file_p_for', $pm->getProject($group_id)->getPublicName())));
+            echo $fmmf->getMonitoringHTML($currentUser, $group_id, $filemodule_id, $um, $userHelper);
+            file_utils_footer(array());
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'no_permission'));
+            $GLOBALS['Response']->redirect('showfiles.php?group_id='.$group_id);
+        }
     } else {
-        $redirection_url = '../my/';
+        $GLOBALS['Response']->addFeedback('error', $Language->getText('file_filemodule_monitor', 'choose_p'));
+        $GLOBALS['Response']->redirect('showfiles.php?group_id='.$group_id);
     }
-    $GLOBALS['Response']->redirect($redirection_url);
-
 } else {
-	exit_not_logged_in();
+    exit_not_logged_in();
 }
+
 ?>

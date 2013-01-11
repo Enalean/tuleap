@@ -55,6 +55,14 @@ class trackerPlugin extends Plugin {
         $this->_addHook('register_project_creation',           'register_project_creation',         false);
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
+        $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
+    }
+    
+    public function getHooksAndCallbacks() {
+        if (defined('AGILEDASHBOARD_BASE_DIR')) {
+            $this->_addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE, 'agiledashboard_event_additional_panes_on_milestone', false);
+        }
+        return parent::getHooksAndCallbacks();
     }
     
     public function getPluginInfo() {
@@ -106,6 +114,7 @@ class trackerPlugin extends Plugin {
                 '/plugins/tracker/scripts/TrackerAdminFields.js',
                 '/plugins/tracker/scripts/TrackerArtifact.js',
                 '/plugins/tracker/scripts/TrackerArtifactLink.js',
+                '/plugins/tracker/scripts/TrackerCreate.js',
                 '/plugins/tracker/scripts/TrackerFormElementFieldPermissions.js',
                 '/plugins/tracker/scripts/TrackerDateReminderForms.js',
             )
@@ -133,6 +142,21 @@ class trackerPlugin extends Plugin {
                 $report_factory->save($report);
             }
             $params['done'] = true;
+        }
+    }
+    
+    public function agiledashboard_event_additional_panes_on_milestone($params) {
+        $artifact = $params['milestone']->getArtifact();
+        $user     = $params['user'];
+        require_once 'Tracker/Artifact/Burndown/Pane.class.php';
+        $burndown_field = $artifact->getABurndownField($user);
+        if ($burndown_field) {
+            $params['panes'][] = new Tracker_Artifact_Burndown_Pane(
+                    $artifact,
+                    $burndown_field,
+                    $params['user'],
+                    $this->getThemePath()
+                );
         }
     }
     
@@ -283,7 +307,13 @@ class trackerPlugin extends Plugin {
                     $transition = TransitionFactory::instance()->getTransition($atid);
                     $tracker_id = $transition->getWorkflow()->getTrackerId();
                     $edit_transition = $transition->getFieldValueFrom().'_'.$transition->getFieldValueTo();
-                    echo '<TD><a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-workflow&edit_transition='.$edit_transition.'">'.$objname.'</a></TD>';
+                    echo '<TD><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
+                        array(
+                            'tracker'         => $tracker_id,
+                            'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
+                            'edit_transition' => $edit_transition
+                        )
+                    ).'">'.$objname.'</a></TD>';
                 }
             }
         }
@@ -509,6 +539,16 @@ class trackerPlugin extends Plugin {
         );
     }
 
+    public function soap_description($params) {
+        $params['end_points'][] = array(
+            'title'       => 'Tracker',
+            'wsdl'        => $this->getPluginPath().'/soap/?wsdl',
+            'wsdl_viewer' => $this->getPluginPath().'/soap/view-wsdl',
+            'changelog'   => $this->getPluginPath().'/soap/ChangeLog',
+            'version'     => file_get_contents(dirname(__FILE__).'/../www/soap/VERSION'),
+            'description' => 'Query and modify Trackers.',
+        );
+    }
 }
 
 ?>

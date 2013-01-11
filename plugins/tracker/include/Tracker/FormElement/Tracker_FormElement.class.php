@@ -32,11 +32,15 @@ require_once('json.php');
  * Base class for all fields in trackers, from fieldsets to selectboxes
  */
 abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tracker_FormElement_IProvideFactoryButtonInformation {
+    const PERMISSION_READ   = 'PLUGIN_TRACKER_FIELD_READ';
+    const PERMISSION_UPDATE = 'PLUGIN_TRACKER_FIELD_UPDATE';
+    const PERMISSION_SUBMIT = 'PLUGIN_TRACKER_FIELD_SUBMIT';
+
     /**
      * The field id
      */
     public $id;
-    
+
     /**
      * The tracker id
      */
@@ -46,71 +50,71 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @var Tracker
      */
     private $tracker;
-    
+
     /**
      * Id of the fieldcomposite this field belongs to
      */
     public $parent_id;
-    
+
     /**
      * The name
      *
      * @var string $name
      */
     public $name;
-    
+
     /**
      * The label
      */
     public $label;
-    
+
     /**
      * The description
      *
      * @var string $description
      */
     public $description;
-    
+
     /**
      * Is the field used?
      */
     public $use_it;
-    
+
     /**
      * The scope of the field: S: system or P:project
      */
     public $scope;
-    
+
     /**
      * Is the field is required?
      */
     public $required;
-    
+
     /**
      * Is the field has notifications
      */
     public $notifications;
-    
+
     /**
      * The rank
      *
      * @var string $rank
      */
     public $rank;
-    
+
     /**
      * @var Tracker_FormElement
      */
     protected $original_field = null;
-    
+
     /**
      * @var Tracker_FormElementFactory
      */
     private $formElementFactory;
-    
+
     /**
      * Base constructor
-     * 
+     *
      * @param int    $id                          The id of the field
      * @param int    $tracker_id                  The id of the tracker this field belongs to
      * @param int    $parent_id                   The id of the parent element
@@ -122,7 +126,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @param bool   $required                    Is the element required? Todo: move this in field?
      * @param int    $rank                        The rank of the field (in the parent)
      * @param Tracker_FormElement $original_field The field the current field is refering to (null if no references)
-     * 
+     *
      * @return void
      */
     public function __construct($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank, Tracker_FormElement $original_field = null) {
@@ -139,11 +143,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $this->rank           = $rank;
         $this->original_field = $original_field;
     }
-    
+
     public function getScope() { return $this->scope; }
     public function getParentId() { return $this->parent_id; }
     public function getRank() { return $this->rank; }
-    
+
     /**
      *  Return true if the field is used
      *
@@ -152,10 +156,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     function isUsed() {
         return( $this->use_it );
     }
-    
+
     /**
      * Process the request
-     * 
+     *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
      * @param User                           $current_user    The user who mades the request
@@ -186,10 +190,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             break;
         }
     }
-    
+
     /**
      * Update the form element
-     * 
+     *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
      * @param User                           $current_user    The user who mades the request
@@ -225,7 +229,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. (int)$this->tracker_id .'&func=admin-formElements');
         }
     }
-    
+
     /**
      * Return the tracker of this formElement
      *
@@ -237,12 +241,12 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $this->tracker;
     }
-    
+
     public function setTracker(Tracker $tracker) {
         $this->tracker    = $tracker;
         $this->tracker_id = $tracker->getId();
     }
-    
+
     /**
      * Return the tracker id of this formElement
      *
@@ -251,34 +255,34 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getTrackerId() {
         return $this->tracker_id;
     }
-    
+
     /**
      * Fetch the "add criteria" box in query form
      *
      * @param array  $used   Current used formElements as criteria.
      * @param string $prefix Prefix to add before label in optgroups
-     * 
+     *
      * @return string
      */
-    
+
     public abstract function fetchAddCriteria($used, $prefix = '');
-    
+
     /**
      * Fetch the "add column" box in table renderer
      *
      * @param array  $used   Current used formElements as column.
      * @param string $prefix Prefix to add before label in optgroups
-     * 
+     *
      * @return string
      */
     public abstract function fetchAddColumn($used, $prefix = '');
-    
+
     /**
      * Fetch the "add tooltip" box in admin
      *
      * @param array  $used   Current used fields as column.
      * @param string $prefix Prefix to add before label in optgroups
-     * 
+     *
      * @return string
      */
     public abstract function fetchAddTooltip($used, $prefix = '');
@@ -301,7 +305,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
-     * Duplicate a field. If the field has custom properties, 
+     * Duplicate a field. If the field has custom properties,
      * they should be propagated to the new one
      *
      * @param int $from_field_id The id of the field
@@ -315,14 +319,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return array();
     }
-    
+
     /**
      * Display the form to administrate the element
-     * 
+     *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
      * @param User                           $current_user    The user who mades the request
-     * 
+     *
      * @return void
      */
     public function displayAdminFormElement(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
@@ -335,11 +339,11 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $this->accept($visitor);
         $visitor->display($layout, $request);
     }
-    
+
     public function setFormElementFactory(Tracker_FormElementFactory $factory) {
         $this->formElementFactory = $factory;
     }
-    
+
     /**
      * @return Tracker_FormElementFactory
      */
@@ -349,16 +353,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $this->formElementFactory;
     }
-    
+
     /**
      * Accessor for visitors
-     * 
+     *
      * @param Tracker_FormElement_Visitor $visitor
      */
     public function accept(Tracker_FormElement_Visitor $visitor) {
         $visitor->visit($this);
     }
-    
+
     /**
      * Get the rank structure for the selectox
      *
@@ -371,7 +375,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             'rank' => $this->rank,
         );
     }
-        
+
     /**
      * Get the use_it row for the element
      *
@@ -399,10 +403,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $html .= '</td></tr>';
         return $html;
     }
-    
+
     public $default_properties = array();
     protected $cache_specific_properties;
-    
+
     /**
      * Get a property value identified by its key
      *
@@ -413,7 +417,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getProperty($key) {
         return $this->getPropertyValueInCollection($this->getProperties(), $key);
     }
-    
+
     /**
      * Retreive a property value in the recursive collection $array
      *
@@ -437,7 +441,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $found;
     }
-    
+
     /**
      * Get the dao of the field
      *
@@ -446,7 +450,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     protected function getDao() {
         return null;
     }
-    
+
     /**
      * Get the properties of the field
      *
@@ -463,7 +467,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $this->cache_specific_properties;
     }
-    
+
     /**
      * Get the properties as a unique, flattened array
      *
@@ -485,7 +489,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $properties;
     }
-    
+
     /**
      * Get the properties values as a unique, flattened array
      *
@@ -502,10 +506,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $properties;
     }
-    
+
     /**
      * Look for a suitable property and set its value
-     * 
+     *
      * @param mixed &$array The array or subarray storing properties
      * @param mixed $key    The property to search
      * @param array $value  The value to set if the property is found
@@ -526,7 +530,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             }
         }
     }
-    
+
     /**
      * Store the specific properties of the formElement
      *
@@ -542,7 +546,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $success;
     }
-    
+
     /**
      * Fetch the element for the submit new artifact form
      *
@@ -556,7 +560,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return string html
      */
     public abstract function fetchSubmitMasschange(/*$submitted_values = array()*/);
-    
+
     /**
      * Fetch the element for the update artifact form
      *
@@ -592,7 +596,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
         return '';
     }
-    
+
     /**
      * Prepare the element to be displayed
      *
@@ -607,8 +611,8 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value
      * @param String $format
-     * 
-     * @return String 
+     *
+     * @return String
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
         return '';
@@ -616,15 +620,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
 
     /**
      * Get the label of a property by key
-     * 
+     *
      * @param string $key the key of the property
      *
-     * @return string the label 
+     * @return string the label
      */
     public function getPropertyLabel($key) {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_property', $key);
     }
-    
+
     /**
      * Update the properties of the formElement
      *
@@ -647,7 +651,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $this->rank          = isset($properties['rank'])          ? $properties['rank']                    : $this->rank;
         return $this->updateSpecificProperties($properties);
     }
-    
+
     /**
      * Update the specific properties of the formElement
      *
@@ -659,7 +663,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         //TODO make it abstract
         return true;
     }
-   
+
     /**
      * Change the type of the formElement
      *
@@ -671,14 +675,14 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         // Default: type change is not allowed, so return false
         return false;
     }
- 
+
     /**
      * Display the html f in the admin ui
      *
      * @return string html
      */
     protected abstract function fetchAdminFormElement();
-    
+
     /**
      * Compute the url to edit the element
      *
@@ -687,10 +691,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getAdminEditUrl() {
         return TRACKER_BASE_URL.'/?tracker='. (int)$this->getTracker()->getId() .'&amp;func=admin-formElement-update&amp;formElement='. $this->id;
     }
-    
+
     /**
      * Transforms FormElement into a SimpleXMLElement
-     * 
+     *
      * @param SimpleXMLElement $root        the node to which the FormElement is attached (passed by reference)
      * @param array            &$xmlMapping correspondance between real ids and xml IDs
      * @param int              $index       of the last field in the array
@@ -704,7 +708,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $xmlMapping[$ID] = $this->id;
         $root->addAttribute('ID', $ID);
         $root->addAttribute('rank', $this->rank);
-        // if old ids are important, modify code here 
+        // if old ids are important, modify code here
         if (false) {
             $root->addAttribute('id', $this->id);
             $root->addAttribute('tracker_id', $this->tracker_id);
@@ -724,7 +728,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         if ($this->notifications) {
             $root->addAttribute('notifications', $this->notifications);
         }
-        
+
         $root->addChild('name', $this->name);
         $root->addChild('label', $this->label);
         // only add if not empty
@@ -735,7 +739,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $this->exportPropertiesToXML($root);
         }
     }
-    
+
     /**
      * Export form element properties into a SimpleXMLElement
      *
@@ -751,7 +755,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             }
         }
     }
-    
+
     /**
      * Continue the initialisation from an xml (FormElementFactory is not smart enough to do all stuff.
      * Polymorphism rulez!!!
@@ -769,7 +773,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             }
         }
     }
-    
+
     /**
      * Callback called after factory::saveObject. Use this to do post-save actions
      *
@@ -780,16 +784,16 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function afterSaveObject($tracker) {
         //do nothing per default
     }
-    
+
     /**
      * Verifies the consistency of the imported Tracker
-     * 
-     * @return true if Tracler is ok 
+     *
+     * @return true if Tracler is ok
      */
     public function testImport() {
         return true;
     }
-    
+
     /**
      *  Set the id
      *
@@ -801,7 +805,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         $this->id = $id;
         return $this;
     }
-    
+
     /**
      *  Get the id
      *
@@ -810,7 +814,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getId() {
         return $this->id;
     }
-    
+
     /**
      * Hook called after a creation of a formelement
      *
@@ -820,10 +824,10 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      */
     public function afterCreate($formElement_data) {
     }
-    
+
     /**
      * The element is permanently deleted from the db
-     * This hooks is here to delete specific properties, 
+     * This hooks is here to delete specific properties,
      *  specific values of the element... all its dependencies.
      * (The element itself will be deleted later)
      *
@@ -832,7 +836,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function delete() {
         return true;
     }
-    
+
     /**
      *  Get the label attribute value
      *
@@ -841,7 +845,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     function getLabel() {
         return $this->label;
     }
-    
+
     /**
      *  Get the name attribute value (internal field name)
      *
@@ -850,7 +854,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     function getName() {
         return $this->name;
     }
-    
+
     /**
      *  Get the description attribute value
      *
@@ -859,7 +863,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     function getDescription() {
         return $this->description;
     }
-    
+
     /**
      * Say if the element has notifications
      *
@@ -868,44 +872,44 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function hasNotifications() {
         return $this->notifications;
     }
-    
-    public function getOriginalFieldId() { 
+
+    public function getOriginalFieldId() {
         if ($this->original_field) {
             return $this->original_field->getId();
         }
         return 0;
     }
-    
+
     public function getOriginalField() {
         return $this->original_field;
     }
-    
+
     public function getOriginalTracker() {
         return $this->getOriginalField()->getTracker();
     }
-    
+
     public function getOriginalProject() {
         return $this->getOriginalTracker()->getProject();
     }
-    
+
     /**
      * Returns true if the field is a copy of another one
-     * 
+     *
      * @return Boolean
      */
     public function isTargetSharedField() {
         return $this->original_field !== null;
     }
-    
+
     /**
      * Returns FormElements that are a copy of the current FormElement
-     * 
-     * @return Array of FormElement 
+     *
+     * @return Array of FormElement
      */
     public function getSharedTargets() {
         return $this->getFormElementFactory()->getSharedTargets($this);
     }
-    
+
     /**
      * Get a recipients list for notifications. This is filled by users fields for example.
      *
@@ -916,7 +920,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getRecipients(Tracker_Artifact_ChangesetValue $changeset_value) {
         return array();
     }
-    
+
     /**
      * Get the current user
      *
@@ -925,7 +929,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     protected function getCurrentUser() {
         return UserManager::instance()->getCurrentUser();
     }
-    
+
     /**
      * Say if a user has permission. Checks super user status.
      * Do not call this directly. Use userCanRead, userCanUpdate or userCanSubmit instead.
@@ -943,90 +947,90 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
             $this->id,
             $permission_type,
             $user->getUgroups(
-                $this->getTracker()->getGroupId(), 
+                $this->getTracker()->getGroupId(),
                 array(
                     'tracker' => $this->getTrackerId()
                 )
             )
         );
     }
-    
-    /** 
+
+    /**
      * return true if user has Read or Update permission on this field
-     * 
+     *
      * @param User $user The user. if not given or null take the current user
      *
      * @return bool
-     */ 
+     */
     public function userCanRead(User $user = null) {
         $ok = $this->userHasPermission('PLUGIN_TRACKER_FIELD_READ', $user)
               || $this->userHasPermission('PLUGIN_TRACKER_FIELD_UPDATE', $user);
         return $ok;
     }
-    
-    /** 
-     * return true if user has Update permission on this field 
+
+    /**
+     * return true if user has Update permission on this field
      *
      * @param User $user The user. if not given or null take the current user
      *
      * @return bool
-     */ 
+     */
     public function userCanUpdate(User $user = null) {
         $ok = $this->isUpdateable() && $this->userHasPermission('PLUGIN_TRACKER_FIELD_UPDATE', $user);
         return $ok;
     }
-    
-    /** 
-     * return true if user has Submit permission on this field 
+
+    /**
+     * return true if user has Submit permission on this field
      *
      * @param User $user The user. if not given or null take the current user
      *
      * @return bool
-     */ 
+     */
     public function userCanSubmit(User $user = null) {
         $ok = $this->isSubmitable() && $this->userHasPermission('PLUGIN_TRACKER_FIELD_SUBMIT', $user);
         return $ok;
     }
-    
-    /** 
+
+    /**
      * return true if users in ugroups have Read permission on this field
-     * 
+     *
      * @param array $ugroups the ugroups users are part of
      *
      * @return bool
-     */ 
+     */
     protected function ugroupsCanRead($ugroups) {
       $pm = PermissionsManager::instance();
       $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_READ', $ugroups);
       return $ok;
     }
-    
-    /** 
-     * return true if users in ugroups have Update permission on this field 
+
+    /**
+     * return true if users in ugroups have Update permission on this field
      *
      * @param array $ugroups the ugroups users are part of
      *
      * @return bool
-     */ 
+     */
     protected function ugroupsCanUpdate($ugroups) {
       $pm = PermissionsManager::instance();
       $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_UPDATE', $ugroups);
       return $ok;
     }
-    
-    /** 
-     * return true if users in ugroups have Submit permission on this field 
+
+    /**
+     * return true if users in ugroups have Submit permission on this field
      *
      * @param array $ugroups the ugroups users are part of
      *
      * @return bool
-     */ 
+     */
     protected function ugroupsCanSubmit($ugroups) {
       $pm = PermissionsManager::instance();
       $ok = $pm->userHasPermission($this->id, 'PLUGIN_TRACKER_FIELD_SUBMIT', $ugroups);
       return $ok;
     }
-    
+
     /**
      * Retrieve users permissions (PLUGIN_TRACKER_FIELD_SUBMIT, -UPDATE, -READ)
      * on this field.
@@ -1048,7 +1052,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $perms;
     }
-    
+
     /**
      * Say if the field is readable
      *
@@ -1057,7 +1061,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function isReadable() {
         return true;
     }
-    
+
     /**
      * Say if the field is updateable
      *
@@ -1066,7 +1070,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function isUpdateable() {
         return !is_a($this, 'Tracker_FormElement_Field_ReadOnly');
     }
-    
+
     /**
      * Say if the field is submitable
      *
@@ -1075,7 +1079,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function isSubmitable() {
         return !is_a($this, 'Tracker_FormElement_Field_ReadOnly');
     }
-    
+
     /**
      * Is the form element can be set as unused?
      * This method is to prevent tracker inconsistency
@@ -1083,7 +1087,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      * @return boolean returns true if the field can be unused, false otherwise
      */
     public abstract function canBeUnused();
-    
+
     protected $cache_permissions;
     /**
      * get the permissions for this field
@@ -1093,7 +1097,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function getPermissions() {
         return array();
     }
-    
+
     /**
      * Set the cache permission for the ugroup_id
      * Use during the two-step xml import
@@ -1106,19 +1110,37 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function setCachePermission($ugroup_id, $permission_type) {
         $this->cache_permissions[$ugroup_id][] = $permission_type;
     }
-    
+
     /**
      * @return bool say if the field is a unique one
      */
     public static function getFactoryUniqueField() {
         return false;
     }
-    
+
     /**
      * Format a timestamp into Y-m-d format
      */
     public function formatDate($date) {
         return format_date("Y-m-d", (float)$date, '');
+    }
+
+    public function exportCurrentUserPermissionsToSOAP(User $user) {
+
+        $permissions = array();
+
+        if ($this->userCanRead($user)) {
+            $permissions[] = 'read';
+        }
+
+        if ($this->userCanUpdate($user)) {
+            $permissions[] = 'update';
+        }
+
+        if ($this->userCanSubmit($user)) {
+            $permissions[] = 'submit';
+        }
+        return $permissions;
     }
 }
 ?>

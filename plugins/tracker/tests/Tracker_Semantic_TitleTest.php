@@ -32,9 +32,9 @@ class Tracker_Semantic_TitleTest extends UnitTestCase {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
         $GLOBALS['Language']->setReturnValue('getText','Title',array('plugin_tracker_admin_semantic','title_label'));
         $GLOBALS['Language']->setReturnValue('getText','Define the title of an artifact',array('plugin_tracker_admin_semantic','title_description'));
-        
+
         $xml = simplexml_load_file(dirname(__FILE__) . '/_fixtures/ImportTrackerSemanticTitleTest.xml');
-        
+
         $tracker = new MockTracker();
         $f = new MockTracker_FormElement_Field_Text();
         $f->setReturnValue('getId', 102);
@@ -42,13 +42,13 @@ class Tracker_Semantic_TitleTest extends UnitTestCase {
         $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
         $array_mapping = array('F13' => '102');
         $tst->exportToXML($root, $array_mapping);
-        
+
         $this->assertEqual((string)$xml->shortname, (string)$root->semantic->shortname);
         $this->assertEqual((string)$xml->label, (string)$root->semantic->label);
         $this->assertEqual((string)$xml->description, (string)$root->semantic->description);
         $this->assertEqual((string)$xml->field['REF'], (string)$root->semantic->field['REF']);
     }
-    
+
 }
 
 ?>

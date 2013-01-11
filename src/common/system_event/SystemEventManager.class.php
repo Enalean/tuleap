@@ -293,51 +293,7 @@ class SystemEventManager {
         }
         return implode(SystemEvent::PARAMETER_SEPARATOR, $concat);
     }
-    
-    /**
-     * Process stored events. Should this be moved to a new class?
-     */
-    function processEvents() {        
-        while (($dar=$this->dao->checkOutNextEvent()) != null) {            
-            if ($row = $dar->getRow()) {
-                //echo "Processing event ".$row['id']." (".$row['type'].")\n";
-                $sysevent = $this->getInstanceFromRow($row);               
-                // Process $sysevent
-                if ($sysevent) {
-                    Backend::instance('Backend')->log("Processing event #".$sysevent->getId()." ".$sysevent->getType()."(".$sysevent->getParameters().")", Backend::LOG_INFO);
-                    $sysevent->process();
-                    $this->dao->close($sysevent);
-                    $sysevent->notify();
-                    Backend::instance('Backend')->log("Processing event #".$sysevent->getId().": done.", Backend::LOG_INFO);
-                    // Output errors???
-                }
-            }
-        }
-        // Since generating aliases may be costly, do it only once everything else is processed
-        if (Backend::instance('Aliases')->aliasesNeedUpdate()) {
-            Backend::instance('Aliases')->update();
-        }
 
-        // Update CVS root allow file once everything else is processed
-        if (Backend::instance('CVS')->getCVSRootListNeedUpdate()) {
-            Backend::instance('CVS')->CVSRootListUpdate();
-        }
-
-        // Update SVN root definition for Apache once everything else is processed
-        if (Backend::instance('SVN')->getSVNApacheConfNeedUpdate()) {
-            Backend::instance('SVN')->generateSVNApacheConf();
-            // Need to refresh apache (graceful)
-            system('/sbin/service httpd graceful');
-        }
-        // Update system user and group caches once everything else is processed
-        if (Backend::instance('System')->getNeedRefreshUserCache()) {
-            Backend::instance('System')->refreshUserCache();
-        }
-        if (Backend::instance('System')->getNeedRefreshGroupCache()) {
-            Backend::instance('System')->refreshGroupCache();
-        }
-    }
-    
     /**
      * Instantiate a SystemEvent from a row
      *
@@ -345,7 +301,7 @@ class SystemEventManager {
      *
      * @return SystemEvent
      */
-    protected function getInstanceFromRow($row) {
+    public function getInstanceFromRow($row) {
         $em           = EventManager::instance();
         $sysevent     = null;
         $klass        = null;
@@ -497,7 +453,7 @@ class SystemEventManager {
                     $html .= '<td>'. $sysevent->getCreateDate().'</td>';
                     $html .= '<td>'. $sysevent->getProcessDate() .'</td>';
                     $html .= '<td>'. $sysevent->getEndDate() .'</td>';
-                    $html .= '<td>'. $sysevent->getLog() .'</td>';
+                    $html .= '<td>'. nl2br($sysevent->getLog()) .'</td>';
                     $html .= '<td>'. $replay_link .'</td>';
                 }
                 
@@ -536,6 +492,26 @@ class SystemEventManager {
         }
         return $html;
     }
+
+    /**
+     *
+     * @param type $event_type
+     * @param type $parameter
+     * @return boolean
+     */
+    public function isThereAnEventAlreadyOnGoing($event_type, $parameter) {
+        $dar = $this->_getDao()->searchWithParam(
+            'head',
+             $parameter,
+             array($event_type),
+             array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
+        );
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Return true if there is no pending rename event of this user, otherwise false
      * 
@@ -543,11 +519,7 @@ class SystemEventManager {
      * @return Boolean
      */
     public function canRenameUser($user) {
-        $dar = $this->_getDao()->searchWithParam('head', $user->getId(), array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
-            return true;
-        }
-        return false;
+        return ! $this->isThereAnEventAlreadyOnGoing(SystemEvent::TYPE_USER_RENAME, $user->getId());
     }
     
     /**
@@ -557,11 +529,7 @@ class SystemEventManager {
      * @return Boolean
      */
     public function canRenameProject($project) {
-        $dar = $this->_getDao()->searchWithParam('head', $project->getId(), array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
-            return true;
-        }
-        return false;
+        return ! $this->isThereAnEventAlreadyOnGoing(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
     }
     
     
