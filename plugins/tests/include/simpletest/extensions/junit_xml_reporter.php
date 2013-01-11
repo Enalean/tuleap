@@ -43,8 +43,8 @@ class JUnitXMLReporter extends SimpleReporter {
         echo "-->\n";
         $duration = microtime(true) - $this->testsStart;
         $this->root->setAttribute('tests', $this->getPassCount() + $this->getFailCount() + $this->getExceptionCount());
-        $this->root->setAttribute('failures', $this->getFailCount());
-        $this->root->setAttribute('errors', $this->getExceptionCount());
+        $this->root->setAttribute('failures', $this->getFailCount() + $this->getExceptionCount());
+        $this->root->setAttribute('errors', 0);
         $this->root->setAttribute('time', $duration);
         $this->doc->formatOutput = true;
         $xml = $this->doc->saveXML();
