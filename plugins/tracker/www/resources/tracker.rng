@@ -478,6 +478,13 @@
             </element>
           </element>
         </zeroOrMore>
+        <zeroOrMore>
+          <element name="postaction_ci_build">
+            <attribute name="job_url">
+              <data type="string"/>
+            </attribute>
+          </element>
+        </zeroOrMore>
       </element>
     </optional>
     <choice>

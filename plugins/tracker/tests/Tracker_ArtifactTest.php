@@ -2225,4 +2225,81 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
         ));
     }
 }
+
+class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->fields_data = array();
+        $this->submitter   = aUser()->build();
+        $this->email       = 'toto@example.net';
+
+        $this->changesets  = array(new Tracker_Artifact_Changeset_Null());
+        $factory     = mock('Tracker_FormElementFactory');
+        stub($factory)->getAllFormElementsForTracker()->returns(array());
+        stub($factory)->getUsedFields()->returns(array());
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->workflow = mock('Workflow');
+        stub($this->workflow)->validateGlobalRules()->returns(true);
+        $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
+        stub($this->changeset_dao)->searchByArtifactIdAndChangesetId()->returnsDar(array(
+            'id'           => 123,
+            'submitted_by' => 12,
+            'submitted_on' => 21,
+            'email'        => ''
+        ));
+        $tracker        = stub('Tracker')->getWorkflow()->returns($this->workflow);
+        $this->artifact = partial_mock('Tracker_Artifact', array('validateFields','getChangesetDao','getChangesetCommentDao', 'getReferenceManager'));
+        $this->artifact->setId(42);
+        $this->artifact->setTracker($tracker);
+        $this->artifact->setChangesets($this->changesets);
+        $this->artifact->setFormElementFactory($factory);
+        $this->artifact->setArtifactFactory($this->artifact_factory);
+        stub($this->artifact)->validateFields()->returns(true);
+        stub($this->artifact)->getChangesetDao()->returns($this->changeset_dao);
+        stub($this->artifact)->getChangesetCommentDao()->returns(mock('Tracker_Artifact_Changeset_CommentDao'));
+        stub($this->artifact)->getReferenceManager()->returns(mock('ReferenceManager'));
+
+    }
+
+    public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
+        stub($this->changeset_dao)->create()->returns(5667);
+        stub($this->artifact_factory)->save()->returns(true);
+        expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails() {
+        stub($this->changeset_dao)->create()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(true);
+        expect($this->workflow)->after($this->fields_data, end($this->changesets), new IsAExpectation('Tracker_Artifact_Changeset'))->once();
+
+        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
+    }
+}
 ?>
