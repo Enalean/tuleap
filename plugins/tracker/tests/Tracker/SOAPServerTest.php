@@ -139,7 +139,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $artifact->setChangesets($changesets);
         $cross_reference_factory = mock('CrossReferenceFactory');
         stub($artifact)->getCrossReferenceFactory()->returns($cross_reference_factory);
-        stub($cross_reference_factory)->getCrossReferencesGroupByDirection()->returns(array());
+        stub($cross_reference_factory)->getFormattedCrossReferences()->returns(array());
         return $artifact;
     }
     private function setUpArtifacts(Tracker_ArtifactFactory $artifact_factory) {
@@ -378,6 +378,15 @@ class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_Bas
             $this->private_unreadable_tracker_id
         );
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
+    }
+
+    public function _itStuff() {
+        $soap_fault = $this->server->getTrackerStructure(
+            $this->session_key,
+            $this->project_id,
+            $this->tracker_id
+        );
+        //$this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
     }
 }
 
