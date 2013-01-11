@@ -85,7 +85,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($this->current_user)->isRestricted()->returns(false);
         $this->user_manager  = stub('UserManager')->getCurrentUser($this->session_key)->returns($this->current_user);
 
-        $permissions_manager = mock('PermissionsManager');
+        $this->permissions_manager = mock('PermissionsManager');
         $project_manager     = mock('ProjectManager');
         $project             = mock('Project');
         $private_project     = mock('Project');
@@ -100,19 +100,19 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($private_project)->usesService('plugin_tracker')->returns(true);
         stub($this->current_user)->isMember($this->i_should_not_have_access_to_this_private_project_id)->returns(false);
 
-        $dao = mock('Tracker_ReportDao');
-        $this->setUpArtifactResults($dao);
+        $this->dao = mock('Tracker_ReportDao');
+        $this->setUpArtifactResults($this->dao);
 
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->setUpFields($this->formelement_factory);
 
-        $tracker_factory = mock('TrackerFactory');
-        $this->setUpTrackers($tracker_factory, $project, $private_project);
+        $this->tracker_factory = mock('TrackerFactory');
+        $this->setUpTrackers($this->tracker_factory, $project, $private_project);
 
         $this->artifact_factory    = mock('Tracker_ArtifactFactory');
         $this->setUpArtifacts($this->artifact_factory);
 
-        $soap_request_validator = new SOAP_RequestValidator($project_manager, $this->user_manager);
+        $this->soap_request_validator = new SOAP_RequestValidator($project_manager, $this->user_manager);
 
         stub($project_manager)->getGroupByIdForSoap($this->project_id, '*')->returns($project);
         stub($project_manager)->getGroupByIdForSoap($this->i_should_not_have_access_to_this_private_project_id, '*')->returns($private_project);
@@ -122,10 +122,10 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $this->fileinfo_factory = mock('Tracker_FileInfoFactory');
 
         $this->server = new Tracker_SOAPServer(
-            $soap_request_validator,
-            $tracker_factory,
-            $permissions_manager,
-            $dao,
+            $this->soap_request_validator,
+            $this->tracker_factory,
+            $this->permissions_manager,
+            $this->dao,
             $this->formelement_factory,
             $this->artifact_factory,
             $this->report_factory,
@@ -371,6 +371,20 @@ class Tracker_SOAPServer_updateArtifact_Test extends Tracker_SOAPServer_BaseTest
 
 class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_BaseTest {
 
+    public function setUp() {
+        parent::setUp();
+        $this->server = partial_mock('Tracker_SOAPServer', array('getTrackerSemantic', 'getTrackerWorkflow'), array(
+            $this->soap_request_validator,
+            $this->tracker_factory,
+            $this->permissions_manager,
+            $this->dao,
+            $this->formelement_factory,
+            $this->artifact_factory,
+            $this->report_factory,
+            $this->fileinfo_factory
+         ));
+    }
+
     public function itRaisesASoapFaultIfTheProjectIsNotReadableByTheUser() {
         $soap_fault = $this->server->getTrackerStructure(
             $this->session_key,
@@ -380,13 +394,20 @@ class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_Bas
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
     }
 
-    public function _itStuff() {
-        $soap_fault = $this->server->getTrackerStructure(
+    public function itExecutesTheSOAPCall() {
+        $semantic = 'whatever';
+        $workflow = 'I dunno care either';
+        stub($this->server)->getTrackerSemantic()->returns($semantic);
+        stub($this->server)->getTrackerWorkflow()->returns($workflow);
+        $structure = $this->server->getTrackerStructure(
             $this->session_key,
             $this->project_id,
             $this->tracker_id
         );
-        //$this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
+        $this->assertEqual($structure, array(
+            'semantic' => $semantic,
+            'workflow' => $workflow,
+        ));
     }
 }
 

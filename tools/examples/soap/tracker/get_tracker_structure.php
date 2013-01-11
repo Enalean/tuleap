@@ -41,10 +41,10 @@ $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl',
 
 //Executing method getTrackerSemantic
 try {
-$response = $soapTracker->getTrackerStructure($requesterSessionHash, $group_id, $tracker_id);
-var_dump($response);
+    $response = $soapTracker->getTrackerStructure($requesterSessionHash, $group_id, $tracker_id);
+    var_dump($response);
 } catch(Exception $e) {
-var_dump($soapTracker->__getLastResponse());
+    var_dump($soapTracker->__getLastResponse());
 }
 
 
