@@ -43,8 +43,8 @@ class JUnitXMLReporter extends SimpleReporter {
         echo "-->\n";
         $duration = microtime(true) - $this->testsStart;
         $this->root->setAttribute('tests', $this->getPassCount() + $this->getFailCount() + $this->getExceptionCount());
-        $this->root->setAttribute('failures', $this->getFailCount() + $this->getExceptionCount());
-        $this->root->setAttribute('errors', 0);
+        $this->root->setAttribute('failures', $this->getFailCount());
+        $this->root->setAttribute('errors', $this->getExceptionCount());
         $this->root->setAttribute('time', $duration);
         $this->doc->formatOutput = true;
         $xml = $this->doc->saveXML();
@@ -84,6 +84,18 @@ class JUnitXMLReporter extends SimpleReporter {
         parent::paintException($exception);
         error_log("Exception: " . $exception);
         $this->terminateAbnormally($exception);
+    }
+
+    /**
+     *    Paints a PHP error or exception.
+     *    @param string $message        Message to be shown.
+     *    @access public
+     *    @abstract
+     */
+    function paintError($message) {
+        parent::paintError($message);
+        error_log("Exception: " . $message);
+        $this->terminateAbnormally($message);
     }
 
     function terminateAbnormally($message) {
