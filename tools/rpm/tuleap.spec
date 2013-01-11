@@ -44,6 +44,10 @@ AutoReqProv: no
 Requires: vixie-cron >= 4.1-9, tmpwatch
 # Php and web related stuff
 Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring, %{php_base}-gd, %{php_base}-soap, %{php_base}-pear, gd
+%if %{php_base} == php53
+# contains posix* functions
+Requires: %{php_base}-process
+%endif
 Requires: dejavu-lgc-fonts
 %if %{PKG_NAME} == codendi_st
 Requires: jpgraph
