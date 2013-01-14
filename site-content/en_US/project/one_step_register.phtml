@@ -1,0 +1,96 @@
+<?
+/**
+  * Copyright (c) Enalean, 2013. All rights reserved
+  *
+  * This file is a part of Tuleap.
+  *
+  * Tuleap is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * Tuleap is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+  */
+?>
+<p><h1>Request for a Project Creation</h1></p>
+
+
+<p>Creating a new project on tuleap only takes a few steps. <br /><br />
+    <span>Warning:</span> Before being able to do anything with your project, a system administrator must approve the project.
+</p>
+
+<h2>Describe your project</h2>
+<hr/>
+
+<table>
+    <tr>
+        <td>Full name</td>
+        <td>
+            <input size="40" type="text" name="form_full_name" value="<?=$full_name?>" />
+            <br>
+            between 3 and 40 characters
+        </td>
+    </tr>
+    <tr>
+        <td>Short name</td>
+        <td>
+            <input type="text" maxlength="30" SIZE="15" name="form_unix_name" value="<?=$unix_name?>" />
+            <br>
+            between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.
+            <br>
+            <span>Info</span> The short name is a technical name used in various URLs (project URL and source code repositories) and other references.
+        </td>
+    </tr>
+    <tr>
+        <td>Short description</td>
+        <td>
+            <TEXTAREA name="form_short_description" wrap="virtual" cols="70" rows="3">
+                <?php $short_description; ?>
+            </TEXTAREA>
+        </td>
+    </tr>
+    <tr>
+        <td>Project Privacy</td>
+        <td>
+            <?php if ($GLOBALS['sys_is_project_public'] == 1) : ?>
+            <input type="radio" name="is_public" value="1" checked="checked"/> Public<br>
+            <input type="radio" name="is_public" value="0"/> Private (limit access only to the project members)
+            <?php else :?>
+            <input type="radio" name="is_public" value="1"/> Public<br>
+            <input type="radio" name="is_public" value="0" checked="checked"/> Private (limit access only to the project members)
+            <?php endif; ?>
+        </td>
+    </tr>
+</table>
+
+<h2>Choose an appropriate template for your project.</h2>
+<hr/>
+<p>
+    A project template is a pre-configured workspace: activated tools (trackers, version control system, communication tools...) 
+    tools customisation and configuration (workflow, documentation structure...), user groups, permissions, etc.
+    <br>
+    <br>
+    The project template you will select provides some services. Add those you need and/ or desactivate those you will not use.
+    <br>
+    <br>
+    You can always modify your project workspace after your project has been approved.
+</p>
+
+<h2>That's it!</h2>
+<hr/>
+<p>
+    You are about to request the actual project creation. 
+    You will receive a notification when the sytem administrator has validated it.
+    Then, you will be able to access your new project workspace. Enjoy!
+</p>
+
+
+
+
+
