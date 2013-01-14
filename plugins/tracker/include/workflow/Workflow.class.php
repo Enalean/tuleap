@@ -239,7 +239,7 @@ class Workflow {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
            $root->addChild('field_id')->addAttribute('REF', array_search($this->field_id, $xmlMapping));
            $root->addChild('is_used', $this->is_used);
            $child = $root->addChild('transitions');

@@ -132,7 +132,7 @@ class Tracker_SemanticManager {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $semantics = $this->getSemantics();
         foreach ($semantics as $semantic) {
             $semantic->exportToXML($root, $xmlMapping);

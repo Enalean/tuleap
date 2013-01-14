@@ -117,7 +117,7 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->getFieldId()) {
             $child = $root->addChild(Transition_PostAction_Field_Float::XML_TAG_NAME);
              $child->addAttribute('value', $this->getValue());

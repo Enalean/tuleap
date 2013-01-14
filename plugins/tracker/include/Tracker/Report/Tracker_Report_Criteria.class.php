@@ -86,7 +86,7 @@ class Tracker_Report_Criteria {
      * 
      * @param SimpleXMLElement $root the node to which the Criteria is attached (passed by reference)
      */
-    public function exportToXML($root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $root->addAttribute('rank', $this->rank);
         if ($this->is_advanced) {
             $root->addAttribute('is_advanced', $this->is_advanced);
