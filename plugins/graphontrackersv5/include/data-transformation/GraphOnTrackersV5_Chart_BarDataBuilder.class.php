@@ -62,6 +62,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
             while($data = db_fetch_array($res)) {
                 if ($data[$af->name] !== null) {
                     if ($select_group) {
+                        $engine->colors[$data[$af->name]] =  array($data['red'], $data['green'], $data['blue']);
                         $engine->data[$data[$af->name]][$data[$gf->name]]   = $data['nb'];
                         if($data[$gf->name] !== null) {
                             $engine->xaxis[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
@@ -71,6 +72,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                             $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
                         }
                     } else {
+                        $engine->colors[] =  array($data['red'], $data['green'], $data['blue']);
                         $engine->data[]   = $data['nb'];
                     }
                     $engine->legend[$data[$af->name]] = $af->fetchRawValue($data[$af->name]);

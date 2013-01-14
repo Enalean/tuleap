@@ -66,13 +66,13 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
             $this->graph->xaxis->SetTickLabels(array_values($this->legend));
         }
         
+        $this->convertColors();
         $colors = $this->graph->getThemedColors();
         
         if (is_null($this->xaxis)) {
             if ((is_array($this->data)) && (array_sum($this->data)>0)) {
-                $this->graph->add($this->getBarPlot($this->data, $colors[0]));
+                $this->graph->add($this->getBarPlot($this->data, $this->colors));
             }
-                
         } else {
             $this->keys = array();
             foreach($this->data as $group => $data) {
@@ -91,7 +91,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
             }
             $l = 0; 
             foreach($this->data as $base => $group) {
-                $b[$l] = $this->getBarPlot(array_values($group), $colors[$l % count($colors)]);
+                $b[$l] = $this->getBarPlot(array_values($group), $this->colors[$base]);
                 $b[$l]->SetLegend($this->legend[$base]);
                 $l++;
             }
@@ -105,6 +105,23 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
     function sort($a, $b) {
         return array_search($a, $this->keys) - array_search($b, $this->keys);
     }
+    
+    private function convertColors() {
+        if ($this->graph) {
+            $availableColors = $this->graph->getThemedColors();
+            $length = count($this->colors);
+            foreach ($this->colors as $group => $color) {
+                //We fill the blanks
+                if ($color[0] == NULL || $color[1] == NULL || $color[2] == NULL )
+                    $this->colors[$group] = $availableColors[$i];
+                else {
+                    //We convert RGB array to hex
+                    $this->colors[$group]= ColorHelper::RBGToHexa($color[0], $color[1], $color[2]);
+                }
+            }
+        }
+    }
+    
     function getBarPlot($data, $color) {
         $b = new BarPlot($data);
         //parameters hard coded for the moment
@@ -117,7 +134,12 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         $b->value->SetFont($this->graph->getFont(), FS_NORMAL, 7);
         
         $b->SetWidth(0.4);
-        $b->SetColor($color.':0.7');
+        if(is_array($color)) {
+            $b->SetColor($color[0].':0.7');
+        }
+        else {
+           $b->SetColor($color.':0.7');  
+        }
         $b->SetFillColor($color);
         // end hard coded parameter
         return $b;
