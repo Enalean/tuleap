@@ -71,6 +71,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     private $title;
 
+    /**@var Tracker_ArtifactFactory */
+    private $artifact_factory;
+
     /**
      * Constructor
      *
@@ -895,7 +898,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return Tracker_ArtifactFactory
      */
     protected function getArtifactFactory() {
+        if ($this->artifact_factory) {
+            return $this->artifact_factory;
+        }
         return Tracker_ArtifactFactory::instance();
+    }
+
+    public function setArtifactFactory(Tracker_ArtifactFactory $artifact_factory) {
+        $this->artifact_factory = $artifact_factory;
     }
 
     /**
@@ -941,7 +951,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         }
                     }
                     //Save the artifact
-                    $this->getArtifactFactory()->save($this);
+                    if ($this->getArtifactFactory()->save($this)) {
+                        $previous_changeset = null;
+                        $workflow->after($fields_data, $this->getChangeset($changeset_id), $previous_changeset);
+                    }
 
                     // Clear fake changeset so subsequent call to getChangesets will load a fresh & complete one from the DB
                     $this->changesets = null;
@@ -1023,8 +1036,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return boolean True if update is done without error, false otherwise
      */
     public function createNewChangeset($fields_data, $comment, $submitter, $email, $send_notification = true, $comment_format = Tracker_Artifact_Changeset_Comment::TEXT_COMMENT) {
-        $this->validateNewChangeset($fields_data, $comment, $submitter);
-        
+        $this->validateNewChangeset($fields_data, $comment, $submitter, $email);
+        $previous_changeset = $this->getLastChangeset();
         /*
          * Post actions were run by validateNewChangeset but they modified a 
          * different set of $fields_data in the case of massChange or soap requests;
@@ -1039,7 +1052,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         
         $comment = trim($comment);
-        $last_changeset = $this->getLastChangeset();
+        $new_changeset = $this->getLastChangeset();
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
         $workflow = $this->getWorkflow();
        
@@ -1055,17 +1068,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         foreach ($used_fields as $field) {
             if (isset($fields_data[$field->getId()]) && $field->userCanUpdate()) {
 
-                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
+                $field->saveNewChangeset($this, $new_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission);
             } else if ($workflow && isset($fields_data[$field->getId()]) && !$field->userCanUpdate() && $workflow->bypassPermissions($field)) {
                 $bypass_perms  = true;
-                $field->saveNewChangeset($this, $last_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
+                $field->saveNewChangeset($this, $new_changeset, $changeset_id, $fields_data[$field->getId()], $submitter, $is_submission, $bypass_perms);
             } else {
-                $field->saveNewChangeset($this, $last_changeset, $changeset_id, null, $submitter, $is_submission);
+                $field->saveNewChangeset($this, $new_changeset, $changeset_id, null, $submitter, $is_submission);
             }
         }
 
         //Save the artifact
-        $this->getArtifactFactory()->save($this);
+        if ($this->getArtifactFactory()->save($this)) {
+            $this->getWorkflow()->after($fields_data, $new_changeset, $previous_changeset);
+        }
 
         if ($send_notification) {
             // Send notifications
@@ -1156,11 +1171,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Returns the latest changeset of this artifact
      *
-     * @return Tracker_Artifact_Changeset The latest changeset of this artifact, or false if no latest changeset
+     * @return Tracker_Artifact_Changeset The latest changeset of this artifact, or null if no latest changeset
      */
     public function getLastChangeset() {
         $changesets = $this->getChangesets();
-        return end($changesets);
+        $last_changeset = end($changesets);
+        if ($last_changeset) {
+            return $last_changeset;
+        }
     }
 
     /**
