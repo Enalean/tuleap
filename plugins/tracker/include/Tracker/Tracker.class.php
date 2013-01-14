@@ -2712,6 +2712,7 @@ EOS;
                 $key = array_search($field->getName(), $header_line);
                 if ($key === false) {
                     //search if field  is in the CSV file header line
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_required_field', array($field->getName())));
                     $is_missing = true;
                 } else {
                     //search if there is a value at each line for that field
