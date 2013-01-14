@@ -103,9 +103,31 @@
         <element name="dependencies">
           <zeroOrMore>
             <element name="rule">
-              <ref name="ruleContent"/>
+              <ref name="listRuleContent"/>
             </element>
           </zeroOrMore>
+        </element>
+      </optional>
+      <optional>
+        <element name="rules">
+          <optional>
+            <element name="date_rules">
+              <zeroOrMore>
+                <element name="rule">
+                  <ref name="dateRuleContent"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
+          <optional>
+            <element name="list_rules">
+              <zeroOrMore>
+                <element name="rule">
+                  <ref name="listRuleContent"/>
+                </element>
+              </zeroOrMore>
+            </element>
+          </optional>
         </element>
       </optional>
       <optional>
@@ -456,6 +478,13 @@
             </element>
           </element>
         </zeroOrMore>
+        <zeroOrMore>
+          <element name="postaction_ci_build">
+            <attribute name="job_url">
+              <data type="string"/>
+            </attribute>
+          </element>
+        </zeroOrMore>
       </element>
     </optional>
     <choice>
@@ -500,7 +529,7 @@
       </attribute>
     </element>
   </define>
-  <define name="ruleContent">
+  <define name="listRuleContent">
     <element name="source_field">
       <attribute name="REF">
         <data type="IDREF"/>
@@ -519,6 +548,23 @@
     <element name="target_value">
       <attribute name="REF">
         <data type="IDREF"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="dateRuleContent">
+    <element name="source_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="target_field">
+      <attribute name="REF">
+        <data type="IDREF"/>
+      </attribute>
+    </element>
+    <element name="comparator">
+      <attribute name="type">
+        <data type="string"/>
       </attribute>
     </element>
   </define>

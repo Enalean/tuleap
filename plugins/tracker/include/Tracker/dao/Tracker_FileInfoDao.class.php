@@ -41,7 +41,21 @@ class Tracker_FileInfoDao extends DataAccessObject {
                 WHERE id = $id";
         return $this->retrieve($sql);
     }
-    
+
+    public function searchFieldIdByFileInfoId($id) {
+        $id = $this->da->escapeInt($id);
+        $sql = "SELECT DISTINCT cv.field_id AS field_id
+                FROM tracker_changeset_value AS cv
+                    INNER JOIN tracker_changeset_value_file AS cv_file ON (cv_file.changeset_value_id = cv.id)
+                WHERE cv_file.fileinfo_id = $id";
+        $dar = $this->retrieve($sql);
+        if ($dar && count($dar) == 1) {
+            $row = $dar->getRow();
+            return $row['field_id'];
+        }
+        return false;
+    }
+
     public function create($submitted_by, $description, $filename, $filesize, $filetype) {
         $submitted_by = $this->da->escapeInt($submitted_by);
         $description  = $this->da->quoteSmart($description);

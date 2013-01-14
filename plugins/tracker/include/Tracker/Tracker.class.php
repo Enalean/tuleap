@@ -36,6 +36,7 @@ require_once('Hierarchy/Controller.class.php');
 require_once('Hierarchy/HierarchyFactory.class.php');
 require_once 'IFetchTrackerSwitcher.class.php';
 require_once 'Action/CreateArtifact.class.php';
+require_once TRACKER_BASE_DIR.'/Tracker/NoChangeException.class.php';
 
 require_once('json.php');
 
@@ -1900,7 +1901,7 @@ EOS;
             $fields_data[$field_id] = $data;
         }
         $this->augmentDataFromRequest($fields_data);
-        
+
         $not_updated_aids = array();
         foreach ( $masschange_aids as $aid ) {
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($aid);
@@ -1908,8 +1909,16 @@ EOS;
                 $not_updated_aids[] = $aid;
                 continue;
             }
-            
-            if ( !$artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format)) {
+
+            try {
+                $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
+            } catch (Tracker_NoChangeException $e) {
+                $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                $not_updated_aids[] = $aid;
+                continue;
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($aid)));
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 $not_updated_aids[] = $aid;
                 continue;
             }
@@ -2328,9 +2337,9 @@ EOS;
         $child = $xmlElem->addChild('semantics');
         $tsm->exportToXML($child, $xmlMapping);
         
-        //field dependencies
+        // rules
         $trm = $this->getRulesManager();
-        $child = $xmlElem->addChild('dependencies');
+        $child = $xmlElem->addChild('rules');
         $trm->exportToXML($child, $xmlMapping);
         
         // only the reports with project scope are exported
@@ -2678,7 +2687,7 @@ EOS;
                                   );
                         if ($line[$idx]!=''){
                             
-                            $data[$field->getId()] = $field->getFieldData($line[$idx]);
+                            $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
                             
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
@@ -2781,7 +2790,7 @@ EOS;
                 foreach ($data_line as $idx => $data_cell) {
                     if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement_Field')) {
                         $field = $fields[$idx];
-                        $fields_data[$field->getId()] = $field->getFieldData($data_cell);
+                        $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
                     } else  {
                         // else: this cell is an 'aid' cell
                         if ($data_cell) {
@@ -2805,10 +2814,15 @@ EOS;
                     $artifact = $af->getArtifactById($artifact_id);
                     if ($artifact) {
                         $followup_comment = '';
-                        if ($artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications)) {
+                        try {
+                            $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications);
                             $nb_artifact_update++;
-                        } else {
+                        } catch (Tracker_NoChangeException $e) {
+                            $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                            $is_error = true;
+                        } catch (Tracker_Exception $e) {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($artifact_id)));
+                            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                             $is_error = true;
                         }
                     } else {

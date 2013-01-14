@@ -1,5 +1,8 @@
+Version 0.9.10 - Tuleap 5.9
+    * Fix some isolated tests
+
 Version 0.9.9 - Tuleap 5.8
-    * Add adms plugin
+    * Add admssw plugin
 
 Version 0.9.8 - Tuleap 5.7
     * Fix art #1188 - Refresh issue on Card Wall when moving task to done

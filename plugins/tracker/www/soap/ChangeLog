@@ -1,0 +1,26 @@
+2.0.3 - Tuleap 5.9
+    * Bug fix: rename TrackerWorkflowRules type to TrackerWorkflowRuleArray
+
+2.0.2 - Tuleap 5.9
+    * Enhancement: 'Artifact' type now contains a 'cross_references' field with artifact cross references
+
+2.0.1 - Tuleap 5.9
+    * Enhancement: add getArtifactComments() method
+
+2.0 - Tuleap 5.8
+    == /!\ Backward compatibility break /!\ ==
+    * On type ArtifactFieldValue field_value changes from 'string' to complex type
+      FieldValue
+      -> impacted methods getArtifact, getArtifacts, addArtifact, updateArtifact
+
+    == New behaviour ==
+    * addArtifact and updateArtifact can now create and delete file attachments.
+      See details in https://tuleap.net/wiki/index.php?pagename=HowToUseTuleapSoapApi&group_id=101
+
+    == New methods ==
+    * getTrackerReports
+    * getArtifactsFromReportId
+    * getArtifactAttachmentChunk
+    * createTemporaryAttachment
+    * appendTemporaryAttachmentChunk
+    * purgeAllTemporaryAttachments

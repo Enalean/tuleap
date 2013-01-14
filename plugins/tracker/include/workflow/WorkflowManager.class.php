@@ -48,7 +48,8 @@ class WorkflowManager {
                     'func'    => Workflow::FUNC_ADMIN_RULES,
                     )
             ));
-            $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, Tracker_FormElementFactory::instance(), new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance()), $token);
+            $rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), Tracker_FormElementFactory::instance());
+            $action = new Tracker_Workflow_Action_Rules_EditRules($this->tracker, $rule_date_factory, $token);
         } else if ($request->get('create')) {
             $action = new Tracker_Workflow_Action_Transitions_Create($this->tracker, WorkflowFactory::instance());
         } else if ($request->get('edit_transition')) {

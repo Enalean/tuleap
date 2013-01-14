@@ -26,6 +26,9 @@
  * Base class to read forge configuration
  */
 class Config {
+
+    const AUTH_TYPE_LDAP = 'ldap';
+
     
     /**
      * Hold the configuration variables

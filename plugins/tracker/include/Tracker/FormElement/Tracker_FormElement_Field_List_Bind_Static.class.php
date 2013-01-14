@@ -25,8 +25,12 @@ require_once('Tracker_FormElement_Field_List_Bind_StaticValue_Null.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Field_List_Bind {
 
+    /**
+     * @var Array of Tracker_FormElement_Field_List_Bind_StaticValue
+     */
     protected $values;
     protected $is_rank_alpha;
+    
     public function __construct($field, $is_rank_alpha, $values, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
         $this->is_rank_alpha = $is_rank_alpha;
@@ -701,7 +705,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXML($root, &$xmlMapping, $fieldID) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
         $root->addAttribute('is_rank_alpha', $this->is_rank_alpha);
         if ($this->getAllValues()) {
             $child = $root->addChild('items');

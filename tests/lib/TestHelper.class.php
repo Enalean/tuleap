@@ -55,14 +55,7 @@ class TestHelper {
     }
 
     public static function emptyDar() {
-        $dar = new MockDataAccessResult();
-        $dar->setReturnValue('valid',    false);
-        $dar->setReturnValue('current',  false);
-        $dar->setReturnValue('rowCount', 0);
-        $dar->setReturnValue('count', 0);
-        $dar->setReturnValue('isError',  false);
-        $dar->setReturnValue('getRow',   false);
-        return $dar;
+        return self::arrayToDar();
     }
     
     public static function errorDar() {
@@ -76,52 +69,33 @@ class TestHelper {
     }
 }
 
-class FakeDataAccessResult implements IProvideDataAccessResult {
-    private $index = 0;
+class FakeDataAccessResult extends DataAccessResult {
     private $data;
+    
 
     public function __construct(array $data) {
         $this->data = $data;
+        $this->_current = -1;
+        $this->_row = false;
+        $this->rewind(); // in case getRow is called explicitly
     }
 
-    public function count() {
+    protected function daFetch() {
+        return isset($this->data[$this->_current]) ? $this->data[$this->_current] : false;
+    }
+    
+    protected function daSeek() {
+        $this->_current = -1;
+    }
+    
+    protected function daIsError() {
+        return false;
+    }
+    
+    public function rowCount() {
         return count($this->data);
     }
-
-    public function current() {
-        return $this->data[$this->index];
-    }
-
-    public function getRow() {
-        if (isset($this->data[$this->index])) {
-            return $this->data[$this->index++];
-        }
-        return false;
-    }
-
-    public function isError() {
-        return false;
-    }
-
-    public function key() {
-        return $this->index;
-    }
-
-    public function next() {
-        $this->index++;
-    }
-
-    public function rewind() {
-        $this->index = 0;
-    }
-
-    public function rowCount() {
-        return $this->count();
-    }
-
-    public function valid() {
-        return $this->index < $this->count();
-    }
+    
 }
 
 ?>

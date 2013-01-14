@@ -964,9 +964,31 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
-    public function getFieldData($soap_value) {
+    public function getFieldData($value) {
         // for atomic fields, the field data is the soap value (int, float, date, string, text)
-        return $soap_value;
+        return $value;
+    }
+
+    /**
+     * Get data from SOAP value in order to be saved in DB (create/update DB)
+     *
+     * @param stdClass $soap_value
+     *
+     * @return mixed
+     */
+    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+        return $this->getFieldData($soap_value->field_value->value);
+    }
+
+    /**
+     * Get data from CSV value in order to be saved in DB (create/update DB)
+     *
+     * @param string $csv_value
+     *
+     * @return mixed
+     */
+    public function getFieldDataFromCSVValue($csv_value) {
+        return $this->getFieldData($csv_value);
     }
 
     /**

@@ -56,6 +56,11 @@ class Workflow_Transition_ConditionFactory {
         );
     }
 
+    /** @return bool */
+    public function isFieldUsedInConditions(Tracker_FormElement_Field $field) {
+        return $this->fieldnotempty_factory->isFieldUsedInConditions($field);
+    }
+
     /**
      * @return Workflow_Transition_ConditionsCollection
      */

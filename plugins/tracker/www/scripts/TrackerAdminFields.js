@@ -306,27 +306,30 @@ document.observe('dom:loaded', function () {
         var r = new codendi.RTE(elem);
     });
     
-    $$("input[type=checkbox][name^=remove_postaction]").each(function (elem) {
+    $$("input[type=checkbox][name^=remove_postaction]", "input[type=checkbox][name^=remove_rule]").each(function (elem) {
         elem.observe('click', function (evt) {
             if (elem.checked) {
-                elem.up('tr').down('td').addClassName('workflow_action_deleted');
+                elem.up('tr').down('div').addClassName('deleted');
                 elem.up('tr').select('select').each(function (e) { e.disabled = true; e.readOnly = true; });
+                elem.up('tr').select('input').each(function (e) { e.required = false; });
             } else {
-                elem.up('tr').down('td').removeClassName('workflow_action_deleted');
+                elem.up('tr').down('div').removeClassName('deleted');
                 elem.up('tr').select('select').each(function (e) { e.disabled = false; e.readOnly = false; });
+                elem.up('tr').select('input').each(function (e) { if (e.hasClassName('required')) e.required = true; });
             }
         });
     });
 
-    $$("input[type=checkbox][name^=remove_rule]").each(function (elem) {
-        elem.observe('click', function (evt) {
-            if (elem.checked) {
-                elem.up('li').addClassName('workflow_rule_deleted');
-            } else {
-                elem.up('li').removeClassName('workflow_rule_deleted');
-            }
-        });
+    $$('.add_new_rule_title').each(function (add) {
+        var link = new Element('a', { href: '#add_new_rule' })
+            .update(add.innerHTML)
+            .observe('click', function (evt) {
+                add.next().toggle();
+                Event.stop(evt);
+                return false;
+            });
+        add.update(link);
+        add.next().hide();
     });
-
 });
 

@@ -14,6 +14,7 @@ my $cgi = new CGI;
 use strict;
 use warnings;
 use lib qw(/home/httpd/perl/);
+use lib qw(/usr/share/codendi/tools/utils/stats/);
 use Getopt::Long;
 use Time::Local;
 use Carp;

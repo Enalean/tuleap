@@ -57,15 +57,6 @@ class Tracker_Rule_List_Factory {
         
         return $list_rule;
     }
-    
-    /**
-     * 
-     * @param Tracker_Rule_List $list_rule
-     * @return int The ID of the tracker_Rule created
-     */
-    private function insert(Tracker_Rule_List $list_rule) {
-        return $this->dao->insert($list_rule);
-    }
 
     /**
      * 
@@ -106,13 +97,87 @@ class Tracker_Rule_List_Factory {
         $rules_array = array();
 
         while ($rule = $rules->getRow()) {
-            $list_rule = $this->populate(new Tracker_Rule_List(), $rule['source_field_id'], $rule['target_field_id'], $rule['tracker_id'], $rule['source_value_id'], $rule['target_value_id']);
+            $list_rule = $this->populate(new Tracker_Rule_List(), $rule['tracker_id'], $rule['source_field_id'], $rule['target_field_id'], $rule['source_value_id'], $rule['target_value_id']);
             $rules_array[] = $list_rule;
         }
         
         return $rules_array;
     }
+        
+    /**
+     * Duplicate the rules from tracker source to tracker target
+     *
+     * @param int   $from_tracker_id The Id of the tracker source
+     * @param int   $to_tracker_id   The Id of the tracker target
+     * @param array $field_mapping   The mapping of the fields of the tracker
+     *
+     * @return void
+     */
+    public function duplicate($from_tracker_id, $to_tracker_id, $field_mapping) {
+        $dar = $this->dao->searchByTrackerId($from_tracker_id);
+
+        // Retrieve rules of tracker from
+        while ($row = $dar->getRow()) {
+            // if we already have the status field, just jump to open values
+            $source_field_id = $row['source_field_id'];
+            $target_field_id = $row['target_field_id'];
+            $source_value_id = $row['source_value_id'];
+            $target_value_id = $row['target_value_id'];
+            // walk the mapping array to get the corresponding field values for tracker TARGET
+            foreach ($field_mapping as $mapping) {
+                if ($mapping['from'] == $source_field_id) {
+                    $duplicate_source_field_id = $mapping['to'];
+
+                    $mapping_values = $mapping['values'];
+                    $duplicate_source_value_id = $mapping_values[$source_value_id];
+                }
+                if ($mapping['from'] == $target_field_id) {
+                    $duplicate_target_field_id = $mapping['to'];
+
+                    $mapping_values = $mapping['values'];
+                    $duplicate_target_value_id = $mapping_values[$target_value_id];
+                }
+            }
+            $this->dao->create($to_tracker_id, $duplicate_source_field_id, $duplicate_source_value_id, $duplicate_target_field_id, $duplicate_target_value_id);
+        }
+    }
     
+    /**
+     * 
+     * @param SimpleXMLElement $root
+     * @param array $xmlMapping
+     * @param Tracker_FormElementFactory $form_element_factory
+     * @param int $tracker_id
+     */
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping, $form_element_factory, $tracker_id) {
+        $rules = $this->searchByTrackerId($tracker_id);
+        $list_rules = $root->addChild('list_rules');
+        
+        foreach ($rules as $rule) {
+            $source_field = $form_element_factory->getFormElementById($rule->getSourceFieldId());
+            $target_field = $form_element_factory->getFormElementById($rule->getTargetFieldId());
+            $bf = new Tracker_FormElement_Field_List_BindFactory();
+            //TODO: handle sb/msb bind to users and remove condition
+            if ($bf->getType($source_field->getBind()) == 'static' &&  $bf->getType($target_field->getBind()) == 'static') {
+                $child = $list_rules->addChild('rule');
+                $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
+                $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
+                $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
+                $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
+            }
+        }
+    }
+
+    /**
+     * 
+     * @param Tracker_Rule_List $list_rule
+     * @return int The ID of the tracker_Rule created
+     */
+    public function insert(Tracker_Rule_List $list_rule) {
+        return $this->dao->insert($list_rule);
+    }
+    
+
     /**
      * 
      * @param Tracker_Rule_List $list_rule
@@ -123,12 +188,11 @@ class Tracker_Rule_List_Factory {
      * @param int $target_value
      * @return \Tracker_Rule_List
      */
-    protected function populate(Tracker_Rule_List $list_rule, $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value) {
+    private function populate(Tracker_Rule_List $list_rule, $tracker_id, $source_field_id, $target_field_id, $source_value, $target_value) {
         
         $list_rule->setTrackerId($tracker_id)
                 ->setSourceFieldId($source_field_id)
                 ->setTargetFieldId($target_field_id)
-                ->setTrackerId($tracker_id)
                 ->setSourceValue($source_value)
                 ->setTargetValue($target_value);
         

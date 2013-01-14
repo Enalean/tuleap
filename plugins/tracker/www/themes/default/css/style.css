@@ -790,28 +790,29 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
     list-style: none;
     padding-left: 0;
 }
-.workflow_rule_action {
+.workflow_rule {
     clear: both;
     margin: 5px 0px;
 }
-.workflow_rule_action .pc_check_unchecked {
+.workflow_existing_rules .pc_check_unchecked {
     background-image: url(/themes/common/images/ic/bin_closed.png);
     float: right;
 }
-.workflow_rule_action .pc_check_checked {
+.workflow_existing_rules .pc_check_checked {
     background-image: url(/themes/common/images/ic/bin.png);
     float: right;
 }
-.workflow_action_deleted {
+.workflow_action.deleted,
+.workflow_rule.deleted {
     text-decoration: line-through;
 }
-.workflow_rule_deleted {
-    text-decoration: line-through;
+.add_new_rule {
+    line-height:2em;
 }
 .workflow_actions, .workflow_conditions  {
     list-style-type: none;
 }
-.workflow_rule_action,
+.workflow_rule,
 .workflow_action {
     padding: 1em 2em 1em 3em;
     border: 1px solid #ccc;
@@ -822,6 +823,9 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 }
 .workflow_action_field {
     background-image: url(../images/ic/ui-text-field-change.png);
+}
+.workflow_action_ci_build {
+    background-image: url(../images/ic/ci_build/server.png);
 }
 .workflow_conditions_perms {
     list-style-image: url(/themes/common/images/ic/lock.png);

@@ -26,49 +26,59 @@ require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/Date/Factory.c
 
 class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
 
-    /**
-     * @var Tracker_Rule_Date_Dao
-     */
+    protected $source_field_id = 46345;
+    protected $target_field_id = 465;
+
+    /** @var Tracker_Rule_Date_Dao */
     protected $date_rule_dao;
 
-    /**
-     *
-     * @var Tracker_Rule_Date_Factory
-     */
+    /** @var Tracker_Rule_Date_Factory */
     protected $date_rule_factory;
+
+    /** @var Tracker_FormElementFactory */
+    protected $element_factory;
+
+    /** @var int */
+    protected $tracker_id = 999;
+
+    /** @var Tracker */
+    protected $tracker;
 
     public function setUp() {
         parent::setUp();
 
+        $this->tracker = stub('Tracker')->getId()->returns($this->tracker_id);
+
         $this->date_rule_dao = mock('Tracker_Rule_Date_Dao');
         $this->source_field = mock('Tracker_FormElement_Field_Date');
-        stub($this->source_field)->getId()->returns(46345);
+        stub($this->source_field)->getId()->returns($this->source_field_id);
 
         $this->target_field = mock('Tracker_FormElement_Field_Date');
         stub($this->target_field)->getId()->returns(465);
 
-        $element_factory = mock('Tracker_FormElementFactory');
-        stub($element_factory)->getFormElementById(46345)->returns($this->source_field);
-        stub($element_factory)->getFormElementById(465)->returns($this->target_field);
+        $this->element_factory = mock('Tracker_FormElementFactory');
+        stub($this->element_factory)->getFormElementById($this->source_field_id)->returns($this->source_field);
+        stub($this->element_factory)->getFormElementById(465)->returns($this->target_field);
 
-        $this->date_rule_factory = new Tracker_Rule_Date_Factory($this->date_rule_dao, $element_factory);
+        $this->date_rule_factory = new Tracker_Rule_Date_Factory($this->date_rule_dao, $this->element_factory);
     }
 
     public function testCreateRuleDateGeneratesANewObjectThatContainsAllValuesPassed() {
         stub($this->date_rule_dao)->insert()->returns(20);
 
-        $source_field_id = 46345;
-        $target_field_id = 465;
-        $tracker_id      = 999;
-        $comparator      = Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
+        $comparator = Tracker_Rule_Date::COMPARATOR_GREATER_THAN;
 
-        $date_rule = $this->date_rule_factory
-                ->create($source_field_id, $target_field_id, $tracker_id, $comparator);
+        $date_rule = $this->date_rule_factory->create(
+            $this->source_field_id,
+            $this->target_field_id,
+            $this->tracker_id,
+            $comparator
+        );
 
         $this->assertIsA($date_rule, 'Tracker_Rule_Date');
-        $this->assertEqual($date_rule->getTrackerId(), $tracker_id);
-        $this->assertEqual($date_rule->getTargetFieldId(), $target_field_id);
-        $this->assertEqual($date_rule->getSourceFieldId(), $source_field_id);
+        $this->assertEqual($date_rule->getTrackerId(), $this->tracker_id);
+        $this->assertEqual($date_rule->getTargetFieldId(), $this->target_field_id);
+        $this->assertEqual($date_rule->getSourceFieldId(), $this->source_field_id);
         $this->assertEqual($date_rule->getComparator(), $comparator);
         $this->assertEqual($date_rule->getId(), 20);
     }
@@ -76,7 +86,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     public function testSearchByIdReturnsNullIfNoEntryIsFoundByTheDao() {
         stub($this->date_rule_dao)->searchById()->returnsEmptyDar();
         $date_rule = $this->date_rule_factory
-                ->searchById(20);
+                ->getRule($this->tracker, 20);
 
         $this->assertNull($date_rule);
     }
@@ -85,14 +95,15 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
         $data = array(
             'id'                => 20,
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
-            'source_field_id'   => 46345,
-            'target_field_id'   => 465,
-            'tracker_id'        => 999,
+            'source_field_id'   => $this->source_field_id,
+            'target_field_id'   => $this->target_field_id,
+            'tracker_id'        => $this->tracker_id,
         );
 
-        stub($this->date_rule_dao)->searchById(20)->returnsDar($data);
+        stub($this->date_rule_dao)->searchById($this->tracker_id, 20)->returnsDar($data);
+        stub($this->date_rule_dao)->searchById()->returnsEmptyDar();
         $date_rule = $this->date_rule_factory
-                ->searchById(20);
+                ->getRule($this->tracker, 20);
 
         $this->assertNotNull($date_rule);
     }
@@ -100,7 +111,7 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     public function testSearchByTrackerIdReturnsNullIfNoEntryIsFoundByTheDao() {
         stub($this->date_rule_dao)->searchByTrackerId()->returnsEmptyDar();
         $date_rule = $this->date_rule_factory
-                ->searchByTrackerId(999);
+                ->searchByTrackerId($this->tracker_id);
 
         $this->assertTrue(is_array($date_rule));
         $this->assertCount($date_rule, 0);
@@ -110,15 +121,15 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     public function testSearchByTrackerIdReturnsAnArrayOfASingleObjectIfOneEntryIsFoundByTheDao() {
         $data = array(
             'comparator'        => Tracker_Rule_Date::COMPARATOR_LESS_THAN_OR_EQUALS,
-            'source_field_id'   => 46345,
-            'target_field_id'   => 465,
-            'tracker_id'        => 999,
+            'source_field_id'   => $this->source_field_id,
+            'target_field_id'   => $this->target_field_id,
+            'tracker_id'        => $this->tracker_id,
             'id'                => 20
         );
 
         stub($this->date_rule_dao)->searchByTrackerId()->returnsDar($data);
         $date_rules = $this->date_rule_factory
-                ->searchByTrackerId(999);
+                ->searchByTrackerId($this->tracker_id);
 
         $this->assertNotNull($date_rules);
         $this->assertIsA($date_rules, 'array');
@@ -135,10 +146,165 @@ class Tracker_Rule_Date_FactoryTest extends TuleapTestCase {
     }
 
     public function itDelegatesDeletionToDao() {
-        $tracker_id = '123';
         $rule_id    = '456';
-        expect($this->date_rule_dao)->deleteById($tracker_id, $rule_id)->once();
-        $this->date_rule_factory->deleteById($tracker_id, $rule_id);
+        expect($this->date_rule_dao)->deleteById($this->tracker_id, $rule_id)->once();
+        $this->date_rule_factory->deleteById($this->tracker_id, $rule_id);
+    }
+    
+    public function testDuplicateDoesNotInsertWhenNoRulesExist() {
+        $from_tracker_id = 56;
+        $to_tracker_id   = 789;
+        $field_mapping   = array(
+            array(
+                'from'  => 123,
+                'to'    => 888
+            ),
+            array(
+                'from'  => 456,
+                'to'    => 999
+            ),
+        );
+        
+        $db_data = false;
+        
+        $dao = mock('Tracker_Rule_Date_Dao');
+        stub($dao)->searchByTrackerId()->returnsDar($db_data);
+        stub($dao)->insert()->never();
+        $form_factory = mock('Tracker_FormElementFactory');
+        
+        $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+    }
+    
+    public function testDuplicateInsertsANewRule() {
+        $from_tracker_id = 56;
+        $to_tracker_id   = 789;
+        
+        $field_mapping   = array(
+            array(
+                'from'  => 123,
+                'to'    => 888
+            ),
+            array(
+                'from'  => 456,
+                'to'    => 999
+            ),
+        );
+        
+        $db_data = array(
+            'source_field_id' => 123,
+            'target_field_id' => 456,
+            'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
+        );
+        
+        $dao = mock('Tracker_Rule_Date_Dao');
+        stub($dao)->searchByTrackerId()->returnsDar($db_data);
+        stub($dao)->insert($to_tracker_id, 888, 999, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->once();
+        $form_factory = mock('Tracker_FormElementFactory');
+        
+        $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+    }
+    
+    public function testDuplicateInsertsMultipleRules() {
+        $from_tracker_id = 56;
+        $to_tracker_id   = 789;
+        
+        $field_mapping   = array(
+            array(
+                'from'  => 111,
+                'to'    => 555
+            ),
+            array(
+                'from'  => 222,
+                'to'    => 666
+            ),
+            array(
+                'from'  => 333,
+                'to'    => 777
+            ),
+            array(
+                'from'  => 444,
+                'to'    => 888
+            ),
+        );
+        
+        $db_data1 = array(
+            'source_field_id' => 111,
+            'target_field_id' => 222,
+            'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
+        );
+        $db_data2 = array(
+            'source_field_id' => 333,
+            'target_field_id' => 444,
+            'comparator'      => Tracker_Rule_Date::COMPARATOR_LESS_THAN,
+        );
+        
+        $dao = mock('Tracker_Rule_Date_Dao');
+        stub($dao)->searchByTrackerId()->returnsDar($db_data1, $db_data2);
+        stub($dao)->insert($to_tracker_id, 555, 666, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->at(0);
+        stub($dao)->insert($to_tracker_id, 777, 888, Tracker_Rule_Date::COMPARATOR_LESS_THAN)->at(1);
+        $form_factory = mock('Tracker_FormElementFactory');
+        
+        $factory = new Tracker_Rule_Date_Factory($dao, $form_factory);
+        $factory->duplicate($from_tracker_id, $to_tracker_id, $field_mapping); 
+    }
+    
+    public function itDelegatesUsedDateFieldsRetrievalToElementFactory() {
+        $tracker          = mock('Tracker');
+        $used_date_fields = array('of', 'fields');
+        expect($this->element_factory)->getUsedDateFields($tracker)->once()->returns($used_date_fields);
+        $this->assertEqual($used_date_fields, $this->date_rule_factory->getUsedDateFields($tracker));
+    }
+
+    public function itDelegatesUsedDateFieldByIdRetrievalToElementFactory() {
+        $tracker = mock('Tracker');
+        expect($this->element_factory)->getUsedDateFieldById($tracker, $this->source_field_id)->once()->returns($this->source_field);
+        $this->assertEqual($this->source_field, $this->date_rule_factory->getUsedDateFieldById($tracker, $this->source_field_id));
+
+    }
+    
+    function testExport() {
+        $xml = simplexml_load_file(dirname(__FILE__) . '/../../../_fixtures/ImportTrackerRulesTest.xml');
+
+        $root = new SimpleXMLElement('<?xml version="1.0" encoding="UTF-8"?><tracker xmlns="http://codendi.org/tracker" />');
+        $array_xml_mapping = array('F25' => 102,
+                                   'F28' => 103,
+                                   'F29' => 801,
+                                   'F22' => 806,
+                                   );
+
+        $r1 = new Tracker_Rule_Date();
+        $r1->setComparator(Tracker_Rule_Date::COMPARATOR_NOT_EQUALS)
+                ->setSourceFieldId(102)
+                ->setTargetFieldId(801);
+        
+        $r2 = new Tracker_Rule_Date();
+        $r2->setComparator(Tracker_Rule_Date::COMPARATOR_GREATER_THAN_OR_EQUALS)
+                ->setSourceFieldId(103)
+                ->setTargetFieldId(806);
+         
+        $trm = partial_mock('Tracker_Rule_Date_Factory', 
+                array('searchByTrackerId'), 
+                array(mock('Tracker_Rule_Date_Dao'), mock('Tracker_FormElementFactory'))
+                );
+        $trm->setReturnValue('searchByTrackerId', array($r1, $r2));
+
+        $trm->exportToXML($root, $array_xml_mapping, 666);
+        $this->assertEqual(count($xml->dependencies->rule), count($root->dependencies->rule));
+    }
+
+    public function itDelegatesSaveToDao() {
+        $id   = 20;
+        $rule = new Tracker_Rule_Date();
+        $rule->setId($id);
+        $rule->setSourceField($this->source_field);
+        $rule->setComparator('>');
+        $rule->setTargetField($this->target_field);
+
+        stub($this->date_rule_dao)->save($id, $this->source_field_id, $this->target_field_id, '>')->once()->returns(true);
+        $success = $this->date_rule_factory->save($rule);
+        $this->assertTrue($success);
     }
 }
 ?>

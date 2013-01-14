@@ -271,8 +271,27 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     }
 
     public function setCriteriaValueFromSOAP(Tracker_Report_Criteria $criteria, StdClass $soap_criteria_value) {
-        $criteria_value = explode(',', $soap_criteria_value->value);
-        $this->setCriteriaValue($criteria_value);
+        $soap_criteria_values   = explode(',', $soap_criteria_value->value);
+        $available_field_values = $this->getAllValues();
+        $values                 = array();
+        $criterias              = array();
+
+        foreach ($available_field_values as $field_value_id => $field_value) {
+            $values[$field_value->getLabel()] = $field_value_id;
+        }
+
+        foreach ($soap_criteria_values as $soap_criteria_value) {
+            // Check if the SOAP string only contains digits
+            if (ctype_digit($soap_criteria_value)) {
+                $criterias[] = $soap_criteria_value;
+            } else {
+                $field_value_id = $values[$soap_criteria_value];
+                if ($field_value_id) {
+                    $criterias[] = $field_value_id;
+                }
+            }
+        }
+        $this->setCriteriaValue($criterias);
     }
 
     /**
@@ -427,10 +446,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return string
      */
     protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        $selected_values = $value ? $value->getListValues() : array();
+        $submitted_values = isset($submitted_values[0][$this->id]) ? $submitted_values[0][$this->id] : array();
+        $selected_values  = $value ? $value->getListValues() : array();
         return $this->_fetchField('tracker_field_'. $this->id, 
                 'artifact['. $this->id .']', 
-                $selected_values, $submitted_values[0][$this->id]);
+                $selected_values, $submitted_values);
     }
 
      /**
@@ -899,7 +919,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param array            &$xmlMapping The correpondance between real ids and xml IDs
      * @param int              &$index      The index of this form element in the export file
      */
-    public function exportToXML($root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
         parent::exportToXML($root, $xmlMapping, $index);
         if ($this->getBind() && $this->shouldBeBindXML()) {
             $child = $root->addChild('bind');

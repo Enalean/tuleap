@@ -57,6 +57,10 @@ function aSelectBoxField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Selectbox');
 }
 
+function aFileField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_File');
+}
+
 class Test_Tracker_FormElement_Builder {
     private $klass;
     private $id;

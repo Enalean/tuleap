@@ -29,8 +29,9 @@ require_once 'common/backend/BackendLogger.class.php';
  */
 class Git_Driver_Gerrit {
 
-    const COMMAND = 'gerrit';
-    const EXIT_CODE = 1;
+    const COMMAND      = 'gerrit';
+    const GSQL_COMMAND = 'gerrit gsql --format json -c';
+    const EXIT_CODE    = 1;
 
     /**
      * @var Git_Driver_Gerrit_RemoteSSHCommand
@@ -73,6 +74,15 @@ class Git_Driver_Gerrit {
         $this->logger->info("Gerrit: Group $gerrit_group successfully created");
     }
 
+    public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
+        $command = self::GSQL_COMMAND .' "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\\\''. $group_full_name .'\\\'"';
+        $command_result = $this->ssh->execute($server, $command);
+        $json_result = json_decode(array_shift(explode("\n", $command_result)));
+        if (isset($json_result->columns->group_uuid)) {
+            return $json_result->columns->group_uuid;
+        }
+    }
+
     private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command) {
         return $this->isGerritFailure($e) ? $this->gerritDriverException($e, $command) : $e;
 
@@ -86,7 +96,7 @@ class Git_Driver_Gerrit {
         return new Git_Driver_Gerrit_Exception("Command: $command".PHP_EOL."Error: ".$e->getStdErr());
     }
 
-    private function getGerritProjectName(GitRepository $repository) {
+    public function getGerritProjectName(GitRepository $repository) {
         $host    = Config::get('sys_default_domain');
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
@@ -96,9 +106,14 @@ class Git_Driver_Gerrit {
     private function compileMemberCommands($user_list) {
         $members = array();
         foreach ($user_list as $user) {
-            $members[] = "--member ".$user->getUsername();
+            $user = $this->escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user);
+            $members[] = "--member $user";
         }
         return $members;
+    }
+
+    private function escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_identifier) {
+        return escapeshellarg(escapeshellarg($user_identifier));
     }
 }
 ?>

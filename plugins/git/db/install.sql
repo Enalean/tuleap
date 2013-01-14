@@ -45,7 +45,8 @@ PRIMARY KEY (`job_id`));
 CREATE TABLE plugin_git_remote_servers (
     id INT(11) UNSIGNED NOT NULL auto_increment,
     host VARCHAR(255) NOT NULL,
-    port INT(11) UNSIGNED NOT NULL,
+    http_port INT(11) UNSIGNED NOT NULL,
+    ssh_port INT(11) UNSIGNED NOT NULL,
     login VARCHAR(255) NOT NULL,
     identity_file VARCHAR(255) NOT NULL,
 PRIMARY KEY (id));
@@ -74,6 +75,7 @@ INSERT INTO permissions_values (permission_type, ugroup_id, is_default)
 VALUES ('PLUGIN_GIT_READ', 2, 1),
        ('PLUGIN_GIT_READ', 3, 0),
        ('PLUGIN_GIT_READ', 4, 0),
+       ('PLUGIN_GIT_READ', 1, 0),
        ('PLUGIN_GIT_WRITE', 2, 0),
        ('PLUGIN_GIT_WRITE', 3, 1),
        ('PLUGIN_GIT_WRITE', 4, 0),

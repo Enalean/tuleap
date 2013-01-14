@@ -59,7 +59,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /**
      * @see Workflow_Transition_Condition::exportToXml()
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $child = $root->addChild('condition');
         $child->addAttribute('type', $this->identifier);
 

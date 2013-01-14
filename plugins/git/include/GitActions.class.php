@@ -62,6 +62,9 @@ class GitActions extends PluginActions {
      */
     private $gerrit_server_factory;
 
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
     /**
      * Constructor
      *
@@ -75,13 +78,15 @@ class GitActions extends PluginActions {
         SystemEventManager $systemEventManager,
         GitRepositoryFactory $factory,
         GitRepositoryManager $manager,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        Git_Driver_Gerrit $driver
     ) {
         parent::__construct($controller);
         $this->systemEventManager    = $systemEventManager;
         $this->factory               = $factory;
         $this->manager               = $manager;
         $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->driver                = $driver;
 
     }
 
@@ -204,14 +209,15 @@ class GitActions extends PluginActions {
         return true;
     }
 
-    public function repoManagement($projectId, $repositoryId) {
-        $c = $this->getController();
-        if (empty($repositoryId)) {
-            $this->addError('actions_params_error');
-            return false;
+    public function repoManagement(GitRepository $repository) {
+        $this->addData(array('repository'=>$repository));
+        if ($this->systemEventManager->isThereAnEventAlreadyOnGoing(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, $repository->getId())) {
+            $GLOBALS['Response']->addFeedback(Feedback::INFO, $this->getText('gerrit_migration_ongoing'));
         }
-        $this->_loadRepository($projectId, $repositoryId);
-        $this->addData(array('gerrit_servers' => $this->gerrit_server_factory->getServers()));
+        $this->addData(array(
+            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
+            'driver'         => $this->driver,
+        ));
         return true;
     }
 
@@ -469,15 +475,16 @@ class GitActions extends PluginActions {
     /**
      * Fork a bunch of repositories in a project for a given user
      * 
-     * @param int    $groupId   The project id
-     * @param array  $repos_ids The array of id of repositories to fork
-     * @param string $namespace The namespace where the new repositories will live
-     * @param User   $user      The owner of those new repositories
-     * @param Layout $response  The response object
+     * @param int    $groupId         The project id
+     * @param array  $repos_ids       The array of id of repositories to fork
+     * @param string $namespace       The namespace where the new repositories will live
+     * @param User   $user            The owner of those new repositories
+     * @param Layout $response        The response object
+     * @param array  $forkPermissions Permissions to be applied for the new repository
      */
-    public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
+    public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url, array $forkPermissions) {
         try {
-            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope)) {
+            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope, $forkPermissions)) {
                 $GLOBALS['Response']->addFeedback('info', $this->getText('successfully_forked'));
                 $response->redirect($redirect_url);
             }
@@ -485,7 +492,24 @@ class GitActions extends PluginActions {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
     }
-    
+
+    /**
+     * Prepare data for fork permissions action
+     *
+     * @param array  $repos     Repositories Ids we want to fork
+     * @param array  $project   The project Id where repositories would be forked
+     * @param string $namespace The namespace where the new repositories will live
+     * @param string $scope     The scope of the fork: personal or cross project.
+     *
+     * @return void
+     */
+    public function forkRepositoriesPermissions($repos, $project, $namespace, $scope) {
+        $this->addData(array('repos'     => join(',', $repos),
+                             'group_id'  => $project,
+                             'namespace' => $namespace,
+                             'scope'     => $scope));
+    }
+
     /**
      * 
      * @param GitRepository $repository

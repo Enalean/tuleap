@@ -53,6 +53,16 @@ class Response {
     function addFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) {
         $this->_feedback->log($level, $message, $purify);
     }
+    
+    /**
+     * Only adds to the feedback if the messge doesn't already exist.
+     */
+    function addUniqueFeedback($level, $message,  $purify=CODENDI_PURIFIER_CONVERT_HTML) { 
+        if(! strstr($this->getRawFeedback(), $message)) {
+            $this->_feedback->log($level, $message, $purify);
+         }
+    }
+    
     public function displayFeedback() {
         $this->_feedback->display();
     }

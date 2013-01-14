@@ -49,30 +49,6 @@ class GitActionsTest extends TuleapTestCase {
         $GLOBALS['Language']->setReturnValue('getText', 'successfully_forked', array('plugin_git', 'successfully_forked', '*'));
     }
 
-    function testRepoManagement() {
-        $repository = mock('GitRepository');
-        $controller = mock('Git');
-        $factory    = stub('GitRepositoryFactory')->getRepositoryById()->returns($repository);
-
-        $action = partial_mock(
-            'GitActions',
-            array('getText'),
-            array(
-                $controller,
-                mock('SystemEventManager'),
-                $factory,
-                mock('GitRepositoryManager'),
-                mock('Git_RemoteServer_GerritServerFactory')
-            )
-        );
-        $action->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
-
-        expect($controller)->addError('actions_params_error')->once();
-
-        $this->assertFalse($action->repoManagement(1, null));
-        $this->assertTrue($action->repoManagement(1, 1));
-    }
-
     function testNotificationUpdatePrefixFail() {
         $gitAction = new GitActionsTestVersion();
         $gitAction->setReturnValue('getText', 'actions_params_error', array('actions_params_error'));
@@ -475,7 +451,8 @@ class GitActions_Delete_Tests extends TuleapTestCase {
             $this->system_event_manager,
             $git_repository_factory,
             mock('GitRepositoryManager'),
-            mock('Git_RemoteServer_GerritServerFactory')
+            mock('Git_RemoteServer_GerritServerFactory'),
+            mock('Git_Driver_Gerrit')
         );
     }
 
@@ -522,7 +499,8 @@ class GitActions_ForkTests extends TuleapTestCase {
             mock('SystemEventManager'),
             mock('GitRepositoryFactory'),
             $this->manager,
-            mock('Git_RemoteServer_GerritServerFactory')
+            mock('Git_RemoteServer_GerritServerFactory'),
+            mock('Git_Driver_Gerrit')
         );
     }
 
@@ -534,10 +512,11 @@ class GitActions_ForkTests extends TuleapTestCase {
         $user         = mock('User');
         $response     = mock('Layout');
         $redirect_url = '/stuff';
+        $forkPermissions = array();
 
-        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope));
+        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope, $forkPermissions));
 
-        $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url);
+        $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url, $forkPermissions);
     }
 }
 
@@ -635,7 +614,8 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
             $this->em,
             mock('GitRepositoryFactory'),
             $this->manager,
-            $this->gerrit_factory
+            $this->gerrit_factory,
+            mock('Git_Driver_Gerrit')
         );
     }
 

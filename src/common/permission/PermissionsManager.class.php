@@ -155,11 +155,11 @@ class PermissionsManager {
      */
      public function getUgroupIdByObjectIdAndPermissionType($object_id, $permission_type){
          $dar = $this->_permission_dao->searchUgroupByObjectIdAndPermissionType($object_id, $permission_type, false);
-         if ($dar->isError() || !$dar->valid()) {
+         if ($dar->isError()) {
             return;
          } else {
              return $dar;
-         } 
+         }
      }
 
      /**

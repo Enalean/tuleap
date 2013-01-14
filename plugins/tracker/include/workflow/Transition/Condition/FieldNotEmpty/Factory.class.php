@@ -32,6 +32,11 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
         $this->element_factory = $element_factory;
     }
 
+    /** @return bool */
+    public function isFieldUsedInConditions(Tracker_FormElement_Field $field) {
+        return $this->dao->isFieldUsed($field->getId());
+    }
+
     public function getFieldNotEmpty(Transition $transition){
         $condition = new Workflow_Transition_Condition_FieldNotEmpty($transition, $this->dao);
 

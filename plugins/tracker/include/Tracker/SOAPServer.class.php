@@ -16,8 +16,12 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-require_once 'common/soap/SOAP_UserManager.class.php';
+require_once 'common/soap/SOAP_RequestValidator.class.php';
 require_once 'Report/Tracker_Report_SOAP.class.php';
+require_once 'Report/Tracker_ReportFactory.class.php';
+require_once 'NoChangeException.class.php';
+require_once 'FileInfoFactory.class.php';
+
 
 //define fault code constants
 define ('get_group_fault', '3000');
@@ -45,17 +49,19 @@ define('delete_artifact_followup_fault','3023');
 define('get_tracker_factory_fault','3024');
 define('get_tracker_fault','3025');
 define('user_is_not_tracker_admin','3026');
+define('invalid_report', '3027');
+define('invalid_file', '3028');
+define('invalid_file_field_format', Tracker_FormElement_Field_File::SOAP_FAULT_INVALID_REQUEST_FORMAT); //'3029'
+define('nb_max_temp_files', '3030');
+define('temp_file_invalid', '3031');
+define('uploaded_file_too_big', '3032');
+define('artifact_does_not_exist', '3033');
 
 class Tracker_SOAPServer {
     /**
-     * @var SOAP_UserManager
+     * @var SOAP_RequestValidator
      */
-    private $soap_user_manager;
-
-    /**
-     * @var ProjectManager
-     */
-    private $project_manager;
+    private $soap_request_validator;
 
     /**
      * @var TrackerFactory
@@ -82,22 +88,38 @@ class Tracker_SOAPServer {
      */
     private $artifact_factory;
 
+    /**
+     * @var Tracker_ReportFactory
+     */
+    private $report_factory;
+
+    /**
+     * @var Tracker_FileInfoFactory
+     */
+    private $fileinfo_factory;
+
     public function __construct(
-            SOAP_UserManager $soap_user_manager,
-            ProjectManager $project_manager,
+            SOAP_RequestValidator $soap_request_validator,
             TrackerFactory $tracker_factory,
             PermissionsManager $permissions_manager,
             Tracker_ReportDao $dao,
             Tracker_FormElementFactory $formelement_factory,
-            Tracker_ArtifactFactory $artifact_factory
+            Tracker_ArtifactFactory $artifact_factory,
+            Tracker_ReportFactory $report_factory,
+            Tracker_FileInfoFactory $fileinfo_factory
     ) {
-        $this->soap_user_manager        = $soap_user_manager;
-        $this->project_manager          = $project_manager;
+        $this->soap_request_validator   = $soap_request_validator;
         $this->tracker_factory          = $tracker_factory;
         $this->permissions_manager      = $permissions_manager;
         $this->report_dao               = $dao;
         $this->formelement_factory      = $formelement_factory;
         $this->artifact_factory         = $artifact_factory;
+        $this->report_factory           = $report_factory;
+        $this->fileinfo_factory         = $fileinfo_factory;
+    }
+
+    public function getVersion() {
+        return file_get_contents(dirname(__FILE__).'/../../www/soap/VERSION');
     }
 
     /**
@@ -113,14 +135,18 @@ class Tracker_SOAPServer {
      * @return Array
      */
     public function getArtifacts($session_key, $group_id, $tracker_id, $criteria, $offset, $max_rows) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
-        $tracker = $this->tracker_factory->getTrackerById($tracker_id);
-        $this->checkUserCanViewTracker($tracker, $current_user);
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+            $this->checkUserCanViewTracker($tracker, $current_user);
 
-        $report = new Tracker_Report_SOAP($current_user, $tracker, $this->permissions_manager, $this->report_dao, $this->formelement_factory);
-        $report->setSoapCriteria($criteria);
-        $matching = $report->getMatchingIds();
-        return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
+            $report = new Tracker_Report_SOAP($current_user, $tracker, $this->permissions_manager, $this->report_dao, $this->formelement_factory);
+            $report->setSoapCriteria($criteria);
+            $matching = $report->getMatchingIds();
+            return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
     }
 
     private function artifactListToSoap(User $user, $id_list, $offset, $max_rows) {
@@ -143,6 +169,33 @@ class Tracker_SOAPServer {
     }
 
     /**
+     * Returns all artifacts that match criteria defined in reports
+     *
+     * @param String $session_key
+     * @param Integer $report_id
+     * @param Integer $offset
+     * @param Integer $max_rows
+     *
+     * @return Array
+     * @throws SoapFault
+     */
+    public function getArtifactsFromReport($session_key, $report_id, $offset, $max_rows) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $report = $this->report_factory->getReportById($report_id, $current_user->getId(), false);
+            if ($report) {
+                $this->checkUserCanViewTracker($report->getTracker(), $current_user);
+                $matching = $report->getMatchingIds(null, true);
+                return $this->artifactListToSoap($current_user, $matching['id'], $offset, $max_rows);
+            } else {
+                return new SoapFault(invalid_report, "You attempt to use a report that doesn't exist or you don't have access to");
+            }
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
      * getTrackerList - returns an array of Tracker that belongs to the project identified by group_id
      *
      * @param string $session_key the session hash associated with the session opened by the person who calls the service
@@ -150,13 +203,18 @@ class Tracker_SOAPServer {
      * @return array the array of SOAPTracker that belongs to the project identified by $group_id, or a soap fault if group_id does not match with a valid project.
      */
     public function getTrackerList($session_key, $group_id) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
-        $this->getProjectById($group_id, 'getTrackerList');
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $project = $this->getProjectById($group_id, 'getTrackerList');
+            $this->checkUserCanAccessProject($current_user, $project);
 
-        // The function getTrackersByGroupId returns all trackers,
-        // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
-        $trackers = $this->tracker_factory->getTrackersByGroupId($group_id);
-        return $this->trackerlist_to_soap($trackers, $current_user);
+            // The function getTrackersByGroupId returns all trackers,
+            // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
+            $trackers = $this->tracker_factory->getTrackersByGroupId($group_id);
+            return $this->trackerlist_to_soap($trackers, $current_user);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
     }
 
     /**
@@ -210,14 +268,20 @@ class Tracker_SOAPServer {
      *          or a soap fault if tracker_id or group_id does not match with a valid project/tracker.
      */
     public function getTrackerFields($session_key, $group_id, $tracker_id) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
-        $this->getProjectById($group_id, 'getTrackerFields');
-        $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerFields');
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $project = $this->getProjectById($group_id, 'getTrackerFields');
+            $this->checkUserCanAccessProject($current_user, $project);
 
-        // The function getTrackerFields returns all tracker fields,
-        // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
-        $tracker_fields = $this->formelement_factory->getUsedFields($tracker);
-        return $this->trackerfields_to_soap($current_user, $tracker, $tracker_fields);
+            $tracker = $this->getTrackerById($group_id, $tracker_id, 'getTrackerFields');
+
+            // The function getTrackerFields returns all tracker fields,
+            // even those the user is NOT allowed to view -> we will filter in trackerlist_to_soap
+            $tracker_fields = $this->formelement_factory->getUsedFields($tracker);
+            return $this->trackerfields_to_soap($current_user, $tracker, $tracker_fields);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
     }
 
     /**
@@ -259,27 +323,54 @@ class Tracker_SOAPServer {
      *          or a soap fault if artifact_id is not a valid artifact
      */
     public function getArtifact($session_key, $group_id, $tracker_id, $artifact_id) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
-        $artifact     = $this->getArtifactById($artifact_id, 'getArtifact');
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $artifact     = $this->getArtifactById($artifact_id, $current_user, 'getArtifact');
+            return $this->artifact_to_soap($current_user, $artifact);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    private function checkUserCanViewArtifact(Tracker_Artifact $artifact, User $user) {
+        if (!$artifact->userCanView($user)) {
+            throw new SoapFault(get_artifact_fault, 'Permission Denied: you cannot access this artifact');
+        }
 
         $tracker = $artifact->getTracker();
         if (!$tracker) {
             throw new SoapFault(get_tracker_factory_fault, 'Could Not Get Tracker', 'getArtifact');
         }
-        $group_id = $tracker->getProject()->getGroupId();
-        $this->getProjectById($group_id, 'getArtifact');
+        $this->getProjectById($tracker->getProject()->getGroupId(), 'getArtifact');
 
-        $this->checkUserCanViewTracker($tracker, $current_user);
-        return $this->artifact_to_soap($current_user, $artifact);
+        $this->checkUserCanViewTracker($tracker, $user);
     }
 
     /**
      * @throws SoapFault if user can't view the tracker
      */
     private function checkUserCanViewTracker(Tracker $tracker, User $user) {
-        if (!$tracker->userCanView($user)) {
-            throw new SoapFault(get_tracker_factory_fault, 'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifact');
+        if (! $tracker->userCanView($user)) {
+            throw new Exception('Permission Denied: You are not granted sufficient permission to perform this operation.', (string)get_tracker_factory_fault);
         }
+        $this->checkUserCanAccessProject($user, $tracker->getProject());
+    }
+
+    /**
+     * @throws SoapFault if user can't view the tracker
+     */
+    private function checkUserCanAdminTracker(User $user, $tracker) {
+        $this->checkUserCanViewTracker($tracker, $user);
+        if (! $tracker->userCanAdmin($user)) {
+            throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
+        }
+    }
+
+    /**
+     * @throws SoapFault if user can't access the project
+     */
+    private function checkUserCanAccessProject(User $user, Project $project) {
+        $this->soap_request_validator->assertUserCanAccessProject($user, $project);
     }
 
     /**
@@ -292,32 +383,39 @@ class Tracker_SOAPServer {
      * @return array the SOAPArtifact corresponding to the Artifact Object
      */
     private function artifact_to_soap(User $user, Tracker_Artifact $artifact) {
-        $return = array();
+        $soap_artifact = array();
 
         // We check if the user can view this artifact
         if ($artifact->userCanView($user)) {
             $last_changeset = $artifact->getLastChangeset();
 
-            $return['artifact_id']      = $artifact->getId();
-            $return['tracker_id']       = $artifact->getTrackerId();
-            $return['submitted_by']     = $artifact->getSubmittedBy();
-            $return['submitted_on']     = $artifact->getSubmittedOn();
-            $return['last_update_date'] = $last_changeset->getSubmittedOn();
+            $soap_artifact['artifact_id']      = $artifact->getId();
+            $soap_artifact['tracker_id']       = $artifact->getTrackerId();
+            $soap_artifact['submitted_by']     = $artifact->getSubmittedBy();
+            $soap_artifact['submitted_on']     = $artifact->getSubmittedOn();
+            $soap_artifact['cross_references'] = $artifact->getCrossReferencesSOAPValues();
+            $soap_artifact['last_update_date'] = $last_changeset->getSubmittedOn();
 
-            $return['value'] = array();
+            $soap_artifact['value'] = array();
             foreach ($last_changeset->getValues() as $field_id => $field_value) {
                 if ($field_value &&
                         ($field = $this->formelement_factory->getFormElementById($field_id)) &&
                         ($field->userCanRead($user))) {
-                    $return['value'][] = array(
+                    $soap_field_value = array(
                         'field_name' => $field->getName(),
                         'field_label' => $field->getLabel(),
-                        'field_value' => $field_value->getSoapValue()
                     );
+                    if ($field instanceof Tracker_FormElement_Field_File) {
+                        $soap_field_value['field_value'] = $field_value->getSoapValue();
+                    } else {
+                        // TODO: refactor to move 'value' into Field
+                        $soap_field_value['field_value'] = array('value' => $field_value->getSoapValue());
+                    }
+                    $soap_artifact['value'][] = $soap_field_value;
                 }
             }
         }
-        return $return;
+        return $soap_artifact;
     }
 
     /**
@@ -337,19 +435,36 @@ class Tracker_SOAPServer {
      *              - the artifact creation failed.
      */
     public function addArtifact($session_key, $group_id, $tracker_id, $value) {
-        $user = $this->soap_user_manager->continueSession($session_key);
-        $this->getProjectById($group_id, 'addArtifact');
-        $tracker = $this->getTrackerById($group_id, $tracker_id, 'addArtifact');
+        try {
+            $user = $this->soap_request_validator->continueSession($session_key);
+            $tracker = $this->getTrackerById($group_id, $tracker_id, 'addArtifact');
+            $this->checkUserCanViewTracker($tracker, $user);
 
+            $fields_data = $this->getArtifactDataFromSoapRequest($tracker, $value);
+            if ($artifact = $this->artifact_factory->createArtifact($tracker, $fields_data, $user, null)) {
+                return $artifact->getId();
+            } else {
+                if ($GLOBALS['Response']->feedbackHasErrors()) {
+                    return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'addArtifact');
+                } else {
+                    return new SoapFault(update_artifact_fault, 'Unknown error', 'addArtifact');
+                }
+            }
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    private function getArtifactDataFromSoapRequest(Tracker $tracker, $values) {
         $fields_data = array();
-        foreach ($value as $field_value) {
+        foreach ($values as $field_value) {
             // field are identified by name, we need to retrieve the field id
             if ($field_value->field_name) {
 
-                $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
+                $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_value->field_name);
                 if ($field) {
+                    $field_data = $field->getFieldDataFromSoapValue($field_value);
 
-                    $field_data = $field->getFieldData($field_value->field_value);
                     if ($field_data != null) {
                         // $field_value is an object: SOAP must cast it in ArtifactFieldValue
                         if (isset($fields_data[$field->getId()])) {
@@ -361,23 +476,14 @@ class Tracker_SOAPServer {
                             $fields_data[$field->getId()] = $field_data;
                         }
                     } else {
-                        return new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name, 'addArtifact');
+                        throw new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name);
                     }
                 } else {
-                    return new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name, 'addArtifact');
+                    throw new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name);
                 }
             }
         }
-
-        if ($artifact = $this->artifact_factory->createArtifact($tracker, $fields_data, $user, null)) {
-            return $artifact->getId();
-        } else {
-            if ($GLOBALS['Response']->feedbackHasErrors()) {
-                return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'addArtifact');
-            } else {
-                return new SoapFault(update_artifact_fault, 'Unknown error', 'addArtifact');
-            }
-        }
+        return $fields_data;
     }
 
     /**
@@ -400,63 +506,27 @@ class Tracker_SOAPServer {
      *              - the artifact modification failed.
      */
     public function updateArtifact($session_key, $group_id, $tracker_id, $artifact_id, $value, $comment, $comment_format) {
-        $user = $this->soap_user_manager->continueSession($session_key);
-        $this->getProjectById($group_id, 'updateArtifact');
-        $this->getTrackerById($group_id, $tracker_id, 'updateArtifact');
+        try {
+            $user = $this->soap_request_validator->continueSession($session_key);
+            $artifact = $this->getArtifactById($artifact_id, $user, 'updateArtifact');
 
-        if ($artifact = $this->getArtifactById($artifact_id, 'updateArtifact')) {
-            if ($artifact->getTrackerId() != $tracker_id) {
-                return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
-            }
-
-            //Check Field Dependencies
-            // TODO : implement it
-            /* require_once('common/tracker/ArtifactRulesManager.class.php');
-              $arm =& new ArtifactRulesManager();
-              if (!$arm->validate($ath->getID(), $data, $art_field_fact)) {
-              return new SoapFault(invalid_field_dependency_fault, 'Invalid Field Dependency', 'updateArtifact');
-              } */
-
-            $fields_data = array();
-            foreach ($value as $field_value) {
-                // field are identified by name, we need to retrieve the field id
-                if ($field_value->field_name) {
-
-                    $field = $this->formelement_factory->getUsedFieldByName($tracker_id, $field_value->field_name);
-                    if ($field) {
-
-                        $field_data = $field->getFieldData($field_value->field_value);
-                        if ($field_data != null) {
-                            // $field_value is an object: SOAP must cast it in ArtifactFieldValue
-                            if (isset($fields_data[$field->getId()])) {
-                                if (!is_array($fields_data[$field->getId()])) {
-                                    $fields_data[$field->getId()] = array($fields_data[$field->getId()]);
-                                }
-                                $fields_data[$field->getId()][] = $field_data;
-                            } else {
-                                $fields_data[$field->getId()] = $field_data;
-                            }
-                        } else {
-                            return new SoapFault(update_artifact_fault, 'Unknown value ' . $field_value->field_value . ' for field: ' . $field_value->field_name, 'addArtifact');
-                        }
-                    } else {
-                        return new SoapFault(update_artifact_fault, 'Unknown field: ' . $field_value->field_name, 'addArtifact');
-                    }
-                }
-            }
-
-            if ($artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format)) {
+            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value);
+            try {
+                $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
-            } else {
-                $response = new Response();
-                if ($response->feedbackHasErrors()) {
-                    return new SoapFault(update_artifact_fault, $response->getRawFeedback(), 'updateArtifact');
-                } else {
-                    return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
-                }
+            } catch (Tracker_NoChangeException $e) {
+                return $artifact_id;
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
             }
-        } else {
-            return new SoapFault(get_tracker_fault, 'Could not get Artifact.', 'updateArtifact');
+
+            if ($GLOBALS['Response']->feedbackHasErrors()) {
+                return new SoapFault(update_artifact_fault, $GLOBALS['Response']->getRawFeedback(), 'updateArtifact');
+            } else {
+                return new SoapFault(update_artifact_fault, 'Unknown error', 'updateArtifact');
+            }
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 
@@ -469,15 +539,16 @@ class Tracker_SOAPServer {
      * @throws SoapFault in case of failure.
      */
     public function getTrackerStructure($session_key, $group_id, $tracker_id) {
-        $user      = $this->soap_user_manager->continueSession($session_key);
-        $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
-        $structure = array();
-        if ($tracker->userIsAdmin($user)) {
-            $structure['semantic'] = $this->getTrackerSemantic($tracker);
-            $structure['workflow'] = $this->getTrackerWorkflow($tracker);
-            return $structure;
-        } else {
-            throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
+        try {
+            $user      = $this->soap_request_validator->continueSession($session_key);
+            $tracker   = $this->getTrackerById($group_id, $tracker_id, 'getTrackerSemantic');
+            $this->checkUserCanAdminTracker($user, $tracker);
+            return array(
+                'semantic' => $this->getTrackerSemantic($tracker),
+                'workflow' => $this->getTrackerWorkflow($tracker),
+            );
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 
@@ -491,68 +562,133 @@ class Tracker_SOAPServer {
     }
 
     /**
-     * getArtifactHistory - returns the array of ArtifactHistory of the artifact $artifact_id in the tracker $tracker_id of the project $group_id
+     * List all reports the user can access/run (both project reports and personnal reports)
      *
-     * @param string $session_key the session hash associated with the session opened by the person who calls the service
-     * @param int $group_id the ID of the group we want to retrieve the history
-     * @param int $tracker_id the ID of the tracker we want to retrieve the history
-     * @param int $artifact_id the ID of the artifact we want to retrieve the history
-     * @return array{SOAPArtifactHistory} the array of the history of the artifact,
-     *              or a soap fault if :
-     *              - group_id does not match with a valid project,
-     *              - tracker_id does not match with a valid tracker
-     *              - artifact_id does not match with a valid artifact
+     * @param String  $session_key
+     * @param Integer $group_id
+     * @param Integer $tracker_id
+     *
+     * @return Array
+     *
+     * @throws SoapFault
      */
-    public function getArtifactHistory($session_key, $group_id, $tracker_id, $artifact_id) {
-        $current_user = $this->soap_user_manager->continueSession($session_key);
-        $this->getProjectById($group_id, 'getArtifactHistory');
-        $tracker = $this->getTrackerById($group_id, $tracker_id, 'getArtifactHistory');
+    public function getTrackerReports($session_key, $group_id, $tracker_id) {
+        try {
+            $current_user      = $this->soap_request_validator->continueSession($session_key);
+            $tracker = $this->tracker_factory->getTrackerById($tracker_id);
+            $this->checkUserCanViewTracker($tracker, $current_user);
 
-        if (! $tracker->userCanView($current_user)) {
-            throw new SoapFault(get_tracker_factory_fault,'Permission Denied: You are not granted sufficient permission to perform this operation.', 'getArtifactFollowups');
-        } else {
-            $artifact = $this->getArtifactById($artifact_id, 'getArtifactHistory');
-            $changesets = $artifact->getChangesets();
-            return $this->history_to_soap($changesets);
+            return $this->report_factory->exportToSoap($tracker, $current_user);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
     }
 
-    private function history_to_soap($changesets) {
-        $return = array();
-        foreach ($changesets as $changeset_id => $changeset) {
+    /**
+     * Return a part of the requested attachment, base64 encoded.
+     *
+     * @param String  $session_key
+     * @param Integer $artifact_id
+     * @param Integer $attachment_id
+     * @param Integer $offset
+     * @param Integer $size
+     *
+     * @return String
+     */
+    public function getArtifactAttachmentChunk($session_key, $artifact_id, $attachment_id, $offset, $size) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $artifact     = $this->getArtifactById($artifact_id, $current_user, 'getArtifactAttachmentChunk');
 
-            if ($previous_changeset = $changeset->getArtifact()->getPreviousChangeset($changeset->getId())) {
-
-                $changes = array();
-
-                foreach ($changeset->getValues() as $field_id => $current_changeset_value) {
-                    if ($field = $this->formelement_factory->getFieldById($field_id)) {
-                        if ($current_changeset_value->hasChanged()) {
-                            if ($previous_changeset_value = $previous_changeset->getValue($field)) {
-                                if ($diff = $current_changeset_value->diff($previous_changeset_value)) {
-                                    $changes[] = $field->getLabel() . ': ' . $diff;
-                                }
-                            }
-                        }
-                    }
+            $file_info = $this->fileinfo_factory->getById($attachment_id);
+            if ($file_info && $file_info->fileExists()) {
+                $field = $file_info->getField();
+                if ($field->userCanRead($current_user)) {
+                    return $file_info->getSoapContent($offset, $size);
+                } else {
+                    return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
                 }
-
-                $return[] = array(
-                    'artifact_id'     => $changeset->artifact->getId(),
-                    'changeset_id'    => $changeset_id,
-                    'changes'         => $changes,
-                    'modification_by' => $changeset->submitted_by,
-                    'date'            => $changeset->submitted_on,
-                    'comment'         => $changeset->getComment()
-                );
+            } else {
+                return new SoapFault(invalid_field_fault, 'Permission denied: you cannot access this field');
             }
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
-        return $return;
+    }
+
+    /**
+     * Provision a file name for a future upload
+     *
+     * @param String $session_key
+     *
+     * @return String Name (UUID) of the provisioned file
+     */
+    public function createTemporaryAttachment($session_key) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
+            return $temporary->getUniqueFileName();
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
+     * Upload base64 encoded content of file (appened at the end of file)
+     *
+     * @param String $session_key
+     * @param String $attachment_name (generated wuth createTemporaryAttachment)
+     * @param String $content
+     *
+     * @return Integer the length written on disk
+     */
+    public function appendTemporaryAttachmentChunk($session_key, $attachment_name, $content) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user, $attachment_name);
+            return $temporary->appendChunk($content);
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
+     * Remove existing temporary files for a user
+     *
+     * @param String $session_key
+     *
+     * @return Boolean
+     */
+    public function purgeAllTemporaryAttachments($session_key) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $temporary    = new Tracker_SOAP_TemporaryFile($current_user);
+            return $temporary->purgeAllTemporaryFiles();
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+    }
+
+    /**
+     * Returns comments of a given artifact
+     *
+     * @param String $session_key
+     * @param int $artifact_id
+     */
+    public function getArtifactComments($session_key, $artifact_id) {
+        try {
+            $current_user = $this->soap_request_validator->continueSession($session_key);
+            $artifact     = $this->getArtifactById($artifact_id, $current_user, __FUNCTION__);
+            return $artifact->exportCommentsToSOAP();
+        } catch (Exception $e) {
+            return new SoapFault((string) $e->getCode(), $e->getMessage());
+        }
+
     }
 
     private function getProjectById($group_id, $method_name) {
-        $project = $this->project_manager->getGroupByIdForSoap($group_id, $method_name);
-        if (!$project->usesService('plugin_tracker')) {
+        $project = $this->soap_request_validator->getProjectById($group_id, $method_name);
+        if (! $project->usesService('plugin_tracker')) {
             throw new SoapFault(get_service_fault, 'Tracker service is not used for this project.', $method_name);
         }
         return $project;
@@ -568,11 +704,12 @@ class Tracker_SOAPServer {
         return $tracker;
     }
 
-    private function getArtifactById($artifact_id, $method_name) {
+    private function getArtifactById($artifact_id, $user, $method_name) {
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
         if (!$artifact) {
             throw new SoapFault(get_artifact_fault, 'Could Not Get Artifact', $method_name);
         }
+        $this->checkUserCanViewArtifact($artifact, $user);
         return $artifact;
     }
 

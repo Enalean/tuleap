@@ -40,6 +40,12 @@ class Tracker_RulesManager {
 
      /** @var Tracker_Rule_Date_Factory */
     protected $rule_date_factory;
+    
+    /**
+     *
+     * @var Tracker_Rule_List_Factory 
+     */
+    private $rule_list_factory;
 
     public function __construct($tracker, Tracker_FormElementFactory $form_element_factory) {
         $this->tracker              = $tracker;
@@ -51,9 +57,9 @@ class Tracker_RulesManager {
      * @param int $tracker_id
      * @return array
      */
-    function getAllListRulesByTrackerWithOrder($tracker_id) {
+    public function getAllListRulesByTrackerWithOrder($tracker_id) {
         if (!isset($this->rules_by_tracker_id[$tracker_id])) {
-            $this->rules_by_tracker_id[$tracker_id] = $this->_getTracker_RuleFactory()
+            $this->rules_by_tracker_id[$tracker_id] = $this->getRuleFactory()
                     ->getAllListRulesByTrackerWithOrder($tracker_id);
         }
         return $this->rules_by_tracker_id[$tracker_id];
@@ -65,25 +71,15 @@ class Tracker_RulesManager {
      * @return array An array of Tracker_Rule_Date objects
      */
     public function getAllDateRulesByTrackerId($tracker_id) {
-        return $this->getTracker_RuleDateFactory()
+        return $this->getTrackerRuleDateFactory()
                     ->searchByTrackerId($tracker_id);
-    }
-
-    function saveRuleValue($tracker_id, $source, $source_value, $target, $target_value) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->saveRuleValue($tracker_id, $source, $source_value, $target, $target_value);
-    }
-
-    function deleteRule($rule_id) {
-        $fact = $this->_getTracker_RuleFactory();
-        return $fact->deleteRule($rule_id);
     }
 
     /**
      *
      * @return Tracker_Rule_Date_Factory
      */
-    public function getTracker_RuleDateFactory() {
+    public function getTrackerRuleDateFactory() {
         if($this->rule_date_factory ==  null) {
             $this->rule_date_factory = new Tracker_Rule_Date_Factory(new Tracker_Rule_Date_Dao(), $this->form_element_factory);
         }
@@ -100,12 +96,34 @@ class Tracker_RulesManager {
         $this->rule_date_factory = $factory;
         return $this;
     }
+    
+    /**
+     *
+     * @return Tracker_Rule_List_Factory
+     */
+    public function getTrackerRuleListFactory() {
+        if($this->rule_list_factory ==  null) {
+            $this->rule_list_factory = new Tracker_Rule_List_Factory(new Tracker_Rule_List_Dao());
+        }
+
+        return $this->rule_list_factory;
+    }
+
+    /**
+     *
+     * @param Tracker_Rule_List_Factory $factory
+     * @return \Tracker_RulesManager
+     */
+    public function setRuleListFactory(Tracker_Rule_List_Factory $factory) {
+        $this->rule_list_factory = $factory;
+        return $this;
+    }
 
     /**
      *
      * @return Tracker_RuleFactory
      */
-    function _getTracker_RuleFactory() {
+    function getRuleFactory() {
         return Tracker_RuleFactory::instance();
     }
 
@@ -282,12 +300,12 @@ class Tracker_RulesManager {
      * @return array of Tracker_Rule_List
      */
     public function getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
-        $fact = $this->_getTracker_RuleFactory();
+        $fact = $this->getRuleFactory();
         return $fact->getDependenciesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
     }
 
     public function deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id) {
-        $fact = $this->_getTracker_RuleFactory();
+        $fact = $this->getRuleFactory();
         return $fact->deleteRulesBySourceTarget($tracker_id, $field_source_id, $field_target_id);
     }
 
@@ -330,7 +348,15 @@ class Tracker_RulesManager {
                        $dependency = $field_source_value_id.'_'.$field_target_value_id;
                        if ($request->existAndNonEmpty($dependency)) {
                            $currMatrix[]=array($field_source_value_id, $field_target_value_id);
-                           $this->saveRuleValue($this->tracker->id, $field_source->getId(), $field_source_value_id, $field_target->getId(), $field_target_value_id);
+                           $this->getTrackerRuleListFactory()->create(
+                                   $field_source->getId(), 
+                                   $field_target->getId(), 
+                                   $this->tracker->id, 
+                                   $field_source_value_id, 
+                                   $field_target_value_id
+                                   );
+//                           $this->saveRuleValue($this->tracker->id, $field_source->getId(), 
+//                                   $field_source_value_id, $field_target->getId(), $field_target_value_id);
                         }
                    }
                 }
@@ -392,7 +418,7 @@ class Tracker_RulesManager {
         echo '</from>';
 
         //Shortcut
-        $sources_targets = $this->_getTracker_RuleFactory()->getInvolvedFieldsByTrackerId($this->tracker->id);
+        $sources_targets = $this->getRuleFactory()->getInvolvedFieldsByTrackerId($this->tracker->id);
         if (count($sources_targets)) {
             $dependencies = array();
             foreach ($sources_targets as $row) {
@@ -523,11 +549,16 @@ class Tracker_RulesManager {
         return $html;
     }
 
-    function isUsedInFieldDependency($field) {
+    /** @return bool */
+    public function isUsedInFieldDependency(Tracker_FormElement $field) {
         $field_id = $field->getId();
-        $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
+        $list_rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->getId());
+        $date_rules = $this->getAllDateRulesByTrackerId($this->tracker->getId());
+        $rules = array_merge($list_rules, $date_rules);
         foreach ($rules as $rule) {
-            if ($rule->isUsedInRule($field->getId())) return true;
+            if ($rule->isUsedInRule($field->getId())) {
+                return true;
+            }
         }
         return false;
     }
@@ -535,26 +566,23 @@ class Tracker_RulesManager {
     /**
      * Export workflow to XML
      *
-     * @param SimpleXMLElement &$root     the node to which the workflow is attached (passed by reference)
+     * @param SimpleXMLElement $root     the node to which the workflow is attached (passed by reference)
      * @param array            $xmlMapping correspondance between real ids and xml IDs
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
-            $rules = $this->getAllListRulesByTrackerWithOrder($this->tracker->id);
-            foreach ($rules as $rule) {
-                $source_field = $this->form_element_factory->getFormElementById($rule->source_field);
-                $target_field = $this->form_element_factory->getFormElementById($rule->target_field);
-                $bf = new Tracker_FormElement_Field_List_BindFactory();
-                //TODO: handle sb/msb bind to users and remove condition
-                if ($bf->getType($source_field->getBind()) == 'static' &&  $bf->getType($target_field->getBind()) == 'static') {
-                    $child = $root->addChild('rule');
-                    $child->addChild('source_field')->addAttribute('REF', array_search($rule->source_field, $xmlMapping));
-                    $child->addChild('target_field')->addAttribute('REF', array_search($rule->target_field, $xmlMapping));
-                    $child->addChild('source_value')->addAttribute('REF', array_search($rule->source_value, $xmlMapping['values']));
-                    $child->addChild('target_value')->addAttribute('REF', array_search($rule->target_value, $xmlMapping['values']));
-                }
-            }
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
+        $this->getTrackerRuleDateFactory()->exportToXml(
+                $root, 
+                $xmlMapping, 
+                $this->tracker->getId()
+                );
+        $this->getTrackerRuleListFactory()->exportToXml(
+                $root, 
+                $xmlMapping, 
+                $this->getTrackerFormElementFactory(),
+                $this->tracker->getId()
+                );
     }
 
     /**
@@ -567,29 +595,28 @@ class Tracker_RulesManager {
         $rules = $this->getAllDateRulesByTrackerId($tracker_id);
 
         foreach ($rules as $rule) {
+            
             if (! $this->dateRuleApplyToSubmittedFields($rule, $value_field_list)) {
-                // If the request doesn't contain all fields then the rules
-                // are considered violated.
-                // It may impact partial csv import / soap update
                 return false;
             }
-
+                    
             if (! $this->validateDateRuleOnSubmittedFields($rule, $value_field_list)) {
                 $source_field = $this->getField($rule->getSourceFieldId());
                 $target_field = $this->getField($rule->getTargetFieldId());
-
-                $GLOBALS['Response']->addFeedback(
-                    'error',
-                    $GLOBALS['Language']->getText(
+                $feedback = $GLOBALS['Language']->getText(
                         'plugin_tracker_artifact',
                         'rules_date_not_valid',
                         array(
-                            $source_field->getLabel(),
+                            $source_field->getLabel() ,
                             $rule->getComparator(),
-                            $target_field->getLabel()
+                            $target_field->getLabel() 
                         )
-                    )
-                );
+                    );
+                
+                $GLOBALS['Response']->addFeedback('error', $feedback);
+                
+                $source_field->setHasErrors(true);
+                $target_field->setHasErrors(true);
                 return false;
             }
         }
@@ -598,7 +625,25 @@ class Tracker_RulesManager {
     }
 
     private function dateRuleApplyToSubmittedFields(Tracker_Rule_Date $rule, array $value_field_list) {
-        return isset($value_field_list[$rule->getSourceFieldId()]) && isset($value_field_list[$rule->getTargetFieldId()]);
+        $is_valid = true;
+        if(! array_key_exists($rule->getSourceFieldId(), $value_field_list)) {
+            $source_field = $this->getField($rule->getSourceFieldId());
+            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $source_field->getLabel();
+            
+            $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
+            $source_field->setHasErrors(true);
+            $is_valid = false;
+        }
+        
+        if(! array_key_exists($rule->getTargetFieldId(), $value_field_list)) {
+            $target_field = $this->getField($rule->getTargetFieldId());
+            $feedback = $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'missing_field_value') . $target_field->getLabel();
+            $GLOBALS['Response']->addUniqueFeedback('error', $feedback);
+            $target_field->setHasErrors(true);
+            $is_valid = false;
+        } 
+          
+        return $is_valid;
     }
 
     /** @return bool */
@@ -654,17 +699,32 @@ class Tracker_RulesManager {
                 reset($dependencies[$source]);
                 while(!$error_occured && (list($target,) = each($dependencies[$source]))) {
                     if (isset($values[$target])) {
-
                         reset($values[$target]['values']);
                         while(!$error_occured && (list(,$target_value) = each($values[$target]['values']))) {
+                            
+                            if($target_value == Tracker_FormElement_Field_List_Bind_StaticValue_Null::VALUE_ID
+                                    || $target_value == null) {
+                                
+                                /*
+                                 * Field dependencies are only set between fields with values.
+                                 * Ideally, field dependencies between all other fields and the null/ 100
+                                 * value should be set.
+                                 */
+                                continue;
+                            }
                             //Foreach target values we look if there is at least one source value whith corresponding rule valid
                             $valid = false;
                             reset($values[$source]['values']);
+                            
+                            
+
                             while(!$valid && (list(,$source_value) = each($values[$source]['values']))) {
+                                
+                                
                                 $applied = false;
                                 reset($dependencies[$source][$target]);
                                 while(!($applied && $valid) && (list($rule,) = each($dependencies[$source][$target]))) {
-
+                
                                     if ($dependencies[$source][$target][$rule]->canApplyTo(
                                         $tracker_id,
                                         $source,
@@ -685,15 +745,24 @@ class Tracker_RulesManager {
                             // when a dependence problem is detected, we detail the message error
                             // to explain the fields that trigger the problem
                             if (! $valid) {
+                                                               
                                 $error_occured = true;
                                 // looking for the source field value which cause the dependence problem
                                 $source_field = $this->getTrackerFormElementFactory()->getFormElementById($source);
-                                $pb_source_values = $this->getSelectedValuesForField($source_field, $value_field_list[$source]);
+                                if(is_null($value_field_list[$source])) {
+                                    $pb_source_values = array();
+                                } else {
+                                    $pb_source_values = $this->getSelectedValuesForField($source_field, $value_field_list[$source]);
+                                }
                                 $source_field->setHasErrors(true);
 
                                 // looking for the target field value which cause the dependence problem
                                 $target_field = $this->getTrackerFormElementFactory()->getFormElementById($target);
-                                $pb_target_values = $this->getSelectedValuesForField($target_field, $target_value);
+                                if(is_null($target_value)) {
+                                   $pb_target_values = array();
+                                } else {
+                                    $pb_target_values = $this->getSelectedValuesForField($target_field, $target_value);
+                                }
                                 $target_field->setHasErrors(true);
                                // detailled error message
                                $GLOBALS['Response']->addFeedback('error', $values[$source]['field']->getLabel().'('. implode(', ', $pb_source_values) .') -> '.$values[$target]['field']->getLabel().'('. implode(', ', $pb_target_values) .')');
@@ -711,6 +780,20 @@ class Tracker_RulesManager {
         $field                = $tracker_list_factory->getFormElementById($field_id);
         return $field;
     }
-}
 
+    /** @return array { 'dates' => [...], 'lists' => [...] } */
+    public function exportToSOAP() {
+        $soap = array(
+            'dates' => array(),
+            'lists' => array()
+        );
+        foreach ($this->getAllListRulesByTrackerWithOrder($this->tracker->getId()) as $rule) {
+            $soap['lists'][] = $rule->exportToSOAP();
+        }
+        foreach ($this->getAllDateRulesByTrackerId($this->tracker->getId()) as $rule) {
+            $soap['dates'][] = $rule->exportToSOAP();
+        }
+        return $soap;
+    }
+}
 ?>

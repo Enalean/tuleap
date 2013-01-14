@@ -52,11 +52,11 @@ body {
 .newproject { background-color: gray; }
 .top_up { color: #009900; }
 .top_down { color: #CC0000; }
-.command { font-family: courier,sans-serif;}
+.command { font-family: "Courier New", courier,sans-serif;}
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: gray; }
 
-PRE,TT { font-family: courier, sans-serif; }
+PRE,TT { font-family: "Courier New", courier, sans-serif; }
 
 /********   links    **********/
 a:link, a:visited { 

@@ -27,7 +27,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
     private $server_id     = 1;
     private $host          = 'g.tuleap.net';
-    private $port          = 32915;
+    private $ssh_port      = 32915;
+    private $http_port     = 8080;
     private $login         = 'chuck';
     private $identity_file = '/home/chuck/.ssh/id_rsa';
 
@@ -39,14 +40,16 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $dar_1 = array(
             'id'            => $this->server_id,
             'host'          => $this->host,
-            'port'          => $this->port,
+            'ssh_port'      => $this->ssh_port,
+            'http_port'     => $this->http_port,
             'login'         => $this->login,
             'identity_file' => $this->identity_file
         );
         $dar_2 = array(
             'id'            => $this->alternate_server_id,
             'host'          => $this->alternate_host,
-            'port'          => $this->port,
+            'ssh_port'      => $this->ssh_port,
+            'http_port'     => $this->http_port,
             'login'         => $this->login,
             'identity_file' => $this->identity_file
         );
@@ -61,14 +64,16 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
             $this->server_id,
             $this->host,
-            $this->port,
+            $this->ssh_port,
+            $this->http_port,
             $this->login,
             $this->identity_file
         );
         $this->alternate_gerrit_server  = new Git_RemoteServer_GerritServer(
             $this->alternate_server_id,
             $this->alternate_host,
-            $this->port,
+            $this->ssh_port,
+            $this->http_port,
             $this->login,
             $this->identity_file
         );
@@ -100,7 +105,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
     public function itSavesAnExistingServer() {
         $this->main_gerrit_server->setLogin('new_login');
-        expect($this->dao)->save($this->server_id, $this->host, $this->port, 'new_login', $this->identity_file)->once();
+        expect($this->dao)->save($this->server_id, $this->host, $this->ssh_port, $this->http_port, 'new_login', $this->identity_file)->once();
         $this->factory->save($this->main_gerrit_server);
     }
 

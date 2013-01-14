@@ -46,7 +46,7 @@ abstract class Workflow_Transition_Condition {
      *
      * @return void
      */
-    public abstract function exportToXml(&$root, $xmlMapping);
+    public abstract function exportToXml(SimpleXMLElement $root, $xmlMapping);
 
     /**
      * Get the html code needed to display the condition in workflow admin

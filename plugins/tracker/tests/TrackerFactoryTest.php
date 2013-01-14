@@ -304,4 +304,59 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
 
     
 }
+
+
+class TrackerFactoryInstanceFromXMLTest extends UnitTestCase {
+
+    public function testGetInstanceFromXmlGeneratesRulesFromDependencies() {
+        
+        $data = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker />
+XML;
+        $xml = new SimpleXMLElement($data);
+        $xml->addChild('cannedResponses');
+        $xml->addChild('formElements');
+        
+        $groupId     = 15; 
+        $name        = 'the tracker';
+        $description = 'tracks stuff'; 
+        $itemname    = 'the item';
+        
+        $mocked_tracker_factory_methods = array(
+            'getInstanceFromRow',
+            'getRuleFactory'
+        );        
+        $tracker_factory = partial_mock('TrackerFactory', $mocked_tracker_factory_methods);     
+        $rule_factory = mock('Tracker_RuleFactory');
+        $tracker      = mock('Tracker');
+        
+        stub($tracker_factory)->getInstanceFromRow()->returns($tracker);
+        stub($tracker_factory)->getRuleFactory()->returns($rule_factory);
+        
+        //create data passed
+        $dependencies = $xml->addChild('dependencies');
+        $rule = $dependencies->addChild('rule');
+        $rule->addChild('source_field')->addAttribute('REF', 'F1');
+        $rule->addChild('target_field')->addAttribute('REF', 'F2');
+        $rule->addChild('source_value')->addAttribute('REF', 'F3');
+        $rule->addChild('target_value')->addAttribute('REF', 'F4');
+        
+        //create data expected
+        $expected_xml = new SimpleXMLElement($data);
+        $expected_rules = $expected_xml->addChild('rules');
+        $list_rules = $expected_rules->addChild('list_rules');
+        $expected_rule = $list_rules->addChild('rule');
+        $expected_rule->addChild('source_field')->addAttribute('REF', 'F1');
+        $expected_rule->addChild('target_field')->addAttribute('REF', 'F2');
+        $expected_rule->addChild('source_value')->addAttribute('REF', 'F3');
+        $expected_rule->addChild('target_value')->addAttribute('REF', 'F4');
+       
+        //this is where we check the data has been correctly transformed
+        stub($rule_factory)->getInstanceFromXML($expected_rules, array(), $tracker)->once();
+        
+        $tracker_factory->getInstanceFromXML($xml,$groupId, $name, $description, $itemname);
+    }
+    
+}
 ?>

@@ -230,7 +230,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
 
     public function itReturnsEmptyArrayWhenNoSharedFields() {
         $project_id = 1;
-        $dar = TestHelper::arrayToDar();
+        $dar = TestHelper::emptyDar();
         
         $factory = $this->GivenSearchAllSharedTargetsOfProjectReturnsDar($dar, $project_id);
 

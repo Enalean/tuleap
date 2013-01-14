@@ -1212,6 +1212,7 @@ plugin_tracker_admin_import	unable_to_open_file	Unable to open file $1
 plugin_tracker_admin_import	file_not_found	File not found
 plugin_tracker_admin_import	missing_required_field	Missing required field: $1
 plugin_tracker_admin_import	missing_required_field_value	Missing value on a required field: $1
+plugin_tracker_admin_import	missing_field_value	Missing field in data: 
 plugin_tracker_admin_import	aid_does_not_exist	Artifact Id $1 does not exist
 plugin_tracker_admin_import	field_not_taken_account	The field "$1" will not be taken into account.
 plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created
@@ -1309,10 +1310,11 @@ workflow_admin	title	Workflow Administration
 workflow_admin	transitions_deactivated	Transition rules don't apply yet
 workflow_admin	same_field	The two fields must be different
 workflow_admin	deleted_rules	Rule(s) successfully deleted
+workflow_admin	updated_rules	Rule(s) successfully updated
 workflow_admin	created_rule	Rule successfully created
 workflow_admin	title_define_global_date_rules	Define global date rules
 workflow_admin	hint_date_rules_definition	Those rules will be applied on each creation/update of artifacts.
-workflow_admin	add_new_rule	Add a new rule:
+workflow_admin	add_new_rule	Add a new rule
 workflow_admin	title_define_transitions	Define the transitions
 workflow_admin	tab_global_rules	Global Rules
 workflow_admin	tab_transitions	Transitions
@@ -1337,6 +1339,13 @@ workflow_admin	new_artifact	New artifact
 workflow_admin	change_value_date_field_to	The date field $1 is set to $2
 workflow_admin	change_value_int_field_to	The integer field $1 is set to $2
 workflow_admin	change_value_float_field_to	The float field $1 is set to $2
+workflow_admin	ci_build	The following job $1 will be launched
+workflow_admin	ci_build_help	$1 will automatically pass following parameters to the job:
+workflow_admin	ci_build_help_userid	userId: Identifier (integer) of $1 user who made the transition
+workflow_admin	ci_build_help_projectid	projectId: Identifier (integer) of the current project (ie. $1)
+workflow_admin	ci_build_help_trackerid	trackerId: Identifier (integer) of the current tracker (ie. $1)
+workflow_admin	ci_build_help_artifactid	artifactId: Identifier (integer) of the artifact where the transition happens
+workflow_admin	ci_build_help_trigger_field_value	triggerFieldValue: Value (string) of current transition target (ie. $1)
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	post_action_change_value_int_field	Change the value of an int field
 workflow_admin	post_action_change_value_float_field	Change the value of a float field
@@ -1351,9 +1360,13 @@ workflow_admin	post_action_field_date_current_time	the current time
 workflow_admin	post_action_not_defined	This action will be inactive until it is completely configured
 workflow_admin	the_field	The field
 workflow_admin	field_not_empty	must not be empty
+workflow_admin	ci_url	Hudson or Jenkins job url: http://CI_URL/job/JOBNAME
 
-workflow_postaction	field_value_set	The field '$1' has been automatically set to $2
-workflow_postaction	field_clear	The field '$1' has been automatically cleared
+workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
+workflow_postaction	field_clear	The field '$1' will be automatically cleared
+workflow_postaction	invalid_job_url	The continuous integration job URL '$1' is not valid.
+workflow_postaction	ci_build	Launch a continuous integration build
+workflow_postaction	ci_build_succeeded	Job build launch succeeded ($1)
 
 workflow_condition	invalid_condition	Invalid condition: the field '$1'must not be empty
 

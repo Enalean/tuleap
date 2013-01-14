@@ -55,6 +55,7 @@ class trackerPlugin extends Plugin {
         $this->_addHook('register_project_creation',           'register_project_creation',         false);
         $this->_addHook('codendi_daily_start',                 'codendi_daily_start',               false);
         $this->_addHook('fill_project_history_sub_events',     'fillProjectHistorySubEvents',       false);
+        $this->_addHook(Event::SOAP_DESCRIPTION,               'soap_description',                  false);
     }
     
     public function getHooksAndCallbacks() {
@@ -538,6 +539,16 @@ class trackerPlugin extends Plugin {
         );
     }
 
+    public function soap_description($params) {
+        $params['end_points'][] = array(
+            'title'       => 'Tracker',
+            'wsdl'        => $this->getPluginPath().'/soap/?wsdl',
+            'wsdl_viewer' => $this->getPluginPath().'/soap/view-wsdl',
+            'changelog'   => $this->getPluginPath().'/soap/ChangeLog',
+            'version'     => file_get_contents(dirname(__FILE__).'/../www/soap/VERSION'),
+            'description' => 'Query and modify Trackers.',
+        );
+    }
 }
 
 ?>

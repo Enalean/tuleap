@@ -46,6 +46,11 @@ class Test_Tracker_FormElement_Field_List_BindValue_Builder {
         return $this;
     }
 
+    public function withLabel($label) {
+        $this->label = $label;
+        return $this;
+    }
+
     /**
      * @return Tracker_FormElement_Field_List_BindValue
      */

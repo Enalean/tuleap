@@ -42,6 +42,11 @@ class Transition {
     protected $post_actions = array();
 
     /**
+     * @var Array of Transition_PostAction run after fields validation
+     */
+    protected $post_actions_after = array();
+
+    /**
      * @var Array of Workflow_Transition_Condition
      */
     private $conditions = array();
@@ -181,10 +186,22 @@ class Transition {
      * @return void
      */
     public function before(&$fields_data, User $current_user) {
-
         $post_actions = $this->getPostActions();
         foreach ($post_actions as $post_action) {
             $post_action->before($fields_data, $current_user);
+        }
+    }
+
+    /**
+     * Execute actions after transition happenstype
+     * 
+     * @param Tracker_Artifact_Changeset $changeset
+     * @return void
+     */
+    public function after(Tracker_Artifact_Changeset $changeset) {
+        $post_actions = $this->getPostActions();
+        foreach ($post_actions as $post_action) {
+            $post_action->after($changeset);
         }
     }
 
@@ -220,6 +237,24 @@ class Transition {
     }
 
     /**
+     * Get Post Actions for the transition
+     *
+     * @return Array
+     */
+    public function getAllPostActions() {
+        return array_merge($this->post_actions, $this->post_actions_after);
+    }
+
+    /**
+     * Get Post Actions for the transition
+     *
+     * @return Array
+     */
+    public function getPostActionsAfter() {
+        return $this->post_actions_after;
+    }
+
+    /**
      * Get the html code needed to display the post actions in workflow admin
      *
      * @return string html
@@ -227,7 +262,7 @@ class Transition {
     public function fetchPostActions() {
         $hp   = Codendi_HTMLPurifier::instance();
         $html = '';
-        if ($post_actions = $this->getPostActions()) {
+        if ($post_actions = $this->getAllPostActions()) {
             $html .= '<table class="workflow_actions" width="100%" cellpadding="0" cellspacing="10">';
             foreach ($post_actions as $pa) {
                 $classnames = $pa->getCssClasses();
@@ -293,7 +328,7 @@ class Transition {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $child = $root->addChild('transition');
         if ($this->getFieldValueFrom() == null) {
             $child->addChild('from_id')->addAttribute('REF', 'null');

@@ -1,8 +1,18 @@
+Version 5.13 - Tuleap 5.9
+    * Fix include files
+
+Version 5.12 - Tuleap 5.9
+    * Display a diff for strings differences
+    * Helper for exception at a specific time (throwAt)
+
+Version 5.11 - Tuleap 5.8
+    * Fix display of tree nodes when errors (Follow-up to Version 5.10)
+
 Version 5.10 - Tuleap 5.8
     * Kickass unit test runner interface
 
 Version 5.9 - Tuleap 5.8
-    * Add adms plugin
+    * Add admssw plugin
 
 Version 5.8 - Tuleap 5.7
     * Convert tracker v3 structure to a tracker v5

@@ -146,6 +146,10 @@ class Docman_ApprovalTableReminder {
         }
         $itemFactory = new Docman_ItemFactory();
         $docmanItem  = $itemFactory->getItemFromDb($itemId);
+        if (! $docmanItem) {
+            return;
+        }
+
         $subject     = $GLOBALS['Language']->getText('plugin_docman', 'approval_reminder_mail_subject', array($GLOBALS['sys_name'], $docmanItem->getTitle()));
 
         $mailMgr   = new MailManager();

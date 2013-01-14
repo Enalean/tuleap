@@ -1,23 +1,43 @@
-Version 5.8 (Not Released Yet)
+Version 5.9 (Not Released Yet)
+
+   == Plugins ==
+    * cardwall: 0.9.10
+	* git: 2.7.22
+	* tests: 5.13
+	* tracker: 5.64
+	* docman: 2.26.12
+	* graphontrackers: 1.7
+
+  == Bug Fix ==
+    * Do not rely on SimplePie escaping
+
+  == Development ==
+    * Include fundations for HTTP client and Jenkins job
+
+Version 5.8 (Wednesday, December 19th 2012)
 
    == Enhancement ==
-	* Tuleap can respond with several names
+	* Better documentation of SOAP API
 
    == Bug fix ==
 	* Use reliable method to detect if we are running in CLI
 	* Fix setup script: Replace localhost reference by the mysql_host value to be able to install the db on a dedicated server (Contrib STMicroelectronics)
+	* Add missing lib in stats script (sla #1644)
+	* Fix font compatibility with IE9 (Contrib STMicroelectronics)
 
-  == Tracker ==
+  == Plugins ==
 	* cardwall: 0.9.9
-	* tests: 5.9
-	* tracker: 5.46
+	* agiledashboard: 0.60
+	* tests: 5.11
+	* git: 2.7.18
+	* tracker: 5.57
+	* IM: 1.5.5
+	* forumml: 2.6.6
 
-  == Development ==
+	== Development ==
+	* Tuleap can respond with several names
 	* PHP 5.3 compatibility: persist tracker_ids across instance of test
-	* tracker: 5.47
-	* tracker: 5.48
-	* tests: 5.10
-	* tracker: 5.49
+
 
 Version 5.7 (Thursday, November 22nd 2012)
 
