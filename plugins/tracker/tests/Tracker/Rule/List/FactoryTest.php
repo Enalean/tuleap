@@ -225,7 +225,7 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         stub($f1)->getBind()->returns($bind_f1);
         stub($f2)->getBind()->returns($bind_f2);
 
-        $bf = new MockTracker_FormElement_Field_List_BindFactory($this);
+        $bf = mock('Tracker_FormElement_Field_List_BindFactory');
         $bf->setReturnValue('getType', 'static', array($bind_f1));
         $bf->setReturnValue('getType', 'static', array($bind_f2));
 
