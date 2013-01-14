@@ -165,6 +165,6 @@ abstract class Transition_PostAction {
      *
      * @return void
      */
-    public abstract function exportToXml(&$root, $xmlMapping);
+    public abstract function exportToXml(SimpleXMLElement $root, $xmlMapping);
 }
 ?>
