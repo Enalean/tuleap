@@ -19,6 +19,7 @@
  */
 
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once 'common/Jenkins/Client.class.php';
 
 class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 
