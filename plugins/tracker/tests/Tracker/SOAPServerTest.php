@@ -41,6 +41,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         'tracker_id'        => 1235,
         'submitted_by'      => '',
         'submitted_on'      => '',
+        'cross_references'  => array(),
         'last_update_date'  => '',
         'value'             => array(),
     );
@@ -49,6 +50,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         'tracker_id'        => 1235,
         'submitted_by'      => '',
         'submitted_on'      => '',
+        'cross_references'  => array(),
         'last_update_date'  => '',
         'value'             => array(),
     );
@@ -57,6 +59,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         'tracker_id'        => 1235,
         'submitted_by'      => '',
         'submitted_on'      => '',
+        'cross_references'  => array(),
         'last_update_date'  => '',
         'value'             => array(),
     );
@@ -130,12 +133,21 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         );
     }
 
+    private function anArtifactWithAMockedCrossReferenceFactory($id, $tracker, $changesets) {
+        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'), array($id, $tracker->getId(), null, null, null));
+        $artifact->setTracker($tracker);
+        $artifact->setChangesets($changesets);
+        $cross_reference_factory = mock('CrossReferenceFactory');
+        stub($artifact)->getCrossReferenceFactory()->returns($cross_reference_factory);
+        stub($cross_reference_factory)->getFormattedCrossReferences()->returns(array());
+        return $artifact;
+    }
     private function setUpArtifacts(Tracker_ArtifactFactory $artifact_factory) {
         $changesets = array(stub('Tracker_Artifact_Changeset')->getValues()->returns(array()));
-        $artifact_42   = anArtifact()->withId(42)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
-        $artifact_66   = anArtifact()->withId(66)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
-        $artifact_5323 = anArtifact()->withId($this->private_artifact_id)->withTracker($this->private_unreadable_tracker)->withChangesets($changesets)->build();
-        $artifact_9001 = anArtifact()->withId(9001)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
+        $artifact_42   = $this->anArtifactWithAMockedCrossReferenceFactory(42, $this->tracker, $changesets);
+        $artifact_66   = $this->anArtifactWithAMockedCrossReferenceFactory(66, $this->tracker, $changesets);
+        $artifact_5323 = $this->anArtifactWithAMockedCrossReferenceFactory($this->private_artifact_id, $this->private_unreadable_tracker, $changesets);
+        $artifact_9001 = $this->anArtifactWithAMockedCrossReferenceFactory(9001, $this->tracker, $changesets);
 
         $changesets       = stub('Tracker_Artifact_Changeset')->getValues()->returns(array("title" => "title"));
         $artifact_9999    = mock('Tracker_Artifact');
@@ -144,6 +156,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($artifact_9999)->getTrackerId()->returns($this->tracker_id);
         stub($artifact_9999)->userCanView()->returns(true);
         stub($artifact_9999)->getLastChangeset()->returns($changesets);
+        stub($artifact_9999)->getCrossReferencesSOAPValues()->returns(array(array('ref' => 'art #123', 'url' => '/path/to/art=123')));
 
         stub($artifact_factory)->getArtifactById(42)->returns($artifact_42);
         stub($artifact_factory)->getArtifactById(66)->returns($artifact_66);
@@ -304,6 +317,11 @@ class Tracker_SOAPServer_getArtifact_Test extends Tracker_SOAPServer_BaseTest {
     public function itRaisesASoapFaultIfTheProjectIsNotReadableByTheUser() {
         $soap_fault = $this->server->getArtifact($this->session_key, '*', '*', $this->private_artifact_id);
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
+    }
+
+    public function itContainsCrossReferencesValue() {
+        $soap_values = $this->server->getArtifact($this->session_key, '*', '*', 9999);
+        $this->assertEqual($soap_values['cross_references'][0], array('ref' => 'art #123', 'url' => '/path/to/art=123'));
     }
 }
 
@@ -820,4 +838,40 @@ class Tracker_SOAPServer_AppendTemporaryAttachments_Test extends Tracker_SOAPSer
     }
 }
 
+class Tracker_SOAPServer_GetArtifactComments_Test extends Tracker_SOAPServer_BaseTest {
+
+    private $artifact_68;
+    private $artifact_67;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->artifact_68   = stub('Tracker_Artifact')->getId()->returns(68);
+        stub($this->artifact_68)->userCanView()->returns(true);
+        stub($this->artifact_factory)->getArtifactById(68)->returns($this->artifact_68);
+
+        $this->artifact_67   = stub('Tracker_Artifact')->getId()->returns(67);
+        stub($this->artifact_67)->userCanView()->returns(false);
+        stub($this->artifact_factory)->getArtifactById(67)->returns($this->artifact_67);
+
+        stub($this->artifact_68)->getTracker()->returns($this->tracker);
+        stub($this->artifact_67)->getTracker()->returns($this->tracker);
+
+    }
+
+    public function itCallsTheExportCommentsToSoapFunctionOfTheArtifact() {
+        expect($this->artifact_68)->exportCommentsToSOAP()->once();
+        $this->server->getArtifactComments($this->session_key, $this->artifact_68->getId());
+    }
+
+    public function itRaisesASOAPErrorWhenArtifactDoesNotExist() {
+        $return = $this->server->getArtifactComments($this->session_key, 'some_erroneous_id');
+        $this->assertIsA($return, 'SOAPFault');
+    }
+
+    public function itRaisesASOAPErrorWhenArtifactIsNotReadable() {
+        $return = $this->server->getArtifactComments($this->session_key, $this->artifact_67->getId());
+        $this->assertIsA($return, 'SOAPFault');
+    }
+}
 ?>

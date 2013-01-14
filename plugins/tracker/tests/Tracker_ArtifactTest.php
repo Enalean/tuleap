@@ -19,7 +19,6 @@
  */
 
 require_once('bootstrap.php');
-require_once(dirname(__FILE__).'/../include/constants.php');
 Mock::generatePartial(
     'Tracker_Artifact',
     'Tracker_ArtifactTestVersion',
@@ -2034,6 +2033,253 @@ class Tracker_Artifact_getWorkflowTest extends TuleapTestCase {
     public function itInjectsItselfInTheWorkflow() {
         $workflow = $this->artifact->getWorkflow();
         $this->assertEqual($workflow->getArtifact(), $this->artifact);
+    }
+}
+
+class Tracker_Artifact_SOAPTest extends TuleapTestCase {
+
+    private $changeset_without_comments;
+    private $changeset_with_submitted_by1;
+    private $changeset_with_submitted_by2;
+    private $changeset_without_submitted_by;
+    private $changeset_which_has_been_modified_by_another_user;
+
+    private $tracker_id;
+    private $email;
+
+    private $timestamp1;
+    private $timestamp2;
+    private $timestamp3;
+
+    private $body1;
+    private $body2;
+    private $body3;
+
+    private $submitted_by1;
+    private $submitted_by2;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id    = 123;
+        $this->email         = 'martin.goyot@example.com';
+
+        $this->timestamp1    = 1355896800;
+        $this->timestamp2    = 1355896802;
+        $this->timestamp3    = 1355896805;
+
+        $this->body1         = 'coucou';
+        $this->body2         = 'hibou';
+        $this->body3         = 'forêt';
+        $this->body4         = '';
+
+        $this->submitted_by1 = 101;
+        $this->submitted_by2 = 102;
+
+        $this->artifact = anArtifact()->withTrackerId($this->tracker_id)->build();
+
+        $this->changeset_with_submitted_by1                       = new Tracker_Artifact_Changeset(1, $this->artifact, $this->submitted_by1,  $this->timestamp1, null);
+        $this->changeset_with_submitted_by2                       = new Tracker_Artifact_Changeset(2, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
+        $this->changeset_without_submitted_by                     = new Tracker_Artifact_Changeset(3, $this->artifact, null,  $this->timestamp3, $this->email);
+        $this->changeset_with_comment_with_empty_body             = new Tracker_Artifact_Changeset(4, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
+        $this->changeset_with_different_submitted_by              = new Tracker_Artifact_Changeset(4, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
+        $this->changeset_which_has_been_modified_by_another_user  = new Tracker_Artifact_Changeset(4, $this->artifact, $this->submitted_by2,  $this->timestamp2, null);
+        
+        $comment1 = new Tracker_Artifact_Changeset_Comment(1, $this->changeset_with_submitted_by1, 2, 3, $this->submitted_by1,  $this->timestamp1, $this->body1, 'text', 0);
+        $comment2 = new Tracker_Artifact_Changeset_Comment(2, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body2, 'text', 0);
+        $comment3 = new Tracker_Artifact_Changeset_Comment(3, $this->changeset_without_submitted_by, 2, 3, null,  $this->timestamp3, $this->body3, 'text', 0);
+        $comment4 = new Tracker_Artifact_Changeset_Comment(4, $this->changeset_with_submitted_by2, 2, 3, $this->submitted_by2,  $this->timestamp2, $this->body4, 'text', 0);
+        $comment5 = new Tracker_Artifact_Changeset_Comment(5, $this->changeset_which_has_been_modified_by_another_user, 2, 3, $this->submitted_by1,  $this->timestamp2, $this->body3, 'text', 0);
+
+        $this->changeset_with_submitted_by1->setLatestComment($comment1);
+        $this->changeset_with_submitted_by2->setLatestComment($comment2);
+        $this->changeset_without_submitted_by->setLatestComment($comment3);
+        $this->changeset_with_comment_with_empty_body->setLatestComment($comment4);
+        $this->changeset_which_has_been_modified_by_another_user->setLatestComment($comment5);
+    }
+
+    public function itReturnsAnEmptySoapArrayWhenThereIsNoComments() {
+        $changesets = array($this->changeset_with_comment_with_empty_body);
+        $this->artifact->setChangesets($changesets);
+
+        $result = $this->artifact->exportCommentsToSOAP();
+        $this->assertArrayEmpty($result);
+    }
+
+    public function itReturnsASOAPArrayWhenThereAreTwoComments() {
+        $changesets = array($this->changeset_with_submitted_by1, $this->changeset_with_submitted_by2);
+        $this->artifact->setChangesets($changesets);
+
+        $result = $this->artifact->exportCommentsToSOAP();
+        $expected = array(
+            array(
+                'submitted_by' => $this->submitted_by1,
+                'email'        => null,
+                'submitted_on' => $this->timestamp1,
+                'body'         => $this->body1,
+            ),
+            array(
+                'submitted_by' => $this->submitted_by2,
+                'email'        => null,
+                'submitted_on' => $this->timestamp2,
+                'body'         => $this->body2,
+            )
+        );
+
+        $this->assertEqual($expected, $result);
+    }
+
+    public function itReturnsAnEmailInTheSOAPArrayWhenThereIsNoSubmittedBy() {
+        $changesets = array($this->changeset_without_submitted_by);
+        $this->artifact->setChangesets($changesets);
+
+        $result = $this->artifact->exportCommentsToSOAP();
+        $expected = array(array(
+            'submitted_by' => null,
+            'email'        => $this->email,
+            'submitted_on' => $this->timestamp3,
+            'body'         => $this->body3,
+        ));
+
+        $this->assertEqual($expected, $result);
+    }
+
+    public function itDoesNotReturnAnArrayWhenCommentHasAnEmptyBody() {
+        $changesets = array($this->changeset_with_comment_with_empty_body);
+        $this->artifact->setChangesets($changesets);
+
+        $result = $this->artifact->exportCommentsToSOAP();
+        $this->assertArrayEmpty($result);
+    }
+
+    public function itUsesChangesetSubmittedByAndNotCommentsOne() {
+        $changesets = array($this->changeset_which_has_been_modified_by_another_user);
+        $this->artifact->setChangesets($changesets);
+
+        $expected = array(array(
+            'submitted_by' => $this->submitted_by2,
+            'email'        => null,
+            'submitted_on' => $this->timestamp2,
+            'body'         => $this->body3,
+        ));
+
+        $result = $this->artifact->exportCommentsToSOAP();
+
+        $this->assertEqual($result, $expected);
+    }
+
+     public function itReturnsTheReferencesInSOAPFormat() {
+        $id       = $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = 0;
+        $factory  = mock('CrossReferenceFactory');
+        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'));
+        $wiki_ref = array(
+            'ref' => 'wiki #toto',
+            'url' => 'http://example.com/le_link_to_teh_wiki'
+        );
+        $file_ref = array(
+            'ref' => 'file #chapeau',
+            'url' => 'http://example.com/files/chapeau'
+        );
+        $art_ref = array(
+            'ref' => 'art #123',
+            'url' => 'http://example.com/tracker/123'
+        );
+        $doc_ref = array(
+            'ref' => 'doc #42',
+            'url' => 'http://example.com/docman/42'
+        );
+
+        stub($artifact)->getCrossReferenceFactory()->returns($factory);
+        stub($factory)->getFormattedCrossReferences()->returns(
+            array(
+                'source' => array($wiki_ref, $file_ref),
+                'target' => array($art_ref),
+                'both'   => array($doc_ref),
+            )
+        );
+        $soap = $artifact->getCrossReferencesSOAPValues();
+        $this->assertEqual($soap, array(
+            $wiki_ref,
+            $file_ref,
+            $art_ref,
+            $doc_ref
+        ));
+    }
+}
+
+class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->fields_data = array();
+        $this->submitter   = aUser()->build();
+        $this->email       = 'toto@example.net';
+
+        $this->changesets  = array(new Tracker_Artifact_Changeset_Null());
+        $factory     = mock('Tracker_FormElementFactory');
+        stub($factory)->getAllFormElementsForTracker()->returns(array());
+        stub($factory)->getUsedFields()->returns(array());
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->workflow = mock('Workflow');
+        stub($this->workflow)->validateGlobalRules()->returns(true);
+        $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
+        stub($this->changeset_dao)->searchByArtifactIdAndChangesetId()->returnsDar(array(
+            'id'           => 123,
+            'submitted_by' => 12,
+            'submitted_on' => 21,
+            'email'        => ''
+        ));
+        $tracker        = stub('Tracker')->getWorkflow()->returns($this->workflow);
+        $this->artifact = partial_mock('Tracker_Artifact', array('validateFields','getChangesetDao','getChangesetCommentDao', 'getReferenceManager'));
+        $this->artifact->setId(42);
+        $this->artifact->setTracker($tracker);
+        $this->artifact->setChangesets($this->changesets);
+        $this->artifact->setFormElementFactory($factory);
+        $this->artifact->setArtifactFactory($this->artifact_factory);
+        stub($this->artifact)->validateFields()->returns(true);
+        stub($this->artifact)->getChangesetDao()->returns($this->changeset_dao);
+        stub($this->artifact)->getChangesetCommentDao()->returns(mock('Tracker_Artifact_Changeset_CommentDao'));
+        stub($this->artifact)->getReferenceManager()->returns(mock('ReferenceManager'));
+
+    }
+
+    public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
+        stub($this->changeset_dao)->create()->returns(5667);
+        stub($this->artifact_factory)->save()->returns(true);
+        expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails() {
+        stub($this->changeset_dao)->create()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(true);
+        expect($this->workflow)->after($this->fields_data, end($this->changesets), new IsAExpectation('Tracker_Artifact_Changeset'))->once();
+
+        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
     }
 }
 ?>

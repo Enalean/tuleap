@@ -21,10 +21,15 @@
 require_once 'common/log/Logger.class.php';
 
 class BackendLogger implements Logger {
+    const FILENAME = 'codendi_syslog';
+    private $filepath;
 
     public function __construct($filename = null) {
+        $this->filepath = empty($filename) ? Config::get('codendi_log').'/'.self::FILENAME : $filename;
+    }
 
-        $this->filename = empty($filename) ? Config::get('codendi_log').'/codendi_syslog' : $filename;
+    public function getFilepath() {
+        return $this->filepath;
     }
 
     /**
@@ -38,7 +43,7 @@ class BackendLogger implements Logger {
      * @return boolean true on success or false on failure
      */
     public function log($message, $level = 'info') {
-        return error_log(date('c')." [$level] $message\n", 3, $this->filename);
+        return error_log(date('c')." [$level] $message\n", 3, $this->filepath);
     }
 
     public function debug($message) {

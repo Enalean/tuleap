@@ -26,6 +26,7 @@ require_once('common/backend/BackendAliases.class.php');
 require_once('common/backend/BackendSVN.class.php');
 require_once('common/backend/BackendCVS.class.php');
 require_once('common/backend/BackendMailingList.class.php');
+require_once('common/backend/BackendLogger.class.php');
 
 /**
  * Base class to work on Codendi backend
@@ -305,7 +306,8 @@ class Backend {
      * @return boolean true on success or false on failure
      */
     public function log($message, $level = 'info') {
-        return error_log(date('c')." [$level] $message\n", 3, $GLOBALS['codendi_log']."/codendi_syslog");
+        $logger = new BackendLogger();
+        return $logger->log($message, $level);
     }
 
     /** 

@@ -22,14 +22,17 @@
  * Set the date of a field
  */
 class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeric {
-    
+
+    const XML_TAG_NAME = 'postaction_field_int';
+    const SHORT_NAME   = 'field_int';
+
     /**
      * Get the shortname of the post action
      *
      * @return string
      */
     public function getShortName() {
-        return 'field_int';
+        return self::SHORT_NAME;
     }
     
     /**
@@ -111,9 +114,9 @@ class Transition_PostAction_Field_Int extends Transition_PostAction_Field_Numeri
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->getFieldId()) {
-             $child = $root->addChild('postaction_field_int');
+            $child = $root->addChild(Transition_PostAction_Field_Int::XML_TAG_NAME);
              $child->addAttribute('value', $this->getValue());
              $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
          }

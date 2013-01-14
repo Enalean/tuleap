@@ -281,7 +281,7 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
                 }
                 break;
             default:
-                $refs = $crf->getMailCrossRefs('text');
+                $refs = $crf->getFormattedCrossReferences();
                 $src  = '';
                 $tgt  = '';
                 $both = '';

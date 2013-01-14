@@ -1,4 +1,4 @@
-plugin_git	descriptor_description	Plugin which provides Git support for Codendi
+plugin_git	descriptor_description	Plugin which provides Git support for Tuleap
 plugin_git	descriptor_name	Git Plugin
 
 plugin_git	title	Git Plugin
@@ -8,7 +8,7 @@ plugin_git	help_reference_title	Initialize a repository
 plugin_git	help_init_reference	<li>cd mysources</li><li>git init</li><li>touch README (for example)</li><li>git add README</li><li>git commit -m 'initial commit'</li><li>git push &lt;repository_url&gt; master</li>
 plugin_git	help_init_reference_msg	The current repository has not been initialized yet, this is required to allow users to clone it
 plugin_git	help_create_reference_title	Create a reference
-plugin_git	help_create_reference	<li>A reference is main repository which intends to be forked onto the codendi server (e.g. shared project feature) as well as cloned by users for local developments</li>
+plugin_git	help_create_reference	<li>A reference is main repository which intends to be forked onto the Tuleap server (e.g. shared project feature) as well as cloned by users for local developments</li>
 plugin_git	help_link	Help
 plugin_git	help_tree	<li>The tree of repositories shows the repository hierarchie. References are roots as clones (forks) are displayed below their parent</li><li>Each repository is a link to a detail and administration page</li>
 plugin_git	help_fork	<li>A fork is a reference clone or a fork clone</li><li>It is accessible by all project members with read and write permissions.</li><li>It may be used as a repository for any feature developpement.</li>
@@ -46,11 +46,16 @@ plugin_git	admin_save_submit	Save
 plugin_git	admin_mail	Notifications
 
 plugin_git	admin_settings	General settings
-plugin_git	gerrit_settings	Gerrit
-plugin_git	gerrit_url	Url of the gerrit server
+plugin_git	gerrit_pane_title	Gerrit
+plugin_git	gerrit_title	Migration to Gerrit
+plugin_git	gerrit_url	Please choose the Gerrit server:
+plugin_git	gerrit_migration_description	You are about to migrate your repository <em>$1</em> to Gerrit.
+plugin_git	gerrit_migration_more_description	The management of the repository (permissions, ...) will be delegated to Gerrit: <ul><li>A project <em>$1</em> will be created on the chosen server.</li><li>The user groups <em>contributors, integrators, supermen</em> and <em>owners</em> will be created and assigned the default access rights.</li><li>The current repository will become a mirror of the Gerrit reference.</li></ul>
+plugin_git	gerrit_migrated_more_description	As a reminder, the management of the repository (permissions, ...) has been delegated to Gerrit: <ul><li>A project <em>$1</em> has been created on the server $2.</li><li>The user groups <em>contributors, integrators, supermen</em> and <em>owners</em> have been created and assigned the default access rights.</li><li>The current repository is now a mirror of the Gerrit reference.</li></ul>
 plugin_git	gerrit_migrate_to	Migrate repo to Gerrit
-plugin_git	gerrit_server_is_on	This repository is on the following remote server:
+plugin_git	gerrit_server_already_migrated	The repository <em>$1</em> has already been migrated to the Gerrit project: <a href="$3">$2</a>.
 plugin_git	permissions_on_remote_server	You cannot change permissions since this repository is on a remote server
+plugin_git	gerrit_migration_ongoing	The migration of this repository to Gerrit server is on going, please wait for a few minutes.
 
 plugin_git	controller_access_denied	You are not allowed to access this page
 
@@ -165,6 +170,9 @@ plugin_git	fork_malformed_path	Path cannot contain double dots (..)
 plugin_git	fork_choose_destination_project	Copy to another project
 plugin_git	fork_choose_destination_personal	Create personal repositories in this project
 plugin_git	successfully_forked	Successfully forked
+plugin_git	fork_destination_project_message	Into project <b>$1</b>
+plugin_git	fork_destination_personal_message	As personal fork
+plugin_git	fork_repository_message	You are going to fork repository: $1
 
 plugin_git	tree_view_project	Project
 plugin_git	tree_view_repository	Repository

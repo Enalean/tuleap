@@ -38,6 +38,10 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return $this->ugroup->getName();
     }
 
+    /**
+     * 
+     * @return int
+     */
     public function getUgroupId() {
         return $this->ugroup->getId();
     }
@@ -46,8 +50,12 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return __CLASS__ .' #'. $this->getId();
     }
 
+    /**
+     * 
+     * @return array An array of user names
+     */
     public function getMembersName() {
-        return array_map(array($this, 'getUserName'), $this->ugroup->getMembers());
+        return  $this->ugroup->getUsers($this->getUgroupId())->getNames();
     }
 
     private function getUserName(User $user) {

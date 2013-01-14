@@ -129,10 +129,19 @@ class UGroupManager {
      * @return array of User
      */
     public function getDynamicUGroupsMembers($ugroupId, $groupId) {
-        if ($ugroupId <= 100) {
-            $dao = new UGroupUserDao();
-            return $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
+        if ($ugroupId > 100) {
+            return array();
         }
+        $um = UserManager::instance();
+        $users   = array();
+        $dao     = new UGroupUserDao();
+        $members = $dao->searchUserByDynamicUGroupId($ugroupId, $groupId);
+        if ($members && !$members->isError()) {
+            foreach ($members as $member) {
+                $users[] = $um->getUserById($member['user_id']);
+            }
+        }
+        return $users;
     }
 
     /**

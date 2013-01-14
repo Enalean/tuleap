@@ -36,7 +36,7 @@ class Test_Tracker_Builder {
     private $item_name;
 
     public function __construct() {
-        $this->id = uniqid();
+        $this->id = rand(0, 600000);
     }
 
     public function withId($id) {

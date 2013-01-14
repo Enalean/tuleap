@@ -78,7 +78,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
     public function itBuildColumnsFromTheStatusValuesIfFreestyleNotEnabled() {
         stub($this->on_top_dao)->isFreestyleEnabled()->returns(false);
         stub($this->swimline_tracker)->getStatusField()->returns($this->status_field);
-        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
+        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::emptyDar());
         $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnStatusCollection');
@@ -88,7 +88,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
 
     public function itBuildsAnEmptyFreestyleCollectionIfThereIsNothingInTheDaoAndNoStatus() {
         stub($this->tracker)->getStatusField()->returns(null);
-        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
+        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::emptyDar());
         $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');

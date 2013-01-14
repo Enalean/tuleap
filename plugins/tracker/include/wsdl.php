@@ -163,6 +163,32 @@ $GLOBALS['server']->wsdl->addComplexType(
     ),
     'tns:ArtifactFieldValue'
 );
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArtifactCrossReferences',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'ref' => array('name' => 'ref', 'type' => 'xsd:string'),
+        'url' => array('name' => 'url', 'type' => 'xsd:string'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfArtifactCrossReferences',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(
+        array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactCrossReferences[]')
+    ),
+    'tns:ArtifactCrossReferences'
+);
+
 $GLOBALS['server']->wsdl->addComplexType(
     'Artifact',
     'complexType',
@@ -174,6 +200,7 @@ $GLOBALS['server']->wsdl->addComplexType(
         'tracker_id'       => array('name' => 'tracker_id', 'type' => 'xsd:int'),
         'submitted_by'     => array('name' => 'submitted_by', 'type' => 'xsd:int'),
         'submitted_on'     => array('name' => 'submitted_on', 'type' => 'xsd:int'),
+        'cross_references' => array('name' => 'cross_references', 'type' => 'tns:ArrayOfArtifactCrossReferences'),
         'last_update_date' => array('name' => 'last_update_date', 'type' => 'xsd:int'),
         'value'            => array('name' => 'value', 'type' => 'tns:ArrayOfArtifactFieldValue')
     )
@@ -425,7 +452,7 @@ $GLOBALS['server']->wsdl->addComplexType(
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
-    'TrackerWorkflowRules',
+    'TrackerWorkflowRuleArray',
     'complexType',
     'struct',
     'choice',
@@ -520,6 +547,32 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerReport[]')),
     'tns:TrackerReport'
 );
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArtifactComments',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'submitted_by'  => array('name'=>'submitted_by', 'type' => 'xsd:int'),
+        'email'         => array('name'=>'email',        'type' => 'xsd:string'),
+        'submitted_on'  => array('name'=>'submitted_on', 'type' => 'xsd:int'),
+        'body'          => array('name'=>'body',         'type' => 'xsd:string'),
+    )
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfArtifactComments',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:ArtifactComments[]')),
+    'tns:ArtifactComments'
+);
+
 
 //
 // Function definition
@@ -747,6 +800,19 @@ $GLOBALS['server']->register(
     'rpc',
     'encoded',
     'Returns the reports the user can execute.'
+);
+
+$GLOBALS['server']->register(
+    'getArtifactComments',
+    array('sessionKey'=>'xsd:string',
+          'artifact_id'=>'xsd:int',
+    ),
+    array('return'=>'tns:ArrayOfArtifactComments'),
+    $GLOBALS['uri'],
+    $GLOBALS['uri'].'#getArtifactComments',
+    'rpc',
+    'encoded',
+    'Returns the comments of an artifact.'
 );
 
 ?>

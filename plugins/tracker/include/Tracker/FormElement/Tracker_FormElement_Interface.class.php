@@ -41,6 +41,6 @@ interface Tracker_FormElement_Interface extends Tracker_Dispatchable_Interface, 
      *
      * @return void
      */
-    public function exportToXML($root, &$xmlMapping, &$index);
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index);
 }
 ?>

@@ -25,16 +25,21 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      */
     private $gerrit_servers;
 
-    public function __construct(GitRepository $repository, Codendi_Request $request, array $gerrit_servers) {
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
+    public function __construct(GitRepository $repository, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers) {
         parent::__construct($repository, $request);
         $this->gerrit_servers = $gerrit_servers;
+        $this->driver         = $driver;
     }
 
     /**
      * @return bool true if the pane can be displayed
      */
     public function canBeDisplayed() {
-        return count($this->gerrit_servers) > 0;
+        return (Config::get('sys_auth_type') === Config::AUTH_TYPE_LDAP &&
+                count($this->gerrit_servers) > 0);
     }
 
     /**
@@ -48,7 +53,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      * @see GitViews_RepoManagement_Pane::getTitle()
      */
     public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_settings');
+        return $GLOBALS['Language']->getText('plugin_git', 'gerrit_pane_title');
     }
 
     /**
@@ -56,17 +61,21 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      */
     public function getContent() {
         $html  = '';
-        $html .= '<h3>'. $this->getTitle() .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
         if ($this->repository->getRemoteServerId()) {
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_is_on') .' <code>';
-            $html .= $this->gerrit_servers[$this->repository->getRemoteServerId()]->getHost();
-            $html .= '</code>';
+            $html .= $this->getContentAlreadyMigrated();
         } else {
             $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
             $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
             $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
             $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
 
+            $html .= '<p>';
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_description', $this->repository->getName());
+            $html .= '</p>';
+            $html .= '<div class="git_repomanagement_gerrit_more_description">';
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_more_description', $this->driver->getGerritProjectName($this->repository));
+            $html .= '</div>';
             $html .= '<p>';
             $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
             $html .= '<select name="remote_server_id" id="gerrit_url">';
@@ -80,6 +89,21 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
             $html .= '</form>';
         }
+        return $html;
+    }
+
+    private function getContentAlreadyMigrated() {
+        $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+        $gerrit_project = $this->driver->getGerritProjectName($this->repository);
+        $link = $gerrit_server->getProjectAdminUrl($gerrit_project);
+
+        $html  = '';
+        $html .= '<p>';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_already_migrated', array($this->repository->getName(), $gerrit_project, $link));
+        $html .= '</p>';
+        $html .= '<div class="git_repomanagement_gerrit_more_description">';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrated_more_description', array($gerrit_project, $gerrit_server->getHost()));
+        $html .= '</div>';
         return $html;
     }
 }

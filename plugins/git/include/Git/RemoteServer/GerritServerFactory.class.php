@@ -65,7 +65,8 @@ class Git_RemoteServer_GerritServerFactory {
         $this->dao->save(
             $server->getId(),
             $server->getHost(),
-            $server->getPort(),
+            $server->getSSHPort(),
+            $server->getHTTPPort(),
             $server->getLogin(),
             $server->getIdentityFile()
         );
@@ -82,7 +83,7 @@ class Git_RemoteServer_GerritServerFactory {
     }
 
     private function instantiateFromRow(array $row) {
-        return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['port'], $row['login'], $row['identity_file']);
+        return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['ssh_port'], $row['http_port'], $row['login'], $row['identity_file']);
     }
 
 }

@@ -28,7 +28,9 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
     protected $host = 'gerrit.example.com';
 
-    protected $port = '29418';
+    protected $ssh_port = '29418';
+
+    protected $http_port = '80';
 
     protected $login = 'gerrit';
 
@@ -48,7 +50,11 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             'Git_Driver_Gerrit_RemoteSSHCommand',
             array('sshExec')
         );
-        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->port, $this->login, $this->identity_file);
+
+        $this->logger = mock('Logger');
+
+        $this->ssh->__construct($this->logger);
+        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->ssh_port, $this->http_port, $this->login, $this->identity_file);
     }
 
     public function itExecutesTheCreateCommandOnTheRemoteServer() {
@@ -68,7 +74,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
 
     public function itThrowsEnExceptionWithErrorCode_withoutStubbingCallToSystem() {
-        $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand();
+        $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand(mock('Logger'));
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
@@ -78,7 +84,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
 
     public function itRaisesAnErrorThatContainsTheStdErr_withoutStubbingCallToSystem() {
-        $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand();
+        $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand(mock('Logger'));
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
             $this->fail('expected exception');
@@ -115,7 +121,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     
     public function itRemovesTemporaryFiles() {
         $nb_files_b4 = count(scandir('/tmp'));
-        $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand();
+        $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand(mock('Logger'));
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
@@ -137,6 +143,14 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         $this->assertEqual($result, 'Some successful output');
     }
     
+    public function itLogsEveryCommand() {
+        $expected_result = array('exit_code' => 0, 'std_err' => '', 'std_out' => 'Some successful output');
+        stub($this->ssh)->sshExec()->returns($expected_result);
+        $cmd = '-p 29418 -i /path/to/codendiadm/.ssh/id_rsa gerrit@gerrit.example.com create-group toto --username johan';
+        expect($this->logger)->info("executing $cmd")->once();
+        expect($this->logger)->debug("Result: ". var_export($expected_result, 1))->once();
+        $this->ssh->execute($this->config, 'create-group toto --username johan');
+    }
 }
 
 class RemoteSSHCommandFailureTest extends TuleapTestCase {

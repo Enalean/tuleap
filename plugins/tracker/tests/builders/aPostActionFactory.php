@@ -32,9 +32,11 @@ class Test_Transition_PostActionFactoryBuilder {
         
         $this->form_element_factory = mock('Tracker_FormElementFactory');
                 
-        $this->daos = array('field_date'  => mock('Transition_PostAction_Field_DateDao'),
-                            'field_int'   => mock('Transition_PostAction_Field_IntDao'),
-                            'field_float' => mock('Transition_PostAction_Field_FloatDao'));
+        $this->daos = array(
+            'field_date'  => mock('Transition_PostAction_Field_DateDao'),
+            'field_int'   => mock('Transition_PostAction_Field_IntDao'),
+            'field_float' => mock('Transition_PostAction_Field_FloatDao'),
+        );
         
         foreach($this->daos as $short_name => $dao) {
             stub($dao)->searchByTransitionId('*')->returns(array());

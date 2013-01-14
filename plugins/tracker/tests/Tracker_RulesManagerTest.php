@@ -1,6 +1,5 @@
 <?php
 require_once('bootstrap.php');
-require_once(dirname(__FILE__).'/../include/constants.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('getRuleFactory', 'getSelectedValuesForField'));
 
 Mock::generate('Tracker_Rule_List');
@@ -418,7 +417,11 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
     }
     
     function testExportToXmlCallsRuleListFactoryExport() {
-        $sax_object           = mock('SimpleXMLElement');
+        $xml_data = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker />
+XML;
+        $sax_object           = new SimpleXMLElement($xml_data);
         $xmlMapping           = array();
         $tracker              = mock('Tracker');
         $form_element_factory = mock('Tracker_FormElementFactory');

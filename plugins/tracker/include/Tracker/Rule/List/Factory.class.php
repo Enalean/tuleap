@@ -148,7 +148,7 @@ class Tracker_Rule_List_Factory {
      * @param Tracker_FormElementFactory $form_element_factory
      * @param int $tracker_id
      */
-    public function exportToXml($root, $xmlMapping, $form_element_factory, $tracker_id) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping, $form_element_factory, $tracker_id) {
         $rules = $this->searchByTrackerId($tracker_id);
         $list_rules = $root->addChild('list_rules');
         

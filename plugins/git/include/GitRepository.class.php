@@ -544,7 +544,21 @@ class GitRepository implements DVCSRepository {
     public static function getPathFromProjectAndName(Project $project, $name) {
         return $project->getUnixName().DIRECTORY_SEPARATOR.$name.self::REPO_EXT;
     }
-    
+
+    /**
+     * Return the full absolute path to the repository
+     *
+     * @return String
+     */
+    public function getFullPath() {
+        $root_path = $this->getGitRootPath();
+        if(is_string($root_path) && strlen($root_path) > 0) {
+            $root_path = ($root_path[strlen($root_path) - 1] === DIRECTORY_SEPARATOR) ? $root_path : $root_path.DIRECTORY_SEPARATOR ;
+        }
+        
+        return $root_path . $this->getPathWithoutLazyLoading();
+    }
+
     /**
      * Return path on the filesystem where the repositories are stored.
      *

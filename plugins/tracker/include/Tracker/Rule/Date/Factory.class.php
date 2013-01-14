@@ -179,7 +179,7 @@ class Tracker_Rule_Date_Factory {
         }
     }
     
-    public function exportToXml($root, $xmlMapping, $tracker_id) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping, $tracker_id) {
         $date_rules = $root->addChild('date_rules');
         $rules = $this->searchByTrackerId($tracker_id);
         foreach ($rules as $rule) {

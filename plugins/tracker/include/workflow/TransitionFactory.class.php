@@ -168,12 +168,7 @@ class TransitionFactory {
         $transition = new Transition(0, 0, $from, $to);
         $postactions = array();
         if ($xml->postactions) {
-            $tpaf = new Transition_PostActionFactory();
-            foreach(array('postaction_field_date', 'postaction_field_int', 'postaction_field_float') as $post_action_type) {
-                foreach ($xml->postactions->$post_action_type as $p) {
-                    $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
-                }
-            }
+            $postactions = $this->getPostActionFactory()->getInstanceFromXML($xml->postactions, $xmlMapping, $transition);
         }
         $transition->setPostActions($postactions);
 
@@ -242,9 +237,9 @@ class TransitionFactory {
         $transition->setTransitionId($transition_id);
 
         //Save postactions
-        $postactions = $transition->getPostActions();
+        $postactions = $transition->getAllPostActions();
         foreach ($postactions as $postaction) {
-            $tpaf = new Transition_PostActionFactory();
+            $tpaf = $this->getPostActionFactory();
             $tpaf->saveObject($postaction);
         }
 
@@ -314,10 +309,8 @@ class TransitionFactory {
                 $this->condition_factory->duplicate($transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
 
                 // Duplicate postactions
-                $from_transition_id = $transition->getTransitionId();
-                $postactions = $transition->getPostActions();
                 $tpaf = $this->getPostActionFactory();
-                $tpaf->duplicate($from_transition_id, $new_transition_id, $postactions, $field_mapping);
+                $tpaf->duplicate($transition, $new_transition_id, $field_mapping);
             }
         }
     }

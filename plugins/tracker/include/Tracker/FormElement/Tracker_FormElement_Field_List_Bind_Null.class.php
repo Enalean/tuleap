@@ -184,7 +184,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
      * @param array            &$xmlMapping the correspondance between real ids and XML IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXML($root, &$xmlMapping, $fieldID) { return ''; }
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) { return ''; }
     
     /**
      * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids. 

@@ -1295,7 +1295,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * 
      * @param SimpleXMLElement $root the node to which the Report is attached (passed by reference)
      */
-    public function exportToXML($roott, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $roott, $xmlMapping) {
         $root = $roott->addChild('report');
         // if old ids are important, modify code here 
         if (false) {

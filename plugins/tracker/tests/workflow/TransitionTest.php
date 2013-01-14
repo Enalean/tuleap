@@ -98,20 +98,9 @@ class Transition_beforeTest extends Transition_baseTest {
 
         $field_value_new = new MockTracker_FormElement_Field_List_Value();
         $field_value_new->setReturnValue('getId', 2066);
-        //'old_id' => null,
-        //'field_id' => 2707,
-        //'value' => 'New',
-        //'description' => 'The bug has been submitted',
-        //'rank' => '10');
-
 
         $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
         $field_value_analyzed->setReturnValue('getId', 2067);
-        //'old_id' => null,
-        //'field_id' => 2707,
-        //'value' => 'Analyzed',
-        //'description' => 'The bug is analyzed',
-        //'rank' => '20');
 
         $fields_data = array('field_id' => 'value');
 
@@ -127,6 +116,32 @@ class Transition_beforeTest extends Transition_baseTest {
         $a2->expectOnce('before', array($fields_data, $current_user));
 
         $t1->before($fields_data, $current_user);
+    }
+}
+
+class Transition_AfterTest extends Transition_baseTest {
+
+    function testAfterShouldTriggerActions() {
+        $field_value_new = new MockTracker_FormElement_Field_List_Value();
+        $field_value_new->setReturnValue('getId', 2066);
+
+        $field_value_analyzed = new MockTracker_FormElement_Field_List_Value();
+        $field_value_analyzed->setReturnValue('getId', 2067);
+
+        $transition = new Transition(1, 2, $field_value_new, $field_value_analyzed);
+        $transition->setConditions(new Workflow_Transition_ConditionsCollection());
+
+        $post_action_1 = new MockTransition_PostAction();
+        $post_action_2 = new MockTransition_PostAction();
+
+        $transition->setPostActions(array($post_action_1, $post_action_2));
+
+        $post_action_1->expectOnce('after');
+        $post_action_2->expectOnce('after');
+        
+        $changeset = mock('Tracker_Artifact_Changeset');
+
+        $transition->after($changeset);
     }
 }
 
