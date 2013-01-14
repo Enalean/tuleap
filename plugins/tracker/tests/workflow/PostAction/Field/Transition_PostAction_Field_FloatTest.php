@@ -66,7 +66,7 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
     }
     
     public function testBeforeShouldSetTheFloatField() {
-        $user = new MockUser();
+        $user = mock('User');
         
         stub($this->field)->getLabel()->returns('Remaining Effort');
         stub($this->field)->userCanRead($user)->returns(true);
