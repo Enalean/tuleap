@@ -119,7 +119,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         
         $b->SetWidth(0.4);
         if(is_array($color)) {
-            $b->SetColor($color[0].':0.7');
+            $b->SetColor('#FFFFFF:0.7');
         }
         else {
            $b->SetColor($color.':0.7');  
