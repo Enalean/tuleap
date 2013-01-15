@@ -682,7 +682,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         $params['decorator'] = array();
                         foreach ($params['decorators'] as $key => $deco) {
                             $params['decorator'][$valueMapping[$key]] = 
-                                   Tracker_FormElement_Field_List_BindDecorator::toHexa($deco->r, $deco->g, $deco->b);
+                                   ColorHelper::RGBtoHexa($deco->r, $deco->g, $deco->b);
                         }
                     }
                     break;

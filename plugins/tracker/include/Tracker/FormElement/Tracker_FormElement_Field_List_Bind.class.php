@@ -19,6 +19,7 @@
  */
 
 require_once 'Tracker_FormElement_Field_Shareable.class.php';
+require_once 'common/layout/ColorHelper.class.php';
 
 abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
 
@@ -417,7 +418,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         if (is_array($this->decorators) && !empty($this->decorators)) {
             $values = $this->getBindValues();
             foreach ( $this->decorators as $decorator) {
-                $hexacolor = Tracker_FormElement_Field_List_BindDecorator::toHexa($decorator->r, $decorator->g, $decorator->b);
+                $hexacolor = ColorHelper::RGBtoHexa($decorator->r, $decorator->g, $decorator->b);
                 Tracker_FormElement_Field_List_BindDecorator::save($this->field->getId(), $values[$decorator->value_id]->getId(), $hexacolor);
             }
         }

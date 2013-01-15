@@ -25,7 +25,7 @@
 class ColorHelper {
 
     /** @return string like '#efdabc' */
-    public static function RBGToHexa($r, $g, $b) {
+    public static function RGBToHexa($r, $g, $b) {
         return sprintf('#%02X%02X%02X', $r, $g, $b);
     }
 

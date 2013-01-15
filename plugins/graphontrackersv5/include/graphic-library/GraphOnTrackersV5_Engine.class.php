@@ -55,7 +55,7 @@ abstract class GraphOnTrackersV5_Engine {
                     $i++;
                 } else {
                     //We convert RGB array to hex
-                    $this->colors[$group]= ColorHelper::RBGToHexa($color[0], $color[1], $color[2]);
+                    $this->colors[$group]= ColorHelper::RGBToHexa($color[0], $color[1], $color[2]);
                 }
             }
         }

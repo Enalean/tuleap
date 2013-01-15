@@ -53,7 +53,7 @@ class Tracker_FormElement_Field_List_BindDecorator {
     }
     
     public function decorateSelectOption() {
-        return 'border-left: 16px solid '. ColorHelper::RBGToHexa($this->r, $this->g, $this->b) .';';
+        return 'border-left: 16px solid '. ColorHelper::RGBToHexa($this->r, $this->g, $this->b) .';';
     }
     
     /**
@@ -64,7 +64,7 @@ class Tracker_FormElement_Field_List_BindDecorator {
      */
     public function decorateEdit() {
         $html = '';
-        $hexa = ColorHelper::RBGToHexa($this->r, $this->g, $this->b);
+        $hexa = ColorHelper::RGBToHexa($this->r, $this->g, $this->b);
         $id   = 'decorator_'. $this->field_id .'_'. $this->value_id;
         $html .= self::fetchSquareColor($id, $hexa, 'colorpicker', $this->r, $this->g, $this->b);
         $html .= '<input id="'. $id .'_field" type="text" size="6" autocomplete="off" name="bind[decorator]['. $this->value_id .']" value="'. $hexa .'" />';

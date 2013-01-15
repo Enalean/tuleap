@@ -61,7 +61,8 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
         $this->graph->xaxis->title->setMargin(60,20,20,20);
         
         if (!is_null($this->xaxis)) {
-            $this->graph->xaxis->SetTickLabels($this->xaxis);
+            sort($this->xaxis);
+            $this->graph->xaxis->SetTickLabels(array_values($this->xaxis));
         } else {
             $this->graph->xaxis->SetTickLabels(array_values($this->legend));
         }
@@ -80,6 +81,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
                 }
             }
             $this->keys = array_keys($this->keys);
+            sort($this->keys);
             foreach($this->data as $group => $data) {
                 foreach($this->keys as $key) {
                     if (!isset($data[$key])) {
@@ -88,6 +90,7 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
                 }
                 uksort($this->data[$group], array($this, 'sort'));
             }
+            //echo "###<br />\n<pre>"; var_dump($this->xaxis); echo "</pre>\n<br />";
             $l = 0; 
             foreach($this->data as $base => $group) {
                 $b[$l] = $this->getBarPlot(array_values($group), $colors[$base]);

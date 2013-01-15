@@ -101,7 +101,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                 }
             }
             if ($select_group) {
-                $engine->xaxis = array_values($engine->xaxis);
+                //$engine->xaxis = array_values($engine->xaxis);
             }
         }
         return $result;

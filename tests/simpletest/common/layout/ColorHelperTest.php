@@ -33,13 +33,13 @@ class ColorHelperTest extends UnitTestCase {
                         '#E025DC' => array(224, 37, 220)
                           );
                           
-    function testRBGToHexa() {
+    function testRGBToHexa() {
         foreach ($this->colorSet as $hexa => $rgb) {
-           $this->assertEqual($hexa, ColorHelper::RBGToHexa($rgb[0], $rgb[1], $rgb[2])); 
+           $this->assertEqual($hexa, ColorHelper::RGBToHexa($rgb[0], $rgb[1], $rgb[2])); 
         } 
     }
     
-    function testHexaToRBG() {
+    function testHexaToRGB() {
         foreach ($this->colorSet as $hexa => $rgb) {
            $this->assertEqual(array($rgb[0], $rgb[1], $rgb[2]), ColorHelper::HexaToRGB($hexa)); 
         }
