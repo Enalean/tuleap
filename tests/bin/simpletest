@@ -51,7 +51,7 @@ if ($format == 'checkstyle') {
     $reporter->writeXML('unit_tests_report.xml');
 }
 
-/* Un comment if you need return code (eg. git bisect usage). Today it breaks CI for no reason */
+// Return test suite status for usage in git bisect
 if ($status === false) {
     exit(1);
 } else {
