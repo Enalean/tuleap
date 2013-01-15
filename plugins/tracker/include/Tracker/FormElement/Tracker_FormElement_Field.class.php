@@ -136,7 +136,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     
-	/**
+    /**
      * Get the "select" statement to retrieve field values with the RGB values of their decorator
      * Has no sense for fields other than lists
      * @return string
@@ -157,7 +157,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return "INNER JOIN tracker_changeset_value AS $R ON ($R.changeset_id = c.id)";
     }
     
-	/**
+    /**
      * Get the "from" statement to retrieve field values with the RGB values of their decorator
      * Has no sense for fields other than lists
      * @return string

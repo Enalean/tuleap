@@ -23,11 +23,20 @@
  * All the color manupilation related functions
  */
 class ColorHelper {
-    
+
     /** @return string like '#efdabc' */
-  public static function RBGToHexa($r, $g, $b) {
-    return sprintf('#%02X%02X%02X', $r, $g, $b);
-  }
-    
+    public static function RBGToHexa($r, $g, $b) {
+        return sprintf('#%02X%02X%02X', $r, $g, $b);
+    }
+
+    /** @return array like {232, 123, 312} */
+    public static function HexatoRGB($hex) {
+        $delta = strlen($hex) == 4 ? 1 : 2;
+        return array(
+            hexdec(substr($hex, 1 + 0 * $delta, $delta)),
+            hexdec(substr($hex, 1 + 1 * $delta, $delta)),
+            hexdec(substr($hex, 1 + 2 * $delta, $delta)),
+        );
+    }
 }
 ?>

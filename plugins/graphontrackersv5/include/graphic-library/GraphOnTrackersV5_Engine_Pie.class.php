@@ -42,22 +42,6 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
         }
     }
     
-    private function convertColors() {
-        if ($this->graph) {
-            $availableColors = $this->graph->getThemedColors();
-            $length = count($this->colors);
-            for ($i = 0 ; $i < $length ; $i++ ) {
-                //We fill the blanks
-                if ($this->colors[$i][0] == NULL || $this->colors[$i][1] == NULL || $this->colors[$i][2] == NULL )
-                    $this->colors[$i] = $availableColors[$i];
-                else {
-                    //We convert RGB array to hex
-                    $this->colors[$i]= ColorHelper::RBGToHexa($this->colors[$i][0], $this->colors[$i][1], $this->colors[$i][2]);
-                }
-            }
-        }
-    }
-    
     /**
      * Builds pie graph
      */
@@ -72,12 +56,12 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
         }
         $this->graph->subtitle->Set($this->description);
         
-        $this->convertColors();
+        $colors = $this->getColors();
         
         if ((is_array($this->data)) && (array_sum($this->data)>0)) {
             $p = new PiePlot($this->data);
             
-            $p->setSliceColors($this->colors);
+            $p->setSliceColors($colors);
             
             $p->SetCenter(0.4,0.6);
             $p->SetLegends($this->legend);

@@ -120,7 +120,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         return $this->getBind()->getQuerySelect();
     }
     
-	/**
+    /**
      * Get the "select" statement to retrieve field values with the RGB values of their decorator
      * Has no sense for fields other than lists
      * @return string

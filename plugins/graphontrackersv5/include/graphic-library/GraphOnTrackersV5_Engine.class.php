@@ -43,6 +43,26 @@ abstract class GraphOnTrackersV5_Engine {
         }
     }
     
+    public function getColors() {
+        if ($this->graph) {
+            $availableColors = $this->graph->getThemedColors();
+            $length = count($this->colors);
+            $i = 0;
+            foreach ($this->colors as $group => $color) {
+                //We fill the blanks
+                if ($color[0] == NULL || $color[1] == NULL || $color[2] == NULL ) {
+                    $this->colors[$group] = $availableColors[$i];
+                    $i++;
+                } else {
+                    //We convert RGB array to hex
+                    $this->colors[$group]= ColorHelper::RBGToHexa($color[0], $color[1], $color[2]);
+                }
+            }
+        }
+        
+        return $this->colors;
+    }
+    
     /**
      * Build graph based on data, title, description given to the engine
      */
