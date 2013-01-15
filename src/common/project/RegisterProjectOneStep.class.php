@@ -18,8 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once('RegisterProjectStep.class.php');
-require_once('common/include/TemplateSingleton.class.php');
+require_once 'RegisterProjectStep.class.php';
+require_once 'common/include/TemplateSingleton.class.php';
 require_once 'Template.class.php';
 
 /**
@@ -64,23 +64,15 @@ class RegisterProjectOneStep {
         include($GLOBALS['Language']->getContent('project/one_step_register', null, null, '.phtml')); 
     }
     
-    public function onLeave($request, &$data) {
-        $data['project']['built_from_template'] = $request->get('built_from_template');
-        return $this->validate($data);
-    }
-    
-    public function validate($data) {
-        if (!$data['project']['built_from_template']) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+    /**
+     * 
+     * @return boolean
+     */
+    public function isValid() {     
+        if(!$this->propertiesAreValid()) {
             return false;
-        } else {
-            $pm = ProjectManager::instance();
-            $p = $pm->getProject($data['project']['built_from_template']);
-            if (!$p->isTemplate() && !user_ismember($data['project']['built_from_template'],'A')) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-                return false;
-            }
         }
+
         return true;
     }
     
@@ -262,6 +254,112 @@ class RegisterProjectOneStep {
      */
     private function getDateFormat() {
         return $GLOBALS['Language']->getText('system', 'datefmt_short');
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    private function propertiesAreValid() {
+        if ($this->isValidTemplateId() &&
+            $this->isValidUnixName() &&
+            $this->isValidTemplateId() &&
+            $this->isValidProjectPrivacy() &&
+            $this->isValidFullName() &&
+            $this->isValidShortDescription()
+            ) {
+            return true;
+        }
+        
+        return false;
+    }
+
+    /**
+     * 
+     * @return boolean
+     */
+    private function isValidFullName() {
+        if ($this->getFullName() == null) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            return false;
+        }
+        
+        $rule = new Rule_ProjectFullName();
+        if (!$rule->isValid($this->getFullName())) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_full_name'));
+            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    private function isValidShortDescription() {
+        if ($this->getShortDescription() == null) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            return false;
+        }
+        
+        return true;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    private function isValidUnixName() {
+        if ($this->getUnixName() == null) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            return false;
+        }
+        
+        //check for valid group name
+        $rule = new Rule_ProjectName();
+        if (!$rule->isValid($this->getUnixName())) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
+            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
+            return false;
+        } 
+        
+        return true;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    private function isValidTemplateId() {
+        if ($this->getTemplateId() == null) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            return false;
+        }
+
+        $project_manager = ProjectManager::instance();
+        $project = $project_manager->getProject($this->getTemplateId());
+        
+        if (! $project->isTemplate() && ! user_ismember($this->getTemplateId(), 'A')) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
+            return false;
+        }
+            
+        return true;
+    }
+    
+    /**
+     * 
+     * @return boolean
+     */
+    private function isValidProjectPrivacy() {
+        if ($this->isPublic() == null) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            return false;
+        }
+        
+        return true;
     }
 }
 
