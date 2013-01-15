@@ -3,16 +3,18 @@ Version 5.9 (Not Released Yet)
    == Plugins ==
     * cardwall: 0.9.10
 	* git: 2.7.22
-	* tests: 5.13
-	* tracker: 5.64
+	* tests: 5.14
+	* tracker: 5.65
 	* docman: 2.26.12
 	* graphontrackers: 1.7
+	* agiledashboard: 0.61
 
   == Bug Fix ==
     * Do not rely on SimplePie escaping
 
   == Development ==
     * Include fundations for HTTP client and Jenkins job
+    * unit test CLI runner returns build status so it can be used in git bisect
 
 Version 5.8 (Wednesday, December 19th 2012)
 
