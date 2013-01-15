@@ -20,16 +20,22 @@ require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
 require_once('common/project/RegisterProjectOneStep.class.php');
 
-$request      = HTTPRequest::instance();
-$current_step = $request->exist('current_step') ? $request->get('current_step') : 0;
-$data         = $request->exist('data') ? unserialize($request->get('data')) : array();
+$request = HTTPRequest::instance();
+$data = $request->params;
 
+//var_dump(get_class($request), $request->dump());
 //Display current step
 $HTML->header(array('title'=>$Language->getText('register_index','project_registration')));
 
 if ($request->exist('onestep')) {
-    $single_step = new RegisterProjectOneStep($data);
-    $single_step->display($data);
+    $single_step = new RegisterProjectOneStep();
+
+    $single_step->setFullName($data)
+            ->setUnixName($data)
+            ->setShortDescription($data)
+            ->setIsPublic($data)
+            ->setTemplateId($data)
+            ->display();
 }
 $HTML->footer(array());
 ?>
