@@ -51,8 +51,18 @@ if ($display_homepage_news) {
     width: auto;
 }
 .main_body_row {
-    width: 1260px;
+    width: 1000px; /* container + 2 * gutter */
     margin: 0 auto;
+}
+@media (min-width: 1200px) {
+    .main_body_row {
+        width: 1230px; /* container + 2 * gutter */
+    }
+}
+@media (min-width: 768px) and (max-width: 979px) {
+    .main_body_row {
+        width: 764px; /* container + 2 * gutter */
+    }
 }
 .homepage_speech {
     width: auto;
@@ -900,7 +910,7 @@ a.btn-primary {
 			<h2><img src="images/play.png" alt="Getting started with Tuleap" width="48px"> 
 			Get started</h2>
 			<ul>
-			<li>Feature Overview</li>
+			<li><a href="/#screenshots">Features Overview</a></li>
 			<li><a href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
 			Try it!</a></li>
 			<li><a href="https://tuleap.net/documentation/user_guide/html/en_US/User_Guide.html">Documentation</a> & videos</li>
@@ -1014,7 +1024,7 @@ a.btn-primary {
         <h2>Stay tuned, Share knowledge &amp; Discuss</h2>
         <ul>
 		<li>Promote <strong>social coding</strong> and leverage integrated per-project tools: forums, instant messaging, mailing-lists, news, RSS feeds</li>
-        <li><strong>Discuss</strong>ideas in forums and mailing lists with flexible subscription and management</li>
+        <li><strong>Discuss</strong> ideas in forums and mailing lists with flexible subscription and management</li>
 		<li>Leverage per-project instant messaging rooms for real-time discussing</li>
 		<li>All along discussions, create shortcuts for direct access to project items you are mentioning</li>
 		<li>Share news of your project with other members and stay tuned</li>
