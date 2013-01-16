@@ -19,25 +19,33 @@ require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
 require_once('common/project/RegisterProjectOneStep.class.php');
-
+require_once 'common/view/View.class.php';
+require_once 'vars.php'; //load licenses
 
 $request      = HTTPRequest::instance();
-$current_step = $request->exist('current_step') ? $request->get('current_step') : 0;
-$data         = $request->exist('data') ? unserialize($request->get('data')) : array();
 
 if (Config::get('sys_create_project_in_one_step')) {
     $data = $request->params;
-
-    //var_dump(get_class($request), $request->dump());
-    //Display current step
-    $HTML->header(array('title'=>$Language->getText('register_index','project_registration')));
-
-    $single_step = new RegisterProjectOneStep($data);
-    $single_step->display();
+    $single_step_project = new RegisterProjectOneStep($data);
+    
+    if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
+        require_once('create_project.php');
+        create_project($single_step_project->getProjectValues());
+    }
+    
+    $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));
+    
+    $view = new View('project/one_step_register', '.phtml');
+    $view->single_step_project = $single_step_project;
+    $view->available_licenses = $LICENSE;
+    $view->render();
 
     $HTML->footer(array());
-    exit;
+    exit; 
 }
+
+$current_step = $request->exist('current_step') ? $request->get('current_step') : 0;
+$data         = $request->exist('data') ? unserialize($request->get('data')) : array();
 
 //Register steps
 if ($GLOBALS['sys_use_trove'] != 0) {

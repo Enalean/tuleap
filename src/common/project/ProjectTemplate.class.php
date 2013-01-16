@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (c) Enalean, 2012. All rights reserved
+ * Copyright (c) Enalean, 2013. All rights reserved
  *
  * This file is a part of Tuleap.
  *
@@ -19,9 +19,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once('pre.php');
+require_once 'common/project/Project.class.php';
 
-class Template {
+class ProjectTemplate {
     
     const ADMIN_GROUP = 100;
     
@@ -185,6 +185,15 @@ class Template {
         }
         
         return $admins;
+    }
+    
+    public function getServicesUsed() {
+        if($this->getUserGroupId() == null) {
+            return array();
+        }
+        
+        $template_project = new Project($this->getUserGroupId());
+        return $template_project->getAllUsedServices();
     }
     
     /**

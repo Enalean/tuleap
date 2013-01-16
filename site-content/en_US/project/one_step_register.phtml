@@ -18,9 +18,10 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-/* @var $this RegisterProjectOneStep */
+/* @var $this->single_step_project RegisterProjectOneStep */
+require_once 'common/project/RegisterProjectOneStep.class.php';
 ?>
-<form action="" method="get">
+<form action="<?= $this->single_step_project->getFormSubmissionPath(); ?>" method="post">
     <input type="hidden" name="onestep" value="true" />
     <p>
         <h1>Project Creation Request</h1>
@@ -41,8 +42,8 @@
             <td>
                 <input size="40" 
                        type="text" 
-                       name="form_full_name" 
-                       value="<?= $this->getFullName(); ?>" />
+                       name="<?= RegisterProjectOneStep::FULL_NAME ?>" 
+                       value="<?= $this->single_step_project->getFullName(); ?>" />
                 <br>
                 between 3 and 40 characters
             </td>
@@ -53,8 +54,8 @@
                 <input type="text" 
                        maxlength="30" 
                        size="15" 
-                       name="form_unix_name" 
-                       value="<?= $this->getUnixName(); ?>" />
+                       name="<?= RegisterProjectOneStep::UNIX_NAME ?>" 
+                       value="<?= $this->single_step_project->getUnixName(); ?>" />
                 <br>
                 between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.
                 <br>
@@ -65,28 +66,26 @@
             <td>Short description</td>
             <td>
                 <textarea 
-                    name="form_short_description" 
+                    name="<?= RegisterProjectOneStep::SHORT_DESCRIPTION ?>" 
                     wrap="virtual" 
                     cols="70" 
-                    rows="3">
-                    <?= $this->getShortDescription(); ?>
-                </textarea>
+                    rows="3"><?= $this->single_step_project->getShortDescription(); ?></textarea>
             </td>
         </tr>
         <tr>
             <td>Project Privacy</td>
             <td>
                 <input type="radio" 
-                       name="is_public" 
+                       name="<?= RegisterProjectOneStep::IS_PUBLIC ?>" 
                        value="1"
-                       <?= ($this->isPublic()) ? 'checked="checked"' : '' ?>
+                       <?= ($this->single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
                     /> 
                 Public
                 <br>
                 <input type="radio" 
-                       name="is_public" 
+                       name="<?= RegisterProjectOneStep::IS_PUBLIC ?>" 
                        value="0"
-                       <?= (! $this->isPublic()) ? 'checked="checked"' : '' ?>
+                       <?= (! $this->single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
                     /> 
                 Private (limit access only to the project members)
             </td>
@@ -105,25 +104,26 @@
         <br>
         You can always modify your project workspace after your project has been approved.
     </p>
+    <h3>Default templates</h3>
     <table>
         <?php 
-        $default_templates = $this->getDefaultTemplates();
+        $default_templates = $this->single_step_project->getDefaultTemplates();
         foreach ($default_templates as $template) :
             /* @var $template Template */
         ?>
             <tr>
                 <td>
                     <input type="radio" 
-                           name="built_from_template" 
+                           name="<?= RegisterProjectOneStep::TEMPLATE_ID ?>" 
                            value="<?= $template->getUserGroupId(); ?>" 
-                           <?= ($this->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
+                           <?= ($this->single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                         />
                 </td>
                 <td>
                     <b>
                         <?= $template->getPurifiedUserGroupName(); ?>
                     </b> 
-                    (<?= $template->getFormattedDateRegistered($this->getDateFormat()); ?>)
+                    (<?= $template->getFormattedDateRegistered($this->single_step_project->getDateFormat()); ?>)
                 </td>
                 <td rowspan="2" align="left" valign="top">
                     <i>
@@ -147,6 +147,12 @@
                         endforeach;
                         ?>
                     </i>
+                    <br />
+                    <br />
+                    <p>
+                        <i>Services used:</i> 
+                        <?= implode($template->getServicesUsed(), ', ');?>
+                    </p>
                 </td>
             </tr>
             <tr>
@@ -159,25 +165,27 @@
         ?>
     </table>
     <br />
+    <br />
+    <h3>Projects of which you are administrator</h3>
     <table>
         <?php 
-        $user_templates = $this->getUserTemplates();
+        $user_templates = $this->single_step_project->getUserTemplates();
         foreach ($user_templates as $template) :
             /* @var $template Template */
         ?>
             <tr>
                 <td>
                     <input type="radio" 
-                           name="built_from_template" 
+                           name="<?= RegisterProjectOneStep::TEMPLATE_ID ?>" 
                            value="<?= $template->getUserGroupId(); ?>" 
-                           <?= ($this->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
+                           <?= ($this->single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                         />
                 </td>
                 <td>
                     <b>
                         <?= $template->getPurifiedUserGroupName(); ?>
                     </b> 
-                    (<?= $template->getFormattedDateRegistered($this->getDateFormat()); ?>)
+                    (<?= $template->getFormattedDateRegistered($this->single_step_project->getDateFormat()); ?>)
                 </td>
                 <td rowspan="2" align="left" valign="top">
                     <i>
@@ -201,6 +209,12 @@
                         endforeach;
                         ?>
                     </i>
+                    <br />
+                    <br />
+                    <p>
+                        <i>Services used:</i> 
+                        <?= implode($template->getServicesUsed(), ', ');?>
+                    </p>
                 </td>
             </tr>
             <tr>
@@ -212,6 +226,30 @@
         endforeach;
         ?>  
     </table>
+    <h2>Choose the license for your project.</h2>
+    <hr/>
+    <p>
+        Choose the correct one because you cannot modify your project license after your project has been approved.
+    </p>
+    <select name="<?= RegisterProjectOneStep::LICENSE_TYPE ?>">';
+        <?php
+        foreach ($this->available_licenses as $license_type => $license_description) :   
+        ?>
+            <option value="<?= $license_type ?>"
+                    <?= ($this->single_step_project->getLicenseType() == $license_type) ? 'selected="selected"' : ''; ?>
+                    >
+                <?= $license_description ?>
+            </option>
+        <?php
+        endforeach;
+        ?>
+    </select>
+    <br/>
+    <h3>Custom License (other)</h3>
+    <textarea name="<?= RegisterProjectOneStep::CUSTOM_LICENSE ?>" 
+              wrap=virtual 
+              cols=60 
+              rows=10><?= $this->single_step_project->getCustomLicense(); ?></textarea>
     <h2>That's it!</h2>
     <hr/>
     <p>
@@ -219,7 +257,7 @@
         You will receive a notification when the system administrator has validated it.
         Then, you will be able to access your new project workspace. Enjoy!
     </p>
-    <input type="submit" value="submit project"/>
+    <input type="submit" value="submit project" name="create_project"/>
 </form>
 
 
