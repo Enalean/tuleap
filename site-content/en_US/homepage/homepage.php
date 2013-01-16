@@ -808,6 +808,15 @@ input[type="submit"].btn.btn-mini {
   border-bottom: 1px solid #eeeeee;
 }
 
+img {
+  width: auto\9;
+  height: auto;
+  max-width: 100%;
+  vertical-align: middle;
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+}
+
 .img-polaroid {
   padding: 4px;
   background-color: #fff;
