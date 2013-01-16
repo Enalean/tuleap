@@ -957,6 +957,7 @@ substitute '/etc/codendi/conf/local.inc' '%sys_org_name%' "$sys_org_name"
 substitute '/etc/codendi/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
 substitute '/etc/codendi/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+substitute '/etc/codendi/conf/local.inc' 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
 if [ "$disable_subdomains" = "y" ]; then
   substitute '/etc/codendi/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
   substitute '/etc/codendi/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
