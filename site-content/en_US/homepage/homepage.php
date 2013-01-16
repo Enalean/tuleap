@@ -888,7 +888,7 @@ a.btn-primary {
           </p>
           </div>
     <div class="span4"><h2>Who is it for?</h2>
-    <p>CEO, Quality managers, Project managers, Developers, Businesses, Agilers. All stackholers creating innovative applications.</p>
+    <p>Developers, Project managers, Agilers, CEO, Quality managers, Businesses... All stackholers creating innovative applications.</p>
     <p>Large companies, SMEs, free projects, public organizations.</p>
     </div>
     
