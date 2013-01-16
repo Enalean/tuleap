@@ -18,9 +18,9 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-/* @var $this RegisterProjectOneStep */
+/* @var $single_step RegisterProjectOneStep */
 ?>
-<form action="" method="get">
+<form action="<?= $single_step->getFormSubmissionPath(); ?>" method="post">
     <input type="hidden" name="onestep" value="true" />
     <p>
         <h1>Project Creation Request</h1>
@@ -42,7 +42,7 @@
                 <input size="40" 
                        type="text" 
                        name="form_full_name" 
-                       value="<?= $this->getFullName(); ?>" />
+                       value="<?= $single_step->getFullName(); ?>" />
                 <br>
                 between 3 and 40 characters
             </td>
@@ -54,7 +54,7 @@
                        maxlength="30" 
                        size="15" 
                        name="form_unix_name" 
-                       value="<?= $this->getUnixName(); ?>" />
+                       value="<?= $single_step->getUnixName(); ?>" />
                 <br>
                 between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.
                 <br>
@@ -68,9 +68,7 @@
                     name="form_short_description" 
                     wrap="virtual" 
                     cols="70" 
-                    rows="3">
-                    <?= $this->getShortDescription(); ?>
-                </textarea>
+                    rows="3"><?= $single_step->getShortDescription(); ?></textarea>
             </td>
         </tr>
         <tr>
@@ -79,14 +77,14 @@
                 <input type="radio" 
                        name="is_public" 
                        value="1"
-                       <?= ($this->isPublic()) ? 'checked="checked"' : '' ?>
+                       <?= ($single_step->isPublic()) ? 'checked="checked"' : '' ?>
                     /> 
                 Public
                 <br>
                 <input type="radio" 
                        name="is_public" 
                        value="0"
-                       <?= (! $this->isPublic()) ? 'checked="checked"' : '' ?>
+                       <?= (! $single_step->isPublic()) ? 'checked="checked"' : '' ?>
                     /> 
                 Private (limit access only to the project members)
             </td>
@@ -107,7 +105,7 @@
     </p>
     <table>
         <?php 
-        $default_templates = $this->getDefaultTemplates();
+        $default_templates = $single_step->getDefaultTemplates();
         foreach ($default_templates as $template) :
             /* @var $template Template */
         ?>
@@ -116,14 +114,14 @@
                     <input type="radio" 
                            name="built_from_template" 
                            value="<?= $template->getUserGroupId(); ?>" 
-                           <?= ($this->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
+                           <?= ($single_step->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                         />
                 </td>
                 <td>
                     <b>
                         <?= $template->getPurifiedUserGroupName(); ?>
                     </b> 
-                    (<?= $template->getFormattedDateRegistered($this->getDateFormat()); ?>)
+                    (<?= $template->getFormattedDateRegistered($single_step->getDateFormat()); ?>)
                 </td>
                 <td rowspan="2" align="left" valign="top">
                     <i>
@@ -161,7 +159,7 @@
     <br />
     <table>
         <?php 
-        $user_templates = $this->getUserTemplates();
+        $user_templates = $single_step->getUserTemplates();
         foreach ($user_templates as $template) :
             /* @var $template Template */
         ?>
@@ -170,14 +168,14 @@
                     <input type="radio" 
                            name="built_from_template" 
                            value="<?= $template->getUserGroupId(); ?>" 
-                           <?= ($this->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
+                           <?= ($single_step->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                         />
                 </td>
                 <td>
                     <b>
                         <?= $template->getPurifiedUserGroupName(); ?>
                     </b> 
-                    (<?= $template->getFormattedDateRegistered($this->getDateFormat()); ?>)
+                    (<?= $template->getFormattedDateRegistered($single_step->getDateFormat()); ?>)
                 </td>
                 <td rowspan="2" align="left" valign="top">
                     <i>
@@ -212,6 +210,27 @@
         endforeach;
         ?>  
     </table>
+    <h2>Choose the license for your project.</h2>
+    <hr/>
+    <p>
+        Choose the correct one because you cannot modify your project license after your project has been approved.
+    </p>
+    <select name="form_license">';
+        <?php
+        foreach ($single_step->getAvailableLicenses() as $license_type => $license_description) :   
+        ?>
+            <option value="<?= $license_type ?>"
+                    <?= ($single_step->getLicenseType() == $license_type) ? 'selected="selected"' : ''; ?>
+                    >
+                <?= $license_description ?>
+            </option>
+        <?php
+        endforeach;
+        ?>
+    </select>
+    <br/>
+    <h3>Custom License (other)</h3>
+    <textarea name="form_license_other" wrap=virtual cols=60 rows=10><?= $single_step->getCustomLicense(); ?></textarea>
     <h2>That's it!</h2>
     <hr/>
     <p>
@@ -219,7 +238,7 @@
         You will receive a notification when the system administrator has validated it.
         Then, you will be able to access your new project workspace. Enjoy!
     </p>
-    <input type="submit" value="submit project"/>
+    <input type="submit" value="submit project" name="create_project"/>
 </form>
 
 
