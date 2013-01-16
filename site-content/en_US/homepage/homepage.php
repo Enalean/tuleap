@@ -853,28 +853,43 @@ a.btn-warning {
     height: 30px;
     margin-right: 1em;
 }
-.hero-unit > .row {
-    min-height:244px;
+.hero-unit > div {
+    min-height:344px;
     background: white url(images/banner-grass.png) no-repeat;
-    padding-top:10em;
+    padding-top:150px;
+}
+.hero-unit p {
+    font-size: 2em;
+    line-height: 1.5em;
+    font-weight: inherit;
+}
+#homepage .hero-unit ul {
+    list-style:none;
+    margin-left: 0;
+}
+
+.contribute-ways a {
+    color:white;
 }
 </style>
 <div class="hero-unit">
     <div class="row">
-        <div class="span6">
-            <p style="font-size:2em;">Here users, developers and all contributors gather to create Tuleap, the full open source ALM</p>
+        <div class="span7">
+            <p style="">Here users, developers and all contributors gather to&nbsp;create Tuleap, <strong>the&nbsp;full&nbsp;open&nbsp;source&nbsp;ALM</strong>.</p>
             <a class="btn  btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
                 <i class="icon-download-alt icon-white icon"></i>
                 Get Tuleap</a><br />
         </div>
-        <div class="span3 offset1">
-            <h2>Contribute</h2>
-            <ul>
+        <div class="span3">
+            <h3>Contribute</h3>
+            <ul class="contribute-ways">
                 <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Report a bug </a></li>
                 <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Suggest a new feature</a></li>
                 <li><a href="https://tuleap.net/wiki/?group_id=101&pagename=DeveloperGuide">Participate to developments</a></li>
             </ul>
-            <a class="btn btn-warning btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">Join us!</a> 
+            <p>
+                <a class="btn btn-warning btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">Join us!</a>
+            </p>
         </div>
     </div>
 </div>
@@ -912,19 +927,17 @@ a.btn-warning {
 			<li><a href="/#screenshots">Features Overview</a></li>
 			<li><a href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
 			Try it!</a></li>
-			<li><a href="https://tuleap.net/documentation/user_guide/html/en_US/User_Guide.html">Documentation</a> & videos</li>
-			<li><a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">Ask questions</a></li>
 			</ul>
 			<p>
 			<a class="btn btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install"><i class="icon-download-alt icon-white"></i> Get Tuleap</a>
-			</p>				         
+			</p>
 			</div>
     
     <div class="span4" style="text-align:left">
           <h2><img src="images/help.png" alt="Contribute to Tuleap" width="48px">Get Help</h2>
 			<ul>
 			<li><a href="https://tuleap.net/documentation/user_guide/html/en_US/User_Guide.html">Documentation</a> 
-			<li><a href="http://tuleap.com/resources/videos">videos</a></li>
+			<li><a href="http://tuleap.com/resources/videos">Videos</a></li>
 			<li><a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">Ask questions</a></li>
 			<li><a href="http://tuleap.com/?q=services/support">Professional Support</a></li>
 
@@ -932,7 +945,7 @@ a.btn-warning {
 			
     <div class="span4">
         <h2><?= $Language->getText('homepage', 'news_title') ?></h2>
-        <?= news_show_latest($GLOBALS['sys_news_group'], 1, true, false, true, 3) ?>
+        <?= news_show_latest($GLOBALS['sys_news_group'], 1, true, false, true, 2) ?>
     </div>
 </div>
 
