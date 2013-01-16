@@ -45,7 +45,8 @@ if ($display_homepage_news) {
     /* background: white url(white_brick_wall.png); */
     /* background: white url(gears-green.jpg); */
     /* background: white url(gears.png); */
-    background: #cae7ec;
+    /* background: #cae7ec; */
+    background: white;
 }
 .contenttable {
     width: auto;
@@ -837,7 +838,9 @@ img {
           box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
-a.btn-primary {
+a.btn-success,
+a.btn-primary,
+a.btn-warning {
     color: white;
 }
 #homepage {
@@ -850,32 +853,28 @@ a.btn-primary {
     height: 30px;
     margin-right: 1em;
 }
+.hero-unit > .row {
+    min-height:244px;
+    background: white url(images/banner-grass.png) no-repeat;
+    padding-top:10em;
+}
 </style>
 <div class="hero-unit">
-    <div class="row-fluid">
-        <img src="/banner.png"  />
-    </div>
-    
-    <div class="row-fluid">
+    <div class="row">
         <div class="span6">
-            <br />
-            <br />
             <p style="font-size:2em;">Here users, developers and all contributors gather to create Tuleap, the full open source ALM</p>
+            <a class="btn  btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
+                <i class="icon-download-alt icon-white icon"></i>
+                Get Tuleap</a><br />
         </div>
-        <div class="span3">
+        <div class="span3 offset1">
             <h2>Contribute</h2>
             <ul>
                 <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Report a bug </a></li>
                 <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Suggest a new feature</a></li>
                 <li><a href="https://tuleap.net/wiki/?group_id=101&pagename=DeveloperGuide">Participate to developments</a></li>
             </ul>
-            <a class="btn btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">Join now</a>
-        </div>
-        <div class="span3">
-        <br /><br />
-            <a class="btn  btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
-                <i class="icon-download-alt icon-white icon-2x"></i><br /><br />
-                Get Tuleap</a>
+            <a class="btn btn-warning btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">Join us!</a> 
         </div>
     </div>
 </div>
@@ -888,7 +887,7 @@ a.btn-primary {
           </p>
           </div>
     <div class="span4"><h2>Who is it for?</h2>
-    <p>Developers, Project managers, Agilers, CEO, Quality managers, Businesses... All stackholers creating innovative applications.</p>
+    <p>Developers, Project managers, Agilers, Quality managers, CEO, Businesses... All stackholers creating innovative applications.</p>
     <p>Large companies, SMEs, free projects, public organizations.</p>
     </div>
     
