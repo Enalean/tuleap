@@ -401,6 +401,10 @@ $sys_use_snippet = 1;
 // (1 to enable, 0 to disable)
 $sys_use_project_registration = 1;
 
+//Let the user create project using one form only, instead of the traditional wizard
+// (1 to enable, 0 to disable)
+$sys_create_project_in_one_step = 0;
+
 //Enable users avatar?
 // (1 to enable, 0 to disable)
 $sys_enable_avatars = 1;

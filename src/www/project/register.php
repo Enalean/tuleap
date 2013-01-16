@@ -18,11 +18,26 @@ require_once('common/project/RegisterProjectStep_License.class.php');
 require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
+require_once('common/project/RegisterProjectOneStep.class.php');
 
 
 $request      = HTTPRequest::instance();
 $current_step = $request->exist('current_step') ? $request->get('current_step') : 0;
 $data         = $request->exist('data') ? unserialize($request->get('data')) : array();
+
+if (Config::get('sys_create_project_in_one_step')) {
+    $data = $request->params;
+
+    //var_dump(get_class($request), $request->dump());
+    //Display current step
+    $HTML->header(array('title'=>$Language->getText('register_index','project_registration')));
+
+    $single_step = new RegisterProjectOneStep($data);
+    $single_step->display();
+
+    $HTML->footer(array());
+    exit;
+}
 
 //Register steps
 if ($GLOBALS['sys_use_trove'] != 0) {
