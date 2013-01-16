@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_Report_RendererDao.class.php');
-require_once('dao/Tracker_Report_Renderer_TableDao.class.php');
-require_once('Tracker_ReportFactory.class.php');
-require_once('Tracker_Report_Renderer.class.php');
-require_once('Tracker_Report_Renderer_Table.class.php');
 require_once('common/event/EventManager.class.php');
 
 

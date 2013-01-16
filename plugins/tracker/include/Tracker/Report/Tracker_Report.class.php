@@ -18,16 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_Report_CriteriaDao.class.php');
 
-require_once(dirname(__FILE__).'/../TrackerFactory.class.php');
-require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once('Tracker_Report_RendererFactory.class.php');
-require_once('Tracker_Report_Criteria.class.php');
-require_once('Tracker_Report_Session.class.php');
 require_once('common/include/Toggler.class.php');
-require_once dirname(__FILE__).'/../IFetchTrackerSwitcher.class.php';
 
 /**
  * Tracker_ report.

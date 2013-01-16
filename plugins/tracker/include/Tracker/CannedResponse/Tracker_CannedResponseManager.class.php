@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_CannedResponseDao.class.php');
-require_once('Tracker_CannedResponse.class.php');
 class Tracker_CannedResponseManager {
     protected $tracker;
     public function __construct($tracker) {

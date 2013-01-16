@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../Condition.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 
 class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition {

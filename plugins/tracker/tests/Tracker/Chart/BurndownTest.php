@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../../include/Tracker/Chart/Burndown.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Chart_BurndownTest_FakeData implements Tracker_Chart_Data_IProvideDataForBurndownChart {
     public $artifact_ids     = array();

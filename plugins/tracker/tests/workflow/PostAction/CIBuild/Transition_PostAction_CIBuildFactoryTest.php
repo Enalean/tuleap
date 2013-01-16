@@ -19,9 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../../../builders/aCIBuildPostAction.php';
-require_once dirname(__FILE__) .'/../../../../include/constants.php';
-require_once TRACKER_BASE_DIR .'/workflow/PostAction/CIBuild/Transition_PostAction_CIBuildFactory.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Transition_PostAction_CIBuildFactory_BaseTest extends TuleapTestCase {
 

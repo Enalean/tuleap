@@ -17,11 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker_FileInfo.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial('Tracker_FileInfo', 'Tracker_FileInfoTestVersion', array('getFiletype'));
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_File.class.php');
 Mock::generate('Tracker_FormElement_Field_File');
 
 class Tracker_FileInfo_CommonTest extends TuleapTestCase {

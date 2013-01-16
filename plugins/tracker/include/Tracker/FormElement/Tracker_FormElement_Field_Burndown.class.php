@@ -18,10 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_FormElement_Field_ReadOnly.class.php';
-require_once 'Tracker_FormElement_Field_BurndownException.class.php';
-require_once dirname(__FILE__).'/../Chart/Data/LinkedArtifacts.class.php';
-require_once dirname(__FILE__).'/../Chart/BurndownView.class.php';
 require_once 'common/chart/ErrorChart.class.php';
 
 class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly {

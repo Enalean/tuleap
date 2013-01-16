@@ -18,20 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Field/Transition_PostAction_Field_Date.class.php');
-require_once('Field/Transition_PostAction_Field_Int.class.php');
-require_once('Field/Transition_PostAction_Field_Float.class.php');
-require_once('CIBuild/Transition_PostAction_CIBuild.class.php');
-require_once('Field/dao/Transition_PostAction_Field_DateDao.class.php');
-require_once('Field/dao/Transition_PostAction_Field_IntDao.class.php');
-require_once('Field/dao/Transition_PostAction_Field_FloatDao.class.php');
-require_once('CIBuild/Transition_PostAction_CIBuildDao.class.php');
-require_once 'Transition_PostAction_NotFoundException.class.php';
-require_once 'PostActionSubFactories.class.php';
-require_once 'PostActionSubFactory.class.php';
-require_once 'Field/Transition_PostAction_FieldFactory.class.php';
-require_once 'CIBuild/Transition_PostAction_CIBuildFactory.class.php';
-
 /**
  * Collection of subfactories to CRUD postactions. Uniq entry point from the transition point of view.
  */

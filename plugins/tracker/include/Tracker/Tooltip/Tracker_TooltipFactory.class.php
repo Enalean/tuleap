@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Tracker.class.php');
-require_once(dirname(__FILE__).'/../dao/TrackerDao.class.php');
 
 class Tracker_TooltipFactory {
 

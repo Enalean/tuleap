@@ -17,9 +17,6 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-require_once 'Tracker_Rule.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/Date/InvalidComparatorException.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/Date/MissingComparatorException.class.php';
 
 /**
  * Date Rule between two dynamic fields

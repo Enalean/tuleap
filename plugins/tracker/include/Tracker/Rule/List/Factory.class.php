@@ -17,7 +17,6 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/List.class.php';
 
 /**
 * Factory of rules

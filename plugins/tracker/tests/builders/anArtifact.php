@@ -22,8 +22,7 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
-
-require_once 'aTracker.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 function anArtifact() {
     return new Test_Artifact_Builder();

@@ -18,22 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'V3/Dao.class.php';
-require_once 'V3/FieldsetsDao.class.php';
-require_once 'V3/FieldsDao.class.php';
-require_once 'V3/FieldsDefaultValuesDao.class.php';
-require_once 'V3/ReportsDao.class.php';
-require_once 'V3/RenderersTableDao.class.php';
-require_once 'V3/RenderersGraphDao.class.php';
-require_once 'V3/PermissionsOnArtifactFieldDao.class.php';
-require_once 'V3/AttachmentFieldDao.class.php';
-require_once 'V3/ReferenceFieldDao.class.php';
-require_once 'V3/SemanticDao.class.php';
-require_once 'V3/CannedDao.class.php';
-require_once 'V3/CcFieldDao.class.php';
-require_once 'V3/ColumnsDao.class.php';
-require_once 'V3/FieldPermsDao.class.php';
-require_once 'V3/FieldDependenciesDao.class.php';
 
 /**
  * This migrate trackers v3 into tracker v5

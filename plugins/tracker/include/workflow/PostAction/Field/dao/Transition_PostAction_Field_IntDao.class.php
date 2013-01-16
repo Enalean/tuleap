@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Transition_PostAction_FieldDao.class.php';
 
 /**
  * Data Acces object which deals with tracker_workflow_transition_postactions_field_int table

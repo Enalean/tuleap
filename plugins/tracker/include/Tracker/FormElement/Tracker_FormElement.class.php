@@ -18,13 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Interface.class.php');
-require_once('IProvideFactoryButtonInformation.class.php');
-require_once('Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../IDisplayTrackerLayout.class.php');
 
-require_once 'View/Admin/UpdateVisitor.class.php';
-require_once 'View/Admin/UpdateSharedVisitor.class.php';
 
 require_once('json.php');
 

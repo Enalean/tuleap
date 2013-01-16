@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Tracker_Dispatchable_Interface.class.php');
-require_once('Tracker_FormElement_Usable.class.php');
-require_once('IHaveAnId.class.php');
 
 /**
  * Base interface for all form elements in trackers, from fieldsets to selectboxes

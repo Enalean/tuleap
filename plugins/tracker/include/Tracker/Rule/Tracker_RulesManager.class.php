@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_RuleFactory.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/List/View.class.php';
 
 /**
 * Manager of rules

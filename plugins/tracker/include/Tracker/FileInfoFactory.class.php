@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_FileInfo.class.php';
-require_once 'dao/Tracker_FileInfoDao.class.php';
 
 class Tracker_FileInfoFactory {
     /**

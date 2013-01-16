@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__). '/../../../include/Tracker/CrossSearch/Query.class.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class QueryTest extends TuleapTestCase {
     public function itCanBeInstantiatedWithoutSemanticQuery() {
         $criteria = new Tracker_CrossSearch_Query(array());

@@ -18,22 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'IDisplayTrackerLayout.class.php';
-require_once 'IFetchTrackerSwitcher.class.php';
-require_once('TrackerFactory.class.php');
-require_once('Tracker_URL.class.php');
-require_once('Tracker_CannotAccessTrackerException.class.php');
-require_once('FormElement/Tracker_FormElementFactory.class.php');
-require_once('Artifact/Tracker_ArtifactFactory.class.php');
-require_once('Report/Tracker_ReportFactory.class.php');
-require_once('dao/Tracker_PermDao.class.php');
 require_once('common/reference/ReferenceManager.class.php');
-require_once('CrossSearch/SearchController.class.php');
-require_once('CrossSearch/SearchViewBuilder.class.php');
-require_once('CrossSearch/Search.class.php');
-require_once('CrossSearch/SemanticValueFactory.class.php');
-require_once 'HomeNavPresenter.class.php';
-require_once('DateReminder/dao/Tracker_DateReminderDao.class.php');
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class TrackerManager implements Tracker_IFetchTrackerSwitcher {

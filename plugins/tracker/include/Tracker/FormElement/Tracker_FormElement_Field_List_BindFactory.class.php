@@ -18,20 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_List_Bind_Null.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_Static.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_StaticValue.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_Users.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_Ugroups.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_UgroupsValue.class.php');
-require_once('Tracker_FormElement_Field_List_BindDecorator.class.php');
 
-require_once('dao/Tracker_FormElement_Field_List_BindDecoratorDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_DefaultvalueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_StaticDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_Ugroups_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_UsersDao.class.php');
 
 require_once('common/html/HTML_Element_Input_Radio.class.php');
 

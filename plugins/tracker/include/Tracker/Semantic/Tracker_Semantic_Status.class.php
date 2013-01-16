@@ -17,12 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Semantic.class.php');
-require_once(dirname(__FILE__).'/../TrackerManager.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElement_Field_List.class.php');
 require_once('common/include/Codendi_Request.class.php');
 require_once('common/user/User.class.php');
-require_once('dao/Tracker_Semantic_StatusDao.class.php');
 
 class Tracker_Semantic_Status extends Tracker_Semantic {
 

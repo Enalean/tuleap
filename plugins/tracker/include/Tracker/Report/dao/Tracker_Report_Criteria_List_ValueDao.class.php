@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_Report_Criteria_ValueDao.class.php');
 class Tracker_Report_Criteria_List_ValueDao extends Tracker_Report_Criteria_ValueDao {
     function __construct() {
         parent::__construct();
