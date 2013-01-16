@@ -20,7 +20,7 @@
 
 require_once 'RegisterProjectStep.class.php';
 require_once 'common/include/TemplateSingleton.class.php';
-require_once 'Template.class.php';
+require_once 'ProjectTemplate.class.php';
 require_once 'common/valid/Rule.class.php';
 
 
@@ -190,7 +190,7 @@ class RegisterProjectOneStep {
         
     /**
      * 
-     * @return Template[]
+     * @return ProjectTemplate[]
      */
     public function getDefaultTemplates() {
         $db_templates = db_query("
@@ -210,7 +210,7 @@ class RegisterProjectOneStep {
     
     /**
      * 
-     * @return Template[]
+     * @return ProjectTemplate[]
      */
     public function getUserTemplates() {
         $userId = (int) user_getid();
@@ -355,14 +355,14 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param resource $db_data
-     * @return Template[]
+     * @return ProjectTemplate[]
      */
     private function generateTemplatesFromDbData($db_data) {
         $templates = array();
         $row_count = db_numrows($db_data);
         
         for ($i=0; $i < $row_count; $i++) {
-            $template = new Template();
+            $template = new ProjectTemplate();
             $template->setUserGroupId(db_result($db_data, $i, 'group_id'))
                     ->setUserGroupName(db_result($db_data, $i, 'group_name'))
                     ->setDateRegistered(db_result($db_data, $i, 'register_time'))

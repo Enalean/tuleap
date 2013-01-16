@@ -27,11 +27,11 @@ $request      = HTTPRequest::instance();
 
 if (Config::get('sys_create_project_in_one_step')) {
     $data = $request->params;
-    $single_step = new RegisterProjectOneStep($data, $available_project_licenses);
+    $single_step_project = new RegisterProjectOneStep($data, $available_project_licenses);
     
-    if(isset($data['create_project']) && $single_step->validateAndGenerateErrors()) {
+    if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
         require_once('create_project.php');
-        create_project($single_step->getProjectValues());
+        create_project($single_step_project->getProjectValues());
     }
     
     $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));

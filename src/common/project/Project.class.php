@@ -185,6 +185,22 @@ class Project extends Group implements PFO_Project {
     public function getService($service_name) {
         return $this->usesService($service_name) ? $this->services[$service_name] : null;
     }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function getAllUsedServices() {
+        $used_services = array();
+        foreach($this->use_service as $service_name => $is_service_used) {
+            if($is_service_used) {
+                $used_services[] = $service_name;
+            }
+        }
+        
+        return $used_services;
+    }
+    
     public function getActiveServices() {
         return $this->cache_active_services;
     }
