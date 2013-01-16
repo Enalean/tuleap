@@ -887,7 +887,7 @@ a.btn-warning {
             <div class="span7 offset1">
                 <p style="">Here users, developers and all contributors gather to&nbsp;create Tuleap, <strong>the&nbsp;full&nbsp;open&nbsp;source&nbsp;ALM</strong>.</p>
                 <a class="btn  btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
-                    <i class="icon-download-alt icon-white icon"></i>
+                    <i class="icon-download-alt icon-white"></i>
                     Get Tuleap</a><br />
             </div>
             <div class="span3">
@@ -898,7 +898,10 @@ a.btn-warning {
                     <li><a href="https://tuleap.net/wiki/?group_id=101&pagename=DeveloperGuide">Participate to developments</a></li>
                 </ul>
                 <p>
-                    <a class="btn btn-warning btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">Join us!</a>
+                    <a class="btn btn-warning btn-large" href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">
+                        <i class="icon-comments-alt"></i>
+                        Join us!
+                    </a>
                 </p>
             </div>
         </div>
@@ -946,15 +949,14 @@ a.btn-warning {
 			</div>
     
     <div class="span4" style="text-align:left">
-          <h2><img src="images/help.png" alt="Contribute to Tuleap" width="48px">Get Help</h2>
-			<ul>
-			<li><a href="https://tuleap.net/documentation/user_guide/html/en_US/User_Guide.html">Documentation</a> 
-			<li><a href="http://tuleap.com/resources/videos">Videos</a></li>
-			<li><a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">Ask questions</a></li>
-			<li><a href="http://tuleap.com/?q=services/support">Professional Support</a></li>
-
-			</div>
-			
+        <h2><img src="images/help.png" alt="Contribute to Tuleap" width="48px">Get Help</h2>
+        <ul>
+            <li><a href="https://tuleap.net/site/">Documentation</a>
+            <li><a href="http://tuleap.com/resources/videos">Videos <i class="icon-film"></i></a></li>
+            <li><a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">Ask questions</a></li>
+            <li><a href="http://tuleap.com/?q=services/support">Professional Support <img src="http://p.yusukekamiyamane.com/icons/search/fugue/icons/briefcase.png" /></a>
+        </li>
+    </div>
     <div class="span4">
         <h2><?= $Language->getText('homepage', 'news_title') ?></h2>
         <?= news_show_latest($GLOBALS['sys_news_group'], 1, true, false, true, 2) ?>
