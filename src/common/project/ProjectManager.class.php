@@ -224,7 +224,7 @@ class ProjectManager {
             $em = $this->getEventManager();
             $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
 
-            if (!send_new_project_email($project->getId())) {
+            if (!send_new_project_email($project)) {
                 $GLOBALS['Response']->addFeedback('warning', $project->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }
             return true;
