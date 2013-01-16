@@ -21,10 +21,11 @@
 require_once 'RegisterProjectStep.class.php';
 require_once 'common/include/TemplateSingleton.class.php';
 require_once 'Template.class.php';
+require_once 'common/valid/Rule.class.php';
 
 /**
-* RegisterProjectStep_Template
-*/
+ * Controller view helper class 
+ */
 class RegisterProjectOneStep {
 
     /**
@@ -58,6 +59,23 @@ class RegisterProjectOneStep {
     private $templateId;
     
     /**
+     *
+     * @var bool 
+     */
+    private $is_valid = true;
+
+
+
+
+    public function __construct(array $request_data) {
+        $this->setFullName($request_data)
+            ->setUnixName($request_data)
+            ->setShortDescription($request_data)
+            ->setIsPublic($request_data)
+            ->setTemplateId($request_data);
+    }
+    
+    /**
      * Displays the view for this step. The view is a file called one_step_register.phtml
      */
     public function display() {
@@ -68,12 +86,16 @@ class RegisterProjectOneStep {
      * 
      * @return boolean
      */
-    public function isValid() {     
-        if(!$this->propertiesAreValid()) {
-            return false;
-        }
-
-        return true;
+    public function validateAndDisplayErrors() {
+        $this->is_valid = true;
+        
+        $this->validateTemplateId()
+            ->validateUnixName()
+            ->validateProjectPrivacy()
+            ->validateFullName()
+            ->validateShortDescription();
+        
+        return $this->is_valid;
     }
     
     /**
@@ -255,66 +277,48 @@ class RegisterProjectOneStep {
     private function getDateFormat() {
         return $GLOBALS['Language']->getText('system', 'datefmt_short');
     }
-    
-    /**
-     * 
-     * @return boolean
-     */
-    private function propertiesAreValid() {
-        if ($this->isValidTemplateId() &&
-            $this->isValidUnixName() &&
-            $this->isValidTemplateId() &&
-            $this->isValidProjectPrivacy() &&
-            $this->isValidFullName() &&
-            $this->isValidShortDescription()
-            ) {
-            return true;
-        }
-        
-        return false;
-    }
 
     /**
      * 
-     * @return boolean
+     * @return \RegisterProjectOneStep
      */
-    private function isValidFullName() {
+    private function validateFullName() {
         if ($this->getFullName() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            return false;
+            $this->setIsNotValid();
         }
         
         $rule = new Rule_ProjectFullName();
         if (!$rule->isValid($this->getFullName())) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_full_name'));
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
-            return false;
+            $this->setIsNotValid();
         }
         
-        return true;
+        return $this;
     }
     
     /**
      * 
-     * @return boolean
+     * @return \RegisterProjectOneStep
      */
-    private function isValidShortDescription() {
+    private function validateShortDescription() {
         if ($this->getShortDescription() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            return false;
+            $this->setIsNotValid();
         }
         
-        return true;
+        return $this;
     }
     
     /**
      * 
-     * @return boolean
+     * @return \RegisterProjectOneStep
      */
-    private function isValidUnixName() {
+    private function validateUnixName() {
         if ($this->getUnixName() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            return false;
+            $this->setIsNotValid();
         }
         
         //check for valid group name
@@ -322,20 +326,20 @@ class RegisterProjectOneStep {
         if (!$rule->isValid($this->getUnixName())) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
-            return false;
-        } 
+            $this->setIsNotValid();
+        }
         
-        return true;
+        return $this;
     }
     
     /**
      * 
-     * @return boolean
+     * @return \RegisterProjectOneStep
      */
-    private function isValidTemplateId() {
+    private function validateTemplateId() {
         if ($this->getTemplateId() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            return false;
+            $this->setIsNotValid();
         }
 
         $project_manager = ProjectManager::instance();
@@ -343,23 +347,32 @@ class RegisterProjectOneStep {
         
         if (! $project->isTemplate() && ! user_ismember($this->getTemplateId(), 'A')) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-            return false;
+            $this->setIsNotValid();
         }
-            
-        return true;
+        
+        return $this;
     }
     
     /**
      * 
-     * @return boolean
+     * @return \RegisterProjectOneStep
      */
-    private function isValidProjectPrivacy() {
+    private function validateProjectPrivacy() {
         if ($this->isPublic() == null) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            return false;
+            $this->setIsNotValid();
         }
         
-        return true;
+        return $this;
+    }
+    
+    /**
+     * 
+     * @return \RegisterProjectOneStep
+     */
+    private function setIsNotValid() {
+        $this->is_valid = false;
+        return $this;
     }
 }
 

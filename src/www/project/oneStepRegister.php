@@ -28,14 +28,8 @@ $data = $request->params;
 $HTML->header(array('title'=>$Language->getText('register_index','project_registration')));
 
 if ($request->exist('onestep')) {
-    $single_step = new RegisterProjectOneStep();
-
-    $single_step->setFullName($data)
-            ->setUnixName($data)
-            ->setShortDescription($data)
-            ->setIsPublic($data)
-            ->setTemplateId($data)
-            ->display();
+    $single_step = new RegisterProjectOneStep($data);
+    $single_step->display();
 }
 $HTML->footer(array());
 ?>
