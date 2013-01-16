@@ -28,6 +28,14 @@ require_once 'common/valid/Rule.class.php';
  * Controller view helper class 
  */
 class RegisterProjectOneStep {
+    
+    const FULL_NAME = 'form_full_name';
+    const UNIX_NAME = 'form_unix_name';
+    const IS_PUBLIC = 'is_public';
+    const TEMPLATE_ID = 'built_from_template';
+    const LICENSE_TYPE = 'form_license';
+    const CUSTOM_LICENSE = 'form_license_other';
+    const SHORT_DESCRIPTION = 'form_short_description';
 
     /**
      *
@@ -107,17 +115,16 @@ class RegisterProjectOneStep {
      */
     public function getProjectValues() {
         $custom_license = ($this->getLicenseType() == 'other') ? $this->getCustomLicense() : null;
-        
         return array(
             'project' => array(
-                'form_full_name'            => $this->getFullName(),
-                'is_public'                 => $this->isPublic(),
-                'form_unix_name'            => $this->getUnixName(),
-                'built_from_template'       => $this->getTemplateId(),
-                'form_license'              => $this->getLicenseType(),
-                'form_license_other'        => $custom_license,
-                'form_short_description'    => $this->getShortDescription(),
-                'is_test'                   => false,
+                self::FULL_NAME         => $this->getFullName(),
+                self::IS_PUBLIC         => $this->isPublic(),
+                self::UNIX_NAME         => $this->getUnixName(),
+                self::TEMPLATE_ID       => $this->getTemplateId(),
+                self::LICENSE_TYPE      => $this->getLicenseType(),
+                self::CUSTOM_LICENSE    => $custom_license,
+                self::SHORT_DESCRIPTION => $this->getShortDescription(),
+                'is_test'               => false,
             )
         );
     }
@@ -237,8 +244,8 @@ class RegisterProjectOneStep {
      * @return \RegisterProjectOneStep
      */
     private function setUnixName(array $data) {
-        if(isset($data['form_unix_name'])) {
-            $this->unix_name = $data['form_unix_name'];
+        if(isset($data[self::UNIX_NAME])) {
+            $this->unix_name = $data[self::UNIX_NAME];
         }
         
         return $this;
@@ -250,8 +257,8 @@ class RegisterProjectOneStep {
      * @return \RegisterProjectOneStep
      */
     private function setFullName(array $data) {
-        if(isset($data['form_full_name'])) {
-            $this->full_name = $data['form_full_name'];
+        if(isset($data[self::FULL_NAME])) {
+            $this->full_name = $data[self::FULL_NAME];
         }
         
         return $this;
@@ -263,8 +270,8 @@ class RegisterProjectOneStep {
      * @return \RegisterProjectOneStep
      */
     private function setShortDescription(array $data) {
-        if(isset($data['form_short_description'])) {
-            $this->short_description = trim($data['form_short_description']);
+        if(isset($data[self::SHORT_DESCRIPTION])) {
+            $this->short_description = trim($data[self::SHORT_DESCRIPTION]);
         }
         
         return $this;
@@ -276,8 +283,8 @@ class RegisterProjectOneStep {
      * @return \RegisterProjectOneStep
      */
     private function setTemplateId(array $data) {
-        if(isset($data['built_from_template'])) {
-            $this->templateId = $data['built_from_template'];
+        if(isset($data[self::TEMPLATE_ID])) {
+            $this->templateId = $data[self::TEMPLATE_ID];
         }
         
         return $this;
@@ -289,8 +296,8 @@ class RegisterProjectOneStep {
      * @return \RegisterProjectOneStep
      */
     private function setIsPublic(array $data) {
-        if(isset($data['is_public'])) {
-            $this->is_public = $data['is_public'];
+        if(isset($data[self::IS_PUBLIC])) {
+            $this->is_public = $data[self::IS_PUBLIC];
         }
         
         return $this;
@@ -312,8 +319,8 @@ class RegisterProjectOneStep {
      * @return \RegisterProjectOneStep
      */
     private function setLicenseType($data) {
-        if(isset($data['form_license'])) {
-            $this->license_type = $data['form_license'];
+        if(isset($data[self::LICENSE_TYPE])) {
+            $this->license_type = $data[self::LICENSE_TYPE];
         }
         
         return $this;
@@ -325,8 +332,8 @@ class RegisterProjectOneStep {
      * @return \RegisterProjectOneStep
      */
     private function setCustomLicense($data) {
-        if(isset($data['form_license_other'])) {
-            $this->custom_license = trim($data['form_license_other']);
+        if(isset($data[self::CUSTOM_LICENSE])) {
+            $this->custom_license = trim($data[self::CUSTOM_LICENSE]);
         }
         
         return $this;
@@ -360,14 +367,14 @@ class RegisterProjectOneStep {
      */
     private function validateFullName() {
         if ($this->getFullName() == null) {
-            $GLOBALS['Response']->addFeedback('error', 'full_name' . $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
             return $this;
         }
         
         $rule = new Rule_ProjectFullName();
         if (!$rule->isValid($this->getFullName())) {
-            $GLOBALS['Response']->addFeedback('error', 'full_name' . $GLOBALS['Language']->getText('register_license','invalid_full_name'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_full_name'));
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             $this->setIsNotValid();
         }
@@ -381,7 +388,7 @@ class RegisterProjectOneStep {
      */
     private function validateShortDescription() {
         if ($this->getShortDescription() == null) {
-            $GLOBALS['Response']->addFeedback('error', 'short' . $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
         }
         
@@ -394,7 +401,7 @@ class RegisterProjectOneStep {
      */
     private function validateUnixName() {
         if ($this->getUnixName() == null) {
-            $GLOBALS['Response']->addFeedback('error', 'unix' . $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
             return $this;
         }
@@ -402,7 +409,7 @@ class RegisterProjectOneStep {
         //check for valid group name
         $rule = new Rule_ProjectName();
         if (!$rule->isValid($this->getUnixName())) {
-            $GLOBALS['Response']->addFeedback('error', 'unix' . $GLOBALS['Language']->getText('register_license','invalid_short_name'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             $this->setIsNotValid();
         }
@@ -416,7 +423,7 @@ class RegisterProjectOneStep {
      */
     private function validateTemplateId() {
         if ($this->getTemplateId() == null) {
-            $GLOBALS['Response']->addFeedback('error', 'template' .$GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
             return $this;
         }
@@ -425,7 +432,7 @@ class RegisterProjectOneStep {
         $project = $project_manager->getProject($this->getTemplateId());
         
         if (! $project->isTemplate() && ! user_ismember($this->getTemplateId(), 'A')) {
-            $GLOBALS['Response']->addFeedback('error', 'template' .$GLOBALS['Language']->getText('global', 'perm_denied'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
             $this->setIsNotValid();
         }
         
@@ -438,7 +445,7 @@ class RegisterProjectOneStep {
      */
     private function validateProjectPrivacy() {
         if ($this->isPublic() === null) {
-            $GLOBALS['Response']->addFeedback('error', 'priv' . $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
         }
         
@@ -451,7 +458,7 @@ class RegisterProjectOneStep {
      */
     private function validateLicense() {
         if ($this->getLicenseType() === null) {
-            $GLOBALS['Response']->addFeedback('error', 'priv' . $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
         }
         

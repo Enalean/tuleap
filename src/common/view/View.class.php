@@ -24,15 +24,27 @@ class View {
     private $file_location;
     private $file_extension;
     
+    private $reserved_properties = array(
+        'file_location',
+        'file_extension',
+    );
+    
     public function __construct($file_location_without_extension, $file_extension) {
         $this->file_location = $file_location_without_extension;
         $this->file_extension = $file_extension;
     }
     
-    
+    /**
+     * 
+     * Use this method to pass php to a view file
+     * 
+     * @param string $name
+     * @param any $value
+     * @throws Exception
+     */
     public function __set($name, $value) {
-        if($name == 'file_location' || $name == 'file_extension') {
-            throw new Exception('reserved class properties');
+        if(in_array($name, $this->reserved_properties)) {
+            throw new Exception($name . 'is a reserved class property');
         }
         
         $this->$name = $value;

@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once 'pre.php';
 require_once 'common/project/Project.class.php';
 
 class ProjectTemplate {
