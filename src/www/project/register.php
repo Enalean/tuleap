@@ -36,8 +36,8 @@ if (Config::get('sys_create_project_in_one_step')) {
     $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));
     
     $view = new View('project/one_step_register', '.phtml');
-    $view->__set('single_step_project', $single_step_project);
-    $view->__set('available_licenses', $LICENSE);
+    $view->single_step_project = $single_step_project;
+    $view->available_licenses = $LICENSE;
     $view->render();
 
     $HTML->footer(array());
