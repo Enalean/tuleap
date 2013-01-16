@@ -943,8 +943,8 @@ a.btn-primary {
         <ul>
         <li><strong>Plan</strong> releases and assign tasks</li>
         <li>Monitor <strong>project progress</strong> and <strong>remaining work</strong> </li>
-        <li>Model Tuleap to your process: Agile, Lean, Waterfall or custom methods and meet your business compliance</li>
-		<li>Get full traceability on changes</li>
+        <li><strong>Model Tuleap to your process</strong>: Agile, Lean, Waterfall or custom methods and meet your <strong>business compliance</strong></li>
+		<li>Get <strong>full traceability</strong> on changes</li>
        </ul>
         <a href="http://tuleap.com/?q=features/project-management">Learn more on tuleap.com <i class="icon-external-link"></i></a>
     </div>
@@ -955,11 +955,11 @@ a.btn-primary {
         <h2>Track, trace, link everything</h2>
         <p>A powerful tracking system with extensive configuration capabilities</p>
         <ul>
-		<li>Track <strong> any type of artifacts</strong>: requirements, risks, stories, tasks, bugs… </li>
-        <li>Create your own trackers very easily with a dedicated UI</li>
-		<li>Trace and link artifacts back to source code, build, document, discussion, release &amp; more</li>
-        <li>Normalize process with tracker <strong>templates</strong></li>
-		<li>Configure workflow to set up automatic actions</li>
+		<li><strong>Track any type of artifacts</strong>: requirements, risks, stories, tasks, bugs… </li>
+        <li>Create your <strong>own trackers</strong> very easily with a dedicated UI</li>
+		<li><strong>Trace and link</strong> artifacts back to source code, build, document, discussion, release &amp; more</li>
+        <li><strong>Normalize process</strong> with tracker <strong>templates</strong></li>
+		<li>Configure <strong>workflow</strong> to set up automatic actions</li>
 		</ul>
         <a href="http://tuleap.com/?q=features/tracker">Learn more on tuleap.com <i class="icon-external-link"></i></a>
     </div>
@@ -974,12 +974,12 @@ a.btn-primary {
     <div class="span6">
         <h2>Code &amp; build with famous tools</h2>
         <ul>
-            <li>Browse, manage and search your source code with Git, Subversion or CVS</li>
+            <li><strong>Browse, manage and search</strong> your source code with Git, Subversion or CVS</li>
             <li><strong>View code differences</strong> between versions</li>
-            <li>Automate build and test with Hudson-Jenkins for continuous integration</li>
-            <li>Organize and share releases with the delivery manager</li>
+            <li><strong>Automate build and test</strong> with Hudson-Jenkins for <strong>continuous integration</strong></li>
+            <li>Organize and share releases with the <strong>delivery manager</strong></li>
             <li>Follow latest commits, continous integration status and recent releases with <strong>dashboard widgets</strong></li> 
-            <li><strong>Link source code and builds back to bugs, tasks,</strong> documents, releases…</li>
+            <li><strong>Link source code and builds</strong> back to bugs, tasks, documents, releases…</li>
         </ul>
         <p class="tools-logos">
         <img src="images/logos/Git-Logo.png" /> <img src="images/logos/subversion-logo.png" /> <img src="images/logos/cvs.png" />
@@ -994,11 +994,11 @@ a.btn-primary {
         <h2>Create, version and collaborate on documents</h2>
         <ul>
 		<li>Centralize project documents from a  <strong>single online space</strong></li>
-        <li>Upload files, create embedded rich text documents and wiki pages</li>
-		<li>Compare document versions and track history</li>
-		<li>Guide project members through your content process with templates and sample files</li>
-        <li>Organize  <strong>documents reviews </strong> with approval workflow</li>
-        <li>Keep your content  <strong>safe and secure </strong> and decide who can modify what</li>
+        <li><strong>Upload</strong> files, create <strong>embedded rich text documents</strong> and <strong>wiki</strong> pages</li>
+		<li>Compare <strong>document versions</strong> and <strong>track history</strong></li>
+		<li>Guide project members through your content process with <strong>templates and sample files</strong></li>
+        <li>Organize  <strong>documents reviews </strong> with approval <strong>workflow</strong></li>
+        <li>Keep your content  <strong>safe and secure </strong> and decide <strong>who can modify what</strong></li>
         </ul>
         <a href="http://tuleap.com/?q=features/document-management">Learn more on tuleap.com <i class="icon-external-link"></i></a>
     </div>
