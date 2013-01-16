@@ -48,6 +48,7 @@ plugin_graphontrackersv5_admin_menu	graphic_report	Rapports graphiques
 plugin_graphontrackersv5_include_report	pie	Camembert
 plugin_graphontrackersv5_include_report	bar	Bâtons
 plugin_graphontrackersv5_include_report	gantt	Gantt
+plugin_graphontrackersv5_include_report	evolution	Graph d'évolution temporelle
 plugin_graphontrackersv5_include_report	add_chart_dashboard	Ajouter le graphique à mon tableau de bord
 plugin_graphontrackersv5_include_report	add_chart_project_dashboard	Ajouter le graphique au tableau de bord du projet
 plugin_graphontrackersv5_graphreportcopy	ins_err	Erreur lors de l'insertion de plugin_graphontrackersv5_report_graphic ($1-$2) : $3
@@ -159,3 +160,5 @@ plugin_graphontrackersv5_scrum	burndown_property_duration	Durée (en jours)
 plugin_graphontrackersv5_scrum	add_title_burnup	Scrum BurnUp
 plugin_graphontrackersv5_scrum	burnup_property_start_date	Début du sprint
 plugin_graphontrackersv5_scrum	burnup_property_duration	Durée (en jours)
+
+plugin_graphontrackersv5_evolution	
