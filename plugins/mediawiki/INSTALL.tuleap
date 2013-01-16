@@ -1,3 +1,9 @@
+=============== INSTALL on local server ===============
+#get mediawiki
+cd /usr/share
+wget http://download.wikimedia.org/mediawiki/1.15/mediawiki-1.15.5.tar.gz
+tar -xvf mediawiki-1.15.5.tar.gz mediawiki115
+
 # Must create /var/lib/codendi/plugins/mediawiki/master
 # Done in /usr/share/gforge/plugins/mediawiki/cronjobs/create-wikis.php
 # Theme
@@ -7,7 +13,7 @@
 # create view group_plugin as (select service.service_id group_plugin_id,service.group_id,plugin.id plugin_id,service.short_name from service,plugin where service.short_name=CONCAT('plugin_', plugin.name) and service.is_active=1 and service.is_used=1 and service.group_id != 100);
 # create view plugins as (select id plugin_id, name plugin_name, name plugin_desc from plugin );
 
-# modify /etc/httpd/conf.d/codendi_aliases.conf to add plugin-mediawiki.inc
+# modify /etc/httpd/conf.d/codendi_aliases.conf to add plugin-mediawiki.inc (usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc)
 
 # add conf param in local.inc
 // Mediawiki
@@ -53,3 +59,10 @@ $PHP $MWCRON/create-wikis-mysql.php
 
 # Create wiki XML dumps every night
 #5 1 * * * root [ -x $MWCRON/dump-wikis.php ] && $PHP $MWCRON/dump-wikis.php
+
+
+
+
+
+
+
