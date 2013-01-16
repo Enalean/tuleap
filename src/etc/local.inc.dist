@@ -1,24 +1,26 @@
 <?php
+// Copyright (c) Enalean, 2011-2013. All rights reserved
+// Copyright (c) STMicroelectronics, 2009-2011. All rights reserved
 // Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved
 //
-// This file is a part of Codendi.
+// This file is a part of Tuleap.
 //
-// Codendi is free software; you can redistribute it and/or modify
+// Tuleap is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation; either version 2 of the License, or
 // (at your option) any later version.
 //
-// Codendi is distributed in the hope that it will be useful,
+// Tuleap is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with Codendi. If not, see <http://www.gnu.org/licenses/>.
+// along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
 //
  
 //
-// Codendi Global Configuration File
+// Tuleap Global Configuration File
 //
 
 // Important note on file format
@@ -42,11 +44,11 @@
 
 //
 //
-// PART I - Codendi hostnames
+// PART I - Tuleap hostnames
 //
 
 // Hostnames should be fully qualified domain names (FQDNs); using short names
-// would be prettier but would stop you from distributing your Codendi
+// would be prettier but would stop you from distributing your Tuleap
 // implementation across multiple domains.
 //
 // Of course, if you have a lot of machines serving a particular purpose
@@ -55,9 +57,9 @@
 // mechanism or something fancy like a local-director.
 //
 // =============================================================
-// The default Codendi domain
+// The default Tuleap domain
 //
-// this is used where ever the "naked" form of the Codendi domain
+// this is used where ever the "naked" form of the Tuleap domain
 // might be used.
 // This is also used as the default name for the Web server using
 // the standard http protocol (for https see below). You can also 
@@ -118,16 +120,16 @@ $sys_server_id = 0;
 // $sys_data_dir = "mydir/data"
 
 
-// Codendi directory (PHP pages, site-content, etc)
+// Tuleap directory (PHP pages, site-content, etc)
 $codendi_dir = "/usr/share/codendi";
 
 // Site specific settings are stored there:
 $sys_custom_dir = "/etc/codendi";
 
-// Codendi binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
+// Tuleap binary prefix - do *not* use variables in this definition (compile_fileforge.sh)
 $codendi_bin_prefix = "/usr/lib/codendi/bin";
 
-// Codendi database configuration file
+// Tuleap database configuration file
 $db_config_file = $sys_custom_dir . "/conf/database.inc";
 
 // Data Directory
@@ -136,19 +138,19 @@ $sys_data_dir = "/var/lib/codendi";
 // Place to put temporary data: deleted user's accounts, etc
 $tmp_dir = "/var/tmp";		 
 
-// Codendi utils and documentation directories
+// Tuleap utils and documentation directories
 // WARNING: DO NOT USE VARIABLES in the three parameter definitions below.
 // For instance, do *not* use someting like
 //    *wrong* $codendi_utils_prefix = $codendi_dir . "codendi/utils" *wrong*
 // this is because those variables will be read by shell scripts.
 $codendi_utils_prefix         = "/usr/share/codendi/src/utils";
 $codendi_documentation_prefix = "/usr/share/codendi/documentation";
-$codendi_downloads_dir        = "/usr/share/codendi/downloads";// Codendi extra files download directory (eg: CLI archive)
+$codendi_downloads_dir        = "/usr/share/codendi/downloads";// Tuleap extra files download directory (eg: CLI archive)
 
 // Where wiki attachments are stored
 $sys_wiki_attachment_data_dir = $sys_data_dir . "/wiki";
 
-// Where the Codendi files are placed
+// Where the Tuleap files are placed
 $sys_urlroot = $codendi_dir . "/src/www/"; 
 
 // Site-content paths
@@ -185,8 +187,8 @@ $ftp_anon_dir_prefix = "/var/lib/codendi/ftp/pub";     // prefix to add to the a
 $dump_dir         = "/var/lib/codendi/dumps";// Where should we stick files we're working with
 
 // Paths for backend scripts
-$codendi_log        = "/var/log/codendi";   // Codendi log dir (cvslogs,)
-$codendi_shell_skel = "/etc/skel_codendi";  // Codendi Shell skeleton files directory
+$codendi_log        = "/var/log/codendi";   // Tuleap log dir (cvslogs,)
+$codendi_shell_skel = "/etc/skel_codendi";  // Tuleap Shell skeleton files directory
 $dns_master_file  = "/var/named/codendi.zone";// DNS master file
 
 // Mailman paths
@@ -238,7 +240,7 @@ $sys_dbauth_passwd = '%sys_dbauth_passwd%';
 // 
 
 
-// Group id corresponding to Codendi News group
+// Group id corresponding to Tuleap News group
 // (was group 714 in SourceForge - sfnews)
 $sys_news_group = 46;
 
@@ -285,11 +287,11 @@ $sys_name = 'Tuleap';
 $sys_org_name      = '%sys_org_name%';
 $sys_long_org_name = '%sys_long_org_name%';
 
-// Email address pointing to the Codendi site administrators
+// Email address pointing to the Tuleap site administrators
 // for use Web pages, documentation,etc.
 $sys_email_admin = 'codendi-admin@%sys_default_domain%';
 
-// Email address pointing to the Codendi contacts.
+// Email address pointing to the Tuleap contacts.
 // for use Web pages, documentation,etc.
 $sys_email_contact = 'codendi-contact@%sys_default_domain%';
 
