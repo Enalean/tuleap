@@ -113,7 +113,9 @@ class Tracker_Semantic_StatusFactory implements Tracker_Semantic_IRetrieveSemant
                 $mapping_values = $mapping['values'];
                 // get the value ids for status open values target
                 foreach ($from_open_value_ids as $from_open_value_id) {
-                    $to_open_value_ids[] = $mapping_values[$from_open_value_id];
+                    if (isset($mapping_values[$from_open_value_id])) {
+                        $to_open_value_ids[] = $mapping_values[$from_open_value_id];
+                    }
                 }
             }
         }
