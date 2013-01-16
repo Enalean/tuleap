@@ -28,6 +28,22 @@ $additional_tabs = array(
     //     'link'     => '/projects/gpig/',
     //     'title'    => 'Guinea Pig',
     // ),
+    array(
+        'selected' => false,
+        'link'     => '/#screenshots',
+        'title'    => 'Features & Screenshots',
+    ),
 );
-
+$wiki_install_url = '/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install';
+$additional_tabs[] = array(
+    'selected' => (boolean) (strstr(getStringFromServer('REQUEST_URI'), $wiki_install_url)),
+    'link'     => $wiki_install_url,
+    'title'    => 'Get Tuleap',
+);
+$wiki_contribute_url = '/wiki/?group_id=101&pagename=ContributePageToBeDefined';
+$additional_tabs[] = array(
+    'selected' => (boolean) (strstr(getStringFromServer('REQUEST_URI'), $wiki_contribute_url)),
+    'link'     => $wiki_contribute_url,
+    'title'    => 'Contribute',
+);
 ?>
