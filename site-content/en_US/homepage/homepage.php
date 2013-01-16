@@ -34,6 +34,9 @@ if ($display_homepage_news) {
 ?>
 
 <style>
+:target {
+    border: none;
+}
 #homepage .hero-unit {
     /* background: white url(ecailles.png); */
     /* background: white url(subtle_grunge.png); */
@@ -805,11 +808,28 @@ input[type="submit"].btn.btn-mini {
   border-bottom: 1px solid #eeeeee;
 }
 
+.img-polaroid {
+  padding: 4px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
 a.btn-primary {
     color: white;
 }
 #homepage {
     line-height: 20px;
+}
+.tools-logos {
+    text-align:center;
+}
+.tools-logos > img {
+    height: 30px;
+    margin-right: 1em;
 }
 </style>
 <div class="hero-unit">
@@ -903,94 +923,92 @@ a.btn-primary {
 </div>
 
 <div class="page-header">
-    <h1>Features overview <small>discover Tuleap pure awesomeness! <i class="icon-thumbs-up"></i></small></h1>
+    <h1 id="screenshots">Features overview <small>discover Tuleap pure awesomeness! <i class="icon-thumbs-up"></i></small></h1>
 </div>
-<div class="row-fluid homepage-feature">
+<div class="row-fluid homepage-feature" id="screenshots-plan">
     <div class="span6">
-        <img src="http://tuleap.com/sites/default/files/Tuleap-personal-dashboard.png" class="img-polaroid" width="570px" />
+        <img src="images/screenshots/cardwall.png" class="img-polaroid" width="570px" />
     </div>
     <div class="span6">
         <h2>Plan and monitor project</h2>
-        <ul><li><strong>Plan releases, sprints, tasks and assign</strong> them to project members</li>
-        <li>Track <strong>progress</strong> and <strong>remaining work</strong> </li>
-        <li>Map <strong>backlog, stories and tasks</strong> </li>
-        <li>Get a handle on project status and <strong>real-time progress</strong> with dashboards </li>
-        <li>Know exactly what you have to do on your personal <strong>dashboard</strong></li>
-        <li>Run <strong>personalized searches</strong> and generate <strong>adhoc graphs</strong></li>
-        <li>Create <strong>public and private reports</strong></li>
-        </ul>
+        <ul>
+        <li><strong>Plan</strong> releases and assign tasks</li>
+        <li>Monitor <strong>project progress</strong> and <strong>remaining work</strong> </li>
+        <li>Model Tuleap to your process: Agile, Lean, Waterfall or custom methods and meet your business compliance</li>
+		<li>Get full traceability on changes</li>
+       </ul>
         <a href="http://tuleap.com/?q=features/project-management">Learn more on tuleap.com <i class="icon-external-link"></i></a>
     </div>
 </div>
 
-<div class="row-fluid homepage-feature">
+<div class="row-fluid homepage-feature" id="screenshots-track">
     <div class="span6">
         <h2>Track, trace, link everything</h2>
-        <p>A powerful tracking system with extensive configuration capabilities for all your project items</p>
-        <ul><li>Track <strong> any type of project artifacts</strong>: risks, requirements, tasks, bugs,… </li>
-        <li>Trace and link artifacts back to code, build, document, discussion, release &amp; more</li>
-        <li>Easily <strong> customize trackers</strong>  to match your activity</li>
-        <li>Configure<strong> workflow</strong>  to set up automatic actions</li>
-        <li>Normalize process with your own trackers <strong>templates</strong></li>
-        <li>Set <strong>fine-grained permissions</strong>, on each tracker, on each field</li>
-        <li>Generate reports and add them to your <strong> dashboards</strong> </li>
-        <li><strong>Import-export</strong> data from or to third tool</li>
-        <li>Keep up-to-date with <strong>email notifications</strong></li>
-        </ul>
+        <p>A powerful tracking system with extensive configuration capabilities</p>
+        <ul>
+		<li>Track <strong> any type of artifacts</strong>: requirements, risks, stories, tasks, bugs… </li>
+        <li>Create your own trackers very easily with a dedicated UI</li>
+		<li>Trace and link artifacts back to source code, build, document, discussion, release &amp; more</li>
+        <li>Normalize process with tracker <strong>templates</strong></li>
+		<li>Configure workflow to set up automatic actions</li>
+		</ul>
         <a href="http://tuleap.com/?q=features/tracker">Learn more on tuleap.com <i class="icon-external-link"></i></a>
     </div>
     <div class="span6">
-        <img src="http://tuleap.com/sites/default/files/Tuleap-bug-tracker-search%20area.png" class="img-polaroid" width="570px" height="356px"/>
+        <img src="images/screenshots/create-tracker.png" class="img-polaroid" width="570px" height="380px"/>
     </div>
 </div>
-<div class="row-fluid homepage-feature">
+<div class="row-fluid homepage-feature" id="screenshots-tools">
     <div class="span6">
-        <img src="http://tuleap.com/sites/default/files/Tuleap-svn-version-differences_0.png" class="img-polaroid" width="570px" />
+        <img src="images/screenshots/svn-browse.png" class="img-polaroid"/>
     </div>
     <div class="span6">
         <h2>Code &amp; build with famous tools</h2>
-        <ul><li><strong>Browse repositories</strong> and <strong>view differences</strong> between versions</li>
-        <li><strong>Link commits back to artifacts</strong>, documents,  files…</li>
-        <li>Improve <strong>traceability</strong> forcing references in commit messages</li>
-        <li>Follow latest commits with <strong>version control widgets on dashboards</strong></li>
-        <li>Assign <strong>granular, path</strong> based access rights, on trunck and branches</li>
-        <li>Receive <strong>email notifications</strong> when changes occur</li>
-        <li>Search in commits</li>
+        <ul>
+            <li>Browse, manage and search your source code with Git, Subversion or CVS</li>
+            <li><strong>View code differences</strong> between versions</li>
+            <li>Automate build and test with Hudson-Jenkins for continuous integration</li>
+            <li>Organize and share releases with the delivery manager</li>
+            <li>Follow latest commits, continous integration status and recent releases with <strong>dashboard widgets</strong></li> 
+            <li><strong>Link source code and builds back to bugs, tasks,</strong> documents, releases…</li>
         </ul>
-        <p>git, svn, cvs, jenkins logos</p>
-        <a href="http://tuleap.com/?q=features/version-control">Learn more on tuleap.com <i class="icon-external-link"></i></a>
+        <p class="tools-logos">
+        <img src="images/logos/Git-Logo.png" /> <img src="images/logos/subversion-logo.png" /> <img src="images/logos/cvs.png" />
+		<img src="images/logos/hudson-logo.png" /> <img src="images/logos/jenkins_logo.png" />
+		</p>
+        <p><a href="images/screenshots/">Learn more on tuleap.com <i class="icon-external-link"></i></a></p>
     </div>
 </div>
 
-<div class="row-fluid homepage-feature">
+<div class="row-fluid homepage-feature" id="screenshots-doc">
     <div class="span6">
-        <h2>Create, store, version documents</h2>
-        <ul><li> Centralize project documentation in a <strong>single documentation space</strong></li>
-        <li>Create new <strong>versions</strong> and <strong>compare</strong> them with previous ones</li>
+        <h2>Create, version and collaborate on documents</h2>
+        <ul>
+		<li>Centralize project documents from a  <strong>single online space</strong></li>
+        <li>Upload files, create embedded rich text documents and wiki pages</li>
+		<li>Compare document versions and track history</li>
+		<li>Guide project members through your content process with templates and sample files</li>
         <li>Organize  <strong>documents reviews </strong> with approval workflow</li>
-        <li>Keep your content  <strong>safe and secure </strong> and decide exactly who can modify what</li>
-        <li>Run personalized <b>searches in documents</b> and save your queries</li>
-        <li>Archive all actions made on documents in an <strong>auditable history</strong></li>
-        <li>Stay up-to-date about updates with <strong>notifications</strong></li>
+        <li>Keep your content  <strong>safe and secure </strong> and decide who can modify what</li>
         </ul>
         <a href="http://tuleap.com/?q=features/document-management">Learn more on tuleap.com <i class="icon-external-link"></i></a>
     </div>
     <div class="span6">
-        <img src="http://tuleap.com/sites/default/files/Tuleap-document-manager_0.png" class="img-polaroid" width="570px"/>
+        <img src="images/screenshots/docman.png" class="img-polaroid" width="570px"/>
     </div>
 </div>
-<div class="row-fluid homepage-feature">
+<div class="row-fluid homepage-feature" id="screenshots-discuss">
     <div class="span6">
-        <img src="http://tuleap.com/sites/default/files/Tuleap-forum-discussion.png" class="img-polaroid" width="570px" />
+        <img src="images/screenshots/chat.png" class="img-polaroid" width="570px" />
     </div>
     <div class="span6">
-        <h2>Stay tuned, Collaborate &amp; Exchange</h2>
-        <ul><li>For each project, choose between integrated collaboration tools: forums, instant messaging, mailing-lists, news, RSS feeds</li>
-        <li><strong>Discuss in real-time</strong> with  team members and partners with instant messaging</li>
-        <li>Receive <strong>notifications</strong> on your dashboard or by email on document changes, commits or artifacts modifications</li>
-        <li><strong>Discuss</strong> ideas in forums with flexible subscription and management</li>
-        <li>With the wiki, <strong>share</strong> mockups, <strong>write</strong> documentation together, view <strong>modifications</strong> between versions</li>
-        <li><strong>Create links back to artifacts,document, file, etc.from discussions</strong></li>
+        <h2>Stay tuned, Share knowledge &amp; Discuss</h2>
+        <ul>
+		<li>Promote <strong>social coding</strong> and leverage integrated per-project tools: forums, instant messaging, mailing-lists, news, RSS feeds</li>
+        <li><strong>Discuss</strong>ideas in forums and mailing lists with flexible subscription and management</li>
+		<li>Leverage per-project instant messaging rooms for real-time discussing</li>
+		<li>All along discussions, create shortcuts for direct access to project items you are mentioning</li>
+		<li>Share news of your project with other members and stay tuned</li>
         </ul>
         <a href="http://tuleap.com/?q=features/collaboration-tools">Learn more on tuleap.com <i class="icon-external-link"></i></a>
     </div>
