@@ -19,15 +19,14 @@ require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
 require_once('common/project/RegisterProjectOneStep.class.php');
-
+require_once 'common/view/View.class.php';
 require_once 'vars.php'; //load licenses
-$available_project_licenses = $LICENSE;
 
 $request      = HTTPRequest::instance();
 
 if (Config::get('sys_create_project_in_one_step')) {
     $data = $request->params;
-    $single_step_project = new RegisterProjectOneStep($data, $available_project_licenses);
+    $single_step_project = new RegisterProjectOneStep($data);
     
     if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
         require_once('create_project.php');
@@ -36,8 +35,10 @@ if (Config::get('sys_create_project_in_one_step')) {
     
     $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));
     
-    //!!!content display file uses $single_step variable
-    include($GLOBALS['Language']->getContent('project/one_step_register', null, null, '.phtml'));
+    $view = new View('project/one_step_register', '.phtml');
+    $view->__set('single_step_project', $single_step_project);
+    $view->__set('available_licenses', $LICENSE);
+    $view->render();
 
     $HTML->footer(array());
     exit; 

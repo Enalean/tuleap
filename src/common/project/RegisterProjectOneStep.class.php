@@ -74,7 +74,7 @@ class RegisterProjectOneStep {
     private $available_licenses;
 
 
-    public function __construct(array $request_data, array $available_licenses) {
+    public function __construct(array $request_data) {
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -82,8 +82,6 @@ class RegisterProjectOneStep {
             ->setTemplateId($request_data)
             ->setLicenseType($request_data)
             ->setCustomLicense($request_data);
-        
-        $this->setAvailableLicenses($available_licenses);
     }
     
     /**
@@ -122,14 +120,6 @@ class RegisterProjectOneStep {
                 'is_test'                   => false,
             )
         );
-    }
-    
-    /**
-     * 
-     * @return array
-     */
-    public function getAvailableLicenses() {
-        return $this->available_licenses;
     }
 
     /**
@@ -339,16 +329,6 @@ class RegisterProjectOneStep {
             $this->custom_license = trim($data['form_license_other']);
         }
         
-        return $this;
-    }
-        
-    /**
-     * 
-     * @param array $licenses
-     * @return \RegisterProjectOneStep
-     */
-    private function setAvailableLicenses(array $licenses) {
-        $this->available_licenses = $licenses;
         return $this;
     }
     

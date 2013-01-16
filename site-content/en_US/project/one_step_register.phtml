@@ -18,9 +18,9 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-/* @var $single_step_project RegisterProjectOneStep */
+/* @var $this->single_step_project RegisterProjectOneStep */
 ?>
-<form action="<?= $single_step_project->getFormSubmissionPath(); ?>" method="post">
+<form action="<?= $this->single_step_project->getFormSubmissionPath(); ?>" method="post">
     <input type="hidden" name="onestep" value="true" />
     <p>
         <h1>Project Creation Request</h1>
@@ -42,7 +42,7 @@
                 <input size="40" 
                        type="text" 
                        name="form_full_name" 
-                       value="<?= $single_step_project->getFullName(); ?>" />
+                       value="<?= $this->single_step_project->getFullName(); ?>" />
                 <br>
                 between 3 and 40 characters
             </td>
@@ -54,7 +54,7 @@
                        maxlength="30" 
                        size="15" 
                        name="form_unix_name" 
-                       value="<?= $single_step_project->getUnixName(); ?>" />
+                       value="<?= $this->single_step_project->getUnixName(); ?>" />
                 <br>
                 between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.
                 <br>
@@ -68,7 +68,7 @@
                     name="form_short_description" 
                     wrap="virtual" 
                     cols="70" 
-                    rows="3"><?= $single_step_project->getShortDescription(); ?></textarea>
+                    rows="3"><?= $this->single_step_project->getShortDescription(); ?></textarea>
             </td>
         </tr>
         <tr>
@@ -77,14 +77,14 @@
                 <input type="radio" 
                        name="is_public" 
                        value="1"
-                       <?= ($single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
+                       <?= ($this->single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
                     /> 
                 Public
                 <br>
                 <input type="radio" 
                        name="is_public" 
                        value="0"
-                       <?= (! $single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
+                       <?= (! $this->single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
                     /> 
                 Private (limit access only to the project members)
             </td>
@@ -106,7 +106,7 @@
     <h3>Default templates</h3>
     <table>
         <?php 
-        $default_templates = $single_step_project->getDefaultTemplates();
+        $default_templates = $this->single_step_project->getDefaultTemplates();
         foreach ($default_templates as $template) :
             /* @var $template Template */
         ?>
@@ -115,14 +115,14 @@
                     <input type="radio" 
                            name="built_from_template" 
                            value="<?= $template->getUserGroupId(); ?>" 
-                           <?= ($single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
+                           <?= ($this->single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                         />
                 </td>
                 <td>
                     <b>
                         <?= $template->getPurifiedUserGroupName(); ?>
                     </b> 
-                    (<?= $template->getFormattedDateRegistered($single_step_project->getDateFormat()); ?>)
+                    (<?= $template->getFormattedDateRegistered($this->single_step_project->getDateFormat()); ?>)
                 </td>
                 <td rowspan="2" align="left" valign="top">
                     <i>
@@ -168,7 +168,7 @@
     <h3>Projects of which you are administrator</h3>
     <table>
         <?php 
-        $user_templates = $single_step_project->getUserTemplates();
+        $user_templates = $this->single_step_project->getUserTemplates();
         foreach ($user_templates as $template) :
             /* @var $template Template */
         ?>
@@ -177,14 +177,14 @@
                     <input type="radio" 
                            name="built_from_template" 
                            value="<?= $template->getUserGroupId(); ?>" 
-                           <?= ($single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
+                           <?= ($this->single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                         />
                 </td>
                 <td>
                     <b>
                         <?= $template->getPurifiedUserGroupName(); ?>
                     </b> 
-                    (<?= $template->getFormattedDateRegistered($single_step_project->getDateFormat()); ?>)
+                    (<?= $template->getFormattedDateRegistered($this->single_step_project->getDateFormat()); ?>)
                 </td>
                 <td rowspan="2" align="left" valign="top">
                     <i>
@@ -232,10 +232,10 @@
     </p>
     <select name="form_license">';
         <?php
-        foreach ($single_step_project->getAvailableLicenses() as $license_type => $license_description) :   
+        foreach ($this->availableLicenses as $license_type => $license_description) :   
         ?>
             <option value="<?= $license_type ?>"
-                    <?= ($single_step_project->getLicenseType() == $license_type) ? 'selected="selected"' : ''; ?>
+                    <?= ($this->single_step_project->getLicenseType() == $license_type) ? 'selected="selected"' : ''; ?>
                     >
                 <?= $license_description ?>
             </option>
@@ -245,7 +245,7 @@
     </select>
     <br/>
     <h3>Custom License (other)</h3>
-    <textarea name="form_license_other" wrap=virtual cols=60 rows=10><?= $single_step_project->getCustomLicense(); ?></textarea>
+    <textarea name="form_license_other" wrap=virtual cols=60 rows=10><?= $this->single_step_project->getCustomLicense(); ?></textarea>
     <h2>That's it!</h2>
     <hr/>
     <p>
