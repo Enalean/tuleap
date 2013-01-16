@@ -55,16 +55,29 @@ if ($display_homepage_news) {
     width: 1000px; /* container + 2 * gutter */
     margin: 0 auto;
 }
+.callout {
+    margin-top: 1em;
+    min-height:344px;
+    background: white url(images/banner.png) no-repeat;
+    padding-top:150px;
+}
 @media (min-width: 1200px) {
     .main_body_row {
         width: 1230px; /* container + 2 * gutter */
+    }
+    .callout {
+        background-image: url(images/banner-large.png);
     }
 }
 @media (min-width: 768px) and (max-width: 979px) {
     .main_body_row {
         width: 764px; /* container + 2 * gutter */
     }
+    .callout {
+        background-image: url(images/banner-small.png);
+    }
 }
+
 .homepage_speech {
     width: auto;
 }
@@ -853,17 +866,12 @@ a.btn-warning {
     height: 30px;
     margin-right: 1em;
 }
-.hero-unit > div {
-    min-height:344px;
-    background: white url(images/banner-grass.png) no-repeat;
-    padding-top:150px;
-}
-.hero-unit p {
+.callout p {
     font-size: 2em;
     line-height: 1.5em;
     font-weight: inherit;
 }
-#homepage .hero-unit ul {
+#homepage .callout ul {
     list-style:none;
     margin-left: 0;
 }
@@ -872,30 +880,34 @@ a.btn-warning {
     color:white;
 }
 </style>
-<div class="hero-unit">
-    <div class="row">
-        <div class="span7">
-            <p style="">Here users, developers and all contributors gather to&nbsp;create Tuleap, <strong>the&nbsp;full&nbsp;open&nbsp;source&nbsp;ALM</strong>.</p>
-            <a class="btn  btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
-                <i class="icon-download-alt icon-white icon"></i>
-                Get Tuleap</a><br />
-        </div>
-        <div class="span3">
-            <h3>Contribute</h3>
-            <ul class="contribute-ways">
-                <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Report a bug </a></li>
-                <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Suggest a new feature</a></li>
-                <li><a href="https://tuleap.net/wiki/?group_id=101&pagename=DeveloperGuide">Participate to developments</a></li>
-            </ul>
-            <p>
-                <a class="btn btn-warning btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">Join us!</a>
-            </p>
+
+<div class="row-fluid callout">
+    <div class="span12">
+        <div class="row">
+            <div class="span7 offset1">
+                <p style="">Here users, developers and all contributors gather to&nbsp;create Tuleap, <strong>the&nbsp;full&nbsp;open&nbsp;source&nbsp;ALM</strong>.</p>
+                <a class="btn  btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
+                    <i class="icon-download-alt icon-white icon"></i>
+                    Get Tuleap</a><br />
+            </div>
+            <div class="span3">
+                <h3>Contribute</h3>
+                <ul class="contribute-ways">
+                    <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Report a bug </a></li>
+                    <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Suggest a new feature</a></li>
+                    <li><a href="https://tuleap.net/wiki/?group_id=101&pagename=DeveloperGuide">Participate to developments</a></li>
+                </ul>
+                <p>
+                    <a class="btn btn-warning btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">Join us!</a>
+                </p>
+            </div>
         </div>
     </div>
 </div>
 
-    <hr />
-<div class="row">
+<hr />
+
+<div class="row-fluid">
     <div class="span4"><h2>What is Tuleap?</h2>
     <p>Tuleap is a <b>full free Open Source Suite for <a href="http://en.wikipedia.org/wiki/Application_lifecycle_management">Application Lifecycle Management</a></b>.</b><br>
           Traditional development, Requirement Management, Agile Development, IT Service management...Tuleap makes software projects more productive, collaborative and industrialized.
