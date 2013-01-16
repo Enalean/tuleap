@@ -1,3 +1,6 @@
+Version 5.66 - Tuleap 5.9
+    * Add autoload to trackers
+
 Version 5.65 - Tuleap 5.9
     * Fix bugs #2159 & defect #ericsson:1886: SOAP getTrackerStructure error
 

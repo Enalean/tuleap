@@ -1,3 +1,6 @@
+Version 0.62 - Tuleap 5.9
+    * Add autoload to trackers
+
 Version 0.61 - Tuleap 5.9
     * Fix unit test notice
 
