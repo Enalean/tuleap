@@ -19,7 +19,6 @@ require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
 require_once('common/project/OneStepProjectCreationPresenter.class.php');
-require_once 'common/view/View.class.php';
 require_once 'vars.php'; //load licenses
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
