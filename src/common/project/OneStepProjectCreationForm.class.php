@@ -73,14 +73,23 @@ class OneStepProjectCreationForm {
      */
     private $is_valid = true;
 
+    /**
+     *
+     * @var string 
+     */
     private $form_submission_path;
     
+    /**
+     *
+     * @var string 
+     */
     private $license_type;
     
+    /**
+     *
+     * @var blob 
+     */
     private $custom_license = null;
-    
-    private $available_licenses;
-
 
     public function __construct(array $request_data) {
         $this->setFullName($request_data)
@@ -177,10 +186,18 @@ class OneStepProjectCreationForm {
         return $this->is_public;
     }
     
+    /**
+     * 
+     * @return string
+     */
     public function getLicenseType() {
         return $this->license_type;
     }
     
+    /**
+     * 
+     * @return blob
+     */
     public function getCustomLicense() {
         return $this->custom_license;
     }
