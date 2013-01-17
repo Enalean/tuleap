@@ -18,7 +18,7 @@ require_once('common/project/RegisterProjectStep_License.class.php');
 require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
-require_once('common/project/RegisterProjectOneStep.class.php');
+require_once('common/project/OneStepProjectCreationForm.class.php');
 require_once 'common/view/View.class.php';
 require_once 'vars.php'; //load licenses
 
@@ -26,7 +26,7 @@ $request      = HTTPRequest::instance();
 
 if (Config::get('sys_create_project_in_one_step')) {
     $data = $request->params;
-    $single_step_project = new RegisterProjectOneStep($data);
+    $single_step_project = new OneStepProjectCreationForm($data);
     
     if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
         require_once('create_project.php');

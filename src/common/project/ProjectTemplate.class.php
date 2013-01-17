@@ -187,6 +187,10 @@ class ProjectTemplate {
         return $admins;
     }
     
+    /**
+     * 
+     * @return array List of names
+     */
     public function getServicesUsed() {
         if($this->getUserGroupId() == null) {
             return array();

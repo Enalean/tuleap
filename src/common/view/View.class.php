@@ -36,7 +36,7 @@ class View {
     
     /**
      * 
-     * Use this method to pass php to a view file
+     * Use this method to pass php vars to a view file
      * 
      * @param string $name
      * @param any $value

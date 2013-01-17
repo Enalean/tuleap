@@ -18,19 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once 'common/project/RegisterProjectOneStep.class.php';
+require_once 'common/project/OneStepProjectCreationForm.class.php';
 require_once 'common/include/Response.class.php';
 
-class RegisterProjectOneStepTest extends TuleapTestCase {
+class OneStepProjectCreationFormTest extends TuleapTestCase {
     
     public function testNewObjectSetsFullName() {
         $full_name = 'my_test proj';
         
         $request_data = array(
-            RegisterProjectOneStep::FULL_NAME => $full_name,
+            OneStepProjectCreationForm::FULL_NAME => $full_name,
         );
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         $this->assertEqual($full_name, $single_step->getFullName());
     }
     
@@ -38,10 +38,10 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         $unix_name = 'fdgd';
         
         $request_data = array(
-            RegisterProjectOneStep::UNIX_NAME => $unix_name,
+            OneStepProjectCreationForm::UNIX_NAME => $unix_name,
         );
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         $this->assertEqual($unix_name, $single_step->getUnixName());
     }
     
@@ -49,10 +49,10 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         $description = 'short description';
         
         $request_data = array(
-            RegisterProjectOneStep::SHORT_DESCRIPTION => $description,
+            OneStepProjectCreationForm::SHORT_DESCRIPTION => $description,
         );
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         $this->assertEqual($description, $single_step->getShortDescription());
     }
     
@@ -60,10 +60,10 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         $is_public = true;
         
         $request_data = array(
-            RegisterProjectOneStep::IS_PUBLIC => $is_public,
+            OneStepProjectCreationForm::IS_PUBLIC => $is_public,
         );
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         $this->assertEqual($is_public, $single_step->isPublic());
     }
     
@@ -71,10 +71,10 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         $id = 5689;
         
         $request_data = array(
-            RegisterProjectOneStep::TEMPLATE_ID => $id,
+            OneStepProjectCreationForm::TEMPLATE_ID => $id,
         );
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         $this->assertEqual($id, $single_step->getTemplateId());
     }
     
@@ -82,10 +82,10 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         $type = 'artistic';
         
         $request_data = array(
-            RegisterProjectOneStep::LICENSE_TYPE=> $type,
+            OneStepProjectCreationForm::LICENSE_TYPE=> $type,
         );
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         $this->assertEqual($type, $single_step->getLicenseType());
     }
     
@@ -93,10 +93,10 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         $license = 'do not copy';
         
         $request_data = array(
-            RegisterProjectOneStep::CUSTOM_LICENSE => $license,
+            OneStepProjectCreationForm::CUSTOM_LICENSE => $license,
         );
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         $this->assertEqual($license, $single_step->getCustomLicense());
     }
     
@@ -110,16 +110,16 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         $license = 'do not copy';
         
         $request_data = array(
-            RegisterProjectOneStep::FULL_NAME => $full_name,
-            RegisterProjectOneStep::UNIX_NAME => $unix_name,
-            RegisterProjectOneStep::SHORT_DESCRIPTION => $description,
-            RegisterProjectOneStep::IS_PUBLIC => $is_public,
-            RegisterProjectOneStep::TEMPLATE_ID => $id,
-            RegisterProjectOneStep::LICENSE_TYPE=> $type,
-            RegisterProjectOneStep::CUSTOM_LICENSE => $license,
+            OneStepProjectCreationForm::FULL_NAME => $full_name,
+            OneStepProjectCreationForm::UNIX_NAME => $unix_name,
+            OneStepProjectCreationForm::SHORT_DESCRIPTION => $description,
+            OneStepProjectCreationForm::IS_PUBLIC => $is_public,
+            OneStepProjectCreationForm::TEMPLATE_ID => $id,
+            OneStepProjectCreationForm::LICENSE_TYPE=> $type,
+            OneStepProjectCreationForm::CUSTOM_LICENSE => $license,
         );
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         
         $expected = array(
             'project' => $request_data
@@ -140,13 +140,13 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         $license = 'do not copy';
         
         $request_data = array(
-            RegisterProjectOneStep::FULL_NAME => $full_name,
-            RegisterProjectOneStep::UNIX_NAME => $unix_name,
-            RegisterProjectOneStep::SHORT_DESCRIPTION => $description,
-            RegisterProjectOneStep::IS_PUBLIC => $is_public,
-            RegisterProjectOneStep::TEMPLATE_ID => $id,
-            RegisterProjectOneStep::LICENSE_TYPE=> $type,
-            RegisterProjectOneStep::CUSTOM_LICENSE => $license,
+            OneStepProjectCreationForm::FULL_NAME => $full_name,
+            OneStepProjectCreationForm::UNIX_NAME => $unix_name,
+            OneStepProjectCreationForm::SHORT_DESCRIPTION => $description,
+            OneStepProjectCreationForm::IS_PUBLIC => $is_public,
+            OneStepProjectCreationForm::TEMPLATE_ID => $id,
+            OneStepProjectCreationForm::LICENSE_TYPE=> $type,
+            OneStepProjectCreationForm::CUSTOM_LICENSE => $license,
         );
         
         
@@ -156,16 +156,16 @@ class RegisterProjectOneStepTest extends TuleapTestCase {
         );
         
         $expected['project']['is_test'] = false;
-        $expected['project'][RegisterProjectOneStep::CUSTOM_LICENSE] = null;
+        $expected['project'][OneStepProjectCreationForm::CUSTOM_LICENSE] = null;
         
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         
         $this->assertEqual($expected, $single_step->getProjectValues());
     }
     
 }
 
-class RegisterProjectOneStepValidationTest extends RegisterProjectOneStepTest {
+class OneStepProjectCreationFormValidationTest extends OneStepProjectCreationFormTest {
     
     public function setUp() {
         parent::setUp();
@@ -175,7 +175,7 @@ class RegisterProjectOneStepValidationTest extends RegisterProjectOneStepTest {
     
     public function testValidateAndGenerateErrorsValidatesFullname() {
         $request_data = array();
-        $single_step = new RegisterProjectOneStep($request_data);
+        $single_step = new OneStepProjectCreationForm($request_data);
         
         $single_step->validateAndGenerateErrors();
     }

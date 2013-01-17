@@ -18,8 +18,8 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-/* @var $this->single_step_project RegisterProjectOneStep */
-require_once 'common/project/RegisterProjectOneStep.class.php';
+/* @var $this->single_step_project OneStepProjectCreationForm */
+require_once 'common/project/OneStepProjectCreationForm.class.php';
 ?>
 <form action="<?= $this->single_step_project->getFormSubmissionPath(); ?>" method="post">
     <input type="hidden" name="onestep" value="true" />
@@ -42,7 +42,7 @@ require_once 'common/project/RegisterProjectOneStep.class.php';
             <td>
                 <input size="40" 
                        type="text" 
-                       name="<?= RegisterProjectOneStep::FULL_NAME ?>" 
+                       name="<?= OneStepProjectCreationForm::FULL_NAME ?>" 
                        value="<?= $this->single_step_project->getFullName(); ?>" />
                 <br>
                 between 3 and 40 characters
@@ -54,7 +54,7 @@ require_once 'common/project/RegisterProjectOneStep.class.php';
                 <input type="text" 
                        maxlength="30" 
                        size="15" 
-                       name="<?= RegisterProjectOneStep::UNIX_NAME ?>" 
+                       name="<?= OneStepProjectCreationForm::UNIX_NAME ?>" 
                        value="<?= $this->single_step_project->getUnixName(); ?>" />
                 <br>
                 between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.
@@ -66,7 +66,7 @@ require_once 'common/project/RegisterProjectOneStep.class.php';
             <td>Short description</td>
             <td>
                 <textarea 
-                    name="<?= RegisterProjectOneStep::SHORT_DESCRIPTION ?>" 
+                    name="<?= OneStepProjectCreationForm::SHORT_DESCRIPTION ?>" 
                     wrap="virtual" 
                     cols="70" 
                     rows="3"><?= $this->single_step_project->getShortDescription(); ?></textarea>
@@ -76,14 +76,14 @@ require_once 'common/project/RegisterProjectOneStep.class.php';
             <td>Project Privacy</td>
             <td>
                 <input type="radio" 
-                       name="<?= RegisterProjectOneStep::IS_PUBLIC ?>" 
+                       name="<?= OneStepProjectCreationForm::IS_PUBLIC ?>" 
                        value="1"
                        <?= ($this->single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
                     /> 
                 Public
                 <br>
                 <input type="radio" 
-                       name="<?= RegisterProjectOneStep::IS_PUBLIC ?>" 
+                       name="<?= OneStepProjectCreationForm::IS_PUBLIC ?>" 
                        value="0"
                        <?= (! $this->single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
                     /> 
@@ -114,7 +114,7 @@ require_once 'common/project/RegisterProjectOneStep.class.php';
             <tr>
                 <td>
                     <input type="radio" 
-                           name="<?= RegisterProjectOneStep::TEMPLATE_ID ?>" 
+                           name="<?= OneStepProjectCreationForm::TEMPLATE_ID ?>" 
                            value="<?= $template->getUserGroupId(); ?>" 
                            <?= ($this->single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                         />
@@ -176,7 +176,7 @@ require_once 'common/project/RegisterProjectOneStep.class.php';
             <tr>
                 <td>
                     <input type="radio" 
-                           name="<?= RegisterProjectOneStep::TEMPLATE_ID ?>" 
+                           name="<?= OneStepProjectCreationForm::TEMPLATE_ID ?>" 
                            value="<?= $template->getUserGroupId(); ?>" 
                            <?= ($this->single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                         />
@@ -231,7 +231,7 @@ require_once 'common/project/RegisterProjectOneStep.class.php';
     <p>
         Choose the correct one because you cannot modify your project license after your project has been approved.
     </p>
-    <select name="<?= RegisterProjectOneStep::LICENSE_TYPE ?>">';
+    <select name="<?= OneStepProjectCreationForm::LICENSE_TYPE ?>">';
         <?php
         foreach ($this->available_licenses as $license_type => $license_description) :   
         ?>
@@ -246,7 +246,7 @@ require_once 'common/project/RegisterProjectOneStep.class.php';
     </select>
     <br/>
     <h3>Custom License (other)</h3>
-    <textarea name="<?= RegisterProjectOneStep::CUSTOM_LICENSE ?>" 
+    <textarea name="<?= OneStepProjectCreationForm::CUSTOM_LICENSE ?>" 
               wrap=virtual 
               cols=60 
               rows=10><?= $this->single_step_project->getCustomLicense(); ?></textarea>
