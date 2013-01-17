@@ -40,10 +40,4 @@ $additional_tabs[] = array(
     'link'     => $wiki_install_url,
     'title'    => 'Get Tuleap',
 );
-$wiki_contribute_url = '/wiki/?group_id=101&pagename=ContributePageToBeDefined';
-$additional_tabs[] = array(
-    'selected' => (boolean) (strstr(getStringFromServer('REQUEST_URI'), $wiki_contribute_url)),
-    'link'     => $wiki_contribute_url,
-    'title'    => 'Contribute',
-);
 ?>

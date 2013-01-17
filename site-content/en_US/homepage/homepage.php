@@ -66,7 +66,7 @@ if ($display_homepage_news) {
         width: 1230px; /* container + 2 * gutter */
     }
     .callout {
-        background-image: url(images/banner-large.png);
+        background-image: url(images/banner.png);
     }
 }
 @media (min-width: 768px) and (max-width: 979px) {
@@ -877,7 +877,26 @@ a.btn-warning {
 }
 
 .contribute-ways a {
-    color:white;
+    color:black;
+}
+.embed-container {
+    position: relative;
+    padding-bottom: 56.25%; /* 16/9 ratio */
+    padding-top: 30px; /* IE6 workaround*/
+    height: 0;
+    overflow: hidden;
+}
+.embed-container iframe,
+.embed-container object,
+.embed-container embed {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.embed-container {
+    margin-bottom: 1em;
 }
 </style>
 
@@ -885,12 +904,12 @@ a.btn-warning {
     <div class="span12">
         <div class="row">
             <div class="span7 offset1">
-                <p style="">Here users, developers and all contributors gather to&nbsp;create Tuleap, <strong>the&nbsp;full&nbsp;open&nbsp;source&nbsp;ALM</strong>.</p>
+                <p style="">Here users, developers and all contributors gather to&nbsp;create Tuleap, <strong>the full open&nbsp;source&nbsp;ALM</strong>.</p>
                 <a class="btn  btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
                     <i class="icon-download-alt icon-white"></i>
                     Get Tuleap</a><br />
             </div>
-            <div class="span3">
+            <div class="span3 offset1">
                 <h3>Contribute</h3>
                 <ul class="contribute-ways">
                     <li><a href="https://tuleap.net/plugins/tracker/?tracker=140">Report a bug </a></li>
@@ -913,18 +932,21 @@ a.btn-warning {
 <div class="row-fluid">
     <div class="span4"><h2>What is Tuleap?</h2>
     <p>Tuleap is a <b>full free Open Source Suite for <a href="http://en.wikipedia.org/wiki/Application_lifecycle_management">Application Lifecycle Management</a></b>.</b><br>
-          Traditional development, Requirement Management, Agile Development, IT Service management...Tuleap makes software projects more productive, collaborative and industrialized.
-          </p>
+          Traditional development, Requirement Management, Agile Development, IT Service management... Tuleap makes software projects more productive, collaborative and industrialized.
+     </p>
+	 <p><b>We don’t distinguish</b> between a “free” and an “enterprise” version. You can leverage <b>all Tuleap features</b> for <b>unlimited</b> users, <b>unlimited</b> projects and <b>unlimited</b> time. </p>
           </div>
     <div class="span4"><h2>Who is it for?</h2>
     <p>Developers, Project managers, Agilers, Quality managers, CEO, Businesses... All stackholers creating innovative applications.</p>
     <p>Large companies, SMEs, free projects, public organizations.</p>
     </div>
     
-    <div class="span4"><h2>What you get downloading it?</h2>
-    <img src="images/open-source-logo.png" alt="Tuleap Open Source" width="50px"><b>ALL Tuleap capabilities in Open Source</b> 
-    <p>Unlimited users, unlimited projects, unlimited period.</p>
-    </p><b> We don’t distinguish between a “free” and an “enterprise” version.</b>  </p>
+    <div class="span4"><h2>What is the license?</h2>
+    <img src="images/open-source-logo.png" alt="Tuleap Open Source" width="50px">
+	<p><b>Tuleap is provided under GPLv2 license</b>. You are free to access the <a href="https://tuleap.net/plugins/git/?group_id=101">source code here</a> and 
+	<a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">discuss</a> with Community members.
+    Enjoy it and <a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">share with us</a> how you use it!</p>
+    </p> </p>
     
      </div>
 </div>
@@ -936,23 +958,25 @@ a.btn-warning {
 <div class="row-fluid">
     
     <div class="span4" style="text-align:left">
-			<h2><img src="images/play.png" alt="Getting started with Tuleap" width="48px"> 
-			Get started</h2>
-			<ul>
-			<li><a href="/#screenshots">Features Overview</a></li>
-			<li><a href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
-			Try it!</a></li>
-			</ul>
-			<p>
-			<a class="btn btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install"><i class="icon-download-alt icon-white"></i> Get Tuleap</a>
-			</p>
-			</div>
+        <h2><img src="images/play.png" alt="Getting started with Tuleap" width="48px"> Get started</h2>
+        <div class="embed-container">
+            <iframe src="http://www.youtube.com/embed/mmScXlOZi0o" frameborder="0" allowfullscreen></iframe>
+        </div>
+        <center>
+            <a class="btn btn-primary" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
+                <i class="icon-download-alt icon-white"></i> Get Tuleap
+            </a>
+            <a class="btn" href="https://demo.tuleap.net/">
+                <i class="icon-desktop icon"></i> Try it
+            </a>
+        </center>
+    </div>
     
     <div class="span4" style="text-align:left">
         <h2><img src="images/help.png" alt="Contribute to Tuleap" width="48px">Get Help</h2>
         <ul>
             <li><a href="https://tuleap.net/site/">Documentation</a>
-            <li><a href="http://tuleap.com/resources/videos">Videos <i class="icon-film"></i></a></li>
+            <li><a href="http://tuleap.com/resources/videos">Videos</a></li>
             <li><a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">Ask questions</a></li>
             <li><a href="http://tuleap.com/?q=services/support">Professional Support <img src="http://p.yusukekamiyamane.com/icons/search/fugue/icons/briefcase.png" /></a>
         </li>
@@ -968,7 +992,7 @@ a.btn-warning {
 </div>
 
 <div class="page-header">
-    <h1 id="screenshots">Features overview <small>discover Tuleap pure awesomeness! <i class="icon-thumbs-up"></i></small></h1>
+    <h1 id="screenshots">Features &amp; screenshots <small>discover Tuleap pure awesomeness! <i class="icon-thumbs-up"></i></small></h1>
 </div>
 <div class="row-fluid homepage-feature" id="screenshots-plan">
     <div class="span6">
@@ -1060,7 +1084,7 @@ a.btn-warning {
 </div>
 
 <center>
-    <a class="btn btn-primary " href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install"><i class="icon-download-alt icon-white"></i> Get Tuleap now!</a>
+    <a class="btn btn-primary " href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install"><i class="icon-download-alt icon-white"></i> Get Tuleap</a>
     
     <a class="btn " href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install"><i class="icon-desktop icon"></i> Try It</a>
 </center>
