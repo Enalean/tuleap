@@ -96,6 +96,13 @@ class ProjectManager {
         return $this->_cached_projects[$group_id];
     }
 
+    /**
+     * Instanciate a project based on a database row
+     *
+     * @param array $row
+     *
+     * @return Project
+     */
     public function getProjectFromDbRow(array $row) {
         return $this->getAndCacheProject($row);
     }
