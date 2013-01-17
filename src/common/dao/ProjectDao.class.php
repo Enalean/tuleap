@@ -29,7 +29,7 @@ class ProjectDao extends DataAccessObject {
     const IS_PUBLIC        = 'is_public';
    
 
-    public function __construct($da) {
+    public function __construct($da = null) {
         parent::__construct($da);
         $this->table_name = 'groups';
     }
@@ -114,6 +114,25 @@ class ProjectDao extends DataAccessObject {
                $groupby.
                " ORDER BY group_name".
                " LIMIT ".$this->da->escapeInt($limit);
+        return $this->retrieve($sql);
+    }
+
+    public function searchSiteTemplates() {
+        $sql = "SELECT *
+         FROM groups
+         WHERE type='2'
+             AND status IN ('A','s')";
+        return $this->retrieve($sql);
+    }
+
+    public function searchProjectsUserIsAdmin($user_id) {
+        $sql = "SELECT groups.*
+            FROM groups
+              JOIN user_group ON (user_group.group_id = groups.group_id)
+            WHERE user_group.user_id = '". $this->da->escapeInt($user_id) ."'
+              AND user_group.admin_flags = 'A'
+              AND groups.status='A'
+            ORDER BY group_name";
         return $this->retrieve($sql);
     }
 

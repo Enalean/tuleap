@@ -22,7 +22,11 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
 require_once 'common/include/Response.class.php';
 
 class OneStepProjectCreationFormTest extends TuleapTestCase {
-    
+
+    protected function aOneStepProjectCreationForm($request_data) {
+        return new OneStepProjectCreationForm($request_data, aUser()->build(), mock('ProjectManager'), mock('ProjectDao'));
+    }
+
     public function testNewObjectSetsFullName() {
         $full_name = 'my_test proj';
         
@@ -30,7 +34,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
             OneStepProjectCreationForm::FULL_NAME => $full_name,
         );
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEqual($full_name, $single_step->getFullName());
     }
     
@@ -41,7 +45,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
             OneStepProjectCreationForm::UNIX_NAME => $unix_name,
         );
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEqual($unix_name, $single_step->getUnixName());
     }
     
@@ -52,7 +56,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
             OneStepProjectCreationForm::SHORT_DESCRIPTION => $description,
         );
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEqual($description, $single_step->getShortDescription());
     }
     
@@ -63,7 +67,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
             OneStepProjectCreationForm::IS_PUBLIC => $is_public,
         );
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEqual($is_public, $single_step->isPublic());
     }
     
@@ -74,7 +78,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
             OneStepProjectCreationForm::TEMPLATE_ID => $id,
         );
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEqual($id, $single_step->getTemplateId());
     }
     
@@ -85,7 +89,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
             OneStepProjectCreationForm::LICENSE_TYPE=> $type,
         );
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEqual($type, $single_step->getLicenseType());
     }
     
@@ -96,7 +100,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
             OneStepProjectCreationForm::CUSTOM_LICENSE => $license,
         );
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEqual($license, $single_step->getCustomLicense());
     }
     
@@ -119,7 +123,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
             OneStepProjectCreationForm::CUSTOM_LICENSE => $license,
         );
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         
         $expected = array(
             'project' => $request_data
@@ -158,7 +162,7 @@ class OneStepProjectCreationFormTest extends TuleapTestCase {
         $expected['project']['is_test'] = false;
         $expected['project'][OneStepProjectCreationForm::CUSTOM_LICENSE] = null;
         
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         
         $this->assertEqual($expected, $single_step->getProjectValues());
     }
@@ -175,7 +179,7 @@ class OneStepProjectCreationFormValidationTest extends OneStepProjectCreationFor
     
     public function testValidateAndGenerateErrorsValidatesFullname() {
         $request_data = array();
-        $single_step = new OneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
         
         $single_step->validateAndGenerateErrors();
     }

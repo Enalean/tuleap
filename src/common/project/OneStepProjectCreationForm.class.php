@@ -91,7 +91,22 @@ class OneStepProjectCreationForm {
      */
     private $custom_license = null;
 
-    public function __construct(array $request_data) {
+    /**
+     * @var User
+     */
+    private $creator;
+
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var ProjectDao
+     */
+    private $project_dao;
+
+    public function __construct(array $request_data, User $creator, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -99,6 +114,9 @@ class OneStepProjectCreationForm {
             ->setTemplateId($request_data)
             ->setLicenseType($request_data)
             ->setCustomLicense($request_data);
+        $this->creator = $creator;
+        $this->project_manager = $project_manager !== null ? $project_manager : ProjectManager::instance();
+        $this->project_dao     = $project_dao !== null     ? $project_dao     : new ProjectDao();
     }
     
     /**
@@ -207,19 +225,8 @@ class OneStepProjectCreationForm {
      * @return ProjectTemplate[]
      */
     public function getDefaultTemplates() {
-        $db_templates = db_query("
-            SELECT group_id, 
-                group_name, 
-                unix_group_name,
-                short_description,
-                register_time 
-            FROM groups 
-            WHERE type='2' 
-            AND status IN ('A','s')"
-        );
-
-        $templates = $this->generateTemplatesFromDbData($db_templates);
-        return $templates;     
+        $db_templates = $this->project_dao->searchSiteTemplates()->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
+        return $this->generateTemplatesFromDbData($db_templates);
     }
     
     /**
@@ -227,26 +234,24 @@ class OneStepProjectCreationForm {
      * @return ProjectTemplate[]
      */
     public function getUserTemplates() {
-        $userId = (int) user_getid();
-        
-        $db_data = db_query("
-            SELECT groups.group_name AS group_name, 
-                groups.group_id AS group_id, 
-                groups.unix_group_name AS unix_group_name,
-                groups.register_time AS register_time, 
-                groups.short_description AS short_description
-            FROM groups, user_group 
-            WHERE groups.group_id = user_group.group_id 
-            AND user_group.user_id = '". $userId ."' 
-            AND user_group.admin_flags = 'A' 
-            AND groups.status='A' 
-            ORDER BY group_name"
-        );
-        
-        $templates = $this->generateTemplatesFromDbData($db_data);
-        return $templates; 
+        $db_templates = $this->project_dao->searchProjectsUserIsAdmin($this->creator->getId())->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
+        return $this->generateTemplatesFromDbData($db_templates);
     }
-    
+
+    /**
+     *
+     * @param resource $db_data
+     * @return ProjectTemplate[]
+     */
+    private function generateTemplatesFromDbData(DataAccessResult $projects) {
+        $templates = array();
+        foreach ($projects as $project) {
+            /* @var $project Project */
+            $templates[] = new ProjectTemplate($project);
+        }
+        return $templates;
+    }
+
     /**
      * 
      * @return string
@@ -356,23 +361,6 @@ class OneStepProjectCreationForm {
         return $this;
     }
     
-    /**
-     * 
-     * @param resource $db_data
-     * @return ProjectTemplate[]
-     */
-    private function generateTemplatesFromDbData($db_data) {
-        $templates = array();
-        $row_count = db_numrows($db_data);
-
-        $project_manager = ProjectManager::instance();
-        for ($i=0; $i < $row_count; $i++) {
-            $templates[] = new ProjectTemplate($project_manager->getProject(db_result($db_data, $i, 'group_id')));
-        }
-        
-        return $templates;
-    }
-
     /**
      * 
      * @return \OneStepProjectCreationForm

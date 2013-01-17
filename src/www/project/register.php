@@ -26,7 +26,7 @@ $request      = HTTPRequest::instance();
 
 if (Config::get('sys_create_project_in_one_step')) {
     $data = $request->params;
-    $single_step_project = new OneStepProjectCreationForm($data);
+    $single_step_project = new OneStepProjectCreationForm($data, $current_user);
     
     if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
         require_once('create_project.php');

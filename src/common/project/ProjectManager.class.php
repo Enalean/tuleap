@@ -96,6 +96,10 @@ class ProjectManager {
         return $this->_cached_projects[$group_id];
     }
 
+    public function getProjectFromDbRow(array $row) {
+        return $this->getAndCacheProject($row);
+    }
+
     /**
      * @param $group_id int The id of the project to look for
      * @return Project
