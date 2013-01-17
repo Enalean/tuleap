@@ -27,7 +27,7 @@ require_once 'common/valid/Rule.class.php';
 /**
  * Controller view helper class 
  */
-class RegisterProjectOneStep {
+class OneStepProjectCreationForm {
     
     const FULL_NAME = 'form_full_name';
     const UNIX_NAME = 'form_unix_name';
@@ -241,7 +241,7 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param array $data
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setUnixName(array $data) {
         if(isset($data[self::UNIX_NAME])) {
@@ -254,7 +254,7 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param array $data
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setFullName(array $data) {
         if(isset($data[self::FULL_NAME])) {
@@ -267,7 +267,7 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param array $data
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setShortDescription(array $data) {
         if(isset($data[self::SHORT_DESCRIPTION])) {
@@ -280,7 +280,7 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param array $data
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setTemplateId(array $data) {
         if(isset($data[self::TEMPLATE_ID])) {
@@ -293,7 +293,7 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param array $data
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setIsPublic(array $data) {
         if(isset($data[self::IS_PUBLIC])) {
@@ -306,7 +306,7 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param string $path
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setFormSubmissionPath(string $path) {
         $this->form_submission_path = $path;
@@ -316,7 +316,7 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param array $data
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setLicenseType($data) {
         if(isset($data[self::LICENSE_TYPE])) {
@@ -329,7 +329,7 @@ class RegisterProjectOneStep {
     /**
      * 
      * @param string $data
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setCustomLicense($data) {
         if(isset($data[self::CUSTOM_LICENSE])) {
@@ -363,7 +363,7 @@ class RegisterProjectOneStep {
 
     /**
      * 
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function validateFullName() {
         if ($this->getFullName() == null) {
@@ -384,7 +384,7 @@ class RegisterProjectOneStep {
     
     /**
      * 
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function validateShortDescription() {
         if ($this->getShortDescription() == null) {
@@ -397,7 +397,7 @@ class RegisterProjectOneStep {
     
     /**
      * 
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function validateUnixName() {
         if ($this->getUnixName() == null) {
@@ -419,7 +419,7 @@ class RegisterProjectOneStep {
     
     /**
      * 
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function validateTemplateId() {
         if ($this->getTemplateId() == null) {
@@ -441,7 +441,7 @@ class RegisterProjectOneStep {
     
     /**
      * 
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function validateProjectPrivacy() {
         if ($this->isPublic() === null) {
@@ -454,7 +454,7 @@ class RegisterProjectOneStep {
     
     /**
      * 
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function validateLicense() {
         if ($this->getLicenseType() === null) {
@@ -466,7 +466,7 @@ class RegisterProjectOneStep {
     }
     /**
      * 
-     * @return \RegisterProjectOneStep
+     * @return \OneStepProjectCreationForm
      */
     private function setIsNotValid() {
         $this->is_valid = false;
