@@ -1042,7 +1042,7 @@ a.btn-warning {
         <img src="images/logos/Git-Logo.png" /> <img src="images/logos/subversion-logo.png" /> <img src="images/logos/cvs.png" />
 		<img src="images/logos/hudson-logo.png" /> <img src="images/logos/jenkins_logo.png" />
 		</p>
-        <p><a href="images/screenshots/">Learn more on tuleap.com <i class="icon-external-link"></i></a></p>
+        <p><a href="http://tuleap.com/?q=features/version-control">Learn more on tuleap.com <i class="icon-external-link"></i></a></p>
     </div>
 </div>
 
