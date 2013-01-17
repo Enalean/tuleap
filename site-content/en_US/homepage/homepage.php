@@ -65,9 +65,6 @@ if ($display_homepage_news) {
     .main_body_row {
         width: 1230px; /* container + 2 * gutter */
     }
-    .callout {
-        background-image: url(images/banner.png);
-    }
 }
 @media (min-width: 768px) and (max-width: 979px) {
     .main_body_row {
