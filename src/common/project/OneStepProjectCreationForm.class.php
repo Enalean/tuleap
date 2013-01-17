@@ -364,15 +364,10 @@ class OneStepProjectCreationForm {
     private function generateTemplatesFromDbData($db_data) {
         $templates = array();
         $row_count = db_numrows($db_data);
-        
+
+        $project_manager = ProjectManager::instance();
         for ($i=0; $i < $row_count; $i++) {
-            $template = new ProjectTemplate();
-            $template->setUserGroupId(db_result($db_data, $i, 'group_id'))
-                    ->setUserGroupName(db_result($db_data, $i, 'group_name'))
-                    ->setDateRegistered(db_result($db_data, $i, 'register_time'))
-                    ->setUnixGroupName(db_result($db_data, $i, 'unix_group_name'))
-                    ->setShortDescription(db_result($db_data, $i, 'short_description'));
-            $templates[] = $template;
+            $templates[] = new ProjectTemplate($project_manager->getProject(db_result($db_data, $i, 'group_id')));
         }
         
         return $templates;

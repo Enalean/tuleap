@@ -23,19 +23,22 @@ require_once 'common/project/Project.class.php';
 
 class ProjectTemplate {
     
-    const ADMIN_GROUP = 100;
-    
+    /**
+     * @var Project
+     */
+    private $project;
+
     /**
      *
      * @var int 
      */
-    private $user_group_id;
+    private $group_id;
     
     /**
      *
      * @var string 
      */
-    private $user_group_name;
+    private $group_name;
     
     /**
      *
@@ -61,17 +64,18 @@ class ProjectTemplate {
      */
     private $text_purifier;
 
-    public function __construct() {
+    public function __construct(Project $project) {
+        $this->project = $project;
         $this->text_purifier = Codendi_HTMLPurifier::instance();
     }
-    
+
     /**
      * 
      * @param int $group_id
      * @return \Template
      */
     public function setUserGroupId($group_id) {
-        $this->user_group_id = (int) $group_id;
+        $this->group_id = (int) $group_id;
         return $this;
     }
     
@@ -81,7 +85,7 @@ class ProjectTemplate {
      * @return \Template
      */
     public function setUserGroupName($group_name) {
-        $this->user_group_name = (string) $group_name;
+        $this->group_name = (string) $group_name;
         return $this;
     }
     
@@ -117,18 +121,10 @@ class ProjectTemplate {
     
     /**
      * 
-     * @return bool
-     */
-    public function userBelongsToAdminGroup() {
-        return $this->user_group_id == self::ADMIN_GROUP;
-    }
-    
-    /**
-     * 
      * @return int
      */
     public function getUserGroupId() {
-        return $this->user_group_id;
+        return $this->project->getID();
     }
     
     /**
@@ -136,7 +132,7 @@ class ProjectTemplate {
      * @return string
      */
     public function getUserGroupName() {
-        return $this->user_group_name;
+        return $this->project->getPublicName();
     }
     
     /**
@@ -145,7 +141,7 @@ class ProjectTemplate {
      * @return string
      */
     public function getFormattedDateRegistered($format) {
-        return date($format, $this->date_registered); 
+        return date($format, $this->project->getStartDate());
     }
     
     /**
@@ -153,7 +149,7 @@ class ProjectTemplate {
      * @return string
      */
     public function getUnixGroupName() {
-        return $this->unix_group_name;
+        return $this->project->getUnixName();
     }
     
     /**
@@ -161,30 +157,9 @@ class ProjectTemplate {
      * @return array List of names of admin users for this template
      */
     public function getAdminUserNames() {
-        $group_id = (int) $this->getUserGroupId();
-        
-        if ($this->userBelongsToAdminGroup()) {
-            $res_admin = db_query("
-                SELECT user_name AS user_name 
-                FROM user
-                WHERE user_id = 101"
-                );
-        } else {
-            $res_admin = db_query("
-                SELECT user.user_name AS user_name
-                FROM user,user_group
-                WHERE user_group.user_id=user.user_id 
-                    AND user_group.group_id = $group_id 
-                    AND user_group.admin_flags = 'A'"
-                );
-        }
-        
-        $admins = array();
-        while ($row_admin = db_fetch_array($res_admin)) {
-            $admins[] = $row_admin['user_name'];
-        }
-        
-        return $admins;
+        $ugroup_manager = new UGroupManager();
+        $admin_ugroup   = $ugroup_manager->getUGroup($this->project, UGroup::PROJECT_ADMIN);
+        return $admin_ugroup->getMembersUserName();
     }
     
     /**
@@ -192,12 +167,7 @@ class ProjectTemplate {
      * @return array List of names
      */
     public function getServicesUsed() {
-        if($this->getUserGroupId() == null) {
-            return array();
-        }
-        
-        $template_project = new Project($this->getUserGroupId());
-        return $template_project->getAllUsedServices();
+        return $this->project->getAllUsedServices();
     }
     
     /**
@@ -206,7 +176,7 @@ class ProjectTemplate {
      */
     public function getPurifiedUserGroupName() {
         return $this->text_purifier->purify(
-                util_unconvert_htmlspecialchars($this->user_group_name), 
+                util_unconvert_htmlspecialchars($this->project->getPublicName()),
                 CODENDI_PURIFIER_CONVERT_HTML
                 );
     }
@@ -217,9 +187,9 @@ class ProjectTemplate {
      */
     public function getPurifiedShortDescription() {
         return $this->text_purifier->purify(
-                util_unconvert_htmlspecialchars($this->short_description), 
+                util_unconvert_htmlspecialchars($this->project->getDescription()),
                 CODENDI_PURIFIER_LIGHT, 
-                $this->user_group_id
+                $this->group_id
                 );
     }
 }
