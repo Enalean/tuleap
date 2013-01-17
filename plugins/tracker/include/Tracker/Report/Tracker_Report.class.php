@@ -499,7 +499,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
 
         //  Query title
         $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</h3>';
-
         $used = array();
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
@@ -514,10 +513,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
 
         //@todo Find a better way to manage search in followup thru Tracker report
         $followupSearchForm = '';
-        $params = array('html' => &$followupSearchForm, 'report_id' => $this->id, 'request' => $request);
+        $params = array('html' => &$followupSearchForm, 'request' => $request);
         EventManager::instance()->processEvent('tracker_report_followup_search', $params);
         $criteria_fetched[] = '<li id="tracker_report_crit_followup_search" class ="lab_features">' . $followupSearchForm. '</li>';
-
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
  
         $html .= '<div align="center">';
@@ -796,6 +794,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
             $html .= '</div>';
             echo $html;
+
             if ($report_can_be_modified) {
                 $this->getTracker()->displayFooter($layout);
                 exit();
