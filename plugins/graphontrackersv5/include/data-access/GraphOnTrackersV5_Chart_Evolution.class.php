@@ -27,9 +27,9 @@ require_once('GraphOnTrackersV5_Chart_EvolutionDao.class.php');
 require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
 
 /**
- * Base class to provide a Scrum Burndown Chart
+ * Base class to provide a temporal evolution Chart
  */
-class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart {
+class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
     
     /**
      * The date (timestamp) the sprint start
