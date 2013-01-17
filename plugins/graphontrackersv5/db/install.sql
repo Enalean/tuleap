@@ -80,6 +80,6 @@ CREATE TABLE plugin_graphontrackersv5_evolution_chart(
   id int(11)  NOT NULL PRIMARY KEY ,
   field_id int(11),
   start_date int(11),
-  step int(11),
+  nb_step int(11),
   unit int(11)
 );

@@ -1,4 +1,292 @@
 <?php
+/*
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
+ *
+ * Originally written by Yoann CELTON, 2013. Jtekt Europe SAS.
+ *
+ * This file is a part of Tuleap.
+ *
+ * Tuleap is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * Tuleap is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Tuleap; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ */
+require_once('GraphOnTrackersV5_Chart.class.php');
+require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Evolution_DataBuilder.class.php');
+require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Evolution.class.php');
+require_once('GraphOnTrackersV5_Chart_EvolutionDao.class.php');
+require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
 
+/**
+ * Base class to provide a Scrum Burndown Chart
+ */
+class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart {
+    
+    /**
+     * The date (timestamp) the sprint start
+     */
+    protected $start_date;
+    public function getStartDate() { return $this->start_date; }
+    public function setStartDate($start_date) { return $this->start_date = $start_date; }
+    
+    /**
+     * The unit of the duration
+     */
+    protected $unit;
+    public function getUnit() { return $this->unit; }
+    public function setUnit($unit) { return $this->unit = $unit; }
+    
+    /**
+     * The nb of point of the chart
+     */
+    protected $nb_step;
+    public function getNbStep() { return $this->nb_step; }
+    public function setTimeSpan($nb_step) { return $this->nb_step = $nb_step; }
+    
+    /**
+     * The observed field id
+     */
+    protected $field_id;
+    public function getFieldId() { return $this->field_id; }
+    public function setFieldId($field_id) { return $this->field_id = $field_id; }
+    
+    /**
+     * class constructor: use parent one
+     *
+     */    
+
+    /** 
+     * Load object from session
+     */
+    public function loadFromSession() {
+        $this->report_session = self::getSession($this->renderer->report->id, $this->renderer->id);
+        $chart_in_session = $this->report_session->get($this->id);
+        if (isset($chart_in_session['field_id']) && $chart_in_session['field_id'] !== '') {
+            $this->field_id   = $chart_in_session['field_id'];
+            $this->start_date = $chart_in_session['start_date'];
+            $this->unit       = $chart_in_session['unit'];
+            $this->nb_step  = $chart_in_session['nb_step'];
+        } else {
+            $this->loadFromDb();
+            $this->registerInSession();
+        }
+    }
+
+    /** 
+     * Load object from DB
+     */
+    public function loadFromDb() {
+        $arr = $this->getDao()->searchById($this->id)->getRow();
+        $this->field_id   = $arr['field_id'];
+        $this->start_date = $arr['start_date'];
+        $this->unit = $arr['unit'];
+        $this->nb_step   = $arr['nb_step'];
+    }
+
+    public function registerInSession() {
+        parent::registerInSession();
+        $this->report_session->set("$this->id.field_id", $this->field_id);
+        $this->report_session->set("$this->id.start_date", $this->start_date);
+        $this->report_session->set("$this->id.unit", $this->unit);
+        $this->report_session->set("$this->id.nb_step", $this->nb_step);
+    }
+    
+    protected function getDao() {
+        return new GraphOnTrackersV5_Chart_EvolutionDao();
+    }
+    
+    public static function create($graphic_report, $id, $rank, $title, $description, $width, $height) {
+        $session = self::getSession($graphic_report->report->id, $graphic_report->id);
+        
+        $session->set("$id.field_id", 0);
+        $session->set("$id.start_date", 0);
+        $session->set("$id.nb_step", 0);
+        $session->set("$id.unit", 0);
+        $c = new GraphOnTrackersV5_Chart_Evolution($graphic_report, $id, $rank, $title, $description, $width, $height);
+        $c->registerInSession();
+        return $c;
+    }
+    
+    /**
+     * Return the specific properties as a row
+     * array('prop1' => 'value', 'prop2' => 'value', ...)
+     * @return array
+     */
+    public function getSpecificRow() {
+        return array(
+            'field_id'   => $this->getFieldId(),
+            'start_date' => $this->getStartDate(), 
+            'nb_step'   => $this->getNbStep(),
+        	'unit'   => $this->getUnit(),
+        );
+    }
+    
+    /**
+     * Return the chart type (gantt, bar, pie, ...)
+     */
+    public function getChartType() {
+        return "evolution";
+    }
+    
+    /**
+     * @return GraphOnTrackerV5_Engine The engine associated to the concrete chart
+     */
+    protected function getEngine() {
+        return new GraphOnTrackersV5_Engine_Evolution();
+    }
+    
+    /**
+     * @return ChartDataBuilder The data builder associated to the concrete chart
+     */
+    protected function getChartDataBuilder($artifacts) {
+        return new GraphOnTrackersV5_Evolution_DataBuilder($this,$artifacts);
+    }
+    
+    /**
+     * Allow update of the specific properties of the concrete chart
+     * @return boolean true if the update is successful
+     */
+    protected function updateSpecificProperties($row) {
+        $session = self::getSession($this->renderer->report->id, $this->renderer->id);
+        
+        $session->set("$this->id.field_id", $row['field_id']);
+        $session->set("$this->id.start_date", strtotime($row['start_date']));
+        $session->set("$this->id.nb_step", $row['nb_step']);
+        $session->set("$this->id.unit", $row['unit']);
+        
+        $session->setHasChanged();
+        
+        $this->setFieldId($row['field_id']);
+        $this->setStartDate(strtotime($row['start_date']));
+        $this->setUnit($row['unit']);
+        $this->setNbStep($row['nb_step']);
+        
+        return true;
+        
+    }
+    
+    /**
+     * User as permission to visualize the chart
+     */
+    public function userCanVisualize() {
+        $ff = Tracker_FormElementFactory::instance();
+        $observed_field = $ff->getFormElementById($this->field_id);
+        if ($observed_field && $observed_field->userCanRead()) {
+            return true;
+        }
+        return false;
+    }
+    
+    /**
+     * @return array of HTML_Element for properties
+     */
+    public function getProperties() {
+        $unitSelect = new HTML_Element_Selectbox(
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_nb_step'), 
+                    'chart[unit]', 
+                    'value');
+        $unitSelect->addMultipleOptions(array(
+                                              0 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_day'),
+                                              1 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_week'),
+                                              2 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_month'),
+                                              ), $this->getUnit());
+        return array_merge(parent::getProperties(),
+            array(
+                'field_id'   => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
+                    $this->getTracker(), 
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_field'),
+                    'chart[field_id]', 
+                    $this->getFieldId()),
+                'start_date' => new HTML_Element_Input_Date(
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_start_date'), 
+                    'chart[start_date]', 
+                    $this->getStartDate()),
+                'nb_step'   => new HTML_Element_Input_Text(
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_unit'), 
+                    'chart[duration]', 
+                    $this->getNbStep(), 
+                    4),
+                'unit'   => ( $unitSelect)
+        ));
+    }
+    
+    public function createDb($id) {
+        $field_id   = $this->getFieldId();
+        if (!is_int($field_id) && !is_string($field_id) && $field_id) {
+            $field_id = $field_id->getid();
+        }
+        $start_date = $this->getStartDate();
+        $unit       = $this->getUnit();
+        $nb_step    = $this->getNbStep();
+        return $this->getDao()->save($id, $field_id, $nb_step, $unit);
+    }
+    
+    public function updateDb() {
+        $field_id   = $this->getFieldId();
+        $start_date = $this->getStartDate();
+        $unit       = $this->getUnit();
+        $nb_step    = $this->getNbStep();
+        return $this->getDao()->save($this->id, $field_id, $nb_step, $unit);
+    }
+    
+    /**
+     * Sets the specific properties of the concrete chart from XML
+     * 
+     * @param SimpleXMLElement $xml characterising the chart
+     * @param array $formsMapping associating xml IDs to real fields
+     */
+    public function setSpecificPropertiesFromXML($xml, $formsMapping) {
+        if ($xml['start_date']) {
+            $this->setStartDate((int)$xml['start_date']);
+        }
+        if ($xml['unit']) {
+            $this->setUnit((int)$xml['unit']);
+        }
+        if ($xml['nb_step']) {
+            $this->setUnit((int)$xml['nb_step']);
+        }
+        if (isset($formsMapping[(int)$xml['field_id']])) {
+            $this->setFieldId($formsMapping[(int)$xml['field_id']]);
+        }
+    }
+    
+    /**
+     * Creates an array of specific properties of this chart
+     * 
+     * @return array containing the properties
+     */
+    public function arrayOfSpecificProperties() {
+        return array('start_date' => $this->getStartDate(),
+                     'field_id' => $this->getFieldId(),
+                     'unit'		=> $this->getUnit(),
+                     'nb_step' => $this->getNbStep());        
+    }
+    
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
+        parent::exportToXML(&$root, $formsMapping);
+        if ($this->start_date) {
+            $root->addAttribute('start_date', $this->start_date);
+        }
+        if ($this->nb_step) {
+            $root->addAttribute('nb_step', $this->nb_step);
+        }
+        if ($this->unit) {
+            $root->addAttribute('unit', $this->unit);
+        }
+        if ($this->field_id) {
+            $root->addAttribute('effort_field', array_search($this->field_id, $formsMapping));
+        }
+    }
+
+}
 
 ?>
