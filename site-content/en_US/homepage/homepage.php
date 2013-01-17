@@ -958,7 +958,7 @@ a.btn-warning {
         </li>
     </div>
     <div class="span4">
-        <h2><?= $Language->getText('homepage', 'news_title') ?></h2>
+        <h2>Latest News</h2>
         <?= news_show_latest($GLOBALS['sys_news_group'], 1, true, false, true, 2) ?>
     </div>
 </div>
