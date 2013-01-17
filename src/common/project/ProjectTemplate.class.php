@@ -30,36 +30,6 @@ class ProjectTemplate {
 
     /**
      *
-     * @var int 
-     */
-    private $group_id;
-    
-    /**
-     *
-     * @var string 
-     */
-    private $group_name;
-    
-    /**
-     *
-     * @var string 
-     */
-    private $date_registered;
-    
-    /**
-     *
-     * @var string 
-     */
-    private $unix_group_name;
-    
-    /**
-     *
-     * @var string 
-     */
-    private $short_description;
-    
-    /**
-     *
      * @var Codendi_HTMLPurifier 
      */
     private $text_purifier;
@@ -69,56 +39,6 @@ class ProjectTemplate {
         $this->text_purifier = Codendi_HTMLPurifier::instance();
     }
 
-    /**
-     * 
-     * @param int $group_id
-     * @return \Template
-     */
-    public function setUserGroupId($group_id) {
-        $this->group_id = (int) $group_id;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @param string $group_name
-     * @return \Template
-     */
-    public function setUserGroupName($group_name) {
-        $this->group_name = (string) $group_name;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @param string $date
-     * @return \Template
-     */
-    public function setDateRegistered($date) {
-        $this->date_registered = $date;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @param string $name
-     * @return \Template
-     */
-    public function setUnixGroupName($name) {
-        $this->unix_group_name = $name;
-        return $this;
-    }
-    
-    /**
-     * 
-     * @param string $description
-     * @return \Template
-     */
-    public function setShortDescription($description) {
-        $this->short_description = $description;
-        return $this;
-    }
-    
     /**
      * 
      * @return int
@@ -189,7 +109,7 @@ class ProjectTemplate {
         return $this->text_purifier->purify(
                 util_unconvert_htmlspecialchars($this->project->getDescription()),
                 CODENDI_PURIFIER_LIGHT, 
-                $this->group_id
+                $this->project->getID()
                 );
     }
 }
