@@ -20,14 +20,14 @@
 
 require_once 'RegisterProjectStep.class.php';
 require_once 'common/include/TemplateSingleton.class.php';
-require_once 'ProjectTemplate.class.php';
+require_once 'ProjectCreationTemplatePresenter.class.php';
 require_once 'common/valid/Rule.class.php';
 
 
 /**
  * Controller view helper class 
  */
-class OneStepProjectCreationForm {
+class OneStepProjectCreationPresenter {
     
     const FULL_NAME = 'form_full_name';
     const UNIX_NAME = 'form_unix_name';
@@ -248,7 +248,7 @@ class OneStepProjectCreationForm {
         
     /**
      * 
-     * @return ProjectTemplate[]
+     * @return ProjectCreationTemplatePresenter[]
      */
     public function getDefaultTemplates() {
         $db_templates = $this->project_dao->searchSiteTemplates()->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
@@ -257,7 +257,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return ProjectTemplate[]
+     * @return ProjectCreationTemplatePresenter[]
      */
     public function getUserTemplates() {
         $db_templates = $this->project_dao->searchProjectsUserIsAdmin($this->creator->getId())->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
@@ -267,13 +267,13 @@ class OneStepProjectCreationForm {
     /**
      *
      * @param resource $db_data
-     * @return ProjectTemplate[]
+     * @return ProjectCreationTemplatePresenter[]
      */
     private function generateTemplatesFromDbData(DataAccessResult $projects) {
         $templates = array();
         foreach ($projects as $project) {
             /* @var $project Project */
-            $templates[] = new ProjectTemplate($project, $this->getTemplateId());
+            $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());
         }
         return $templates;
     }
@@ -289,7 +289,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setUnixName(array $data) {
         if(isset($data[self::UNIX_NAME])) {
@@ -302,7 +302,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setFullName(array $data) {
         if(isset($data[self::FULL_NAME])) {
@@ -315,7 +315,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setShortDescription(array $data) {
         if(isset($data[self::SHORT_DESCRIPTION])) {
@@ -328,7 +328,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setTemplateId(array $data) {
         if(isset($data[self::TEMPLATE_ID])) {
@@ -341,7 +341,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setIsPublic(array $data) {
         if(isset($data[self::IS_PUBLIC])) {
@@ -354,7 +354,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param string $path
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setFormSubmissionPath(string $path) {
         $this->form_submission_path = $path;
@@ -364,7 +364,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setLicenseType($data) {
         if(isset($data[self::LICENSE_TYPE])) {
@@ -377,7 +377,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param string $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setCustomLicense($data) {
         if(isset($data[self::CUSTOM_LICENSE])) {
@@ -389,7 +389,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateFullName() {
         if ($this->getFullName() == null) {
@@ -410,7 +410,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateShortDescription() {
         if ($this->getShortDescription() == null) {
@@ -423,7 +423,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateUnixName() {
         if ($this->getUnixName() == null) {
@@ -445,7 +445,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateTemplateId() {
         if ($this->getTemplateId() == null) {
@@ -467,7 +467,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateProjectPrivacy() {
         if ($this->isPublic() === null) {
@@ -480,7 +480,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateLicense() {
         if ($this->getLicenseType() === null) {
@@ -492,7 +492,7 @@ class OneStepProjectCreationForm {
     }
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setIsNotValid() {
         $this->is_valid = false;

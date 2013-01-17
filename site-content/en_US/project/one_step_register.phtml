@@ -43,7 +43,7 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
                 <div class="controls">
                     <input size="40"
                            type="text"
-                           name="<?= OneStepProjectCreationForm::FULL_NAME ?>"
+                           name="<?= OneStepProjectCreationPresenter::FULL_NAME ?>"
                            value="<?= $this->single_step_project->getFullName(); ?>" />
                     <span class="help-block">between 3 and 40 characters</span>
                 </div>
@@ -54,7 +54,7 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
                     <input type="text"
                            maxlength="30"
                            size="15"
-                           name="<?= OneStepProjectCreationForm::UNIX_NAME ?>"
+                           name="<?= OneStepProjectCreationPresenter::UNIX_NAME ?>"
                            value="<?= $this->single_step_project->getUnixName(); ?>" />
                     <span class="help-block">between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.<br />
                     <span class="label label-info">Info</span> The short name is a technical name used in various URLs (project URL and source code repositories) and other references.
@@ -65,7 +65,7 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
                 <label class="control-label">Short description</label>
                 <div class="controls">
                     <textarea
-                        name="<?= OneStepProjectCreationForm::SHORT_DESCRIPTION ?>"
+                        name="<?= OneStepProjectCreationPresenter::SHORT_DESCRIPTION ?>"
                         wrap="virtual"
                         cols="40"
                         rows="3"><?= $this->single_step_project->getShortDescription(); ?></textarea>
@@ -76,14 +76,14 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
                 <label class="control-label">Project Privacy</label>
                 <div class="controls">
                     <input type="radio"
-                           name="<?= OneStepProjectCreationForm::IS_PUBLIC ?>"
+                           name="<?= OneStepProjectCreationPresenter::IS_PUBLIC ?>"
                            value="1"
                            <?= ($this->single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
                         />
                     Public
                     <br>
                     <input type="radio"
-                           name="<?= OneStepProjectCreationForm::IS_PUBLIC ?>"
+                           name="<?= OneStepProjectCreationPresenter::IS_PUBLIC ?>"
                            value="0"
                            <?= (! $this->single_step_project->isPublic()) ? 'checked="checked"' : '' ?>
                         />
@@ -117,7 +117,7 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
                             <tr>
                                 <td>
                                     <input type="radio"
-                                           name="<?= OneStepProjectCreationForm::TEMPLATE_ID ?>"
+                                           name="<?= OneStepProjectCreationPresenter::TEMPLATE_ID ?>"
                                            value="<?= $template->getUserGroupId(); ?>"
                                            <?= ($this->single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                                         />
@@ -175,7 +175,7 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
                             <tr>
                                 <td>
                                     <input type="radio"
-                                           name="<?= OneStepProjectCreationForm::TEMPLATE_ID ?>"
+                                           name="<?= OneStepProjectCreationPresenter::TEMPLATE_ID ?>"
                                            value="<?= $template->getUserGroupId(); ?>"
                                            <?= ($this->single_step_project->getTemplateId() == $template->getUserGroupId()) ? 'checked="checked"' : ''; ?>
                                         />
@@ -228,7 +228,7 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
         <p>
             Choose the correct one because you cannot modify your project license after your project has been approved.
         </p>
-        <select name="<?= OneStepProjectCreationForm::LICENSE_TYPE ?>">';
+        <select name="<?= OneStepProjectCreationPresenter::LICENSE_TYPE ?>">';
             <?php
             foreach ($this->available_licenses as $license_type => $license_description) :
             ?>
@@ -243,7 +243,7 @@ require_once 'common/project/OneStepProjectCreationForm.class.php';
         </select>
         <br/>
         <h3>Custom License (other)</h3>
-        <textarea name="<?= OneStepProjectCreationForm::CUSTOM_LICENSE ?>"
+        <textarea name="<?= OneStepProjectCreationPresenter::CUSTOM_LICENSE ?>"
                   wrap=virtual
                   cols=60
                   rows=10><?= $this->single_step_project->getCustomLicense(); ?></textarea>

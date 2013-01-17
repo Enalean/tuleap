@@ -21,7 +21,7 @@
 
 require_once 'common/project/Project.class.php';
 
-class ProjectTemplate {
+class ProjectCreationTemplatePresenter {
     
     /**
      * @var Project
