@@ -24,7 +24,7 @@ require_once 'common/include/Response.class.php';
 class OneStepProjectCreationFormTest extends TuleapTestCase {
 
     protected function aOneStepProjectCreationForm($request_data) {
-        return new OneStepProjectCreationForm($request_data, aUser()->build(), mock('ProjectManager'), mock('ProjectDao'));
+        return new OneStepProjectCreationForm($request_data, aUser()->build(), array(), mock('ProjectManager'), mock('ProjectDao'));
     }
 
     public function testNewObjectSetsFullName() {

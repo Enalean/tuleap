@@ -37,6 +37,14 @@ class OneStepProjectCreationForm {
     const CUSTOM_LICENSE = 'form_license_other';
     const SHORT_DESCRIPTION = 'form_short_description';
 
+    public $full_name_label         = self::FULL_NAME;
+    public $unix_name_label         = self::UNIX_NAME;
+    public $is_public_label         = self::IS_PUBLIC;
+    public $template_id_label       = self::TEMPLATE_ID;
+    public $license_type_label      = self::LICENSE_TYPE;
+    public $custom_license_label    = self::CUSTOM_LICENSE;
+    public $short_description_label = self::SHORT_DESCRIPTION;
+
     /**
      *
      * @var string 
@@ -92,6 +100,11 @@ class OneStepProjectCreationForm {
     private $custom_license = null;
 
     /**
+     * @var array
+     */
+    private $available_licenses;
+
+    /**
      * @var User
      */
     private $creator;
@@ -106,7 +119,7 @@ class OneStepProjectCreationForm {
      */
     private $project_dao;
 
-    public function __construct(array $request_data, User $creator, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
+    public function __construct(array $request_data, User $creator, array $licenses, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -114,9 +127,10 @@ class OneStepProjectCreationForm {
             ->setTemplateId($request_data)
             ->setLicenseType($request_data)
             ->setCustomLicense($request_data);
-        $this->creator = $creator;
-        $this->project_manager = $project_manager !== null ? $project_manager : ProjectManager::instance();
-        $this->project_dao     = $project_dao !== null     ? $project_dao     : new ProjectDao();
+        $this->available_licenses = $licenses;
+        $this->creator            = $creator;
+        $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
+        $this->project_dao        = $project_dao !== null     ? $project_dao     : new ProjectDao();
     }
     
     /**
@@ -211,7 +225,19 @@ class OneStepProjectCreationForm {
     public function getLicenseType() {
         return $this->license_type;
     }
-    
+
+    public function getAvailableLicenses() {
+        $licenses = array();
+        foreach ($this->available_licenses as $license_type => $license_description) {
+            $licenses[] = array(
+                'license_type'        => $license_type,
+                'license_description' => $license_description,
+                'isSelected'          => ($license_type == $this->getLicenseType())
+            );
+        }
+        return $licenses;
+    }
+
     /**
      * 
      * @return blob
@@ -247,7 +273,7 @@ class OneStepProjectCreationForm {
         $templates = array();
         foreach ($projects as $project) {
             /* @var $project Project */
-            $templates[] = new ProjectTemplate($project);
+            $templates[] = new ProjectTemplate($project, $this->getTemplateId());
         }
         return $templates;
     }

@@ -34,16 +34,22 @@ class ProjectTemplate {
      */
     private $text_purifier;
 
-    public function __construct(Project $project) {
-        $this->project = $project;
+    /**
+     * @var integer
+     */
+    private $selected_template_id;
+
+    public function __construct(Project $project, $selected_template_id) {
+        $this->project       = $project;
         $this->text_purifier = Codendi_HTMLPurifier::instance();
+        $this->selected_template_id = $selected_template_id;
     }
 
     /**
      * 
      * @return int
      */
-    public function getUserGroupId() {
+    public function getGroupId() {
         return $this->project->getID();
     }
     
@@ -60,8 +66,8 @@ class ProjectTemplate {
      * @param string $format A valid php date format
      * @return string
      */
-    public function getFormattedDateRegistered($format) {
-        return date($format, $this->project->getStartDate());
+    public function getFormattedDateRegistered() {
+        return date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->project->getStartDate());
     }
     
     /**
@@ -87,7 +93,7 @@ class ProjectTemplate {
      * @return array List of names
      */
     public function getServicesUsed() {
-        return $this->project->getAllUsedServices();
+        return implode(', ', $this->project->getAllUsedServices());
     }
     
     /**
@@ -111,6 +117,10 @@ class ProjectTemplate {
                 CODENDI_PURIFIER_LIGHT, 
                 $this->project->getID()
                 );
+    }
+
+    public function isSelectedTemplate() {
+        return $this->selected_template_id == $this->project->getID();
     }
 }
 
