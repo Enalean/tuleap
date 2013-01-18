@@ -165,17 +165,21 @@
         <p>
             Choose the correct one because you cannot modify your project license after your project has been approved.
         </p>
-        <select name="{{license_type_label}}">
-            {{#getAvailableLicenses}}
-            <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
-            {{/getAvailableLicenses}}
-        </select>
-        <br/>
-        <h3>Custom License (other)</h3>
-        <textarea name="{{custom_license_label}}"
-                  wrap=virtual
-                  cols=60
-                  rows=10>{{getCustomLicense}}</textarea>
+        <div class="control-group">
+            <div class="controls">
+                <select name="{{license_type_label}}">
+                    {{#getAvailableLicenses}}
+                    <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
+                    {{/getAvailableLicenses}}
+                </select>
+                <br/>
+                <h3>Custom License (other)</h3>
+                <textarea name="{{custom_license_label}}"
+                          wrap=virtual
+                          cols=60
+                          rows=10>{{getCustomLicense}}</textarea>
+            </div>
+        </div>
         <legend>That's it !</legend>
 
         <p>
@@ -183,6 +187,11 @@
             You will receive a notification when the system administrator has validated it.
             Then, you will be able to access your new project workspace. Enjoy!
         </p>
-        <input type="submit" value="Create the project" name="create_project" class="btn btn-primary"/>
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" value="Create the project" name="create_project" class="btn btn-primary"/>
+                <input type="submit" value="Cancel" name="cancel" class="btn"/>
+            </div>
+        </div>
     </form>
 </div>
