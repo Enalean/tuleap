@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 class WorkflowManager {
     protected $tracker;

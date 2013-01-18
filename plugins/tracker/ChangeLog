@@ -1,3 +1,6 @@
+Version 5.67 - Tuleap 5.9
+    * Fix CSRF missing include
+
 Version 5.66 - Tuleap 5.9
     * Add autoload to trackers
 
