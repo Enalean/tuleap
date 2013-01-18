@@ -109,25 +109,19 @@
                         {{#getDefaultTemplates}}
                             <tr>
                                 <td>
-                                    <input type="radio"
+                                    <label class="radio">
+                                        <input type="radio"
                                            name="{{template_id_label}}"
                                            value="{{getGroupId}}"
                                            {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
                                         />
-                                </td>
-                                <td>
                                     <b>{{getPurifiedUserGroupName}}</b>
                                     ({{getFormattedDateRegistered}})
                                     <i>{{getPurifiedShortDescription}}</i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                </td>
-                                <td>
-                                   <i>Contact: {{{getAdminUserNames}}}</i>
-                                    <br />
-                                    <br />
+                                    </label>
+                                    <p>
+                                        <i>Contact: {{{getAdminUserNames}}}</i>
+                                    </p>
                                     <p>
                                         <i>Services used:</i>
                                         {{getServicesUsed}}
@@ -145,31 +139,24 @@
                         {{#getUserTemplates}}
                             <tr>
                                 <td>
-                                    <input type="radio"
+                                    <label class="radio">
+                                        <input type="radio"
                                            name="{{template_id_label}}"
                                            value="{{getGroupId}}"
                                            {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
                                         />
-                                </td>
-                                <td>
-                                    <b>{{getPurifiedUserGroupName}}</b>
-                                    ({{getFormattedDateRegistered}})
-                                    <i>{{getPurifiedShortDescription}}</i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                </td>
-                                <td>
-                                   <i>Contact: {{{getAdminUserNames}}}</i>
-                                    <br />
-                                    <br />
+                                         <b>{{getPurifiedUserGroupName}}</b>
+                                        ({{getFormattedDateRegistered}})
+                                        <i>{{getPurifiedShortDescription}}</i>
+                                    </label>
+                                    <p>
+                                        <i>Contact: {{{getAdminUserNames}}}</i>
+                                    </p>
                                     <p>
                                         <i>Services used:</i>
                                         {{getServicesUsed}}
                                     </p>
                                 </td>
-                            </tr>
                         {{/getUserTemplates}}
                     </tbody>
                 </table>
