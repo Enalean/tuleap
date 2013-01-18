@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'BurndownTimePeriod.class.php';
 
 /**
  * Storage data for Burndown display via JPgraph

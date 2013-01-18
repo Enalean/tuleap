@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../../include/Tracker/Chart/Data/Burndown.class.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
     private $start_date;
     private $time_period;

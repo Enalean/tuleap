@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR .'/workflow/Action/Transitions.class.php';
 
 class Tracker_Workflow_Action_Transitions_Details extends Tracker_Workflow_Action_Transitions {
      /** @var TransitionFactory */

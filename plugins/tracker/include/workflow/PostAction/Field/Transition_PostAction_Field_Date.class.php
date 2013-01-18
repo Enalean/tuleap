@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
-require_once(dirname(__FILE__) .'/../../../Tracker/FormElement/Tracker_FormElementFactory.class.php');
-require_once 'Transition_PostAction_Field.class.php';
 
 /**
  * Set the date of a field
@@ -36,6 +33,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
      */
     const FILL_CURRENT_TIME = 2;
     
+    const SHORT_NAME   = 'field_date';
+    const XML_TAG_NAME = 'postaction_field_date';
+
     /**
      * @var Integer the type of the value. CLEAR_DATE | FILL_CURRENT_TIME
      */
@@ -60,7 +60,7 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
      * @return string
      */
     public function getShortName() {
-        return 'field_date';
+        return self::SHORT_NAME;
     }
     
     /**
@@ -211,9 +211,9 @@ class Transition_PostAction_Field_Date extends Transition_PostAction_Field {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->getFieldId()) {
-             $child = $root->addChild('postaction_field_date');
+            $child = $root->addChild(Transition_PostAction_Field_Date::XML_TAG_NAME);
              $child->addAttribute('valuetype', $this->getValueType());
              $child->addChild('field_id')->addAttribute('REF', array_search($this->getFieldId(), $xmlMapping));
          }

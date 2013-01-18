@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_SpecificPropertiesDao.class.php');
 
 class Tracker_FormElement_Field_OpenListDao extends Tracker_FormElement_SpecificPropertiesDao {
     function __construct() {

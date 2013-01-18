@@ -17,12 +17,7 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-
-require_once dirname(__FILE__).'/../../../builders/all.php';
-require_once dirname(__FILE__).'/../../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/List.class.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/List/Dao.class.php';
-require_once dirname(__FILE__).'/../../../../include/Tracker/Rule/List/Factory.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
     
@@ -230,7 +225,7 @@ class Tracker_Rule_List_FactoryTest extends TuleapTestCase {
         stub($f1)->getBind()->returns($bind_f1);
         stub($f2)->getBind()->returns($bind_f2);
 
-        $bf = new MockTracker_FormElement_Field_List_BindFactory($this);
+        $bf = mock('Tracker_FormElement_Field_List_BindFactory');
         $bf->setReturnValue('getType', 'static', array($bind_f1));
         $bf->setReturnValue('getType', 'static', array($bind_f2));
 

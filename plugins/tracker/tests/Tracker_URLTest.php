@@ -18,8 +18,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker_URL.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Interface');
 Mock::generate('Tracker_Artifact');

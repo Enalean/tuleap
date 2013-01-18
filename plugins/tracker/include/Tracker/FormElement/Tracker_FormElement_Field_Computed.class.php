@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'IComputeValues.class.php';
-require_once 'dao/Tracker_FormElement_Field_ComputedDao.class.php';
 
 class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field implements Tracker_FormElement_Field_ReadOnly, Tracker_FormElement_IComputeValues {
 

@@ -18,14 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field.class.php');
-require_once 'Tracker_FormElement_Field_Shareable.class.php';
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_List.class.php');
-require_once('Tracker_FormElement_Field_List_BindFactory.class.php');
-require_once('dao/Tracker_FormElement_Field_ListDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_ListDao.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_List_ValueDao.class.php');
-require_once(dirname(__FILE__).'/../../workflow/TransitionFactory.class.php');
 
 abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field implements Tracker_FormElement_Field_Shareable {
 
@@ -899,7 +891,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @param array            &$xmlMapping The correpondance between real ids and xml IDs
      * @param int              &$index      The index of this form element in the export file
      */
-    public function exportToXML($root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
         parent::exportToXML($root, $xmlMapping, $index);
         if ($this->getBind() && $this->shouldBeBindXML()) {
             $child = $root->addChild('bind');

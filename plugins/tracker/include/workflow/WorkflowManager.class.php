@@ -18,21 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Workflow_Dao.class.php');
-require_once('Workflow_TransitionDao.class.php');
-require_once('Workflow.class.php');
-require_once('WorkflowFactory.class.php');
-require_once('PostAction/Field/Transition_PostAction_Field_Date.class.php');
-require_once('PostAction/Transition_PostActionFactory.class.php');
-require_once('PostAction/Transition_PostActionManager.class.php');
-require_once('Transition/ConditionManager.class.php');
-require_once('Action/Rules/EditRules.class.php');
-require_once('Action/Transitions/Create.class.php');
-require_once('Action/Transitions/EditTransition.class.php');
-require_once('Action/Transitions/Delete.class.php');
-require_once('Action/Transitions/CreateMatrix.class.php');
-require_once('Action/Transitions/Details.class.php');
-require_once('Action/Transitions/DefineWorkflow.class.php');
 
 class WorkflowManager {
     protected $tracker;

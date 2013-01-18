@@ -337,7 +337,7 @@ class GraphOnTrackersV5_Chart_Gantt extends GraphOnTrackersV5_Chart {
         );
     }
     
-    public function exportToXML($root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         parent::exportToXML(&$root, $formsMapping);
         if ($this->scale) {
             $root->addAttribute('scale', $this->scale);

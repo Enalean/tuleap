@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Artifact_ChangesetValue.class.php');
+
 require_once('common/include/Codendi_HTMLPurifier.class.php');
 
 /**
@@ -37,7 +37,7 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * @param boolean                          $has_changed If the changeset value has chnged from the previous one
      * @param array                            $list_values The list of values
      */
-    public function __construct($id, $field, $has_changed, $list_values) {
+    public function __construct($id, $field, $has_changed, array $list_values) {
         parent::__construct($id, $field, $has_changed);
         $this->list_values = $list_values;
     }

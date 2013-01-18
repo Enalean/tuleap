@@ -21,11 +21,6 @@
 
 require_once 'common/include/URL.class.php';
 
-require_once 'Tracker_ResourceDoesntExistException.class.php';
-require_once 'Tracker_NoMachingResourceException.class.php';
-require_once 'TrackerFactory.class.php';
-require_once 'Tracker_Dispatchable_Interface.class.php';
-
 class Tracker_URL extends URL {
     
     /**

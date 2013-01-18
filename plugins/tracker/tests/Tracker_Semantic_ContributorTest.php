@@ -18,11 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
-
-require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_Semantic_Contributor.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');

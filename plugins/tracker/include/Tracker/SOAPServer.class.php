@@ -17,10 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once 'common/soap/SOAP_RequestValidator.class.php';
-require_once 'Report/Tracker_Report_SOAP.class.php';
-require_once 'Report/Tracker_ReportFactory.class.php';
-require_once 'NoChangeException.class.php';
-require_once 'FileInfoFactory.class.php';
 
 
 //define fault code constants
@@ -361,7 +357,7 @@ class Tracker_SOAPServer {
      */
     private function checkUserCanAdminTracker(User $user, $tracker) {
         $this->checkUserCanViewTracker($tracker, $user);
-        if (! $tracker->userCanAdmin($user)) {
+        if (! $tracker->userIsAdmin($user)) {
             throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
         }
     }
@@ -552,12 +548,12 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function getTrackerSemantic(Tracker $tracker) {
+    protected function getTrackerSemantic(Tracker $tracker) {
         $tracker_semantic_manager = new Tracker_SemanticManager($tracker);
         return $tracker_semantic_manager->exportToSOAP();
     }
 
-    private function getTrackerWorkflow (Tracker $tracker) {
+    protected function getTrackerWorkflow (Tracker $tracker) {
         return $tracker->getWorkflow()->exportToSOAP();
     }
 

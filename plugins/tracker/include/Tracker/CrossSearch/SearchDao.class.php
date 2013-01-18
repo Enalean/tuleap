@@ -19,8 +19,6 @@
  */
 
 require_once 'common/dao/include/DataAccessObject.class.php';
-require_once 'SharedField.class.php';
-require_once dirname(__FILE__).'/../Report/dao/Tracker_ReportDao.class.php';
 
 class Tracker_CrossSearch_SearchDao extends DataAccessObject {
     

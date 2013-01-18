@@ -17,11 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/Dao.class.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/Hierarchy/HierarchicalTrackerFactory.class.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/TrackerFactory.class.php');
-require_once(dirname(__FILE__).'/../../builders/aTracker.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 Mock::generate('Tracker_Hierarchy_Dao');
 Mock::generate('Project');

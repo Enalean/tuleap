@@ -19,9 +19,6 @@
  */
 
 
-require_once('Tracker_FormElement_Container.class.php');
-require_once('Tracker_FormElement_Container_Column_Group.class.php');
-require_once('Tracker_FormElementFactory.class.php');
 
 class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container {
     

@@ -1,3 +1,18 @@
+Version 5.66 - Tuleap 5.9
+    * Add autoload to trackers
+
+Version 5.65 - Tuleap 5.9
+    * Fix bugs #2159 & defect #ericsson:1886: SOAP getTrackerStructure error
+
+Version 5.64 - Tuleap 5.9
+    * Fix: Correctly set the timezone for PHP 5.3
+
+Version 5.63 - Tuleap 5.9
+    * * New post action in workflow: trigger a jenkins build.
+
+Version 5.62 - Tuleap 5.9
+    * Update SOAP API to 2.0.3 (bug fix)
+
 Version 5.61 - Tuleap 5.9
     * SOAP API (v2.0.2): artifacts now contains their cross references.
 

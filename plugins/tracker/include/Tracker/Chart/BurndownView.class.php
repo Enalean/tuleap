@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Burndown.class.php';
-require_once 'Data/Burndown.class.php';
 
 /**
  * I'm responsible of 

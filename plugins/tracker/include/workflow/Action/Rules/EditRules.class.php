@@ -18,10 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR .'/workflow/Action/Rules.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/Rule/Date/Factory.class.php';
-require_once dirname(__FILE__).'/../../../../tests/builders/aField.php';
-
+require_once 'html.php';
 class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Rules {
 
     const PARAMETER_ADD_RULE     = 'add_rule';
