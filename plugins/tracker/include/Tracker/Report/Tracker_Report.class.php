@@ -20,6 +20,7 @@
 
 
 require_once('common/include/Toggler.class.php');
+require_once('common/html/HTML_Element_Input_Checkbox.class.php');
 
 /**
  * Tracker_ report.

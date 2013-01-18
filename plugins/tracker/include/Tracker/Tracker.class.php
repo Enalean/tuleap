@@ -20,6 +20,7 @@
 
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 require_once('json.php');
 
