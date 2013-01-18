@@ -41,7 +41,8 @@
                     <input size="40"
                            type="text"
                            name="{{full_name_label}}"
-                           value="{{getFullName}}" />
+                           value="{{getFullName}}"
+                           required/>
                     <span class="help-block">between 3 and 40 characters</span>
                 </div>
             </div>
@@ -52,7 +53,8 @@
                            maxlength="30"
                            size="15"
                            name="{{unix_name_label}}"
-                           value="{{getUnixName}}" />
+                           value="{{getUnixName}}"
+                           required/>
                     <span class="help-block">between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.<br />
                     <span class="label label-info">Info</span> The short name is a technical name used in various URLs (project URL and source code repositories) and other references.
                     </span>
@@ -65,7 +67,8 @@
                         name="{{short_description_label}}"
                         wrap="virtual"
                         cols="40"
-                        rows="3">{{getShortDescription}}</textarea>
+                        rows="3"
+                        required>{{getShortDescription}}</textarea>
                         <span class="help-block">What is the purpose of your project?</span>
                 </div>
             </div>
@@ -165,17 +168,21 @@
         <p>
             Choose the correct one because you cannot modify your project license after your project has been approved.
         </p>
-        <select name="{{license_type_label}}">
-            {{#getAvailableLicenses}}
-            <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
-            {{/getAvailableLicenses}}
-        </select>
-        <br/>
-        <h3>Custom License (other)</h3>
-        <textarea name="{{custom_license_label}}"
-                  wrap=virtual
-                  cols=60
-                  rows=10>{{getCustomLicense}}</textarea>
+        <div class="control-group">
+            <div class="controls">
+                <select name="{{license_type_label}}">
+                    {{#getAvailableLicenses}}
+                    <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
+                    {{/getAvailableLicenses}}
+                </select>
+                <br/>
+                <h3>Custom License (other)</h3>
+                <textarea name="{{custom_license_label}}"
+                          wrap=virtual
+                          cols=60
+                          rows=10>{{getCustomLicense}}</textarea>
+            </div>
+        </div>
         <legend>That's it !</legend>
 
         <p>
@@ -183,6 +190,22 @@
             You will receive a notification when the system administrator has validated it.
             Then, you will be able to access your new project workspace. Enjoy!
         </p>
-        <input type="submit" value="Create the project" name="create_project" class="btn btn-primary"/>
+
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox">
+                    I agree to the
+                    <a href="#">policy agreement</a>
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" value="Create the project" name="create_project" class="btn btn-primary"/>
+                <input type="submit" value="Cancel" name="cancel" class="btn"/>
+            </div>
+        </div>
     </form>
 </div>
