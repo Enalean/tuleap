@@ -121,9 +121,11 @@
                                         />
                                     <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
                                     </label>
-                                    <p>
-                                        <i>Contact: {{{getAdminUserNames}}}</i>
-                                    </p>
+                                    {{#getAdminUserNames}}
+                                        <p>
+                                            <i>Contact: {{{getAdminUserNames}}}</i>
+                                        </p>
+                                    {{/getAdminUserNames}}
                                     <p>
                                         <i>Services used:</i>
                                         {{getServicesUsed}}
@@ -147,9 +149,11 @@
                                         />
                                          <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
                                     </label>
-                                    <p>
-                                        <i>Contact: {{{getAdminUserNames}}}</i>
-                                    </p>
+                                    {{#getAdminUserNames}}
+                                        <p>
+                                            <i>Contact: {{{getAdminUserNames}}}</i>
+                                        </p>
+                                    {{/getAdminUserNames}}
                                     <p>
                                         <i>Services used:</i>
                                         {{getServicesUsed}}
