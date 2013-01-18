@@ -54,10 +54,11 @@ if ($display_homepage_news) {
 .main_body_row {
     width: 1000px; /* container + 2 * gutter */
     margin: 0 auto;
+    background: white url(images/cream_dust.png);
 }
 .callout {
     margin-top: 1em;
-    min-height:344px;
+    min-height:314px;
     background: white url(images/banner.png) no-repeat;
     padding-top:150px;
 }
