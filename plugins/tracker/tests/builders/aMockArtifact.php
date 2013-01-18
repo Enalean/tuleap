@@ -38,6 +38,7 @@ class MockArtifactBuilder {
         $this->xref     = '';
         $this->value    = null;
         $this->parent   = null;
+        $this->lastChangeset = null;
     }
 
     /** @return \MockArtifactBuilder */
@@ -88,6 +89,12 @@ class MockArtifactBuilder {
         return $this;
     }
 
+    /** @return \MockArtifactBuilder */
+    public function withlastChangeset($changset) {
+        $this->lastChangeset = $changset;
+        return $this;
+    }
+
     /**
      * @param Tracker_Artifact_ChangesetValue $value
      * @return \MockArtifactBuilder
@@ -117,6 +124,7 @@ class MockArtifactBuilder {
         $this->artifact->setReturnValue('getAllowedChildrenTypes', $this->allowedChildrenTypes);
         $this->artifact->setReturnValue('getValue', $this->value);
         $this->artifact->setReturnValue('getParent', $this->parent);
+        $this->artifact->setReturnValue('getLastChangeset', $this->lastChangeset);
 
         return $this->artifact;
     }
