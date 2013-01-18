@@ -1,3 +1,6 @@
+Version 5.68 - Tuleap 5.9
+    * HTML_Element_Input_Checkbox missing include
+
 Version 5.67 - Tuleap 5.9
     * Fix CSRF missing include
 
