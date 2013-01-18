@@ -236,6 +236,11 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_search_process($params) {
+        try {
+            $index_status = $this->getAdminController()->getIndexStatus();
+        } catch (ElasticSearchTransportHTTPException $e) {
+            return;
+        }
         if ($this->getCurrentUser()->useLabFeatures()) {
             $filter = $params['request']->get('search_followups');
             if ($params['request']->get('func') == 'followup_search' && !empty($filter)) {
