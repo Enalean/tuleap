@@ -90,6 +90,24 @@
                         />
                     Private (limit access only to the project members)
                 </div>
+            </div><div class="control-group">
+                <label class="control-label">License</label>
+                <div class="controls">
+                    <p>
+                        <select name="{{license_type_label}}">
+                            {{#getAvailableLicenses}}
+                                <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
+                            {{/getAvailableLicenses}}
+                        </select>
+                    </p>
+                    <div class="custom_license_block">
+                        <textarea name="{{custom_license_label}}"
+                            wrap=virtual
+                            cols=60
+                            rows=10>{{getCustomLicense}}</textarea>
+                        <div class="help">Please provide an explanation along with a description of your license.</div>
+                    </div>
+                </div>
             </div>
         </table>
 
@@ -164,31 +182,8 @@
                 </table>
             </div>
         </div>
-        <legend>Choose the license for your project</legend>
 
-        <p>
-            Choose the correct one because you cannot modify your project license after your project has been approved.
-        </p>
-        <div class="control-group">
-            <div class="controls">
-                <p>
-                    <select name="{{license_type_label}}">
-                        {{#getAvailableLicenses}}
-                            <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
-                        {{/getAvailableLicenses}}
-                    </select>
-                </p>
-                <div>
-                    <h3>Custom License (other)</h3>
-                    <textarea name="{{custom_license_label}}"
-                              wrap=virtual
-                              cols=60
-                              rows=10>{{getCustomLicense}}</textarea>
-                </div>
-            </div>
-        </div>
         <legend>That's it !</legend>
-
         <p>
             You are about to request the actual project creation.
             You will receive a notification when the system administrator has validated it.

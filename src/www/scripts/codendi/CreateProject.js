@@ -43,9 +43,9 @@ document.observe('dom:loaded', function () {
     if (select_licenses) {
         function toggleOther(select) {
             if ($F(select) == 'other') {
-                select.up().next().show();
+                select.up('.controls').down('.custom_license_block').show();
             } else {
-                select.up().next().hide();
+                select.up('.controls').down('.custom_license_block').hide();
             }
         }
 
