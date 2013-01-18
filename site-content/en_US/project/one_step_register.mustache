@@ -152,33 +152,35 @@
                         {{/getDefaultTemplates}}
                     </tbody>
                 </table>
-                <h3 class="one_step_project">Projects of which you are administrator</h3>
-                <table class="table table-bordered table-striped">
-                    <tbody>
-                        {{#getUserTemplates}}
-                            <tr>
-                                <td class="one_step_project_choose_template">
-                                    <label class="radio">
-                                        <input type="radio"
-                                           name="{{template_id_label}}"
-                                           value="{{getGroupId}}"
-                                           {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
-                                        />
-                                         <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
-                                    </label>
-                                    {{#getAdminUserNames}}
+                {{#hasUserTemplates}}
+                    <h3 class="one_step_project">Projects of which you are administrator</h3>
+                    <table class="table table-bordered table-striped">
+                        <tbody>
+                            {{#getUserTemplates}}
+                                <tr>
+                                    <td class="one_step_project_choose_template">
+                                        <label class="radio">
+                                            <input type="radio"
+                                               name="{{template_id_label}}"
+                                               value="{{getGroupId}}"
+                                               {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
+                                            />
+                                             <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
+                                        </label>
+                                        {{#getAdminUserNames}}
+                                            <p>
+                                                Contact: {{{getAdminUserNames}}}
+                                            </p>
+                                        {{/getAdminUserNames}}
                                         <p>
-                                            Contact: {{{getAdminUserNames}}}
+                                            Services used:
+                                            {{getServicesUsed}}
                                         </p>
-                                    {{/getAdminUserNames}}
-                                    <p>
-                                        Services used:
-                                        {{getServicesUsed}}
-                                    </p>
-                                </td>
-                        {{/getUserTemplates}}
-                    </tbody>
-                </table>
+                                    </td>
+                            {{/getUserTemplates}}
+                        </tbody>
+                    </table>
+                {{/hasUserTemplates}}
             </div>
         </div>
 

@@ -289,6 +289,13 @@ class OneStepProjectCreationPresenter {
     }
 
     /**
+     * @return bool
+     */
+    public function hasUserTemplates() {
+        return count($this->getUserTemplates()) > 0;
+    }
+
+    /**
      *
      * @param resource $db_data
      * @return ProjectCreationTemplatePresenter[]
