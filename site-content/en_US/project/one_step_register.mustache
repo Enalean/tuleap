@@ -112,14 +112,14 @@
                     <tbody>
                         {{#getDefaultTemplates}}
                             <tr>
-                                <td>
+                                <td class="one_step_project_choose_template">
                                     <label class="radio">
                                         <input type="radio"
-                                           name="{{template_id_label}}"
-                                           value="{{getGroupId}}"
-                                           {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
+                                        name="{{template_id_label}}"
+                                        value="{{getGroupId}}"
+                                        {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
                                         />
-                                    <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
+                                        <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
                                     </label>
                                     {{#getAdminUserNames}}
                                         <p>
@@ -140,7 +140,7 @@
                     <tbody>
                         {{#getUserTemplates}}
                             <tr>
-                                <td>
+                                <td class="one_step_project_choose_template">
                                     <label class="radio">
                                         <input type="radio"
                                            name="{{template_id_label}}"
