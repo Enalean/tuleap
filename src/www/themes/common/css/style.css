@@ -3656,14 +3656,15 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
 .container.one_step_project textarea {
     display: inline-block;
     padding: 4px 6px;
-    margin-bottom: 9px;
+    margin-bottom: 10px;
     font-size: 14px;
-    color: #555;
-    -webkit-border-radius: 3px;
-    -moz-border-radius: 3px;
-    border-radius: 3px;
-    border: 1px solid #B5B5B5;
-    background-color: white;
+    color: #555555;
+    vertical-align: middle;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    border: 1px solid #cccccc;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
@@ -3671,6 +3672,22 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
     -o-transition: border linear 0.2s, box-shadow linear 0.2s;
     transition: border linear 0.2s, box-shadow linear 0.2s;
+}
+.container.one_step_project input[type="text"] {
+    width: 206px;
+}
+.container.one_step_project input[type="text"]:focus,
+.container.one_step_project textarea:focus {
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
+}
+.container.one_step_project input:focus:invalid:focus,
+.container.one_step_project textarea:focus:invalid:focus {
+    border-color: #e9322d;
+    -webkit-box-shadow: 0 0 6px #f8b9b7;
+    -moz-box-shadow: 0 0 6px #f8b9b7;
+    box-shadow: 0 0 6px #f8b9b7;
 }
 .container.one_step_project input[type="checkbox"] {
     vertical-align: middle;
@@ -3934,5 +3951,8 @@ input[type="submit"].btn {
 .container.one_step_project select,
 .container.one_step_project textarea {
     font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+}
+.container.one_step_project span.mandatory_field {
+    color: red;
 }
 /* }}} */

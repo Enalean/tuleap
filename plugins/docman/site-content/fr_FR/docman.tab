@@ -619,8 +619,8 @@ plugin_docman	move_position_end	A la fin
 plugin_docman	move_position_select	Personnalisée <em>(prochaine étape)</em>
 plugin_docman	move_prefix	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&larr; 
 
-plugin_docman	new_fldsel_title	Nouveau document - Sélection du répertoir parent
-plugin_docman	new_fldsel_location_desc	Merci de sélectionner le répertoir où vous souhaitez que ce document apparaisse.
+plugin_docman	new_fldsel_title	Nouveau document - Sélection du répertoire parent
+plugin_docman	new_fldsel_location_desc	Merci de sélectionner le répertoire où vous souhaitez que ce document apparaisse.
 plugin_docman	new_fldsel_location_help	Comment utiliser le sélecteur de dossier:<ul><li>Le lien <em>[autres dossiers: ]</em> affiche toute l'arborescence.</li><li>La liste déroulante <em>Position</em> permet de sélectionner la position au sein du dossier sélectionné.</li></ul>
 plugin_docman	new_fldsel_typehelp	Vous pouvez soit créer un nouveau document (fichier, lien, wiki, etc) ou un nouveau dossier.
 plugin_docman	new_fldsel_location	Chemin
