@@ -29,6 +29,8 @@ require_once 'common/valid/Rule.class.php';
  */
 class OneStepProjectCreationPresenter {
 
+    const DEFAULT_TEMPLATE_ID = 100;
+
     const FULL_NAME = 'form_full_name';
     const UNIX_NAME = 'form_unix_name';
     const IS_PUBLIC = 'is_public';
@@ -337,6 +339,8 @@ class OneStepProjectCreationPresenter {
     private function setTemplateId(array $data) {
         if(isset($data[self::TEMPLATE_ID])) {
             $this->templateId = $data[self::TEMPLATE_ID];
+        } else {
+            $this->templateId = self::DEFAULT_TEMPLATE_ID;
         }
 
         return $this;

@@ -21,8 +21,7 @@
 require_once 'common/project/OneStepProjectCreationPresenter.class.php';
 require_once 'common/include/Response.class.php';
 
-class OneStepProjectCreationPresenterTest extends TuleapTestCase {
-
+class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
     protected function aOneStepProjectCreationForm($request_data) {
         return new OneStepProjectCreationPresenter($request_data, aUser()->build(), array(), mock('ProjectManager'), mock('ProjectDao'));
     }
@@ -80,6 +79,13 @@ class OneStepProjectCreationPresenterTest extends TuleapTestCase {
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
         $this->assertEqual($id, $single_step->getTemplateId());
+    }
+
+    public function itSetsDefaultTemplateIdIfRequestDataDontHaveOne() {
+        $request_data          = array();
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
+
+        $this->assertEqual(OneStepProjectCreationPresenter::DEFAULT_TEMPLATE_ID , $single_step->getTemplateId());
     }
 
     public function testNewObjectSetsLicenseType() {
@@ -169,12 +175,19 @@ class OneStepProjectCreationPresenterTest extends TuleapTestCase {
 
 }
 
-class OneStepProjectCreationFormValidationTest extends OneStepProjectCreationPresenterTest {
+class OneStepProjectCreationFormValidationTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
 
         $GLOBALS['Response'] = mock('Response');
+    }
+
+    protected function aOneStepProjectCreationForm($request_data) {
+        $single_step = partial_mock('OneStepProjectCreationPresenter' , array('getTemplateId'), array($request_data, aUser()->build(), array(), mock('ProjectManager'), mock('ProjectDao')));
+        stub($single_step)->getTemplateId()->returns(null);
+
+        return $single_step;
     }
 
     public function testValidateAndGenerateErrorsValidatesFullname() {
