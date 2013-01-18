@@ -90,7 +90,6 @@ class GraphOnTrackersV5_Engine_Bar extends GraphOnTrackersV5_Engine {
                 }
                 uksort($this->data[$group], array($this, 'sort'));
             }
-            //echo "###<br />\n<pre>"; var_dump($this->xaxis); echo "</pre>\n<br />";
             $l = 0; 
             foreach($this->data as $base => $group) {
                 $b[$l] = $this->getBarPlot(array_values($group), $colors[$base]);

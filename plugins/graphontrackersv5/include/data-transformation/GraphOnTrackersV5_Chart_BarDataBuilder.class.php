@@ -87,6 +87,11 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                 } else {
                     if ($select_group) {
                         $engine->data[$data[$af->name]][$data[$gf->name]]   = $data['nb'];
+                        if(isset($data['red'])) {
+                            $engine->colors[$data[$af->name]] =  array($data['red'], $data['green'], $data['blue']);
+                        } else {
+                            $engine->colors[$data[$af->name]] =  array(null, null, null);
+                        }
                         if($data[$gf->name] !== null) {
                             $engine->xaxis[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
                             $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
@@ -96,12 +101,14 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                         }
                     } else {
                         $engine->data[]   = $data['nb'];
+                        if(isset($data['red'])) {
+                            $engine->colors[] =  array($data['red'], $data['green'], $data['blue']);
+                        } else {
+                            $engine->colors[] =  array(null, null, null);
+                        }
                     }
                     $engine->legend[$data[$af->name]] = $GLOBALS['Language']->getText('global','none');
                 }
-            }
-            if ($select_group) {
-                //$engine->xaxis = array_values($engine->xaxis);
             }
         }
         return $result;
