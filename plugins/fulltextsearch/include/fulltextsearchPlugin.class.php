@@ -237,11 +237,20 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_warning($params) {
-        if ($params['request']->get('search_followups')) {
-            $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
-            $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
-            $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followup_full_text_warning_search');
-            $params['html'] .= '</div>';
+        try {
+            $index_status = $this->getAdminController()->getIndexStatus();
+        } catch (ElasticSearchTransportHTTPException $e) {
+            return;
+        }
+        if ($this->isAllowed($params['group_id'])) {
+            if ($this->getCurrentUser()->useLabFeatures()) {
+                if ($params['request']->get('search_followups')) {
+                    $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
+                    $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
+                    $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followup_full_text_warning_search');
+                    $params['html'] .= '</div>';
+                }
+            }
         }
     }
 
