@@ -3672,6 +3672,10 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     -o-transition: border linear 0.2s, box-shadow linear 0.2s;
     transition: border linear 0.2s, box-shadow linear 0.2s;
 }
+.container.one_step_project input[type="checkbox"] {
+    vertical-align: middle;
+}
+
 .container.one_step_project div.controls span.help-block {
     color: #595959;
     display: block;
@@ -3683,7 +3687,6 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
 .container.one_step_project table {
   max-width: 100%;
   background-color: transparent;
-  border-collapse: collapse;
   border-spacing: 0;
 }
 
