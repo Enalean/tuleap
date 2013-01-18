@@ -902,7 +902,7 @@ a.btn-warning {
     <div class="span12">
         <div class="row">
             <div class="span7 offset1">
-                <p style="">Here users, developers and all contributors gather to&nbsp;create Tuleap, <strong>the full open&nbsp;source&nbsp;ALM</strong>.</p>
+                <p style="">Here users, developers and all contributors meet to&nbsp;develop Tuleap, <strong>the full open&nbsp;source&nbsp;ALM</strong>.</p>
                 <a class="btn  btn-primary btn-large" href="https://tuleap.net/wiki/?group_id=101&pagename=Installation+%26+Administration%2FHow+to+install">
                     <i class="icon-download-alt icon-white"></i>
                     Get Tuleap</a><br />
@@ -932,16 +932,16 @@ a.btn-warning {
     <p>Tuleap is a <b>full free Open Source Suite for <a href="http://en.wikipedia.org/wiki/Application_lifecycle_management">Application Lifecycle Management</a></b>.</b><br>
           Traditional development, Requirement Management, Agile Development, IT Service management... Tuleap makes software projects more productive, collaborative and industrialized.
      </p>
-	 <p><b>We don’t distinguish</b> between a “free” and an “enterprise” version. You can leverage <b>all Tuleap features</b> for <b>unlimited</b> users, <b>unlimited</b> projects and <b>unlimited</b> time. </p>
           </div>
     <div class="span4"><h2>Who is it for?</h2>
     <p>Developers, Project managers, Agilers, Quality managers, CEO, Businesses... All stackholers creating innovative applications.</p>
-    <p>Large companies, SMEs, free projects, public organizations.</p>
+    <p>Fortune 500 companies, innovative start-ups, free projects, public organizations.</p>
     </div>
     
     <div class="span4"><h2>What is the license?</h2>
     <img src="images/open-source-logo.png" alt="Tuleap Open Source" width="50px">
-	<p><b>Tuleap is provided under GPLv2 license</b>. You are free to access the <a href="https://tuleap.net/plugins/git/?group_id=101">source code here</a> and 
+	<p><b>Yes, Tuleap is a real libre and free software.</b> It is provided under GPLv2 license. <b>We don’t distinguish</b> between a “free” and an “enterprise” version. 
+	You can leverage <b>all Tuleap features</b> for <b>unlimited</b> users, <b>unlimited</b> projects and <b>unlimited</b> time. You are free to access the <a href="https://tuleap.net/plugins/git/?group_id=101">source code here</a> and 
 	<a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">discuss</a> with Community members.
     Enjoy it and <a href="https://tuleap.net/plugins/forumml/message.php?group_id=101&list=1">share with us</a> how you use it!</p>
     </p> </p>
@@ -994,7 +994,7 @@ a.btn-warning {
 </div>
 <div class="row-fluid homepage-feature" id="screenshots-plan">
     <div class="span6">
-        <img src="images/screenshots/cardwall.png" class="img-polaroid" width="570px" />
+        <img src="images/screenshots/gantt.png" class="img-polaroid" width="570px" />
     </div>
     <div class="span6">
         <h2>Plan and monitor project</h2>
@@ -1022,7 +1022,7 @@ a.btn-warning {
         <a href="http://tuleap.com/?q=features/tracker">Learn more on tuleap.com <i class="icon-external-link"></i></a>
     </div>
     <div class="span6">
-        <img src="images/screenshots/create-tracker.png" class="img-polaroid" width="570px" height="380px"/>
+        <img src="images/screenshots/linked-items.png" class="img-polaroid" width="570px" height="380px"/>
     </div>
 </div>
 <div class="row-fluid homepage-feature" id="screenshots-tools">
@@ -1071,7 +1071,7 @@ a.btn-warning {
     <div class="span6">
         <h2>Stay tuned, Share knowledge &amp; Discuss</h2>
         <ul>
-		<li>Promote <strong>social coding</strong> and leverage integrated per-project tools: forums, instant messaging, mailing-lists, news, RSS feeds</li>
+		<li>Leverage integrated per-project tools: forums, instant messaging, mailing-lists, news, RSS feeds</li>
         <li><strong>Discuss</strong> ideas in forums and mailing lists with flexible subscription and management</li>
 		<li>Leverage per-project instant messaging rooms for real-time discussing</li>
 		<li>All along discussions, create shortcuts for direct access to project items you are mentioning</li>
