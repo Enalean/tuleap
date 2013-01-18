@@ -1263,7 +1263,6 @@ plugin_tracker_report	isobsolete_explanations	$1 Report has been modified by <sp
 plugin_tracker_report	haschanged_isobsolete_explanations	$1 Report has been modified by <span class="tracker_report_updated_by">$2</span>. If you're happy with the modifications you've also made to the report, don't forget to save it or <a id="tracker_report_clean_session" href="?tracker=$3&amp;func=clean-session">cancel your modifications and load the new report</a>.
 plugin_tracker_report	renderer_name_mandatory	Renderer name is mandatory.
 plugin_tracker_report	set_default_report	Set default report
-plugin_tracker_report	global_full_text_warning_search	<strong>Only part of comments are indexed for this tracker.</strong><br>Global Full Text Search is still in beta.
 
 plugin_tracker_report_widget	go_to_report	Go to report
 

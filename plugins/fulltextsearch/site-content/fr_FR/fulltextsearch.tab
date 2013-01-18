@@ -7,3 +7,4 @@ plugin_fulltextsearch	result_count	$1 résultats ($2 seconds)
 
 plugin_fulltextsearch	followups_search	Recerche dans les commentaires
 plugin_fulltextsearch	search_followup_comments	Rechercher dans les commentaires
+plugin_fulltextsearch	followup_full_text_warning_search	<strong>Uniquement une partie des commentaires a été indexée pour cet outil de suivi.</strong><br>La recherche est encore en beta.

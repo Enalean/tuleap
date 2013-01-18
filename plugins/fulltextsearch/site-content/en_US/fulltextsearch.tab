@@ -7,3 +7,4 @@ plugin_fulltextsearch	result_count	$1 results ($2 seconds)
 
 plugin_fulltextsearch	followups_search	Followups search
 plugin_fulltextsearch	search_followup_comments	Search in followup comments
+plugin_fulltextsearch	followup_full_text_warning_search	<strong>Only part of comments are indexed for this tracker.</strong><br>Followup Search is still in beta.
