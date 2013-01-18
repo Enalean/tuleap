@@ -73,6 +73,7 @@ register_license	license	Licence
 #
 register_projectname	ins_query_fail	REQUETE D'INSERTION A ECHOUE. Veuillez avertir $1
 register_projectname	info_missed	Information manquante. Veuillez saisir les informations demandées.
+register_projectname	tos_not_approved	Vous devez accepter les conditions d'utilisation.
 #
 #-----------------------------------------------
 # Script: src/common/project//tos.php

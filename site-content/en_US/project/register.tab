@@ -80,6 +80,7 @@ register_license	license	License
 #
 register_projectname	ins_query_fail	INSERT QUERY FAILED. Please notify $1
 register_projectname	info_missed	Missing Information. PLEASE fill in all required information.
+register_projectname	tos_not_approved	You must approve terms of services.
 #
 #-----------------------------------------------
 # Script: src/common/project//tos.php

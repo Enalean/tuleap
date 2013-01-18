@@ -31,21 +31,23 @@ class OneStepProjectCreationPresenter {
 
     const DEFAULT_TEMPLATE_ID = 100;
 
-    const FULL_NAME = 'form_full_name';
-    const UNIX_NAME = 'form_unix_name';
-    const IS_PUBLIC = 'is_public';
-    const TEMPLATE_ID = 'built_from_template';
-    const LICENSE_TYPE = 'form_license';
-    const CUSTOM_LICENSE = 'form_license_other';
+    const FULL_NAME         = 'form_full_name';
+    const UNIX_NAME         = 'form_unix_name';
+    const IS_PUBLIC         = 'is_public';
+    const TEMPLATE_ID       = 'built_from_template';
+    const LICENSE_TYPE      = 'form_license';
+    const CUSTOM_LICENSE    = 'form_license_other';
     const SHORT_DESCRIPTION = 'form_short_description';
+    const TOS_APPROVAL      = 'form_terms_of_services_approval';
 
-    public $full_name_label         = self::FULL_NAME;
-    public $unix_name_label         = self::UNIX_NAME;
-    public $is_public_label         = self::IS_PUBLIC;
-    public $template_id_label       = self::TEMPLATE_ID;
-    public $license_type_label      = self::LICENSE_TYPE;
-    public $custom_license_label    = self::CUSTOM_LICENSE;
-    public $short_description_label = self::SHORT_DESCRIPTION;
+    public $full_name_label                = self::FULL_NAME;
+    public $unix_name_label                = self::UNIX_NAME;
+    public $is_public_label                = self::IS_PUBLIC;
+    public $template_id_label              = self::TEMPLATE_ID;
+    public $license_type_label             = self::LICENSE_TYPE;
+    public $custom_license_label           = self::CUSTOM_LICENSE;
+    public $short_description_label        = self::SHORT_DESCRIPTION;
+    public $term_of_service_approval_label = self::TOS_APPROVAL;
 
     /**
      *
@@ -76,6 +78,12 @@ class OneStepProjectCreationPresenter {
      * @var int
      */
     private $templateId;
+
+    /**
+     *
+     * @var bool
+     */
+    private $term_of_service_approval;
 
     /**
      *
@@ -128,7 +136,8 @@ class OneStepProjectCreationPresenter {
             ->setIsPublic($request_data)
             ->setTemplateId($request_data)
             ->setLicenseType($request_data)
-            ->setCustomLicense($request_data);
+            ->setCustomLicense($request_data)
+            ->setTosApproval($request_data);
         $this->available_licenses = $licenses;
         $this->creator            = $creator;
         $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
@@ -147,7 +156,8 @@ class OneStepProjectCreationPresenter {
             ->validateProjectPrivacy()
             ->validateFullName()
             ->validateShortDescription()
-            ->validateLicense();
+            ->validateLicense()
+            ->validateTosApproval();
 
         return $this->is_valid;
     }
@@ -250,6 +260,14 @@ class OneStepProjectCreationPresenter {
      */
     public function getCustomLicense() {
         return $this->custom_license;
+    }
+
+    /**
+     *
+     * @return type
+     */
+    public function getTosApproval() {
+        return $this->term_of_service_approval;
     }
 
     /**
@@ -397,6 +415,21 @@ class OneStepProjectCreationPresenter {
 
     /**
      *
+     * @param type $data
+     * @return \OneStepProjectCreationPresenter
+     */
+    private function setTosApproval($data) {
+        $this->term_of_service_approval = false;
+
+        if (isset($data[self::TOS_APPROVAL])) {
+            $this->term_of_service_approval = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     *
      * @return \OneStepProjectCreationPresenter
      */
     private function validateFullName() {
@@ -504,6 +537,15 @@ class OneStepProjectCreationPresenter {
      */
     private function setIsNotValid() {
         $this->is_valid = false;
+        return $this;
+    }
+
+    private function validateTosApproval() {
+        if (! $this->getTosApproval()) {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'tos_not_approved'));
+            $this->setIsNotValid();
+        }
+
         return $this;
     }
 }

@@ -110,6 +110,17 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $this->assertEqual($license, $single_step->getCustomLicense());
     }
 
+    public function testNewObjectSetsProjectApprobation() {
+        $tos = 'approved';
+
+        $request_data = array(
+            OneStepProjectCreationPresenter::TOS_APPROVAL => $tos,
+        );
+
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
+        $this->assertTrue($single_step->getTosApproval());
+    }
+
     public function testGetProjectValuesUsesCustomLicenseIfTypeIsOther() {
         $full_name = 'my_test proj';
         $unix_name = 'fdgd';
