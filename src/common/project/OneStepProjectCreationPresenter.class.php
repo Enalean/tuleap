@@ -25,10 +25,10 @@ require_once 'common/valid/Rule.class.php';
 
 
 /**
- * Controller view helper class 
+ * Controller view helper class
  */
 class OneStepProjectCreationPresenter {
-    
+
     const FULL_NAME = 'form_full_name';
     const UNIX_NAME = 'form_unix_name';
     const IS_PUBLIC = 'is_public';
@@ -47,55 +47,55 @@ class OneStepProjectCreationPresenter {
 
     /**
      *
-     * @var string 
+     * @var string
      */
     private $full_name;
-    
+
     /**
      *
-     * @var string 
+     * @var string
      */
     private $short_description;
-    
+
     /**
      *
-     * @var string 
+     * @var string
      */
     private $unix_name;
-    
+
     /**
      *
-     * @var bool 
+     * @var bool
      */
     private $is_public;
-    
+
     /**
      *
-     * @var int 
+     * @var int
      */
     private $templateId;
-    
+
     /**
      *
-     * @var bool 
+     * @var bool
      */
     private $is_valid = true;
 
     /**
      *
-     * @var string 
+     * @var string
      */
     private $form_submission_path;
-    
+
     /**
      *
-     * @var string 
+     * @var string
      */
     private $license_type;
-    
+
     /**
      *
-     * @var blob 
+     * @var blob
      */
     private $custom_license = null;
 
@@ -132,26 +132,26 @@ class OneStepProjectCreationPresenter {
         $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
         $this->project_dao        = $project_dao !== null     ? $project_dao     : new ProjectDao();
     }
-    
+
     /**
-     * 
+     *
      * @return boolean
      */
     public function validateAndGenerateErrors() {
         $this->is_valid = true;
-        
+
         $this->validateTemplateId()
             ->validateUnixName()
             ->validateProjectPrivacy()
             ->validateFullName()
             ->validateShortDescription()
             ->validateLicense();
-        
+
         return $this->is_valid;
     }
-        
+
     /**
-     * 
+     *
      * @return array
      */
     public function getProjectValues() {
@@ -170,56 +170,60 @@ class OneStepProjectCreationPresenter {
         );
     }
 
+    public function getSysName() {
+        return Config::get('sys_name');
+    }
+
     /**
-     * 
+     *
      * @return string
      */
     public function getFormSubmissionPath() {
         return $this->form_submission_path;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getUnixName() {
         return $this->unix_name;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getFullName() {
         return $this->full_name;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getShortDescription() {
         return $this->short_description;
     }
-    
+
     /**
-     * 
+     *
      * @return int
      */
     public function getTemplateId() {
         return $this->templateId;
     }
-    
+
     /**
-     * 
+     *
      * @return bool
      */
     public function isPublic() {
         return $this->is_public;
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getLicenseType() {
@@ -239,24 +243,24 @@ class OneStepProjectCreationPresenter {
     }
 
     /**
-     * 
+     *
      * @return blob
      */
     public function getCustomLicense() {
         return $this->custom_license;
     }
-        
+
     /**
-     * 
+     *
      * @return ProjectCreationTemplatePresenter[]
      */
     public function getDefaultTemplates() {
         $db_templates = $this->project_dao->searchSiteTemplates()->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
         return $this->generateTemplatesFromDbData($db_templates);
     }
-    
+
     /**
-     * 
+     *
      * @return ProjectCreationTemplatePresenter[]
      */
     public function getUserTemplates() {
@@ -279,15 +283,15 @@ class OneStepProjectCreationPresenter {
     }
 
     /**
-     * 
+     *
      * @return string
      */
     public function getDateFormat() {
         return $GLOBALS['Language']->getText('system', 'datefmt_short');
     }
-    
+
     /**
-     * 
+     *
      * @param array $data
      * @return \OneStepProjectCreationPresenter
      */
@@ -295,12 +299,12 @@ class OneStepProjectCreationPresenter {
         if(isset($data[self::UNIX_NAME])) {
             $this->unix_name = $data[self::UNIX_NAME];
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param array $data
      * @return \OneStepProjectCreationPresenter
      */
@@ -308,12 +312,12 @@ class OneStepProjectCreationPresenter {
         if(isset($data[self::FULL_NAME])) {
             $this->full_name = $data[self::FULL_NAME];
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param array $data
      * @return \OneStepProjectCreationPresenter
      */
@@ -321,12 +325,12 @@ class OneStepProjectCreationPresenter {
         if(isset($data[self::SHORT_DESCRIPTION])) {
             $this->short_description = trim($data[self::SHORT_DESCRIPTION]);
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param array $data
      * @return \OneStepProjectCreationPresenter
      */
@@ -334,12 +338,12 @@ class OneStepProjectCreationPresenter {
         if(isset($data[self::TEMPLATE_ID])) {
             $this->templateId = $data[self::TEMPLATE_ID];
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param array $data
      * @return \OneStepProjectCreationPresenter
      */
@@ -347,12 +351,12 @@ class OneStepProjectCreationPresenter {
         if(isset($data[self::IS_PUBLIC])) {
             $this->is_public = $data[self::IS_PUBLIC];
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param string $path
      * @return \OneStepProjectCreationPresenter
      */
@@ -360,9 +364,9 @@ class OneStepProjectCreationPresenter {
         $this->form_submission_path = $path;
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param array $data
      * @return \OneStepProjectCreationPresenter
      */
@@ -370,12 +374,12 @@ class OneStepProjectCreationPresenter {
         if(isset($data[self::LICENSE_TYPE])) {
             $this->license_type = $data[self::LICENSE_TYPE];
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @param string $data
      * @return \OneStepProjectCreationPresenter
      */
@@ -383,12 +387,12 @@ class OneStepProjectCreationPresenter {
         if(isset($data[self::CUSTOM_LICENSE])) {
             $this->custom_license = trim($data[self::CUSTOM_LICENSE]);
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return \OneStepProjectCreationPresenter
      */
     private function validateFullName() {
@@ -397,19 +401,19 @@ class OneStepProjectCreationPresenter {
             $this->setIsNotValid();
             return $this;
         }
-        
+
         $rule = new Rule_ProjectFullName();
         if (!$rule->isValid($this->getFullName())) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_full_name'));
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             $this->setIsNotValid();
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return \OneStepProjectCreationPresenter
      */
     private function validateShortDescription() {
@@ -417,12 +421,12 @@ class OneStepProjectCreationPresenter {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return \OneStepProjectCreationPresenter
      */
     private function validateUnixName() {
@@ -431,7 +435,7 @@ class OneStepProjectCreationPresenter {
             $this->setIsNotValid();
             return $this;
         }
-        
+
         //check for valid group name
         $rule = new Rule_ProjectName();
         if (!$rule->isValid($this->getUnixName())) {
@@ -439,12 +443,12 @@ class OneStepProjectCreationPresenter {
             $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
             $this->setIsNotValid();
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return \OneStepProjectCreationPresenter
      */
     private function validateTemplateId() {
@@ -456,17 +460,17 @@ class OneStepProjectCreationPresenter {
 
         $project_manager = ProjectManager::instance();
         $project = $project_manager->getProject($this->getTemplateId());
-        
+
         if (! $project->isTemplate() && ! user_ismember($this->getTemplateId(), 'A')) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
             $this->setIsNotValid();
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return \OneStepProjectCreationPresenter
      */
     private function validateProjectPrivacy() {
@@ -474,12 +478,12 @@ class OneStepProjectCreationPresenter {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
         }
-        
+
         return $this;
     }
-    
+
     /**
-     * 
+     *
      * @return \OneStepProjectCreationPresenter
      */
     private function validateLicense() {
@@ -487,11 +491,11 @@ class OneStepProjectCreationPresenter {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
             $this->setIsNotValid();
         }
-        
+
         return $this;
     }
     /**
-     * 
+     *
      * @return \OneStepProjectCreationPresenter
      */
     private function setIsNotValid() {

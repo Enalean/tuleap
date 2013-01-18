@@ -29,8 +29,14 @@ if (Config::get('sys_create_project_in_one_step')) {
     $single_step_project = new OneStepProjectCreationPresenter($data, $current_user, $LICENSE);
     
     if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
+        $data    = $single_step_project->getProjectValues();
+        $project = ProjectManager::instance()->getProject($data['project']['built_from_template']);
+        foreach($project->services as $service) {
+            $id = $service->getId();
+            $data['project']['services'][$id]['is_used'] = $service->isUsed();
+        }
         require_once('create_project.php');
-        create_project($single_step_project->getProjectValues());
+        create_project($data);
     }
     
     $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));
