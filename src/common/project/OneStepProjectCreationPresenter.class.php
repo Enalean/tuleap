@@ -270,6 +270,10 @@ class OneStepProjectCreationPresenter {
         return $this->term_of_service_approval;
     }
 
+    public function hasMoreThanOneAvailableTemplate() {
+        return $this->hasUserTemplates() || $this->hasMoreThanOneDefaultTemplates();
+    }
+
     /**
      *
      * @return ProjectCreationTemplatePresenter[]
@@ -277,6 +281,13 @@ class OneStepProjectCreationPresenter {
     public function getDefaultTemplates() {
         $db_templates = $this->project_dao->searchSiteTemplates()->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
         return $this->generateTemplatesFromDbData($db_templates);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasMoreThanOneDefaultTemplates() {
+        return count($this->getDefaultTemplates()) > 1;
     }
 
     /**

@@ -30,6 +30,10 @@ if (Config::get('sys_create_project_in_one_step')) {
     
     if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
         $data    = $single_step_project->getProjectValues();
+        if (! isset($data['project']['built_from_template'])) {
+            $default_templates = $single_step_project->getDefaultTemplates();
+            $data['project']['built_from_template'] = $default_templates->getGroupId();
+        }
         $project = ProjectManager::instance()->getProject($data['project']['built_from_template']);
         foreach($project->services as $service) {
             $id = $service->getId();

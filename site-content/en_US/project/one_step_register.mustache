@@ -111,61 +111,33 @@
             </div>
         </table>
 
-        <legend>Choose an appropriate template for your project</legend>
+        {{#hasMoreThanOneAvailableTemplate}}
+            <legend>Choose an appropriate template for your project</legend>
 
-        <p>A project template is a pre-configured workspace: activated tools
-        (trackers, version control system, communication tools...), tools
-        customisation and configuration (workflow, documentation structure...),
-        user groups, permissions, etc.</p>
+            <p>A project template is a pre-configured workspace: activated tools
+            (trackers, version control system, communication tools...), tools
+            customisation and configuration (workflow, documentation structure...),
+            user groups, permissions, etc.</p>
 
-        <p>The project template you will select provides some services. You can
-        always modify your project workspace after your project has been
-        approved.</p>
+            <p>The project template you will select provides some services. You can
+            always modify your project workspace after your project has been
+            approved.</p>
 
-        <div class="control-group">
-            <div class="controls">
-                <h3 class="one_step_project">Default templates</h3>
-                <table class="table table-bordered table-striped">
-                    <tbody>
-                        {{#getDefaultTemplates}}
-                            <tr>
-                                <td class="one_step_project_choose_template">
-                                    <label class="radio">
-                                        <input type="radio"
-                                        name="{{template_id_label}}"
-                                        value="{{getGroupId}}"
-                                        {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
-                                        />
-                                        <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
-                                    </label>
-                                    {{#getAdminUserNames}}
-                                        <p>
-                                            Contact: {{{getAdminUserNames}}}
-                                        </p>
-                                    {{/getAdminUserNames}}
-                                    <p>
-                                        Services used:
-                                        {{getServicesUsed}}
-                                    </p>
-                                </td>
-                            </tr>
-                        {{/getDefaultTemplates}}
-                    </tbody>
-                </table>
-                {{#hasUserTemplates}}
-                    <h3 class="one_step_project">Projects of which you are administrator</h3>
+            <div class="control-group">
+                <div class="controls">
+                    <h3 class="one_step_project">Default templates</h3>
                     <table class="table table-bordered table-striped">
                         <tbody>
-                            {{#getUserTemplates}}
+                            {{#getDefaultTemplates}}
                                 <tr>
                                     <td class="one_step_project_choose_template">
                                         <label class="radio">
                                             <input type="radio"
-                                               name="{{template_id_label}}"
-                                               value="{{getGroupId}}"
-                                               {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
+                                            name="{{template_id_label}}"
+                                            value="{{getGroupId}}"
+                                            {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
                                             />
-                                             <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
+                                            <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
                                         </label>
                                         {{#getAdminUserNames}}
                                             <p>
@@ -177,12 +149,42 @@
                                             {{getServicesUsed}}
                                         </p>
                                     </td>
-                            {{/getUserTemplates}}
+                                </tr>
+                            {{/getDefaultTemplates}}
                         </tbody>
                     </table>
-                {{/hasUserTemplates}}
+                    {{#hasUserTemplates}}
+                        <h3 class="one_step_project">Projects of which you are administrator</h3>
+                        <table class="table table-bordered table-striped">
+                            <tbody>
+                                {{#getUserTemplates}}
+                                    <tr>
+                                        <td class="one_step_project_choose_template">
+                                            <label class="radio">
+                                                <input type="radio"
+                                                   name="{{template_id_label}}"
+                                                   value="{{getGroupId}}"
+                                                   {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
+                                                />
+                                                 <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
+                                            </label>
+                                            {{#getAdminUserNames}}
+                                                <p>
+                                                    Contact: {{{getAdminUserNames}}}
+                                                </p>
+                                            {{/getAdminUserNames}}
+                                            <p>
+                                                Services used:
+                                                {{getServicesUsed}}
+                                            </p>
+                                        </td>
+                                {{/getUserTemplates}}
+                            </tbody>
+                        </table>
+                    {{/hasUserTemplates}}
+                </div>
             </div>
-        </div>
+        {{/hasMoreThanOneAvailableTemplate}}
 
         <legend>That's it !</legend>
         <p>
