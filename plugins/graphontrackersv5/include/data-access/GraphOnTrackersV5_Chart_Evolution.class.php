@@ -50,7 +50,7 @@ class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
      */
     protected $nb_step;
     public function getNbStep() { return $this->nb_step; }
-    public function setTimeSpan($nb_step) { return $this->nb_step = $nb_step; }
+    public function setNbStep($nb_step) { return $this->nb_step = $nb_step; }
     
     /**
      * The observed field id
@@ -191,7 +191,7 @@ class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
      */
     public function getProperties() {
         $unitSelect = new HTML_Element_Selectbox(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_nb_step'), 
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_unit'), 
                     'chart[unit]', 
                     'value');
         $unitSelect->addMultipleOptions(array(
@@ -211,8 +211,8 @@ class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
                     'chart[start_date]', 
                     $this->getStartDate()),
                 'nb_step'   => new HTML_Element_Input_Text(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_unit'), 
-                    'chart[duration]', 
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_nb_step'), 
+                    'chart[nb_step]', 
                     $this->getNbStep(), 
                     4),
                 'unit'   => ( $unitSelect)

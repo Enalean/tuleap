@@ -24,6 +24,7 @@
 require_once 'common/user/UserManager.class.php';
 
 class GraphOnTrackersV5_Evolution_DataBuilder extends ChartDataBuilderV5 {
+    
     /**
      * build evolution chart properties
      *
@@ -47,15 +48,49 @@ class GraphOnTrackersV5_Evolution_DataBuilder extends ChartDataBuilderV5 {
     }
     
     protected function getEvolutionData($observed_field_id, $type) {
+        $result = array();
+        $timeFiller = array(3600*24, 3600*24*7, 3600*24*30);
         $artifact_ids = explode(',', $this->artifacts['id']);
-        $sql = "SELECT c.artifact_id AS id, TO_DAYS(FROM_UNIXTIME(submitted_on)) - TO_DAYS(FROM_UNIXTIME(0)) as day, value
-                            FROM tracker_changeset AS c 
-                                 INNER JOIN tracker_changeset_value AS cv ON(cv.changeset_id = c.id AND cv.field_id = ". $observed_field_id . ")";
+        $nbSteps = $this->chart->getNbStep();
+        $start = $this->chart->getStartDate();
+        $unit = $this->chart->getUnit();
         
-        $sql .= " INNER JOIN tracker_changeset_value_$type AS cvi ON(cvi.changeset_value_id = cv.id)";
-        $sql .= " WHERE c.artifact_id IN (". implode(',', $artifact_ids) .")";
-        //echo "<br />\n<pre>";var_dump($this);echo "</pre><br />\n";
-        return null;
+        for ($i = 0 ; $i < $nbSteps; $i++ ) {
+            $timestamp = $start + ($i * $timeFiller[$unit]) ;
+            $sql = "SELECT val2.label, r.count
+FROM  tracker_field_list_bind_static_value val2
+LEFT JOIN (
+	SELECT label, count(*) as count
+FROM tracker_field_list_bind_static_value val,  tracker_changeset_value_list l 
+WHERE l.bindvalue_id = val.id
+AND changeset_value_id IN (
+	SELECT v.id
+	FROM `tracker_changeset` as c, `tracker_changeset_value` v
+	WHERE c.id = v.changeset_id
+	AND v.field_id = ". $observed_field_id . "
+	AND artifact_id in (". implode(',', $artifact_ids) .")
+	AND submitted_on = ( 
+		SELECT MAX(submitted_on) 
+		FROM `tracker_changeset` c2
+		WHERE c2.artifact_id = c.artifact_id
+		AND c2.submitted_on < ". $timestamp ."
+		)
+)
+GROUP BY label
+ORDER BY rank
+) as r
+ON r.label = val2.label
+WHERE val2.field_id = ". $observed_field_id;
+            //echo $sql;
+            $res = db_query($sql);
+            
+            $result[$timestamp] = array();
+            while($data = db_fetch_array($res)) 
+                $result[$timestamp][$data['label']] =  $data['count'] | 0; //Switch null for 0
+        }
+        
+        //echo "<br />\n<pre>";var_dump($this->chart->getUnit());echo "</pre><br />\n";
+        return $result;
     }
     
     protected function isValidObservedField($observed_field, $type) {
