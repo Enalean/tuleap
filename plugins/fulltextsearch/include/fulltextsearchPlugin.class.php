@@ -205,6 +205,11 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_search($params) {
+        try {
+            $index_status = $this->getAdminController()->getIndexStatus();
+        } catch (ElasticSearchTransportHTTPException $e) {
+            return;
+        }
         if ($this->isAllowed($params['group_id'])) {
             if ($this->getCurrentUser()->useLabFeatures()) {
                 $filter = '';
@@ -212,12 +217,13 @@ class fulltextsearchPlugin extends Plugin {
                     $hp     = Codendi_HTMLPurifier::instance();
                     $filter = $hp->purify($params['request']->getValidated('search_followups', 'string', ''));
                 }
-
+                $params['html'] .='<span class ="lab_features">';
                 $params['html'] .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
                 $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
                 $params['html'] .= '<input type="hidden" value="followup_search" name="func">';
                 $params['html'] .= '</label><br>';
                 $params['html'] .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
+                $params['html'] .= '</span>';
             }
         }
     }

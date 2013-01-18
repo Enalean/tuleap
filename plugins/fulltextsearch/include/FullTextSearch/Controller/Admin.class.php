@@ -28,9 +28,13 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
         parent::__construct($request, $client);
     }
 
+    public function getIndexStatus() {
+        return $this->client->getStatus();
+    }
+
     public function index() {
         try {
-            $index_status = $this->client->getStatus();
+            $index_status = $this->getIndexStatus();
             $presenter    = new FullTextSearch_Presenter_Index($index_status);
         } catch (ElasticSearchTransportHTTPException $e) {
             $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
@@ -39,7 +43,7 @@ class FullTextSearch_Controller_Admin extends FullTextSearch_Controller_Search {
     }
 
     protected function getSearchPresenter($terms, $search_result) {
-        $index_status  = $this->client->getStatus();
+        $index_status  = $this->getIndexStatus();
         return new FullTextSearch_Presenter_AdminSearch($index_status, $terms, $search_result);
     }
 
