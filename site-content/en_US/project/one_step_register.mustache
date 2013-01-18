@@ -42,7 +42,7 @@
                            type="text"
                            name="{{full_name_label}}"
                            value="{{getFullName}}"
-                           required
+                           required="required"
                            autofocus/>
                     <span class="help-block">between 3 and 40 characters</span>
                 </div>
@@ -55,7 +55,7 @@
                            size="15"
                            name="{{unix_name_label}}"
                            value="{{getUnixName}}"
-                           required/>
+                           required="required" />
                     <span class="help-block">between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.<br />
                     <span class="label label-info">Info</span> The short name is a technical name used in various URLs (project URL and source code repositories) and other references.
                     </span>
@@ -73,6 +73,15 @@
                         <span class="help-block">What is the purpose of your project?</span>
                 </div>
             </div>
+            {{#getProjectDescriptionFields}}
+            <div class="control-group">
+                <label class="control-label">{{label}} <span class="mandatory_field">*</span></label>
+                <div class="controls">
+                    {{{field_type}}}
+                    <span class="help-block">{{{description}}}</span>
+                </div>
+            </div>
+            {{/getProjectDescriptionFields}}
             <div class="control-group">
                 <label class="control-label">Project Privacy</label>
                 <div class="controls">

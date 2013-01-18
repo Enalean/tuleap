@@ -270,6 +270,30 @@ class OneStepProjectCreationPresenter {
         return $this->term_of_service_approval;
     }
 
+    public function getProjectDescriptionFields() {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $fields = array();
+        $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
+        while ($row = db_fetch_array($res)) {
+            $fields[] = array(
+                'label'       => $row['desc_name'],
+                'description' => $purifier->purify($row['desc_description'], CODENDI_PURIFIER_LIGHT),
+                'field_type'  => $this->getFieldType($row),
+            );
+        }
+        return $fields;
+    }
+
+    private function getFieldType($row) {
+        $form_name = 'form_'.$row['group_desc_id'];
+        if ($row['desc_type'] == 'line') {
+            $html = '<input size="40" maxlen="70" type="text" name="'.$form_name.'" value="" required="required" />';
+        } else {
+            $html = '<textarea name="'.$form_name.'" wrap="virtual" cols="40" rows="3" required="required"></textarea>';
+        }
+        return $html;
+    }
+
     /**
      *
      * @return ProjectCreationTemplatePresenter[]
