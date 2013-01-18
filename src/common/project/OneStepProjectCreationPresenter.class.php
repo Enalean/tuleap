@@ -20,14 +20,14 @@
 
 require_once 'RegisterProjectStep.class.php';
 require_once 'common/include/TemplateSingleton.class.php';
-require_once 'ProjectTemplate.class.php';
+require_once 'ProjectCreationTemplatePresenter.class.php';
 require_once 'common/valid/Rule.class.php';
 
 
 /**
  * Controller view helper class 
  */
-class OneStepProjectCreationForm {
+class OneStepProjectCreationPresenter {
     
     const FULL_NAME = 'form_full_name';
     const UNIX_NAME = 'form_unix_name';
@@ -36,6 +36,14 @@ class OneStepProjectCreationForm {
     const LICENSE_TYPE = 'form_license';
     const CUSTOM_LICENSE = 'form_license_other';
     const SHORT_DESCRIPTION = 'form_short_description';
+
+    public $full_name_label         = self::FULL_NAME;
+    public $unix_name_label         = self::UNIX_NAME;
+    public $is_public_label         = self::IS_PUBLIC;
+    public $template_id_label       = self::TEMPLATE_ID;
+    public $license_type_label      = self::LICENSE_TYPE;
+    public $custom_license_label    = self::CUSTOM_LICENSE;
+    public $short_description_label = self::SHORT_DESCRIPTION;
 
     /**
      *
@@ -91,7 +99,27 @@ class OneStepProjectCreationForm {
      */
     private $custom_license = null;
 
-    public function __construct(array $request_data) {
+    /**
+     * @var array
+     */
+    private $available_licenses;
+
+    /**
+     * @var User
+     */
+    private $creator;
+
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    /**
+     * @var ProjectDao
+     */
+    private $project_dao;
+
+    public function __construct(array $request_data, User $creator, array $licenses, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -99,6 +127,10 @@ class OneStepProjectCreationForm {
             ->setTemplateId($request_data)
             ->setLicenseType($request_data)
             ->setCustomLicense($request_data);
+        $this->available_licenses = $licenses;
+        $this->creator            = $creator;
+        $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
+        $this->project_dao        = $project_dao !== null     ? $project_dao     : new ProjectDao();
     }
     
     /**
@@ -193,7 +225,19 @@ class OneStepProjectCreationForm {
     public function getLicenseType() {
         return $this->license_type;
     }
-    
+
+    public function getAvailableLicenses() {
+        $licenses = array();
+        foreach ($this->available_licenses as $license_type => $license_description) {
+            $licenses[] = array(
+                'license_type'        => $license_type,
+                'license_description' => $license_description,
+                'isSelected'          => ($license_type == $this->getLicenseType())
+            );
+        }
+        return $licenses;
+    }
+
     /**
      * 
      * @return blob
@@ -204,49 +248,36 @@ class OneStepProjectCreationForm {
         
     /**
      * 
-     * @return ProjectTemplate[]
+     * @return ProjectCreationTemplatePresenter[]
      */
     public function getDefaultTemplates() {
-        $db_templates = db_query("
-            SELECT group_id, 
-                group_name, 
-                unix_group_name,
-                short_description,
-                register_time 
-            FROM groups 
-            WHERE type='2' 
-            AND status IN ('A','s')"
-        );
-
-        $templates = $this->generateTemplatesFromDbData($db_templates);
-        return $templates;     
+        $db_templates = $this->project_dao->searchSiteTemplates()->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
+        return $this->generateTemplatesFromDbData($db_templates);
     }
     
     /**
      * 
-     * @return ProjectTemplate[]
+     * @return ProjectCreationTemplatePresenter[]
      */
     public function getUserTemplates() {
-        $userId = (int) user_getid();
-        
-        $db_data = db_query("
-            SELECT groups.group_name AS group_name, 
-                groups.group_id AS group_id, 
-                groups.unix_group_name AS unix_group_name,
-                groups.register_time AS register_time, 
-                groups.short_description AS short_description
-            FROM groups, user_group 
-            WHERE groups.group_id = user_group.group_id 
-            AND user_group.user_id = '". $userId ."' 
-            AND user_group.admin_flags = 'A' 
-            AND groups.status='A' 
-            ORDER BY group_name"
-        );
-        
-        $templates = $this->generateTemplatesFromDbData($db_data);
-        return $templates; 
+        $db_templates = $this->project_dao->searchProjectsUserIsAdmin($this->creator->getId())->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
+        return $this->generateTemplatesFromDbData($db_templates);
     }
-    
+
+    /**
+     *
+     * @param resource $db_data
+     * @return ProjectCreationTemplatePresenter[]
+     */
+    private function generateTemplatesFromDbData(DataAccessResult $projects) {
+        $templates = array();
+        foreach ($projects as $project) {
+            /* @var $project Project */
+            $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());
+        }
+        return $templates;
+    }
+
     /**
      * 
      * @return string
@@ -258,7 +289,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setUnixName(array $data) {
         if(isset($data[self::UNIX_NAME])) {
@@ -271,7 +302,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setFullName(array $data) {
         if(isset($data[self::FULL_NAME])) {
@@ -284,7 +315,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setShortDescription(array $data) {
         if(isset($data[self::SHORT_DESCRIPTION])) {
@@ -297,7 +328,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setTemplateId(array $data) {
         if(isset($data[self::TEMPLATE_ID])) {
@@ -310,7 +341,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setIsPublic(array $data) {
         if(isset($data[self::IS_PUBLIC])) {
@@ -323,7 +354,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param string $path
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setFormSubmissionPath(string $path) {
         $this->form_submission_path = $path;
@@ -333,7 +364,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param array $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setLicenseType($data) {
         if(isset($data[self::LICENSE_TYPE])) {
@@ -346,7 +377,7 @@ class OneStepProjectCreationForm {
     /**
      * 
      * @param string $data
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setCustomLicense($data) {
         if(isset($data[self::CUSTOM_LICENSE])) {
@@ -358,29 +389,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @param resource $db_data
-     * @return ProjectTemplate[]
-     */
-    private function generateTemplatesFromDbData($db_data) {
-        $templates = array();
-        $row_count = db_numrows($db_data);
-        
-        for ($i=0; $i < $row_count; $i++) {
-            $template = new ProjectTemplate();
-            $template->setUserGroupId(db_result($db_data, $i, 'group_id'))
-                    ->setUserGroupName(db_result($db_data, $i, 'group_name'))
-                    ->setDateRegistered(db_result($db_data, $i, 'register_time'))
-                    ->setUnixGroupName(db_result($db_data, $i, 'unix_group_name'))
-                    ->setShortDescription(db_result($db_data, $i, 'short_description'));
-            $templates[] = $template;
-        }
-        
-        return $templates;
-    }
-
-    /**
-     * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateFullName() {
         if ($this->getFullName() == null) {
@@ -401,7 +410,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateShortDescription() {
         if ($this->getShortDescription() == null) {
@@ -414,7 +423,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateUnixName() {
         if ($this->getUnixName() == null) {
@@ -436,7 +445,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateTemplateId() {
         if ($this->getTemplateId() == null) {
@@ -458,7 +467,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateProjectPrivacy() {
         if ($this->isPublic() === null) {
@@ -471,7 +480,7 @@ class OneStepProjectCreationForm {
     
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function validateLicense() {
         if ($this->getLicenseType() === null) {
@@ -483,7 +492,7 @@ class OneStepProjectCreationForm {
     }
     /**
      * 
-     * @return \OneStepProjectCreationForm
+     * @return \OneStepProjectCreationPresenter
      */
     private function setIsNotValid() {
         $this->is_valid = false;

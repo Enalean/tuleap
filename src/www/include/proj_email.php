@@ -11,62 +11,29 @@ require_once('common/mail/Mail.class.php');
 require_once('common/include/URL.class.php');
 
 
-function send_new_project_email($group_id) {
-  global $Language;
+function send_new_project_email(Project $project) {
+    $ugroup_manager = new UGroupManager();
+    $admin_ugroup   = $ugroup_manager->getUGroup($project, UGroup::PROJECT_ADMIN);
 
-	$res_grp = db_query("SELECT * FROM groups WHERE group_id='".db_ei($group_id)."'");
+    $mail_manager   = new MailManager();
 
-	if (db_numrows($res_grp) < 1) {
-	  echo $Language->getText('include_proj_email','g_not_exist',$group_id);
-	}
+    $hp = Codendi_HTMLPurifier::instance();
 
-	$row_grp = db_fetch_array($res_grp);
+    foreach ($admin_ugroup->getMembers() as $user) {
+        /* @var $user User */
+        $language = $user->getLanguage();
+        $subject = $GLOBALS['sys_name'] . ' ' . $language->getText('include_proj_email', 'proj_approve', $project->getUnixName());
+        $message = '';
+        include($language->getContent('include/new_project_email', null, null, '.php'));
 
-	$res_admins = db_query("SELECT user.user_name,user.email FROM user,user_group WHERE "
-		. "user.user_id=user_group.user_id AND user_group.group_id='".db_ei($group_id)."' AND "
-		. "user_group.admin_flags='A'");
-
-	$nb_recipients = db_numrows($res_admins);
-    if ($nb_recipients < 1) {
-		echo $Language->getText('include_proj_email','no_admin',$group_id);;
-	}
-
-	// send one email per admin
-    $nb_mail_failed = 0;
-	$pm = ProjectManager::instance();
-    while ($row_admins = db_fetch_array($res_admins)) {
-
-        $server = get_server_url();
-        $p = $pm->getProject($group_id);
-        $host = $GLOBALS['sys_default_domain'];
-        if ($p && $p->usesService('svn')) {
-           $sf = new ServerFactory();
-           if ($s =& $sf->getServerById($p->services['svn']->getServerId())) {
-               $host = URL::getHost($s->getUrl(session_issecure()));
-           }
-        }
-        if ($GLOBALS['sys_force_ssl']) {
-           $svn_url = 'https://'. $host;
-        } else {
-           $svn_url = 'http://svn.'. $row_grp['unix_group_name'] .'.'. $host;
-        }
-        $svn_url .= '/svnroot/'. $row_grp['unix_group_name'];
-        // $message is defined in the content file
-        include($Language->getContent('include/new_project_email'));
-    
-        // LJ Uncomment to test
-        //echo $message; return
-    
-        $mail = new Mail();
-        $mail->setTo($row_admins['email']);
-        $mail->setSubject($GLOBALS['sys_name'].' '.$Language->getText('include_proj_email','proj_approve',$row_grp['unix_group_name']));
-        $mail->setBody($message);
-        $mail->setFrom($GLOBALS['sys_email_admin']);
-        if (!$mail->send()) {
-            $nb_mail_failed++;
-        }
+        $mail = $mail_manager->getMailByType('html');
+        $mail->getLookAndFeelTemplate()->set('title', $hp->purify($subject, CODENDI_PURIFIER_CONVERT_HTML));
+        $mail->setTo($user->getEmail());
+        $mail->setSubject($subject);
+        $mail->setBodyHtml($message);
+        $mail->send();
     }
-    return ($nb_mail_failed < $nb_recipients);
+    return true;
 }
 
 //
