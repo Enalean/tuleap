@@ -782,13 +782,12 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
                 }
-                //@todo Properly manage warning about Global Full text in Tracker Report...
-                if ($request->get('search_followups')) {
-                    $html .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
-                    $html .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
-                    $html .= $GLOBALS['Language']->getText('plugin_tracker_report', 'global_full_text_warning_search');
-                    $html .= '</div>';
-                }
+                //Warning about Full text in Tracker Report...
+                $fts_warning = '';
+                $params = array('html' => &$fts_warning, 'request' => $request, 'group_id' => $this->tracker->getGroupId());
+                EventManager::instance()->processEvent('tracker_report_followup_warning', $params);
+                $html .= $fts_warning;
+
                 $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }

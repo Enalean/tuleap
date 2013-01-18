@@ -47,6 +47,7 @@ class fulltextsearchPlugin extends Plugin {
         $this->_addHook('tracker_report_followup_search_process', 'tracker_report_followup_search_process', false);
         $this->_addHook('tracker_followup_event_add', 'tracker_followup_event_add', false);
         $this->_addHook('tracker_followup_event_update', 'tracker_followup_event_update', false);
+        $this->_addHook('tracker_report_followup_warning', 'tracker_report_followup_warning', false);
 
         // site admin
         $this->_addHook('site_admin_option_hook',   'site_admin_option_hook', false);
@@ -225,6 +226,22 @@ class fulltextsearchPlugin extends Plugin {
                 $params['html'] .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
                 $params['html'] .= '</span>';
             }
+        }
+    }
+
+    /**
+     * Process warning display for tracker followup search
+     *
+     * @param Array $params Hook params
+     *
+     * @return Void
+     */
+    public function tracker_report_followup_warning($params) {
+        if ($params['request']->get('search_followups')) {
+            $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
+            $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
+            $params['html'] .= $GLOBALS['Language']->getText('plugin_tracker_report', 'global_full_text_warning_search');
+            $params['html'] .= '</div>';
         }
     }
 
