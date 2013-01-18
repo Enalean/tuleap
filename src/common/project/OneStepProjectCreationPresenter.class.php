@@ -187,6 +187,13 @@ class OneStepProjectCreationPresenter {
     }
 
     /**
+     * @return bool
+     */
+    public function isProjectApprovalEnabled() {
+        return Config::get('sys_project_approval');
+    }
+
+    /**
      *
      * @return string
      */
@@ -270,6 +277,9 @@ class OneStepProjectCreationPresenter {
         return $this->term_of_service_approval;
     }
 
+    /**
+     * @return bool
+     */
     public function hasMoreThanOneAvailableTemplate() {
         return $this->hasUserTemplates() || $this->hasMoreThanOneDefaultTemplates();
     }

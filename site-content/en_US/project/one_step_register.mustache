@@ -25,15 +25,15 @@
             <h1 class="one_step_project">Project Creation Request</h1>
         </p>
 
-        <p class="one_step_project">Creating a new project on {{getSysName}} only takes a few steps.
-            <br />
-            <br />
-            <span class="label label-warning">Warning</span> Before being able to do anything with your project, a system administrator must approve the project.
-        </p>
+        <p class="one_step_project">Creating a new project on {{getSysName}} only takes a few steps.</p>
+
+        {{#isProjectApprovalEnabled}}
+            <p><span class="label label-warning">Warning</span> Before being able to
+            do anything with your project, a system administrator must approve the
+            project.</p>
+        {{/isProjectApprovalEnabled}}
 
         <legend>Describe your project</legend>
-
-
         <table>
             <div class="control-group">
                 <label class="control-label">Full name <span class="mandatory_field">*</span></label>
@@ -44,7 +44,7 @@
                            value="{{getFullName}}"
                            required
                            autofocus/>
-                    <span class="help-block">between 3 and 40 characters</span>
+                    <div class="help">between 3 and 40 characters</div>
                 </div>
             </div>
             <div class="control-group">
@@ -56,7 +56,7 @@
                            name="{{unix_name_label}}"
                            value="{{getUnixName}}"
                            required/>
-                    <span class="help-block">between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.<br />
+                    <div class="help">between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.</div>
                     <span class="label label-info">Info</span> The short name is a technical name used in various URLs (project URL and source code repositories) and other references.
                     </span>
                 </div>
@@ -70,7 +70,7 @@
                         cols="40"
                         rows="3"
                         required>{{getShortDescription}}</textarea>
-                        <span class="help-block">What is the purpose of your project?</span>
+                        <div class="help">What is the purpose of your project?</div>
                 </div>
             </div>
             <div class="control-group">
