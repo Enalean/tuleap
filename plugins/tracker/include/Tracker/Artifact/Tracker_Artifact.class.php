@@ -1012,7 +1012,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $list_errors = array();
         $is_valid = true;
         $used_fields    = $this->getFormElementFactory()->getUsedFields($this->getTracker());
-        $last_changeset = $this->getLastChangeset();
         foreach ($used_fields as $field) {
             if ($field->hasErrors()) {
                 $list_errors[] = $field->getId();
@@ -1179,6 +1178,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($last_changeset) {
             return $last_changeset;
         }
+        return null;
     }
 
     /**
