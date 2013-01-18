@@ -19,22 +19,42 @@
 
 document.observe('dom:loaded', function () {
 
-    function toggleTemplate(input) {
-        var method = 'hide';
-        if (input.checked) {
-            method = 'show';
-        }
-        input.up('label').nextSiblings().invoke(method);
-    }
-
-    function toggleAllTemplates(inputs) {
-        inputs.map(toggleTemplate);
-    }
-
     var inputs = $$('.one_step_project_choose_template > label.radio > input[type=radio]');
-    toggleAllTemplates(inputs);
-    inputs.invoke('observe', 'click', function () {
+    if (inputs) {
+        function toggleTemplate(input) {
+            var method = 'hide';
+            if (input.checked) {
+                method = 'show';
+            }
+            input.up('label').nextSiblings().invoke(method);
+        }
+
+        function toggleAllTemplates(inputs) {
+            inputs.map(toggleTemplate);
+        }
+
         toggleAllTemplates(inputs);
-    });
+        inputs.invoke('observe', 'click', function () {
+            toggleAllTemplates(inputs);
+        });
+    }
+
+    var select_licenses = $$('.one_step_project select[name="form_license"]');
+    if (select_licenses) {
+        function toggleOther(select) {
+            if ($F(select) == 'other') {
+                select.up().next().show();
+            } else {
+                select.up().next().hide();
+            }
+        }
+
+        select_licenses.map(toggleOther);
+        select_licenses.each(function (select) {
+            select.observe('change', function () {
+                toggleOther(select);
+            });
+        });
+    }
 });
 
