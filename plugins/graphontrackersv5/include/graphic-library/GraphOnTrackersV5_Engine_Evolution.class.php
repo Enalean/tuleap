@@ -43,18 +43,53 @@ class GraphOnTrackersV5_Engine_Evolution extends GraphOnTrackersV5_Engine {
      */
     public function buildGraph() {
         require_once('common/chart/Chart.class.php');
-        echo "<pre>"; var_dump($this->data); echo "</pre>";
+        //echo "<pre>"; var_dump($this->data); echo "</pre>";
+
         if ($this->width == 0) {
             $this->width = (count($this->data)*100)+(2*150);
         }
         
         $right_margin = 50;
         
+        foreach ($this->data as $date => $label)
+            $dates[] = date('M-d', $date);
+        
         $this->graph = new Chart($this->width,$this->height);
-        $this->graph->SetScale("textlint");
+        $colors = $this->graph->getThemedColors();
+        $this->graph->SetScale("datlin");
         $this->graph->title->Set($this->title);
         
+        $this->graph->xaxis->SetTickLabels($dates);
         
+        if (is_null($this->description)) {
+            $this->description = "";
+        }
+        $this->graph->subtitle->Set($this->description);
+        
+        $keys = array_keys($this->data[$this->start_date]);
+        $nbOpt = count($keys);
+        foreach ($this->data as $date => $row) {
+            for($i = 1; $i < $nbOpt ;$i++) {
+                if($this->data[$date][$keys[$i]]!==null){
+                    $this->data[$date][$keys[$i]] += $this->data[$date][$keys[$i-1]];
+                }
+            }
+        }
+        $this->graph->ygrid->SetFill(true,'#F3FFFF@0.5','#FFFFFF@0.5');
+        
+        for($i = $nbOpt-1; $i >= 0; $i--) {
+            $lineData = array();
+            foreach ($this->data as $data => $row) {
+                $lineData[] = $row[$keys[$i]];
+            }
+            $line = new LinePlot($lineData);
+            $line->SetFillColor($colors[$i]);
+            $line->SetColor('#000');
+            
+            $this->graph->Add($line);
+        }
+        //$this->graph->Stroke();
+        //echo "###<pre>"; var_dump($this->data); echo "</pre>@@@";
         /*
         $burndown = new Tracker_Chart_Burndown($this->data);
         $burndown->setTitle($this->title);
