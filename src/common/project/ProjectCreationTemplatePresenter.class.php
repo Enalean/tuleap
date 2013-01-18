@@ -90,7 +90,7 @@ class ProjectCreationTemplatePresenter {
         foreach ($admin_ugroup->getMembers() as $user) {
             $users[] = $user_helper->getLinkOnUser($user);
         }
-        return implode(',', $users);
+        return implode(', ', $users);
     }
 
     /**
