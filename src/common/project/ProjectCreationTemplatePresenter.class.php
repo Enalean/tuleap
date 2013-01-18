@@ -22,7 +22,7 @@
 require_once 'common/project/Project.class.php';
 
 class ProjectCreationTemplatePresenter {
-    
+
     /**
      * @var Project
      */
@@ -30,7 +30,7 @@ class ProjectCreationTemplatePresenter {
 
     /**
      *
-     * @var Codendi_HTMLPurifier 
+     * @var Codendi_HTMLPurifier
      */
     private $text_purifier;
 
@@ -46,40 +46,40 @@ class ProjectCreationTemplatePresenter {
     }
 
     /**
-     * 
+     *
      * @return int
      */
     public function getGroupId() {
         return $this->project->getID();
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getUserGroupName() {
         return $this->project->getPublicName();
     }
-    
+
     /**
-     * 
+     *
      * @param string $format A valid php date format
      * @return string
      */
     public function getFormattedDateRegistered() {
         return date($GLOBALS['Language']->getText('system', 'datefmt_short'), $this->project->getStartDate());
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getUnixGroupName() {
         return $this->project->getUnixName();
     }
-    
+
     /**
-     * 
+     *
      * @return array List of names of admin users for this template
      */
     public function getAdminUserNames() {
@@ -92,17 +92,17 @@ class ProjectCreationTemplatePresenter {
         }
         return implode(',', $users);
     }
-    
+
     /**
-     * 
+     *
      * @return array List of names
      */
     public function getServicesUsed() {
         return implode(', ', $this->project->getAllUsedServices());
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getPurifiedUserGroupName() {
@@ -111,15 +111,15 @@ class ProjectCreationTemplatePresenter {
                 CODENDI_PURIFIER_CONVERT_HTML
                 );
     }
-    
+
     /**
-     * 
+     *
      * @return string
      */
     public function getPurifiedShortDescription() {
         return $this->text_purifier->purify(
                 util_unconvert_htmlspecialchars($this->project->getDescription()),
-                CODENDI_PURIFIER_LIGHT, 
+                CODENDI_PURIFIER_LIGHT,
                 $this->project->getID()
                 );
     }
