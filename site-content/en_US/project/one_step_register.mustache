@@ -109,25 +109,19 @@
                         {{#getDefaultTemplates}}
                             <tr>
                                 <td>
-                                    <input type="radio"
+                                    <label class="radio">
+                                        <input type="radio"
                                            name="{{template_id_label}}"
                                            value="{{getGroupId}}"
                                            {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
                                         />
-                                </td>
-                                <td>
                                     <b>{{getPurifiedUserGroupName}}</b>
                                     ({{getFormattedDateRegistered}})
                                     <i>{{getPurifiedShortDescription}}</i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                </td>
-                                <td>
-                                   <i>Contact: {{{getAdminUserNames}}}</i>
-                                    <br />
-                                    <br />
+                                    </label>
+                                    <p>
+                                        <i>Contact: {{{getAdminUserNames}}}</i>
+                                    </p>
                                     <p>
                                         <i>Services used:</i>
                                         {{getServicesUsed}}
@@ -137,39 +131,30 @@
                         {{/getDefaultTemplates}}
                     </tbody>
                 </table>
-                <br />
-                <br />
                 <h5 class="one_step_project">Projects of which you are administrator</h5>
                 <table class="table table-bordered table-striped">
                     <tbody>
                         {{#getUserTemplates}}
                             <tr>
                                 <td>
-                                    <input type="radio"
+                                    <label class="radio">
+                                        <input type="radio"
                                            name="{{template_id_label}}"
                                            value="{{getGroupId}}"
                                            {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
                                         />
-                                </td>
-                                <td>
-                                    <b>{{getPurifiedUserGroupName}}</b>
-                                    ({{getFormattedDateRegistered}})
-                                    <i>{{getPurifiedShortDescription}}</i>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                </td>
-                                <td>
-                                   <i>Contact: {{{getAdminUserNames}}}</i>
-                                    <br />
-                                    <br />
+                                         <b>{{getPurifiedUserGroupName}}</b>
+                                        ({{getFormattedDateRegistered}})
+                                        <i>{{getPurifiedShortDescription}}</i>
+                                    </label>
+                                    <p>
+                                        <i>Contact: {{{getAdminUserNames}}}</i>
+                                    </p>
                                     <p>
                                         <i>Services used:</i>
                                         {{getServicesUsed}}
                                     </p>
                                 </td>
-                            </tr>
                         {{/getUserTemplates}}
                     </tbody>
                 </table>
@@ -198,6 +183,6 @@
             You will receive a notification when the system administrator has validated it.
             Then, you will be able to access your new project workspace. Enjoy!
         </p>
-        <input type="submit" value="submit project" name="create_project"/>
+        <input type="submit" value="Create the project" name="create_project" class="btn btn-primary"/>
     </form>
 </div>
