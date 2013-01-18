@@ -8,6 +8,8 @@ Version 5.9 (Not Released Yet)
 	* docman: 2.26.12
 	* graphontrackers: 1.7
 	* agiledashboard: 0.62
+  == Themes ==
+	* Tuleap: 2.5
 
   == Bug Fix ==
     * Do not rely on SimplePie escaping
