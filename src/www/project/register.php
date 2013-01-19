@@ -45,11 +45,8 @@ if (Config::get('sys_create_project_in_one_step')) {
     
     $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));
 
-    $mustache = new Mustache();
-    echo $mustache->render(
-            file_get_contents($GLOBALS['Language']->getContent('project/one_step_register', null, null, '.mustache')),
-            $single_step_project
-    );
+    $renderer  = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/project');
+    $renderer->renderToPage('register', $single_step_project);
 
     $HTML->footer(array());
     exit; 

@@ -129,27 +129,7 @@
                     <table class="table table-bordered table-striped">
                         <tbody>
                             {{#getDefaultTemplates}}
-                                <tr>
-                                    <td class="one_step_project_choose_template">
-                                        <label class="radio">
-                                            <input type="radio"
-                                            name="{{template_id_label}}"
-                                            value="{{getGroupId}}"
-                                            {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
-                                            />
-                                            <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
-                                        </label>
-                                        {{#getAdminUserNames}}
-                                            <p>
-                                                Contact: {{{getAdminUserNames}}}
-                                            </p>
-                                        {{/getAdminUserNames}}
-                                        <p>
-                                            Services used:
-                                            {{getServicesUsed}}
-                                        </p>
-                                    </td>
-                                </tr>
+                                {{> register-templates }}
                             {{/getDefaultTemplates}}
                         </tbody>
                     </table>
@@ -158,26 +138,7 @@
                         <table class="table table-bordered table-striped">
                             <tbody>
                                 {{#getUserTemplates}}
-                                    <tr>
-                                        <td class="one_step_project_choose_template">
-                                            <label class="radio">
-                                                <input type="radio"
-                                                   name="{{template_id_label}}"
-                                                   value="{{getGroupId}}"
-                                                   {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
-                                                />
-                                                 <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
-                                            </label>
-                                            {{#getAdminUserNames}}
-                                                <p>
-                                                    Contact: {{{getAdminUserNames}}}
-                                                </p>
-                                            {{/getAdminUserNames}}
-                                            <p>
-                                                Services used:
-                                                {{getServicesUsed}}
-                                            </p>
-                                        </td>
+                                   {{> register-templates }}
                                 {{/getUserTemplates}}
                             </tbody>
                         </table>
