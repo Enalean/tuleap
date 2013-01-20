@@ -18,23 +18,21 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 }}
-<tr>
-    <td class="one_step_project_choose_template">
-        <label class="radio">
-            <input type="radio"
-                name="{{template_id_label}}"
-                value="{{getGroupId}}"
-                {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
-                />
-            <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
-        </label>
-        {{#getAdminUserNames}}
-            <p>
-                Contact: {{{getAdminUserNames}}}
-            </p>
-        {{/getAdminUserNames}}
+<div class="one_step_project_choose_template">
+    <label class="radio">
+        <input type="radio"
+            name="{{template_id_label}}"
+            value="{{getGroupId}}"
+            {{#isSelectedTemplate}}checked="checked"{{/isSelectedTemplate}}
+            />
+        <b>{{getPurifiedUserGroupName}}</b> - {{{getPurifiedShortDescription}}}
+    </label>
+    {{#getAdminUserNames}}
         <p>
-            Services used: {{getServicesUsed}}
+            Contact: {{{getAdminUserNames}}}
         </p>
-    </td>
-</tr>
+    {{/getAdminUserNames}}
+    <p>
+        Services used: {{getServicesUsed}}
+    </p>
+</div>

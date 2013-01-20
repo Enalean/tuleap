@@ -126,22 +126,18 @@
             <div class="control-group">
                 <div class="controls">
                     <h3 class="one_step_project">Default templates</h3>
-                    <table class="table table-bordered table-striped">
-                        <tbody>
-                            {{#getDefaultTemplates}}
-                                {{> register-templates }}
-                            {{/getDefaultTemplates}}
-                        </tbody>
-                    </table>
+                    <div class="one_step_project_templates">
+                       {{#getDefaultTemplates}}
+                           {{> register-templates }}
+                       {{/getDefaultTemplates}}
+                    </div>
                     {{#hasUserTemplates}}
                         <h3 class="one_step_project">Projects of which you are administrator</h3>
-                        <table class="table table-bordered table-striped">
-                            <tbody>
-                                {{#getUserTemplates}}
-                                   {{> register-templates }}
-                                {{/getUserTemplates}}
-                            </tbody>
-                        </table>
+                        <div class="one_step_project_templates">
+                           {{#getUserTemplates}}
+                              {{> register-templates }}
+                           {{/getUserTemplates}}
+                        </div>
                     {{/hasUserTemplates}}
                 </div>
             </div>
