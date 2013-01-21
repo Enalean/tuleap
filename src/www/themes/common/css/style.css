@@ -3709,12 +3709,13 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
   text-align: left;
   vertical-align: top;
   border: 1px solid #dddddd;
+  border-top: none;
 }
 .one_step_project_choose_template:nth-child(odd) {
   background-color: #f9f9f9;
 }
-.one_step_project_choose_template:nth-child(even) {
-  border-top:none;
+.one_step_project_choose_template:first-child {
+  border-top: 1px solid #dddddd;
 }
 .one_step_project_choose_template:first-child {
   -webkit-border-top-left-radius: 4px;
