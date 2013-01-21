@@ -23,9 +23,8 @@ class ElasticSearch_SearchResult_tracker extends ElasticSearch_SearchResult {
     public $url;
         
     public function __construct(array $hit, Project $project) {
-        //TODO
-        $this->artifact_title    = '';//$hit['fields']['title'];
-        $this->url           = '/plugins/tracker/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
+        $this->artifact_title = '';//$hit['fields']['title'];
+        $this->url            = '/plugins/tracker/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
         parent::__construct($hit, $project);
     }
 }
