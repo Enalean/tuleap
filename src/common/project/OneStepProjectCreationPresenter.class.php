@@ -113,6 +113,11 @@ class OneStepProjectCreationPresenter {
     /**
      * @var array
      */
+    private $custom_descriptions = array();
+
+    /**
+     * @var array
+     */
     private $available_licenses;
 
     /**
@@ -138,7 +143,8 @@ class OneStepProjectCreationPresenter {
             ->setTemplateId($request_data)
             ->setLicenseType($request_data)
             ->setCustomLicense($request_data)
-            ->setTosApproval($request_data);
+            ->setTosApproval($request_data)
+            ->setCustomDescriptions($request_data);
         $this->available_licenses = $licenses;
         $this->creator            = $creator;
         $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
@@ -278,12 +284,19 @@ class OneStepProjectCreationPresenter {
         return $this->term_of_service_approval;
     }
 
+    /**
+     * @return string
+     */
+    public function getCustomProjectDescription($id) {
+        return $this->custom_descriptions[$id];
+    }
+
     public function getProjectDescriptionFields() {
         $purifier = Codendi_HTMLPurifier::instance();
         $fields = array();
         $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
         while ($row = db_fetch_array($res)) {
-            $form_name = 'form_'.$row['group_desc_id'];
+            $form_name = self::PROJECT_DESCRIPTION_PREFIX.$row['group_desc_id'];
             $fields[] = array(
                 'label'               => $row['desc_name'],
                 'description'         => $purifier->purify($row['desc_description'], CODENDI_PURIFIER_LIGHT),
@@ -346,7 +359,6 @@ class OneStepProjectCreationPresenter {
     private function generateTemplatesFromParsedDbData(DataAccessResult $projects) {
         $templates = array();
         foreach ($projects as $project) {
-            var_dump(get_class($project), $projects);
             /* @var $project Project */
             $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());
         }
@@ -477,6 +489,12 @@ class OneStepProjectCreationPresenter {
         }
 
         return $this;
+    }
+
+    private function setCustomDescriptions($data) {
+        foreach ($data as $key => $value) {
+            //if (strp)
+        }
     }
 
     /**

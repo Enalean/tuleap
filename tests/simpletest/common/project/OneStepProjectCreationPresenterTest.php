@@ -121,6 +121,18 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $this->assertTrue($single_step->getTosApproval());
     }
 
+    public function testNewObjectSetsACustomTextDescriptionField() {
+        $text_content = 'bla bla bla';
+        $custom_id    = 101;
+
+        $request_data = array(
+            OneStepProjectCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+        );
+
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
+        $this->assertEqual($text_content, $single_step->getCustomProjectDescription($custom_id));
+    }
+
     public function testGetProjectValuesUsesCustomLicenseIfTypeIsOther() {
         $full_name = 'my_test proj';
         $unix_name = 'fdgd';
