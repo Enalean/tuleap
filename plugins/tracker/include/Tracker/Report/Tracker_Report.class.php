@@ -40,7 +40,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     const ACTION_REPLACE = 'report-replace';
     const ACTION_DELETE  = 'report-delete';
     const ACTION_SCOPE   = 'report-scope';
-    const ACTION_DEFAULT   = 'report-default';
+    const ACTION_DEFAULT = 'report-default';
     
     public $id;
     public $name;
@@ -511,7 +511,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
         }
 
-        //@todo Find a better way to manage search in followup thru Tracker report
         $followupSearchForm = '';
         $params = array('html' => &$followupSearchForm, 'request' => $request, 'group_id' => $this->tracker->getGroupId());
         EventManager::instance()->processEvent('tracker_report_followup_search', $params);
