@@ -39,6 +39,7 @@ class OneStepProjectCreationPresenter {
     const CUSTOM_LICENSE    = 'form_license_other';
     const SHORT_DESCRIPTION = 'form_short_description';
     const TOS_APPROVAL      = 'form_terms_of_services_approval';
+    const PROJECT_DESCRIPTION_PREFIX = 'form_';
 
     public $full_name_label                = self::FULL_NAME;
     public $unix_name_label                = self::UNIX_NAME;
@@ -275,6 +276,23 @@ class OneStepProjectCreationPresenter {
      */
     public function getTosApproval() {
         return $this->term_of_service_approval;
+    }
+
+    public function getProjectDescriptionFields() {
+        $purifier = Codendi_HTMLPurifier::instance();
+        $fields = array();
+        $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
+        while ($row = db_fetch_array($res)) {
+            $form_name = 'form_'.$row['group_desc_id'];
+            $fields[] = array(
+                'label'               => $row['desc_name'],
+                'description'         => $purifier->purify($row['desc_description'], CODENDI_PURIFIER_LIGHT),
+                'is_text_field_type'  => $row['desc_type'] == 'line' ? false : true,
+                'form_name'           => $form_name,
+                'value'               => '',
+            );
+        }
+        return $fields;
     }
 
     /**
