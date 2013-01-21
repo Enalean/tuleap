@@ -105,7 +105,7 @@ class ProjectCreationTemplatePresenter {
      *
      * @return string
      */
-    public function getPurifiedUserGroupName() {
+    public function getPurifiedProjectName() {
         return $this->text_purifier->purify(
                 util_unconvert_htmlspecialchars($this->project->getPublicName()),
                 CODENDI_PURIFIER_CONVERT_HTML

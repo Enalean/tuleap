@@ -134,3 +134,4 @@ register_project_one_step	description_container_project_private_label	Privé (ac
 register_project_one_step	description_container_project_public_label	Public
 register_project_one_step	description_container_project_license	Licence
 register_project_one_step	description_container_project_license_help	Merci de fournir une description de votre licence.
+register_project_one_step	submit_button	Créer le projet

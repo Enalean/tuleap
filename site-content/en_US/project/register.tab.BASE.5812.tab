@@ -132,25 +132,3 @@ register_confirmation	trove	Categories
 #
 register_desc	short_description	Short Project Description
 register_desc	short_description_desc	What's the purpose of your project (3-4 lines description). HTML tags allowed.
-
-register_project_one_step	title	Project Creation request
-register_project_one_step	page_description_beg	Creating a new project on
-register_project_one_step	page_description_end	only takes a few steps.
-register_project_one_step	warning	Warning
-register_project_one_step	warning_message	Before being able to do anything with your project, a system administrator must approve the project.
-register_project_one_step	description_container_title	Describe your project
-register_project_one_step	description_container_full_name	Full Name
-register_project_one_step	description_container_full_name_help	between 3 and 40 characters
-register_project_one_step	description_container_short_name	Short Name
-register_project_one_step	description_container_short_name_help	between 3 and 30 characters length, with only characters, numbers and dashes. Must start with a letter. NO SPACES ALLOWED.
-register_project_one_step	description_container_short_name_label	The short name is a technical name used in various URLs (project URL and source code repositories) and other references.
-
-register_project_one_step	description_container_short_description	Short Description
-register_project_one_step	description_container_short_description_help	What is the purpose of your project?
-register_project_one_step	description_container_project_description	Project Description
-register_project_one_step	description_container_project_privacy	Project Privacy
-register_project_one_step	description_container_project_private_label	Private (limit access only to the project members)
-register_project_one_step	description_container_project_public_label	Public
-register_project_one_step	description_container_project_license	License
-register_project_one_step	description_container_project_license_help	Please provide an explanation along with a description of your license.
-register_project_one_step	submit_button	Create the project

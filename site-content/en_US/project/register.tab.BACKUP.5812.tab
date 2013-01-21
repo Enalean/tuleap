@@ -133,6 +133,7 @@ register_confirmation	trove	Categories
 register_desc	short_description	Short Project Description
 register_desc	short_description_desc	What's the purpose of your project (3-4 lines description). HTML tags allowed.
 
+<<<<<<< HEAD
 register_project_one_step	title	Project Creation request
 register_project_one_step	page_description_beg	Creating a new project on
 register_project_one_step	page_description_end	only takes a few steps.
@@ -153,4 +154,6 @@ register_project_one_step	description_container_project_private_label	Private (l
 register_project_one_step	description_container_project_public_label	Public
 register_project_one_step	description_container_project_license	License
 register_project_one_step	description_container_project_license_help	Please provide an explanation along with a description of your license.
+=======
 register_project_one_step	submit_button	Create the project
+>>>>>>> 83c410fd8a1b093e0d048fe47e9fca361e905f1b
