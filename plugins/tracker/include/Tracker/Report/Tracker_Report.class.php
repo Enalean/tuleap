@@ -514,7 +514,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $followupSearchForm = '';
         $params = array('html' => &$followupSearchForm, 'request' => $request, 'group_id' => $this->tracker->getGroupId());
         EventManager::instance()->processEvent('tracker_report_followup_search', $params);
-        $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
+        if (!empty($followupSearchForm)) {
+            $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
+        }
         $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
  
         $html .= '<div align="center">';
