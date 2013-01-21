@@ -243,7 +243,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      *
      * @return Array
      */
-    public function scrambleMatchingIds($formattedMatchingIds) {
+    private function scrambleMatchingIds($formattedMatchingIds) {
         $matchingIds['id']                = '';
         $matchingIds['last_changeset_id'] = '';
         foreach ($formattedMatchingIds as $artifactId => $lastChangesetId) {
