@@ -487,7 +487,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null, $request = null) {
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, Codendi_Request $request, User $current_user = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
@@ -596,7 +596,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
             }
-            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user, $request);
+            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $request, $current_user);
             
             //Display Renderers
             $html .= '<div>';
