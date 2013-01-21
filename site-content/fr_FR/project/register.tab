@@ -114,3 +114,4 @@ register_services	server	Serveur
 register_desc	short_description	Description courte du projet
 register_desc	short_description_desc	Quel est le sujet de votre projet (description de 3 ou 4 lignes). Balises HTML autorisées.
 
+register_project_one_step	submit_button	Créer le projet

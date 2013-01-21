@@ -132,3 +132,5 @@ register_confirmation	trove	Categories
 #
 register_desc	short_description	Short Project Description
 register_desc	short_description_desc	What's the purpose of your project (3-4 lines description). HTML tags allowed.
+
+register_project_one_step	submit_button	Create the project

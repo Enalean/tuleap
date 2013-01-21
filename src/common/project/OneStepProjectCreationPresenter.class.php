@@ -308,6 +308,9 @@ class OneStepProjectCreationPresenter {
         return $fields;
     }
 
+    public function getCreateProjectButtonLabel() {
+        return $GLOBALS[Language]->getText('register_project_one_step', 'submit_button');
+    }
     /**
      * @return bool
      */
