@@ -22,21 +22,19 @@
     <form class="one_step_project" action="{{getFormSubmissionPath}}" method="post">
         <input type="hidden" name="onestep" value="true" />
         <p>
-            <h1 class="one_step_project">Project Creation Request</h1>
+            <h1 class="one_step_project">{{getTitle}}</h1>
         </p>
 
-        <p class="one_step_project">Creating a new project on {{getSysName}} only takes a few steps.</p>
-
+        <p class="one_step_project">{{getPageDescriptionBeg}} {{getSysName}} {{getPageDescriptionEnd}}</p>
+        
         {{#isProjectApprovalEnabled}}
-            <p><span class="label label-warning">Warning</span> Before being able to
-            do anything with your project, a system administrator must approve the
-            project.</p>
+            <p><span class="label label-warning">{{getWarning}}</span> {{getWarningMessage}}</p>
         {{/isProjectApprovalEnabled}}
 
-        <h2>Describe your project</h2>
+        <h2>{{getDescriptionContainerTitle}}</h2>
         <table>
             <div class="control-group">
-                <label class="control-label">Full name <span class="mandatory_field">*</span></label>
+                <label class="control-label">{{getDescriptionContainerFullName}} <span class="mandatory_field">*</span></label>
                 <div class="controls">
                     <input size="40"
                            type="text"
@@ -44,11 +42,11 @@
                            value="{{getFullName}}"
                            required
                            autofocus/>
-                    <div class="help">between 3 and 40 characters</div>
+                    <div class="help">{{getDescriptionContainerFullNameHelp}}</div>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">Short name <span class="mandatory_field">*</span></label>
+                <label class="control-label">{{getDescriptionContainerShortName}} <span class="mandatory_field">*</span></label>
                 <div class="controls">
                     <input type="text"
                            maxlength="30"
@@ -56,13 +54,13 @@
                            name="{{unix_name_label}}"
                            value="{{getUnixName}}"
                            required/>
-                    <div class="help">between 3 and 30 characters length, with only characters, numbers and dashes. Must start with a letter. NO SPACES ALLOWED.</div>
-                    <span class="label label-info">Info</span> The short name is a technical name used in various URLs (project URL and source code repositories) and other references.
+                    <div class="help">{{getDescriptionContainerShortNameHelp}}</div>
+                    <span class="label label-info">Info</span> {{getDescriptionContainerShortNameLabel}}
                     </span>
                 </div>
             </div>
             <div class="control-group">
-                <label class="control-label">Short description <span class="mandatory_field">*</span></label>
+                <label class="control-label">{{getDescriptionContainerShortDescription}} <span class="mandatory_field">*</span></label>
                 <div class="controls">
                     <textarea
                         name="{{short_description_label}}"
@@ -70,7 +68,7 @@
                         cols="40"
                         rows="3"
                         required>{{getShortDescription}}</textarea>
-                        <div class="help">What is the purpose of your project?</div>
+                        <div class="help">{{getDescriptionContainerShortDescriptionHelp}}</div>
                 </div>
             </div>
             {{#getProjectDescriptionFields}}
@@ -84,24 +82,24 @@
             </div>
             {{/getProjectDescriptionFields}}
             <div class="control-group">
-                <label class="control-label">Project Privacy</label>
+                <label class="control-label">{{getDescriptionContainerProjectPrivacy}}</label>
                 <div class="controls">
                     <input type="radio"
                            name="{{is_public_label}}"
                            value="1"
                            {{#isPublic}}checked="checked"{{/isPublic}}
                         />
-                    Public
+                    {{getDescriptionContainerPublicLabel}}
                     <br>
                     <input type="radio"
                            name="{{is_public_label}}"
                            value="0"
                            {{^isPublic}}checked="checked"{{/isPublic}}
                         />
-                    Private (limit access only to the project members)
+                    {{getDescriptionContainerPrivateLabel}}
                 </div>
             </div><div class="control-group">
-                <label class="control-label">License</label>
+                <label class="control-label">{{getDescriptionContainerProjectLicense}}</label>
                 <div class="controls">
                     <select name="{{license_type_label}}">
                         {{#getAvailableLicenses}}
@@ -113,7 +111,7 @@
                             wrap=virtual
                             cols=60
                             rows=10>{{getCustomLicense}}</textarea>
-                        <div class="help">Please provide an explanation along with a description of your license.</div>
+                        <div class="help">{{getDescriptionContainerProjectLicenseHelp}}</div>
                     </div>
                 </div>
             </div>

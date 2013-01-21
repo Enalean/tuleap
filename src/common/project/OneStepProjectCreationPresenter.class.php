@@ -294,7 +294,82 @@ class OneStepProjectCreationPresenter {
         }
         return $fields;
     }
-
+    
+    public function getTitle() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'title');
+    }
+    
+    public function getPageDescriptionBeg() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'page_description_beg');
+    }
+    
+    public function getPageDescriptionEnd() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'page_description_end');
+    }
+    
+    public function getWarning() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'warning');
+    }
+    
+    public function getWarningMessage() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'warning_message');
+    }
+    
+    public function getDescriptionContainerTitle() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_title');
+    }
+    
+    public function getDescriptionContainerFullName() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_full_name');
+    }
+    
+    public function getDescriptionContainerShortName() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_short_name');
+    }
+    
+    public function getDescriptionContainerFullNameHelp() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_full_name_help');
+    }
+    
+    public function getDescriptionContainerShortNameHelp() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_short_name_help');
+    }
+    
+    public function getDescriptionContainerShortNameLabel() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_short_name_label');
+    }
+    
+    public function getDescriptionContainerShortDescription() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_short_description');
+    }
+    
+    public function getDescriptionContainerShortDescriptionHelp() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_short_description_help');
+    }
+    
+    public function getDescriptionContainerProjectDescription() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_description');
+    }
+    
+    public function getDescriptionContainerProjectPrivacy() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_privacy');
+    }
+    
+    public function getDescriptionContainerPublicLabel() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_public_label');
+    }
+    
+    public function getDescriptionContainerPrivateLabel() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_private_label');
+    }
+    
+    public function getDescriptionContainerProjectLicense() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_license');
+    }
+    
+    public function getDescriptionContainerProjectLicenseHelp() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_license_help');
+    }
     /**
      * @return bool
      */
@@ -346,7 +421,6 @@ class OneStepProjectCreationPresenter {
     private function generateTemplatesFromParsedDbData(DataAccessResult $projects) {
         $templates = array();
         foreach ($projects as $project) {
-            var_dump(get_class($project), $projects);
             /* @var $project Project */
             $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());
         }
