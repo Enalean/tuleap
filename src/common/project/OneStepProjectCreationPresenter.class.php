@@ -307,7 +307,6 @@ class OneStepProjectCreationPresenter {
         }
         return $fields;
     }
-<<<<<<< HEAD
     
     public function getTitle() {
         return $GLOBALS['Language']->getText('register_project_one_step', 'title');
@@ -383,11 +382,9 @@ class OneStepProjectCreationPresenter {
     
     public function getDescriptionContainerProjectLicenseHelp() {
         return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_license_help');
-=======
 
     public function getCreateProjectButtonLabel() {
         return $GLOBALS[Language]->getText('register_project_one_step', 'submit_button');
->>>>>>> 83c410fd8a1b093e0d048fe47e9fca361e905f1b
     }
     /**
      * @return bool
