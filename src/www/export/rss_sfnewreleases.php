@@ -14,6 +14,7 @@ require_once('common/frs/FRSReleaseFactory.class.php');
 require('./rss_utils.inc');
 
 header("Content-Type: text/xml");
+
 print '<?xml version="1.0" encoding="UTF-8" ?>
 <rss version="0.91">
 ';
