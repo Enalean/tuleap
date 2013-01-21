@@ -3615,7 +3615,7 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
 .container.one_step_project .label-info {
     background-color: #3A87AD;
 }
-.container.one_step_project legend {
+.container.one_step_project h2 {
     font-weight: 600;
     -webkit-padding-start: 2px;
     -webkit-padding-end: 2px;
