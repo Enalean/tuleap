@@ -387,6 +387,23 @@ class OneStepProjectCreationPresenter {
     public function getCreateProjectButtonLabel() {
         return $GLOBALS['Language']->getText('register_project_one_step', 'submit_button');
     }
+
+    public function getAgreeTOSLabel() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'agree_TOS_label');
+    }
+
+    public function getTOSLabel() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'TOS_label');
+    }
+
+    public function getAboutToCreateLabel() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'about_to_create');
+    }
+
+    public function getAboutToCreateOptionalLabel() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'about_to_create_optional');
+>>>>>>> a019422addcf7494f1bfe3a07ada697a8e95ce63
+    }
     /**
      * @return bool
      */
