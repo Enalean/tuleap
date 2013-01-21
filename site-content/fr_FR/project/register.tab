@@ -139,3 +139,8 @@ register_project_one_step	agree_TOS_label	J'accepte les
 register_project_one_step	TOS_label	conditions d'utilisation
 register_project_one_step	about_to_create	Vous êtes sur le point de demander la création du projet.
 register_project_one_step	about_to_create_optional	Vous recevrez une notification dès que l'administrateur l'aura validée. Vous pourrez alors accéder à celui-ci.
+register_project_one_step	choose_template_title	Choisir un modèle de projet
+register_project_one_step	choose_template_description_part_one	Un modèle de projet est un espace de travail pré-configuré: outils déjà activés et customisés.
+register_project_one_step	choose_template_description_part_two	Le modèle de projet que vous sélectionnerez fournit des services. Après la création, vous pourrez en modifier la configuration.
+register_project_one_step	choose_default_templates	Modèles par défaut
+register_project_one_step	choose_admin_projects	Projets dont vous êtes administrateur

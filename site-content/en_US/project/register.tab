@@ -158,3 +158,8 @@ register_project_one_step	agree_TOS_label	I agree to the
 register_project_one_step	TOS_label	policy agreement
 register_project_one_step	about_to_create	You are about to request the actual project creation.
 register_project_one_step	about_to_create_optional	You will receive a notification when the system administrator has validated it. Then, you will be able to access your new project workspace. Enjoy!
+register_project_one_step	choose_template_title	Choose an appropriate template for your project
+register_project_one_step	choose_template_description_part_one	A project template is a pre-configured workspace: activated tools (trackers, version control system, communication tools...), tools customisation and configuration (workflow, documentation structure...), user groups, permissions, etc.
+register_project_one_step	choose_template_description_part_two	The project template you will select provides some services. You can always modify your project workspace after your project has been approved.
+register_project_one_step	choose_default_templates	Default templates
+register_project_one_step	choose_admin_projects	Projects of which you are administrator

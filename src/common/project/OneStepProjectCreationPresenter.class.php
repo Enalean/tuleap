@@ -383,7 +383,27 @@ class OneStepProjectCreationPresenter {
     public function getDescriptionContainerProjectLicenseHelp() {
         return $GLOBALS['Language']->getText('register_project_one_step', 'description_container_project_license_help');
     }
-
+    
+    public function getChooseTemplateContainerTitle() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'choose_template_title');
+    }
+    
+    public function getChooseTemplateContainerDescriptionPartOne() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'choose_template_description_part_one');
+    }
+    
+    public function getChooseTemplateContainerDescriptionPartTwo() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'choose_template_description_part_two');
+    }
+    
+    public function getDefaultTemplatesTitle() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'choose_default_templates');
+    }
+    
+    public function getAdminProjectsTitle() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'choose_admin_projects');
+    }
+    
     public function getCreateProjectButtonLabel() {
         return $GLOBALS['Language']->getText('register_project_one_step', 'submit_button');
     }
@@ -402,7 +422,6 @@ class OneStepProjectCreationPresenter {
 
     public function getAboutToCreateOptionalLabel() {
         return $GLOBALS['Language']->getText('register_project_one_step', 'about_to_create_optional');
->>>>>>> a019422addcf7494f1bfe3a07ada697a8e95ce63
     }
     /**
      * @return bool

@@ -118,27 +118,22 @@
         </table>
 
         {{#hasMoreThanOneAvailableTemplate}}
-            <h2>Choose an appropriate template for your project</h2>
+            <h2>{{getChooseTemplateContainerTitle}}</h2>
 
-            <p>A project template is a pre-configured workspace: activated tools
-            (trackers, version control system, communication tools...), tools
-            customisation and configuration (workflow, documentation structure...),
-            user groups, permissions, etc.</p>
+            <p>{{getChooseTemplateContainerDescriptionPartOne}}</p>
 
-            <p>The project template you will select provides some services. You can
-            always modify your project workspace after your project has been
-            approved.</p>
+            <p>{{getChooseTemplateContainerDescriptionPartTwo}}</p>
 
             <div class="control-group">
                 <div class="controls">
-                    <h3 class="one_step_project">Default templates</h3>
+                    <h3 class="one_step_project">{{getDefaultTemplatesTitle}}</h3>
                     <div class="one_step_project_templates">
                        {{#getDefaultTemplates}}
                            {{> register-templates }}
                        {{/getDefaultTemplates}}
                     </div>
                     {{#hasUserTemplates}}
-                        <h3 class="one_step_project">Projects of which you are administrator</h3>
+                        <h3 class="one_step_project">{{getAdminProjectsTitle}}</h3>
                         <div class="one_step_project_templates">
                            {{#getUserTemplates}}
                               {{> register-templates }}
