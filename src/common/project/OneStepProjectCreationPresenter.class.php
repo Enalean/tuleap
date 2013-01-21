@@ -289,8 +289,10 @@ class OneStepProjectCreationPresenter {
      * @return ProjectCreationTemplatePresenter[]
      */
     public function getDefaultTemplates() {
-        $db_templates = $this->project_dao->searchSiteTemplates()->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
-        return $this->generateTemplatesFromDbData($db_templates);
+        $projects = $this->project_dao
+                ->searchSiteTemplates()
+                ->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
+        return $this->generateTemplatesFromParsedDbData($projects);
     }
 
     /**
@@ -305,8 +307,10 @@ class OneStepProjectCreationPresenter {
      * @return ProjectCreationTemplatePresenter[]
      */
     public function getUserTemplates() {
-        $db_templates = $this->project_dao->searchProjectsUserIsAdmin($this->creator->getId())->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
-        return $this->generateTemplatesFromDbData($db_templates);
+        $projects = $this->project_dao
+                ->searchProjectsUserIsAdmin($this->creator->getId())
+                ->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
+        return $this->generateTemplatesFromParsedDbData($projects);
     }
 
     /**
@@ -321,9 +325,10 @@ class OneStepProjectCreationPresenter {
      * @param resource $db_data
      * @return ProjectCreationTemplatePresenter[]
      */
-    private function generateTemplatesFromDbData(DataAccessResult $projects) {
+    private function generateTemplatesFromParsedDbData(DataAccessResult $projects) {
         $templates = array();
         foreach ($projects as $project) {
+            var_dump(get_class($project), $projects);
             /* @var $project Project */
             $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());
         }
