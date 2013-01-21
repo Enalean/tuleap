@@ -1,0 +1,167 @@
+{{!
+ /**
+  * Copyright (c) Enalean, 2013. All rights reserved
+  *
+  * This file is a part of Tuleap.
+  *
+  * Tuleap is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * Tuleap is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+  */
+}}
+<div class="one_step_project container">
+    <form class="one_step_project" action="{{getFormSubmissionPath}}" method="post">
+        <input type="hidden" name="onestep" value="true" />
+        <p>
+            <h1 class="one_step_project">Project Creation Request</h1>
+        </p>
+
+        <p class="one_step_project">Creating a new project on {{getSysName}} only takes a few steps.</p>
+
+        {{#isProjectApprovalEnabled}}
+            <p><span class="label label-warning">Warning</span> Before being able to
+            do anything with your project, a system administrator must approve the
+            project.</p>
+        {{/isProjectApprovalEnabled}}
+
+        <legend>Describe your project</legend>
+        <table>
+            <div class="control-group">
+                <label class="control-label">Full name <span class="mandatory_field">*</span></label>
+                <div class="controls">
+                    <input size="40"
+                           type="text"
+                           name="{{full_name_label}}"
+                           value="{{getFullName}}"
+                           required
+                           autofocus/>
+                    <div class="help">between 3 and 40 characters</div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Short name <span class="mandatory_field">*</span></label>
+                <div class="controls">
+                    <input type="text"
+                           maxlength="30"
+                           size="15"
+                           name="{{unix_name_label}}"
+                           value="{{getUnixName}}"
+                           required/>
+                    <div class="help">between 3 and 30 characters length, with only characters, numbers and dashes. NO SPACES ALLOWED.</div>
+                    <span class="label label-info">Info</span> The short name is a technical name used in various URLs (project URL and source code repositories) and other references.
+                    </span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Short description <span class="mandatory_field">*</span></label>
+                <div class="controls">
+                    <textarea
+                        name="{{short_description_label}}"
+                        wrap="virtual"
+                        cols="40"
+                        rows="3"
+                        required>{{getShortDescription}}</textarea>
+                        <div class="help">What is the purpose of your project?</div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Project Privacy</label>
+                <div class="controls">
+                    <input type="radio"
+                           name="{{is_public_label}}"
+                           value="1"
+                           {{#isPublic}}checked="checked"{{/isPublic}}
+                        />
+                    Public
+                    <br>
+                    <input type="radio"
+                           name="{{is_public_label}}"
+                           value="0"
+                           {{^isPublic}}checked="checked"{{/isPublic}}
+                        />
+                    Private (limit access only to the project members)
+                </div>
+            </div><div class="control-group">
+                <label class="control-label">License</label>
+                <div class="controls">
+                    <select name="{{license_type_label}}">
+                        {{#getAvailableLicenses}}
+                            <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
+                        {{/getAvailableLicenses}}
+                    </select>
+                    <div class="custom_license_block">
+                        <textarea name="{{custom_license_label}}"
+                            wrap=virtual
+                            cols=60
+                            rows=10>{{getCustomLicense}}</textarea>
+                        <div class="help">Please provide an explanation along with a description of your license.</div>
+                    </div>
+                </div>
+            </div>
+        </table>
+
+        {{#hasMoreThanOneAvailableTemplate}}
+            <legend>Choose an appropriate template for your project</legend>
+
+            <p>A project template is a pre-configured workspace: activated tools
+            (trackers, version control system, communication tools...), tools
+            customisation and configuration (workflow, documentation structure...),
+            user groups, permissions, etc.</p>
+
+            <p>The project template you will select provides some services. You can
+            always modify your project workspace after your project has been
+            approved.</p>
+
+            <div class="control-group">
+                <div class="controls">
+                    <h3 class="one_step_project">Default templates</h3>
+                    <div class="one_step_project_templates">
+                       {{#getDefaultTemplates}}
+                           {{> register-templates }}
+                       {{/getDefaultTemplates}}
+                    </div>
+                    {{#hasUserTemplates}}
+                        <h3 class="one_step_project">Projects of which you are administrator</h3>
+                        <div class="one_step_project_templates">
+                           {{#getUserTemplates}}
+                              {{> register-templates }}
+                           {{/getUserTemplates}}
+                        </div>
+                    {{/hasUserTemplates}}
+                </div>
+            </div>
+        {{/hasMoreThanOneAvailableTemplate}}
+
+        <legend>That's it !</legend>
+        <p>
+            You are about to request the actual project creation.
+            You will receive a notification when the system administrator has validated it.
+            Then, you will be able to access your new project workspace. Enjoy!
+        </p>
+
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="{{term_of_service_approval_label}}" value="approved" required />
+                    I agree to the
+                    <a href="/tos/tos.php">policy agreement</a>
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" value="Create the project" name="create_project" class="btn btn-primary"/>
+            </div>
+        </div>
+    </form>
+</div>

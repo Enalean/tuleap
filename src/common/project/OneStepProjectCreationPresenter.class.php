@@ -187,6 +187,13 @@ class OneStepProjectCreationPresenter {
     }
 
     /**
+     * @return bool
+     */
+    public function isProjectApprovalEnabled() {
+        return Config::get('sys_project_approval');
+    }
+
+    /**
      *
      * @return string
      */
@@ -295,6 +302,13 @@ class OneStepProjectCreationPresenter {
     }
 
     /**
+     * @return bool
+     */
+    public function hasMoreThanOneAvailableTemplate() {
+        return $this->hasUserTemplates() || $this->hasMoreThanOneDefaultTemplates();
+    }
+
+    /**
      *
      * @return ProjectCreationTemplatePresenter[]
      */
@@ -304,12 +318,26 @@ class OneStepProjectCreationPresenter {
     }
 
     /**
+     * @return bool
+     */
+    public function hasMoreThanOneDefaultTemplates() {
+        return count($this->getDefaultTemplates()) > 1;
+    }
+
+    /**
      *
      * @return ProjectCreationTemplatePresenter[]
      */
     public function getUserTemplates() {
         $db_templates = $this->project_dao->searchProjectsUserIsAdmin($this->creator->getId())->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
         return $this->generateTemplatesFromDbData($db_templates);
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasUserTemplates() {
+        return count($this->getUserTemplates()) > 0;
     }
 
     /**

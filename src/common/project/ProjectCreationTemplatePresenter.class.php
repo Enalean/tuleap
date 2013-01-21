@@ -124,6 +124,9 @@ class ProjectCreationTemplatePresenter {
                 );
     }
 
+    /**
+     * @return bool
+     */
     public function isSelectedTemplate() {
         return $this->selected_template_id == $this->project->getID();
     }

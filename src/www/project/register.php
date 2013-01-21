@@ -30,6 +30,10 @@ if (Config::get('sys_create_project_in_one_step')) {
     
     if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
         $data    = $single_step_project->getProjectValues();
+        if (! isset($data['project']['built_from_template'])) {
+            $default_templates = $single_step_project->getDefaultTemplates();
+            $data['project']['built_from_template'] = $default_templates->getGroupId();
+        }
         $project = ProjectManager::instance()->getProject($data['project']['built_from_template']);
         foreach($project->services as $service) {
             $id = $service->getId();
@@ -41,11 +45,8 @@ if (Config::get('sys_create_project_in_one_step')) {
     
     $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));
 
-    $mustache = new Mustache();
-    echo $mustache->render(
-            file_get_contents($GLOBALS['Language']->getContent('project/one_step_register', null, null, '.mustache')),
-            $single_step_project
-    );
+    $renderer  = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/project');
+    $renderer->renderToPage('register', $single_step_project);
 
     $HTML->footer(array());
     exit; 
