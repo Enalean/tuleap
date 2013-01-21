@@ -225,7 +225,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      *
      * @return Array
      */
-    public function formatMatchingIds($request = null, $useDataFromDb = false) {
+    private function formatMatchingIds($request = null, $useDataFromDb = false) {
         $matchingIds          = $this->getMatchingIds($request, $useDataFromDb);
         $artifactIds          = explode(',', $matchingIds['id']);
         $lastChangesetIds     = explode(',', $matchingIds['last_changeset_id']);
