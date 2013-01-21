@@ -19,7 +19,7 @@
  */
 
 /**
- * Class responsible to send requests to an indexation server
+ * Class responsible to send indexation requests for tracker changesets to an indexation server
  */
 class FullTextSearchTrackerActions extends FullTextSearchActions {
 
@@ -59,7 +59,6 @@ class FullTextSearchTrackerActions extends FullTextSearchActions {
      * @return Void
      */
     public function indexNewVersion($groupId, $artifactId, $changesetId, $text) {
-        // @TODO: If no index start first by indexing the followup comment.
         $updateData = $this->client->initializeSetterData();
         $updateData = $this->client->appendSetterData($updateData, 'followup', $text);
         $this->client->update($changesetId, $updateData);
