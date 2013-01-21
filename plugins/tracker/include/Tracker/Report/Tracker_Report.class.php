@@ -807,7 +807,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      *
      * @return array
      */
-    public function joinResults($request) {
+    private function joinResults($request) {
         $result          = array();
         $searchPerformed = false;
         $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed);
