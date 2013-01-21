@@ -135,3 +135,7 @@ register_project_one_step	description_container_project_public_label	Public
 register_project_one_step	description_container_project_license	Licence
 register_project_one_step	description_container_project_license_help	Merci de fournir une description de votre licence.
 register_project_one_step	submit_button	Créer le projet
+register_project_one_step	agree_TOS_label	J'accepte les
+register_project_one_step	TOS_label	conditions d'utilisation
+register_project_one_step	about_to_create	Vous êtes sur le point de demander la création du projet.
+register_project_one_step	about_to_create_optional	Vous recevrez une notification dès que l'administrateur l'aura validée. Vous pourrez alors accéder à celui-ci.

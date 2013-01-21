@@ -154,3 +154,7 @@ register_project_one_step	description_container_project_public_label	Public
 register_project_one_step	description_container_project_license	License
 register_project_one_step	description_container_project_license_help	Please provide an explanation along with a description of your license.
 register_project_one_step	submit_button	Create the project
+register_project_one_step	agree_TOS_label	I agree to the
+register_project_one_step	TOS_label	policy agreement
+register_project_one_step	about_to_create	You are about to request the actual project creation.
+register_project_one_step	about_to_create_optional	You will receive a notification when the system administrator has validated it. Then, you will be able to access your new project workspace. Enjoy!

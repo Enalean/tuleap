@@ -150,18 +150,14 @@
         {{/hasMoreThanOneAvailableTemplate}}
 
         <h2>That's it !</h2>
-        <p>
-            You are about to request the actual project creation.
-            You will receive a notification when the system administrator has validated it.
-            Then, you will be able to access your new project workspace. Enjoy!
-        </p>
-
+        <p>{{getAboutToCreateLabel}}</p>
+        <p>{{getAboutToCreateOptionalLabel}}</p>
         <div class="control-group">
             <div class="controls">
                 <label class="checkbox">
                     <input type="checkbox" name="{{term_of_service_approval_label}}" value="approved" required />
-                    I agree to the
-                    <a href="/tos/tos.php">policy agreement</a>
+                    {{getAgreeTOSLabel}}
+                    <a href="/tos/tos.php">{{getTOSLabel}}</a>
                 </label>
             </div>
         </div>
