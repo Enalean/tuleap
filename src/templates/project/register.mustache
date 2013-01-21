@@ -93,13 +93,11 @@
             </div><div class="control-group">
                 <label class="control-label">License</label>
                 <div class="controls">
-                    <p>
-                        <select name="{{license_type_label}}">
-                            {{#getAvailableLicenses}}
-                                <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
-                            {{/getAvailableLicenses}}
-                        </select>
-                    </p>
+                    <select name="{{license_type_label}}">
+                        {{#getAvailableLicenses}}
+                            <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
+                        {{/getAvailableLicenses}}
+                    </select>
                     <div class="custom_license_block">
                         <textarea name="{{custom_license_label}}"
                             wrap=virtual
