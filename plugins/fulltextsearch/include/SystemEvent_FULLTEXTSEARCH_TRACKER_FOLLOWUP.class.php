@@ -102,11 +102,9 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
         $changesetId = (int)$this->getRequiredParameter(2);
         $text        = $this->getRequiredParameter(3);
         if (strlen($text)>15) {
-            $indexedText = substr($text, 0, 15).'...';
-        } else {
-            $indexedText = $text;
+            $text = substr($text, 0, 15).'...';
         }
-        return 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$this->verbalizeArtifactId($artifactId, $changesetId, $withLink).', Text: '.$indexedText;
+        return 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$this->verbalizeArtifactId($artifactId, $changesetId, $withLink).', Text: '.$text;
     }
 
     /**
