@@ -77,22 +77,29 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     public function __construct(
         Project_OneStepCreation_OneStepCreationRequest $creation_request,
-        array $licenses,
+        array $available_licenses,
         array $required_custom_descriptions,
         ProjectManager $project_manager
     ) {
-        $this->creation_request   = $creation_request;
-        $this->available_licenses = $licenses;
-        $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
+        $this->creation_request                       = $creation_request;
+        $this->available_licenses                     = $available_licenses;
+        $this->project_manager                        = $project_manager;
+        $this->required_custom_description_presenters = $this->getCustomDescriptionPresenters($required_custom_descriptions);
+    }
 
-        $this->required_custom_description_presenters = array();
+    /**
+     * @return Project_CustomDescription_CustomDescriptionPresenter[]
+     */
+    private function getCustomDescriptionPresenters($required_custom_descriptions) {
+        $presenters = array();
         foreach ($required_custom_descriptions as $custom_description) {
-            $this->required_custom_description_presenters[] = new Project_CustomDescription_CustomDescriptionPresenter(
+            $presenters[] = new Project_CustomDescription_CustomDescriptionPresenter(
                 $custom_description,
                 $this->creation_request->getCustomProjectDescription($custom_description->getId()),
                 self::PROJECT_DESCRIPTION_PREFIX
             );
         }
+        return $presenters;
     }
 
     public function getSysName() {
