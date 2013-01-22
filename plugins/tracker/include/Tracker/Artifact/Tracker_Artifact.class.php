@@ -99,7 +99,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return EventManager
      */
-    private function _getEventManager() {
+    private function getEventManager() {
         return EventManager::instance();
     }
 
@@ -420,7 +420,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($from_aid != null) {
             $redirect->query_parameters['from_aid'] = $from_aid;
         }
-        $this->_getEventmanager()->processEvent(
+        $this->getEventManager()->processEvent(
             TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
             array(
                 'request'  => $request,
@@ -1074,7 +1074,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                             'artifact_id'  => $this->getId(),
                             'changeset_id' => $changeset_id,
                             'text'         => $comment);
-            $this->_getEventmanager()->processEvent('tracker_followup_event_add', $params);
+            $this->getEventManager()->processEvent('tracker_followup_event_add', $params);
         }
 
         //extract references from the comment
@@ -1668,7 +1668,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Codendi_Request $request The request
      */
     public function summonArtifactRedirectors(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
-        $this->_getEventmanager()->processEvent(
+        $this->getEventManager()->processEvent(
             TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
             array(
                 'request'  => $request,
@@ -1679,7 +1679,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     private function summonArtifactAssociators(Codendi_Request $request, User $current_user, $linked_artifact_id) {
-        $this->_getEventmanager()->processEvent(
+        $this->getEventManager()->processEvent(
             TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED,
             array(
                 'artifact'             => $this,
