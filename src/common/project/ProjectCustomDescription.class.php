@@ -68,5 +68,9 @@ class ProjectCustomDescription {
     public function getRank() {
         return $this->rank;
     }
+
+    public function isText() {
+        return $this->getType() == self::TYPE_TEXT;
+    }
 }
 ?>

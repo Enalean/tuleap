@@ -26,7 +26,19 @@ $request      = HTTPRequest::instance();
 
 if (Config::get('sys_create_project_in_one_step')) {
     $data = $request->params;
-    $single_step_project = new OneStepProjectCreationPresenter($data, $current_user, $LICENSE);
+    $required_custom_descriptions = array();
+    $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
+    while ($row = db_fetch_array($res)) {
+        $required_custom_descriptions[$row['group_desc_id']] = new ProjectCustomDescription(
+            $row['group_desc_id'],
+            $row['desc_name'],
+            $row['desc_description'],
+            $row['desc_required'],
+            $row['desc_type'],
+            $row['desc_rank']
+        );
+    }
+    $single_step_project = new OneStepProjectCreationPresenter($data, $current_user, $LICENSE, $required_custom_descriptions);
     
     if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
         $data    = $single_step_project->getProjectValues();

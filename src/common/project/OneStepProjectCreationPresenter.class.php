@@ -302,21 +302,12 @@ class OneStepProjectCreationPresenter {
         }
     }
 
+    public function getDescriptionFormPrefix() {
+        return self::PROJECT_DESCRIPTION_PREFIX;
+    }
+
     public function getProjectDescriptionFields() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $fields = array();
-        $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
-        while ($row = db_fetch_array($res)) {
-            $form_name = self::PROJECT_DESCRIPTION_PREFIX.$row['group_desc_id'];
-            $fields[] = array(
-                'label'               => $row['desc_name'],
-                'description'         => $purifier->purify($row['desc_description'], CODENDI_PURIFIER_LIGHT),
-                'is_text_field_type'  => $row['desc_type'] == 'line' ? false : true,
-                'form_name'           => $form_name,
-                'value'               => '',
-            );
-        }
-        return $fields;
+        return array_values($this->required_custom_descriptions);
     }
     
     public function getTitle() {
