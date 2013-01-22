@@ -81,7 +81,7 @@ abstract class MVC2_Controller {
     /**
      * @var String
      */
-    private $base_name;
+    protected $base_name;
     
     /**
      * @var TemplateRenderer

@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/include/Codendi_Request.class.php';
-require_once 'common/templating/TemplateRenderer.class.php';
-require_once 'common/templating/TemplateRendererFactory.class.php';
+require_once 'Controller.class.php';
 
 /**
  * Base class for plugin controllers
@@ -30,12 +28,12 @@ require_once 'common/templating/TemplateRendererFactory.class.php';
 abstract class MVC2_PluginController extends MVC2_Controller {
 
     protected function getTemplatesDir() {
-        return Config::get('codendi_dir') .'/plugins/'.$this->plugin_name.'/templates';
+        return Config::get('codendi_dir') .'/plugins/'.$this->base_name.'/templates';
     }
 
     protected function redirect($query_parts) {
         $redirect = http_build_query($query_parts);
-        $GLOBALS['Response']->redirect('/plugins/'.$this->plugin_name.'/?'.$redirect);
+        $GLOBALS['Response']->redirect('/plugins/'.$this->base_name.'/?'.$redirect);
     }
 }
 ?>
