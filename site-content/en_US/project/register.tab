@@ -136,6 +136,7 @@ register_desc	short_description_desc	What's the purpose of your project (3-4 lin
 register_project_one_step	title	Project Creation request
 register_project_one_step	page_description_beg	Creating a new project on
 register_project_one_step	page_description_end	only takes a few steps.
+register_project_one_step	custom_description_missing	The field '$1' is required
 register_project_one_step	warning	Warning
 register_project_one_step	warning_message	Before being able to do anything with your project, a system administrator must approve the project.
 register_project_one_step	description_container_title	Describe your project

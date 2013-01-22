@@ -117,6 +117,7 @@ register_desc	short_description_desc	Quel est le sujet de votre projet (descript
 register_project_one_step	title	Création d'un projet
 register_project_one_step	page_description_beg	Création d'un nouveau projet sur
 register_project_one_step	page_description_end	en seulement quelques clics.
+register_project_one_step	custom_description_missing	Le champ '$1' est requis
 register_project_one_step	warning	Attention
 register_project_one_step	warning_message	Votre projet sera validé par un administrateur de la plateforme.
 register_project_one_step	description_container_title	Description du projet

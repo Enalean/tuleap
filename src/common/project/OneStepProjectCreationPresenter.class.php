@@ -744,7 +744,7 @@ class OneStepProjectCreationPresenter {
     private function validateCustomDescriptions() {
         foreach ($this->required_custom_descriptions as $id => $description) {
             if (! $this->getCustomProjectDescription($id)) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'custom_description_missing', $description->getName()));
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_project_one_step', 'custom_description_missing', $description->getName()));
                 $this->setIsNotValid();
             }
         }
