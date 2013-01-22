@@ -45,7 +45,8 @@ class Project_CustomDescription_CustomDescriptionPresenter {
     }
 
     public function getDescription() {
-        return $this->getTranslation($this->custom_description->getDescription());
+        $hp = Codendi_HTMLPurifier::instance();
+        return $hp->purify($this->getTranslation($this->custom_description->getDescription()), CODENDI_PURIFIER_LIGHT);
     }
 
     public function isRequired() {
