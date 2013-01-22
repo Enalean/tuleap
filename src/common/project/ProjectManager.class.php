@@ -475,6 +475,24 @@ class ProjectManager {
         return $dao->returnAllProjects($offset, $limit, $status, $groupName);
     }
 
+    /**
+     * @return Project[]
+     */
+    public function getSiteTemplates() {
+        return $this->_getDao()
+            ->searchSiteTemplates()
+            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
+
+    /**
+     * @return Project[]
+     */
+    public function getProjectsUserIsAdmin(User $user) {
+        // Why not use method in User class?
+        return $this->_getDao()
+            ->searchProjectsUserIsAdmin($user->getId())
+            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
 }
 
 ?>

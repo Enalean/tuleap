@@ -26,7 +26,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $project_manager = mock('ProjectManager');
         $request = aRequest()->withParams($request_data)->build();
         $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
-        return new Project_OneStepCreation_OneStepCreationPresenter($creation_request, array(), array(), $project_manager, mock('ProjectDao'));
+        return new Project_OneStepCreation_OneStepCreationPresenter($creation_request, array(), array(), $project_manager);
     }
 
     public function testNewObjectSetsFullName() {

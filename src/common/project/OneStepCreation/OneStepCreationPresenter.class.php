@@ -51,12 +51,6 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     public $term_of_service_approval_label = self::TOS_APPROVAL;
 
     /**
-     *
-     * @var string
-     */
-    private $form_submission_path;
-
-    /**
      * @var Project_CustomDescription_CustomDescriptionPresenter[]
      */
     private $required_custom_description_presenters;
@@ -77,20 +71,19 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     private $project_manager;
 
     /**
-     * @var ProjectDao
-     */
-    private $project_dao;
-
-    /**
      * @var Project_OneStepCreation_OneStepCreationRequest
      */
     private $creation_request;
 
-    public function __construct(Project_OneStepCreation_OneStepCreationRequest $creation_request, array $licenses, array $required_custom_descriptions, ProjectManager $project_manager, ProjectDao $project_dao = null) {
+    public function __construct(
+        Project_OneStepCreation_OneStepCreationRequest $creation_request,
+        array $licenses,
+        array $required_custom_descriptions,
+        ProjectManager $project_manager
+    ) {
         $this->creation_request   = $creation_request;
         $this->available_licenses = $licenses;
         $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
-        $this->project_dao        = $project_dao !== null     ? $project_dao     : new ProjectDao();  //TODO: avoid usage of dao in presenter
 
         $this->required_custom_description_presenters = array();
         foreach ($required_custom_descriptions as $custom_description) {
@@ -320,9 +313,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return ProjectCreationTemplatePresenter[]
      */
     public function getDefaultTemplates() {
-        $projects = $this->project_dao
-                ->searchSiteTemplates()
-                ->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
+        $projects = $this->project_manager->getSiteTemplates();
         return $this->generateTemplatesFromParsedDbData($projects);
     }
 
@@ -338,9 +329,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return ProjectCreationTemplatePresenter[]
      */
     public function getUserTemplates() {
-        $projects = $this->project_dao
-                ->searchProjectsUserIsAdmin($this->creation_request->getCurrentUser()->getId())
-                ->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
+        $projects = $this->project_manager->getProjectsUserIsAdmin($this->creation_request->getCurrentUser());
         return $this->generateTemplatesFromParsedDbData($projects);
     }
 
