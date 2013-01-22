@@ -779,6 +779,7 @@ fi
 %{APP_DIR}/src/forgeupgrade
 %{APP_DIR}/src/INSTALL
 %{APP_DIR}/src/README
+%{APP_DIR}/src/templates
 %{APP_DIR}/src/updates
 %{APP_DIR}/src/utils
 # Split src/www for src/www/themes
