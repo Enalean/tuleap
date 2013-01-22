@@ -9,6 +9,10 @@ cd /usr/share
 wget http://download.wikimedia.org/mediawiki/1.15/mediawiki-1.15.5.tar.gz
 tar -xvf mediawiki-1.15.5.tar.gz mediawiki115
 
+#If the tar command doesn't extract mediawiki in a mediawiki115 folder, please run these commands :
+cd /usr/share
+ln -s YOUR_FOLDER_WHERE_MEDIAWIKI_IS_EXTRACTED mediawiki115
+
 # Must create /var/lib/codendi/plugins/mediawiki/master
 # Done in /usr/share/gforge/plugins/mediawiki/cronjobs/create-wikis.php
 # Theme
