@@ -57,6 +57,10 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     }
 
     public function create() {
+        if (! $this->presenter->validateAndGenerateErrors()) {
+            $this->index();
+        }
+
         $data = $this->presenter->getProjectValues();
         $this->setDefaultTemplateIfNoOneHasBeenChoosen($data);
         $this->setServices($data);
