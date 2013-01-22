@@ -18,50 +18,16 @@ require_once('common/project/RegisterProjectStep_License.class.php');
 require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
-require_once('common/project/OneStepProjectCreationPresenter.class.php');
+require_once('common/project/OneStepProjectCreationRouter.class.php');
 require_once 'vars.php'; //load licenses
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
-$request      = HTTPRequest::instance();
+$request = HTTPRequest::instance();
 
 if (Config::get('sys_create_project_in_one_step')) {
-    $data = $request->params;
-    $required_custom_descriptions = array();
-    $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
-    while ($row = db_fetch_array($res)) {
-        $required_custom_descriptions[$row['group_desc_id']] = new ProjectCustomDescription(
-            $row['group_desc_id'],
-            $row['desc_name'],
-            $row['desc_description'],
-            $row['desc_required'],
-            $row['desc_type'],
-            $row['desc_rank']
-        );
-    }
-    $single_step_project = new OneStepProjectCreationPresenter($data, $current_user, $LICENSE, $required_custom_descriptions);
-    
-    if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
-        $data    = $single_step_project->getProjectValues();
-        if (! isset($data['project']['built_from_template'])) {
-            $default_templates = $single_step_project->getDefaultTemplates();
-            $data['project']['built_from_template'] = $default_templates->getGroupId();
-        }
-        $project = ProjectManager::instance()->getProject($data['project']['built_from_template']);
-        foreach($project->services as $service) {
-            $id = $service->getId();
-            $data['project']['services'][$id]['is_used'] = $service->isUsed();
-        }
-        require_once('create_project.php');
-        create_project($data);
-    }
-    
-    $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));
-
-    $renderer  = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/project');
-    $renderer->renderToPage('register', $single_step_project);
-
-    $HTML->footer(array());
-    exit; 
+    $router = new OneStepProjectCreationRouter();
+    $router->route($request);
+    exit;
 }
 
 $current_step = $request->exist('current_step') ? $request->get('current_step') : 0;
