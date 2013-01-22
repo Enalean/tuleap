@@ -19,13 +19,17 @@ require_once('common/project/RegisterProjectStep_Category.class.php');
 require_once('common/project/RegisterProjectStep_Confirmation.class.php');
 require_once('common/project/RegisterProjectStep_Services.class.php');
 require_once('common/project/OneStepCreation/OneStepCreationRouter.class.php');
+require_once('common/project/CustomDescription/CustomDescriptionFactory.class.php');
 require_once 'vars.php'; //load licenses
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 $request = HTTPRequest::instance();
 
 if (Config::get('sys_create_project_in_one_step')) {
-    $router = new Project_OneStepCreation_OneStepCreationRouter();
+    $router = new Project_OneStepCreation_OneStepCreationRouter(
+        ProjectManager::instance(),
+        new Project_CustomDescription_CustomDescriptionFactory()
+    );
     $router->route($request);
     exit;
 }

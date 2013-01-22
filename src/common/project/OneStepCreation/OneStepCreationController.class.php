@@ -35,17 +35,23 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     /** @var Project_OneStepCreation_OneStepCreationPresenter */
     private $presenter;
 
-    public function __construct(Codendi_Request $request) {
-        parent::__construct('project', $request);
+    /** @var Project_CustomDescription_CustomDescription[] */
+    private $required_custom_descriptions;
 
-        $project_manager = ProjectManager::instance();
+    public function __construct(
+        Codendi_Request $request,
+        ProjectManager $project_manager,
+        Project_CustomDescription_CustomDescriptionFactory $custom_description_factory
+    ) {
+        parent::__construct('project', $request);
+        $this->required_custom_descriptions = $custom_description_factory->getRequiredCustomDescriptions();
 
         $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
 
         $this->presenter = new Project_OneStepCreation_OneStepCreationPresenter(
             $this->creation_request,
             $GLOBALS['LICENSE'],
-            $this->getCustomDescriptions(),
+            $this->required_custom_descriptions,
             $project_manager
         );
     }
@@ -63,7 +69,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
      * Create the project if request is valid
      */
     public function create() {
-        $validator = new Project_OneStepCreation_OneStepCreationValidator($this->creation_request, $this->getCustomDescriptions());
+        $validator = new Project_OneStepCreation_OneStepCreationValidator($this->creation_request, $this->required_custom_descriptions);
         if (! $validator->validateAndGenerateErrors()) {
             $this->index();
         }
@@ -71,23 +77,6 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $data = $this->creation_request->getProjectValues();
         require_once 'www/project/create_project.php';
         create_project($data);
-    }
-
-    // TODO: to be injected, avoid sql here
-    private function getCustomDescriptions() {
-        $required_custom_descriptions = array();
-        $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
-        while ($row = db_fetch_array($res)) {
-            $required_custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescription(
-                $row['group_desc_id'],
-                $row['desc_name'],
-                $row['desc_description'],
-                $row['desc_required'],
-                $row['desc_type'],
-                $row['desc_rank']
-            );
-        }
-        return $required_custom_descriptions;
     }
 }
 ?>

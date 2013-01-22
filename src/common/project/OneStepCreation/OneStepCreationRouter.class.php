@@ -25,8 +25,22 @@ require_once 'OneStepCreationController.class.php';
  */
 class Project_OneStepCreation_OneStepCreationRouter {
 
+    /** @var ProjectManager */
+    private $project_manager;
+
+    /** @var Project_CustomDescription_CustomDescriptionFactory */
+    private $custom_description_factory;
+
+    public function __construct(
+        ProjectManager $project_manager,
+        Project_CustomDescription_CustomDescriptionFactory $custom_description_factory
+    ) {
+        $this->project_manager            = $project_manager;
+        $this->custom_description_factory = $custom_description_factory;
+    }
+
     public function route(Codendi_Request $request) {
-        $controller = new Project_OneStepCreation_OneStepCreationController($request);
+        $controller = new Project_OneStepCreation_OneStepCreationController($request, $this->project_manager, $this->custom_description_factory);
 
         if ($request->get('create_project')) {
             $controller->create();
