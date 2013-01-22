@@ -102,13 +102,16 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
         $this->server->getEndUserCloneUrl('gerrit_project_name', $this->user);
     }
 
-    public function _itGivesTheCloneUrlForTheEndUserWhoWantToCloneRepository() {
+    public function itGivesTheCloneUrlForTheEndUserWhoWantToCloneRepository() {
         //git clone ssh://sshusername@hostname:29418/REPOSITORY_NAME.git
-        stub($this->event_manager)->processEvent('get_ldap_login_name_for_user', '*')->execute(array($this, 'fakeLdapLogin'));
+        $event_manager = new EventManager();
+        $event_manager->addListener('get_ldap_login_name_for_user', $this, 'fakeLdapLogin', false, 0);
+        EventManager::setInstance($event_manager);
         $this->assertEqual($this->server->getEndUserCloneUrl('gerrit_project_name', $this->user), 'ssh://blurp@le_host:29418/gerrit_project_name.git');
+        EventManager::clearInstance();
     }
 
-    public function fakeLdapLogin($params) {
+    public function fakeLdapLogin(array &$params) {
         $params['login'] = 'blurp';
     }
 }
