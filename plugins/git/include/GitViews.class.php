@@ -30,6 +30,7 @@ require_once GIT_BASE_DIR .'/GitForkPermissionsManager.class.php';
 require_once 'www/project/admin/permissions.php';
 require_once 'common/include/CSRFSynchronizerToken.class.php';
 require_once 'GitViews/RepoManagement/RepoManagement.class.php';
+require_once 'GitViews/ShowRepo.class.php';
 
 /**
  * GitViews
@@ -114,105 +115,19 @@ class GitViews extends PluginViews {
             }            
         }      
 
-        /**
-         * REPO VIEW
-         */
-        public function view() {
-            $gitphp      = '';
-            $params       = $this->getData();
-            if ( empty($params['repository']) ) {
-                $this->getController()->redirect('/plugins/git/?action=index&group_id='.$this->groupId);
-                return false;
-            }
-            $repository   = $params['repository'];
-            $repoId       = $repository->getId();
-            $repoName     = $repository->getName();
-            $initialized  = $repository->isInitialized();
-            $creator      = $repository->getCreator();
-            $parent       = $repository->getParent();
-            $access       = $repository->getAccess();
-            $description  = $repository->getDescription();
-            $creatorName  = '';
-            if ( !empty($creator) ) {
-                $creatorName  = UserHelper::instance()->getLinkOnUserFromUserId($creator->getId());
-            }
-            $creationDate = html_time_ago(strtotime($repository->getCreationDate()));
+    /**
+     * REPO VIEW
+     */
+    public function view() {
+        $params = $this->getData();
+        $repository = $params['repository'];
 
-            ob_start();
-            $this->getView($repository);
-            $gitphp = ob_get_contents();
-            ob_end_clean();
+        echo '<br />';
+        
+        $this->_getBreadCrumb();
 
-            //download
-            if ( $this->request->get('noheader') == 1 ) {
-                die($gitphp);
-            }
-
-            echo '<br />';
-            if ( !$initialized ) {
-                $this->help('init', array('repository'=>$repository));
-            }
-            $this->_getBreadCrumb();
-            
-            // Access type
-            $accessType = $this->fetchAccessType($access, $repository->getBackend() instanceof Git_Backend_Gitolite);
-
-            // Actions
-            $repoActions = '<ul id="plugin_git_repository_actions">';
-            if ($this->getController()->isAPermittedAction('repo_management')) {
-                $repoActions .= '<li>'.$this->linkTo($this->getText('admin_repo_management'), '/plugins/git/?action=repo_management&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_admin"').'</li>';
-            }
-
-            /** Disable fork of gitshell repositories **/
-            /*
-            if ($initialized && $this->getController()->isAPermittedAction('clone') && !($repository->getBackend() instanceof Git_Backend_Gitolite)) {
-                $repoActions .= '<li>'.$this->linkTo($this->getText('admin_fork_creation_title'), '/plugins/git/?action=fork&group_id='.$this->groupId.'&repo_id='.$repoId, 'class="repo_fork"').'</li>';
-            }
-            */
-            $repoActions .= '</ul>';
-
-            echo '<div id="plugin_git_reference">';
-            echo '<h1>'.$accessType.$repository->getFullName().'</h1>';
-            echo $repoActions;
-            echo '<p id="plugin_git_reference_author">'. 
-                $this->getText('view_repo_creator') 
-                .' '. 
-                $creatorName
-                .' '.
-                $creationDate
-                .'</p>';
-            ?>
-    <?php
-    if ( !empty($parent) ) :
-    ?>
-    <p id="plugin_git_repo_parent"><?php echo $this->getText('view_repo_parent');
-            ?>: <span><?php echo $this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() );?></span>
-    </p>
-    <?php
-    endif;
-    
-    ?>
-    <p id="plugin_git_clone_url">
-        <?php
-        $hp = Codendi_HTMLPurifier::instance();
-        $urls = $repository->getAccessURL();
-        list(,$first_url) = each($urls);
-        if (count($urls) > 1) {
-            $selected = 'checked="checked"';
-            foreach ($urls as $transport => $url) {
-                echo '<label>';
-                echo '<input type="radio" class="plugin_git_transport" name="plugin_git_transport" value="'. $hp->purify($url) .'" '.$selected.' />';
-                echo $transport;
-                echo '</label> ';
-                $selected  = '';
-            }
-        }
-        ?>
-        <input id="plugin_git_clone_field" type="text" value="<?= $first_url; ?>" /></label>
-    </p>
-        <?php
-        echo '</div>';
-        echo $gitphp;
+        $index_view = new GitViews_ShowRepo($repository, $this->controller, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers']);
+        $index_view->display();
     }
 
     /**
@@ -308,71 +223,6 @@ class GitViews extends PluginViews {
         if ( $this->getController()->isAPermittedAction('add') ) {
             $this->_createForm();
         }
-    }
-
-    /**
-     * Configure gitphp output
-     * 
-     * @param GitRepository $repository
-     */
-    public function getView($repository) {
-        include_once 'common/include/Codendi_HTMLPurifier.class.php';
-        if ( empty($_REQUEST['a']) )  {
-            $_REQUEST['a'] = 'summary';
-        } else if ($_REQUEST['a'] === 'blobdiff') {
-            $this->inverseURLArgumentsForGitPhpDiff();
-        }
-        set_time_limit(300);
-        $_GET['a'] = $_REQUEST['a'];        
-        $_REQUEST['group_id']      = $this->groupId;
-        $_REQUEST['repo_id']       = $repository->getId();
-        $_REQUEST['repo_name']     = $repository->getFullName();
-        $_GET['p']                 = $_REQUEST['repo_name'].'.git';
-        $_REQUEST['repo_path']     = $repository->getPath();
-        $_REQUEST['project_dir']   = $repository->getProject()->getUnixName();
-        $_REQUEST['git_root_path'] = $repository->getGitRootPath();
-        $_REQUEST['action']        = 'view';
-        if ( empty($_REQUEST['noheader']) ) {
-            //echo '<hr>';
-            echo '<div id="gitphp">';
-        }
-
-        include($this->getGitPhpIndexPath());
-
-        if ( empty($_REQUEST['noheader']) ) {
-            echo '</div>';
-        }
-    }
-    /**
-     * inverse the source and destination params in the URL to match the Git PHP
-     * template
-     */
-    private function inverseURLArgumentsForGitPhpDiff() {
-        $old_src  = $_GET['h'];
-        $old_dest = $_GET['hp'];
-
-        $_GET['h']  = $old_dest;
-        $_GET['hp'] = $old_src;
-    }
-
-    /**
-     * Return path to GitPhp index file
-     *
-     * @return String
-     */
-    private function getGitPhpIndexPath() {
-        $gitphp_path = $this->getController()->getPlugin()->getConfigurationParameter('gitphp_path');
-        if ($gitphp_path) {
-            $this->initGitPhpEnvironement();
-        } else {
-            $gitphp_path = GIT_BASE_DIR .'/../gitphp';
-        }
-        return $gitphp_path.'/index.php';
-    }
-
-    private function initGitPhpEnvironement() {
-        define('GITPHP_CONFIGDIR', GIT_BASE_DIR .'/../etc/');
-        ini_set('include_path', '/usr/share/gitphp-tuleap:'.ini_get('include_path'));
     }
 
     /**
@@ -605,35 +455,6 @@ class GitViews extends PluginViews {
         else {
             echo "<h3>".$this->getText('tree_msg_no_available_repo')."</h3>";
         }
-    }
-    
-    /**
-     * Fetch the html code to display the icon of a repository (depends on type of project)
-     *
-     * @param $access
-     * @param $backend_type
-     */
-    public function fetchAccessType($access, $backendIsGitolite) {
-        $accessType = '<span class="plugin_git_repo_privacy" title=';
-
-        if ($backendIsGitolite) {
-            //$accessType .= '"'.$this->getText('view_repo_access_custom').'">';
-            $accessType .= '"custom">';
-            $accessType .= '<img src="'.$this->getController()->getPlugin()->getThemePath().'/images/perms.png" />';
-        } else {
-            switch ($access) {
-                case GitRepository::PRIVATE_ACCESS:
-                    $accessType .= '"'.$this->getText('view_repo_access_private').'">';
-                    $accessType .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
-                    break;
-                case GitRepository::PUBLIC_ACCESS:
-                    $accessType .= '"'.$this->getText('view_repo_access_public').'">';
-                    $accessType .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
-                    break;
-            }
-        }
-        $accessType .= '</span>';
-        return $accessType;
     }
 }
 
