@@ -163,3 +163,4 @@ register_project_one_step	choose_template_description_part_one	A project templat
 register_project_one_step	choose_template_description_part_two	The project template you will select provides some services. You can always modify your project workspace after your project has been approved.
 register_project_one_step	choose_default_templates	Default templates
 register_project_one_step	choose_admin_projects	Projects of which you are administrator
+register_project_one_step	services_used	Services used:

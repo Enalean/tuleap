@@ -100,7 +100,10 @@ class ProjectCreationTemplatePresenter {
     public function getServicesUsed() {
         return implode(', ', $this->project->getAllUsedServices());
     }
-
+    
+    public function getServicesUsedTitle() {
+        return $GLOBALS['Language']->getText('register_project_one_step', 'services_used');
+    }
     /**
      *
      * @return string

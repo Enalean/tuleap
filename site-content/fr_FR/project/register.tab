@@ -144,3 +144,4 @@ register_project_one_step	choose_template_description_part_one	Un modèle de pro
 register_project_one_step	choose_template_description_part_two	Le modèle de projet que vous sélectionnerez fournit des services. Après la création, vous pourrez en modifier la configuration.
 register_project_one_step	choose_default_templates	Modèles par défaut
 register_project_one_step	choose_admin_projects	Projets dont vous êtes administrateur
+register_project_one_step	services_used	Services utilisés :
