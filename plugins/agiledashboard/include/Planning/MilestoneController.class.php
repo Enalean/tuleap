@@ -22,7 +22,7 @@ require_once 'common/mvc2/Controller.class.php';
 /**
  * Handles the HTTP actions related to a planning milestone.
  */
-class Planning_MilestoneController extends MVC2_Controller {
+class Planning_MilestoneController extends MVC2_PluginController {
 
     /**
      * @var Planning_MilestoneFactory

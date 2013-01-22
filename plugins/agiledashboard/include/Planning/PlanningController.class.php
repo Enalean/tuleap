@@ -28,7 +28,7 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Track
  * TODO: Rename this file to PlanningController.class.php, to be consistent with
  * other classes. 
  */
-class Planning_Controller extends MVC2_Controller {
+class Planning_Controller extends MVC2_PluginController {
     
     /**
      * @var Tracker_Artifact

@@ -27,7 +27,7 @@ require_once 'common/mvc2/Controller.class.php';
  *   - Merge into MilestoneController ?
  *   - Use MilestoneController ?
  */
-class Planning_ArtifactCreationController extends MVC2_Controller {
+class Planning_ArtifactCreationController extends MVC2_PluginController {
 
     /**
      * @var PlanningFactory

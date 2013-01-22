@@ -23,7 +23,7 @@ require_once 'common/mvc2/Controller.class.php';
 /**
  * Controller for basic fulltext searches
  */
-class FullTextSearch_Controller_Search extends MVC2_Controller {
+class FullTextSearch_Controller_Search extends MVC2_PluginController {
 
     /**
      * @var FullTextSearch_ISearchDocuments

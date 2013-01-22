@@ -19,7 +19,7 @@
  */
 require_once 'common/mvc2/Controller.class.php';
 
-class Planning_MilestoneSelectorController extends MVC2_Controller {
+class Planning_MilestoneSelectorController extends MVC2_PluginController {
     private $milestone_factory;
 
     public function __construct(Codendi_Request $request, Planning_MilestoneFactory $milestone_factory) {

@@ -81,21 +81,21 @@ abstract class MVC2_Controller {
     /**
      * @var String
      */
-    private $plugin_name;
+    private $base_name;
     
     /**
      * @var TemplateRenderer
      */
     private $renderer;
     
-    public function __construct($plugin_name, Codendi_Request $request) {
-        $this->request     = $request;
-        $this->plugin_name = $plugin_name;
-        $this->renderer    = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
+    public function __construct($base_name, Codendi_Request $request) {
+        $this->request   = $request;
+        $this->base_name = $base_name;
+        $this->renderer  = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
     }
     
     private function getTemplatesDir() {
-        return dirname(__FILE__).'/../../../plugins/'.$this->plugin_name.'/templates';
+        return Config::get('codendi_dir') .'/src/templates/'. $this->base_name;
     }
     
     protected function render($template_name, $presenter) {
@@ -104,11 +104,6 @@ abstract class MVC2_Controller {
     
     protected function addFeedback($type, $message) {
         $GLOBALS['Response']->addFeedback('error', 'All fields are mandatory');
-    }
-    
-    protected function redirect($query_parts) {
-        $redirect = http_build_query($query_parts);
-        $GLOBALS['Response']->redirect('/plugins/'.$this->plugin_name.'/?'.$redirect);
     }
     
     protected function getCurrentUser() {
