@@ -97,11 +97,18 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     }
 
     public function getProjectAdminUrl($gerrit_project) {
+        return $this->getGerritServerBaseUrl()."/#/admin/projects/$gerrit_project";
+    }
+
+    public function getProjectUrl($gerrit_project) {
+        return $this->getGerritServerBaseUrl()."/#/q/project:$gerrit_project,n,z";
+    }
+
+    private function getGerritServerBaseUrl() {
         $url = "http://$this->host";
         if ($this->http_port != self::DEFAULT_HTTP_PORT) {
             $url .= ":$this->http_port";
         }
-        $url .= "/#/admin/projects/$gerrit_project";
         return $url;
     }
 }

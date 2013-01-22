@@ -66,7 +66,14 @@ class GitViews_ShowRepo {
         if ($this->request->get('noheader') == 1) {
             $view = new GitViews_ShowRepo_Download($git_php_viewer);
         } else {
-            $view = new GitViews_ShowRepo_Content($this->repository, $git_php_viewer, $this->controller, $this->controller->getPlugin()->getThemePath());
+            $view = new GitViews_ShowRepo_Content(
+                $this->repository,
+                $git_php_viewer,
+                $this->controller,
+                $this->driver,
+                $this->gerrit_servers,
+                $this->controller->getPlugin()->getThemePath()
+            );
         }
         $view->display();
     }

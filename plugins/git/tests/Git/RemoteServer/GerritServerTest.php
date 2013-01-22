@@ -59,5 +59,17 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
 
         $this->assertEqual($server->getProjectAdminUrl('gerrit_project_name'), 'http://le_host:8080/#/admin/projects/gerrit_project_name');
     }
+
+    public function itGivesTheUrlToProjectRequests() {
+        $id            = 1;
+        $host          = 'le_host';
+        $http_port     = '8080';
+        $ssh_port      = 'le_ssh_port';
+        $login         = 'le_login';
+        $identity_file = 'le_identity_file';
+        $server = new Git_RemoteServer_GerritServer($id, $host, $ssh_port, $http_port, $login, $identity_file);
+
+        $this->assertEqual($server->getProjectUrl('gerrit_project_name'), 'http://le_host:8080/#/q/project:gerrit_project_name,n,z');
+    }
 }
 ?>

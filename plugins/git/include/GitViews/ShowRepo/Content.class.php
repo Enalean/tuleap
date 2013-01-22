@@ -35,15 +35,33 @@ class GitViews_ShowRepo_Content {
     private $controller;
 
     /**
+     * @var Git_Driver_Gerrit
+     */
+    private $driver;
+
+    /**
+     * @var array
+     */
+    private $gerrit_servers;
+
+    /**
      * @var string
      */
     private $theme_path;
 
-    public function __construct(GitRepository $repository, GitViews_GitPhpViewer $gitphp_viewer, Git $controller, $theme_path) {
-        $this->repository    = $repository;
-        $this->gitphp_viewer = $gitphp_viewer;
-        $this->controller    = $controller;
-        $this->theme_path    = $theme_path;
+    public function __construct(
+            GitRepository $repository,
+            GitViews_GitPhpViewer $gitphp_viewer,
+            Git $controller,
+            Git_Driver_Gerrit $driver,
+            array $gerrit_servers,
+            $theme_path) {
+        $this->repository     = $repository;
+        $this->gitphp_viewer  = $gitphp_viewer;
+        $this->controller     = $controller;
+        $this->driver         = $driver;
+        $this->gerrit_servers = $gerrit_servers;
+        $this->theme_path     = $theme_path;
     }
 
     public function display() {
@@ -51,6 +69,9 @@ class GitViews_ShowRepo_Content {
         $html .= '<div id="plugin_git_reference">';
         $html .= $this->getHeader();
         $html .= $this->getCloneUrl();
+        if ($this->repository->getRemoteServerId()) {
+            $html .= $this->getRemoteRepositoryInfo();
+        }
         $html .= '</div>';
         $html .= $this->gitphp_viewer->getContent();
         echo $html;
@@ -145,6 +166,17 @@ class GitViews_ShowRepo_Content {
         return $html;
     }
 
+    private function getRemoteRepositoryInfo() {
+        /** @var $gerrit_server Git_RemoteServer_GerritServer */
+        $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+        $gerrit_project = $this->driver->getGerritProjectName($this->repository);
+        $link = $gerrit_server->getProjectUrl($gerrit_project);
+
+        $html  = '';
+        $html .= '<p>Gerrit: <a href="'.$link.'">'.$gerrit_project.'</a>';
+        $html .= '</p>';
+        return $html;
+    }
 
 }
 
