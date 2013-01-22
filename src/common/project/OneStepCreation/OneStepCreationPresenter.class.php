@@ -90,7 +90,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      * @return Project_CustomDescription_CustomDescriptionPresenter[]
      */
-    private function getCustomDescriptionPresenters($required_custom_descriptions) {
+    private function getCustomDescriptionPresenters(array $required_custom_descriptions) {
         $presenters = array();
         foreach ($required_custom_descriptions as $custom_description) {
             $presenters[] = new Project_CustomDescription_CustomDescriptionPresenter(
