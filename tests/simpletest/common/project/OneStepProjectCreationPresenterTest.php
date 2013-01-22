@@ -23,9 +23,10 @@ require_once 'common/include/Response.class.php';
 
 class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
     protected function aOneStepProjectCreationForm($request_data) {
+        $project_manager = mock('ProjectManager');
         $request = aRequest()->withParams($request_data)->build();
-        $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request);
-        return new Project_OneStepCreation_OneStepCreationPresenter($creation_request, array(), array(), mock('ProjectManager'), mock('ProjectDao'));
+        $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
+        return new Project_OneStepCreation_OneStepCreationPresenter($creation_request, array(), array(), $project_manager, mock('ProjectDao'));
     }
 
     public function testNewObjectSetsFullName() {

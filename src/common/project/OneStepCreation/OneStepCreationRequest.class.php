@@ -98,27 +98,17 @@ class Project_OneStepCreation_OneStepCreationRequest {
      */
     private $available_licenses;
 
-    /**
-     * @var User
-     */
-    private $creator;
-
-    /**
-     * @var ProjectManager
-     */
+    /** @var ProjectManager */
     private $project_manager;
-
-    /**
-     * @var ProjectDao
-     */
-    private $project_dao;
 
     /** @var Codendi_Request */
     private $request;
 
-    public function __construct(Codendi_Request $request) {
-        $this->request = $request;
-        $request_data  = $request->params;
+    public function __construct(Codendi_Request $request, ProjectManager $project_manager) {
+        $this->request         = $request;
+        $this->project_manager = $project_manager;
+
+        $request_data = $request->params;
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -150,6 +140,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
                     Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE    => $custom_license,
                     Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $this->getShortDescription(),
                     'is_test'                                                           => false,
+                    'services'                                                          => $this->getServices(),
                 ),
                 $this->custom_descriptions
             )
@@ -368,6 +359,19 @@ class Project_OneStepCreation_OneStepCreationRequest {
                 $this->custom_descriptions[$key] = $value;
             }
         }
+    }
+
+    /**
+     * @return array
+     */
+    private function getServices() {
+        $services = array();
+        $project = $this->project_manager->getProject($this->getTemplateId());
+        foreach($project->getServices() as $service) {
+            $id = $service->getId();
+            $services[$id]['is_used'] = $service->isUsed();
+        }
+        return $services;
     }
 }
 

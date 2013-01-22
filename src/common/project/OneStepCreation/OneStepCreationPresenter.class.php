@@ -86,7 +86,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     private $creation_request;
 
-    public function __construct(Project_OneStepCreation_OneStepCreationRequest $creation_request, array $licenses, array $required_custom_descriptions, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
+    public function __construct(Project_OneStepCreation_OneStepCreationRequest $creation_request, array $licenses, array $required_custom_descriptions, ProjectManager $project_manager, ProjectDao $project_dao = null) {
         $this->creation_request   = $creation_request;
         $this->available_licenses = $licenses;
         $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();

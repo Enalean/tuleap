@@ -51,7 +51,7 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
 
     protected function aCreationValidator($request_data, $required_custom_descriptions) {
         $request = aRequest()->withParams($request_data)->build();
-        $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request);
+        $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, ProjectManager::instance());
         $validator = new Project_OneStepCreation_OneStepCreationValidator($creation_request, $required_custom_descriptions);
 
         return $validator;

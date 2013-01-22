@@ -200,7 +200,14 @@ class Project extends Group implements PFO_Project {
         
         return $used_services;
     }
-    
+
+    /**
+     * @return Service[]
+     */
+    public function getServices() {
+        return $this->services;
+    }
+
     public function getActiveServices() {
         return $this->cache_active_services;
     }

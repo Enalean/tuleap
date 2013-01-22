@@ -38,12 +38,15 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
     public function __construct(Codendi_Request $request) {
         parent::__construct('project', $request);
 
-        $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest($request);
+        $project_manager = ProjectManager::instance();
+
+        $this->creation_request = new Project_OneStepCreation_OneStepCreationRequest($request, $project_manager);
 
         $this->presenter = new Project_OneStepCreation_OneStepCreationPresenter(
             $this->creation_request,
             $GLOBALS['LICENSE'],
-            $this->getCustomDescriptions()
+            $this->getCustomDescriptions(),
+            $project_manager
         );
     }
 
@@ -66,27 +69,8 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         }
 
         $data = $this->creation_request->getProjectValues();
-        $this->setDefaultTemplateIfNoOneHasBeenChoosen($data);
-        $this->setServices($data);
         require_once 'www/project/create_project.php';
         create_project($data);
-    }
-
-    private function setDefaultTemplateIfNoOneHasBeenChoosen(array &$data) {
-        //TODO: useless? What about Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID
-        if (! isset($data['project']['built_from_template'])) {
-            $default_templates = $this->presenter->getDefaultTemplates();
-            $first_default_template = current($default_templates);
-            $data['project']['built_from_template'] = $first_default_template->getGroupId();
-        }
-    }
-
-    private function setServices(array &$data) {
-        $project = ProjectManager::instance()->getProject($data['project']['built_from_template']);
-        foreach($project->services as $service) {
-            $id = $service->getId();
-            $data['project']['services'][$id]['is_used'] = $service->isUsed();
-        }
     }
 
     // TODO: to be injected, avoid sql here

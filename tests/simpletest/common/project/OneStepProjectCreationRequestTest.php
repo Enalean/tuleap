@@ -22,10 +22,30 @@ require_once 'common/project/OneStepCreation/OneStepCreationRequest.class.php';
 
 class OneStepProjectCreationRequestTest extends TuleapTestCase {
 
+    private $template_id        = 100;
+    private $service_git_id     = 11;
+    private $service_tracker_id = 12;
+
+    public function setUp() {
+        parent::setUp();
+
+        $service_git = mock('Service');
+        stub($service_git)->getId()->returns($this->service_git_id);
+        stub($service_git)->isUsed()->returns(false);
+
+        $service_tracker = mock('Service');
+        stub($service_tracker)->getId()->returns($this->service_tracker_id);
+        stub($service_tracker)->isUsed()->returns(true);
+
+        $template = mock('Project');
+        stub($template)->getServices()->returns(array($service_git, $service_tracker));
+
+        $this->project_manager = stub('ProjectManager')->getProject($this->template_id)->returns($template);
+    }
+
     protected function aCreationRequest($request_data) {
         $request = aRequest()->withParams($request_data)->build();
-        $creation_request = new Project_OneStepCreation_OneStepCreationRequest($request);
-        return new Project_OneStepCreation_OneStepCreationRequest($creation_request);
+        return new Project_OneStepCreation_OneStepCreationRequest($request, $this->project_manager);
     }
 
     public function testNewObjectSetsACustomTextDescriptionField() {
@@ -67,64 +87,44 @@ class OneStepProjectCreationRequestTest extends TuleapTestCase {
     }
 
     public function testGetProjectValuesUsesCustomLicenseIfTypeIsOther() {
-        $full_name = 'my_test proj';
-        $unix_name = 'fdgd';
-        $description = 'short description';
-        $is_public = true;
-        $id = 5689;
-        $type = 'other';
-        $license = 'do not copy';
-
         $request_data = array(
-            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => $full_name,
-            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => $unix_name,
-            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $description,
-            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => $is_public,
-            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $id,
-            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => $type,
-            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => $license,
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => 'other',
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => 'do not copy',
         );
-
         $creation_request = $this->aCreationRequest($request_data);
 
-        $expected = array(
-            'project' => $request_data
-        );
-
-        $expected['project']['is_test'] = false;
-
-        $this->assertEqual($expected, $creation_request->getProjectValues());
+        $values = $creation_request->getProjectValues();
+        $this->assertEqual($values['project'][Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE], 'do not copy');
     }
 
     public function testGetProjectValuesIgnoresCustomLicenseIfTypeIsNotOther() {
-        $full_name = 'my_test proj';
-        $unix_name = 'fdgd';
-        $description = 'short description';
-        $is_public = true;
-        $id = 5689;
-        $type = 'artistic';
-        $license = 'do not copy';
-
         $request_data = array(
-            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => $full_name,
-            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => $unix_name,
-            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $description,
-            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => $is_public,
-            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $id,
-            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => $type,
-            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => $license,
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => 'artistic',
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => 'do not copy',
         );
-
-        $expected = array(
-            'project' => $request_data
-        );
-
-        $expected['project']['is_test'] = false;
-        $expected['project'][Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE] = null;
-
         $creation_request = $this->aCreationRequest($request_data);
 
-        $this->assertEqual($expected, $creation_request->getProjectValues());
+        $values = $creation_request->getProjectValues();
+        $this->assertNull($values['project'][Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE]);
+    }
+
+    public function itForcesTheProjectToNotBeATest() {
+        $request_data     = array('whatever');
+        $creation_request = $this->aCreationRequest($request_data);
+
+        $values = $creation_request->getProjectValues();
+        $this->assertFalse($values['project']['is_test']);
+    }
+
+    public function itIncludesTheUsedServicesOfTheChoosenTemplate() {
+        $request_data = array(
+            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $this->template_id,
+        );
+        $creation_request = $this->aCreationRequest($request_data);
+        $values = $creation_request->getProjectValues();
+
+        $this->assertEqual($values['project']['services'][$this->service_tracker_id]['is_used'], 1);
+        $this->assertEqual($values['project']['services'][$this->service_git_id]['is_used'], 0);
     }
 }
 ?>
