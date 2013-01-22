@@ -72,14 +72,14 @@ class ProjectCustomDescription {
     public function isText() {
         return $this->getType() == self::TYPE_TEXT;
     }
-    
+
     public function getTranslation($text) {
-        if(preg_match('/(.*):(.*)/', $text, $matches)) {			
+        if(preg_match('/(.*):(.*)/', $text, $matches)) {
             if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
                 return $GLOBALS['Language']->getText($matches[1], $matches[2]);
             }
         }
-        return false;
+        return $text;
     }
 }
 ?>
