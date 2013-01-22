@@ -21,7 +21,7 @@
 require_once 'common/include/TemplateSingleton.class.php';
 require_once 'common/project/ProjectCreationTemplatePresenter.class.php';
 require_once 'common/valid/Rule.class.php';
-require_once 'common/project/CustomDescription/CustomDescription.class.php';
+require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
 
 /**
  * Controller view helper class
@@ -115,9 +115,9 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     private $custom_descriptions = array();
 
     /**
-     * @var ProjectCustomDescription[]
+     * @var Project_CustomDescription_CustomDescriptionPresenters[]
      */
-    private $required_custom_descriptions = array();
+    private $required_custom_description_presenters = array();
 
     /**
      * @var array
@@ -139,8 +139,8 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     private $project_dao;
 
-    public function __construct(array $request_data, User $creator, array $licenses, array $required_custom_descriptions, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
-        $this->required_custom_descriptions = $required_custom_descriptions;
+    public function __construct(array $request_data, User $creator, array $licenses, array $required_custom_description_presenters, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
+        $this->required_custom_description_presenters = $required_custom_description_presenters;
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -306,7 +306,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     }
 
     public function getProjectDescriptionFields() {
-        return array_values($this->required_custom_descriptions);
+        return array_values($this->required_custom_description_presenters);
     }
 
     public function getTitle() {
@@ -617,8 +617,8 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     }
 
     private function setRequiredCustomDescriptionValue($id, $value) {
-        if (isset ($this->required_custom_descriptions[$id])) {
-            $this->required_custom_descriptions[$id]->setValue($value);
+        if (isset ($this->required_custom_description_presenters[$id])) {
+            $this->required_custom_description_presenters[$id]->setValue($value);
         }
     }
 
@@ -748,7 +748,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return \OneStepProjectCreationPresenter
      */
     private function validateCustomDescriptions() {
-        foreach ($this->required_custom_descriptions as $id => $description) {
+        foreach ($this->required_custom_description_presenters as $id => $description) {
             if (! $this->getCustomProjectDescription($id)) {
                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_project_one_step', 'custom_description_missing', $description->getName()));
                 $this->setIsNotValid();

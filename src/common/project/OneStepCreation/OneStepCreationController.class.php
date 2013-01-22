@@ -20,6 +20,7 @@
 
 require_once 'common/mvc2/Controller.class.php';
 require_once 'OneStepCreationPresenter.class.php';
+require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
 
 class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller {
 
@@ -29,13 +30,16 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $required_custom_descriptions = array();
         $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
         while ($row = db_fetch_array($res)) {
-            $required_custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescription(
-                $row['group_desc_id'],
-                $row['desc_name'],
-                $row['desc_description'],
-                $row['desc_required'],
-                $row['desc_type'],
-                $row['desc_rank']
+            $required_custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescriptionPresenter(
+                new Project_CustomDescription_CustomDescription(
+                    $row['group_desc_id'],
+                    $row['desc_name'],
+                    $row['desc_description'],
+                    $row['desc_required'],
+                    $row['desc_type'],
+                    $row['desc_rank']
+                ),
+                Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX
             );
         }
         $this->presenter = new Project_OneStepCreation_OneStepCreationPresenter(

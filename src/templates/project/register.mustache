@@ -75,8 +75,8 @@
             <div class="control-group">
                 <label class="control-label">{{getName}} <span class="mandatory_field">*</span></label>
                 <div class="controls">
-                    {{#isText}}<textarea name="{{getDescriptionFormPrefix}}{{getId}}" wrap="virtual" cols="40" rows="3" required="required">{{getValue}}</textarea>{{/isText}}
-                    {{^isText}}<input name="{{getDescriptionFormPrefix}}{{getId}}" size="40" maxlen="70" type="text" value="{{getValue}}" required="required" />{{/isText}}
+                    {{#isText}}<textarea name="{{getFormName}}" wrap="virtual" cols="40" rows="3" required="required">{{getValue}}</textarea>{{/isText}}
+                    {{^isText}}<input name="{{getFormName}}" size="40" maxlen="70" type="text" value="{{getValue}}" required="required" />{{/isText}}
                     <div class="help">{{{getDescription}}}</div>
                 </div>
             </div>
