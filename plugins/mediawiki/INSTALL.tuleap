@@ -14,7 +14,8 @@ cd /usr/share
 ln -s YOUR_FOLDER_WHERE_MEDIAWIKI_IS_EXTRACTED mediawiki115
 
 # Must create /var/lib/codendi/plugins/mediawiki/master
-# Done in /usr/share/gforge/plugins/mediawiki/cronjobs/create-wikis.php
+# Done in
+/usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis.php
 # Theme
 # ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php /usr/share/mediawiki115/skins/
 # ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/fusionforge /usr/share/mediawiki115/skins/
@@ -40,8 +41,6 @@ $src_path = "/usr/share/mediawiki115";
 
 #run this command
 /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
-
-#if you have an error with a failed require_once on the 'cron_utils.php' file, comment the line on the 'create-wikis-mysql.php' and execute the command
 
 You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
 

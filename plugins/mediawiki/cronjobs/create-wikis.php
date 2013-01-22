@@ -30,9 +30,10 @@
 # Required config variables:
 #   src_path: the directory where the mediawiki sources are installed
 
-require_once dirname(__FILE__) . '/../../../www/env.inc.php';
-require_once $gfcommon.'include/pre.php';
-require_once $gfcommon.'include/cron_utils.php';
+require_once dirname(__FILE__) . '/../../../src/www/env.inc.php';
+require_once $gfcommon.'../www/include/pre.php';
+require_once $gfcommon.'../../plugins/mediawiki/fusionforge/cron_utils.php';
+require_once $gfcommon.'../../plugins/fusionforge_compat/include/fusionforge/forge_get_config.php';
 
 $src_path = forge_get_config('src_path', 'mediawiki');
 $master_path = forge_get_config('master_path', 'mediawiki');

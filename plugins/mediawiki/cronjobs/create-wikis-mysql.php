@@ -32,7 +32,7 @@
 
 require_once 'www/env.inc.php';
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../../../cron_utils.php';
+require_once dirname(__FILE__).'/../fusionforge/cron_utils.php';
 
 $src_path = forge_get_config('src_path', 'mediawiki');
 $master_path = forge_get_config('master_path', 'mediawiki');
