@@ -1,3 +1,6 @@
+Version 0.9.11 - Tuleap 5.9
+    * Fix some issues occuring during project creation
+
 Version 0.9.10 - Tuleap 5.9
     * Fix some isolated tests
 

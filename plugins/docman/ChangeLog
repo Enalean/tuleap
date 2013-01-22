@@ -1,3 +1,6 @@
+Version 2.26.13 - Tuleap 5.9
+    * Fix: typo
+
 Version 2.26.12 - Tuleap 5.9
     * Fix bug with document filename on download with IE9 (contrib STMicroelectronics)
 
