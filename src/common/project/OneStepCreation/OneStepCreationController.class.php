@@ -63,6 +63,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $GLOBALS['HTML']->header(array('title'=> $GLOBALS['Language']->getText('register_index','project_registration')));
         $this->render('register', $this->presenter);
         $GLOBALS['HTML']->footer(array());
+        exit;
     }
 
     /**
