@@ -29,7 +29,7 @@ class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller 
         $required_custom_descriptions = array();
         $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
         while ($row = db_fetch_array($res)) {
-            $required_custom_descriptions[$row['group_desc_id']] = new ProjectCustomDescription(
+            $required_custom_descriptions[$row['group_desc_id']] = new Project_CustomDescription_CustomDescription(
                 $row['group_desc_id'],
                 $row['desc_name'],
                 $row['desc_description'],

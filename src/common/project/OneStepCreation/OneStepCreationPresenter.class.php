@@ -21,7 +21,7 @@
 require_once 'common/include/TemplateSingleton.class.php';
 require_once 'common/project/ProjectCreationTemplatePresenter.class.php';
 require_once 'common/valid/Rule.class.php';
-require_once 'common/project/ProjectCustomDescription.class.php';
+require_once 'common/project/CustomDescription/CustomDescription.class.php';
 
 /**
  * Controller view helper class

@@ -21,7 +21,7 @@
 /**
  * Value Object of a Custom Project Description Field
  */
-class ProjectCustomDescription {
+class Project_CustomDescription_CustomDescription {
 
     const REQUIRED     = true;
     const NOT_REQUIRED = false;

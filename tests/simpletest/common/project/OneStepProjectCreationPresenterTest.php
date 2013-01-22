@@ -18,19 +18,19 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
-require_once 'common/project/OneStepProjectCreationPresenter.class.php';
+require_once 'common/project/OneStepCreation/OneStepCreationPresenter.class.php';
 require_once 'common/include/Response.class.php';
 
 class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
     protected function aOneStepProjectCreationForm($request_data) {
-        return new OneStepProjectCreationPresenter($request_data, aUser()->build(), array(), array(), mock('ProjectManager'), mock('ProjectDao'));
+        return new Project_OneStepCreation_OneStepCreationPresenter($request_data, aUser()->build(), array(), array(), mock('ProjectManager'), mock('ProjectDao'));
     }
 
     public function testNewObjectSetsFullName() {
         $full_name = 'my_test proj';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::FULL_NAME => $full_name,
+            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => $full_name,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -41,7 +41,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $unix_name = 'fdgd';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::UNIX_NAME => $unix_name,
+            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => $unix_name,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -52,7 +52,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $description = 'short description';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::SHORT_DESCRIPTION => $description,
+            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $description,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -63,7 +63,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $is_public = true;
 
         $request_data = array(
-            OneStepProjectCreationPresenter::IS_PUBLIC => $is_public,
+            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => $is_public,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -74,7 +74,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $id = 5689;
 
         $request_data = array(
-            OneStepProjectCreationPresenter::TEMPLATE_ID => $id,
+            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $id,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -85,14 +85,14 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $request_data          = array();
         $single_step = $this->aOneStepProjectCreationForm($request_data);
 
-        $this->assertEqual(OneStepProjectCreationPresenter::DEFAULT_TEMPLATE_ID , $single_step->getTemplateId());
+        $this->assertEqual(Project_OneStepCreation_OneStepCreationPresenter::DEFAULT_TEMPLATE_ID , $single_step->getTemplateId());
     }
 
     public function testNewObjectSetsLicenseType() {
         $type = 'artistic';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::LICENSE_TYPE => $type,
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => $type,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -103,7 +103,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $license = 'do not copy';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::CUSTOM_LICENSE => $license,
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => $license,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -114,7 +114,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $tos = 'approved';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::TOS_APPROVAL => $tos,
+            Project_OneStepCreation_OneStepCreationPresenter::TOS_APPROVAL => $tos,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -126,7 +126,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $custom_id    = 101;
 
         $request_data = array(
-            OneStepProjectCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -138,7 +138,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $custom_id    = 'name';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -150,13 +150,13 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $custom_id    = 101;
 
         $request_data = array(
-            OneStepProjectCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+            Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
 
         $project_values = $single_step->getProjectValues();
-        $this->assertEqual($project_values['project'][OneStepProjectCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id"], $text_content);
+        $this->assertEqual($project_values['project'][Project_OneStepCreation_OneStepCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id"], $text_content);
     }
 
     public function testGetProjectValuesUsesCustomLicenseIfTypeIsOther() {
@@ -169,13 +169,13 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $license = 'do not copy';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::FULL_NAME => $full_name,
-            OneStepProjectCreationPresenter::UNIX_NAME => $unix_name,
-            OneStepProjectCreationPresenter::SHORT_DESCRIPTION => $description,
-            OneStepProjectCreationPresenter::IS_PUBLIC => $is_public,
-            OneStepProjectCreationPresenter::TEMPLATE_ID => $id,
-            OneStepProjectCreationPresenter::LICENSE_TYPE => $type,
-            OneStepProjectCreationPresenter::CUSTOM_LICENSE => $license,
+            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => $full_name,
+            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => $unix_name,
+            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $description,
+            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => $is_public,
+            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $id,
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => $type,
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => $license,
         );
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
@@ -199,13 +199,13 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $license = 'do not copy';
 
         $request_data = array(
-            OneStepProjectCreationPresenter::FULL_NAME => $full_name,
-            OneStepProjectCreationPresenter::UNIX_NAME => $unix_name,
-            OneStepProjectCreationPresenter::SHORT_DESCRIPTION => $description,
-            OneStepProjectCreationPresenter::IS_PUBLIC => $is_public,
-            OneStepProjectCreationPresenter::TEMPLATE_ID => $id,
-            OneStepProjectCreationPresenter::LICENSE_TYPE => $type,
-            OneStepProjectCreationPresenter::CUSTOM_LICENSE => $license,
+            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => $full_name,
+            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => $unix_name,
+            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $description,
+            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => $is_public,
+            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $id,
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => $type,
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => $license,
         );
 
 
@@ -215,7 +215,7 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         );
 
         $expected['project']['is_test'] = false;
-        $expected['project'][OneStepProjectCreationPresenter::CUSTOM_LICENSE] = null;
+        $expected['project'][Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE] = null;
 
         $single_step = $this->aOneStepProjectCreationForm($request_data);
 
@@ -256,7 +256,7 @@ class OneStepProjectCreationFormValidationTest extends TuleapTestCase {
     }
 
     protected function aOneStepProjectCreationForm($request_data, $required_custom_descriptions) {
-        $single_step = partial_mock('OneStepProjectCreationPresenter' , array('getTemplateId'), array($request_data, aUser()->build(), array(), $required_custom_descriptions, mock('ProjectManager'), mock('ProjectDao')));
+        $single_step = partial_mock('Project_OneStepCreation_OneStepCreationPresenter' , array('getTemplateId'), array($request_data, aUser()->build(), array(), $required_custom_descriptions, mock('ProjectManager'), mock('ProjectDao')));
 
         return $single_step;
     }
@@ -271,7 +271,7 @@ class OneStepProjectCreationFormValidationTest extends TuleapTestCase {
 
     public function itReturnsFalseIfARequiredCustomDescriptionIsNotSet() {
         $required_custom_descriptions = array(
-            101 => new ProjectCustomDescription(101, "A REQUIRED description field", "desc", ProjectCustomDescription::REQUIRED, ProjectCustomDescription::TYPE_TEXT, 1),
+            101 => new Project_CustomDescription_CustomDescription(101, "A REQUIRED description field", "desc", Project_CustomDescription_CustomDescription::REQUIRED, Project_CustomDescription_CustomDescription::TYPE_TEXT, 1),
         );
         $full_name = 'my_test proj';
         $unix_name = 'fdgd';
@@ -281,14 +281,14 @@ class OneStepProjectCreationFormValidationTest extends TuleapTestCase {
         $type = 'other';
         $license = 'do not copy';
         $request_data = array(
-            OneStepProjectCreationPresenter::FULL_NAME => $full_name,
-            OneStepProjectCreationPresenter::UNIX_NAME => $unix_name,
-            OneStepProjectCreationPresenter::SHORT_DESCRIPTION => $description,
-            OneStepProjectCreationPresenter::IS_PUBLIC => $is_public,
-            OneStepProjectCreationPresenter::TEMPLATE_ID => $id,
-            OneStepProjectCreationPresenter::LICENSE_TYPE => $type,
-            OneStepProjectCreationPresenter::CUSTOM_LICENSE => $license,
-            OneStepProjectCreationPresenter::TOS_APPROVAL => 'approved',
+            Project_OneStepCreation_OneStepCreationPresenter::FULL_NAME => $full_name,
+            Project_OneStepCreation_OneStepCreationPresenter::UNIX_NAME => $unix_name,
+            Project_OneStepCreation_OneStepCreationPresenter::SHORT_DESCRIPTION => $description,
+            Project_OneStepCreation_OneStepCreationPresenter::IS_PUBLIC => $is_public,
+            Project_OneStepCreation_OneStepCreationPresenter::TEMPLATE_ID => $id,
+            Project_OneStepCreation_OneStepCreationPresenter::LICENSE_TYPE => $type,
+            Project_OneStepCreation_OneStepCreationPresenter::CUSTOM_LICENSE => $license,
+            Project_OneStepCreation_OneStepCreationPresenter::TOS_APPROVAL => 'approved',
         );
         $single_step = $this->aOneStepProjectCreationForm($request_data, $required_custom_descriptions);
         stub($single_step)->getTemplateId()->returns($this->template_id);
