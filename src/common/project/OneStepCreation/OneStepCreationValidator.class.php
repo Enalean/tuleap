@@ -19,6 +19,8 @@
   */
 
 require_once 'common/valid/Rule.class.php';
+require_once 'OneStepCreationRequest.class.php';
+require_once 'OneStepCreationPresenter.class.php';
 
 /**
  * Validates the request
