@@ -144,7 +144,6 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return FullTextSearchTrackerActions
      */
-    //TO BE removed
     private function getTrackerActions() {
         $type = self::SEARCH_TRACKER_TYPE;
         if (!isset($this->trackerActions) && ($search_client = $this->getIndexClient($type))) {
