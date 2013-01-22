@@ -26,6 +26,8 @@ class OneStepCreationValidatorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $GLOBALS['ftp_frs_dir_prefix'] = 'whatever';
+        $GLOBALS['ftp_anon_dir_prefix'] = 'whatever';
 
         $template = stub('Project')->isTemplate()->returns(true);
 
