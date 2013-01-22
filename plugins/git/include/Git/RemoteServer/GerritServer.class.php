@@ -96,6 +96,20 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return "ext::ssh -p $this->ssh_port -i $this->identity_file $this->login@$this->host %S $gerrit_project";
     }
 
+    public function getEndUserCloneUrl($gerrit_project, User $user) {
+        /*$ldap_manager = new LDAP_UserManager(new LDAP());
+        $ldap_result  = $ldap_manager->getLdapFromUser($user);
+        if ($ldap_result) {
+            $login = $ldap_result->getLogin();
+        } else {
+            $login = 'gerrit_username';
+        }*/
+        $login = 'gerrit_username';
+        $params = array('login' => &$login);
+        EventManager::instance()->processEvent('get_ldap_login_name_for_user', $params);
+        return 'ssh://'.$login.'@'.$this->host.':'.$this->ssh_port.'/'.$gerrit_project.'.git';
+    }
+
     public function getProjectAdminUrl($gerrit_project) {
         return $this->getGerritServerBaseUrl()."/#/admin/projects/$gerrit_project";
     }

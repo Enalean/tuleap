@@ -30,6 +30,11 @@ class GitViews_ShowRepo_Content {
     private $gitphp_viewer;
 
     /**
+     * @var User
+     */
+    private $current_user;
+
+    /**
      * @var Git
      */
     private $controller;
@@ -52,12 +57,14 @@ class GitViews_ShowRepo_Content {
     public function __construct(
             GitRepository $repository,
             GitViews_GitPhpViewer $gitphp_viewer,
+            User $current_user,
             Git $controller,
             Git_Driver_Gerrit $driver,
             array $gerrit_servers,
             $theme_path) {
         $this->repository     = $repository;
         $this->gitphp_viewer  = $gitphp_viewer;
+        $this->current_user   = $current_user;
         $this->controller     = $controller;
         $this->driver         = $driver;
         $this->gerrit_servers = $gerrit_servers;
@@ -161,10 +168,28 @@ class GitViews_ShowRepo_Content {
                 $selected  = '';
             }
         }
-        $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" /></label>
-                  </p>';
+
+        if ($this->repository->getRemoteServerId()) {
+            /* @var $gerrit_server Git_RemoteServer_GerritServer */
+            $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+            $gerrit_project = $this->driver->getGerritProjectName($this->repository);
+
+            $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $this->current_user);
+
+            $html .= '<label>';
+            $html .= '<input type="radio" class="plugin_git_transport" name="plugin_git_transport" value="'.$clone_url.'" />';
+            $html .= 'gerrit';
+            $html .= '</label> ';
+        }
+
+        $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" />';
+
+
+
+        $html .= '</p>';
         return $html;
     }
+
 
     private function getRemoteRepositoryInfo() {
         /** @var $gerrit_server Git_RemoteServer_GerritServer */

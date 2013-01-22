@@ -72,4 +72,45 @@ class Git_RemoteServer_GerritServerTest extends TuleapTestCase {
         $this->assertEqual($server->getProjectUrl('gerrit_project_name'), 'http://le_host:8080/#/q/project:gerrit_project_name,n,z');
     }
 }
+
+class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->event_manager = mock('EventManager');
+        EventManager::setInstance($this->event_manager);
+
+        $id            = 1;
+        $this->host    = 'le_host';
+        $http_port     = '8080';
+        $ssh_port      = '29418';
+        $login         = 'le_login';
+        $identity_file = 'le_identity_file';
+        $this->server = new Git_RemoteServer_GerritServer($id, $this->host, $ssh_port, $http_port, $login, $identity_file);
+
+        $this->user = aUser()->build();
+    }
+
+    public function tearDown() {
+        EventManager::clearInstance();
+        parent::tearDown();
+    }
+
+    public function itReliesOnLdapPluginToFindTheRelevantGerritUserName() {
+        expect($this->event_manager)->processEvent('get_ldap_login_name_for_user', '*')->once();
+        $this->server->getEndUserCloneUrl('gerrit_project_name', $this->user);
+    }
+
+    public function _itGivesTheCloneUrlForTheEndUserWhoWantToCloneRepository() {
+        //git clone ssh://sshusername@hostname:29418/REPOSITORY_NAME.git
+        stub($this->event_manager)->processEvent('get_ldap_login_name_for_user', '*')->execute(array($this, 'fakeLdapLogin'));
+        $this->assertEqual($this->server->getEndUserCloneUrl('gerrit_project_name', $this->user), 'ssh://blurp@le_host:29418/gerrit_project_name.git');
+    }
+
+    public function fakeLdapLogin($params) {
+        $params['login'] = 'blurp';
+    }
+}
+
 ?>

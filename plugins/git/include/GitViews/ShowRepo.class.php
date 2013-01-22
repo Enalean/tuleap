@@ -49,7 +49,12 @@ class GitViews_ShowRepo {
      */
     private $gerrit_servers;
 
-    public function __construct(GitRepository $repository, Git $controller, Codendi_Request $request, Git_Driver_Gerrit $driver, array $gerrit_servers) {
+    public function __construct(
+            GitRepository $repository,
+            Git $controller,
+            Codendi_Request $request,
+            Git_Driver_Gerrit $driver,
+            array $gerrit_servers) {
         $this->repository     = $repository;
         $this->controller     = $controller;
         $this->request        = $request;
@@ -69,6 +74,7 @@ class GitViews_ShowRepo {
             $view = new GitViews_ShowRepo_Content(
                 $this->repository,
                 $git_php_viewer,
+                $this->request->getCurrentUser(),
                 $this->controller,
                 $this->driver,
                 $this->gerrit_servers,
