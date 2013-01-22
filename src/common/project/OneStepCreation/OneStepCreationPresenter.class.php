@@ -492,7 +492,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param array $data
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setUnixName(array $data) {
         if(isset($data[self::UNIX_NAME])) {
@@ -505,7 +505,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param array $data
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setFullName(array $data) {
         if(isset($data[self::FULL_NAME])) {
@@ -518,7 +518,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param array $data
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setShortDescription(array $data) {
         if(isset($data[self::SHORT_DESCRIPTION])) {
@@ -531,7 +531,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param array $data
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setTemplateId(array $data) {
         if(isset($data[self::TEMPLATE_ID])) {
@@ -546,7 +546,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param array $data
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setIsPublic(array $data) {
         if(isset($data[self::IS_PUBLIC])) {
@@ -559,7 +559,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param string $path
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setFormSubmissionPath(string $path) {
         $this->form_submission_path = $path;
@@ -569,7 +569,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param array $data
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setLicenseType($data) {
         if(isset($data[self::LICENSE_TYPE])) {
@@ -582,7 +582,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param string $data
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setCustomLicense($data) {
         if(isset($data[self::CUSTOM_LICENSE])) {
@@ -595,7 +595,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     /**
      *
      * @param type $data
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setTosApproval($data) {
         $this->term_of_service_approval = false;
@@ -624,7 +624,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     /**
      *
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function validateFullName() {
         if ($this->getFullName() == null) {
@@ -645,7 +645,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     /**
      *
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function validateShortDescription() {
         if ($this->getShortDescription() == null) {
@@ -658,7 +658,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     /**
      *
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function validateUnixName() {
         if ($this->getUnixName() == null) {
@@ -680,7 +680,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     /**
      *
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function validateTemplateId() {
         if ($this->getTemplateId() == null) {
@@ -702,7 +702,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     /**
      *
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function validateProjectPrivacy() {
         if ($this->isPublic() === null) {
@@ -715,7 +715,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     /**
      *
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function validateLicense() {
         if ($this->getLicenseType() === null) {
@@ -725,15 +725,18 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
         return $this;
     }
+
     /**
-     *
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function setIsNotValid() {
         $this->is_valid = false;
         return $this;
     }
 
+    /**
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
+     */
     private function validateTosApproval() {
         if (! $this->getTosApproval()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'tos_not_approved'));
@@ -745,7 +748,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     /**
      *
-     * @return \OneStepProjectCreationPresenter
+     * @return \Project_OneStepCreation_OneStepCreationPresenter
      */
     private function validateCustomDescriptions() {
         foreach ($this->required_custom_description_presenters as $id => $description) {
