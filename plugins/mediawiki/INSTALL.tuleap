@@ -1,4 +1,9 @@
 =============== INSTALL on local server ===============
+#install fusion forge compatibility plugin
+As forge admin, go to your tuleap instance in the administration pannel -> plugins administration.
+If the plugin isn't yet installed, install it !
+Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
+
 #get mediawiki
 cd /usr/share
 wget http://download.wikimedia.org/mediawiki/1.15/mediawiki-1.15.5.tar.gz
@@ -15,6 +20,11 @@ tar -xvf mediawiki-1.15.5.tar.gz mediawiki115
 
 # modify /etc/httpd/conf.d/codendi_aliases.conf to add plugin-mediawiki.inc (usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc)
 
+include /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc
+
+#Then restart yout httpd service
+service httpd restart
+
 # add conf param in local.inc
 // Mediawiki
 $master_path = "/var/lib/codendi/plugins/mediawiki/master" ;
@@ -24,8 +34,10 @@ $projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
 $config_path = "/etc/codendi";
 $src_path = "/usr/share/mediawiki115";
 
+#run this command
 /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
 
+#if you have an error with a failed require_once on the 'cron_utils.php' file, comment the line on the 'create-wikis-mysql.php' and execute the command
 
 You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
 
