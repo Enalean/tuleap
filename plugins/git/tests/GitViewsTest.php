@@ -132,7 +132,7 @@ class GitView_DiffViewTest extends TuleapTestCase {
         stub($repository)->getProject()->returns(stub('Project')->getUnixName()->returns('project'));
         stub($repository)->getGitRootPath()->returns('/home/abcd');
 
-        $gitphp_viewer = new GitViews_GitPhpViewer($repository);
+        $gitphp_viewer = new GitViews_GitPhpViewer($repository, dirname(__FILE__).'/_fixtures/fakeGitPHP');
         $gitphp_viewer->getContent();
 
         $this->assertEqual($_GET['h'], $dest_initial);

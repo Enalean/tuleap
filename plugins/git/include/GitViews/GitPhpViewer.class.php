@@ -29,7 +29,7 @@ class GitViews_GitPhpViewer {
      */
     private $gitphp_path;
 
-    public function __construct(GitRepository $repository, $gitphp_path = '') {
+    public function __construct(GitRepository $repository, $gitphp_path) {
         $this->repository  = $repository;
         $this->gitphp_path = $gitphp_path;
     }
