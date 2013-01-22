@@ -59,23 +59,17 @@ class GitViews_ShowRepo {
 
 
     public function display() {
-        if ( $this->request->get('noheader') == 1 ) {
-            $view = new GitViews_ShowRepo_Download($this->repository, $this->controller, $this->request, $this->driver, $this->gerrit_servers);
-        } else {
-            $view = new GitViews_ShowRepo_Content($this->repository, $this->controller, $this->request, $this->driver, $this->gerrit_servers);
-        }
-        $view->display();
-    }
-
-    protected function getGitPhpContent() {
         $git_php_viewer = new GitViews_GitPhpViewer(
             $this->repository,
             $this->controller->getPlugin()->getConfigurationParameter('gitphp_path')
         );
-        return $git_php_viewer->getContent();
+        if ($this->request->get('noheader') == 1) {
+            $view = new GitViews_ShowRepo_Download($git_php_viewer);
+        } else {
+            $view = new GitViews_ShowRepo_Content($this->repository, $git_php_viewer, $this->controller, $this->controller->getPlugin()->getThemePath());
+        }
+        $view->display();
     }
-
-
 }
 
 ?>

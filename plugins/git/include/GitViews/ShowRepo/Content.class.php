@@ -18,8 +18,34 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class GitViews_ShowRepo_Content extends GitViews_ShowRepo {
-    
+class GitViews_ShowRepo_Content {
+    /**
+     * @var GitRepository
+     */
+    protected $repository;
+
+    /**
+     * @var GitViews_GitPhpViewer
+     */
+    private $gitphp_viewer;
+
+    /**
+     * @var Git
+     */
+    private $controller;
+
+    /**
+     * @var string
+     */
+    private $theme_path;
+
+    public function __construct(GitRepository $repository, GitViews_GitPhpViewer $gitphp_viewer, Git $controller, $theme_path) {
+        $this->repository    = $repository;
+        $this->gitphp_viewer = $gitphp_viewer;
+        $this->controller    = $controller;
+        $this->theme_path    = $theme_path;
+    }
+
     public function display() {
         $repoId       = $this->repository->getId();
         $creator      = $this->repository->getCreator();
@@ -83,7 +109,7 @@ class GitViews_ShowRepo_Content extends GitViews_ShowRepo {
     </p>
         <?php
         echo '</div>';
-        echo $this->getGitPhpContent();
+        echo $this->gitphp_viewer->getContent();
     }
 
     /**
@@ -98,7 +124,7 @@ class GitViews_ShowRepo_Content extends GitViews_ShowRepo {
         if ($backendIsGitolite) {
             //$accessType .= '"'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_access_custom').'">';
             $accessType .= '"custom">';
-            $accessType .= '<img src="'.$this->controller->getPlugin()->getThemePath().'/images/perms.png" />';
+            $accessType .= '<img src="'.$this->theme_path.'/images/perms.png" />';
         } else {
             switch ($access) {
                 case GitRepository::PRIVATE_ACCESS:
