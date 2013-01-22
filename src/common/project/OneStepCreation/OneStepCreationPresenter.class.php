@@ -117,14 +117,6 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      *
      * @return string
      */
-    public function getFormSubmissionPath() {
-        return $this->form_submission_path; //TODO: uninitialized, to be removed?
-    }
-
-    /**
-     *
-     * @return string
-     */
     public function getUnixName() {
         return $this->creation_request->getUnixName();
     }
