@@ -115,7 +115,6 @@ class GitViews_ShowRepo_Content {
         $accessType = '<span class="plugin_git_repo_privacy" title=';
 
         if ($backendIsGitolite) {
-            //$accessType .= '"'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_access_custom').'">';
             $accessType .= '"custom">';
             $accessType .= '<img src="'.$this->theme_path.'/images/perms.png" />';
         } else {
