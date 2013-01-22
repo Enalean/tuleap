@@ -52,6 +52,8 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
         $this->request_uri = '/plugins/agiledashboard/';
         $this->saved_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
@@ -72,13 +74,13 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        parent::tearDown();
-
+        Config::restore();
         $_SERVER['REQUEST_URI'] = $this->saved_request_uri;
 
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
+        parent::tearDown();
     }
 
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -320,6 +322,8 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
         $this->plugin_path = '/plugin/path';
 
@@ -333,6 +337,11 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
 
         $this->current_user   = aUser()->build();
         $this->request        = aRequest()->withUser($this->current_user)->build();
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
     }
 
     public function itHasNoBreadCrumbWhenThereIsNoMilestone() {
@@ -392,6 +401,8 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
         $this->sprint_planning = aPlanning()->withBacklogTracker(aTracker()->build())->build();
         
@@ -413,6 +424,11 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         
         $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
         stub($this->hierarchy_factory)->getHierarchy()->returns(new Tracker_Hierarchy());
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
     }
 
     public function itDisplaysOnlySiblingsMilestones() {

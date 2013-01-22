@@ -26,6 +26,8 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
         $this->planning_controller = mock('Planning_Controller');
         $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
@@ -42,6 +44,11 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         stub($this->router)->getViewBuilder()->returns(mock('Planning_ViewBuilder'));
         stub($this->router)->getProjectManager()->returns(mock('ProjectManager'));
         stub($this->router)->buildMilestoneController()->returns(mock('Planning_MilestoneController'));
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
     }
     
     public function itRoutesPlanningEditionRequests() {
