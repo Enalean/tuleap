@@ -43,6 +43,8 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
         $this->group_id         = 123;
         $this->project          = stub('Project')->getID()->returns($this->group_id);
         $this->project_manager  = stub('ProjectManager')->getProject($this->group_id)->returns($this->project);
@@ -50,6 +52,11 @@ abstract class Planning_Controller_BaseTest extends TuleapTestCase {
         $this->request          = aRequest()->withProjectManager($this->project_manager)->with('group_id', "$this->group_id")->withUser($this->current_user)->build();
         $this->planning_factory = new MockPlanningFactory();
         $this->controller       = new Planning_Controller($this->request, $this->planning_factory, mock('Planning_MilestoneFactory'), '/path/to/theme');
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
     }
 
     protected function userIsAdmin() {
@@ -135,6 +142,8 @@ class Planning_ControllerNewTest extends TuleapTestCase {
 
     function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_dir', TRACKER_BASE_DIR .'/../../..');
         $this->group_id         = 123;
         $this->request          = aRequest()->with('group_id', "$this->group_id")->build();
         $this->dao              = mock('PlanningDao');
@@ -155,6 +164,11 @@ class Planning_ControllerNewTest extends TuleapTestCase {
         );
 
         $this->renderNew();
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
     }
 
     protected function renderNew() {
@@ -236,7 +250,7 @@ class Planning_ControllerCreateWithValidParamsTest extends Planning_ControllerCr
     }
 }
 
-class Planning_Controller_EditTest extends TuleapTestCase {
+class Planning_Controller_EditTest extends Planning_Controller_BaseTest {
 
     public function itRendersTheEditTemplate() {
         $group_id         = 123;

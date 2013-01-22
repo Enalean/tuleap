@@ -140,7 +140,7 @@ class UGroup {
      * @deprecated user getUsers($group_id)
      * Return DAR of all ugroup members as User objects
      *
-     * @return DataAccessResult
+     * @return Array of User
      */
     public function getMembers() {
         if (! $this->members) {
