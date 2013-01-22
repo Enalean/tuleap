@@ -293,6 +293,8 @@ class OneStepProjectCreationFormValidationTest extends TuleapTestCase {
         $single_step = $this->aOneStepProjectCreationForm($request_data, $required_custom_descriptions);
         stub($single_step)->getTemplateId()->returns($this->template_id);
 
+        expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
+        expect($GLOBALS['Language'])->getText('register_projectname', 'custom_description_missing', "A REQUIRED description field")->once();
         $this->assertFalse($single_step->validateAndGenerateErrors());
     }
 }
