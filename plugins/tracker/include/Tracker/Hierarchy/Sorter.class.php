@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Hierarchy.class.php';
-require_once dirname(__FILE__).'/../CrossSearch/ArtifactNode.class.php';
 
 /**
  * Sorts artifacts in a TreeNode structure 

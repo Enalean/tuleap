@@ -1,35 +1,24 @@
 <?php
-
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/builders/all.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial('Tracker_RulesManager', 'Tracker_RulesManagerTestVersion', array('getRuleFactory', 'getSelectedValuesForField'));
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/List.class.php');
 Mock::generate('Tracker_Rule_List');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RuleFactory.class.php');
 Mock::generate('Tracker_RuleFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
 
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Selectbox.class.php');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Static.class.php');
 Mock::generate('Tracker_FormElement_Field_List_Bind_Static');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindFactory.class.php');
 Mock::generate('Tracker_FormElement_Field_List_BindFactory');
 
 /**
@@ -428,7 +417,11 @@ class Tracker_RulesManagerTest extends TuleapTestCase {
     }
     
     function testExportToXmlCallsRuleListFactoryExport() {
-        $sax_object           = mock('SimpleXMLElement');
+        $xml_data = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker />
+XML;
+        $sax_object           = new SimpleXMLElement($xml_data);
         $xmlMapping           = array();
         $tracker              = mock('Tracker');
         $form_element_factory = mock('Tracker_FormElementFactory');

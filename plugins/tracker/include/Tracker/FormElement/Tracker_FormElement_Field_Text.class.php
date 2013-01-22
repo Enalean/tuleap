@@ -18,13 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Alphanum.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Text.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_Text_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_TextDao.class.php');
-require_once('dao/Tracker_FormElement_Field_TextDao.class.php');
 require_once('common/include/Codendi_Diff.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Text.class.php');
 
 class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum {
     

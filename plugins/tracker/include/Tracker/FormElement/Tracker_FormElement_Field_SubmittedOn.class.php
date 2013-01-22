@@ -18,13 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Date.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_Date_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_DateDao.class.php');
-require_once('dao/Tracker_FormElement_Field_DateDao.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
-require_once('Tracker_FormElement_Field_ReadOnly.class.php');
 require_once('common/date/DateHelper.class.php');
 
 class Tracker_FormElement_Field_SubmittedOn extends Tracker_FormElement_Field_Date implements Tracker_FormElement_Field_ReadOnly {

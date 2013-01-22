@@ -25,7 +25,7 @@
 function aCrossSearchCriteria() {
     return new Test_Tracker_CrossSearch_CriteriaBuilder();
 }
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Test_Tracker_CrossSearch_CriteriaBuilder {
 
     public function __construct() {

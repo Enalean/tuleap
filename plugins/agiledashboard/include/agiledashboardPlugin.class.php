@@ -40,6 +40,7 @@ class AgileDashboardPlugin extends Plugin {
     public function getHooksAndCallbacks() {
         // Do not load the plugin if tracker is not installed & active
         if (defined('TRACKER_BASE_URL')) {
+            require_once dirname(__FILE__) .'/../../tracker/include/autoload.php';
             $this->_addHook('cssfile', 'cssfile', false);
             $this->_addHook(Event::JAVASCRIPT, 'javascript', false);
             $this->_addHook(Event::COMBINED_SCRIPTS, 'combined_scripts', false);

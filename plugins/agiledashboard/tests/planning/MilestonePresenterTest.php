@@ -27,6 +27,18 @@ require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.
 require_once dirname(__FILE__).'/../../include/Planning/MilestonePresenter.class.php';
 
 abstract class Planning_MilestonePresenter_Common extends TuleapTestCase {
+    private $request_uri;
+
+    public function setUp() {
+        parent::setUp();
+        $this->request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+        $_SERVER['REQUEST_URI'] = 'bla';
+    }
+
+    public function tearDown() {
+        $_SERVER['REQUEST_URI'] = $this->request_uri;
+        parent::tearDown();
+    }
 
     protected function getAnArtifact($artifact_id, $children = array(), $tracker = null) {
         if (!$tracker) {
@@ -47,6 +59,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
     
     public function setUp() {
         parent::setUp();
+
         $this->user                = mock('User');
         $this->planning_tracker_id = 191;
         $this->planning_tracker    = mock('Tracker');

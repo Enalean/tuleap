@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) . '/../Condition.class.php';
 require_once 'common/permission/PermissionsManager.class.php';
 
 class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Condition {
@@ -59,7 +58,7 @@ class Workflow_Transition_Condition_Permissions extends Workflow_Transition_Cond
     /**
      * @see Workflow_Transition_Condition::exportToXml()
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $child = $root->addChild('condition');
         $child->addAttribute('type', $this->identifier);
 

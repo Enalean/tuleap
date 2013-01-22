@@ -19,8 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'FormElement/Tracker_FormElement_Usable.class.php';
-require_once('FormElement/IHaveAnId.class.php');
 
 interface Tracker_Report_Field extends Tracker_FormElement_IHaveAnId, Tracker_FormElement_Usable {
     

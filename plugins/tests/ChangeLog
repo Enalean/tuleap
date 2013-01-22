@@ -1,3 +1,9 @@
+Version 5.15 - Tuleap 5.9
+    * Add autoload to trackers
+
+Version 5.14 - Tuleap 5.9
+    * Continuous integration builds now fails when there is a notice or an execution error.
+
 Version 5.13 - Tuleap 5.9
     * Fix include files
 

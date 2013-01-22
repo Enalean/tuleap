@@ -36,12 +36,17 @@ $group_id   = $argv[1];
 $tracker_id = $argv[2];
 
 // Connecting to the soap's tracker client
-$soapTracker = new SoapClient($serverUrl.'/plugins/tracker/soap/?wsdl',
+$soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl',
                                     array('cache_wsdl' => WSDL_CACHE_NONE));
 
 //Executing method getTrackerSemantic
-$response = $soapTracker->getTrackerStructure($requesterSessionHash, $group_id, $tracker_id);
-var_dump($response);
+try {
+    $response = $soapTracker->getTrackerStructure($requesterSessionHash, $group_id, $tracker_id);
+    var_dump($response);
+} catch(Exception $e) {
+    var_dump($soapTracker->__getLastResponse());
+}
+
 
 $soapLogin->logout($requesterSessionHash);
 

@@ -18,12 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SemanticTitleReportField.class.php';
-require_once 'Query.class.php';
-require_once 'SemanticStatusReportField.class.php';
-require_once 'SemanticValueFactory.class.php';
-require_once 'CriteriaBuilder.class.php';
-require_once 'ViewBuilder.class.php';
 
 /**
  * Build Tracker_CrossSearch_SearchView object

@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_ReadOnly.class.php');
 require_once('common/dao/CrossReferenceDao.class.php');
 require_once('common/reference/CrossReferenceFactory.class.php');
 

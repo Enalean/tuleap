@@ -174,7 +174,7 @@ class GraphOnTrackersV5_Chart_Bar extends GraphOnTrackersV5_Chart {
         );
     }
     
-    public function exportToXML($root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         parent::exportToXML(&$root, $formsMapping);
         if ($base = (string)array_search($this->field_base, $formsMapping)) {
             $root->addAttribute('base', $base);

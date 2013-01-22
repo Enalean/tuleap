@@ -1,3 +1,9 @@
+Version 0.62 - Tuleap 5.9
+    * Add autoload to trackers
+
+Version 0.61 - Tuleap 5.9
+    * Fix unit test notice
+
 Version 0.60 - Tuleap 5.8
     * The title of the milestones title is not anymore displayed as a tab
 

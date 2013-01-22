@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__) . '/../Condition.class.php');
 
 class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Condition {
 
@@ -75,7 +74,7 @@ class Workflow_Transition_Condition_FieldNotEmpty extends Workflow_Transition_Co
     /**
      * @see Workflow_Transition_Condition::exportToXml()
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->getField()) {
             $child = $root->addChild('condition');
             $child->addAttribute('type', $this->identifier);

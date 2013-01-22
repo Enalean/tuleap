@@ -23,6 +23,8 @@
  * 
  */
 
+header("Cache-Control: no-cache, no-store, must-revalidate");
+
 require('pre.php');
 
 $hp = Codendi_HTMLPurifier::instance();

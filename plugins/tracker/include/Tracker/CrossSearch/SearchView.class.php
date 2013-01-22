@@ -20,9 +20,6 @@
 
 require_once 'common/user/User.class.php';
 require_once 'common/project/Service.class.php';
-require_once 'SearchContentView.class.php';
-require_once dirname(__FILE__).'/../Report/Tracker_Report.class.php';
-require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 

@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(dirname(__FILE__) .'/../Transition_PostAction.class.php');
-require_once(dirname(__FILE__) .'/../../../Tracker/FormElement/Tracker_FormElementFactory.class.php');
-require_once 'Transition_PostAction_Field_Numeric.class.php';
-
+include_once 'common/valid/ValidFactory.class.php';
 /**
  * Set the date of a field
  */
@@ -117,7 +114,7 @@ class Transition_PostAction_Field_Float extends Transition_PostAction_Field_Nume
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         if ($this->getFieldId()) {
             $child = $root->addChild(Transition_PostAction_Field_Float::XML_TAG_NAME);
              $child->addAttribute('value', $this->getValue());

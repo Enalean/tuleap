@@ -18,14 +18,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) .'/../../../../include/constants.php';
-require_once TRACKER_BASE_DIR .'/Tracker/TrackerManager.class.php';
-require_once TRACKER_BASE_DIR .'/workflow/Transition/Condition/FieldNotEmpty.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElement_Field.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/Artifact/Tracker_Artifact_ChangesetValue.class.php';
 
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class FieldNotEmpty_BaseTest extends TuleapTestCase {
 
     protected $condition;

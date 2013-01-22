@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial('Tracker',
                       'TrackerTestVersion',
                       array(
@@ -108,62 +105,41 @@ Mock::generate('User');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');
 Mock::generate('TrackerFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_SemanticManager.class.php');
 Mock::generate('Tracker_SemanticManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker_NotificationsManager.class.php');
 Mock::generate('Tracker_NotificationsManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/DateReminder/Tracker_DateReminderManager.class.php');
 Mock::generate('Tracker_DateReminderManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseManager.class.php');
 Mock::generate('Tracker_CannedResponseManager');
 
-require_once(dirname(__FILE__).'/../include/workflow/WorkflowManager.class.php');
 Mock::generate('WorkflowManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_ReportFactory.class.php');
 Mock::generate('Tracker_ReportFactory');
 
-require_once(dirname(__FILE__).'/../include/workflow/WorkflowFactory.class.php');
 Mock::generate('WorkflowFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
 Mock::generate('Tracker_FormElement_Field_String');
 
-require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseFactory.class.php');
 Mock::generate('Tracker_CannedResponseFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Interface.class.php');
 Mock::generate('Tracker_FormElement_Interface');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
 Mock::generate('Tracker_ArtifactFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
 Mock::generate('Tracker_SharedFormElementFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
-
-require_once dirname(__FILE__).'/builders/aTracker.php';
-require_once dirname(__FILE__).'/builders/anArtifact.php';
-require_once dirname(__FILE__).'/builders/aMockArtifact.php';
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
-    public function exportToXML($root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
         $xmlMapping['F'. $index] = $this->getId();
         return parent::exportToXML($root, $xmlMapping, $index);
     }

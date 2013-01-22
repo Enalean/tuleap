@@ -18,9 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../../include/constants.php';
-require_once TRACKER_BASE_DIR .'/Tracker/TrackerManager.class.php';
-require_once TRACKER_BASE_DIR .'/workflow/PostAction/CIBuild/Transition_PostAction_CIBuild.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+require_once 'common/Jenkins/Client.class.php';
 
 class Transition_PostAction_CIBuildTest extends TuleapTestCase {
 

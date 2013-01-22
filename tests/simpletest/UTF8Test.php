@@ -6,11 +6,13 @@
 */
 
 class UTF8Test extends UnitTestCase {
-    function UTF8Test($name = 'UTF-8 encoding test') {
-        $this->UnitTestCase($name);
-    }
-    
-    function testEncoding() {
+
+    /*
+     * No longer run UTF8 tests because it takes more than
+     * 50% of the whole test suite and as of Jan'13 we didn't not
+     * have UTF8 breakage since 2 years
+     */
+    function ___testEncoding() {
         $exclude_wholename = array(
             '.svn',
             'simpletest',
@@ -39,7 +41,7 @@ class UTF8Test extends UnitTestCase {
         }
     }
     
-    function testHtmlEncoding() {
+    function ___testHtmlEncoding() {
         //file -i does not work well on text/xml files
         $this->_parseHtmlFiles($GLOBALS['codendi_dir'].'/');
     }

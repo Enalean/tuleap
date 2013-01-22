@@ -22,6 +22,9 @@
 /**
  * Renders both the cross-tracker search form and results. 
  */
+require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
+require_once 'html.php';
+
 class Tracker_CrossSearch_SearchContentView {
     /**
      * @var Tracker_Report

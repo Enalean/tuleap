@@ -17,11 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once 'PostAction/Transition_PostAction.class.php';
-require_once 'Transition/Condition/Permissions.class.php';
-require_once 'Transition/Condition/FieldNotEmpty.class.php';
-
 class Transition {
     public $transition_id;
     public $workflow_id;
@@ -328,7 +323,7 @@ class Transition {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $child = $root->addChild('transition');
         if ($this->getFieldValueFrom() == null) {
             $child->addChild('from_id')->addAttribute('REF', 'null');

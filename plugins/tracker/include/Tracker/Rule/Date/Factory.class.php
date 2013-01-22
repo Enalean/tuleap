@@ -17,8 +17,6 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/Date.class.php';
-require_once 'Dao.class.php';
 /**
  * Factory of rules
  * Base class to create, retrieve, update or delete rules
@@ -181,7 +179,7 @@ class Tracker_Rule_Date_Factory {
         }
     }
     
-    public function exportToXml($root, $xmlMapping, $tracker_id) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping, $tracker_id) {
         $date_rules = $root->addChild('date_rules');
         $rules = $this->searchByTrackerId($tracker_id);
         foreach ($rules as $rule) {

@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/workflow/PostAction/Transition_PostActionFactory.class.php';
-require_once dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 function aPostActionFactory() {
     return new Test_Transition_PostActionFactoryBuilder();
 }

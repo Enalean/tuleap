@@ -18,11 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('common/user/UserHelper.class.php');
-require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.

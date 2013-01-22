@@ -17,10 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once('bootstrap.php');
 
-require_once dirname(__FILE__).'/builders/aField.php';
-
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generatePartial(
     'Tracker_FormElementFactory', 
     'Tracker_FormElementFactoryTestVersion', 
@@ -33,14 +31,9 @@ Mock::generatePartial(
 
 Mock::generate('Tracker_FormElement_FieldDao');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Container_Fieldset.class.php');
 Mock::generate('Tracker_FormElement_Container_Fieldset');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
-
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
-require_once(dirname(__FILE__).'/builders/aTracker.php');
 
 Mock::generate('Tracker');
 Mock::generate('TrackerManager');
@@ -53,7 +46,6 @@ Mock::generate('HTTPRequest');
 require_once 'common/event/EventManager.class.php';
 Mock::generate('EventManager');
 
-require_once(dirname(__FILE__).'/../include/constants.php');
 
 abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
 

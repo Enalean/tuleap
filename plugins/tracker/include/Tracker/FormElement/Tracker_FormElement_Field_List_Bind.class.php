@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_FormElement_Field_Shareable.class.php';
 
 abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
 
@@ -314,7 +313,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @param array            &$xmlMapping the correspondance between real ids and XML IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public abstract function exportToXML($root, &$xmlMapping, $fieldID);
+    public abstract function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID);
     
     /**
      * Give an extract of the bindvalues defined. The extract is based on $bindvalue_ids. 

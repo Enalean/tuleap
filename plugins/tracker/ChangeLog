@@ -1,3 +1,18 @@
+Version 5.68 - Tuleap 5.9
+    * HTML_Element_Input_Checkbox missing include
+
+Version 5.67 - Tuleap 5.9
+    * Fix CSRF missing include
+
+Version 5.66 - Tuleap 5.9
+    * Add autoload to trackers
+
+Version 5.65 - Tuleap 5.9
+    * Fix bugs #2159 & defect #ericsson:1886: SOAP getTrackerStructure error
+
+Version 5.64 - Tuleap 5.9
+    * Fix: Correctly set the timezone for PHP 5.3
+
 Version 5.63 - Tuleap 5.9
     * * New post action in workflow: trigger a jenkins build.
 

@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_List_Bind.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
 
@@ -615,7 +613,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXML($root, &$xmlMapping, $fieldID) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
         if ($this->value_function) {
             $child = $root->addChild('items');
             foreach ($this->value_function as $vf) {

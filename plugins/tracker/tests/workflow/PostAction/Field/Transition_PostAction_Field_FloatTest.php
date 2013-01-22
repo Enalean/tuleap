@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/Transition_PostAction_Field_Float.class.php';
-require_once dirname(__FILE__).'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
-require_once  dirname(__FILE__).'/../../../../include/workflow/PostAction/Field/dao/Transition_PostAction_Field_FloatDao.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 Mock::generatePartial('Transition_PostAction_Field_Float', 'Transition_PostAction_Field_FloatTestVersion', array('getDao', 'addFeedback', 'getFormElementFactory', 'isDefined', 'getFieldIdOfPostActionToUpdate'));
 
@@ -69,7 +66,7 @@ class Transition_PostAction_Field_FloatTest extends TuleapTestCase {
     }
     
     public function testBeforeShouldSetTheFloatField() {
-        $user = new MockUser();
+        $user = mock('User');
         
         stub($this->field)->getLabel()->returns('Remaining Effort');
         stub($this->field)->userCanRead($user)->returns(true);
