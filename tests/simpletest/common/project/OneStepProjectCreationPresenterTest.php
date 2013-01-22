@@ -294,7 +294,7 @@ class OneStepProjectCreationFormValidationTest extends TuleapTestCase {
         stub($single_step)->getTemplateId()->returns($this->template_id);
 
         expect($GLOBALS['Response'])->addFeedback('error', '*')->once();
-        expect($GLOBALS['Language'])->getText('register_projectname', 'custom_description_missing', "A REQUIRED description field")->once();
+        expect($GLOBALS['Language'])->getText('register_project_one_step', 'custom_description_missing', false)->once();
         $this->assertFalse($single_step->validateAndGenerateErrors());
     }
 }

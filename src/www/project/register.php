@@ -39,7 +39,6 @@ if (Config::get('sys_create_project_in_one_step')) {
         );
     }
     $single_step_project = new OneStepProjectCreationPresenter($data, $current_user, $LICENSE, $required_custom_descriptions);
-    
     if(isset($data['create_project']) && $single_step_project->validateAndGenerateErrors()) {
         $data    = $single_step_project->getProjectValues();
         if (! isset($data['project']['built_from_template'])) {
@@ -54,7 +53,7 @@ if (Config::get('sys_create_project_in_one_step')) {
         require_once('create_project.php');
         create_project($data);
     }
-    
+
     $HTML->header(array('title'=> $Language->getText('register_index','project_registration')));
 
     $renderer  = TemplateRendererFactory::build()->getRenderer(Config::get('codendi_dir') .'/src/templates/project');

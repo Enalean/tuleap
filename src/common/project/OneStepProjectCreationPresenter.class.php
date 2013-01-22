@@ -141,6 +141,7 @@ class OneStepProjectCreationPresenter {
     private $project_dao;
 
     public function __construct(array $request_data, User $creator, array $licenses, array $required_custom_descriptions, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
+        $this->required_custom_descriptions = $required_custom_descriptions;
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -150,7 +151,6 @@ class OneStepProjectCreationPresenter {
             ->setCustomLicense($request_data)
             ->setTosApproval($request_data)
             ->setCustomDescriptions($request_data);
-        $this->required_custom_descriptions = $required_custom_descriptions;
         $this->available_licenses           = $licenses;
         $this->creator                      = $creator;
         $this->project_manager              = $project_manager !== null ? $project_manager : ProjectManager::instance();
@@ -610,9 +610,16 @@ class OneStepProjectCreationPresenter {
 
     private function setCustomDescriptions($data) {
         foreach ($data as $key => $value) {
-            if (preg_match('/^'. preg_quote(self::PROJECT_DESCRIPTION_PREFIX) .'(\d+)$/', $key)) {
+            if (preg_match('/^'. preg_quote(self::PROJECT_DESCRIPTION_PREFIX) .'(\d+)$/', $key, $matches)) {
                 $this->custom_descriptions[$key] = $value;
+                $this->setRequiredCustomDescriptionValue($matches[1], $value);
             }
+        }
+    }
+
+    private function setRequiredCustomDescriptionValue($id, $value) {
+        if (isset ($this->required_custom_descriptions[$id])) {
+            $this->required_custom_descriptions[$id]->setValue($value);
         }
     }
 

@@ -35,6 +35,7 @@ class ProjectCustomDescription {
     private $is_required;
     private $type;
     private $rank;
+    private $value;
 
     public function __construct($id, $name, $description, $is_required, $type, $rank) {
         $this->id          = $id;
@@ -80,6 +81,14 @@ class ProjectCustomDescription {
             }
         }
         return false;
+    }
+
+    public function getValue() {
+        return $this->value;
+    }
+
+    public function setValue($value) {
+        $this->value = $value;
     }
 }
 ?>
