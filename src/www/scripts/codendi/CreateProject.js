@@ -19,28 +19,32 @@
 
 document.observe('dom:loaded', function () {
 
-    var inputs = $$('.one_step_project_choose_template > label.radio > input[type=radio]');
-    if (inputs) {
-        function toggleTemplate(input) {
+    (function toggleInformationForTemplates() {
+        var templates = $$('.one_step_project_choose_template > label.radio > input[type=radio]');
+
+        function toggleTemplate(template) {
             var method = 'hide';
-            if (input.checked) {
+            if (template.checked) {
                 method = 'show';
             }
-            input.up('label').nextSiblings().invoke(method);
+            template.up('label').nextSiblings().invoke(method);
         }
 
-        function toggleAllTemplates(inputs) {
-            inputs.map(toggleTemplate);
+        function toggleAllTemplates(templates) {
+            templates.map(toggleTemplate);
         }
 
-        toggleAllTemplates(inputs);
-        inputs.invoke('observe', 'click', function () {
-            toggleAllTemplates(inputs);
-        });
-    }
+        if (templates) {
+            toggleAllTemplates(templates);
+            templates.invoke('observe', 'click', function () {
+                toggleAllTemplates(templates);
+            });
+        }
+    })();
 
-    var select_licenses = $$('.one_step_project select[name="form_license"]');
-    if (select_licenses) {
+    (function displayTheCustomLicenseBlockWhenTheUserSelectOther() {
+        var select_licenses = $$('.one_step_project select[name="form_license"]');
+
         function toggleOther(select) {
             if ($F(select) == 'other') {
                 select.up('.controls').down('.custom_license_block').show();
@@ -49,12 +53,14 @@ document.observe('dom:loaded', function () {
             }
         }
 
-        select_licenses.map(toggleOther);
-        select_licenses.each(function (select) {
-            select.observe('change', function () {
-                toggleOther(select);
+        if (select_licenses) {
+            select_licenses.map(toggleOther);
+            select_licenses.each(function (select) {
+                select.observe('change', function () {
+                    toggleOther(select);
+                });
             });
-        });
-    }
+        }
+    })();
 });
 
