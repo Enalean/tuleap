@@ -20,7 +20,11 @@
 
 require_once 'OneStepCreationController.class.php';
 
+/**
+ * Routes the one step creation requests
+ */
 class Project_OneStepCreation_OneStepCreationRouter {
+
     public function route(Codendi_Request $request) {
         $controller = new Project_OneStepCreation_OneStepCreationController($request);
 

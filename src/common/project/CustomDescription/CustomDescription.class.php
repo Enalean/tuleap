@@ -51,15 +51,15 @@ class Project_CustomDescription_CustomDescription {
     }
 
     public function getName() {
-        return $this->getTranslation($this->name);
+        return $this->name;
     }
 
     public function getDescription() {
-        return $this->getTranslation($this->description);
+        return $this->description;
     }
 
     public function isRequired() {
-        return $this->is_required;
+        return $this->is_required == self::REQUIRED;
     }
 
     public function getType() {
@@ -72,23 +72,6 @@ class Project_CustomDescription_CustomDescription {
 
     public function isText() {
         return $this->getType() == self::TYPE_TEXT;
-    }
-
-    public function getTranslation($text) {
-        if(preg_match('/(.*):(.*)/', $text, $matches)) {
-            if ($GLOBALS['Language']->hasText($matches[1], $matches[2])) {
-                return $GLOBALS['Language']->getText($matches[1], $matches[2]);
-            }
-        }
-        return $text;
-    }
-
-    public function getValue() {
-        return $this->value;
-    }
-
-    public function setValue($value) {
-        $this->value = $value;
     }
 }
 ?>

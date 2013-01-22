@@ -34,8 +34,8 @@ class Project_CustomDescription_CustomDescriptionPresenter {
     /** @var string */
     private $form_prefix;
 
-    public function __construct(Project_CustomDescription_CustomDescription $custom_description, $form_prefix) {
-        $this->value              = '';
+    public function __construct(Project_CustomDescription_CustomDescription $custom_description, $value, $form_prefix) {
+        $this->value              = $value;
         $this->form_prefix        = $form_prefix;
         $this->custom_description = $custom_description;
     }

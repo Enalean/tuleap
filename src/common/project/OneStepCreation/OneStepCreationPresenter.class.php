@@ -22,9 +22,10 @@ require_once 'common/include/TemplateSingleton.class.php';
 require_once 'common/project/ProjectCreationTemplatePresenter.class.php';
 require_once 'common/valid/Rule.class.php';
 require_once 'common/project/CustomDescription/CustomDescriptionPresenter.class.php';
+require_once 'OneStepCreationRequest.class.php';
 
 /**
- * Controller view helper class
+ * Presenter for one step creation project
  */
 class Project_OneStepCreation_OneStepCreationPresenter {
 
@@ -53,71 +54,12 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      *
      * @var string
      */
-    private $full_name;
-
-    /**
-     *
-     * @var string
-     */
-    private $short_description;
-
-    /**
-     *
-     * @var string
-     */
-    private $unix_name;
-
-    /**
-     *
-     * @var bool
-     */
-    private $is_public;
-
-    /**
-     *
-     * @var int
-     */
-    private $templateId;
-
-    /**
-     *
-     * @var bool
-     */
-    private $term_of_service_approval;
-
-    /**
-     *
-     * @var bool
-     */
-    private $is_valid = true;
-
-    /**
-     *
-     * @var string
-     */
     private $form_submission_path;
 
     /**
-     *
-     * @var string
+     * @var Project_CustomDescription_CustomDescriptionPresenter[]
      */
-    private $license_type;
-
-    /**
-     *
-     * @var blob
-     */
-    private $custom_license = null;
-
-    /**
-     * @var array
-     */
-    private $custom_descriptions = array();
-
-    /**
-     * @var Project_CustomDescription_CustomDescriptionPresenters[]
-     */
-    private $required_custom_description_presenters = array();
+    private $required_custom_description_presenters;
 
     /**
      * @var array
@@ -139,62 +81,25 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     private $project_dao;
 
-    public function __construct(array $request_data, User $creator, array $licenses, array $required_custom_description_presenters, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
-        $this->required_custom_description_presenters = $required_custom_description_presenters;
-        $this->setFullName($request_data)
-            ->setUnixName($request_data)
-            ->setShortDescription($request_data)
-            ->setIsPublic($request_data)
-            ->setTemplateId($request_data)
-            ->setLicenseType($request_data)
-            ->setCustomLicense($request_data)
-            ->setTosApproval($request_data)
-            ->setCustomDescriptions($request_data);
-        $this->available_licenses           = $licenses;
-        $this->creator                      = $creator;
-        $this->project_manager              = $project_manager !== null ? $project_manager : ProjectManager::instance();
-        $this->project_dao                  = $project_dao !== null     ? $project_dao     : new ProjectDao();
-    }
-
     /**
-     *
-     * @return boolean
+     * @var Project_OneStepCreation_OneStepCreationRequest
      */
-    public function validateAndGenerateErrors() {
-        $this->is_valid = true;
+    private $creation_request;
 
-        $this->validateTemplateId()
-            ->validateUnixName()
-            ->validateProjectPrivacy()
-            ->validateFullName()
-            ->validateShortDescription()
-            ->validateLicense()
-            ->validateTosApproval()
-            ->validateCustomDescriptions();
-        return $this->is_valid;
-    }
+    public function __construct(Project_OneStepCreation_OneStepCreationRequest $creation_request, array $licenses, array $required_custom_descriptions, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
+        $this->creation_request   = $creation_request;
+        $this->available_licenses = $licenses;
+        $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
+        $this->project_dao        = $project_dao !== null     ? $project_dao     : new ProjectDao();  //TODO: avoid usage of dao in presenter
 
-    /**
-     *
-     * @return array
-     */
-    public function getProjectValues() {
-        $custom_license = ($this->getLicenseType() == 'other') ? $this->getCustomLicense() : null;
-        return array(
-            'project' => array_merge(
-                array(
-                    self::FULL_NAME         => $this->getFullName(),
-                    self::IS_PUBLIC         => $this->isPublic(),
-                    self::UNIX_NAME         => $this->getUnixName(),
-                    self::TEMPLATE_ID       => $this->getTemplateId(),
-                    self::LICENSE_TYPE      => $this->getLicenseType(),
-                    self::CUSTOM_LICENSE    => $custom_license,
-                    self::SHORT_DESCRIPTION => $this->getShortDescription(),
-                    'is_test'               => false,
-                ),
-                $this->custom_descriptions
-            )
-        );
+        $this->required_custom_description_presenters = array();
+        foreach ($required_custom_descriptions as $custom_description) {
+            $this->required_custom_description_presenters[] = new Project_CustomDescription_CustomDescriptionPresenter(
+                $custom_description,
+                $this->creation_request->getCustomProjectDescription($custom_description->getId()),
+                self::PROJECT_DESCRIPTION_PREFIX
+            );
+        }
     }
 
     public function getSysName() {
@@ -213,7 +118,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return string
      */
     public function getFormSubmissionPath() {
-        return $this->form_submission_path;
+        return $this->form_submission_path; //TODO: uninitialized, to be removed?
     }
 
     /**
@@ -221,7 +126,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return string
      */
     public function getUnixName() {
-        return $this->unix_name;
+        return $this->creation_request->getUnixName();
     }
 
     /**
@@ -229,7 +134,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return string
      */
     public function getFullName() {
-        return $this->full_name;
+        return $this->creation_request->getFullName();
     }
 
     /**
@@ -237,7 +142,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return string
      */
     public function getShortDescription() {
-        return $this->short_description;
+        return $this->creation_request->getShortDescription();
     }
 
     /**
@@ -245,7 +150,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return int
      */
     public function getTemplateId() {
-        return $this->templateId;
+        return $this->creation_request->getTemplateId();
     }
 
     /**
@@ -253,7 +158,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return bool
      */
     public function isPublic() {
-        return $this->is_public;
+        return $this->creation_request->isPublic();
     }
 
     /**
@@ -261,7 +166,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return string
      */
     public function getLicenseType() {
-        return $this->license_type;
+        return $this->creation_request->getLicenseType();
     }
 
     public function getAvailableLicenses() {
@@ -278,10 +183,10 @@ class Project_OneStepCreation_OneStepCreationPresenter {
 
     /**
      *
-     * @return blob
+     * @return text
      */
     public function getCustomLicense() {
-        return $this->custom_license;
+        return $this->creation_request->getCustomLicense();
     }
 
     /**
@@ -289,24 +194,11 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      * @return type
      */
     public function getTosApproval() {
-        return $this->term_of_service_approval;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCustomProjectDescription($id) {
-        if (isset($this->custom_descriptions[self::PROJECT_DESCRIPTION_PREFIX . $id])) {
-            return $this->custom_descriptions[self::PROJECT_DESCRIPTION_PREFIX . $id];
-        }
-    }
-
-    public function getDescriptionFormPrefix() {
-        return self::PROJECT_DESCRIPTION_PREFIX;
+        return $this->creation_request->getTosApproval();
     }
 
     public function getProjectDescriptionFields() {
-        return array_values($this->required_custom_description_presenters);
+        return $this->required_custom_description_presenters;
     }
 
     public function getTitle() {
@@ -455,7 +347,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
      */
     public function getUserTemplates() {
         $projects = $this->project_dao
-                ->searchProjectsUserIsAdmin($this->creator->getId())
+                ->searchProjectsUserIsAdmin($this->creation_request->getCurrentUser()->getId())
                 ->instanciateWith(array($this->project_manager, 'getProjectFromDbRow'));
         return $this->generateTemplatesFromParsedDbData($projects);
     }
@@ -479,286 +371,6 @@ class Project_OneStepCreation_OneStepCreationPresenter {
             $templates[] = new ProjectCreationTemplatePresenter($project, $this->getTemplateId());
         }
         return $templates;
-    }
-
-    /**
-     *
-     * @return string
-     */
-    public function getDateFormat() {
-        return $GLOBALS['Language']->getText('system', 'datefmt_short');
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setUnixName(array $data) {
-        if(isset($data[self::UNIX_NAME])) {
-            $this->unix_name = $data[self::UNIX_NAME];
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setFullName(array $data) {
-        if(isset($data[self::FULL_NAME])) {
-            $this->full_name = $data[self::FULL_NAME];
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setShortDescription(array $data) {
-        if(isset($data[self::SHORT_DESCRIPTION])) {
-            $this->short_description = trim($data[self::SHORT_DESCRIPTION]);
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setTemplateId(array $data) {
-        if(isset($data[self::TEMPLATE_ID])) {
-            $this->templateId = $data[self::TEMPLATE_ID];
-        } else {
-            $this->templateId = self::DEFAULT_TEMPLATE_ID;
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setIsPublic(array $data) {
-        if(isset($data[self::IS_PUBLIC])) {
-            $this->is_public = $data[self::IS_PUBLIC];
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param string $path
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setFormSubmissionPath(string $path) {
-        $this->form_submission_path = $path;
-        return $this;
-    }
-
-    /**
-     *
-     * @param array $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setLicenseType($data) {
-        if(isset($data[self::LICENSE_TYPE])) {
-            $this->license_type = $data[self::LICENSE_TYPE];
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param string $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setCustomLicense($data) {
-        if(isset($data[self::CUSTOM_LICENSE])) {
-            $this->custom_license = trim($data[self::CUSTOM_LICENSE]);
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @param type $data
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setTosApproval($data) {
-        $this->term_of_service_approval = false;
-
-        if (isset($data[self::TOS_APPROVAL])) {
-            $this->term_of_service_approval = true;
-        }
-
-        return $this;
-    }
-
-    private function setCustomDescriptions($data) {
-        foreach ($data as $key => $value) {
-            if (preg_match('/^'. preg_quote(self::PROJECT_DESCRIPTION_PREFIX) .'(\d+)$/', $key, $matches)) {
-                $this->custom_descriptions[$key] = $value;
-                $this->setRequiredCustomDescriptionValue($matches[1], $value);
-            }
-        }
-    }
-
-    private function setRequiredCustomDescriptionValue($id, $value) {
-        if (isset ($this->required_custom_description_presenters[$id])) {
-            $this->required_custom_description_presenters[$id]->setValue($value);
-        }
-    }
-
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function validateFullName() {
-        if ($this->getFullName() == null) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            $this->setIsNotValid();
-            return $this;
-        }
-
-        $rule = new Rule_ProjectFullName();
-        if (!$rule->isValid($this->getFullName())) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_full_name'));
-            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
-            $this->setIsNotValid();
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function validateShortDescription() {
-        if ($this->getShortDescription() == null) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            $this->setIsNotValid();
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function validateUnixName() {
-        if ($this->getUnixName() == null) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            $this->setIsNotValid();
-            return $this;
-        }
-
-        //check for valid group name
-        $rule = new Rule_ProjectName();
-        if (!$rule->isValid($this->getUnixName())) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_license','invalid_short_name'));
-            $GLOBALS['Response']->addFeedback('error', $rule->getErrorMessage());
-            $this->setIsNotValid();
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function validateTemplateId() {
-        if ($this->getTemplateId() == null) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            $this->setIsNotValid();
-            return $this;
-        }
-
-        $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProject($this->getTemplateId());
-
-        if (! $project->isTemplate() && ! user_ismember($this->getTemplateId(), 'A')) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('global', 'perm_denied'));
-            $this->setIsNotValid();
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function validateProjectPrivacy() {
-        if ($this->isPublic() === null) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            $this->setIsNotValid();
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function validateLicense() {
-        if ($this->getLicenseType() === null) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'info_missed'));
-            $this->setIsNotValid();
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function setIsNotValid() {
-        $this->is_valid = false;
-        return $this;
-    }
-
-    /**
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function validateTosApproval() {
-        if (! $this->getTosApproval()) {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'tos_not_approved'));
-            $this->setIsNotValid();
-        }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return \Project_OneStepCreation_OneStepCreationPresenter
-     */
-    private function validateCustomDescriptions() {
-        foreach ($this->required_custom_description_presenters as $id => $description) {
-            if (! $this->getCustomProjectDescription($id)) {
-                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_project_one_step', 'custom_description_missing', $description->getName()));
-                $this->setIsNotValid();
-            }
-        }
-
-        return $this;
     }
 }
 
