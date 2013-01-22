@@ -63,7 +63,7 @@ class GitViews_ShowRepo_Content {
         // Actions
         $repoActions = '<ul id="plugin_git_repository_actions">';
         if ($this->controller->isAPermittedAction('repo_management')) {
-            $repoActions .= '<li><a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$repoId.'" class="repo_admin"></li>';
+            $repoActions .= '<li><a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$repoId.'" class="repo_admin">'.$GLOBALS['Language']->getText('plugin_git', 'admin_repo_management').'</li>';
         }
 
         $repoActions .= '</ul>';
@@ -78,19 +78,14 @@ class GitViews_ShowRepo_Content {
             .' '.
             $creationDate
             .'</p>';
-            ?>
-    <?php
-    if ( !empty($parent) ) :
-    ?>
-    <p id="plugin_git_repo_parent"><?php echo $GLOBALS['Language']->getText('plugin_git', 'view_repo_parent');
-            ?>: <span><?php echo $this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() );?></span>
-    </p>
-    <?php
-    endif;
+        if ( !empty($parent) ) {
+            echo '<p id="plugin_git_repo_parent">'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_parent').':
+                  <span>'.$this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() ).'</span>
+                  </p>';
+        }
 
-    ?>
-    <p id="plugin_git_clone_url">
-        <?php
+        echo '<p id="plugin_git_clone_url">';
+
         $hp = Codendi_HTMLPurifier::instance();
         $urls = $this->repository->getAccessURL();
         list(,$first_url) = each($urls);
@@ -104,11 +99,9 @@ class GitViews_ShowRepo_Content {
                 $selected  = '';
             }
         }
-        ?>
-        <input id="plugin_git_clone_field" type="text" value="<?= $first_url; ?>" /></label>
-    </p>
-        <?php
-        echo '</div>';
+        echo '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" /></label>
+              </p>
+              </div>';
         echo $this->gitphp_viewer->getContent();
     }
 
@@ -140,8 +133,6 @@ class GitViews_ShowRepo_Content {
         $accessType .= '</span>';
         return $accessType;
     }
-
-
 }
 
 ?>
