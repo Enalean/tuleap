@@ -73,11 +73,11 @@
             </div>
             {{#getProjectDescriptionFields}}
             <div class="control-group">
-                <label class="control-label">{{label}} <span class="mandatory_field">*</span></label>
+                <label class="control-label">{{getName}} <span class="mandatory_field">*</span></label>
                 <div class="controls">
-                    {{#is_text_field_type}}<textarea name="{{form_name}}" wrap="virtual" cols="40" rows="3" required="required">{{value}}</textarea>{{/is_text_field_type}}
-                    {{^is_text_field_type}}<input name="{{form_name}}"size="40" maxlen="70" type="text" value="{{value}}" required="required" />{{/is_text_field_type}}
-                    <div class="help">{{{description}}}</div>
+                    {{#isText}}<textarea name="{{getDescriptionFormPrefix}}{{getId}}" wrap="virtual" cols="40" rows="3" required="required"></textarea>{{/isText}}
+                    {{^isText}}<input name="{{getDescriptionFormPrefix}}{{getId}}" size="40" maxlen="70" type="text" value="" required="required" />{{/isText}}
+                    <div class="help">{{{getDescription}}}</div>
                 </div>
             </div>
             {{/getProjectDescriptionFields}}

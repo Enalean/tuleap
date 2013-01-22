@@ -22,7 +22,7 @@ require_once 'RegisterProjectStep.class.php';
 require_once 'common/include/TemplateSingleton.class.php';
 require_once 'ProjectCreationTemplatePresenter.class.php';
 require_once 'common/valid/Rule.class.php';
-
+require_once 'ProjectCustomDescription.class.php';
 
 /**
  * Controller view helper class
@@ -116,6 +116,11 @@ class OneStepProjectCreationPresenter {
     private $custom_descriptions = array();
 
     /**
+     * @var ProjectCustomDescription[]
+     */
+    private $required_custom_descriptions = array();
+
+    /**
      * @var array
      */
     private $available_licenses;
@@ -135,7 +140,7 @@ class OneStepProjectCreationPresenter {
      */
     private $project_dao;
 
-    public function __construct(array $request_data, User $creator, array $licenses, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
+    public function __construct(array $request_data, User $creator, array $licenses, array $required_custom_descriptions, ProjectManager $project_manager = null, ProjectDao $project_dao = null) {
         $this->setFullName($request_data)
             ->setUnixName($request_data)
             ->setShortDescription($request_data)
@@ -145,10 +150,11 @@ class OneStepProjectCreationPresenter {
             ->setCustomLicense($request_data)
             ->setTosApproval($request_data)
             ->setCustomDescriptions($request_data);
-        $this->available_licenses = $licenses;
-        $this->creator            = $creator;
-        $this->project_manager    = $project_manager !== null ? $project_manager : ProjectManager::instance();
-        $this->project_dao        = $project_dao !== null     ? $project_dao     : new ProjectDao();
+        $this->required_custom_descriptions = $required_custom_descriptions;
+        $this->available_licenses           = $licenses;
+        $this->creator                      = $creator;
+        $this->project_manager              = $project_manager !== null ? $project_manager : ProjectManager::instance();
+        $this->project_dao                  = $project_dao !== null     ? $project_dao     : new ProjectDao();
     }
 
     /**
@@ -164,8 +170,8 @@ class OneStepProjectCreationPresenter {
             ->validateFullName()
             ->validateShortDescription()
             ->validateLicense()
-            ->validateTosApproval();
-
+            ->validateTosApproval()
+            ->validateCustomDescriptions();
         return $this->is_valid;
     }
 
@@ -176,15 +182,18 @@ class OneStepProjectCreationPresenter {
     public function getProjectValues() {
         $custom_license = ($this->getLicenseType() == 'other') ? $this->getCustomLicense() : null;
         return array(
-            'project' => array(
-                self::FULL_NAME         => $this->getFullName(),
-                self::IS_PUBLIC         => $this->isPublic(),
-                self::UNIX_NAME         => $this->getUnixName(),
-                self::TEMPLATE_ID       => $this->getTemplateId(),
-                self::LICENSE_TYPE      => $this->getLicenseType(),
-                self::CUSTOM_LICENSE    => $custom_license,
-                self::SHORT_DESCRIPTION => $this->getShortDescription(),
-                'is_test'               => false,
+            'project' => array_merge(
+                array(
+                    self::FULL_NAME         => $this->getFullName(),
+                    self::IS_PUBLIC         => $this->isPublic(),
+                    self::UNIX_NAME         => $this->getUnixName(),
+                    self::TEMPLATE_ID       => $this->getTemplateId(),
+                    self::LICENSE_TYPE      => $this->getLicenseType(),
+                    self::CUSTOM_LICENSE    => $custom_license,
+                    self::SHORT_DESCRIPTION => $this->getShortDescription(),
+                    'is_test'               => false,
+                ),
+                $this->custom_descriptions
             )
         );
     }
@@ -288,24 +297,17 @@ class OneStepProjectCreationPresenter {
      * @return string
      */
     public function getCustomProjectDescription($id) {
-        return $this->custom_descriptions[$id];
+        if (isset($this->custom_descriptions[self::PROJECT_DESCRIPTION_PREFIX . $id])) {
+            return $this->custom_descriptions[self::PROJECT_DESCRIPTION_PREFIX . $id];
+        }
+    }
+
+    public function getDescriptionFormPrefix() {
+        return self::PROJECT_DESCRIPTION_PREFIX;
     }
 
     public function getProjectDescriptionFields() {
-        $purifier = Codendi_HTMLPurifier::instance();
-        $fields = array();
-        $res = db_query('SELECT * FROM group_desc WHERE desc_required = 1 ORDER BY desc_rank');
-        while ($row = db_fetch_array($res)) {
-            $form_name = self::PROJECT_DESCRIPTION_PREFIX.$row['group_desc_id'];
-            $fields[] = array(
-                'label'               => $row['desc_name'],
-                'description'         => $purifier->purify($row['desc_description'], CODENDI_PURIFIER_LIGHT),
-                'is_text_field_type'  => $row['desc_type'] == 'line' ? false : true,
-                'form_name'           => $form_name,
-                'value'               => '',
-            );
-        }
-        return $fields;
+        return array_values($this->required_custom_descriptions);
     }
     
     public function getTitle() {
@@ -608,7 +610,9 @@ class OneStepProjectCreationPresenter {
 
     private function setCustomDescriptions($data) {
         foreach ($data as $key => $value) {
-            //if (strp)
+            if (preg_match('/^'. preg_quote(self::PROJECT_DESCRIPTION_PREFIX) .'(\d+)$/', $key)) {
+                $this->custom_descriptions[$key] = $value;
+            }
         }
     }
 
@@ -728,6 +732,21 @@ class OneStepProjectCreationPresenter {
         if (! $this->getTosApproval()) {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'tos_not_approved'));
             $this->setIsNotValid();
+        }
+
+        return $this;
+    }
+
+    /**
+     *
+     * @return \OneStepProjectCreationPresenter
+     */
+    private function validateCustomDescriptions() {
+        foreach ($this->required_custom_descriptions as $id => $description) {
+            if (! $this->getCustomProjectDescription($id)) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('register_projectname', 'custom_description_missing'));
+                $this->setIsNotValid();
+            }
         }
 
         return $this;
