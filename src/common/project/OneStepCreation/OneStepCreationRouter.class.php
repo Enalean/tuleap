@@ -18,11 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/project/OneStepProjectCreationController.class.php';
+require_once 'OneStepCreationController.class.php';
 
-class OneStepProjectCreationRouter {
+class Project_OneStepCreation_OneStepCreationRouter {
     public function route(Codendi_Request $request) {
-        $controller = new OneStepProjectCreationController($request);
+        $controller = new Project_OneStepCreation_OneStepCreationController($request);
 
         if ($request->get('create_project')) {
             $controller->create();

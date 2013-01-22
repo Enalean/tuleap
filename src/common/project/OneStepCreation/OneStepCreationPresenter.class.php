@@ -18,16 +18,15 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-require_once 'RegisterProjectStep.class.php';
 require_once 'common/include/TemplateSingleton.class.php';
-require_once 'ProjectCreationTemplatePresenter.class.php';
+require_once 'common/project/ProjectCreationTemplatePresenter.class.php';
 require_once 'common/valid/Rule.class.php';
-require_once 'ProjectCustomDescription.class.php';
+require_once 'common/project/ProjectCustomDescription.class.php';
 
 /**
  * Controller view helper class
  */
-class OneStepProjectCreationPresenter {
+class Project_OneStepCreation_OneStepCreationPresenter {
 
     const DEFAULT_TEMPLATE_ID = 100;
 

@@ -19,9 +19,9 @@
  */
 
 require_once 'common/mvc2/Controller.class.php';
-require_once 'OneStepProjectCreationPresenter.class.php';
+require_once 'OneStepCreationPresenter.class.php';
 
-class OneStepProjectCreationController extends MVC2_Controller {
+class Project_OneStepCreation_OneStepCreationController extends MVC2_Controller {
 
     public function __construct(Codendi_Request $request) {
         parent::__construct('project', $request);
@@ -38,7 +38,7 @@ class OneStepProjectCreationController extends MVC2_Controller {
                 $row['desc_rank']
             );
         }
-        $this->presenter = new OneStepProjectCreationPresenter(
+        $this->presenter = new Project_OneStepCreation_OneStepCreationPresenter(
             $request->params,
             $request->getCurrentUser(),
             $GLOBALS['LICENSE'],
