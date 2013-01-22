@@ -23,7 +23,7 @@ require_once 'common/include/Response.class.php';
 
 class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
     protected function aOneStepProjectCreationForm($request_data) {
-        return new OneStepProjectCreationPresenter($request_data, aUser()->build(), array(), mock('ProjectManager'), mock('ProjectDao'));
+        return new OneStepProjectCreationPresenter($request_data, aUser()->build(), array(), array(), mock('ProjectManager'), mock('ProjectDao'));
     }
 
     public function testNewObjectSetsFullName() {
@@ -133,6 +133,32 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
         $this->assertEqual($text_content, $single_step->getCustomProjectDescription($custom_id));
     }
 
+    public function itDoesNotSetACustomTextDescriptionFieldIfIdIsNotNumeric() {
+        $text_content = 'bla bla bla';
+        $custom_id    = 'name';
+
+        $request_data = array(
+            OneStepProjectCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+        );
+
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
+        $this->assertNull($single_step->getCustomProjectDescription($custom_id));
+    }
+
+    public function testGetProjectValuesContainsCustomTextDescriptionField() {
+        $text_content = 'bla bla bla';
+        $custom_id    = 101;
+
+        $request_data = array(
+            OneStepProjectCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id" => $text_content,
+        );
+
+        $single_step = $this->aOneStepProjectCreationForm($request_data);
+
+        $project_values = $single_step->getProjectValues();
+        $this->assertEqual($project_values['project'][OneStepProjectCreationPresenter::PROJECT_DESCRIPTION_PREFIX."$custom_id"], $text_content);
+    }
+
     public function testGetProjectValuesUsesCustomLicenseIfTypeIsOther() {
         $full_name = 'my_test proj';
         $unix_name = 'fdgd';
@@ -200,26 +226,75 @@ class OneStepProjectCreationPresenter_FieldsTest extends TuleapTestCase {
 
 class OneStepProjectCreationFormValidationTest extends TuleapTestCase {
 
+    private $template_id = 101;
+
     public function setUp() {
         parent::setUp();
+
+        $template = stub('Project')->isTemplate()->returns(true);
+
+        $user_manager = mock('UserManager');
+        UserManager::setInstance($user_manager);
+
+        $project_manager = mock('ProjectManager');
+        ProjectManager::setInstance($project_manager);
+        stub($project_manager)->getProject($this->template_id)->returns($template);
+
+        $system_event_manager = mock('SystemEventManager');
+        SystemEventManager::setInstance($system_event_manager);
+        stub($system_event_manager)->isUserNameAvailable()->returns(true);
+        stub($system_event_manager)->isProjectNameAvailable()->returns(true);
 
         $GLOBALS['Response'] = mock('Response');
     }
 
-    protected function aOneStepProjectCreationForm($request_data) {
-        $single_step = partial_mock('OneStepProjectCreationPresenter' , array('getTemplateId'), array($request_data, aUser()->build(), array(), mock('ProjectManager'), mock('ProjectDao')));
-        stub($single_step)->getTemplateId()->returns(null);
+    public function tearDown() {
+        UserManager::clearInstance();
+        ProjectManager::clearInstance();
+        SystemEventManager::clearInstance();
+        parent::tearDown();
+    }
+
+    protected function aOneStepProjectCreationForm($request_data, $required_custom_descriptions) {
+        $single_step = partial_mock('OneStepProjectCreationPresenter' , array('getTemplateId'), array($request_data, aUser()->build(), array(), $required_custom_descriptions, mock('ProjectManager'), mock('ProjectDao')));
 
         return $single_step;
     }
 
     public function testValidateAndGenerateErrorsValidatesFullname() {
         $request_data = array();
-        $single_step = $this->aOneStepProjectCreationForm($request_data);
+        $single_step = $this->aOneStepProjectCreationForm($request_data, array());
+        stub($single_step)->getTemplateId()->returns(null);
 
         $single_step->validateAndGenerateErrors();
     }
 
+    public function itReturnsFalseIfARequiredCustomDescriptionIsNotSet() {
+        $required_custom_descriptions = array(
+            101 => new ProjectCustomDescription(101, "A REQUIRED description field", "desc", ProjectCustomDescription::REQUIRED, ProjectCustomDescription::TYPE_TEXT, 1),
+        );
+        $full_name = 'my_test proj';
+        $unix_name = 'fdgd';
+        $description = 'short description';
+        $is_public = true;
+        $id = 5689;
+        $type = 'other';
+        $license = 'do not copy';
+        $request_data = array(
+            OneStepProjectCreationPresenter::FULL_NAME => $full_name,
+            OneStepProjectCreationPresenter::UNIX_NAME => $unix_name,
+            OneStepProjectCreationPresenter::SHORT_DESCRIPTION => $description,
+            OneStepProjectCreationPresenter::IS_PUBLIC => $is_public,
+            OneStepProjectCreationPresenter::TEMPLATE_ID => $id,
+            OneStepProjectCreationPresenter::LICENSE_TYPE => $type,
+            OneStepProjectCreationPresenter::CUSTOM_LICENSE => $license,
+            OneStepProjectCreationPresenter::TOS_APPROVAL => 'approved',
+        );
+        $single_step = $this->aOneStepProjectCreationForm($request_data, $required_custom_descriptions);
+        stub($single_step)->getTemplateId()->returns($this->template_id);
+
+        $this->assertFalse($single_step->validateAndGenerateErrors());
+    }
 }
 
 ?>
