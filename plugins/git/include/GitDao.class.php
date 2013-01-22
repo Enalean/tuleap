@@ -267,10 +267,10 @@ class GitDao extends DataAccessObject {
      * 
      * @return DataAccessResult
      */
-    public function getRepositoryPathsWithRemoteServersForAllProjects() {
+    public function getActiveRepositoryPathsWithRemoteServersForAllProjects() {
         $sql = "SELECT * FROM $this->tableName
-                WHERE remote_server_id IS NOT NULL";
-        
+                WHERE remote_server_id IS NOT NULL
+                AND repository_deletion_date = '0000-00-00 00:00:00'";
         return $this->retrieve($sql);
     }
 

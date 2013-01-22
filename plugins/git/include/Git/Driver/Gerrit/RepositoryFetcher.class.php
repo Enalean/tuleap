@@ -41,18 +41,19 @@ class Git_Driver_Gerrit_RepositoryFetcher {
      * Update all repositories from their remote references
      */
     public function process() {
-        try {
+        $repositories = $this->repository_factory->getActiveRepositoriesWithRemoteServersForAllProjects();
+        if (count($repositories)) {
             $this->logger->info('Gerrit fetch all repositories...');
-            foreach ($this->repository_factory->getRepositoriesWithRemoteServersForAllProjects() as $repository) {
-                $this->updateRepositoryFromRemote($repository);
+            foreach ($repositories as $repository) {
+                try {
+                    $this->updateRepositoryFromRemote($repository);
+                } catch (Git_Command_Exception $exception) {
+                    $this->logger->error('Error raised while updating repository ' . $repository->getFullPath() . ' (id: ' . $repository->getId() . ')', $exception);
+                } catch (Exception $exception) {
+                    $this->logger->error('Unknown error', $exception);
+                }
             }
             $this->logger->info('Gerrit fetch all repositories done');
-        }
-        catch (Git_Command_Exception $exception) {
-            $this->logger->error('Error raised while updating repository '.$repository->getFullPath().' (id: '.$repository->getId().')', $exception);
-        }
-        catch (Exception $exception) {
-            $this->logger->error('Unknown error', $exception);
         }
     }
 
