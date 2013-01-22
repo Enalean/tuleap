@@ -98,7 +98,13 @@ class Git_RemoteServer_GerritServer_EndUserCloneUrlTest extends TuleapTestCase {
     }
 
     public function itReliesOnLdapPluginToFindTheRelevantGerritUserName() {
-        expect($this->event_manager)->processEvent('get_ldap_login_name_for_user', '*')->once();
+        expect($this->event_manager)->processEvent(
+            Event::GET_LDAP_LOGIN_NAME_FOR_USER,
+            array(
+                'login' => Git_RemoteServer_GerritServer::DEFAULT_GERRIT_USERNAME,
+                'user' => $this->user
+            )
+        )->once();
         $this->server->getEndUserCloneUrl('gerrit_project_name', $this->user);
     }
 

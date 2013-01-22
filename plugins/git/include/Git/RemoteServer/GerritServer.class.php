@@ -25,7 +25,8 @@ require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
  */
 class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
-    const DEFAULT_HTTP_PORT = 80;
+    const DEFAULT_HTTP_PORT       = 80;
+    const DEFAULT_GERRIT_USERNAME = 'gerrit_username';
 
     private $id;
     private $host;
@@ -97,8 +98,8 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     }
 
     public function getEndUserCloneUrl($gerrit_project, User $user) {
-        $login  = 'gerrit_username';
-        $params = array('login' => &$login);
+        $login  = self::DEFAULT_GERRIT_USERNAME;
+        $params = array('login' => &$login, 'user' => $user);
         EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
         return 'ssh://'.$login.'@'.$this->host.':'.$this->ssh_port.'/'.$gerrit_project.'.git';
     }
