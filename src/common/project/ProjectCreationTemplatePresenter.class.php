@@ -80,7 +80,7 @@ class ProjectCreationTemplatePresenter {
 
     /**
      *
-     * @return array List of names of admin users for this template
+     * @return string coma separated list of names of admin users for this template
      */
     public function getAdminUserNames() {
         $ugroup_manager = new UGroupManager();
@@ -95,7 +95,7 @@ class ProjectCreationTemplatePresenter {
 
     /**
      *
-     * @return array List of names
+     * @return string coma separated list of names
      */
     public function getServicesUsed() {
         return implode(', ', $this->project->getAllUsedServices());
