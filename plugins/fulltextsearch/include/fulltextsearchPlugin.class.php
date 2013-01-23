@@ -108,12 +108,10 @@ class fulltextsearchPlugin extends Plugin {
         if (strpos($params['type'], 'FULLTEXTSEARCH_DOCMAN') !== false) {
             $params['class']        = 'SystemEvent_'. $params['type'];
             $params['dependencies'] = array($this->getActions(), new Docman_ItemFactory(), new Docman_VersionFactory());
-            require_once $params['class'] .'.class.php';
         }
         if (strpos($params['type'], 'FULLTEXTSEARCH_TRACKER') !== false) {
             $params['class']        = 'SystemEvent_'. $params['type'];
             $params['dependencies'] = array($this->getTrackerActions());
-            require_once $params['class'] .'.class.php';
         }
     }
 
