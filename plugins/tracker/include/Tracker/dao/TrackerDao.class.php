@@ -116,18 +116,23 @@ class TrackerDao extends DataAccessObject {
                         name,
                         description,
                         item_name,
+                        instantiate_for_new_projects,
                         allow_copy,
                         submit_instructions,
                         browse_instructions,
                         status,
-                        instantiate_for_new_projects,
                         stop_notification)
-                    SELECT $id, $group_id, $name, $description, $item_name,
+                    SELECT
+                        $id,
+                        $group_id,
+                        $name,
+                        $description,
+                        $item_name,
+                        1,
                         allow_copy,
                         submit_instructions,
                         browse_instructions,
                         status,
-                        instantiate_for_new_projects,
                         stop_notification
                     FROM $this->table_name
                     WHERE id = $atid_template";

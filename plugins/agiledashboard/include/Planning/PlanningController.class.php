@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once 'common/mvc2/Controller.class.php';
+require_once 'common/mvc2/PluginController.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
 require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
@@ -28,7 +28,7 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Track
  * TODO: Rename this file to PlanningController.class.php, to be consistent with
  * other classes. 
  */
-class Planning_Controller extends MVC2_Controller {
+class Planning_Controller extends MVC2_PluginController {
     
     /**
      * @var Tracker_Artifact
