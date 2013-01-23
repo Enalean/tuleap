@@ -35,6 +35,7 @@ class Combined {
             '/scripts/jquery/jquery-ui.min.js',
             '/scripts/jquery/jquery-noconflict.js',
             '/scripts/bootstrap/bootstrap-dropdown.js',
+            '/scripts/bootstrap/bootstrap-button.js',
             '/scripts/codendi/common.js',
             '/scripts/codendi/feedback.js',
             '/scripts/codendi/cross_references.js',
