@@ -184,8 +184,9 @@ class GitViews_ShowRepo_Content {
         }
 
         $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" />';
+        $html .= ' <a href="#plugin_git_example" id="plugin_git_example-handle" title="Display contextual help"><i class="icon-question-sign"></i></a>';
         $html .= '</p>';
-        $html .= '<pre>
+        $html .= '<div id="plugin_git_example">
 Cloning this repository:
 
 <pre>

@@ -95,5 +95,16 @@ document.observe('dom:loaded', function () {
         $('choose_project').observe('click', toggleDestination); 
         $('choose_personal').observe('click', toggleDestination);
     }
-} );
+
+    (function toggleContextualHelpForCloneUrl() {
+        var handle = $('plugin_git_example-handle');
+        if (handle) {
+            $('plugin_git_example').hide();
+            handle.observe('click', function (evt) {
+                $('plugin_git_example').toggle();
+                Event.stop(evt);
+            });
+        }
+    })();
+});
 

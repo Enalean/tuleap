@@ -76,12 +76,8 @@ textarea.text {
 }
 
 #plugin_git_clone_field {
-    cursor:       text;
     border:       1px solid rgb(196,196,196);
-    font-family:  Monaco, 'Courier New', 'DejaVu Sans Mono', 'Bitstream Vera Sans Mono', monospace;
     padding-left: 5px;
-    width:        80%;
-    font-size:    12px;
 }
 
 #plugin_git_description textarea {
@@ -168,4 +164,9 @@ td.plugin_git_first_col {
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
        -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
+}
+
+#plugin_git_example,
+#plugin_git_example:target {
+    border: 1px solid #ccc;
 }
