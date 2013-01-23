@@ -157,16 +157,15 @@ class GitViews_ShowRepo_Content {
     private function getCloneUrl() {
         $html = '<p id="plugin_git_clone_url">';
 
+        $html    .= '<div class="btn-group" data-toggle="buttons-radio">';
         $hp = Codendi_HTMLPurifier::instance();
         $urls = $this->repository->getAccessURL();
         list(,$first_url) = each($urls);
         if (count($urls) > 1) {
             $selected = 'checked="checked"';
             foreach ($urls as $transport => $url) {
-                $html .= '<label>';
-                $html .= '<input type="radio" class="plugin_git_transport" name="plugin_git_transport" value="'. $hp->purify($url) .'" '.$selected.' />';
+                $html .= '<button type="button" class="btn active" name="plugin_git_transport" value="'. $hp->purify($url) .'" '.$selected.' />';
                 $html .= $transport;
-                $html .= '</label> ';
                 $selected  = '';
             }
         }
@@ -178,11 +177,10 @@ class GitViews_ShowRepo_Content {
 
             $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $this->current_user);
 
-            $html .= '<label>';
-            $html .= '<input type="radio" class="plugin_git_transport" name="plugin_git_transport" value="'.$clone_url.'" />';
+            $html .= '<button type="button" class="btn" name="plugin_git_transport" value="'.$clone_url.'" />';
             $html .= 'gerrit';
-            $html .= '</label> ';
         }
+        $html .= '</div>';
 
         $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" />';
         $html .= ' <a href="#plugin_git_example" id="plugin_git_example-handle" title="Display contextual help"><i class="icon-question-sign"></i></a>';
