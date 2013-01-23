@@ -16,6 +16,9 @@ require_once('common/event/EventManager.class.php');
 require_once('common/wiki/lib/WikiCloner.class.php');
 require_once('common/widget/WidgetLayoutManager.class.php');
 
+define('PROJECT_APPROVAL_BY_ADMIN', 'P');
+define('PROJECT_APPROVAL_AUTO',     'A');
+
 /**
 * create_project
 * 
@@ -43,7 +46,7 @@ function create_project($data, $do_not_exit = false) {
     }
     
     //Verify if the approbation of the new project is automatic or not
-    $auto_approval = Config::get('sys_project_approval', 1) ? 'P' : 'A' ;
+    $auto_approval = Config::get('sys_project_approval', 1) ? PROJECT_APPROVAL_BY_ADMIN : PROJECT_APPROVAL_AUTO;
     
     // make group entry
     $insert_data = array(
@@ -51,7 +54,7 @@ function create_project($data, $do_not_exit = false) {
         'is_public'           => $GLOBALS['sys_is_project_public'],
         'unix_group_name'     => "'". $data['project']['form_unix_name'] ."'",
         'http_domain'         => "'". $http_domain ."'",
-        'status'              => "'". $auto_approval ."'",
+        'status'              => "'P'",
         'unix_box'            => "'shell1'",
         'cvs_box'             => "'cvs1'",
         'license'             => "'". htmlspecialchars(mysql_real_escape_string($data['project']['form_license'])) ."'",
@@ -102,8 +105,8 @@ function create_project($data, $do_not_exit = false) {
         }
 
         // define a module
-        $pm = ProjectManager::instance();
-        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$pm->getProject($group_id)->getUnixName()."')");
+        $project_manager = ProjectManager::instance();
+        $result=db_query("INSERT INTO filemodule (group_id,module_name) VALUES ('$group_id','".$project_manager->getProject($group_id)->getUnixName()."')");
         if (!$result) {
                 list($host,$port) = explode(':',$GLOBALS['sys_default_domain']);		
                 exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','ins_file_fail',array($host,db_error())));
@@ -148,8 +151,7 @@ function create_project($data, $do_not_exit = false) {
         */
             
         // Instanciate all services from the project template that are 'active'
-        $pm = ProjectManager::instance();
-        $group = $pm->getProject($group_id);
+        $group = $project_manager->getProject($group_id);
         if (!$group || !is_object($group)) {
             exit_no_group();
         }
@@ -160,7 +162,7 @@ function create_project($data, $do_not_exit = false) {
 
         $template_id = $group->getTemplate();
         
-        $template_group = $pm->getProject($template_id);
+        $template_group = $project_manager->getProject($template_id);
         if (!$template_group || !is_object($template_group) || $template_group->isError()) {
           exit_no_group();
         }
@@ -201,12 +203,12 @@ function create_project($data, $do_not_exit = false) {
             }
         }
         //Add the import of the message to requester from the parent project if defined
-        $dar = $pm->getMessageToRequesterForAccessProject($template_id);
+        $dar = $project_manager->getMessageToRequesterForAccessProject($template_id);
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row = $dar->getRow();
-            $result = $pm->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
+            $result = $project_manager->setMessageToRequesterForAccessProject($group_id, $row['msg_to_requester']);
         } else {
-            $result = $pm->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
+            $result = $project_manager->setMessageToRequesterForAccessProject($group_id, 'member_request_delegation_msg_to_requester');
         }
         if (!$result) {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('register_confirmation','cant_copy_msg_to_requester'));
@@ -376,6 +378,11 @@ function create_project($data, $do_not_exit = false) {
             'group_id'       => $group_id,
             'template_id'    => $template_id
         ));
+
+        if ($auto_approval == PROJECT_APPROVAL_AUTO) {
+            $project_manager->activate($group);
+        }
+
         if (!$do_not_exit) {
             $content = '';
             include($GLOBALS['Language']->getContent('project/complete'));

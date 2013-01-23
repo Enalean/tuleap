@@ -1,3 +1,7 @@
+Version 5.69 - Tuleap 5.9
+    * By default trackers are instantiable for new project
+    * Fix notices
+
 Version 5.68 - Tuleap 5.9
     * HTML_Element_Input_Checkbox missing include
 

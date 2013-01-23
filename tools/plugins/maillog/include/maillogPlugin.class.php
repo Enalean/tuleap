@@ -22,27 +22,32 @@
  *
  */
 require_once('common/plugin/Plugin.class.php');
-require_once('MaillogDao.class.php');
 
-class MaillogPlugin
-extends Plugin {
+class maillogPlugin extends Plugin {
 
-    function MaillogPlugin($id) {
-        $this->Plugin($id);
+    function __construct($id) {
+        parent::__construct($id);
         $this->_addHook('mail_sendmail', 'sendmail', false);
+        $this->_addHook('site_admin_option_hook', 'site_admin_option_hook', false);
     }
 
-    function &getPluginInfo() {
+    function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'MaillogPluginInfo')) {
             require_once('MaillogPluginInfo.class.php');
-            $this->pluginInfo =& new MaillogPluginInfo($this);
+            $this->pluginInfo = new MaillogPluginInfo($this);
         }
         return $this->pluginInfo;
+    }
+
+    public function site_admin_option_hook() {
+        $name = $GLOBALS['Language']->getText('plugin_maillog', 'descriptor_name');
+        echo '<li><a href="'.$this->getPluginPath().'/">'.$name.'</a></li>';
     }
 
     //$params['mail'] Mail
     //$params['header'] String array
     function sendmail($params) {
+        include_once('MaillogDao.class.php');
         $dao = new MaillogDao(CodendiDataAccess::instance());
         $dao->insertMail($params['mail']);
     }
@@ -53,8 +58,9 @@ extends Plugin {
     }
 
     function actions() {
-        $request =& HTTPRequest::instance();
+        $request = HTTPRequest::instance();
         if($request->isPost() && $request->get("delete") == "Delete") {
+            include_once('MaillogDao.class.php');
             $dao = new MaillogDao(CodendiDataAccess::instance());
             $dao->deleteAllMessages();
             $GLOBALS['Response']->redirect($this->getPluginPath().'/');
@@ -69,6 +75,7 @@ extends Plugin {
     }
 
     function listMessages() {
+        include_once('MaillogDao.class.php');
         $dao = new MaillogDao(CodendiDataAccess::instance());
         $dar = $dao->getAllMessages();
         $nb = $dao->getNbMessages();
@@ -80,7 +87,7 @@ extends Plugin {
         echo "<input type=\"submit\" name=\"delete\" value=\"Delete\" />\n";
         echo "</p>\n";
 
-        $hp =& Codendi_HTMLPurifier::instance();
+        $hp = Codendi_HTMLPurifier::instance();
         while($dar->valid()) {
             $row = $dar->current();
 

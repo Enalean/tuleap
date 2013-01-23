@@ -56,10 +56,13 @@ class PlanningFactory {
         $planning_rows = $this->dao->searchByPlanningTrackerIds(array_keys($tracker_mapping));
 
         foreach($planning_rows as $row) {
-            $row['backlog_tracker_id']  = $tracker_mapping[$row['backlog_tracker_id']];
-            $row['planning_tracker_id'] = $tracker_mapping[$row['planning_tracker_id']];
-
-            $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
+            if(isset($tracker_mapping[$row['backlog_tracker_id']]) && 
+                    isset($tracker_mapping[$row['backlog_tracker_id']])) {
+                $row['backlog_tracker_id']  = $tracker_mapping[$row['backlog_tracker_id']];
+                $row['planning_tracker_id'] = $tracker_mapping[$row['planning_tracker_id']];
+                
+                $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
+            }
         }
     }
 

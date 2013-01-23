@@ -134,7 +134,10 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         $artifact_status = null;
         $field           = $field_provider->getField($artifact);
         if ($field) {
-            $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
+            $last_changeset = $artifact->getLastChangeset();
+            if ($last_changeset) {
+                $artifact_status = $field->getFirstValueFor($last_changeset);
+            }
         }
         return $column->canContainStatus($artifact_status, $this->getMappingFor($artifact->getTracker()));
     }
