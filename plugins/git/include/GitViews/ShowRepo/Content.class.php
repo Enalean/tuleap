@@ -101,21 +101,22 @@ class GitViews_ShowRepo_Content {
         $accessType = $this->getAccessType($access, $this->repository->getBackend() instanceof Git_Backend_Gitolite);
 
         // Actions
-        $repoActions = '<ul id="plugin_git_repository_actions">';
+        $admin_link = '';
         if ($this->controller->isAPermittedAction('repo_management')) {
-            $repoActions .= '<li><a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$repoId.'" class="repo_admin">'.$GLOBALS['Language']->getText('plugin_git', 'admin_repo_management').'</li>';
+            $admin_link .= ' - <a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$repoId.'" class="repo_admin">';
+            $admin_link .= $GLOBALS['Language']->getText('plugin_git', 'admin_repo_management');
+            $admin_link .= '</a>';
         }
 
-        $repoActions .= '</ul>';
-
         $html .= '<h1>'.$accessType.$this->repository->getFullName().'</h1>';
-        $html .= $repoActions;
         $html .= '<p id="plugin_git_reference_author">'.
             $GLOBALS['Language']->getText('plugin_git', 'view_repo_creator')
             .' '.
             $creatorName
             .' '.
             $creationDate
+            .' '.
+            $admin_link
             .'</p>';
         if ( !empty($parent) ) {
             $html .= '<p id="plugin_git_repo_parent">'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_parent').':
