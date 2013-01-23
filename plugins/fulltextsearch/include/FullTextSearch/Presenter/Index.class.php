@@ -19,7 +19,7 @@
  */
 
 class FullTextSearch_Presenter_Index {
-    public $template;
+    public $template = 'index';
     
     private $index_status;
     private $terms;
@@ -28,7 +28,6 @@ class FullTextSearch_Presenter_Index {
         $this->index_status = $index_status;
         $this->terms        = $terms;
         $this->search_label = $GLOBALS['Language']->getText('search_index', 'search');
-        $this->template = 'index';
     }
     
     public function index_size() {
