@@ -54,7 +54,8 @@ class GitViews_ShowRepo {
             Git $controller,
             Codendi_Request $request,
             Git_Driver_Gerrit $driver,
-            array $gerrit_servers) {
+            array $gerrit_servers
+    ) {
         $this->repository     = $repository;
         $this->controller     = $controller;
         $this->request        = $request;
