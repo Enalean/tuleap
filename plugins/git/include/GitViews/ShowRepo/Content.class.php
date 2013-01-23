@@ -61,7 +61,8 @@ class GitViews_ShowRepo_Content {
             Git $controller,
             Git_Driver_Gerrit $driver,
             array $gerrit_servers,
-            $theme_path) {
+            $theme_path
+    ) {
         $this->repository     = $repository;
         $this->gitphp_viewer  = $gitphp_viewer;
         $this->current_user   = $current_user;
@@ -183,10 +184,23 @@ class GitViews_ShowRepo_Content {
         }
 
         $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" />';
-
-
-
         $html .= '</p>';
+        $html .= '<pre>
+Cloning this repository:
+
+<pre>
+    git clone <span class="plugin_git_example_url">'. $first_url .'</span> '. $this->repository->getName() .'
+    cd '. $this->repository->getName() .'
+</pre>
+
+Add this repository as a remote to an existing local repository:
+
+<pre>
+    git remote add '. $this->repository->getName() .' <span class="plugin_git_example_url">'. $first_url .'</span>
+    git fetch '. $this->repository->getName() .'
+    git checkout -b my-local-tracking-branch '. $this->repository->getName() .'/master_or_other_branch
+</pre>
+</div>';
         return $html;
     }
 
