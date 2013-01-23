@@ -19,6 +19,7 @@ Version 5.9 (Not Released Yet)
   == Bug Fix ==
     * Do not rely on SimplePie escaping
     * Prevent some user account pages to be cached (contrib STMicroelectronics).
+    * Fix bugs #2250: Restricted users are notified of wiki page update in public projects
 
   == Development ==
     * Include fundations for HTTP client and Jenkins job
