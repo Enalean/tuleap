@@ -5,7 +5,8 @@ document.observe('dom:loaded', function () {
     $$('.plugin_git_transport').each(function (radio) {
        radio.observe('click', function (event) {
            $('plugin_git_clone_field').value = event.target.value;
-       }) 
+           $$('.plugin_git_example_url').invoke('update', event.target.value);
+       })
     });
 
     if (fork_repositories_prefix) {

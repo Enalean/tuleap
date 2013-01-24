@@ -164,7 +164,7 @@ class GitViews_ShowRepo_Content {
         if (count($urls) > 1) {
             $selected = 'active';
             foreach ($urls as $transport => $url) {
-                $html .= '<button type="button" class="btn '.$selected.'" name="plugin_git_transport" value="'. $hp->purify($url) .'" >';
+                $html .= '<button type="button" class="btn '.$selected.' plugin_git_transport" name="plugin_git_transport" value="'. $hp->purify($url) .'" >';
                 $html .= $transport;
                 $html .= '</button>';
                 $selected = '';
@@ -178,7 +178,7 @@ class GitViews_ShowRepo_Content {
 
             $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $this->current_user);
 
-            $html .= '<button type="button" class="btn" name="plugin_git_transport" value="'.$clone_url.'" >';
+            $html .= '<button type="button" class="btn plugin_git_transport" name="plugin_git_transport" value="'.$clone_url.'" >';
             $html .= 'gerrit';
             $html .= '</button>';
         }
