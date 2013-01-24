@@ -36,23 +36,30 @@ class AgileDashboard_MilestonePresenter extends PlanningPresenter {
     private $current_user;
     private $request;
 
-    private $pane;
+    public $active_pane;
     /**
      * @var string
      */
     private $planning_redirect_to_new;
 
-    public $active_pane;
-
-    public function __construct(Planning $planning, Planning_Milestone $milestone, User $current_user, Codendi_Request $request, $pane, array $available_milestones, $planning_redirect_to_new) {
+    public function __construct(
+            Planning $planning,
+            Planning_Milestone $milestone,
+            User $current_user,
+            Codendi_Request $request,
+            $active_pane,
+            array $additional_panes,
+            array $available_milestones,
+            $planning_redirect_to_new
+            ) {
         parent::__construct($planning);
         $this->milestone = $milestone;
         $this->current_user = $current_user;
         $this->request = $request;
-        $this->pane = $pane;
+        $this->active_pane = $active_pane;
+        $this->additional_panes = $additional_panes;
         $this->available_milestones        = $available_milestones;
         $this->planning_redirect_to_new = $planning_redirect_to_new;
-        $this->getAdditionalPanes();
     }
 
     public function milestoneTitle() {
@@ -99,41 +106,8 @@ class AgileDashboard_MilestonePresenter extends PlanningPresenter {
      * @return array
      */
     public function additionalPanes() {
-        return $this->getAdditionalPanes();
-    }
-
-    private function getAdditionalPanes() {
-        if (empty($this->additional_panes)) {
-            $this->additional_panes = array($this->pane);
-            $this->active_pane = null;
-            if ($this->milestone->getArtifact()) {
-                EventManager::instance()->processEvent(
-                    AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
-                    array(
-                        'milestone' => $this->milestone,
-                        'panes'     => &$this->additional_panes,
-                        'user'      => $this->current_user,
-                    )
-                );
-                $requested_pane   = $this->request->get('pane');
-                foreach($this->additional_panes as $pane) {
-                    if ($this->active_pane) {
-                        break;
-                    }
-                    $pane->setActive($requested_pane === $pane->getIdentifier());
-                    if ($pane->isActive()) {
-                        $this->active_pane = $pane;
-                    }
-                }
-                if (!$this->active_pane) {
-                    $this->pane->setActive(true);
-                    $this->active_pane = $this->pane;
-                }
-            }
-        }
         return $this->additional_panes;
     }
-
 }
 
 /**
