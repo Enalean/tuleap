@@ -19,6 +19,7 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
+require_once 'autoload.php';
 
 /**
  * trackerPlugin
