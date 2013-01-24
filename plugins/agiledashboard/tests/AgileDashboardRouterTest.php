@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/constants.php';
 require_once dirname(__FILE__).'/../../tracker/include/constants.php';
-require_once dirname(__FILE__).'/../include/AgileDashboardRouter.class.php';
-require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aRequest.php';
+require_once AGILEDASHBOARD_BASE_DIR.'/autoload.php';
+require_once TRACKER_BASE_DIR.'/autoload.php';
 
 class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
 
@@ -29,6 +30,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         Config::store();
         Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
+        $this->event_manager = mock('EventManager');
         $this->planning_controller = mock('Planning_Controller');
         $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
                                              array('getViewBuilder',
@@ -38,7 +40,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
                                                    'getProjectManager',
                                                    'getArtifactFactory',
                                                    'buildMilestoneController'));
-        $this->router->__construct(mock('Plugin'), mock('Planning_MilestoneFactory'), mock('PlanningFactory'), mock('Tracker_HierarchyFactory'));
+        $this->router->__construct(mock('Plugin'), mock('Planning_MilestoneFactory'), mock('PlanningFactory'), mock('Tracker_HierarchyFactory'), $this->event_manager);
         
         stub($this->router)->buildController()->returns($this->planning_controller);
         stub($this->router)->getViewBuilder()->returns(mock('Planning_ViewBuilder'));
@@ -83,7 +85,12 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
         $this->router->routeShowPlanning($request);
     }
-    
+
+    public function itRoutesAccordingToAnotherPluginAnswer() {
+        $request = new Codendi_Request(array('aid' => '5771'));
+        expect($this->event_manager)->processEvent('agiledashboard_event_route', '*')->once();
+        $this->router->routeShowPlanning($request);
+    }
 }
 
 ?>

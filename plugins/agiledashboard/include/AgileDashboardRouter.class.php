@@ -57,11 +57,22 @@ class AgileDashboardRouter {
      */
     private $hierarchy_factory;
 
-    public function __construct(Plugin $plugin, Planning_MilestoneFactory $milestone_factory, PlanningFactory $planning_factory, Tracker_HierarchyFactory $hierarchy_factory) {
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(
+            Plugin $plugin,
+            Planning_MilestoneFactory $milestone_factory,
+            PlanningFactory $planning_factory,
+            Tracker_HierarchyFactory $hierarchy_factory,
+            EventManager $event_manager) {
         $this->plugin            = $plugin;
         $this->milestone_factory = $milestone_factory;
         $this->planning_factory  = $planning_factory;
         $this->hierarchy_factory = $hierarchy_factory;
+        $this->event_manager     = $event_manager;
     }
     
     /**
@@ -279,6 +290,7 @@ class AgileDashboardRouter {
      * @param Codendi_Request $request 
      */
     public function routeShowPlanning(Codendi_Request $request) {
+        $this->event_manager->processEvent('agiledashboard_event_route', array());
         $aid = $request->getValidated('aid', 'int', 0);
         switch ($aid) {
             case -1:
