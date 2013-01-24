@@ -21,7 +21,7 @@
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
-class AgileDashboard_MilestonePresenter extends PlanningPresenter {
+class AgileDashboard_MilestonePresenter {
     /**
      * @var array
      */
@@ -43,7 +43,6 @@ class AgileDashboard_MilestonePresenter extends PlanningPresenter {
     private $planning_redirect_to_new;
 
     public function __construct(
-            Planning $planning,
             Planning_Milestone $milestone,
             User $current_user,
             Codendi_Request $request,
@@ -52,7 +51,6 @@ class AgileDashboard_MilestonePresenter extends PlanningPresenter {
             array $available_milestones,
             $planning_redirect_to_new
             ) {
-        parent::__construct($planning);
         $this->milestone = $milestone;
         $this->current_user = $current_user;
         $this->request = $request;
