@@ -525,6 +525,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $value = $this->fetchCardValue($artifact);
         $html .= '<tr><td>'. $this->getLabel().':</td>';
         $html .= '<td class="valueOf_'. $this->getName() .'" data-field-id="'.$this->getId().'">'. $value .'</td></tr>';
+
         return $html;
     }
 
