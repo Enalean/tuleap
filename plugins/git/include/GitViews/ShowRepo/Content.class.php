@@ -156,8 +156,8 @@ class GitViews_ShowRepo_Content {
 
     private function getCloneUrl() {
         $html = '<div id="plugin_git_clone_url">';
-        $html .= '<div class="input-prepend">';
-        $html .= '<div class="btn-group" data-toggle="buttons-radio">';
+        $html .= '<span class="input-prepend input-append">';
+        $html .= '<span class="btn-group gitclone_urls_protocols" data-toggle="buttons-radio">';
         $hp = Codendi_HTMLPurifier::instance();
         $urls = $this->repository->getAccessURL();
         list(,$first_url) = each($urls);
@@ -182,12 +182,12 @@ class GitViews_ShowRepo_Content {
             $html .= 'gerrit';
             $html .= '</button>';
         }
-        $html .= '</div>';
+        $html .= '</span>';
 
-        $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" />';
-        $html .= '</div>';
-        $html .= ' <a href="#plugin_git_example" id="plugin_git_example-handle" title="Display contextual help"><i class="icon-question-sign"></i></a>';
-        $html .= '</p>';
+        $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" class="span6" />';
+        $html .= '<button class="btn" type="button" id="plugin_git_example-handle" data-toggle="button">?</button>';
+        $html .= '</span>';
+        $html .= '<div>';
         $html .= '<div id="plugin_git_example">
 Cloning this repository:
 
@@ -204,6 +204,7 @@ Add this repository as a remote to an existing local repository:
     git checkout -b my-local-tracking-branch '. $this->repository->getName() .'/master_or_other_branch
 </pre>
 </div>';
+        $html .= '</div>';
         $html .= '</div>';
         return $html;
     }

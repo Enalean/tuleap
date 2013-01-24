@@ -102,9 +102,14 @@ document.observe('dom:loaded', function () {
             $('plugin_git_example').hide();
             handle.observe('click', function (evt) {
                 $('plugin_git_example').toggle();
-                Event.stop(evt);
             });
         }
+    })();
+
+    (function autoSelectGitCloneUrl() {
+        $('plugin_git_clone_field').observe('click', function (evt) {
+            Event.element(evt).select();
+        });
     })();
 });
 
