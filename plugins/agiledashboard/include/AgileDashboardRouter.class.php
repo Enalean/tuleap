@@ -290,7 +290,6 @@ class AgileDashboardRouter {
      * @param Codendi_Request $request 
      */
     public function routeShowPlanning(Codendi_Request $request) {
-        $this->event_manager->processEvent('agiledashboard_event_route', array());
         $aid = $request->getValidated('aid', 'int', 0);
         switch ($aid) {
             case -1:
@@ -302,6 +301,13 @@ class AgileDashboardRouter {
                 $this->executeAction($controller, 'show');
                 /* no break */
             default:
+                $this->event_manager->processEvent(
+                    'agiledashboard_event_route',
+                     array(
+                         'request'           => $request,
+                         'milestone_factory' => $this->milestone_factory
+                     )
+                );
                 $controller = $this->buildMilestoneController($request);
                 $action_arguments = array();
                 $this->renderAction($controller, 'show', $request, $action_arguments);

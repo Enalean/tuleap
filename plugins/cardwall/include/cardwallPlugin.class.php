@@ -60,6 +60,7 @@ class cardwallPlugin extends Plugin {
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
+                $this->addHook('agiledashboard_event_route');
             }
         }
         return parent::getHooksAndCallbacks();
@@ -220,6 +221,13 @@ class cardwallPlugin extends Plugin {
     private function getCSRFToken($tracker_id) {
         require_once 'common/include/CSRFSynchronizerToken.class.php';
         return new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update');
+    }
+
+    public function agiledashboard_event_route($params) {
+        if ($params['request']->get('pane') == 'cardwall') {
+            $controller = new Cardwall_AgileDashboard_Controller($params['request'], $params['milestone_factory']);
+            $controller->show();
+        }
     }
 
     public function agiledashboard_event_additional_panes_on_milestone($params) {
