@@ -159,7 +159,7 @@ class GitViews_ShowRepo_Content {
         $html .= '<span class="input-prepend input-append">';
         $html .= '<span class="btn-group gitclone_urls_protocols" data-toggle="buttons-radio">';
         $hp = Codendi_HTMLPurifier::instance();
-        $urls = $this->repository->getAccessURL();
+        $urls = $this->getAccessURLs();
         list(,$first_url) = each($urls);
         if (count($urls) > 1) {
             $selected = 'active';
@@ -169,18 +169,6 @@ class GitViews_ShowRepo_Content {
                 $html .= '</button>';
                 $selected = '';
             }
-        }
-
-        if ($this->repository->getRemoteServerId()) {
-            /* @var $gerrit_server Git_RemoteServer_GerritServer */
-            $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
-            $gerrit_project = $this->driver->getGerritProjectName($this->repository);
-
-            $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $this->current_user);
-
-            $html .= '<button type="button" class="btn plugin_git_transport" name="plugin_git_transport" value="'.$clone_url.'" >';
-            $html .= 'gerrit';
-            $html .= '</button>';
         }
         $html .= '</span>';
 
@@ -209,6 +197,22 @@ Add this repository as a remote to an existing local repository:
         return $html;
     }
 
+    private function getAccessURLs() {
+        $urls = $this->repository->getAccessURL();
+        if ($this->repository->getRemoteServerId()) {
+            $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+            $gerrit_project = $this->driver->getGerritProjectName($this->repository);
+
+            $clone_url = $gerrit_server->getEndUserCloneUrl($gerrit_project, $this->current_user);
+            $this->prependGerritCloneURL($urls, $clone_url);
+        }
+        return $urls;
+    }
+
+    private function prependGerritCloneURL(array &$urls, $gerrit_clone_url) {
+        $gerrit = array('gerrit' => $gerrit_clone_url);
+        $urls = array_merge($gerrit, $urls);
+    }
 
     private function getRemoteRepositoryInfo() {
         /** @var $gerrit_server Git_RemoteServer_GerritServer */
