@@ -18,15 +18,37 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class Tracker_Artifact_Burndown_PaneInfo extends AgileDashboard_PaneInfo {
+    const IDENTIFIER = 'burndown';
+    const TITLE = 'Burndown';
+
+    public function getUri() {
+        return parent::getUri().'&pane='.$this->getIdentifier();
+    }
+
+
+    /**
+     * @see AgileDashboard_Pane::getIdentifier()
+     * @return string
+     */
+    public function getIdentifier() {
+        return self::IDENTIFIER;
+    }
+
+    /**
+     * @see AgileDashboard_Pane::getTitle()
+     * @return string
+     */
+    public function getTitle() {
+        return self::TITLE;
+    }
+}
 
 /**
  * A pane to be displayed in AgileDashboard
  */
 class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
-    
-    const IDENTIFIER = 'burndown';
-    const TITLE = 'Burndown';
-    
+        
     /**
      * @var Tracker_Artifact
      */
@@ -54,28 +76,12 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
         $this->plugin_theme_path = $plugin_theme_path;
     }
 
-    public function getUri() {
-        return parent::getUri().'&pane='.$this->getIdentifier();
+    public function getIdentifier() {
+        return Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER;
     }
 
     public function getUriForMilestone(Planning_Milestone $milestone) {
-        parent::getUriForMilestone($milestone).'&pane='.$this->getIdentifier();
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getIdentifier()
-     * @return string
-     */
-    public function getIdentifier() {
-        return self::IDENTIFIER;
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getTitle()
-     * @return string
-     */
-    public function getTitle() {
-        return self::TITLE;
+        parent::getUriForMilestone($milestone).'&pane='.Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER;
     }
     
     /**

@@ -217,29 +217,23 @@ class cardwallPlugin extends Plugin {
         return new CSRFSynchronizerToken(TRACKER_BASE_URL.'/?tracker='. $tracker_id .'&amp;func=admin-cardwall-update');
     }
 
-    public function agiledashboard_event_route($params) {
-        if ($params['request']->get('pane') == 'cardwall') {
-            $controller = new Cardwall_AgileDashboard_Controller(
-                $this,
-                $params['request'],
-                $params['milestone_factory'],
-                $this->getConfigFactory()
-            );
-            $controller->show();
-        }
-    }
-
     public function agiledashboard_event_additional_panes_on_milestone($params) {
         $tracker  = $params['milestone']->getArtifact()->getTracker();
 
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
-            $config = $this->getConfigFactory()->getOnTopConfig($tracker);
-            $params['panes'][] = new Cardwall_Pane(
-                $params['milestone'],
-                $this->getPluginInfo()->getPropVal('display_qr_code'),
-                $config, $params['user'],
-                $this->getThemePath()
-            );
+            $pane_info = new Cardwall_PaneInfo();
+            if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
+                $pane_info->setActive(true);
+                $config = $this->getConfigFactory()->getOnTopConfig($tracker);
+                $params['active_pane'] = new Cardwall_Pane(
+                    $params['milestone'],
+                    $this->getPluginInfo()->getPropVal('display_qr_code'),
+                    $config,
+                    $params['user'],
+                    $this->getThemePath()
+                );
+            }
+            $params['panes'][] = $pane_info;
         }
     }
 

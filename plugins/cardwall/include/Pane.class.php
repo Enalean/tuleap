@@ -21,11 +21,37 @@
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
+class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
+    const IDENTIFIER = 'cardwall';
+    
+    public function getUri() {
+        return parent::getUri().'&pane='.$this->getIdentifier();
+    }
+
+
+    /**
+     * @see AgileDashboard_Pane::getIdentifier()
+     */
+    public function getIdentifier() {
+        return self::IDENTIFIER;
+    }
+
+    /**
+     * @see AgileDashboard_Pane::getTitle()
+     */
+    public function getTitle() {
+        return 'Card Wall';
+    }
+
+
+}
+
 /**
  * A pane to be displayed in AgileDashboard
  */
 class Cardwall_Pane extends AgileDashboard_Pane {
 
+    
     /**
      * @var Planning_Milestone
      */
@@ -59,28 +85,14 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         $this->plugin_theme_path = $plugin_theme_path;
     }
 
-    public function getUri() {
-        return parent::getUri().'&pane='.$this->getIdentifier();
+    public function getIdentifier() {
+        return Cardwall_PaneInfo::IDENTIFIER;
     }
 
     public function getUriForMilestone(Planning_Milestone $milestone) {
-        parent::getUriForMilestone($milestone).'&pane='.$this->getIdentifier();
-    }
-    
-    /**
-     * @see AgileDashboard_Pane::getIdentifier()
-     */
-    public function getIdentifier() {
-        return 'cardwall';
+        parent::getUriForMilestone($milestone).'&pane='.Cardwall_PaneInfo::IDENTIFIER;
     }
 
-    /**
-     * @see AgileDashboard_Pane::getTitle()
-     */
-    public function getTitle() {
-        return 'Card Wall';
-    }
-    
     /**
      * @see AgileDashboard_Pane::getIcon()
      */

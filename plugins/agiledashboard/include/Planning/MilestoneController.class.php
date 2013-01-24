@@ -110,30 +110,22 @@ class Planning_MilestoneController extends MVC2_PluginController {
 
 
     private function initAdditionalPanes() {
-        $this->additional_panes = array($this->getMilestonePlanningPane());
+        $this->additional_panes = array(new AgileDashboard_MilestonePlanningPaneInfo());
         $this->active_pane = null;
         if ($this->milestone->getArtifact()) {
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
                 array(
-                    'milestone' => $this->milestone,
-                    'panes'     => &$this->additional_panes,
-                    'user'      => $this->getCurrentUser(),
+                    'milestone'   => $this->milestone,
+                    'request'     => $this->request,
+                    'user'        => $this->getCurrentUser(),
+                    'panes'       => &$this->additional_panes,
+                    'active_pane' => &$this->active_pane,
                 )
             );
-            $requested_pane   = $this->request->get('pane');
-            foreach($this->additional_panes as $pane) {
-                if ($this->active_pane) {
-                    break;
-                }
-                $pane->setActive($requested_pane === $pane->getIdentifier());
-                if ($pane->isActive()) {
-                    $this->active_pane = $pane;
-                }
-            }
             if (!$this->active_pane) {
                 $this->additional_panes[0]->setActive(true);
-                $this->active_pane = $this->additional_panes[0];
+                $this->active_pane = $this->getMilestonePlanningPane();
             }
         }
         return $this->additional_panes;

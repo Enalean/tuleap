@@ -18,6 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
+    const IDENTIFIER = 'planner';
+    
+    /**
+     * @return string eg: 'cardwall'
+     */
+    public function getIdentifier() {
+        return self::IDENTIFIER;
+    }
+
+    /**
+     * @return string eg: 'Card Wall'
+     */
+    public function getTitle() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_pane_title');
+    }
+    
+}
+
 class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
 
     private $presenter;
@@ -26,18 +45,8 @@ class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
         $this->presenter = $presenter;
     }
 
-    /**
-     * @return string eg: 'cardwall'
-     */
     public function getIdentifier() {
-        return 'planner';
-    }
-
-    /**
-     * @return string eg: 'Card Wall'
-     */
-    public function getTitle() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_pane_title');
+        return AgileDashboard_MilestonePlanningPaneInfo::IDENTIFIER;
     }
 
     /**

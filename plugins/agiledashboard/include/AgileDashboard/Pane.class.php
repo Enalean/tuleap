@@ -18,24 +18,19 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Base interface to display a content pane in the agiledashboard next to a
- * milestone
- */
-abstract class AgileDashboard_Pane {
-
+abstract class AgileDashboard_PaneInfo {
     /**
      * @var bool
      */
     private $is_active;
-    
+
     /**
      * @return bool
      */
     public function isActive() {
         return $this->is_active;
     }
-    
+
     /**
      * @param bool $state
      */
@@ -49,9 +44,6 @@ abstract class AgileDashboard_Pane {
         return $current_uri;
     }
 
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
-    }
 
     /**
      * @return string eg: 'cardwall'
@@ -62,6 +54,20 @@ abstract class AgileDashboard_Pane {
      * @return string eg: 'Card Wall'
      */
     public abstract function getTitle();
+    
+}
+
+/**
+ * Base interface to display a content pane in the agiledashboard next to a
+ * milestone
+ */
+abstract class AgileDashboard_Pane {
+
+    public function getUriForMilestone(Planning_Milestone $milestone) {
+        return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
+    }
+
+    public abstract function getIdentifier();
 
     /**
      * @return string eg: '<a href="">customize</a> <table>...</table>'
