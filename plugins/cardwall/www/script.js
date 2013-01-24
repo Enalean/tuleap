@@ -114,13 +114,10 @@ document.observe('dom:loaded', function () {
             };
 
             this.injectTemporaryContainer = function () {
-                console.log(this.element.innerHTML);
                 if(this.element.innerHTML == '') {
                     this.element.innerHTML = '0' ;
                 }
-
                 this.div.update(this.element.innerHTML);
-                console.log(this.div);
                 this.element.update(this.div);
             };
 
