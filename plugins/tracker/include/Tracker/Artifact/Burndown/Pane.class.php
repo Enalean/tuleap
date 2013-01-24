@@ -54,6 +54,14 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
         $this->plugin_theme_path = $plugin_theme_path;
     }
 
+    public function getUri() {
+        return parent::getUri().'&pane='.$this->getIdentifier();
+    }
+
+    public function getUriForMilestone(Planning_Milestone $milestone) {
+        parent::getUriForMilestone($milestone).'&pane='.$this->getIdentifier();
+    }
+
     /**
      * @see AgileDashboard_Pane::getIdentifier()
      * @return string

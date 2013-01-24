@@ -18,68 +18,59 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Base interface to display a content pane in the agiledashboard next to a
- * milestone
- */
-abstract class AgileDashboard_Pane {
+class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
 
-    /**
-     * @var bool
-     */
-    private $is_active;
-    
-    /**
-     * @return bool
-     */
-    public function isActive() {
-        return $this->is_active;
-    }
-    
-    /**
-     * @param bool $state
-     */
-    public function setActive($state) {
-        $this->is_active = (bool)$state;
-    }
+    private $presenter;
 
-    public function getUri() {
-        $current_uri = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
-        return $current_uri;
-    }
-
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
+    public function __construct(AgileDashboard_MilestonePlanningPresenter $presenter) {
+        $this->presenter = $presenter;
     }
 
     /**
      * @return string eg: 'cardwall'
      */
-    public abstract function getIdentifier();
+    public function getIdentifier() {
+        return 'planner';
+    }
 
     /**
      * @return string eg: 'Card Wall'
      */
-    public abstract function getTitle();
+    public function getTitle() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_pane_title');
+    }
 
     /**
      * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
-    public abstract function getFullContent();
+    public function getFullContent() {
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
+        return $renderer->renderToString('milestone-planning', $this->presenter);
+        //return '';
+    }
 
     /**
      * @return string eg: '<table>...</table>'
      */
-    public abstract function getMinimalContent();
+    public function getMinimalContent() {
+        throw new RuntimeException('I should be implemented');
+    }
 
     /**
      * @see string eg: '/themes/common/images/ic/duck.png'
      */
-    public abstract function getIcon();
+    public function getIcon() {
+        throw new RuntimeException('I should be implemented');
+    }
 
     /**
      * @return string eg: 'Access to cardwall'
      */
-    public abstract function getIconTitle();
+    public function getIconTitle() {
+        throw new RuntimeException('I should be implemented');
+    }
 }
+
+
+
 ?>

@@ -41,7 +41,7 @@ class Cardwall_AgileDashboard_Controller extends MVC2_PluginController {
     }
 
     public function show() {
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
+        /*$milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
             $this->request->getCurrentUser(),
             ProjectManager::instance()->getProject($this->request->get('group_id')),
             $this->request->get('planning_id'),
@@ -59,6 +59,7 @@ class Cardwall_AgileDashboard_Controller extends MVC2_PluginController {
         $presenter = new Cardwall_AgileDashboard_Presenter($pane, $milestone);
         $this->render('agiledashboard-pane', $presenter);
         exit;
+         */
     }
 }
 

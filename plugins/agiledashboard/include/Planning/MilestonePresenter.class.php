@@ -21,15 +21,126 @@
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
-/**
- * Provides the presentation logic for a planning milestone.
- */
-class Planning_MilestonePresenter extends PlanningPresenter {
-    
+class AgileDashboard_MilestonePresenter extends PlanningPresenter {
+    /**
+     * @var array
+     */
+    private $additional_panes = array();
+
     /**
      * @var array of Planning_Milestone
      */
     private $available_milestones;
+    
+    private $milestone;
+    private $current_user;
+    private $request;
+
+    private $pane;
+    /**
+     * @var string
+     */
+    private $planning_redirect_to_new;
+
+    private $active_pane;
+
+    public function __construct(Planning $planning, Planning_Milestone $milestone, User $current_user, Codendi_Request $request, $pane, array $available_milestones, $planning_redirect_to_new) {
+        parent::__construct($planning);
+        $this->milestone = $milestone;
+        $this->current_user = $current_user;
+        $this->request = $request;
+        $this->pane = $pane;
+        $this->available_milestones        = $available_milestones;
+        $this->planning_redirect_to_new = $planning_redirect_to_new;
+        $this->getAdditionalPanes();
+    }
+
+    public function milestoneTitle() {
+        return $this->milestone->getArtifactTitle();
+    }
+
+    /**
+     * @return array of (id, title, selected)
+     */
+    public function selectableArtifacts() {
+        $hp             = Codendi_HTMLPurifier::instance();
+        $artifacts_data = array();
+        $selected_id    = $this->milestone->getArtifactId();
+
+        foreach ($this->available_milestones as $milestone) {
+            $artifacts_data[] = array(
+                'title'    => $hp->purify($milestone->getArtifactTitle()),
+                'selected' => ($milestone->getArtifactId() == $selected_id) ? 'selected="selected"' : '',
+                'url'      => $this->active_pane->getUriForMilestone($milestone)
+            );
+        }
+        return $artifacts_data;
+    }
+    
+    /**
+     * @return string
+     */
+    public function createNewItemToPlan() {
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($this->milestone->getPlanning()->getPlanningTracker()->getItemName()));
+    }
+
+    public function createNewItemToPlanUrl() {
+        return '/plugins/tracker/?tracker='.$this->milestone->getPlanning()->getPlanningTrackerId().'&func=new-artifact-link&id='.$this->getParentArtifactId().'&immediate=1&'.$this->planning_redirect_to_new;
+    }
+
+    private function getParentArtifactId() {
+        $ancestors = $this->milestone->getAncestors();
+        if (count($ancestors) > 0) {
+            return $ancestors[0]->getArtifactId();
+        }
+    }
+
+    /**
+     * @return array
+     */
+    public function additionalPanes() {
+        return $this->getAdditionalPanes();
+    }
+
+    private function getAdditionalPanes() {
+        if (empty($this->additional_panes)) {
+            $this->additional_panes = array($this->pane);
+            $this->active_pane = null;
+            if ($this->milestone->getArtifact()) {
+                EventManager::instance()->processEvent(
+                    AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
+                    array(
+                        'milestone' => $this->milestone,
+                        'panes'     => &$this->additional_panes,
+                        'user'      => $this->current_user,
+                    )
+                );
+                $requested_pane   = $this->request->get('pane');
+                foreach($this->additional_panes as $pane) {
+                    if ($this->active_pane) {
+                        break;
+                    }
+                    $pane->setActive($requested_pane === $pane->getIdentifier());
+                    if ($pane->isActive()) {
+                        $this->active_pane = $pane;
+                    }
+                }
+                if (!$this->active_pane) {
+                    $this->pane->setActive(true);
+                    $this->active_pane = $this->pane;
+                }
+            }
+        }
+        return $this->additional_panes;
+    }
+
+}
+
+/**
+ * Provides the presentation logic for a planning milestone.
+ */
+class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
+    
     
     /**
      * @var Planning_Milestone
@@ -57,16 +168,11 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     private $planning_redirect_to_new;
 
     /**
-     * @var array
-     */
-    private $additional_panes = array();
-
-    /**
      * @var Codendi_Request
      */
     private $request;
 
-    /**
+    /**u
      * Instanciates a new presenter.
      * 
      * TODO:
@@ -83,7 +189,6 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public function __construct(
         Planning                              $planning,
         Tracker_CrossSearch_SearchContentView $backlog_search_view,
-        array                                 $available_milestones,
         Planning_Milestone                    $milestone, 
         User                                  $current_user,
         Codendi_Request                       $request,
@@ -93,7 +198,6 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         parent::__construct($planning);
         
         $this->milestone                   = $milestone;
-        $this->available_milestones        = $available_milestones;
         $this->backlog_search_view         = $backlog_search_view;
         $this->current_user                = $current_user;
         $this->request                     = $request;
@@ -103,14 +207,8 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         $this->planned_artifacts_tree      = $this->buildPlannedArtifactsTree();
     }
 
-    public function milestoneTitle() {
-        return $this->milestone->getArtifactTitle();
-    }
-
-    public function currentPaneUrlParam() {
-        if (!$this->isPlannerPaneActive()) {
-            return '&pane='.$this->request->get('pane');
-        }
+    public function backlogSearchView() {
+        return $this->backlog_search_view->fetch();
     }
 
     /**
@@ -118,48 +216,6 @@ class Planning_MilestonePresenter extends PlanningPresenter {
      */
     public function hasSelectedArtifact() {
         return !is_a($this->milestone, 'Planning_NoMilestone');
-    }
-
-    /**
-     * @return bool
-     */
-    public function isPlannerPaneActive() {
-        $this->getAdditionalPanes();
-        return $this->is_planner_pane_active;
-    }
-
-    /**
-     * @return array
-     */
-    public function additionalPanes() {
-        return $this->getAdditionalPanes();
-    }
-
-    private function getAdditionalPanes() {
-        if (empty($this->additional_panes)) {
-            $this->additional_panes = array();
-            $a_pane_is_active       = false;
-            if ($this->milestone->getArtifact()) {
-                EventManager::instance()->processEvent(
-                    AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
-                    array(
-                        'milestone' => $this->milestone,
-                        'panes'     => &$this->additional_panes,
-                        'user'      => $this->current_user,
-                    )
-                );
-                $requested_pane   = $this->request->get('pane');
-                foreach($this->additional_panes as $pane) {
-                    if($a_pane_is_active){
-                        break;
-                    }
-                    $pane->setActive($requested_pane === $pane->getIdentifier());
-                    $a_pane_is_active = $pane->isActive();
-                }
-            }
-            $this->is_planner_pane_active = ! $a_pane_is_active;
-        }
-        return $this->additional_panes;
     }
 
     /**
@@ -195,12 +251,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
         return $this->milestone && $this->milestone->userCanView($this->current_user);
     }
     
-    /**
-     * @return string html
-     */
-    public function backlogSearchView() {
-        return $this->backlog_search_view->fetch();
-    }
+
     
     
     /**
@@ -209,25 +260,7 @@ class Planning_MilestonePresenter extends PlanningPresenter {
     public function pleaseChoose() {
         return $GLOBALS['Language']->getText('global', 'please_choose_dashed');
     }
-    
-    /**
-     * @return array of (id, title, selected)
-     */
-    public function selectableArtifacts() {
-        $hp             = Codendi_HTMLPurifier::instance();
-        $artifacts_data = array();
-        $selected_id    = $this->milestone->getArtifactId();
         
-        foreach ($this->available_milestones as $milestone) {
-            $artifacts_data[] = array(
-                'id'       => $milestone->getArtifactId(),
-                'title'    => $hp->purify($milestone->getArtifactTitle()),
-                'selected' => ($milestone->getArtifactId() == $selected_id) ? 'selected="selected"' : '',
-            );
-        }
-        return $artifacts_data;
-    }
-    
     /**
      * @return string
      */
@@ -288,13 +321,6 @@ class Planning_MilestonePresenter extends PlanningPresenter {
             return false;
         }
         return '<div class="feedback_warning">'. $GLOBALS['Language']->getText('plugin_tracker', 'must_have_artifact_link_field') .'</div>';
-    }
-
-    /**
-     * @return string
-     */
-    public function createNewItemToPlan() {
-        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($this->milestone->getPlanning()->getPlanningTracker()->getItemName()));
     }
     
     /**

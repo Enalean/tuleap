@@ -104,7 +104,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
                                             $this->artifact,
                                             $planned_artifacts_tree);
         
-        return new Planning_MilestonePresenter(
+        return new AgileDashboard_MilestonePlanningPresenter(
             $this->planning,
             $this->content_view,
             $this->artifacts_to_select,
@@ -211,7 +211,7 @@ class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_Milesto
         $this->artifacts_to_select = array();
         $this->sprint_artifact     = null;
 
-        $this->presenter = new Planning_MilestonePresenter(
+        $this->presenter = new AgileDashboard_MilestonePlanningPresenter(
                         $this->planning,
                         $this->content_view,
                         $this->artifacts_to_select,
@@ -244,7 +244,7 @@ class Planning_MilestonePresenter_OverCapacityTest extends Planning_MilestonePre
         $this->artifacts_to_select = array();
         $this->sprint_milestone    = mock('Planning_ArtifactMilestone');
 
-        $this->presenter = new Planning_MilestonePresenter(
+        $this->presenter = new AgileDashboard_MilestonePlanningPresenter(
             $this->planning,
             $this->content_view,
             $this->artifacts_to_select,

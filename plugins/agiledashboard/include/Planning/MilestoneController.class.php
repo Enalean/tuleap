@@ -98,17 +98,25 @@ class Planning_MilestoneController extends MVC2_PluginController {
         
         $planning_redirect_parameter = $this->getPlanningRedirectToSelf();
         $planning_redirect_to_new    = $this->getPlanningRedirectToNew();
-        
-        return new Planning_MilestonePresenter(
+
+        $milestone_planning_presenter = new AgileDashboard_MilestonePlanningPresenter(
             $planning,
             $content_view,
-            $available_milestones,
             $this->milestone,
             $this->getCurrentUser(),
             $this->request,
             $planning_redirect_parameter,
             $planning_redirect_to_new
         );
+        $pane = new AgileDashboard_MilestonePlanningPane($milestone_planning_presenter);
+        return new AgileDashboard_MilestonePresenter(
+            $planning,
+            $this->milestone,
+            $this->getCurrentUser(),
+            $this->request,
+            $pane,
+            $available_milestones,
+            $planning_redirect_to_new);
     }
     
     private function getPlanningRedirectToSelf() {
