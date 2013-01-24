@@ -1,3 +1,6 @@
+Version 5.71 - Tuleap 5.10
+    * Fix error on getArtifactComments() through SOAP
+
 Version 5.70 - Tuleap 5.9.1
     * Fix fatal error when agiledashboard is not installed
 
