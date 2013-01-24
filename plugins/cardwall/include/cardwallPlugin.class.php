@@ -219,7 +219,12 @@ class cardwallPlugin extends Plugin {
 
     public function agiledashboard_event_route($params) {
         if ($params['request']->get('pane') == 'cardwall') {
-            $controller = new Cardwall_AgileDashboard_Controller($params['request'], $params['milestone_factory']);
+            $controller = new Cardwall_AgileDashboard_Controller(
+                $this,
+                $params['request'],
+                $params['milestone_factory'],
+                $this->getConfigFactory()
+            );
             $controller->show();
         }
     }

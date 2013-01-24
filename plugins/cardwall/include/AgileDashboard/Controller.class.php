@@ -29,13 +29,40 @@ class Cardwall_AgileDashboard_Controller {
      */
     private $milestone_factory;
 
-    public function __construct(Codendi_Request $request, Planning_MilestoneFactory $milestone_factory) {
+    /**
+     * @var Cardwall_OnTop_ConfigFactory
+     */
+    private $config_factory;
+
+    public function __construct(
+            cardwallPlugin $plugin,
+            Codendi_Request $request,
+            Planning_MilestoneFactory $milestone_factory,
+            Cardwall_OnTop_ConfigFactory $config_factory) {
+        $this->plugin = $plugin;
         $this->request = $request;
         $this->milestone_factory = $milestone_factory;
+        $this->config_factory = $config_factory;
     }
 
     public function show() {
-        
+        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
+            $this->request->getCurrentUser(),
+            ProjectManager::instance()->getProject($this->request->get('group_id')),
+            $this->request->get('planning_id'),
+            $this->request->get('aid')
+        );
+        $tracker = $milestone->getArtifact()->getTracker();
+        $config = $this->config_factory->getOnTopConfig($tracker);
+        $pane = new Cardwall_Pane(
+            $milestone,
+            $this->plugin->getPluginInfo()->getPropVal('display_qr_code'),
+            $config,
+            $this->request->getCurrentUser(),
+            $this->plugin->getThemePath()
+        );
+        echo $pane->getFullContent();
+        exit;
     }
 }
 
