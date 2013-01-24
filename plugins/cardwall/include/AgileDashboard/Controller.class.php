@@ -18,12 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Cardwall_AgileDashboard_Controller {
-    /**
-     * @var Codendi_Request
-     */
-    private $request;
-
+class Cardwall_AgileDashboard_Controller extends MVC2_PluginController {
     /**
      * @var Planning_MilestoneFactory
      */
@@ -39,8 +34,8 @@ class Cardwall_AgileDashboard_Controller {
             Codendi_Request $request,
             Planning_MilestoneFactory $milestone_factory,
             Cardwall_OnTop_ConfigFactory $config_factory) {
+        parent::__construct('cardwall', $request);
         $this->plugin = $plugin;
-        $this->request = $request;
         $this->milestone_factory = $milestone_factory;
         $this->config_factory = $config_factory;
     }
@@ -61,7 +56,8 @@ class Cardwall_AgileDashboard_Controller {
             $this->request->getCurrentUser(),
             $this->plugin->getThemePath()
         );
-        echo $pane->getFullContent();
+        $presenter = new Cardwall_AgileDashboard_Presenter($pane, $milestone);
+        $this->render('agiledashboard-pane', $presenter);
         exit;
     }
 }
