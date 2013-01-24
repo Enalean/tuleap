@@ -1,3 +1,6 @@
+Version 5.70 - Tuleap 5.9.1
+    * Fix fatal error when agiledashboard is not installed
+
 Version 5.69 - Tuleap 5.9
     * By default trackers are instantiable for new project
     * Fix notices
