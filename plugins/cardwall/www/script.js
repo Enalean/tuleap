@@ -96,16 +96,17 @@ document.observe('dom:loaded', function () {
         });
         // }}}
 
-        function card_element_editor ( element, initialise ) {
-            this.element                    = element;
-            this.field_id                   = element.readAttribute('data-field-id');
-            this.artifact_id                = element.up('.card').readAttribute('data-artifact-id');
-            this.url                        = '/plugins/tracker/?func=update-artifact&aid=' + this.artifact_id;
-            this.div                        = new Element('div');
+        function card_element_editor ( element ) {
+            this.element        = element;
+            this.field_id       = element.readAttribute('data-field-id');
+            this.artifact_id    = element.up('.card').readAttribute('data-artifact-id');
+            this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
+            this.div            = new Element('div');
 
             this.init = function() {
                 this.injectTemporaryContainer();
                 new Ajax.InPlaceEditor( this.div, this.url, {
+                    formClassName : 'card_element_form',
                     callback   : this.ajaxCallback(),
                     onComplete : this.success(),
                     onFailure  : this.fail
@@ -133,22 +134,19 @@ document.observe('dom:loaded', function () {
                 var field_id    = this.field_id;
                 var div         = this.div;
 
-                return function(transport, element) {
+                return function(transport) {
                     div.update(transport.request.parameters['artifact[' + field_id + ']']);
                 }
             };
 
             this.fail = function() {
-                console.log('fail');
             };
 
-            if(initialise !== false) {
-                this.init();
-            } 
+            this.init();
         }
 
         $$('.valueOf_remaining_effort').each(function (remaining_effort_container) {
-            var editor = new card_element_editor(remaining_effort_container);
+            new card_element_editor(remaining_effort_container);
         })
 
     });
