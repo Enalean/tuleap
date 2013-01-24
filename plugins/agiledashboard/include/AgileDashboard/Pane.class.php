@@ -44,6 +44,7 @@ abstract class AgileDashboard_Pane {
     }
 
     public function getUri() {
+        // TODO: this is uterly crap to remove
         $current_uri = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
         return $current_uri;
     }

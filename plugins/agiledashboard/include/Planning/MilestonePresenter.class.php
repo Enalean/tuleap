@@ -175,7 +175,7 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
         $this->request                     = $request;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
         $this->planning_redirect_to_new    = $planning_redirect_to_new;
-        $this->current_uri                 = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
+        //$this->current_uri                 = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
         $this->planned_artifacts_tree      = $this->buildPlannedArtifactsTree();
     }
 

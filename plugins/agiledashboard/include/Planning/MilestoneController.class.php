@@ -92,9 +92,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->render('show', $presenter);
     }
 
-    private function getMilestonePresenter(
-            array                                 $available_milestones
-            ) {
+    private function getMilestonePresenter(array $available_milestones) {
         
         $planning_redirect_to_new    = $this->getPlanningRedirectToNew();
 
