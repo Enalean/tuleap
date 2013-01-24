@@ -46,7 +46,6 @@ class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
     public function getFullContent() {
         $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
         return $renderer->renderToString('milestone-planning', $this->presenter);
-        //return '';
     }
 
     /**

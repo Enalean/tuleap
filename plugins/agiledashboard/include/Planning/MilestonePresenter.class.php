@@ -42,7 +42,7 @@ class AgileDashboard_MilestonePresenter extends PlanningPresenter {
      */
     private $planning_redirect_to_new;
 
-    private $active_pane;
+    public $active_pane;
 
     public function __construct(Planning $planning, Planning_Milestone $milestone, User $current_user, Codendi_Request $request, $pane, array $available_milestones, $planning_redirect_to_new) {
         parent::__construct($planning);

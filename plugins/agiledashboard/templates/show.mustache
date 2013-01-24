@@ -17,13 +17,9 @@
         {{/additionalPanes}}
     </ul>
     <div class="tab-content">
-        {{#additionalPanes}}
-            <div id="{{getIdentifier}}" class="tab-pane {{#isActive}}active{{/isActive}}">
-                {{#isActive}}
-                    {{{getFullContent}}}
-                {{/isActive}}
-            </div>
-        {{/additionalPanes}}
+        <div id="{{active_pane.getIdentifier}}" class="tab-pane active">
+        {{{active_pane.getFullContent}}}
+        </div>
     </div>
 </div>
 
