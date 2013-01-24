@@ -10,11 +10,11 @@
         </ul>
     </div>
     <ul class="nav nav-tabs">
-        {{#additionalPanes}}
+        {{#pane_info_list}}
             <li class="{{#isActive}}active{{/isActive}}">
                 <a href="{{getUri}}">{{getTitle}}</a>
             </li>
-        {{/additionalPanes}}
+        {{/pane_info_list}}
     </ul>
     <div class="tab-content">
         <div id="{{active_pane.getIdentifier}}" class="tab-pane active">

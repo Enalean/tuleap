@@ -103,7 +103,7 @@ class AgileDashboard_MilestonePresenter {
     /**
      * @return array
      */
-    public function additionalPanes() {
+    public function pane_info_list() {
         return $this->additional_panes;
     }
 }
