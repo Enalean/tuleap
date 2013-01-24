@@ -156,6 +156,7 @@ class GitViews_ShowRepo_Content {
 
     private function getCloneUrl() {
         $html = '<div id="plugin_git_clone_url">';
+        $html .= '<div class="input-prepend">';
         $html .= '<div class="btn-group" data-toggle="buttons-radio">';
         $hp = Codendi_HTMLPurifier::instance();
         $urls = $this->repository->getAccessURL();
@@ -184,6 +185,7 @@ class GitViews_ShowRepo_Content {
         $html .= '</div>';
 
         $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" />';
+        $html .= '</div>';
         $html .= ' <a href="#plugin_git_example" id="plugin_git_example-handle" title="Display contextual help"><i class="icon-question-sign"></i></a>';
         $html .= '</p>';
         $html .= '<div id="plugin_git_example">
