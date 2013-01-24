@@ -106,7 +106,7 @@ document.observe('dom:loaded', function () {
             this.init = function() {
                 this.injectTemporaryContainer();
                 new Ajax.InPlaceEditor( this.div, this.url, {
-                    formClassName : 'card_element_form',
+                    formClassName : 'card_element_edit_form',
                     callback   : this.ajaxCallback(),
                     onComplete : this.success(),
                     onFailure  : this.fail
@@ -114,7 +114,13 @@ document.observe('dom:loaded', function () {
             };
 
             this.injectTemporaryContainer = function () {
+                console.log(this.element.innerHTML);
+                if(this.element.innerHTML == '') {
+                    this.element.innerHTML = '0' ;
+                }
+
                 this.div.update(this.element.innerHTML);
+                console.log(this.div);
                 this.element.update(this.div);
             };
 
@@ -135,7 +141,9 @@ document.observe('dom:loaded', function () {
                 var div         = this.div;
 
                 return function(transport) {
-                    div.update(transport.request.parameters['artifact[' + field_id + ']']);
+                    if(typeof transport != 'undefined') {
+                        div.update(transport.request.parameters['artifact[' + field_id + ']']);
+                    } 
                 }
             };
 
