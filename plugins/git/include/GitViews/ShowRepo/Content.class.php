@@ -155,19 +155,18 @@ class GitViews_ShowRepo_Content {
     }
 
     private function getCloneUrl() {
-        $html = '<p id="plugin_git_clone_url">';
-
-        $html    .= '<div class="btn-group" data-toggle="buttons-radio">';
+        $html = '<div id="plugin_git_clone_url">';
+        $html .= '<div class="btn-group" data-toggle="buttons-radio">';
         $hp = Codendi_HTMLPurifier::instance();
         $urls = $this->repository->getAccessURL();
         list(,$first_url) = each($urls);
         if (count($urls) > 1) {
-            $selected = 'checked="checked"';
+            $selected = 'active';
             foreach ($urls as $transport => $url) {
-                $html .= '<button type="button" class="btn" name="plugin_git_transport" value="'. $hp->purify($url) .'" '.$selected.' >';
+                $html .= '<button type="button" class="btn '.$selected.'" name="plugin_git_transport" value="'. $hp->purify($url) .'" >';
                 $html .= $transport;
                 $html .= '</button>';
-                $selected  = '';
+                $selected = '';
             }
         }
 
@@ -203,6 +202,7 @@ Add this repository as a remote to an existing local repository:
     git checkout -b my-local-tracking-branch '. $this->repository->getName() .'/master_or_other_branch
 </pre>
 </div>';
+        $html .= '</div>';
         return $html;
     }
 
