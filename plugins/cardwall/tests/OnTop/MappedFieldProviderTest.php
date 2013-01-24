@@ -18,11 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) .'/../../include/constants.php';
-require_once dirname(__FILE__) .'/../../../tracker/include/constants.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/MappedFieldProvider.class.php';
-require_once TRACKER_BASE_DIR .'/../tests/builders/aMockArtifact.php';
-require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
+require_once dirname(__FILE__) .'/../bootstrap.php';
 
 class Cardwall_OnTop_MappedFieldProviderTest extends TuleapTestCase {
     

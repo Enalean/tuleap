@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once CARDWALL_BASE_DIR .'/View.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/View/SemanticStatusColumnDefinition.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/View/FreestyleColumnDefinition.class.php';
-require_once 'Admin/Form.class.php';
 
 /**
  * Display the admin of the Cardwall

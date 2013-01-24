@@ -19,7 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+require_once dirname(__FILE__) .'/bootstrap.php';
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aTreeNode.php';
 require_once dirname(__FILE__).'/../include/Cardwall_Renderer.class.php';
 require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php';

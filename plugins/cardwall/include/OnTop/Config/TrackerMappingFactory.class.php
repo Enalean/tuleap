@@ -18,15 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ColumnCollection.class.php';
-require_once 'TrackerMappingNoField.class.php';
-require_once 'TrackerMappingStatus.class.php';
-require_once 'TrackerMappingFreestyle.class.php';
-require_once 'ValueMappingFactory.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldDao.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldValueDao.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
 
 class Cardwall_OnTop_Config_TrackerMappingFactory {
 

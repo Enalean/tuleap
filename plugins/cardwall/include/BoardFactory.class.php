@@ -18,12 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SwimlineFactory.class.php';
-require_once 'OnTop/Config/ColumnFactory.class.php';
-require_once 'Board.class.php';
-require_once 'FieldsExtractor.class.php';
-require_once 'OnTop/Config/MappedFieldProvider.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
 /**
  * Builds Board given artifacts (for swimlines/cards) and a field (for columns)

@@ -19,13 +19,7 @@
  */
 
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
-require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
-require_once 'BoardFactory.class.php';
-require_once 'PaneContentPresenter.class.php';
-require_once 'QrCode.class.php';
-require_once 'CreateCardPresenterCallback.class.php';
-require_once 'CardInCellPresenterCallback.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard

@@ -33,6 +33,10 @@ class Cardwall_AgileDashboard_Controller {
         $this->request = $request;
         $this->milestone_factory = $milestone_factory;
     }
+
+    public function show() {
+        
+    }
 }
 
 ?>
