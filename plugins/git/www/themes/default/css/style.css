@@ -170,3 +170,9 @@ td.plugin_git_first_col {
 #plugin_git_example:target {
     border: 1px solid #ccc;
 }
+
+button {
+  margin: 0;
+  font-size: 100%;
+  vertical-align: middle;
+}
