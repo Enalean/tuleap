@@ -23,7 +23,16 @@ require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
     const IDENTIFIER = 'cardwall';
-    
+
+    /**
+     * @var string
+     */
+    private $plugin_theme_path;
+
+    public function __construct($plugin_theme_path) {
+        $this->plugin_theme_path = $plugin_theme_path;
+    }
+
     public function getUri() {
         return parent::getUri().'&pane='.$this->getIdentifier();
     }
@@ -43,6 +52,19 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
         return 'Card Wall';
     }
 
+    /**
+     * @see AgileDashboard_Pane::getIcon()
+     */
+    public function getIcon() {
+        return $this->plugin_theme_path .'/images/ic/sticky-note-pin.png';
+    }
+
+    /**
+     * @see AgileDashboard_Pane::getIconTitle()
+     */
+    public function getIconTitle() {
+        return $GLOBALS['Language']->getText('plugin_cardwall', 'access_cardwall');
+    }
 
 }
 
@@ -72,17 +94,11 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $user;
 
-    /**
-     * @var string
-     */
-    private $plugin_theme_path;
-
-    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user, $plugin_theme_path) {
+    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user) {
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
         $this->user           = $user;
-        $this->plugin_theme_path = $plugin_theme_path;
     }
 
     public function getIdentifier() {
@@ -93,19 +109,6 @@ class Cardwall_Pane extends AgileDashboard_Pane {
         parent::getUriForMilestone($milestone).'&pane='.Cardwall_PaneInfo::IDENTIFIER;
     }
 
-    /**
-     * @see AgileDashboard_Pane::getIcon()
-     */
-    public function getIcon() {
-        return $this->plugin_theme_path .'/images/ic/sticky-note-pin.png';
-    }
-    
-    /**
-     * @see AgileDashboard_Pane::getIconTitle()
-     */
-    public function getIconTitle() {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'access_cardwall');
-    }
     
     /**
      * @see AgileDashboard_Pane::getFullContent()

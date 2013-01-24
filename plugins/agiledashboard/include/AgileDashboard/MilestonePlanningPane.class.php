@@ -35,6 +35,19 @@ class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'planning_pane_title');
     }
     
+    /**
+     * @see string eg: '/themes/common/images/ic/duck.png'
+     */
+    public function getIcon() {
+        throw new RuntimeException('I should be implemented');
+    }
+
+    /**
+     * @return string eg: 'Access to cardwall'
+     */
+    public function getIconTitle() {
+        throw new RuntimeException('I should be implemented');
+    }
 }
 
 class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
@@ -64,19 +77,6 @@ class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
         throw new RuntimeException('I should be implemented');
     }
 
-    /**
-     * @see string eg: '/themes/common/images/ic/duck.png'
-     */
-    public function getIcon() {
-        throw new RuntimeException('I should be implemented');
-    }
-
-    /**
-     * @return string eg: 'Access to cardwall'
-     */
-    public function getIconTitle() {
-        throw new RuntimeException('I should be implemented');
-    }
 }
 
 

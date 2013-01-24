@@ -42,6 +42,20 @@ class Tracker_Artifact_Burndown_PaneInfo extends AgileDashboard_PaneInfo {
     public function getTitle() {
         return self::TITLE;
     }
+    
+    /**
+     * @see AgileDashboard_Pane::getIcon()
+     */
+    public function getIcon() {
+        return '';
+    }
+
+    /**
+     * @see AgileDashboard_Pane::getIconTitle()
+     */
+    public function getIconTitle() {
+        return '';
+    }
 }
 
 /**
@@ -84,19 +98,6 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
         parent::getUriForMilestone($milestone).'&pane='.Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER;
     }
     
-    /**
-     * @see AgileDashboard_Pane::getIcon()
-     */
-    public function getIcon() {
-        return '';
-    }
-    
-    /**
-     * @see AgileDashboard_Pane::getIconTitle()
-     */
-    public function getIconTitle() {
-        return '';
-    }
     
     /**
      * @see AgileDashboard_Pane::getFullContent()

@@ -221,7 +221,7 @@ class cardwallPlugin extends Plugin {
         $tracker  = $params['milestone']->getArtifact()->getTracker();
 
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
-            $pane_info = new Cardwall_PaneInfo();
+            $pane_info = new Cardwall_PaneInfo($this->getThemePath());
             if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
                 $pane_info->setActive(true);
                 $config = $this->getConfigFactory()->getOnTopConfig($tracker);
@@ -229,8 +229,7 @@ class cardwallPlugin extends Plugin {
                     $params['milestone'],
                     $this->getPluginInfo()->getPropVal('display_qr_code'),
                     $config,
-                    $params['user'],
-                    $this->getThemePath()
+                    $params['user']
                 );
             }
             $params['panes'][] = $pane_info;

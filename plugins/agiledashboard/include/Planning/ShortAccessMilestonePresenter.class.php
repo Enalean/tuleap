@@ -44,13 +44,16 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
 
     public function additionalPanes() {
         if (!$this->additional_panes) {
+            $active_pane = null;
             $this->additional_panes = array();
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
                 array(
-                    'milestone' => $this->milestone,
-                    'panes'     => &$this->additional_panes,
-                    'user'      => $this->user,
+                    'milestone'   => $this->milestone,
+                    'user'        => $this->user,
+                    'request'     => HTTPRequest::instance(),
+                    'panes'       => &$this->additional_panes,
+                    'active_pane' => $active_pane,
                 )
             );
         }

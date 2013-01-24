@@ -55,6 +55,15 @@ abstract class AgileDashboard_PaneInfo {
      */
     public abstract function getTitle();
     
+    /**
+     * @see string eg: '/themes/common/images/ic/duck.png'
+     */
+    public abstract function getIcon();
+
+    /**
+     * @return string eg: 'Access to cardwall'
+     */
+    public abstract function getIconTitle();
 }
 
 /**
@@ -79,14 +88,5 @@ abstract class AgileDashboard_Pane {
      */
     public abstract function getMinimalContent();
 
-    /**
-     * @see string eg: '/themes/common/images/ic/duck.png'
-     */
-    public abstract function getIcon();
-
-    /**
-     * @return string eg: 'Access to cardwall'
-     */
-    public abstract function getIconTitle();
 }
 ?>
