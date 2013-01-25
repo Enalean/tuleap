@@ -1,3 +1,6 @@
+Version 5.72 - Tuleap 5.11
+    * Display burndown icon on AD homepage
+
 Version 5.71 - Tuleap 5.10
     * Fix error on getArtifactComments() through SOAP
 
