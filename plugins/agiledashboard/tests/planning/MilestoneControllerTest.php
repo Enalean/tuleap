@@ -35,12 +35,35 @@ Mock::generate('Planning_ViewBuilder');
 
 
 abstract class Planning_MilestoneController_Common extends TuleapTestCase {
+    protected $planning_tracker_id;
+    protected $planning;
+    protected $milestone_factory;
 
     public function setUp() {
         parent::setUp();
+
+        Config::store();
+        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
+
+        $this->request_uri = '/plugins/agiledashboard/';
+        $this->saved_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+        $_SERVER['REQUEST_URI'] = $this->request_uri;
+
+        $this->planning_tracker_id = 66;
+        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', null, $this->planning_tracker_id);
+
+        $this->milestone_factory = mock('Planning_MilestoneFactory');
+        stub($this->milestone_factory)->getSiblingMilestones()->returns(array());
+        stub($this->milestone_factory)->getAllMilestones()->returns(array());
+
+        EventManager::setInstance(mock('EventManager'));
     }
 
     public function tearDown() {
+        Config::restore();
+        $_SERVER['REQUEST_URI'] = $this->saved_request_uri;
+        EventManager::clearInstance();
+        TrackerFactory::clearInstance();
         parent::tearDown();
     }
 
@@ -92,38 +115,8 @@ class Planning_MilestoneControllerTest extends Planning_MilestoneController_Comm
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
-
-        $this->request_uri = '/plugins/agiledashboard/';
-        $this->saved_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
-        $_SERVER['REQUEST_URI'] = $this->request_uri;
-
-
-        $this->planning_tracker_id = 66;
-        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', null, $this->planning_tracker_id);
         $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
-
-        $this->milestone_factory = mock('Planning_MilestoneFactory');
-        stub($this->milestone_factory)->getSiblingMilestones()->returns(array());
-        stub($this->milestone_factory)->getAllMilestones()->returns(array());
-
-        //$hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
-        //Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
-
-        EventManager::setInstance(mock('EventManager'));
-    }
-
-    public function tearDown() {
-        Config::restore();
-        $_SERVER['REQUEST_URI'] = $this->saved_request_uri;
-
-        Tracker_ArtifactFactory::clearInstance();
-        Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
-        TrackerFactory::clearInstance();
-        EventManager::clearInstance();
-        parent::tearDown();
     }
 
     public function itExplicitlySaysThereAreNoItemsWhenThereIsNothing() {
@@ -140,7 +133,7 @@ class Planning_MilestoneControllerTest extends Planning_MilestoneController_Comm
         $this->assertNoPattern('/class="[^"]*planning-droppable[^"]*"/', $content);
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
     }
-    
+
     private function WhenICaptureTheOutputOfShowActionForAnEmptyArtifact($id, $title) {
         $artifact = $this->GivenAnArtifactWithNoLinkedItem($id, $title);
         $request  = aRequest()->with('aid', $id)
@@ -215,47 +208,11 @@ class Planning_MilestoneControllerTest extends Planning_MilestoneController_Comm
         return $milestone;
     }
 
-    
+
 }
 
 
-class Planning_MilestoneController_TOODODOODODOODOODODOODO_Test extends Planning_MilestoneController_Common {
-
-    public function setUp() {
-        parent::setUp();
-        Config::store();
-        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
-
-        $this->request_uri = '/plugins/agiledashboard/';
-        $this->saved_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
-        $_SERVER['REQUEST_URI'] = $this->request_uri;
-
-
-        $this->planning_tracker_id = 66;
-        $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', null, $this->planning_tracker_id);
-        $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
-        $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
-
-        $this->milestone_factory = mock('Planning_MilestoneFactory');
-        stub($this->milestone_factory)->getSiblingMilestones()->returns(array());
-        stub($this->milestone_factory)->getAllMilestones()->returns(array());
-
-        $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
-        Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
-
-        EventManager::setInstance(mock('EventManager'));
-    }
-
-    public function tearDown() {
-        Config::restore();
-        $_SERVER['REQUEST_URI'] = $this->saved_request_uri;
-
-        Tracker_ArtifactFactory::clearInstance();
-        Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
-        TrackerFactory::clearInstance();
-        EventManager::clearInstance();
-        parent::tearDown();
-    }
+class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_MilestoneController_Common {
 
     public function itDisplaysTheSearchContentView() {
         $shared_fields_criteria = array('220' => array('values' => array('toto', 'titi')));
@@ -335,28 +292,6 @@ class Planning_MilestoneController_TOODODOODODOODOODODOODO_Test extends Planning
                              ->build();
         return $request;
     }
-
-
-
-   
-
-   
-
-    
-
-   
-
-    private function WhenICaptureTheOutputOfShowActionWithoutArtifact() {
-        $milestone = $this->GivenNoMilestone(mock('Project'));
-        $request = aRequest()->withUri($this->request_uri)
-                             ->with('group_id', $this->planning->getGroupId())
-                             ->with('planning_id', $this->planning->getId())
-                             ->withUser(aUser()->build())
-                             ->build();
-        return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
-    }
-
-    
 }
 
 class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
@@ -454,7 +389,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
         $this->sprint_planning = aPlanning()->withBacklogTracker(aTracker()->build())->build();
-        
+
         $this->sprint_1 = mock('Planning_Milestone');
         stub($this->sprint_1)->getArtifactId()->returns(1);
         stub($this->sprint_1)->getArtifactTitle()->returns('Sprint 1');
@@ -470,7 +405,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         $this->request = aRequest()->withUser($this->current_user)->build();
 
         $this->view_builder = stub('Planning_ViewBuilder')->build()->returns(mock('Tracker_CrossSearch_SearchContentView'));
-        
+
         $this->hierarchy_factory = mock('Tracker_HierarchyFactory');
         stub($this->hierarchy_factory)->getHierarchy()->returns(new Tracker_Hierarchy());
     }
