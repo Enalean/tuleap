@@ -57,7 +57,16 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
                 )
             );
         }
-        return $this->additional_panes;
+        $panes = array();
+        foreach ($this->additional_panes as $pane_info) {
+            /* @var $pane_info AgileDashboard_PaneInfo */
+            $panes[] = array(
+                'uri' => $pane_info->getUriForMilestone($this->milestone),
+                'title' => $pane_info->getIconTitle(),
+                'icon' => $pane_info->getIcon(),
+            );
+        }
+        return $panes;
     }
 
     public function getContent() {

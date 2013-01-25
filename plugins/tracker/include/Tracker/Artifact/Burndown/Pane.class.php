@@ -26,6 +26,9 @@ class Tracker_Artifact_Burndown_PaneInfo extends AgileDashboard_PaneInfo {
         return parent::getUri().'&pane='.$this->getIdentifier();
     }
 
+    public function getUriForMilestone(Planning_Milestone $milestone) {
+        parent::getUriForMilestone($milestone).'&pane='.Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER;
+    }
 
     /**
      * @see AgileDashboard_Pane::getIdentifier()
@@ -62,7 +65,12 @@ class Tracker_Artifact_Burndown_PaneInfo extends AgileDashboard_PaneInfo {
  * A pane to be displayed in AgileDashboard
  */
 class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
-        
+
+    /**
+     * @var Tracker_Artifact_Burndown_PaneInfo 
+     */
+    private $info;
+
     /**
      * @var Tracker_Artifact
      */
@@ -78,26 +86,24 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
      */
     private $user;
 
-    /**
-     * @var string
-     */
-    private $plugin_theme_path;
-
-    public function __construct(Tracker_Artifact $artifact, Tracker_FormElement_Field_Burndown $field, User $user, $plugin_theme_path) {
+    public function __construct(
+            Tracker_Artifact_Burndown_PaneInfo $info,
+            Tracker_Artifact $artifact,
+            Tracker_FormElement_Field_Burndown $field,
+            User $user) {
+        $this->info              = $info;
         $this->artifact          = $artifact;
         $this->field             = $field;
         $this->user              = $user;
-        $this->plugin_theme_path = $plugin_theme_path;
     }
 
     public function getIdentifier() {
-        return Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER;
+        return $this->info->getIdentifier();
     }
 
     public function getUriForMilestone(Planning_Milestone $milestone) {
-        parent::getUriForMilestone($milestone).'&pane='.Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER;
+        return $this->info->getUriForMilestone($milestone);
     }
-    
     
     /**
      * @see AgileDashboard_Pane::getFullContent()

@@ -52,16 +52,31 @@ class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
 
 class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
 
+    /**
+     * @var AgileDashboard_MilestonePlanningPaneInfo
+     */
+    private $info;
+
+    /**
+     * @var AgileDashboard_MilestonePlanningPresenter
+     */
     private $presenter;
 
-    public function __construct(AgileDashboard_MilestonePlanningPresenter $presenter) {
+    public function __construct(
+            AgileDashboard_MilestonePlanningPaneInfo $info,
+            AgileDashboard_MilestonePlanningPresenter $presenter
+            ) {
+        $this->info      = $info;
         $this->presenter = $presenter;
     }
 
     public function getIdentifier() {
-        return AgileDashboard_MilestonePlanningPaneInfo::IDENTIFIER;
+        return $this->info->getIdentifier();
     }
 
+    public function getUriForMilestone(Planning_Milestone $milestone) {
+        return $this->info->getUriForMilestone($milestone);
+    }
     /**
      * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
@@ -76,6 +91,7 @@ class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
     public function getMinimalContent() {
         throw new RuntimeException('I should be implemented');
     }
+
 
 }
 

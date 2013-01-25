@@ -224,21 +224,23 @@ class cardwallPlugin extends Plugin {
             $pane_info = new Cardwall_PaneInfo($this->getThemePath());
             if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
                 $pane_info->setActive(true);
-                $params['active_pane'] = $this->getCardwallPane($params['milestone'], $params['user']);
+                $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
             }
             $params['panes'][] = $pane_info;
         }
     }
 
     public function agiledashboard_event_index_page($params) {
-        $params['pane'] = $this->getCardwallPane($params['milestone'], $params['user']);
+        $pane_info = new Cardwall_PaneInfo($this->getThemePath());
+        $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
     }
 
-    protected function getCardwallPane(Planning_Milestone $milestone, User $user) {
+    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, User $user) {
         $tracker = $milestone->getArtifact()->getTracker();
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);
             return new Cardwall_Pane(
+                $info,
                 $milestone,
                 $this->getPluginInfo()->getPropVal('display_qr_code'),
                 $config,

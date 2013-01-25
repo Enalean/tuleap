@@ -37,6 +37,9 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
         return parent::getUri().'&pane='.$this->getIdentifier();
     }
 
+    public function getUriForMilestone(Planning_Milestone $milestone) {
+        return parent::getUriForMilestone($milestone).'&pane='.$this->getIdentifier();
+    }
 
     /**
      * @see AgileDashboard_Pane::getIdentifier()
@@ -73,6 +76,10 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
  */
 class Cardwall_Pane extends AgileDashboard_Pane {
 
+    /**
+     * @var Cardwall_PaneInfo
+     */
+    private $info;
     
     /**
      * @var Planning_Milestone
@@ -94,7 +101,15 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $user;
 
-    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user) {
+
+    public function __construct(
+            Cardwall_PaneInfo $info,
+            Planning_Milestone $milestone,
+            $enable_qr_code,
+            Cardwall_OnTop_Config $config,
+            User $user
+            ) {
+        $this->info           = $info;
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
@@ -102,11 +117,11 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     }
 
     public function getIdentifier() {
-        return Cardwall_PaneInfo::IDENTIFIER;
+        return $this->info->getIdentifier();
     }
 
     public function getUriForMilestone(Planning_Milestone $milestone) {
-        parent::getUriForMilestone($milestone).'&pane='.Cardwall_PaneInfo::IDENTIFIER;
+        return $this->info->getUriForMilestone($milestone);
     }
 
     

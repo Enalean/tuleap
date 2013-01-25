@@ -46,7 +46,10 @@ class Planning_MilestoneController extends MVC2_PluginController {
      */
     private $all_milestones = null;
 
-    private $content_view;
+    /**
+     * @var Planning_ViewBuilder
+     */
+    private $view_builder;
 
     /**
      * Instanciates a new controller.
@@ -110,7 +113,8 @@ class Planning_MilestoneController extends MVC2_PluginController {
 
 
     private function initAdditionalPanes() {
-        $this->additional_panes = array(new AgileDashboard_MilestonePlanningPaneInfo());
+        $pane_info = new AgileDashboard_MilestonePlanningPaneInfo();
+        $this->additional_panes = array($pane_info);
         $this->active_pane = null;
         if ($this->milestone->getArtifact()) {
             EventManager::instance()->processEvent(
@@ -125,13 +129,13 @@ class Planning_MilestoneController extends MVC2_PluginController {
             );
             if (!$this->active_pane) {
                 $this->additional_panes[0]->setActive(true);
-                $this->active_pane = $this->getMilestonePlanningPane();
+                $this->active_pane = $this->getMilestonePlanningPane($pane_info);
             }
         }
         return $this->additional_panes;
     }
 
-    private function getMilestonePlanningPane() {
+    private function getMilestonePlanningPane(AgileDashboard_MilestonePlanningPaneInfo $info) {
 
         $planning     = $this->milestone->getPlanning();
         $content_view = $this->buildContentView($this->view_builder, $planning, $this->milestone->getProject());
@@ -145,7 +149,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->getPlanningRedirectToSelf(),
             $this->getPlanningRedirectToNew()
         );
-        return new AgileDashboard_MilestonePlanningPane($milestone_planning_presenter);
+        return new AgileDashboard_MilestonePlanningPane($info, $milestone_planning_presenter);
     }
     
     private function getPlanningRedirectToSelf() {

@@ -44,6 +44,9 @@ abstract class AgileDashboard_PaneInfo {
         return $current_uri;
     }
 
+    public function getUriForMilestone(Planning_Milestone $milestone) {
+        return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
+    }
 
     /**
      * @return string eg: 'cardwall'
@@ -72,9 +75,7 @@ abstract class AgileDashboard_PaneInfo {
  */
 abstract class AgileDashboard_Pane {
 
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
-    }
+    public abstract function getUriForMilestone(Planning_Milestone $milestone);
 
     public abstract function getIdentifier();
 

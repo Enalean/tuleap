@@ -154,10 +154,10 @@ class trackerPlugin extends Plugin {
             if ($params['request']->get('pane') == Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER) {
                 $pane_info->setActive(true);
                 $params['active_pane'] = new Tracker_Artifact_Burndown_Pane(
+                        $pane_info,
                         $artifact,
                         $burndown_field,
-                        $params['user'],
-                        $this->getThemePath()
+                        $params['user']
                 );
             }
             $params['panes'][] = $pane_info;
