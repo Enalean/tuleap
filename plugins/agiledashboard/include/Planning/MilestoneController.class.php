@@ -148,13 +148,10 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $content_view = $this->buildContentView($this->view_builder, $planning, $this->milestone->getProject());
 
         $milestone_planning_presenter = new AgileDashboard_MilestonePlanningPresenter(
-            $planning,
             $content_view,
             $this->milestone,
             $this->getCurrentUser(),
-            $this->request,
-            $this->getPlanningRedirectToSelf(),
-            $this->getPlanningRedirectToNew()
+            $this->getPlanningRedirectToSelf()
         );
         return new AgileDashboard_MilestonePlanningPane($info, $milestone_planning_presenter);
     }
