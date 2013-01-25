@@ -26,14 +26,6 @@ textarea.text {
     margin-bottom: 1em;
 }
 
-#plugin_git_reference h1 {
-    float:          left;
-    padding-bottom: 0;
-    padding-top:    0;
-    margin-bottom:  0;
-    margin-top:     0;
-}
-
 #plugin_git_repository_actions {
     float:      right;
     list-style: none;
@@ -346,9 +338,7 @@ input::-moz-focus-inner {
 }
 .gerrit_url.alert.alert-info {
     display: inline-block;
-    margin-top: 1em;
     margin-bottom: 0em;
-    text-align: center;
 }
 .gerrit_url.alert.alert-info a {
     font-weight: bold;
@@ -369,4 +359,8 @@ input::-moz-focus-inner {
 }
 .plugin_git_clone_field-read-only > #plugin_git_clone_field {
     border-left:none;
+}
+a.btn.plugin_git_admin_button {
+    color: #333;
+    margin-left: 1em;
 }

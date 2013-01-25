@@ -99,16 +99,7 @@ class GitViews_ShowRepo_Content {
         // Access type
         $accessType = $this->getAccessType($access, $this->repository->getBackend() instanceof Git_Backend_Gitolite);
 
-        // Actions
-        $admin_link = '';
-        if ($this->controller->isAPermittedAction('repo_management')) {
-            $admin_link .= '<a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$repoId.'" class="repo_admin">';
-            $admin_link .= $GLOBALS['Language']->getText('plugin_git', 'admin_repo_management');
-            $admin_link .= '</a>';
-        }
-
         $html .= '<h1>'.$accessType.$this->repository->getFullName().'</h1>';
-        $html .= '<p id="plugin_git_reference_author">'. $admin_link .'</p>';
         if ( !empty($parent) ) {
             $html .= '<p id="plugin_git_repo_parent">'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_parent').':
                   <span>'.$this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() ).'</span>
@@ -145,7 +136,7 @@ class GitViews_ShowRepo_Content {
     private function getCloneUrl() {
         $html = '<div id="plugin_git_clone_url">';
         $html .= '<span id="plugin_git_clone_url_group" class="input-prepend input-append">';
-        $html .= '<span class="btn-group gitclone_urls_protocols" data-toggle="buttons-radio">';
+        $html .= '<span class="gitclone_urls_protocols" data-toggle="buttons-radio">';
         $hp = Codendi_HTMLPurifier::instance();
         $urls = $this->getAccessURLs();
         list(,$first_url) = each($urls);
@@ -162,6 +153,15 @@ class GitViews_ShowRepo_Content {
         $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" class="span6" />';
         $html .= '<button class="btn" type="button" id="plugin_git_example-handle" data-toggle="button">?</button>';
         $html .= '</span>';
+
+        if ($this->controller->isAPermittedAction('repo_management')) {
+            $html .= ' ';
+            $html .= '<a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$this->repository->getId().'" class="btn plugin_git_admin_button">';
+            $html .= '<i class="icon-cog"></i> ';
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'admin_repo_management'); //TODO: What about "Settings" ?
+            $html .= '</a>';
+        }
+
         $html .= '<div>';
         $html .= '<div id="plugin_git_example">
 Cloning this repository:
