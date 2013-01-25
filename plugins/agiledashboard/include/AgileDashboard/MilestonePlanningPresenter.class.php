@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/TreeNode/TreeNodeMapper.class.php';
+
 class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
 
 
