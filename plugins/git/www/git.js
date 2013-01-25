@@ -19,7 +19,7 @@ document.observe('dom:loaded', function () {
            $$('.plugin_git_example_url').invoke('update', event.target.value);
        });
        radio.observe('click', function (event){
-           var transport = event.target.innerText;
+           var transport = event.target.innerHTML;
            displayReadOnly(transport);
        });
     });
