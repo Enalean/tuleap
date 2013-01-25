@@ -3,12 +3,13 @@ document.observe('dom:loaded', function () {
 
     // About the read-only add-on
     (function ($) {
+        var element = '<span class="add-on"><span class="label">read-only</span></span>';
+        $(element).insertBefore($('#plugin_git_clone_field'));
         displayReadOnly = function (transport) {
-            read_only = $('#plugin_git_clone_url .add-on');
             if ($('.gerrit_url').length > 0 && transport !== "gerrit") {
-                read_only.css('display', 'inline-block');
+                $('#plugin_git_clone_url_group').addClass('plugin_git_clone_field-read-only');
             } else {
-                read_only.css('display', 'none');
+                $('#plugin_git_clone_url_group').removeClass('plugin_git_clone_field-read-only');
             }
         }
     })(jQuery);

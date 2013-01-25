@@ -353,9 +353,20 @@ input::-moz-focus-inner {
 .gerrit_url.alert.alert-info a {
     font-weight: bold;
 }
-#plugin_git_clone_url .add-on {
+#plugin_git_clone_url_group > .add-on {
     display: none;
 }
-#plugin_git_clone_url .add-on > .label {
+#plugin_git_clone_url_group.plugin_git_clone_field-read-only > .add-on {
+    display: inline-block;
+    border-right: none;
+    background: #fcfcfc;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+.plugin_git_clone_field-read-only > .add-on > .label {
     line-height: inherit;
+}
+.plugin_git_clone_field-read-only > #plugin_git_clone_field {
+    border-left:none;
 }
