@@ -111,7 +111,8 @@ class Planning_MilestoneController extends MVC2_PluginController {
             $this->active_pane,
             $this->available_panes_info,
             $this->getAvailableMilestones(),
-            $this->getPlanningRedirectToNew());
+            $this->getPlanningRedirectToNew()
+        );
     }
 
     protected function getAvailableMilestones() {
@@ -137,10 +138,10 @@ class Planning_MilestoneController extends MVC2_PluginController {
                     'active_pane' => &$this->active_pane,
                 )
             );
-            if (!$this->active_pane) {
-                $this->available_panes_info[0]->setActive(true);
-                $this->active_pane = $this->getMilestonePlanningPane($pane_info);
-            }
+        }
+        if (!$this->active_pane) {
+            $this->available_panes_info[0]->setActive(true);
+            $this->active_pane = $this->getMilestonePlanningPane($pane_info);
         }
         return $this->available_panes_info;
     }

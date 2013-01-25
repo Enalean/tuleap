@@ -32,7 +32,7 @@ Mock::generate('Project');
 Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Planning_ViewBuilder');
-/*
+
 class Planning_MilestoneControllerTest extends TuleapTestCase {
     private $planning;
 
@@ -57,6 +57,8 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
 
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
+
+        EventManager::setInstance(mock('EventManager'));
     }
 
     public function tearDown() {
@@ -66,6 +68,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
         TrackerFactory::clearInstance();
+        EventManager::clearInstance();
         parent::tearDown();
     }
 
@@ -134,7 +137,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
     }
 
     private function GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, Tracker_CrossSearch_Query $expected_criteria, $already_linked_items, $content) {
-        $content_view = $this->GivenAContentViewThatFetch($content);
+        $content_view = stub('Tracker_CrossSearch_SearchContentView')->fetch()->returns($content);
         $backlog_tracker_ids  = array(); // It's null because of NoMilestone in assertThatWeBuildAcontentViewWith
         $view_builder = new MockPlanning_ViewBuilder();
         $expected_arguments = array(
@@ -151,11 +154,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $view_builder->setReturnValue('build', $content_view);
 
         return $view_builder;
-    }
-
-    private function GivenAContentViewThatFetch($content) {
-        $content_view = stub('Tracker_CrossSearch_SearchContentView')->fetch()->returns($content);
-        return $content_view;
     }
 
     private function buildRequest($aid, $project_id, $shared_field_criteria, $semantic_criteria) {
@@ -284,7 +282,7 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         stub($hierarchy_factory)->getHierarchy()->returns(new Tracker_Hierarchy());
         
         ob_start();
-        $controller = new Planning_MilestoneController($request, $this->milestone_factory, $project_manager, $view_builder, $hierarchy_factory);
+        $controller = new Planning_MilestoneController($request, $this->milestone_factory, $project_manager, $view_builder, $hierarchy_factory, '');
 
         $controller->show();
         $content = ob_get_clean();
@@ -299,7 +297,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         return $project_manager;
     }
 }
-*/
 
 class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
     private $plugin_path;
