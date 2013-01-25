@@ -87,11 +87,6 @@ class Planning_MilestoneControllerTest extends TuleapTestCase {
         $this->assertPattern('/The artifact doesn\'t have an artifact link field, please reconfigure your tracker/', $content);
     }
 
-    public function itDoesNotShowAnyErrorIfThereIsNoArtifactGivenInTheRequest() {
-        $this->WhenICaptureTheOutputOfShowActionWithoutArtifact();
-        $this->assertNoErrors();
-    }
-
     public function itDisplaysTheSearchContentView() {
         $shared_fields_criteria = array('220' => array('values' => array('toto', 'titi')));
         $semantic_criteria      = array('title' => 'bonjour', 'status' => Tracker_CrossSearch_SemanticStatusReportField::STATUS_CLOSED);
