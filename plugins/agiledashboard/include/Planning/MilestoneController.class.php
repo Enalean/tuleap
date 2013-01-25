@@ -52,6 +52,11 @@ class Planning_MilestoneController extends MVC2_PluginController {
     private $view_builder;
 
     /**
+     * @var string
+     */
+    private $theme_path;
+
+    /**
      * Instanciates a new controller.
      * 
      * TODO:
@@ -65,12 +70,14 @@ class Planning_MilestoneController extends MVC2_PluginController {
                                 Planning_MilestoneFactory $milestone_factory,
                                 ProjectManager            $project_manager,
                                 Planning_ViewBuilder      $view_builder,
-                                Tracker_HierarchyFactory  $hierarchy_factory) {
+                                Tracker_HierarchyFactory  $hierarchy_factory,
+                                $theme_path) {
         
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory = $milestone_factory;
         $this->hierarchy_factory = $hierarchy_factory;
         $this->view_builder      = $view_builder;
+        $this->theme_path        = $theme_path;
         $project                 = $project_manager->getProject($request->get('group_id'));
 
         $this->milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
@@ -113,7 +120,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
 
 
     private function initAdditionalPanes() {
-        $pane_info = new AgileDashboard_MilestonePlanningPaneInfo();
+        $pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->theme_path);
         $this->additional_panes = array($pane_info);
         $this->active_pane = null;
         if ($this->milestone->getArtifact()) {

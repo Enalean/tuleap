@@ -213,7 +213,8 @@ class AgileDashboardRouter {
             $this->milestone_factory,
             $this->getProjectManager(),
             $this->getViewBuilder($request),
-            $this->hierarchy_factory
+            $this->hierarchy_factory,
+            $this->plugin->getThemePath()
         );
     }
     
