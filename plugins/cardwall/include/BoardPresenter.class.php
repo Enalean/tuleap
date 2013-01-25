@@ -72,5 +72,15 @@ abstract class Cardwall_BoardPresenter {
     public function column_width() {
         return round(100 / (count($this->board->columns) + ($this->has_swimline_header ? 1 : 0)));
     }
+
+    public function getUsersAsJson() {
+        return json_encode(
+                array(
+                    11 => 'chocolat',
+                    12 => 'vanille',
+                    13 => 'pistache' 
+                    )
+                );
+    }
 }
 ?>

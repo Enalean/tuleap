@@ -1,3 +1,66 @@
+Ajax.InPlaceCollectionEditorMulti = Class.create(Ajax.InPlaceCollectionEditor, {
+    createEditField: function() {
+        var list = document.createElement('select');
+        list.name = this.options.paramName;
+        list.size = 1;
+        if (this.options.multiple) {
+            list.writeAttribute
+            ('multiple');
+            list.size =
+            2;
+        }
+        this._controls.editor = list;
+        this._collection = this.options.collection ||
+        [];
+        if
+        (this.options.loadCollectionURL)
+            this.loadCollection
+            ();
+        else
+            this.checkForExternalText();
+        this._form.appendChild
+        (this._controls.editor);
+    },
+
+    buildOptionList: function() {
+        this._form.removeClassName
+        (this.options.loadingClassName);
+        this._collection = this._collection.map(function(entry) {
+            return 2 === entry.length ? entry : [entry, entry].flatten
+            ();
+        });
+        var marker = ('value' in this.options) ? this.options.value :
+        this._text;
+        var textFound = this._collection.any(function(entry)
+        {
+            return entry[0] ==
+            marker;
+        }.bind(this));
+        this._controls.editor.update
+        ('');
+        var option;
+        this._collection.each(function(entry, index)
+        {
+            option = document.createElement
+            ('option');
+            option.value = entry[0];
+            if (this.options.selected)
+            {
+                option.selected =
+                (entry[0] in this.options.selected) ? 1 :
+                0;
+            }
+            else {
+                option.selected = textFound ? entry[0] == marker : 0 == index;
+            }
+            option.appendChild(document.createTextNode(entry[1]));
+            this._controls.editor.appendChild(option);
+        }.bind(this));
+        this._controls.editor.disabled = false;
+        Field.scrollFreeActivate(this._controls.editor);
+    }
+});
+
 document.observe('dom:loaded', function () {
     $$('.cardwall_board').each(function (board) {
         //{{{ Make sure that we got the last version of the card wall
@@ -96,12 +159,13 @@ document.observe('dom:loaded', function () {
         });
         // }}}
 
-        function card_element_editor ( element ) {
+        function card_text_element_editor ( element ) {
             this.element        = element;
             this.field_id       = element.readAttribute('data-field-id');
             this.artifact_id    = element.up('.card').readAttribute('data-artifact-id');
             this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
             this.div            = new Element('div');
+            this.artifact_type  = element.readAttribute('data-field-type');
 
             this.init = function() {
                 this.injectTemporaryContainer();
@@ -114,12 +178,24 @@ document.observe('dom:loaded', function () {
             };
 
             this.injectTemporaryContainer = function () {
-                if(this.element.innerHTML == '') {
-                    this.element.innerHTML = '0' ;
-                }
+                this.accountForEmptyValues();
                 this.div.update(this.element.innerHTML);
                 this.element.update(this.div);
             };
+            
+            this.accountForEmptyValues = function() {
+                if(this.element.innerHTML != '') {
+                    return;
+                }
+                
+                switch(this.artifact_type) {
+                    case 'float':
+                        this.element.innerHTML = '0' ;
+                        break;
+                    default:
+                        this.element.innerHTML = '?';
+                }
+            }
 
             this.ajaxCallback = function() {
                 var field_id = this.field_id;
@@ -150,11 +226,115 @@ document.observe('dom:loaded', function () {
             this.init();
         }
 
+        function card_select_element_editor ( element, select_options ) {
+            
+            this.element        = element;
+            this.field_id       = element.readAttribute('data-field-id');
+            this.artifact_id    = element.up('.card').readAttribute('data-artifact-id');
+            this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
+            this.div            = new Element('div');
+            this.artifact_type  = element.readAttribute('data-field-type');
+            this.select_options = select_options;
+
+            this.init = function() {
+                this.injectTemporaryContainer();
+                this.checkMultipleSelect();
+                new Ajax.InPlaceCollectionEditorMulti( this.div, this.url, this.select_options, {
+                    formClassName : 'card_element_edit_form',
+                    callback   : this.ajaxCallback(),
+                    onComplete : this.success(),
+                    onFailure  : this.fail
+                });
+            };
+
+            this.injectTemporaryContainer = function () {
+                this.accountForEmptyValues();
+                this.div.update(this.element.innerHTML);
+                this.element.update(this.div);
+            };
+
+            this.accountForEmptyValues = function() {
+                
+                if(this.element.innerHTML == '') {
+                    this.element.innerHTML = '?' ;
+                }
+            }
+
+            this.checkMultipleSelect = function () {
+                if (this.artifact_type == 'multiselectbox') {
+                    this.select_options['multiple'] = true;
+                }
+            };
+            
+            this.ajaxCallback = function() {
+                var field_id = this.field_id;
+
+                return function (form, value) {
+                    console.log(value);
+                    var parameters = {},
+                        linked_field = 'artifact[' + field_id +']';
+
+                    parameters[linked_field] = value;
+                    return parameters;
+                }
+            };
+  
+            this.success = function() {
+                var field_id    = this.field_id;
+                var div         = this.div;
+
+                return function(transport) {
+                    if(typeof transport != 'undefined') {
+                        div.update(transport.request.parameters['artifact[' + field_id + ']']);
+                    }
+                }
+            };
+
+            this.fail = function() {
+            };
+
+            this.init();
+        }
+
+
+//        new Ajax.InPlaceCollectionEditorMulti(
+//            element_id,
+//            submit_url,
+//            {collection:[[0, "zero"],[1,"one"],[2,"two"]],
+//                multiple:true,
+//                selected:[[0,''],[2,'']], // "zero" and "two" in the select list  will be selected.
+//                ajaxOptions:{asynchronous:true, evalScripts:true}
+//            }
+//        );
+
+
+        function parseUserInfo( user_info ) {
+            var user_collection = [];
+
+            for (property in user_info) {
+                user_collection.push(user_info[property]);
+            }
+            return user_collection;
+        }
+
         $$('.valueOf_remaining_effort').each(function (remaining_effort_container) {
-            new card_element_editor(remaining_effort_container);
+            new card_text_element_editor(remaining_effort_container);
         })
 
+        var user_info = jQuery.parseJSON( jQuery("#card_assign_users").html() );
+        
+        $$('.valueOf_assigned_to').each(function (assigned_to_container) {
+            new card_select_element_editor(assigned_to_container, {
+                collection : parseUserInfo(user_info)
+            });
+        })
+
+
     });
+
+
+
+
 
     $$('.cardwall_admin_ontop_mappings input[name^=custom_mapping]').each(function (input) {
             input.observe('click', function (evt) {
