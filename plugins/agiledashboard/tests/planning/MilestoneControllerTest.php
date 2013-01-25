@@ -45,10 +45,6 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
         Config::store();
         Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
-        $this->request_uri = '/plugins/agiledashboard/';
-        $this->saved_request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
-        $_SERVER['REQUEST_URI'] = $this->request_uri;
-
         $this->planning_tracker_id = 66;
         $this->planning = new Planning(123, 'Stuff Backlog', $group_id = 103, 'Release Backlog', 'Sprint Plan', null, $this->planning_tracker_id);
 
@@ -61,7 +57,6 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
 
     public function tearDown() {
         Config::restore();
-        $_SERVER['REQUEST_URI'] = $this->saved_request_uri;
         EventManager::clearInstance();
         TrackerFactory::clearInstance();
         parent::tearDown();
@@ -139,7 +134,6 @@ class Planning_MilestoneControllerTest extends Planning_MilestoneController_Comm
         $request  = aRequest()->with('aid', $id)
                               ->with('group_id', $this->planning->getGroupId())
                               ->with('planning_id', $this->planning->getId())
-                              ->withUri($this->request_uri)
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
         $user = aUser()->build();
@@ -155,7 +149,6 @@ class Planning_MilestoneControllerTest extends Planning_MilestoneController_Comm
         $request  = aRequest()->with('aid', $id)
                               ->with('group_id', $this->planning->getGroupId())
                               ->with('planning_id', $this->planning->getId())
-                              ->withUri($this->request_uri)
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
         $user = aUser()->build();
@@ -288,7 +281,6 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
         );
 
         $request = aRequest()->withParams($request_params)
-                             ->withUri($this->request_uri)
                              ->build();
         return $request;
     }
