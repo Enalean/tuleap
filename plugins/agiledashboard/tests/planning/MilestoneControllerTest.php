@@ -58,7 +58,6 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
     public function tearDown() {
         Config::restore();
         EventManager::clearInstance();
-        TrackerFactory::clearInstance();
         parent::tearDown();
     }
 
@@ -73,8 +72,6 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
     protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array $projects) {
         $project_manager = $this->GivenAProjectManagerThatReturns($projects);
 
-        $tracker_factory = new MockTrackerFactory();
-        TrackerFactory::setInstance($tracker_factory);
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones($request->getCurrentUser(),
                                                                                         $project_manager->getProject($request->get('group_id')),
