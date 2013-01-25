@@ -61,12 +61,6 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
         parent::tearDown();
     }
 
-    protected function WhenICaptureTheOutputOfShowAction($request, $milestone) {
-        $content_view = mock('Tracker_CrossSearch_SearchContentView');
-        $view_builder = stub('Planning_ViewBuilder')->build()->returns($content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array());
-    }
-
     protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array $projects) {
         $project_manager = $this->GivenAProjectManagerThatReturns($projects);
 
@@ -88,16 +82,12 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
         return $content;
     }
 
-    protected function GivenAProjectManagerThatReturns(array $projects) {
+    private function GivenAProjectManagerThatReturns(array $projects) {
         $project_manager = mock('ProjectManager');
         foreach ($projects as $project) {
             stub($project_manager)->getProject($project->getId())->returns($project);
         }
         return $project_manager;
-    }
-
-    protected function GivenNoMilestone($project) {
-        return new Planning_NoMilestone($project, $this->planning);
     }
 }
 
@@ -185,6 +175,12 @@ class Planning_MilestoneController_EmptyBacklogTest extends Planning_MilestoneCo
 
         return $milestone;
     }
+
+    private function WhenICaptureTheOutputOfShowAction($request, $milestone) {
+        $content_view = mock('Tracker_CrossSearch_SearchContentView');
+        $view_builder = stub('Planning_ViewBuilder')->build()->returns($content_view);
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array());
+    }
 }
 
 
@@ -219,7 +215,6 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
         $this->assertThatWeBuildAcontentViewWith($shared_fields_criteria, $semantic_criteria, $expectedCriteria);
     }
 
-
     private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, Tracker_CrossSearch_Query $expected_criteria) {
         $project_id                = 1111;
         $id                        = 987;
@@ -228,7 +223,7 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
         $already_linked_items      = array();
         $view_builder              = $this->GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $a_list_of_draggable_items);
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
-        $milestone                 = $this->GivenNoMilestone($project);
+        $milestone                 = new Planning_NoMilestone($project, $this->planning);
 
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array($project));
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
