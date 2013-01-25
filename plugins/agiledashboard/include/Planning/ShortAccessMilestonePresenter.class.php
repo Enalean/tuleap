@@ -60,6 +60,22 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
         return $this->additional_panes;
     }
 
+    public function getContent() {
+        $pane = null;
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_INDEX_PAGE,
+            array(
+                'milestone'   => $this->milestone,
+                'user'        => $this->user,
+                'pane'        => &$pane,
+            )
+        );
+        if ($pane) {
+            return $pane->getMinimalContent();
+        }
+        return '';
+    }
+
     public function getBacklogTrackerId() {
         return $this->milestone->getTrackerId();
     }

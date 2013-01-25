@@ -33,6 +33,8 @@ define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
  */
 define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE', 'agiledashboard_event_additional_panes_on_milestone');
 
+define('AGILEDASHBOARD_EVENT_INDEX_PAGE', 'agiledashboard_event_index_page');
+
 /**
  * Modify the redirect parameters when attempt to display a planning without specific Milestone selected
  *

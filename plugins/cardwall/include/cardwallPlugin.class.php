@@ -58,8 +58,8 @@ class cardwallPlugin extends Plugin {
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+                $this->addHook(AGILEDASHBOARD_EVENT_INDEX_PAGE);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
-                $this->addHook('agiledashboard_event_route');
             }
         }
         return parent::getHooksAndCallbacks();
@@ -224,16 +224,28 @@ class cardwallPlugin extends Plugin {
             $pane_info = new Cardwall_PaneInfo($this->getThemePath());
             if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
                 $pane_info->setActive(true);
-                $config = $this->getConfigFactory()->getOnTopConfig($tracker);
-                $params['active_pane'] = new Cardwall_Pane(
-                    $params['milestone'],
-                    $this->getPluginInfo()->getPropVal('display_qr_code'),
-                    $config,
-                    $params['user']
-                );
+                $params['active_pane'] = $this->getCardwallPane($params['milestone'], $params['user']);
             }
             $params['panes'][] = $pane_info;
         }
+    }
+
+    public function agiledashboard_event_index_page($params) {
+        $params['pane'] = $this->getCardwallPane($params['milestone'], $params['user']);
+    }
+
+    protected function getCardwallPane(Planning_Milestone $milestone, User $user) {
+        $tracker = $milestone->getArtifact()->getTracker();
+        if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
+            $config = $this->getConfigFactory()->getOnTopConfig($tracker);
+            return new Cardwall_Pane(
+                $milestone,
+                $this->getPluginInfo()->getPropVal('display_qr_code'),
+                $config,
+                $user
+            );
+        }
+        return null;
     }
 
     public function agiledashboard_event_milestone_selector_redirect($params) {
