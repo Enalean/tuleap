@@ -1443,3 +1443,5 @@ project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' n'est pas un ugrou
 project_admin_utils	tracker_date_reminder_empty_ugroup_param	Vous devez sélectionner au moins un ugroup valide
 project_admin_utils	tracker_date_reminder_before_submittedOn	Impossible d'ajouter un rappel sur date de tracker avant le champ 'SubmittedOn'
 project_admin_utils	tracker_date_reminder_duplicated	Impossible de dupliquer un rappel sur date de tracker
+
+plugin_tracker	access_burndown	Accéder au burndown
