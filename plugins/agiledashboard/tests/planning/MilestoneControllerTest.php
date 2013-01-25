@@ -61,12 +61,11 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
         parent::tearDown();
     }
 
-    protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array $projects) {
-        $project_manager = $this->GivenAProjectManagerThatReturns($projects);
-
+    protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, $project=null) {
+        $project_manager = stub('ProjectManager')->getProject()->returns($project);
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones($request->getCurrentUser(),
-                                                                                         $project_manager->getProject($request->get('group_id')),
+                                                                                         $project,
                                                                                          $request->get('planning_id'),
                                                                                          $request->get('aid'))
                                       ->returns($milestone);
@@ -80,14 +79,6 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
         $controller->show();
         $content = ob_get_clean();
         return $content;
-    }
-
-    private function GivenAProjectManagerThatReturns(array $projects) {
-        $project_manager = mock('ProjectManager');
-        foreach ($projects as $project) {
-            stub($project_manager)->getProject($project->getId())->returns($project);
-        }
-        return $project_manager;
     }
 }
 
@@ -179,7 +170,7 @@ class Planning_MilestoneController_EmptyBacklogTest extends Planning_MilestoneCo
     private function WhenICaptureTheOutputOfShowAction($request, $milestone) {
         $content_view = mock('Tracker_CrossSearch_SearchContentView');
         $view_builder = stub('Planning_ViewBuilder')->build()->returns($content_view);
-        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array());
+        return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder);
     }
 }
 
@@ -225,7 +216,7 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
         $milestone                 = new Planning_NoMilestone($project, $this->planning);
 
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array($project));
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, $project);
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
 
