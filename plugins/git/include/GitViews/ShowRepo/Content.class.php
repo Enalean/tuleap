@@ -164,26 +164,13 @@ class GitViews_ShowRepo_Content {
         }
 
         $html .= '<div>';
-        $html .= '<div id="plugin_git_example" style="display:none">
-        <link rel="stylesheet" href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css">
-        <script src="//cdnjs.cloudflare.com/ajax/libs/prettify/r224/prettify.js"></script>
-    <h3>How to use a Git repository:</h3>
-    <ul>
-        <li>Clone the repository in order to get your working copy:
-            <pre style="">
-    git clone <span class="plugin_git_example_url">'. $first_url .'</span> '. $this->repository->getName() .'
-    cd '. $this->repository->getName() .'
-            </pre>
-        </li>
-        <li>Or just add this repository as a remote to an existing local repository:
-            <pre class="">
-    git remote add '. $this->repository->getName() .' <span class="plugin_git_example_url">'. $first_url .'</span>
-    git fetch '. $this->repository->getName() .'
-    git checkout -b my-local-tracking-branch '. $this->repository->getName() .'/master_or_other_branch
-            </pre>
-        </li>
-    </ul>
-</div>';
+        $html .= '<div id="plugin_git_example" style="display:none">';
+        ob_start();
+        $url  = $first_url;
+        $name = $this->repository->getName();
+        include($GLOBALS['Language']->getContent('git_url_example', null, 'git', '.php'));
+        $html .= ob_get_clean();
+        $html .= '</div>';
         $html .= '</div>';
         $html .= '</div>';
         return $html;
