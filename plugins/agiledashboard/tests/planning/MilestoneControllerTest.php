@@ -61,20 +61,22 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
         parent::tearDown();
     }
 
-    protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, $project=null) {
-        $project_manager = stub('ProjectManager')->getProject()->returns($project);
-
-        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones($request->getCurrentUser(),
-                                                                                         $project,
-                                                                                         $request->get('planning_id'),
-                                                                                         $request->get('aid'))
+    protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder) {
+        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()
                                       ->returns($milestone);
 
         $hierarchy_factory = mock('Tracker_HierarchyFactory');
         stub($hierarchy_factory)->getHierarchy()->returns(new Tracker_Hierarchy());
 
         ob_start();
-        $controller = new Planning_MilestoneController($request, $this->milestone_factory, $project_manager, $view_builder, $hierarchy_factory, '');
+        $controller = new Planning_MilestoneController(
+            $request,
+            $this->milestone_factory,
+            mock('ProjectManager'),
+            $view_builder,
+            $hierarchy_factory,
+            ''
+        );
 
         $controller->show();
         $content = ob_get_clean();
@@ -216,7 +218,7 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
         $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
         $milestone                 = new Planning_NoMilestone($project, $this->planning);
 
-        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, $project);
+        $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder);
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
     }
 
