@@ -18,11 +18,9 @@ document.observe('dom:loaded', function () {
     $$('.plugin_git_transport').each(function (radio) {
        radio.observe('click', function (event) {
            var url = radio.readAttribute('data-url');
+           var transport = event.target.innerHTML;
            $('plugin_git_clone_field').value = url;
            $$('.plugin_git_example_url').invoke('update', url);
-       });
-       radio.observe('click', function (event){
-           var transport = event.target.innerHTML;
            displayReadOnly(transport);
        });
     });

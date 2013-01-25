@@ -159,10 +159,6 @@ td.plugin_git_first_col {
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-#plugin_git_clone_url {
-    padding-top: 1em;
-}
-
 #plugin_git_example,
 #plugin_git_example:target {
     display: inline-block;
@@ -336,9 +332,15 @@ input::-moz-focus-inner {
   -moz-border-radius: 0;
   border-radius: 0;
 }
+.input-prepend .gitclone_urls_protocols > .btn:last-child:first-child {
+    -webkit-border-radius: 4px 0 0 4px;
+    -moz-border-radius: 4px 0 0 4px;
+    border-radius: 4px 0 0 4px;
+}
+
 .gerrit_url.alert.alert-info {
     display: inline-block;
-    margin-bottom: 0em;
+    margin-bottom: 1em;
 }
 .gerrit_url.alert.alert-info a {
     font-weight: bold;
