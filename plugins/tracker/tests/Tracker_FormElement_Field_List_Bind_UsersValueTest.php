@@ -67,6 +67,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends Tulea
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue(12, 'neo', 'Thomas A. Anderson (neo)');
         $json = $value->fetchJSON();
         $this->assertEqual($json, array(
+            'id'       => '12',
             'value'    => 'b12',
             'caption'  => 'Thomas A. Anderson (neo)',
             'username' => 'neo',
