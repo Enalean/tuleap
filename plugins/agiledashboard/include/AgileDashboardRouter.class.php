@@ -19,8 +19,6 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
-require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
-require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 
 /**
  * Routes HTTP (and maybe SOAP ?) requests to the appropriate controllers
