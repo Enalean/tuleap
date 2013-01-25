@@ -48,6 +48,14 @@ abstract class AgileDashboard_PaneInfo {
         return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
     }
 
+    public function getIconTemplateParametersForMilestone(Planning_Milestone $milestone) {
+        return array(
+            'uri'   => $this->getUriForMilestone($milestone),
+            'title' => $this->getIconTitle(),
+            'icon'  => $this->getIcon(),
+        );
+    }
+
     /**
      * @return string eg: 'cardwall'
      */

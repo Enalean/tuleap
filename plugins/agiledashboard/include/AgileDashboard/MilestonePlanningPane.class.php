@@ -20,7 +20,16 @@
 
 class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
     const IDENTIFIER = 'planner';
-    
+
+    /**
+     * @var string
+     */
+    private $theme_path;
+
+    public function __construct($theme_path) {
+        $this->theme_path = $theme_path;
+    }
+
     /**
      * @return string eg: 'cardwall'
      */
@@ -39,14 +48,14 @@ class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
      * @see string eg: '/themes/common/images/ic/duck.png'
      */
     public function getIcon() {
-        throw new RuntimeException('I should be implemented');
+        return $this->theme_path.'/images/sticky-notes-stack.png';
     }
 
     /**
      * @return string eg: 'Access to cardwall'
      */
     public function getIconTitle() {
-        throw new RuntimeException('I should be implemented');
+        return $GLOBALS['Language']->getText('plugin_agiledashboard', 'access_to_planning');
     }
 }
 
