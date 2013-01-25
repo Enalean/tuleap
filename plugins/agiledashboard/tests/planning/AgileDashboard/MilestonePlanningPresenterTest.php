@@ -21,18 +21,6 @@
 require_once dirname(__FILE__).'/../../common.php';
 
 abstract class AgileDashboard_MilestonePlanningPresenter_Common extends TuleapTestCase {
-    private $request_uri;
-
-    public function setUp() {
-        parent::setUp();
-        $this->request_uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
-        $_SERVER['REQUEST_URI'] = 'bla';
-    }
-
-    public function tearDown() {
-        $_SERVER['REQUEST_URI'] = $this->request_uri;
-        parent::tearDown();
-    }
 
     protected function getAnArtifact($artifact_id, $children = array(), $tracker = null) {
         if (!$tracker) {
