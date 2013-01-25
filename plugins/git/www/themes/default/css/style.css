@@ -353,3 +353,7 @@ input::-moz-focus-inner {
 .gerrit_url.alert.alert-info a {
     font-weight: bold;
 }
+#plugin_git_clone_url .add-on {
+    color: grey;
+    display: none;
+}

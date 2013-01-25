@@ -1,12 +1,27 @@
 document.observe('dom:loaded', function () {
     var fork_repositories_prefix = $('fork_repositories_prefix');
 
+    // About the read-only add-on
+    (function ($) {
+        displayReadOnly = function (transport) {
+            read_only = $('#plugin_git_clone_url .add-on');
+            if ($('.gerrit_url').length > 0 && transport !== "gerrit") {
+                read_only.css('display', 'inline-block');
+            } else {
+                read_only.css('display', 'none');
+            }
+        }
+    })(jQuery);
     // Update clone url field value according to selected protocol
     $$('.plugin_git_transport').each(function (radio) {
        radio.observe('click', function (event) {
            $('plugin_git_clone_field').value = event.target.value;
            $$('.plugin_git_example_url').invoke('update', event.target.value);
-       })
+       });
+       radio.observe('click', function (event){
+           var transport = event.target.innerText;
+           displayReadOnly(transport);
+       });
     });
 
     if (fork_repositories_prefix) {
