@@ -156,7 +156,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                                 if ($keyword) {
                                     $keyword = $da->quoteSmart('%'. $keyword .'%');
                                 }
-                                $sql[] = "(SELECT DISTINCT user.user_id, user.user_name, ". $uh->getDisplayNameSQLQuery() ."
+                                $sql[] = "(SELECT DISTINCT user.user_id, ". $uh->getDisplayNameSQLQuery() .", user.user_name
                                           FROM tracker_artifact AS a
                                                INNER JOIN user
                                                ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker->id )
