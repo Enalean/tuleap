@@ -57,22 +57,16 @@ class AgileDashboardRouter {
      */
     private $hierarchy_factory;
 
-    /**
-     * @var EventManager
-     */
-    private $event_manager;
-
     public function __construct(
             Plugin $plugin,
             Planning_MilestoneFactory $milestone_factory,
             PlanningFactory $planning_factory,
-            Tracker_HierarchyFactory $hierarchy_factory,
-            EventManager $event_manager) {
+            Tracker_HierarchyFactory $hierarchy_factory
+            ) {
         $this->plugin            = $plugin;
         $this->milestone_factory = $milestone_factory;
         $this->planning_factory  = $planning_factory;
         $this->hierarchy_factory = $hierarchy_factory;
-        $this->event_manager     = $event_manager;
     }
     
     /**
@@ -301,13 +295,6 @@ class AgileDashboardRouter {
                 $this->executeAction($controller, 'show');
                 /* no break */
             default:
-                $this->event_manager->processEvent(
-                    'agiledashboard_event_route',
-                     array(
-                         'request'           => $request,
-                         'milestone_factory' => $this->milestone_factory
-                     )
-                );
                 $controller = $this->buildMilestoneController($request);
                 $action_arguments = array();
                 $this->renderAction($controller, 'show', $request, $action_arguments);

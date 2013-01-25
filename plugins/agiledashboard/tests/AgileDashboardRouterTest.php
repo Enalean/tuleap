@@ -30,7 +30,6 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         Config::store();
         Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
 
-        $this->event_manager = mock('EventManager');
         $this->planning_controller = mock('Planning_Controller');
         $this->router = TestHelper::getPartialMock('AgileDashboardRouter',
                                              array('getViewBuilder',
@@ -40,7 +39,7 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
                                                    'getProjectManager',
                                                    'getArtifactFactory',
                                                    'buildMilestoneController'));
-        $this->router->__construct(mock('Plugin'), mock('Planning_MilestoneFactory'), mock('PlanningFactory'), mock('Tracker_HierarchyFactory'), $this->event_manager);
+        $this->router->__construct(mock('Plugin'), mock('Planning_MilestoneFactory'), mock('PlanningFactory'), mock('Tracker_HierarchyFactory'));
         
         stub($this->router)->buildController()->returns($this->planning_controller);
         stub($this->router)->getViewBuilder()->returns(mock('Planning_ViewBuilder'));
@@ -83,12 +82,6 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
     public function itRoutesToArtifactCreationWhenAidIsSetToMinusOne() {
         $request = new Codendi_Request(array('aid' => '-1'));
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
-        $this->router->routeShowPlanning($request);
-    }
-
-    public function itRoutesAccordingToAnotherPluginAnswer() {
-        $request = new Codendi_Request(array('aid' => '5771'));
-        expect($this->event_manager)->processEvent('agiledashboard_event_route', '*')->once();
         $this->router->routeShowPlanning($request);
     }
 }
