@@ -3947,7 +3947,7 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     /*margin: 10px 0;*/
     text-rendering: optimizelegibility;
 }
-.container.one_step_project .label {
+.label {
     padding: 1px 4px 2px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -3961,12 +3961,56 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     vertical-align: baseline;
     background-color: #999;
 }
-.container.one_step_project .label-warning {
-    background-color: #F89406;
+.label-important,
+.badge-important {
+  background-color: #b94a48;
 }
-.container.one_step_project .label-info {
-    background-color: #3A87AD;
+
+.label-important[href],
+.badge-important[href] {
+  background-color: #953b39;
 }
+
+.label-warning,
+.badge-warning {
+  background-color: #f89406;
+}
+
+.label-warning[href],
+.badge-warning[href] {
+  background-color: #c67605;
+}
+
+.label-success,
+.badge-success {
+  background-color: #468847;
+}
+
+.label-success[href],
+.badge-success[href] {
+  background-color: #356635;
+}
+
+.label-info,
+.badge-info {
+  background-color: #3a87ad;
+}
+
+.label-info[href],
+.badge-info[href] {
+  background-color: #2d6987;
+}
+
+.label-inverse,
+.badge-inverse {
+  background-color: #333333;
+}
+
+.label-inverse[href],
+.badge-inverse[href] {
+  background-color: #1a1a1a;
+}
+
 .container.one_step_project h2 {
     font-weight: 600;
     -webkit-padding-start: 2px;

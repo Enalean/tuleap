@@ -354,6 +354,8 @@ input::-moz-focus-inner {
     font-weight: bold;
 }
 #plugin_git_clone_url .add-on {
-    color: grey;
     display: none;
+}
+#plugin_git_clone_url .add-on > .label {
+    line-height: inherit;
 }
