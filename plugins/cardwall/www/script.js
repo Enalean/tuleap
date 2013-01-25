@@ -4,58 +4,46 @@ Ajax.InPlaceCollectionEditorMulti = Class.create(Ajax.InPlaceCollectionEditor, {
         list.name = this.options.paramName;
         list.size = 1;
         if (this.options.multiple) {
-            list.writeAttribute
-            ('multiple');
-            list.size =
-            2;
+            list.writeAttribute('multiple');
+            list.size = 2;
         }
         this._controls.editor = list;
-        this._collection = this.options.collection ||
-        [];
-        if
-        (this.options.loadCollectionURL)
-            this.loadCollection
-            ();
-        else
+        this._collection = this.options.collection || [];
+        if(this.options.loadCollectionURL) {
+            this.loadCollection()
+        }
+        else{
             this.checkForExternalText();
-        this._form.appendChild
-        (this._controls.editor);
+        }
+        this._form.appendChild(this._controls.editor);
+
+        jQuery( list ).select2();
     },
 
     buildOptionList: function() {
-        this._form.removeClassName
-        (this.options.loadingClassName);
+        this._form.removeClassName(this.options.loadingClassName);
         this._collection = this._collection.map(function(entry) {
-            return 2 === entry.length ? entry : [entry, entry].flatten
-            ();
+            return 2 === entry.length ? entry : [entry, entry].flatten();
         });
-        var marker = ('value' in this.options) ? this.options.value :
-        this._text;
-        var textFound = this._collection.any(function(entry)
-        {
-            return entry[0] ==
-            marker;
+        var marker = ('value' in this.options) ? this.options.value : this._text;
+        var textFound = this._collection.any(function(entry) {
+            return entry[0] == marker;
         }.bind(this));
-        this._controls.editor.update
-        ('');
+        this._controls.editor.update('');
         var option;
-        this._collection.each(function(entry, index)
-        {
-            option = document.createElement
-            ('option');
+        this._collection.each(function(entry, index) {
+            option = document.createElement('option');
             option.value = entry[0];
-            if (this.options.selected)
-            {
-                option.selected =
-                (entry[0] in this.options.selected) ? 1 :
+            if (this.options.selected) {
+                option.selected = (entry[0] in this.options.selected) ? 1 :
                 0;
-            }
-            else {
+            } else {
                 option.selected = textFound ? entry[0] == marker : 0 == index;
             }
             option.appendChild(document.createTextNode(entry[1]));
             this._controls.editor.appendChild(option);
         }.bind(this));
+        
         this._controls.editor.disabled = false;
         Field.scrollFreeActivate(this._controls.editor);
     }
@@ -351,17 +339,17 @@ document.observe('dom:loaded', function () {
         this.init();
     }
 
-    (function enableRemainingEffortEditing() {
-        $$( '.valueOf_remaining_effort' ).each(function (remaining_effort_container) {
-            new cardTextElementEditor(remaining_effort_container);
+    (function enableRemainingEffortInPlaceEditing() {
+        $$( '.valueOf_remaining_effort' ).each( function( remaining_effort_container ) {
+            new cardTextElementEditor( remaining_effort_container );
         })
     })();
 
-    (function enableAssignedToEditing() {
+    (function enableAssignedToInPlaceEditing() {
         var tracker_user_data = [];
-        $$( '.valueOf_assigned_to' ).each(function (assigned_to_container) {
+        $$( '.valueOf_assigned_to' ).each( function( assigned_to_container ) {
             var options = {};
-            new cardSelectElementEditor(assigned_to_container, options, tracker_user_data);
+            new cardSelectElementEditor( assigned_to_container, options, tracker_user_data );
         })
     })();
  
