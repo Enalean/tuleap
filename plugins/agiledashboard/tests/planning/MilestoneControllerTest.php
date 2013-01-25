@@ -33,6 +33,17 @@ Mock::generate('Tracker_CrossSearch_Search');
 Mock::generate('Tracker_CrossSearch_SearchContentView');
 Mock::generate('Planning_ViewBuilder');
 
+class Planning_MilestoneController4Tests extends Planning_MilestoneController {
+    public $output = null;
+
+    public function render($template_name, $presenter) {
+        $this->output = $this->renderer->renderToString($template_name, $presenter);
+    }
+
+    public function getAvailableMilestones() {
+        return parent::getAvailableMilestones();
+    }
+}
 
 abstract class Planning_MilestoneController_Common extends TuleapTestCase {
     protected $planning_tracker_id;
@@ -68,8 +79,7 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
         $hierarchy_factory = mock('Tracker_HierarchyFactory');
         stub($hierarchy_factory)->getHierarchy()->returns(new Tracker_Hierarchy());
 
-        ob_start();
-        $controller = new Planning_MilestoneController(
+        $controller = new Planning_MilestoneController4Tests(
             $request,
             $this->milestone_factory,
             mock('ProjectManager'),
@@ -77,10 +87,8 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
             $hierarchy_factory,
             ''
         );
-
         $controller->show();
-        $content = ob_get_clean();
-        return $content;
+        return $controller->output;
     }
 }
 
@@ -328,13 +336,6 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
     }
 }
 
-class Planning_MilestoneControllerTrapPresenter extends Planning_MilestoneController {
-
-    public function getAvailableMilestones() {
-        return parent::getAvailableMilestones();
-    }
-}
-
 class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
     private $sprint_planning;
@@ -382,7 +383,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint_1);
         stub($this->milestone_factory)->getAllMilestones()->returns(array());
         stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_1, $this->sprint_2));
-        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, '');
+        $this->controller = new Planning_MilestoneController4Tests($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, '');
 
         $selectable_artifacts = $this->controller->getAvailableMilestones();
         $this->assertCount($selectable_artifacts, 2);
@@ -399,7 +400,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($current_milstone);
         stub($this->milestone_factory)->getAllMilestones($this->current_user, $this->sprint_planning)->returns(array($milstone_1001, $milstone_1002));
-        $this->controller = new Planning_MilestoneControllerTrapPresenter($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, '');
+        $this->controller = new Planning_MilestoneController4Tests($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, '');
 
         $selectable_artifacts = $this->controller->getAvailableMilestones();
         $this->assertCount($selectable_artifacts, 2);
