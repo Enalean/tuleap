@@ -223,7 +223,6 @@ Add this repository as a remote to an existing local repository:
         $html  = '';
         $html .= '<div class="alert alert-info gerrit_url">';
         $html .= $GLOBALS['Language']->getText('plugin_git', 'delegated_to_gerrit');
-        $html .= '<br />';
         $html .= '<a href="'.$link.'">'.$gerrit_project.'</a>';
         $html .= '</div>';
         return $html;
