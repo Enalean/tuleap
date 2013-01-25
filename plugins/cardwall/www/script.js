@@ -159,13 +159,13 @@ document.observe('dom:loaded', function () {
         });
         // }}}
 
-        function card_text_element_editor ( element ) {
+        function cardTextElementEditor ( element ) {
             this.element        = element;
-            this.field_id       = element.readAttribute('data-field-id');
-            this.artifact_id    = element.up('.card').readAttribute('data-artifact-id');
+            this.field_id       = element.readAttribute( 'data-field-id' );
+            this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
             this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
-            this.div            = new Element('div');
-            this.artifact_type  = element.readAttribute('data-field-type');
+            this.div            = new Element( 'div' );
+            this.artifact_type  = element.readAttribute( 'data-field-type' );
 
             this.init = function() {
                 this.injectTemporaryContainer();
@@ -179,16 +179,16 @@ document.observe('dom:loaded', function () {
 
             this.injectTemporaryContainer = function () {
                 this.accountForEmptyValues();
-                this.div.update(this.element.innerHTML);
-                this.element.update(this.div);
+                this.div.update( this.element.innerHTML );
+                this.element.update( this.div );
             };
             
             this.accountForEmptyValues = function() {
-                if(this.element.innerHTML != '') {
+                if( this.element.innerHTML != '' ) {
                     return;
                 }
                 
-                switch(this.artifact_type) {
+                switch( this.artifact_type ) {
                     case 'float':
                         this.element.innerHTML = '0' ;
                         break;
@@ -200,7 +200,7 @@ document.observe('dom:loaded', function () {
             this.ajaxCallback = function() {
                 var field_id = this.field_id;
 
-                return function (form, value) {
+                return function setRequestData(form, value) {
                     var parameters = {},
                         linked_field = 'artifact[' + field_id +']';
 
@@ -213,9 +213,9 @@ document.observe('dom:loaded', function () {
                 var field_id    = this.field_id;
                 var div         = this.div;
 
-                return function(transport) {
-                    if(typeof transport != 'undefined') {
-                        div.update(transport.request.parameters['artifact[' + field_id + ']']);
+                return function updateCardInfo(transport) {
+                    if( typeof transport != 'undefined' ) {
+                        div.update(transport.request.parameters[ 'artifact[' + field_id + ']' ]);
                     } 
                 }
             };
@@ -226,53 +226,61 @@ document.observe('dom:loaded', function () {
             this.init();
         }
 
-        function card_select_element_editor ( element, select_options ) {
-            
+        /**
+         * @var element element DOM element
+         * @var object  options List of options to pass to InPlaceCollectionEditorMulti instance
+         */
+        function cardSelectElementEditor ( element, options ) {
             this.element        = element;
-            this.field_id       = element.readAttribute('data-field-id');
-            this.artifact_id    = element.up('.card').readAttribute('data-artifact-id');
+            this.options        = options;
+            this.field_id       = element.readAttribute( 'data-field-id' );
+            this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
             this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
-            this.div            = new Element('div');
-            this.artifact_type  = element.readAttribute('data-field-type');
-            this.select_options = select_options;
-
+            this.div            = new Element( 'div' );
+            this.artifact_type  = element.readAttribute( 'data-field-type' );
+            
             this.init = function() {
                 this.injectTemporaryContainer();
                 this.checkMultipleSelect();
-                new Ajax.InPlaceCollectionEditorMulti( this.div, this.url, this.select_options, {
-                    formClassName : 'card_element_edit_form',
-                    callback   : this.ajaxCallback(),
-                    onComplete : this.success(),
-                    onFailure  : this.fail
-                });
+
+                this.options[ 'formClassName' ] = 'card_element_edit_form';
+                this.options[ 'callback' ]      = this.ajaxCallback();
+                this.options[ 'onComplete' ]    = this.success();
+                this.options[ 'onFailure' ]     = this.fail;
+
+                new Ajax.InPlaceCollectionEditorMulti( this.div, this.url, this.options );
             };
 
             this.injectTemporaryContainer = function () {
                 this.accountForEmptyValues();
-                this.div.update(this.element.innerHTML);
-                this.element.update(this.div);
+                this.div.update( this.element.innerHTML );
+                this.element.update( this.div );
             };
 
             this.accountForEmptyValues = function() {
-                
-                if(this.element.innerHTML == '') {
+                if( this.element.innerHTML == '' ) {
                     this.element.innerHTML = '?' ;
                 }
             }
 
             this.checkMultipleSelect = function () {
-                if (this.artifact_type == 'multiselectbox') {
-                    this.select_options['multiple'] = true;
+                if ( this.artifact_type == 'multiselectbox' ) {
+                    this.options[ 'multiple' ] = true;
                 }
             };
             
             this.ajaxCallback = function() {
                 var field_id = this.field_id;
+                var artifact_type = this.artifact_type;
 
-                return function (form, value) {
-                    console.log(value);
-                    var parameters = {},
+                return function setRequestData(form, value) {
+                    var parameters = {};
+                    
+                    if ( artifact_type == 'multiselectbox' ) {
+                        linked_field = 'artifact[' + field_id +'][]';
+                    } else {
                         linked_field = 'artifact[' + field_id +']';
+                    }
 
                     parameters[linked_field] = value;
                     return parameters;
@@ -280,12 +288,12 @@ document.observe('dom:loaded', function () {
             };
   
             this.success = function() {
-                var field_id    = this.field_id;
-                var div         = this.div;
+                var field_id    = this.field_id,
+                    div         = this.div;
 
-                return function(transport) {
-                    if(typeof transport != 'undefined') {
-                        div.update(transport.request.parameters['artifact[' + field_id + ']']);
+                return function updateCardInfo(transport) {
+                    if( typeof transport != 'undefined' ) {
+                        div.update(transport.request.parameters[ 'artifact[' + field_id + ']' ]);
                     }
                 }
             };
@@ -296,18 +304,6 @@ document.observe('dom:loaded', function () {
             this.init();
         }
 
-
-//        new Ajax.InPlaceCollectionEditorMulti(
-//            element_id,
-//            submit_url,
-//            {collection:[[0, "zero"],[1,"one"],[2,"two"]],
-//                multiple:true,
-//                selected:[[0,''],[2,'']], // "zero" and "two" in the select list  will be selected.
-//                ajaxOptions:{asynchronous:true, evalScripts:true}
-//            }
-//        );
-
-
         function parseUserInfo( user_info ) {
             var user_collection = [];
 
@@ -317,18 +313,17 @@ document.observe('dom:loaded', function () {
             return user_collection;
         }
 
-        $$('.valueOf_remaining_effort').each(function (remaining_effort_container) {
-            new card_text_element_editor(remaining_effort_container);
+        $$( '.valueOf_remaining_effort' ).each(function (remaining_effort_container) {
+            new cardTextElementEditor(remaining_effort_container);
         })
 
-        var user_info = jQuery.parseJSON( jQuery("#card_assign_users").html() );
+        var user_info = jQuery.parseJSON( jQuery( "#card_assign_users" ).html() );
         
-        $$('.valueOf_assigned_to').each(function (assigned_to_container) {
-            new card_select_element_editor(assigned_to_container, {
+        $$( '.valueOf_assigned_to' ).each(function (assigned_to_container) {
+            new cardSelectElementEditor(assigned_to_container, {
                 collection : parseUserInfo(user_info)
             });
         })
-
 
     });
 
