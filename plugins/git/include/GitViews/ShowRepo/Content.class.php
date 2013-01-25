@@ -95,7 +95,6 @@ class GitViews_ShowRepo_Content {
         if ( !empty($creator) ) {
             $creatorName  = UserHelper::instance()->getLinkOnUserFromUserId($creator->getId());
         }
-        $creationDate = html_time_ago(strtotime($this->repository->getCreationDate()));
 
         // Access type
         $accessType = $this->getAccessType($access, $this->repository->getBackend() instanceof Git_Backend_Gitolite);
@@ -125,22 +124,19 @@ class GitViews_ShowRepo_Content {
      * @param $backend_type
      */
     private function getAccessType($access, $backendIsGitolite) {
-        $html = '<span class="plugin_git_repo_privacy" title=';
-
         if ($backendIsGitolite) {
-            $html .= '"custom">';
-            $html .= '<img src="'.$this->theme_path.'/images/perms.png" />';
-        } else {
-            switch ($access) {
-                case GitRepository::PRIVATE_ACCESS:
-                    $html .= '"'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_access_private').'">';
-                    $html .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
-                    break;
-                case GitRepository::PUBLIC_ACCESS:
-                    $html .= '"'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_access_public').'">';
-                    $html .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
-                    break;
-            }
+            return '';
+        }
+        $html = '<span class="plugin_git_repo_privacy" title=';
+        switch ($access) {
+            case GitRepository::PRIVATE_ACCESS:
+                $html .= '"'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_access_private').'">';
+                $html .= '<img src="'.util_get_image_theme('ic/lock.png').'" />';
+                break;
+            case GitRepository::PUBLIC_ACCESS:
+                $html .= '"'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_access_public').'">';
+                $html .= '<img src="'.util_get_image_theme('ic/lock-unlock.png').'" />';
+                break;
         }
         $html .= '</span>';
         return $html;
