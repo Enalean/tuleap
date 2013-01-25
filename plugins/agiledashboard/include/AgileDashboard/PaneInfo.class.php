@@ -25,6 +25,15 @@ abstract class AgileDashboard_PaneInfo {
     private $is_active;
 
     /**
+     * @var Planning_Milestone
+     */
+    private $milestone;
+
+    public function __construct(Planning_Milestone $milestone) {
+        $this->milestone = $milestone;
+    }
+
+    /**
      * @return bool
      */
     public function isActive() {
@@ -39,9 +48,7 @@ abstract class AgileDashboard_PaneInfo {
     }
 
     public function getUri() {
-        // TODO: this is uterly crap to remove
-        $current_uri = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
-        return $current_uri;
+        return $this->getUriForMilestone($this->milestone);
     }
 
     public function getUriForMilestone(Planning_Milestone $milestone) {

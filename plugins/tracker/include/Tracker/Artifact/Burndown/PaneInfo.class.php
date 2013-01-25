@@ -20,11 +20,7 @@
 
 class Tracker_Artifact_Burndown_PaneInfo extends AgileDashboard_PaneInfo {
     const IDENTIFIER = 'burndown';
-    const TITLE = 'Burndown';
-
-    public function getUri() {
-        return parent::getUri().'&pane='.self::IDENTIFIER;
-    }
+    const TITLE      = 'Burndown';
 
     public function getUriForMilestone(Planning_Milestone $milestone) {
         return parent::getUriForMilestone($milestone).'&pane='.self::IDENTIFIER;

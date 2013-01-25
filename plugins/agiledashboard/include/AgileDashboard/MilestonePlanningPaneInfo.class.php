@@ -26,7 +26,8 @@ class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
      */
     private $theme_path;
 
-    public function __construct($theme_path) {
+    public function __construct(Planning_Milestone $milestone, $theme_path) {
+        parent::__construct($milestone);
         $this->theme_path = $theme_path;
     }
 

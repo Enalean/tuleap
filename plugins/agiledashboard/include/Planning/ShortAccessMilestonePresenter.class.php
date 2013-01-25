@@ -62,7 +62,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
 
     public function quick_link_icon_list() {
         $pane_info_list = $this->getPaneInfoList();
-        $milestone_planning_pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->theme_path);
+        $milestone_planning_pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->milestone, $this->theme_path);
         $panes = array(
             $milestone_planning_pane_info->getIconTemplateParametersForMilestone($this->milestone)
         );

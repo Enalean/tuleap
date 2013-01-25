@@ -26,12 +26,9 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
      */
     private $plugin_theme_path;
 
-    public function __construct($plugin_theme_path) {
+    public function __construct(Planning_Milestone $milestone, $plugin_theme_path) {
+        parent::__construct($milestone);
         $this->plugin_theme_path = $plugin_theme_path;
-    }
-
-    public function getUri() {
-        return parent::getUri().'&pane='.$this->getIdentifier();
     }
 
     public function getUriForMilestone(Planning_Milestone $milestone) {

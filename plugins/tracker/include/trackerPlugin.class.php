@@ -150,7 +150,7 @@ class trackerPlugin extends Plugin {
         $user     = $params['user'];
         $burndown_field = $artifact->getABurndownField($user);
         if ($burndown_field) {
-            $pane_info = new Tracker_Artifact_Burndown_PaneInfo();
+            $pane_info = new Tracker_Artifact_Burndown_PaneInfo($params['milestone']);
             if ($params['request']->get('pane') == Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER) {
                 $pane_info->setActive(true);
                 $params['active_pane'] = new Tracker_Artifact_Burndown_Pane(

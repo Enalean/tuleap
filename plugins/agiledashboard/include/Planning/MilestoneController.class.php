@@ -124,7 +124,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
     }
 
     private function initAdditionalPanes() {
-        $pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->theme_path);
+        $pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->milestone, $this->theme_path);
         $this->available_panes_info = array($pane_info);
         $this->active_pane = null;
         if ($this->milestone->getArtifact()) {
