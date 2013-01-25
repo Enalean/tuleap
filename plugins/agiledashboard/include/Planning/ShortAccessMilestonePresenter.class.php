@@ -29,11 +29,11 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var Planning_ShortAccess */
     private $short_access;
 
-    /** @var array of AgileDashboard_Pane */
-    private $additional_panes;
-
     /** @var string */
     private $theme_path;
+
+    /** @var array of AgileDashboard_PaneInfo */
+    private $pane_info_list;
 
     public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, User $user, $theme_path) {
         parent::__construct($milestone);
@@ -42,26 +42,31 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
         $this->theme_path   = $theme_path;
     }
 
-    public function additionalPanes() {
-        if (!$this->additional_panes) {
-            $active_pane = null;
-            $this->additional_panes = array();
+    private function getPaneInfoList() {
+        if (!$this->pane_info_list) {
+            $active_pane          = null;
+            $this->pane_info_list = array();
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
                 array(
                     'milestone'   => $this->milestone,
                     'user'        => $this->user,
                     'request'     => HTTPRequest::instance(),
-                    'panes'       => &$this->additional_panes,
-                    'active_pane' => $active_pane,
+                    'panes'       => &$this->pane_info_list,
+                    'active_pane' => &$active_pane,
                 )
             );
         }
+        return $this->pane_info_list;
+    }
+
+    public function quick_link_icon_list() {
+        $pane_info_list = $this->getPaneInfoList();
         $milestone_planning_pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->theme_path);
         $panes = array(
             $milestone_planning_pane_info->getIconTemplateParametersForMilestone($this->milestone)
         );
-        foreach ($this->additional_panes as $pane_info) {
+        foreach ($pane_info_list as $pane_info) {
             /* @var $pane_info AgileDashboard_PaneInfo */
             $panes[] = $pane_info->getIconTemplateParametersForMilestone($this->milestone);
         }
@@ -97,7 +102,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     }
 
     public function is_active() {
-        return $this->isLatest() && $this->short_access->isLatest() && count($this->additionalPanes());
+        return $this->isLatest() && $this->short_access->isLatest() && count($this->getPaneInfoList());
     }
 }
 ?>
