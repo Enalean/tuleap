@@ -333,6 +333,12 @@ button {
   width: 46px;
 }
 
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
 .input-prepend .gitclone_urls_protocols > .btn:last-child {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
