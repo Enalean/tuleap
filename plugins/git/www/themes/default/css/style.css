@@ -344,4 +344,12 @@ input::-moz-focus-inner {
   -moz-border-radius: 0;
   border-radius: 0;
 }
-
+.gerrit_url.alert.alert-info {
+    display: inline-block;
+    margin-top: 1em;
+    margin-bottom: 0em;
+    text-align: center;
+}
+.gerrit_url.alert.alert-info a {
+    font-weight: bold;
+}

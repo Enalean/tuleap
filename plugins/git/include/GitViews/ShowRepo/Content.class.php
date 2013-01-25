@@ -76,10 +76,10 @@ class GitViews_ShowRepo_Content {
         $html  = '';
         $html .= '<div id="plugin_git_reference">';
         $html .= $this->getHeader();
-        $html .= $this->getCloneUrl();
         if ($this->repository->getRemoteServerId()) {
             $html .= $this->getRemoteRepositoryInfo();
         }
+        $html .= $this->getCloneUrl();
         $html .= '</div>';
         $html .= $this->gitphp_viewer->getContent();
         echo $html;
@@ -221,8 +221,11 @@ Add this repository as a remote to an existing local repository:
         $link = $gerrit_server->getProjectUrl($gerrit_project);
 
         $html  = '';
-        $html .= '<p>Gerrit: <a href="'.$link.'">'.$gerrit_project.'</a>';
-        $html .= '</p>';
+        $html .= '<div class="alert alert-info gerrit_url">';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'delegated_to_gerrit');
+        $html .= '<br />';
+        $html .= '<a href="'.$link.'">'.$gerrit_project.'</a>';
+        $html .= '</div>';
         return $html;
     }
 
