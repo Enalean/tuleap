@@ -134,7 +134,8 @@ class GitViews_ShowRepo_Content {
     }
 
     private function getCloneUrl() {
-        $html = '<div id="plugin_git_clone_url">';
+        $html  = '';
+        $html .= '<div id="plugin_git_clone_url">';
         $html .= '<span id="plugin_git_clone_url_group" class="input-prepend input-append">';
         $html .= '<span class="gitclone_urls_protocols" data-toggle="buttons-radio">';
         $hp = Codendi_HTMLPurifier::instance();
@@ -163,7 +164,7 @@ class GitViews_ShowRepo_Content {
         }
 
         $html .= '<div>';
-        $html .= '<div id="plugin_git_example">
+        $html .= '<div id="plugin_git_example" style="display:none">
 Cloning this repository:
 
 <pre>
