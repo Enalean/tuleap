@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,9 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/constants.php';
-require_once AGILEDASHBOARD_BASE_DIR.'/autoload.php';
-require_once dirname(__FILE__).'/../../tracker/tests/bootstrap.php';
-require_once 'builders/all.php';
+// Load all builders
 
+// first load tracker to set all includes
+
+foreach (glob(dirname(__FILE__).'/*.php') as $file) {
+    require_once $file;
+}
 ?>

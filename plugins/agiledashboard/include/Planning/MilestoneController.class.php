@@ -56,6 +56,12 @@ class Planning_MilestoneController extends MVC2_PluginController {
      */
     private $theme_path;
 
+    /** @var array of AgileDashboard_PaneInfo */
+    private $available_panes_info;
+
+    /** @var AgileDashboard_Pane */
+    private $active_pane;
+
     /**
      * Instanciates a new controller.
      * 
@@ -92,36 +98,33 @@ class Planning_MilestoneController extends MVC2_PluginController {
     }
 
     public function show() {
-        if ($this->milestone->hasAncestors()) {
-            $available_milestones = $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
-        } else {
-            $available_milestones = $this->getAllMilestonesOfCurrentPlanning();
-        }
-        $presenter = $this->getMilestonePresenter($available_milestones);
-        
+        $presenter = $this->getMilestonePresenter();
         $this->render('show', $presenter);
     }
 
-    private function getMilestonePresenter(array $available_milestones) {
-        
-        $planning_redirect_to_new    = $this->getPlanningRedirectToNew();
-
+    private function getMilestonePresenter() {
         $this->initAdditionalPanes();
-
         return new AgileDashboard_MilestonePresenter(
             $this->milestone,
             $this->getCurrentUser(),
             $this->request,
             $this->active_pane,
-            $this->additional_panes,
-            $available_milestones,
-            $planning_redirect_to_new);
+            $this->available_panes_info,
+            $this->getAvailableMilestones(),
+            $this->getPlanningRedirectToNew());
     }
 
+    protected function getAvailableMilestones() {
+        if ($this->milestone->hasAncestors()) {
+            return $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
+        } else {
+            return $this->getAllMilestonesOfCurrentPlanning();
+        }
+    }
 
     private function initAdditionalPanes() {
         $pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->theme_path);
-        $this->additional_panes = array($pane_info);
+        $this->available_panes_info = array($pane_info);
         $this->active_pane = null;
         if ($this->milestone->getArtifact()) {
             EventManager::instance()->processEvent(
@@ -130,16 +133,16 @@ class Planning_MilestoneController extends MVC2_PluginController {
                     'milestone'   => $this->milestone,
                     'request'     => $this->request,
                     'user'        => $this->getCurrentUser(),
-                    'panes'       => &$this->additional_panes,
+                    'panes'       => &$this->available_panes_info,
                     'active_pane' => &$this->active_pane,
                 )
             );
             if (!$this->active_pane) {
-                $this->additional_panes[0]->setActive(true);
+                $this->available_panes_info[0]->setActive(true);
                 $this->active_pane = $this->getMilestonePlanningPane($pane_info);
             }
         }
-        return $this->additional_panes;
+        return $this->available_panes_info;
     }
 
     private function getMilestonePlanningPane(AgileDashboard_MilestonePlanningPaneInfo $info) {
