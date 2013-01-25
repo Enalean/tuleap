@@ -62,10 +62,8 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
     }
 
     protected function WhenICaptureTheOutputOfShowAction($request, $milestone) {
-        $content_view = new MockTracker_CrossSearch_SearchContentView();
-        $content_view->setReturnValue('fetch', 'stuff');
-        $view_builder = new MockPlanning_ViewBuilder();
-        $view_builder->setReturnValue('build', $content_view);
+        $content_view = mock('Tracker_CrossSearch_SearchContentView');
+        $view_builder = stub('Planning_ViewBuilder')->build()->returns($content_view);
         return $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder, array());
     }
 
@@ -74,9 +72,9 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
 
 
         stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones($request->getCurrentUser(),
-                                                                                        $project_manager->getProject($request->get('group_id')),
-                                                                                        $request->get('planning_id'),
-                                                                                        $request->get('aid'))
+                                                                                         $project_manager->getProject($request->get('group_id')),
+                                                                                         $request->get('planning_id'),
+                                                                                         $request->get('aid'))
                                       ->returns($milestone);
 
         $hierarchy_factory = mock('Tracker_HierarchyFactory');
@@ -103,11 +101,10 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
     }
 }
 
-class Planning_MilestoneControllerTest extends Planning_MilestoneController_Common {
+class Planning_MilestoneController_EmptyBacklogTest extends Planning_MilestoneController_Common {
 
     public function setUp() {
         parent::setUp();
-        $this->setText('-- Please choose', array('global', 'please_choose_dashed'));
         $this->setText('The artifact doesn\'t have an artifact link field, please reconfigure your tracker', array('plugin_tracker', 'must_have_artifact_link_field'));
     }
 
@@ -133,7 +130,6 @@ class Planning_MilestoneControllerTest extends Planning_MilestoneController_Comm
                               ->with('planning_id', $this->planning->getId())
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
-        $user = aUser()->build();
 
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
@@ -148,37 +144,29 @@ class Planning_MilestoneControllerTest extends Planning_MilestoneController_Comm
                               ->with('planning_id', $this->planning->getId())
                               ->build();
         $milestone = $this->GivenAMilestone($artifact);
-        $user = aUser()->build();
 
         return $this->WhenICaptureTheOutputOfShowAction($request, $milestone);
     }
 
 
     private function GivenAnArtifactWithNoLinkedItem($id, $title) {
-        return $this->GivenAnArtifactWithArtifactLinkField($id, $title, array());
-    }
-
-    private function GivenAnArtifactWithArtifactLinkField($id, $title, $already_linked_items) {
-        $field = mock('Tracker_FormElement_Field_ArtifactLink');
-        stub($field)->userCanUpdate()->returns(true);
-        $artifact = $this->GivenAnArtifact($id, $title, $already_linked_items);
+        $field    = stub('Tracker_FormElement_Field_ArtifactLink')->userCanUpdate()->returns(true);
+        $artifact = $this->GivenAnArtifact($id, $title, array());
         stub($artifact)->getAnArtifactLinkField()->returns($field);
-        $tracker = stub('Tracker')->userCanView()->returns(true);
-        stub($artifact)->getTracker()->returns($tracker);
         return $artifact;
     }
 
      private function GivenAnArtifact($id, $title, $already_linked_items) {
-        $artifact = new MockTracker_Artifact();
-        $artifact->setReturnValue('getTitle', $title);
-        $artifact->setReturnValue('fetchTitle', "#$id $title");
-        $artifact->setReturnValue('getId', $id);
-        $artifact->setReturnValue('fetchDirectLinkToArtifact', $id);
-        $artifact->setReturnValue('getUniqueLinkedArtifacts', $already_linked_items);
-        $artifact->setReturnValue('userCanView', true);
-        $artifact->setReturnValue('getAllowedChildrenTypes', array());
-
-        $tracker = stub('Tracker')->userCanView()->returns(true);
+        $tracker  = stub('Tracker')->userCanView()->returns(true);
+        
+        $artifact = mock('Tracker_Artifact');
+        stub($artifact)->getTitle()->returns($title);
+        stub($artifact)->fetchTitle()->returns("#$id $title");
+        stub($artifact)->getId()->returns($id);
+        stub($artifact)->fetchDirectLinkToArtifact()->returns($id);
+        stub($artifact)->getUniqueLinkedArtifacts()->returns($already_linked_items);
+        stub($artifact)->userCanView()->returns(true);
+        stub($artifact)->getAllowedChildrenTypes()->returns(array());
         stub($artifact)->getTracker()->returns($tracker);
 
         return $artifact;
@@ -197,8 +185,6 @@ class Planning_MilestoneControllerTest extends Planning_MilestoneController_Comm
 
         return $milestone;
     }
-
-
 }
 
 
@@ -260,7 +246,7 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
             $backlog_tracker_ids,
             $this->planning,
             '*',
-            '*' // TODO an assert on planning_redirect_param
+            '*'
         );
         $view_builder->expectOnce('build', $expected_arguments);
         $view_builder->setReturnValue('build', $content_view);
