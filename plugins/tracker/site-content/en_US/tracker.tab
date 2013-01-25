@@ -1446,3 +1446,5 @@ project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid Ugr
 project_admin_utils	tracker_date_reminder_empty_ugroup_param	You should select at least one valid ugroup
 project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date Reminder before 'SubmittedOn' Field
 project_admin_utils	tracker_date_reminder_duplicated	Cannot duplicate Date Reminder
+
+plugin_tracker	access_burndown	Access to burndown
