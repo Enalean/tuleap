@@ -103,21 +103,13 @@ class GitViews_ShowRepo_Content {
         // Actions
         $admin_link = '';
         if ($this->controller->isAPermittedAction('repo_management')) {
-            $admin_link .= ' - <a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$repoId.'" class="repo_admin">';
+            $admin_link .= '<a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$repoId.'" class="repo_admin">';
             $admin_link .= $GLOBALS['Language']->getText('plugin_git', 'admin_repo_management');
             $admin_link .= '</a>';
         }
 
         $html .= '<h1>'.$accessType.$this->repository->getFullName().'</h1>';
-        $html .= '<p id="plugin_git_reference_author">'.
-            $GLOBALS['Language']->getText('plugin_git', 'view_repo_creator')
-            .' '.
-            $creatorName
-            .' '.
-            $creationDate
-            .' '.
-            $admin_link
-            .'</p>';
+        $html .= '<p id="plugin_git_reference_author">'. $admin_link .'</p>';
         if ( !empty($parent) ) {
             $html .= '<p id="plugin_git_repo_parent">'.$GLOBALS['Language']->getText('plugin_git', 'view_repo_parent').':
                   <span>'.$this->_getRepositoryPageUrl( $parent->getId(), $parent->getName() ).'</span>
