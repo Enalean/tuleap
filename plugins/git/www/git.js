@@ -12,11 +12,13 @@ document.observe('dom:loaded', function () {
             }
         }
     })(jQuery);
+
     // Update clone url field value according to selected protocol
     $$('.plugin_git_transport').each(function (radio) {
        radio.observe('click', function (event) {
-           $('plugin_git_clone_field').value = event.target.value;
-           $$('.plugin_git_example_url').invoke('update', event.target.value);
+           var url = radio.readAttribute('data-url');
+           $('plugin_git_clone_field').value = url;
+           $$('.plugin_git_example_url').invoke('update', url);
        });
        radio.observe('click', function (event){
            var transport = event.target.innerHTML;

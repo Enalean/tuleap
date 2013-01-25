@@ -164,14 +164,13 @@ class GitViews_ShowRepo_Content {
         if (count($urls) > 1) {
             $selected = 'active';
             foreach ($urls as $transport => $url) {
-                $html .= '<button type="button" class="btn '.$selected.' plugin_git_transport" name="plugin_git_transport" value="'. $hp->purify($url) .'" >';
+                $html .= '<button type="button" class="btn '.$selected.' plugin_git_transport" name="plugin_git_transport" data-url="'. $hp->purify($url) .'" >';
                 $html .= $transport;
                 $html .= '</button>';
                 $selected = '';
             }
         }
         $html .= '</span>';
-
         $html .= '<span class="add-on">(read-only)</span>';
         $html .= '<input id="plugin_git_clone_field" type="text" value="'.$first_url.'" class="span6" />';
         $html .= '<button class="btn" type="button" id="plugin_git_example-handle" data-toggle="button">?</button>';
