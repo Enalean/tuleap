@@ -86,6 +86,14 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
     public function fetchFormattedForCSV() {
         return $this->getUsername();
     }
-    
+
+    /**
+      @see Tracker_FormElement_Field_List_Value::fetchJSON()
+     */
+    public function fetchJSON() {
+        $json = parent::fetchJSON();
+        $json['username'] = $this->getUsername();
+        return $json;
+    }
 }
 ?>
