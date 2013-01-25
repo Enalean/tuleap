@@ -21,56 +21,6 @@
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
-class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
-    const IDENTIFIER = 'cardwall';
-
-    /**
-     * @var string
-     */
-    private $plugin_theme_path;
-
-    public function __construct($plugin_theme_path) {
-        $this->plugin_theme_path = $plugin_theme_path;
-    }
-
-    public function getUri() {
-        return parent::getUri().'&pane='.$this->getIdentifier();
-    }
-
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return parent::getUriForMilestone($milestone).'&pane='.$this->getIdentifier();
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getIdentifier()
-     */
-    public function getIdentifier() {
-        return self::IDENTIFIER;
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getTitle()
-     */
-    public function getTitle() {
-        return 'Card Wall';
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getIcon()
-     */
-    public function getIcon() {
-        return $this->plugin_theme_path .'/images/ic/sticky-note-pin.png';
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getIconTitle()
-     */
-    public function getIconTitle() {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'access_cardwall');
-    }
-
-}
-
 /**
  * A pane to be displayed in AgileDashboard
  */

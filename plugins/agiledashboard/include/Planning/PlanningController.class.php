@@ -19,8 +19,6 @@
  */
  
 require_once 'common/mvc2/PluginController.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
 /**
  * Handles the HTTP actions related to a planning.

@@ -18,73 +18,20 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-abstract class AgileDashboard_PaneInfo {
-    /**
-     * @var bool
-     */
-    private $is_active;
-
-    /**
-     * @return bool
-     */
-    public function isActive() {
-        return $this->is_active;
-    }
-
-    /**
-     * @param bool $state
-     */
-    public function setActive($state) {
-        $this->is_active = (bool)$state;
-    }
-
-    public function getUri() {
-        // TODO: this is uterly crap to remove
-        $current_uri = preg_replace('/&pane=.*(?:&|$)/', '', $_SERVER['REQUEST_URI']);
-        return $current_uri;
-    }
-
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
-    }
-
-    public function getIconTemplateParametersForMilestone(Planning_Milestone $milestone) {
-        return array(
-            'uri'   => $this->getUriForMilestone($milestone),
-            'title' => $this->getIconTitle(),
-            'icon'  => $this->getIcon(),
-        );
-    }
-
-    /**
-     * @return string eg: 'cardwall'
-     */
-    public abstract function getIdentifier();
-
-    /**
-     * @return string eg: 'Card Wall'
-     */
-    public abstract function getTitle();
-    
-    /**
-     * @see string eg: '/themes/common/images/ic/duck.png'
-     */
-    public abstract function getIcon();
-
-    /**
-     * @return string eg: 'Access to cardwall'
-     */
-    public abstract function getIconTitle();
-}
-
 /**
  * Base interface to display a content pane in the agiledashboard next to a
  * milestone
  */
 abstract class AgileDashboard_Pane {
 
+    /**
+     * @return string URI of the pane for a given milestone
+     */
     public abstract function getUriForMilestone(Planning_Milestone $milestone);
 
+    /**
+     * @return string eg: 'cardwall'
+     */
     public abstract function getIdentifier();
 
     /**

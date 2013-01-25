@@ -18,49 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_Artifact_Burndown_PaneInfo extends AgileDashboard_PaneInfo {
-    const IDENTIFIER = 'burndown';
-    const TITLE = 'Burndown';
-
-    public function getUri() {
-        return parent::getUri().'&pane='.$this->getIdentifier();
-    }
-
-    public function getUriForMilestone(Planning_Milestone $milestone) {
-        parent::getUriForMilestone($milestone).'&pane='.Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER;
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getIdentifier()
-     * @return string
-     */
-    public function getIdentifier() {
-        return self::IDENTIFIER;
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getTitle()
-     * @return string
-     */
-    public function getTitle() {
-        return self::TITLE;
-    }
-    
-    /**
-     * @see AgileDashboard_Pane::getIcon()
-     */
-    public function getIcon() {
-        return '';
-    }
-
-    /**
-     * @see AgileDashboard_Pane::getIconTitle()
-     */
-    public function getIconTitle() {
-        return '';
-    }
-}
-
 /**
  * A pane to be displayed in AgileDashboard
  */
