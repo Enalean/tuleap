@@ -20,6 +20,11 @@
 
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
+/**
+ * This class is responsible to build the view of "MilestonePlanning"
+ * It's the view you have when you want to do "Sprint Planning".
+ * It's a Pane content
+ */
 class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
 
 

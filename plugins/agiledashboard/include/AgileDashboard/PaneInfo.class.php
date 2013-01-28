@@ -18,6 +18,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * An agile dashboard can have several panes (MilestonePlanning, Burndown, Cardwall)
+ * Each Pane is associated to a PaneInfo that describe the Pane (it's used to
+ * display presence of a Pane.
+ * It's meant to be as lightweight as possible as it is required to build the view
+ * regardless of what we want to display.
+ */
 abstract class AgileDashboard_PaneInfo {
     /**
      * @var bool
@@ -34,6 +41,8 @@ abstract class AgileDashboard_PaneInfo {
     }
 
     /**
+     * Return true if the current Pane is selected
+     *
      * @return bool
      */
     public function isActive() {
@@ -41,20 +50,41 @@ abstract class AgileDashboard_PaneInfo {
     }
 
     /**
+     * Set activation
+     *
      * @param bool $state
      */
     public function setActive($state) {
         $this->is_active = (bool)$state;
     }
 
+    /**
+     * Return the URI of the current pane
+     *
+     * @return string
+     */
     public function getUri() {
         return $this->getUriForMilestone($this->milestone);
     }
 
+    /**
+     * Return the URI of the pane in another milestone (ie. I want the cardwall of Sprint 6)
+     *
+     * @param Planning_Milestone $milestone
+     *
+     * @return string
+     */
     public function getUriForMilestone(Planning_Milestone $milestone) {
         return '?group_id='.$milestone->getGroupId().'&planning_id='.$milestone->getPlanningId().'&action=show&aid='.$milestone->getArtifactId();
     }
 
+    /**
+     * Return data to present an Icon to the current Pane for given milestone
+     *
+     * @param Planning_Milestone $milestone
+     * 
+     * @return Array
+     */
     public function getIconTemplateParametersForMilestone(Planning_Milestone $milestone) {
         return array(
             'uri'   => $this->getUriForMilestone($milestone),
@@ -74,14 +104,14 @@ abstract class AgileDashboard_PaneInfo {
     public abstract function getTitle();
 
     /**
-     * @see string eg: '/themes/common/images/ic/duck.png'
+     * @return string eg: '/themes/common/images/ic/duck.png'
      */
-    public abstract function getIcon();
+    protected abstract function getIcon();
 
     /**
      * @return string eg: 'Access to cardwall'
      */
-    public abstract function getIconTitle();
+    protected abstract function getIconTitle();
 }
 
 

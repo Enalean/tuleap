@@ -48,14 +48,14 @@ class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
     /**
      * @see string eg: '/themes/common/images/ic/duck.png'
      */
-    public function getIcon() {
+    protected function getIcon() {
         return $this->theme_path.'/images/sticky-notes-stack.png';
     }
 
     /**
      * @return string eg: 'Access to cardwall'
      */
-    public function getIconTitle() {
+    protected function getIconTitle() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'access_to_planning');
     }
 }

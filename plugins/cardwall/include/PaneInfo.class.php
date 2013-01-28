@@ -52,14 +52,14 @@ class Cardwall_PaneInfo extends AgileDashboard_PaneInfo {
     /**
      * @see AgileDashboard_Pane::getIcon()
      */
-    public function getIcon() {
+    protected function getIcon() {
         return $this->plugin_theme_path .'/images/ic/sticky-note-pin.png';
     }
 
     /**
      * @see AgileDashboard_Pane::getIconTitle()
      */
-    public function getIconTitle() {
+    protected function getIconTitle() {
         return $GLOBALS['Language']->getText('plugin_cardwall', 'access_cardwall');
     }
 

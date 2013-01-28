@@ -45,14 +45,14 @@ class Tracker_Artifact_Burndown_PaneInfo extends AgileDashboard_PaneInfo {
     /**
      * @see AgileDashboard_Pane::getIcon()
      */
-    public function getIcon() {
+    protected function getIcon() {
         return Tracker_FormElement_Field_Burndown::getFactoryIconUseIt();
     }
 
     /**
      * @see AgileDashboard_Pane::getIconTitle()
      */
-    public function getIconTitle() {
+    protected function getIconTitle() {
         return $GLOBALS['Language']->getText('plugin_tracker', 'access_burndown');
     }
 }
