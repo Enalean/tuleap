@@ -119,6 +119,7 @@ $wgLanguageCode = strtolower(forge_get_config('default_country_code'));
 $wgDefaultSkin = 'fusionforge';
 $wgHtml5 = false;
 $wgWellFormedXml = true;
+$wgLogo = "";
 
 /* DEBUG
 $wgDebugLogFile         = '/tmp/wiki.log';

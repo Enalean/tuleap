@@ -51,7 +51,18 @@ class MediaWikiPlugin extends Plugin {
 		$this->_addHook("project_admin_plugins"); // to show up in the admin page for group
 		$this->_addHook("clone_project_from_template") ;
 		$this->_addHook('group_delete');
+                // Search
+                $this->_addHook('search_type_entry', 'search_type_entry', false);
 	}
+
+        public function search_type_entry($params) {
+                $params['output'] .= '<option value="'. $this->name .'" ';
+                if ($params['type_of_search'] == $this->name) {
+                    $params['output'] .= 'selected="selected"';
+                }
+                $params['output'] .= '>'. 'Mediawiki';
+                $params['output'] .= '</option>';
+        }
 
         function process() {
 		echo '<h1>Mediawiki</h1>';

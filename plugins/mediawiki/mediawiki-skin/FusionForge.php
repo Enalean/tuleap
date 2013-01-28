@@ -137,14 +137,6 @@ class FusionForgeTemplate extends BaseTemplate {
 ?>
 		</div>
 	</div>
-	<div class="portlet" id="p-logo">
-<?php
-			echo Html::element( 'a', array(
-				'href' => $this->data['nav_urls']['mainpage']['href'],
-				'style' => "background-image: url({$this->data['logopath']});" )
-				+ Linker::tooltipAndAccesskeyAttribs('p-logo') ); ?>
-
-	</div>
 <?php
 	$this->renderPortals( $this->data['sidebar'] );
 ?>
@@ -208,20 +200,6 @@ echo $footerEnd;
 			$efbox_log_link = "/account/login.php?return_to=" .
 			    urlencode(getStringFromServer('REQUEST_URI'));
 		}
-		$efbox_prj_link = "/projects/" .
-		    $this->project->getUnixName() . "/";
-		$this->customBox("FusionForge", array(
-			"project" => array(
-				"id" => "fusionforge_project",
-				"href" => $efbox_prj_link,
-				"text" => _("Project Summary"),
-			    ),
-			"loginout" => array(
-				"id" => "fusionforge_loginout",
-				"href" => $efbox_log_link,
-				"text" => $efbox_log_text,
-			    ),
-		    ));
 
 		foreach( $sidebar as $boxName => $content ) {
 			if ( $content === false )
