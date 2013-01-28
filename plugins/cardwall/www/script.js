@@ -96,7 +96,7 @@ document.observe('dom:loaded', function () {
         });
         // }}}
 
-        function card_element_editor ( element ) {
+        function card_element_editor(element) {
             this.element        = element;
             this.field_id       = element.readAttribute('data-field-id');
             this.artifact_id    = element.up('.card').readAttribute('data-artifact-id');
@@ -115,7 +115,7 @@ document.observe('dom:loaded', function () {
 
             this.injectTemporaryContainer = function () {
                 if(this.element.innerHTML == '') {
-                    this.element.innerHTML = '0' ;
+                    this.element.innerHTML = '0';
                 }
                 this.div.update(this.element.innerHTML);
                 this.element.update(this.div);
@@ -125,8 +125,8 @@ document.observe('dom:loaded', function () {
                 var field_id = this.field_id;
 
                 return function (form, value) {
-                    var parameters = {},
-                        linked_field = 'artifact[' + field_id +']';
+                    var parameters = { },
+                        linked_field = 'artifact[' + field_id + ']';
 
                     parameters[linked_field] = value;
                     return parameters;
@@ -134,11 +134,11 @@ document.observe('dom:loaded', function () {
             };
 
             this.success = function() {
-                var field_id    = this.field_id;
-                var div         = this.div;
+                var field_id = this.field_id;
+                var div     = this.div;
 
                 return function(transport) {
-                    if(typeof transport != 'undefined') {
+                    if (typeof transport != 'undefined') {
                         div.update(transport.request.parameters['artifact[' + field_id + ']']);
                     } 
                 }
