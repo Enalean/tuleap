@@ -189,7 +189,13 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function process(Codendi_Request $request) {
-        $router = new AgileDashboardRouter($this, $this->getMilestoneFactory(), $this->getPlanningFactory(), $this->getHierarchyFactory(), $this->getThemePath());
+        $router = new AgileDashboardRouter(
+            $this,
+            $this->getMilestoneFactory(),
+            $this->getPlanningFactory(),
+            $this->getHierarchyFactory(),
+            $this->getThemePath()
+        );
         $router->route($request);
     }
 

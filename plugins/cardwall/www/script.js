@@ -28,6 +28,7 @@ document.observe('dom:loaded', function () {
                 tr.childElements()[col.up().childElements().indexOf(col)].select('.cardwall_board_postit').invoke('removeClassName', classname);
             });
         });
+
         cols.each(function (col, col_index) {
             col.up('table').down('tbody.cardwall').childElements().each(function (tr) {
                 var td           = tr.down('td.cardwall-cell', col_index),
@@ -94,6 +95,67 @@ document.observe('dom:loaded', function () {
             });
         });
         // }}}
+
+        function card_element_editor(element) {
+            this.element        = element;
+            this.field_id       = element.readAttribute('data-field-id');
+            this.artifact_id    = element.up('.card').readAttribute('data-artifact-id');
+            this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
+            this.div            = new Element('div');
+
+            this.init = function() {
+                this.injectTemporaryContainer();
+                new Ajax.InPlaceEditor( this.div, this.url, {
+                    formClassName : 'card_element_edit_form',
+                    callback   : this.ajaxCallback(),
+                    onComplete : this.success(),
+                    onFailure  : this.fail
+                });
+            };
+
+            this.injectTemporaryContainer = function () {
+                if(this.element.innerHTML == '') {
+                    this.element.innerHTML = '0';
+                }
+                this.div.update(this.element.innerHTML);
+                this.element.update(this.div);
+            };
+
+            this.ajaxCallback = function() {
+                var field_id = this.field_id;
+
+                return function (form, value) {
+                    var parameters = { },
+                        linked_field = 'artifact[' + field_id + ']';
+
+                    parameters[linked_field] = value;
+                    return parameters;
+                }
+            };
+
+            this.success = function() {
+                var field_id = this.field_id;
+                var div     = this.div;
+
+                return function(transport) {
+                    if (typeof transport != 'undefined') {
+                        div.update(transport.request.parameters['artifact[' + field_id + ']']);
+                    } 
+                }
+            };
+
+            this.fail = function() {
+            };
+
+            if (this.field_id) {
+                this.init();
+            }
+        }
+
+        $$('.valueOf_remaining_effort').each(function (remaining_effort_container) {
+            new card_element_editor(remaining_effort_container);
+        })
+
     });
 
     $$('.cardwall_admin_ontop_mappings input[name^=custom_mapping]').each(function (input) {
