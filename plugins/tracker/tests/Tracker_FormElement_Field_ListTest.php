@@ -470,8 +470,15 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
     public function itSendsTheValuesInJSONFormat() {
         $v1 = new Tracker_FormElement_Field_List_Bind_StaticValue(10, 'label1', 'desc1', 'rank', false);
         $v2 = new Tracker_FormElement_Field_List_Bind_StaticValue(11, 'label2', 'desc2', 'rank', false);
+
         stub($this->bind)->getAllValues()->returns(array($v1, $v2));
-        expect($GLOBALS['Response'])->sendJSON(array($v1->fetchJSON(), $v2->fetchJSON()))->once();
+
+        expect($GLOBALS['Response'])->sendJSON(
+                array(
+                    10 => $v1->fetchJSON(),
+                    11 => $v2->fetchJSON()
+                ))->once();
+
         $this->list->process($this->layout, $this->request, $this->user);
     }
 }
