@@ -1,19 +1,33 @@
 =============== INSTALL on local server ===============
+#install fusion forge compatibility plugin
+As forge admin, go to your tuleap instance in the administration pannel -> plugins administration.
+If the plugin isn't yet installed, install it !
+Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
+
 #get mediawiki
 cd /usr/share
 wget http://download.wikimedia.org/mediawiki/1.15/mediawiki-1.15.5.tar.gz
 tar -xvf mediawiki-1.15.5.tar.gz mediawiki115
 
-# Must create /var/lib/codendi/plugins/mediawiki/master
-# Done in /usr/share/gforge/plugins/mediawiki/cronjobs/create-wikis.php
-# Theme
-# ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php /usr/share/mediawiki115/skins/
-# ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/fusionforge /usr/share/mediawiki115/skins/
+#If the tar command doesn't extract mediawiki in a mediawiki115 folder, please run these commands :
+cd /usr/share
+ln -s YOUR_FOLDER_WHERE_MEDIAWIKI_IS_EXTRACTED mediawiki115
 
-# create view group_plugin as (select service.service_id group_plugin_id,service.group_id,plugin.id plugin_id,service.short_name from service,plugin where service.short_name=CONCAT('plugin_', plugin.name) and service.is_active=1 and service.is_used=1 and service.group_id != 100);
-# create view plugins as (select id plugin_id, name plugin_name, name plugin_desc from plugin );
+#create folder master
+
+mkdir /var/lib/codendi/plugins/mediawiki/master
+
+#Create MySQL views in codendi scheme
+
+create view group_plugin as (select service.service_id group_plugin_id,service.group_id,plugin.id plugin_id,service.short_name from service,plugin where service.short_name=CONCAT('plugin_', plugin.name) and service.is_active=1 and service.is_used=1 and service.group_id != 100);
+create view plugins as (select id plugin_id, name plugin_name, name plugin_desc from plugin );
 
 # modify /etc/httpd/conf.d/codendi_aliases.conf to add plugin-mediawiki.inc (usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc)
+
+include /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc
+
+#Then restart yout httpd service
+service httpd restart
 
 # add conf param in local.inc
 // Mediawiki
@@ -24,10 +38,16 @@ $projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
 $config_path = "/etc/codendi";
 $src_path = "/usr/share/mediawiki115";
 
+#run these commands
 /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
-
+/usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis.php
 
 You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
+
+# "Install" fusionforge theme
+
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php /usr/share/mediawiki115/skins/
+# ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/fusionforge /usr/share/mediawiki115/skins/
 
 ============================= TO CHECK LATER ============================= 
 
