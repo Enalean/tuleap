@@ -239,6 +239,7 @@ div.cardwall_avatar {
 }
 div.cardwall_avatar > img {
     margin: 1px;
+    width: 16px;
 }
 div.card-details .avatar_structure_div {
     display: inline-block;

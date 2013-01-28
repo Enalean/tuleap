@@ -1,4 +1,4 @@
-Ajax.InPlaceCollectionEditorMulti = Class.create(Ajax.InPlaceCollectionEditor, {
+Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
     createEditField: function() {
         var list = new Element( 'select' );
         list.name = this.options.paramName;
@@ -22,7 +22,7 @@ Ajax.InPlaceCollectionEditorMulti = Class.create(Ajax.InPlaceCollectionEditor, {
         var marker,
             textFound;
 
-        this.getSelectedUsers();
+        
         this._form.removeClassName(this.options.loadingClassName);
         this._collection = this._collection.map(function(entry) {
             return 2 === entry.length ? entry : [entry, entry].flatten();
@@ -35,6 +35,7 @@ Ajax.InPlaceCollectionEditorMulti = Class.create(Ajax.InPlaceCollectionEditor, {
 
         this._controls.editor.update('');
         
+        this.getSelectedUsers();
         this._collection.each(function(entry, index) {
             var option;
 
@@ -246,7 +247,7 @@ document.observe('dom:loaded', function () {
             this.checkMultipleSelect();
             this.addOptions();
 
-            editor = new Ajax.InPlaceCollectionEditorMulti(
+            editor = new Ajax.InPlaceMultiCollectionEditor(
                 container,
                 this.url,
                 this.options
@@ -412,14 +413,19 @@ document.observe('dom:loaded', function () {
 
                     structure_div = new Element( 'div' );
 
-                    avatar_img = new Element( 'img' );
-                    avatar_img.writeAttribute('src', '/users/' + username + '/avatar.png');
-
                     avatar_div = new Element( 'div' );
                     avatar_div.addClassName( 'cardwall_avatar' );
                     avatar_div.writeAttribute( 'title', caption );
                     avatar_div.writeAttribute( 'data-user-id', user_id );
-                    avatar_div.appendChild( avatar_img );
+                    
+                    avatar_img = new Element('img')
+                    avatar_img.writeAttribute('src','/users/' + username + '/avatar.png');
+                    avatar_img.observe('load', function() {
+                        if( this.width == 0 || this.height == 0 ) {
+                            return;
+                        }
+                        avatar_div.appendChild(avatar_img);
+                    });
 
                     structure_div.appendChild( avatar_div );
                     structure_div.addClassName( 'avatar_structure_div' );
