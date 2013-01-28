@@ -4,7 +4,7 @@ As forge admin, go to your tuleap instance in the administration pannel -> plugi
 If the plugin isn't yet installed, install it !
 Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
 
-#get mediawiki
+#get mediawiki (1.19) /!\ needs php 5.2.x
 cd /usr/share
 wget http://download.wikimedia.org/mediawiki/1.15/mediawiki-1.15.5.tar.gz
 tar -xvf mediawiki-1.15.5.tar.gz mediawiki115
@@ -46,8 +46,13 @@ You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectna
 
 # "Install" fusionforge theme
 
+ln -s /usr/share/mediawiki115/load.php www/
 ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php /usr/share/mediawiki115/skins/
-# ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/fusionforge /usr/share/mediawiki115/skins/
+
+#In the mediawiki skin folder
+
+cp MonoBook.deps.php FusionForge.deps.php
+cp -r monobook fusionforge
 
 ============================= TO CHECK LATER ============================= 
 

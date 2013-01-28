@@ -42,9 +42,8 @@ class SkinFusionForge extends SkinTemplate {
 	 */
 	function setupSkinUserCss( OutputPage $out ) {
 		global $wgHandheldStyle;
-
 		/* add FusionForge styles */
-		foreach ($GLOBALS['HTML']->stylesheets as $sheet) {
+		foreach ($GLOBALS['HTML']->getAllStyleSheets() as $sheet) {
 			$out->addStyle($sheet['css'], $sheet['media']);
 		}
 
@@ -61,7 +60,6 @@ class SkinFusionForge extends SkinTemplate {
 		// TODO: Migrate all of these
 		$out->addStyle( 'monobook/IE60Fixes.css', 'screen', 'IE 6' );
 		$out->addStyle( 'monobook/IE70Fixes.css', 'screen', 'IE 7' );
-
 	}
 }
 
@@ -83,14 +81,13 @@ class FusionForgeTemplate extends BaseTemplate {
 	 */
 	function execute() {
 		global $wgHtml5;
-
 		// Suppress warnings to prevent notices about missing indexes in $this->data
 		wfSuppressWarnings();
 
 		$this->html( 'headelement' );
 
 		echo "\n<!-- FUSIONFORGE BodyHeader BEGIN -->\n";
-		$GLOBALS['HTML']->bodyHeader($this->params);
+		$GLOBALS['HTML']->header($this->params);
 		echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
 		echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 

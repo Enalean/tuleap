@@ -75,7 +75,6 @@ set_include_path( implode( PATH_SEPARATOR, $path ) . PATH_SEPARATOR . get_includ
 require_once( "$IP/includes/AutoLoader.php" );
 require_once( "$IP/includes/Defines.php" );
 require_once( "$IP/includes/DefaultSettings.php" );
-
 if ( $wgCommandLineMode ) {
         if ( isset( $_SERVER ) && array_key_exists( 'REQUEST_METHOD', $_SERVER ) ) {
                 die( "This script must be run from the command line\n" );
