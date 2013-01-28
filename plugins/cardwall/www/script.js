@@ -15,7 +15,7 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
         this.checkForExternalText();
 
         this._form.appendChild(this._controls.editor);
-        jQuery( list ).select2();
+        jQuery( list ).select2({"width": "250px"});
     },
 
     buildOptionList: function() {
