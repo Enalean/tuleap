@@ -147,7 +147,9 @@ document.observe('dom:loaded', function () {
             this.fail = function() {
             };
 
-            this.init();
+            if (this.field_id) {
+                this.init();
+            }
         }
 
         $$('.valueOf_remaining_effort').each(function (remaining_effort_container) {
