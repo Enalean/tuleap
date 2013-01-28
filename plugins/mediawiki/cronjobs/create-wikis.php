@@ -39,7 +39,7 @@ $src_path = forge_get_config('src_path', 'mediawiki');
 $master_path = forge_get_config('master_path', 'mediawiki');
 
 # Get all projects that use the mediawiki plugin
-$project_res = db_query_params ("SELECT g.unix_group_name from groups g, group_plugin gp, plugins p where g.group_id = gp.group_id and gp.plugin_id = p.plugin_id and p.plugin_name = $1;", array("mediawiki"));
+$project_res = db_query_params ("SELECT g.unix_group_name from groups g, group_plugin gp, plugins p where g.group_id = gp.group_id and gp.plugin_id = p.plugin_id and p.plugin_name = '$1';", array("mediawiki"));
 if (!$project_res) {
 	$err =  "Error: Database Query Failed: ".db_error();
 	cron_debug($err);
