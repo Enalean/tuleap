@@ -203,26 +203,19 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_search($params) {
-        try {
-            $index_status = $this->getAdminController()->getIndexStatus();
-        } catch (ElasticSearchTransportHTTPException $e) {
-            return;
-        }
-        if ($this->isAllowed($params['group_id'])) {
-            if ($this->getCurrentUser()->useLabFeatures()) {
-                $filter = '';
-                if ($params['request'] && $params['request']->get('func') == 'followup_search') {
-                    $hp     = Codendi_HTMLPurifier::instance();
-                    $filter = $hp->purify($params['request']->getValidated('search_followups', 'string', ''));
-                }
-                $params['html'] .='<span class ="lab_features">';
-                $params['html'] .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
-                $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
-                $params['html'] .= '<input type="hidden" value="followup_search" name="func">';
-                $params['html'] .= '</label><br>';
-                $params['html'] .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
-                $params['html'] .= '</span>';
+        if ($this->check_preconditions($params['group_id'])) {
+            $filter = '';
+            if ($params['request'] && $params['request']->get('func') == 'followup_search') {
+                $hp     = Codendi_HTMLPurifier::instance();
+                $filter = $hp->purify($params['request']->getValidated('search_followups', 'string', ''));
             }
+            $params['html'] .='<span class ="lab_features">';
+            $params['html'] .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
+            $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
+            $params['html'] .= '<input type="hidden" value="followup_search" name="func">';
+            $params['html'] .= '</label><br>';
+            $params['html'] .= '<input id="tracker_report_crit_followup_search" type="text" name="search_followups" value="'.$filter.'" />';
+            $params['html'] .= '</span>';
         }
     }
 
@@ -234,21 +227,31 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_warning($params) {
+        if ($this->check_preconditions($params['group_id'])) {
+            if ($params['request']->get('search_followups')) {
+                $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
+                $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
+                $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followup_full_text_warning_search');
+                $params['html'] .= '</div>';
+            }
+        }
+    }
+
+    /**
+     * This method check preconditions to use fulltext:
+     * Elastic Search is available, the plugin is enabled for this project and the user is enabling mode Lab.
+     *
+     * @param Integer $group_id Project Id
+     *
+     * @return Boolean
+     */
+    private function check_preconditions($group_id) {
         try {
             $index_status = $this->getAdminController()->getIndexStatus();
         } catch (ElasticSearchTransportHTTPException $e) {
-            return;
+            return false;
         }
-        if ($this->isAllowed($params['group_id'])) {
-            if ($this->getCurrentUser()->useLabFeatures()) {
-                if ($params['request']->get('search_followups')) {
-                    $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
-                    $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
-                    $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followup_full_text_warning_search');
-                    $params['html'] .= '</div>';
-                }
-            }
-        }
+        return $this->isAllowed($group_id) && $this->getCurrentUser()->useLabFeatures();
     }
 
     /**
@@ -259,12 +262,7 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_search_process($params) {
-        try {
-            $index_status = $this->getAdminController()->getIndexStatus();
-        } catch (ElasticSearchTransportHTTPException $e) {
-            return;
-        }
-        if ($this->getCurrentUser()->useLabFeatures()) {
+        if ($this->check_preconditions($params['group_id'])) {
             $filter = $params['request']->get('search_followups');
             if ($params['request']->get('func') == 'followup_search' && !empty($filter)) {
                 $controller       = $this->getSearchController('tracker');
