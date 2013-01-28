@@ -1344,9 +1344,10 @@ input.inputMessage { color: #ccc; font-size: 11px; }
 }
 
 /* }}}*/
+
 /* {{{ Avatars */
 div.avatar {
-    background: white url(../images/avatar_default.png) 0px 0px no-repeat;
+    background: white url(/themes/common/images/avatar_default.png) 0px 0px no-repeat;
     background-size: cover;
     width:52px;
     height:52px;

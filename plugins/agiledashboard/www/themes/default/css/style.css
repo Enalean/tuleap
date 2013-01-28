@@ -228,3 +228,20 @@
 .valueOf_remaining_effort {
     min-width: 30px;
 }
+
+/* {{{ Avatars */
+div.cardwall_avatar {
+    background: white url(/themes/common/images/avatar_default.png) 0px 0px no-repeat;
+    background-size: cover;
+    width:18px;
+    height:18px;
+    border:1px solid #ccc;
+}
+div.cardwall_avatar > img {
+    margin: 1px;
+}
+div.card-details .avatar_structure_div {
+    display: inline-block;
+    padding-right: 5px;
+}
+/* }}} */

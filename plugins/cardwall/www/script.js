@@ -1,42 +1,46 @@
 Ajax.InPlaceCollectionEditorMulti = Class.create(Ajax.InPlaceCollectionEditor, {
     createEditField: function() {
-        var list = document.createElement('select');
+        var list = new Element( 'select' );
         list.name = this.options.paramName;
         list.size = 1;
+
         if (this.options.multiple) {
             list.writeAttribute('multiple');
             list.size = 2;
         }
+
         this._controls.editor = list;
         this._collection = this.options.collection || [];
-        if(this.options.loadCollectionURL) {
-            this.loadCollection()
-        }
-        else{
-            this.checkForExternalText();
-        }
-        this._form.appendChild(this._controls.editor);
+        
+        this.checkForExternalText();
 
+        this._form.appendChild(this._controls.editor);
         jQuery( list ).select2();
     },
 
     buildOptionList: function() {
+        var marker,
+            textFound;
+
         this._form.removeClassName(this.options.loadingClassName);
         this._collection = this._collection.map(function(entry) {
             return 2 === entry.length ? entry : [entry, entry].flatten();
         });
-        var marker = ('value' in this.options) ? this.options.value : this._text;
-        var textFound = this._collection.any(function(entry) {
+
+        marker = ('value' in this.options) ? this.options.value : this._text;
+        textFound = this._collection.any(function(entry) {
             return entry[0] == marker;
         }.bind(this));
+
         this._controls.editor.update('');
-        var option;
+        
         this._collection.each(function(entry, index) {
-            option = document.createElement('option');
+            var option;
+
+            option = new Element( 'option' );
             option.value = entry[0];
-            if (this.options.selected) {
-                option.selected = (entry[0] in this.options.selected) ? 1 :
-                0;
+            if (this.options.selected) {    
+                option.selected = (entry[0] in this.options.selected) ? 1 : 0;
             } else {
                 option.selected = textFound ? entry[0] == marker : 0 == index;
             }
@@ -67,7 +71,8 @@ document.observe('dom:loaded', function () {
         (function defineDraggableCards(){
             board.select('.cardwall_board_postit').each(function (postit) {
                 new Draggable(postit, {
-                    revert: 'failure'
+                    revert: 'failure',
+                    delay: 175
                 });
             });
         })();
@@ -217,123 +222,205 @@ document.observe('dom:loaded', function () {
      *                                Avoids multple ajax calls for same data
      */
     function cardSelectElementEditor ( element, options, tracker_user_data ) {
-        this.element        = element;
-        this.options        = options;
+        this.element           = element;
+        this.options           = options;
+        this.tracker_user_data = tracker_user_data;
+
         this.field_id       = element.readAttribute( 'data-field-id' );
         this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
-        this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
-        this.div            = new Element( 'div' );
         this.artifact_type  = element.readAttribute( 'data-field-type' );
+
+        this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
         this.collectionUrl  = '/plugins/tracker/?func=get-values&formElement=' + this.field_id;
-        this.users          = [];
+
+        this.users          = {};
         this.multi_select   = false;
 
         this.init = function() {
-            this.injectTemporaryContainer();
+            var container = this.createAndInjectTemporaryContainer();
+
             this.checkMultipleSelect();
             this.addOptions();
 
-            new Ajax.InPlaceCollectionEditorMulti( this.div, this.url, this.options );
+            new Ajax.InPlaceCollectionEditorMulti( container, this.url, this.options );
+        };
+        
+        this.createAndInjectTemporaryContainer = function () {
+            var clickable     = this.getClickableArea(),
+                clickable_div = new Element( 'div' );
+
+            clickable_div.update( clickable );
+            this.element.update( clickable_div );
+
+            return clickable_div;
+        };
+
+        this.checkMultipleSelect = function () {
+            this.multi_select = ( this.artifact_type === 'multiselectbox' );
         };
 
         this.addOptions = function() {
             this.options[ 'multiple' ]      = this.multi_select;
             this.options[ 'formClassName' ] = 'card_element_edit_form';
-            this.options[ 'callback' ]      = this.ajaxCallback();
+            this.options[ 'collection' ]    = this.getAvailableUsers();
+            this.options[ 'selected' ]      = this.getSelectedUsers();
+            this.options[ 'callback' ]      = this.preRequestCallback();
             this.options[ 'onComplete' ]    = this.success();
             this.options[ 'onFailure' ]     = this.fail;
-            this.options[ 'collection' ]    = this.getSelectUserList();
         };
 
-        this.injectTemporaryContainer = function () {
-            this.handleEmptyValue();
-            this.div.update( this.element.innerHTML );
-            this.element.update( this.div );
-        };
-
-        this.handleEmptyValue = function() {
+        this.getClickableArea = function() {
             if( this.element.innerHTML == '' ) {
-                this.element.innerHTML = '?' ;
+                return '?' ;
             }
+            
+            return this.element.innerHTML;
         }
 
-        this.checkMultipleSelect = function () {
-            this.multi_select = ( this.artifact_type == 'multiselectbox' );
-        };
-
-        this.ajaxCallback = function() {
-            var field_id = this.field_id;
-
-            return function setRequestData(form, value) {
-                var parameters = {};
-
-                if ( this.multi_select === true ) {
-                    linked_field = 'artifact[' + field_id +'][]';
-                } else {
-                    linked_field = 'artifact[' + field_id +']';
-                }
-
-                parameters[linked_field] = value;
-                return parameters;
-            }
-        };
-
-        this.getSelectUserList = function() {
+        this.getAvailableUsers = function() {
             var user_collection = [];
 
-            if (this.users.length === 0) {
-                this.users = tracker_user_data[this.field_id] || [];
+            if ( Object.keys( this.users ).length == 0 ) {
+                this.users = this.tracker_user_data[ this.field_id ] || [];
             }
 
-            if (this.users.length === 0) {
+            if ( Object.keys(this.users).length == 0 ) {
                 this.fetchUsers();
             }
 
-            this.users.forEach(function( user_object ){
-                user_collection.push( [ user_object.id, user_object.caption ] );
+            jQuery.each( this.users, function( id, user_details ){
+                if( typeof( user_details ) !== 'undefined' ) {
+                    user_collection.push( [ user_details.id, user_details.caption ] );
+                }
             });
 
             return user_collection;
         };
 
+        this.getSelectedUsers = function() {
+            var avatars = jQuery( '.avatar', this.element );
+            var users = {};
+
+            avatars.each( function() {
+                var id      = jQuery( this ).attr( 'data-user-id' );
+                users[ id ] = jQuery( this ).attr( 'title' );
+            });
+
+            return users;
+        }
+
         this.fetchUsers = function() {
-            var users;
+            var users = {};
 
             jQuery.ajax({
-                url : this.collectionUrl,
+                url   : this.collectionUrl,
                 async : false
-            }).done(function (data) {
-                    users = data;
+            }).done(function ( data ) {
+                jQuery.each(data, function( id, user_details ) {
+                    users[ id ] = user_details;
+                });
             }).fail( function() {
-                users = [];
+                users = {};
             });
 
             this.users = users;
-            tracker_user_data[ this.field_id ] = users;
+            this.tracker_user_data[ this.field_id ] = users;
+        };
+
+        this.preRequestCallback = function() {
+            var field_id        = this.field_id,
+                is_multi_select = (this.multi_select === true);
+
+            return function setRequestData( form, value ) {
+                var parameters = {};
+
+                if ( is_multi_select ) {
+                    linked_field = 'artifact[' + field_id +'][]';
+                } else {
+                    linked_field = 'artifact[' + field_id +']';
+                }
+
+                parameters[ linked_field ] = value;
+                return parameters;
+            }
         };
 
         this.success = function() {
-            var field_id    = this.field_id,
-                div         = this.div;
-
-            return function updateCardInfo(transport) {
-                var choosen_values;
+            var field_id          = this.field_id,
+                is_multi_select   = (this.multi_select === true),
+                tracker_user_data = this.tracker_user_data;
+                
+            return function updateCardInfo( transport, element ) {
+                var new_values;
 
                 if( typeof transport === 'undefined' ) {
                     return;
                 }
 
-                if ( this.multi_select === true ) {
-                    choosen_values = transport.request.parameters[ 'artifact[' + field_id + '][]' ];
-                } else {
-                    choosen_values = transport.request.parameters[ 'artifact[' + field_id + ']' ];
+                element.update( '' );
+                new_values = getNewValues( transport, is_multi_select, field_id );
+                updateAvatarDiv( element, new_values );
+
+                function updateAvatarDiv( avatar_div, new_values ) {
+                    var div_html;
+
+                    if(new_values instanceof Array) {
+                        for(var i=0; i<new_values.length; i++) {
+                            div_html = generateAvatarDiv( new_values[i] );
+                            avatar_div.appendChild( div_html );
+                        }
+                    } else if( typeof new_values === 'string' ){
+                        div_html = generateAvatarDiv( new_values );
+                        avatar_div.appendChild( div_html );
+                    } else {
+                        avatar_div.update( '?' );
+                    }
+                }
+                
+                function getNewValues(transport, is_multi_select, field_id) {
+                    var new_values;
+
+                    if ( is_multi_select ) {
+                        new_values = transport.request.parameters[ 'artifact[' + field_id + '][]' ];
+                    } else {
+                        new_values = transport.request.parameters[ 'artifact[' + field_id + ']' ];
+                    }
+
+                    return new_values;
                 }
 
-                div.update( choosen_values );
+                function generateAvatarDiv( user_id ) {
+                    var username = tracker_user_data[ field_id ][ user_id ][ 'username' ],
+                        caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
+                        structure_div,
+                        avatar_img,
+                        avatar_div;
+
+                    structure_div = new Element( 'div' );
+
+                    avatar_img = new Element( 'img' );
+                    avatar_img.writeAttribute('src', '/users/' + username + '/avatar.png');
+
+                    avatar_div = new Element( 'div' );
+                    avatar_div.addClassName( 'cardwall_avatar' );
+                    avatar_div.writeAttribute( 'title', caption );
+                    avatar_div.appendChild( avatar_img );
+
+                    structure_div.appendChild( avatar_div );
+                    structure_div.addClassName( 'avatar_structure_div' );
+
+                    return structure_div;
+                }
             }
         };
 
-        this.fail = function() {
+        this.fail = function(transport) {
+            if( typeof transport === 'undefined' ) {
+                return;
+            }
+            if( console && typeof console.error === 'function' ) {
+                console.error( transport.responseText.stripTags() );
+            }
         };
 
         this.init();

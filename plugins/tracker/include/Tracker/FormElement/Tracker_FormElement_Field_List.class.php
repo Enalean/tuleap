@@ -1157,7 +1157,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         if ($request->get('func') == 'get-values') {
             $json_values = array();
             foreach ($this->getAllValues() as $value) {
-                $json_values[] = $value->fetchJSON();
+                $json_values[$value->getId()] = $value->fetchJSON();
             }
             $GLOBALS['Response']->sendJSON($json_values);
         }
