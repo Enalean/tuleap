@@ -22,6 +22,7 @@ Ajax.InPlaceCollectionEditorMulti = Class.create(Ajax.InPlaceCollectionEditor, {
         var marker,
             textFound;
 
+        this.getSelectedUsers();
         this._form.removeClassName(this.options.loadingClassName);
         this._collection = this._collection.map(function(entry) {
             return 2 === entry.length ? entry : [entry, entry].flatten();
@@ -50,7 +51,9 @@ Ajax.InPlaceCollectionEditorMulti = Class.create(Ajax.InPlaceCollectionEditor, {
         
         this._controls.editor.disabled = false;
         Field.scrollFreeActivate(this._controls.editor);
-    }
+    },
+
+    getSelectedUsers: function() {}
 });
 
 document.observe('dom:loaded', function () {
@@ -238,13 +241,36 @@ document.observe('dom:loaded', function () {
 
         this.init = function() {
             var container = this.createAndInjectTemporaryContainer();
+            var editor;
 
             this.checkMultipleSelect();
             this.addOptions();
 
-            new Ajax.InPlaceCollectionEditorMulti( container, this.url, this.options );
+            editor = new Ajax.InPlaceCollectionEditorMulti(
+                container,
+                this.url,
+                this.options
+            );
+                
+            this.bindSelectedElementsToEditor(editor);
         };
+
+        this.bindSelectedElementsToEditor = function( editor ) {
+
+            editor.getSelectedUsers = function() {
+                var avatars = jQuery( '.cardwall_avatar', this.options.element );
+                var users = {};
+
+                avatars.each( function() {
+                    var id      = jQuery( this ).attr( 'data-user-id' );
+                    users[ id ] = jQuery( this ).attr( 'title' );
+                });
+
+                this.options.selected = users;
+            };
+        }
         
+
         this.createAndInjectTemporaryContainer = function () {
             var clickable     = this.getClickableArea(),
                 clickable_div = new Element( 'div' );
@@ -263,7 +289,7 @@ document.observe('dom:loaded', function () {
             this.options[ 'multiple' ]      = this.multi_select;
             this.options[ 'formClassName' ] = 'card_element_edit_form';
             this.options[ 'collection' ]    = this.getAvailableUsers();
-            this.options[ 'selected' ]      = this.getSelectedUsers();
+            this.options[ 'element' ]       = this.element;
             this.options[ 'callback' ]      = this.preRequestCallback();
             this.options[ 'onComplete' ]    = this.success();
             this.options[ 'onFailure' ]     = this.fail;
@@ -296,18 +322,6 @@ document.observe('dom:loaded', function () {
 
             return user_collection;
         };
-
-        this.getSelectedUsers = function() {
-            var avatars = jQuery( '.avatar', this.element );
-            var users = {};
-
-            avatars.each( function() {
-                var id      = jQuery( this ).attr( 'data-user-id' );
-                users[ id ] = jQuery( this ).attr( 'title' );
-            });
-
-            return users;
-        }
 
         this.fetchUsers = function() {
             var users = {};
@@ -404,6 +418,7 @@ document.observe('dom:loaded', function () {
                     avatar_div = new Element( 'div' );
                     avatar_div.addClassName( 'cardwall_avatar' );
                     avatar_div.writeAttribute( 'title', caption );
+                    avatar_div.writeAttribute( 'data-user-id', user_id );
                     avatar_div.appendChild( avatar_img );
 
                     structure_div.appendChild( avatar_div );
