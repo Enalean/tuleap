@@ -85,7 +85,7 @@ class GraphOnTrackersV5_Engine_Evolution extends GraphOnTrackersV5_Engine {
             $line = new LinePlot($lineData);
             $line->SetFillColor($colors[$i]);
             $line->SetColor('#000');
-            
+            $line->SetLegend($keys[$i]);
             $this->graph->Add($line);
         }
         //$this->graph->Stroke();
