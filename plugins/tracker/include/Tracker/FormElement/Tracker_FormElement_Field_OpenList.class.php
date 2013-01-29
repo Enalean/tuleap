@@ -212,7 +212,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             }
         }
         foreach($matching_values as $v) {
-            $json_values[] = $v->fetchJson();
+            $json_values[] = $v->fetchValuesForJson();
         }
         return json_encode($json_values);
     }

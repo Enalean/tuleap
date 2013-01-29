@@ -475,8 +475,8 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
 
         expect($GLOBALS['Response'])->sendJSON(
                 array(
-                    10 => $v1->fetchJSON(),
-                    11 => $v2->fetchJSON()
+                    10 => $v1->fetchValuesForJson(),
+                    11 => $v2->fetchValuesForJson()
                 ))->once();
 
         $this->list->process($this->layout, $this->request, $this->user);

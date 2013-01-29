@@ -61,11 +61,11 @@ class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
     
 }
 
-class Tracker_FormElement_Field_List_Bind_UsersValue_fetchJSONTest extends TuleapTestCase {
+class Tracker_FormElement_Field_List_Bind_UsersValue_fetchValuesForJSONTest extends TuleapTestCase {
 
     public function itReturnsTheUserNameAsWell() {
         $value = new Tracker_FormElement_Field_List_Bind_UsersValue(12, 'neo', 'Thomas A. Anderson (neo)');
-        $json = $value->fetchJSON();
+        $json = $value->fetchValuesForJson();
         $this->assertEqual($json, array(
             'id'       => '12',
             'value'    => 'b12',

@@ -25,7 +25,7 @@ class Tracker_FormElement_Field_List_OpenValueTest extends UnitTestCase {
         $id          = 123;
         $label       = 'Reopen';
         $value = new Tracker_FormElement_Field_List_OpenValue($id, $label);
-        $this->assertEqual(json_encode($value->fetchJson()), '{"id":123,"value":"o123","caption":"Reopen"}');
+        $this->assertEqual(json_encode($value->fetchValuesForJson()), '{"id":123,"value":"o123","caption":"Reopen"}');
     }
     
 }
