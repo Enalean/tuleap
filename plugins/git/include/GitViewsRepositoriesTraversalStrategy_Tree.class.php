@@ -35,9 +35,8 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      *
      * @param GitViews $view The GitViews
      */
-    public function __construct(GitViews $view, $lastPushes) {
+    public function __construct($lastPushes) {
         parent::__construct();
-        $this->view = $view;
         $this->lastPushes = $lastPushes;
     }
     
