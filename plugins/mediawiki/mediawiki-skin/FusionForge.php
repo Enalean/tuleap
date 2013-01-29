@@ -31,7 +31,7 @@ class SkinFusionForge extends SkinTemplate {
 		    group_get_object_by_name($GLOBALS['fusionforgeproject']))) {
 			$tc->params['group'] = $GLOBALS['group_id'] =
 			    $project->getID();
-			$tc->params['toptab'] = 'mediawiki';
+			$tc->params['toptab'] = 'plugin_mediawiki';
 		}
 
 		return $tc;
@@ -88,7 +88,6 @@ class FusionForgeTemplate extends BaseTemplate {
 
 		echo "\n<!-- FUSIONFORGE BodyHeader BEGIN -->\n";
 		$GLOBALS['HTML']->header($this->params);
-                //$GLOBALS['HTML']->header(array('title'=>$title,'group'=>$this->groupId, 'toptab'=>'plugin_mediawiki'));
 		echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
 		echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 
