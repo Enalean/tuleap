@@ -88,6 +88,7 @@ class FusionForgeTemplate extends BaseTemplate {
 
 		echo "\n<!-- FUSIONFORGE BodyHeader BEGIN -->\n";
 		$GLOBALS['HTML']->header($this->params);
+                //$GLOBALS['HTML']->header(array('title'=>$title,'group'=>$this->groupId, 'toptab'=>'plugin_mediawiki'));
 		echo "<div id=\"ff-mw-wrapper\"><div style=\"font-size:x-small;\">\n";
 		echo "<!-- FUSIONFORGE BodyHeader END -->\n";
 
