@@ -129,7 +129,7 @@ tuleap.agiledashboard.cardwall.cardSelectElementEditor = Class.create({
     
     setProperties : function( element, options ) {
         this.element           = element;
-        this.options           = options;
+        this.options           = options || {};
         this.tracker_user_data = [];
 
         this.field_id       = element.readAttribute( 'data-field-id' );

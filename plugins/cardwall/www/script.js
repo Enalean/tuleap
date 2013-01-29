@@ -157,12 +157,7 @@ document.observe('dom:loaded', function () {
 
     (function enableAssignedToInPlaceEditing() {
         $$( '.valueOf_assigned_to' ).each( function( assigned_to_container ) {
-            var options = {};
-            
-            new tuleap.agiledashboard.cardwall.cardSelectElementEditor( 
-                assigned_to_container,
-                options
-            );
+            new tuleap.agiledashboard.cardwall.cardSelectElementEditor( assigned_to_container );
         })
     })();
  
