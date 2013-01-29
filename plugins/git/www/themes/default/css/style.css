@@ -1,3 +1,57 @@
+/* {{{ Bootstrap copy paste */
+
+button::-moz-focus-inner,
+input::-moz-focus-inner {
+  padding: 0;
+  border: 0;
+}
+
+button {
+  margin: 0;
+  font-size: 100%;
+  vertical-align: middle;
+}
+
+.input-append .active,
+.input-prepend .active {
+  border-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.25);
+}
+
+.input-mini {
+  width: 60px;
+}
+
+.input-small {
+  width: 90px;
+}
+
+.input-medium {
+  width: 150px;
+}
+
+.input-large {
+  width: 210px;
+}
+
+.input-xlarge {
+  width: 270px;
+}
+
+.input-xxlarge {
+  width: 530px;
+}
+
+.controls-row [class*="span"] + [class*="span"] {
+  margin-left: 20px;
+}
+
+.row-fluid .input-prepend [class*="span"],
+.row-fluid .input-append [class*="span"] {
+  display: inline-block;
+}
+
+/* }}} */
+
 .help {
   width: auto;
   background:url(../images/help.png) no-repeat;
@@ -165,17 +219,8 @@ td.plugin_git_first_col {
     border: 1px solid #ccc;
 }
 
-button {
-  margin: 0;
-  font-size: 100%;
-  vertical-align: middle;
-}
-
-.input-append .active,
-.input-prepend .active {
-  border-color: rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.15) rgba(0, 0, 0, 0.25);
-}
-
+/* {{{ The styling of the #plugin_git_clone_field is based on bootstrap with 
+       customizations. Waiting for LESS support */
 #plugin_git_clone_field {
   font-size: 14px;
   font-weight: normal;
@@ -227,30 +272,6 @@ button {
   color: #999999;
 }
 
-.input-mini {
-  width: 60px;
-}
-
-.input-small {
-  width: 90px;
-}
-
-.input-medium {
-  width: 150px;
-}
-
-.input-large {
-  width: 210px;
-}
-
-.input-xlarge {
-  width: 270px;
-}
-
-.input-xxlarge {
-  width: 530px;
-}
-
 #plugin_git_clone_field[class*="span"],
 .row-fluid #plugin_git_clone_field[class*="span"] {
   float: none;
@@ -259,18 +280,12 @@ button {
 
 .input-append #plugin_git_clone_field[class*="span"],
 .input-prepend #plugin_git_clone_field[class*="span"],
-.row-fluid #plugin_git_clone_field[class*="span"],
-.row-fluid .input-prepend [class*="span"],
-.row-fluid .input-append [class*="span"] {
+.row-fluid #plugin_git_clone_field[class*="span"] {
   display: inline-block;
 }
 
 #plugin_git_clone_field {
   margin-left: 0;
-}
-
-.controls-row [class*="span"] + [class*="span"] {
-  margin-left: 20px;
 }
 
 #plugin_git_clone_field.span12 {
@@ -320,12 +335,7 @@ button {
 #plugin_git_clone_field.span1 {
   width: 46px;
 }
-
-button::-moz-focus-inner,
-input::-moz-focus-inner {
-  padding: 0;
-  border: 0;
-}
+/* }}} */
 
 .input-prepend .gitclone_urls_protocols > .btn:last-child {
   -webkit-border-radius: 0;
