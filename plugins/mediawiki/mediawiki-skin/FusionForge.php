@@ -206,7 +206,7 @@ echo $footerEnd;
 				continue;
 
 			if ( $boxName == 'SEARCH' ) {
-				$this->searchBox();
+                            //keep empty to remove html search box
 			} elseif ( $boxName == 'TOOLBOX' ) {
 				$this->toolbox();
 			} elseif ( $boxName == 'LANGUAGES' ) {
@@ -215,30 +215,6 @@ echo $footerEnd;
 				$this->customBox( $boxName, $content );
 			}
 		}
-	}
-
-	function searchBox() {
-		global $wgUseTwoButtonsSearchForm;
-?>
-	<div id="p-search" class="portlet">
-		<h5><label for="searchInput"><?php $this->msg('search') ?></label></h5>
-		<div id="searchBody" class="pBody">
-			<form action="<?php $this->text('wgScript') ?>" id="searchform">
-				<input type='hidden' name="title" value="<?php $this->text('searchtitle') ?>"/>
-				<?php echo $this->makeSearchInput(array( "id" => "searchInput" )); ?>
-
-				<?php echo $this->makeSearchButton("go", array( "id" => "searchGoButton", "class" => "searchButton" ));
-				if ($wgUseTwoButtonsSearchForm): ?>&#160;
-				<?php echo $this->makeSearchButton("fulltext", array( "id" => "mw-searchButton", "class" => "searchButton" ));
-				else: ?>
-
-				<div><a href="<?php $this->text('searchaction') ?>" rel="search"><?php $this->msg('powersearch-legend') ?></a></div><?php
-				endif; ?>
-
-			</form>
-		</div>
-	</div>
-<?php
 	}
 
 	/**
