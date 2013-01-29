@@ -22,7 +22,8 @@ tuleap.agiledashboard.cardwall = tuleap.agiledashboard.cardwall || { };
 
 tuleap.agiledashboard.cardwall.cardTextElementEditor = Class.create({
 
-    initialize : function( element ) {
+    initialize : function( element, options ) {
+        this.options = options || {};
         this.setProperties( element );
 
         if(! this.userCanEdit() ) {
@@ -31,12 +32,11 @@ tuleap.agiledashboard.cardwall.cardTextElementEditor = Class.create({
 
         this.injectTemporaryContainer();
 
-        new Ajax.InPlaceEditor( this.div, this.update_url, {
-            formClassName : 'card_element_edit_form',
-            callback   : this.ajaxCallback(),
-            onComplete : this.success(),
-            onFailure  : this.fail
-        });
+        this.options['callback']      = this.ajaxCallback();
+        this.options['onComplete']    = this.success();
+        this.options['onFailure']     = this.fail;
+
+        new Ajax.InPlaceEditor( this.div, this.update_url, this.options );
     },
 
     setProperties : function ( element ) {
@@ -157,7 +157,6 @@ tuleap.agiledashboard.cardwall.cardSelectElementEditor = Class.create({
 
     addOptions : function() {
         this.options[ 'multiple' ]      = this.multi_select;
-        this.options[ 'formClassName' ] = 'card_element_edit_form';
         this.options[ 'collection' ]    = this.getAvailableUsers();
         this.options[ 'element' ]       = this.element;
         this.options[ 'callback' ]      = this.preRequestCallback();

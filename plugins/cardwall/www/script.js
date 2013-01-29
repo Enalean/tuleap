@@ -49,7 +49,6 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
 
 document.observe('dom:loaded', function () {
     $$('.cardwall_board').each(function ( board ) {
-        
         (function checkForLatestCardWallVersion() {
             if ($('tracker_report_cardwall_to_be_refreshed')) {
                 //    Eg: board > drag n drop > go to a page > click back (the post it should be drag 'n dropped)
@@ -102,7 +101,7 @@ document.observe('dom:loaded', function () {
                             dragged.removeClassName( accept_class );
 
                             //switch to the new column
-                            Element.remove( dragged );
+                            dragged.remove();
                             current_td.down( 'ul' ).appendChild( dragged );
 
                             setStyle( dragged, current_td );
@@ -158,35 +157,37 @@ document.observe('dom:loaded', function () {
                     $H( card.value ).each( function( field ) {
                         var field_name = '.valueOf_' + field.key;
                         card_element.select( field_name ).each( function( field_element ) {
-                            field_element.update( field.value );
+                            //auto-updates fields
+                            field_element.down('div').update( field.value );
                         });
                     });
-
                 });
             }
 
         })();
-    });
 
-    (function enableRemainingEffortInPlaceEditing() {
-        $$( '.valueOf_remaining_effort' ).each( function( remaining_effort_container ) {
-            new tuleap.agiledashboard.cardwall.cardTextElementEditor( remaining_effort_container );
-        })
-    })();
+        (function enableRemainingEffortInPlaceEditing() {
+            $$( '.valueOf_remaining_effort' ).each( function( remaining_effort_container ) {
+                new tuleap.agiledashboard.cardwall.cardTextElementEditor( remaining_effort_container );
+            })
+        })();
 
-    (function enableAssignedToInPlaceEditing() {
-        $$( '.valueOf_assigned_to' ).each( function( assigned_to_container ) {
-            new tuleap.agiledashboard.cardwall.cardSelectElementEditor( assigned_to_container );
-        })
-    })();
- 
-    $$('.cardwall_admin_ontop_mappings input[name^=custom_mapping]').each(function (input) {
-        input.observe('click', function (evt) {
-            if (this.checked) {
-                this.up('td').down('select').enable().focus().readonly = false;
-            } else {
-                this.up('td').down('select').disable().readonly = true;
-            }
+        (function enableAssignedToInPlaceEditing() {
+            $$( '.valueOf_assigned_to' ).each( function( assigned_to_container ) {
+                new tuleap.agiledashboard.cardwall.cardSelectElementEditor( assigned_to_container );
+            })
+        })();
+
+        $$('.cardwall_admin_ontop_mappings input[name^=custom_mapping]').each(function (input) {
+            input.observe('click', function (evt) {
+                if (this.checked) {
+                    this.up('td').down('select').enable().focus().readonly = false;
+                } else {
+                    this.up('td').down('select').disable().readonly = true;
+                }
+            });
         });
+
     });
+
 });
