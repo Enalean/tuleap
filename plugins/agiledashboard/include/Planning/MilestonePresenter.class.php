@@ -19,8 +19,12 @@
  */
 
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/CardFields.class.php';
 
+/**
+ * This presenter build the top view of a milestone (milestone title + switch on another milestone).
+ * It delegates the displaye to an AgileDashboardPane for the content
+ * @see AgileDashboard_Pane
+ */
 class AgileDashboard_MilestonePresenter {
     /**
      * @var array
@@ -31,12 +35,27 @@ class AgileDashboard_MilestonePresenter {
      * @var array of Planning_Milestone
      */
     private $available_milestones;
-    
+
+    /**
+     * @var Planning_Milestone
+     */
     private $milestone;
+
+    /**
+     * @var User
+     */
     private $current_user;
+
+    /**
+     * @var Codendi_Request
+     */
     private $request;
 
-    public $active_pane;
+    /**
+     * @var AgileDashboard_Pane
+     */
+    private $active_pane;
+
     /**
      * @var string
      */
@@ -51,12 +70,12 @@ class AgileDashboard_MilestonePresenter {
             array $available_milestones,
             $planning_redirect_to_new
             ) {
-        $this->milestone = $milestone;
-        $this->current_user = $current_user;
-        $this->request = $request;
-        $this->active_pane = $active_pane;
-        $this->additional_panes = $additional_panes;
-        $this->available_milestones        = $available_milestones;
+        $this->milestone                = $milestone;
+        $this->current_user             = $current_user;
+        $this->request                  = $request;
+        $this->active_pane              = $active_pane;
+        $this->additional_panes         = $additional_panes;
+        $this->available_milestones     = $available_milestones;
         $this->planning_redirect_to_new = $planning_redirect_to_new;
     }
 
@@ -81,10 +100,7 @@ class AgileDashboard_MilestonePresenter {
         }
         return $artifacts_data;
     }
-    
-    /**
-     * @return string
-     */
+
     public function createNewItemToPlan() {
         return $GLOBALS['Language']->getText('plugin_agiledashboard', 'create_new_item_to_plan', array($this->milestone->getPlanning()->getPlanningTracker()->getItemName()));
     }
@@ -100,10 +116,14 @@ class AgileDashboard_MilestonePresenter {
         }
     }
 
+    public function getActivePane() {
+        return $this->active_pane;
+    }
+
     /**
      * @return array
      */
-    public function pane_info_list() {
+    public function getPaneInfoList() {
         return $this->additional_panes;
     }
 }
