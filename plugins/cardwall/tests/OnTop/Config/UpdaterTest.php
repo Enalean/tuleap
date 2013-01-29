@@ -17,9 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once dirname(__FILE__) .'/../../../include/constants.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/Updater.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/Command.class.php';
+require_once dirname(__FILE__) .'/../../bootstrap.php';
 require_once 'common/include/Codendi_Request.class.php';
 
 class Cardwall_OnTop_Config_UpdaterTest extends TuleapTestCase {

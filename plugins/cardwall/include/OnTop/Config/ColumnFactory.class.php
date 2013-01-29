@@ -20,10 +20,6 @@
  */
 
 require_once dirname(__FILE__). '/../../constants.php';
-require_once CARDWALL_BASE_DIR. '/Column.class.php';
-require_once 'ColumnStatusCollection.class.php';
-require_once 'ColumnFreestyleCollection.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
 
 class Cardwall_OnTop_Config_ColumnFactory {
 

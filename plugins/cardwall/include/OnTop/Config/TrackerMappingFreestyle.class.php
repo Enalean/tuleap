@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'TrackerMappingField.class.php';
 
 class Cardwall_OnTop_Config_TrackerMappingFreestyle extends Cardwall_OnTop_Config_TrackerMappingField {
 

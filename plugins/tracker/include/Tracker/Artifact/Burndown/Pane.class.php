@@ -18,15 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * A pane to be displayed in AgileDashboard
  */
 class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
-    
-    const IDENTIFIER = 'burndown';
-    const TITLE = 'Burndown';
-    
+
+    /**
+     * @var Tracker_Artifact_Burndown_PaneInfo 
+     */
+    private $info;
+
     /**
      * @var Tracker_Artifact
      */
@@ -42,46 +43,23 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
      */
     private $user;
 
-    /**
-     * @var string
-     */
-    private $plugin_theme_path;
-
-    public function __construct(Tracker_Artifact $artifact, Tracker_FormElement_Field_Burndown $field, User $user, $plugin_theme_path) {
+    public function __construct(
+            Tracker_Artifact_Burndown_PaneInfo $info,
+            Tracker_Artifact $artifact,
+            Tracker_FormElement_Field_Burndown $field,
+            User $user) {
+        $this->info              = $info;
         $this->artifact          = $artifact;
         $this->field             = $field;
         $this->user              = $user;
-        $this->plugin_theme_path = $plugin_theme_path;
     }
 
-    /**
-     * @see AgileDashboard_Pane::getIdentifier()
-     * @return string
-     */
     public function getIdentifier() {
-        return self::IDENTIFIER;
+        return $this->info->getIdentifier();
     }
 
-    /**
-     * @see AgileDashboard_Pane::getTitle()
-     * @return string
-     */
-    public function getTitle() {
-        return self::TITLE;
-    }
-    
-    /**
-     * @see AgileDashboard_Pane::getIcon()
-     */
-    public function getIcon() {
-        return '';
-    }
-    
-    /**
-     * @see AgileDashboard_Pane::getIconTitle()
-     */
-    public function getIconTitle() {
-        return '';
+    public function getUriForMilestone(Planning_Milestone $milestone) {
+        return $this->info->getUriForMilestone($milestone);
     }
     
     /**
