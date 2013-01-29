@@ -118,8 +118,6 @@ plugin_git	project_service_not_available	Service not available for your project 
 plugin_git	reference_commit_desc_key	Git commit
 plugin_git	reference_commit_nature_key	Git commit
 
-plugin_git	admin_repo_management	Repository management
-
 plugin_git	mail_prefix_label	Notification Prefix
 plugin_git	mail_prefix_title	Update notification mail prefix
 plugin_git	mail_prefix	New prefix

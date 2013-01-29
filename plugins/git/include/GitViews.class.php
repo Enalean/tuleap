@@ -140,7 +140,7 @@ class GitViews extends PluginViews {
         $repoName     = $repository->getName();
         echo "<br/>";
         $this->_getBreadCrumb();
-        echo '<h2>'. $this->_getRepositoryPageUrl($repoId, $repoName) .' - '. $this->getText('admin_repo_management') .'</h2>';
+        echo '<h2>'. $this->_getRepositoryPageUrl($repoId, $repoName) .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
 
         $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers']);
         $repo_management_view->display();

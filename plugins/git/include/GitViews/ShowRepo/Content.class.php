@@ -159,7 +159,7 @@ class GitViews_ShowRepo_Content {
             $html .= ' ';
             $html .= '<a href="/plugins/git/?action=repo_management&group_id='.$this->repository->getProjectId().'&repo_id='.$this->repository->getId().'" class="btn plugin_git_admin_button">';
             $html .= '<i class="icon-cog"></i> ';
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'admin_repo_management'); //TODO: What about "Settings" ?
+            $html .= $GLOBALS['Language']->getText('global', 'Settings');
             $html .= '</a>';
         }
 

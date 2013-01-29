@@ -103,8 +103,6 @@ plugin_git	project_service_not_available	Le service n'est pas disponible pour vo
 plugin_git	reference_commit_nature_key	Commit Git
 plugin_git	reference_commit_desc_key	Commit Git
 
-plugin_git	admin_repo_management	Gestion du dépôt GIT
-
 plugin_git	admin_settings	Options générales
 plugin_git	gerrit_pane_title	Gerrit
 plugin_git	gerrit_title	Migration vers Gerrit
