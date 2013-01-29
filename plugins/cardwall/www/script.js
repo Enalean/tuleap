@@ -206,7 +206,13 @@ document.observe('dom:loaded', function () {
         this.fail = function() {
         };
 
-        this.init();
+        this.userCanEdit = function() {
+            return (this.field_id !== null)
+        }
+
+        if( this.userCanEdit() ) {
+            this.init();
+        }
     }
 
     /**
@@ -431,7 +437,13 @@ document.observe('dom:loaded', function () {
             }
         };
 
-        this.init();
+        this.userCanEdit = function() {
+            return (this.field_id !== null)
+        }
+
+        if( this.userCanEdit() ) {
+            this.init();
+        }
     }
 
     (function enableRemainingEffortInPlaceEditing() {
