@@ -1,3 +1,9 @@
+Version 0.64 - Tuleap 5.11
+    * Enhancement: update the remaining effort on a story without leaving the agile dashboard
+
+Version 0.63 - Tuleap 5.9
+    * Refactoring
+
 Version 0.62 - Tuleap 5.9
     * Add autoload to trackers
 

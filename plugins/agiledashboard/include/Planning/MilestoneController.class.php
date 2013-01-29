@@ -17,12 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'common/mvc2/Controller.class.php';
+require_once 'common/mvc2/PluginController.class.php';
 
 /**
  * Handles the HTTP actions related to a planning milestone.
  */
-class Planning_MilestoneController extends MVC2_Controller {
+class Planning_MilestoneController extends MVC2_PluginController {
 
     /**
      * @var Planning_MilestoneFactory

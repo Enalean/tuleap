@@ -894,7 +894,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $lastChangeset = $artifact->getLastChangeset();
         $ids = array();
         if($lastChangeset) {
-            $ids = $artifact->getLastChangeset()->getValue($this)->getArtifactIds();
+            $ids = $lastChangeset->getValue($this)->getArtifactIds();
         }
         return $ids;
     }

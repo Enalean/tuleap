@@ -1,3 +1,9 @@
+Version 0.9.12 - Tuleap 5.11
+    * Enhancement: update the remaining effort on a story without leaving the agile dashboard
+
+Version 0.9.11 - Tuleap 5.9
+    * Fix some issues occuring during project creation
+
 Version 0.9.10 - Tuleap 5.9
     * Fix some isolated tests
 

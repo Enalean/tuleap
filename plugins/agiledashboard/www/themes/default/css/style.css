@@ -217,7 +217,7 @@
     float:right;
 }
 .card_element_edit_form > input[type=text] {
-    width : 40px;
+    width: 40px;
 }
 
 .card_element_edit_form > input[type=submit] {
@@ -247,3 +247,4 @@ div.card-details .avatar_structure_div {
     padding-right: 5px;
 }
 /* }}} */
+

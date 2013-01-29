@@ -115,7 +115,15 @@ class SystemEventManager {
         }
         return self::$_instance;
     }
-    
+
+    public function setInstance(SystemEventManager $instance) {
+        self::$_instance = $instance;
+    }
+
+    public function clearInstance() {
+        self::$_instance = null;
+    }
+
     function _getEventManager() {
         return EventManager::instance();
     }

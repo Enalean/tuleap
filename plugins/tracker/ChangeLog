@@ -1,3 +1,19 @@
+Version 5.73 - Tuleap 5.11
+    * Enhancement: update the remaining effort on a story without leaving the agile dashboard
+
+Version 5.72 - Tuleap 5.11
+    * Display burndown icon on AD homepage
+
+Version 5.71 - Tuleap 5.10
+    * Fix error on getArtifactComments() through SOAP
+
+Version 5.70 - Tuleap 5.9.1
+    * Fix fatal error when agiledashboard is not installed
+
+Version 5.69 - Tuleap 5.9
+    * By default trackers are instantiable for new project
+    * Fix notices
+
 Version 5.68 - Tuleap 5.9
     * HTML_Element_Input_Checkbox missing include
 

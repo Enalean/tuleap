@@ -336,7 +336,6 @@ document.observe('dom:loaded', function () {
 
             return function setRequestData( form, value ) {
                 var parameters = {};
-
                 if ( is_multi_select ) {
                     linked_field = 'artifact[' + field_id +'][]';
                 } else {
