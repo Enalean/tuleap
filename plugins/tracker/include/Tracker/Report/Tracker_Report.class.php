@@ -218,14 +218,17 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     /**
-     * Convert the output of getMatchingIds() to a format that could be used
+     * Given the output of getMatchingIds() which returns an array containing 'artifacts ids' and  'Last changeset ids'
+     * as two strings with comma separated values, this method would format such output to an array with artifactIds in keys
+     * and last changeset ids in values.
+     * @see Tracker_Report::joinResults() for usage
      *
      * @param HTTPRequest $request       @see getMatchingIds()
      * @param Boolean     $useDataFromDb @see getMatchingIds()
      *
      * @return Array
      */
-    private function formatMatchingIds($request = null, $useDataFromDb = false) {
+    private function getLastChangesetIdByArtifactId($request = null, $useDataFromDb = false) {
         $matchingIds          = $this->getMatchingIds($request, $useDataFromDb);
         $artifactIds          = explode(',', $matchingIds['id']);
         $lastChangesetIds     = explode(',', $matchingIds['last_changeset_id']);
@@ -237,13 +240,16 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     }
 
     /**
-     * Convert a useful format to the type of output of getMatchingIds()
+     * This method is the opposite of getLastChangesetIdByArtifactId().
+     * Given an array with artifactIds in keys and lastChangesetIds on values it would return and array with two elements of type string
+     * the first contains comma separated "artifactIds" and the second contains comma separated "lastChangesetIds".
+     * @see Tracker_Report::joinResults() for usage
      *
      * @param Array $formattedMatchingIds Matching Id's that will get converted in that format
      *
      * @return Array
      */
-    private function scrambleMatchingIds($formattedMatchingIds) {
+    private function implodeMatchingIds($formattedMatchingIds) {
         $matchingIds['id']                = '';
         $matchingIds['last_changeset_id'] = '';
         foreach ($formattedMatchingIds as $artifactId => $lastChangesetId) {
@@ -814,7 +820,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $searchPerformed = false;
         $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed, 'group_id' => $this->tracker->getGroupId());
         EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
-        $matchingIds = $this->formatMatchingIds($request, false);
+        $matchingIds = $this->getLastChangesetIdByArtifactId($request, false);
         if ($searchPerformed && is_array($params['result']) && $params['search_performed']) {
             foreach ($matchingIds as $artifactId => $lastChangesetId) {
                 if (!array_key_exists($artifactId, $params['result'])) {
@@ -822,7 +828,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
             }
         }
-        return $this->scrambleMatchingIds($matchingIds);
+        return $this->implodeMatchingIds($matchingIds);
     }
 
     public function getRenderers() {
