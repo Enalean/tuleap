@@ -130,11 +130,29 @@ class Planning_MilestoneFactory {
 
     private function updateMilestoneContextualInfo(User $user, Planning_ArtifactMilestone $milestone) {
         return $milestone
-            ->setCapacity($this->getFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME))
-            ->setRemainingEffort($this->getFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
+            ->setCapacity($this->getComputedFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME))
+            ->setRemainingEffort($this->getComputedFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME))
+            ->setStartDate($this->getTimestamp($user, $milestone, Planning_Milestone::START_DATE_FIELD_NAME))
+            ->setDuration($this->getComputedFieldValue($user, $milestone, Planning_Milestone::DURATION_FIELD_NAME));
     }
 
-    private function getFieldValue(User $user, Planning_ArtifactMilestone $milestone, $field_name) {
+    private function getTimestamp(User $user, Planning_ArtifactMilestone $milestone, $field_name) {
+        $milestone_artifact = $milestone->getArtifact();
+        $field              = $this->formelement_factory->getUsedFieldByNameForUser($milestone_artifact->getTracker()->getId(), $field_name, $user);
+
+        if (! $field) {
+            return 0;
+        }
+
+        $value = $field->getLastChangesetValue($milestone_artifact);
+        if (! $value) {
+            return 0;
+        }
+
+        return $value->getTimestamp();
+    }
+
+    private function getComputedFieldValue(User $user, Planning_ArtifactMilestone $milestone, $field_name) {
         $milestone_artifact = $milestone->getArtifact();
         $field = $this->formelement_factory->getComputableFieldByNameForUser(
             $milestone_artifact->getTracker()->getId(),

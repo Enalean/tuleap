@@ -228,3 +228,10 @@
 .valueOf_remaining_effort {
     min-width: 30px;
 }
+
+.release-date-info {
+    margin-top: -0.5em;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+    color: #999;
+}
