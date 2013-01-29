@@ -216,3 +216,15 @@
     margin-left:0.5em;
     float:right;
 }
+.card_element_edit_form > input[type=text] {
+    width: 40px;
+}
+
+.card_element_edit_form > input[type=submit] {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.valueOf_remaining_effort {
+    min-width: 30px;
+}
