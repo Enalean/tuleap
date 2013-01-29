@@ -131,7 +131,18 @@ class Planning_MilestoneFactory {
     private function updateMilestoneContextualInfo(User $user, Planning_ArtifactMilestone $milestone) {
         return $milestone
             ->setCapacity($this->getFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME))
-            ->setRemainingEffort($this->getFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME));
+            ->setRemainingEffort($this->getFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME))
+            ->setStartDate($this->getDateFieldValue($milestone, Planning_Milestone::START_DATE_FIELD_NAME));
+    }
+
+    private function getDateFieldValue($milestone, $field_name) {
+        $milestone_artifact = $milestone->getArtifact();
+        $field              = $this->formelement_factory->getFormElementByName($milestone_artifact->getTracker()->getId(), $field_name);
+
+        if ($field) {
+            return $field->getLastValue($milestone_artifact);
+        }
+        return 0;
     }
 
     private function getFieldValue(User $user, Planning_ArtifactMilestone $milestone, $field_name) {

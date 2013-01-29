@@ -281,6 +281,15 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     public function setAncestors(array $parents) {
         $this->parent_milestones = $parents;
     }
+
+    public function setStartDate($start_date) {
+        $this->start_date = $start_date;
+        return $this;
+    }
+
+    public function getStartDate() {
+        return $this->start_date;
+    }
 }
 
 ?>

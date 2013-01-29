@@ -261,6 +261,28 @@ class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_Milestone
     }
 }
 
+class MilestoneFactory_MilestoneComesWithStartDateTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+
+    public function testStartDateIsNullWheneThereIsNoStartDateField() {
+        $this->assertEqual($this->getMilestoneStartDate(), null);
+    }
+
+    public function itRetrievesMilestoneWithStartDateWithActualValue() {
+        $start_date = 1359477908;
+
+        $start_date_field = stub('Tracker_FormElement_Field_Date')->getLastValue($this->artifact)->returns($start_date);
+        stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, Planning_Milestone::START_DATE_FIELD_NAME)->returns($start_date_field);
+
+        $this->assertEqual($this->getMilestoneStartDate(), $start_date);
+    }
+
+    private function getMilestoneStartDate() {
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
+        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
+        return $milestone->getStartDate();
+    }
+}
+
 class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     private $project;
       

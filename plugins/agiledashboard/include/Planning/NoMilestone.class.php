@@ -128,5 +128,9 @@ class Planning_NoMilestone implements Planning_Milestone {
 
     public function setAncestors(array $ancestors) {
     }
+
+    public function getStartDate() {
+        return null;
+    }
 }
 ?>
