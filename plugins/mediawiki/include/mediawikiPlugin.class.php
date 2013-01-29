@@ -67,7 +67,8 @@ class MediaWikiPlugin extends Plugin {
 
         public function search_type($params) {
             if ($params['type_of_search'] == $this->name) {
-                util_return_to('/plugins/mediawiki/wiki/'.'mediawiki120' .'/index.php?title=Special%3ASearch&search=' . urlencode($params['words']) . '&go=Go');
+                $project = group_get_object($params['group_id']);
+                util_return_to('/plugins/mediawiki/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($params['words']) . '&go=Go');
             }
         }
 
