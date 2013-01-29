@@ -102,8 +102,7 @@ class GitViews_ShowRepo_Content {
         $html .= '<h1>'.$accessType.$this->repository->getFullName().'</h1>';
         if ( !empty($parent) ) {
             $html .= '<div id="plugin_git_repo_parent">';
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'view_repo_parent');
-            $html .= ': <span>'. $parent->getHTMLLink() .'</span>';
+            $html .= $GLOBALS['Language']->getText('plugin_git', 'view_repo_parent_'. $this->repository->getBackendType(), $parent->getHTMLLink());
             $html .= '</div>';
         }
         return $html;

@@ -84,7 +84,8 @@ plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
 plugin_git	view_repo_creation_date	Date
-plugin_git	view_repo_parent	Parent
+plugin_git	view_repo_parent_gitshell	Parent : $1
+plugin_git	view_repo_parent_gitolite	Fork de $1
 plugin_git	view_repo_initialized	Initialisé
 plugin_git	view_repo_not_initialized	Non initialisé
 plugin_git	view_repo_clone_url	Clone url

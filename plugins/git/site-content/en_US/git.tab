@@ -98,7 +98,8 @@ plugin_git	actions_name_not_available	     A file already exists with this name 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Created by
 plugin_git	view_repo_creation_date	Date
-plugin_git	view_repo_parent	Parent
+plugin_git	view_repo_parent_gitshell	Parent: $1
+plugin_git	view_repo_parent_gitolite	Forked from $1
 plugin_git	view_repo_initialized	Initialized
 plugin_git	view_repo_not_initialized	Not initialized
 plugin_git	view_repo_clone_url	Clone url
