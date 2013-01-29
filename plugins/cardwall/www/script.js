@@ -298,7 +298,7 @@ document.observe('dom:loaded', function () {
 
         this.getClickableArea = function() {
             if( this.element.innerHTML == '' ) {
-                return '?' ;
+                return '&Oslash;' ;
             }
             
             return this.element.innerHTML;
@@ -376,6 +376,18 @@ document.observe('dom:loaded', function () {
                 new_values = getNewValues( transport, is_multi_select, field_id );
                 updateAvatarDiv( element, new_values );
 
+                function getNewValues(transport, is_multi_select, field_id) {
+                    var new_values;
+
+                    if ( is_multi_select ) {
+                        new_values = transport.request.parameters[ 'artifact[' + field_id + '][]' ];
+                    } else {
+                        new_values = transport.request.parameters[ 'artifact[' + field_id + ']' ];
+                    }
+
+                    return new_values;
+                }
+
                 function updateAvatarDiv( avatar_div, new_values ) {
                     var div_html;
 
@@ -388,20 +400,8 @@ document.observe('dom:loaded', function () {
                         div_html = generateAvatarDiv( new_values );
                         avatar_div.appendChild( div_html );
                     } else {
-                        avatar_div.update( '?' );
+                        avatar_div.update( '&Oslash;' );
                     }
-                }
-                
-                function getNewValues(transport, is_multi_select, field_id) {
-                    var new_values;
-
-                    if ( is_multi_select ) {
-                        new_values = transport.request.parameters[ 'artifact[' + field_id + '][]' ];
-                    } else {
-                        new_values = transport.request.parameters[ 'artifact[' + field_id + ']' ];
-                    }
-
-                    return new_values;
                 }
 
                 function generateAvatarDiv( user_id ) {
