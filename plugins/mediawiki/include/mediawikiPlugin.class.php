@@ -53,6 +53,7 @@ class MediaWikiPlugin extends Plugin {
 		$this->_addHook('group_delete');
                 // Search
                 $this->_addHook('search_type_entry', 'search_type_entry', false);
+                $this->_addHook('search_type', 'search_type', false);
 	}
 
         public function search_type_entry($params) {
@@ -62,6 +63,12 @@ class MediaWikiPlugin extends Plugin {
                 }
                 $params['output'] .= '>'. 'Mediawiki';
                 $params['output'] .= '</option>';
+        }
+
+        public function search_type($params) {
+            if ($params['type_of_search'] == $this->name) {
+                util_return_to('/plugins/mediawiki/wiki/'.'mediawiki120' .'/index.php?title=Special%3ASearch&search=' . urlencode($params['words']) . '&go=Go');
+            }
         }
 
         function process() {
