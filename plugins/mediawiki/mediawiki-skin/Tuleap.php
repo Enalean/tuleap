@@ -64,8 +64,9 @@ class SkinTuleap extends SkinTemplate {
             }
 
             // TODO: Migrate all of these
-            $out->addStyle( 'monobook/IE60Fixes.css', 'screen', 'IE 6' );
-            $out->addStyle( 'monobook/IE70Fixes.css', 'screen', 'IE 7' );
+            $out->addStyle( 'tuleap/main.css', 'screen');
+            $out->addStyle( 'tuleap/IE60Fixes.css', 'screen', 'IE 6' );
+            $out->addStyle( 'tuleap/IE70Fixes.css', 'screen', 'IE 7' );
     }
 }
 
