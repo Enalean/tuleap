@@ -71,10 +71,6 @@ textarea.text {
     width:400px;
 }
 
-.plugin_git_repo_privacy {
-    margin-right: 0.5em;
-}
-
 #plugin_git_reference {
     margin-top: 1em;
     margin-bottom: 1em;
@@ -131,8 +127,17 @@ textarea.text {
 }
 
 #plugin_git_repo_parent {
-    margin-top:0em;
-    margin-bottom:0em;
+    color: #666;
+    font-size: 12px;
+    margin-top: -1.5em;
+    margin-bottom: 1.5em;
+}
+
+.plugin_git_repo_privacy {
+    margin-right: 8px;
+}
+.plugin_git_repo_type_gitshell > #plugin_git_repo_parent {
+    margin-left: 25px;
 }
 
 #plugin_git_add_mail_msg {

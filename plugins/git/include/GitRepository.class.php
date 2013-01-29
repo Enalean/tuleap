@@ -190,7 +190,8 @@ class GitRepository implements DVCSRepository {
         $this->backendType = $backendType;
     }
 
-    protected function getBackendType() {
+    /** @return string */
+    public function getBackendType() {
         return $this->backendType;
     }
     

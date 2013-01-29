@@ -74,7 +74,7 @@ class GitViews_ShowRepo_Content {
 
     public function display() {
         $html  = '';
-        $html .= '<div id="plugin_git_reference">';
+        $html .= '<div id="plugin_git_reference" class="plugin_git_repo_type_'. $this->repository->getBackendType() .'">';
         $html .= $this->getHeader();
         if ($this->repository->getRemoteServerId()) {
             $html .= $this->getRemoteRepositoryInfo();
@@ -101,10 +101,10 @@ class GitViews_ShowRepo_Content {
 
         $html .= '<h1>'.$accessType.$this->repository->getFullName().'</h1>';
         if ( !empty($parent) ) {
-            $html .= '<p id="plugin_git_repo_parent">';
+            $html .= '<div id="plugin_git_repo_parent">';
             $html .= $GLOBALS['Language']->getText('plugin_git', 'view_repo_parent');
             $html .= ': <span>'. $parent->getHTMLLink() .'</span>';
-            $html .= '</p>';
+            $html .= '</div>';
         }
         return $html;
     }
