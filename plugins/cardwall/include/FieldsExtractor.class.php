@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once TRACKER_BASE_DIR. '/Tracker/TreeNode/CardPresenterNode.class.php';
-require_once 'CardInCellPresenterCallback.class.php';
-require_once 'FieldProviders/SemanticStatusFieldProvider.class.php';
 
 /**
  * Foreach artifact in a TreeNode tree, make a collection of the semantic status fields and

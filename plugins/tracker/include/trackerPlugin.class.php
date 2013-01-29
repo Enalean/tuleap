@@ -150,12 +150,17 @@ class trackerPlugin extends Plugin {
         $user     = $params['user'];
         $burndown_field = $artifact->getABurndownField($user);
         if ($burndown_field) {
-            $params['panes'][] = new Tracker_Artifact_Burndown_Pane(
-                    $artifact,
-                    $burndown_field,
-                    $params['user'],
-                    $this->getThemePath()
+            $pane_info = new Tracker_Artifact_Burndown_PaneInfo($params['milestone']);
+            if ($params['request']->get('pane') == Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER) {
+                $pane_info->setActive(true);
+                $params['active_pane'] = new Tracker_Artifact_Burndown_Pane(
+                        $pane_info,
+                        $artifact,
+                        $burndown_field,
+                        $params['user']
                 );
+            }
+            $params['panes'][] = $pane_info;
         }
     }
     

@@ -193,8 +193,7 @@ class AgileDashboardPlugin extends Plugin {
             $this,
             $this->getMilestoneFactory(),
             $this->getPlanningFactory(),
-            $this->getHierarchyFactory(),
-            $this->getThemePath()
+            $this->getHierarchyFactory()
         );
         $router->route($request);
     }

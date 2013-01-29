@@ -19,10 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'CardInCellPresenter.class.php';
-require_once 'CardInCellPresenterNode.class.php';
-require_once 'MappingCollection.class.php';
-require_once 'FieldProviders/IProvideFieldGivenAnArtifact.class.php';
 require_once 'common/TreeNode/TreeNodeCallback.class.php';
 
 /**

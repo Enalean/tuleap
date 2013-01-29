@@ -116,11 +116,11 @@ class PlanningFactory {
      *
      * @return array of Planning_ShortAccess
      */
-    public function getPlanningsShortAccess(User $user, $group_id, Planning_MilestoneFactory $milestone_factory) {
+    public function getPlanningsShortAccess(User $user, $group_id, Planning_MilestoneFactory $milestone_factory, $theme_path) {
         $plannings    = $this->getPlannings($user, $group_id);
         $short_access = array();
         foreach ($plannings as $planning) {
-            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory);
+            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $theme_path);
         }
         if (!empty($short_access)) {
             end($short_access)->setIsLatest();

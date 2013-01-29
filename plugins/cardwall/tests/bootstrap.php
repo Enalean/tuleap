@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -17,16 +17,8 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once dirname(__FILE__).'/../include/constants.php';
+require_once dirname(__FILE__).'/../include/autoload.php';
+require_once dirname(__FILE__).'/../../tracker/tests/bootstrap.php';
 
-
-/**
- * Wrapper of array of columns defined freely by the user
- */
-class Cardwall_OnTop_Config_ColumnFreestyleCollection extends Cardwall_OnTop_Config_ColumnCollection
-                                                      implements Cardwall_OnTop_Config_ColumnsVisitor {
-
-    public function accept($visitor, $parameter = '') {
-        return $visitor->visitColumnFreestyleCollection($this, $parameter);
-    }
-}
 ?>

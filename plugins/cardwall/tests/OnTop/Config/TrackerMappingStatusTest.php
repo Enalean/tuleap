@@ -18,12 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../../tracker/include/constants.php';
-require_once TRACKER_BASE_DIR .'/../tests/builders/aMockTracker.php';
-require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerMappingStatus.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/ValueMapping.class.php';
+require_once dirname(__FILE__) .'/../../bootstrap.php';
 
 class Cardwall_OnTop_Config_TrackerMappingStatusTest extends TuleapTestCase {
 

@@ -47,6 +47,22 @@ class Planning_MilestoneController extends MVC2_PluginController {
     private $all_milestones = null;
 
     /**
+     * @var Planning_ViewBuilder
+     */
+    private $view_builder;
+
+    /**
+     * @var string
+     */
+    private $theme_path;
+
+    /** @var array of AgileDashboard_PaneInfo */
+    private $available_panes_info;
+
+    /** @var AgileDashboard_Pane */
+    private $active_pane;
+
+    /**
      * Instanciates a new controller.
      * 
      * TODO:
@@ -60,11 +76,14 @@ class Planning_MilestoneController extends MVC2_PluginController {
                                 Planning_MilestoneFactory $milestone_factory,
                                 ProjectManager            $project_manager,
                                 Planning_ViewBuilder      $view_builder,
-                                Tracker_HierarchyFactory  $hierarchy_factory) {
+                                Tracker_HierarchyFactory  $hierarchy_factory,
+                                $theme_path) {
         
         parent::__construct('agiledashboard', $request);
         $this->milestone_factory = $milestone_factory;
         $this->hierarchy_factory = $hierarchy_factory;
+        $this->view_builder      = $view_builder;
+        $this->theme_path        = $theme_path;
         $project                 = $project_manager->getProject($request->get('group_id'));
 
         $this->milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
@@ -76,39 +95,69 @@ class Planning_MilestoneController extends MVC2_PluginController {
         if (!$this->milestone) {
             $this->milestone = $this->milestone_factory->getNoMilestone($project, $request->get('planning_id'));
         }
-        $planning     = $this->milestone->getPlanning();
-        $this->content_view = $this->buildContentView($view_builder, $planning, $project);
     }
 
     public function show() {
-        $planning     = $this->milestone->getPlanning();
-        if ($this->milestone->hasAncestors()) {
-            $available_milestones = $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
-        } else {
-            $available_milestones = $this->getAllMilestonesOfCurrentPlanning();
-        }
-        $presenter = $this->getMilestonePresenter($planning, $this->content_view, $available_milestones);
-        
+        $presenter = $this->getMilestonePresenter();
         $this->render('show', $presenter);
     }
 
-    private function getMilestonePresenter(Planning                              $planning,
-                                           Tracker_CrossSearch_SearchContentView $content_view,
-                                           array                                 $available_milestones) {
-        
-        $planning_redirect_parameter = $this->getPlanningRedirectToSelf();
-        $planning_redirect_to_new    = $this->getPlanningRedirectToNew();
-        
-        return new Planning_MilestonePresenter(
-            $planning,
-            $content_view,
-            $available_milestones,
+    private function getMilestonePresenter() {
+        $this->initAdditionalPanes();
+        return new AgileDashboard_MilestonePresenter(
             $this->milestone,
             $this->getCurrentUser(),
             $this->request,
-            $planning_redirect_parameter,
-            $planning_redirect_to_new
+            $this->active_pane,
+            $this->available_panes_info,
+            $this->getAvailableMilestones(),
+            $this->getPlanningRedirectToNew()
         );
+    }
+
+    protected function getAvailableMilestones() {
+        if ($this->milestone->hasAncestors()) {
+            return $this->milestone_factory->getSiblingMilestones($this->getCurrentUser(), $this->milestone);
+        } else {
+            return $this->getAllMilestonesOfCurrentPlanning();
+        }
+    }
+
+    private function initAdditionalPanes() {
+        $pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->milestone, $this->theme_path);
+        $this->available_panes_info = array($pane_info);
+        $this->active_pane = null;
+        if ($this->milestone->getArtifact()) {
+            EventManager::instance()->processEvent(
+                AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
+                array(
+                    'milestone'   => $this->milestone,
+                    'request'     => $this->request,
+                    'user'        => $this->getCurrentUser(),
+                    'panes'       => &$this->available_panes_info,
+                    'active_pane' => &$this->active_pane,
+                )
+            );
+        }
+        if (!$this->active_pane) {
+            $this->available_panes_info[0]->setActive(true);
+            $this->active_pane = $this->getMilestonePlanningPane($pane_info);
+        }
+        return $this->available_panes_info;
+    }
+
+    private function getMilestonePlanningPane(AgileDashboard_MilestonePlanningPaneInfo $info) {
+
+        $planning     = $this->milestone->getPlanning();
+        $content_view = $this->buildContentView($this->view_builder, $planning, $this->milestone->getProject());
+
+        $milestone_planning_presenter = new AgileDashboard_MilestonePlanningPresenter(
+            $content_view,
+            $this->milestone,
+            $this->getCurrentUser(),
+            $this->getPlanningRedirectToSelf()
+        );
+        return new AgileDashboard_MilestonePlanningPane($info, $milestone_planning_presenter);
     }
     
     private function getPlanningRedirectToSelf() {

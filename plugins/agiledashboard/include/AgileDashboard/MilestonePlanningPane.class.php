@@ -19,39 +19,28 @@
  */
 
 /**
- * A pane to be displayed in AgileDashboard
+ * Content of MilestonePlanning
+ *
+ * @see AgileDashboard_MilestonePlanningPresenter for description of what MilestonePlanning is
  */
-class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
+class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
 
     /**
-     * @var Tracker_Artifact_Burndown_PaneInfo 
+     * @var AgileDashboard_MilestonePlanningPaneInfo
      */
     private $info;
 
     /**
-     * @var Tracker_Artifact
+     * @var AgileDashboard_MilestonePlanningPresenter
      */
-    private $artifact;
-    
-    /**
-     * @var Tracker_FormElement_Field_Burndown
-     */
-    private $field;
-    
-    /**
-     * @var User
-     */
-    private $user;
+    private $presenter;
 
     public function __construct(
-            Tracker_Artifact_Burndown_PaneInfo $info,
-            Tracker_Artifact $artifact,
-            Tracker_FormElement_Field_Burndown $field,
-            User $user) {
-        $this->info              = $info;
-        $this->artifact          = $artifact;
-        $this->field             = $field;
-        $this->user              = $user;
+            AgileDashboard_MilestonePlanningPaneInfo $info,
+            AgileDashboard_MilestonePlanningPresenter $presenter
+            ) {
+        $this->info      = $info;
+        $this->presenter = $presenter;
     }
 
     public function getIdentifier() {
@@ -61,23 +50,24 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
     public function getUriForMilestone(Planning_Milestone $milestone) {
         return $this->info->getUriForMilestone($milestone);
     }
-    
     /**
-     * @see AgileDashboard_Pane::getFullContent()
+     * @return string eg: '<a href="">customize</a> <table>...</table>'
      */
     public function getFullContent() {
-        return $this->getPaneContent();
+        $renderer  = TemplateRendererFactory::build()->getRenderer(dirname(__FILE__).'/../../templates');
+        return $renderer->renderToString('milestone-planning', $this->presenter);
     }
 
     /**
-     * @see AgileDashboard_Pane::getMinimalContent()
+     * @return string eg: '<table>...</table>'
      */
     public function getMinimalContent() {
         return '';
     }
 
-    private function getPaneContent() {
-        return $this->field->fetchArtifactValueReadOnly($this->artifact);
-    }
+
 }
+
+
+
 ?>

@@ -19,9 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/CardInCellPresenterCallback.class.php';
-require_once dirname(__FILE__).'/../include/CardPresenter.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
+require_once dirname(__FILE__) .'/bootstrap.php';
 require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aTreeNode.php';
 
 class CardInCellPresenterCallbackTest extends TuleapTestCase {

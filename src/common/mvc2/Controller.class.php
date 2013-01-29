@@ -86,7 +86,7 @@ abstract class MVC2_Controller {
     /**
      * @var TemplateRenderer
      */
-    private $renderer;
+    protected $renderer;
     
     public function __construct($base_name, Codendi_Request $request) {
         $this->request   = $request;
