@@ -18,14 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
-require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/MilestoneFactory.class.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
-require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
-require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
-require_once dirname(__FILE__).'/../builders/aMilestone.php';
-require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
+require_once dirname(__FILE__).'/../common.php';
 
 abstract class Planning_MilestoneBaseTest extends TuleapTestCase {
 
