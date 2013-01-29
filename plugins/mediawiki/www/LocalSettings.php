@@ -116,7 +116,7 @@ $wgShowExceptionDetails = true ;
 
 $wgLanguageCode = strtolower(forge_get_config('default_country_code'));
 
-$wgDefaultSkin = 'fusionforge';
+$wgDefaultSkin = 'tuleap';
 $wgHtml5 = false;
 $wgWellFormedXml = true;
 $wgLogo = "";

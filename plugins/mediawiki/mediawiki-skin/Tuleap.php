@@ -18,58 +18,64 @@ if( !defined( 'MEDIAWIKI' ) )
  * @todo document
  * @ingroup Skins
  */
-class SkinFusionForge extends SkinTemplate {
-	/** Using fusionforge. */
-	var $skinname = 'fusionforge', $stylename = 'fusionforge',
-		$template = 'FusionForgeTemplate', $useHeadElement = true;
+class SkinTuleap extends SkinTemplate {
 
-	function setupTemplate( $classname, $repository = false, $cache_dir = false ) {
-		$tc = new $classname();
+    CONST MEDIAWIKI_URL = '/\/plugins\/mediawiki\/wiki\/(.*)\/index.php\//';
 
-		$tc->params = array();
-		if (($tc->project = $project =
-		    group_get_object_by_name($GLOBALS['fusionforgeproject']))) {
-			$tc->params['group'] = $GLOBALS['group_id'] =
-			    $project->getID();
-			$tc->params['toptab'] = 'plugin_mediawiki';
-		}
+    /** Using fusionforge. */
+    var $skinname = 'tuleap', $stylename = 'tuleap',
+            $template = 'TuleapTemplate', $useHeadElement = true;
 
-		return $tc;
-	}
+    function setupTemplate( $classname, $repository = false, $cache_dir = false ) {
+            $tc = new $classname();
 
-	/**
-	 * @param $out OutputPage
-	 */
-	function setupSkinUserCss( OutputPage $out ) {
-		global $wgHandheldStyle;
-		/* add FusionForge styles */
-		foreach ($GLOBALS['HTML']->getAllStyleSheets() as $sheet) {
-			$out->addStyle($sheet['css'], $sheet['media']);
-		}
+            $tc->params = array();
+            if (($tc->project = $project =
+                group_get_object_by_name($GLOBALS['fusionforgeproject']))) {
+                    $tc->params['group'] = $GLOBALS['group_id'] =
+                        $project->getID();
+                    $tc->params['toptab'] = 'plugin_mediawiki';
+                    //$page_name = substr($_SERVER['REQUEST_URI'], (strpos($_SERVER['REQUEST_URI'], 'index.php/') + strlen('index.php/')), strlen($_SERVER['REQUEST_URI']));
+                    $page_name = preg_replace(self::MEDIAWIKI_URL,'',$_SERVER['REQUEST_URI']);
+                    $tc->params['title'] = 'Mediawiki-' . $page_name;
+            }
 
-		parent::setupSkinUserCss( $out );
+            return $tc;
+    }
 
-		$out->addModuleStyles( 'skins.monobook' );
+    /**
+     * @param $out OutputPage
+     */
+    function setupSkinUserCss( OutputPage $out ) {
+            global $wgHandheldStyle;
+            /* add Tuleap styles */
+            foreach ($GLOBALS['HTML']->getAllStyleSheets() as $sheet) {
+                    $out->addStyle($sheet['css'], $sheet['media']);
+            }
 
-		// Ugh. Can't do this properly because $wgHandheldStyle may be a URL
-		if( $wgHandheldStyle ) {
-			// Currently in testing... try 'chick/main.css'
-			$out->addStyle( $wgHandheldStyle, 'handheld' );
-		}
+            parent::setupSkinUserCss( $out );
 
-		// TODO: Migrate all of these
-		$out->addStyle( 'monobook/IE60Fixes.css', 'screen', 'IE 6' );
-		$out->addStyle( 'monobook/IE70Fixes.css', 'screen', 'IE 7' );
-	}
+            $out->addModuleStyles( 'skins.monobook' );
+
+            // Ugh. Can't do this properly because $wgHandheldStyle may be a URL
+            if( $wgHandheldStyle ) {
+                    // Currently in testing... try 'chick/main.css'
+                    $out->addStyle( $wgHandheldStyle, 'handheld' );
+            }
+
+            // TODO: Migrate all of these
+            $out->addStyle( 'monobook/IE60Fixes.css', 'screen', 'IE 6' );
+            $out->addStyle( 'monobook/IE70Fixes.css', 'screen', 'IE 7' );
+    }
 }
 
 /**
  * @todo document
  * @ingroup Skins
  */
-class FusionForgeTemplate extends BaseTemplate {
+class TuleapTemplate extends BaseTemplate {
 
-	var $project = false;
+        var $project = false;
 
 	/**
 	 * Template filter callback for FusionForge skin.

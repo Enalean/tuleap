@@ -48,12 +48,12 @@ You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectna
 # "Install" fusionforge theme
 
 ln -s /usr/share/mediawiki115/load.php www/
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php /usr/share/mediawiki115/skins/
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki115/skins/
 
 #In the mediawiki skin folder
 
-cp MonoBook.deps.php FusionForge.deps.php
-cp -r monobook fusionforge
+cp MonoBook.deps.php Tuleap.deps.php
+cp -r monobook tuleap
 
 ============================= TO CHECK LATER ============================= 
 
