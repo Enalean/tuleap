@@ -18,9 +18,9 @@
             {{#getLastOpenMilestones}}
             <li class="{{#is_active}}active{{/is_active}}">
                 <div class="ad_index_planning_icons">
-                    {{#quick_link_icon_list}}
+                    {{#getQuickLinkIconList}}
                         <a href="{{uri}}"><img title="{{title}}" src="{{icon}}"></a>
-                    {{/quick_link_icon_list}}
+                    {{/getQuickLinkIconList}}
                 </div>
                 {{getTitle}}{{^getTitle}}{{getXRef}}{{/getTitle}}
             </li>

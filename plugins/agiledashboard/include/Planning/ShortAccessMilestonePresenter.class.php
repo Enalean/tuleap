@@ -42,6 +42,10 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
         $this->theme_path   = $theme_path;
     }
 
+    /**
+     *
+     * @return AgileDashboard_PaneInfo[]
+     */
     private function getPaneInfoList() {
         if (!$this->pane_info_list) {
             $active_pane          = null;
@@ -60,14 +64,13 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
         return $this->pane_info_list;
     }
 
-    public function quick_link_icon_list() {
+    public function getQuickLinkIconList() {
         $pane_info_list = $this->getPaneInfoList();
         $milestone_planning_pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->milestone, $this->theme_path);
         $panes = array(
             $milestone_planning_pane_info->getIconTemplateParametersForMilestone($this->milestone)
         );
         foreach ($pane_info_list as $pane_info) {
-            /* @var $pane_info AgileDashboard_PaneInfo */
             $panes[] = $pane_info->getIconTemplateParametersForMilestone($this->milestone);
         }
         return $panes;
