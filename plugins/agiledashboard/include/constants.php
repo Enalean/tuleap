@@ -31,7 +31,7 @@ define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
  *
  * Expected results
  * 'panes'       => Input/Output parameter, array of type AgileDashboard_PaneInfo
- * 'active_pane' => Input/Output parameter, the current active pane
+ * 'active_pane' => Input/Output parameter, the current active pane (type AgileDashboard_Pane)
  */
 define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE', 'agiledashboard_event_additional_panes_on_milestone');
 
