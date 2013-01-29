@@ -136,11 +136,9 @@ class GitViews extends PluginViews {
     public function repoManagement() {
         $params = $this->getData();
         $repository   = $params['repository'];
-        $repoId       = $repository->getId();
-        $repoName     = $repository->getName();
         echo "<br/>";
         $this->_getBreadCrumb();
-        echo '<h2>'. $this->_getRepositoryPageUrl($repoId, $repoName) .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
+        echo '<h2>'. $repository->getHTMLLink() .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
 
         $repo_management_view = new GitViews_RepoManagement($repository, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers']);
         $repo_management_view->display();
@@ -153,11 +151,10 @@ class GitViews extends PluginViews {
         $params = $this->getData();
         $repository   = $params['repository'];
         $repoId       = $repository->getId();
-        $repoName     = $repository->getName();
         $initialized  = $repository->isInitialized();
         echo "<br/>";
         $this->_getBreadCrumb();
-        echo "<h1>".$this->_getRepositoryPageUrl($repoId, $repoName)."</h1>";
+        echo "<h1>". $repository->getHTMLLink() ."</h1>";
         ?>
         <form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id=<?php echo $this->groupId?>">
         <input type="hidden" id="action" name="action" value="edit" />
@@ -271,10 +268,6 @@ class GitViews extends PluginViews {
         return  $this->userName.'@'.$serverName.':/gitroot/'.$this->projectName.'/'.$repositoryName.'.git';
     }
 
-    public function _getRepositoryPageUrl($repoId, $repoName) {
-        return $this->linkTo($repoName,'/plugins/git/index.php/'.$this->groupId.'/view/'.$repoId.'/');
-    }
-    
     protected function forkRepositories() {
         $params = $this->getData();
         $this->_getBreadCrumb();

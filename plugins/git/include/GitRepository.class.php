@@ -852,5 +852,14 @@ class GitRepository implements DVCSRepository {
     public function getRemoteServerId() {
         return $this->remote_server_id;
     }
+
+    /**
+     * @return string html <a href="/path/to/repo">repo_name</a>
+     */
+    public function getHTMLLink() {
+        $href  = GIT_BASE_URL .'/index.php/'. $this->getProjectId() .'/view/'. $this->getId() .'/';
+        $label = $this->getName();
+        return '<a href="'. $href .'">'. $label .'</a>';
+    }
 }
 ?>

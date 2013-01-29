@@ -145,7 +145,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     
     protected function fetchGitRepositoryRow(GitRepository $repository, $name, $depth) {
         $trclass     = 'boxitem';
-        $label       = $this->view->_getRepositoryPageUrl($repository->getId(), $name);
+        $label       = $repository->getHTMLLink();
         $description = $repository->getDescription();
         
         $lastPush    = '&nbsp;';
