@@ -4,8 +4,8 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
         list.name = this.options.paramName;
         list.size = 1;
 
-        if (this.options.multiple) {
-            list.writeAttribute('multiple');
+        if ( this.options.multiple ) {
+            list.writeAttribute( 'multiple' );
             list.size = 2;
         }
 
@@ -14,47 +14,37 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
         
         this.checkForExternalText();
 
-        this._form.appendChild(this._controls.editor);
-        jQuery( list ).select2({"width": "250px"});
+        this._form.appendChild( this._controls.editor );
+
+        if( jQuery && typeof jQuery( list ).select2 === 'function' ) {
+            jQuery( list ).select2( { "width" : "250px" } );
+        }
     },
 
     buildOptionList: function() {
-        var marker,
-            textFound;
-
-        
-        this._form.removeClassName(this.options.loadingClassName);
-        this._collection = this._collection.map(function(entry) {
-            return 2 === entry.length ? entry : [entry, entry].flatten();
-        });
-
-        marker = ('value' in this.options) ? this.options.value : this._text;
-        textFound = this._collection.any(function(entry) {
-            return entry[0] == marker;
-        }.bind(this));
-
-        this._controls.editor.update('');
+        this._form.removeClassName( this.options.loadingClassName );
+        this._controls.editor.update( '' );
         
         this.getSelectedUsers();
-        this._collection.each(function(entry, index) {
-            var option;
+        this._collection.each( function( option ) {
+            var option_element = new Element( 'option' ),
+                option_key     = option[ 0 ],
+                option_val     = option[ 1 ];
 
-            option = new Element( 'option' );
-            option.value = entry[0];
-            if (this.options.selected) {    
-                option.selected = (entry[0] in this.options.selected) ? 1 : 0;
-            } else {
-                option.selected = textFound ? entry[0] == marker : 0 == index;
-            }
-            option.appendChild(document.createTextNode(entry[1]));
-            this._controls.editor.appendChild(option);
-        }.bind(this));
+            option_element.value = option_key;
+            option_element.selected = ( option_key in this.options.selected ) ? true : false;
+            option_element.appendChild( document.createTextNode( option_val ) );
+
+            this._controls.editor.appendChild( option_element );
+        }.bind( this ));
         
         this._controls.editor.disabled = false;
-        Field.scrollFreeActivate(this._controls.editor);
+        Field.scrollFreeActivate( this._controls.editor );
     },
 
-    getSelectedUsers: function() {}
+    getSelectedUsers: function() {
+        this.options.selected = {}
+    }
 });
 
 document.observe('dom:loaded', function () {
@@ -163,14 +153,14 @@ document.observe('dom:loaded', function () {
         this.element        = element;
         this.field_id       = element.readAttribute( 'data-field-id' );
         this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
-        this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
+        this.update_url     = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
         this.div            = new Element( 'div' );
         this.artifact_type  = element.readAttribute( 'data-field-type' );
 
         this.init = function() {
             this.injectTemporaryContainer();
 
-            new Ajax.InPlaceEditor( this.div, this.url, {
+            new Ajax.InPlaceEditor( this.div, this.update_url, {
                 formClassName : 'card_element_edit_form',
                 callback   : this.ajaxCallback(),
                 onComplete : this.success(),
@@ -234,8 +224,8 @@ document.observe('dom:loaded', function () {
         this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
         this.artifact_type  = element.readAttribute( 'data-field-type' );
 
-        this.url            = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
-        this.collectionUrl  = '/plugins/tracker/?func=get-values&formElement=' + this.field_id;
+        this.update_url     = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
+        this.collection_url  = '/plugins/tracker/?func=get-values&formElement=' + this.field_id;
 
         this.users          = {};
         this.multi_select   = false;
@@ -249,7 +239,7 @@ document.observe('dom:loaded', function () {
 
             editor = new Ajax.InPlaceMultiCollectionEditor(
                 container,
-                this.url,
+                this.update_url,
                 this.options
             );
                 
@@ -257,7 +247,6 @@ document.observe('dom:loaded', function () {
         };
 
         this.bindSelectedElementsToEditor = function( editor ) {
-
             editor.getSelectedUsers = function() {
                 var avatars = jQuery( '.cardwall_avatar', this.options.element );
                 var users = {};
@@ -266,7 +255,6 @@ document.observe('dom:loaded', function () {
                     var id      = jQuery( this ).attr( 'data-user-id' );
                     users[ id ] = jQuery( this ).attr( 'title' );
                 });
-
                 this.options.selected = users;
             };
         }
@@ -328,7 +316,7 @@ document.observe('dom:loaded', function () {
             var users = {};
 
             jQuery.ajax({
-                url   : this.collectionUrl,
+                url   : this.collection_url,
                 async : false
             }).done(function ( data ) {
                 jQuery.each(data, function( id, user_details ) {
