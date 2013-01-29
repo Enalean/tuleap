@@ -497,5 +497,34 @@ class GitDao extends DataAccessObject {
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
     }
+    
+    /**
+     * 
+     * @param int $repository_id
+     * @param int $remote_server_id
+     * 
+     * @return Boolean
+     */
+    public function switchToGerrit($repository_id, $remote_server_id) {
+        $repository_id    = $this->da->escapeInt($repository_id);
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $sql = "UPDATE plugin_git
+                SET remote_server_id = $remote_server_id
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+    
+    /**
+     * @return bool
+     */
+    public function isRemoteServerUsed($remote_server_id) {
+        $remote_server_id = $this->da->escapeInt($remote_server_id);
+        $sql = "SELECT NULL
+                FROM plugin_git
+                WHERE remote_server_id = $remote_server_id
+                LIMIT 1";
+        return count($this->retrieve($sql)) > 0;
+    }
 }
+
 ?>
