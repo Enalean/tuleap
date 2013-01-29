@@ -1,3 +1,7 @@
+Version 0.9.13 - Tuleap 5.11
+    * Autoload plugin
+    * Refactor rendering of AgileDashboard Panes
+
 Version 0.9.12 - Tuleap 5.11
     * Enhancement: update the remaining effort on a story without leaving the agile dashboard
 
