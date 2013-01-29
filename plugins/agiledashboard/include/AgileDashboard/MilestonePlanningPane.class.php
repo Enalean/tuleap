@@ -18,6 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Content of MilestonePlanning
+ *
+ * @see AgileDashboard_MilestonePlanningPresenter for description of what MilestonePlanning is
+ */
 class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
 
     /**
@@ -57,7 +62,7 @@ class AgileDashboard_MilestonePlanningPane extends AgileDashboard_Pane {
      * @return string eg: '<table>...</table>'
      */
     public function getMinimalContent() {
-        throw new RuntimeException('I should be implemented');
+        return '';
     }
 
 

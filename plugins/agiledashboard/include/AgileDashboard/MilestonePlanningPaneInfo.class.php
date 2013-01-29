@@ -18,6 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * PaneInfo of MilestonePlanning
+ *
+ * @see AgileDashboard_MilestonePlanningPresenter for description of what MilestonePlanning is
+ */
 class AgileDashboard_MilestonePlanningPaneInfo extends AgileDashboard_PaneInfo {
     const IDENTIFIER = 'planner';
 

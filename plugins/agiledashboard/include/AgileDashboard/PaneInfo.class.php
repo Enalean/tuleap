@@ -94,6 +94,8 @@ abstract class AgileDashboard_PaneInfo {
     }
 
     /**
+     * Technical identifier for HTML output
+     *
      * @return string eg: 'cardwall'
      */
     public abstract function getIdentifier();
