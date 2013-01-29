@@ -48,7 +48,7 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
 });
 
 document.observe('dom:loaded', function () {
-    $$('.cardwall_board').each(function (board) {
+    $$('.cardwall_board').each(function ( board ) {
         
         (function checkForLatestCardWallVersion() {
             if ($('tracker_report_cardwall_to_be_refreshed')) {
@@ -71,81 +71,100 @@ document.observe('dom:loaded', function () {
             });
         })();
 
-        (function defineDroppableColumns(){
-            var cols = board.select('col');
+        (function dragAndDropColumns(){
+            var cols = board.select( 'col' );
 
-            cols.each(function (col) {
-                col.up('table').down('tbody.cardwall').childElements().each(function (tr) {
-                    var classname = 'drop-into-' + tr.id.split('-')[1] + '-' + col.id.split('-')[1];
-                    tr.childElements()[col.up().childElements().indexOf(col)].select('.cardwall_board_postit').invoke('removeClassName', classname);
-                });
-            });
+            cols.each( function( col, col_index ) {
+                var table_rows = col.up( 'table' ).down( 'tbody.cardwall' ).childElements();
 
-            cols.each(function (col, col_index) {
-                col.up('table').down('tbody.cardwall').childElements().each(function (tr) {
-                    var td           = tr.down('td.cardwall-cell', col_index),
-                        restorecolor = td.getStyle('background-color'),
-                        effect       = null,
-                        swimline_id  = tr.id.split('-')[1],
-                        accept       = 'drop-into-' + swimline_id + '-' + col.id.split('-')[1];
-                    Droppables.add(td, {
+                table_rows.each( function( tr ) {
+                    var value_id     = col.id.split( '-' )[ 1 ],
+                        swimline_id  = tr.id.split( '-' )[ 1 ],
+                        current_td   = tr.down( 'td.cardwall-cell', col_index ),
+                        accept_class = 'drop-into-' + swimline_id + '-' + value_id;
+
+                    tr.childElements()[ col_index ]
+                        .select( '.cardwall_board_postit' )
+                        .invoke( 'removeClassName', accept_class );
+
+                    Droppables.add( current_td, {
                         hoverclass: 'cardwall_board_column_hover',
-                        accept: accept,
+                        accept: accept_class,
+
                         onDrop: function (dragged, dropped, event) {
+                            var value_id       = col.id.split( '-' )[ 1 ],
+                                new_column     = dragged.up( 'tr' ).childElements().indexOf( dragged.up( 'td' ) ),
+                                new_column_id  = cols[ new_column ].id.split( '-' )[ 1 ],
+                                new_class_name = 'drop-into-' + swimline_id + '-' + new_column_id;
+
                             //change the classname of the post it to be accepted by the formers columns
-                            dragged.addClassName('drop-into-' + swimline_id + '-' + cols[dragged.up('tr').childElements().indexOf(dragged.up('td'))].id.split('-')[1]);
-                            dragged.removeClassName(accept);
+                            dragged.addClassName( new_class_name );
+                            dragged.removeClassName( accept_class );
 
                             //switch to the new column
-                            Element.remove(dragged);
-                            td.down('ul').appendChild(dragged);
-                            dragged.setStyle({
-                                left: 'auto',
-                                top: 'auto'
-                            });
-                            if (effect) {
-                                effect.cancel();
-                            }
-                            effect = new Effect.Highlight(td, {
-                                restorecolor: restorecolor
-                            });
+                            Element.remove( dragged );
+                            current_td.down( 'ul' ).appendChild( dragged );
 
-                            //save the new state
-                            var parameters = {
-                                    aid: dragged.id.split('-')[1],
-                                    func: 'artifact-update'
-                                },
-                                field_id,
-                                value_id = col.id.split('-')[1];
-                            if ($('tracker_report_cardwall_settings_column')) {
-                                 field_id = $F('tracker_report_cardwall_settings_column');
-                            } else {
-                                field_id = dragged.readAttribute('data-column-field-id');
-                                value_id = $F('cardwall_column_mapping_' + value_id + '_' + field_id);
-                            }
-                            parameters['artifact[' + field_id + ']'] = value_id;
-                            var req = new Ajax.Request(codendi.tracker.base_url, {
-                                method: 'POST',
-                                parameters: parameters,
-                                onComplete: function (response) {
-                                    $H(response.responseJSON).each(function (card) {
-                                        var card_element = $('cardwall_board_postit-' + card.key);
-                                        if (card_element) {
-                                            $H(card.value).each(function (field) {
-                                                card_element.select('.valueOf_' + field.key).each(function (field_element) {
-                                                    field_element.update(field.value);
-                                                });
-                                            });
-                                        }
-                                    });
-                                    //TODO handle errors (perms, workflow, ...)
-                                    // eg: change color of the post it
-                                }
-                            });
+                            setStyle( dragged, current_td );
+                            ajaxUpdate( dragged, value_id );
                         }
                     });
                 });
             });
+
+            function setStyle( dragged, current_td ) {
+                var restore_color   = current_td.getStyle( 'background-color' );
+                
+                dragged.setStyle({
+                    left: 'auto',
+                    top : 'auto'
+                });
+                
+                new Effect.Highlight(current_td, {
+                    restorecolor: restore_color
+                });
+            }
+
+            function ajaxUpdate( dragged, value_id ) {
+                var field_id,
+                    parameters = {};
+
+                if ($( 'tracker_report_cardwall_settings_column' )) {
+                    field_id = $F( 'tracker_report_cardwall_settings_column' );
+                } else {
+                    field_id = dragged.readAttribute( 'data-column-field-id' );
+                    value_id = $F( 'cardwall_column_mapping_' + value_id + '_' + field_id );
+                }
+
+                parameters[ 'aid' ]  = dragged.id.split( '-' )[ 1 ];
+                parameters[ 'func' ] = 'artifact-update';
+                parameters[ 'artifact[' + field_id + ']' ] = value_id;
+
+                //save the new state
+                new Ajax.Request( codendi.tracker.base_url, {
+                    method : 'POST',
+                    parameters : parameters,
+                    onComplete : afterAjaxUpdate
+                });
+            }
+
+            function afterAjaxUpdate( response ) {
+                $H( response.responseJSON ).each( function ( card ) {
+                    var card_element = $( 'cardwall_board_postit-' + card.key );
+                    if ( card_element === null ) {
+                        return
+                    }
+
+                    $H( card.value ).each( function( field ) {
+                        var field_name = '.valueOf_' + field.key;
+                        card_element.select( field_name ).each( function( field_element ) {
+                            field_element.update( field.value );
+                        });
+                    });
+
+                });
+            }
+
         })();
     });
 
