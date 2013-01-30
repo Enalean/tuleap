@@ -47,7 +47,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         this.options[ 'callback' ]        = this.ajaxCallback();
         this.options[ 'onComplete' ]      = this.success();
         this.options[ 'onFailure' ]       = this.fail;
-        this.options[ 'validation' ]      = this.getValidationPattern();
+        this.options[ 'validation' ]      = this.getValidation();
 
         new Ajax.InPlaceTextEditor( this.div, this.update_url, this.options );
     },
@@ -103,7 +103,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         }
     },
 
-    getValidationPattern : function() {
+    getValidation : function() {
         var pattern,
             message;
             
@@ -117,7 +117,8 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
                 message = 'the value must be an integer';
                 break;
             default:
-                pattern = '.'
+                pattern = '.';
+                message = '';
         }
 
         return {
