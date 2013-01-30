@@ -4,10 +4,10 @@ As forge admin, go to your tuleap instance in the administration pannel -> plugi
 If the plugin isn't yet installed, install it !
 Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
 
-#get mediawiki (1.19) /!\ needs php 5.2.x
+#get mediawiki (1.20) /!\ needs php 5.2.x
 cd /usr/share
-wget http://download.wikimedia.org/mediawiki/1.15/mediawiki-1.15.5.tar.gz
-tar -xvf mediawiki-1.15.5.tar.gz mediawiki115
+wget http://download.wikimedia.org/mediawiki/1.20/mediawiki-1.20.2.tar.gz
+tar -xvf mediawiki-1.20.2.tar.gz
 
 #If the tar command doesn't extract mediawiki in a mediawiki115 folder, please run these commands :
 cd /usr/share
