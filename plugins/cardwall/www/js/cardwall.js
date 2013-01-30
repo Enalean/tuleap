@@ -24,10 +24,13 @@ tuleap.agiledashboard.cardwall.card = tuleap.agiledashboard.cardwall.card || { }
 tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
     jQuery.each(transport.responseJSON, function( artifact_id, art_values ) {
         jQuery.each( art_values, function( field_name, field_value ) {
-            jQuery( 'div[data-artifact-id='+ artifact_id +']' )
-                .find( '.valueOf_' + field_name )
-                .find( 'div' )
-                .html( field_value );
+            var element_to_update_container = jQuery( 'div[data-artifact-id='+ artifact_id +']' ).find( '.valueOf_' + field_name );
+
+            if( element_to_update_container.find( 'div' ) > 0) {
+                element_to_update_container.find( 'div' ).html( field_value );
+            } else {
+                element_to_update_container.html( field_value );
+            }
         });
     })
 };
@@ -77,7 +80,6 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         var field_id = this.field_id;
         
         return function setRequestData(form, value) {
-            console.log(form)
             var parameters = {},
                 linked_field = 'artifact[' + field_id +']';
 
