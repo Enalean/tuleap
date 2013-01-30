@@ -17,9 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once('bootstrap.php');
 
 class Tracker_Artifact_RedirectUrlTestVersion extends Tracker_Artifact {
     public function getRedirectUrlAfterArtifactUpdate(Codendi_Request $request) {

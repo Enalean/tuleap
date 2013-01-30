@@ -17,11 +17,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_SubmittedOn.class.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_SubmittedOn', 
     'Tracker_FormElement_Field_SubmittedOnTestVersion', 
@@ -35,7 +33,6 @@ Mock::generatePartial(
     )
 );
     
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
 
 

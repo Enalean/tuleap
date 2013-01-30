@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'PriorityDao.class.php';
-require_once dirname(__FILE__).'/../../FormElement/dao/Tracker_FormElement_Field_Value_ArtifactLinkDao.class.php';
 
 class Tracker_ArtifactDao extends DataAccessObject {
 

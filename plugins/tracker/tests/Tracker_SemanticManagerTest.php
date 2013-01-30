@@ -18,13 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(dirname(__FILE__) . '/builders/all.php');
-require_once(dirname(__FILE__) . '/../include/Tracker/Semantic/Tracker_SemanticManager.class.php');
-require_once(dirname(__FILE__) . '/../include/Tracker/Semantic/Tracker_Semantic_Title.class.php');
-require_once(dirname(__FILE__) . '/../include/Tracker/Semantic/Tracker_Semantic_Status.class.php');
-require_once(dirname(__FILE__) . '/../include/Tracker/Semantic/Tracker_Semantic_Contributor.class.php');
-require_once(dirname(__FILE__) . '/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
-
+require_once('bootstrap.php');
 class Tracker_SemanticManagerTest extends TuleapTestCase {
 
     private $semantic_title;

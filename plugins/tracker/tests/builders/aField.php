@@ -22,8 +22,7 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
-
-require_once(dirname(__FILE__).'/../../include/Tracker/TrackerManager.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 function aTextField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Text');
@@ -57,6 +56,10 @@ function aSelectBoxField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Selectbox');
 }
 
+function aFileField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_File');
+}
+
 class Test_Tracker_FormElement_Builder {
     private $klass;
     private $id;
@@ -66,6 +69,7 @@ class Test_Tracker_FormElement_Builder {
     private $originalField;
     private $use_it;
     private $bind;
+    private $label;
 
     public function __construct($klass) {
         $this->klass = $klass;
@@ -104,12 +108,17 @@ class Test_Tracker_FormElement_Builder {
         return $this;
     }
 
+    public function withLabel($label) {
+        $this->label = $label;
+        return $this;
+    }
+
     /**
      * @return Tracker_FormElement
      */
     public function build() {
         $klass  = $this->klass;
-        $object = new $klass($this->id, $this->trackerId, null, $this->name, null, null, $this->use_it, null, null, null, null, $this->originalField);
+        $object = new $klass($this->id, $this->trackerId, null, $this->name, $this->label, null, $this->use_it, null, null, null, null, $this->originalField);
         if ($this->tracker) {
             $object->setTracker($this->tracker);
         }

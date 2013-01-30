@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SharedFieldDao.class.php';
-require_once 'SharedField.class.php';
 
 class Tracker_CrossSearch_SharedFieldFactory {
     const VALUE_NONE = 100;

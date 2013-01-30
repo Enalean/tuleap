@@ -22,8 +22,7 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
-
-require_once(dirname(__FILE__).'/../../include/Tracker/TrackerManager.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 function aFieldListStaticValue() {
     return new Test_Tracker_FormElement_Field_List_BindValue_Builder('Tracker_FormElement_Field_List_Bind_StaticValue');
@@ -43,6 +42,11 @@ class Test_Tracker_FormElement_Field_List_BindValue_Builder {
 
     public function withId($id) {
         $this->id = $id;
+        return $this;
+    }
+
+    public function withLabel($label) {
+        $this->label = $label;
         return $this;
     }
 

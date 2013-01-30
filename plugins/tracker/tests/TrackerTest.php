@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial('Tracker',
                       'TrackerTestVersion',
                       array(
@@ -108,62 +105,41 @@ Mock::generate('User');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');
 Mock::generate('TrackerFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Semantic/Tracker_SemanticManager.class.php');
 Mock::generate('Tracker_SemanticManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker_NotificationsManager.class.php');
 Mock::generate('Tracker_NotificationsManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/DateReminder/Tracker_DateReminderManager.class.php');
 Mock::generate('Tracker_DateReminderManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseManager.class.php');
 Mock::generate('Tracker_CannedResponseManager');
 
-require_once(dirname(__FILE__).'/../include/workflow/WorkflowManager.class.php');
 Mock::generate('WorkflowManager');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_ReportFactory.class.php');
 Mock::generate('Tracker_ReportFactory');
 
-require_once(dirname(__FILE__).'/../include/workflow/WorkflowFactory.class.php');
 Mock::generate('WorkflowFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_String.class.php');
 Mock::generate('Tracker_FormElement_Field_String');
 
-require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseFactory.class.php');
 Mock::generate('Tracker_CannedResponseFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Interface.class.php');
 Mock::generate('Tracker_FormElement_Interface');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
 Mock::generate('Tracker_ArtifactFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
 Mock::generate('Tracker_Artifact');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
 Mock::generate('Tracker_SharedFormElementFactory');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
-
-require_once dirname(__FILE__).'/builders/aTracker.php';
-require_once dirname(__FILE__).'/builders/anArtifact.php';
-require_once dirname(__FILE__).'/builders/aMockArtifact.php';
 
 class Tracker_FormElement_InterfaceTestVersion extends MockTracker_FormElement_Interface {
-    public function exportToXML($root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
         $xmlMapping['F'. $index] = $this->getId();
         return parent::exportToXML($root, $xmlMapping, $index);
     }
@@ -1218,7 +1194,7 @@ class TrackerTest extends TuleapTestCase {
     //
     public function testPermsAdminWorkflowTrackerSiteAdmin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // site admin can access tracker admin part
         $this->tracker->expectOnce('getWorkflowManager');
@@ -1226,7 +1202,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerProjectAdmin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // project admin can access tracker admin part
         $this->tracker->expectOnce('getWorkflowManager');
@@ -1234,7 +1210,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerTrackerAdmin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // tracker admin can access tracker admin part
         $this->tracker1->expectOnce('getWorkflowManager');
@@ -1244,7 +1220,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerTracker1Admin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // tracker admin can access tracker admin part
         $this->tracker1->expectOnce('getWorkflowManager');
@@ -1254,7 +1230,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerTracker2Admin() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // tracker admin can access tracker admin part
         $this->tracker1->expectNever('getWorkflowManager');
@@ -1264,7 +1240,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerProjectMember() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // project member can NOT access tracker admin part
         $this->tracker->expectNever('getWorkflowManager');
@@ -1272,7 +1248,7 @@ class TrackerTest extends TuleapTestCase {
     }
     public function testPermsAdminWorkflowTrackerRegisteredUser() {
         $request_admin_workflow_tracker = new MockCodendi_Request($this);
-        $request_admin_workflow_tracker->setReturnValue('get', 'admin-workflow', array('func'));
+        $request_admin_workflow_tracker->setReturnValue('get', Workflow::FUNC_ADMIN_TRANSITIONS, array('func'));
 
         // registered user can NOT access tracker admin part
         $this->tracker->expectNever('getWorkflowManager');
@@ -1519,11 +1495,11 @@ class TrackerTest extends TuleapTestCase {
         $field1->setReturnValue('getId', 1);
         $field2->setReturnValue('getId', 2);
 
-        $field1->setReturnValue('getFieldData', 'summary 1',array('summary 1') );
-        $field1->setReturnValue('getFieldData', 'summary 2',array('summary 2') );
+        $field1->setReturnValue('getFieldDataFromCSVValue', 'summary 1',array('summary 1') );
+        $field1->setReturnValue('getFieldDataFromCSVValue', 'summary 2',array('summary 2') );
 
-        $field2->setReturnValue('getFieldData', 'details 1',array('details 1') );
-        $field2->setReturnValue('getFieldData', 'details 2',array('details 2') );
+        $field2->setReturnValue('getFieldDataFromCSVValue', 'details 1',array('details 1') );
+        $field2->setReturnValue('getFieldDataFromCSVValue', 'details 2',array('details 2') );
 
         $this->formelement_factory->setReturnReference('getUsedFieldByName', $field1, array(110, 'summary'));
         $this->formelement_factory->setReturnReference('getUsedFieldByName', $field2, array(110, 'details'));
@@ -1687,6 +1663,32 @@ class TrackerTest extends TuleapTestCase {
         $tracker->setSharedFormElementFactory($sharedFactory);
         $user = mock('PFUser');
         return array($tracker, $factory, $sharedFactory, $user);
+    }
+}
+
+class Tracker_WorkflowTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker_id = 12;
+        $this->tracker = partial_mock('Tracker', array('getWorkflowFactory'));
+        $this->tracker->setId($this->tracker_id);
+
+        $this->workflow_factory = mock('WorkflowFactory');
+        stub($this->tracker)->getWorkflowFactory()->returns($this->workflow_factory);
+    }
+
+    public function itHasADefaultWorkflow() {
+        stub($this->workflow_factory)->getWorkflowByTrackerId()->returns(false);
+        $workflow   = $this->tracker->getWorkflow();
+        $this->assertIsA($workflow, 'Workflow');
+        $this->assertEqual($workflow->getTrackerId(), $this->tracker_id);
+    }
+
+    public function itHasAWorkflowFromTheFactoryWhenThereAreTransitions() {
+        $workflow = new Workflow(1, $this->tracker_id, 34, true);
+        stub($this->workflow_factory)->getWorkflowByTrackerId($this->tracker_id)->returns($workflow);
+        $this->assertIdentical($this->tracker->getWorkflow(), $workflow);
     }
 }
 

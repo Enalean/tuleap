@@ -18,12 +18,13 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/dao/UGroupDao.class.php');
-require_once('common/dao/UGroupUserDao.class.php');
-require_once('common/dao/UserGroupDao.class.php');
-require_once('common/user/User.class.php');
-require_once('www/project/admin/ugroup_utils.php');
-require_once('UGroup_Invalid_Exception.class.php');
+require_once 'common/dao/UGroupDao.class.php';
+require_once 'common/dao/UGroupUserDao.class.php';
+require_once 'common/dao/UserGroupDao.class.php';
+require_once 'common/user/User.class.php';
+require_once 'www/project/admin/ugroup_utils.php';
+require_once 'UGroup_Invalid_Exception.class.php';
+require_once 'common/user/Users.class.php';
 
 /**
  * UGroup object
@@ -96,6 +97,10 @@ class UGroup {
         }
         return $this->_ugroupuserdao;
     }
+    
+    public function setUGroupUserDao(UGroupUserDao $dao) {
+        $this->_ugroupuserdao = $dao;
+    }
 
     /**
      * Get instance of UserGroupDao
@@ -132,34 +137,72 @@ class UGroup {
     }
 
     /**
-     * Return array of all ugroup members as User objects
-     * WARNING: this does not work currently with dynamic ugroups
+     * @deprecated user getUsers($group_id)
+     * Return DAR of all ugroup members as User objects
      *
-     * @return Array
+     * @return Array of User
      */
     public function getMembers() {
         if (! $this->members) {
-            $this->members = array();
-            $this->members_name = array();
-            $dar           = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
-            foreach ($dar as $row) {
-                $currentUser          = new PFUser($row);
-                $this->members[]      = $currentUser;
-                $this->members_name[] = $currentUser->getUserName();
-            }
+            $this->members = $this->getStaticOrDynamicMembers($this->group_id);
         }
         return $this->members;
     }
 
     /**
+     *  
+     * @param int $group_id the group id of the static or dynamic group.
+     * You have to supply this argument as $this->group_id is 100 in the case of a dynamic group
+     *
+     * @return Users
+     */
+    public function getUsers($group_id) {
+        return new Users($this->getStaticOrDynamicMembers($group_id));
+    }
+    
+    /**
+     *  
+     * @param int $group_id the group id of the static or dynamic group.
+     * You have to supply this argument as $this->group_id is 100 in the case of a dynamic group
+     *
+     * @return Array of string
+     */
+    public function getUserNames($group_id) {
+        return $this->getUsers($group_id)->getNames();
+    }
+
+    public function getUserLdapIds($group_id) {
+        return $this->getUsers($group_id)->getLdapIds();
+    }
+
+    /**
      * Return array containing the user_name of all ugroup members
-     * WARNING: this does not work currently with dynamic ugroups
      *
      * @return Array
      */
     public function getMembersUserName() {
-        $this->getMembers();
-        return $this->members_name;
+        $names = array();
+        foreach ($this->getMembers() as $member) {
+            $names[] = $member->getUserName();
+        }
+        return $names;
+    }
+
+    private function getStaticOrDynamicMembers($group_id) {
+        if ($this->is_dynamic) {
+            $dar = $this->getUGroupUserDao()->searchUserByDynamicUGroupId($this->id, $group_id);
+            return $dar->instanciateWith(array($this, 'newUserFromIncompleteRow'));
+        }
+        $dar = $this->getUGroupUserDao()->searchUserByStaticUGroupId($this->id);
+        return $dar->instanciateWith(array($this, 'newUser'));
+    }
+
+    public function newUser($row) {
+        return new User($row);
+    }
+
+    public function newUserFromIncompleteRow($row) {
+        return UserManager::instance()->getUserById($row['user_id']);
     }
 
     /**
@@ -380,7 +423,5 @@ class UGroup {
             return false;
         }
     }
-
 }
-
 ?>

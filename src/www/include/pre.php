@@ -9,6 +9,11 @@
 if (version_compare(phpversion(), '5.1.6', '<')) {
     die('Codendi must be run on a PHP 5.1.6 (or greater) engine');
 }
+if (version_compare(phpversion(), '5.3', '>=')) {
+    if (!ini_get('date.timezone')) {
+        date_default_timezone_set('Europe/Paris');
+    }
+}
 
 // Defines all of the Codendi settings first (hosts, databases, etc.)
 $local_inc = getenv('CODENDI_LOCAL_INC');
@@ -178,12 +183,14 @@ if(!IS_SCRIPT) {
 
 
 */
-//set up the user's timezone if they are logged in
-if (user_isloggedin()) {
-    putenv('TZ='.$current_user->getTimezone());
-} else {
-    //just use pacific time as always
+if ($current_user->isLoggedIn()) {
+    if (version_compare(phpversion(), '5.3', '>=')) {
+        date_default_timezone_set($current_user->getTimezone());
+    } else {
+        putenv('TZ='.$current_user->getTimezone());
+    }
 }
+
 
 //Set up the vars and theme functions 
 require_once('theme.php');

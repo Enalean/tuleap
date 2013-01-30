@@ -115,7 +115,15 @@ class SystemEventManager {
         }
         return self::$_instance;
     }
-    
+
+    public function setInstance(SystemEventManager $instance) {
+        self::$_instance = $instance;
+    }
+
+    public function clearInstance() {
+        self::$_instance = null;
+    }
+
     function _getEventManager() {
         return EventManager::instance();
     }
@@ -492,6 +500,26 @@ class SystemEventManager {
         }
         return $html;
     }
+
+    /**
+     *
+     * @param type $event_type
+     * @param type $parameter
+     * @return boolean
+     */
+    public function isThereAnEventAlreadyOnGoing($event_type, $parameter) {
+        $dar = $this->_getDao()->searchWithParam(
+            'head',
+             $parameter,
+             array($event_type),
+             array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING)
+        );
+        if ($dar && !$dar->isError() && $dar->rowCount() > 0) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Return true if there is no pending rename event of this user, otherwise false
      * 
@@ -499,11 +527,7 @@ class SystemEventManager {
      * @return Boolean
      */
     public function canRenameUser($user) {
-        $dar = $this->_getDao()->searchWithParam('head', $user->getId(), array(SystemEvent::TYPE_USER_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
-            return true;
-        }
-        return false;
+        return ! $this->isThereAnEventAlreadyOnGoing(SystemEvent::TYPE_USER_RENAME, $user->getId());
     }
     
     /**
@@ -513,11 +537,7 @@ class SystemEventManager {
      * @return Boolean
      */
     public function canRenameProject($project) {
-        $dar = $this->_getDao()->searchWithParam('head', $project->getId(), array(SystemEvent::TYPE_PROJECT_RENAME), array(SystemEvent::STATUS_NEW, SystemEvent::STATUS_RUNNING));
-        if ($dar && !$dar->isError() && $dar->rowCount() == 0) {
-            return true;
-        }
-        return false;
+        return ! $this->isThereAnEventAlreadyOnGoing(SystemEvent::TYPE_PROJECT_RENAME, $project->getId());
     }
     
     

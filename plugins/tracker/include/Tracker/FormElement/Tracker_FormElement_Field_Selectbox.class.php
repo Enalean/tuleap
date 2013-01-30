@@ -18,9 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('dao/Tracker_FormElement_Field_List_Bind_Static_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_Bind_StaticDao.class.php');
-require_once('Tracker_FormElement_Field_List.class.php');
 
 class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List {
     
@@ -156,7 +153,7 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
           if ($check) {
               echo ' <a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array(
                                                         'tracker' => (int)$this->tracker_id,
-                                                        'func'    => 'admin-workflow',
+                                                        'func'    => Workflow::FUNC_ADMIN_TRANSITIONS,
                                                         'edit_transition'  => $transition->getTransitionId())) .'">[Details]</a>';
           }
           echo '</td>';
@@ -173,7 +170,6 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
        }
        
        $nb_field_values =count($field_values);
-        echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(array('tracker' => (int)$this->tracker_id, 'func'    => 'admin-workflow')) .'" method="POST">';
         echo '<table id="tracker_workflow_matrix">';
             echo "<tr class='boxtitle'>\n";
             echo "<td>FROM</td>";
@@ -219,8 +215,6 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
            }
 
             echo '</table>';
-            echo '<input type="submit" name="create_matrix" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-            echo '</FORM>';
     }
     
     /**

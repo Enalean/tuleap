@@ -29,6 +29,8 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
         $this->planning_id       = '321';
         $this->user              = aUser()->withId(12)->build();
         $this->request                 = aRequest()->with('planning_id', $this->planning_id)->withUser($this->user)->build();
@@ -41,8 +43,9 @@ class Planning_MilestoneSelectorControllerTest extends TuleapTestCase {
     }
 
     public function tearDown() {
-        parent::tearDown();
         EventManager::clearInstance();
+        Config::restore();
+        parent::tearDown();
     }
 
     function itRedirectToTheCurrentMilestone() {

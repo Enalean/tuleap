@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../Widget/Tracker_Widget_MyRenderer.class.php';
-require_once dirname(__FILE__).'/../Widget/Tracker_Widget_ProjectRenderer.class.php';
 
 abstract class Tracker_Report_Renderer {
     
@@ -273,7 +271,7 @@ abstract class Tracker_Report_Renderer {
      * 
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
-    public function exportToXML($root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $root->addAttribute('type', $this->getType());
         $root->addAttribute('rank', $this->rank);    
         // if old ids are important, modify code here 

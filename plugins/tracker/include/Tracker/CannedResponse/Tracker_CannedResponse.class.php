@@ -65,7 +65,7 @@ class Tracker_CannedResponse {
      *
      * @return void
      */
-    public function exportToXML($root) {
+    public function exportToXml(SimpleXMLElement $root) {
         // if old ids are important, modify code here 
         if (false) {
             $root->addAttribute('id', $this->id);

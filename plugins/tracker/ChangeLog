@@ -1,5 +1,96 @@
+Version 5.76 - Tuleap 5.11
+    * Fix for story #2223 - Retrieve my default fields value after tracker migration.
+
+Version 5.75 - Tuleap 5.11
+    * Add missing Codendi_HTTPPurifier include
+
+Version 5.74 - Tuleap 5.11
+    * Refactor rendering of AgileDashboard Panes
+
+Version 5.73 - Tuleap 5.11
+    * Enhancement: update the remaining effort on a story without leaving the agile dashboard
+
+Version 5.72 - Tuleap 5.11
+    * Display burndown icon on AD homepage
+
+Version 5.71 - Tuleap 5.10
+    * Fix error on getArtifactComments() through SOAP
+
+Version 5.70 - Tuleap 5.9.1
+    * Fix fatal error when agiledashboard is not installed
+
+Version 5.69 - Tuleap 5.9
+    * By default trackers are instantiable for new project
+    * Fix notices
+
+Version 5.68 - Tuleap 5.9
+    * HTML_Element_Input_Checkbox missing include
+
+Version 5.67 - Tuleap 5.9
+    * Fix CSRF missing include
+
+Version 5.66 - Tuleap 5.9
+    * Add autoload to trackers
+
+Version 5.65 - Tuleap 5.9
+    * Fix bugs #2159 & defect #ericsson:1886: SOAP getTrackerStructure error
+
+Version 5.64 - Tuleap 5.9
+    * Fix: Correctly set the timezone for PHP 5.3
+
+Version 5.63 - Tuleap 5.9
+    * * New post action in workflow: trigger a jenkins build.
+
+Version 5.62 - Tuleap 5.9
+    * Update SOAP API to 2.0.3 (bug fix)
+
+Version 5.61 - Tuleap 5.9
+    * SOAP API (v2.0.2): artifacts now contains their cross references.
+
+Version 5.60 - Tuleap 5.9
+    * Development: Fix tests builders, ID of a tracker should a numeric.
+
+Version 5.59 - Tuleap 5.9
+    * SOAP API: export artifact comments
+
+Version 5.58 - Tuleap 5.9
+    * Fix some isolated tests
+
+Version 5.57 - Tuleap 5.8
+    * Fix bugs #1997: Warning & notice in the log
+
+Version 5.56 - Tuleap 5.8
+    * Fix bug when user submit an artifact but don't have permissions on all fields involved in rules
+
+Version 5.55 - Tuleap 5.8
+    * Follow-up version 5.53: finish refactoring
+
+Version 5.54 - Tuleap 5.8
+    * Complete SOAP API (see plugins/tracker/www/soap/ChangeLog for details)
+
+Version 5.53 - Tuleap 5.8
+    * Cross references field no longer taken into account in CSV import (read-only field)
+
+Version 5.52 - Tuleap 5.8
+    * Apply global validation rules on CSV Import, SOAP create/update artifact, Tracker clone, XML Import/Export
+
+Version 5.51 - Tuleap 5.8
+    * Fix bugs #1905: soap criteria for list fields are not consistance with what is returned getArtifacts
+
+Version 5.50 - Tuleap 5.8
+    * Fix bugs #1537 - Issue with status semantic criteria on cross tracker search
+
+Version 5.49 - Tuleap 5.8
+    * Remove call time pass by reference for unit tests
+
+Version 5.48 - Tuleap 5.8
+    * Workflow global rules have precedence over transitions post-actions
+
+Version 5.47 - Tuleap 5.8
+    * * Tracker admin can define tracker wide rules that applies on dates
+
 Version 5.46 - Tuleap 5.8
-    * Add adms plugin
+    * Add admssw plugin
 
 Version 5.45 - Tuleap 5.7
     * Enhancement: add conditions on transition (check that a field is not empty)

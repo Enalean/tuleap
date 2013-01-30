@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Transition_PostAction_Field.class.php';
 
 /**
  * Base class for numeric field post actions. 

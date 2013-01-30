@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/builders/all.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php'); // workaround for cyclic includes issue
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement.class.php');
+require_once('bootstrap.php');
 
 Mock::generate('Project');
 Mock::generate('Tracker');

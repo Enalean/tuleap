@@ -66,6 +66,17 @@ CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_field_float (
   INDEX idx_wf_transition_id( transition_id )
 ) ENGINE=InnoDB;
 
+--  
+--  Table structure for tracker_workflow_transition_postactions_cibuild
+-- 
+DROP TABLE IF EXISTS tracker_workflow_transition_postactions_cibuild;
+CREATE TABLE IF NOT EXISTS tracker_workflow_transition_postactions_cibuild (
+  id int(11) UNSIGNED NOT NULL auto_increment  PRIMARY KEY,
+  transition_id int(11) NOT NULL,
+  job_url varchar(255) default NULL,
+  INDEX idx_wf_transition_id( transition_id )
+) ENGINE=InnoDB;
+
 DROP TABLE IF EXISTS tracker_widget_renderer;
 CREATE TABLE tracker_widget_renderer (
    id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
@@ -612,12 +623,25 @@ DROP TABLE IF EXISTS tracker_rule;
 CREATE TABLE IF NOT EXISTS tracker_rule(
   id int(11) unsigned NOT NULL auto_increment PRIMARY KEY,
   tracker_id int(11) unsigned NOT NULL default '0',
+  rule_type tinyint(4) unsigned NOT NULL default '0',
+  KEY tracker_id (tracker_id)
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_rule_list;
+CREATE TABLE IF NOT EXISTS tracker_rule_list(
+  tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
   source_field_id int(11) unsigned NOT NULL default '0',
   source_value_id int(11) unsigned NOT NULL default '0',
   target_field_id int(11) unsigned NOT NULL default '0',
-  rule_type tinyint(4) unsigned NOT NULL default '0',
-  target_value_id int(11) unsigned default NULL,
-  KEY tracker_id (tracker_id)
+  target_value_id int(11) unsigned default NULL
+) ENGINE=InnoDB;
+
+DROP TABLE IF EXISTS tracker_rule_date;
+CREATE TABLE IF NOT EXISTS tracker_rule_date(
+  tracker_rule_id int(11) unsigned NOT NULL PRIMARY KEY,
+  source_field_id int(11) unsigned NOT NULL,
+  target_field_id int(11) unsigned NOT NULL,
+  comparator varchar(2) NOT NULL
 ) ENGINE=InnoDB;
 
 DROP TABLE IF EXISTS tracker_hierarchy;

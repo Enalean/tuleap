@@ -25,10 +25,12 @@ class Workflow_Transition_Condition_Permissions_Factory {
      */
     public function getInstanceFromXML($xml, &$xmlMapping, Transition $transition) {
         $authorized_ugroups_keyname = array();
-        foreach ($xml->permissions->permission as $perm) {
-            $ugroup = (string)$perm['ugroup'];
-            if (isset($GLOBALS['UGROUPS'][$ugroup])) {
-                $authorized_ugroups_keyname[] = $GLOBALS['UGROUPS'][$ugroup];
+        if (isset($xml->permissions)) {
+            foreach ($xml->permissions->permission as $perm) {
+                $ugroup = (string)$perm['ugroup'];
+                if (isset($GLOBALS['UGROUPS'][$ugroup])) {
+                    $authorized_ugroups_keyname[] = $GLOBALS['UGROUPS'][$ugroup];
+                }
             }
         }
         $condition = new Workflow_Transition_Condition_Permissions($transition);

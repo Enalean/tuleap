@@ -25,17 +25,17 @@ require_once 'common/include/Codendi_Request.class.php';
  * Post action occuring when transition is run
  */
 abstract class Transition_PostAction {
-    
+
     /**
      * @var Transition the transition
      */
     protected $transition;
-    
+
     /**
      * @var Integer Id of the post action
      */
     protected $id;
-    
+
     /**
      * Constructor
      *
@@ -46,7 +46,7 @@ abstract class Transition_PostAction {
         $this->transition = $transition;
         $this->id         = $id;
     }
-    
+
     /**
      * Return ID of the post-action
      *
@@ -55,25 +55,25 @@ abstract class Transition_PostAction {
     public function getId() {
         return $this->id;
     }
-    
+
     /**
      * Return all the relevant concatenated CSS classes for this PostAction.
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public function getCssClasses() {
         return 'workflow_action '.$this->getCssClass();
     }
-    
+
     /**
      * Return the most specific CSS class for this PostAction.
-     * 
+     *
      * @return string
      */
     public function getCssClass() {
         return 'workflow_action_'.$this->getShortName();
     }
-    
+
     /**
      * Return the transition
      *
@@ -82,10 +82,10 @@ abstract class Transition_PostAction {
     public function getTransition() {
         return $this->transition;
     }
-    
+
     /**
      * Log feedback to be displayed to the user
-     * 
+     *
      * @param string $level    One of info|warning|error
      * @param string $pagename The primary key for BaseLanguage::getText()
      * @param string $category The secondary key for BaseLanguage::getText()
@@ -96,48 +96,58 @@ abstract class Transition_PostAction {
      * @return void
      */
     protected function addFeedback($level, $pagename, $category, $args) {
-        $GLOBALS['Response']->addFeedback($level, $GLOBALS['Language']->getText($pagename, $category, $args));
+        $feedback = $GLOBALS['Language']->getText($pagename, $category, $args);
+        $GLOBALS['Response']->addUniqueFeedback($level, $feedback);
     }
-    
+
     /**
      * Execute actions before transition happens
-     * 
-     * @param Array &$fields_data Request field data (array[field_id] => data)
-     * @param PFUser  $current_user The user who are performing the update
-     * 
+     *
+     * @param Array  &$fields_data Request field data (array[field_id] => data)
+     * @param PFUser $current_user The user who are performing the update
+     *
      * @return void
      */
     public function before(array &$fields_data, PFUser $current_user) {
     }
-    
+
+    /**
+     * Execute actions after transition happens
+     *
+     * @param Tracker_Artifact_Changeset $changeset
+     * @return void
+     */
+    public function after(Tracker_Artifact_Changeset $changeset) {
+    }
+
     /**
      * Get the shortname of the post action
      *
      * @return string
      */
     public abstract function getShortName();
-    
+
     /**
      * Get the label of the post action
      *
      * @return string
      */
     public static abstract function getLabel();
-    
+
     /**
      * Get the html code needed to display the post action in workflow admin
      *
      * @return string html
      */
     public abstract function fetch();
-    
+
     /**
      * Say if the action is well defined
      *
      * @return bool
      */
     public abstract function isDefined();
-    
+
     /**
      * Update/Delete action
      *
@@ -146,5 +156,15 @@ abstract class Transition_PostAction {
      * @return void
      */
     public abstract function process(Codendi_Request $request);
+
+    /**
+     * Export postactions to XML
+     *
+     * @param SimpleXMLElement &$root     the node to which the postaction is attached (passed by reference)
+     * @param array            $xmlMapping correspondance between real ids and xml IDs
+     *
+     * @return void
+     */
+    public abstract function exportToXml(SimpleXMLElement $root, $xmlMapping);
 }
 ?>

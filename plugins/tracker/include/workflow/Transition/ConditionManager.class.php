@@ -22,7 +22,6 @@
 /**
  * Manager for Condition
  */
-require_once 'ConditionFactory.class.php';
 
 class Transition_ConditionManager {
 

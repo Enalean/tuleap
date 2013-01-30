@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Artifact_ChangesetValue_Text.class.php');
 
 /**
  * Manage values in changeset for string fields

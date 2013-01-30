@@ -987,6 +987,8 @@ plugin_tracker_artifact	formelement_artifactlink_open_parent	Open $1
 plugin_tracker_artifact	unable_update	Unable to update the artifact
 plugin_tracker_artifact	no_changes	No changes for artifact $1
 plugin_tracker_artifact	fields_not_valid	Fields are not valid
+plugin_tracker_artifact	rules_date_not_valid	Error on the date value : $1 must be $2 to $3.
+plugin_tracker_artifact	dependencies_rules_not_valid	Error on the dependency between the fields $1 and $2.
 plugin_tracker_artifact	mail_followup_date	Date:
 plugin_tracker_artifact	mail_followup_by	By:
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">You Are NOT Logged In<br />Please <a href="$1">log in,</a> so update notifications can be emailed to you.</span></strong><br />If you don't have a user account, then enter your email address instead:
@@ -1210,6 +1212,7 @@ plugin_tracker_admin_import	unable_to_open_file	Unable to open file $1
 plugin_tracker_admin_import	file_not_found	File not found
 plugin_tracker_admin_import	missing_required_field	Missing required field: $1
 plugin_tracker_admin_import	missing_required_field_value	Missing value on a required field: $1
+plugin_tracker_admin_import	missing_field_value	Missing field in data: 
 plugin_tracker_admin_import	aid_does_not_exist	Artifact Id $1 does not exist
 plugin_tracker_admin_import	field_not_taken_account	The field "$1" will not be taken into account.
 plugin_tracker_admin_import	nb_created_import	$1 Artifact(s) created
@@ -1304,19 +1307,29 @@ plugin_tracker_search_index	artifact_title	Artifact Title
 # Script: SF/common/workflow/WorkflowManager.class.php
 #
 workflow_admin	title	Workflow Administration
+workflow_admin	transitions_deactivated	Transition rules don't apply yet
+workflow_admin	same_field	The two fields must be different
+workflow_admin	deleted_rules	Rule(s) successfully deleted
+workflow_admin	updated_rules	Rule(s) successfully updated
+workflow_admin	created_rule	Rule successfully created
+workflow_admin	title_define_global_date_rules	Define global date rules
+workflow_admin	hint_date_rules_definition	Those rules will be applied on each creation/update of artifacts.
+workflow_admin	add_new_rule	Add a new rule
 workflow_admin	title_define_transitions	Define the transitions
-workflow_admin	field	Field
-workflow_admin	enabled	Enabled
-workflow_admin	delete	Delete
+workflow_admin	tab_global_rules	Global Rules
+workflow_admin	tab_transitions	Transitions
+workflow_admin	field	Field on which the transitions will be based:
+workflow_admin	enabled	Enforce transition rules
+workflow_admin	delete	Delete all transitions
 workflow_admin	choose_field	Choose the field on which applies the workflow:
-workflow_admin	updated	Updated
+workflow_admin	updated	Transitions updated
 workflow_admin	not_updated	Nothing to update
 workflow_admin	created	Created
 workflow_admin	deleted	Deleted
-workflow_admin	workflow_enabled	The workflow has been enabled.
-workflow_admin	workflow_disabled	The workflow has been disabled.
-workflow_admin	delete_workflow	Are you sure you want to delete that workflow?
-workflow_admin	title_define_transition_details	Define rules on transition : from $1 to $2
+workflow_admin	workflow_enabled	Starting from now, transitions <strong>will be</strong> applied.
+workflow_admin	workflow_disabled	Starting from now, transitions will <strong>not</strong> be applied.
+workflow_admin	delete_workflow	Are you sure you want to delete all transitions?
+workflow_admin	title_define_transition_details	Define rules on transition: from <em>$1</em> to <em>$2</em>
 workflow_admin	label_define_transition_permissions	Groups that may make the transition:
 workflow_admin	label_define_transition_required_field	Field that must not be empty
 workflow_admin	permissions_not_updated	Permissions on transition have not been updated.
@@ -1326,6 +1339,13 @@ workflow_admin	new_artifact	New artifact
 workflow_admin	change_value_date_field_to	The date field $1 is set to $2
 workflow_admin	change_value_int_field_to	The integer field $1 is set to $2
 workflow_admin	change_value_float_field_to	The float field $1 is set to $2
+workflow_admin	ci_build	The following job $1 will be launched
+workflow_admin	ci_build_help	$1 will automatically pass following parameters to the job:
+workflow_admin	ci_build_help_userid	userId: Identifier (integer) of $1 user who made the transition
+workflow_admin	ci_build_help_projectid	projectId: Identifier (integer) of the current project (ie. $1)
+workflow_admin	ci_build_help_trackerid	trackerId: Identifier (integer) of the current tracker (ie. $1)
+workflow_admin	ci_build_help_artifactid	artifactId: Identifier (integer) of the artifact where the transition happens
+workflow_admin	ci_build_help_trigger_field_value	triggerFieldValue: Value (string) of current transition target (ie. $1)
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	post_action_change_value_int_field	Change the value of an int field
 workflow_admin	post_action_change_value_float_field	Change the value of a float field
@@ -1340,9 +1360,13 @@ workflow_admin	post_action_field_date_current_time	the current time
 workflow_admin	post_action_not_defined	This action will be inactive until it is completely configured
 workflow_admin	the_field	The field
 workflow_admin	field_not_empty	must not be empty
+workflow_admin	ci_url	Hudson or Jenkins job url: http://CI_URL/job/JOBNAME
 
-workflow_postaction	field_value_set	The field '$1' has been automatically set to $2
-workflow_postaction	field_clear	The field '$1' has been automatically cleared
+workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
+workflow_postaction	field_clear	The field '$1' will be automatically cleared
+workflow_postaction	invalid_job_url	The continuous integration job URL '$1' is not valid.
+workflow_postaction	ci_build	Launch a continuous integration build
+workflow_postaction	ci_build_succeeded	Job build launch succeeded ($1)
 
 workflow_condition	invalid_condition	Invalid condition: the field '$1'must not be empty
 
@@ -1422,3 +1446,5 @@ project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid Ugr
 project_admin_utils	tracker_date_reminder_empty_ugroup_param	You should select at least one valid ugroup
 project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date Reminder before 'SubmittedOn' Field
 project_admin_utils	tracker_date_reminder_duplicated	Cannot duplicate Date Reminder
+
+plugin_tracker	access_burndown	Access to burndown

@@ -358,5 +358,30 @@ class Event {
      */
     const  UGROUP_UPDATE_USERS_ALLOWED = 'ugroup_update_users_allowed';
 
+    /**
+     * Display information about SOAP end points
+     *
+     * Parameters:
+     *    None
+     * Expected results
+     *    'end_points' => array of array(
+     *        'title'       => '',
+     *        'wsdl'        => '',
+     *        'wsdl_viewer' => '',
+     *        'description' => '',
+     *    );
+     */
+    const SOAP_DESCRIPTION = 'soap_description';
+
+    /**
+     * Get ldap login for a given user
+     *
+     * Parameters:
+     *    'user'  => User object
+     *
+     * Expected results:
+     *    'login' => String, ldap username
+     */
+    const GET_LDAP_LOGIN_NAME_FOR_USER = 'get_ldap_login_name_for_user';
 }
 ?>

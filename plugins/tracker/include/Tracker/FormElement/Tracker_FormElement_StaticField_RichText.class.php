@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_StaticField.class.php');
-require_once('dao/Tracker_FormElement_StaticField_RichTextDao.class.php');
 
 class Tracker_FormElement_StaticField_RichText extends Tracker_FormElement_StaticField {
     

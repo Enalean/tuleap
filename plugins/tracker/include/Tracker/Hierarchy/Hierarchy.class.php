@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'NotInHierarchyException.class.php';
-require_once 'CyclicHierarchyException.class.php';
 
 /**
  * Store relationship between tracker based on their ids.

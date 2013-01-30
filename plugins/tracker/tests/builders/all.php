@@ -21,7 +21,6 @@
 // Load all builders
 
 // first load tracker to set all includes
-require_once 'aTracker.php';
 
 foreach (glob(dirname(__FILE__).'/*.php') as $file) {
     require_once $file;

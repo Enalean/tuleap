@@ -18,11 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('common/user/UserHelper.class.php');
-require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
@@ -526,7 +524,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html  = null;
         $value = $this->fetchCardValue($artifact);
         $html .= '<tr><td>'. $this->getLabel().':</td>';
-        $html .= '<td class="valueOf_'. $this->getName() .'">'. $value .'</td></tr>';
+        $data_field_id = '';
+        if ($this->userCanUpdate()) {
+            $data_field_id = 'data-field-id="'.$this->getId().'"';
+        }
+        $html .= '<td class="valueOf_'. $this->getName() .'" '. $data_field_id .'>'. $value .'</td></tr>';
+
         return $html;
     }
 
@@ -944,9 +947,31 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
-    public function getFieldData($soap_value) {
+    public function getFieldData($value) {
         // for atomic fields, the field data is the soap value (int, float, date, string, text)
-        return $soap_value;
+        return $value;
+    }
+
+    /**
+     * Get data from SOAP value in order to be saved in DB (create/update DB)
+     *
+     * @param stdClass $soap_value
+     *
+     * @return mixed
+     */
+    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+        return $this->getFieldData($soap_value->field_value->value);
+    }
+
+    /**
+     * Get data from CSV value in order to be saved in DB (create/update DB)
+     *
+     * @param string $csv_value
+     *
+     * @return mixed
+     */
+    public function getFieldDataFromCSVValue($csv_value) {
+        return $this->getFieldData($csv_value);
     }
 
     /**

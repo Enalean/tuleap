@@ -7,8 +7,7 @@
 // 
 
 header("Expires: Wed, 11 Nov 1998 11:11:11 GMT");
-header("Cache-Control: no-cache, no-store");
-header("Cache-Control: must-revalidate");
+header("Cache-Control: no-cache, no-store, must-revalidate");
 
 require_once('pre.php');
 require_once('account.php');
@@ -130,17 +129,11 @@ if($_cVar['pv'] == 2) {
 $_useHttps = false;
 if (isset($GLOBALS['sys_https_host']) && $GLOBALS['sys_https_host']) {
     $_useHttps = true;
-    $form_url = "https://".$GLOBALS['sys_https_host'];
-} else {
-    $form_url = "http://".$GLOBALS['sys_default_domain'];
 }
-$form_url .= '/account/login.php';
+$form_url = '/account/login.php';
 
 // Page title
 $pageTitle = $GLOBALS['Language']->getText('account_login', 'title');
-if($_useHttps) {
-    $pageTitle .= ' ('.$GLOBALS['Language']->getText('account_login', 'secure').')';
-}
 
 //
 // Start output

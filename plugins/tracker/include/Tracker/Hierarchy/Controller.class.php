@@ -18,12 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Presenter.class.php';
-require_once 'Dao.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 require_once 'common/valid/ValidFactory.class.php';
-require_once 'HierarchicalTracker.class.php';
-require_once 'HierarchicalTrackerFactory.class.php';
 
 class Tracker_Hierarchy_Controller {
 

@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__) .'/../Field.class.php';
 
 class Tracker_FormElement_View_Admin_Field_CrossReferences extends Tracker_FormElement_View_Admin_Field {
 

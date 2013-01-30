@@ -18,24 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/TrackerDao.class.php');
-require_once('dao/Tracker_PermDao.class.php');
-require_once('Semantic/Tracker_SemanticManager.class.php');
-require_once('Tooltip/Tracker_Tooltip.class.php');
-require_once('Tracker_NotificationsManager.class.php');
-require_once('CannedResponse/Tracker_CannedResponseManager.class.php');
-require_once('DateReminder/Tracker_DateReminderManager.class.php');
-require_once('Rule/Tracker_RulesManager.class.php');
-require_once(dirname(__FILE__).'/../workflow/WorkflowManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/widget/Widget_Static.class.php');
-require_once(dirname(__FILE__).'/../tracker_permissions.php');
-require_once('Tracker_Dispatchable_Interface.class.php');
-require_once('FormElement/Tracker_SharedFormElementFactory.class.php');
-require_once('Hierarchy/Controller.class.php');
-require_once('Hierarchy/HierarchyFactory.class.php');
-require_once 'IFetchTrackerSwitcher.class.php';
-require_once 'Action/CreateArtifact.class.php';
+require_once 'common/include/CSRFSynchronizerToken.class.php';
 
 require_once('json.php');
 
@@ -521,7 +506,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
                     $GLOBALS['Response']->redirect(TRACKER_BASE_URL.'/?tracker='. $this->getId());
                 }
                 break;
-            case 'admin-workflow':
+            case Workflow::FUNC_ADMIN_RULES:
+            case Workflow::FUNC_ADMIN_TRANSITIONS:
                 if ($this->userIsAdmin($current_user)) {
                     $this->getWorkflowManager()->process($layout, $request, $current_user);
                 } else {
@@ -1167,7 +1153,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
                         'img'         => $GLOBALS['HTML']->getImagePath('ic/48/tracker-semantic.png'),
                 ),
                 'editworkflow' => array(
-                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func=admin-workflow',
+                        'url'         => TRACKER_BASE_URL.'/?tracker='. $this->id .'&amp;func='. Workflow::FUNC_ADMIN_RULES,
                         'short_title' => $GLOBALS['Language']->getText('plugin_tracker_admin','workflow'),
                         'title'       => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow'),
                         'description' => $GLOBALS['Language']->getText('plugin_tracker_admin','manage_workflow_desc'),
@@ -1899,7 +1885,7 @@ EOS;
             $fields_data[$field_id] = $data;
         }
         $this->augmentDataFromRequest($fields_data);
-        
+
         $not_updated_aids = array();
         foreach ( $masschange_aids as $aid ) {
             $artifact = Tracker_ArtifactFactory::instance()->getArtifactById($aid);
@@ -1907,8 +1893,16 @@ EOS;
                 $not_updated_aids[] = $aid;
                 continue;
             }
-            
-            if ( !$artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format)) {
+
+            try {
+                $artifact->createNewChangeset($fields_data, $comment, $submitter, $email='', $send_notifications, $comment_format);
+            } catch (Tracker_NoChangeException $e) {
+                $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                $not_updated_aids[] = $aid;
+                continue;
+            } catch (Tracker_Exception $e) {
+                $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($aid)));
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                 $not_updated_aids[] = $aid;
                 continue;
             }
@@ -2327,9 +2321,9 @@ EOS;
         $child = $xmlElem->addChild('semantics');
         $tsm->exportToXML($child, $xmlMapping);
         
-        //field dependencies
+        // rules
         $trm = $this->getRulesManager();
-        $child = $xmlElem->addChild('dependencies');
+        $child = $xmlElem->addChild('rules');
         $trm->exportToXML($child, $xmlMapping);
         
         // only the reports with project scope are exported
@@ -2677,7 +2671,7 @@ EOS;
                                   );
                         if ($line[$idx]!=''){
                             
-                            $data[$field->getId()] = $field->getFieldData($line[$idx]);
+                            $data[$field->getId()] = $field->getFieldDataFromCSVValue($line[$idx]);
                             
                             if ($data[$field->getId()] === null) {
                                 $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unknown_value', array($line[$idx], $field_name)));
@@ -2780,7 +2774,7 @@ EOS;
                 foreach ($data_line as $idx => $data_cell) {
                     if ($fields[$idx] && is_a($fields[$idx], 'Tracker_FormElement_Field')) {
                         $field = $fields[$idx];
-                        $fields_data[$field->getId()] = $field->getFieldData($data_cell);
+                        $fields_data[$field->getId()] = $field->getFieldDataFromCSVValue($data_cell);
                     } else  {
                         // else: this cell is an 'aid' cell
                         if ($data_cell) {
@@ -2804,10 +2798,15 @@ EOS;
                     $artifact = $af->getArtifactById($artifact_id);
                     if ($artifact) {
                         $followup_comment = '';
-                        if ($artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications)) {
+                        try {
+                            $artifact->createNewChangeset($fields_data, $followup_comment, $current_user, null, $send_notifications);
                             $nb_artifact_update++;
-                        } else {
+                        } catch (Tracker_NoChangeException $e) {
+                            $GLOBALS['Response']->addFeedback('info', $e->getMessage(), CODENDI_PURIFIER_LIGHT);
+                            $is_error = true;
+                        } catch (Tracker_Exception $e) {
                             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_admin_import', 'unable_to_update_artifact', array($artifact_id)));
+                            $GLOBALS['Response']->addFeedback('error', $e->getMessage());
                             $is_error = true;
                         }
                     } else {
@@ -3166,6 +3165,21 @@ EOS;
         }
         return null;
     }
-}
 
+    /**
+     * Return workflow of the current tracker (there is always a workflow).
+     *
+     * @return Workflow
+     */
+    public function getWorkflow() {
+        $workflow = $this->getWorkflowFactory()->getWorkflowByTrackerId($this->getId());
+        if (! $workflow) {
+            $workflow_id = 0;
+            $field_id    = 0;
+            $is_used     = false;
+            $workflow    = new Workflow($workflow_id, $this->getId(), $field_id, $is_used);
+        }
+        return $workflow;
+    }
+}
 ?>

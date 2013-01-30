@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCase {
 
     private $xml_mapping = array();
@@ -47,8 +47,7 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
             <permissions>
                 <permission ugroup="UGROUP_PROJECT_MEMBERS"/>
                 <permission ugroup="UGROUP_PROJECT_ADMIN"/>
-            </permissions>
-        ');
+            </permissions>');
 
         $condition = $this->permissions_factory->getInstanceFromXML($xml, $this->xml_mapping, $this->transition);
 

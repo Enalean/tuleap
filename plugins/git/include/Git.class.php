@@ -36,7 +36,9 @@ class Git extends PluginController {
     const PERM_READ  = 'PLUGIN_GIT_READ';
     const PERM_WRITE = 'PLUGIN_GIT_WRITE';
     const PERM_WPLUS = 'PLUGIN_GIT_WPLUS';
-    
+
+    const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
+
     /**
      * Lists all git-related permission types.
      * 
@@ -76,13 +78,17 @@ class Git extends PluginController {
      */
     private $gerrit_server_factory;
 
-    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory) {
+    /** @var Git_Driver_Gerrit */
+    private $driver;
+
+    public function __construct(GitPlugin $plugin, Git_RemoteServer_GerritServerFactory $gerrit_server_factory, Git_Driver_Gerrit $driver) {
         parent::__construct();
         
         $this->userManager           = UserManager::instance();
         $this->projectManager        = ProjectManager::instance();
         $this->factory               = new GitRepositoryFactory(new GitDao(), $this->projectManager);
         $this->gerrit_server_factory = $gerrit_server_factory;
+        $this->driver                = $driver;
         
         $matches = array();
         if ( preg_match_all('/^\/plugins\/git\/index.php\/(\d+)\/([^\/][a-zA-Z]+)\/([a-zA-Z\-\_0-9]+)\/\?{0,1}.*/', $_SERVER['REQUEST_URI'], $matches) ) {
@@ -192,6 +198,7 @@ class Git extends PluginController {
                                             'set_private',
                                             'confirm_private',
                                             'fork_repositories',
+                                            'fork_repositories_permissions',
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
                                             'migrate_to_gerrit',
@@ -200,6 +207,7 @@ class Git extends PluginController {
             $this->addPermittedAction('index');
             $this->addPermittedAction('view_last_git_pushes');
             $this->addPermittedAction('fork_repositories');
+            $this->addPermittedAction('fork_repositories_permissions');
             $this->addPermittedAction('do_fork_repositories');
 
             if ($repoId !== 0) {
@@ -252,7 +260,7 @@ class Git extends PluginController {
 
     }
     
-    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) {
+    public function _dispatchActionAndView($action, $repoId, $repositoryName, $user) { 
         $pane = $this->request->get('pane');
         switch ($action) {
             #CREATE REF
@@ -317,7 +325,8 @@ class Git extends PluginController {
                 break;
             #repo_management
             case 'repo_management':
-                $this->addAction('repoManagement', array($this->groupId, $repoId));
+                $repository = $this->factory->getRepositoryById($repoId);
+                $this->addAction('repoManagement', array($repository));
                 $this->addView('repoManagement');
                 break;
             case 'mail':
@@ -359,6 +368,36 @@ class Git extends PluginController {
                 $this->addAction('getProjectRepositoryList', array($this->groupId));
                 $this->addView('forkRepositories');
                 break;
+            case 'fork_repositories_permissions':
+                $valid = new Valid_UInt('repos');
+                $valid->required();
+                if($this->request->validArray($valid)) {
+                    $repos = $this->request->get('repos');
+                }
+                $valid = new Valid_UInt('to_project');
+                if ($this->request->valid($valid)) {
+                    $toProject = $this->request->get('to_project');
+                }
+                $valid = new Valid_String('path');
+                $valid->required();
+                $path = '';
+                if($this->request->valid($valid)) {
+                    $path = $this->request->get('path');
+                }
+                $valid = new Valid_String('choose_destination');
+                $valid->required();
+                if($this->request->valid($valid)) {
+                    $scope = $this->request->get('choose_destination');
+                }
+                if (!empty($repos)) {
+                    $this->addAction('forkRepositoriesPermissions', array($repos, $toProject, $path, $scope));
+                    $this->addView('forkRepositoriesPermissions');
+                } else {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->addAction('getProjectRepositoryList', array($this->groupId));
+                    $this->addView('forkRepositories');
+                }
+                break;
             case 'do_fork_repositories':
                 try {
                     if ($this->request->get('choose_destination') == 'personal') {
@@ -393,6 +432,11 @@ class Git extends PluginController {
                 $imageRenderer->display();
                 break;
             case 'migrate_to_gerrit':
+                if (Config::get('sys_auth_type') !== Config::AUTH_TYPE_LDAP) {
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                    break;
+                }
+                
                 $repo = $this->factory->getRepositoryById($repoId);
                 $remote_server_id = $this->request->getValidated('remote_server_id', 'uint');
                 if (empty($repo) || empty($remote_server_id)) {
@@ -405,7 +449,7 @@ class Git extends PluginController {
                 break;
             #LIST
             default:
-                
+               
                 $user_id = null;
                 $valid = new Valid_UInt('user');
                 $valid->required();
@@ -505,12 +549,12 @@ class Git extends PluginController {
     protected function instantiateAction($action) {
         $system_event_manager   = SystemEventManager::instance();
         $git_repository_manager = new GitRepositoryManager($this->factory, $system_event_manager);
-        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory);
+        return new $action($this, $system_event_manager, $this->factory, $git_repository_manager, $this->gerrit_server_factory, $this->driver);
     }
 
     public function _doDispatchForkCrossProject($request, $user) {
         $this->checkSynchronizerToken('/plugins/git/?group_id='. (int)$this->groupId .'&action=fork_repositories');
-        $validators = array(new Valid_UInt('to_project'), new Valid_Array('repos'));
+        $validators = array(new Valid_UInt('to_project'), new Valid_String('repos'), new Valid_Array('repo_access'));
 
         foreach ($validators as $validator) {
             $validator->required();
@@ -520,15 +564,17 @@ class Git extends PluginController {
                 return;
             }
         }
-        $to_project_id = $request->get('to_project');
+        $to_project_id   = $request->get('to_project');
         if ($user->isMember($to_project_id, 'A')) {
-            $to_project    = $this->projectManager->getProject($to_project_id);
-            $repos_ids     = $request->get('repos');
-            $repos         = $this->getRepositoriesFromIds($repos_ids);
-            $namespace     = '';
-            $scope         = GitRepository::REPO_SCOPE_PROJECT;
-            $redirect_url  = '/plugins/git/?group_id='. (int)$to_project_id;
-            $this->addAction('fork', array($repos, $to_project, $namespace, $scope, $user, $GLOBALS['HTML'], $redirect_url));
+            $to_project      = $this->projectManager->getProject($to_project_id);
+            $repos_ids       = explode(',', $request->get('repos'));
+            $repos           = $this->getRepositoriesFromIds($repos_ids);
+            $namespace       = '';
+            $scope           = GitRepository::REPO_SCOPE_PROJECT;
+            $redirect_url    = '/plugins/git/?group_id='. (int)$to_project_id;
+            $forkPermissions = $this->getForkPermissionsFromRequest($request);
+
+            $this->addAction('fork', array($repos, $to_project, $namespace, $scope, $user, $GLOBALS['HTML'], $redirect_url, $forkPermissions));
         } else {
             $this->addError($this->getText('must_be_admin_to_create_project_repo'));
         }
@@ -553,20 +599,34 @@ class Git extends PluginController {
             $path = trim($request->get('path'));
         }
         $path = userRepoPath($user->getUserName(), $path);
+        $forkPermissions = $this->getForkPermissionsFromRequest($request);
 
-        $valid = new Valid_UInt('repos');
+        $valid = new Valid_String('repos');
         $valid->required();
-        if($request->validArray($valid)) {
-            $repos_ids = $request->get('repos');
-        }
+        $repos_ids = explode(',', $request->get('repos'));
         $to_project   = $this->projectManager->getProject($this->groupId);
         $repos        = $this->getRepositoriesFromIds($repos_ids);
         $scope        = GitRepository::REPO_SCOPE_INDIVIDUAL;
         $redirect_url = '/plugins/git/?group_id='. (int)$this->groupId .'&user='. (int)$user->getId();
-        $this->addAction('fork', array($repos, $to_project, $path, $scope, $user, $GLOBALS['HTML'], $redirect_url));
+        $this->addAction('fork', array($repos, $to_project, $path, $scope, $user, $GLOBALS['HTML'], $redirect_url, $forkPermissions));
         
     }
-    
+
+    /**
+     * @return array
+     */
+    private function getForkPermissionsFromRequest(Codendi_Request $request) {
+        $fork_permissions = $request->get('repo_access');
+        if ($fork_permissions) {
+            return $fork_permissions;
+        }
+        // when we fork a gerrit repository, the repo rights cannot
+        // be updated by the user on the intermediate screen and the
+        // repo_access is false. Forcing it to empty array to avoid
+        // fatal errors
+        return array();
+    }
+
     private function getRepositoriesFromIds(array $repoIds) {
         $repos = array();
         foreach ($repoIds as $id) {

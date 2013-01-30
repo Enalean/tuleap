@@ -72,7 +72,7 @@ class UserPreferencesDao extends DataAccessObject {
     function deleteByPreferenceNameAndValue($preference_name, $preference_value) {
         $preference_name  = $this->da->quoteSmart($preference_name);
         $preference_value = $this->da->quoteSmart($preference_value);
-        $sql = "DELETE FROM $this->table_name
+        $sql = "DELETE FROM user_preferences
                 WHERE preference_name = $preference_name
                   AND preference_value = $preference_value";
         return $this->update($sql);

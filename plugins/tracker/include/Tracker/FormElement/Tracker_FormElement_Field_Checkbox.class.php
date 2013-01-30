@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_MultiSelectbox.class.php');
 
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
 

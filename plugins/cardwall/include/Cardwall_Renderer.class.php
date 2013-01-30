@@ -19,17 +19,6 @@
  */
 
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
-require_once TRACKER_BASE_DIR .'/constants.php';
-require_once TRACKER_BASE_DIR .'/Tracker/Report/Tracker_Report_Renderer.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/CrossSearch/ArtifactNode.class.php';
-require_once 'RendererPresenter.class.php';
-require_once 'ArtifactNodeTreeProvider.class.php';
-require_once 'BoardFactory.class.php';
-require_once 'QrCode.class.php';
-require_once 'Form.class.php';
-require_once 'FieldProviders/CustomFieldProvider.class.php';
-require_once 'CreateCardPresenterCallback.class.php';
-require_once 'CardInCellPresenterCallback.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
 
 class Cardwall_Renderer extends Tracker_Report_Renderer {
@@ -266,7 +255,7 @@ class Cardwall_Renderer extends Tracker_Report_Renderer {
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      * @param $formsMapping the form elements mapping
      */
-    public function exportToXML(&$root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         parent::exportToXML($root, $formsMapping);
         if ($mapping = (string)array_search($this->field_id, $formsMapping)) {
             $root->addAttribute('field_id', $mapping);

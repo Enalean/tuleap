@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_Artifact_ChangesetValue.class.php');
 
 /**
  * Manage values in changeset for numeric fields

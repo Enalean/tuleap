@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Artifact_ChangesetValue.class.php');
 
 /**
  * Manage values in changeset for files fields
@@ -165,15 +164,14 @@ class Tracker_Artifact_ChangesetValue_File extends Tracker_Artifact_ChangesetVal
      * Return a string that will be use in SOAP API
      * as the value of this ChangesetValue_File 
      *
-     * @return string The value of this artifact changeset value for Soap API
+     * @return Array The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
-        $files_info = $this->getFiles();
         $soap_array = array();
-        foreach ($files_info as $file_info) {
-            $soap_array[] = $file_info->getFilename();
+        foreach ($this->getFiles() as $file_info) {
+            $soap_array[] = $file_info->getSoapValue();
         }
-        return implode(",", $soap_array);
+        return array('file_info' => $soap_array);
     }
     
     /**

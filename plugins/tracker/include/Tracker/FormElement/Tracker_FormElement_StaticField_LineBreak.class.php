@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_StaticField.class.php');
 
 class Tracker_FormElement_StaticField_LineBreak extends Tracker_FormElement_StaticField {
     

@@ -21,7 +21,7 @@
 
 require_once GIT_BASE_DIR .'/GitDao.class.php';
 require_once GIT_BASE_DIR .'/Git/Driver/Gerrit.class.php';
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/UserFinder.class.php';
+require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/ProjectCreator.class.php';
 require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
 require_once 'common/backend/BackendLogger.class.php';
 
@@ -32,13 +32,6 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var GitDao */
     private $dao;
 
-    private $gerrit_groups = array('contributors' => Git::PERM_READ,
-                                   'integrators'  => Git::PERM_WRITE,
-                                   'supermen'     => Git::PERM_WPLUS);
-
-    /** @var Git_Driver_Gerrit */
-    private $driver;
-
     /** @var GitRepositoryFactory */
     private $repository_factory;
 
@@ -48,8 +41,8 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
     /** @var Logger */
     private $logger;
 
-    /** @var UserFinder */
-    private $user_finder;
+    /** @var Git_Driver_Gerrit_ProjectCreator */
+    private $project_creator;
 
     public function process() {
         $repo_id           = (int)$this->getParameter(0);
@@ -58,14 +51,9 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
         $repository = $this->repository_factory->getRepositoryById($repo_id);
         try {
-            $server = $this->server_factory->getServer($repository);
-
-            $gerrit_project = $this->driver->createProject($server, $repository);
-
-            foreach ($this->gerrit_groups as $group_name => $permission_level) {
-                $user_list = $this->user_finder->getUsersForPermission($permission_level, $repo_id);
-                $this->driver->createGroup($server, $repository, $group_name, $user_list);
-            }
+            $server         = $this->server_factory->getServer($repository);
+            $gerrit_project = $this->project_creator->createProject($server, $repository);
+            $this->project_creator->removeTemporaryDirectory();
 
             $this->done("Created project $gerrit_project on ". $server->getHost());
             return true;
@@ -115,22 +103,16 @@ class SystemEvent_GIT_GERRIT_MIGRATION extends SystemEvent {
 
     public function injectDependencies(
         GitDao $dao,
-        Git_Driver_Gerrit $driver,
         GitRepositoryFactory $repository_factory,
         Git_RemoteServer_GerritServerFactory  $server_factory,
         Logger  $logger,
-        Git_Driver_Gerrit_UserFinder $user_finder
+        Git_Driver_Gerrit_ProjectCreator $project_creator
     ) {
         $this->dao                = $dao;
-        $this->driver             = $driver;
         $this->repository_factory = $repository_factory;
         $this->server_factory     = $server_factory;
         $this->logger             = $logger;
-        $this->user_finder        = $user_finder;
-    }
-
-    public function setServerFactory($server_factory) {
-        $this->server_factory = $server_factory;
+        $this->project_creator    = $project_creator;
     }
 }
 

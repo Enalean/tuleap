@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement.class.php');
 
 /**
  * Base class for composite formElements. 
@@ -148,7 +147,7 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      * @param array            &$xmlMapping correspondance between real ids and xml IDs
      * @param int              $index       of the last field in the array
      */
-    public function exportToXML($root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
         parent::exportToXML($root, $xmlMapping, $index);
         $subfields = $this->getAllFormElements();
         $child = $root->addChild('formElements');

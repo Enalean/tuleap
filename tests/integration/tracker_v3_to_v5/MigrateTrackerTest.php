@@ -27,8 +27,8 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
     private static $defect_tracker_converted = false;
 
     protected $admin_user_id      = 1;
-    protected $defect_tracker_id  = 1;
-    protected $task_tracker_id = 2;
+    protected static $defect_tracker_id  = 1;
+    protected static $task_tracker_id = 2;
 
 
     /** @var Tracker */
@@ -61,8 +61,8 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
         $this->form_element_factory = Tracker_FormElementFactory::instance();
         $this->tracker_factory      = TrackerFactory::instance();
 
-        $this->defect_tracker = $this->tracker_factory->getTrackerById($this->defect_tracker_id);
-        $this->task_tracker = $this->tracker_factory->getTrackerById($this->task_tracker_id);
+        $this->defect_tracker = $this->tracker_factory->getTrackerById(self::$defect_tracker_id);
+        $this->task_tracker = $this->tracker_factory->getTrackerById(self::$task_tracker_id);
     }
 
     public function tearDown() {
@@ -93,7 +93,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
         $tv3 = new ArtifactType($project, $defect_trackerv3_id);
 
         $defect_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
-        $this->defect_tracker_id = $defect_tracker->getId();
+        self::$defect_tracker_id = $defect_tracker->getId();
     }
 
     protected function convertTaskTracker() {
@@ -109,7 +109,7 @@ abstract class MigrateDefaultTrackersTest extends TuleapDbTestCase {
         $tv3 = new ArtifactType($project, $trackerv3_id);
 
         $task_tracker = $v3_migration->createTV5FromTV3($project, $name, $description, $itemname, $tv3);
-        $this->task_tracker_id = $task_tracker->getId();
+        self::$task_tracker_id = $task_tracker->getId();
     }
 }
 
@@ -203,7 +203,7 @@ class MigrateTracker_DefectTrackerConfigTest extends MigrateDefaultTrackersTest 
 
 class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest {
     public function itHasSubmittedBy() {
-        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'submitted_by');
+        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'submitted_by');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "submitted_by");
         $this->assertEqual($field->getLabel(), "Submitted by");
@@ -217,7 +217,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
     }
 
     public function itHasATextFieldDescription() {
-        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'details');
+        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'details');
         $this->assertIsA($field, 'Tracker_FormElement_Field_Text');
         $this->assertEqual($field->getName(), "details");
         $this->assertEqual($field->getLabel(), "Original Submission");
@@ -237,7 +237,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
     }
 
     public function itHasAnUnusedDateFieldCloseDate() {
-        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'close_date');
+        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'close_date');
         $this->assertIsA($field, 'Tracker_FormElement_Field_Date');
         $this->assertEqual($field->getName(), "close_date");
         $this->assertEqual($field->getLabel(), "Close Date");
@@ -254,7 +254,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
     }
 
     public function itHasAnUnusedField() {
-        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'originator_name');
+        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'originator_name');
         $this->assertIsA($field, 'Tracker_FormElement_Field_String');
         $this->assertEqual($field->getName(), "originator_name");
         $this->assertEqual($field->getLabel(), "Originator Name");
@@ -262,7 +262,7 @@ class MigrateTracker_DefectTrackerFieldsTest extends MigrateDefaultTrackersTest 
     }
 
     public function itHasAListFieldResolutionWithValues() {
-        $field = $this->form_element_factory->getFormElementByName($this->defect_tracker_id, 'resolution_id');
+        $field = $this->form_element_factory->getFormElementByName(self::$defect_tracker_id, 'resolution_id');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "resolution_id");
         $this->assertEqual($field->getLabel(), "Resolution");
@@ -296,7 +296,7 @@ class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest
     }
 
     protected function getReportByName($name) {
-        foreach ($this->report_factory->getReportsByTrackerId($this->defect_tracker_id, null) as $report) {
+        foreach ($this->report_factory->getReportsByTrackerId(self::$defect_tracker_id, null) as $report) {
             if ($report->name == $name) {
                 return $report;
             }
@@ -304,7 +304,7 @@ class MigrateTracker_DefectTrackerReportsTest extends MigrateDefaultTrackersTest
     }
 
     public function itHasTwoReports() {
-        $this->assertCount($this->report_factory->getReportsByTrackerId($this->defect_tracker_id, null), 2);
+        $this->assertCount($this->report_factory->getReportsByTrackerId(self::$defect_tracker_id, null), 2);
     }
 
 
@@ -449,7 +449,7 @@ class MigrateTracker_TaskTrackerConfigTest extends MigrateDefaultTrackersTest {
 class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
 
     public function itHasSubmittedBy() {
-        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'submitted_by');
+        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'submitted_by');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "submitted_by");
         $this->assertEqual($field->getLabel(), "Submitted by");
@@ -463,7 +463,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
     }
 
     public function itHasATextFieldDescription() {
-        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'details');
+        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'details');
         $this->assertIsA($field, 'Tracker_FormElement_Field_Text');
         $this->assertEqual($field->getName(), "details");
         $this->assertEqual($field->getLabel(), "Original Submission");
@@ -481,7 +481,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
     }
 
     public function itHasADateFieldStartDate() {
-        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'start_date');
+        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
         $this->assertIsA($field, 'Tracker_FormElement_Field_Date');
         $this->assertEqual($field->getName(), "start_date");
         $this->assertEqual($field->getLabel(), "Start Date");
@@ -499,7 +499,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
     }
 
     public function itHasAnUnusedField() {
-        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'stage');
+        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'stage');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "stage");
         $this->assertEqual($field->getLabel(), "Stage");
@@ -507,7 +507,7 @@ class MigrateTracker_TaskTrackerFieldsTest extends MigrateDefaultTrackersTest {
     }
 
     public function itHasAListFieldResolutionWithValues() {
-        $field = $this->form_element_factory->getFormElementByName($this->task_tracker_id, 'severity');
+        $field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'severity');
         $this->assertIsA($field, 'Tracker_FormElement_Field_List');
         $this->assertEqual($field->getName(), "severity");
         $this->assertEqual($field->getLabel(), "Priority");
@@ -541,7 +541,7 @@ class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest {
     }
 
     protected function getReportByName($name) {
-        foreach ($this->report_factory->getReportsByTrackerId($this->task_tracker_id, null) as $report) {
+        foreach ($this->report_factory->getReportsByTrackerId(self::$task_tracker_id, null) as $report) {
             if ($report->name == $name) {
                 return $report;
             }
@@ -549,7 +549,7 @@ class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest {
     }
 
     public function itHasTwoReports() {
-        $this->assertCount($this->report_factory->getReportsByTrackerId($this->task_tracker_id, null), 2);
+        $this->assertCount($this->report_factory->getReportsByTrackerId(self::$task_tracker_id, null), 2);
     }
 
 

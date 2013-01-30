@@ -18,11 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ConditionsCollection.class.php';
-require_once 'Condition/Permissions/Factory.class.php';
-require_once 'Condition/FieldNotEmpty/Factory.class.php';
-require_once TRACKER_BASE_DIR .'/workflow/Transition.class.php';
-require_once TRACKER_BASE_DIR .'/workflow/Transition/Condition/FieldNotEmpty/Dao.class.php';
 
 class Workflow_Transition_ConditionFactory {
 
@@ -54,6 +49,11 @@ class Workflow_Transition_ConditionFactory {
                 Tracker_FormElementFactory::instance()
             )
         );
+    }
+
+    /** @return bool */
+    public function isFieldUsedInConditions(Tracker_FormElement_Field $field) {
+        return $this->fieldnotempty_factory->isFieldUsedInConditions($field);
     }
 
     /**

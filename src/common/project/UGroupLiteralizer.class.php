@@ -32,6 +32,7 @@ class UGroupLiteralizer {
     );
 
     private static $ugroups_templates = array(
+        UGroup::ANONYMOUS       => '@site_active @%s_project_members',
         UGroup::REGISTERED      => '@site_active @%s_project_members',
         UGroup::PROJECT_MEMBERS => '@%s_project_members',
         UGroup::PROJECT_ADMIN   => '@%s_project_admin'

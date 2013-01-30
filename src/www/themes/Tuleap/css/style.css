@@ -52,11 +52,11 @@ body {
 .newproject { background-color: gray; }
 .top_up { color: #009900; }
 .top_down { color: #CC0000; }
-.command { font-family: courier,sans-serif;}
+.command { font-family: "Courier New", courier,sans-serif;}
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: gray; }
 
-PRE,TT { font-family: courier, sans-serif; }
+PRE,TT { font-family: "Courier New", courier, sans-serif; }
 
 /********   links    **********/
 a:link, a:visited { 
@@ -249,7 +249,19 @@ a.tabsellink:hover {
 
 /* Page header. Logo, user, search box, etc. */   
 #wrapper {
-    background: -moz-linear-gradient(center top , #D8E7EE 0%, #EFF5F8 50%, #D8E7EE 100%) repeat scroll 0 0 transparent;
+    background-image: linear-gradient(top, #D8E7EE 0%, #EFF5F8 50%, #D8E7EE 100%);
+    background-image: -o-linear-gradient(top, #D8E7EE 0%, #EFF5F8 50%, #D8E7EE 100%);
+    background-image: -moz-linear-gradient(top, #D8E7EE 0%, #EFF5F8 50%, #D8E7EE 100%);
+    background-image: -webkit-linear-gradient(top, #D8E7EE 0%, #EFF5F8 50%, #D8E7EE 100%);
+    background-image: -ms-linear-gradient(top, #D8E7EE 0%, #EFF5F8 50%, #D8E7EE 100%);
+    background-image: -webkit-gradient(
+        linear,
+        left top,
+        left bottom,
+        color-stop(0, #D8E7EE),
+        color-stop(0.5, #EFF5F8),
+        color-stop(1, #D8E7EE)
+    );
 }
 #header {
 	/* background: transparent url(../images/pageheader.png) center top; */

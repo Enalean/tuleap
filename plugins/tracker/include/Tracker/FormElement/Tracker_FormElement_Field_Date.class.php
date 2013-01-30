@@ -18,13 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php');
-require_once('Tracker_FormElement_Field.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_Date_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_DateDao.class.php');
-require_once('dao/Tracker_FormElement_Field_DateDao.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
 require_once('common/date/DateHelper.class.php');
 
 class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
@@ -761,12 +754,14 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
             $date_array = explode('-', $soap_value);
             if (count($date_array) == 3 && checkdate($date_array[1], $date_array[2], $date_array[0]) && $this->_nbDigits($date_array[0])) {
                 return $soap_value;
-            }else {
+            } else {
                 return null;
             }
-        } else {
-            return null;
+        } elseif(intval($soap_value) == $soap_value) {
+            // Assume it's a timestamp
+            return date('Y-m-d', (int) $soap_value);
         }
+        return null;
     }
 
     /**

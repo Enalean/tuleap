@@ -18,9 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../builders/anArtifact.php';
-require_once dirname(__FILE__).'/../../builders/aMockArtifact.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
     
     //TODO this exercises the same code as itIncludesSearchResults but it documents something else, what to do?

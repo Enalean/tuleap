@@ -241,7 +241,7 @@ class GraphOnTrackersV5_Chart_Burndown extends GraphOnTrackersV5_Chart {
                      'duration' => $this->getDuration());        
     }
     
-    public function exportToXML($root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         parent::exportToXML(&$root, $formsMapping);
         if ($this->start_date) {
             $root->addAttribute('start_date', $this->start_date);
