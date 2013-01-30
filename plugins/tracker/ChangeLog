@@ -1,3 +1,9 @@
+Version 5.76 - Tuleap 5.11
+    * Fix for story #2223 - Retrieve my default fields value after tracker migration.
+
+Version 5.75 - Tuleap 5.11
+    * Add missing Codendi_HTTPPurifier include
+
 Version 5.74 - Tuleap 5.11
     * Refactor rendering of AgileDashboard Panes
 

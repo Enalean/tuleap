@@ -66,6 +66,7 @@ global	deactivate	deactivate
 global	Project	Project
 global	System	System
 global	Admin	Admin
+global	Settings	Settings
 global	Personal	Personal
 global	default	Default
 global	no_mail_for_account	No email address for this account.

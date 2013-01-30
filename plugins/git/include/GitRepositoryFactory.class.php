@@ -111,9 +111,9 @@ class GitRepositoryFactory {
      *
      * @return Array of GitRepository
      */
-    public function getRepositoriesWithRemoteServersForAllProjects() {
+    public function getActiveRepositoriesWithRemoteServersForAllProjects() {
         $repositories = array();
-        foreach ($this->dao->getRepositoryPathsWithRemoteServersForAllProjects() as $row) {
+        foreach ($this->dao->getActiveRepositoryPathsWithRemoteServersForAllProjects() as $row) {
             $repository = new GitRepository();
             $this->dao->hydrateRepositoryObject($repository, $row);
             $repository->setProject($this->projectManager->getProject($row[GitDao::FK_PROJECT_ID]));
