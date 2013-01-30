@@ -57,16 +57,19 @@ abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase 
     protected function getFlatTree($strategy) {
         //go find the variable $repositories
         include dirname(__FILE__) .'/_fixtures/flat_tree_of_repositories.php'; 
-        $gitolite_backend = new MockGit_Backend_Gitolite();
         foreach ($repositories as $row) {
-            $r = mock('GitRepository');
-            $r->setReturnValue('getId', $row['repository_id']);
-            $r->setReturnValue('getDescription', $row['repository_description']);
-            $r->setReturnValue('userCanRead', true);
+            /* @var $repository GitRepository */
+            $repository = partial_mock('GitRepository', array('userCanRead'));
+            $repository->setId($row['repository_id']);
+            $repository->setName($row['repository_name']);
+            $repository->setDescription($row['repository_description']);
+            stub($repository)->userCanRead()->returns(true);
             if ($row['repository_backend_type'] == 'gitolite') {
-                $r->setReturnValue('getBackend', $gitolite_backend);
+                $repository->setBackend(mock('Git_Backend_Gitolite'));
+            } else {
+                $repository->setBackend(mock('GitBackend'));
             }
-            $strategy->setReturnValue('getRepository', $r, array($row));
+            $strategy->setReturnValue('getRepository', $repository, array($row));
         }
         return $repositories;
     }

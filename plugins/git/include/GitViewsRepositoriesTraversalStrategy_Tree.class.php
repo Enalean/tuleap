@@ -27,6 +27,8 @@ require_once 'html.php';
  * Traverse a list of repositories and provides a tree in a table view
  */
 class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTraversalStrategy {
+    private $view;
+    private $lastPushes;
     
     /**
      * Constructor
@@ -146,6 +148,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     protected function fetchGitRepositoryRow(GitRepository $repository, $name, $depth) {
         $trclass     = 'boxitem';
         $label       = $repository->getHTMLLink();
+
         $description = $repository->getDescription();
         
         $lastPush    = '&nbsp;';
