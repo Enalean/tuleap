@@ -35,6 +35,8 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
 tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
 
     initialize : function( element, options ) {
+        var editor;
+
         this.options = options || {};
         this.setProperties( element );
 
@@ -44,11 +46,13 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
 
         this.injectTemporaryContainer();
 
-        this.options['callback']      = this.ajaxCallback();
-        this.options['onComplete']    = this.success();
-        this.options['onFailure']     = this.fail;
+        this.options[ 'callback' ]        = this.ajaxCallback();
+        this.options[ 'onComplete' ]      = this.success();
+        this.options[ 'onFailure' ]       = this.fail;
 
-        new Ajax.InPlaceEditor( this.div, this.update_url, this.options );
+        editor = new Ajax.InPlaceEditor( this.div, this.update_url, this.options );
+
+        this.bindPatternChecking( editor );
     },
 
     setProperties : function ( element ) {
@@ -74,18 +78,19 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
 
     ajaxCallback : function() {
         var field_id = this.field_id;
-
+        
         return function setRequestData(form, value) {
+            console.log(form)
             var parameters = {},
                 linked_field = 'artifact[' + field_id +']';
 
-            parameters[linked_field] = value;
+            parameters[ linked_field ] = value;
             return parameters;
         }
     },
 
     success : function() {
-        return function updateCardInfo(transport) {
+        return function updateCardInfo( transport ) {
             if( typeof transport != 'undefined' ) {
                 tuleap.agiledashboard.cardwall.card.updateAfterAjax( transport );
             }
@@ -99,6 +104,49 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         if( console && typeof console.error === 'function' ) {
             console.error( transport.responseText.stripTags() );
         }
+    },
+
+    bindPatternChecking : function( editor ) {
+        var pattern;
+            
+        switch (this.artifact_type ) {
+            case 'float':
+                pattern = '[0-9]*(\.[0-9]*)?';
+                break;
+            case 'integer':
+                pattern = '[0-9]*';
+                break;
+            default:
+                pattern = '.'
+        }
+
+        //copy of existing method
+        function createEditField() {
+           var text = (this.options.loadTextURL ? this.options.loadingText : this.getText());
+            var fld;
+            if (1 >= this.options.rows && !/\r|\n/.test(this.getText())) {
+              fld = document.createElement('input');
+              fld.type = 'text';
+              var size = this.options.size || this.options.cols || 0;
+              if (0 < size) fld.size = size;
+            } else {
+              fld = document.createElement('textarea');
+              fld.rows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
+              fld.cols = this.options.cols || 40;
+            }
+            fld.name = this.options.paramName;
+            fld.value = text; // No HTML breaks conversion anymore
+            fld.className = 'editor_field';
+            fld.pattern = pattern;//added line-differs from original
+            if (this.options.submitOnBlur)
+              fld.onblur = this._boundSubmitHandler;
+            this._controls.editor = fld;
+            if (this.options.loadTextURL)
+              this.loadExternalText();
+            this._form.appendChild(this._controls.editor);
+        }
+
+        editor.createEditField = createEditField
     },
 
     userCanEdit : function() {
