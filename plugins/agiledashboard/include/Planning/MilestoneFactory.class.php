@@ -144,8 +144,11 @@ class Planning_MilestoneFactory {
             return 0;
         }
 
-        $value = $field->getLastValue($milestone_artifact);
+        if (! $field->userCanRead()) {
+            return 0;
+        }
 
+        $value = $field->getLastValue($milestone_artifact);
         if (! $value) {
             return 0;
         }
