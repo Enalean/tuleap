@@ -49,10 +49,9 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         this.options[ 'callback' ]        = this.ajaxCallback();
         this.options[ 'onComplete' ]      = this.success();
         this.options[ 'onFailure' ]       = this.fail;
+        this.options[ 'pattern' ]         = this.getValidationPattern();
 
-        editor = new Ajax.InPlaceEditor( this.div, this.update_url, this.options );
-
-        this.bindPatternChecking( editor );
+        new Ajax.InPlaceTextEditor( this.div, this.update_url, this.options );
     },
 
     setProperties : function ( element ) {
@@ -106,7 +105,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         }
     },
 
-    bindPatternChecking : function( editor ) {
+    getValidationPattern : function(  ) {
         var pattern;
             
         switch (this.artifact_type ) {
@@ -120,33 +119,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
                 pattern = '.'
         }
 
-        //copy of existing method
-        function createEditField() {
-           var text = (this.options.loadTextURL ? this.options.loadingText : this.getText());
-            var fld;
-            if (1 >= this.options.rows && !/\r|\n/.test(this.getText())) {
-              fld = document.createElement('input');
-              fld.type = 'text';
-              var size = this.options.size || this.options.cols || 0;
-              if (0 < size) fld.size = size;
-            } else {
-              fld = document.createElement('textarea');
-              fld.rows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
-              fld.cols = this.options.cols || 40;
-            }
-            fld.name = this.options.paramName;
-            fld.value = text; // No HTML breaks conversion anymore
-            fld.className = 'editor_field';
-            fld.pattern = pattern;//added line-differs from original
-            if (this.options.submitOnBlur)
-              fld.onblur = this._boundSubmitHandler;
-            this._controls.editor = fld;
-            if (this.options.loadTextURL)
-              this.loadExternalText();
-            this._form.appendChild(this._controls.editor);
-        }
-
-        editor.createEditField = createEditField
+        return pattern;
     },
 
     userCanEdit : function() {
@@ -394,6 +367,34 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
     }
 });
 
+Ajax.InPlaceTextEditor = Class.create(Ajax.InPlaceEditor, {
+    createEditField : function() {
+       var text = (this.options.loadTextURL ? this.options.loadingText : this.getText());
+        var fld;
+        if (1 >= this.options.rows && !/\r|\n/.test(this.getText())) {
+          fld = document.createElement('input');
+          fld.type = 'text';
+          var size = this.options.size || this.options.cols || 0;
+          if (0 < size) fld.size = size;
+        } else {
+          fld = document.createElement('textarea');
+          fld.rows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
+          fld.cols = this.options.cols || 40;
+        }
+        fld.name = this.options.paramName;
+        fld.value = text; // No HTML breaks conversion anymore
+        fld.className = 'editor_field';
+        if( this.options.pattern ) {
+            fld.pattern = this.options.pattern;//differs from original here
+        }
+        if (this.options.submitOnBlur)
+          fld.onblur = this._boundSubmitHandler;
+        this._controls.editor = fld;
+        if (this.options.loadTextURL)
+          this.loadExternalText();
+        this._form.appendChild(this._controls.editor);
+    }
+});
 
 Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
     createEditField: function() {
