@@ -98,7 +98,8 @@ plugin_git	actions_name_not_available	     A file already exists with this name 
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Created by
 plugin_git	view_repo_creation_date	Date
-plugin_git	view_repo_parent	Parent
+plugin_git	view_repo_parent_gitshell	Parent: $1
+plugin_git	view_repo_parent_gitolite	Forked from $1
 plugin_git	view_repo_initialized	Initialized
 plugin_git	view_repo_not_initialized	Not initialized
 plugin_git	view_repo_clone_url	Clone url
@@ -117,8 +118,6 @@ plugin_git	no	No
 plugin_git	project_service_not_available	Service not available for your project (Please contact site administrator)
 plugin_git	reference_commit_desc_key	Git commit
 plugin_git	reference_commit_nature_key	Git commit
-
-plugin_git	admin_repo_management	Repository management
 
 plugin_git	mail_prefix_label	Notification Prefix
 plugin_git	mail_prefix_title	Update notification mail prefix
@@ -212,3 +211,5 @@ plugin_git	widget_project_pushes_error	There is no logged pushes in the last $1 
 
 plugin_git	logsdaily_field	Repository name
 plugin_git	logsdaily_title	Git pushes
+
+plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:

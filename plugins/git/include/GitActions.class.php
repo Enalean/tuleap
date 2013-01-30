@@ -205,7 +205,11 @@ class GitActions extends PluginActions {
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return;
         }
-        $this->addData( array('repository'=>$repository) );
+        $this->addData(array(
+            'repository'     => $repository,
+            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
+            'driver'         => $this->driver,
+        ));
         return true;
     }
 

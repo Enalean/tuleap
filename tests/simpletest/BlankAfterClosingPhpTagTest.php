@@ -74,6 +74,8 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'site-content/en_US/others/default_page.php',
             'site-content/fr_FR/others/default_page.php',
             'site-content/en_US/mail/html_template.php',
+            'plugins/git/site-content/en_US/git_url_example.php',
+            'plugins/git/site-content/fr_FR/git_url_example.php',
             'autoload.php',
         );
     }
