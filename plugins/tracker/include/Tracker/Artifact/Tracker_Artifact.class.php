@@ -1083,7 +1083,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * 
      * @param array $fields_data
      * @param string $comment
-     * @param User $submitter
+     * @param PFUser $submitter
      * @param string $email
      * @return boolean
      * @throws Tracker_Exception

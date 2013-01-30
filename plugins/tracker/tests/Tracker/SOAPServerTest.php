@@ -787,7 +787,7 @@ class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServ
 
         $this->another_session_key = 'sdf54564dsfsd';
         $this->another_user_id     = 357159;
-        $another_user = mock('User');
+        $another_user = mock('PFUser');
         stub($another_user)->getId()->returns($this->another_user_id);
         stub($another_user)->isSuperUser()->returns(true);
         stub($another_user)->isLoggedIn()->returns(true);

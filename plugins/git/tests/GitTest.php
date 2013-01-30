@@ -191,7 +191,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         Config::set('sys_auth_type', 'not_ldap');
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         $group_id    = 101;
-        $user        = stub('User')->isMember($group_id, 'A')->returns(true);
+        $user        = stub('PFUser')->isMember($group_id, 'A')->returns(true);
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
         $request     = new HTTPRequest();
         $repo_id     = 999;
@@ -209,7 +209,7 @@ class Gittest_MigrateToGerritRouteTest extends TuleapTestCase {
         Config::set('sys_auth_type', Config::AUTH_TYPE_LDAP);
         $factory = stub('GitRepositoryFactory')->getRepositoryById()->returns(mock('GitRepository'));
         $group_id    = 101;
-        $user        = stub('User')->isMember($group_id, 'A')->returns(true);
+        $user        = stub('PFUser')->isMember($group_id, 'A')->returns(true);
         $usermanager = stub('UserManager')->getCurrentUser()->returns($user);
         $request     = new HTTPRequest();
         $repo_id     = 999;

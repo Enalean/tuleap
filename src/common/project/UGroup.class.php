@@ -198,7 +198,7 @@ class UGroup {
     }
 
     public function newUser($row) {
-        return new User($row);
+        return new PFUser($row);
     }
 
     public function newUserFromIncompleteRow($row) {

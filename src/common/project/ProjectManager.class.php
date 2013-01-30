@@ -487,7 +487,7 @@ class ProjectManager {
     /**
      * @return Project[]
      */
-    public function getProjectsUserIsAdmin(User $user) {
+    public function getProjectsUserIsAdmin(PFUser $user) {
         // Why not use method in User class?
         return $this->_getDao()
             ->searchProjectsUserIsAdmin($user->getId())

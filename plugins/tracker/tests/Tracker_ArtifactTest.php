@@ -684,7 +684,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectNever('create');
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1169,7 +1169,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectNever('create');
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 

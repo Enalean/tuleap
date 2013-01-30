@@ -24,7 +24,7 @@ class Tracker_Artifact_ProcessAssociateArtifact_Test extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user = new MockUser();
+        $this->user = mock('PFUser');
         $this->request = new Codendi_Request(array(
             'func'               => 'associate-artifact-to',
             'linked-artifact-id' => 987));

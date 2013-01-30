@@ -328,7 +328,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function checkUserCanViewArtifact(Tracker_Artifact $artifact, User $user) {
+    private function checkUserCanViewArtifact(Tracker_Artifact $artifact, PFUser $user) {
         if (!$artifact->userCanView($user)) {
             throw new SoapFault(get_artifact_fault, 'Permission Denied: you cannot access this artifact');
         }
@@ -365,7 +365,7 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't access the project
      */
-    private function checkUserCanAccessProject(User $user, Project $project) {
+    private function checkUserCanAccessProject(PFUser $user, Project $project) {
         $this->soap_request_validator->assertUserCanAccessProject($user, $project);
     }
 

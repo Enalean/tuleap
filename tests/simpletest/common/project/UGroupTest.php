@@ -218,8 +218,8 @@ class UGroup_getUsersBaseTest extends TuleapTestCase {
         $user_manager = mock('UserManager');
         UserManager::setInstance($user_manager);
 
-        $this->garfield = new User($this->garfield_incomplete_row);
-        $this->goofy = new User($this->goofy_incomplete_row);
+        $this->garfield = new PFUser($this->garfield_incomplete_row);
+        $this->goofy    = new PFUser($this->goofy_incomplete_row);
         stub($user_manager)->getUserById($this->garfield_incomplete_row['user_id'])->returns($this->garfield);
         stub($user_manager)->getUserById($this->goofy_incomplete_row['user_id'])->returns($this->goofy);
     }

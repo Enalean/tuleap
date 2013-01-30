@@ -235,7 +235,7 @@ class cardwallPlugin extends Plugin {
         $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
     }
 
-    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, User $user) {
+    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, PFUser $user) {
         $tracker = $milestone->getArtifact()->getTracker();
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);

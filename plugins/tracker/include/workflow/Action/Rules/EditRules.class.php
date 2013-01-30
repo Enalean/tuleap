@@ -112,7 +112,7 @@ class Tracker_Workflow_Action_Rules_EditRules extends Tracker_Workflow_Action_Ru
         return $source_field_is_date && $target_field_is_date;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
         if ($this->shouldAddUpdateOrDeleteRules($request)) {
             // Verify CSRF Protection
             $this->token->check();

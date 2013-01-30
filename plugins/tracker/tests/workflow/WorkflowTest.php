@@ -236,7 +236,7 @@ class Workflow_BeforeAfterTest extends TuleapTestCase {
 
         stub($open_value)->getId()->returns($this->open_value_id);
         stub($close_value)->getId()->returns($this->close_value_id);
-        $this->current_user = mock('User');
+        $this->current_user = mock('PFUser');
 
         $this->transition_null_to_open  = mock('Transition');
         $this->transition_open_to_close = mock('Transition');

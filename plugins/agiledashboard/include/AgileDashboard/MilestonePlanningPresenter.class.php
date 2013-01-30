@@ -39,7 +39,7 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
     private $backlog_search_view;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $current_user;
 
@@ -58,12 +58,12 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
      *
      * @param Tracker_CrossSearch_SearchContentView $backlog_search_view         The view allowing to search through the backlog artifacts.
      * @param Planning_Milestone                    $milestone                   The artifact with planning being displayed right now.
-     * @param User                                  $current_user                The user to which the artifact plannification UI is presented.
+     * @param PFUser                                  $current_user                The user to which the artifact plannification UI is presented.
      */
     public function __construct(
         Tracker_CrossSearch_SearchContentView $backlog_search_view,
         Planning_Milestone                    $milestone,
-        User                                  $current_user,
+        PFUser                                  $current_user,
                                               $planning_redirect_parameter
     ) {
         parent::__construct($milestone->getPlanning());

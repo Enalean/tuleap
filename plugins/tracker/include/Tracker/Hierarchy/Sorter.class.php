@@ -149,7 +149,7 @@ class Tracker_Hierarchy_Sorter {
 
     /**
      *
-     * @param User     $user                  the user who build the tree
+     * @param PFUser     $user                  the user who build the tree
      * @param TreeNode $root                  the artifacts tree
      * @param array    $artifacts             list of artifacts
      * @param array    $artifacts_info        list of the artifacts informations : id, last_changeset_id, title, tracker_id, artifactlinks
