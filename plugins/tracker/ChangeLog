@@ -1,3 +1,6 @@
+Version 5.76 - Tuleap 5.11
+    * Fix for story #2223 - Retrieve my default fields value after tracker migration.
+
 Version 5.75 - Tuleap 5.11
     * Add missing Codendi_HTTPPurifier include
 
