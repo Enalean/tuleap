@@ -107,7 +107,8 @@ $wgDBts2schema      = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproje
 $wgMainCacheType = CACHE_NONE;
 $wgMemCachedServers = array();
 
-$wgEnableUploads = forge_get_config('enable_uploads', 'mediawiki');
+//$wgEnableUploads = forge_get_config('enable_uploads', 'mediawiki');
+$wgEnableUploads = true;
 $wgUploadDirectory = "$project_dir/images";
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";

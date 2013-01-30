@@ -17,6 +17,10 @@ ln -s YOUR_FOLDER_WHERE_MEDIAWIKI_IS_EXTRACTED mediawiki115
 
 mkdir /var/lib/codendi/plugins/mediawiki/master
 
+#Then, grant the rights to codendiadm user
+
+chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
+
 #Create MySQL views in codendi scheme
 
 create view group_plugin as (select service.service_id group_plugin_id,service.group_id,plugin.id plugin_id,service.short_name from service,plugin where service.short_name=CONCAT('plugin_', plugin.name) and service.is_active=1 and service.is_used=1 and service.group_id != 100);
