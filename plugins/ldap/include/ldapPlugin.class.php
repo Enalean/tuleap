@@ -357,13 +357,19 @@ class LdapPlugin extends Plugin {
     }
 
     /**
-     * @params $params $params['user_id'] IN
+     * @params $params $params['user'] IN
      *                 $params['allow_codendi_login'] IN/OUT
      */
     function allowCodendiLogin($params) {
         if ($GLOBALS['sys_auth_type'] == 'ldap') {
+
+            if ($params['user']->getLdapId() != null) {
+                $params['allow_codendi_login'] = false;
+                return;
+            }
+
             $ldapUm = $this->_getLdapUserManager();
-            $lr = $ldapUm->getLdapFromUserId($params['user_id']);
+            $lr = $ldapUm->getLdapFromUserId($params['user']->getId());
             if($lr) {
                 $params['allow_codendi_login'] = false;
                 $GLOBALS['feedback'] .= ' '.$GLOBALS['Language']->getText('plugin_ldap',
