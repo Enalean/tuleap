@@ -5,6 +5,9 @@ Version 5.11 (Not Released Yet)
 	* agiledashboard: 0.65
 	* cardwall: 0.9.13
 
+   == Enhancement ==
+    * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)
+
 Version 5.9.1 (Thursday, January 24rd 2013)
 
 	== Plugins ==
