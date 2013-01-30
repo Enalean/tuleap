@@ -724,12 +724,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
             case 'artifact-update':
                 //TODO : check permissions on this action?
-                $fields_data   = $request->get('artifact');
-                $fields_data['request_method_called'] = 'artifact-update';
-
                 $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
-
+                
+                $fields_data   = $request->get('artifact');
+                
+                $fields_data['request_method_called'] = 'artifact-update';
                 $this->getTracker()->augmentDataFromRequest($fields_data);
                 unset($fields_data['request_method_called']);
 
