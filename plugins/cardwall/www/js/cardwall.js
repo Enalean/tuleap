@@ -47,7 +47,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         this.options[ 'callback' ]        = this.ajaxCallback();
         this.options[ 'onComplete' ]      = this.success();
         this.options[ 'onFailure' ]       = this.fail;
-        this.options[ 'pattern' ]         = this.getValidationPattern();
+        this.options[ 'validation' ]      = this.getValidationPattern();
 
         new Ajax.InPlaceTextEditor( this.div, this.update_url, this.options );
     },
@@ -104,20 +104,26 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
     },
 
     getValidationPattern : function() {
-        var pattern;
+        var pattern,
+            message;
             
         switch (this.artifact_type ) {
             case 'float':
                 pattern = '[0-9]*(\.[0-9]*)?';
+                message = 'the value must be a decimal';
                 break;
             case 'integer':
                 pattern = '[0-9]*';
+                message = 'the value must be an integer';
                 break;
             default:
                 pattern = '.'
         }
 
-        return pattern;
+        return {
+            'pattern' : pattern,
+            'message' : message
+        }
     },
 
     userCanEdit : function() {
@@ -382,8 +388,9 @@ Ajax.InPlaceTextEditor = Class.create(Ajax.InPlaceEditor, {
         fld.name = this.options.paramName;
         fld.value = text; // No HTML breaks conversion anymore
         fld.className = 'editor_field';
-        if( this.options.pattern ) {
-            fld.pattern = this.options.pattern;//differs from original here
+        if( this.options.validation ) {//differs from original here
+            fld.pattern = this.options.validation.pattern;
+            fld.title   = this.options.validation.message;
         }
         if (this.options.submitOnBlur)
           fld.onblur = this._boundSubmitHandler;
