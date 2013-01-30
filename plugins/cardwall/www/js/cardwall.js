@@ -45,14 +45,14 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
             return;
         }
 
-        this.injectTemporaryContainer();
+        var container = this.createAndInjectTemporaryContainer();
 
         this.options[ 'callback' ]        = this.ajaxCallback();
         this.options[ 'onComplete' ]      = this.success();
         this.options[ 'onFailure' ]       = this.fail;
         this.options[ 'validation' ]      = this.getValidation();
 
-        new Ajax.InPlaceTextEditor( this.div, this.update_url, this.options );
+        new Ajax.InPlaceTextEditor( container, this.update_url, this.options );
     },
 
     setProperties : function ( element ) {
@@ -60,20 +60,25 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         this.field_id       = element.readAttribute( 'data-field-id' );
         this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
         this.update_url     = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
-        this.div            = new Element( 'div' );
         this.artifact_type  = element.readAttribute( 'data-field-type' );
     },
 
-    injectTemporaryContainer : function () {
-        this.accountForEmptyValues();
-        this.div.update( this.element.innerHTML );
-        this.element.update( this.div );
+    createAndInjectTemporaryContainer : function () {
+        var clickable     = this.getClickableArea(),
+            clickable_div = new Element( 'div' );
+
+        clickable_div.update( clickable );
+        this.element.update( clickable_div );
+
+        return clickable_div;
     },
 
-    accountForEmptyValues : function() {
+    getClickableArea : function() {
         if( this.element.innerHTML == '' ) {
-            this.element.innerHTML = ' - ' ;
+            return ' - ' ;
         }
+
+        return this.element.innerHTML;
     },
 
     ajaxCallback : function() {
