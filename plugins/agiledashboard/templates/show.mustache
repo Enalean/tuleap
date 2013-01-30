@@ -1,6 +1,11 @@
 <div class="agiledashboard">
     <div class="dropdown">
         <h2 class="dropdown-toggle" data-toggle="dropdown">{{milestoneTitle}} <b class="caret"></b></h2>
+        {{#startDate}}
+        <div class="release-date-info">
+            <div>{{startDate}}</div>
+        </div>
+        {{/startDate}}
         <ul class="dropdown-menu">
             {{#selectableArtifacts}}
             <li><a href="{{url}}">{{{title}}}</a></li>

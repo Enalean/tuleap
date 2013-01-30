@@ -126,6 +126,10 @@ class AgileDashboard_MilestonePresenter {
     public function getPaneInfoList() {
         return $this->additional_panes;
     }
+
+    public function startDate() {
+        return $this->milestone->getStartDate();
+    }
 }
 
 ?>
