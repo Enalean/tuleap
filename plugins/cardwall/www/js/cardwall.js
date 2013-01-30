@@ -68,7 +68,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
 
     accountForEmptyValues : function() {
         if( this.element.innerHTML == '' ) {
-            this.element.innerHTML = '0' ;
+            this.element.innerHTML = ' - ' ;
         }
     },
 
@@ -198,7 +198,7 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
 
     getClickableArea : function() {
         if( this.element.innerHTML == '' ) {
-            return '&Oslash;' ;
+            return ' - ' ;
         }
 
         return this.element.innerHTML;
@@ -301,7 +301,7 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
                     div_html = generateAvatarDiv( new_values );
                     avatar_div.appendChild( div_html );
                 } else {
-                    avatar_div.update( '&Oslash;' );
+                    avatar_div.update( ' - ' );
                 }
             }
 
