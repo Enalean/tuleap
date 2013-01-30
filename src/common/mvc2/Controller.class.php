@@ -94,7 +94,7 @@ abstract class MVC2_Controller {
         $this->renderer  = TemplateRendererFactory::build()->getRenderer($this->getTemplatesDir());
     }
     
-    private function getTemplatesDir() {
+    protected function getTemplatesDir() {
         return Config::get('codendi_dir') .'/src/templates/'. $this->base_name;
     }
     
