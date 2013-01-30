@@ -49,13 +49,13 @@ class GraphOnTrackersV5_Evolution_DataBuilder extends ChartDataBuilderV5 {
     
     protected function getEvolutionData($observed_field_id, $type) {
         $result = array();
-        $timeFiller = array(3600*24, 3600*24*7, 3600*24*30);
+        $timeFiller = array(3600*24, 3600*24*7, 3600*24*30.45);
         $artifact_ids = explode(',', $this->artifacts['id']);
         $nbSteps = $this->chart->getNbStep();
         $start = $this->chart->getStartDate();
         $unit = $this->chart->getUnit();
         
-        for ($i = 0 ; $i < $nbSteps; $i++ ) {
+        for ($i = 0 ; $i <= $nbSteps; $i++ ) {
             $timestamp = $start + ($i * $timeFiller[$unit]) ;
             $sql = "SELECT val2.label, r.count
 FROM  tracker_field_list_bind_static_value val2
