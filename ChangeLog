@@ -4,6 +4,8 @@ Version 5.11 (Not Released Yet)
 	* tracker: 5.75
 	* agiledashboard: 0.65
 	* cardwall: 0.9.13
+	* git: 2.7.24
+	* ldap: 3.23
 
    == Enhancement ==
     * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)

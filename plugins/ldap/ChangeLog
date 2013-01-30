@@ -1,3 +1,6 @@
+Version 3.23 - Tuleap 5.11
+    * Development: add new hook to provide LDAP uid to other component of the application
+
 Version 3.22 - Tuleap 5.7
     * Fix art #1679: Not redirected to Personal Page after log in from Tuleap Home page
 
