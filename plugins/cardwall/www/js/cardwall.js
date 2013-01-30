@@ -35,8 +35,6 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
 tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
 
     initialize : function( element, options ) {
-        var editor;
-
         this.options = options || {};
         this.setProperties( element );
 
@@ -105,7 +103,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         }
     },
 
-    getValidationPattern : function(  ) {
+    getValidationPattern : function() {
         var pattern;
             
         switch (this.artifact_type ) {

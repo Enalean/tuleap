@@ -725,10 +725,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'artifact-update':
                 //TODO : check permissions on this action?
                 $fields_data   = $request->get('artifact');
+                $fields_data['request_method_called'] = 'artifact-update';
+
                 $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
+
                 $this->getTracker()->augmentDataFromRequest($fields_data);
+                unset($fields_data['request_method_called']);
+
                 try {
+
                     $this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format);
                     
                     $art_link = $this->fetchDirectLinkToArtifact();
@@ -736,6 +742,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
+
                     if ($request->isAjax()) {
                         $this->sendAjaxCardsUpdateInfo($current_user);
                     } else {
