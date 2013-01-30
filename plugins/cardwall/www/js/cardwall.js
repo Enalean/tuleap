@@ -26,7 +26,7 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
         jQuery.each( art_values, function( field_name, field_value ) {
             var element_to_update_container = jQuery( 'div[data-artifact-id='+ artifact_id +']' ).find( '.valueOf_' + field_name );
 
-            if( element_to_update_container.find( 'div' ) > 0) {
+            if( element_to_update_container.find( 'div' ).length > 0) {
                 element_to_update_container.find( 'div' ).html( field_value );
             } else {
                 element_to_update_container.html( field_value );
