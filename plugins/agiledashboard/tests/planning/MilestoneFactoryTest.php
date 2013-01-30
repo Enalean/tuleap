@@ -263,23 +263,57 @@ class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_Milestone
 
 class MilestoneFactory_MilestoneComesWithStartDateTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
 
-    public function testStartDateIsNullWheneThereIsNoStartDateField() {
+    public function testStartDateIsNullWhenThereIsNoStartDateField() {
         $this->assertEqual($this->getMilestoneStartDate(), null);
     }
 
     public function itRetrievesMilestoneWithStartDateWithActualValue() {
-        $start_date = 1359477908;
+        $start_date          = '12/10/2013';
+        $expected_start_date = strtotime($start_date);
 
-        $start_date_field = stub('Tracker_FormElement_Field_Date')->getLastValue($this->artifact)->returns($start_date);
+        $start_date_changeset = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($expected_start_date);
+        $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastValue($this->artifact)->returns($start_date_changeset);
         stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, Planning_Milestone::START_DATE_FIELD_NAME)->returns($start_date_field);
 
-        $this->assertEqual($this->getMilestoneStartDate(), $start_date);
+        $this->setText('d M', false);
+
+        $this->assertEqual($this->getMilestoneStartDate(), $expected_start_date);
     }
 
     private function getMilestoneStartDate() {
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
         $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
         return $milestone->getStartDate();
+    }
+}
+
+class MilestoneFactory_MilestoneComesWithEndDateTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+
+    public function testEndDateIsNullWhenThereIsNoStartDateOrDurationField() {
+        $this->assertEqual($this->getMilestoneEndDate(), null);
+    }
+
+    public function itRetrievesMilestoneWithEndDate() {
+        $duration          = 20;
+        $start_date        = '10/01/2013';
+        $expected_end_date = '10/21/2013';
+
+        $start_date_changeset = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns(strtotime($start_date));
+        $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastValue($this->artifact)->returns($start_date_changeset);
+        $duration_field       = stub('Tracker_FormElement_Field_Integer')->getComputedValue($this->user, $this->artifact)->returns($duration);
+
+        stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, Planning_Milestone::START_DATE_FIELD_NAME)->returns($start_date_field);
+        stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::DURATION_FIELD_NAME, $this->user)->returns($duration_field);
+
+        $this->setText('d M', false);
+
+        $this->assertEqual($this->getMilestoneEndDate(), strtotime($expected_end_date));
+    }
+
+    private function getMilestoneEndDate() {
+        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
+        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
+        return $milestone->getEndDate();
     }
 }
 

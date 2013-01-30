@@ -149,9 +149,16 @@ interface Planning_Milestone {
     /**
      * Get the start date of the milestone
      *
-     * @return int the value of start_date field if any
+     * @return int the timestamp value of start_date field
      */
     public function getStartDate();
+
+     /**
+     * Get the end date of the milestone
+     *
+     * @return int the timestamp value of the duration field
+     */
+     public function getEndDate();
 }
 
 ?>

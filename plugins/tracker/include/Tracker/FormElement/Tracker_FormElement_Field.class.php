@@ -1059,10 +1059,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @param Tracker_Artifact $artifact
      *
-     * @return value
+     * @return Tracker_Artifact_ChangesetValue
      */
     public function getLastValue(Tracker_Artifact $artifact) {
-        return $artifact->getValue($this)->getValue();
+        return $artifact->getValue($this);
     }
 }
 

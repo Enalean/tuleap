@@ -100,6 +100,20 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     private $capacity = null;
 
     /**
+     * The duration before hitting the end date of the milestone.
+     *
+     * @var Int
+     */
+     private $duration = null;
+
+    /**
+     * The start date of the milestone
+     *
+     * @var String
+     */
+     private $start_date = null;
+
+    /**
      * @param Project $project
      * @param Planning $planning
      * @param Tracker_Artifact $artifact
@@ -290,6 +304,26 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     public function getStartDate() {
         return $this->start_date;
     }
+
+    public function setDuration($duration) {
+        $this->duration = $duration;
+        return $this;
+    }
+
+    public function getEndDate() {
+        if (! $this->start_date) {
+            return null;
+        }
+
+        if (! $this->duration) {
+            return null;
+        }
+
+        $end_date   = strtotime("+".floor($this->duration)." days", $this->start_date);
+
+        return $end_date;
+    }
+
 }
 
 ?>
