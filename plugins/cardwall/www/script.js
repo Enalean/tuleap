@@ -55,28 +55,23 @@ document.observe('dom:loaded', function () {
                             dragged.remove();
                             current_td.down( 'ul' ).appendChild( dragged );
 
-                            setStyle( dragged, current_td );
+                            setStyle( dragged );
                             ajaxUpdate( dragged, value_id );
                         }
                     });
                 });
             });
 
-            function setStyle( dragged, current_td ) {
-                var restore_color   = current_td.getStyle( 'background-color' );
-                
+            function setStyle( dragged ) {
                 dragged.setStyle({
                     left: 'auto',
                     top : 'auto'
-                });
-                
-                new Effect.Highlight(current_td, {
-                    restorecolor: restore_color
                 });
             }
 
             function ajaxUpdate( dragged, value_id ) {
                 var field_id,
+                    url,
                     parameters = {};
 
                 if ($( 'tracker_report_cardwall_settings_column' )) {
@@ -86,12 +81,11 @@ document.observe('dom:loaded', function () {
                     value_id = $F( 'cardwall_column_mapping_' + value_id + '_' + field_id );
                 }
 
-                parameters[ 'aid' ]  = dragged.id.split( '-' )[ 1 ];
-                parameters[ 'func' ] = 'artifact-update';
+                url = codendi.tracker.base_url + '?func=artifact-update&aid=' + dragged.id.split( '-' )[ 1 ];
                 parameters[ 'artifact[' + field_id + ']' ] = value_id;
 
                 //save the new state
-                new Ajax.Request( codendi.tracker.base_url, {
+                new Ajax.Request( url, {
                     method : 'POST',
                     parameters : parameters,
                     onComplete : afterAjaxUpdate
