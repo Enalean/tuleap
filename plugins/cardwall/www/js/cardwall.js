@@ -19,8 +19,20 @@
 var tuleap = tuleap || { };
 tuleap.agiledashboard = tuleap.agiledashboard || { };
 tuleap.agiledashboard.cardwall = tuleap.agiledashboard.cardwall || { };
+tuleap.agiledashboard.cardwall.card = tuleap.agiledashboard.cardwall.card || { };
 
-tuleap.agiledashboard.cardwall.cardTextElementEditor = Class.create({
+tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
+    jQuery.each(transport.responseJSON, function( artifact_id, art_values ) {
+        jQuery.each( art_values, function( field_name, field_value ) {
+            jQuery( 'div[data-artifact-id='+ artifact_id +']' )
+                .find( '.valueOf_' + field_name )
+                .find( 'div' )
+                .html( field_value );
+        });
+    })
+};
+
+tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
 
     initialize : function( element, options ) {
         this.options = options || {};
@@ -73,12 +85,9 @@ tuleap.agiledashboard.cardwall.cardTextElementEditor = Class.create({
     },
 
     success : function() {
-        var field_id    = this.field_id;
-        var div         = this.div;
-
         return function updateCardInfo(transport) {
             if( typeof transport != 'undefined' ) {
-                div.update(transport.request.parameters[ 'artifact[' + field_id + ']' ]);
+                tuleap.agiledashboard.cardwall.card.updateAfterAjax( transport );
             }
         }
     },
@@ -97,7 +106,7 @@ tuleap.agiledashboard.cardwall.cardTextElementEditor = Class.create({
     }
 });
 
-tuleap.agiledashboard.cardwall.cardSelectElementEditor = Class.create({
+tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
 
     initialize : function( element, options ) {
         this.setProperties( element, options );

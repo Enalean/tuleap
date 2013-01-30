@@ -98,34 +98,21 @@ document.observe('dom:loaded', function () {
                 });
             }
 
-            function afterAjaxUpdate( response ) {
-                $H( response.responseJSON ).each( function ( card ) {
-                    var card_element = $( 'cardwall_board_postit-' + card.key );
-                    if ( card_element === null ) {
-                        return
-                    }
-
-                    $H( card.value ).each( function( field ) {
-                        var field_name = '.valueOf_' + field.key;
-                        card_element.select( field_name ).each( function( field_element ) {
-                            //auto-updates fields
-                            field_element.down('div').update( field.value );
-                        });
-                    });
-                });
+            function afterAjaxUpdate( transport ) {
+                tuleap.agiledashboard.cardwall.card.updateAfterAjax( transport );
             }
 
         })();
 
         (function enableRemainingEffortInPlaceEditing() {
             $$( '.valueOf_remaining_effort' ).each( function( remaining_effort_container ) {
-                new tuleap.agiledashboard.cardwall.cardTextElementEditor( remaining_effort_container );
+                new tuleap.agiledashboard.cardwall.card.textElementEditor( remaining_effort_container );
             })
         })();
 
         (function enableAssignedToInPlaceEditing() {
             $$( '.valueOf_assigned_to' ).each( function( assigned_to_container ) {
-                new tuleap.agiledashboard.cardwall.cardSelectElementEditor( assigned_to_container );
+                new tuleap.agiledashboard.cardwall.card.selectElementEditor( assigned_to_container );
             })
         })();
 
