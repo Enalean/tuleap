@@ -272,7 +272,9 @@ class MilestoneFactory_MilestoneComesWithStartDateTest extends Planning_Mileston
         $expected_start_date = strtotime($start_date);
 
         $start_date_changeset = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns($expected_start_date);
-        $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastValue($this->artifact)->returns($start_date_changeset);
+        $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastChangesetValue($this->artifact)->returns($start_date_changeset);
+
+        stub($start_date_field)->userCanRead()->returns(true);
         stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, Planning_Milestone::START_DATE_FIELD_NAME)->returns($start_date_field);
 
         $this->setText('d M', false);
@@ -299,9 +301,10 @@ class MilestoneFactory_MilestoneComesWithEndDateTest extends Planning_MilestoneF
         $expected_end_date = '10/21/2013';
 
         $start_date_changeset = stub('Tracker_Artifact_ChangesetValue_Date')->getTimestamp()->returns(strtotime($start_date));
-        $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastValue($this->artifact)->returns($start_date_changeset);
+        $start_date_field     = stub('Tracker_FormElement_Field_Date')->getLastChangesetValue($this->artifact)->returns($start_date_changeset);
         $duration_field       = stub('Tracker_FormElement_Field_Integer')->getComputedValue($this->user, $this->artifact)->returns($duration);
 
+        stub($start_date_field)->userCanRead()->returns(true);
         stub($this->formelement_factory)->getFormElementByName($this->milestone_tracker_id, Planning_Milestone::START_DATE_FIELD_NAME)->returns($start_date_field);
         stub($this->formelement_factory)->getComputableFieldByNameForUser($this->milestone_tracker_id, Planning_Milestone::DURATION_FIELD_NAME, $this->user)->returns($duration_field);
 

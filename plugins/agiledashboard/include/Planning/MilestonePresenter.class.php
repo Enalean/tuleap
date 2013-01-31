@@ -143,6 +143,13 @@ class AgileDashboard_MilestonePresenter {
         return $this->formatDate($end_date);
     }
 
+    public function displayMilestoneDates() {
+        $start_date = $this->startDate();
+        $end_date   = $this->endDate();
+
+        return $start_date && $end_date;
+    }
+
     private function formatDate($date) {
         return date($GLOBALS['Language']->getText('system', 'datefmt_day_and_month'), $date);
     }

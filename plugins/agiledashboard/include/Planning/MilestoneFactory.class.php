@@ -148,7 +148,7 @@ class Planning_MilestoneFactory {
             return 0;
         }
 
-        $value = $field->getLastValue($milestone_artifact);
+        $value = $field->getLastChangesetValue($milestone_artifact);
         if (! $value) {
             return 0;
         }
