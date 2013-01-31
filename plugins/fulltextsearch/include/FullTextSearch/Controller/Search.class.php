@@ -57,7 +57,6 @@ class FullTextSearch_Controller_Search extends MVC2_Controller {
                     $presenter = new FullTextSearch_Presenter_SearchOnlyResults($search_result);
                 } else {
                     $presenter = $this->getSearchPresenter($terms, $search_result);
-                           var_dump($presenter->template);
                 }
             } catch (ElasticSearchTransportHTTPException $e) {
                 $presenter = new FullTextSearch_Presenter_ErrorNoSearch($e->getMessage());
