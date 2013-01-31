@@ -84,13 +84,5 @@ class FullTextSearchTrackerActions extends FullTextSearchActions {
         );
     }
 
-    /**
-     *  Set permission for the given followup
-     * 
-     * @param Integer $artifactId The artifact id
-     */
-    protected function setPermissions($artifactId) {
-        $this->permissions = Tracker_ArtifactFactory::instance()->getArtifactById($artifactId)->exportPermissions();
-    }
 }
 ?>
