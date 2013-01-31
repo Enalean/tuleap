@@ -11,6 +11,10 @@ Version 5.11 (Not Released Yet)
     * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)
 	* Allow site to customize robots.txt
 
+
+  == Bug Fix ==
+    * Add missing php53-process dependency for posix functions
+
 Version 5.9.1 (Thursday, January 24rd 2013)
 
 	== Plugins ==
