@@ -38,7 +38,7 @@ class Git_Driver_Gerrit_RepositoryFetcher_BaseTest extends TuleapTestCase {
 
 class Git_Driver_Gerrit_RepositoryFetcher_WithoutDataTest extends Git_Driver_Gerrit_RepositoryFetcher_BaseTest {
     public function itDoesNothingWhenThereAreNoMatchingRepositories() {
-        stub($this->repository_factory)->getRepositoriesWithRemoteServersForAllProjects()->returns(array());
+        stub($this->repository_factory)->getActiveRepositoriesWithRemoteServersForAllProjects()->returns(array());
         $this->fetcher->process();
     }
 }
@@ -52,7 +52,7 @@ class Git_Driver_Gerrit_RepositoryFetcher_WithOneRepoTest extends Git_Driver_Ger
         $repository = mock('GitRepository');
         stub($repository)->getFullPath()->returns($this->repository_path);
         stub($repository)->getId()->returns($this->repository_id);
-        stub($this->repository_factory)->getRepositoriesWithRemoteServersForAllProjects()->returns(array($repository));
+        stub($this->repository_factory)->getActiveRepositoriesWithRemoteServersForAllProjects()->returns(array($repository));
 
 
         stub($this->git_exec)->lsRemoteHeads()->returns(array(
