@@ -15,6 +15,7 @@ function autoload34e5cad2d8cb67c1c361505bdc291d70($class) {
             'elasticsearch_searchresultcollection' => '/ElasticSearch/SearchResultCollection.class.php',
             'elasticsearch_searchresultprojectsfacet' => '/ElasticSearch/SearchResultProjectsFacet.class.php',
             'elasticsearch_searchresultprojectsfacetcollection' => '/ElasticSearch/SearchResultProjectsFacetCollection.class.php',
+            'elasticsearch_searchresultdocman' => '/ElasticSearch/SearchResultDocman.class.php',
             'elasticsearch_transporthttpbasicauth' => '/ElasticSearch/TransportHTTPBasicAuth.class.php',
             'fulltextsearch_controller_admin' => '/FullTextSearch/Controller/Admin.class.php',
             'fulltextsearch_controller_search' => '/FullTextSearch/Controller/Search.class.php',

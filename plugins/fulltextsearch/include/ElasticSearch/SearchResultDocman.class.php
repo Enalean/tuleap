@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResult_docman extends ElasticSearch_SearchResult {
+class ElasticSearch_SearchResultDocman extends ElasticSearch_SearchResult {
     public $item_title;
     public $url;
           
