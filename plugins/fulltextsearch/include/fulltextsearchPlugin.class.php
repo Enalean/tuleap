@@ -203,7 +203,7 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_search($params) {
-        if ($this->check_preconditions($params['group_id'])) {
+        if ($this->tracker_followup_check_preconditions($params['group_id'])) {
             $filter = '';
             if ($params['request'] && $params['request']->get('func') == 'followup_search') {
                 $hp     = Codendi_HTMLPurifier::instance();
@@ -227,7 +227,7 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_warning($params) {
-        if ($this->check_preconditions($params['group_id'])) {
+        if ($this->tracker_followup_check_preconditions($params['group_id'])) {
             if ($params['request']->get('search_followups')) {
                 $params['html'] .= '<div id="tracker_report_selection" class="tracker_report_haschanged_and_isobsolete" style="z-index: 2;position: relative;">';
                 $params['html'] .= $GLOBALS['HTML']->getimage('ic/warning.png', array('style' => 'vertical-align:top;'));
@@ -245,7 +245,7 @@ class fulltextsearchPlugin extends Plugin {
      *
      * @return Boolean
      */
-    private function check_preconditions($group_id) {
+    private function tracker_followup_check_preconditions($group_id) {
         try {
             $index_status = $this->getAdminController()->getIndexStatus();
         } catch (ElasticSearchTransportHTTPException $e) {
@@ -262,7 +262,7 @@ class fulltextsearchPlugin extends Plugin {
      * @return Void
      */
     public function tracker_report_followup_search_process($params) {
-        if ($this->check_preconditions($params['group_id'])) {
+        if ($this->tracker_followup_check_preconditions($params['group_id'])) {
             $filter = $params['request']->get('search_followups');
             if ($params['request']->get('func') == 'followup_search' && !empty($filter)) {
                 $controller       = $this->getSearchController('tracker');
