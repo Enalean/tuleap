@@ -1709,7 +1709,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return Array
      */
-    public function getAuthorisedUgroups () {
+    private function getAuthorisedUgroups () {
         $ugroups = array();
         //Individual artifact permission
         if ($this->useArtifactPermissions()) {
