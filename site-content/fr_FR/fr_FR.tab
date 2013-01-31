@@ -6,6 +6,7 @@ system	locale	fr_FR
 system	strftimefmt	%e %B %Y  %H:%M
 system	datefmt	d/m/Y H:i
 system	datefmt_short	d/m/Y
+system	datefmt_day_and_month	j M
 system	decimal_separator	,
 system	thousand_separator	' '
 conf	content_encoding	utf-8
