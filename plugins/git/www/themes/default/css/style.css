@@ -292,54 +292,6 @@ td.plugin_git_first_col {
 #plugin_git_clone_field {
   margin-left: 0;
 }
-
-#plugin_git_clone_field.span12 {
-  width: 926px;
-}
-
-#plugin_git_clone_field.span11 {
-  width: 846px;
-}
-
-#plugin_git_clone_field.span10 {
-  width: 766px;
-}
-
-#plugin_git_clone_field.span9 {
-  width: 686px;
-}
-
-#plugin_git_clone_field.span8 {
-  width: 606px;
-}
-
-#plugin_git_clone_field.span7 {
-  width: 526px;
-}
-
-#plugin_git_clone_field.span6 {
-  width: 446px;
-}
-
-#plugin_git_clone_field.span5 {
-  width: 366px;
-}
-
-#plugin_git_clone_field.span4 {
-  width: 286px;
-}
-
-#plugin_git_clone_field.span3 {
-  width: 206px;
-}
-
-#plugin_git_clone_field.span2 {
-  width: 126px;
-}
-
-#plugin_git_clone_field.span1 {
-  width: 46px;
-}
 /* }}} */
 
 .input-prepend .gitclone_urls_protocols > .btn:last-child {
@@ -359,6 +311,7 @@ td.plugin_git_first_col {
 }
 .gerrit_url.alert.alert-info a {
     font-weight: bold;
+    white-space: nowrap;
 }
 #plugin_git_clone_url_group > .add-on {
     display: none;
