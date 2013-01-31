@@ -1,3 +1,6 @@
+Version 5.77 - Tuleap 5.11
+    * Enhancement: displays start and end date of a sprint on the agile dashboard
+
 Version 5.76 - Tuleap 5.11
     * Fix for story #2223 - Retrieve my default fields value after tracker migration.
 
