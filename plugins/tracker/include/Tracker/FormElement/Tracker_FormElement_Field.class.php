@@ -1054,16 +1054,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         }
     }
 
-    /**
-     * Return the field last value
-     *
-     * @param Tracker_Artifact $artifact
-     *
-     * @return Tracker_Artifact_ChangesetValue
-     */
-    public function getLastValue(Tracker_Artifact $artifact) {
-        return $artifact->getValue($this);
-    }
 }
 
 ?>

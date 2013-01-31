@@ -765,6 +765,17 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
     }
 
     /**
+     * Return the field last value
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return Date
+     */
+    public function getLastValue(Tracker_Artifact $artifact) {
+        return $artifact->getValue($this)->getValue();
+    }
+
+    /**
      * Get artifacts that responds to some criteria
      *
      * @param date    $date      The date criteria
