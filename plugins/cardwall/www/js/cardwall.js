@@ -119,7 +119,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
                 pattern = '[0-9]*(\.[0-9]*)?';
                 message = 'the value must be a decimal';
                 break;
-            case 'integer':
+            case 'int':
                 pattern = '[0-9]*';
                 message = 'the value must be an integer';
                 break;
@@ -194,7 +194,7 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
     },
 
     checkMultipleSelect : function () {
-        this.multi_select = ( this.artifact_type === 'multiselectbox' );
+        this.multi_select = ( this.artifact_type === 'msb' );
     },
 
     addOptions : function() {
