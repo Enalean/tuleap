@@ -18,14 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../../../tracker/include/constants.php';
-require_once dirname(__FILE__) .'/../../../../include/constants.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/Command/DeleteMappingFields.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldDao.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/ColumnMappingFieldValueDao.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/Tracker.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/TrackerFactory.class.php';
-require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
+require_once dirname(__FILE__) .'/../../../bootstrap.php';
 require_once dirname(__FILE__) .'/../../../../../../tests/simpletest/common/include/builders/aRequest.php';
 
 class Cardwall_OnTop_Config_Command_DeleteMappingFieldsTest extends TuleapTestCase {

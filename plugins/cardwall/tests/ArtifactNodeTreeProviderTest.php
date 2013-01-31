@@ -19,8 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../include/ArtifactNodeTreeProvider.class.php';
-require_once dirname(__FILE__).'/../../tracker/tests/builders/aMockArtifact.php';
+require_once dirname(__FILE__) .'/bootstrap.php';
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
 
 class Cardwall_ArtifactNodeTreeProviderTest extends TuleapTestCase {

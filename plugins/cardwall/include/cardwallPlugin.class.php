@@ -20,6 +20,7 @@
 
 require_once 'common/plugin/Plugin.class.php';
 require_once 'constants.php';
+require_once 'autoload.php';
 
 /**
  * CardwallPlugin
@@ -33,8 +34,6 @@ class cardwallPlugin extends Plugin {
     
     public function getConfigFactory() {
         if (!$this->config_factory) {
-            require_once 'OnTop/ConfigFactory.class.php';
-            require_once TRACKER_BASE_DIR. '/Tracker/TrackerFactory.class.php';
             $tracker_factory  = TrackerFactory::instance();
             $element_factory  = Tracker_FormElementFactory::instance();
             $this->config_factory = new Cardwall_OnTop_ConfigFactory($tracker_factory, $element_factory);
@@ -59,6 +58,7 @@ class cardwallPlugin extends Plugin {
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
+                $this->addHook(AGILEDASHBOARD_EVENT_INDEX_PAGE);
                 $this->addHook(AGILEDASHBOARD_EVENT_MILESTONE_SELECTOR_REDIRECT);
             }
         }
@@ -99,8 +99,6 @@ class cardwallPlugin extends Plugin {
      */
     public function tracker_report_renderer_instance($params) {
         if ($params['type'] == self::RENDERER_TYPE) {
-            require_once('Cardwall_Renderer.class.php');
-            require_once('Cardwall_RendererDao.class.php');
             //First retrieve specific properties of the renderer that are not saved in the generic table
             if ( !isset($row['field_id']) ) {
                 $row['field_id'] = null;
@@ -119,7 +117,6 @@ class cardwallPlugin extends Plugin {
             }
 
             $report = $params['report'];
-            require_once('OnTop/ConfigEmpty.class.php');
             $config = new Cardwall_OnTop_ConfigEmpty();
             
             if ($report->tracker_id != 0) {
@@ -145,7 +142,6 @@ class cardwallPlugin extends Plugin {
 
     function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'CardwallPluginInfo')) {
-            require_once('CardwallPluginInfo.class.php');
             $this->pluginInfo = new CardwallPluginInfo($this);
         }
         return $this->pluginInfo;
@@ -192,7 +188,6 @@ class cardwallPlugin extends Plugin {
         $token            = $this->getCSRFToken($tracker_id);
         switch ($params['func']) {
             case 'admin-cardwall':
-                require_once 'View/Admin.class.php';
 
                 $admin_view = new Cardwall_View_Admin();
                 $config     = $this->getConfigFactory()->getOnTopConfig($tracker);
@@ -226,15 +221,33 @@ class cardwallPlugin extends Plugin {
         $tracker  = $params['milestone']->getArtifact()->getTracker();
 
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
-            require_once 'Pane.class.php';
+            $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
+            if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
+                $pane_info->setActive(true);
+                $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
+            }
+            $params['panes'][] = $pane_info;
+        }
+    }
+
+    public function agiledashboard_event_index_page($params) {
+        $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
+        $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
+    }
+
+    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, User $user) {
+        $tracker = $milestone->getArtifact()->getTracker();
+        if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);
-            $params['panes'][] = new Cardwall_Pane(
-                $params['milestone'],
+            return new Cardwall_Pane(
+                $info,
+                $milestone,
                 $this->getPluginInfo()->getPropVal('display_qr_code'),
-                $config, $params['user'],
-                $this->getThemePath()
+                $config,
+                $user
             );
         }
+        return null;
     }
 
     public function agiledashboard_event_milestone_selector_redirect($params) {
@@ -268,7 +281,6 @@ class cardwallPlugin extends Plugin {
 
     private function redirectToAgileDashboard(Tracker_Artifact_Redirect $redirect, array $redirect_params) {
         list($planning_id, $artifact_id) = each($redirect_params);
-        require_once AGILEDASHBOARD_BASE_DIR .'/Planning/PlanningFactory.class.php';
         $planning = PlanningFactory::build()->getPlanning($planning_id);
         if ($planning) {
             $redirect->base_url         = AGILEDASHBOARD_BASE_URL;
@@ -307,7 +319,6 @@ class cardwallPlugin extends Plugin {
      * @return Cardwall_OnTop_Dao
      */
     private function getOnTopDao() {
-        require_once 'OnTop/Dao.class.php';
         return new Cardwall_OnTop_Dao();
     }
 
@@ -315,7 +326,6 @@ class cardwallPlugin extends Plugin {
      * @return Cardwall_OnTop_ColumnDao
      */
     private function getOnTopColumnDao() {
-        require_once 'OnTop/ColumnDao.class.php';
         return new Cardwall_OnTop_ColumnDao();
     }
 
@@ -323,7 +333,6 @@ class cardwallPlugin extends Plugin {
      * @return Cardwall_OnTop_ColumnMappingFieldDao
      */
     private function getOnTopColumnMappingFieldDao() {
-        require_once 'OnTop/ColumnMappingFieldDao.class.php';
         return new Cardwall_OnTop_ColumnMappingFieldDao();
     }
 
@@ -331,7 +340,6 @@ class cardwallPlugin extends Plugin {
      * @return Cardwall_OnTop_ColumnMappingFieldValueDao
      */
     private function getOnTopColumnMappingFieldValueDao() {
-        require_once 'OnTop/ColumnMappingFieldValueDao.class.php';
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
 

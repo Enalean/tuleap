@@ -328,7 +328,9 @@ class Tracker_Artifact_Changeset {
      * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
      */
     public function getComment() {
-        if (isset($this->latest_comment)) return $this->latest_comment;
+        if (isset($this->latest_comment)) {
+            return $this->latest_comment;
+        }
         
         if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
             $this->latest_comment = new Tracker_Artifact_Changeset_Comment($row['id'],
@@ -782,7 +784,10 @@ class Tracker_Artifact_Changeset {
     }
 
     public function exportCommentToSOAP() {
-        return $this->getComment()->exportToSOAP();
+        $comment = $this->getComment();
+        if ($comment) {
+            return $comment->exportToSOAP();
+        }
     }
 }
 ?>

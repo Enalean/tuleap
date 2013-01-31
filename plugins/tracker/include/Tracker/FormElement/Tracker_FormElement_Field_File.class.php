@@ -19,6 +19,7 @@
  */
 
 require_once('common/valid/Rule.class.php');
+require_once('common/include/Codendi_HTTPPurifier.class.php');
 
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     const SOAP_FAKE_FILE = 'soapfakefile';

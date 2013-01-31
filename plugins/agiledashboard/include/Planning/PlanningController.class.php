@@ -19,8 +19,6 @@
  */
  
 require_once 'common/mvc2/PluginController.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_ArtifactFactory.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/Tracker/Artifact/Tracker_Artifact.class.php';
 
 /**
  * Handles the HTTP actions related to a planning.
@@ -56,7 +54,7 @@ class Planning_Controller extends MVC2_PluginController {
     }
     
     public function index() {
-        $plannings = $this->planning_factory->getPlanningsShortAccess($this->getCurrentUser(), $this->group_id, $this->milestone_factory);
+        $plannings = $this->planning_factory->getPlanningsShortAccess($this->getCurrentUser(), $this->group_id, $this->milestone_factory, $this->plugin_theme_path);
         $presenter = new Planning_IndexPresenter($plannings, $this->plugin_theme_path);
         $this->render('index', $presenter);
     }

@@ -18,9 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__).'/../include/constants.php';
 require_once dirname(__FILE__).'/../../tracker/include/constants.php';
-require_once dirname(__FILE__).'/../include/AgileDashboardRouter.class.php';
-require_once dirname(__FILE__).'/../../../tests/simpletest/common/include/builders/aRequest.php';
+require_once AGILEDASHBOARD_BASE_DIR.'/autoload.php';
+require_once TRACKER_BASE_DIR.'/autoload.php';
 
 class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
 
@@ -83,7 +84,6 @@ class AgileDashboardRouter_RouteShowPlanningTest extends TuleapTestCase {
         $this->router->expectOnce('executeAction', array(new IsAExpectation('Planning_ArtifactCreationController'), 'createArtifact'));
         $this->router->routeShowPlanning($request);
     }
-    
 }
 
 ?>

@@ -433,5 +433,10 @@ $sys_lists_prefix = '';
 // The mailing list name suffix
 $sys_lists_suffix = '';
 
+//Displays to end users the privacy of the project
+// If enabled (1), a 'lock' icon will be displayed plus the mention public|private
+// If disabled (0), only the project name is displayed
+$sys_display_project_privacy_in_service_bar = 1;
+
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
