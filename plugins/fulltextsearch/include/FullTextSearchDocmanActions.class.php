@@ -86,13 +86,5 @@ class FullTextSearchDocmanActions extends FullTextSearchActions {
         );
     }
 
-    /**
-     *  Set permission for the given document
-     * 
-     * @param Docman_Item $item The item to update permission
-     */
-    protected function setPermissions($item) {
-        $this->permissions = $this->permissions_manager->exportPermissions($item);
-    }
 }
 ?>

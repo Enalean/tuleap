@@ -80,14 +80,6 @@ class FullTextSearchActions {
     }
 
     /**
-     *  Set permission for the given object
-     * 
-     */
-    protected function setPermission($permissions) {
-        $this->permissions = $permissions;
-    }
-
-    /**
      * Get file contents and encode them with base64
      *
      * @param string $file_name
