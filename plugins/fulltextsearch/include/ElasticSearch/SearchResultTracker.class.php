@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) STMicroelectronics 2013. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class ElasticSearch_SearchResult_tracker extends ElasticSearch_SearchResult {
+class ElasticSearch_SearchResultTracker extends ElasticSearch_SearchResult {
     public $artifact_title;
     public $url;
         
