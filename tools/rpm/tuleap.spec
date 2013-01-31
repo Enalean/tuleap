@@ -812,7 +812,7 @@ fi
 %{APP_DIR}/src/www/project
 %{APP_DIR}/src/www/projects
 %{APP_DIR}/src/www/reference
-%{APP_DIR}/src/www/robots.txt
+%{APP_DIR}/src/www/robots.txt.php
 %{APP_DIR}/src/www/scripts
 %{APP_DIR}/src/www/search
 %{APP_DIR}/src/www/service
