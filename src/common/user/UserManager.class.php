@@ -413,7 +413,7 @@ class UserManager {
                     if ($this->_currentuser->getUserPw() == md5($pwd)) {
                         //We have the good user, but check that he is allowed to connect
                         $auth_success = true;
-                        $params = array('user_id'           => $this->_currentuser->getId(),
+                        $params = array('user'                => $this->_currentuser,
                                         'allow_codendi_login' => &$auth_success);
                         $em->processEvent('session_after_login', $params);
                     }
