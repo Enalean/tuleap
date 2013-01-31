@@ -6,6 +6,7 @@ Version 5.11 (Not Released Yet)
 	* cardwall: 0.9.13
 	* git: 2.7.26
 	* ldap: 3.24
+	* forumml: 2.6.7
 
    == Enhancement ==
     * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)
