@@ -54,10 +54,11 @@ $src_path = "/usr/share/mediawiki115";
 
 You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
 
-# "Install" fusionforge theme
+# "Install" tuleap theme
 
 ln -s /usr/share/mediawiki115/load.php /usr/share/codendi/plugins/mediawiki/www/
 ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki115/skins/
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/mediawiki115/skins/tuleap
 
 #Go to the mediawiki skin folder
 cd /usr/share/mediawiki115/skins
