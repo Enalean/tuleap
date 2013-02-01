@@ -97,14 +97,19 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
      * @return String
      */
     public function verbalizeParameters($withLink) {
-        $groupId     = (int)$this->getRequiredParameter(0);
-        $artifactId  = (int)$this->getRequiredParameter(1);
-        $changesetId = (int)$this->getRequiredParameter(2);
-        $text        = $this->getRequiredParameter(3);
-        if (strlen($text)>15) {
-            $text = substr($text, 0, 15).'...';
+        try {
+            $groupId     = (int)$this->getRequiredParameter(0);
+            $artifactId  = (int)$this->getRequiredParameter(1);
+            $changesetId = (int)$this->getRequiredParameter(2);
+            $text        = $this->getRequiredParameter(3);
+            if (strlen($text)>15) {
+                $text = substr($text, 0, 15).'...';
+            }
+            $preparedParams = 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$this->verbalizeArtifactId($artifactId, $changesetId, $withLink).', Text: '.$text;
+        } catch (Exception $e) {
+            return $e->getMessage().':<br>'.$preparedParams;
         }
-        return 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$this->verbalizeArtifactId($artifactId, $changesetId, $withLink).', Text: '.$text;
+        return $preparedParams;
     }
 
     /**
