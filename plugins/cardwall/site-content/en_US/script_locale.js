@@ -16,7 +16,6 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
-
 codendi.locales['cardwall_field_validation'] = {
     'error_message' : {
         'float_type' : 'the value must be a decimal',
