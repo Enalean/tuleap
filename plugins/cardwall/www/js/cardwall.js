@@ -78,7 +78,11 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
     initialize : function( element ) {
         this.options = { };
-        this.setProperties( element );
+        this.element        = element;
+        this.field_id       = element.readAttribute( 'data-field-id' );
+        this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
+        this.update_url     = codendi.tracker.base_url + '?func=artifact-update&aid=' + this.artifact_id;
+        this.artifact_type  = element.readAttribute( 'data-field-type' );
 
         if(! this.userCanEdit() ) {
             return;
@@ -92,14 +96,6 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
         this.options[ 'validation' ]      = this.getValidation();
 
         new Ajax.InPlaceTextEditor( container, this.update_url, this.options );
-    },
-
-    setProperties : function ( element ) {
-        this.element        = element;
-        this.field_id       = element.readAttribute( 'data-field-id' );
-        this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
-        this.update_url     = codendi.tracker.base_url + '?func=artifact-update&aid=' + this.artifact_id;
-        this.artifact_type  = element.readAttribute( 'data-field-type' );
     },
 
     createAndInjectTemporaryContainer : function () {
