@@ -56,6 +56,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
+            $this->_addHook(Event::JAVASCRIPT);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -174,6 +175,11 @@ class cardwallPlugin extends Plugin {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/script.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/select2.min.js"></script>'."\n";
         }
+    }
+
+    public function javascript($params) {
+        include $GLOBALS['Language']->getContent('script_locale', null, 'cardwall', '.js');
+        echo PHP_EOL;
     }
 
     function tracker_event_admin_items($params) {

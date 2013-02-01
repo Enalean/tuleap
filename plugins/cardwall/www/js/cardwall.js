@@ -147,11 +147,11 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
         switch (this.artifact_type ) {
             case 'float':
                 pattern = '[0-9]*(\.[0-9]*)?';
-                message = 'the value must be a decimal';
+                message = codendi.locales.cardwall_field_validation.error_message.float_type;
                 break;
             case 'int':
                 pattern = '[0-9]*';
-                message = 'the value must be an integer';
+                message = codendi.locales.cardwall_field_validation.error_message.int_type;
                 break;
             default:
                 pattern = '.';
