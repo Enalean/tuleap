@@ -20,7 +20,7 @@ ln -s YOUR_FOLDER_WHERE_MEDIAWIKI_IS_EXTRACTED mediawiki115
 
 #create folder master
 
-mkdir /var/lib/codendi/plugins/mediawiki/master
+mkdir -p /var/lib/codendi/plugins/mediawiki/master
 
 #Then, grant the rights to codendiadm user
 
@@ -55,10 +55,9 @@ $src_path = "/usr/share/mediawiki115";
 You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
 
 # "Install" tuleap theme
-
+rm /usr/share/codendi/plugins/mediawiki/www/load.php
 ln -s /usr/share/mediawiki115/load.php /usr/share/codendi/plugins/mediawiki/www/
 ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki115/skins/
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/mediawiki115/skins/tuleap
 
 #Go to the mediawiki skin folder
 cd /usr/share/mediawiki115/skins
@@ -70,7 +69,11 @@ cp MonoBook.deps.php Tuleap.deps.php        #
 #############################################
 
 cp -r monobook tuleap
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/mediawiki115/skins/tuleap
 
+####################
+### You're done! ###
+####################
 ============================= TO CHECK LATER ============================= 
 
 Is there a need for bin/create_links.sh??? as of today the links are commited
