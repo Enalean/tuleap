@@ -100,13 +100,13 @@ document.observe('dom:loaded', function () {
 
         (function enableRemainingEffortInPlaceEditing() {
             $$( '.valueOf_remaining_effort' ).each( function( remaining_effort_container ) {
-                new tuleap.agiledashboard.cardwall.card.textElementEditor( remaining_effort_container );
+                new tuleap.agiledashboard.cardwall.card.TextElementEditor( remaining_effort_container );
             })
         })();
 
         (function enableAssignedToInPlaceEditing() {
             $$( '.valueOf_assigned_to' ).each( function( assigned_to_container ) {
-                new tuleap.agiledashboard.cardwall.card.selectElementEditor( assigned_to_container );
+                new tuleap.agiledashboard.cardwall.card.SelectElementEditor( assigned_to_container );
             })
         })();
 

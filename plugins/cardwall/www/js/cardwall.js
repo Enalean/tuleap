@@ -22,23 +22,44 @@ tuleap.agiledashboard.cardwall = tuleap.agiledashboard.cardwall || { };
 tuleap.agiledashboard.cardwall.card = tuleap.agiledashboard.cardwall.card || { };
 
 tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
-    jQuery.each(transport.responseJSON, function( artifact_id, art_values ) {
-        jQuery.each( art_values, function( field_name, field_value ) {
-            var element_to_update_container = jQuery( 'div[data-artifact-id='+ artifact_id +']' ).find( '.valueOf_' + field_name );
+    var artifacts_modifications = $H(transport.responseJSON);
 
-            if( element_to_update_container.find( 'div' ).length > 0) {
-                element_to_update_container.find( 'div' ).html( field_value );
-            } else {
-                element_to_update_container.html( field_value );
-            }
-        });
-    })
+    artifacts_modifications.each(function (artifact) {
+        updateArtifact(artifact);
+    });
+
+    function updateArtifact(artifact) {
+        var artifact_id = artifact.key,
+            values = artifact.value;
+
+        $H(values).each(function (field) {
+            updateArtifactField(artifact_id, field);
+        })
+    }
+
+    function updateArtifactField(artifact_id, field) {
+        var field_to_update_selector = '.card[data-artifact-id='+ artifact_id +'] .valueOf_' + field.key;
+
+        $$(field_to_update_selector).each(function (element_to_update) {
+            updateFieldValue(element_to_update, field.value)
+        })
+    }
+
+    function updateFieldValue(element, value) {
+        var element_editor = element.down( 'div' );
+
+        if( element_editor) {
+            element_editor.update( value );
+        } else {
+            element.update( value );
+        }
+    }
 };
 
-tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
+tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create({
 
-    initialize : function( element, options ) {
-        this.options = options || {};
+    initialize : function( element ) {
+        this.options = { };
         this.setProperties( element );
 
         if(! this.userCanEdit() ) {
@@ -59,7 +80,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         this.element        = element;
         this.field_id       = element.readAttribute( 'data-field-id' );
         this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
-        this.update_url     = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
+        this.update_url     = codendi.tracker.base_url + '?func=artifact-update&aid=' + this.artifact_id;
         this.artifact_type  = element.readAttribute( 'data-field-type' );
     },
 
@@ -85,7 +106,7 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
         var field_id = this.field_id;
         
         return function setRequestData(form, value) {
-            var parameters = {},
+            var parameters = { },
                 linked_field = 'artifact[' + field_id +']';
 
             parameters[ linked_field ] = value;
@@ -139,17 +160,16 @@ tuleap.agiledashboard.cardwall.card.textElementEditor = Class.create({
     }
 });
 
-tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
+tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create({
 
-    initialize : function( element, options ) {
-        this.setProperties( element, options );
+    initialize : function( element ) {
+        this.setProperties( element );
     
         if(! this.userCanEdit() ) {
             return;
         }
 
         this.checkUserData();
-        this.checkMultipleSelect();
         this.addOptions();
 
         var container = this.createAndInjectTemporaryContainer();
@@ -169,20 +189,19 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
         return ( this.field_id !== null )
     },
     
-    setProperties : function( element, options ) {
+    setProperties : function( element ) {
         this.element           = element;
-        this.options           = options || {};
-        this.tracker_user_data = [];
+        this.options           = { };
+        this.tracker_user_data = [ ];
 
         this.field_id       = element.readAttribute( 'data-field-id' );
         this.artifact_id    = element.up( '.card' ).readAttribute( 'data-artifact-id' );
         this.artifact_type  = element.readAttribute( 'data-field-type' );
 
-        this.update_url     = '/plugins/tracker/?func=artifact-update&aid=' + this.artifact_id;
-        this.collection_url = '/plugins/tracker/?func=get-values&formElement=' + this.field_id;
+        this.update_url     = codendi.tracker.base_url + '?func=artifact-update&aid=' + this.artifact_id;
+        this.collection_url = codendi.tracker.base_url + '?func=get-values&formElement=' + this.field_id;
 
-        this.users          = {};
-        this.multi_select   = false;
+        this.users          = { };
     },
 
     checkUserData : function() {
@@ -193,12 +212,12 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
         this.tracker_user_data = tuleap.agiledashboard.cardwall.tracker_user_data;
     },
 
-    checkMultipleSelect : function () {
-        this.multi_select = ( this.artifact_type === 'msb' );
+    isMultipleSelect : function () {
+        return this.artifact_type === 'msb';
     },
 
     addOptions : function() {
-        this.options[ 'multiple' ]      = this.multi_select;
+        this.options[ 'multiple' ]      = this.isMultipleSelect();
         this.options[ 'collection' ]    = this.getAvailableUsers();
         this.options[ 'element' ]       = this.element;
         this.options[ 'callback' ]      = this.preRequestCallback();
@@ -209,7 +228,7 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
     bindSelectedElementsToEditor : function( editor ) {
         editor.getSelectedUsers = function() {
             var avatars = jQuery( '.cardwall_avatar', this.options.element );
-            var users = {};
+            var users = { };
 
             avatars.each( function() {
                 var id      = jQuery( this ).attr( 'data-user-id' );
@@ -258,7 +277,7 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
     },
 
     fetchUsers : function() {
-        var users = {};
+        var users = { };
 
         jQuery.ajax({
             url   : this.collection_url,
@@ -268,7 +287,7 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
                 users[ id ] = user_details;
             });
         }).fail( function() {
-            users = {};
+            users = { };
         });
 
         this.users = users;
@@ -279,10 +298,10 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
 
     preRequestCallback : function() {
         var field_id        = this.field_id,
-            is_multi_select = (this.multi_select === true);
+            is_multi_select = this.isMultipleSelect();
 
         return function setRequestData( form, value ) {
-            var parameters = {};
+            var parameters = { };
             if ( is_multi_select ) {
                 linked_field = 'artifact[' + field_id +'][]';
             } else {
@@ -296,7 +315,7 @@ tuleap.agiledashboard.cardwall.card.selectElementEditor = Class.create({
 
     success : function() {
         var field_id          = this.field_id,
-            is_multi_select   = (this.multi_select === true),
+            is_multi_select   = (this.isMultipleSelect() === true),
             tracker_user_data = this.tracker_user_data;
 
         return function updateCardInfo( transport, element ) {
@@ -454,6 +473,6 @@ Ajax.InPlaceMultiCollectionEditor = Class.create(Ajax.InPlaceCollectionEditor, {
     },
 
     getSelectedUsers: function() {
-        this.options.selected = {}
+        this.options.selected = { }
     }
 });
