@@ -170,7 +170,7 @@ class cardwallPlugin extends Plugin {
         if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/cardwall.js"></script>'."\n";
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>'."\n";
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/script.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/select2.min.js"></script>'."\n";
         }
     }
