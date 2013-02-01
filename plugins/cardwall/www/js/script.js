@@ -25,9 +25,9 @@ document.observe('dom:loaded', function () {
             var cols = board.select( 'col' );
 
             cols.each( function( col, col_index ) {
-                var table_rows = col.up( 'table' ).down( 'tbody.cardwall' ).childElements();
+                var table_body_rows = col.up( 'table' ).down( 'tbody.cardwall' ).childElements();
 
-                table_rows.each( function( tr ) {
+                table_body_rows.each( function( tr ) {
                     var value_id     = col.id.split( '-' )[ 1 ],
                         swimline_id  = tr.id.split( '-' )[ 1 ],
                         current_td   = tr.down( 'td.cardwall-cell', col_index ),
