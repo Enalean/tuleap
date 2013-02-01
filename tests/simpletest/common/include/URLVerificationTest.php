@@ -25,7 +25,7 @@ Mock::generate('Project');
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/include/URLVerification.class.php');
-
+require_once '/../site-content/en_US/include/restricted_user_permissions.txt';
 Mock::generatepartial('URLVerification',
                       'URLVerificationTestVersion2',
                       array('getUrlChunks',
@@ -69,6 +69,7 @@ class URLVerificationTest extends TuleapTestCase {
     function setUp() {
         $this->fixtures = dirname(__FILE__).'/_fixtures';
         $GLOBALS['Language'] = new MockBaseLanguage($this);
+        $this->request = $_REQUEST;
     }
 
     function tearDown() {
@@ -78,6 +79,7 @@ class URLVerificationTest extends TuleapTestCase {
         $GLOBALS['sys_force_ssl'] = 1;
         $GLOBALS['sys_https_host'] = 1;
         unset($GLOBALS['group_id']);
+        unset($this->request);
     }
 
     function testIsScriptAllowedForAnonymous() {
@@ -633,6 +635,29 @@ class URLVerificationTest extends TuleapTestCase {
         $urlVerification->setReturnValue('getCurrentUser', $user);
         
         $this->assertFalse($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+    }
+
+    function testRestrictedUserCanAccessSearchOnTracker() {
+        
+        $this->request['type_of_search'] = 'tracker';
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
+        $GLOBALS['group_id'] = 120;
+
+        $urlVerification->setReturnValue('getUrl', '/search/');
+        $urlVerification->setReturnValue('displayRestrictedUserError', true);
+
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', true);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+
+        $server = array(
+            'REQUEST_URI' => '/search/',
+            'SCRIPT_NAME' => 'blah'
+        );
+        
+        $canAcces = $urlVerification->checkRestrictedAccess($server, 'stuff');
+        $this->assertTrue($canAcces);
+        var_dump($canAcces, $this->request);
     }
 }
 

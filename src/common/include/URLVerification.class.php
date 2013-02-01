@@ -257,8 +257,8 @@ class URLVerification {
      *
      * @return void
      */
-    function checkRestrictedAccess($server) {;
-        $user = $this->getCurrentUser();
+    function checkRestrictedAccess($server) {
+        $user = $this->getCurrentUser();var_dump(42112);
         if ($user->isRestricted()) {
             $url = $this->getUrl();
             if (!$this->restrictedUserCanAccessUrl($user, $url, $server['REQUEST_URI'], $server['SCRIPT_NAME'])) {
