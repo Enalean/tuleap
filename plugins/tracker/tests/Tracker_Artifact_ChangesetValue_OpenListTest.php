@@ -21,9 +21,7 @@ require_once('bootstrap.php');
 Mock::generate('Tracker_FormElement_Field_OpenList');
 Mock::generate('Tracker_FormElement_Field_List_OpenValue');
 
-require_once('common/language/BaseLanguage.class.php');
-Mock::generate('BaseLanguage');
-
+require_once 'Tracker_Artifact_ChangesetValue_ListTest.php';
 
 class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_ChangesetValue_ListTest {
     

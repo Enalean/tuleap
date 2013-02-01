@@ -43,24 +43,6 @@ interface Planning_Milestone {
     public function getArtifact();
 
     /**
-     * @return array of Planning_Milestone
-     */
-    public function getSubMilestones();
-
-    /**
-     * @return Boolean True if milestone has at least 1 sub-milestone.
-     */
-    public function hasSubMilestones();
-
-    /**
-     * Adds some sub-milestones. Ignores milestones which are already a
-     * sub-milestone of the current one.
-     *
-     * @param array $new_sub_milestones
-     */
-    public function addSubMilestones(array $new_sub_milestones);
-
-    /**
      * @return Boolean
      */
     public function userCanView(User $user);
@@ -97,7 +79,7 @@ interface Planning_Milestone {
     public function getPlanningId();
 
     /**
-     * @return TreeNode
+     * @return ArtifactNode
      */
     public function getPlannedArtifacts();
 
@@ -107,20 +89,6 @@ interface Planning_Milestone {
      * @return Array of Tracker_Artifact
      */
     public function getLinkedArtifacts(User $user);
-
-    /**
-     * Return numerical value of remaining effort
-     *
-     * @return float
-     */
-    public function getRemainingEffort();
-
-    /**
-     * Return numerical value of capacity
-     *
-     * @return float
-     */
-    public function getCapacity();
 
     /**
      * Return true of the milestone is inside hierarchy.

@@ -61,7 +61,9 @@ abstract class Planning_MilestoneController_Common extends TuleapTestCase {
     }
 
     protected function WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder) {
-        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()
+        stub($this->milestone_factory)->getMilestonePlan()->returns(aMilestonePlan()->withMilestone($milestone)->build());
+
+        stub($this->milestone_factory)->getBareMilestone()
                                       ->returns($milestone);
 
         $hierarchy_factory = mock('Tracker_HierarchyFactory');
@@ -152,7 +154,7 @@ class Planning_MilestoneController_EmptyBacklogTest extends Planning_MilestoneCo
     }
 
      private function GivenAMilestone($artifact) {
-        $milestone = mock('Planning_Milestone');
+        $milestone = mock('Planning_ArtifactMilestone');
         $root_node = new ArtifactNode($artifact);
 
         stub($milestone)->getArtifact()->returns($artifact);
@@ -206,13 +208,16 @@ class Planning_MilestoneController_CrossTrackerSearchTest extends Planning_Miles
 
     private function assertThatWeBuildAcontentViewWith($shared_field_criteria, $semantic_criteria, Tracker_CrossSearch_Query $expected_criteria) {
         $project_id                = 1111;
-        $id                        = 987;
+        $artifact_id               = 987;
         $a_list_of_draggable_items = 'A list of draggable items';
         $project                   = stub('Project')->getId()->returns($project_id);
         $already_linked_items      = array();
         $view_builder              = $this->GivenAViewBuilderThatBuildAPlanningSearchContentViewThatFetchContent($project, $expected_criteria, $already_linked_items, $a_list_of_draggable_items);
-        $request                   = $this->buildRequest($id, $project_id, $shared_field_criteria, $semantic_criteria);
-        $milestone                 = new Planning_NoMilestone($project, $this->planning);
+        $request                   = $this->buildRequest($artifact_id, $project_id, $shared_field_criteria, $semantic_criteria);
+        $milestone                 = mock('Planning_ArtifactMilestone');
+        stub($milestone)->userCanView()->returns(true);
+        stub($milestone)->getPlanning()->returns($this->planning);
+        stub($milestone)->getProject()->returns($project);
 
         $content = $this->WhenICaptureTheOutputOfShowActionWithViewBuilder($request, $milestone, $view_builder);
         $this->assertPattern("/$a_list_of_draggable_items/", $content);
@@ -284,7 +289,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
     }
 
     public function itHasNoBreadCrumbWhenThereIsNoMilestone() {
-        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->nomilestone);
+        stub($this->milestone_factory)->getBareMilestone()->returns($this->nomilestone);
 
         $breadcrumbs = $this->getBreadcrumbs();
         $this->assertIsA($breadcrumbs, 'BreadCrumb_NoCrumb');
@@ -292,7 +297,7 @@ class MilestoneController_BreadcrumbsTest extends TuleapTestCase {
 
     public function itIncludesBreadcrumbsForParentMilestones() {
         $this->sprint->setAncestors(array($this->release, $this->product));
-        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint);
+        stub($this->milestone_factory)->getBareMilestone()->returns($this->sprint);
 
         $breadcrumbs = $this->getBreadcrumbs();
         $this->assertEqualToBreadCrumbWithAllMilestones($breadcrumbs);
@@ -368,7 +373,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
     }
 
     public function itDisplaysOnlySiblingsMilestones() {
-        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($this->sprint_1);
+        stub($this->milestone_factory)->getBareMilestone()->returns($this->sprint_1);
         stub($this->milestone_factory)->getAllMilestones()->returns(array());
         stub($this->milestone_factory)->getSiblingMilestones()->returns(array($this->sprint_1, $this->sprint_2));
         $this->controller = new Planning_MilestoneController4Tests($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, '');
@@ -386,7 +391,7 @@ class MilestoneController_AvailableMilestonesTest extends TuleapTestCase {
         $milstone_1001 = aMilestone()->withArtifact(aMockArtifact()->withId(1001)->withTitle('An open artifact')->build())->build();
         $milstone_1002 = aMilestone()->withArtifact(aMockArtifact()->withId(1002)->withTitle('Another open artifact')->build())->build();
 
-        stub($this->milestone_factory)->getMilestoneWithPlannedArtifactsAndSubMilestones()->returns($current_milstone);
+        stub($this->milestone_factory)->getBareMilestone()->returns($current_milstone);
         stub($this->milestone_factory)->getAllMilestones($this->current_user, $this->sprint_planning)->returns(array($milstone_1001, $milstone_1002));
         $this->controller = new Planning_MilestoneController4Tests($this->request, $this->milestone_factory, $this->project_manager, $this->view_builder, $this->hierarchy_factory, '');
 

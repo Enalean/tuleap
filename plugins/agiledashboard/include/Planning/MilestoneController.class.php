@@ -86,15 +86,12 @@ class Planning_MilestoneController extends MVC2_PluginController {
         $this->theme_path        = $theme_path;
         $project                 = $project_manager->getProject($request->get('group_id'));
 
-        $this->milestone = $this->milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones(
+        $this->milestone = $this->milestone_factory->getBareMilestone(
             $this->getCurrentUser(),
             $project,
             $request->get('planning_id'),
             $request->get('aid')
         );
-        if (!$this->milestone) {
-            $this->milestone = $this->milestone_factory->getNoMilestone($project, $request->get('planning_id'));
-        }
     }
 
     public function show() {
@@ -136,6 +133,7 @@ class Planning_MilestoneController extends MVC2_PluginController {
                     'user'        => $this->getCurrentUser(),
                     'panes'       => &$this->available_panes_info,
                     'active_pane' => &$this->active_pane,
+                    'milestone_factory' => $this->milestone_factory,
                 )
             );
         }
@@ -147,13 +145,14 @@ class Planning_MilestoneController extends MVC2_PluginController {
     }
 
     private function getMilestonePlanningPane(AgileDashboard_MilestonePlanningPaneInfo $info) {
-
         $planning     = $this->milestone->getPlanning();
         $content_view = $this->buildContentView($this->view_builder, $planning, $this->milestone->getProject());
 
+        $milestone_plan = $this->milestone_factory->getMilestonePlan($this->getCurrentUser(), $this->milestone);
+
         $milestone_planning_presenter = new AgileDashboard_MilestonePlanningPresenter(
             $content_view,
-            $this->milestone,
+            $milestone_plan,
             $this->getCurrentUser(),
             $this->getPlanningRedirectToSelf()
         );

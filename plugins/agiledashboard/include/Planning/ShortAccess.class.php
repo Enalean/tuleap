@@ -66,7 +66,7 @@ class Planning_ShortAccess {
             $this->presenters = array();
             $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, self::NUMBER_TO_DISPLAY + 1);
             foreach ($milestones as $milestone) {
-                $this->presenters[] = new Planning_ShortAccessMilestonePresenter($this, $milestone, $this->user, $this->theme_path);
+                $this->presenters[] = new Planning_ShortAccessMilestonePresenter($this, $milestone, $this->milestone_factory, $this->user, $this->theme_path);
             }
             if (!empty($this->presenters)) {
                 end($this->presenters)->setIsLatest();

@@ -80,32 +80,31 @@ class AgileDashboard_MilestonePlanningPresenterTest extends AgileDashboard_Miles
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
     }
 
-    protected function getAPresenter(TreeNode $planned_artifacts_tree = null) {
-        $milestone = new Planning_ArtifactMilestone(mock('Project'),
-                                            $this->planning,
-                                            $this->artifact,
-                                            $planned_artifacts_tree);
+    protected function getAPresenter(ArtifactNode $planned_artifacts_tree = null) {
+        $milestone = new Planning_ArtifactMilestone(
+            mock('Project'),
+            $this->planning,
+            $this->artifact,
+            $planned_artifacts_tree
+        );
+        $milestone_plan = new Planning_MilestonePlan(
+            $milestone,
+            array(),
+            0,
+            0
+        );
 
         return new AgileDashboard_MilestonePlanningPresenter(
             $this->content_view,
-            $milestone,
+            $milestone_plan,
             $this->user,
             'planning['. (int)$this->planning->getId() .']='
         );
     }
 
-    protected function getATreeNode($tree_node_id, $artifact_links = array(), $classname = "planning-draggable-alreadyplanned") {
-        $node = new TreeNode(array(
-                        'id'                   => $tree_node_id,
-                        'artifact_id'          => $tree_node_id,
-                        'title'                => 'Artifact '.$tree_node_id,
-                        'class'                => $classname,
-                        'uri'                  => '/bar',
-                        'xref'                 => 'art #'. $tree_node_id,
-                        'editLabel'            => null,
-                        'allowedChildrenTypes' => array(),
-        ));
-        $node->setId($tree_node_id);
+    protected function getATreeNode(Tracker_Artifact $artifact, $artifact_links = array(), $classname = "planning-draggable-alreadyplanned") {
+        $node = new ArtifactNode($artifact);
+        //$node->setId($tree_node_id);
         foreach($artifact_links as $node_child) {
             $node->addChild($node_child);
         }
@@ -113,7 +112,7 @@ class AgileDashboard_MilestonePlanningPresenterTest extends AgileDashboard_Miles
     }
 
     protected function assertEqualTreeNodes($node1, $node2) {
-        $this->assertEqual($node1->getData(), $node2->getData());
+        $this->assertEqual($node1->getObject(), $node2->getObject());
         $this->assertEqual($node1->getId(), $node2->getId());
         $children1 = $node1->getChildren();
         $children2 = $node2->getChildren();
@@ -133,6 +132,7 @@ class AgileDashboard_MilestonePlanningPresenterTest extends AgileDashboard_Miles
      * 		- artifact 38
      */
     public function itCanReturnLinkedItemsForADepthOfOne() {
+        $artifact30 = $this->getAnArtifact(30);
         $artifact33 = $this->getAnArtifact(33);
         $artifact35 = $this->getAnArtifact(35);
         $artifact34 = $this->getAnArtifact(34, array($artifact35));
@@ -142,14 +142,14 @@ class AgileDashboard_MilestonePlanningPresenterTest extends AgileDashboard_Miles
 
         $this->artifact = $this->getAnArtifact(30, array($artifact33, $artifact34, $artifact36));
 
-        $node33 = $this->getATreeNode(33);
-        $node34 = $this->getATreeNode(34, array($this->getATreeNode(35)));
-        $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
-        $node_parent = $this->getATreeNode(30, array($node33, $node34, $node36));
+        $node33 = $this->getATreeNode($artifact33);
+        $node34 = $this->getATreeNode($artifact34, array($this->getATreeNode($artifact35)));
+        $node36 = $this->getATreeNode($artifact36, array($this->getATreeNode($artifact37), $this->getATreeNode($artifact38)));
+        $node_parent = $this->getATreeNode($artifact30, array($node33, $node34, $node36));
 
         $presenter = $this->getAPresenter($node_parent);
 
-        $result = $presenter->getPlannedArtifactsTree($node_parent);
+        $result = $presenter->getPlannedArtifactsTree();
         $this->assertEqualTreeNodes($node_parent, $result);
     }
 
@@ -161,6 +161,7 @@ class AgileDashboard_MilestonePlanningPresenterTest extends AgileDashboard_Miles
     * 	      - artifact 39
     */
     public function itReturnsOnlyOneLevelOnLinkedItems() {
+        $artifact30 = $this->getAnArtifact(30);
         $artifact39 = $this->getAnArtifact(39);
         $artifact37 = $this->getAnArtifact(37);
         $artifact38 = $this->getAnArtifact(38, array($artifact39));
@@ -168,8 +169,8 @@ class AgileDashboard_MilestonePlanningPresenterTest extends AgileDashboard_Miles
 
         $this->artifact = $this->getAnArtifact(30, array($artifact36));
 
-        $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
-        $node_parent = $this->getATreeNode(30, array($node36));
+        $node36 = $this->getATreeNode($artifact36, array($this->getATreeNode($artifact37), $this->getATreeNode($artifact38)));
+        $node_parent = $this->getATreeNode($artifact30, array($node36));
 
         $presenter = $this->getAPresenter($node_parent);
 
@@ -189,18 +190,19 @@ class AgileDashboard_MilestonePlanningPresenter_AssertPermissionsTest extends Ag
         $this->artifacts_to_select = array();
         $this->sprint_artifact     = null;
 
-        $this->presenter = new AgileDashboard_MilestonePlanningPresenter(
-                        $this->content_view,
-                        new Planning_NoMilestone(mock('Project'), $this->planning),
-                        $this->user,
-                        ''
-        );
     }
 
     public function itDisplaysDestinationOnlyIfUserCanAccessTheTracker() {
         $sprint_tracker            = stub('Tracker')->userCanView()->returns(false);
 
         $this->sprint_artifact = $this->getAnArtifact(30, array($this->getAnArtifact(37)), $sprint_tracker);
+        $milestone = aMilestone()->withArtifact($this->sprint_artifact)->withGroup(mock('Project'))->withPlanning($this->planning)->build();
+        $this->presenter = new AgileDashboard_MilestonePlanningPresenter(
+                        $this->content_view,
+                        aMilestonePlan()->withMilestone($milestone)->build(),
+                        $this->user,
+                        ''
+        );
 
         $this->assertNull($this->presenter->getPlannedArtifactsTree());
     }
@@ -208,7 +210,7 @@ class AgileDashboard_MilestonePlanningPresenter_AssertPermissionsTest extends Ag
 
 class AgileDashboard_MilestonePlanningPresenter_OverCapacityTest extends AgileDashboard_MilestonePlanningPresenter_Common {
     private $presenter;
-    private $sprint_milestone;
+    private $sprint_milestone_plan;
 
     public function setUp() {
         parent::setUp();
@@ -218,42 +220,61 @@ class AgileDashboard_MilestonePlanningPresenter_OverCapacityTest extends AgileDa
         $this->artifacts_to_select = array();
         $this->sprint_milestone    = stub('Planning_ArtifactMilestone')->getPlanning()->returns($this->planning);
 
+    }
+
+    private function isOverCapacity($sprint_milestone_plan) {
         $this->presenter = new AgileDashboard_MilestonePlanningPresenter(
             $this->content_view,
-            $this->sprint_milestone,
+            $sprint_milestone_plan,
             $this->user,
             ''
         );
+        return $this->presenter->isOverCapacity();
     }
 
     public function itIsOverCapacityIfRemainingEffortIsGreaterThanCapacity() {
-        stub($this->sprint_milestone)->getRemainingEffort()->returns(5);
-        stub($this->sprint_milestone)->getCapacity()->returns(3);
-        $this->assertTrue($this->presenter->isOverCapacity());
+        $sprint_milestone_plan = aMilestonePlan()
+            ->withMilestone($this->sprint_milestone)
+            ->withRemainingEffort(5)
+            ->withCapacity(3)
+            ->build();
+        $this->assertTrue($this->isOverCapacity($sprint_milestone_plan));
     }
 
     public function itIsNotOverCapacityIfRemainingEffortIsEqualTo0() {
-        stub($this->sprint_milestone)->getRemainingEffort()->returns(0);
-        stub($this->sprint_milestone)->getCapacity()->returns(3);
-        $this->assertFalse($this->presenter->isOverCapacity());
+        $sprint_milestone_plan = aMilestonePlan()
+            ->withMilestone($this->sprint_milestone)
+            ->withRemainingEffort(0)
+            ->withCapacity(3)
+            ->build();
+        $this->assertFalse($this->isOverCapacity($sprint_milestone_plan));
     }
 
     public function itIsNotOverCapacityIfNoRemainingEffort() {
-        stub($this->sprint_milestone)->getRemainingEffort()->returns(null);
-        stub($this->sprint_milestone)->getCapacity()->returns(3);
-        $this->assertFalse($this->presenter->isOverCapacity());
+        $sprint_milestone_plan = aMilestonePlan()
+            ->withMilestone($this->sprint_milestone)
+            ->withRemainingEffort(null)
+            ->withCapacity(3)
+            ->build();
+        $this->assertFalse($this->isOverCapacity($sprint_milestone_plan));
     }
 
     public function itIsNotOverCapacityIfNoCapacity() {
-        stub($this->sprint_milestone)->getRemainingEffort()->returns(5);
-        stub($this->sprint_milestone)->getCapacity()->returns(null);
-        $this->assertFalse($this->presenter->isOverCapacity());
+        $sprint_milestone_plan = aMilestonePlan()
+            ->withMilestone($this->sprint_milestone)
+            ->withRemainingEffort(5)
+            ->withCapacity(null)
+            ->build();
+        $this->assertFalse($this->isOverCapacity($sprint_milestone_plan));
     }
 
     public function itIsNotOverCapacityCapacityIsNegative() {
-        stub($this->sprint_milestone)->getRemainingEffort()->returns(0);
-        stub($this->sprint_milestone)->getCapacity()->returns(-5);
-        $this->assertTrue($this->presenter->isOverCapacity());
+        $sprint_milestone_plan = aMilestonePlan()
+            ->withMilestone($this->sprint_milestone)
+            ->withRemainingEffort(0)
+            ->withCapacity(-5)
+            ->build();
+        $this->assertTrue($this->isOverCapacity($sprint_milestone_plan));
     }
 }
 ?>
