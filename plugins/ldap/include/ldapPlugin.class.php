@@ -116,6 +116,9 @@ class LdapPlugin extends Plugin {
         // SystemEvent
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES, 'system_event_get_types', false);
         $this->_addHook(Event::GET_SYSTEM_EVENT_CLASS, 'get_system_event_class', false);
+
+        // Ask for LDAP Username of a User
+        $this->_addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
     }
     
     /**
@@ -905,6 +908,17 @@ class LdapPlugin extends Plugin {
                 include_once dirname(__FILE__).'/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php';
                 $params['class'] = 'SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN';
                 break;
+        }
+    }
+
+    public function get_ldap_login_name_for_user($params) {
+        $user = $params['user'];
+        if ($GLOBALS['sys_auth_type'] == 'ldap') {
+            $ldap_user_manager = $this->_getLdapUserManager();
+            $ldap_result = $ldap_user_manager->getLdapFromUser($user);
+            if($ldap_result !== false) {
+                $params['login'] = strtolower($ldap_result->getLogin());
+            }
         }
     }
 }

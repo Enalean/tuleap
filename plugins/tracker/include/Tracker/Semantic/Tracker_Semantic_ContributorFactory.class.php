@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once('Tracker_Semantic_Contributor.class.php');
-require_once('dao/Tracker_Semantic_ContributorDao.class.php');
-require_once 'IRetrieveSemantic.class.php';
 
 class Tracker_Semantic_ContributorFactory implements Tracker_Semantic_IRetrieveSemantic {
     

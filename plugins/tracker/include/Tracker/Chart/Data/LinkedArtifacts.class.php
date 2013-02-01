@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'LinkedArtifactsDao.class.php';
-require_once 'IProvideDataForBurndownChart.class.php';
 
 class Tracker_Chart_Burndown_Data_LinkedArtifacts implements Tracker_Chart_Data_IProvideDataForBurndownChart {
     private $artifact_ids     = array();

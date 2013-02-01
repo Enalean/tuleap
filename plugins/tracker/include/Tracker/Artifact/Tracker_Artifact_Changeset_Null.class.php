@@ -18,7 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_Artifact_Changeset.class.php');
 
 /**
  * Fake / Null class for Tracker_Artifact_Changeset

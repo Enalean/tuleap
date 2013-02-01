@@ -35,7 +35,7 @@ class ArtifactTest extends TuleapTestCase {
         $a->setReturnValue('validArtifact', true);
         $a->setReturnValue('existDependency', false);
         $changes = null;
-        $this->assertTrue($a->addDependencies("171", &$changes, false), "It should be possible to add a dependency like 171");
+        $this->assertTrue($a->addDependencies("171", $changes, false), "It should be possible to add a dependency like 171");
     }
 
     public function testAddWrongDependency() {
@@ -44,7 +44,7 @@ class ArtifactTest extends TuleapTestCase {
         $a->setReturnValue('validArtifact', false);
         //$a->setReturnValue('existDependency', false);
         $changes = null;
-        $this->assertFalse($a->addDependencies("99999", &$changes, false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
+        $this->assertFalse($a->addDependencies("99999", $changes, false), "It should be possible to add a dependency like 99999 because it is not a valid artifact");
         $GLOBALS['Response']->expectCallCount('addFeedback', 2);
 
     }
@@ -57,7 +57,7 @@ class ArtifactTest extends TuleapTestCase {
         $a->setReturnValueAt(0, 'existDependency', false);
         $a->setReturnValueAt(1, 'existDependency', true);
         $changes = null;
-        $this->assertTrue($a->addDependencies("171, 171", &$changes, false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
+        $this->assertTrue($a->addDependencies("171, 171", $changes, false), "It should be possible to add two identical dependencies in the same time, without getting an exception");
     }
     
     public function testFormatFollowUp() {
@@ -91,10 +91,10 @@ class ArtifactTest extends TuleapTestCase {
             $referenceManager = new MockReferenceManager($this);
             $art->setReturnValue('getReferenceManager', $referenceManager);
 
-            $art->addFollowUpComment('<pre>text</pre>', null, null, &$changes, Artifact::FORMAT_TEXT);
+            $art->addFollowUpComment('<pre>text</pre>', null, null, $changes, Artifact::FORMAT_TEXT);
             $this->assertEqual($changes['comment']['add'], '<pre>text</pre>');
             $this->assertEqual($changes['comment']['format'], Artifact::FORMAT_TEXT);
-            $art->addFollowUpComment('<pre>text</pre>', null, null, &$changes, Artifact::FORMAT_HTML);
+            $art->addFollowUpComment('<pre>text</pre>', null, null, $changes, Artifact::FORMAT_HTML);
             $this->assertEqual($changes['comment']['add'], '<pre>text</pre>');
             $this->assertEqual($changes['comment']['format'], Artifact::FORMAT_HTML);
 
@@ -118,10 +118,10 @@ class ArtifactTest extends TuleapTestCase {
             $art->setReturnValue('getReferenceManager', $referenceManager);
             $art->setReturnValue('userCanEditFollowupComment', true);
 
-            $art->updateFollowUpComment(1, '<pre>text</pre>', &$changes, Artifact::FORMAT_TEXT);
+            $art->updateFollowUpComment(1, '<pre>text</pre>', $changes, Artifact::FORMAT_TEXT);
             $this->assertEqual($changes['comment']['add'], '<pre>text</pre>');
             $this->assertEqual($changes['comment']['format'], Artifact::FORMAT_TEXT);
-            $art->updateFollowUpComment(1, '<pre>text</pre>', &$changes, Artifact::FORMAT_HTML);
+            $art->updateFollowUpComment(1, '<pre>text</pre>', $changes, Artifact::FORMAT_HTML);
             $this->assertEqual($changes['comment']['add'], '<pre>text</pre>');
             $this->assertEqual($changes['comment']['format'], Artifact::FORMAT_HTML);
 

@@ -139,7 +139,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $repositories    = $this->getFlatTree($strategy);
         
         $output = $strategy->fetch($repositories, $user);
-        
+
         // Ensure nested levels
         $this->assertPattern('%<td style="padding-left: 1em;">automaticTests</td>%', $output);
         $this->assertPattern('%<td style="padding-left: 2em;">.*Python.*</td>%', $output);
@@ -149,7 +149,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         $this->assertPattern("%Python.*</td><td>$description</td>%", $output);
         
         // Ensure that there is a link to the repository
-        $this->assertPattern('%<a href="[^"]*/view/3/"  >Python</a>%', $output);
+        $this->assertPattern('%<a href="[^"]*/view/3/">Python</a>%', $output);
     }
   
     public function testFetchShouldReturnFolderBeforeLeaves() {

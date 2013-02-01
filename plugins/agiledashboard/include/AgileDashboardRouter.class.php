@@ -19,8 +19,6 @@
  */
 
 require_once 'common/plugin/Plugin.class.php';
-require_once dirname(__FILE__) .'/../../tracker/include/Tracker/TrackerFactory.class.php';
-require_once dirname(__FILE__) .'/../../tracker/include/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 
 /**
  * Routes HTTP (and maybe SOAP ?) requests to the appropriate controllers
@@ -57,7 +55,12 @@ class AgileDashboardRouter {
      */
     private $hierarchy_factory;
 
-    public function __construct(Plugin $plugin, Planning_MilestoneFactory $milestone_factory, PlanningFactory $planning_factory, Tracker_HierarchyFactory $hierarchy_factory) {
+    public function __construct(
+            Plugin $plugin,
+            Planning_MilestoneFactory $milestone_factory,
+            PlanningFactory $planning_factory,
+            Tracker_HierarchyFactory $hierarchy_factory
+            ) {
         $this->plugin            = $plugin;
         $this->milestone_factory = $milestone_factory;
         $this->planning_factory  = $planning_factory;
@@ -208,7 +211,8 @@ class AgileDashboardRouter {
             $this->milestone_factory,
             $this->getProjectManager(),
             $this->getViewBuilder($request),
-            $this->hierarchy_factory
+            $this->hierarchy_factory,
+            $this->plugin->getThemePath()
         );
     }
     

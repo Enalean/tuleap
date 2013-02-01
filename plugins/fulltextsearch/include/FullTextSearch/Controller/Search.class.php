@@ -18,12 +18,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/mvc2/Controller.class.php';
+require_once 'common/mvc2/PluginController.class.php';
 
 /**
  * Controller for basic fulltext searches
  */
-class FullTextSearch_Controller_Search extends MVC2_Controller {
+class FullTextSearch_Controller_Search extends MVC2_PluginController {
 
     /**
      * @var FullTextSearch_ISearchDocuments

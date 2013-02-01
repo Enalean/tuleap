@@ -25,11 +25,14 @@ if ($argc < 1) {
     die('Usage: ".$argv[0]." artifact_id'.PHP_EOL);
 }
 
-$serverURL = 'http://shunt.cro.enalean.com';
+$serverURL = isset($_SERVER['TULEAP_SERVER']) ? $_SERVER['TULEAP_SERVER'] : 'http://sonde.cro.enalean.com';
+$login     = isset($_SERVER['TULEAP_USER']) ? $_SERVER['TULEAP_USER'] : 'testman';
+$password  = isset($_SERVER['TULEAP_PASSWORD']) ? $_SERVER['TULEAP_PASSWORD'] : 'testpwd';
+
 $soapLogin = new SoapClient($serverURL.'/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
 // Establish connection to the server
-$requesterSessionHash = $soapLogin->login('manuel','')->session_hash;
+$requesterSessionHash = $soapLogin->login($login, $password)->session_hash;
 
 //save values
 $artifact_id = $argv[1];
@@ -37,6 +40,7 @@ $artifact_id = $argv[1];
 // Connecting to the soap's tracker client
 $soapTracker = new SoapClient($serverURL.'/plugins/tracker/soap/?wsdl', array('cache_wsdl' => WSDL_CACHE_NONE));
 
+var_dump($soapTracker->getVersion());
 
 $response = $soapTracker->getArtifact($requesterSessionHash, '', '', $artifact_id);
 

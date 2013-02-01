@@ -38,7 +38,17 @@ grammar {
         }?,
 
         element dependencies {
-            element rule { ruleContent }*
+            element rule { listRuleContent }*
+        }?,
+
+        element rules {
+            element date_rules { 
+                element rule {dateRuleContent }*
+            }?,
+            element list_rules { 
+                element rule {listRuleContent }*
+            }?
+            
         }?,
 
         element reports {
@@ -181,6 +191,9 @@ grammar {
                 element field_id {
                     attribute REF { xsd:IDREF }
                 }
+            }*,
+            element postaction_ci_build {
+                attribute job_url { xsd:string }
             }*
         }?,
         (
@@ -214,7 +227,7 @@ grammar {
             attribute REF { xsd:IDREF }
         }
 
-    ruleContent =
+    listRuleContent =
         (
             element source_field {
                 attribute REF { xsd:IDREF }
@@ -227,6 +240,18 @@ grammar {
             },
             element target_value {
                 attribute REF { xsd:IDREF }
+            }
+        )
+    dateRuleContent =
+        (
+            element source_field {
+                attribute REF { xsd:IDREF }
+            },
+            element target_field {
+                attribute REF { xsd:IDREF }
+            },
+            element comparator {
+                attribute type { xsd:string }
             }
         )
     semanticContent =

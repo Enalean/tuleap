@@ -16,8 +16,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElement_Field.class.php');
 require_once('common/project/UGroupManager.class.php');
 
 class Tracker_DateReminder {

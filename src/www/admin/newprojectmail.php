@@ -13,14 +13,14 @@ require_once('proj_email.php');
 session_require(array('group'=>'1','admin_flags'=>'A'));
 
 $content = "";
-if (!send_new_project_email($group_id)) {
-    $pm = ProjectManager::instance();
-    $group = $pm->getProject($group_id);
-    if ($group && is_object($group) && !$group->isError()) {
+$pm = ProjectManager::instance();
+$group = $pm->getProject($request->getValidated('group_id', 'uint', 0));
+if ($group && is_object($group) && !$group->isError()) {
+    if (!send_new_project_email($group)) {
         $GLOBALS['feedback'] .= "<p>".$group->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin']))."</p>";
+    } else {
+        $content = "<p>".$Language->getText('admin_newprojectmail','success')."</p>";
     }
-} else {
-    $content = "<p>".$Language->getText('admin_newprojectmail','success')."</p>";
 }
 
 site_header(array('title'=>$Language->getText('admin_newprojectmail','title')));

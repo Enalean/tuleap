@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php';
 
 /**
  * The criteria for a cross-tracker search.

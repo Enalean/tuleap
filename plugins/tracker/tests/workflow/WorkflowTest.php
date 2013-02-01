@@ -17,18 +17,12 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once(dirname(__FILE__).'/../builders/all.php');
-require_once(dirname(__FILE__).'/../../include/constants.php');
-require_once(dirname(__FILE__).'/../../include/workflow/Workflow.class.php');
-require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
+
 Mock::generate('Transition');
-require_once(dirname(__FILE__).'/../../include/workflow/WorkflowManager.class.php');
-require_once(dirname(__FILE__).'/../../include/workflow/WorkflowFactory.class.php');
 
 Mock::generatePartial('Workflow', 'WorkflowTestVersion', array('getTransitions'));
-require_once(dirname(__FILE__).'/../../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
-require_once(dirname(__FILE__).'/../../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 Mock::generate('Tracker_FormElement_Field_List_Value');
 
@@ -38,7 +32,6 @@ Mock::generate('Tracker_Artifact_ChangesetValue_List');
 Mock::generate('Tracker_Artifact_Changeset_Null');
 Mock::generate('User');
 
-require_once('common/permission/PermissionsManager.class.php');
 Mock::generate('PermissionsManager');
 
 class WorkflowTest extends UnitTestCase {
@@ -224,104 +217,123 @@ class WorkflowTest extends UnitTestCase {
         $field_value = array();
         $this->assertTrue($workflow->isTransitionExist($field_value, $field_value));
     }
+}
 
-    function testBeforeShouldTriggerTransitionActions() {
-        $current_user = mock('PFUser');
+class Workflow_BeforeAfterTest extends TuleapTestCase {
 
-        $f = new MockTracker_FormElement_Field_List();
-        $f->setReturnValue('getId', 103);
+    private $transition_null_to_open;
+    private $transition_open_to_close;
+    private $open_value_id = 801;
+    private $close_value_id = 802;
+    public function setUp() {
+        parent::setUp();
 
-        $v1 = new MockTracker_FormElement_Field_List_Value();
-        $v2 = new MockTracker_FormElement_Field_List_Value();
+        $this->status_field = new MockTracker_FormElement_Field_List();
+        stub($this->status_field)->getId()->returns(103);
 
-        $v1->setReturnValue('getId', 801);
-        $v2->setReturnValue('getId', 802);
+        $open_value  = mock('Tracker_FormElement_Field_List_Value');
+        $close_value = mock('Tracker_FormElement_Field_List_Value');
 
-        $t1 = new MockTransition();
-        $t2 = new MockTransition();
+        stub($open_value)->getId()->returns($this->open_value_id);
+        stub($close_value)->getId()->returns($this->close_value_id);
+        $this->current_user = mock('PFUser');
 
-        $t1->setReturnValue('getFieldValueFrom',     null);
-        $t1->setReturnReference('getFieldValueTo',   $v1);
-        $t2->setReturnReference('getFieldValueFrom', $v1);
-        $t2->setReturnReference('getFieldValueTo',   $v2);
+        $this->transition_null_to_open  = mock('Transition');
+        $this->transition_open_to_close = mock('Transition');
 
-        $cvl = new MockTracker_Artifact_ChangesetValue_List();
-        $cvl->setReturnValue('getValue', array(801));
-
-        $changeset = new MockTracker_Artifact_Changeset();
-        $changeset->setReturnValue('getValue', $cvl, array($f));
-
-        $a = new MockTracker_Artifact();
-        $a->setReturnValue('getLastChangeset', $changeset);
+        stub($this->transition_null_to_open)->getFieldValueFrom()->returns(null);
+        stub($this->transition_null_to_open)->getFieldValueTo()->returns($open_value);
+        stub($this->transition_open_to_close)->getFieldValueFrom()->returns($open_value);
+        stub($this->transition_open_to_close)->getFieldValueTo()->returns($close_value);
 
         $workflow_id = 1;
         $tracker_id  = 2;
         $field_id    = 103;
         $is_used     = 1;
-        $transitions = array($t1, $t2);
-        $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
+        $transitions = array($this->transition_null_to_open, $this->transition_open_to_close);
+        $this->workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
+        $this->workflow->setField($this->status_field);
 
-        $workflow->setField($f);
+        $this->artifact = new MockTracker_Artifact();
+    }
+
+    function testBeforeShouldTriggerTransitionActions() {
+        $changeset_value_list = new MockTracker_Artifact_ChangesetValue_List();
+        $changeset_value_list->setReturnValue('getValue', array($this->open_value_id));
+
+        $changeset = new MockTracker_Artifact_Changeset();
+        $changeset->setReturnValue('getValue', $changeset_value_list, array($this->status_field));
+
+        $this->artifact->setReturnValue('getLastChangeset', $changeset);
 
         $fields_data = array(
-            '103' => '802',
+            '103' => "$this->close_value_id",
         );
-        $t1->expectNever('before');
-        $t2->expectOnce('before', array($fields_data, $current_user));
-        $workflow->before($fields_data, $current_user, $a);
+        $this->transition_null_to_open->expectNever('before');
+        $this->transition_open_to_close->expectOnce('before', array($fields_data, $this->current_user));
+        $this->workflow->before($fields_data, $this->current_user, $this->artifact);
     }
 
     function testBeforeShouldTriggerTransitionActionsForNewArtifact() {
-        $current_user = mock('PFUser');
+        $changeset = new MockTracker_Artifact_Changeset_Null();
+        $this->artifact->setReturnValue('getLastChangeset', $changeset);
 
-        $f = new MockTracker_FormElement_Field_List();
-        $f->setReturnValue('getId', 103);
-
-        $v1 = new MockTracker_FormElement_Field_List_Value();
-        $v2 = new MockTracker_FormElement_Field_List_Value();
-
-        $v1->setReturnValue('getId', 801);
-        $v2->setReturnValue('getId', 802);
-
-        $t1 = new MockTransition();
-        $t2 = new MockTransition();
-
-        $t1->setReturnValue('getFieldValueFrom',     null);
-        $t1->setReturnReference('getFieldValueTo',   $v1);
-        $t2->setReturnReference('getFieldValueFrom', $v1);
-        $t2->setReturnReference('getFieldValueTo',   $v2);
-
-        $c = new MockTracker_Artifact_Changeset_Null();
-
-        $a = new MockTracker_Artifact();
-        $a->setReturnValue('getLastChangeset', $c);
-
-        $workflow_id = 1;
-        $tracker_id  = 2;
-        $field_id    = 103;
-        $is_used     = 1;
-        $transitions = array($t1, $t2);
-        $workflow    = new Workflow($workflow_id, $tracker_id, $field_id, $is_used, $transitions);
-
-        $workflow->setField($f);
-
-       $fields_data = array(
-            '103' => '801',
+        $fields_data = array(
+            '103' => "$this->open_value_id",
         );
-        $t1->expectOnce('before');
-        $t2->expectNever('before', array($fields_data, $current_user));
-        $workflow->before($fields_data, $current_user, $a);
+        $this->transition_null_to_open->expectOnce('before', array($fields_data, $this->current_user));
+        $this->transition_open_to_close->expectNever('before');
+        $this->workflow->before($fields_data, $this->current_user, $this->artifact);
     }
 
+    public function testAfterShouldTriggerTransitionActions() {
+        $changeset_value_list = mock('Tracker_Artifact_ChangesetValue_List');
+        stub($changeset_value_list)->getValue()->returns(array($this->open_value_id));
+
+        $previous_changeset = mock('Tracker_Artifact_Changeset');
+        stub($previous_changeset)->getValue($this->status_field)->returns($changeset_value_list);
+
+        $new_changeset = mock('Tracker_Artifact_Changeset');
+
+        $fields_data = array(
+            '103' => "$this->close_value_id",
+        );
+        expect($this->transition_null_to_open)->after()->never();
+        expect($this->transition_open_to_close)->after($new_changeset)->once();
+        $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
+    }
+
+    function testAfterShouldTriggerTransitionActionsForNewArtifact() {
+        $previous_changeset = null;
+        $new_changeset      = mock('Tracker_Artifact_Changeset');
+
+        $fields_data = array(
+            '103' => "$this->open_value_id",
+        );
+        expect($this->transition_null_to_open)->after($new_changeset)->once();
+        expect($this->transition_open_to_close)->after()->never();
+        $this->workflow->after($fields_data, $new_changeset, $previous_changeset);
+    }
 }
 
-class Workflow_ExportToSOAPTest extends TuleapTestCase {
+class Workflow_ExportToSOAP_BaseTest extends TuleapTestCase {
 
-    private $workflow;
-    private $result;
+    protected $tracker_id = 123;
+    protected $tracker;
+    protected $workflow;
+    protected $result;
 
     public function setUp() {
         parent::setUp();
+
+        $this->tracker   = stub('Tracker')->getId()->returns($this->tracker_id);
+        $tracker_factory = mock('TrackerFactory');
+        TrackerFactory::setInstance($tracker_factory);
+        stub($tracker_factory)->getTrackerById($this->tracker_id)->returns($this->tracker);
+
+        $this->rules_manager = mock('Tracker_RulesManager');
+        stub($this->rules_manager)->exportToSOAP()->returns('rules in soap format');
+        stub($this->tracker)->getRulesManager()->returns($this->rules_manager);
 
         $field_list_value1 = aFieldListStaticValue()->withId(0)->build();
         $field_list_value2 = aFieldListStaticValue()->withId(11)->build();
@@ -334,34 +346,56 @@ class Workflow_ExportToSOAPTest extends TuleapTestCase {
         $transition2 = new Transition(0,1, $field_list_value3, $field_list_value4);
         $transition3 = new Transition(0,1, $field_list_value5, $field_list_value6);
 
-        $this->workflow = new Workflow(1,1,1,1, array($transition1, $transition2, $transition3));
-        $this->result   = $this->workflow->exportToSOAP();
+        $this->workflow = new Workflow(1, $this->tracker_id, 1, 1, array($transition1, $transition2, $transition3));
     }
 
+    public function tearDown() {
+        TrackerFactory::clearInstance();
+        parent::tearDown();
+    }
+}
+
+class Workflow_ExportToSOAPTest extends Workflow_ExportToSOAP_BaseTest {
+
     public function itExportsTheFieldId() {
+        $result = $this->workflow->exportToSOAP();
         $expected_field_id = 1;
-        $this->assertEqual($this->result['field_id'], $expected_field_id);
+        $this->assertEqual($result['field_id'], $expected_field_id);
     }
 
     public function itExportsTheIsUsedValue() {
+        $result = $this->workflow->exportToSOAP();
         $expected_is_used = 1;
-        $this->assertEqual($this->result['is_used'], $expected_is_used);
+        $this->assertEqual($result['is_used'], $expected_is_used);
     }
+}
+
+class Workflow_ExportToSOAP_transitionsTest extends Workflow_ExportToSOAP_BaseTest {
 
     public function itExportsAllTheTransitions() {
+        $result = $this->workflow->exportToSOAP();
         $expected_transisitions = array(
             '0' => array ('from_id' => 0, 'to_id'=> 11),
             '1' => array ('from_id' => 4, 'to_id'=> 5),
             '2' => array ('from_id' => 6, 'to_id'=> 89)
         );
 
-        $this->assertEqual($this->result['transitions'], $expected_transisitions);
+        $this->assertEqual($result['transitions'], $expected_transisitions);
     }
 
     public function itExportsEmptyTransitionWhenWorkflowDoesntHaveTransition() {
-        $workflow = new Workflow(1,1,1,1, array());
+        $workflow = new Workflow(1, $this->tracker_id, 1, 1, array());
         $result   = $workflow->exportToSOAP();
-        $this->assertTrue(empty($result['transitions']));
+        $this->assertArrayEmpty($result['transitions']);
+    }
+}
+
+class Workflow_ExportToSOAP_rulesTest extends Workflow_ExportToSOAP_BaseTest {
+
+    public function itExportsRules() {
+        $result = $this->workflow->exportToSOAP();
+
+        $this->assertEqual($result['rules'], 'rules in soap format');
     }
 }
 
@@ -390,6 +424,36 @@ class Workflow_validateTest extends TuleapTestCase {
 
         expect($transition)->validate()->once()->returns(false);
         $this->assertFalse($workflow->validate($fields_data, $artifact));
+    }
+}
+
+class Workflow_validateGlobalRulesTest extends TuleapTestCase {
+
+    private $tracker_id  = 123;
+
+    public function setUp() {
+        parent::setUp();
+
+        $tracker         = mock('Tracker');
+        $tracker_factory = mock('TrackerFactory');
+        TrackerFactory::setInstance($tracker_factory);
+        stub($tracker_factory)->getTrackerByid($this->tracker_id)->returns($tracker);
+
+        $this->rules_manager = mock ('Tracker_RulesManager');
+        stub($tracker)->getRulesManager()->returns($this->rules_manager);
+    }
+
+    public function tearDown() {
+        TrackerFactory::clearInstance();
+        parent::tearDown();
+    }
+
+    public function itDelegatesValidationToRulesManager() {
+        $fields_data = array();
+
+        expect($this->rules_manager)->validate($this->tracker_id, $fields_data)->once()->returns(true);
+        $workflow = new workflow(1, $this->tracker_id, 1, 1, array());
+        $this->assertTrue($workflow->validateGlobalRules($fields_data));
     }
 }
 ?>

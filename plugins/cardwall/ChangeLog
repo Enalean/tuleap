@@ -1,5 +1,18 @@
+Version 0.9.13 - Tuleap 5.11
+    * Autoload plugin
+    * Refactor rendering of AgileDashboard Panes
+
+Version 0.9.12 - Tuleap 5.11
+    * Enhancement: update the remaining effort on a story without leaving the agile dashboard
+
+Version 0.9.11 - Tuleap 5.9
+    * Fix some issues occuring during project creation
+
+Version 0.9.10 - Tuleap 5.9
+    * Fix some isolated tests
+
 Version 0.9.9 - Tuleap 5.8
-    * Add adms plugin
+    * Add admssw plugin
 
 Version 0.9.8 - Tuleap 5.7
     * Fix art #1188 - Refresh issue on Card Wall when moving task to done

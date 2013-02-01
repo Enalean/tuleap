@@ -51,7 +51,26 @@ class MediaWikiPlugin extends Plugin {
 		$this->_addHook("project_admin_plugins"); // to show up in the admin page for group
 		$this->_addHook("clone_project_from_template") ;
 		$this->_addHook('group_delete');
+                // Search
+                $this->_addHook('search_type_entry', 'search_type_entry', false);
+                $this->_addHook('search_type', 'search_type', false);
 	}
+
+        public function search_type_entry($params) {
+                $params['output'] .= '<option value="'. $this->name .'" ';
+                if ($params['type_of_search'] == $this->name) {
+                    $params['output'] .= 'selected="selected"';
+                }
+                $params['output'] .= '>'. 'Mediawiki';
+                $params['output'] .= '</option>';
+        }
+
+        public function search_type($params) {
+            if ($params['type_of_search'] == $this->name) {
+                $project = group_get_object($params['group_id']);
+                util_return_to('/plugins/mediawiki/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($params['words']) . '&go=Go');
+            }
+        }
 
         function process() {
 		echo '<h1>Mediawiki</h1>';

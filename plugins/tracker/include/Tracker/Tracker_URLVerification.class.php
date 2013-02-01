@@ -20,7 +20,6 @@
  */
  
 require_once 'common/include/URLVerification.class.php';
-require_once 'Tracker_URL.class.php';
 
 class Tracker_URLVerification extends URLVerification {
     

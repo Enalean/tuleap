@@ -16,10 +16,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/View/Admin/Visitor.class.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/TrackerManager.class.php');
-require_once(dirname(__FILE__).'/../../../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class AdminVisitorTest extends TuleapTestCase {
     

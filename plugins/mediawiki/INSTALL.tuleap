@@ -4,10 +4,10 @@ As forge admin, go to your tuleap instance in the administration pannel -> plugi
 If the plugin isn't yet installed, install it !
 Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
 
-#get mediawiki
+#get mediawiki (1.20) /!\ needs php 5.2.x
 cd /usr/share
-wget http://download.wikimedia.org/mediawiki/1.15/mediawiki-1.15.5.tar.gz
-tar -xvf mediawiki-1.15.5.tar.gz mediawiki115
+wget http://download.wikimedia.org/mediawiki/1.20/mediawiki-1.20.2.tar.gz
+tar -xvf mediawiki-1.20.2.tar.gz
 
 #If the tar command doesn't extract mediawiki in a mediawiki115 folder, please run these commands :
 cd /usr/share
@@ -16,6 +16,10 @@ ln -s YOUR_FOLDER_WHERE_MEDIAWIKI_IS_EXTRACTED mediawiki115
 #create folder master
 
 mkdir /var/lib/codendi/plugins/mediawiki/master
+
+#Then, grant the rights to codendiadm user
+
+chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
 
 #Create MySQL views in codendi scheme
 
@@ -38,7 +42,8 @@ $projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
 $config_path = "/etc/codendi";
 $src_path = "/usr/share/mediawiki115";
 
-#run these commands
+#run these commands /!\ Be careful, you have to run these 2 commands in the following order :
+
 /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
 /usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis.php
 
@@ -46,8 +51,13 @@ You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectna
 
 # "Install" fusionforge theme
 
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/FusionForge.php /usr/share/mediawiki115/skins/
-# ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/fusionforge /usr/share/mediawiki115/skins/
+ln -s /usr/share/mediawiki115/load.php www/
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki115/skins/
+
+#In the mediawiki skin folder
+
+cp MonoBook.deps.php Tuleap.deps.php
+cp -r monobook tuleap
 
 ============================= TO CHECK LATER ============================= 
 

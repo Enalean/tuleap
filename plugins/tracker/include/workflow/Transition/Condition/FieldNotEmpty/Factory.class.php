@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Dao.class.php';
-require_once TRACKER_BASE_DIR .'/workflow/Transition.class.php';
-require_once TRACKER_BASE_DIR .'/Tracker/FormElement/Tracker_FormElementFactory.class.php';
 
 class Workflow_Transition_Condition_FieldNotEmpty_Factory {
 
@@ -30,6 +27,11 @@ class Workflow_Transition_Condition_FieldNotEmpty_Factory {
     public function __construct(Workflow_Transition_Condition_FieldNotEmpty_Dao $dao, Tracker_FormElementFactory $element_factory) {
         $this->dao             = $dao;
         $this->element_factory = $element_factory;
+    }
+
+    /** @return bool */
+    public function isFieldUsedInConditions(Tracker_FormElement_Field $field) {
+        return $this->dao->isFieldUsed($field->getId());
     }
 
     public function getFieldNotEmpty(Transition $transition){

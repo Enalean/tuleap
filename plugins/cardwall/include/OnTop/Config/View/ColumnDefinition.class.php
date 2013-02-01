@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once CARDWALL_BASE_DIR .'/View.class.php';
 
 abstract class Cardwall_OnTop_Config_View_ColumnDefinition extends Cardwall_View {
 

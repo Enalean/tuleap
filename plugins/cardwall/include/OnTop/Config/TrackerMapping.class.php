@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../Column.class.php';
 
 abstract class Cardwall_OnTop_Config_TrackerMapping {
 

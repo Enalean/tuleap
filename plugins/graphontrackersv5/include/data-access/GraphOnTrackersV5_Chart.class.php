@@ -275,7 +275,7 @@ abstract class GraphOnTrackersV5_Chart {
         return '';
     }
     
-    public function exportToXML($root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         $root->addAttribute('type', $this->getChartType());
         $root->addAttribute('width', $this->width);
         $root->addAttribute('height', $this->height);

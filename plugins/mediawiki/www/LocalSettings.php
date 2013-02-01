@@ -75,7 +75,6 @@ set_include_path( implode( PATH_SEPARATOR, $path ) . PATH_SEPARATOR . get_includ
 require_once( "$IP/includes/AutoLoader.php" );
 require_once( "$IP/includes/Defines.php" );
 require_once( "$IP/includes/DefaultSettings.php" );
-
 if ( $wgCommandLineMode ) {
         if ( isset( $_SERVER ) && array_key_exists( 'REQUEST_METHOD', $_SERVER ) ) {
                 die( "This script must be run from the command line\n" );
@@ -108,7 +107,8 @@ $wgDBts2schema      = str_replace ('-', '_', "plugin_mediawiki_$fusionforgeproje
 $wgMainCacheType = CACHE_NONE;
 $wgMemCachedServers = array();
 
-$wgEnableUploads = forge_get_config('enable_uploads', 'mediawiki');
+//$wgEnableUploads = forge_get_config('enable_uploads', 'mediawiki');
+$wgEnableUploads = true;
 $wgUploadDirectory = "$project_dir/images";
 $wgUseImageMagick = true;
 $wgImageMagickConvertCommand = "/usr/bin/convert";
@@ -117,9 +117,10 @@ $wgShowExceptionDetails = true ;
 
 $wgLanguageCode = strtolower(forge_get_config('default_country_code'));
 
-$wgDefaultSkin = 'fusionforge';
+$wgDefaultSkin = 'tuleap';
 $wgHtml5 = false;
 $wgWellFormedXml = true;
+$wgLogo = "";
 
 /* DEBUG
 $wgDebugLogFile         = '/tmp/wiki.log';

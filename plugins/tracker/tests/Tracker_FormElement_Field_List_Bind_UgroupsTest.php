@@ -16,9 +16,7 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-
-require_once dirname(__FILE__).'/builders/all.php';
-require_once TRACKER_BASE_DIR.'/Tracker/FormElement/Tracker_FormElement_Field_List_Bind_Ugroups.class.php';
+require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_List_Bind_BaseTest extends TuleapTestCase {
     public function setUp() {

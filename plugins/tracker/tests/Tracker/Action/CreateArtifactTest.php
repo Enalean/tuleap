@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../../include/constants.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Action/CreateArtifact.class.php';
-require_once TRACKER_BASE_DIR.'/../tests/builders/all.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 
 class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact {

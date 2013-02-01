@@ -18,11 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_GlobalNotification.class.php');
 
-require_once('dao/Tracker_WatcherDao.class.php');
-require_once('dao/Tracker_GlobalNotificationDao.class.php');
-require_once('dao/Tracker_NotificationDao.class.php');
 
 class Tracker_NotificationsManager {
 

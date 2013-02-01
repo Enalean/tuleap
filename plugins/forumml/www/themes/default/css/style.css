@@ -75,7 +75,7 @@ font.headerlabelalt {
 
 .plugin_forumml_message_content_pre {
     padding: 0.5em;
-    font-family: courier, monospace;
+    font-family: "Courier New", courier,monospace;
 }
 
 .plugin_forumml_message_content_std {

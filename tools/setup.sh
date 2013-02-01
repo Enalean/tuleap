@@ -957,6 +957,7 @@ substitute '/etc/codendi/conf/local.inc' '%sys_org_name%' "$sys_org_name"
 substitute '/etc/codendi/conf/local.inc' '%sys_long_org_name%' "$sys_long_org_name" 
 substitute '/etc/codendi/conf/local.inc' '%sys_fullname%' "$sys_fullname" 
 substitute '/etc/codendi/conf/local.inc' '%sys_dbauth_passwd%' "$dbauth_passwd" 
+substitute '/etc/codendi/conf/local.inc' 'sys_create_project_in_one_step = 0' 'sys_create_project_in_one_step = 1'
 if [ "$disable_subdomains" = "y" ]; then
   substitute '/etc/codendi/conf/local.inc' 'sys_lists_host = "lists.' 'sys_lists_host = "'
   substitute '/etc/codendi/conf/local.inc' 'sys_disable_subdomains = 0' 'sys_disable_subdomains = 1'
@@ -965,7 +966,8 @@ fi
 substitute '/etc/httpd/conf.d/codendi_aliases.conf' '%sys_default_domain%' "$sys_default_domain" 
 
 # replace string patterns in database.inc
-substitute '/etc/codendi/conf/database.inc' '%sys_dbpasswd%' "$codendiadm_passwd" 
+substitute '/etc/codendi/conf/database.inc' '%sys_dbpasswd%' "$codendiadm_passwd"
+substitute '/etc/codendi/conf/database.inc' 'localhost' "$mysql_host" 
 
 # replace string patterns in httpd.conf
 substitute '/etc/httpd/conf/httpd.conf' '%sys_default_domain%' "$sys_default_domain"
@@ -1320,11 +1322,11 @@ fi
 if [ "$enable_plugin_im" = "true" ]; then
     # Create openfireadm MySQL user
     $CAT <<EOF | $MYSQL $pass_opt mysql
-GRANT ALL PRIVILEGES on openfire.* to 'openfireadm'@'localhost' identified by '$openfire_passwd';
-GRANT SELECT ON codendi.user to 'openfireadm'@'localhost';
-GRANT SELECT ON codendi.groups to 'openfireadm'@'localhost';
-GRANT SELECT ON codendi.user_group to 'openfireadm'@'localhost';
-GRANT SELECT ON codendi.session to 'openfireadm'@'localhost';
+GRANT ALL PRIVILEGES on openfire.* to 'openfireadm'@'$mysql_httpd_host' identified by '$openfire_passwd';
+GRANT SELECT ON codendi.user to 'openfireadm'@'$mysql_httpd_host';
+GRANT SELECT ON codendi.groups to 'openfireadm'@'$mysql_httpd_host';
+GRANT SELECT ON codendi.user_group to 'openfireadm'@'$mysql_httpd_host';
+GRANT SELECT ON codendi.session to 'openfireadm'@'$mysql_httpd_host';
 FLUSH PRIVILEGES;
 EOF
     # Install plugin
@@ -1338,7 +1340,7 @@ EOF
     IM_ADMIN_USER='imadmin-bot'
     IM_ADMIN_USER_PW='1M@dm1n'
     IM_MUC_PW='Mu6.4dm1n' # Doesn't need to change
-    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://localhost:3306/openfire -cdb jdbc:mysql://localhost:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
+    $PHP $INSTALL_DIR/plugins/IM/include/jabbex_api/installation/install.php -a -orp $rt_passwd -uod openfireadm -pod $openfire_passwd -ucd openfireadm -pcd $openfire_passwd -odb jdbc:mysql://$mysql_host:3306/openfire -cdb jdbc:mysql://$mysql_host:3306/codendi -ouri $sys_default_domain -gjx $IM_ADMIN_GROUP -ujx $IM_ADMIN_USER -pjx $IM_ADMIN_USER_PW -pmuc $IM_MUC_PW
     echo "path[]=\"$INSTALL_DIR/plugins/IM\"" >> /etc/codendi/forgeupgrade/config.ini
 
     # Enable service
@@ -1366,4 +1368,3 @@ echo "Installation completed successfully!"
 $CAT $TODO_FILE
 
 exit 0
-

@@ -55,6 +55,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $user->setId(42);
         $user->setUserName('Ben');
         $path = userRepoPath('Ben', 'toto');
+        $forkPermissions = array();
         
         $project = new MockProject();
         
@@ -68,10 +69,11 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $git->setGroupId($groupId);
         $git->setProjectManager($projectManager);
         $git->expectAt(0, 'addAction', array('getProjectRepositoryList', array($groupId)));
-        $git->expectAt(1,'addAction', array('fork', array($repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42')));
+        $git->expectAt(1,'addAction', array('fork', array($repos, $project, $path, GitRepository::REPO_SCOPE_INDIVIDUAL, $user, $GLOBALS['HTML'], '/plugins/git/?group_id=101&user=42', $forkPermissions)));
         $request = new Codendi_Request(array(
-            'repos' => array('1001'),
-            'path'  => 'toto'));
+            'repos' => '1001',
+            'path'  => 'toto',
+            'repo_access' => $forkPermissions));
         $git->setFactory($factory);
         $git->_doDispatchForkRepositories($request, $user);
     }

@@ -17,10 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/builders/aField.php';
-require_once dirname(__FILE__).'/builders/anArtifact.php';
-require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Computed.class.php';
+require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
     private $user;

@@ -262,6 +262,17 @@ class GitDao extends DataAccessObject {
         }
         return $list;
     }
+    
+    /**
+     * 
+     * @return DataAccessResult
+     */
+    public function getActiveRepositoryPathsWithRemoteServersForAllProjects() {
+        $sql = "SELECT * FROM $this->tableName
+                WHERE remote_server_id IS NOT NULL
+                AND repository_deletion_date = '0000-00-00 00:00:00'";
+        return $this->retrieve($sql);
+    }
 
     /**
      * Return the list of users that owns repositories in the project $projectId

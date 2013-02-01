@@ -203,7 +203,7 @@ class Tracker_Tooltip extends Tracker_Semantic {
      *
      * @return void
      */
-    public function exportToXML(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $child = $root->addChild('semantic');
         $child->addAttribute('type', $this->getShortName());
         foreach($this->getFields() as $field) {

@@ -45,10 +45,17 @@ if ($format == 'checkstyle') {
 array_shift($_SERVER['argv']);
 
 $suite = new TuleapTestSuite($_SERVER['argv']);
-$suite->run($reporter);
+$status = $suite->run($reporter);
 
 if ($format == 'checkstyle') {
     $reporter->writeXML('unit_tests_report.xml');
+}
+
+// Return test suite status for usage in git bisect
+if ($status === false) {
+    exit(1);
+} else {
+    exit(0);
 }
 
 ?>

@@ -218,13 +218,8 @@ class Git_GitoliteDriver {
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
         
-        // Do not dump repository description as it seems to produce wiered effect @ST
-        // 
-        // More informations about the feature:
-        // @see https://github.com/sitaramc/gitolite/blob/v1.5.9.1/doc/2-admin.mkd#specifying-gitweb-and-daemon-access
-        // 
-        // $description = preg_replace( "% *\n *%", ' ', $repository->getDescription());
-        // $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
+        $description = preg_replace( "%\s+%", ' ', $repository->getDescription());
+        $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
         
         return $repo_config. PHP_EOL;
     }

@@ -17,7 +17,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../../Tracker_FormElement_Visitor.class.php';
 
 /**
  * Can visit a FormElement and provides the corresponding administration element 

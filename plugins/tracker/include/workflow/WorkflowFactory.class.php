@@ -17,13 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('Workflow.class.php');
-require_once('Transition.class.php');
-require_once('Workflow_Dao.class.php');
-require_once('Workflow_TransitionDao.class.php');
-
-
 class WorkflowFactory {
 
     /** @var TransitionFactory */
@@ -282,7 +275,7 @@ class WorkflowFactory {
             $transitions[] = $tf->getInstanceFromXML($t, $xmlMapping);
         }
 
-        return new Workflow(0, $tracker, $field_id, $xml->is_used, $transitions);
+        return new Workflow(0, $tracker, $field_id, (string)$xml->is_used, $transitions);
     }
 
    /**

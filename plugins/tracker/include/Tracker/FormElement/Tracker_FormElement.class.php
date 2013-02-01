@@ -18,13 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Interface.class.php');
-require_once('IProvideFactoryButtonInformation.class.php');
-require_once('Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../IDisplayTrackerLayout.class.php');
 
-require_once 'View/Admin/UpdateVisitor.class.php';
-require_once 'View/Admin/UpdateSharedVisitor.class.php';
 
 require_once('json.php');
 
@@ -701,7 +695,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
      *
      * @return void
      */
-    public function exportToXML($root, &$xmlMapping, &$index) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, &$index) {
         $root->addAttribute('type', Tracker_FormElementFactory::instance()->getType($this));
         // this id is internal to XML
         $ID = 'F' . $index;

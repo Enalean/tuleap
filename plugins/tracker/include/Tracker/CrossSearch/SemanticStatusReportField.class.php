@@ -19,9 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
-require_once dirname(__FILE__).'/../Report/Tracker_Report_Criteria.class.php';
-require_once 'Query.class.php';
 
 /**
  * A report field to render the searched/current status of an artifact (as

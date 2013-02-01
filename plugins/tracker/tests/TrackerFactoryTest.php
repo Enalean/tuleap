@@ -17,18 +17,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-//require_once('common/dao/include/DataAccessObject.class.php');
-//require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_Tooltip.class.php');
-require_once(dirname(__FILE__).'/builders/aTracker.php');
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Hierarchy/HierarchyFactory.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_HierarchyFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_SharedFormElementFactory.class.php');
 Mock::generate('Tracker_SharedFormElementFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerFactory.class.php');
 Mock::generatePartial('TrackerFactory',
                       'TrackerFactoryTestVersion',
                       array('getCannedResponseFactory',
@@ -48,7 +40,6 @@ Mock::generatePartial('TrackerFactory',
                       )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/dao/TrackerDao.class.php');
 Mock::generate('TrackerDao');
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
@@ -56,13 +47,9 @@ require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
-require_once(dirname(__FILE__).'/../include/Tracker/CannedResponse/Tracker_CannedResponseFactory.class.php');
 Mock::generate('Tracker_CannedResponseFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_TooltipFactory.class.php');
 Mock::generate('Tracker_TooltipFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/Report/Tracker_ReportFactory.class.php');
 Mock::generate('Tracker_ReportFactory');
 require_once('common/include/Response.class.php');
 Mock::generate('response');
@@ -302,6 +289,61 @@ class TrackerFactoryDuplicationTest extends TuleapTestCase {
         return $t1;
     }
 
+    
+}
+
+
+class TrackerFactoryInstanceFromXMLTest extends UnitTestCase {
+
+    public function testGetInstanceFromXmlGeneratesRulesFromDependencies() {
+        
+        $data = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tracker />
+XML;
+        $xml = new SimpleXMLElement($data);
+        $xml->addChild('cannedResponses');
+        $xml->addChild('formElements');
+        
+        $groupId     = 15; 
+        $name        = 'the tracker';
+        $description = 'tracks stuff'; 
+        $itemname    = 'the item';
+        
+        $mocked_tracker_factory_methods = array(
+            'getInstanceFromRow',
+            'getRuleFactory'
+        );        
+        $tracker_factory = partial_mock('TrackerFactory', $mocked_tracker_factory_methods);     
+        $rule_factory = mock('Tracker_RuleFactory');
+        $tracker      = mock('Tracker');
+        
+        stub($tracker_factory)->getInstanceFromRow()->returns($tracker);
+        stub($tracker_factory)->getRuleFactory()->returns($rule_factory);
+        
+        //create data passed
+        $dependencies = $xml->addChild('dependencies');
+        $rule = $dependencies->addChild('rule');
+        $rule->addChild('source_field')->addAttribute('REF', 'F1');
+        $rule->addChild('target_field')->addAttribute('REF', 'F2');
+        $rule->addChild('source_value')->addAttribute('REF', 'F3');
+        $rule->addChild('target_value')->addAttribute('REF', 'F4');
+        
+        //create data expected
+        $expected_xml = new SimpleXMLElement($data);
+        $expected_rules = $expected_xml->addChild('rules');
+        $list_rules = $expected_rules->addChild('list_rules');
+        $expected_rule = $list_rules->addChild('rule');
+        $expected_rule->addChild('source_field')->addAttribute('REF', 'F1');
+        $expected_rule->addChild('target_field')->addAttribute('REF', 'F2');
+        $expected_rule->addChild('source_value')->addAttribute('REF', 'F3');
+        $expected_rule->addChild('target_value')->addAttribute('REF', 'F4');
+       
+        //this is where we check the data has been correctly transformed
+        stub($rule_factory)->getInstanceFromXML($expected_rules, array(), $tracker)->once();
+        
+        $tracker_factory->getInstanceFromXML($xml,$groupId, $name, $description, $itemname);
+    }
     
 }
 ?>

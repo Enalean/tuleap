@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_ArtifactDao.class.php');
-require_once('Tracker_Artifact.class.php');
 
 class Tracker_ArtifactFactory {
     

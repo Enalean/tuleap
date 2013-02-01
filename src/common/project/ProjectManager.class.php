@@ -97,6 +97,17 @@ class ProjectManager {
     }
 
     /**
+     * Instanciate a project based on a database row
+     *
+     * @param array $row
+     *
+     * @return Project
+     */
+    public function getProjectFromDbRow(array $row) {
+        return $this->getAndCacheProject($row);
+    }
+
+    /**
      * @param $group_id int The id of the project to look for
      * @return Project
      */
@@ -224,7 +235,7 @@ class ProjectManager {
             $em = $this->getEventManager();
             $em->processEvent('approve_pending_project', array('group_id' => $project->getId()));
 
-            if (!send_new_project_email($project->getId())) {
+            if (!send_new_project_email($project)) {
                 $GLOBALS['Response']->addFeedback('warning', $project->getPublicName()." - ".$GLOBALS['Language']->getText('global', 'mail_failed', array($GLOBALS['sys_email_admin'])));
             }
             return true;
@@ -464,6 +475,24 @@ class ProjectManager {
         return $dao->returnAllProjects($offset, $limit, $status, $groupName);
     }
 
+    /**
+     * @return Project[]
+     */
+    public function getSiteTemplates() {
+        return $this->_getDao()
+            ->searchSiteTemplates()
+            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
+
+    /**
+     * @return Project[]
+     */
+    public function getProjectsUserIsAdmin(PFUser $user) {
+        // Why not use method in User class?
+        return $this->_getDao()
+            ->searchProjectsUserIsAdmin($user->getId())
+            ->instanciateWith(array($this, 'getProjectFromDbRow'));
+    }
 }
 
 ?>

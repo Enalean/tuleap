@@ -18,11 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../include/constants.php';
-require_once dirname(__FILE__).'/../../../../tracker/include/constants.php';
-require_once TRACKER_BASE_DIR .'/../tests/builders/aMockTracker.php';
-require_once TRACKER_BASE_DIR .'/../tests/builders/aField.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/ColumnFactory.class.php';
+require_once dirname(__FILE__) .'/../../bootstrap.php';
 
 class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
 
@@ -78,7 +74,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
     public function itBuildColumnsFromTheStatusValuesIfFreestyleNotEnabled() {
         stub($this->on_top_dao)->isFreestyleEnabled()->returns(false);
         stub($this->swimline_tracker)->getStatusField()->returns($this->status_field);
-        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
+        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::emptyDar());
         $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnStatusCollection');
@@ -88,7 +84,7 @@ class Cardwall_OnTop_Config_ColumnFactoryTest extends TuleapTestCase {
 
     public function itBuildsAnEmptyFreestyleCollectionIfThereIsNothingInTheDaoAndNoStatus() {
         stub($this->tracker)->getStatusField()->returns(null);
-        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::arrayToDar());
+        stub($this->dao)->searchColumnsByTrackerId(42)->returns(TestHelper::emptyDar());
         $columns = $this->factory->getDashboardColumns($this->tracker, $this->swimline_tracker);
 
         $this->assertIsA($columns, 'Cardwall_OnTop_Config_ColumnFreestyleCollection');

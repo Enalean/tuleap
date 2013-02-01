@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_Artifact_Changeset_ValueDao.class.php');
-require_once('dao/Tracker_Artifact_Changeset_CommentDao.class.php');
-require_once('Tracker_Artifact_Changeset_Comment.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../Tracker_NotificationsManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/include/Config.class.php');
 require_once('common/mail/MailManager.class.php');
@@ -333,7 +328,9 @@ class Tracker_Artifact_Changeset {
      * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
      */
     public function getComment() {
-        if (isset($this->latest_comment)) return $this->latest_comment;
+        if (isset($this->latest_comment)) {
+            return $this->latest_comment;
+        }
         
         if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
             $this->latest_comment = new Tracker_Artifact_Changeset_Comment($row['id'],
@@ -347,6 +344,10 @@ class Tracker_Artifact_Changeset {
                                                     $row['parent_id']);
         }
         return $this->latest_comment;
+    }
+
+    public function setLatestComment(Tracker_Artifact_Changeset_Comment $comment) {
+        $this->latest_comment = $comment;
     }
 
     /**
@@ -380,8 +381,9 @@ class Tracker_Artifact_Changeset {
         reset($used_fields);
         while (!$has_changes && (list(,$field) = each($used_fields))) {
             if (!is_a($field, 'Tracker_FormElement_Field_ReadOnly')) {
-                if (isset($fields_data[$field->id])) {
-                    if ($current_value = $this->getValue($field)) {
+               if (array_key_exists($field->id, $fields_data)) {
+                   $current_value = $this->getValue($field);
+                    if ($current_value) {
                         $has_changes = $field->hasChanges($current_value, $fields_data[$field->id]);
                     } else {
                         //There is no current value in the changeset for the submitted field
@@ -779,6 +781,13 @@ class Tracker_Artifact_Changeset {
      */
     public function getId() {
         return $this->id;
+    }
+
+    public function exportCommentToSOAP() {
+        $comment = $this->getComment();
+        if ($comment) {
+            return $comment->exportToSOAP();
+        }
     }
 }
 ?>

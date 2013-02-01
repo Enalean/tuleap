@@ -105,7 +105,23 @@ class GitRepositoryFactory {
         }
         return $repo;
     }
-    
+
+    /**
+     * Return all repositories with a remote server set
+     *
+     * @return Array of GitRepository
+     */
+    public function getActiveRepositoriesWithRemoteServersForAllProjects() {
+        $repositories = array();
+        foreach ($this->dao->getActiveRepositoryPathsWithRemoteServersForAllProjects() as $row) {
+            $repository = new GitRepository();
+            $this->dao->hydrateRepositoryObject($repository, $row);
+            $repository->setProject($this->projectManager->getProject($row[GitDao::FK_PROJECT_ID]));
+            $repositories[] = $repository;
+        }
+        return $repositories;
+    }
+
     /**
      * Attempt to get repository if path match given base directory
      * 

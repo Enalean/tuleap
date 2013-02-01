@@ -17,17 +17,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_OpenList.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_OpenList.class.php');
+require_once('bootstrap.php');
+require_once('Tracker_Artifact_ChangesetValue_ListTest.php');
 Mock::generate('Tracker_FormElement_Field_OpenList');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_OpenValue.class.php');
 Mock::generate('Tracker_FormElement_Field_List_OpenValue');
 
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
-require_once('Tracker_Artifact_ChangesetValue_ListTest.php');
 
 class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_ChangesetValue_ListTest {
     

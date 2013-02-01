@@ -18,12 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../include/constants.php';
-require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
-require_once TRACKER_BASE_DIR .'/../tests/builders/aTracker.php';
-
-require_once CARDWALL_BASE_DIR .'/OnTop/Config.class.php';
-require_once CARDWALL_BASE_DIR .'/FieldProviders/CustomFieldProvider.class.php';
+require_once dirname(__FILE__) .'/../bootstrap.php';
 
 class Cardwall_OnTop_ConfigTest extends TuleapTestCase {
 
@@ -98,7 +93,12 @@ class Cardwall_OnTop_Config_IsInColumnTest extends TuleapTestCase {
 
         $this->config   = partial_mock('Cardwall_OnTop_Config', array('getMappingFor'));
 
-        $this->artifact = aMockArtifact()->withTracker(aTracker()->build())->build();
+        $changset = new Tracker_Artifact_Changeset_Null();
+
+        $this->artifact = aMockArtifact()
+                ->withTracker(aTracker()->build())
+                ->withlastChangeset($changset)
+                ->build();
     }
 
     public function itIsNotInColumnWhenNoFieldAndNoMapping() {

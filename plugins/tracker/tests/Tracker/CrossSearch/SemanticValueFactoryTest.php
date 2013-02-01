@@ -17,13 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
-require_once dirname(__FILE__).'/../../builders/aMockArtifact.php';
-require_once dirname(__FILE__).'/../../builders/aMockArtifactFactory.php';
-require_once dirname(__FILE__).'/../../builders/aMockSemanticTitleFactory.php';
-require_once dirname(__FILE__).'/../../builders/aMockSemanticStatusFactory.php';
-require_once dirname(__FILE__).'/../../builders/aMockField.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 abstract class Tracker_CrossSearch_SemanticValueFactory_NoSemanticTest extends TuleapTestCase {
 

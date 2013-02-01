@@ -206,6 +206,102 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     }
 }
 
+class UGroup_getUsersBaseTest extends TuleapTestCase {
+
+    protected $garfield;
+    protected $goofy;
+    protected $garfield_incomplete_row = array('user_id' => 1234, 'user_name' => 'garfield');
+    protected $goofy_incomplete_row    = array('user_id' => 5677, 'user_name' => 'goofy');
+
+    public function setUp() {
+        parent::setUp();
+        $user_manager = mock('UserManager');
+        UserManager::setInstance($user_manager);
+
+        $this->garfield = new PFUser($this->garfield_incomplete_row);
+        $this->goofy    = new PFUser($this->goofy_incomplete_row);
+        stub($user_manager)->getUserById($this->garfield_incomplete_row['user_id'])->returns($this->garfield);
+        stub($user_manager)->getUserById($this->goofy_incomplete_row['user_id'])->returns($this->goofy);
+    }
+
+    public function tearDown() {
+        UserManager::clearInstance();
+        parent::tearDown();
+    }
+}
+
+class UGroup_getUsersTest extends UGroup_getUsersBaseTest {
+
+    public function itIsEmptyWhenTheGroupIsEmpty() {
+        $id       = 333;
+        $row      = array('ugroup_id' =>$id);
+        $ugroup   = new UGroup($row);
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
+        $this->assertEqual($ugroup->getUsers($id)->reify(), array());
+        $this->assertEqual($ugroup->getUserNames($id), array());
+    }
+
+    public function itReturnsTheMembersOfStaticGroups() {
+        $id       = 333;
+        $row      = array('ugroup_id' =>$id);
+        $ugroup   = new UGroup($row);
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        
+        $users = array($this->garfield, $this->goofy);
+        $this->assertEqual($ugroup->getUsers($id)->reify(), $users);
+        $this->assertEqual($ugroup->getUserNames($id), array('garfield', 'goofy'));
+    }
+    
+    public function itReturnsTheMembersOfDynamicGroups() {
+        $id       = 1;
+        $group_id = 555;
+        $row      = array('ugroup_id' =>$id , 'group_id' => 100); // this is how UgroupManager instantiates dynamic ugroups
+        $ugroup   = new UGroup($row);
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+
+        $users = array($this->garfield, $this->goofy);
+        $this->assertEqual($ugroup->getUsers($group_id)->reify(), $users);
+        $this->assertEqual($ugroup->getUserNames($group_id), array('garfield', 'goofy'));
+    }
+}
+
+class UGroup_getMembersTest extends UGroup_getUsersBaseTest {
+
+    public function itIsEmptyWhenTheGroupIsEmpty() {
+        $id       = 333;
+        $row      = array('ugroup_id' =>$id);
+        $ugroup   = new UGroup($row);
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsEmptyDar());
+        $this->assertTrue(count($ugroup->getMembers()) == 0);
+        $this->assertTrue(count($ugroup->getMembersUserName()) == 0);
+    }
+
+    public function itReturnsTheMembersOfStaticGroups() {
+        $id       = 333;
+        $row      = array('ugroup_id' =>$id);
+        $ugroup   = new UGroup($row);
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByStaticUGroupId($id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        $this->assertArrayNotEmpty($ugroup->getMembers());
+        $this->assertEqual(count($ugroup->getMembers()), 2);
+        
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName());
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $this->goofy_incomplete_row));
+    }
+
+    public function itReturnsTheMembersOfDynamicGroups() {
+        $id       = 1;
+        $group_id = 555;
+        $row      = array('ugroup_id' =>$id , 'group_id' => $group_id);
+        $ugroup   = new UGroup($row);
+        $ugroup->setUGroupUserDao(stub('UGroupUserDao')->searchUserByDynamicUGroupId($id, $group_id)->returnsDar($this->garfield_incomplete_row, $this->goofy_incomplete_row));
+        $this->assertArrayNotEmpty($ugroup->getMembers());
+        $this->assertEqual(count($ugroup->getMembers()), 2);
+        
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName());
+        $this->assertArrayNotEmpty($ugroup->getMembersUserName(), array('garfiel', $this->goofy_incomplete_row));
+    }
+}
+
 class UGroup_DynamicGroupTest extends TuleapTestCase {
     
     function itConvertDynamicGroupIdToCorrespondingDatabaseFieldUpdateForAdd() {
@@ -232,5 +328,4 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 0");
     }
 }
-
 ?>

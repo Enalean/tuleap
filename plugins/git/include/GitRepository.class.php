@@ -190,7 +190,8 @@ class GitRepository implements DVCSRepository {
         $this->backendType = $backendType;
     }
 
-    protected function getBackendType() {
+    /** @return string */
+    public function getBackendType() {
         return $this->backendType;
     }
     
@@ -544,7 +545,21 @@ class GitRepository implements DVCSRepository {
     public static function getPathFromProjectAndName(Project $project, $name) {
         return $project->getUnixName().DIRECTORY_SEPARATOR.$name.self::REPO_EXT;
     }
-    
+
+    /**
+     * Return the full absolute path to the repository
+     *
+     * @return String
+     */
+    public function getFullPath() {
+        $root_path = $this->getGitRootPath();
+        if(is_string($root_path) && strlen($root_path) > 0) {
+            $root_path = ($root_path[strlen($root_path) - 1] === DIRECTORY_SEPARATOR) ? $root_path : $root_path.DIRECTORY_SEPARATOR ;
+        }
+        
+        return $root_path . $this->getPathWithoutLazyLoading();
+    }
+
     /**
      * Return path on the filesystem where the repositories are stored.
      *
@@ -837,6 +852,15 @@ class GitRepository implements DVCSRepository {
 
     public function getRemoteServerId() {
         return $this->remote_server_id;
+    }
+
+    /**
+     * @return string html <a href="/path/to/repo">repo_name</a>
+     */
+    public function getHTMLLink() {
+        $href  = GIT_BASE_URL .'/index.php/'. $this->getProjectId() .'/view/'. $this->getId() .'/';
+        $label = $this->getName();
+        return '<a href="'. $href .'">'. $label .'</a>';
     }
 }
 ?>

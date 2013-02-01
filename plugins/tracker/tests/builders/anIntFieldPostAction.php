@@ -18,10 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/workflow/PostAction/Field/Transition_PostAction_Field_Int.class.php';
-require_once 'aTransition.php';
-require_once 'aField.php';
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 function anIntFieldPostAction() {
     return new Test_Transition_PostAction_Field_Int_Builder();
 }

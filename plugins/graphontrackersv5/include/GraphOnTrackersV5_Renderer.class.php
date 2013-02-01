@@ -298,7 +298,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      * 
      * @param SimpleXMLElement $root the node to which the renderer is attached (passed by reference)
      */
-    public function exportToXML($root, $formsMapping) {
+    public function exportToXml(SimpleXMLElement $root, $formsMapping) {
         parent::exportToXML($root, $formsMapping);
         $child = $root->addChild('charts');
         foreach($this->getChartFactory()->getCharts($this) as $chart) {

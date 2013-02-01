@@ -18,11 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once(dirname(__FILE__).'/../../../include/constants.php');
-require_once dirname(__FILE__) . '/../../builders/aTracker.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SearchView.class.php';
-require_once dirname(__FILE__) .'/../../../include/Tracker/CrossSearch/SemanticValueFactory.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 Mock::generate('Service');
 Mock::generate('Project');

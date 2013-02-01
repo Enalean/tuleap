@@ -2,6 +2,7 @@
 require_once('pre.php');
 
 header('Content-type: application/x-javascript');
+header("Cache-Control: no-cache, no-store, must-revalidate");
 
 ?>
 /*

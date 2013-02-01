@@ -43,10 +43,14 @@ class Planning_ShortAccess {
     /** @var array of Planning_MilestoneLinkPresenter */
     private $presenters;
 
-    public function __construct(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
+    /** @var string */
+    private $theme_path;
+
+    public function __construct(Planning $planning, PFUser $user, Planning_MilestoneFactory $milestone_factory, $theme_path) {
         $this->user              = $user;
         $this->planning          = $planning;
         $this->milestone_factory = $milestone_factory;
+        $this->theme_path        = $theme_path;
     }
 
     public function getLastOpenMilestones() {
@@ -62,7 +66,7 @@ class Planning_ShortAccess {
             $this->presenters = array();
             $milestones = $this->milestone_factory->getLastOpenMilestones($this->user, $this->planning, self::NUMBER_TO_DISPLAY + 1);
             foreach ($milestones as $milestone) {
-                $this->presenters[] = new Planning_ShortAccessMilestonePresenter($this, $milestone, $this->user);
+                $this->presenters[] = new Planning_ShortAccessMilestonePresenter($this, $milestone, $this->user, $this->theme_path);
             }
             if (!empty($this->presenters)) {
                 end($this->presenters)->setIsLatest();

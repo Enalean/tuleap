@@ -42,7 +42,7 @@ class Transition_PostActionManager {
         }
         
         // Loop over defined actions and update them if relevant
-        foreach ($transition->getPostActions() as $post_action) {
+        foreach ($transition->getAllPostActions() as $post_action) {
             $post_action->process($request);
         }
     }
