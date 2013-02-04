@@ -17,37 +17,6 @@
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
 
-Ajax.InPlaceTextEditor = Class.create(Ajax.InPlaceEditor, {
-    createEditField : function() {
-       var text = (this.options.loadTextURL ? this.options.loadingText : this.getText());
-        var fld;
-        if (1 >= this.options.rows && !/\r|\n/.test(this.getText())) {
-          fld = document.createElement('input');
-          fld.type = 'text';
-          var size = this.options.size || this.options.cols || 0;
-          if (0 < size) fld.size = size;
-        } else {
-          fld = document.createElement('textarea');
-          fld.rows = (1 >= this.options.rows ? this.options.autoRows : this.options.rows);
-          fld.cols = this.options.cols || 40;
-        }
-        fld.name = this.options.paramName;
-        fld.value = text; // No HTML breaks conversion anymore
-        fld.className = 'editor_field';
-        /* begin Tuleap modifications rel Ajax.InPlaceEditor.createEditField */
-        if( this.options.validation ) {
-            fld.pattern = this.options.validation.pattern;
-            fld.title   = this.options.validation.message;
-        }
-        /* end modifications */
-        if (this.options.submitOnBlur)
-          fld.onblur = this._boundSubmitHandler;
-        this._controls.editor = fld;
-        if (this.options.loadTextURL)
-          this.loadExternalText();
-        this._form.appendChild(this._controls.editor);
-    }
-});
 
 /**
  * Adapted from https://groups.google.com/forum/?fromgroups=#!topic/prototype-scriptaculous/HcCxMmdAyjk

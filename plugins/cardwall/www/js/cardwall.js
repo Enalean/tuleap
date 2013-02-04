@@ -91,12 +91,12 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
         var container = this.createAndInjectTemporaryContainer();
 
-        this.options[ 'callback' ]        = this.ajaxCallback();
-        this.options[ 'onComplete' ]      = this.success();
-        this.options[ 'onFailure' ]       = this.fail;
-        this.options[ 'validation' ]      = this.getValidation();
+        this.options[ 'callback' ]            = this.ajaxCallback();
+        this.options[ 'onComplete' ]          = this.success();
+        this.options[ 'onFailure' ]           = this.fail;
+        this.options[ 'onFormCustomization' ] = this.addValidationOnTextEditor.bind(this);
 
-        new Ajax.InPlaceTextEditor( container, this.update_url, this.options );
+        new Ajax.InPlaceEditor( container, this.update_url, this.options );
     },
 
     createAndInjectTemporaryContainer : function () {
@@ -119,7 +119,7 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
 
     ajaxCallback : function() {
         var field_id = this.field_id;
-        
+
         return function setRequestData(form, value) {
             var parameters = { },
                 linked_field = 'artifact[' + field_id +']';
@@ -137,10 +137,10 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
         }
     },
 
-    getValidation : function() {
+    addValidationOnTextEditor : function( in_place_editor ) {
         var pattern,
             message;
-            
+
         switch (this.artifact_type ) {
             case 'float':
                 pattern = '[0-9]*(\.[0-9]*)?';
@@ -155,10 +155,8 @@ tuleap.agiledashboard.cardwall.card.TextElementEditor = Class.create(
                 message = '';
         }
 
-        return {
-            'pattern' : pattern,
-            'message' : message
-        }
+        in_place_editor._controls.editor.pattern = pattern;
+        in_place_editor._controls.editor.title   = message;
     }
 });
 
@@ -167,7 +165,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
     initialize : function( element ) {
         this.setProperties( element );
-    
+
         if(! this.userCanEdit() ) {
             return;
         }
@@ -186,7 +184,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
         this.bindSelectedElementsToEditor(editor);
     },
-    
+
     setProperties : function( element ) {
         this.element           = element;
         this.options           = { };
@@ -252,7 +250,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
     getAvailableUsers : function() {
         var user_collection = [];
-        
+
         if ( $H( this.users ).size() == 0 ) {
             this.users = this.tracker_user_data[ this.field_id ] || { };
         }
