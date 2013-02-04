@@ -1,3 +1,6 @@
+Version 0.9.15 - Tuleap 5.11
+    * Fix bug with multiple-assigned to on card editions
+
 Version 0.9.14 - Tuleap 5.11
     * On cardwall, I can update who is assigned to a card without leaving the page
 
