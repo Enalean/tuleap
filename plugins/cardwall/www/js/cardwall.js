@@ -39,10 +39,11 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
     }
 
     function updateArtifactField( artifact_id, field ) {
-        var field_to_update_selector = '.card[data-artifact-id='+ artifact_id +'] .valueOf_' + field.key;
+        var field_to_update_selector = '.card[data-artifact-id='+ artifact_id +'] .valueOf_' + field.key,
+            field_value = ( field.value === '' ) ? ' - ' : field.value;
 
         $$( field_to_update_selector ).each( function ( element_to_update ) {
-            updateFieldValue( element_to_update, field.value )
+            updateFieldValue( element_to_update, field_value )
         })
     }
 
