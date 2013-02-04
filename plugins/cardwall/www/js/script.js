@@ -1,3 +1,21 @@
+/**
+  * Copyright (c) Enalean, 2013. All rights reserved
+  *
+  * This file is a part of Tuleap.
+  *
+  * Tuleap is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * Tuleap is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+  */
 document.observe('dom:loaded', function () {
     $$('.cardwall_board').each(function ( board ) {
         (function checkForLatestCardWallVersion() {
@@ -25,9 +43,9 @@ document.observe('dom:loaded', function () {
             var cols = board.select( 'col' );
 
             cols.each( function( col, col_index ) {
-                var table_rows = col.up( 'table' ).down( 'tbody.cardwall' ).childElements();
+                var table_body_rows = col.up( 'table' ).down( 'tbody.cardwall' ).childElements();
 
-                table_rows.each( function( tr ) {
+                table_body_rows.each( function( tr ) {
                     var value_id     = col.id.split( '-' )[ 1 ],
                         swimline_id  = tr.id.split( '-' )[ 1 ],
                         current_td   = tr.down( 'td.cardwall-cell', col_index ),
@@ -100,13 +118,13 @@ document.observe('dom:loaded', function () {
 
         (function enableRemainingEffortInPlaceEditing() {
             $$( '.valueOf_remaining_effort' ).each( function( remaining_effort_container ) {
-                new tuleap.agiledashboard.cardwall.card.textElementEditor( remaining_effort_container );
+                new tuleap.agiledashboard.cardwall.card.TextElementEditor( remaining_effort_container );
             })
         })();
 
         (function enableAssignedToInPlaceEditing() {
             $$( '.valueOf_assigned_to' ).each( function( assigned_to_container ) {
-                new tuleap.agiledashboard.cardwall.card.selectElementEditor( assigned_to_container );
+                new tuleap.agiledashboard.cardwall.card.SelectElementEditor( assigned_to_container );
             })
         })();
 

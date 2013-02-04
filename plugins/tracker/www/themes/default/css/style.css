@@ -1250,6 +1250,16 @@ td.first-column {
 .card-details tr td:last-child {
     font-weight: bold;
 }
+
+.card-details .avatar {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+}
+.card-details .avatar > img {
+    width: 16px;
+    height: 16px;
+}
 /* }}} */
 .tracker_artifact_attachment_delete.pc_check_unchecked {
     background-image:url('../images/ic/cross-disabled.png');

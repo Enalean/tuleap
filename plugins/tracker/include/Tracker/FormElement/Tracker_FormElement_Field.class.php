@@ -528,7 +528,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         
         if ($this->userCanUpdate()) {
             $data_field_id   = 'data-field-id="'.$this->getId().'"';
-            $data_field_type = 'data-field-type="'.$this->getObjectType().'"';
+            $data_field_type = 'data-field-type="'.$this->getFormElementFactory()->getType($this).'"';
         }
 
         $html = '<tr>

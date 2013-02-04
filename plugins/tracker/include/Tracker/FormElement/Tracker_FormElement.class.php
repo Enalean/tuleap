@@ -1136,14 +1136,5 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
         }
         return $permissions;
     }
-
-    /**
-     *
-     * @return string
-     */
-    protected function getObjectType() {
-        $name_parts = explode('_', get_class($this));
-        return strtolower(array_pop($name_parts));
-    }
 }
 ?>
