@@ -58,6 +58,7 @@ tuleap.agiledashboard.cardwall.card.updateAfterAjax = function( transport ) {
 };
 
 tuleap.agiledashboard.cardwall.card.AbstractElementEditor = Class.create({
+    field_id : null,
 
     fail : function(transport) {
         if( typeof transport === 'undefined' ) {
@@ -251,19 +252,17 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
     getAvailableUsers : function() {
         var user_collection = [];
-
+        
         if ( $H( this.users ).size() == 0 ) {
-            this.users = this.tracker_user_data[ this.field_id ] || [];
+            this.users = this.tracker_user_data[ this.field_id ] || { };
         }
 
-        if ( $H( this.users ).size() == 0 ) {
+        if (  $H( this.users ).size() == 0 ) {
             this.fetchUsers();
         }
 
-        jQuery.each( this.users, function( id, user_details ){
-            if( typeof( user_details ) !== 'undefined' ) {
-                user_collection.push( [ user_details.id, user_details.caption ] );
-            }
+        $H( this.users ).each( function( user_details ) {
+            user_collection.push( [ user_details.value.id, user_details.value.caption ] );
         });
 
         return user_collection;
@@ -272,15 +271,22 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     fetchUsers : function() {
         var users = { };
 
-        jQuery.ajax({
-            url   : this.collection_url,
-            async : false
-        }).done(function ( data ) {
-            jQuery.each(data, function( id, user_details ) {
-                users[ id ] = user_details;
-            });
-        }).fail( function() {
-            users = { };
+        new Ajax.Request( this.collection_url, {
+            method: 'GET',
+            asynchronous : false,
+            onSuccess : function ( data ) {
+
+                $H( data.responseJSON ).each( function( user_details ){
+                    var id        = user_details[0],
+                        user_data = user_details[1];
+
+                    users[ id ] = user_data;
+                })
+            },
+            onFailure : function() {
+                users = { };
+            }
+
         });
 
         this.users = users;
