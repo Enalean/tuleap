@@ -219,7 +219,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
     bindSelectedElementsToEditor : function( editor ) {
         editor.getSelectedUsers = function() {
-            var avatars = $$('.valueOf_assigned_to .cardwall_avatar');
+            var avatars = $$('.valueOf_assigned_to .avatar');
             var users = { };
 
             avatars.each( function( avatar ) {
@@ -324,7 +324,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
 
             element.update( '' );
             new_values = getNewValues( transport, is_multi_select, field_id );
-            updateAvatarDiv( element, new_values );
+            updateAvatars( element, new_values );
 
             function getNewValues(transport, is_multi_select, field_id) {
                 var new_values;
@@ -338,49 +338,44 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 return new_values;
             }
 
-            function updateAvatarDiv( avatar_div, new_values ) {
+            function updateAvatars( avatars_div, new_values ) {
                 var div_html;
 
                 if(new_values instanceof Array) {
                     for(var i=0; i<new_values.length; i++) {
-                        div_html = generateAvatarDiv( new_values[i] );
-                        avatar_div.appendChild( div_html );
+                        addAvatar( avatars_div, new_values[i] );
                     }
                 } else if( typeof new_values === 'string' ){
-                    div_html = generateAvatarDiv( new_values );
-                    avatar_div.appendChild( div_html );
+                    addAvatar( avatars_div, new_values );
                 } else {
-                    avatar_div.update( ' - ' );
+                    avatars_div.update( '-' );
                 }
             }
 
-            function generateAvatarDiv( user_id ) {
+            function addAvatar( container, user_id ) {
                 var username = tracker_user_data[ field_id ][ user_id ][ 'username' ],
                     caption = tracker_user_data[ field_id ][ user_id ][ 'caption' ],
-                    structure_div,
                     avatar_img,
                     avatar_div;
 
-                structure_div = new Element( 'div' );
 
                 avatar_div = new Element( 'div' );
-                avatar_div.addClassName( 'cardwall_avatar' );
+                avatar_div.addClassName( 'avatar' );
                 avatar_div.writeAttribute( 'title', caption );
                 avatar_div.writeAttribute( 'data-user-id', user_id );
 
-                avatar_img = new Element('img')
-                avatar_img.writeAttribute('src','/users/' + username + '/avatar.png');
+                avatar_img = new Element('img', {
+                    src: '/users/' + username + '/avatar.png'
+                });
                 avatar_img.observe('load', function() {
                     if( this.width == 0 || this.height == 0 ) {
                         return;
                     }
-                    avatar_div.appendChild(avatar_img);
                 });
+                avatar_div.appendChild(avatar_img);
 
-                structure_div.appendChild( avatar_div );
-                structure_div.addClassName( 'avatar_structure_div' );
-
-                return structure_div;
+                container.insert( avatar_div );
+                container.insert(' ');
             }
         }
     }

@@ -1241,7 +1241,7 @@ class User implements PFO_User {
          $style    = 'width: '. ($width+2) .'px; height: '. ($width+2) .'px;';
          $user_id  = $this->getId();
 
-         $html = '<div class="cardwall_avatar"
+         $html = '<div class="avatar"
                         title="'. $title . '"
                         style="' . $style .'"
                         data-user-id = "' . $user_id . '"
