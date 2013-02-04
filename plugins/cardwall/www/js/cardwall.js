@@ -218,14 +218,17 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
     },
 
     bindSelectedElementsToEditor : function( editor ) {
+        
         editor.getSelectedUsers = function() {
-            var avatars = $$('.valueOf_assigned_to .avatar');
+            
+            var avatars = editor.element.select( '.avatar' );
             var users = { };
 
             avatars.each( function( avatar ) {
                 var id      = avatar.readAttribute( 'data-user-id' );
                 users[ id ] = avatar.readAttribute( 'title' );
             });
+            
             this.options.selected = users;
         };
     },
