@@ -1,3 +1,8 @@
+Version 5.78 - Tuleap 5.11
+    == Development ==
+    * Allow to update artifact from an Ajax request
+    * Retreive list of values of a list through an Ajax Call
+
 Version 5.77 - Tuleap 5.11
     * Enhancement: displays start and end date of a sprint on the agile dashboard
 
