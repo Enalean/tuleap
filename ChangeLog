@@ -10,7 +10,8 @@ Version 5.11 (Not Released Yet)
 
    == Enhancement ==
     * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)
-	* Allow site to customize robots.txt
+    * Allow site to customize robots.txt
+    * Fix for sla #2290: allow restricted users to search in trackers v3
 
   == Bug Fix ==
     * Add missing php53-process dependency for posix functions
