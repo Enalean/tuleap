@@ -78,6 +78,7 @@ class URLVerificationTest extends TuleapTestCase {
         $GLOBALS['sys_force_ssl'] = 1;
         $GLOBALS['sys_https_host'] = 1;
         unset($GLOBALS['group_id']);
+        unset($_REQUEST);
     }
 
     function testIsScriptAllowedForAnonymous() {
@@ -633,6 +634,116 @@ class URLVerificationTest extends TuleapTestCase {
         $urlVerification->setReturnValue('getCurrentUser', $user);
         
         $this->assertFalse($urlVerification->userCanAccessPrivate(new MockUrl(), 'stuff'));
+    }
+
+    function testRestrictedUserCanAccessSearchOnTracker() {
+        $_REQUEST['type_of_search'] = 'tracker';
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
+        $GLOBALS['group_id'] = 120;
+
+        $urlVerification->setReturnValue('getUrl', '/search/');
+
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', true);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+
+        $server = array(
+            'REQUEST_URI' => '/search/',
+            'SCRIPT_NAME' => 'blah'
+        );
+
+        stub($urlVerification)->displayRestrictedUserError()->never();
+        stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
+        
+        $urlVerification->checkRestrictedAccess($server, 'stuff');
+    }
+
+    function testRestrictedUserCanNotAccessSearchOnPeople() {
+        $_REQUEST['type_of_search'] = 'people';
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
+        $GLOBALS['group_id'] = 120;
+
+        $urlVerification->setReturnValue('getUrl', '/search/');
+
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', true);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+
+        $server = array(
+            'REQUEST_URI' => '/search/',
+            'SCRIPT_NAME' => 'blah'
+        );
+
+        stub($urlVerification)->displayRestrictedUserError()->once();
+        stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
+
+        $urlVerification->checkRestrictedAccess($server, 'stuff');
+    }
+    
+    function testRestrictedUserCanNotAccessSearchOnLdapPeople() {
+        $_REQUEST['type_of_search'] = 'people_ldap';
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
+        $GLOBALS['group_id'] = 120;
+
+        $urlVerification->setReturnValue('getUrl', '/search/');
+
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', true);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+
+        $server = array(
+            'REQUEST_URI' => '/search/',
+            'SCRIPT_NAME' => 'blah'
+        );
+
+        stub($urlVerification)->displayRestrictedUserError()->once();
+        stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
+
+        $urlVerification->checkRestrictedAccess($server, 'stuff');
+    }
+
+    function testRestrictedUserCanNotAccessSearchOnSoftwareProjects() {
+        $_REQUEST['type_of_search'] = 'soft';
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
+        $GLOBALS['group_id'] = 120;
+
+        $urlVerification->setReturnValue('getUrl', '/search/');
+
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', true);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+
+        $server = array(
+            'REQUEST_URI' => '/search/',
+            'SCRIPT_NAME' => 'blah'
+        );
+
+        stub($urlVerification)->displayRestrictedUserError()->once();
+        stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
+
+        $urlVerification->checkRestrictedAccess($server, 'stuff');
+    }
+
+    function testRestrictedUserCanNotAccessSearchOnCodeSnippets() {
+        $_REQUEST['type_of_search'] = 'snippets';
+        $urlVerification = TestHelper::getPartialMock('URLVerification', array('getUrl', 'getCurrentUser', 'displayRestrictedUserError'));
+        $GLOBALS['group_id'] = 120;
+
+        $urlVerification->setReturnValue('getUrl', '/search/');
+
+        $user = new MockUser();
+        $user->setReturnValue('isRestricted', true);
+        $urlVerification->setReturnValue('getCurrentUser', $user);
+
+        $server = array(
+            'REQUEST_URI' => '/search/',
+            'SCRIPT_NAME' => 'blah'
+        );
+
+        stub($urlVerification)->displayRestrictedUserError()->once();
+        stub($GLOBALS['Language'])->getContent()->returns(dirname(__FILE__) . '/_fixtures/empty.txt');
+
+        $urlVerification->checkRestrictedAccess($server, 'stuff');
     }
 }
 
