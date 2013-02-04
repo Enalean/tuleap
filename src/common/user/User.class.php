@@ -1236,8 +1236,17 @@ class User implements PFO_User {
       */
      public function fetchHtmlAvatar($width = 50) {
          $purifier = Codendi_HTMLPurifier::instance();
-         $html = '';
-         $html .= '<div class="avatar" title="'. $purifier->purify($this->getRealName()) .'" style="width: '. ($width+2) .'px; height: '. ($width+2) .'px;">';
+         
+         $title    = $purifier->purify($this->getRealName());
+         $style    = 'width: '. ($width+2) .'px; height: '. ($width+2) .'px;';
+         $user_id  = $this->getId();
+
+         $html = '<div class="cardwall_avatar"
+                        title="'. $title . '"
+                        style="' . $style .'"
+                        data-user-id = "' . $user_id . '"
+                    >';
+
          if ($this->isAnonymous()) {
              $html .= '<img src="http://www.gravatar.com/avatar/'. md5($this->getEmail()) .'.jpg?s='. $width .'&amp;d=wavatar" />';
          } else {

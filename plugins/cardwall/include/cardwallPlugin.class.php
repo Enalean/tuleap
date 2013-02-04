@@ -156,6 +156,7 @@ class cardwallPlugin extends Plugin {
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getPluginPath() .'/themes/select2/select2.css" />';
         }
     }
 
@@ -164,7 +165,9 @@ class cardwallPlugin extends Plugin {
         // This stops styles inadvertently clashing with the main site.
         if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/cardwall.js"></script>'."\n";
             echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>'."\n";
+            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/select2.min.js"></script>'."\n";
         }
     }
 

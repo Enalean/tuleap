@@ -35,7 +35,7 @@ class Tracker_FormElement_Field_List_BindValueTest extends UnitTestCase {
         $value = new Tracker_FormElement_Field_List_BindValueTestVersion();
         $value->setReturnValue('getLabel', $label);
         $value->setId($id);
-        $this->assertEqual(json_encode($value->fetchJson()), '{"value":"b123","caption":"Reopen"}');
+        $this->assertEqual(json_encode($value->fetchValuesForJson()), '{"id":123,"value":"b123","caption":"Reopen"}');
     }
     
 }

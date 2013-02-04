@@ -1148,5 +1148,19 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function fixOriginalValueIds(array $value_mapping) {
         $this->getBind()->fixOriginalValueIds($value_mapping);
     }
+
+    /**
+     * @see Tracker_FormElement::process()
+     */
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+        parent::process($layout, $request, $current_user);
+        if ($request->get('func') == 'get-values') {
+            $json_values = array();
+            foreach ($this->getAllValues() as $value) {
+                $json_values[$value->getId()] = $value->fetchValuesForJson();
+            }
+            $GLOBALS['Response']->sendJSON($json_values);
+        }
+    }
 }
 ?>

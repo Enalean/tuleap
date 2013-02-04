@@ -109,6 +109,11 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      * @return void
      */
     public function augmentDataFromRequest(&$fields_data) {
+
+        if(isset($fields_data['request_method_called']) && $fields_data['request_method_called'] = 'artifact-update') {
+            return;//hack to stop this being set when called by 'artifact-update'
+        }
+
         if ((!isset($fields_data[$this->getId()]) || !is_array($fields_data[$this->getId()])) && !$this->isRequired() && $this->userCanUpdate()) {
             $fields_data[$this->getId()] = array('100');
         }

@@ -521,14 +521,26 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string
      */
     public function fetchCard(Tracker_Artifact $artifact) {
-        $html  = null;
+
         $value = $this->fetchCardValue($artifact);
-        $html .= '<tr><td>'. $this->getLabel().':</td>';
-        $data_field_id = '';
+        $data_field_id   = '';
+        $data_field_type = '';
+        
         if ($this->userCanUpdate()) {
-            $data_field_id = 'data-field-id="'.$this->getId().'"';
+            $data_field_id   = 'data-field-id="'.$this->getId().'"';
+            $data_field_type = 'data-field-type="'.$this->getObjectType().'"';
         }
-        $html .= '<td class="valueOf_'. $this->getName() .'" '. $data_field_id .'>'. $value .'</td></tr>';
+
+        $html = '<tr>
+                    <td>'. $this->getLabel().':
+                    </td>
+                    <td class="valueOf_'.$this->getName().'"'.
+                        $data_field_id.
+                        $data_field_type.
+                        '>'.
+                        $value .
+                    '</td>
+                </tr>';
 
         return $html;
     }
