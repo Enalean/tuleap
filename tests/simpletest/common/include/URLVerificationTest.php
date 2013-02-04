@@ -78,7 +78,7 @@ class URLVerificationTest extends TuleapTestCase {
         $GLOBALS['sys_force_ssl'] = 1;
         $GLOBALS['sys_https_host'] = 1;
         unset($GLOBALS['group_id']);
-        unset($_REQUEST);
+        unset($_REQUEST['type_of_search']);
     }
 
     function testIsScriptAllowedForAnonymous() {
