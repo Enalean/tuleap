@@ -442,7 +442,7 @@ class GitViews extends PluginViews {
                     $lastPushes[$id] = $dar->getRow();
                 }
             }
-            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($this, $lastPushes);
+            $strategy = new GitViewsRepositoriesTraversalStrategy_Tree($lastPushes);
             echo $strategy->fetch($params['repository_list'], $this->user);
         }
         else {

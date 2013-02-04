@@ -1,14 +1,20 @@
 Version 5.11 (Not Released Yet)
 
 	== Plugins ==
-	* tracker: 5.76
-	* agiledashboard: 0.65
+	* tracker: 5.77
+	* agiledashboard: 0.67
 	* cardwall: 0.9.13
-	* git: 2.7.25
-	* ldap: 3.23
+	* git: 2.7.26
+	* ldap: 3.24
+	* forumml: 2.6.7
 
    == Enhancement ==
     * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)
+	* Allow site to customize robots.txt
+
+  == Bug Fix ==
+    * Add missing php53-process dependency for posix functions
+	* Fix sla #813: Project administration page is distorded on IE when the custom notification message is long
 
 Version 5.9.1 (Thursday, January 24rd 2013)
 

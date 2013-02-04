@@ -292,6 +292,7 @@ function plugin_forumml_nb_children($parents, $list_id) {
     if (count($parents) == 0) {
         return 0;
     } else {
+        $list_id = db_ei($list_id);
         $sql = 'SELECT id_message'.
             ' FROM plugin_forumml_message m'.
             ' WHERE m.id_parent IN ('.implode(',', $parents).')

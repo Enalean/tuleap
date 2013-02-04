@@ -24,6 +24,8 @@
 interface Planning_Milestone {
     const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
     const CAPACITY_FIELD_NAME         = 'capacity';
+    const START_DATE_FIELD_NAME       = 'start_date';
+    const DURATION_FIELD_NAME         = 'duration';
 
     /**
      * @return int The project identifier.
@@ -143,6 +145,20 @@ interface Planning_Milestone {
      * @param Array of Planning_Milestone
      */
     public function setAncestors(array $ancestors);
+
+    /**
+     * Get the start date of the milestone
+     *
+     * @return int the timestamp value of start_date field
+     */
+    public function getStartDate();
+
+    /**
+     * Get the end date of the milestone
+     *
+     * @return int the timestamp value of the duration field
+     */
+    public function getEndDate();
 }
 
 ?>

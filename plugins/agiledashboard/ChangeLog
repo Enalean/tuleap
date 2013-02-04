@@ -1,3 +1,9 @@
+Version 0.67 - Tuleap 5.11
+    * Fix displaybug on milestone selector
+
+Version 0.66 - Tuleap 5.11
+    * Enhancement: displays start and end date of a sprint on the agile dashboard
+
 Version 0.65 - Tuleap 5.11
     * Refactor rendering of AgileDashboard Panes
 
