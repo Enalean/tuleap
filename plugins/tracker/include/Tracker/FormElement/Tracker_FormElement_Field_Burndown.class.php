@@ -30,11 +30,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     const REMAINING_EFFORT_FIELD_NAME = 'remaining_effort';
     const DURATION_FIELD_NAME         = 'duration';
     const START_DATE_FIELD_NAME       = 'start_date';
-    
+    const CAPACITY_FIELD_NAME         = 'capacity';
     /**
      * @var Tracker_HierarchyFactory
      */
     private $hierarchy_factory;
+    
+    protected $use_capacity;
     
     /**
      * Returns the previously injected factory (e.g. in tests), or a new
@@ -288,7 +290,18 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         
         return $field;
     }
-
+    
+    public function getBurndownCapacityField() {
+        $user = UserManager::instance()->getCurrentUser();
+        $field = $this->getFormElementFactory()->getUsedFieldByNameForUser($this->getTracker()->getId(), self::CAPACITY_FIELD_NAME, $user);
+        
+        if (! $field) {
+            return false;
+        }
+        
+        return $field;
+    }
+    
     /**
      * Returns the sprint duration for burndown rendering
      * 
@@ -523,6 +536,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return string html
      */
      public function fetchSubmitMasschange() {
+     }
+     
+     public function useCapacity() {
+         return $this->use_capacity;
      }
 }
 ?>

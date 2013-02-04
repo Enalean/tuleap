@@ -43,6 +43,9 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
         //notifications
         $html .= $this->fetchNotifications();
         
+        //use capacity field value
+        $html .= $this->fetchUseCapacity($this->formElement);
+        
         $html .= parent::fetchAdminSpecificProperties();
         
         return $html;
@@ -78,6 +81,15 @@ class Tracker_FormElement_View_Admin_Field extends Tracker_FormElement_View_Admi
         $html .= '<label for="formElement_required">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'required');
         $html .= '</p>';
         return $html;
+    }
+    
+    /**
+     * Fetch the "use_capacity" part of field admin
+     *
+     * @return string the HTML for the part of form for required checkbox
+     */
+    protected function fetchUseCapacity($field) {
+        return '';
     }
 }
 

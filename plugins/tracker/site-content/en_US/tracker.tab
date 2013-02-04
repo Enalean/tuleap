@@ -720,6 +720,7 @@ plugin_tracker_common_field	val_exist	This value id already exists.
 plugin_tracker_common_field	val_id_requ	Value id and value name are required.
 plugin_tracker_common_field	required	Required
 plugin_tracker_common_field	notifications	Send notifications to selected people
+plugin_tracker_common_field	use_capacity	Use "capacity" field for ideal initial effort
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldFactory.class.php

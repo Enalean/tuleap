@@ -710,6 +710,7 @@ plugin_tracker_common_field	val_exist	Cet ID de valeur existe déjà.
 plugin_tracker_common_field	val_id_requ	L'ID de la valeur et son nom sont obligatoires.
 plugin_tracker_common_field	required	Requis
 plugin_tracker_common_field	notifications	Envoyer des notifications aux personnes selectionnées
+plugin_tracker_common_field	use_capacity	Utiliser le champ "capacity" pour la courbe théorique
 
 #
 #-----------------------------------------------
