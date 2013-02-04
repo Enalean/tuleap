@@ -34,10 +34,12 @@ Ajax.InPlaceTextEditor = Class.create(Ajax.InPlaceEditor, {
         fld.name = this.options.paramName;
         fld.value = text; // No HTML breaks conversion anymore
         fld.className = 'editor_field';
-        if( this.options.validation ) {//differs from original here
+        /* begin Tuleap modifications rel Ajax.InPlaceEditor.createEditField */
+        if( this.options.validation ) {
             fld.pattern = this.options.validation.pattern;
             fld.title   = this.options.validation.message;
         }
+        /* end modifications */
         if (this.options.submitOnBlur)
           fld.onblur = this._boundSubmitHandler;
         this._controls.editor = fld;
