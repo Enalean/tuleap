@@ -210,7 +210,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
-        $capacity = ($this->useCapacity()) ? $this->getCapacity() : null;
+        $capacity = ($this->isCapacityUsed()) ? $this->getCapacity() : null;
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
@@ -307,9 +307,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $field;
     }
     
-    public function isCapacityUsed() {
-        
-    }
     /**
      * Returns the sprint duration for burndown rendering
      * 
