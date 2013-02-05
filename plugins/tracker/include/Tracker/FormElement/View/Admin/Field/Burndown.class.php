@@ -46,7 +46,7 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
     protected function fetchUseCapacity() {
         $key = 'use_capacity';
         $disabled = 'disabled';
-        if ($this->formElement->getBurndownCapacityField()) {
+        if ($this->formElement->isCapacityUsed()) {
             $disabled = '';
         }
         $html = '';

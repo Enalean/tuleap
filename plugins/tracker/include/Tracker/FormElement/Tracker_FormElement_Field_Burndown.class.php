@@ -35,6 +35,36 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @var Tracker_HierarchyFactory
      */
     private $hierarchy_factory;
+
+    private $capacity = null;
+    
+    /**
+     * @return the label of the field (mainly used in admin part)
+     */
+    public static function getFactoryLabel() {
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_label');
+    }
+
+    /**
+     * @return the description of the field (mainly used in admin part)
+     */
+    public static function getFactoryDescription() {
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_description');
+    }
+
+    /**
+     * @return the path to the icon
+     */
+    public static function getFactoryIconUseIt() {
+        return $GLOBALS['HTML']->getImagePath('ic/burndown.png');
+    }
+
+    /**
+     * @return the path to the icon
+     */
+    public static function getFactoryIconCreate() {
+        return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
+    }
     
     public $default_properties = array(
         'use_capacity' => array(
@@ -64,63 +94,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     public function setHierarchyFactory($hierarchy_factory) {
         $this->hierarchy_factory = $hierarchy_factory;
     }
-    
-    public function getCriteriaFrom($criteria) {
-    }
-    
-    public function getCriteriaWhere($criteria) {
-    }
-    
-    public function getQuerySelect() {
-    }
-    
-    public function getQueryFrom() {
-    }
-    
-    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
-    }
-    
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
-    }
-    
-    public function fetchCriteriaValue($criteria) {
-    }
-
-    public function fetchRawValue($value) {
-    }
-    
-    protected function getCriteriaDao() {
-    }
-    
-    protected function fetchSubmitValue() {
-    }
-
-    protected function fetchSubmitValueMasschange() {
-    }
-
-    protected function getValueDao() {
-    }
-
-    public function afterCreate() {
-    }
-
-    public function fetchFollowUp($artifact, $from, $to) {
-    }
-    
-    public function fetchRawValueFromChangeset($changeset) {
-    }
-    
-    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
-    }
-    
-    protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {
-    }
-    
-    public function getChangesetValue($changeset, $value_id, $has_changed) {
-    }
-    
-    public function getSoapAvailableValues() {
-    }
 
     public function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
@@ -140,19 +113,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $html;
     }
 
-    /**
-     * Return the relative url to the burndown chart image.
-     * 
-     * @param Tracker_Artifact $artifact
-     * 
-     * @return String
-     */
-    private function getBurndownImageUrl(Tracker_Artifact $artifact) {
-        $url_query = http_build_query(array('formElement' => $this->getId(),
-                                            'func'        => self::FUNC_SHOW_BURNDOWN,
-                                            'src_aid'     => $artifact->getId()));
-        return TRACKER_BASE_URL .'/?'.$url_query;
-    }
     /**
      *
      * @param Tracker_IDisplayTrackerLayout $layout
@@ -177,16 +137,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
                 parent::process($layout, $request, $current_user);
         }
     }
-    
-    /**
-     * Display a png image with the given error message
-     * 
-     * @param String $msg 
-     */
-    protected function displayErrorImage($msg) {
-        $error = new ErrorChart($GLOBALS['Language']->getText('plugin_tracker', 'unable_to_render_the_chart'), $msg, 640, 480);
-        $error->Stroke();
-    }
 
     /**
      * Render a burndown image based on $artifact artifact links
@@ -197,7 +147,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         if ($this->userCanRead($user)) {
             $start_date = $this->getBurndownStartDate($artifact, $user);
             $duration   = $this->getBurndownDuration($artifact, $user);
-            $burndown   = $this->getBurndown($this->getBurndownData($artifact, $user, $start_date, $duration));
+            $burndown   = $this->getBurndown($this->getBurndownData(
+                            $artifact,
+                            $user,
+                            $start_date,
+                            $duration
+                        ));
             
             $burndown->display();
         } else {
@@ -205,12 +160,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
     }
     
-    private function getBurndownRemainingEffortField(Tracker_Artifact $artifact, User $user) {
-        return $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
-    }
-    
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
-        $capacity = ($this->isCapacityUsed()) ? $this->getCapacity() : null;
+        $capacity      = ($this->isCapacityUsed()) ? $this->getCapacity($artifact) : null;
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
@@ -227,7 +178,199 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         return $burndown_data;
     }
-    
+    /**
+     * Fetch the element for the submit new artifact form
+     *
+     * @return string html
+     */
+     public function fetchSubmit() {
+         return '';
+     }
+
+     /**
+     * Fetch the element for the submit masschange form
+     *
+     * @return string html
+     */
+     public function fetchSubmitMasschange() {
+     }
+
+
+     public function isCapacityUsed() {
+        return $this->getProperty('use_capacity');
+     }
+
+    /**
+     * Fetch data to display the field value in mail
+     *
+     * @param Tracker_Artifact                $artifact         The artifact
+     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
+     * @param string                          $format           output format
+     *
+     * @return string
+     */
+    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
+        $output = '';
+        if ($format == Codendi_Mail::FORMAT_HTML) {
+            $output .= '<img src="'.get_server_url().$this->getBurndownImageUrl($artifact).'" alt="'.$this->getLabel().'" width="640" height="480" />';
+            $output .= '<p><em>'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today').'</em></p>';
+        }
+        return $output;
+    }
+
+    /**
+     * Display the html field in the admin ui
+     * @return string html
+     */
+    public function fetchAdminFormElement() {
+        $html = $this->fetchWarnings();
+        $html .= '<img src="'. TRACKER_BASE_URL .'/images/fake-burndown-admin.png" />';
+        return $html;
+    }
+
+
+    /**
+     * Verifies the consistency of the imported Tracker
+     *
+     * @return true if Tracler is ok
+     */
+    public function testImport() {
+        return true;
+    }
+
+    public function getCriteriaFrom($criteria) {
+    }
+
+    public function getCriteriaWhere($criteria) {
+    }
+
+    public function getQuerySelect() {
+    }
+
+    public function getQueryFrom() {
+    }
+
+    public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
+    }
+
+    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
+    }
+
+    public function fetchCriteriaValue($criteria) {
+    }
+
+    public function fetchRawValue($value) {
+    }
+
+    public function afterCreate() {
+    }
+
+    public function fetchFollowUp($artifact, $from, $to) {
+    }
+
+    public function fetchRawValueFromChangeset($changeset) {
+    }
+
+    public function getChangesetValue($changeset, $value_id, $has_changed) {
+    }
+
+    public function getSoapAvailableValues() {
+    }
+
+    protected function saveValue($artifact, $changeset_value_id, $value, Tracker_Artifact_ChangesetValue $previous_changesetvalue = null) {
+    }
+
+    protected function keepValue($artifact, $changeset_value_id, Tracker_Artifact_ChangesetValue $previous_changesetvalue) {
+    }
+
+    protected function getCriteriaDao() {
+    }
+
+    protected function fetchSubmitValue() {
+    }
+
+    protected function fetchSubmitValueMasschange() {
+    }
+
+    protected function getValueDao() {
+    }
+
+    /**
+     * Returns the children of the burndown field tracker.
+     *
+     * @return array of Tracker
+     */
+    protected function getChildTrackers() {
+        return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
+    }
+
+     /**
+     * Display a png image with the given error message
+     *
+     * @param String $msg
+     */
+    protected function displayErrorImage($msg) {
+        $error = new ErrorChart($GLOBALS['Language']->getText('plugin_tracker', 'unable_to_render_the_chart'), $msg, 640, 480);
+        $error->Stroke();
+    }
+       
+    /**
+     * Returns a Burndown rendering object for given data
+     * 
+     * @param Tracker_Chart_Data_Burndown $burndown_data
+     * 
+     * @return \Tracker_Chart_BurndownView
+     */
+    protected function getBurndown(Tracker_Chart_Data_Burndown $burndown_data) {
+        return new Tracker_Chart_BurndownView($burndown_data);
+    }
+
+
+    /**
+     * Fetch the html code to display the field value in tooltip
+     *
+     * @param Tracker_Artifact $artifact
+     * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
+     * @return string The html code to display the field value in tooltip
+     */
+    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+        return $this->fetchArtifactValueReadOnly($artifact, $value);
+    }
+
+    /**
+     * Validate a value
+     *
+     * @param Tracker_Artifact $artifact The artifact
+     * @param mixed            $value    data coming from the request.
+     *
+     * @return bool true if the value is considered ok
+     */
+    protected function validate(Tracker_Artifact $artifact, $value) {
+        //No need to validate artifact id (read only for all)
+        return true;
+    }
+
+    protected function getDao() {
+       return new Tracker_FormElement_Field_BurndownDao();
+    }
+
+    /**
+     * Return the relative url to the burndown chart image.
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return String
+     */
+    private function getBurndownImageUrl(Tracker_Artifact $artifact) {
+        $url_query = http_build_query(array('formElement' => $this->getId(),
+                                            'func'        => self::FUNC_SHOW_BURNDOWN,
+                                            'src_aid'     => $artifact->getId()));
+        return TRACKER_BASE_URL .'/?'.$url_query;
+    }
+
+     private function getBurndownRemainingEffortField(Tracker_Artifact $artifact, User $user) {
+        return $this->getFormElementFactory()->getComputableFieldByNameForUser($artifact->getTracker()->getId(), self::REMAINING_EFFORT_FIELD_NAME, $user);
+    }
     /**
      * Returns linked artifacts
      * 
@@ -243,17 +386,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             return $linked_artifacts;
         }
         throw new Tracker_FormElement_Field_BurndownException('burndown_no_linked_artifacts');
-    }
-    
-    /**
-     * Returns a Burndown rendering object for given data
-     * 
-     * @param Tracker_Chart_Data_Burndown $burndown_data
-     * 
-     * @return \Tracker_Chart_BurndownView
-     */
-    protected function getBurndown(Tracker_Chart_Data_Burndown $burndown_data) {
-        return new Tracker_Chart_BurndownView($burndown_data);
     }
     
     private function getBurndownStartDateField(Tracker_Artifact $artifact, User $user) {
@@ -295,15 +427,32 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         
         return $field;
     }
-    
-    public function getBurndownCapacityField() {
+
+    private function getCapacity(Tracker_Artifact $artifact) {
+        if($this->capacity !== null) {
+            return $this->capacity;
+        }
+        
+        $field    = $this->getCapacityField();
+        $capacity = $artifact->getValue($field)->getValue();
+
+        if (! $capacity) {
+            $capacity = null;
+        }
+
+        $this->capacity = $capacity;
+
+        return $capacity;
+    }
+
+    private function getCapacityField() {
         $user = UserManager::instance()->getCurrentUser();
         $field = $this->getFormElementFactory()->getUsedFieldByNameForUser($this->getTracker()->getId(), self::CAPACITY_FIELD_NAME, $user);
-        
+
         if (! $field) {
             return false;
         }
-        
+
         return $field;
     }
     
@@ -323,35 +472,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         }
         
         return $duration;
-    }
-        
-    /**
-     * Fetch data to display the field value in mail
-     *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param string                          $format           output format
-     *
-     * @return string
-     */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        $output = '';
-        if ($format == Codendi_Mail::FORMAT_HTML) {
-            $output .= '<img src="'.get_server_url().$this->getBurndownImageUrl($artifact).'" alt="'.$this->getLabel().'" width="640" height="480" />';
-            $output .= '<p><em>'.$GLOBALS['Language']->getText('plugin_tracker', 'burndown_email_as_of_today').'</em></p>';
-        }
-        return $output;
-    }
-
-    /**
-     * Display the html field in the admin ui
-     * @return string html
-     */
-    public function fetchAdminFormElement() {
-        $html = $this->fetchWarnings();
-        $html .= '<img src="'. TRACKER_BASE_URL .'/images/fake-burndown-admin.png" />';
-        return $html;
-    }
+    }   
     
     /**
      * Renders all the possible warnings for this field.
@@ -454,105 +575,5 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private function hasRemainingEffort(Tracker $tracker) {
         return $tracker->hasFormElementWithNameAndType(self::REMAINING_EFFORT_FIELD_NAME, array('int', 'float'));
     }
-    
-    /**
-     * Returns the children of the burndown field tracker.
-     * 
-     * @return array of Tracker
-     */
-    protected function getChildTrackers() {
-        return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
-    }
-    
-    /**
-     * @return the label of the field (mainly used in admin part)
-     */
-    public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_label');
-    }
-    
-    /**
-     * @return the description of the field (mainly used in admin part)
-     */
-    public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_description');
-    }
-    
-    /**
-     * @return the path to the icon
-     */
-    public static function getFactoryIconUseIt() {
-        return $GLOBALS['HTML']->getImagePath('ic/burndown.png');
-    }
-    
-    /**
-     * @return the path to the icon
-     */
-    public static function getFactoryIconCreate() {
-        return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
-    }
-    
-    /**
-     * Fetch the html code to display the field value in tooltip
-     * 
-     * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
-    }
-
-    /**
-     * Verifies the consistency of the imported Tracker
-     * 
-     * @return true if Tracler is ok 
-     */
-    public function testImport() {
-        return true;
-    }
-
-    
-    /**
-     * Validate a value
-     *
-     * @param Tracker_Artifact $artifact The artifact 
-     * @param mixed            $value    data coming from the request. 
-     *
-     * @return bool true if the value is considered ok
-     */
-    protected function validate(Tracker_Artifact $artifact, $value) {
-        //No need to validate artifact id (read only for all)
-        return true;
-    }
-    
-    /**
-     * Fetch the element for the submit new artifact form
-     *
-     * @return string html
-     */
-     public function fetchSubmit() {
-         return '';
-     }
-
-     /**
-     * Fetch the element for the submit masschange form
-     *
-     * @return string html
-     */
-     public function fetchSubmitMasschange() {
-     }
-     
-     protected function getDao() {
-        return new Tracker_FormElement_Field_BurndownDao();
-     }
-    
-     public function isCapacityUsed() {
-        return $this->getProperty('use_capacity');
-     }
-
-     public function getCapacity() {
-         return 25;
-     }
 }
 ?>
