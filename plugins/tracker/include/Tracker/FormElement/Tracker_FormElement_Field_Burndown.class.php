@@ -161,7 +161,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
-        $capacity      = ($this->doesBurndownUseCapacityField()) ? $this->getCapacity($artifact, $user) : null;
+        $capacity      = ($this->doesBurndownUseCapacityField()) ? $this->getCapacity($artifact) : null;
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
@@ -442,12 +442,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $field;
     }
 
-    private function getCapacity(Tracker_Artifact $artifact, User $user) {
+    private function getCapacity(Tracker_Artifact $artifact) {
         if($this->capacity !== null && is_numeric($this->capacity)) {
             return $this->capacity;
         }
         
-        $field    = $this->getCapacityField($user);
+        $field    = $this->getCapacityField();
         $capacity = $artifact->getValue($field)->getValue();
 
         if (! $capacity) {
@@ -459,8 +459,8 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $capacity;
     }
 
-    private function getCapacityField(User $user) {
-        $field = $this->getFormElementFactory()->getUsedFieldByNameForUser($this->getTracker()->getId(), self::CAPACITY_FIELD_NAME, $user);
+    private function getCapacityField() {
+        $field = $this->getFormElementFactory()->getUsedFieldByName($this->getTracker()->getId(), self::CAPACITY_FIELD_NAME);
 
         if (! $field) {
             return null;
