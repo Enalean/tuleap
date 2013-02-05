@@ -37,7 +37,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private $hierarchy_factory;
     
     protected $use_capacity;
-    
+    public $default_properties = array(
+        'use_capacity' => ''
+    );
     /**
      * Returns the previously injected factory (e.g. in tests), or a new
      * instance (e.g. in production).
@@ -302,6 +304,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $field;
     }
     
+    public function isCapacityUsed() {
+        
+    }
     /**
      * Returns the sprint duration for burndown rendering
      * 
@@ -541,5 +546,13 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      public function useCapacity() {
          return $this->use_capacity;
      }
+     
+     protected function getDao() {
+        return new Tracker_FormElement_Field_BurndownDao();
+    }
+    
+    public function getUseCapacity() {
+        return $this->getProperty('use_capacity');
+    }
 }
 ?>

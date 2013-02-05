@@ -30,18 +30,19 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
      * @return string the HTML for the part of form for required checkbox
      */
     protected function fetchUseCapacity() {
+        $disabled = 'disabled';
         if ($this->formElement->getBurndownCapacityField()) {
-            $html = '';
-            $html .= '<p>';
-            $html .= '<input type="hidden" name="formElement_data[use_capacity]" value="0" />';
-            //$html .= '<input type="checkbox" name="formElement_data[use_capacity]" id="formElement_use_capacity" value="1" '. ($this->formElement->use_capacity ? 'checked="checked"' : '') .'" />';
-            $html .= '<input type="checkbox" name="formElement_data[use_capacity]" id="formElement_use_capacity" value="1" />';
-            $html .= '<label for="formElement_use_capacity">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'use_capacity');
-            $html .= '</p>';
-            return $html;
-        } else {
-            return 'coucou';
+            $disabled = '';
         }
+        
+        $html = '';
+        $html .= '<p>';
+        $html .= '<input type="hidden" name="formElement_data[use_capacity]" value="0" />';
+        $html .= '<input type="checkbox" name="formElement_data[use_capacity]" id="formElement_use_capacity" value="1" '. $disabled . ($this->formElement->getUseCapacity() ? 'checked="checked"' : '') .'" />';
+        //$html .= '<input type="checkbox" name="formElement_data[use_capacity]" id="formElement_use_capacity" '.$disabled.' value="1" />';
+        $html .= '<label for="formElement_use_capacity">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'use_capacity');
+        $html .= '</p>';
+        return $html;
     }
 }
 
