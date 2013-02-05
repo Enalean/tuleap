@@ -37,6 +37,7 @@ class Combined {
             '/scripts/bootstrap/bootstrap-dropdown.js',
             '/scripts/bootstrap/bootstrap-button.js',
             '/scripts/codendi/common.js',
+            '/scripts/tuleap/systray.js',
             '/scripts/codendi/feedback.js',
             '/scripts/codendi/CreateProject.js',
             '/scripts/codendi/cross_references.js',
