@@ -1342,7 +1342,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Tracker_FormElement_Field  $field     The field
      * @param Tracker_Artifact_Changeset $changeset The changeset. if null given take the last changeset of the artifact
      *
-     * @return Tracker_Artifact_ChangesetValue
+     * @return Tracker_Artifact_ChangesetValue | null
      */
     function getValue(Tracker_FormElement_Field $field, Tracker_Artifact_Changeset $changeset = null) {
         if (!$changeset) {

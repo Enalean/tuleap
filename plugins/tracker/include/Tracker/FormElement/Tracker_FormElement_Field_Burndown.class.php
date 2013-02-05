@@ -35,8 +35,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @var Tracker_HierarchyFactory
      */
     private $hierarchy_factory;
-
-    private $capacity = null;
     
     /**
      * @return the label of the field (mainly used in admin part)
@@ -161,7 +159,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
-        $capacity      = ($this->doesBurndownUseCapacityField()) ? $this->getCapacity($artifact) : null;
+        $capacity = null;
+        if ($this->doesBurndownUseCapacityField()) {
+            $capacity = $this->getCapacity($artifact);
+        }
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
@@ -200,9 +201,9 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return bool
      */
     public function doesCapacityFieldExist() {
-//        if ($this->getCapacityField($user) === null) {
-//            return false;
-//        }
+        if ($this->getCapacityField() === null) {
+            return false;
+        }
         return true;
     }
 
@@ -210,7 +211,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      * @return bool
      */
     public function doesBurndownUseCapacityField() {
-        return false;
+        if(! $this->doesCapacityFieldExist()) {
+            return false;
+        }
+
         return $this->getProperty('use_capacity');
     }
 
@@ -443,30 +447,19 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
 
     private function getCapacity(Tracker_Artifact $artifact) {
-        if($this->capacity !== null && is_numeric($this->capacity)) {
-            return $this->capacity;
-        }
-        
-        $field    = $this->getCapacityField();
-        $capacity = $artifact->getValue($field)->getValue();
-
-        if (! $capacity) {
-            $capacity = null;
-        }
-
-        $this->capacity = $capacity;
-
-        return $capacity;
-    }
-
-    private function getCapacityField() {
-        $field = $this->getFormElementFactory()->getUsedFieldByName($this->getTracker()->getId(), self::CAPACITY_FIELD_NAME);
-
+        $field = $this->getCapacityField();
         if (! $field) {
             return null;
         }
 
-        return $field;
+        return $artifact->getValue($field)->getValue();
+    }
+
+    private function getCapacityField() {
+        return $this->getFormElementFactory()->getUsedFieldByName(
+            $this->getTrackerId(),
+            self::CAPACITY_FIELD_NAME
+        );
     }
     
     /**
