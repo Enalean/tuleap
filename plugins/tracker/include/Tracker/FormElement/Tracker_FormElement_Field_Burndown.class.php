@@ -550,7 +550,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return new Tracker_FormElement_Field_BurndownDao();
      }
     
-     public function getUseCapacity() {
+     public function isCapacityUsed() {
         return $this->getProperty('use_capacity');
      }
 
