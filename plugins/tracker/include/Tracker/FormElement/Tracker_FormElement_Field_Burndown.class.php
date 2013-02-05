@@ -161,7 +161,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
-        $capacity      = ($this->isCapacityUsed()) ? $this->getCapacity($artifact) : null;
+        $capacity      = ($this->doesBurndownUseCapacityField()) ? $this->getCapacity($artifact, $user) : null;
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
         $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
@@ -196,9 +196,23 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      }
 
 
-     public function isCapacityUsed() {
+    /**
+     * @return bool
+     */
+    public function doesCapacityFieldExist() {
+//        if ($this->getCapacityField($user) === null) {
+//            return false;
+//        }
+        return true;
+    }
+
+    /**
+     * @return bool
+     */
+    public function doesBurndownUseCapacityField() {
+        return false;
         return $this->getProperty('use_capacity');
-     }
+    }
 
     /**
      * Fetch data to display the field value in mail
@@ -428,12 +442,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $field;
     }
 
-    private function getCapacity(Tracker_Artifact $artifact) {
-        if($this->capacity !== null) {
+    private function getCapacity(Tracker_Artifact $artifact, User $user) {
+        if($this->capacity !== null && is_numeric($this->capacity)) {
             return $this->capacity;
         }
         
-        $field    = $this->getCapacityField();
+        $field    = $this->getCapacityField($user);
         $capacity = $artifact->getValue($field)->getValue();
 
         if (! $capacity) {
@@ -445,12 +459,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $capacity;
     }
 
-    private function getCapacityField() {
-        $user = UserManager::instance()->getCurrentUser();
+    private function getCapacityField(User $user) {
         $field = $this->getFormElementFactory()->getUsedFieldByNameForUser($this->getTracker()->getId(), self::CAPACITY_FIELD_NAME, $user);
 
         if (! $field) {
-            return false;
+            return null;
         }
 
         return $field;

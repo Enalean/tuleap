@@ -263,7 +263,7 @@ class Tracker_FormElement_View_Admin {
         
         case 'checkbox':
             $disabled = 'disabled';
-            if ($this->formElement->isCapacityUsed()) {
+            if ($this->formElement->doesCapacityFieldExist()) {
                 $disabled = '';
             }
             //$html .= '<p>';
