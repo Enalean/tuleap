@@ -89,7 +89,7 @@ class TabbedLayout extends Layout {
 		?>
 
 
-<body>
+<body class="<?php echo $this->getClassnamesForBodyTag() ?>">
 <div id="header"><?php echo $this->getBodyHeader($params); ?></div>
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
