@@ -36,9 +36,11 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     private $hierarchy_factory;
     
-    protected $use_capacity;
     public $default_properties = array(
-        'use_capacity' => ''
+        'use_capacity' => array(
+            'value' => 0,
+            'type'  => 'checkbox',
+        )
     );
     /**
      * Returns the previously injected factory (e.g. in tests), or a new
@@ -543,16 +545,12 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      public function fetchSubmitMasschange() {
      }
      
-     public function useCapacity() {
-         return $this->use_capacity;
-     }
-     
      protected function getDao() {
         return new Tracker_FormElement_Field_BurndownDao();
-    }
+     }
     
-    public function getUseCapacity() {
+     public function getUseCapacity() {
         return $this->getProperty('use_capacity');
-    }
+     }
 }
 ?>

@@ -19,6 +19,20 @@
 
 
 class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_View_Admin_Field {
+    
+    public function fetchAdminSpecificProperties() {
+        $html = '';
+        
+        //required
+        $html .= $this->fetchRequired();
+        
+        //use capacity field value
+        $html .= $this->fetchUseCapacity();
+        
+        $html .= parent::fetchAdminSpecificProperties();
+        
+        return $html;
+    }
 
     protected function fetchRequired() {
         return '';
@@ -30,17 +44,16 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
      * @return string the HTML for the part of form for required checkbox
      */
     protected function fetchUseCapacity() {
+        $key = 'use_capacity';
         $disabled = 'disabled';
         if ($this->formElement->getBurndownCapacityField()) {
             $disabled = '';
         }
-        
         $html = '';
         $html .= '<p>';
-        $html .= '<input type="hidden" name="formElement_data[use_capacity]" value="0" />';
-        $html .= '<input type="checkbox" name="formElement_data[use_capacity]" id="formElement_use_capacity" value="1" '. $disabled . ($this->formElement->getUseCapacity() ? 'checked="checked"' : '') .'" />';
-        //$html .= '<input type="checkbox" name="formElement_data[use_capacity]" id="formElement_use_capacity" '.$disabled.' value="1" />';
-        $html .= '<label for="formElement_use_capacity">'.$GLOBALS['Language']->getText('plugin_tracker_common_field', 'use_capacity');
+        $html .= '<input type="hidden" name="formElement_data[specific_properties]['. $key .']"  value="0" />';
+        $html .= '<input type="checkbox" name="formElement_data[specific_properties]['. $key .']"  id="formElement_properties_'. $key .'" value="1" '. $disabled . ($this->formElement->getUseCapacity() ? 'checked="checked"' : '') .'" />';
+        $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
         $html .= '</p>';
         return $html;
     }

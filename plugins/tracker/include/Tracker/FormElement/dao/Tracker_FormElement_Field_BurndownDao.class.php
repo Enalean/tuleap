@@ -36,5 +36,9 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
                 VALUES ($field_id, $use_capacity)";
         return $this->retrieve($sql);
     }
+    
+     public function duplicate($from_field_id, $to_field_id) {
+        
+    }
 }
 ?>
