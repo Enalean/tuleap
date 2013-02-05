@@ -31,9 +31,11 @@ class Tracker_Chart_Data_Burndown {
 
     private $remaining_effort = array();
     private $ideal_effort     = array();
+    private $capacity = null;
 
-    public function __construct(Tracker_Chart_Data_BurndownTimePeriod $time_period) {
+    public function __construct(Tracker_Chart_Data_BurndownTimePeriod $time_period, $capacity = null) {
         $this->time_period = $time_period;
+        $this->capacity = $capacity;
     }
 
     /**
@@ -82,19 +84,6 @@ class Tracker_Chart_Data_Burndown {
         return $remaining_effort;
     }
 
-    private function getFirstEffort() {
-        foreach($this->remaining_effort as $effort) {
-            if ($effort !== null) {
-                return $effort;
-            }
-        }
-        return null;
-    }
-
-    private function isInTheFutur($day) {
-        return $day > $_SERVER['REQUEST_TIME'];
-    }
-
     /**
      * Returns the Burndown dates in a human readable fashion
      *
@@ -111,9 +100,11 @@ class Tracker_Chart_Data_Burndown {
      */
     public function getIdealEffort() {
         $start_effort = $this->getFirstEffort();
+        
         foreach($this->time_period->getDayOffsets() as $day_offset) {
             $this->ideal_effort[] = $this->getIdealEffortAtDay($day_offset, $start_effort);
         }
+        
         return $this->ideal_effort;
     }
 
@@ -122,11 +113,30 @@ class Tracker_Chart_Data_Burndown {
             $slope = - ($start_effort / $this->getDuration());
             return floatval($slope * $day + $start_effort);
         }
+        
         return 0;
     }
 
     private function getDuration() {
         return $this->time_period->getDuration();
+    }
+
+    private function getFirstEffort() {
+        if($this->capacity !== null) {
+            return $this->capacity;
+        }
+
+        foreach($this->remaining_effort as $effort) {
+            if ($effort !== null) {
+                return $effort;
+            }
+        }
+        
+        return null;
+    }
+
+    private function isInTheFutur($day) {
+        return $day > $_SERVER['REQUEST_TIME'];
     }
 }
 

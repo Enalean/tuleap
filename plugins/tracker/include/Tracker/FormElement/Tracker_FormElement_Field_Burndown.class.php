@@ -210,9 +210,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     }
     
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
+        $capacity = ($this->useCapacity()) ? $this->getCapacity() : null;
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
         $time_period   = new Tracker_Chart_Data_BurndownTimePeriod($start_date, $duration);
-        $burndown_data = new Tracker_Chart_Data_Burndown($time_period);
+        $burndown_data = new Tracker_Chart_Data_Burndown($time_period, $capacity);
         $tonight       = mktime(23, 59, 59, date('n'), date('j'), date('Y'));
 
         foreach($time_period->getDayOffsets() as $day_offset) {
@@ -551,6 +552,10 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     
      public function getUseCapacity() {
         return $this->getProperty('use_capacity');
+     }
+
+     public function getCapacity() {
+         return 25;
      }
 }
 ?>
