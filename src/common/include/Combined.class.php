@@ -39,6 +39,7 @@ class Combined {
             '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
+            '/scripts/tuleap/load-systray.js',
             '/scripts/codendi/feedback.js',
             '/scripts/codendi/CreateProject.js',
             '/scripts/codendi/cross_references.js',

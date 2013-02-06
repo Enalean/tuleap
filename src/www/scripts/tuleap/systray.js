@@ -15,7 +15,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-document.observe('dom:loaded', function () {
+var tuleap = tuleap || { };
+tuleap.systray = { };
+
+tuleap.systray.load = function(body) {
     var cache_duration_2_hours    = 2 * 3600,
         cache_duration_1_week     = 7 * 24 * 3600,
         systray_collapse          = 'collapse',
@@ -24,7 +27,7 @@ document.observe('dom:loaded', function () {
         collapse_classname        = 'systray-collapsed',
         systray_links_cachekey    = 'systray-links';
 
-    if (! document.body.hasClassName('lab-mode')) {
+    if (! body.hasClassName('lab-mode')) {
         return;
     }
 
@@ -37,7 +40,7 @@ document.observe('dom:loaded', function () {
                         '<div class="systray_links"></div>' +
                     '</div>' +
                   '</div>';
-        document.body.insert(systray);
+        body.insert(systray);
         $$('.systray_icon').each(function (icon) {
             var systray = icon.up('.systray');
 
@@ -103,4 +106,4 @@ document.observe('dom:loaded', function () {
             cache_duration_1_week
         );
     }
-});
+}
