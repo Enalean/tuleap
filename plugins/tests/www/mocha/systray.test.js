@@ -18,7 +18,36 @@
  */
 
 describe('systray', function() {
+
+    var body;
+
+    beforeEach(function () {
+        body = new Element('div');
+    });
+
     it('is defined', function() {
-        tuleap.systray.should.be.truthy;
+        tuleap.systray.should.be.an('object');
+    });
+
+    describe('when not in lab mode', function() {
+
+        it('does not inject anything in body', function () {
+            tuleap.systray.load(body);
+
+            expect(body.down('.systray')).to.not.exist;
+        });
+    });
+
+    describe('when in lab mode', function() {
+
+        beforeEach(function () {
+            body.addClassName('lab-mode');
+        });
+
+        it('inject a systray in body', function () {
+            tuleap.systray.load(body);
+
+            expect(body.down('.systray')).to.exist;
+        });
     });
 });
