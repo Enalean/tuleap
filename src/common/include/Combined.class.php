@@ -36,6 +36,7 @@ class Combined {
             '/scripts/jquery/jquery-noconflict.js',
             '/scripts/bootstrap/bootstrap-dropdown.js',
             '/scripts/bootstrap/bootstrap-button.js',
+            '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',
             '/scripts/tuleap/systray.js',
             '/scripts/codendi/feedback.js',
