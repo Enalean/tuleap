@@ -383,5 +383,17 @@ class Event {
      *    'login' => String, ldap username
      */
     const GET_LDAP_LOGIN_NAME_FOR_USER = 'get_ldap_login_name_for_user';
+
+    /**
+     * Get the content of the sprint
+     *
+     * Parameters:
+     *    'user'  => The User who made the request
+     *    'links' => The SystrayLinksCollection
+     *
+     * Expected results:
+     *    The links are added in the collection
+     */
+    const SYSTRAY = 'systray';
 }
 ?>

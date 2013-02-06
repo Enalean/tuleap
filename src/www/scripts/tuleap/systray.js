@@ -49,18 +49,34 @@ document.observe('dom:loaded', function () {
         var systray = '<div class="systray">' +
                     '<div class="systray_content">' +
                         '<img class="systray_icon" src="/themes/Tuleap/images/favicon.ico">' +
-                        '<div class="systray_links">Bla</div>' +
+                        '<div class="systray_links"></div>' +
                     '</div>' +
                   '</div>';
         document.body.insert(systray);
         $$('.systray_icon').each(function (icon) {
             var systray = icon.up('.systray');
 
-            loadTogglePreference(systray)
+            loadTogglePreference(systray);
+            loadLinks(systray);
             icon.observe('click', function (evt) {
                 toggleSystray(systray)
             });
         });
+    }
+
+    function loadLinks(systray) {
+        var systray_links = systray.down('.systray_links'),
+            template      = new Template('<a href="#{href}">#{label}</a>');;
+
+        new Ajax.Request('/systray.json', { onSuccess: getLinksFromJSONRequest });
+
+        function getLinksFromJSONRequest(transport) {
+            if (transport.responseJSON) {
+                transport.responseJSON.each(function (link) {
+                    systray_links.insert(template.evaluate(link));
+                });
+            }
+        }
     }
 
     function loadTogglePreference(systray) {
