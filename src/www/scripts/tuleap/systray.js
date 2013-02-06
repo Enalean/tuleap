@@ -16,17 +16,69 @@
  */
 
 document.observe('dom:loaded', function () {
-    var systray;
+    var cache_duration_2_hours = 2 * 3600,
+        cache_duration_1_week  = 7 * 24 * 3600,
+        systray_collapse       = 'collapse',
+        systray_expand         = 'expand';
+        systray_collapse_key   = 'systray-collapse',
+        collapse_classname     = 'systray-collapsed';
+
+    // http://blog.anhangzhu.com/2011/07/20/html-5-local-storage-with-expiration/
+    var AZHU = { }
+    AZHU.storage = {
+      save: function(key, jsonData, expirationSec){
+        var expirationMS = expirationSec * 1000;
+        var record = {value: JSON.stringify(jsonData), timestamp: new Date().getTime() + expirationMS}
+        localStorage.setItem(key, JSON.stringify(record));
+        return jsonData;
+      },
+      load: function(key){
+        var record = JSON.parse(localStorage.getItem(key));
+        if (!record){return false;}
+        return (new Date().getTime() < record.timestamp && JSON.parse(record.value));
+      }
+    }
 
     if (! document.body.hasClassName('lab-mode')) {
         return;
     }
 
-    systray = '<div class="systray">' +
-                '<div class="systray_content">' +
-                    '<img class="systray_icon" src="/themes/Tuleap/images/favicon.ico">' +
-                    '<div class="systray_info">&nbsp;</div>' +
-                '</div>' +
-              '</div>';
-    document.body.insert(systray);
+    createSystray();
+
+    function createSystray() {
+        var systray = '<div class="systray">' +
+                    '<div class="systray_content">' +
+                        '<img class="systray_icon" src="/themes/Tuleap/images/favicon.ico">' +
+                        '<div class="systray_links">Bla</div>' +
+                    '</div>' +
+                  '</div>';
+        document.body.insert(systray);
+        $$('.systray_icon').each(function (icon) {
+            var systray = icon.up('.systray');
+
+            loadTogglePreference(systray)
+            icon.observe('click', function (evt) {
+                toggleSystray(systray)
+            });
+        });
+    }
+
+    function loadTogglePreference(systray) {
+        if (AZHU.storage.load(systray_collapse_key) === systray_collapse) {
+            toggleSystray(systray);
+        }
+    }
+
+    function toggleSystray(systray) {
+        systray.toggleClassName(collapse_classname);
+        saveTogglePreference(systray)
+    }
+
+    function saveTogglePreference(systray) {
+        AZHU.storage.save(
+            systray_collapse_key,
+            systray.hasClassName(collapse_classname) ? systray_collapse : systray_expand,
+            cache_duration_1_week
+        );
+    }
 });
