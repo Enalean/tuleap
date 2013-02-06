@@ -1,0 +1,1 @@
+../../../../src/www/scripts/tuleap/systray.js
