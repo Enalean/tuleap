@@ -729,7 +729,24 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance());
         return $rm->isUsedInFieldDependency($this);
     }
-
+    
+    /**
+     * Is the field used in another field?
+     *
+     * @return boolean returns true if the field is used in field named 'capacity', false otherwise
+     */
+    private function isUsedByAnotherField() {
+        if ($this->name === Tracker_FormElement_Field_Burndown::CAPACITY_FIELD_NAME) {
+            $burndown_fields = Tracker_FormElementFactory::instance()->getUsedBurndownFields($this->getTracker());
+            foreach ($burndown_fields as $burndown_field) {
+                if ($burndown_field->doesBurndownUseCapacityField()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    
     /**
      * Is the field can be set as unused?
      * You can't set a field unused if it is used in the tracker
@@ -739,7 +756,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     public function canBeUnused() {
         // a field deletable if it not used in semantics nor in workflow
-        return  ! ($this->isUsedInSemantics() || $this->isUsedInWorkflow() || $this->isUsedInFieldDependency());
+        return  ! ($this->isUsedInSemantics() || 
+                   $this->isUsedInWorkflow() || 
+                   $this->isUsedInFieldDependency() || 
+                   $this->isUsedByAnotherField()
+                );
     }
 
     /**
