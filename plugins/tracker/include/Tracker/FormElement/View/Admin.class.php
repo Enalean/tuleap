@@ -259,20 +259,7 @@ class Tracker_FormElement_View_Admin {
                 $html .= $this->fetchAdminSpecificProperty($key_choice, $choice);
                 $html .= '<br />';
             }
-            break;      
-        
-        case 'checkbox':
-            $disabled = 'disabled';
-            if ($this->formElement->doesCapacityFieldExist()) {
-                $disabled = '';
-            }
-            //$html .= '<p>';
-            //$html .= '<input type="hidden" name="formElement_data[specific_properties]['. $key .']"  value="0" />';
-            //$html .= '<input type="checkbox" name="formElement_data[specific_properties]['. $key .']"  id="formElement_properties_'. $key .'" value="1" '. $disabled . ($this->formElement->getUseCapacity() ? 'checked="checked"' : '') .'" />';
-            //$html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
-            //$html .= '</p>';
             break;
-            
         case 'label':
             $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
             

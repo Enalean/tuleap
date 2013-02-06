@@ -29,11 +29,9 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
         //use capacity field value
         $html .= $this->fetchUseCapacity();
         
-        $html .= parent::fetchAdminSpecificProperties();
-        
         return $html;
     }
-
+    
     protected function fetchRequired() {
         return '';
     }    

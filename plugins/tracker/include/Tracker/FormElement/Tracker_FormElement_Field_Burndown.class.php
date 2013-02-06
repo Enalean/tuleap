@@ -179,24 +179,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
         return $burndown_data;
     }
-    /**
-     * Fetch the element for the submit new artifact form
-     *
-     * @return string html
-     */
-     public function fetchSubmit() {
-         return '';
-     }
-
-     /**
-     * Fetch the element for the submit masschange form
-     *
-     * @return string html
-     */
-     public function fetchSubmitMasschange() {
-     }
-
-
+    
     /**
      * @return bool
      */
@@ -353,23 +336,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         return $this->fetchArtifactValueReadOnly($artifact, $value);
-    }
-
-    /**
-     * Validate a value
-     *
-     * @param Tracker_Artifact $artifact The artifact
-     * @param mixed            $value    data coming from the request.
-     *
-     * @return bool true if the value is considered ok
-     */
-    protected function validate(Tracker_Artifact $artifact, $value) {
-        //No need to validate artifact id (read only for all)
-        return true;
-    }
-
-    protected function getDao() {
-       return new Tracker_FormElement_Field_BurndownDao();
     }
 
     /**
@@ -581,65 +547,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     private function hasRemainingEffort(Tracker $tracker) {
         return $tracker->hasFormElementWithNameAndType(self::REMAINING_EFFORT_FIELD_NAME, array('int', 'float'));
     }
-    
-    /**
-     * Returns the children of the burndown field tracker.
-     * 
-     * @return array of Tracker
-     */
-    protected function getChildTrackers() {
-        return $this->getHierarchyFactory()->getChildren($this->getTrackerId());
-    }
-    
-    /**
-     * @return the label of the field (mainly used in admin part)
-     */
-    public static function getFactoryLabel() {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_label');
-    }
-    
-    /**
-     * @return the description of the field (mainly used in admin part)
-     */
-    public static function getFactoryDescription() {
-        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'burndown_description');
-    }
-    
-    /**
-     * @return the path to the icon
-     */
-    public static function getFactoryIconUseIt() {
-        return $GLOBALS['HTML']->getImagePath('ic/burndown.png');
-    }
-    
-    /**
-     * @return the path to the icon
-     */
-    public static function getFactoryIconCreate() {
-        return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
-    }
-    
-    /**
-     * Fetch the html code to display the field value in tooltip
-     * 
-     * @param Tracker_Artifact $artifact
-     * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
-     * @return string The html code to display the field value in tooltip
-     */
-    protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
-    }
-
-    /**
-     * Verifies the consistency of the imported Tracker
-     * 
-     * @return true if Tracler is ok 
-     */
-    public function testImport() {
-        return true;
-    }
-
-    
+   
     /**
      * Validate a value
      *
@@ -676,10 +584,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     
      public function getUseCapacity() {
         return $this->getProperty('use_capacity');
-     }
-
-     public function getCapacity() {
-         return 25;
      }
 }
 ?>
