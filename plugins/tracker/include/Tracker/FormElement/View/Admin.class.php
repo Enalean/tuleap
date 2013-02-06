@@ -203,10 +203,8 @@ class Tracker_FormElement_View_Admin {
         $html = '';
         foreach ($this->formElement->getProperties() as $key => $property) {
             $html .= '<p>';
-            if ($property['type'] != 'checkbox') {
-                $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>: ';
-                $html .= '<br />';
-            }
+            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>: ';
+            $html .= '<br />';
             $html .= $this->fetchAdminSpecificProperty($key, $property);
             $html .= '</p>';
         }
