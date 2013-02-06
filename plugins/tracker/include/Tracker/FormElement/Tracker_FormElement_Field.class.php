@@ -737,7 +737,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      */
     private function isUsedByAnotherField() {
         if ($this->name === Tracker_FormElement_Field_Burndown::CAPACITY_FIELD_NAME) {
-            $burndown_fields = Tracker_FormElementFactory::instance()->getUsedBurndownFields($this->getTracker());
+            $burndown_fields = $this->getFormElementFactory()->getUsedBurndownFields($this->getTracker());
             foreach ($burndown_fields as $burndown_field) {
                 if ($burndown_field->doesBurndownUseCapacityField()) {
                     return true;
