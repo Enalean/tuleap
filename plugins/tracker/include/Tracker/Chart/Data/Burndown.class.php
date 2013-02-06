@@ -122,7 +122,7 @@ class Tracker_Chart_Data_Burndown {
     }
 
     private function getFirstEffort() {
-        if($this->capacity !== null) {
+        if($this->capacity !== null && $this->capacity > 0) {
             return $this->capacity;
         }
 

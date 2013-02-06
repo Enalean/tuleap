@@ -309,6 +309,7 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
                 linked_field = 'artifact[' + field_id +']';
             }
 
+            value = ( value.length === 0 ) ? '' : value;
             parameters[ linked_field ] = value;
             return parameters;
         }
@@ -343,16 +344,14 @@ tuleap.agiledashboard.cardwall.card.SelectElementEditor = Class.create(
             }
 
             function updateAvatars( avatars_div, new_values ) {
-                var div_html;
-
                 if(new_values instanceof Array) {
-                    for(var i=0; i<new_values.length; i++) {
+                    for(var i=0; i<new_values.length; i++) {           
                         addAvatar( avatars_div, new_values[i] );
                     }
-                } else if( typeof new_values === 'string' ){
+                } else if( typeof new_values === 'string' && new_values.length > 0 ){
                     addAvatar( avatars_div, new_values );
                 } else {
-                    avatars_div.update( '-' );
+                    avatars_div.update( ' - ' );
                 }
             }
 
