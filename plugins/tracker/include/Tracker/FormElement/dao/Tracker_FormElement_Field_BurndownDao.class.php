@@ -38,7 +38,13 @@ class Tracker_FormElement_Field_BurndownDao extends Tracker_FormElement_Specific
     }
     
      public function duplicate($from_field_id, $to_field_id) {
-        
+        $from_field_id  = $this->da->escapeInt($from_field_id);
+        $to_field_id    = $this->da->escapeInt($to_field_id);
+        $sql = "INSERT INTO $this->table_name (field_id, use_capacity)
+                SELECT $to_field_id, use_capacity
+                FROM $this->table_name
+                WHERE field_id = $from_field_id";
+        return $this->update($sql);
     }
 }
 ?>
