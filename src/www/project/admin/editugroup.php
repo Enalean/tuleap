@@ -109,12 +109,12 @@ if (($func=='edit')||($func=='do_create')) {
     $ugroup_binding = new UGroupBinding(new UGroupUserDao(), $uGroupMgr);
 
     $pane_management = new Project_Admin_UGroup_PaneManagement(
-        $project,
+        $ugroup,
         array(
             new Project_Admin_UGroup_Pane_Settings($ugroup),
             new Project_Admin_UGroup_Pane_Members($ugroup, $request, $uGroupMgr),
-            new Project_Admin_UGroup_Pane_Bind($ugroup, $request, $uGroupMgr),
-            new Project_Admin_UGroup_Pane_UGroupBinding($ugroup, $request, $uGroupMgr, $ugroup_binding),
+            //new Project_Admin_UGroup_Pane_Bind($ugroup, $request, $uGroupMgr),
+            //new Project_Admin_UGroup_Pane_UGroupBinding($ugroup, $request, $uGroupMgr, $ugroup_binding),
             new Project_Admin_UGroup_Pane_Permissions($ugroup),
             new Project_Admin_UGroup_Pane_BindUsage($ugroup, $ugroup_binding),
         ),
