@@ -23,6 +23,8 @@
  */
 
 class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
+    const IDENTIFIER = 'members';
+    
     /**
      * @var UGroupManager
      */
@@ -37,6 +39,18 @@ class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
     public function getContent() {
         $this->ugroup_manager->processEditMembersAction($this->ugroup->getProjectId(), $this->ugroup->getId(), $this->request);
         return $this->ugroup_manager->displayUgroupMembers($this->ugroup->getProjectId(), $this->ugroup->getId(), $this->request);
+    }
+
+    public function getIdentifier() {
+        return self::IDENTIFIER;
+    }
+
+    public function getTitle() {
+        return $GLOBALS['Language']->getText('admin_grouplist', 'members');
+    }
+
+    public function getUrl() {
+        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=members';
     }
 }
 

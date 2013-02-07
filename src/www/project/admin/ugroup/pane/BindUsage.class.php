@@ -23,10 +23,24 @@
  */
 
 class Project_Admin_UGroup_Pane_BindUsage extends Project_Admin_UGroup_Pane {
+    const IDENTIFIER = 'usage';
+    
     public function getContent() {
         $ugroupBinding = get_ugroup_binding();
         $bindingiewer  = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
         return $bindingiewer->getUsagePaneContent($this->ugroup->getProjectId(), $this->ugroup->getId());
+    }
+
+    public function getIdentifier() {
+        return self::IDENTIFIER;
+    }
+
+    public function getTitle() {
+        return $GLOBALS['Language']->getText('global', 'usage');
+    }
+
+    public function getUrl() {
+        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=usage';
     }
 }
 

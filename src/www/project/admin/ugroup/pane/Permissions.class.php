@@ -23,6 +23,7 @@
  */
 
 class Project_Admin_UGroup_Pane_Permissions extends Project_Admin_UGroup_Pane {
+    const IDENTIFIER = 'permissions';
 
     /**
      * @var PermissionsManager
@@ -127,6 +128,18 @@ class Project_Admin_UGroup_Pane_Permissions extends Project_Admin_UGroup_Pane {
             $content .= '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'no_perms').'.</p>';
         }
         return $content;
+    }
+
+    public function getIdentifier() {
+        return self::IDENTIFIER;
+    }
+
+    public function getTitle() {
+        return $GLOBALS['Language']->getText('project_admin_utils', 'event_permission');
+    }
+
+    public function getUrl() {
+        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=permissions';
     }
 }
 

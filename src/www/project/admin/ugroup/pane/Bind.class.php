@@ -23,16 +23,7 @@
  */
 
 
-class Project_Admin_UGroup_Pane_Bind extends Project_Admin_UGroup_Pane {
-    /**
-     * @var UGroupManager
-     */
-    private $ugroup_manager;
-
-    public function __construct(UGroup $ugroup, UGroupManager $ugroup_manager) {
-        parent::__construct($ugroup);
-        $this->ugroup_manager = $ugroup_manager;
-    }
+class Project_Admin_UGroup_Pane_Bind extends Project_Admin_UGroup_Pane_Members {
 
     public function getContent() {
         $content = '';

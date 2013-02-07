@@ -14,13 +14,7 @@ require_once('www/docman/doc_utils.php');
 require_once 'common/project/UGroupManager.class.php';
 require_once('common/html/HTML_Element_Pane.class.php');
 require_once('common/project/UGroupBindingViewer.class.php');
-require_once 'ugroup/Pane.class.php';
-require_once 'ugroup/pane/Settings.class.php';
-require_once 'ugroup/pane/Members.class.php';
-require_once 'ugroup/pane/Permissions.class.php';
-require_once 'ugroup/pane/Bind.class.php';
-require_once 'ugroup/pane/BindUsage.class.php';
-require_once 'ugroup/pane/UGroupBinding.class.php';
+require_once 'ugroup/PaneManagement.class.php';
 
 $hp      = Codendi_HTMLPurifier::instance();
 $request = HTTPRequest::instance();
@@ -68,11 +62,11 @@ function display_name_and_desc_form($ugroup_name, $ugroup_description) {
     </tr>';
 }
 
-    function get_ugroup_binding() {
-        $ugroupUserDao = new UGroupUserDao();
-        $ugroupManager = new UGroupManager(new UGroupDao());
-        return new UGroupBinding($ugroupUserDao, $ugroupManager);
-    }
+function get_ugroup_binding() {
+    $ugroupUserDao = new UGroupUserDao();
+    $ugroupManager = new UGroupManager(new UGroupDao());
+    return new UGroupBinding($ugroupUserDao, $ugroupManager);
+}
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
@@ -126,86 +120,42 @@ if ($func=='create') {
             </tr><tr><td><input type="submit" value="'.$Language->getText('project_admin_editugroup', 'create_ug').'"></tr></td>
         </table>
       </form>';
+    $HTML->footer(array());
 }
 
 
 if (($func=='edit')||($func=='do_create')) {
+    $uGroupMgr = new UGroupManager();
     // Sanity check
     $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
     if (!$ugroup_id) { 
         exit_error($Language->getText('global', 'error'), 'The ugroup ID is missing');
     }
-    $res=ugroup_db_get_ugroup($ugroup_id);
-    if (!$res) {
+    $ugroup = $uGroupMgr->getById($ugroup_id);
+    
+    if (!$ugroup) {
         exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_editugroup', 'ug_not_found', array($ugroup_id, db_error())));
     }
-    if (!isset($ugroup_name) || !$ugroup_name) {
-        $ugroup_name = db_result($res, 0, 'name');
-    }
-    if (!isset($ugroup_description) || !$ugroup_description) {
-        $ugroup_description = db_result($res, 0, 'description');
-    } else {
-        $ugroup_description = stripslashes($ugroup_description);
-    }
-
-    $uGroupMgr = new UGroupManager();
-    $ugroup = $uGroupMgr->getById($ugroup_id);
 
     $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding'));
     $vPane->required();
-    $pane  = $request->getValidated('pane', $vPane, 'settings');
 
-    $panes = array(array('name'  => 'settings',
-                         'link'  => '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=settings',
-                         'title' =>  $Language->getText('global', 'settings')),
-                   array('name'  => 'members',
-                         'link'  => '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=members',
-                         'title' =>  $Language->getText('admin_grouplist', 'members')),
-                   array('name'  => 'permissions',
-                         'link'  => '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=permissions',
-                         'title' =>  $Language->getText('project_admin_utils', 'event_permission')),
-                   array('name'  => 'usage',
-                         'link'  => '/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=usage',
-                         'title' =>  $Language->getText('global', 'usage')));
-
-    $content = '';
-    $activePane = $pane;
-    switch ($pane) {
-    case 'settings':
-        $pane = new Project_Admin_UGroup_Pane_Settings($ugroup);
-        $content = $pane->getContent();
-    break;
-    case 'members':
-        $pane = new Project_Admin_UGroup_Pane_Members($ugroup, $request, $uGroupMgr);
-        $content = $pane->getContent();
-    break;
-    case 'bind':
-        $pane = new Project_Admin_UGroup_Pane_Bind($ugroup, $uGroupMgr);
-        $content = $pane->getContent();
-    break;
-    case 'permissions':
-        $pane = new Project_Admin_UGroup_Pane_Permissions($ugroup);
-        $content = $pane->getContent();
-    break;
-    case 'usage':
-        $pane = new Project_Admin_UGroup_Pane_BindUsage($ugroup);
-        $content = $pane->getContent();
-    break;
-    case 'ugroup_binding':
-        $pane = new Project_Admin_UGroup_Pane_UGroupBinding($ugroup, $request);
-        $content = $pane->getContent();
-    break;
-    }
+    $pane_management = new Project_Admin_UGroup_PaneManagement(
+        array(
+            new Project_Admin_UGroup_Pane_Settings($ugroup),
+            new Project_Admin_UGroup_Pane_Members($ugroup, $request, $uGroupMgr),
+            new Project_Admin_UGroup_Pane_Bind($ugroup, $request, $uGroupMgr),
+            new Project_Admin_UGroup_Pane_UGroupBinding($ugroup, $request, $uGroupMgr),
+            new Project_Admin_UGroup_Pane_Permissions($ugroup),
+            new Project_Admin_UGroup_Pane_BindUsage($ugroup),
+        ),
+        $request->getValidated('pane', $vPane, 'settings')
+    );
 
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
-    //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'ug_admin', $ugroup_name).'</h2>';
     echo _breadCrumbs($project, $ugroup_id, $ugroup_name);
-
-    $HTMLPane = new HTML_Element_Pane($panes, $activePane, $content);
-    echo $HTMLPane->renderValue();
-
+    $pane_management->display();
+    $HTML->footer(array());
 }
-
-$HTML->footer(array());
 
 ?>

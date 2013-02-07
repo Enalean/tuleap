@@ -20,6 +20,7 @@
  */
 
 class Project_Admin_UGroup_Pane_Settings extends Project_Admin_UGroup_Pane {
+    const IDENTIFIER = 'settings';
 
     public function getContent() {
         $content = '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'upd_ug_name').'</p>
@@ -48,6 +49,18 @@ class Project_Admin_UGroup_Pane_Settings extends Project_Admin_UGroup_Pane {
         </table>
         </form>';
         return $content;
+    }
+
+    public function getIdentifier() {
+        return self::IDENTIFIER;
+    }
+
+    public function getTitle() {
+        return $GLOBALS['Language']->getText('global', 'settings');
+    }
+
+    public function getUrl() {
+        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=settings';
     }
 }
 

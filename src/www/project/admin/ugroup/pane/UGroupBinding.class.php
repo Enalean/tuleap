@@ -22,17 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane {
-    /**
-     *
-     * @var Codendi_Request
-     */
-    private $request;
-
-    public function __construct(UGroup $ugroup, Codendi_Request $request) {
-        parent::__construct($ugroup);
-        $this->request = $request;
-    }
+class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_Members {
 
     public function getContent() {
         $groupId       = $this->request->getValidated('group_id', 'GroupId', 0);
