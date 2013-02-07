@@ -13,7 +13,6 @@ require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
 require_once 'common/project/UGroupManager.class.php';
 require_once('common/html/HTML_Element_Pane.class.php');
-require_once('common/project/UGroupBindingViewer.class.php');
 require_once 'ugroup/PaneManagement.class.php';
 
 $hp      = Codendi_HTMLPurifier::instance();
