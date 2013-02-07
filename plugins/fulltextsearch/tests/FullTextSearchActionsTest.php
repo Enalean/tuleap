@@ -23,7 +23,7 @@ require_once dirname(__FILE__) .'/../../docman/include/Docman_PermissionsItemMan
 require_once dirname(__FILE__).'/Constants.php';
 require_once dirname(__FILE__).'/builders/Parameters_Builder.php';
 
-class FullTextSearchActionsTests extends TuleapTestCase {
+class FullTextSearchDocmanActionsTests extends TuleapTestCase {
     protected $client;
     protected $actions;
     protected $params;
@@ -34,7 +34,7 @@ class FullTextSearchActionsTests extends TuleapTestCase {
 
         $this->client              = mock('FullTextSearch_IIndexDocuments');
         $this->permissions_manager = mock('Docman_PermissionsItemManager');
-        $this->actions = new FullTextSearchActions($this->client, $this->permissions_manager);
+        $this->actions = new FullTextSearchDocmanActions($this->client, $this->permissions_manager);
 
         $this->item = aDocman_File()
             ->withId(101)
