@@ -153,7 +153,7 @@ if (($func=='edit')||($func=='do_create')) {
     );
 
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
-    echo _breadCrumbs($project, $ugroup_id, $ugroup_name);
+    echo _breadCrumbs($project, $ugroup->getId(), $ugroup->getName());
     $pane_management->display();
     $HTML->footer(array());
 }
