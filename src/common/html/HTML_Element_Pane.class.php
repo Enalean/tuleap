@@ -20,6 +20,8 @@ require_once('HTML_Element.class.php');
 
 /**
  * Display a pane
+ *
+ * @todo Try to remove duplication between UGroup PaneManaget and git pane magement
  */
 class HTML_Element_Pane extends HTML_Element {
 
