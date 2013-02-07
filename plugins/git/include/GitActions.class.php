@@ -205,7 +205,11 @@ class GitActions extends PluginActions {
             $c->redirect('/plugins/git/?action=index&group_id='.$projectId);
             return;
         }
-        $this->addData( array('repository'=>$repository) );
+        $this->addData(array(
+            'repository'     => $repository,
+            'gerrit_servers' => $this->gerrit_server_factory->getServers(),
+            'driver'         => $this->driver,
+        ));
         return true;
     }
 
@@ -475,15 +479,16 @@ class GitActions extends PluginActions {
     /**
      * Fork a bunch of repositories in a project for a given user
      * 
-     * @param int    $groupId   The project id
-     * @param array  $repos_ids The array of id of repositories to fork
-     * @param string $namespace The namespace where the new repositories will live
-     * @param User   $user      The owner of those new repositories
-     * @param Layout $response  The response object
+     * @param int    $groupId         The project id
+     * @param array  $repos_ids       The array of id of repositories to fork
+     * @param string $namespace       The namespace where the new repositories will live
+     * @param User   $user            The owner of those new repositories
+     * @param Layout $response        The response object
+     * @param array  $forkPermissions Permissions to be applied for the new repository
      */
-    public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url) {
+    public function fork(array $repos, Project $to_project, $namespace, $scope, User $user, Layout $response, $redirect_url, array $forkPermissions) {
         try {
-            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope)) {
+            if ($this->manager->forkRepositories($repos, $to_project, $user, $namespace, $scope, $forkPermissions)) {
                 $GLOBALS['Response']->addFeedback('info', $this->getText('successfully_forked'));
                 $response->redirect($redirect_url);
             }
@@ -491,7 +496,24 @@ class GitActions extends PluginActions {
             $GLOBALS['Response']->addFeedback('error', $e->getMessage());
         }
     }
-    
+
+    /**
+     * Prepare data for fork permissions action
+     *
+     * @param array  $repos     Repositories Ids we want to fork
+     * @param array  $project   The project Id where repositories would be forked
+     * @param string $namespace The namespace where the new repositories will live
+     * @param string $scope     The scope of the fork: personal or cross project.
+     *
+     * @return void
+     */
+    public function forkRepositoriesPermissions($repos, $project, $namespace, $scope) {
+        $this->addData(array('repos'     => join(',', $repos),
+                             'group_id'  => $project,
+                             'namespace' => $namespace,
+                             'scope'     => $scope));
+    }
+
     /**
      * 
      * @param GitRepository $repository

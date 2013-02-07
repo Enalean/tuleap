@@ -17,9 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../../include/Tracker/Semantic/Tracker_Semantic_Status.class.php';
-require_once dirname(__FILE__).'/../../include/Tracker/Semantic/Tracker_Semantic_StatusFactory.class.php';
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 Mock::generate('Tracker_Semantic_Status');
 Mock::generate('Tracker_Semantic_StatusFactory');

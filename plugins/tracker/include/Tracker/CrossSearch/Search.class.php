@@ -18,11 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'SharedFieldFactory.class.php';
-require_once 'SearchDao.class.php';
-require_once dirname(__FILE__).'/../Hierarchy/Sorter.class.php';
-require_once dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php';
-require_once dirname(__FILE__).'/../Hierarchy/Hierarchy.class.php';
 
 /**
  * The cross-tracker search model.

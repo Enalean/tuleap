@@ -18,13 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/NoMilestone.class.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
-require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
-require_once dirname(__FILE__).'/../builders/aMilestone.php';
+require_once dirname(__FILE__).'/../common.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
-require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
 abstract class Planning_MilestoneTest extends TuleapTestCase {
     public function setUp() {

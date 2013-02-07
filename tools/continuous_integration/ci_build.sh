@@ -87,10 +87,11 @@ substitute '../etc/codendi/conf/local.inc' '\/var\/tmp' "$WORKSPACE/var/tmp"
 # Set environment var CODENDI_LOCAL_INC
 export CODENDI_LOCAL_INC="$WORKSPACE/etc/codendi/conf/local.inc"
 
-# Write test config file
+# Write test config file for database tests
+sys_dbname=$(echo $JOB_NAME | tr '.' '_')
 cat >$WORKSPACE/etc/codendi/conf/tests.inc <<EOF
 <?php
-\$sys_dbname = "$JOB_NAME";
+\$sys_dbname = "$sys_dbname";
 ?>
 EOF
 

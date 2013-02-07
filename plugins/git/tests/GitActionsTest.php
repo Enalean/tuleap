@@ -512,10 +512,11 @@ class GitActions_ForkTests extends TuleapTestCase {
         $user         = mock('User');
         $response     = mock('Layout');
         $redirect_url = '/stuff';
+        $forkPermissions = array();
 
-        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope));
+        $this->manager->expectOnce('forkRepositories', array($repositories, $to_project, $user, $namespace, $scope, $forkPermissions));
 
-        $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url);
+        $this->actions->fork($repositories, $to_project, $namespace, $scope, $user, $response, $redirect_url, $forkPermissions);
     }
 }
 

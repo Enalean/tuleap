@@ -46,6 +46,8 @@ class UGroupManager {
 
         $row = $this->getDao()->searchByGroupIdAndUGroupId($project_id, $ugroup_id)->getRow();
         if ($row) {
+            // force group_id as it is set to 100 for dynamic groups
+            $row['group_id'] = $project_id;
             return new UGroup($row);
         }
     }

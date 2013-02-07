@@ -22,8 +22,6 @@ require_once 'common/widget/Widget.class.php';
 require_once 'common/user/UserManager.class.php';
 require_once 'common/include/Toggler.class.php';
 
-require_once dirname(__FILE__).'/../Artifact/Tracker_ArtifactFactory.class.php';
-require_once dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php';
 
 /**
  * Widget_MyArtifacts

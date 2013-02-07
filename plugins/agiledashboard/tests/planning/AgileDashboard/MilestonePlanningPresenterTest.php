@@ -18,21 +18,15 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/user/User.class.php';
-require_once dirname(__FILE__).'/../../../tracker/include/constants.php';
-require_once TRACKER_BASE_DIR.'/Tracker/CrossSearch/SearchContentView.class.php';
-require_once TRACKER_BASE_DIR.'/../tests/builders/aMockTracker.php';
-require_once dirname(__FILE__).'/../../include/Planning/Planning.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/MilestonePresenter.class.php';
+require_once dirname(__FILE__).'/../../common.php';
 
-abstract class Planning_MilestonePresenter_Common extends TuleapTestCase {
+abstract class AgileDashboard_MilestonePlanningPresenter_Common extends TuleapTestCase {
 
     protected function getAnArtifact($artifact_id, $children = array(), $tracker = null) {
         if (!$tracker) {
             $tracker = stub('Tracker')->userCanView()->returns(true);
         }
-        
+
         $artifact = stub('Tracker_Artifact')->getUniqueLinkedArtifacts()->returns($children);
         stub($artifact)->getId()->returns($artifact_id);
         stub($artifact)->getTitle()->returns('Artifact ' . $artifact_id);
@@ -43,10 +37,11 @@ abstract class Planning_MilestonePresenter_Common extends TuleapTestCase {
 
 }
 
-class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common {
-    
+class AgileDashboard_MilestonePlanningPresenterTest extends AgileDashboard_MilestonePlanningPresenter_Common {
+
     public function setUp() {
         parent::setUp();
+
         $this->user                = mock('User');
         $this->planning_tracker_id = 191;
         $this->planning_tracker    = mock('Tracker');
@@ -54,21 +49,21 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
         $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
         $this->artifacts_to_select = array();
         $this->artifact            = null;
-        
+
         $factory = mock('Tracker_ArtifactFactory');
         Tracker_ArtifactFactory::setInstance($factory);
-        
+
         $this->generateABunchOfArtifacts($factory);
-        
+
         $hierarchy_factory = mock('Tracker_Hierarchy_HierarchicalTrackerFactory');
         Tracker_Hierarchy_HierarchicalTrackerFactory::setInstance($hierarchy_factory);
-        
-        
+
+
         stub($this->planning)->getPlanningTrackerId()->returns($this->planning_tracker_id);
         stub($this->planning)->getPlanningTracker()->returns($this->planning_tracker);
         stub($this->planning_tracker)->getId()->returns($this->planning_tracker_id);
     }
-    
+
     private function generateABunchOfArtifacts($factory) {
         for ($i = 30 ; $i < 40 ; ++$i) {
             $artifact = mock('Tracker_Artifact');
@@ -79,30 +74,26 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
             stub($factory)->getArtifactById($i)->returns($artifact);
         }
     }
-    
+
     public function tearDown() {
         Tracker_ArtifactFactory::clearInstance();
         Tracker_Hierarchy_HierarchicalTrackerFactory::clearInstance();
     }
-    
+
     protected function getAPresenter(TreeNode $planned_artifacts_tree = null) {
         $milestone = new Planning_ArtifactMilestone(mock('Project'),
                                             $this->planning,
                                             $this->artifact,
                                             $planned_artifacts_tree);
-        
-        return new Planning_MilestonePresenter(
-            $this->planning,
+
+        return new AgileDashboard_MilestonePlanningPresenter(
             $this->content_view,
-            $this->artifacts_to_select,
             $milestone,
             $this->user,
-            mock('Codendi_Request'),
-            'planning['. (int)$this->planning->getId() .']=',
-            'planning['. (int)$this->planning->getId() .']=-1'
+            'planning['. (int)$this->planning->getId() .']='
         );
     }
-    
+
     protected function getATreeNode($tree_node_id, $artifact_links = array(), $classname = "planning-draggable-alreadyplanned") {
         $node = new TreeNode(array(
                         'id'                   => $tree_node_id,
@@ -120,7 +111,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
         }
         return $node;
     }
-    
+
     protected function assertEqualTreeNodes($node1, $node2) {
         $this->assertEqual($node1->getData(), $node2->getData());
         $this->assertEqual($node1->getId(), $node2->getId());
@@ -131,7 +122,7 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
             $this->assertEqualTreeNodes($child, $children2[$child_num]);
         }
     }
-    
+
     /**
      * artifacct parent 30
      * 	- artifact 33
@@ -148,20 +139,20 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
         $artifact37 = $this->getAnArtifact(37);
         $artifact38 = $this->getAnArtifact(38);
         $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
-        
+
         $this->artifact = $this->getAnArtifact(30, array($artifact33, $artifact34, $artifact36));
-        
+
         $node33 = $this->getATreeNode(33);
         $node34 = $this->getATreeNode(34, array($this->getATreeNode(35)));
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node33, $node34, $node36));
 
         $presenter = $this->getAPresenter($node_parent);
-        
+
         $result = $presenter->getPlannedArtifactsTree($node_parent);
         $this->assertEqualTreeNodes($node_parent, $result);
     }
-    
+
     /**
     * artifacct parent 30
     * 	- artifact 36
@@ -174,20 +165,20 @@ class Planning_MilestonePresenterTest extends Planning_MilestonePresenter_Common
         $artifact37 = $this->getAnArtifact(37);
         $artifact38 = $this->getAnArtifact(38, array($artifact39));
         $artifact36 = $this->getAnArtifact(36, array($artifact37, $artifact38));
-    
+
         $this->artifact = $this->getAnArtifact(30, array($artifact36));
-        
+
         $node36 = $this->getATreeNode(36, array($this->getATreeNode(37), $this->getATreeNode(38)));
         $node_parent = $this->getATreeNode(30, array($node36));
-    
+
         $presenter = $this->getAPresenter($node_parent);
-    
+
         $result = $presenter->getPlannedArtifactsTree();
         $this->assertEqualTreeNodes($node_parent, $result);
     }
 }
 
-class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_MilestonePresenter_Common {
+class AgileDashboard_MilestonePlanningPresenter_AssertPermissionsTest extends AgileDashboard_MilestonePlanningPresenter_Common {
     private $sprint_artifact;
 
     public function setUp() {
@@ -198,28 +189,24 @@ class Planning_MilestonePresenter_AssertPermissionsTest extends Planning_Milesto
         $this->artifacts_to_select = array();
         $this->sprint_artifact     = null;
 
-        $this->presenter = new Planning_MilestonePresenter(
-                        $this->planning,
+        $this->presenter = new AgileDashboard_MilestonePlanningPresenter(
                         $this->content_view,
-                        $this->artifacts_to_select,
                         new Planning_NoMilestone(mock('Project'), $this->planning),
                         $this->user,
-                        mock('Codendi_Request'),
-                        '',
                         ''
         );
     }
 
     public function itDisplaysDestinationOnlyIfUserCanAccessTheTracker() {
         $sprint_tracker            = stub('Tracker')->userCanView()->returns(false);
-        
+
         $this->sprint_artifact = $this->getAnArtifact(30, array($this->getAnArtifact(37)), $sprint_tracker);
 
         $this->assertNull($this->presenter->getPlannedArtifactsTree());
     }
 }
 
-class Planning_MilestonePresenter_OverCapacityTest extends Planning_MilestonePresenter_Common {
+class AgileDashboard_MilestonePlanningPresenter_OverCapacityTest extends AgileDashboard_MilestonePlanningPresenter_Common {
     private $presenter;
     private $sprint_milestone;
 
@@ -229,16 +216,12 @@ class Planning_MilestonePresenter_OverCapacityTest extends Planning_MilestonePre
         $this->planning            = mock('Planning');
         $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
         $this->artifacts_to_select = array();
-        $this->sprint_milestone    = mock('Planning_ArtifactMilestone');
+        $this->sprint_milestone    = stub('Planning_ArtifactMilestone')->getPlanning()->returns($this->planning);
 
-        $this->presenter = new Planning_MilestonePresenter(
-            $this->planning,
+        $this->presenter = new AgileDashboard_MilestonePlanningPresenter(
             $this->content_view,
-            $this->artifacts_to_select,
             $this->sprint_milestone,
             $this->user,
-            mock('Codendi_Request'),
-            '',
             ''
         );
     }

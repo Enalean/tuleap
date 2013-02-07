@@ -21,11 +21,6 @@
 
 require_once dirname(__FILE__) .'/../../constants.php';
 
-require_once CARDWALL_BASE_DIR .'/FieldProviders/IProvideFieldGivenAnArtifact.class.php';
-require_once CARDWALL_BASE_DIR .'/FieldProviders/SemanticStatusFieldProvider.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/TrackerMapping.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/Config.class.php';
-
 /**
  * Provides the Cardwall_OnTop configured field for an artifact, and fallbacks on the status field if
  * there is no mapping

@@ -1,3 +1,19 @@
+Version 0.9.15 - Tuleap 5.11
+    * Fix bug with multiple-assigned to on card editions
+
+Version 0.9.14 - Tuleap 5.11
+    * On cardwall, I can update who is assigned to a card without leaving the page
+
+Version 0.9.13 - Tuleap 5.11
+    * Autoload plugin
+    * Refactor rendering of AgileDashboard Panes
+
+Version 0.9.12 - Tuleap 5.11
+    * Enhancement: update the remaining effort on a story without leaving the agile dashboard
+
+Version 0.9.11 - Tuleap 5.9
+    * Fix some issues occuring during project creation
+
 Version 0.9.10 - Tuleap 5.9
     * Fix some isolated tests
 

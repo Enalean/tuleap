@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_List_Bind.class.php');
-require_once('Tracker_FormElement_Field_List_Bind_UsersValue.class.php');
 
 class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Field_List_Bind {
 
@@ -158,7 +156,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                                 if ($keyword) {
                                     $keyword = $da->quoteSmart('%'. $keyword .'%');
                                 }
-                                $sql[] = "(SELECT DISTINCT user.user_id, user.user_name, ". $uh->getDisplayNameSQLQuery() ."
+                                $sql[] = "(SELECT DISTINCT user.user_id, ". $uh->getDisplayNameSQLQuery() .", user.user_name
                                           FROM tracker_artifact AS a
                                                INNER JOIN user
                                                ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker->id )
@@ -615,7 +613,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * @param array            &$xmlMapping the array of mapping XML ID => real IDs
      * @param string           $fieldID     XML ID of the binded field
      */
-    public function exportToXML($root, &$xmlMapping, $fieldID) {
+    public function exportToXml(SimpleXMLElement $root, &$xmlMapping, $fieldID) {
         if ($this->value_function) {
             $child = $root->addChild('items');
             foreach ($this->value_function as $vf) {

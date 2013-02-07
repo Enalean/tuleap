@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List_BindValue.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_FormElement_Field_List_BindValue', 
     'Tracker_FormElement_Field_List_BindValueTestVersion', 
@@ -36,7 +35,7 @@ class Tracker_FormElement_Field_List_BindValueTest extends UnitTestCase {
         $value = new Tracker_FormElement_Field_List_BindValueTestVersion();
         $value->setReturnValue('getLabel', $label);
         $value->setId($id);
-        $this->assertEqual(json_encode($value->fetchJson()), '{"value":"b123","caption":"Reopen"}');
+        $this->assertEqual(json_encode($value->fetchValuesForJson()), '{"id":123,"value":"b123","caption":"Reopen"}');
     }
     
 }

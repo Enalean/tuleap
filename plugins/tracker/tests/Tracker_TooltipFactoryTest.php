@@ -17,9 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/Tooltip/Tracker_TooltipFactory.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker');
 
 class Tracker_TooltipFactoryTest extends UnitTestCase {

@@ -18,8 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Tracker_RuleFactory.class.php';
-require_once TRACKER_BASE_DIR.'/Tracker/Rule/List/View.class.php';
 
 /**
 * Manager of rules
@@ -571,7 +569,7 @@ class Tracker_RulesManager {
      *
      * @return void
      */
-    public function exportToXml($root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
         $this->getTrackerRuleDateFactory()->exportToXml(
                 $root, 
                 $xmlMapping, 

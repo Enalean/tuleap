@@ -17,9 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once('WorkflowFactory.class.php');
-
 class Workflow {
 
     const FUNC_ADMIN_RULES       = 'admin-workflow';
@@ -239,7 +236,7 @@ class Workflow {
      *
      * @return void
      */
-    public function exportToXml(&$root, $xmlMapping) {
+    public function exportToXml(SimpleXMLElement $root, $xmlMapping) {
            $root->addChild('field_id')->addAttribute('REF', array_search($this->field_id, $xmlMapping));
            $root->addChild('is_used', $this->is_used);
            $child = $root->addChild('transitions');
@@ -266,14 +263,34 @@ class Workflow {
      *
      * @param Array $fields_data  Request field data (array[field_id] => data)
      * @param User  $current_user The user who are performing the update
+     * @param Tracker_Artifact  $artifact The artifact
      *
      * @return void
      */
     public function before(array &$fields_data, User $current_user, Tracker_Artifact $artifact) {
         if (isset($fields_data[$this->getFieldId()])) {
-            $transition = $this->getCurrentTransition($fields_data, $artifact);
+            $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
             if ($transition) {
                 $transition->before($fields_data, $current_user);
+            }
+        }
+    }
+
+
+    /**
+     * Execute actions after transition happens (if there is one)
+     *
+     * @param Array                      $fields_data        Request field data (array[field_id] => data)
+     * @param Tracker_Artifact_Changeset $new_changeset      The changeset that has just been created
+     * @param Tracker_Artifact_Changeset $previous_changeset The changeset just before (null for a new artifact)
+     *
+     * @return void
+     */
+    public function after(array $fields_data, Tracker_Artifact_Changeset $new_changeset, Tracker_Artifact_Changeset $previous_changeset = null) {
+        if (isset($fields_data[$this->getFieldId()])) {
+            $transition = $this->getCurrentTransition($fields_data, $previous_changeset);
+            if ($transition) {
+                $transition->after($new_changeset);
             }
         }
     }
@@ -283,17 +300,17 @@ class Workflow {
             return true;
         }
 
-        $transition = $this->getCurrentTransition($fields_data, $artifact);
+        $transition = $this->getCurrentTransition($fields_data, $artifact->getLastChangeset());
         if (isset($transition)) {
             return $transition->validate($fields_data, $artifact);
         }
         return true;
     }
 
-    private function getCurrentTransition($fields_data, Tracker_Artifact $artifact) {
+    private function getCurrentTransition($fields_data, Tracker_Artifact_Changeset $changeset = null) {
         $oldValues = null;
-        if($artifact->getLastChangeset()) {
-            $oldValues = $artifact->getLastChangeset()->getValue($this->getField());
+        if ($changeset) {
+            $oldValues = $changeset->getValue($this->getField());
         }
         $from      = null;
         if ($oldValues) {

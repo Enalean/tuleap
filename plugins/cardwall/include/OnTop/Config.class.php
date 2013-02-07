@@ -18,12 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Dao.class.php';
-require_once 'Config/ColumnFactory.class.php';
-require_once 'Config/TrackerMappingFactory.class.php';
-require_once 'Config/ColumnCollection.class.php';
-require_once CARDWALL_BASE_DIR. '/Mapping.class.php';
-require_once 'IConfig.class.php';
 
 /**
  * Manage configuration of a cardwall on top of a tracker
@@ -134,7 +128,10 @@ class Cardwall_OnTop_Config implements Cardwall_OnTop_IConfig{
         $artifact_status = null;
         $field           = $field_provider->getField($artifact);
         if ($field) {
-            $artifact_status = $field->getFirstValueFor($artifact->getLastChangeset());
+            $last_changeset = $artifact->getLastChangeset();
+            if ($last_changeset) {
+                $artifact_status = $field->getFirstValueFor($last_changeset);
+            }
         }
         return $column->canContainStatus($artifact_status, $this->getMappingFor($artifact->getTracker()));
     }

@@ -3,61 +3,28 @@
         <h2 class="dropdown-toggle" data-toggle="dropdown">{{milestoneTitle}} <b class="caret"></b></h2>
         <ul class="dropdown-menu">
             {{#selectableArtifacts}}
-            <li><a href="?group_id={{groupId}}&planning_id={{planningId}}&action=show&aid={{id}}{{currentPaneUrlParam}}">{{{title}}}</a></li>
+            <li><a href="{{url}}">{{{title}}}</a></li>
             {{/selectableArtifacts}}
             <li class="divider"></li>
-            <li><a href="/plugins/tracker/?tracker={{planningTrackerId}}&func=new-artifact-link&id={{parentArtifactId}}&immediate=1&{{planningRedirectToNew}}">{{createNewItemToPlan}}</a></li>
+            <li><a href="{{createNewItemToPlanUrl}}">{{createNewItemToPlan}}</a></li>
         </ul>
     </div>
+    {{#displayMilestoneDates}}
+        <div class="release-date-info">
+            {{startDate}} – {{endDate}}
+        </div>
+    {{/displayMilestoneDates}}
     <ul class="nav nav-tabs">
-        <li class="{{#isPlannerPaneActive}}active{{/isPlannerPaneActive}}">
-            <a href="{{current_uri}}">{{planningPaneTitle}}</a>
-        </li>
-        {{#hasSelectedArtifact}}
-            {{#additionalPanes}}
-                <li class="{{#isActive}}active{{/isActive}}">
-                    <a href="{{current_uri}}&pane={{getIdentifier}}">{{getTitle}}</a>
-                </li>
-            {{/additionalPanes}}
-        {{/hasSelectedArtifact}}
+        {{#getPaneInfoList}}
+            <li class="{{#isActive}}active{{/isActive}}">
+                <a href="{{getUri}}">{{getTitle}}</a>
+            </li>
+        {{/getPaneInfoList}}
     </ul>
     <div class="tab-content">
-        {{#isPlannerPaneActive}}
-            <div id="planner" class="tab-pane active">
-                <div class="planner_feedback">
-                    <div>
-                        <ul class="feedback_warning"><li></li></ul>
-                    </div>
-                </div>
-                <table cellspacing="5">
-                    <tbody>
-                        <tr valign="top">
-                            <td width="50%">
-                                <div class="planning-backlog">
-                                    <h3>{{planningBacklogTitle}}</h3>
-                                    {{{backlogSearchView}}}
-                                </div>
-                            </td>
-                            <td>
-                                <h3>{{planningPlanTitle}}</h3>
-                                {{#hasSelectedArtifact}}
-                                    {{> show-destination}}
-                                {{/hasSelectedArtifact}}
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        {{/isPlannerPaneActive}}
-        {{#hasSelectedArtifact}}
-            {{#additionalPanes}}
-                <div id="{{getIdentifier}}" class="tab-pane {{#isActive}}active{{/isActive}}">
-                    {{#isActive}}
-                        {{{getFullContent}}}
-                    {{/isActive}}
-                </div>
-            {{/additionalPanes}}
-        {{/hasSelectedArtifact}}
+        <div id="{{getActivePane.getIdentifier}}" class="tab-pane active">
+        {{{getActivePane.getFullContent}}}
+        </div>
     </div>
 </div>
 

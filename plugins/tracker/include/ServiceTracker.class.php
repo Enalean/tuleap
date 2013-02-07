@@ -50,7 +50,6 @@ class ServiceTracker extends Service {
      * @return TrackerManager 
      */
     protected function getTrackerManager() {
-        require_once('Tracker/TrackerManager.class.php');
         return new TrackerManager();
     }
     

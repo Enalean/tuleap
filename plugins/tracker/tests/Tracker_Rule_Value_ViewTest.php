@@ -1,7 +1,5 @@
 <?php
-
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/List/View.class.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/List.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_Rule_List');
 
 /**

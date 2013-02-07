@@ -292,4 +292,31 @@ class GitRepository_CanDeletedTest extends TuleapTestCase {
     
 }
 
+class GitRepository_GetAccessUrlTest extends TuleapTestCase {
+    /**
+     * @var Git_Backend_Interface
+     */
+    private $backend;
+
+    /**
+     * @var GitRepository
+     */
+    private $repository;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->backend = mock('GitBackend');
+
+        $this->repository = new GitRepository();
+        $this->repository->setBackend($this->backend);
+    }
+
+    public function itReturnsTheBackendContent() {
+        $access_url = array('ssh' => 'plop');
+        stub($this->backend)->getAccessURL()->returns(array('ssh' => 'plop'));
+        $this->assertEqual($this->repository->getAccessURL(), $access_url);
+    }
+}
+
 ?>

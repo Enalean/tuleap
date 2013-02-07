@@ -22,8 +22,7 @@
 // please add the functions/methods below when needed.
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
-
-require_once(dirname(__FILE__).'/../../include/workflow/Transition.class.php');
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 function aTransition() {
     return new Test_Transition_Builder();

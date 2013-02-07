@@ -24,7 +24,7 @@ class CrossReferenceFactory {
     var $source_refs_datas;
     
     /**
-     * array of references {Object CrossReference} made by the current CrossReferenceFaxtory
+     * array of references {Object CrossReference} made by the current CrossReferenceFactory
      * In other words, Items in this array are referenced by the current Item
      * @var array
      */
@@ -111,8 +111,13 @@ class CrossReferenceFactory {
         $params.= "&source_key=".$currRef->getRefSourceKey() ;
         return $params;
     }
-    
-    function getMailCrossRefs($format='text') {
+
+    /**
+     * Returns the cross references grouped by 'source', 'target' and
+     * 'both' types with their URLs and tags.
+     * @return array The formatted cross references
+     */
+    public function getFormattedCrossReferences() {
         $crossRefArray = $this->getCrossReferences();
         $refs = array();
         foreach ($crossRefArray as $nature => $refArraySourceTarget) {

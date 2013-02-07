@@ -1,19 +1,13 @@
 <?php
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/builders/all.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RuleFactory.class.php');
-
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/dao/Tracker_RuleDao.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_RuleDao');
 
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
 
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_List.class.php');
 Mock::generate('Tracker_FormElement_Field_List');
 /**
  * Copyright (c) Xerox Corporation, Codendi Team, 2001-2009. All rights reserved

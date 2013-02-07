@@ -17,7 +17,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once TRACKER_BASE_DIR.'/Tracker/Artifact/Redirect.class.php';
 
 class Tracker_Action_CreateArtifact {
     private $tracker;

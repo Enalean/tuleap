@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php');
-require_once('Tracker_FormElement_Field.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_PermissionsOnArtifact.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_PermissionsOnArtifact_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_PermissionsOnArtifactDao.class.php');
 require_once('common/dao/UGroupDao.class.php');
 
 class Tracker_FormElement_Field_PermissionsOnArtifact extends Tracker_FormElement_Field {

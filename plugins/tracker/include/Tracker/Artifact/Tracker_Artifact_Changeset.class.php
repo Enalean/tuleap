@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_Artifact_Changeset_ValueDao.class.php');
-require_once('dao/Tracker_Artifact_Changeset_CommentDao.class.php');
-require_once('Tracker_Artifact_Changeset_Comment.class.php');
-require_once(dirname(__FILE__).'/../FormElement/Tracker_FormElementFactory.class.php');
-require_once(dirname(__FILE__).'/../Tracker_NotificationsManager.class.php');
 require_once('common/date/DateHelper.class.php');
 require_once('common/include/Config.class.php');
 require_once('common/mail/MailManager.class.php');
@@ -323,7 +318,14 @@ class Tracker_Artifact_Changeset {
      */
     public function updateComment($body, $user, $comment_format) {
         if ($this->userCanEdit($user)) {
-            $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $comment_format);
+            $commentUpdated = $this->getCommentDao()->createNewVersion($this->id, $body, $user->getId(), $this->getComment()->id, $comment_format);
+            if ($commentUpdated) {
+                $params = array('group_id'     => $this->getArtifact()->getTracker()->getGroupId(),
+                                'artifact_id'  => $this->getArtifact()->getId(),
+                                'changeset_id' => $this->getId(),
+                                'text'         => $body);
+                EventManager::instance()->processEvent('tracker_followup_event_update', $params);
+            }
         }
     }
 
@@ -333,7 +335,9 @@ class Tracker_Artifact_Changeset {
      * @return Tracker_Artifact_Changeset_Comment The comment of this changeset, or null if no comments
      */
     public function getComment() {
-        if (isset($this->latest_comment)) return $this->latest_comment;
+        if (isset($this->latest_comment)) {
+            return $this->latest_comment;
+        }
         
         if ($row = $this->getCommentDao()->searchLastVersion($this->id)->getRow()) {
             $this->latest_comment = new Tracker_Artifact_Changeset_Comment($row['id'],
@@ -787,7 +791,10 @@ class Tracker_Artifact_Changeset {
     }
 
     public function exportCommentToSOAP() {
-        return $this->getComment()->exportToSOAP();
+        $comment = $this->getComment();
+        if ($comment) {
+            return $comment->exportToSOAP();
+        }
     }
 }
 ?>

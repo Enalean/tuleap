@@ -1,3 +1,9 @@
+Version 0.14 - Tuleap 5.11
+    * Allow to search in tracker follow-up comments via Full Text Search Engine. This feature is in Beta and available only through Lab mode. (Contrib STMicroeletronics).
+
+Version 0.13 - Tuleap 5.9
+    * Refactoring
+
 Version 0.12 - Tuleap 5.5
     * When a new version is uploaded, index it in ES
 

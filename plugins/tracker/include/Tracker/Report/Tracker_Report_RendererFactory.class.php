@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('dao/Tracker_Report_RendererDao.class.php');
-require_once('dao/Tracker_Report_Renderer_TableDao.class.php');
-require_once('Tracker_ReportFactory.class.php');
-require_once('Tracker_Report_Renderer.class.php');
-require_once('Tracker_Report_Renderer_Table.class.php');
 require_once('common/event/EventManager.class.php');
 
 
@@ -35,6 +30,15 @@ class Tracker_Report_RendererFactory {
     protected function __construct() {
 
     }
+
+    /**
+     * Get Event Manager instance
+     *
+     * @return EventManager
+     */
+     private function getEventManager() {
+         return EventManager::instance();
+     }
 
     /**
      * Hold an instance of the class
@@ -192,7 +196,7 @@ class Tracker_Report_RendererFactory {
                         //Not yet implemented
                         break;
                     default:
-                        EventManager::instance()
+                        $this->getEventManager()
                                     ->processEvent('tracker_report_create_renderer',
                                                    array('renderer_id' => $renderer_id,
                                                          'type'        => $type,
@@ -263,7 +267,7 @@ class Tracker_Report_RendererFactory {
                     //Not yet implemented
                     break;
                 default:
-                    EventManager::instance()
+                    $this->getEventManager()
                                 ->processEvent('tracker_report_create_renderer_in_session',
                                                array('renderer_id' => $renderer_id,
                                                      'type'        => $type,
@@ -305,7 +309,7 @@ class Tracker_Report_RendererFactory {
     
     public function getTypes() {
         $types = array(Tracker_Report_Renderer::TABLE => $GLOBALS['Language']->getText('plugin_tracker_report','table'));
-        EventManager::instance()
+        $this->getEventManager()
                     ->processEvent('tracker_report_renderer_types', 
                                    array('types' => &$types));
         return $types;
@@ -424,7 +428,7 @@ class Tracker_Report_RendererFactory {
                     break;
                     
                 default:
-                    EventManager::instance()->processEvent(
+                    $this->getEventManager()->processEvent(
                         'tracker_report_renderer_instance', 
                         array(
                             'instance'         => &$instance,
@@ -504,7 +508,7 @@ class Tracker_Report_RendererFactory {
             break;
             
         default:
-            EventManager::instance()->processEvent(
+            $this->getEventManager()->processEvent(
                 'tracker_report_renderer_from_xml',
                 array(
                     'row'     => &$row,

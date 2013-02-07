@@ -1339,6 +1339,13 @@ workflow_admin	new_artifact	New artifact
 workflow_admin	change_value_date_field_to	The date field $1 is set to $2
 workflow_admin	change_value_int_field_to	The integer field $1 is set to $2
 workflow_admin	change_value_float_field_to	The float field $1 is set to $2
+workflow_admin	ci_build	The following job $1 will be launched
+workflow_admin	ci_build_help	$1 will automatically pass following parameters to the job:
+workflow_admin	ci_build_help_userid	userId: Identifier (integer) of $1 user who made the transition
+workflow_admin	ci_build_help_projectid	projectId: Identifier (integer) of the current project (ie. $1)
+workflow_admin	ci_build_help_trackerid	trackerId: Identifier (integer) of the current tracker (ie. $1)
+workflow_admin	ci_build_help_artifactid	artifactId: Identifier (integer) of the artifact where the transition happens
+workflow_admin	ci_build_help_trigger_field_value	triggerFieldValue: Value (string) of current transition target (ie. $1)
 workflow_admin	post_action_change_value_date_field	Change the value of a date field
 workflow_admin	post_action_change_value_int_field	Change the value of an int field
 workflow_admin	post_action_change_value_float_field	Change the value of a float field
@@ -1353,9 +1360,13 @@ workflow_admin	post_action_field_date_current_time	the current time
 workflow_admin	post_action_not_defined	This action will be inactive until it is completely configured
 workflow_admin	the_field	The field
 workflow_admin	field_not_empty	must not be empty
+workflow_admin	ci_url	Hudson or Jenkins job url: http://CI_URL/job/JOBNAME
 
 workflow_postaction	field_value_set	The field '$1' will be automatically set to $2
 workflow_postaction	field_clear	The field '$1' will be automatically cleared
+workflow_postaction	invalid_job_url	The continuous integration job URL '$1' is not valid.
+workflow_postaction	ci_build	Launch a continuous integration build
+workflow_postaction	ci_build_succeeded	Job build launch succeeded ($1)
 
 workflow_condition	invalid_condition	Invalid condition: the field '$1'must not be empty
 
@@ -1435,3 +1446,5 @@ project_admin_utils	tracker_date_reminder_invalid_ugroup	'$1' is not a valid Ugr
 project_admin_utils	tracker_date_reminder_empty_ugroup_param	You should select at least one valid ugroup
 project_admin_utils	tracker_date_reminder_before_submittedOn	Unable to add Date Reminder before 'SubmittedOn' Field
 project_admin_utils	tracker_date_reminder_duplicated	Cannot duplicate Date Reminder
+
+plugin_tracker	access_burndown	Access to burndown

@@ -554,7 +554,7 @@ class GitPlugin extends Plugin {
         $project = $pm->getProject($params['group_id']);
         if ($project->usesService(GitPlugin::SERVICE_SHORTNAME)) {
             require_once('Git.class.php');
-            $controler = new Git($this, $this->getGerritServerFactory());
+            $controler = new Git($this, $this->getGerritServerFactory(), $this->getGerritDriver());
             $controler->logsDaily($params);
         }
     }
@@ -608,7 +608,7 @@ class GitPlugin extends Plugin {
         require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/UserFinder.class.php';
         $user_finder = new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
         //$dir, Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_UserFinder $user_finder
-        $tmp_dir = Config::get('tmp_dir') .'/'. uniqid();
+        $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
         return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $user_finder);
     }
 }

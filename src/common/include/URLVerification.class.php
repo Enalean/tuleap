@@ -297,7 +297,6 @@ class URLVerification {
           '/snippet',     // Code Snippet Library
           '/softwaremap/',// browsable software map
           '/new/',        // list of the newest releases made on the Codendi site ('/news' must be allowed...)
-          '/search',      // search for people, projects, and artifacts in trackers!
           '/people/',     // people skills and profile
           '/stats',       // Codendi site statistics
           '/top',         // projects rankings (active, downloads, etc)
@@ -355,6 +354,13 @@ class URLVerification {
             if ($sc_name == '/index.php') {
                 return false;
             }
+        }
+
+        //Forbid search unless it's on a tracker
+        if (strpos($req_uri,'/search') === 0 && isset($_REQUEST['type_of_search']) && $_REQUEST['type_of_search'] == 'tracker') {
+            return true;
+        } elseif( strpos($req_uri,'/search') === 0 ) {
+            return false;
         }
 
         // Forbid access to other user's page (Developer Profile)

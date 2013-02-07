@@ -1899,28 +1899,32 @@ class Layout extends Response {
             $hp =& Codendi_HTMLPurifier::instance();
             if ($short_name == 'summary') {
 
-                // Add a default tab to explain project privacy
-                if ($project->isPublic()) {
-                    $privacy = 'public';
-                } else {
-                    $privacy = 'private';
+                $label = '';
+                if (Config::get('sys_display_project_privacy_in_service_bar')) {
+                    // Add a default tab to explain project privacy
+                    if ($project->isPublic()) {
+                        $privacy = 'public';
+                    } else {
+                        $privacy = 'private';
+                    }
+                    $label .= '<span class="project_privacy_'.$privacy.'">[';
+                    $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
+                    $label .= ']</span>';
+
+                    // Javascript for project privacy tooltip
+                    $js = "
+                    document.observe('dom:loaded', function() {
+                        $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
+                            var type = span.className.substring('project_privacy_'.length, span.className.length);
+                            codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
+                        });
+                    });
+                    ";
+                    $this->includeFooterJavascriptSnippet($js);
+
+                    $label .= '&nbsp;';
                 }
-                $label  = '<span class="project_privacy_'.$privacy.'">[';
-                $label .= $GLOBALS['Language']->getText('project_privacy', $privacy);
-                $label .= ']</span>';
-
-                // Javascript for project privacy tooltip
-                $js = "
-document.observe('dom:loaded', function() {
-    $$('span[class=project_privacy_private], span[class=project_privacy_public]').each(function (span) {
-        var type = span.className.substring('project_privacy_'.length, span.className.length);
-        codendi.Tooltips.push(new codendi.Tooltip(span, '/project/privacy.php?project_type='+type));
-    });
-});
-";
-                $this->includeFooterJavascriptSnippet($js);
-
-                $label .= '&nbsp;'.$hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;';
+                $label .= $hp->purify(util_unconvert_htmlspecialchars($project->getPublicName()), CODENDI_PURIFIER_CONVERT_HTML).'&nbsp;&raquo;';
             } else {
                 $label  = '<span title="'.$hp->purify($service_data['description']).'">';
                 $label .= $hp->purify($service_data['label']).'</span>';

@@ -18,10 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once(dirname(__FILE__).'/builders/all.php');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact.class.php');
+require_once('bootstrap.php');
 Mock::generatePartial(
     'Tracker_Artifact',
     'Tracker_ArtifactTestVersion',
@@ -55,23 +52,14 @@ Mock::generatePartial(
     )
 );
 
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_Changeset.class.php');
 Mock::generate('Tracker_Artifact_Changeset');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Date.class.php');
 Mock::generate('Tracker_FormElement_Field_Date');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_Artifact_ChangesetValue_Date.class.php');
 Mock::generate('Tracker_Artifact_ChangesetValue_Date');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/dao/Tracker_Artifact_ChangesetDao.class.php');
 Mock::generate('Tracker_Artifact_ChangesetDao');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/dao/Tracker_Artifact_Changeset_CommentDao.class.php');
 Mock::generate('Tracker_Artifact_Changeset_CommentDao');
-require_once(dirname(__FILE__).'/../include/Tracker/Tracker.class.php');
 Mock::generate('Tracker');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElementFactory.class.php');
 Mock::generate('Tracker_FormElementFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field.class.php');
 Mock::generatePartial('Tracker_FormElement_Field', 'MockTracker_FormElement_Field', array(
         'getId',
         'getLabel',
@@ -121,27 +109,19 @@ require_once('common/reference/ReferenceManager.class.php');
 Mock::generate('ReferenceManager');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-require_once(dirname(__FILE__).'/../include/Tracker/Artifact/Tracker_ArtifactFactory.class.php');
 Mock::generate('Tracker_ArtifactFactory');
-require_once(dirname(__FILE__).'/../include/Tracker/Rule/Tracker_RulesManager.class.php');
 Mock::generate('Tracker_RulesManager');
 /*Mock::generatePartial('Tracker_RulesManager', 'MockTracker_RulesManager', array(
         'validate'
     )
 );*/
 
-require_once(dirname(__FILE__).'/builders/aField.php');
-require_once(dirname(__FILE__).'/builders/aTracker.php');
 
 
-require_once dirname(__FILE__) .'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
 Mock::generate('Tracker_FormElement_Field_ArtifactLink');
-require_once dirname(__FILE__).'/builders/anArtifact.php';
 
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
 Mock::generate('TrackerManager');
 
-require_once(dirname(__FILE__).'/../include/workflow/Workflow.class.php');
 Mock::generate('Workflow');
 
 class MockWorkflow_Tracker_ArtifactTest_WorkflowNoPermsOnPostActionFields extends MockWorkflow {
@@ -2185,6 +2165,121 @@ class Tracker_Artifact_SOAPTest extends TuleapTestCase {
         $result = $this->artifact->exportCommentsToSOAP();
 
         $this->assertEqual($result, $expected);
+    }
+
+     public function itReturnsTheReferencesInSOAPFormat() {
+        $id       = $tracker_id = $parent_id = $name = $label = $description = $use_it = $scope = $required = $notifications = $rank = 0;
+        $factory  = mock('CrossReferenceFactory');
+        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'));
+        $wiki_ref = array(
+            'ref' => 'wiki #toto',
+            'url' => 'http://example.com/le_link_to_teh_wiki'
+        );
+        $file_ref = array(
+            'ref' => 'file #chapeau',
+            'url' => 'http://example.com/files/chapeau'
+        );
+        $art_ref = array(
+            'ref' => 'art #123',
+            'url' => 'http://example.com/tracker/123'
+        );
+        $doc_ref = array(
+            'ref' => 'doc #42',
+            'url' => 'http://example.com/docman/42'
+        );
+
+        stub($artifact)->getCrossReferenceFactory()->returns($factory);
+        stub($factory)->getFormattedCrossReferences()->returns(
+            array(
+                'source' => array($wiki_ref, $file_ref),
+                'target' => array($art_ref),
+                'both'   => array($doc_ref),
+            )
+        );
+        $soap = $artifact->getCrossReferencesSOAPValues();
+        $this->assertEqual($soap, array(
+            $wiki_ref,
+            $file_ref,
+            $art_ref,
+            $doc_ref
+        ));
+    }
+}
+
+class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->fields_data = array();
+        $this->submitter   = aUser()->build();
+        $this->email       = 'toto@example.net';
+
+        $this->changesets  = array(new Tracker_Artifact_Changeset_Null());
+        $factory     = mock('Tracker_FormElementFactory');
+        stub($factory)->getAllFormElementsForTracker()->returns(array());
+        stub($factory)->getUsedFields()->returns(array());
+
+        $this->artifact_factory = mock('Tracker_ArtifactFactory');
+        $this->workflow = mock('Workflow');
+        stub($this->workflow)->validateGlobalRules()->returns(true);
+        $this->changeset_dao  = mock('Tracker_Artifact_ChangesetDao');
+        stub($this->changeset_dao)->searchByArtifactIdAndChangesetId()->returnsDar(array(
+            'id'           => 123,
+            'submitted_by' => 12,
+            'submitted_on' => 21,
+            'email'        => ''
+        ));
+        $tracker        = stub('Tracker')->getWorkflow()->returns($this->workflow);
+        $this->artifact = partial_mock('Tracker_Artifact', array('validateFields','getChangesetDao','getChangesetCommentDao', 'getReferenceManager'));
+        $this->artifact->setId(42);
+        $this->artifact->setTracker($tracker);
+        $this->artifact->setChangesets($this->changesets);
+        $this->artifact->setFormElementFactory($factory);
+        $this->artifact->setArtifactFactory($this->artifact_factory);
+        stub($this->artifact)->validateFields()->returns(true);
+        stub($this->artifact)->getChangesetDao()->returns($this->changeset_dao);
+        stub($this->artifact)->getChangesetCommentDao()->returns(mock('Tracker_Artifact_Changeset_CommentDao'));
+        stub($this->artifact)->getReferenceManager()->returns(mock('ReferenceManager'));
+
+    }
+
+    public function itCallsTheAfterMethodOnWorkflowWhenCreateInitialChangeset() {
+        stub($this->changeset_dao)->create()->returns(5667);
+        stub($this->artifact_factory)->save()->returns(true);
+        expect($this->workflow)->after($this->fields_data, new IsAExpectation('Tracker_Artifact_Changeset'), null)->once();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfInitialChangesetFails() {
+        stub($this->changeset_dao)->create()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFails() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createInitialChangeset($this->fields_data, $this->submitter, $this->email);
+    }
+
+    public function itCallsTheAfterMethodOnWorkflowWhenCreateNewChangeset() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(true);
+        expect($this->workflow)->after($this->fields_data, end($this->changesets), new IsAExpectation('Tracker_Artifact_Changeset'))->once();
+
+        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
+    }
+
+    public function itDoesNotCallTheAfterMethodOnWorkflowWhenSaveOfArtifactFailsOnNewChangeset() {
+        stub($this->changeset_dao)->create()->returns(true);
+        stub($this->artifact_factory)->save()->returns(false);
+        expect($this->workflow)->after()->never();
+
+        $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
     }
 }
 ?>

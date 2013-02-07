@@ -937,7 +937,7 @@ class WikiDB_Page
                     $dbUser = $um->getUserByUserName($userid);
                     $wiki = new Wiki($_REQUEST['group_id']);
                     $wp = new WikiPage($_REQUEST['group_id'], $_REQUEST['pagename']);
-                    if ($dbUser && ($dbUser->isActive() || $dbUser->isRestricted()) &&
+                    if ($dbUser && ($dbUser->isActive() || ($dbUser->isRestricted() && $dbUser->isMember($_REQUEST['group_id']))) &&
                         $wiki->isAutorized($dbUser->getId()) && $wp->isAutorized($dbUser->getId())) {
                         if (!$user) { // handle the case for ModeratePage: no prefs, just userid's.
                             global $request;

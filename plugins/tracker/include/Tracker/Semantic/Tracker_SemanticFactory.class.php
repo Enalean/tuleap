@@ -18,10 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
  
-require_once('Tracker_Semantic_TitleFactory.class.php');
-require_once('Tracker_Semantic_StatusFactory.class.php');
-require_once('Tracker_Semantic_ContributorFactory.class.php');
-require_once(dirname(__FILE__).'/../Tooltip/Tracker_TooltipFactory.class.php');
 
 class Tracker_SemanticFactory {
     

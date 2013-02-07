@@ -18,14 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_OpenList.class.php');
-require_once('Tracker_FormElement_Field_List.class.php');
-require_once('Tracker_FormElement_Field_List_OpenValue.class.php');
-require_once('Tracker_FormElement_Field_List_UnsavedValue.class.php');
-require_once('dao/Tracker_FormElement_Field_OpenListDao.class.php');
-require_once('dao/Tracker_FormElement_Field_List_OpenValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_OpenListDao.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_OpenList_ValueDao.class.php');
 
 class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List {
     
@@ -220,7 +212,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             }
         }
         foreach($matching_values as $v) {
-            $json_values[] = $v->fetchJson();
+            $json_values[] = $v->fetchValuesForJson();
         }
         return json_encode($json_values);
     }

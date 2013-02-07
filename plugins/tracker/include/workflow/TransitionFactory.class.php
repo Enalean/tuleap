@@ -18,13 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Workflow.class.php');
-require_once('Transition.class.php');
-require_once('Workflow_Dao.class.php');
-require_once('Workflow_TransitionDao.class.php');
 require_once('common/permission/PermissionsManager.class.php');
-require_once('PostAction/Transition_PostActionFactory.class.php');
-require_once 'Transition/ConditionFactory.class.php';
 
 class TransitionFactory {
 
@@ -174,12 +168,7 @@ class TransitionFactory {
         $transition = new Transition(0, 0, $from, $to);
         $postactions = array();
         if ($xml->postactions) {
-            $tpaf = new Transition_PostActionFactory();
-            foreach(array('postaction_field_date', 'postaction_field_int', 'postaction_field_float') as $post_action_type) {
-                foreach ($xml->postactions->$post_action_type as $p) {
-                    $postactions[] = $tpaf->getInstanceFromXML($p, $xmlMapping, $transition);
-                }
-            }
+            $postactions = $this->getPostActionFactory()->getInstanceFromXML($xml->postactions, $xmlMapping, $transition);
         }
         $transition->setPostActions($postactions);
 
@@ -248,9 +237,9 @@ class TransitionFactory {
         $transition->setTransitionId($transition_id);
 
         //Save postactions
-        $postactions = $transition->getPostActions();
+        $postactions = $transition->getAllPostActions();
         foreach ($postactions as $postaction) {
-            $tpaf = new Transition_PostActionFactory();
+            $tpaf = $this->getPostActionFactory();
             $tpaf->saveObject($postaction);
         }
 
@@ -320,10 +309,8 @@ class TransitionFactory {
                 $this->condition_factory->duplicate($transition, $new_transition_id, $field_mapping, $ugroup_mapping, $duplicate_type);
 
                 // Duplicate postactions
-                $from_transition_id = $transition->getTransitionId();
-                $postactions = $transition->getPostActions();
                 $tpaf = $this->getPostActionFactory();
-                $tpaf->duplicate($from_transition_id, $new_transition_id, $postactions, $field_mapping);
+                $tpaf->duplicate($transition, $new_transition_id, $field_mapping);
             }
         }
     }

@@ -18,11 +18,6 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field_Numeric.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_Float.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_Float_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_FloatDao.class.php');
-require_once('dao/Tracker_FormElement_Field_FloatDao.class.php');
 
 class Tracker_FormElement_Field_Float extends Tracker_FormElement_Field_Numeric {
     

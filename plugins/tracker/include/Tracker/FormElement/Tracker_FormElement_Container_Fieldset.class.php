@@ -20,8 +20,6 @@
 
 require_once('common/include/Error.class.php');
 
-require_once('Tracker_FormElement_Container.class.php');
-require_once('Tracker_FormElementFactory.class.php');
 
 class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Container {
    

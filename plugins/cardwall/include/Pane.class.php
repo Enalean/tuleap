@@ -19,19 +19,18 @@
  */
 
 require_once 'common/TreeNode/TreeNodeMapper.class.php';
-require_once AGILEDASHBOARD_BASE_DIR .'/AgileDashboard/Pane.class.php';
 require_once 'common/templating/TemplateRendererFactory.class.php';
-require_once 'BoardFactory.class.php';
-require_once 'PaneContentPresenter.class.php';
-require_once 'QrCode.class.php';
-require_once 'CreateCardPresenterCallback.class.php';
-require_once 'CardInCellPresenterCallback.class.php';
 
 /**
  * A pane to be displayed in AgileDashboard
  */
 class Cardwall_Pane extends AgileDashboard_Pane {
 
+    /**
+     * @var Cardwall_PaneInfo
+     */
+    private $info;
+    
     /**
      * @var Planning_Milestone
      */
@@ -52,46 +51,29 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $user;
 
-    /**
-     * @var string
-     */
-    private $plugin_theme_path;
 
-    public function __construct(Planning_Milestone $milestone, $enable_qr_code, Cardwall_OnTop_Config $config, User $user, $plugin_theme_path) {
+    public function __construct(
+            Cardwall_PaneInfo $info,
+            Planning_Milestone $milestone,
+            $enable_qr_code,
+            Cardwall_OnTop_Config $config,
+            User $user
+            ) {
+        $this->info           = $info;
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
         $this->user           = $user;
-        $this->plugin_theme_path = $plugin_theme_path;
     }
 
-    /**
-     * @see AgileDashboard_Pane::getIdentifier()
-     */
     public function getIdentifier() {
-        return 'cardwall';
+        return $this->info->getIdentifier();
     }
 
-    /**
-     * @see AgileDashboard_Pane::getTitle()
-     */
-    public function getTitle() {
-        return 'Card Wall';
+    public function getUriForMilestone(Planning_Milestone $milestone) {
+        return $this->info->getUriForMilestone($milestone);
     }
-    
-    /**
-     * @see AgileDashboard_Pane::getIcon()
-     */
-    public function getIcon() {
-        return $this->plugin_theme_path .'/images/ic/sticky-note-pin.png';
-    }
-    
-    /**
-     * @see AgileDashboard_Pane::getIconTitle()
-     */
-    public function getIconTitle() {
-        return $GLOBALS['Language']->getText('plugin_cardwall', 'access_cardwall');
-    }
+
     
     /**
      * @see AgileDashboard_Pane::getFullContent()

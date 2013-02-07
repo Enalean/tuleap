@@ -29,6 +29,8 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
+        Config::store();
+        Config::set('codendi_dir', AGILEDASHBOARD_BASE_DIR .'/../../..');
         
         $planning_id         = "99876387";
         $aid                 = -1;
@@ -45,6 +47,11 @@ class Planning_ArtifactCreationControllerTest extends TuleapTestCase {
         stub($planning_factory)->getPlanning($planning_id)->returns($this->planning);
         
         $this->controller = new Planning_ArtifactCreationController($planning_factory, $this->request);
+    }
+
+    public function tearDown() {
+        Config::restore();
+        parent::tearDown();
     }
     
     public function itRedirectsToArtifactCreationForm() {

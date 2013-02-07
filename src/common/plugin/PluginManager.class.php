@@ -124,9 +124,13 @@ class PluginManager {
                 if (!$this->_executeSqlStatements('install', $name)) {
                     $plugin_factory = $this->_getPluginFactory();
                     $plugin = $plugin_factory->createPlugin($name);
-                    $this->_createEtc($name);
-                    $this->configureForgeUpgrade($name);
-                    $plugin->postInstall();
+                    if ($plugin instanceof Plugin) {
+                        $this->_createEtc($name);
+                        $this->configureForgeUpgrade($name);
+                        $plugin->postInstall();
+                    } else {
+                        $GLOBALS['Response']->addFeedback('error', 'Unable to create plugin');
+                    }
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'DB may be corrupted');
                 }

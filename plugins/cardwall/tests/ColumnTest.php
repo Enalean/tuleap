@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) .'/bootstrap.php';
+
 class Cardwall_Column_isInColumnTest extends TuleapTestCase {
     
     
@@ -27,7 +29,11 @@ class Cardwall_Column_isInColumnTest extends TuleapTestCase {
         parent::setUp();
         $tracker = aMockTracker()->withId(33)->build();
         $swimline_tracker = aMockTracker()->build();
-        $this->artifact = stub('Tracker_Artifact')->getTracker()->returns($tracker);
+        $this->artifact = mock('Tracker_Artifact');
+        $changset = new Tracker_Artifact_Changeset_Null();
+        stub($this->artifact)->getTracker()->returns($tracker);
+        stub($this->artifact)->getLastChangeset()->returns($changset);
+
         $this->field = mock('Tracker_FormElement_Field_MultiSelectbox');
         $this->field_provider = stub('Cardwall_FieldProviders_IProvideFieldGivenAnArtifact')->getField($this->artifact)->returns($this->field);
         $dao = mock('Cardwall_OnTop_Dao');

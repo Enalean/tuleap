@@ -16,8 +16,8 @@
  * along with Tuleap; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
-require_once(dirname(__FILE__).'/../builders/all.php');
 require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
 abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
@@ -41,6 +41,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         'tracker_id'        => 1235,
         'submitted_by'      => '',
         'submitted_on'      => '',
+        'cross_references'  => array(),
         'last_update_date'  => '',
         'value'             => array(),
     );
@@ -49,6 +50,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         'tracker_id'        => 1235,
         'submitted_by'      => '',
         'submitted_on'      => '',
+        'cross_references'  => array(),
         'last_update_date'  => '',
         'value'             => array(),
     );
@@ -57,6 +59,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         'tracker_id'        => 1235,
         'submitted_by'      => '',
         'submitted_on'      => '',
+        'cross_references'  => array(),
         'last_update_date'  => '',
         'value'             => array(),
     );
@@ -82,7 +85,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($this->current_user)->isRestricted()->returns(false);
         $this->user_manager  = stub('UserManager')->getCurrentUser($this->session_key)->returns($this->current_user);
 
-        $permissions_manager = mock('PermissionsManager');
+        $this->permissions_manager = mock('PermissionsManager');
         $project_manager     = mock('ProjectManager');
         $project             = mock('Project');
         $private_project     = mock('Project');
@@ -97,19 +100,19 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($private_project)->usesService('plugin_tracker')->returns(true);
         stub($this->current_user)->isMember($this->i_should_not_have_access_to_this_private_project_id)->returns(false);
 
-        $dao = mock('Tracker_ReportDao');
-        $this->setUpArtifactResults($dao);
+        $this->dao = mock('Tracker_ReportDao');
+        $this->setUpArtifactResults($this->dao);
 
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->setUpFields($this->formelement_factory);
 
-        $tracker_factory = mock('TrackerFactory');
-        $this->setUpTrackers($tracker_factory, $project, $private_project);
+        $this->tracker_factory = mock('TrackerFactory');
+        $this->setUpTrackers($this->tracker_factory, $project, $private_project);
 
         $this->artifact_factory    = mock('Tracker_ArtifactFactory');
         $this->setUpArtifacts($this->artifact_factory);
 
-        $soap_request_validator = new SOAP_RequestValidator($project_manager, $this->user_manager);
+        $this->soap_request_validator = new SOAP_RequestValidator($project_manager, $this->user_manager);
 
         stub($project_manager)->getGroupByIdForSoap($this->project_id, '*')->returns($project);
         stub($project_manager)->getGroupByIdForSoap($this->i_should_not_have_access_to_this_private_project_id, '*')->returns($private_project);
@@ -119,10 +122,10 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $this->fileinfo_factory = mock('Tracker_FileInfoFactory');
 
         $this->server = new Tracker_SOAPServer(
-            $soap_request_validator,
-            $tracker_factory,
-            $permissions_manager,
-            $dao,
+            $this->soap_request_validator,
+            $this->tracker_factory,
+            $this->permissions_manager,
+            $this->dao,
             $this->formelement_factory,
             $this->artifact_factory,
             $this->report_factory,
@@ -130,12 +133,21 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         );
     }
 
+    private function anArtifactWithAMockedCrossReferenceFactory($id, $tracker, $changesets) {
+        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'), array($id, $tracker->getId(), null, null, null));
+        $artifact->setTracker($tracker);
+        $artifact->setChangesets($changesets);
+        $cross_reference_factory = mock('CrossReferenceFactory');
+        stub($artifact)->getCrossReferenceFactory()->returns($cross_reference_factory);
+        stub($cross_reference_factory)->getFormattedCrossReferences()->returns(array());
+        return $artifact;
+    }
     private function setUpArtifacts(Tracker_ArtifactFactory $artifact_factory) {
         $changesets = array(stub('Tracker_Artifact_Changeset')->getValues()->returns(array()));
-        $artifact_42   = anArtifact()->withId(42)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
-        $artifact_66   = anArtifact()->withId(66)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
-        $artifact_5323 = anArtifact()->withId($this->private_artifact_id)->withTracker($this->private_unreadable_tracker)->withChangesets($changesets)->build();
-        $artifact_9001 = anArtifact()->withId(9001)->withTrackerId($this->tracker_id)->withChangesets($changesets)->build();
+        $artifact_42   = $this->anArtifactWithAMockedCrossReferenceFactory(42, $this->tracker, $changesets);
+        $artifact_66   = $this->anArtifactWithAMockedCrossReferenceFactory(66, $this->tracker, $changesets);
+        $artifact_5323 = $this->anArtifactWithAMockedCrossReferenceFactory($this->private_artifact_id, $this->private_unreadable_tracker, $changesets);
+        $artifact_9001 = $this->anArtifactWithAMockedCrossReferenceFactory(9001, $this->tracker, $changesets);
 
         $changesets       = stub('Tracker_Artifact_Changeset')->getValues()->returns(array("title" => "title"));
         $artifact_9999    = mock('Tracker_Artifact');
@@ -144,6 +156,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         stub($artifact_9999)->getTrackerId()->returns($this->tracker_id);
         stub($artifact_9999)->userCanView()->returns(true);
         stub($artifact_9999)->getLastChangeset()->returns($changesets);
+        stub($artifact_9999)->getCrossReferencesSOAPValues()->returns(array(array('ref' => 'art #123', 'url' => '/path/to/art=123')));
 
         stub($artifact_factory)->getArtifactById(42)->returns($artifact_42);
         stub($artifact_factory)->getArtifactById(66)->returns($artifact_66);
@@ -305,6 +318,11 @@ class Tracker_SOAPServer_getArtifact_Test extends Tracker_SOAPServer_BaseTest {
         $soap_fault = $this->server->getArtifact($this->session_key, '*', '*', $this->private_artifact_id);
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
     }
+
+    public function itContainsCrossReferencesValue() {
+        $soap_values = $this->server->getArtifact($this->session_key, '*', '*', 9999);
+        $this->assertEqual($soap_values['cross_references'][0], array('ref' => 'art #123', 'url' => '/path/to/art=123'));
+    }
 }
 
 class Tracker_SOAPServer_addArtifact_Test extends Tracker_SOAPServer_BaseTest {
@@ -353,6 +371,20 @@ class Tracker_SOAPServer_updateArtifact_Test extends Tracker_SOAPServer_BaseTest
 
 class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_BaseTest {
 
+    public function setUp() {
+        parent::setUp();
+        $this->server = partial_mock('Tracker_SOAPServer', array('getTrackerSemantic', 'getTrackerWorkflow'), array(
+            $this->soap_request_validator,
+            $this->tracker_factory,
+            $this->permissions_manager,
+            $this->dao,
+            $this->formelement_factory,
+            $this->artifact_factory,
+            $this->report_factory,
+            $this->fileinfo_factory
+         ));
+    }
+
     public function itRaisesASoapFaultIfTheProjectIsNotReadableByTheUser() {
         $soap_fault = $this->server->getTrackerStructure(
             $this->session_key,
@@ -360,6 +392,22 @@ class Tracker_SOAPServer_getTrackerStructure_Test extends Tracker_SOAPServer_Bas
             $this->private_unreadable_tracker_id
         );
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
+    }
+
+    public function itExecutesTheSOAPCall() {
+        $semantic = 'whatever';
+        $workflow = 'I dunno care either';
+        stub($this->server)->getTrackerSemantic()->returns($semantic);
+        stub($this->server)->getTrackerWorkflow()->returns($workflow);
+        $structure = $this->server->getTrackerStructure(
+            $this->session_key,
+            $this->project_id,
+            $this->tracker_id
+        );
+        $this->assertEqual($structure, array(
+            'semantic' => $semantic,
+            'workflow' => $workflow,
+        ));
     }
 }
 

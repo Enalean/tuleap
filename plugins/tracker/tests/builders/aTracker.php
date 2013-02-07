@@ -23,9 +23,7 @@
 // For further information about the Test Data Builder pattern
 // @see http://nat.truemesh.com/archives/000727.html
 
-require_once(dirname(__FILE__).'/../../include/constants.php');
-require_once(dirname(__FILE__).'/../../include/Tracker/TrackerManager.class.php');
-
+require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 function aTracker() {
     return new Test_Tracker_Builder();
 }
@@ -38,7 +36,7 @@ class Test_Tracker_Builder {
     private $item_name;
 
     public function __construct() {
-        $this->id = uniqid();
+        $this->id = rand(0, 600000);
     }
 
     public function withId($id) {

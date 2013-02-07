@@ -143,11 +143,25 @@ input[name=tracker_query_submit] {
     z-index:100;
     position:relative;
 }
+.tracker_report_query_followup_search {
+    border-left:1px solid #CCC;
+    border-top:1px solid #CCC;
+    border-right:1px solid #CCC;
+    padding:0 1em;
+    background:#f5f7f7 url(../images/tracker_report_query_bg.png) top left repeat-x;
+    position:relative;
+}
 .tracker_report_query form {
     margin:0px;
     position:relative;
 }
 .tracker_report_query h3 {
+    padding-top: 0;
+    margin-top: 0;
+    text-shadow: 1px 1px white;
+}
+
+.tracker_report_query_followup_search h3 {
     padding-top: 0;
     margin-top: 0;
     text-shadow: 1px 1px white;
@@ -824,6 +838,9 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
 .workflow_action_field {
     background-image: url(../images/ic/ui-text-field-change.png);
 }
+.workflow_action_ci_build {
+    background-image: url(../images/ic/ci_build/server.png);
+}
 .workflow_conditions_perms {
     list-style-image: url(/themes/common/images/ic/lock.png);
 }
@@ -1246,6 +1263,16 @@ td.first-column {
 }
 .card-details tr td:last-child {
     font-weight: bold;
+}
+
+.card-details .avatar {
+    width: 18px;
+    height: 18px;
+    display: inline-block;
+}
+.card-details .avatar > img {
+    width: 16px;
+    height: 16px;
 }
 /* }}} */
 .tracker_artifact_attachment_delete.pc_check_unchecked {

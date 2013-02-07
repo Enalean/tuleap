@@ -18,10 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'IDisplayTrackerLayout.class.php';
 require_once 'common/user/User.class.php';
 require_once 'common/project/Project.class.php';
-require_once 'Tracker.class.php';
 
 /**
  * Render a tracker switching selectbox. Also display headers and footers

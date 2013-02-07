@@ -18,11 +18,9 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement.class.php');
 require_once('common/user/UserManager.class.php');
 require_once('common/permission/PermissionsManager.class.php');
 require_once('common/user/UserHelper.class.php');
-require_once dirname(__FILE__).'/../Tracker_Report_Field.class.php';
 
 /**
  * The base class for fields in trackers. From int and string to selectboxes.
@@ -523,10 +521,27 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string
      */
     public function fetchCard(Tracker_Artifact $artifact) {
-        $html  = null;
+
         $value = $this->fetchCardValue($artifact);
-        $html .= '<tr><td>'. $this->getLabel().':</td>';
-        $html .= '<td class="valueOf_'. $this->getName() .'">'. $value .'</td></tr>';
+        $data_field_id   = '';
+        $data_field_type = '';
+        
+        if ($this->userCanUpdate()) {
+            $data_field_id   = 'data-field-id="'.$this->getId().'"';
+            $data_field_type = 'data-field-type="'.$this->getFormElementFactory()->getType($this).'"';
+        }
+
+        $html = '<tr>
+                    <td>'. $this->getLabel().':
+                    </td>
+                    <td class="valueOf_'.$this->getName().'"'.
+                        $data_field_id.
+                        $data_field_type.
+                        '>'.
+                        $value .
+                    '</td>
+                </tr>';
+
         return $html;
     }
 
@@ -1049,6 +1064,17 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ( $valueDao   = $this->getValueDao() ) {
                 $valueDao->createNoneValue($tracker_id, $this->id);
         }
+    }
+
+    /**
+     * Get the last ChangesetValue of the field
+     *
+     * @param Tracker_Artifact
+     *
+     * @return Tracker_Artifact_ChangesetValue
+     */
+    public function getLastChangesetValue(Tracker_Artifact $artifact) {
+        return $artifact->getValue($this);
     }
 
 }

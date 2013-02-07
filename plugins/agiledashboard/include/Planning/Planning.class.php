@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../tracker/include/Tracker/NullTracker.class.php';
-
 /**
  * This allows to define a planning
  * A planning is composed of a list of tracker ids (eg: Sprints, Tasks...) that represent what is in the backlog

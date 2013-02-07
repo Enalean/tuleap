@@ -17,8 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once(dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php');
+require_once('bootstrap.php');
 Mock::generate('Tracker_URL');
 Mock::generate('Tracker');
 Mock::generate('Tracker_FormElement_Interface');
@@ -42,7 +41,6 @@ Mock::generatePartial('TrackerManager',
                           'getCrossSearchController'
                       )
 );
-require_once dirname(__FILE__) .'/../include/Tracker/CrossSearch/SearchController.class.php';
 Mock::generate('Tracker_CrossSearch_SearchController');
 require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
@@ -54,7 +52,6 @@ require_once('common/project/Project.class.php');
 Mock::generate('Project');
 Mock::generate('ReferenceManager');
 
-require_once(dirname(__FILE__).'/../include/constants.php');
 
 class TrackerManagerTest extends TuleapTestCase {
     

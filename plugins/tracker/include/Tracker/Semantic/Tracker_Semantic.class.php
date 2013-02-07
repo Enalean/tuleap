@@ -113,7 +113,7 @@ abstract class Tracker_Semantic {
      *
      * @return void
      */
-    public abstract function exportToXML(&$root, $xmlMapping);
+    public abstract function exportToXml(SimpleXMLElement $root, $xmlMapping);
 
     /**
      * Is the field used in semantics?

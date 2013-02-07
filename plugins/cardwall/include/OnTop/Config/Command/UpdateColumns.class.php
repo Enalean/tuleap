@@ -18,8 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once CARDWALL_BASE_DIR .'/OnTop/Config/Command.class.php';
-require_once CARDWALL_BASE_DIR .'/OnTop/ColumnDao.class.php';
 
 /**
  * Update a column for a cardwall on top of a tracker

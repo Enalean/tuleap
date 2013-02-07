@@ -78,7 +78,7 @@ class ElasticSearch_TransportHTTPBasicAuth extends ElasticSearchTransportHTTP {
                     $error = "Couldnt resolve host";
                     break;
                 case CURLE_COULDNT_CONNECT:
-                    $error = "Couldnt connect to host [{$this->host}], ElasticSearch down?";
+                    $error = "Could not reach the the fulltext search server at [{$this->host}]. Please contact the site admin.";
                     break;
                 case CURLE_OPERATION_TIMEDOUT:
                     $error = "Operation timed out on [$requestURL]";

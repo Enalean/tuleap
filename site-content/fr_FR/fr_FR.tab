@@ -6,6 +6,7 @@ system	locale	fr_FR
 system	strftimefmt	%e %B %Y  %H:%M
 system	datefmt	d/m/Y H:i
 system	datefmt_short	d/m/Y
+system	datefmt_day_and_month	j M
 system	decimal_separator	,
 system	thousand_separator	' '
 conf	content_encoding	utf-8
@@ -59,6 +60,7 @@ global	deactivate	désactiver
 global	Project	Projet
 global	System	Système
 global	Admin	Admin
+global	Settings	Paramètres
 global	Personal	Personnel
 global	default	Défaut
 global	no_mail_for_account	Ce compte n'a pas d'adresse mail.

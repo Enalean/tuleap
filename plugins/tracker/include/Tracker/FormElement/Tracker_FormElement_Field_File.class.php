@@ -18,15 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('Tracker_FormElement_Field.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact.class.php');
-require_once(dirname(__FILE__).'/../Artifact/Tracker_Artifact_ChangesetValue_File.class.php');
-require_once(dirname(__FILE__).'/../Report/dao/Tracker_Report_Criteria_File_ValueDao.class.php');
-require_once('dao/Tracker_FormElement_Field_Value_FileDao.class.php');
-require_once(dirname(__FILE__).'/../dao/Tracker_FileInfoDao.class.php');
-require_once(dirname(__FILE__).'/../Tracker_FileInfo.class.php');
-require_once(dirname(__FILE__).'/../SOAP/TemporaryFile.class.php');
 require_once('common/valid/Rule.class.php');
+require_once('common/include/Codendi_HTTPPurifier.class.php');
 
 class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
     const SOAP_FAKE_FILE = 'soapfakefile';

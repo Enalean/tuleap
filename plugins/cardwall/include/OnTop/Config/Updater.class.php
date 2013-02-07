@@ -19,7 +19,6 @@
  */
 
 require_once 'common/include/Codendi_Request.class.php';
-require_once 'Command.class.php';
 
 /**
  * Handle requests to update config of cardwalls on top of trackers

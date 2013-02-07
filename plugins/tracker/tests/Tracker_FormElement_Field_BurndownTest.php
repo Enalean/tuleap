@@ -17,17 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
-require_once dirname(__FILE__).'/../include/Tracker/TrackerManager.class.php';
-require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_Burndown.class.php';
-require_once dirname(__FILE__).'/../include/Tracker/FormElement/Tracker_FormElement_Field_ArtifactLink.class.php';
-require_once dirname(__FILE__).'/builders/aTracker.php';
-require_once dirname(__FILE__).'/builders/anArtifact.php';
-require_once dirname(__FILE__).'/builders/aBurndownField.php';
-require_once dirname(__FILE__).'/builders/aMockTracker.php';
-require_once dirname(__FILE__).'/builders/aMockHierarchyFactory.php';
-
-require_once(dirname(__FILE__).'/../include/constants.php');
+require_once('bootstrap.php');
 
 class Tracker_FormElement_Field_Burndown_StartDateAndDurationTest extends TuleapTestCase {
     

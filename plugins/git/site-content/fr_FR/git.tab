@@ -84,7 +84,8 @@ plugin_git	actions_no_repository_forked	Aucun dépôt n'a été forké.
 plugin_git	view_repo_description	Description
 plugin_git	view_repo_creator	Crée par
 plugin_git	view_repo_creation_date	Date
-plugin_git	view_repo_parent	Parent
+plugin_git	view_repo_parent_gitshell	Parent : $1
+plugin_git	view_repo_parent_gitolite	Fork de $1
 plugin_git	view_repo_initialized	Initialisé
 plugin_git	view_repo_not_initialized	Non initialisé
 plugin_git	view_repo_clone_url	Clone url
@@ -102,8 +103,6 @@ plugin_git	no	Non
 plugin_git	project_service_not_available	Le service n'est pas disponible pour votre projet (Contactez l'administrateur du site)
 plugin_git	reference_commit_nature_key	Commit Git
 plugin_git	reference_commit_desc_key	Commit Git
-
-plugin_git	admin_repo_management	Gestion du dépôt GIT
 
 plugin_git	admin_settings	Options générales
 plugin_git	gerrit_pane_title	Gerrit
@@ -167,6 +166,9 @@ plugin_git	fork_malformed_path	Le chemin ne peut pas contenir (..)
 plugin_git	fork_choose_destination_project	Copier vers un autre projet
 plugin_git	fork_choose_destination_personal	Créer les dépôts personnels dans ce projet
 plugin_git	successfully_forked	Fork créé avec succès
+plugin_git	fork_destination_project_message	Dans le projet <b>$1</b>
+plugin_git	fork_destination_personal_message	en tant que fork personnel
+plugin_git	fork_repository_message	Vous êtes sur le point de créer un fork du dépôt: $1
 
 plugin_git	tree_view_project	Projet
 plugin_git	tree_view_repository	Dépôt
@@ -207,3 +209,4 @@ plugin_git	widget_project_pushes_error	Pas de push pour la/les dernière(s) $1 s
 plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git push
 
+plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit:
