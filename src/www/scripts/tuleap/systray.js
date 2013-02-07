@@ -36,7 +36,7 @@ tuleap.systray = {
             var systray = '<div class="systray">' +
                         '<div class="systray_content">' +
                             '<img class="systray_icon" src="/themes/Tuleap/images/favicon.ico">' +
-                            '<div class="systray_links"></div>' +
+                            '<div class="systray_links dropup"></div>' +
                         '</div>' +
                       '</div>';
             body.insert(systray);
@@ -71,10 +71,18 @@ tuleap.systray = {
             }
 
             function insertLinksInSystray(links) {
-                var systray_links = systray.down('.systray_links');
+                var systray_links = systray.down('.systray_links'),
+                    menu,
+                    first_link = links.shift();
+                systray_links.update('<div class="dropdown">' +
+                    template.evaluate(first_link) +
+                    '<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-angle-up"></i> </a>' +
+                    '<ul class="dropdown-menu" role="menu"></ul>' +
+                '</div>');
+                menu = systray_links.down('.dropdown-menu');
 
                 links.each(function (link) {
-                    systray_links.insert(template.evaluate(link));
+                    menu.insert('<li>' + template.evaluate(link) + '</li>');
                 });
             }
 

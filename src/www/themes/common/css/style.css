@@ -4311,4 +4311,11 @@ input[type="submit"].btn {
 .systray-collapsed > .systray_content > .systray_links {
     display: none;
 }
+.systray_links > .dropdown > .dropdown-menu {
+    left: auto;
+    right: 0;
+}
+.systray_links > .dropdown > .dropdown-toggle {
+    margin-left: 1em;
+}
 /* }}} */
