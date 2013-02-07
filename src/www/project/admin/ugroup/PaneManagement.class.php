@@ -38,17 +38,24 @@ class Project_Admin_UGroup_PaneManagement {
 
     private $current_pane;
     
-    public function __construct(array $panes, $current_pane) {
+    /**
+     * @var Project
+     */
+    private $project;
+
+    public function __construct(Project $project, array $panes, $current_pane) {
         foreach ($panes as $pane) {
             $this->panes[$pane->getIdentifier()] = $pane;
         }
         $this->current_pane = $current_pane;
+        $this->project = $project;
     }
 
     /**
      * Output repo management sub screen to the browser
      */
     public function display() {
+        echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->project->getId().'">'.$GLOBALS['Language']->getText('project_admin_utils','ug_admin').'</a> - '.$this->panes[$this->current_pane]->getTitle().'</h1>';
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
         foreach ($this->panes as $pane) {
