@@ -22,7 +22,6 @@ require_once 'pre.php';
 require_once 'common/Systray/LinksCollection.class.php';
 
 $links = new Systray_LinksCollection();
-$links[] = new Systray_Link('ProjectName: TitleOfTheSprint', '/path/to/the/sprint.php');
 
 EventManager::instance()->processEvent(
     Event::SYSTRAY,
