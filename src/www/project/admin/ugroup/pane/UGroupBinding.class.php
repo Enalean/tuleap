@@ -24,14 +24,23 @@
 
 class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_Members {
 
+    /**
+     * @var UGroupBinding 
+     */
+    private $ugroup_binding;
+
+    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager, UGroupBinding $ugroup_binding) {
+        parent::__construct($ugroup, $request, $ugroup_manager);
+        $this->ugroup_binding = $ugroup_binding;
+    }
+
     public function getContent() {
         $groupId       = $this->request->getValidated('group_id', 'GroupId', 0);
         $ugroupId      = $this->request->getValidated('ugroup_id', 'uint', 0);
         $sourceProject = $this->request->getValidated('source_project', 'GroupId', 0);
-        $ugroupBinding = get_ugroup_binding();
-        $ugroupBinding->processRequest($ugroupId, $this->request);
+        $this->ugroup_binding->processRequest($ugroupId, $this->request);
 
-        $bindingiewer = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
+        $bindingiewer = new UGroupBindingViewer($this->ugroup_binding, ProjectManager::instance());
         return $bindingiewer->getUgtoupBindingPaneContent($groupId, $ugroupId, $sourceProject);
     }
 }

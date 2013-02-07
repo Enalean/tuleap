@@ -62,12 +62,6 @@ function display_name_and_desc_form($ugroup_name, $ugroup_description) {
     </tr>';
 }
 
-function get_ugroup_binding() {
-    $ugroupUserDao = new UGroupUserDao();
-    $ugroupManager = new UGroupManager(new UGroupDao());
-    return new UGroupBinding($ugroupUserDao, $ugroupManager);
-}
-
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
 $pm = ProjectManager::instance();
@@ -140,14 +134,16 @@ if (($func=='edit')||($func=='do_create')) {
     $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding'));
     $vPane->required();
 
+    $ugroup_binding = new UGroupBinding(new UGroupUserDao(), $uGroupMgr);
+
     $pane_management = new Project_Admin_UGroup_PaneManagement(
         array(
             new Project_Admin_UGroup_Pane_Settings($ugroup),
             new Project_Admin_UGroup_Pane_Members($ugroup, $request, $uGroupMgr),
             new Project_Admin_UGroup_Pane_Bind($ugroup, $request, $uGroupMgr),
-            new Project_Admin_UGroup_Pane_UGroupBinding($ugroup, $request, $uGroupMgr),
+            new Project_Admin_UGroup_Pane_UGroupBinding($ugroup, $request, $uGroupMgr, $ugroup_binding),
             new Project_Admin_UGroup_Pane_Permissions($ugroup),
-            new Project_Admin_UGroup_Pane_BindUsage($ugroup),
+            new Project_Admin_UGroup_Pane_BindUsage($ugroup, $ugroup_binding),
         ),
         $request->getValidated('pane', $vPane, 'settings')
     );

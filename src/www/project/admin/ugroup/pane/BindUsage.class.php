@@ -24,10 +24,25 @@
 
 class Project_Admin_UGroup_Pane_BindUsage extends Project_Admin_UGroup_Pane {
     const IDENTIFIER = 'usage';
-    
+
+    /**
+     * @var UGroupBinding
+     */
+    private $ugroup_binding;
+
+    /**
+     * @var ProjectManager
+     */
+    private $project_manager;
+
+    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding) {
+        parent::__construct($ugroup);
+        $this->ugroup_binding = $ugroup_binding;
+        $this->project_manager = ProjectManager::instance();
+    }
+
     public function getContent() {
-        $ugroupBinding = get_ugroup_binding();
-        $bindingiewer  = new UGroupBindingViewer($ugroupBinding, ProjectManager::instance());
+        $bindingiewer  = new UGroupBindingViewer($this->ugroup_binding, $this->project_manager);
         return $bindingiewer->getUsagePaneContent($this->ugroup->getProjectId(), $this->ugroup->getId());
     }
 
