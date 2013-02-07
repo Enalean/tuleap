@@ -57,6 +57,7 @@ if ($request->existAndNonEmpty('func')) {
             $name = $request->getValidated('ugroup_name', 'String', '');
             $desc = $request->getValidated('ugroup_description', 'String', '');
             ugroup_update($group_id, $ugroup_id, $name, $desc);
+            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.$group_id.'&ugroup_id='.$ugroup_id.'&func=edit&pane=settings');
             break;
     }
     $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='.$group_id);
