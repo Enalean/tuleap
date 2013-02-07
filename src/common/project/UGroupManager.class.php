@@ -428,7 +428,7 @@ class UGroupManager {
                         '&amp;begin='. urlencode($validRequest['begin']) .
                         '&amp;in_project='. (int)$validRequest['in_project'] .
                         '">';
-                    if ($i == $current_page) {
+                    if ($i == $currentPage) {
                         $content .= '<b>'. ($i + 1) .'</b>';
                     } else {
                         $content .= $i + 1;
