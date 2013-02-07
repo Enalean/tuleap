@@ -1,12 +1,13 @@
 Version 5.11 (Not Released Yet)
 
 	== Plugins ==
-	* tracker: 5.78
+	* tracker: 5.79
 	* agiledashboard: 0.69
 	* cardwall: 0.9.15
 	* git: 2.7.26
 	* ldap: 3.24
 	* forumml: 2.6.7
+	* fulltextsearch: 0.14
 
    == Enhancement ==
     * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)
