@@ -228,26 +228,6 @@ class UGroupManager {
         }
         return array();
     }
-
-    /**
-     * Display the binding pane content
-     *
-     * @param Integer     $groupId  Id of the project
-     * @param Integer     $ugroupId Id of the user group
-     *
-     * @return String
-     */
-    public function displayUgroupBinding($groupId, $ugroupId) {
-        $html = '';
-        $uGroup                   = $this->getById($ugroupId);
-        $ugroupUpdateUsersAllowed = !$uGroup->isBound();
-        if ($ugroupUpdateUsersAllowed) {
-            $em   = EventManager::instance();
-            $em->processEvent('ugroup_table_row', array('row' => array('group_id' => $groupId, 'ugroup_id' => $ugroupId), 'html' => &$html));
-        }
-        return $html;
-    }
-
 }
 
 ?>
