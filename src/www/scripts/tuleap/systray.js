@@ -17,7 +17,7 @@
 
 var tuleap = tuleap || { };
 tuleap.systray = {
-    load: function(body) {
+    load: function(body, storage) {
         var cache_duration_2_hours    = 2 * 3600,
             cache_duration_1_week     = 7 * 24 * 3600,
             systray_collapse          = 'collapse',
@@ -40,7 +40,7 @@ tuleap.systray = {
                         '</div>' +
                       '</div>';
             body.insert(systray);
-            $$('.systray_icon').each(function (icon) {
+            body.select('.systray_icon').each(function (icon) {
                 var systray = icon.up('.systray');
 
                 loadTogglePreference(systray);
@@ -53,7 +53,7 @@ tuleap.systray = {
 
         function loadLinks(systray) {
             var link_template = new Template('<a href="#{href}">#{label}</a>'),
-                links         = AZHU.storage.load(systray_links_cachekey);
+                links         = storage.load(systray_links_cachekey);
 
             if (links) {
                 insertLinksInSystray(links);
@@ -88,7 +88,7 @@ tuleap.systray = {
             }
 
             function saveLinks(links) {
-                AZHU.storage.save(
+                storage.save(
                     systray_links_cachekey,
                     links,
                     cache_duration_2_hours
@@ -97,7 +97,7 @@ tuleap.systray = {
         }
 
         function loadTogglePreference(systray) {
-            if (AZHU.storage.load(systray_collapse_cachekey) === systray_collapse) {
+            if (storage.load(systray_collapse_cachekey) === systray_collapse) {
                 toggleSystray(systray);
             }
         }
@@ -108,7 +108,7 @@ tuleap.systray = {
         }
 
         function saveTogglePreference(systray) {
-            AZHU.storage.save(
+            storage.save(
                 systray_collapse_cachekey,
                 systray.hasClassName(collapse_classname) ? systray_collapse : systray_expand,
                 cache_duration_1_week

@@ -19,7 +19,11 @@
 
 describe('systray', function() {
 
-    var body;
+    var body,
+        storage = {
+            load: sinon.stub(),
+            save: sinon.stub()
+        };
 
     beforeEach(function () {
         body = new Element('div');
@@ -32,7 +36,7 @@ describe('systray', function() {
     describe('when not in lab mode', function() {
 
         it('does not inject anything in body', function () {
-            tuleap.systray.load(body);
+            tuleap.systray.load(body, storage);
 
             expect(body.down('.systray')).to.not.exist;
         });
@@ -45,9 +49,38 @@ describe('systray', function() {
         });
 
         it('inject a systray in body', function () {
-            tuleap.systray.load(body);
+            tuleap.systray.load(body, storage);
 
             expect(body.down('.systray')).to.exist;
+        });
+
+        describe('collapsable', function () {
+
+            beforeEach(function () {
+                storage.save.returns([]);
+            });
+
+            it('is expanded by default', function () {
+                tuleap.systray.load(body, storage);
+
+                body.down('.systray').className.should.not.include('.systray-collapsed');
+            });
+
+            it('is collapsed if the user wants it that way', function () {
+                storage.load.withArgs('systray-collapse').returns('collapse');
+
+                tuleap.systray.load(body, storage);
+
+                body.down('.systray').className.should.include('systray-collapsed');
+            });
+
+            it('is expanded if the user wants it that way', function () {
+                storage.load.withArgs('systray-collapse').returns('expanded');
+
+                tuleap.systray.load(body, storage);
+
+                body.down('.systray').className.should.not.include('systray-collapsed');
+            });
         });
     });
 });
