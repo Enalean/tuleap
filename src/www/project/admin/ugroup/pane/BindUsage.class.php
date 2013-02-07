@@ -42,8 +42,41 @@ class Project_Admin_UGroup_Pane_BindUsage extends Project_Admin_UGroup_Pane {
     }
 
     public function getContent() {
-        $bindingiewer  = new UGroupBindingViewer($this->ugroup_binding, $this->project_manager);
-        return $bindingiewer->getUsagePaneContent($this->ugroup->getProjectId(), $this->ugroup->getId());
+        $clones = $this->ugroup_binding->getUGroupsByBindingSource($this->ugroup->getId());
+        $content = '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
+        $content .= $this->getClonesHTML($clones);
+        return $content;
+    }
+
+    /**
+     * Get the HTML output for ugroups bound to the current one
+     *
+     * @param Array $clones List of ugroups bound to this one
+     *
+     * @return String
+     */
+    private function getClonesHTML($clones) {
+        $clonesHTML = '<table>';
+        if (!empty($clones)) {
+            $clonesHTML .= html_build_list_table_top(array($GLOBALS['Language']->getText('project_reference', 'ref_scope_P'), $GLOBALS['Language']->getText('project_ugroup_binding', 'ugroup')), false, false, false);
+            $count      = 0;
+            $i          = 0;
+            foreach ($clones as $clone) {
+                $project = $this->project_manager->getProject($clone['group_id']);
+                if ($project->userIsAdmin()) {
+                    $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'"><td><a href="/projects/'.$project->getUnixName().'" >'.$project->getPublicName().'</a></td><td><a href="/project/admin/ugroup.php?group_id='.$project->getID().'" >'.$clone['cloneName'].'</a></td></tr>';
+                } else {
+                    $count ++;
+                }
+            }
+            if ($count) {
+                $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'" colspan="2" ><td>and '.$count.' other ugroups you\'re not allowed to administrate</td></tr>';
+            }
+        } else {
+            $clonesHTML .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'not_source').'</td></tr>';
+        }
+        $clonesHTML .= '</table>';
+        return $clonesHTML;
     }
 
     public function getIdentifier() {
