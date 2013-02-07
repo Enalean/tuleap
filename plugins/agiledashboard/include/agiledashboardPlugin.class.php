@@ -257,7 +257,16 @@ class AgileDashboardPlugin extends Plugin {
      * @see Event::SYSTRAY
      */
     public function systray($params) {
-        $params['links'][] = new Systray_Link('ProjectName: TitleOfTheSprint', '/path/to/the/sprint.php');
+        foreach ($params['user']->getGroups() as $project) {
+            if (! $project->usesService('plugin_agiledashboard')) {
+                continue;
+            }
+
+            $params['links'][] = new Systray_Link(
+                $project->getPublicName(). ': TitleOfTheSprint',
+                AGILEDASHBOARD_BASE_URL .'/?group_id='. $project->getId()
+            );
+        }
     }
 }
 
