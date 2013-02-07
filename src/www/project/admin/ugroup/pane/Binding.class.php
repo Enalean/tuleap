@@ -22,8 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Project_Admin_UGroup_Pane_BindUsage extends Project_Admin_UGroup_Pane {
-    const IDENTIFIER = 'usage';
+class Project_Admin_UGroup_Pane_Binding extends Project_Admin_UGroup_Pane {
+    const IDENTIFIER = 'binding';
 
     /**
      * @var UGroupBinding
@@ -114,11 +114,11 @@ class Project_Admin_UGroup_Pane_BindUsage extends Project_Admin_UGroup_Pane {
     }
 
     public function getTitle() {
-        return $GLOBALS['Language']->getText('global', 'usage');
+        return $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding');
     }
 
     public function getUrl() {
-        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=usage';
+        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane='.self::IDENTIFIER;
     }
 }
 

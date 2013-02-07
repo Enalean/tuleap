@@ -458,6 +458,7 @@ project_admin_utils	ugroup_remove_binding	Liaison avec groupe d'utilisateurs enl
 project_admin_utils	frs_self_add_monitor_package	Auto ajout du suivi de paquet
 project_admin_utils	frs_add_monitor_package	Ajout du suivi de paquet
 project_admin_utils	frs_stop_monitor_package	Arrêt du suivi de paquet
+project_admin_utils	ugroup_binding	Liens
 #... end of values
 #
 #-----------------------------------------------

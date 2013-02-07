@@ -103,7 +103,7 @@ if (($func=='edit')||($func=='do_create')) {
         exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_editugroup', 'ug_not_found', array($ugroup_id, db_error())));
     }
 
-    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'bind', 'permissions', 'usage', 'ugroup_binding'));
+    $vPane = new Valid_WhiteList('pane', array('settings', 'members', 'permissions', 'binding', 'ugroup_binding'));
     $vPane->required();
 
     $ugroup_binding = new UGroupBinding(new UGroupUserDao(), $uGroupMgr);
@@ -115,7 +115,7 @@ if (($func=='edit')||($func=='do_create')) {
             new Project_Admin_UGroup_Pane_Members($ugroup, $request, $uGroupMgr),
             //new Project_Admin_UGroup_Pane_UGroupBinding($ugroup, $request, $uGroupMgr, $ugroup_binding),
             new Project_Admin_UGroup_Pane_Permissions($ugroup),
-            new Project_Admin_UGroup_Pane_BindUsage($ugroup, $ugroup_binding),
+            new Project_Admin_UGroup_Pane_Binding($ugroup, $ugroup_binding),
         ),
         $request->getValidated('pane', $vPane, 'settings')
     );
