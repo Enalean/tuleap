@@ -133,7 +133,7 @@ class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
 
         $content = '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($this->ugroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
-        $content = '
+        $content .= '
             <form method="post" action="">
                 <input type="hidden" name="func" value="" />
                 <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'" />
@@ -147,32 +147,32 @@ class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
         //ugroup binding link
         //$content .= '<P> You can also choose to <a href="editugroup.php?group_id='.$groupId.'&ugroup_id='.$ugroupId.'&func=edit&pane=bind"><b>bind to another group</b></a></p>';
 
-        $content .= '<p><b>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</b></p>';
+        $content .= '<h2>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</h2>';
         $content .= '<div style="padding-left:10px">';
         $content .= '<table><tr valign="top"><td>';
 
         // Get existing members from group
-        $content .= '<fieldset><legend>'. $GLOBALS['Language']->getText('project_admin_editugroup','members').'</legend>';
+        $content .= '<div class="admin_group_members">';
+        $content .= $GLOBALS['Language']->getText('project_admin_editugroup','members');
         $members = $this->ugroup->getMembers();
         if (count($members) > 0) {
-            $content .= '<table>';
             $i = 0;
             $userHelper = UserHelper::instance();
+            $content .= '<ul>';
             foreach ($members as $user) {
-                $content .= '<tr class="'. html_get_alt_row_color(++$i) .'">';
-                $content .= '<td>'. $hp->purify($userHelper->getDisplayNameFromUser($user)) .'</td>';
+                $content .= '<li>';
                 if ($ugroupUpdateUsersAllowed) {
-                    $content .= '<td>';
                     $content .= project_admin_display_bullet_user($user->getId(), 'remove');
-                    $content .= '</td>';
                 }
-                $content .= '</tr>';
+                $content .= ' '.$hp->purify($userHelper->getDisplayNameFromUser($user));
+                $content .= '</li>';
             }
-            $content .= '</table>';
+            $content .= '</ul>';
         } else {
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup', 'nobody_yet');
         }
-        $content .= '</fieldset>';
+        $content .= '</div>';
+        //$content .= '</fieldset>';
 
         if ($ugroupUpdateUsersAllowed) {
             $validRequest = $this->validateRequest($groupId, $request);
@@ -181,7 +181,7 @@ class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
             $selected = 'selected="selected"';
             $content .= '<form action="" method="GET">';
 
-            $content .= '</td><td>';
+            $content .= '</td><td style="padding-left: 1em;">';
 
             $content .= '<input type="hidden" name="group_id" value="'. (int)$groupId .'" />';
             $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
@@ -190,8 +190,8 @@ class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
             $content .= '<input type="hidden" name="offset" value="'. (int)$validRequest['offset'] .'" />';
 
             //Filter
-            $content .= '<fieldset><legend>'.$GLOBALS['Language']->getText('project_admin_editugroup','users').'</legend>';
-            $content .= '<p>'. $GLOBALS['Language']->getText('project_admin_editugroup','search_in').' ';
+            //$content .= '<fieldset><legend>'.$GLOBALS['Language']->getText('project_admin_editugroup','users').'</legend>';
+            $content .= $GLOBALS['Language']->getText('project_admin_editugroup','search_in').' ';
             $content .= '<select name="in_project">';
             $content .= '<option value="0" '. ( !$validRequest['in_project'] ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
             $content .= '<option value="'. (int)$groupId .'" '. ($validRequest['in_project'] == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
@@ -263,7 +263,7 @@ class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
             }
             $content .= '</div>';
 
-            $content .= '</fieldset>';
+            //$content .= '</fieldset>';
 
             $content .= '</form>';
         }
