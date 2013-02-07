@@ -18,20 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
 require_once 'common/Systray/LinksCollection.class.php';
 
-$links = new Systray_LinksCollection();
-$links[] = new Systray_Link('ProjectName: TitleOfTheSprint', '/path/to/the/sprint.php');
+class Systray_LinksCollectionTest extends TuleapTestCase {
 
-EventManager::instance()->processEvent(
-    Event::SYSTRAY,
-    array(
-        'links' => $links,
-        'user'  => $request->getCurrentUser()
-    )
-);
-
-$GLOBALS['Response']->sendJSON((array)$links);
-
+    public function itExportsLinksInJSONFormat() {
+        $links = new Systray_LinksCollection();
+        $links[] = new Systray_Link('ProjectName: TitleOfTheSprint', '/path/to/the/sprint.php');
+        $json = json_encode((array)$links);
+        $expected = '[{"label":"ProjectName: TitleOfTheSprint","href":"\/path\/to\/the\/sprint.php"}]';
+        $this->assertEqual($json, $expected);
+    }
+}
 ?>

@@ -18,20 +18,24 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
-require_once 'common/Systray/LinksCollection.class.php';
+/**
+ * Value object of a link displayed in da systray
+ */
+class Systray_Link {
 
-$links = new Systray_LinksCollection();
-$links[] = new Systray_Link('ProjectName: TitleOfTheSprint', '/path/to/the/sprint.php');
+    /** @var string */
+    public $label;
 
-EventManager::instance()->processEvent(
-    Event::SYSTRAY,
-    array(
-        'links' => $links,
-        'user'  => $request->getCurrentUser()
-    )
-);
+    /** @var string */
+    public $href;
 
-$GLOBALS['Response']->sendJSON((array)$links);
-
+    /**
+     * @param string $label The label of the link
+     * @param string $href  The target of the link
+     */
+    public function __construct($label, $href) {
+        $this->label = $label;
+        $this->href  = $href;
+    }
+}
 ?>

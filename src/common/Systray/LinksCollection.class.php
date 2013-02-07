@@ -18,20 +18,11 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'pre.php';
-require_once 'common/Systray/LinksCollection.class.php';
+require_once 'Link.class.php';
 
-$links = new Systray_LinksCollection();
-$links[] = new Systray_Link('ProjectName: TitleOfTheSprint', '/path/to/the/sprint.php');
-
-EventManager::instance()->processEvent(
-    Event::SYSTRAY,
-    array(
-        'links' => $links,
-        'user'  => $request->getCurrentUser()
-    )
-);
-
-$GLOBALS['Response']->sendJSON((array)$links);
-
+/**
+ * First class collection of systray links (Systray_Link)
+ */
+class Systray_LinksCollection extends ArrayObject {
+}
 ?>

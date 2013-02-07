@@ -389,7 +389,7 @@ class Event {
      *
      * Parameters:
      *    'user'  => The User who made the request
-     *    'links' => The SystrayLinksCollection
+     *    'links' => The Systray_LinksCollection
      *
      * Expected results:
      *    The links are added in the collection
