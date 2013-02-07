@@ -131,10 +131,21 @@ class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
         $em                       = EventManager::instance();
         $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
 
-        $content = '<P><h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($this->ugroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
+        $content = '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($this->ugroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
+
+        $content = '
+            <form method="post" action="">
+                <input type="hidden" name="func" value="" />
+                <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'" />
+                <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'" />
+                <label>Type username <input type="text" name="user_name" id="ugroup_add_user" value="" /></label>
+                <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'add').'" />
+            </form>
+        ';
+        $GLOBALS['HTML']->addUserAutocompleteOn('ugroup_add_user', true);
 
         //ugroup binding link
-        $content .= '<P> You can also choose to <a href="editugroup.php?group_id='.$groupId.'&ugroup_id='.$ugroupId.'&func=edit&pane=bind"><b>bind to another group</b></a></p>';
+        //$content .= '<P> You can also choose to <a href="editugroup.php?group_id='.$groupId.'&ugroup_id='.$ugroupId.'&func=edit&pane=bind"><b>bind to another group</b></a></p>';
 
         $content .= '<p><b>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</b></p>';
         $content .= '<div style="padding-left:10px">';

@@ -866,7 +866,13 @@ class Layout extends Response {
     function includeFooterJavascriptSnippet($snippet) {
         $this->javascriptFooter[] = array('snippet' => $snippet);
     }
-    
+
+    public function addUserAutocompleteOn($element_id, $multiple=false) {
+        $jsbool = $multiple ? "true" : "false";
+        $js = "new UserAutoCompleter('".$element_id."', '".util_get_dir_image_theme()."', ".$jsbool.");";
+        $this->includeFooterJavascriptSnippet($js);
+    }
+
     function includeCalendarScripts() {
         $this->includeJavascriptSnippet("var useLanguage = '". substr(UserManager::instance()->getCurrentUser()->getLocale(), 0, 2) ."';");
         $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
