@@ -23,10 +23,16 @@ describe('systray', function() {
         storage = {
             load: sinon.stub(),
             save: sinon.stub()
-        };
+        },
+        server;
 
     beforeEach(function () {
         body = new Element('div');
+        server  = sinon.fakeServer.create();
+    });
+
+    afterEach(function () {
+        server.restore();
     });
 
     it('is defined', function() {
@@ -80,6 +86,38 @@ describe('systray', function() {
                 tuleap.systray.load(body, storage);
 
                 body.down('.systray').className.should.not.include('systray-collapsed');
+            });
+        });
+
+        describe('systray links', function () {
+
+            describe('retrieval', function () {
+
+                it('retrieves links in the cache', function () {
+                    var some_links = [{ label: 'toto', href: '/path' }];
+                    storage.load.withArgs('systray-links').returns(some_links);
+
+                    tuleap.systray.load(body, storage);
+
+                    body.down('.systray_links a[href=/path]').text.should.contain('toto');
+                });
+
+                it('retrieves links from the server', function () {
+                    server.respondWith(
+                        "GET", "/systray.json",
+                        [
+                            200,
+                            { "Content-Type": "application/json" },
+                            '[{"label":"titi","href":"/path/to/titi"}]'
+                        ]
+                    );
+                    storage.load.withArgs('systray-links').returns(undefined);
+
+                    tuleap.systray.load(body, storage);
+                    server.respond();
+
+                    body.down('.systray_links a[href=/path/to/titi]').text.should.contain('titi');
+                });
             });
         });
     });

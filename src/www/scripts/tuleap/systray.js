@@ -58,7 +58,7 @@ tuleap.systray = {
             if (links) {
                 insertLinksInSystray(links);
             } else {
-                new Ajax.Request('/systray.json', { onSuccess: getLinksFromJSONRequest });
+                new Ajax.Request('/systray.json', { method: 'GET', onSuccess: getLinksFromJSONRequest });
             }
 
             function getLinksFromJSONRequest(transport) {
