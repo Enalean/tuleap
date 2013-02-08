@@ -112,7 +112,75 @@ class Planning_Controller extends MVC2_PluginController {
         $this->planning_factory->deletePlanning($this->request->get('planning_id'));
         $this->redirect(array('group_id' => $this->group_id));
     }
-    
+
+    /**
+     * @return BreadCrumb_BreadCrumbGenerator
+     */
+    public function getBreadcrumbs($plugin_path) {
+        return new BreadCrumb_AgileDashboard();
+    }
+
+    public function generateSystrayData() {
+        $user  = $this->request->get('user');
+        $links = $this->request->get('links');
+        
+        foreach ($user->getGroups() as $project) {
+            /* @var $project Project */
+            if (! $project->usesService('plugin_agiledashboard')) {
+                continue;
+            }
+
+            $plannings = $this->getPlanningsShortAccess($project->getID());
+            
+            if (empty($plannings)) {
+                $milestone_title = null;
+            } else {
+                $milestone_title = $this->getLatestMilestoneTitleForProject($plannings);
+            }
+            
+            /* @var $links Systray_LinksCollection */
+            $links->append(
+                new Systray_Link(
+                    $project->getPublicName(). ': ' . $milestone_title,
+                    AGILEDASHBOARD_BASE_URL .'/?group_id=' . $project->getId()
+                )
+            );
+        }
+    }
+
+    /**
+     *
+     * @param int $projectId
+     * @return Planning_ShortAccess[]
+     */
+    private function getPlanningsShortAccess($projectId) {
+        return $this->planning_factory->getPlanningsShortAccess(
+            $this->getCurrentUser(),
+            $projectId,
+            $this->milestone_factory,
+            $this->plugin_theme_path
+        );
+    }
+
+    /**
+     *
+     * @param Planning_ShortAccess[] $plannings
+     * @return string | null
+     */
+    private function getLatestMilestoneTitleForProject($plannings) {
+        $latest_short_access = end($plannings);
+        /*@var $latest_short_access Planning_ShortAccess[] */
+
+        foreach ($latest_short_access->getLastOpenMilestones() as $milestone_presenter) {
+            /* @var $milestone_presenter Planning_ShortAccessMilestonePresenter */
+            if ($milestone_presenter->isLatest()) {
+                return $milestone_presenter->getTitle();
+            }
+        }
+
+        return null;
+    }
+
     private function getFormPresenter(Planning $planning) {
         $group_id = $planning->getGroupId();
         
@@ -125,13 +193,6 @@ class Planning_Controller extends MVC2_PluginController {
     private function getPlanning() {
         $planning_id = $this->request->get('planning_id');
         return $this->planning_factory->getPlanning($planning_id);
-    }
-    
-    /**
-     * @return BreadCrumb_BreadCrumbGenerator
-     */
-    public function getBreadcrumbs($plugin_path) {
-        return new BreadCrumb_AgileDashboard();
     }
 
     private function checkUserIsAdmin() {
