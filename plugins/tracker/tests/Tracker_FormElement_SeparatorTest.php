@@ -19,7 +19,7 @@
  */
 
 
-class Tracker_FormElement_StaticField_SeparatorTest extends UnitTestCase {
+class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
     
     public function testFetchDescription() {
         $id = 2;
@@ -39,7 +39,7 @@ class Tracker_FormElement_StaticField_SeparatorTest extends UnitTestCase {
 
         $this->assertEqual('Separator Label', $separator->getLabel());
         $this->assertEqual('', $separator->getDescription());
-        $this->assertTrue($separator->canBeUnused());
+        $this->assertNull($separator->getCannotRemoveMessage());
     }
 
 }

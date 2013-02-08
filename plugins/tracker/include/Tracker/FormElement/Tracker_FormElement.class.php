@@ -1076,12 +1076,12 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
-     * Is the form element can be set as unused?
+     * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return boolean returns true if the field can be unused, false otherwise
+     * @return string returns null if the field can be unused, a message otherwise
      */
-    public abstract function canBeUnused();
+    public abstract function getCannotRemoveMessage();
 
     protected $cache_permissions;
     /**

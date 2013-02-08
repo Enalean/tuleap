@@ -596,18 +596,19 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
+        $cannot_remove_message = $this->getCannotRemoveMessage();
 
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
         $html .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        if ($this->canBeUnused()) {
+        if ($cannot_remove_message !== null) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $tracker->id,
                 'func'     => 'admin-formElement-remove',
                 'formElement'    => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
-            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field_impossible') .'">';
+            $html .= '<span style="color:gray;" title="'. $cannot_remove_message .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
@@ -748,19 +749,53 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
     
     /**
-     * Is the field can be set as unused?
-     * You can't set a field unused if it is used in the tracker
+     * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return boolean returns true if the field can be unused, false otherwise
+     * @return string returns null if the field can be unused, a message otherwise
      */
-    public function canBeUnused() {
+    public function getCannotRemoveMessage() {
         // a field deletable if it not used in semantics nor in workflow
-        return  ! ($this->isUsedInSemantics() || 
-                   $this->isUsedInWorkflow() || 
-                   $this->isUsedInFieldDependency() || 
-                   $this->isUsedByAnotherField()
+        $canRemove = true;
+        $message = '';
+
+        if($this->isUsedInSemantics()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'delete_field_impossible'
                 );
+            $canRemove = false;
+        }
+
+        if($this->isUsedInWorkflow()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'delete_field_impossible'
+                );
+            $canRemove = false;
+        }
+
+        if($this->isUsedInFieldDependency()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'delete_field_impossible'
+                );
+            $canRemove = false;
+        }
+
+        if($this->isUsedByAnotherField()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'delete_field_impossible'
+                );
+            $canRemove = false;
+        }
+
+        if ($canRemove == true ) {
+            return null;
+        }
+
+        return $message;
     }
 
     /**

@@ -42,7 +42,7 @@ Mock::generate('Tracker_FormElement_Field_Date');
 
 Mock::generate('Tracker');
 
-class Tracker_FormElement_Container_FieldsetTest extends UnitTestCase {
+class Tracker_FormElement_Container_FieldsetTest extends TuleapTestCase {
 
     //testing field import
     public function testImportFormElement() {
@@ -98,13 +98,13 @@ class Tracker_FormElement_Container_FieldsetTest extends UnitTestCase {
         $e1 = new MockTracker_FormElement_Field_Date();
         $elements = array($e1);
         $fieldset->setReturnReference('getFormElements', $e1);
-        $this->assertFalse($fieldset->canBeUnused());
+        $this->assertFalse($fieldset->getCannotRemoveMessage());
     }
     
     public function testIsDeletableWithoutFields() {
         $fieldset = new Tracker_FormElement_Container_FieldsetTestVersion_for_afterSaveObject();
         $fieldset->setReturnValue('getFormElements', null);
-        $this->assertTrue($fieldset->canBeUnused());
+        $this->assertNull($fieldset->getCannotRemoveMessage());
     }
     
 }

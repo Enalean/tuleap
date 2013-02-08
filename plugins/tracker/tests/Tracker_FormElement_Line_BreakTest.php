@@ -39,7 +39,7 @@ class Tracker_FormElement_StaticField_LineBreakTest extends UnitTestCase {
 
         $this->assertEqual('Line Break Label', $line_break->getLabel());
         $this->assertEqual('', $line_break->getDescription());
-        $this->assertTrue($line_break->canBeUnused());
+        $this->assertNull($line_break->getCannotRemoveMessage());
     }
 
 }
