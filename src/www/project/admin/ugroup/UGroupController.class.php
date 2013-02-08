@@ -63,11 +63,10 @@ class Project_Admin_UGroup_UGroupController {
     public function binding() {
         if ($binding = $this->displayUgroupBinding()) {
             $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER]->setBinding($binding);
+            $this->index();
         } else {
-            $source_project_id = $this->request->getValidated('source_project', 'GroupId', 0);
-            $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_UGroupBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
+            $this->edit_binding();
         }
-        $this->index();
     }
 
     /**

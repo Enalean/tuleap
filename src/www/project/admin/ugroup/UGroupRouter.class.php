@@ -37,17 +37,18 @@ class Project_Admin_UGroup_UGroupRouter {
         $current_pane = $this->getPane($request);
         switch($current_pane) {
             case Project_Admin_UGroup_Pane_Binding::IDENTIFIER:
-                $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding'));
-                $vAction->required();
-                $action = $request->getValidated('action', $vAction, Project_Admin_UGroup_Pane_Binding::IDENTIFIER);
+                $action = $this->getBindingAction($request);
                 break;
-        }
-        if (!$action) {
-            $action = self::DEFAULT_ACTION;
         }
         $ugroup       = $this->getUGroup($request);
         $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup, $current_pane);
         $controller->$action();
+    }
+
+    private function getBindingAction($request) {
+        $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding'));
+        $vAction->required();
+        return $request->getValidated('action', $vAction, Project_Admin_UGroup_Pane_Binding::IDENTIFIER);
     }
 
     private function getPane($request) {
