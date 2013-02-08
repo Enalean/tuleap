@@ -50,19 +50,6 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
         return $this->fetchMailRecursiveArtifact($format, 'fetchMailArtifact', array($recipient, $artifact, $format, $ignore_perms));
     }
     
-    
-    /**
-     * Prepare the element to be displayed
-     *
-     * @return void
-     */
-    public function prepareForDisplay() {
-        $this->has_been_displayed = false;
-        foreach($this->getFormElements() as $field) {
-            $field->prepareForDisplay();
-        }
-    }
-    
     public function getRankSelectboxDefinition() {
         $def = parent::getRankSelectboxDefinition();
         $def['subitems'] = array(); 

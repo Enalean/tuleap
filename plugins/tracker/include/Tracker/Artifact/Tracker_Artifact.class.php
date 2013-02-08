@@ -257,9 +257,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchMailFormElements($recipient, $format, $ignore_perms=false) {
         $text = '';
-        foreach ($this->getTracker()->getFormElements() as $formElement) {
-            $formElement->prepareForDisplay();
-        }
+
         foreach ($this->getTracker()->getFormElements() as $formElement) {
             $output = $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
             $text .= $output;
