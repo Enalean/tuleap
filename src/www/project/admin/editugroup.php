@@ -12,7 +12,7 @@ require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
 require_once 'common/project/UGroupManager.class.php';
-require_once 'ugroup/UGroupController.class.php';
+require_once 'ugroup/UGroupRouter.class.php';
 
 $request = HTTPRequest::instance();
 
@@ -89,10 +89,9 @@ if ($func=='create') {
     $HTML->footer(array());
 }
 
-
 if (($func=='edit')||($func=='do_create')) {
-    $controller = new Project_Admin_UGroup_UGroupController($request);
-    $controller->index();
+    $router = new Project_Admin_UGroup_UGroupRouter();
+    $router->process($request);
 }
 
 ?>

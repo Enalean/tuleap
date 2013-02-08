@@ -34,7 +34,6 @@ class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_
         $groupId       = $this->request->getValidated('group_id', 'GroupId', 0);
         $ugroupId      = $this->request->getValidated('ugroup_id', 'uint', 0);
         $sourceProject = $this->request->getValidated('source_project', 'GroupId', 0);
-        $this->ugroup_binding->processRequest($ugroupId, $this->request);
 
         return $this->getUgtoupBindingPaneContent($groupId, $ugroupId, $sourceProject);
     }

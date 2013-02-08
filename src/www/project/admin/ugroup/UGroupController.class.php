@@ -26,28 +26,47 @@ require_once 'PaneManagement.class.php';
 class Project_Admin_UGroup_UGroupController {
     private $request;
     private $ugroup_manager;
+    private $ugroup;
+    private $ugroup_binding;
 
-    public function __construct(Codendi_Request $request) {
+    public function __construct(Codendi_Request $request, UGroup $ugroup) {
         $this->request = $request;
         $this->ugroup_manager = new UGroupManager();
+        $this->ugroup = $ugroup;
+        $this->ugroup_binding = new UGroupBinding(new UGroupUserDao(), $this->ugroup_manager);
     }
 
     public function index() {
-        $ugroup = $this->getUGroup();
         $pane_management = new Project_Admin_UGroup_PaneManagement(
-            $ugroup,
+            $this->ugroup,
             $this->request,
             $this->ugroup_manager
         );
         $pane_management->display();
     }
 
-    private function getUGroup() {
-        $ugroup_id = $this->request->getValidated('ugroup_id', 'uint', 0);
-        if (!$ugroup_id) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), 'The ugroup ID is missing');
+    public function add_binding() {
+        $historyDao        = new ProjectHistoryDao();
+        $projectSourceId   = $this->request->getValidated('source_project', 'GroupId');
+        $sourceId          = $this->request->get('source_ugroup');
+        $validSourceUgroup = $this->ugroup_manager->checkUGroupValidityByGroupId($projectSourceId, $sourceId);
+        $projectSource     = ProjectManager::instance()->getProject($projectSourceId);
+        if ($validSourceUgroup && $projectSource->userIsAdmin()) {
+            if ($this->ugroup_binding->addBinding($this->ugroup->getId(), $sourceId)) {
+                $historyDao->groupAddHistory("ugroup_add_binding", $this->ugroup->getId().":".$sourceId, $this->ugroup->getProjectId());
+            }
+        } else {
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
         }
-        return $this->ugroup_manager->getById($ugroup_id);
+        $this->index();
+    }
+
+    public function remove_binding() {
+        $historyDao        = new ProjectHistoryDao();
+        if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
+            $historyDao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());
+        }
+        $this->index();
     }
 }
 
