@@ -78,6 +78,7 @@ class Project_Admin_UGroup_PaneManagement {
      * Output repo management sub screen to the browser
      */
     public function display() {
+        project_admin_header(array('title' => $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug'), 'group' => $this->ugroup->getProjectId(), 'help' => 'UserGroups.html#UGroupCreation'));
         echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.$GLOBALS['Language']->getText('project_admin_utils','ug_admin').'</a> - '.$this->ugroup->getName().' - '.$this->panes[$this->current_pane]->getTitle().'</h1>';
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
@@ -90,6 +91,7 @@ class Project_Admin_UGroup_PaneManagement {
         echo $this->panes[$this->current_pane]->getContent();
         echo '</div>';
         echo '</div>';
+        $GLOBALS['HTML']->footer(array());
     }
 
     private function displayTab($pane) {

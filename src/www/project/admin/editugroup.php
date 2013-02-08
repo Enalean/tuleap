@@ -12,7 +12,7 @@ require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
 require_once 'common/project/UGroupManager.class.php';
-require_once 'ugroup/PaneManagement.class.php';
+require_once 'ugroup/UGroupController.class.php';
 
 $request = HTTPRequest::instance();
 
@@ -91,27 +91,8 @@ if ($func=='create') {
 
 
 if (($func=='edit')||($func=='do_create')) {
-    $uGroupMgr = new UGroupManager();
-    // Sanity check
-    $ugroup_id = $request->getValidated('ugroup_id', 'uint', 0);
-    if (!$ugroup_id) { 
-        exit_error($Language->getText('global', 'error'), 'The ugroup ID is missing');
-    }
-    $ugroup = $uGroupMgr->getById($ugroup_id);
-    
-    if (!$ugroup) {
-        exit_error($Language->getText('global', 'error'), $Language->getText('project_admin_editugroup', 'ug_not_found', array($ugroup_id, db_error())));
-    }
-
-    $pane_management = new Project_Admin_UGroup_PaneManagement(
-        $ugroup,
-        $request,
-        $uGroupMgr
-    );
-
-    project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'edit_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
-    $pane_management->display();
-    $HTML->footer(array());
+    $controller = new Project_Admin_UGroup_UGroupController($request);
+    $controller->index();
 }
 
 ?>
