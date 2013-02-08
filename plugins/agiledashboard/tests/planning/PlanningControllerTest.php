@@ -154,8 +154,8 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
         $this->assertEqual(0, $this->links->count());
     }
 
-    public function testSystrayWillNotAddALinkIfuserHasNoMilestonesInTheAgileDashboardPlugin() {
-        $project = mock('Project');
+    public function testSystrayWillAddALinkIfuserHasNoMilestonesInTheAgileDashboardPlugin() {
+        $project = stub('Project')->getPublicName()->returns('Garden Project');
 
         stub($project)->usesService('plugin_agiledashboard')->returns(true);
         stub($this->user)->getGroups()->returns(array($project));
@@ -164,7 +164,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
 
         $this->controller->generateSystrayData();
 
-        $this->assertEqual(1, $this->links->count());
+        $this->assertEqual('Garden Project', $this->links[0]->label);
     }
     
     public function testSystrayWillAddLinkIfUserHasAMilestoneInTheAgileDashboardPluginWithTitle() {

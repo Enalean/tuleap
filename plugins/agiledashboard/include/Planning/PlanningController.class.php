@@ -125,25 +125,15 @@ class Planning_Controller extends MVC2_PluginController {
         $links = $this->request->get('links');
         
         foreach ($user->getGroups() as $project) {
-            /* @var $project Project */
             if (! $project->usesService('plugin_agiledashboard')) {
                 continue;
             }
 
             $plannings = $this->getPlanningsShortAccess($project->getID());
-            
-            if (empty($plannings)) {
-                $milestone_title = null;
-            } else {
-                $milestone_title = $this->getLatestMilestoneTitleForProject($plannings);
-            }
-            
+
             /* @var $links Systray_LinksCollection */
             $links->append(
-                new Systray_Link(
-                    $project->getPublicName(). ': ' . $milestone_title,
-                    AGILEDASHBOARD_BASE_URL .'/?group_id=' . $project->getId()
-                )
+                new Systray_AgileDashboardLink($project, $plannings)
             );
         }
     }
@@ -160,25 +150,6 @@ class Planning_Controller extends MVC2_PluginController {
             $this->milestone_factory,
             $this->plugin_theme_path
         );
-    }
-
-    /**
-     *
-     * @param Planning_ShortAccess[] $plannings
-     * @return string | null
-     */
-    private function getLatestMilestoneTitleForProject($plannings) {
-        $latest_short_access = end($plannings);
-        /*@var $latest_short_access Planning_ShortAccess[] */
-
-        foreach ($latest_short_access->getLastOpenMilestones() as $milestone_presenter) {
-            /* @var $milestone_presenter Planning_ShortAccessMilestonePresenter */
-            if ($milestone_presenter->isLatest()) {
-                return $milestone_presenter->getTitle();
-            }
-        }
-
-        return null;
     }
 
     private function getFormPresenter(Planning $planning) {
