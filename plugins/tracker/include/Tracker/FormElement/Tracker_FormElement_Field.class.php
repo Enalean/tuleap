@@ -601,7 +601,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
         $html .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        if ($cannot_remove_message !== null) {
+        if ($cannot_remove_message === null) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $tracker->id,
                 'func'     => 'admin-formElement-remove',
@@ -762,32 +762,32 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if($this->isUsedInSemantics()) {
             $message .= $GLOBALS['Language']->getText(
                 'plugin_tracker_formelement_admin',
-                'delete_field_impossible'
-                );
+                'field_used_in_semantics'
+                ). ' ';
             $canRemove = false;
         }
 
         if($this->isUsedInWorkflow()) {
             $message .= $GLOBALS['Language']->getText(
                 'plugin_tracker_formelement_admin',
-                'delete_field_impossible'
-                );
+                'field_used_in_workflow'
+                ). ' ';
             $canRemove = false;
         }
 
         if($this->isUsedInFieldDependency()) {
             $message .= $GLOBALS['Language']->getText(
                 'plugin_tracker_formelement_admin',
-                'delete_field_impossible'
-                );
+                'field_used_in_field_dependencies'
+                ). ' ';
             $canRemove = false;
         }
 
         if($this->isUsedByAnotherField()) {
             $message .= $GLOBALS['Language']->getText(
                 'plugin_tracker_formelement_admin',
-                'delete_field_impossible'
-                );
+                'field_used_by_another_field'
+                ). ' ';
             $canRemove = false;
         }
 

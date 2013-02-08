@@ -103,7 +103,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '<span class="tracker-admin-field-controls">';
         $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        if ($cannot_remove_message !== null) {
+        if ($cannot_remove_message === null) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-remove',
