@@ -41,6 +41,7 @@ class Project_Admin_UGroup_Pane_Binding extends Project_Admin_UGroup_Pane {
         $this->project_manager = ProjectManager::instance();
     }
 
+    /** @todo: This is crappy, should be in constructor*/
     private $binding;
     public function setBinding($binding) {
         $this->binding = $binding;
