@@ -181,8 +181,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || ! $value->getFiles()) {
+            return '-';
         }
         $output = '';
         return $this->fetchMailAllAttachment($artifact->id, $value, $format);

@@ -226,9 +226,9 @@ class Tracker_FormElement_Field_Text extends Tracker_FormElement_Field_Alphanum 
      *
      * @return string
      */
-    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+    public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {        
+        if (empty($value) || $value->getText() == '') {
+            return '-';
         }
         $output = '';
         switch ($format) {

@@ -51,11 +51,19 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     }
 
     protected function fetchMailArtifactPrefix($format) {
+        $label = $this->getLabel();
         if ($format == 'text') {
-            $label = $this->getLabel();
             return $label . PHP_EOL . str_pad('', strlen($label), '-') . PHP_EOL;
         } else {
-            return $this->fetchArtifactPrefix();
+            return '<tr style="color: #444444; background-color: #F6F6F6;">
+                <td align="left">
+                    <h3>'.
+                        $label.'
+                    </h3>
+                </td>
+                <td>
+                </td>
+            </tr>';
         }
     }
     
@@ -63,7 +71,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         if ($format == 'text') {
             return PHP_EOL;
         } else {
-            return $this->fetchArtifactSuffix();
+            return '';
         }
     }
     

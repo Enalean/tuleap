@@ -230,11 +230,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'html':
                 $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 if ($content) {
-                    $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
+                    $output .=
+                    '<table style="width:100%">
+                        <tr>
+                            <td colspan="3" align="left">
+                                <h2>'.
+                                    $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'
+                                </h2>
+                            </td>
+                        </tr>
+                    </table>';
                     $output .= $content;
                 }
-
-                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
+                $output .=
+                '<table style="width:100%">'.
+                        $this->fetchMailFollowUp($recipient, $format, $ignore_perms).
+                '</table>';
                 break;
             default:
                 $output .= PHP_EOL;
@@ -255,19 +266,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return String
      */
-    public function fetchMailFormElements($recipient, $format, $ignore_perms=false) {
-        $text = '';
-        foreach ($this->getTracker()->getFormElements() as $formElement) {
-            $formElement->prepareForDisplay();
-        }
-        foreach ($this->getTracker()->getFormElements() as $formElement) {
-            $output = $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
-            $text .= $output;
+    public function fetchMailFormElements($recipient, $format, $ignore_perms = false) {  
+        $output = '';
+        $toplevel_form_elements = $this->getTracker()->getFormElements();
+        $this->prepareElementsForDisplay($toplevel_form_elements);
+        
+        foreach ($toplevel_form_elements as $formElement) {
+            $output .= $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
             if ($format == 'text' && $output) {
-                $text .= PHP_EOL;
+                $output .= PHP_EOL;
             }
         }
-        return $text;
+        
+        if ($format == 'html') {
+            $output = '<table width="100%">'.$output.'</table>';
+        }
+        
+        return $output;
+    }
+
+    /** @param Tracker_FormElement[] */
+    private function prepareElementsForDisplay($toplevel_form_elements) {
+        foreach ($toplevel_form_elements as $formElement) {
+            $formElement->prepareForDisplay();
+        }
     }
 
     /**
@@ -285,24 +307,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $cs = $this->getChangesets();
         $hp = Codendi_HTMLPurifier::instance();
         $output = '';
+        
+        if($format == 'html'){
+            $output .=
+            '<tr>
+                <td colspan="3" align="left">
+                    <h2>'.
+                        $GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'
+                    </h2>
+                </td>
+            </tr>';
+        }
+        
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
+            /* @var $comment Tracker_Artifact_Changeset_Comment */
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
-            if (empty($comment)) {
+            if (empty($comment) || $comment->hasEmptyBody()) {
                 //do not display empty comment
                 continue;
             }
             switch ($format) {
-                case 'html':
-                    $followup = $comment->fetchFollowUp($format, true);
-                    if(!empty($followup)) {
-                        if(!isset($output)) {
-                            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>';
-                        }
-                        $output .= '<div class="tracker_artifact_followup_header">';
-                        $output .= $followup;
-                        $output .= '</div>';
-                    }
+                case 'html':               
+                    $followup = $comment->fetchMailFollowUp($format);
+                    $output .=  $followup;
                     break;
                 case 'text':
                     $user = $um->getUserById($comment->submitted_by);

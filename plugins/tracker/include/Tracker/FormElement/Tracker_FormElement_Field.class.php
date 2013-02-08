@@ -358,23 +358,33 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return <type>
      */
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
-        $output = '';
-        if ( $ignore_perms || $this->userCanRead($recipient) ) {
-            $value = $artifact->getLastChangeset()->getValue($this);
+        if (! $ignore_perms && ! $this->userCanRead($recipient) ) {
+            return '';
+        }
 
-            if ($format =='text') {
-                $output .= ' * ';
-                $output .= $this->getLabel();
-                $output .= ' : ';
-                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
-            } else {
-                $hp = Codendi_HTMLPurifier::instance();
-                $output .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
-                $output .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
-                $output .= '<br />';
-                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
-                $output .= '</div>';
-            }
+        $value = $artifact->getLastChangeset()->getValue($this);
+        $mail_formatted_value = $this->fetchMailArtifactValue($artifact, $value, $format);
+
+        if ($format == 'text') {
+            $output = ' * '.$this->getLabel().' : '.$mail_formatted_value;
+        } else {
+            $hp = Codendi_HTMLPurifier::instance();
+            $output = '<tr>
+                <td valign="top" align="left" >
+                    <label id = "tracker_artifact_'. $this->id.'"
+                        for = "tracker_artifact_'. $this->id.'"
+                        title = "'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML).'"
+                        class = "tracker_formelement_label"
+                    >
+                        <b>'.
+                            $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML).'
+                        </b>
+                    </label>
+                </td>
+                <td align = "left">' .
+                    $mail_formatted_value.'
+                </td>
+            </tr>';
         }
         return $output;
     }
