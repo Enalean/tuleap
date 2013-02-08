@@ -17,7 +17,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-describe('systray', function() {
+describe('Le systray', function() {
 
     var body,
         storage = {
@@ -33,6 +33,7 @@ describe('systray', function() {
 
     afterEach(function () {
         server.restore();
+        storage.save.reset();
     });
 
     it('is defined', function() {
@@ -48,7 +49,7 @@ describe('systray', function() {
         });
     });
 
-    describe('when in lab mode', function() {
+    describe(', when in lab mode,', function() {
 
         beforeEach(function () {
             body.addClassName('lab-mode');
@@ -60,7 +61,7 @@ describe('systray', function() {
             expect(body.down('.systray')).to.exist;
         });
 
-        describe('collapsable', function () {
+        describe('is collapsable', function () {
 
             beforeEach(function () {
                 storage.save.returns([]);
@@ -89,9 +90,9 @@ describe('systray', function() {
             });
         });
 
-        describe('systray links', function () {
+        describe('has links', function () {
 
-            describe('retrieval', function () {
+            describe('cached.', function () {
 
                 it('retrieves links in the cache', function () {
                     var some_links = [{ label: 'toto', href: '/path' }];
@@ -102,21 +103,31 @@ describe('systray', function() {
                     body.down('.systray_links a[href=/path]').text.should.contain('toto');
                 });
 
-                it('retrieves links from the server', function () {
-                    server.respondWith(
-                        "GET", "/systray.json",
-                        [
-                            200,
-                            { "Content-Type": "application/json" },
-                            '[{"label":"titi","href":"/path/to/titi"}]'
-                        ]
-                    );
-                    storage.load.withArgs('systray-links').returns(undefined);
+                describe('if not found, retrieves links from the server,', function () {
 
-                    tuleap.systray.load(body, storage);
-                    server.respond();
+                    beforeEach(function () {
+                        server.respondWith(
+                            "GET", "/systray.json",
+                            [
+                                200,
+                                { "Content-type": "application/json" },
+                                '[{"label":"titi","href":"/path/to/titi"}]'
+                            ]
+                        );
+                        storage.load.withArgs('systray-links').returns(undefined);
 
-                    body.down('.systray_links a[href=/path/to/titi]').text.should.contain('titi');
+                        tuleap.systray.load(body, storage);
+                        server.respond();
+                    });
+
+                    it('injects links coming from the server', function () {
+                        body.down('.systray_links a[href=/path/to/titi]').text.should.contain('titi');
+                    });
+
+                    it.skip('store links in the cache to save the rainforest', function () {
+                        //skip it until we know what to do: https://groups.google.com/d/topic/sinonjs/vD1xUXTy9LM/discussion
+                        storage.save.should.have.been.calledWith('systray-links', [{"label":"titi","href":"/path/to/titi"}]);
+                    });
                 });
             });
         });
