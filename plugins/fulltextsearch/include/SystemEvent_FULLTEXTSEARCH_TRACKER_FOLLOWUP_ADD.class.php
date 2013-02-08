@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+ * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
  *
  * This file is a part of Tuleap.
  *
@@ -18,29 +18,23 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_Presenter_Index {
-    public $template = 'index';
-    
-    private $index_status;
-    private $terms;
-    
-    public function __construct($index_status, $terms = '') {
-        $this->index_status = $index_status;
-        $this->terms        = $terms;
-        $this->search_label = $GLOBALS['Language']->getText('search_index', 'search');
+class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP_ADD extends SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP {
+
+    /**
+     * Execute action
+     *
+     * @param Integer $groupId     Project Id
+     * @param Integer $artifactId  Artifact Id
+     * @param Integer $changesetId Changeset Id
+     * @param String  $text        Comment body
+     *
+     * @return Boolean
+     */
+    protected function action($groupId, $artifactId, $changesetId, $text) {
+        $this->actions->indexNewDocument($groupId, $artifactId, $changesetId, $text);
+        return true;
     }
-    
-    public function index_size() {
-        return $this->index_status['size'];
-    }
-    
-    public function nb_docs() {
-        return $this->index_status['nb_docs'];
-    }
-    
-    public function terms() {
-        return $this->terms;
-    }
+
 }
 
 ?>

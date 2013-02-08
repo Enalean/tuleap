@@ -33,7 +33,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     const ACTION_REPLACE = 'report-replace';
     const ACTION_DELETE  = 'report-delete';
     const ACTION_SCOPE   = 'report-scope';
-    const ACTION_DEFAULT   = 'report-default';
+    const ACTION_DEFAULT = 'report-default';
     
     public $id;
     public $name;
@@ -209,7 +209,55 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
        }
        return $this->matching_ids;
     }
-    
+
+    /**
+     * Given the output of getMatchingIds() which returns an array containing 'artifacts ids' and  'Last changeset ids'
+     * as two strings with comma separated values, this method would format such output to an array with artifactIds in keys
+     * and last changeset ids in values.
+     * @see Tracker_Report::joinResults() for usage
+     *
+     * @param HTTPRequest $request       @see getMatchingIds()
+     * @param Boolean     $useDataFromDb @see getMatchingIds()
+     *
+     * @return Array
+     */
+    private function getLastChangesetIdByArtifactId($request = null, $useDataFromDb = false) {
+        $matchingIds          = $this->getMatchingIds($request, $useDataFromDb);
+        $artifactIds          = explode(',', $matchingIds['id']);
+        $lastChangesetIds     = explode(',', $matchingIds['last_changeset_id']);
+        $formattedMatchingIds = array();
+        foreach ($artifactIds as $key => $artifactId) {
+            $formattedMatchingIds[$artifactId] = $lastChangesetIds[$key];
+        }
+        return $formattedMatchingIds;
+    }
+
+    /**
+     * This method is the opposite of getLastChangesetIdByArtifactId().
+     * Given an array with artifactIds in keys and lastChangesetIds on values it would return and array with two elements of type string
+     * the first contains comma separated "artifactIds" and the second contains comma separated "lastChangesetIds".
+     * @see Tracker_Report::joinResults() for usage
+     *
+     * @param Array $formattedMatchingIds Matching Id's that will get converted in that format
+     *
+     * @return Array
+     */
+    private function implodeMatchingIds($formattedMatchingIds) {
+        $matchingIds['id']                = '';
+        $matchingIds['last_changeset_id'] = '';
+        foreach ($formattedMatchingIds as $artifactId => $lastChangesetId) {
+            $matchingIds['id']                .= $artifactId.',';
+            $matchingIds['last_changeset_id'] .= $lastChangesetId.',';
+        }
+        if (substr($matchingIds['id'], -1) === ',') {
+            $matchingIds['id'] = substr($matchingIds['id'], 0, -1);
+        }
+        if (substr($matchingIds['last_changeset_id'], -1) === ',') {
+            $matchingIds['last_changeset_id'] = substr($matchingIds['last_changeset_id'], 0, -1);
+        }
+        return $matchingIds;
+    }
+
     protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
         $dump_criteria = array();
         foreach ($criteria as $c) {
@@ -438,7 +486,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null) {
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, Codendi_Request $request, User $current_user = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
@@ -450,7 +498,6 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
 
         //  Query title
         $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</h3>';
-
         $used = array();
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
@@ -462,10 +509,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         if ($report_can_be_modified && $this->userCanUpdate($current_user)) {
             $html .= '<div id="tracker_report_addcriteria_panel">' . $this->_fetchAddCriteria($used) . '</div>';
         }
-        $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched) . '</ul>';
-        $html .= '<div align="center"><input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
+
+        $followupSearchForm = '';
+        $params = array('html' => &$followupSearchForm, 'request' => $request, 'group_id' => $this->tracker->getGroupId());
+        EventManager::instance()->processEvent('tracker_report_followup_search', $params);
+        if (!empty($followupSearchForm)) {
+            $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
+        }
+        $html .= '<ul id="tracker_query">' . implode('', $criteria_fetched).'</ul>';
+ 
+        $html .= '<div align="center">';
+        $html .= '<input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
         $html .= '</form>';
-        $html .= '</div>';
         return $html;
     }
 
@@ -540,7 +595,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
             }
-            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user);
+            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $request, $current_user);
             
             //Display Renderers
             $html .= '<div>';
@@ -727,18 +782,48 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 if ($current_renderer->description) {
                     $html .= '<p class="tracker_report_renderer_description">'. $hp->purify($current_renderer->description, CODENDI_PURIFIER_BASIC) .'</p>';
                 }
-                $html .= $current_renderer->fetch($this->getMatchingIds($request, false), $request, $report_can_be_modified, $current_user);
+                //Warning about Full text in Tracker Report...
+                $fts_warning = '';
+                $params = array('html' => &$fts_warning, 'request' => $request, 'group_id' => $this->tracker->getGroupId());
+                EventManager::instance()->processEvent('tracker_report_followup_warning', $params);
+                $html .= $fts_warning;
+
+                $html .= $current_renderer->fetch($this->joinResults($request), $request, $report_can_be_modified, $current_user);
                 $html .= '</div>';
             }
             $html .= '</div>';
             echo $html;
+
             if ($report_can_be_modified) {
                 $this->getTracker()->displayFooter($layout);
                 exit();
             }
         }
     }
-    
+
+    /**
+     * Join search results from plugins with matching id's
+     *
+     * @param HTTPRequest $request HTTP request
+     *
+     * @return array
+     */
+    private function joinResults($request) {
+        $result          = array();
+        $searchPerformed = false;
+        $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed, 'group_id' => $this->tracker->getGroupId());
+        EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
+        $matchingIds = $this->getLastChangesetIdByArtifactId($request, false);
+        if ($searchPerformed && is_array($params['result']) && $params['search_performed']) {
+            foreach ($matchingIds as $artifactId => $lastChangesetId) {
+                if (!array_key_exists($artifactId, $params['result'])) {
+                    unset($matchingIds[$artifactId]);
+                }
+            }
+        }
+        return $this->implodeMatchingIds($matchingIds);
+    }
+
     public function getRenderers() {
         return Tracker_Report_RendererFactory::instance()->getReportRenderersByReport($this);
     }    

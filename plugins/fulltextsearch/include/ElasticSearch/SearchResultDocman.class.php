@@ -18,29 +18,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class FullTextSearch_Presenter_Index {
-    public $template = 'index';
-    
-    private $index_status;
-    private $terms;
-    
-    public function __construct($index_status, $terms = '') {
-        $this->index_status = $index_status;
-        $this->terms        = $terms;
-        $this->search_label = $GLOBALS['Language']->getText('search_index', 'search');
-    }
-    
-    public function index_size() {
-        return $this->index_status['size'];
-    }
-    
-    public function nb_docs() {
-        return $this->index_status['nb_docs'];
-    }
-    
-    public function terms() {
-        return $this->terms;
+class ElasticSearch_SearchResultDocman extends ElasticSearch_SearchResult {
+    public $item_title;
+    public $url;
+          
+    public function __construct(array $hit, Project $project) {
+        $this->item_title    = $hit['fields']['title'];
+        $this->url           = '/plugins/docman/?group_id='.$hit['fields']['group_id'].'&id='.$hit['fields']['id'].'&action=details';
+        parent::__construct($hit, $project);
     }
 }
-
 ?>
