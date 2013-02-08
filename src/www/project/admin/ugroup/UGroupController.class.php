@@ -47,12 +47,7 @@ class Project_Admin_UGroup_UGroupController {
         if (!$ugroup_id) {
             exit_error($GLOBALS['Language']->getText('global', 'error'), 'The ugroup ID is missing');
         }
-        $ugroup = $this->ugroup_manager->getById($ugroup_id);
-
-        if (!$ugroup) {
-            exit_error($GLOBALS['Language']->getText('global', 'error'), $GLOBALS['Language']->getText('project_admin_editugroup', 'ug_not_found', array($ugroup_id, db_error())));
-        }
-        return $ugroup;
+        return $this->ugroup_manager->getById($ugroup_id);
     }
 }
 
