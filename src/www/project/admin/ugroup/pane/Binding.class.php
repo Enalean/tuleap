@@ -28,12 +28,12 @@ class Project_Admin_UGroup_Pane_Binding extends Project_Admin_UGroup_Pane {
     /**
      * @var UGroupBinding
      */
-    private $ugroup_binding;
+    protected $ugroup_binding;
 
     /**
      * @var ProjectManager
      */
-    private $project_manager;
+    protected $project_manager;
 
     public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding) {
         parent::__construct($ugroup);

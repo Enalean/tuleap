@@ -22,22 +22,12 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_Members {
+class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_Binding {
+    const IDENTIFIER = 'ugroup_binding';
 
-    /**
-     * @var UGroupBinding 
-     */
-    private $ugroup_binding;
-
-    /**
-     * @var ProjectManager 
-     */
-    private $project_manager;
-
-    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager, UGroupBinding $ugroup_binding) {
-        parent::__construct($ugroup, $request, $ugroup_manager);
-        $this->ugroup_binding = $ugroup_binding;
-        $this->project_manager = ProjectManager::instance();
+    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, Codendi_Request $request) {
+        parent::__construct($ugroup, $ugroup_binding);
+        $this->request = $request;
     }
 
     public function getContent() {
@@ -190,6 +180,10 @@ class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_
         }
         $ugroupSelect .= '</select>';
         return $ugroupSelect;
+    }
+
+    public function getIdentifier() {
+        return self::IDENTIFIER;
     }
 }
 
