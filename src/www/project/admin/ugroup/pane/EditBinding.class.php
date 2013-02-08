@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_Binding {
+class Project_Admin_UGroup_Pane_EditBinding extends Project_Admin_UGroup_Pane_ShowBinding {
     
     public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $source_project_id) {
         parent::__construct($ugroup, $ugroup_binding);

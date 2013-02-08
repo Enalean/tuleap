@@ -37,10 +37,10 @@ class Project_Admin_UGroup_UGroupController {
         $this->ugroup_manager = new UGroupManager();
         $this->ugroup_binding = new UGroupBinding(new UGroupUserDao(), $this->ugroup_manager);
         $this->panes = array(
-            Project_Admin_UGroup_Pane_Settings::IDENTIFIER => new Project_Admin_UGroup_Pane_Settings($ugroup),
-            Project_Admin_UGroup_Pane_Members::IDENTIFIER => new Project_Admin_UGroup_Pane_Members($ugroup, $request, $this->ugroup_manager),
+            Project_Admin_UGroup_Pane_Settings::IDENTIFIER    => new Project_Admin_UGroup_Pane_Settings($ugroup),
+            Project_Admin_UGroup_Pane_Members::IDENTIFIER     => new Project_Admin_UGroup_Pane_Members($ugroup, $request, $this->ugroup_manager),
             Project_Admin_UGroup_Pane_Permissions::IDENTIFIER => new Project_Admin_UGroup_Pane_Permissions($ugroup),
-            Project_Admin_UGroup_Pane_Binding::IDENTIFIER => new Project_Admin_UGroup_Pane_Binding($ugroup, $this->ugroup_binding),
+            Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER     => new Project_Admin_UGroup_Pane_ShowBinding($ugroup, $this->ugroup_binding),
         );
     }
 
@@ -53,16 +53,15 @@ class Project_Admin_UGroup_UGroupController {
         $pane_management->display();
     }
 
-
     public function edit_binding() {
         $source_project_id = $this->request->getValidated('source_project', 'GroupId', 0);
-        $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_UGroupBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
+        $this->panes[Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER] = new Project_Admin_UGroup_Pane_EditBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
         $this->index();
     }
 
     public function binding() {
         if ($binding = $this->displayUgroupBinding()) {
-            $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER]->setBinding($binding);
+            $this->panes[Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER]->setBinding($binding);
             $this->index();
         } else {
             $this->edit_binding();
@@ -97,7 +96,7 @@ class Project_Admin_UGroup_UGroupController {
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
         }
-        $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER]->getUrl());
+        $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER]->getUrl());
     }
 
     public function remove_binding() {
@@ -105,7 +104,7 @@ class Project_Admin_UGroup_UGroupController {
         if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
             $historyDao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());
         }
-        $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER]->getUrl());
+        $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER]->getUrl());
     }
 }
 

@@ -26,8 +26,8 @@ require_once 'Pane.class.php';
 require_once 'pane/Settings.class.php';
 require_once 'pane/Members.class.php';
 require_once 'pane/Permissions.class.php';
-require_once 'pane/Binding.class.php';
-require_once 'pane/UGroupBinding.class.php';
+require_once 'pane/ShowBinding.class.php';
+require_once 'pane/EditBinding.class.php';
 
 class Project_Admin_UGroup_PaneManagement {
     /**
