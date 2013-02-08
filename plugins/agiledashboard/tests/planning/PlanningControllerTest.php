@@ -31,16 +31,16 @@ require_once 'common/Systray/LinksCollection.class.php';
 require_once 'common/project/Project.class.php';
 
 abstract class PlanningControllerTest extends TuleapTestCase {
-    
+
     /**
      *
-     * @var int 
+     * @var int
      */
     protected $group_id;
-    
+
     /**
      *
-     * @var PlanningFactory 
+     * @var PlanningFactory
      */
     protected $planning_factory;
 
@@ -81,43 +81,40 @@ abstract class PlanningControllerTest extends TuleapTestCase {
 
 class PlanningControllerTest_systrayTest extends PlanningControllerTest {
 
-    /**
-     *
-     * @var Codendi_Request 
-     */
+    /** @var Codendi_Request  */
     private $request;
 
-    /**
-     *
-     * @var Planning_Controller
-     */
+    /** @var Planning_Controller */
     private $controller;
 
-    /**
-     *
-     * @var User
-     */
+    /** @var User */
     private $user;
 
-    /**
-     *
-     * @var Systray_LinksCollection
-     */
+    /** @var Systray_LinksCollection */
     private $links;
+
+    /** @var Project */
+    private $project;
+
+    /** @var string */
+    private $garden_project_name = 'Garden Project';
+    private $gpig_project_name   = 'Guinea Pig Project';
+    private $sprint_34_title     = 'Sprint 34';
+    private $release_2_title     = 'Sprint 34';
 
     public function setUp() {
         parent::setUp();
 
         $this->user = mock('User');
         $this->links = new Systray_LinksCollection();
-        
+
         $params = array(
            'user' => $this->user,
            'links'=> $this->links,
         );
 
         $this->request = new Codendi_Request($params);
-        
+
         $controller_mocked_methods = array('getCurrentUser');
         $controller_contructor_params = array(
             $this->request,
@@ -133,156 +130,107 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
         );
         stub($this->controller)->getCurrentUser()->returns($this->user);
 
+        $this->garden_project = mock('Project');
+        $this->gpig_project   = mock('Project');
+        stub($this->garden_project)->getPublicName()->returns($this->garden_project_name);
+        stub($this->gpig_project)->getPublicName()->returns($this->gpig_project_name);
+        stub($this->garden_project)->getId()->returns(111);
+        stub($this->gpig_project)->getId()->returns(222);
     }
 
     public function testSystrayWillNotAddLinksIfuserHasNoProjects() {
         stub($this->user)->getGroups()->returns(array());
-        
+
         $this->controller->generateSystrayData();
-        
-        $this->assertEqual(0, $this->links->count());
+
+        $this->assertEqual(0, count($this->links));
     }
 
     public function testSystrayWillNotAddLinksIfuserHasAProjectButItDoesNotuseTheAgileDashboardPlugin() {
-        $project = mock('Project');
-        
-        stub($project)->usesService('plugin_agiledashboard')->returns(false);
-        stub($this->user)->getGroups()->returns(array($project));
+        stub($this->garden_project)->usesService('plugin_agiledashboard')->returns(false);
+        stub($this->user)->getGroups()->returns(array($this->garden_project));
 
         $this->controller->generateSystrayData();
 
-        $this->assertEqual(0, $this->links->count());
+        $this->assertEqual(0, count($this->links));
     }
 
     public function testSystrayWillAddALinkIfuserHasNoMilestonesInTheAgileDashboardPlugin() {
-        $project = stub('Project')->getPublicName()->returns('Garden Project');
-
-        stub($project)->usesService('plugin_agiledashboard')->returns(true);
-        stub($this->user)->getGroups()->returns(array($project));
-
+        stub($this->garden_project)->usesService('plugin_agiledashboard')->returns(true);
+        stub($this->user)->getGroups()->returns(array($this->garden_project));
         stub($this->planning_factory)->getPlanningsShortAccess()->returns(array());
 
         $this->controller->generateSystrayData();
 
-        $this->assertEqual('Garden Project', $this->links[0]->label);
+        $this->assertEqual(1, count($this->links));
+        $this->assertIsA($this->links[0], 'Systray_Link');
+        $this->assertEqual($this->garden_project_name, $this->links[0]->label);
     }
-    
+
     public function testSystrayWillAddLinkIfUserHasAMilestoneInTheAgileDashboardPluginWithTitle() {
-        $milestone_title = 'my_sprint';
-        $project = mock('Project');
-        $planning_short_access = mock('Planning_ShortAccess');
-        $milestone_presenter = mock('Planning_ShortAccessMilestonePresenter');
-
-        stub($project)->usesService('plugin_agiledashboard')->returns(true);
-        stub($this->user)->getGroups()->returns(array($project));
-
-        $short_access_array = array($planning_short_access);
-        stub($planning_short_access)->getLastOpenMilestones()->returns(array($milestone_presenter));
-        stub($this->planning_factory)->getPlanningsShortAccess()->returns($short_access_array);
-
-        stub($milestone_presenter)->isLatest()->returns(true);
-        stub($milestone_presenter)->getTitle()->returns($milestone_title);
+        stub($this->garden_project)->usesService('plugin_agiledashboard')->returns(true);
+        stub($this->user)->getGroups()->returns(array($this->garden_project));
+        $this->setProjectLatestMilestone($this->garden_project, $this->sprint_34_title);
 
         $this->controller->generateSystrayData();
 
-        $this->assertEqual(1, $this->links->count());
-        $this->assertIsA($this->links->offsetGet(0), 'Systray_Link');
-        $link = $this->links->offsetGet(0);
-        $this->assertPattern('/'.$milestone_title.'/', $link->label);
+        $this->assertPattern('/'.$this->sprint_34_title.'/', $this->links[0]->label);
     }
 
     public function testSystrayWillAddALinkForEachMilestoneInEachProjectAgileDashboard() {
-        $milestone_title1 = 'my_sprint1';
-        $milestone_title2 = 'my_sprint2';
-
-        $project1 = mock('Project');
-        $project2 = mock('Project');
-        stub($project1)->usesService('plugin_agiledashboard')->returns(true);
-        stub($project2)->usesService('plugin_agiledashboard')->returns(true);
-        stub($project1)->getId()->returns(111);
-        stub($project2)->getId()->returns(222);
-        $projects = array(
-            $project1,
-            $project2,
-        );
-        
-        stub($this->user)->getGroups()->returns($projects);
-
-        $planning_short_access1 = mock('Planning_ShortAccess');
-        $milestone_presenter1 = mock('Planning_ShortAccessMilestonePresenter');
-        stub($planning_short_access1)->getLastOpenMilestones()->returns(array($milestone_presenter1));
-        $short_access_array1 = array($planning_short_access1);
-        stub($this->planning_factory)
-            ->getPlanningsShortAccess(
-                $this->user,
-                111,
-                $this->milestone_factory,
-                $this->plugin_theme_path
-            )
-            ->returns($short_access_array1);
-
-        $planning_short_access2 = mock('Planning_ShortAccess');
-        $milestone_presenter2 = mock('Planning_ShortAccessMilestonePresenter');
-        stub($planning_short_access2)->getLastOpenMilestones()->returns(array($milestone_presenter2));
-        $short_access_array2 = array($planning_short_access2);
-        stub($this->planning_factory)
-            ->getPlanningsShortAccess(
-                $this->user,
-                222,
-                $this->milestone_factory,
-                $this->plugin_theme_path
-            )
-            ->returns($short_access_array2);
-
-        stub($milestone_presenter1)->isLatest()->returns(true);
-        stub($milestone_presenter1)->getTitle()->returns($milestone_title1);
-
-        stub($milestone_presenter2)->isLatest()->returns(true);
-        stub($milestone_presenter2)->getTitle()->returns($milestone_title2);
+        stub($this->garden_project)->usesService('plugin_agiledashboard')->returns(true);
+        stub($this->gpig_project)->usesService('plugin_agiledashboard')->returns(true);
+        stub($this->user)->getGroups()->returns(array($this->garden_project, $this->gpig_project));
+        $this->setProjectLatestMilestone($this->garden_project, $this->sprint_34_title);
+        $this->setProjectLatestMilestone($this->gpig_project, $this->release_2_title);
 
         $this->controller->generateSystrayData();
 
-        $this->assertEqual(2, $this->links->count());
-
-        $this->assertIsA($this->links->offsetGet(0), 'Systray_Link');
-        $link1 = $this->links->offsetGet(0);
-        $this->assertPattern('/'.$milestone_title1.'/', $link1->label);
-
-        $this->assertIsA($this->links->offsetGet(1), 'Systray_Link');
-        $link2 = $this->links->offsetGet(1);
-        $this->assertPattern('/'.$milestone_title2.'/', $link2->label);
+        $this->assertEqual(2, count($this->links));
+        $this->assertPattern('/'.$this->sprint_34_title.'/', $this->links[0]->label);
+        $this->assertPattern('/'.$this->release_2_title.'/', $this->links[1]->label);
     }
 
     public function testSystrayWillAddLinkForLatestMilestoneInTheAgileDashboard() {
-        $milestone_title = 'my_sprint';
-        $project = mock('Project');
-        $planning_short_access = mock('Planning_ShortAccess');
-        $milestone_presenter1 = mock('Planning_ShortAccessMilestonePresenter');
-        $milestone_presenter2 = mock('Planning_ShortAccessMilestonePresenter');
+        stub($this->garden_project)->usesService('plugin_agiledashboard')->returns(true);
+        stub($this->user)->getGroups()->returns(array($this->garden_project));
 
-        $milestone_presenters = array(
-            $milestone_presenter1,
-            $milestone_presenter2,
+        $planning_short_access = mock('Planning_ShortAccess');
+        $milestone_presenters  = array(
+            mock('Planning_ShortAccessMilestonePresenter'),
+            mock('Planning_ShortAccessMilestonePresenter'),
         );
 
-        stub($project)->usesService('plugin_agiledashboard')->returns(true);
-        stub($this->user)->getGroups()->returns(array($project));
+        stub($milestone_presenters[0])->isLatest()->returns(true);
+        stub($milestone_presenters[0])->getTitle()->returns($this->sprint_34_title);
+        stub($milestone_presenters[1])->isLatest()->returns(false);
 
         $short_access_array = array($planning_short_access);
         stub($planning_short_access)->getLastOpenMilestones()->returns($milestone_presenters);
         stub($this->planning_factory)->getPlanningsShortAccess()->returns($short_access_array);
 
-        stub($milestone_presenter1)->isLatest()->returns(true);
-        stub($milestone_presenter1)->getTitle()->returns($milestone_title);
-
-        stub($milestone_presenter1)->isLatest()->returns(false);
-
         $this->controller->generateSystrayData();
 
-        $this->assertEqual(1, $this->links->count());
-        $this->assertIsA($this->links->offsetGet(0), 'Systray_Link');
-        $link = $this->links->offsetGet(0);
-        $this->assertPattern('/'.$milestone_title.'/', $link->label);
+        $this->assertEqual(1, count($this->links));
+        $this->assertPattern('/'.$this->sprint_34_title.'/', $this->links[0]->label);
+    }
+
+    private function setProjectLatestMilestone(Project $project, $milestone_title) {
+        $planning_short_access = mock('Planning_ShortAccess');
+        $milestone_presenter   = mock('Planning_ShortAccessMilestonePresenter');
+
+        stub($milestone_presenter)->isLatest()->returns(true);
+        stub($milestone_presenter)->getTitle()->returns($milestone_title);
+
+        $short_access_array = array($planning_short_access);
+        stub($planning_short_access)->getLastOpenMilestones()->returns(array($milestone_presenter));
+        stub($this->planning_factory)
+            ->getPlanningsShortAccess(
+                $this->user,
+                $project->getId(),
+                $this->milestone_factory,
+                $this->plugin_theme_path
+            )->returns($short_access_array);
     }
 }
 
