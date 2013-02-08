@@ -138,7 +138,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
     public function testSystrayWillNotAddLinksIfuserHasNoProjects() {
         stub($this->user)->getGroups()->returns(array());
         
-        $this->controller->systray();
+        $this->controller->generateSystrayData();
         
         $this->assertEqual(0, $this->links->count());
     }
@@ -149,7 +149,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
         stub($project)->usesService('plugin_agiledashboard')->returns(false);
         stub($this->user)->getGroups()->returns(array($project));
 
-        $this->controller->systray();
+        $this->controller->generateSystrayData();
 
         $this->assertEqual(0, $this->links->count());
     }
@@ -162,7 +162,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
 
         stub($this->planning_factory)->getPlanningsShortAccess()->returns(array());
 
-        $this->controller->systray();
+        $this->controller->generateSystrayData();
 
         $this->assertEqual(1, $this->links->count());
     }
@@ -183,7 +183,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
         stub($milestone_presenter)->isLatest()->returns(true);
         stub($milestone_presenter)->getTitle()->returns($milestone_title);
 
-        $this->controller->systray();
+        $this->controller->generateSystrayData();
 
         $this->assertEqual(1, $this->links->count());
         $this->assertIsA($this->links->offsetGet(0), 'Systray_Link');
@@ -240,7 +240,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
         stub($milestone_presenter2)->isLatest()->returns(true);
         stub($milestone_presenter2)->getTitle()->returns($milestone_title2);
 
-        $this->controller->systray();
+        $this->controller->generateSystrayData();
 
         $this->assertEqual(2, $this->links->count());
 
@@ -277,7 +277,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
 
         stub($milestone_presenter1)->isLatest()->returns(false);
 
-        $this->controller->systray();
+        $this->controller->generateSystrayData();
 
         $this->assertEqual(1, $this->links->count());
         $this->assertIsA($this->links->offsetGet(0), 'Systray_Link');
