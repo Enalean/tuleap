@@ -41,41 +41,22 @@ class Project_Admin_UGroup_Pane_Binding extends Project_Admin_UGroup_Pane {
         $this->project_manager = ProjectManager::instance();
     }
 
+    private $binding;
+    public function setBinding($binding) {
+        $this->binding = $binding;
+    }
+
     public function getContent() {
         $content = '';
-        $clones = $this->ugroup_binding->getUGroupsByBindingSource($this->ugroup->getId());
-        $content .= $this->getAdd();
+        
+        $urlAdd     = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_binding';
+        $linkAdd    = '<br/><a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
+        $content .= $this->binding;
+        $content .= $linkAdd;
         $content .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
+        $clones = $this->ugroup_binding->getUGroupsByBindingSource($this->ugroup->getId());
         $content .= $this->getClonesHTML($clones);
         return $content;
-    }
-
-    private function getAdd() {
-        $content = '';
-        $urlAdd     = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=ugroup_binding';
-        $linkAdd    = '<br/><a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
-        if ($binding = $this->displayUgroupBinding()) {
-            $content .= $binding;
-        } else {
-            $GLOBALS['Response']->redirect('/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=ugroup_binding');
-        }
-        $content .= $linkAdd;
-        return $content;
-    }
-
-    /**
-     * Display the binding pane content
-     * 
-     * @return String
-     */
-    private function displayUgroupBinding() {
-        $html = '';
-        $ugroupUpdateUsersAllowed = !$this->ugroup->isBound();
-        if ($ugroupUpdateUsersAllowed) {
-            $em = EventManager::instance();
-            $em->processEvent('ugroup_table_row', array('row' => array('group_id' => $this->ugroup->getProjectId(), 'ugroup_id' => $this->ugroup->getId()), 'html' => &$html));
-        }
-        return $html;
     }
 
     /**
@@ -108,6 +89,7 @@ class Project_Admin_UGroup_Pane_Binding extends Project_Admin_UGroup_Pane {
         $clonesHTML .= '</table>';
         return $clonesHTML;
     }
+
 
     public function getIdentifier() {
         return self::IDENTIFIER;

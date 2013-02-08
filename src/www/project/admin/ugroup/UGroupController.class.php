@@ -28,21 +28,61 @@ class Project_Admin_UGroup_UGroupController {
     private $ugroup_manager;
     private $ugroup;
     private $ugroup_binding;
+    private $current_pane;
 
-    public function __construct(Codendi_Request $request, UGroup $ugroup) {
+    public function __construct(Codendi_Request $request, UGroup $ugroup, $current_pane) {
         $this->request = $request;
-        $this->ugroup_manager = new UGroupManager();
         $this->ugroup = $ugroup;
+        $this->current_pane = $current_pane;
+        $this->ugroup_manager = new UGroupManager();
         $this->ugroup_binding = new UGroupBinding(new UGroupUserDao(), $this->ugroup_manager);
+        $this->panes = array(
+            Project_Admin_UGroup_Pane_Settings::IDENTIFIER => new Project_Admin_UGroup_Pane_Settings($ugroup),
+            Project_Admin_UGroup_Pane_Members::IDENTIFIER => new Project_Admin_UGroup_Pane_Members($ugroup, $request, $this->ugroup_manager),
+            Project_Admin_UGroup_Pane_Permissions::IDENTIFIER => new Project_Admin_UGroup_Pane_Permissions($ugroup),
+            Project_Admin_UGroup_Pane_Binding::IDENTIFIER => new Project_Admin_UGroup_Pane_Binding($ugroup, $this->ugroup_binding),
+        );
     }
 
     public function index() {
         $pane_management = new Project_Admin_UGroup_PaneManagement(
             $this->ugroup,
-            $this->request,
-            $this->ugroup_manager
+            $this->panes,
+            $this->current_pane
         );
         $pane_management->display();
+    }
+
+
+    public function edit_binding() {
+        $source_project_id = $this->request->getValidated('source_project', 'GroupId', 0);
+        $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_UGroupBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
+        $this->index();
+    }
+
+    public function binding() {
+        if ($binding = $this->displayUgroupBinding()) {
+            $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER]->setBinding($binding);
+        } else {
+            $source_project_id = $this->request->getValidated('source_project', 'GroupId', 0);
+            $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_UGroupBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
+        }
+        $this->index();
+    }
+
+    /**
+     * Display the binding pane content
+     *
+     * @return String
+     */
+    private function displayUgroupBinding() {
+        $html = '';
+        $ugroupUpdateUsersAllowed = !$this->ugroup->isBound();
+        if ($ugroupUpdateUsersAllowed) {
+            $em = EventManager::instance();
+            $em->processEvent('ugroup_table_row', array('row' => array('group_id' => $this->ugroup->getProjectId(), 'ugroup_id' => $this->ugroup->getId()), 'html' => &$html));
+        }
+        return $html;
     }
 
     public function add_binding() {
@@ -58,7 +98,7 @@ class Project_Admin_UGroup_UGroupController {
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
         }
-        $this->index();
+        $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER]->getUrl());
     }
 
     public function remove_binding() {
@@ -66,7 +106,7 @@ class Project_Admin_UGroup_UGroupController {
         if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
             $historyDao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());
         }
-        $this->index();
+        $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER]->getUrl());
     }
 }
 

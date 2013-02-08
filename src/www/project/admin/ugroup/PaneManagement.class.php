@@ -42,36 +42,10 @@ class Project_Admin_UGroup_PaneManagement {
      */
     private $ugroup;
 
-    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager) {
-        $this->ugroup = $ugroup;
-
-        $vPane = new Valid_WhiteList(
-            'pane',
-            array(
-                Project_Admin_UGroup_Pane_Settings::IDENTIFIER,
-                Project_Admin_UGroup_Pane_Members::IDENTIFIER,
-                Project_Admin_UGroup_Pane_Permissions::IDENTIFIER,
-                Project_Admin_UGroup_Pane_Binding::IDENTIFIER,
-                Project_Admin_UGroup_Pane_UGroupBinding::IDENTIFIER
-            )
-        );
-        $vPane->required();
-        $this->current_pane = $request->getValidated('pane', $vPane, 'settings');
-
-        $ugroup_binding = new UGroupBinding(new UGroupUserDao(), $ugroup_manager);
-        
-        $this->panes = array(
-            Project_Admin_UGroup_Pane_Settings::IDENTIFIER => new Project_Admin_UGroup_Pane_Settings($ugroup),
-            Project_Admin_UGroup_Pane_Members::IDENTIFIER => new Project_Admin_UGroup_Pane_Members($ugroup, $request, $ugroup_manager),
-            Project_Admin_UGroup_Pane_Permissions::IDENTIFIER => new Project_Admin_UGroup_Pane_Permissions($ugroup)
-        );
-
-        if ($this->current_pane == Project_Admin_UGroup_Pane_UGroupBinding::IDENTIFIER) {
-            $this->panes[Project_Admin_UGroup_Pane_UGroupBinding::IDENTIFIER] = new Project_Admin_UGroup_Pane_UGroupBinding($ugroup, $ugroup_binding, $request);
-        } else {
-            $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_Binding($ugroup, $ugroup_binding);
-        }
-
+    public function __construct(UGroup $ugroup, array $panes, $current_pane) {
+        $this->ugroup       = $ugroup;
+        $this->panes        = $panes;
+        $this->current_pane = $current_pane;
     }
 
     /**

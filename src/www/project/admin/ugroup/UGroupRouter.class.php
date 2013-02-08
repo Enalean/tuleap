@@ -33,16 +33,36 @@ class Project_Admin_UGroup_UGroupRouter {
     }
 
     public function process(Codendi_Request $request) {
-        $ugroup = $this->getUGroup($request);
-        $controller = new Project_Admin_UGroup_UGroupController($request, $ugroup);
-        $action = self::DEFAULT_ACTION;
-        if ($request->get('pane') == Project_Admin_UGroup_Pane_UGroupBinding::IDENTIFIER) {
-            $action = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'));
+        $action       = self::DEFAULT_ACTION;
+        $current_pane = $this->getPane($request);
+        switch($current_pane) {
+            case Project_Admin_UGroup_Pane_Binding::IDENTIFIER:
+                $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding'));
+                $vAction->required();
+                $action = $request->getValidated('action', $vAction, Project_Admin_UGroup_Pane_Binding::IDENTIFIER);
+                break;
         }
         if (!$action) {
             $action = self::DEFAULT_ACTION;
         }
+        $ugroup       = $this->getUGroup($request);
+        $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup, $current_pane);
         $controller->$action();
+    }
+
+    private function getPane($request) {
+        $vPane = new Valid_WhiteList(
+            'pane',
+            array(
+                Project_Admin_UGroup_Pane_Settings::IDENTIFIER,
+                Project_Admin_UGroup_Pane_Members::IDENTIFIER,
+                Project_Admin_UGroup_Pane_Permissions::IDENTIFIER,
+                Project_Admin_UGroup_Pane_Binding::IDENTIFIER,
+                Project_Admin_UGroup_Pane_UGroupBinding::IDENTIFIER
+            )
+        );
+        $vPane->required();
+        return $request->getValidated('pane', $vPane, Project_Admin_UGroup_Pane_Settings::IDENTIFIER);
     }
 
     private function getUGroup(Codendi_Request $request) {

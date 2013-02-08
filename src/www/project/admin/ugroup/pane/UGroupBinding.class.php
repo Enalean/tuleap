@@ -23,19 +23,14 @@
  */
 
 class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_Binding {
-    const IDENTIFIER = 'ugroup_binding';
-
-    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, Codendi_Request $request) {
+    
+    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $source_project_id) {
         parent::__construct($ugroup, $ugroup_binding);
-        $this->request = $request;
+        $this->source_project_id = $source_project_id;
     }
 
     public function getContent() {
-        $groupId       = $this->request->getValidated('group_id', 'GroupId', 0);
-        $ugroupId      = $this->request->getValidated('ugroup_id', 'uint', 0);
-        $sourceProject = $this->request->getValidated('source_project', 'GroupId', 0);
-
-        return $this->getUgtoupBindingPaneContent($groupId, $ugroupId, $sourceProject);
+        return $this->getUgtoupBindingPaneContent($this->ugroup->getProjectId(), $this->ugroup->getId(), $this->source_project_id);
     }
 
     /**
@@ -179,10 +174,6 @@ class Project_Admin_UGroup_Pane_UGroupBinding extends Project_Admin_UGroup_Pane_
         }
         $ugroupSelect .= '</select>';
         return $ugroupSelect;
-    }
-
-    public function getIdentifier() {
-        return self::IDENTIFIER;
     }
 }
 
