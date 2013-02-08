@@ -16,5 +16,5 @@
  */
 
 document.observe('dom:loaded', function () {
-    tuleap.systray.load(document.body);
+    tuleap.systray.load(document.body, AZHU.storage);
 });

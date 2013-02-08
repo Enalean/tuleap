@@ -4308,6 +4308,9 @@ input[type="submit"].btn {
     float: left;
     cursor: pointer;
 }
+.systray_links {
+    margin-left: 1.5em;
+}
 .systray-collapsed > .systray_content > .systray_links {
     display: none;
 }

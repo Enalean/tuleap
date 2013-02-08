@@ -17,7 +17,7 @@
 
 var tuleap = tuleap || { };
 tuleap.systray = {
-    load: function(body) {
+    load: function(body, storage) {
         var cache_duration_2_hours    = 2 * 3600,
             cache_duration_1_week     = 7 * 24 * 3600,
             systray_collapse          = 'collapse',
@@ -40,7 +40,7 @@ tuleap.systray = {
                         '</div>' +
                       '</div>';
             body.insert(systray);
-            $$('.systray_icon').each(function (icon) {
+            body.select('.systray_icon').each(function (icon) {
                 var systray = icon.up('.systray');
 
                 loadTogglePreference(systray);
@@ -52,13 +52,13 @@ tuleap.systray = {
         }
 
         function loadLinks(systray) {
-            var template = new Template('<a href="#{href}">#{label}</a>'),
-                links    = AZHU.storage.load(systray_links_cachekey);
+            var link_template = new Template('<a href="#{href}">#{label}</a>'),
+                links         = storage.load(systray_links_cachekey);
 
             if (links) {
                 insertLinksInSystray(links);
             } else {
-                new Ajax.Request('/systray.json', { onSuccess: getLinksFromJSONRequest });
+                new Ajax.Request('/systray.json', { method: 'GET', onSuccess: getLinksFromJSONRequest });
             }
 
             function getLinksFromJSONRequest(transport) {
@@ -71,23 +71,24 @@ tuleap.systray = {
             }
 
             function insertLinksInSystray(links) {
-                var systray_links = systray.down('.systray_links'),
-                    menu,
-                    first_link = links.shift();
-                systray_links.update('<div class="dropdown">' +
-                    template.evaluate(first_link) +
-                    '<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-angle-up"></i> </a>' +
-                    '<ul class="dropdown-menu" role="menu"></ul>' +
-                '</div>');
+                var menu,
+                    systray_links = systray.down('.systray_links'),
+                    first_link = link_template.evaluate(links.shift()),
+                    dropdown ='<div class="dropdown">' + first_link +
+                            '<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-angle-up"></i> </a>' +
+                            '<ul class="dropdown-menu" role="menu"></ul>' +
+                        '</div>';
+
+                systray_links.update(dropdown);
                 menu = systray_links.down('.dropdown-menu');
 
                 links.each(function (link) {
-                    menu.insert('<li>' + template.evaluate(link) + '</li>');
+                    menu.insert('<li>' + link_template.evaluate(link) + '</li>');
                 });
             }
 
             function saveLinks(links) {
-                AZHU.storage.save(
+                storage.save(
                     systray_links_cachekey,
                     links,
                     cache_duration_2_hours
@@ -96,7 +97,7 @@ tuleap.systray = {
         }
 
         function loadTogglePreference(systray) {
-            if (AZHU.storage.load(systray_collapse_cachekey) === systray_collapse) {
+            if (storage.load(systray_collapse_cachekey) === systray_collapse) {
                 toggleSystray(systray);
             }
         }
@@ -107,7 +108,7 @@ tuleap.systray = {
         }
 
         function saveTogglePreference(systray) {
-            AZHU.storage.save(
+            storage.save(
                 systray_collapse_cachekey,
                 systray.hasClassName(collapse_classname) ? systray_collapse : systray_expand,
                 cache_duration_1_week
