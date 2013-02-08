@@ -36,7 +36,7 @@ class Project_Admin_UGroup_UGroupRouter {
         $action       = self::DEFAULT_ACTION;
         $current_pane = $this->getPane($request);
         switch($current_pane) {
-            case Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER:
+            case Project_Admin_UGroup_Pane_Binding::IDENTIFIER:
                 $action = $this->getBindingAction($request);
                 break;
         }

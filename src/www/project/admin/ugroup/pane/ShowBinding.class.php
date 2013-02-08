@@ -21,30 +21,14 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once 'Binding.class.php';
 
-class Project_Admin_UGroup_Pane_ShowBinding extends Project_Admin_UGroup_Pane {
-    const IDENTIFIER = 'binding';
+class Project_Admin_UGroup_Pane_ShowBinding extends Project_Admin_UGroup_Pane_Binding {
+    private $plugin_binding;
 
-    /**
-     * @var UGroupBinding
-     */
-    protected $ugroup_binding;
-
-    /**
-     * @var ProjectManager
-     */
-    protected $project_manager;
-
-    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding) {
-        parent::__construct($ugroup);
-        $this->ugroup_binding = $ugroup_binding;
-        $this->project_manager = ProjectManager::instance();
-    }
-
-    /** @todo: This is crappy, should be in constructor*/
-    private $binding;
-    public function setBinding($binding) {
-        $this->binding = $binding;
+    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $plugin_binding) {
+        parent::__construct($ugroup, $ugroup_binding);
+        $this->plugin_binding = $plugin_binding;
     }
 
     public function getContent() {
@@ -52,7 +36,7 @@ class Project_Admin_UGroup_Pane_ShowBinding extends Project_Admin_UGroup_Pane {
         
         $urlAdd     = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_binding';
         $linkAdd    = '<br/><a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
-        $content .= $this->binding;
+        $content .= $this->plugin_binding;
         $content .= $linkAdd;
         $content .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
         $clones = $this->ugroup_binding->getUGroupsByBindingSource($this->ugroup->getId());
@@ -89,19 +73,6 @@ class Project_Admin_UGroup_Pane_ShowBinding extends Project_Admin_UGroup_Pane {
         }
         $clonesHTML .= '</table>';
         return $clonesHTML;
-    }
-
-
-    public function getIdentifier() {
-        return self::IDENTIFIER;
-    }
-
-    public function getTitle() {
-        return $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding');
-    }
-
-    public function getUrl() {
-        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane='.self::IDENTIFIER;
     }
 }
 

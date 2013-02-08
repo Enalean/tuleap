@@ -40,7 +40,7 @@ class Project_Admin_UGroup_UGroupController {
             Project_Admin_UGroup_Pane_Settings::IDENTIFIER    => new Project_Admin_UGroup_Pane_Settings($ugroup),
             Project_Admin_UGroup_Pane_Members::IDENTIFIER     => new Project_Admin_UGroup_Pane_Members($ugroup, $request, $this->ugroup_manager),
             Project_Admin_UGroup_Pane_Permissions::IDENTIFIER => new Project_Admin_UGroup_Pane_Permissions($ugroup),
-            Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER     => new Project_Admin_UGroup_Pane_ShowBinding($ugroup, $this->ugroup_binding),
+            Project_Admin_UGroup_Pane_Binding::IDENTIFIER     => new Project_Admin_UGroup_Pane_Binding($ugroup, $this->ugroup_binding),
         );
     }
 
@@ -55,13 +55,13 @@ class Project_Admin_UGroup_UGroupController {
 
     public function edit_binding() {
         $source_project_id = $this->request->getValidated('source_project', 'GroupId', 0);
-        $this->panes[Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER] = new Project_Admin_UGroup_Pane_EditBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
+        $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_EditBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
         $this->index();
     }
 
     public function binding() {
         if ($binding = $this->displayUgroupBinding()) {
-            $this->panes[Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER]->setBinding($binding);
+            $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_ShowBinding($this->ugroup, $this->ugroup_binding, $binding);
             $this->index();
         } else {
             $this->edit_binding();

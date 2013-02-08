@@ -21,8 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
+require_once 'Binding.class.php';
 
-class Project_Admin_UGroup_Pane_EditBinding extends Project_Admin_UGroup_Pane_ShowBinding {
+class Project_Admin_UGroup_Pane_EditBinding extends Project_Admin_UGroup_Pane_Binding {
     
     public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $source_project_id) {
         parent::__construct($ugroup, $ugroup_binding);
