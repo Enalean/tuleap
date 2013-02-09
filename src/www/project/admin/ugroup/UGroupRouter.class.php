@@ -24,7 +24,7 @@
 require_once 'UGroupController.class.php';
 
 class Project_Admin_UGroup_UGroupRouter {
-    const DEFAULT_ACTION = 'index';
+    const DEFAULT_ACTION = 'settings';
     
     private $ugroup_manager;
 
@@ -39,9 +39,12 @@ class Project_Admin_UGroup_UGroupRouter {
             case Project_Admin_UGroup_Pane_Binding::IDENTIFIER:
                 $action = $this->getBindingAction($request);
                 break;
+            default:
+                $action = $current_pane;
+                break;
         }
         $ugroup       = $this->getUGroup($request);
-        $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup, $current_pane);
+        $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup);
         $controller->$action();
     }
 

@@ -22,6 +22,52 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+class PaneInfo {
+
+    private $identifier;
+    private $title;
+    private $url;
+
+    public function __construct($identifier, $title, $url) {
+        $this->identifier = $identifier;
+        $this->title = $title;
+        $this->url = $url;
+    }
+
+    /**
+     * @return string eg: 'perms'
+     */
+    public function getIdentifier() {
+        return $this->identifier;
+    }
+
+    /**
+     * @return string eg: 'Accesss Control'
+     */
+    public function getTitle() {
+        return $this->title;
+    }
+
+    public function getUrl() {
+        return $this->url;
+    }
+
+}
+
+class Project_Admin_UGroup_PaneInfo extends PaneInfo {
+    private $ugroup;
+    
+    public function __construct(UGroup $ugroup, $identifier, $title) {
+        parent::__construct($identifier, $title, '');
+        $this->ugroup = $ugroup;
+    }
+
+    public function getUrl() {
+        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane='.$this->getIdentifier();
+    }
+}
+
+
 abstract class Project_Admin_UGroup_Pane {
 
     /**

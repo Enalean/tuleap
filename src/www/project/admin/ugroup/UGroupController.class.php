@@ -28,41 +28,47 @@ class Project_Admin_UGroup_UGroupController {
     private $ugroup_manager;
     private $ugroup;
     private $ugroup_binding;
-    private $current_pane;
 
-    public function __construct(Codendi_Request $request, UGroup $ugroup, $current_pane) {
+    public function __construct(Codendi_Request $request, UGroup $ugroup) {
         $this->request = $request;
         $this->ugroup = $ugroup;
-        $this->current_pane = $current_pane;
         $this->ugroup_manager = new UGroupManager();
         $this->ugroup_binding = new UGroupBinding(new UGroupUserDao(), $this->ugroup_manager);
-        $this->panes = array(
-            Project_Admin_UGroup_Pane_Settings::IDENTIFIER    => new Project_Admin_UGroup_Pane_Settings($ugroup),
-            Project_Admin_UGroup_Pane_Members::IDENTIFIER     => new Project_Admin_UGroup_Pane_Members($ugroup, $request, $this->ugroup_manager),
-            Project_Admin_UGroup_Pane_Permissions::IDENTIFIER => new Project_Admin_UGroup_Pane_Permissions($ugroup),
-            Project_Admin_UGroup_Pane_Binding::IDENTIFIER     => new Project_Admin_UGroup_Pane_Binding($ugroup, $this->ugroup_binding),
-        );
     }
 
-    public function index() {
+    private function render($view) {
         $pane_management = new Project_Admin_UGroup_PaneManagement(
             $this->ugroup,
-            $this->panes,
-            $this->current_pane
+            $view
         );
         $pane_management->display();
     }
 
+    public function settings() {
+        $view = new Project_Admin_UGroup_Pane_Settings($this->ugroup);
+        $this->render($view);
+    }
+
+    public function members() {
+        $view = new Project_Admin_UGroup_Pane_Members($this->ugroup, $this->request, $this->ugroup_manager);
+        $this->render($view);
+    }
+
+    public function permissions() {
+        $view = new Project_Admin_UGroup_Pane_Permissions($this->ugroup);
+        $this->render($view);
+    }
+
     public function edit_binding() {
         $source_project_id = $this->request->getValidated('source_project', 'GroupId', 0);
-        $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_EditBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
-        $this->index();
+        $view = new Project_Admin_UGroup_Pane_EditBinding($this->ugroup, $this->ugroup_binding, $source_project_id);
+        $this->render($view);
     }
 
     public function binding() {
         if ($binding = $this->displayUgroupBinding()) {
-            $this->panes[Project_Admin_UGroup_Pane_Binding::IDENTIFIER] = new Project_Admin_UGroup_Pane_ShowBinding($this->ugroup, $this->ugroup_binding, $binding);
-            $this->index();
+            $view = new Project_Admin_UGroup_Pane_ShowBinding($this->ugroup, $this->ugroup_binding, $binding);
+            $this->render($view);
         } else {
             $this->edit_binding();
         }
