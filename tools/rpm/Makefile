@@ -56,7 +56,12 @@ THEME_STEERFORGE_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/SteerForg
 THEME_TULEAP_VERSION=$(shell LANG=C cat $(BASE_DIR)/src/www/themes/Tuleap/VERSION)
 
 PKG_NAME=tuleap
+
+ifeq ($(strip $(OS)),rhel6)
+SPEC_FILE=tuleap.rhel6.spec
+else
 SPEC_FILE=tuleap.spec
+endif
 
 default: all
 
