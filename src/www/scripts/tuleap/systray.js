@@ -35,7 +35,7 @@ tuleap.systray = {
         function createSystray() {
             var systray = '<div class="systray">' +
                         '<div class="systray_content">' +
-                            '<img class="systray_icon" src="/themes/Tuleap/images/favicon.ico">' +
+                            '<img class="systray_icon" src="/themes/Tuleap/images/ic/systray.png">' +
                             '<div class="systray_links dropup"></div>' +
                         '</div>' +
                       '</div>';
