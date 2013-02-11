@@ -1,121 +1,92 @@
-// Storage polyfill by Remy Sharp
-// https://gist.github.com/350433
-// Needed for IE7-
+/*
+Copyright (c) 2011 Wojo Design
+Dual licensed under the MIT or GPL licenses.
+*/
+(function(){
+	var window = this;
+	// check to see if we have localStorage or not
+	if( !window.localStorage ){		
 
-// Dependencies:
-//  JSON (use json2.js if necessary)
+		// globalStorage
+		// non-standard: Firefox 2+
+		// https://developer.mozilla.org/en/dom/storage#globalStorage
+		if ( window.globalStorage ) {
+			// try/catch for file protocol in Firefox
+			try {
+				window.localStorage = window.globalStorage;
+			} catch( e ) {}
+			return;
+		}
 
-// Tweaks by Joshua Bell (inexorabletash@gmail.com)
-//  * URI-encode item keys
-//  * Use String() for stringifying
-//  * added length
+		// userData
+		// non-standard: IE 5+
+		// http://msdn.microsoft.com/en-us/library/ms531424(v=vs.85).aspx
+		var div = document.createElement( "div" ),
+			attrKey = "localStorage";
+		div.style.display = "none";
+		document.getElementsByTagName( "head" )[ 0 ].appendChild( div );
+		if ( div.addBehavior ) {
+			div.addBehavior( "#default#userdata" );
+			//div.style.behavior = "url('#default#userData')";
 
-if (!window.localStorage || !window.sessionStorage) (function() {
+			var localStorage = window["localStorage"] = {
+				"length":0,
+				"setItem":function( key , value ){
+					div.load( attrKey );
+					key = cleanKey(key );
+				
+					if( !div.getAttribute( key ) ){
+						this.length++;
+					}
+					div.setAttribute( key , value );
+				
+					div.save( attrKey );
+				},
+				"getItem":function( key ){
+					div.load( attrKey );
+					key = cleanKey(key );
+					return div.getAttribute( key );
 
-    var Storage = function(type) {
-        function createCookie(name, value, days) {
-            var date, expires;
+				},
+				"removeItem":function( key ){
+					div.load( attrKey );
+					key = cleanKey(key );
+					div.removeAttribute( key );
+				
+					div.save( attrKey );
+					this.length--;
+					if( this.length < 0){
+						this.length=0;
+					}
+				},
+			
+				"clear":function(){
+					div.load( attrKey );
+					var i = 0;
+					while ( attr = div.XMLDocument.documentElement.attributes[ i++ ] ) {
+						div.removeAttribute( attr.name );
+					}
+					div.save( attrKey );
+					this.length=0;
+				}, 
+			
+				"key":function( key ){
+					div.load( attrKey );
+					return div.XMLDocument.documentElement.attributes[ key ];
+				}
 
-            if (days) {
-                date = new Date();
-                date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-                expires = "; expires=" + date.toGMTString();
-            } else {
-                expires = "";
-            }
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-
-        function readCookie(name) {
-            var nameEQ = name + "=",
-                ca = document.cookie.split(';'),
-                i, c;
-
-            for (i = 0; i < ca.length; i++) {
-                c = ca[i];
-                while (c.charAt(0) == ' ') {
-                    c = c.substring(1, c.length);
-                }
-
-                if (c.indexOf(nameEQ) == 0) {
-                    return c.substring(nameEQ.length, c.length);
-                }
-            }
-            return null;
-        }
-
-        function setData(data) {
-            data = JSON.stringify(data);
-            if (type == 'session') {
-                window.name = data;
-            } else {
-                createCookie('localStorage', data, 365);
-            }
-        }
-
-        function clearData() {
-            if (type == 'session') {
-                window.name = '';
-            } else {
-                createCookie('localStorage', '', 365);
-            }
-        }
-
-        function getData() {
-            var data = type == 'session' ? window.name : readCookie('localStorage');
-            return data ? JSON.parse(data) : {};
-        }
-
-
-        // initialise if there's already data
-        var data = getData();
-
-        function numKeys() {
-            var n = 0;
-            for (var k in data) {
-                if (data.hasOwnProperty(k)) {
-                    n += 1;
-                }
-            }
-            return n;
-        }
-
-        return {
-            clear: function() {
-                data = {};
-                clearData();
-                this.length = numKeys();
-            },
-            getItem: function(key) {
-                key = encodeURIComponent(key);
-                return data[key] === undefined ? null : data[key];
-            },
-            key: function(i) {
-                // not perfect, but works
-                var ctr = 0;
-                for (var k in data) {
-                    if (ctr == i) return decodeURIComponent(k);
-                    else ctr++;
-                }
-                return null;
-            },
-            removeItem: function(key) {
-                key = encodeURIComponent(key);
-                delete data[key];
-                setData(data);
-                this.length = numKeys();
-            },
-            setItem: function(key, value) {
-                key = encodeURIComponent(key);
-                data[key] = String(value);
-                setData(data);
-                this.length = numKeys();
-            },
-            length: 0
-        };
-    };
-
-    if (!window.localStorage) window.localStorage = new Storage('local');
-    if (!window.sessionStorage) window.sessionStorage = new Storage('session');
-
+			},
+		
+			// convert invalid characters to dashes
+			// http://www.w3.org/TR/REC-xml/#NT-Name
+			// simplified to assume the starting character is valid
+			cleanKey = function( key ){
+				return key.replace( /[^-._0-9A-Za-z\xb7\xc0-\xd6\xd8-\xf6\xf8-\u037d\u37f-\u1fff\u200c-\u200d\u203f\u2040\u2070-\u218f]/g, "-" );
+			};
+		
+	
+			div.load( attrKey );
+			localStorage["length"] = div.XMLDocument.documentElement.attributes.length;
+		} 
+	} 
 })();
