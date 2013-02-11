@@ -840,10 +840,9 @@ $CAT <<'EOF' >/etc/my.cnf
 loose-default-character-set=utf8
 
 [mysqld]
-default-character-set=utf8
+character_set_server=utf8
 log-bin=codendi-bin
-skip-bdb
-set-variable = max_allowed_packet=128M
+max_allowed_packet=128M
 datadir=/var/lib/mysql
 socket=/var/lib/mysql/mysql.sock
 # Default to using old password format for compatibility with mysql 3.x
@@ -853,11 +852,11 @@ old_passwords=1
 # Skip logging openfire db (for instant messaging)
 # The 'monitor' openfire plugin creates large codendi-bin files
 # Comment this line if you prefer to be safer.
-set-variable  = binlog-ignore-db=openfire
+binlog-ignore-db=openfire
 
 # Reduce default inactive timeout (prevent DB overload in case of nscd
 # crash)
-set-variable=wait_timeout=180
+wait_timeout=180
 
 # Innodb settings
 innodb_file_per_table
