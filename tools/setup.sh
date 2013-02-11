@@ -30,7 +30,13 @@ else
     RH_MINOR_VERSION=$(echo $RH_VERSION | cut -d'-' -f2)
 
     INSTALL_PROFILE="rhel"
-    PROJECT_NAME="codendi"
+
+    if [ $RH_MAJOR_VERSION = "6" ]; then
+	PROJECT_NAME="tuleap"
+    
+    else
+	PROJECT_NAME="codendi"
+    fi
     PROJECT_ADMIN="codendiadm"
     TULEAP_CACHE_DIR="/var/tmp/tuleap_cache"
     NAMED_SERVICE="named"
@@ -139,6 +145,10 @@ substitute() {
   # Allow '/' is $3, so we need to double-escape the string
   replacement=`echo $3 | sed "s|/|\\\\\/|g"`
   $PERL -pi -e "s/$2/$replacement/g" $1
+}
+
+fix_paths() {
+    $PERL -pi -E 'my %h = qw(/usr/share/codendi /usr/share/tuleap /etc/codendi /etc/tuleap /usr/lib/codendi /usr/lib/tuleap /var/lib/codendi /var/lib/tuleap /codendi_cache /tuleap_cache /var/log/codendi /var/log/tuleap); s%(/usr/share/codendi|/etc/codendi|/usr/lib/codendi|/var/lib/codendi|/codendi_cache|/var/log/codendi)%$h{$1}%ge;' $1
 }
 
 generate_passwd() {
@@ -600,7 +610,7 @@ setup_apache_rhel() {
     done
     cd - > /dev/null
 
-    $TOUCH /etc/httpd/conf.d/${PROJECT_NAME}_svnroot.conf
+    $TOUCH /etc/httpd/conf.d/codendi_svnroot.conf
 
     echo "Installing Apache configuration files..."
     make_backup /etc/httpd/conf/httpd.conf
@@ -616,6 +626,7 @@ setup_apache_rhel() {
 	     /etc/httpd/conf.d/auth_mysql.conf \
 	     /etc/httpd/conf.d/codendi_aliases.conf; do
 	install_dist_conf $f
+	fix_paths $f
     done
 
     # replace string patterns in codendi_aliases.conf
@@ -636,6 +647,7 @@ setup_apache_rhel() {
 
     # Log Files rotation configuration
     echo "Installing log files rotation..."
+
     cp -f $INSTALL_DIR/src/etc/logrotate.httpd.conf /etc/logrotate.d/httpd
     substitute '/etc/logrotate.d/httpd' "%PROJECT_NAME%" "$PROJECT_NAME"
 
@@ -756,7 +768,8 @@ setup_tuleap() {
     fi
 
     substitute "/etc/$PROJECT_NAME/conf/local.inc" 'codendiadm' "$PROJECT_ADMIN"
-   
+    fix_paths "/etc/$PROJECT_NAME/conf/local.inc"
+
     # replace string patterns in database.inc
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbpasswd%' "$codendiadm_passwd" 
     substitute "/etc/$PROJECT_NAME/conf/database.inc" '%sys_dbuser%' "$PROJECT_ADMIN" 
@@ -829,9 +842,9 @@ do
 		sys_org_name="Tuleap"
 		sys_long_org_name="Tuleap ALM"
 		auto_passwd="true"
-		mysql_host="localhost"
-		MYSQL="$MYSQL -h$mysql_host"
-		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
+        mysql_host="localhost"      
+        MYSQL="$MYSQL -h$mysql_host"        
+        MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
 		shift 1 ;;
 	--auto-passwd)
 		auto_passwd="true";shift 1 ;;
@@ -1365,8 +1378,12 @@ fi
 
 $MYSQL -u$PROJECT_ADMIN -p$codendiadm_passwd $PROJECT_NAME < /usr/share/forgeupgrade/db/install-mysql.sql
 $INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0755 --directory /etc/$PROJECT_NAME/forgeupgrade
-$INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
-substitute /etc/$PROJECT_NAME/forgeupgrade/config.ini "%project_name%" "$PROJECT_NAME"
+if [ $INSTALL_PROFILE = "rhel" -a $RH_MAJOR_VERSION = 6 ]; then
+    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.rhel6.dist
+else
+    forge_upgrade_config_dist=$INSTALL_DIR/src/etc/forgeupgrade-config.ini.dist
+fi
+$INSTALL --group=$PROJECT_ADMIN --owner=$PROJECT_ADMIN --mode=0644 $forge_upgrade_config_dist /etc/$PROJECT_NAME/forgeupgrade/config.ini
 
 ##############################################
 # *Last* step: install plugins
