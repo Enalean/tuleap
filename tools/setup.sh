@@ -547,10 +547,10 @@ done
 ##############################################
 # Check release
 #
-RH_RELEASE="5"
-RH_UPDATE="6"
+RH_RELEASE="6"
+RH_UPDATE="3"
 
-minor_version=`$RPM -qa | grep -P "^(centos|redhat)-release-${RH_RELEASE}" | sed -rn 's/(centos|redhat)-release-5-(.).*/\2/p'`
+minor_version=`$RPM -qa | grep -P "^(centos|redhat)-release-${RH_RELEASE}" | sed -rn 's/(centos|redhat)-release-'${RH_RELEASE}'-(.).*/\2/p'`
 if [ "x$minor_version" != x ] && [ "$minor_version" -ge "$RH_UPDATE" ]; then
     echo "Running on RHEL or CentOS ${RH_RELEASE}... good!"
 else
