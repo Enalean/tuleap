@@ -133,14 +133,6 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
     public function getIdentifier() {
         return self::IDENTIFIER;
     }
-
-    public function getTitle() {
-        return $GLOBALS['Language']->getText('project_admin_utils', 'event_permission');
-    }
-
-    public function getUrl() {
-        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=permissions';
-    }
 }
 
 ?>

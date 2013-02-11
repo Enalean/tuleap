@@ -63,14 +63,6 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
     public function getIdentifier() {
         return self::IDENTIFIER;
     }
-
-    public function getTitle() {
-        return $GLOBALS['Language']->getText('global', 'settings');
-    }
-
-    public function getUrl() {
-        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=settings';
-    }
 }
 
 ?>

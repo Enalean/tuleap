@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Project_Admin_UGroup_View_Binding extends Project_Admin_UGroup_View {
+abstract class Project_Admin_UGroup_View_Binding extends Project_Admin_UGroup_View {
     const IDENTIFIER = 'binding';
 
     /**
@@ -41,21 +41,8 @@ class Project_Admin_UGroup_View_Binding extends Project_Admin_UGroup_View {
         $this->project_manager = ProjectManager::instance();
     }
 
-
-    public function getContent() {
-        return '';
-    }
-
     public function getIdentifier() {
         return self::IDENTIFIER;
-    }
-
-    public function getTitle() {
-        return $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding');
-    }
-
-    public function getUrl() {
-        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane='.self::IDENTIFIER;
     }
 }
 

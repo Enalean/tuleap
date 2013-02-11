@@ -78,7 +78,7 @@ class Project_Admin_UGroup_PaneManagement {
      */
     public function display() {
         project_admin_header(array('title' => $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug'), 'group' => $this->ugroup->getProjectId(), 'help' => 'UserGroups.html#UGroupCreation'));
-        echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.$GLOBALS['Language']->getText('project_admin_utils','ug_admin').'</a> - '.$this->ugroup->getName().' - '.$this->view->getTitle().'</h1>';
+        echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.$GLOBALS['Language']->getText('project_admin_utils','ug_admin').'</a> - '.$this->ugroup->getName().'</h1>';
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
         foreach ($this->panes as $pane) {

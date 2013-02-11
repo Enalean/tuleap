@@ -39,13 +39,6 @@ abstract class Project_Admin_UGroup_View {
     public abstract function getIdentifier();
 
     /**
-     * @return string eg: 'Accesss Control'
-     */
-    public abstract function getTitle();
-
-    public abstract function getUrl();
-
-    /**
      * @return string eg: '<form>...</form>'
      */
     public abstract function getContent();
