@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Project_Admin_UGroup_Pane_Settings extends Project_Admin_UGroup_Pane {
+class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
     const IDENTIFIER = 'settings';
 
     public function getContent() {

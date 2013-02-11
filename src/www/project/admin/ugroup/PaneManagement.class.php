@@ -23,11 +23,11 @@
  */
 
 require_once 'Pane.class.php';
-require_once 'pane/Settings.class.php';
-require_once 'pane/Members.class.php';
-require_once 'pane/Permissions.class.php';
-require_once 'pane/ShowBinding.class.php';
-require_once 'pane/EditBinding.class.php';
+require_once 'view/Settings.class.php';
+require_once 'view/Members.class.php';
+require_once 'view/Permissions.class.php';
+require_once 'view/ShowBinding.class.php';
+require_once 'view/EditBinding.class.php';
 
 class Project_Admin_UGroup_PaneManagement {
     /**
@@ -51,22 +51,22 @@ class Project_Admin_UGroup_PaneManagement {
         $this->panes = array(
             new Project_Admin_UGroup_PaneInfo(
                 $ugroup,
-                Project_Admin_UGroup_Pane_Settings::IDENTIFIER,
+                Project_Admin_UGroup_View_Settings::IDENTIFIER,
                 $GLOBALS['Language']->getText('global', 'settings')
             ),
             new Project_Admin_UGroup_PaneInfo(
                 $ugroup,
-                Project_Admin_UGroup_Pane_Members::IDENTIFIER,
+                Project_Admin_UGroup_View_Members::IDENTIFIER,
                 $GLOBALS['Language']->getText('admin_grouplist', 'members')
             ),
             new Project_Admin_UGroup_PaneInfo(
                 $ugroup,
-                Project_Admin_UGroup_Pane_Permissions::IDENTIFIER,
+                Project_Admin_UGroup_View_Permissions::IDENTIFIER,
                 $GLOBALS['Language']->getText('project_admin_utils', 'event_permission')
             ),
             new Project_Admin_UGroup_PaneInfo(
                 $ugroup,
-                Project_Admin_UGroup_Pane_Binding::IDENTIFIER,
+                Project_Admin_UGroup_View_Binding::IDENTIFIER,
                 $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding')
             ),
         );

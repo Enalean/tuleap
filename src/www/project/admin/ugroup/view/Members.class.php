@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
+class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
     const IDENTIFIER = 'members';
     
     /**

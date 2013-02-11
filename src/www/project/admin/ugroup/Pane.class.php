@@ -68,7 +68,7 @@ class Project_Admin_UGroup_PaneInfo extends PaneInfo {
 }
 
 
-abstract class Project_Admin_UGroup_Pane {
+abstract class Project_Admin_UGroup_View {
 
     /**
      * @var UGroup

@@ -36,7 +36,7 @@ class Project_Admin_UGroup_UGroupRouter {
         $action       = self::DEFAULT_ACTION;
         $current_pane = $this->getPane($request);
         switch($current_pane) {
-            case Project_Admin_UGroup_Pane_Binding::IDENTIFIER:
+            case Project_Admin_UGroup_View_Binding::IDENTIFIER:
                 $action = $this->getBindingAction($request);
                 break;
             default:
@@ -51,22 +51,22 @@ class Project_Admin_UGroup_UGroupRouter {
     private function getBindingAction($request) {
         $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding'));
         $vAction->required();
-        return $request->getValidated('action', $vAction, Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER);
+        return $request->getValidated('action', $vAction, Project_Admin_UGroup_View_ShowBinding::IDENTIFIER);
     }
 
     private function getPane($request) {
         $vPane = new Valid_WhiteList(
             'pane',
             array(
-                Project_Admin_UGroup_Pane_Settings::IDENTIFIER,
-                Project_Admin_UGroup_Pane_Members::IDENTIFIER,
-                Project_Admin_UGroup_Pane_Permissions::IDENTIFIER,
-                Project_Admin_UGroup_Pane_ShowBinding::IDENTIFIER,
-                Project_Admin_UGroup_Pane_EditBinding::IDENTIFIER
+                Project_Admin_UGroup_View_Settings::IDENTIFIER,
+                Project_Admin_UGroup_View_Members::IDENTIFIER,
+                Project_Admin_UGroup_View_Permissions::IDENTIFIER,
+                Project_Admin_UGroup_View_ShowBinding::IDENTIFIER,
+                Project_Admin_UGroup_View_EditBinding::IDENTIFIER
             )
         );
         $vPane->required();
-        return $request->getValidated('pane', $vPane, Project_Admin_UGroup_Pane_Settings::IDENTIFIER);
+        return $request->getValidated('pane', $vPane, Project_Admin_UGroup_View_Settings::IDENTIFIER);
     }
 
     private function getUGroup(Codendi_Request $request) {

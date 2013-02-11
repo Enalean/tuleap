@@ -23,7 +23,7 @@
  */
 require_once 'Binding.class.php';
 
-class Project_Admin_UGroup_Pane_ShowBinding extends Project_Admin_UGroup_Pane_Binding {
+class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Binding {
     private $plugin_binding;
 
     public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $plugin_binding) {
