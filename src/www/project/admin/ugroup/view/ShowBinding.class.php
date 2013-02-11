@@ -37,6 +37,9 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
         $urlAdd     = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_binding';
         $linkAdd    = '<br/><a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
         $content .= $this->plugin_binding;
+        $urlDirectoryGroup    = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_directory_group';
+        $linkDirectoryGroup    = '<br/><a href="'.$urlDirectoryGroup.'">- '. $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding').'</a><br/>';
+        $content .= $linkDirectoryGroup;
         $content .= $linkAdd;
         $content .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
         $clones = $this->ugroup_binding->getUGroupsByBindingSource($this->ugroup->getId());

@@ -52,7 +52,7 @@ class Project_Admin_UGroup_UGroupRouter {
     }
 
     private function getBindingAction($request) {
-        $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding'));
+        $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding', 'edit_directory_group'));
         $vAction->required();
         return $request->getValidated('action', $vAction, Project_Admin_UGroup_View_ShowBinding::IDENTIFIER);
     }

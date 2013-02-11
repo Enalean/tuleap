@@ -65,6 +65,12 @@ class Project_Admin_UGroup_UGroupController {
         $this->render($view);
     }
 
+    public function edit_directory_group() {
+        $source_project_id = $this->request->getValidated('source_project', 'GroupId', 0);
+        $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $source_project_id);
+        $this->render($view);
+    }
+
     public function binding() {
         if ($binding = $this->displayUgroupBinding()) {
             $view = new Project_Admin_UGroup_View_ShowBinding($this->ugroup, $this->ugroup_binding, $binding);
