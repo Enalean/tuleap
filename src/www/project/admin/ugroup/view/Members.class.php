@@ -31,101 +31,19 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
     private $ugroup_manager;
 
     /**
-     * @var UGroupManager
-     */
-    private $user_manager;
-
-    /**
      * @var Codendi_Request
      */
     private $request;
 
-    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager, UserManager $user_manager) {
+    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager) {
         parent::__construct($ugroup);
         $this->request = $request;
-        $this->user_manager = $user_manager;
         $this->ugroup_manager = $ugroup_manager;
     }
 
     public function getContent() {
-        $this->processEditMembersAction($this->ugroup->getProjectId(), $this->ugroup->getId(), $this->request);
+        //$this->processEditMembersAction($this->ugroup->getProjectId(), $this->ugroup->getId(), $this->request);
         return $this->displayUgroupMembers($this->ugroup->getProjectId(), $this->ugroup->getId(), $this->request);
-    }
-
-        /**
-     * Process the members pane action
-     *
-     * @param Integer     $groupId  Id of the project
-     * @param Integer     $ugroupId Id of the user group
-     * @param HTTPRequest $request  HTTP request
-     *
-     * @return Void
-     */
-    private function processEditMembersAction($groupId, $ugroupId, $request) {
-        $ugroupUpdateUsersAllowed = !$this->ugroup->isBound();
-        if ($ugroupUpdateUsersAllowed) {
-            $validRequest = $this->validateRequest($groupId, $request);
-            $user = $validRequest['user'];
-            if ($user && is_array($user)) {
-                $this->editMembershipByUserId($groupId, $ugroupId, $user, $validRequest);
-            }
-            $add_user_name = $validRequest['add_user_name'];
-            if ($add_user_name) {
-                $this->addUserByName($groupId, $ugroupId, $add_user_name);
-            }
-        }
-    }
-
-    /**
-     * Add a user by his name to an ugroup
-     *
-     * @param int $groupId
-     * @param int $ugroupId
-     * @param String $add_user_name
-     */
-    private function addUserByName($groupId, $ugroupId, $add_user_name) {
-        $user = $this->user_manager->findUser($add_user_name);
-        if ($user) {
-            ugroup_add_user_to_ugroup($groupId, $ugroupId, $user->getId());
-        } else {
-            //user doesn't exist
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_not_exist'));
-        }
-    }
-
-    /**
-     * Add or remove user from an ugroup
-     *
-     * @param int $groupId
-     * @param int $ugroupId
-     * @param array $user
-     * @param array $validRequest
-     */
-    private function editMembershipByUserId($groupId, $ugroupId, array $user, array $validRequest) {
-        list($userId, $action) = each($user);
-        $userId = (int)$userId;
-        if ($userId) {
-            switch($action) {
-            case 'add':
-                ugroup_add_user_to_ugroup($groupId, $ugroupId, $userId);
-                break;
-            case 'remove':
-                ugroup_remove_user_from_ugroup($groupId, $ugroupId, $userId);
-                break;
-            default:
-                break;
-            }
-            $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
-                '&ugroup_id='. (int)$ugroupId .
-                '&func=edit'.
-                '&pane=members'.
-                '&offset='. (int)$validRequest['offset'] .
-                '&number_per_page='. (int)$validRequest['number_per_page'] .
-                '&search='. urlencode($validRequest['search']) .
-                '&begin='. urlencode($validRequest['begin']) .
-                '&in_project='. (int)$validRequest['in_project']
-            );
-        }
     }
 
     /**
@@ -181,6 +99,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
         $content .= '
             <form method="post" action="">
                 <input type="hidden" name="func" value="edit" />
+                <input type="hidden" name="action" value="edit_ugroup_members" />
                 <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'" />
                 <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'" />
                 <label>Type username <input type="text" name="add_user_name" id="ugroup_add_user" value="" /></label>
@@ -232,6 +151,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
             $content .= '<input type="hidden" name="func" value="edit" />';
             $content .= '<input type="hidden" name="pane" value="members" />';
+            $content .= '<input type="hidden" name="action" value="edit_ugroup_members" />';
             $content .= '<input type="hidden" name="offset" value="'. (int)$validRequest['offset'] .'" />';
 
             //Filter
@@ -357,7 +277,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             }
             $output .= '</tr></table>';
         } else {
-            $output .= 'No user match';
+            $output = 'No user match';
         }
         return $output;
     }

@@ -510,7 +510,7 @@ function project_admin_display_bullet_user($user_id, $action, $url = null) {
         $icon       = '/ic/cross.png';
     }
     if (!$url) {
-        $url = $_SERVER['REQUEST_URI'] .'&user['. $user_id .']='. $action;
+        $url = $_SERVER['REQUEST_URI'] .'&action=edit_ugroup_members&user['. $user_id .']='. $action;
     }
     $html = '<a href="'. $url .'">';
     $html .= '<img alt="'. $action .'" src="'. util_get_dir_image_theme() . $icon .'" />';
