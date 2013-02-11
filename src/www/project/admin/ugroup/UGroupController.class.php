@@ -119,6 +119,16 @@ class Project_Admin_UGroup_UGroupController {
         $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_View_ShowBinding::IDENTIFIER]->getUrl());
     }
 
+    public function edit_directory() {
+        $groupId  = $this->ugroup->getProjectId();
+        $ugroupId = $this->ugroup->getId();
+        $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
+                '&ugroup_id='. (int)$ugroupId .
+                '&func=edit'.
+                '&pane=binding'
+        );
+    }
+
     public function edit_ugroup_members() {
         $ugroupUpdateUsersAllowed = !$this->ugroup->isBound();
         $groupId  = $this->ugroup->getProjectId();

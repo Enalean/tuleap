@@ -231,7 +231,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     $content .= '<form name="plugin_ldap_edit_ugroup" method="post" action="">';
     $content .= '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'" />';
     $func = 'bind_with_group';
-    $content .= '<input type="hidden" name="func" value="'.$func.'" />';
+    $content .= '<input type="hidden" name="action" value="edit_directory" />';
 
 
     $content .= '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_bind_with_group').' <input type="text" name="bind_with_group" id="group_add" value="'.$clean_ldapGroupName.'"  size="60" /></p>';
