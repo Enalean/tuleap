@@ -48,7 +48,7 @@ Requires: %{php_base}, %{php_base}-mysql, %{php_base}-xml, %{php_base}-mbstring,
 # contains posix* functions
 Requires: %{php_base}-process
 %endif
-Requires: dejavu-lgc-fonts
+Requires: dejavu-lgc-sans-fonts, dejavu-lgc-sans-mono-fonts, dejavu-lgc-serif-fonts
 %if %{PKG_NAME} == codendi_st
 Requires: jpgraph
 # = 2.3.4-0.codendi
