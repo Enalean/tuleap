@@ -22,7 +22,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'Pane.class.php';
+require_once 'PaneInfo.class.php';
+require_once 'View.class.php';
 require_once 'view/Settings.class.php';
 require_once 'view/Members.class.php';
 require_once 'view/Permissions.class.php';
