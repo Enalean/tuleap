@@ -636,6 +636,7 @@ setup_apache_rhel() {
 
     # Log Files rotation configuration
     echo "Installing log files rotation..."
+
     cp -f $INSTALL_DIR/src/etc/logrotate.httpd.conf /etc/logrotate.d/httpd
     substitute '/etc/logrotate.d/httpd' "%PROJECT_NAME%" "$PROJECT_NAME"
 
@@ -829,9 +830,6 @@ do
 		sys_org_name="Tuleap"
 		sys_long_org_name="Tuleap ALM"
 		auto_passwd="true"
-		mysql_host="localhost"
-		MYSQL="$MYSQL -h$mysql_host"
-		MYSQLSHOW="$MYSQLSHOW -h$mysql_host"
 		shift 1 ;;
 	--auto-passwd)
 		auto_passwd="true";shift 1 ;;
