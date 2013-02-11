@@ -50,7 +50,7 @@ class Project_Admin_UGroup_UGroupController {
     }
 
     public function members() {
-        $view = new Project_Admin_UGroup_View_Members($this->ugroup, $this->request, $this->ugroup_manager);
+        $view = new Project_Admin_UGroup_View_Members($this->ugroup, $this->request, $this->ugroup_manager, UserManager::instance());
         $this->render($view);
     }
 

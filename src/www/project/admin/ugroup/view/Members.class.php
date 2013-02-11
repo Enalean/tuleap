@@ -31,13 +31,19 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
     private $ugroup_manager;
 
     /**
+     * @var UGroupManager
+     */
+    private $user_manager;
+
+    /**
      * @var Codendi_Request
      */
     private $request;
 
-    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager) {
+    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager, UserManager $user_manager) {
         parent::__construct($ugroup);
         $this->request = $request;
+        $this->user_manager = $user_manager;
         $this->ugroup_manager = $ugroup_manager;
     }
 
@@ -86,6 +92,17 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
                     );
                 }
             }
+            $add_user_name = $validRequest['add_user_name'];
+            if ($add_user_name) {
+                $user = $this->user_manager->findUser($add_user_name);
+                if ($user) {
+                    ugroup_add_user_to_ugroup($groupId, $ugroupId, $user->getId());
+                } else {
+                    //user doesn't exist
+                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_not_exist'));
+                }
+            }
+
         }
     }
 
@@ -118,6 +135,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
         $result['begin']           = $request->getValidated('begin', $validBegin, '');
         $result['in_project']      = $request->getValidated('in_project', $validInProject, $groupId);
         $result['user']            = $request->get('user');
+        $result['add_user_name']   = $request->get('add_user_name');
         return $result;
     }
 
@@ -140,10 +158,10 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
 
         $content .= '
             <form method="post" action="">
-                <input type="hidden" name="func" value="" />
+                <input type="hidden" name="func" value="edit" />
                 <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'" />
                 <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'" />
-                <label>Type username <input type="text" name="user_name" id="ugroup_add_user" value="" /></label>
+                <label>Type username <input type="text" name="add_user_name" id="ugroup_add_user" value="" /></label>
                 <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'add').'" />
             </form>
         ';
