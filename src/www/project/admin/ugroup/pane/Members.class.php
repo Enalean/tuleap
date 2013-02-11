@@ -30,6 +30,11 @@ class Project_Admin_UGroup_Pane_Members extends Project_Admin_UGroup_Pane {
      */
     private $ugroup_manager;
 
+    /**
+     * @var Codendi_Request
+     */
+    private $request;
+
     public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager) {
         parent::__construct($ugroup);
         $this->request = $request;
