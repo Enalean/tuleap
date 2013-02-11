@@ -22,6 +22,8 @@
 class Combined {
     protected function getCombinedScripts() {
         $arr = array(
+            '/scripts/polyphills/json2.js',
+            '/scripts/polyphills/storage.js',
             '/scripts/prototype/prototype.js',
             '/scripts/protocheck/protocheck.js',
             '/scripts/scriptaculous/scriptaculous.js',
