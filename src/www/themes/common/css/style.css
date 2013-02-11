@@ -30,6 +30,9 @@ body {
     color:#333;
     font-family: helvetica,arial,verdana,sans-serif;
 }
+body.lab-mode {
+    padding-bottom: 3em;
+}
 .center { text-align: center; }
 .alignright { text-align: right }
 .left { text-align: left; }
