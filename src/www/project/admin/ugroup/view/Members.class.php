@@ -67,42 +67,64 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $validRequest = $this->validateRequest($groupId, $request);
             $user = $validRequest['user'];
             if ($user && is_array($user)) {
-                list($userId, $action) = each($user);
-                $userId = (int)$userId;
-                if ($userId) {
-                    switch($action) {
-                    case 'add':
-                        ugroup_add_user_to_ugroup($groupId, $ugroupId, $userId);
-                        break;
-                    case 'remove':
-                        ugroup_remove_user_from_ugroup($groupId, $ugroupId, $userId);
-                        break;
-                    default:
-                        break;
-                    }
-                    $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
-                        '&ugroup_id='. (int)$ugroupId .
-                        '&func=edit'.
-                        '&pane=members'.
-                        '&offset='. (int)$validRequest['offset'] .
-                        '&number_per_page='. (int)$validRequest['number_per_page'] .
-                        '&search='. urlencode($validRequest['search']) .
-                        '&begin='. urlencode($validRequest['begin']) .
-                        '&in_project='. (int)$validRequest['in_project']
-                    );
-                }
+                $this->editMembershipByUserId($groupId, $ugroupId, $user, $validRequest);
             }
             $add_user_name = $validRequest['add_user_name'];
             if ($add_user_name) {
-                $user = $this->user_manager->findUser($add_user_name);
-                if ($user) {
-                    ugroup_add_user_to_ugroup($groupId, $ugroupId, $user->getId());
-                } else {
-                    //user doesn't exist
-                    $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_not_exist'));
-                }
+                $this->addUserByName($groupId, $ugroupId, $add_user_name);
             }
+        }
+    }
 
+    /**
+     * Add a user by his name to an ugroup
+     *
+     * @param int $groupId
+     * @param int $ugroupId
+     * @param String $add_user_name
+     */
+    private function addUserByName($groupId, $ugroupId, $add_user_name) {
+        $user = $this->user_manager->findUser($add_user_name);
+        if ($user) {
+            ugroup_add_user_to_ugroup($groupId, $ugroupId, $user->getId());
+        } else {
+            //user doesn't exist
+            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('include_account','user_not_exist'));
+        }
+    }
+
+    /**
+     * Add or remove user from an ugroup
+     *
+     * @param int $groupId
+     * @param int $ugroupId
+     * @param array $user
+     * @param array $validRequest
+     */
+    private function editMembershipByUserId($groupId, $ugroupId, array $user, array $validRequest) {
+        list($userId, $action) = each($user);
+        $userId = (int)$userId;
+        if ($userId) {
+            switch($action) {
+            case 'add':
+                ugroup_add_user_to_ugroup($groupId, $ugroupId, $userId);
+                break;
+            case 'remove':
+                ugroup_remove_user_from_ugroup($groupId, $ugroupId, $userId);
+                break;
+            default:
+                break;
+            }
+            $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
+                '&ugroup_id='. (int)$ugroupId .
+                '&func=edit'.
+                '&pane=members'.
+                '&offset='. (int)$validRequest['offset'] .
+                '&number_per_page='. (int)$validRequest['number_per_page'] .
+                '&search='. urlencode($validRequest['search']) .
+                '&begin='. urlencode($validRequest['begin']) .
+                '&in_project='. (int)$validRequest['in_project']
+            );
         }
     }
 
