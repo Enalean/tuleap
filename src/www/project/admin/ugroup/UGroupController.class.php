@@ -195,6 +195,8 @@ class Project_Admin_UGroup_UGroupController {
             } else {
                 $this->linkLDAPGroup($ldapUserGroupManager);
             }
+        } else {
+            $this->redirect_edit_directory();
         }
     }
 
