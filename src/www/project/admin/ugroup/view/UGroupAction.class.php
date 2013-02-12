@@ -24,6 +24,10 @@ require_once 'Binding.class.php';
 class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_Binding {
 
     private $ldapUserGroupManager;
+    private $request;
+    private $bindOption;
+    private $synchro;
+    private $purifier;
 
     public function __construct($ugroup, $ugroup_binding, $ldapUserGroupManager, $request, $bindOption, $synchro) {
         parent::__construct($ugroup, $ugroup_binding);
@@ -31,26 +35,22 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
         $this->request = $request;
         $this->bindOption = $bindOption;
         $this->synchro = $synchro;
+        $this->purifier = Codendi_HTMLPurifier::instance();
+
     }
 
     public function getContent() {
-
         $content = '';
-
-        // Display to user what will be done with Ugroup members.
-        //
 
         $toRemove    = $this->ldapUserGroupManager->getUsersToBeRemoved($this->bindOption);
         $toAdd       = $this->ldapUserGroupManager->getUsersToBeAdded($this->bindOption);
         $notImpacted = $this->ldapUserGroupManager->getUsersNotImpacted($this->bindOption);
 
-        $hp = Codendi_HTMLPurifier::instance();
-
         $btn_update = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_update');
 
         if(is_array($toAdd)) {
-            // Display
-            $um = UserManager::instance();
+
+            $user_manager = UserManager::instance();
 
             $content .= '<h1>'.$GLOBALS['Language']->getText('plugin_ldap','ugroup_members_synchro_title').'</h1>';
             $content .= '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_members_synchro_warning').'</p>';
@@ -62,7 +62,7 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
             $content .= $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('plugin_ldap', 'group_members_synchro_to_remove', array(count($toRemove))),0);
             $content .= '<ul>';
             foreach ($toRemove as $userId) {
-                if (($user = $um->getUserById($userId))) {
+                if (($user = $user_manager->getUserById($userId))) {
                     $content .= '<li>'.$user->getRealName().' ('.$user->getUserName().')</li>';
                 }
             }
@@ -74,7 +74,7 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
             $content .= $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('plugin_ldap', 'group_members_synchro_to_add', array(count($toAdd))),0);
             $content .= '<ul>';
             foreach ($toAdd as $userId) {
-                if (($user = $um->getUserById($userId))) {
+                if (($user = $user_manager->getUserById($userId))) {
                     $content .= '<li>'.$user->getRealName().' ('.$user->getUserName().')</li>';
                 }
             }
@@ -84,7 +84,7 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
             $content .= '</tr></td>';
             $content .= '<tr><td colspan="2" align="center">';
             $content .= '<form method="post" action="">';
-            $content .= '<input type="hidden" name="bind_with_group" value="'.$hp->purify($this->request->get('bind_with_group')).'" />';
+            $content .= '<input type="hidden" name="bind_with_group" value="'.$this->purifier->purify($this->request->get('bind_with_group')).'" />';
             $content .= '<input type="hidden" name="confirm" value="yes" />';
             if($this->bindOption == 'preserve_members') {
                 $content .= '<input type="hidden" name="preserve_members" value="on" />';

@@ -35,8 +35,8 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
         parent::__construct($ugroup, $ugroup_binding);
         $this->row = $row;
         $this->ldap_user_group_manager = $ldapUserGroupManager;
-        $this->purifier = Codendi_HTMLPurifier::instance();
         $this->pluginPath = $pluginPath;
+        $this->purifier = Codendi_HTMLPurifier::instance();
     }
 
     public function getContent() {

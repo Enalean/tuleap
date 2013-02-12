@@ -76,23 +76,20 @@ class Project_Admin_UGroup_UGroupController {
             if ($ugroupId) {
                 $ugroup_row  = $this->getUGroupRow($ugroupId);
                 if ($ugroup_row) {
-                    $group_id    = $ugroup_row['group_id'];
-
-                    $vFunc = new Valid_String('func', array('bind_with_group'));
-                    $vFunc->required();
-                    if(!$this->request->valid($vFunc)) {
-                        $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='.$group_id);
-                    }
-
-                    $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
-                    $ldapUserGroupManager->setGroupName($this->request->get('bind_with_group'));
-                    $ldapUserGroupManager->setId($ugroupId);
-
+                    $ldapUserGroupManager = $this->setldapUserGroupManager($ldapPlugin, $ugroupId);
                     $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $ldapUserGroupManager, $pluginPath);
                     $this->render($view);
                 }
             }
         }
+    }
+
+    private function setldapUserGroupManager($ldapPlugin, $ugroupId) {
+        $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
+        $ldapUserGroupManager->setGroupName($this->request->get('bind_with_group'));
+        $ldapUserGroupManager->setId($ugroupId);
+
+        return $ldapUserGroupManager;
     }
 
     private function verifyLDAPAvailable($pluginManager, $ldapPlugin) {
