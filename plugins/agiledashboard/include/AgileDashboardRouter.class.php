@@ -105,7 +105,7 @@ class AgileDashboardRouter {
                     $this->renderAction($controller, 'index', $request);
                 }
                 break;
-            case 'generateSystrayData':
+            case 'generate_systray_data':
                 $this->executeAction($controller, 'generateSystrayData', $request->params);
                 break;
             case 'index':

@@ -19,7 +19,7 @@ var tuleap = tuleap || { };
 tuleap.systray = {
     load: function(body, storage) {
         var cache_duration_2_hours    = 2 * 3600,
-            cache_duration_1_week     = 7 * 24 * 3600,
+            cache_duration_1_week     = 7 * 24 * 3600,
             systray_collapse          = 'collapse',
             systray_expand            = 'expand',
             systray_collapse_cachekey = 'systray-collapse',
