@@ -41,10 +41,13 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     //
     // Verify common requirement
     //
-
-    $pluginPath = $this->verifyLDAPAvailable();
-    $ugroupId   = $this->verifyUGroupExists();
-    $group_id   = $this->getGroupId();
+    $pluginManager = PluginManager::instance();
+    $ldapPlugin = $pluginManager->getPluginByName('ldap');
+    $request = HTTPRequest::instance();
+    $pluginPath = $this->verifyLDAPAvailable($pluginManager,$ldapPlugin);
+    $ugroupId   = $this->verifyUGroupExists($request);
+    $row        = $this->getRow($ugroupId);
+    $group_id    = $row['group_id'];
 
     $vFunc = new Valid_String('func', array('bind_with_group'));
     $vFunc->required();
@@ -147,9 +150,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     
     }
 
-    private function verifyLDAPAvailable() {
-        $pluginManager = PluginManager::instance();
-        $ldapPlugin = $pluginManager->getPluginByName('ldap');
+    private function verifyLDAPAvailable($pluginManager, $ldapPlugin) {
         if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
             $pluginPath = $ldapPlugin->getPluginPath();
         } else {
@@ -158,10 +159,9 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
         return $pluginPath;
     }
 
-    private function verifyUGroupExists() {
+    private function verifyUGroupExists($request) {
         $vUgroupId = new Valid_UInt('ugroup_id');
         $vUgroupId->required();
-        $request = HTTPRequest::instance();
         if($request->valid($vUgroupId)) {
             $ugroupId = $request->get('ugroup_id');
         } else {
@@ -170,8 +170,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
         return $ugroupId;
     }
 
-    private function getGroupId() {
-        // Do not try to modify ugroups of project 100
+    private function getRow($ugroupId) {
         $res = ugroup_db_get_ugroup($ugroupId);
         if($res && !db_error($res) && db_numrows($res) == 1) {
             $row = db_fetch_array($res);
@@ -182,7 +181,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
         } else {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
         }
-        return $row['group_id'];
+        return $row;
     }
 }
 
