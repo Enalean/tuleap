@@ -23,8 +23,13 @@ require_once dirname(__FILE__).'/../UGroupController.class.php';
 
 class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup_UGroupController {
 
+    private $bindOption;
+    private $synchro;
+
     public function __construct(Codendi_Request $request, UGroup $ugroup) {
         parent::__construct($request, $ugroup);
+        $this->synchro    = null;
+        $this->bindOption = null;
     }
 
     public function edit_binding() {
@@ -33,7 +38,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         $this->render($view);
     }
 
-    public function edit_directory_group($bindOption = null , $synchro = null) {
+    public function edit_directory_group() {
         $pluginManager = PluginManager::instance();
         $ldapPlugin = $pluginManager->getPluginByName('ldap');
 
@@ -45,7 +50,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
                 $ugroup_row  = $this->getUGroupRow($ugroupId);
                 if ($ugroup_row) {
                     $ldapUserGroupManager = $this->setldapUserGroupManager($ldapPlugin, $ugroupId);
-                    $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $ldapUserGroupManager, $pluginPath, $bindOption, $synchro);
+                    $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $ldapUserGroupManager, $pluginPath, $this->bindOption,  $this->synchro);
                     $this->render($view);
                 }
             }
@@ -172,8 +177,8 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         $vBindWithGroup = new Valid_String('bind_with_group');
         $vBindWithGroup->required();
 
-        $bindOption = $this->getBindOption();
-        $synchro    = $this->getSynchro();
+        $this->bindOption = $this->getBindOption();
+        $this->synchro    = $this->getSynchro();
 
         if($this->request->valid($vBindWithGroup)) {
 
@@ -181,7 +186,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
                 //
                 // Perform Ugroup <-> LDAP Group synchro
                 //
-                $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
+                $ldapUserGroupManager->bindWithLdap($this->bindOption, $this->synchro);
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', array($this->request->get('bind_with_group'))));
                 $this->redirect();
 
@@ -191,16 +196,16 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
 
             } else {
                 if ($ldapUserGroupManager->getGroupDn()) {
-                    $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $this->ugroup_binding, $ldapUserGroupManager, $this->request, $bindOption, $synchro);
+                    $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $this->ugroup_binding, $ldapUserGroupManager, $this->request, $this->bindOption, $this->synchro);
                     $this->render($view);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'ldap_group_error', array($this->request->get('bind_with_group'))));
-                    $this->edit_directory_group($bindOption, $synchro);
+                    $this->edit_directory_group($this->bindOption, $this->synchro);
                 }
             }
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'ldap_group_empty'));
-            $this->edit_directory_group($bindOption, $synchro);
+            $this->edit_directory_group();
         }
     }
 
