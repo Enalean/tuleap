@@ -175,8 +175,13 @@ class Project_Admin_UGroup_UGroupController {
                         continue;
 
                     } else {
-                        $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $ldapUserGroupManager, $this->request, $bindOption, $synchro);
-                        $this->render($view);
+                        if ($ldapUserGroupManager->getGroupDn()) {
+                            $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $ldapUserGroupManager, $this->request, $bindOption, $synchro);
+                            $this->render($view);
+                        } else {
+                            $GLOBALS['Response']->addFeedback('error', 'directory doesn\'t exist');
+                            $this->edit_directory_group();
+                        }
                     }
                 }
             }
