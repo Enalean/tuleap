@@ -18,14 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/constants.php';
-require_once dirname(__FILE__).'/../../include/Planning/MilestoneFactory.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/PlanningFactory.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/PlanningController.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ShortAccess.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/MilestoneLinkPresenter.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/ShortAccessMilestonePresenter.class.php';
-
+require_once dirname(__FILE__).'/../common.php';
 
 require_once 'common/Systray/LinksCollection.class.php';
 require_once 'common/project/Project.class.php';
