@@ -28,20 +28,21 @@ Mock::generatePartial(
 
 Mock::generate('Tracker_FormElement_Field_Date');
 
-class Tracker_FormElement_Container_ColumnTest extends UnitTestCase {
+class Tracker_FormElement_Container_ColumnTest extends TuleapTestCase {
 
     public function testIsDeletableWithFields() {
         $column = new Tracker_FormElement_Container_ColumnTestVersion();
         $e1 = new MockTracker_FormElement_Field_Date();
         $elements = array($e1);
         $column->setReturnReference('getFormElements', $e1);
-        $this->assertFalse($column->canBeUnused());
+        $this->assertFalse($column->getCannotRemoveMessage());
     }
     
     public function testIsDeletableWithoutFields() {
+        $expected_message = '';
         $column = new Tracker_FormElement_Container_ColumnTestVersion();
         $column->setReturnValue('getFormElements', null);
-        $this->assertTrue($column->canBeUnused());
+        $this->assertEqual($expected_message, $column->getCannotRemoveMessage());
     }
     
 }

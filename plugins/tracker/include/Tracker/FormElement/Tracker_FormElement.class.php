@@ -535,6 +535,7 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     public function storeProperties($properties) {
         $success = true;
         $dao = $this->getDao();
+        
         if ($dao && ($success = $dao->save($this->id, $properties))) {
             $this->cache_specific_properties = null; //force reload
         }
@@ -1075,12 +1076,20 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
-     * Is the form element can be set as unused?
+     * Generates a non-empty message string if the element cannot be
+     * removed from usage; returns an empty string otherwise.
+     *
+     * @return string returns a message
+     */
+    public abstract function getCannotRemoveMessage();
+
+    /**
+     * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return boolean returns true if the field can be unused, false otherwise
+     * @return boolean
      */
-    public abstract function canBeUnused();
+    public abstract function canBeRemovedFromUsage();
 
     protected $cache_permissions;
     /**
