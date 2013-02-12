@@ -55,8 +55,6 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
         $urlDirectoryGroup    = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_directory_group';
         $linkDirectoryGroup    = '<br/><a href="'.$urlDirectoryGroup.'">- '. $title .'</a><br/>';
 
-        $content .= $this->plugin_binding;
-
         $content .= $linkDirectoryGroup;
         $content .= $linkAdd;
 
