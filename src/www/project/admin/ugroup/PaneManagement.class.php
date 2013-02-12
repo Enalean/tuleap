@@ -30,6 +30,7 @@ require_once 'view/Permissions.class.php';
 require_once 'view/ShowBinding.class.php';
 require_once 'view/EditBinding.class.php';
 require_once 'view/EditDirectoryGroup.class.php';
+require_once 'view/UGroupAction.class.php';
 
 class Project_Admin_UGroup_PaneManagement {
     /**

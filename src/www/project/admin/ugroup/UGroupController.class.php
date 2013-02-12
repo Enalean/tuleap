@@ -120,13 +120,65 @@ class Project_Admin_UGroup_UGroupController {
     }
 
     public function edit_directory() {
-        $groupId  = $this->ugroup->getProjectId();
-        $ugroupId = $this->ugroup->getId();
-        $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
-                '&ugroup_id='. (int)$ugroupId .
-                '&func=edit'.
-                '&pane=binding'
-        );
+
+        // Check if user have choosen the preserve members option.
+        $bindOption = LDAP_GroupManager::BIND_OPTION;
+        if($this->request->exist('preserve_members') && $this->request->get('preserve_members') == 'on') {
+            $bindOption = LDAP_GroupManager::PRESERVE_MEMBERS_OPTION;
+        }
+
+        // Check if user has checked the Synchronization option.
+        $synchro = LDAP_GroupManager::NO_SYNCHRONIZATION;
+        if ($this->request->existAndNonEmpty('synchronize')) {
+            $synchro = LDAP_GroupManager::AUTO_SYNCHRONIZATION;
+        }
+
+        // LDAP plugin enabled
+        $pluginManager = PluginManager::instance();
+        $ldapPlugin = $pluginManager->getPluginByName('ldap');
+
+        $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
+        $ldapUserGroupManager->setGroupName($this->request->get('bind_with_group'));
+        $ldapUserGroupManager->setId($this->ugroup->getId());
+
+        $btn_update = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_update');
+        $btn_unlink = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_unlink');
+        $vSubmit = new Valid_WhiteList('submit', array($btn_update, $btn_unlink));
+        $vSubmit->required();
+        if($this->request->isPost() && $this->request->valid($vSubmit)) {
+            if($this->request->get('submit') == $btn_unlink) {
+                if($ldapUserGroupManager->unbindFromBindLdap()) {
+                    $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink'));
+                }
+            } else {
+                $vBindWithGroup = new Valid_String('bind_with_group');
+                $vBindWithGroup->required();
+                if($this->request->valid($vBindWithGroup)) {
+                    if($this->request->existAndNonEmpty('confirm')) {
+                        //
+                        // Perform Ugroup <-> LDAP Group synchro
+                        //
+                        $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
+
+                    } elseif($this->request->exist('cancel')) {
+                        // Display the screen below!
+                        continue;
+
+                    } else {
+                        $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $ldapUserGroupManager, $this->request, $bindOption, $synchro);
+                        $this->render($view);
+                    }
+                }
+            }
+        }
+
+
+
+//        $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
+//                '&ugroup_id='. (int)$ugroupId .
+//                '&func=edit'.
+//                '&pane=binding'
+//        );
     }
 
     public function edit_ugroup_members() {

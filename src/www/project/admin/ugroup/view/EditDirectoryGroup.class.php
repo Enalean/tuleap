@@ -29,6 +29,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     public function getContent(){
 
     $content = '';
+
     // Import very long user group may takes very long time.
     ini_set('max_execution_time', 0);
 
@@ -78,112 +79,10 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     $ldapUserGroupManager->setGroupName($request->get('bind_with_group'));
     $ldapUserGroupManager->setId($ugroupId);
 
-    // Check if user have choosen the preserve members option.
-    $bindOption = LDAP_GroupManager::BIND_OPTION;
-    if($request->exist('preserve_members') && $request->get('preserve_members') == 'on') {
-        $bindOption = LDAP_GroupManager::PRESERVE_MEMBERS_OPTION;
-    }
-
-    // Check if user has checked the Synchronization option.
-    $synchro = LDAP_GroupManager::NO_SYNCHRONIZATION;
-    if ($request->existAndNonEmpty('synchronize')) {
-        $synchro = LDAP_GroupManager::AUTO_SYNCHRONIZATION;
-    }
-
-
     $hp = Codendi_HTMLPurifier::instance();
 
     $btn_update = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_update');
     $btn_unlink = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_unlink');
-    $vSubmit = new Valid_WhiteList('submit', array($btn_update, $btn_unlink));
-    $vSubmit->required();
-    if($request->isPost() && $request->valid($vSubmit)) {
-        if($request->get('submit') == $btn_unlink) {
-            if($ldapUserGroupManager->unbindFromBindLdap()) {
-                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink'));
-            }
-        } else {
-            $vBindWithGroup = new Valid_String('bind_with_group');
-            $vBindWithGroup->required();
-            if($request->valid($vBindWithGroup)) {
-                if($request->existAndNonEmpty('confirm')) {
-                    //
-                    // Perform Ugroup <-> LDAP Group synchro
-                    //
-                    $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
-
-                } elseif($request->exist('cancel')) {
-                    // Display the screen below!
-                    continue;
-
-                } else {
-                    //
-                    // Display to user what will be done with Ugroup members.
-                    //
-
-                    $toRemove    = $ldapUserGroupManager->getUsersToBeRemoved($bindOption);
-                    $toAdd       = $ldapUserGroupManager->getUsersToBeAdded($bindOption);
-                    $notImpacted = $ldapUserGroupManager->getUsersNotImpacted($bindOption);
-
-                    if(is_array($toAdd)) {
-                        // Display
-                        $um = UserManager::instance();
-
-                        $content .= '<h1>'.$GLOBALS['Language']->getText('plugin_ldap','ugroup_members_synchro_title').'</h1>';
-                        $content .= '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_members_synchro_warning').'</p>';
-                        $content .= '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'group_members_synchro_sumup', array(count($toRemove), count($toAdd), count($notImpacted))).'</p>';
-
-                        $content .= '<table width="100%">';
-                        $content .= '<tr><td width="50%" valign="top">';
-
-                        $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('plugin_ldap', 'group_members_synchro_to_remove', array(count($toRemove))));
-                        $content .= '<ul>';
-                        foreach ($toRemove as $userId) {
-                            if (($user = $um->getUserById($userId))) {
-                                $content .= '<li>'.$user->getRealName().' ('.$user->getUserName().')</li>';
-                            }
-                        }
-                        $content .= '</ul>';
-                        $GLOBALS['HTML']->box1_bottom();
-
-                        $content .= '</td><td width="50%"  valign="top">';
-
-                        $GLOBALS['HTML']->box1_top($GLOBALS['Language']->getText('plugin_ldap', 'group_members_synchro_to_add', array(count($toAdd))));
-                        $content .= '<ul>';
-                        foreach ($toAdd as $userId) {
-                            if (($user = $um->getUserById($userId))) {
-                                $content .= '<li>'.$user->getRealName().' ('.$user->getUserName().')</li>';
-                            }
-                        }
-                        $content .= '</ul>';
-                        $GLOBALS['HTML']->box1_bottom();
-
-                        $content .= '</tr></td>';
-                        $content .= '<tr><td colspan="2" align="center">';
-                        $content .= '<form method="post" action="?ugroup_id='.$ugroupId.'&func=bind_with_group">';
-                        $content .= '<input type="hidden" name="bind_with_group" value="'.$hp->purify($request->get('bind_with_group')).'" />';
-                        $content .= '<input type="hidden" name="confirm" value="yes" />';
-                        if($bindOption == 'preserve_members') {
-                            $content .= '<input type="hidden" name="preserve_members" value="on" />';
-                        }
-                        if($synchro == LDAP_GroupManager::AUTO_SYNCHRONIZATION) {
-                            $content .= '<input type="hidden" name="synchronize" value="on" />';
-                        }
-                        $content .= '<input type="submit" name="cancel" value="'.$GLOBALS['Language']->getText('global', 'btn_cancel').'" />';
-                        $content .= '<input type="submit" name="submit" value="'.$btn_update.'" />';
-                        $content .= '</form>';
-                        $content .= '</td></tr>';
-                        $content .= '</table>';
-
-                        return $content;
-                    } else {
-                      /*  $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'invalid_ldap_group_name'));
-                        $GLOBALS['Response']->redirect('/project/admin/index.php?group_id='.$group_id);*/
-                    }
-                }
-            }
-        }
-    }
 
     //
     // Display
@@ -231,6 +130,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     $content .= '<form name="plugin_ldap_edit_ugroup" method="post" action="">';
     $content .= '<input type="hidden" name="ugroup_id" value="'.$ugroupId.'" />';
     $func = 'bind_with_group';
+    //$content .= '<input type="hidden" name="func" value="'.$func.'" />';
     $content .= '<input type="hidden" name="action" value="edit_directory" />';
 
 
