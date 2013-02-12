@@ -23,6 +23,7 @@
  */
 require_once 'UGroupController.class.php';
 require_once 'controller/Members.class.php';
+require_once 'controller/Binding.class.php';
 
 class Project_Admin_UGroup_UGroupRouter {
     const DEFAULT_ACTION = 'settings';
@@ -39,7 +40,7 @@ class Project_Admin_UGroup_UGroupRouter {
         $ugroup       = $this->getUGroup($request);
         switch($current_pane) {
             case Project_Admin_UGroup_View_Binding::IDENTIFIER:
-                $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup);
+                $controller   = new Project_Admin_UGroup_UGroupController_Binding($request, $ugroup);
                 $action = $this->getBindingAction($request);
                 break;
             case Project_Admin_UGroup_View_Members::IDENTIFIER:
