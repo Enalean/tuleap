@@ -83,7 +83,7 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
 
             $content .= '</tr></td>';
             $content .= '<tr><td colspan="2" align="center">';
-            $content .= '<form method="post" action="?ugroup_id='.$this->ugroup->getId().'&func=bind_with_group">';
+            $content .= '<form method="post" action="">';
             $content .= '<input type="hidden" name="bind_with_group" value="'.$hp->purify($this->request->get('bind_with_group')).'" />';
             $content .= '<input type="hidden" name="confirm" value="yes" />';
             if($this->bindOption == 'preserve_members') {

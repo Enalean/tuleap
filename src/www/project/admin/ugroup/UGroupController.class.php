@@ -149,6 +149,11 @@ class Project_Admin_UGroup_UGroupController {
             if($this->request->get('submit') == $btn_unlink) {
                 if($ldapUserGroupManager->unbindFromBindLdap()) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink'));
+                    $GLOBALS['Response']->redirect('?group_id='. (int)$this->ugroup->getProjectId() .
+                                                    '&ugroup_id='. (int)$this->ugroup->getId() .
+                                                    '&func=edit'.
+                                                    '&pane=binding'
+                    );
                 }
             } else {
                 $vBindWithGroup = new Valid_String('bind_with_group');
@@ -159,6 +164,11 @@ class Project_Admin_UGroup_UGroupController {
                         // Perform Ugroup <-> LDAP Group synchro
                         //
                         $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
+                        $GLOBALS['Response']->redirect('?group_id='. (int)$this->ugroup->getProjectId() .
+                                                    '&ugroup_id='. (int)$this->ugroup->getId() .
+                                                    '&func=edit'.
+                                                    '&pane=binding'
+                        );
 
                     } elseif($this->request->exist('cancel')) {
                         // Display the screen below!
@@ -171,8 +181,6 @@ class Project_Admin_UGroup_UGroupController {
                 }
             }
         }
-
-
 
 //        $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
 //                '&ugroup_id='. (int)$ugroupId .
