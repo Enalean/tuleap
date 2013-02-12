@@ -158,7 +158,11 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
      * @return string returns null if the field can be unused, a message otherwise
      */
     public function getCannotRemoveMessage() {
-        return null;
+        return '';
+    }
+
+    public function canBeRemovedFromUsage() {
+        return true;
     }
     
     /** 

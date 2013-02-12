@@ -94,7 +94,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         return $this->fetchWithColumnGroup('fetchAdmin', array($tracker));
     }
     public function fetchAdminInGroup($tracker) {
-        $cannot_remove_message = $this->getCannotRemoveMessage();
+        
 
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
@@ -103,13 +103,14 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '<span class="tracker-admin-field-controls">';
         $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        if ($cannot_remove_message === null) {
+        if ($this->canBeRemovedFromUsage()) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-remove',
                 'formElement' => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
+            $cannot_remove_message = $this->getCannotRemoveMessage();
             $html .= '<span style="color:gray;" title="'. $cannot_remove_message .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';

@@ -1076,12 +1076,20 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
+     * Generates a non-empty message string if the element cannot be
+     * removed from usage; returns an empty string otherwise.
+     *
+     * @return string returns a message
+     */
+    public abstract function getCannotRemoveMessage();
+
+    /**
      * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return string returns null if the field can be unused, a message otherwise
+     * @return boolean
      */
-    public abstract function getCannotRemoveMessage();
+    public abstract function canBeRemovedFromUsage();
 
     protected $cache_permissions;
     /**

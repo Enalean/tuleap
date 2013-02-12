@@ -102,9 +102,10 @@ class Tracker_FormElement_Container_FieldsetTest extends TuleapTestCase {
     }
     
     public function testIsDeletableWithoutFields() {
+        $expected_message = '';
         $fieldset = new Tracker_FormElement_Container_FieldsetTestVersion_for_afterSaveObject();
         $fieldset->setReturnValue('getFormElements', null);
-        $this->assertNull($fieldset->getCannotRemoveMessage());
+        $this->assertEqual($expected_message, $fieldset->getCannotRemoveMessage());
     }
     
 }

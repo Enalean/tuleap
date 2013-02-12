@@ -22,6 +22,7 @@
 class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
     
     public function testFetchDescription() {
+        $expected_message = '';
         $id = 2;
         $tracker_id = 254;
         $parent_id = 0;
@@ -39,7 +40,7 @@ class Tracker_FormElement_StaticField_SeparatorTest extends TuleapTestCase {
 
         $this->assertEqual('Separator Label', $separator->getLabel());
         $this->assertEqual('', $separator->getDescription());
-        $this->assertNull($separator->getCannotRemoveMessage());
+        $this->assertEqual($expected_message, $separator->getCannotRemoveMessage());
     }
 
 }

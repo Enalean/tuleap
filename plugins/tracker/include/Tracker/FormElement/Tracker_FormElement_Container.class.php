@@ -332,22 +332,36 @@ abstract class Tracker_FormElement_Container extends Tracker_FormElement {
      * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return string returns null if the field can be unused, a message otherwise
+     * @return string
      */
     public function getCannotRemoveMessage() {
-        // a container is deletable if it does not contain any field
-        if (! count($this->getFormElements())) {
-            return null;
+        $message = '';
+
+        if (! $this->canBeRemovedFromUsage()) {
+            $message = $GLOBALS['Language']->getText(
+                'plugin_tracker_common_fieldset_factory',
+                'delete_only_empty_fieldset'
+            );
         }
-        
-        $message = $GLOBALS['Language']->getText(
-            'plugin_tracker_common_fieldset_factory',
-            'delete_only_empty_fieldset'
-        );
         
         return $message;
     }
-    
+
+    /**
+     *
+     * @return boolean
+     */
+    public function canBeRemovedFromUsage() {
+        $container_sub_elements = count($this->getFormElements());
+
+        if ($container_sub_elements > 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+
     /** 
      * return true if user has Read or Update permission on this field
      * 

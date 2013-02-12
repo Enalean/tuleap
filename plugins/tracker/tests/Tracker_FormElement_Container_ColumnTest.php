@@ -39,9 +39,10 @@ class Tracker_FormElement_Container_ColumnTest extends TuleapTestCase {
     }
     
     public function testIsDeletableWithoutFields() {
+        $expected_message = '';
         $column = new Tracker_FormElement_Container_ColumnTestVersion();
         $column->setReturnValue('getFormElements', null);
-        $this->assertNull($column->getCannotRemoveMessage());
+        $this->assertEqual($expected_message, $column->getCannotRemoveMessage());
     }
     
 }

@@ -755,8 +755,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string returns null if the field can be unused, a message otherwise
      */
     public function getCannotRemoveMessage() {
-        // a field deletable if it not used in semantics nor in workflow
-        $canRemove = true;
         $message = '';
 
         if($this->isUsedInSemantics()) {
@@ -764,7 +762,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 'plugin_tracker_formelement_admin',
                 'field_used_in_semantics'
                 ). ' ';
-            $canRemove = false;
         }
 
         if($this->isUsedInWorkflow()) {
@@ -772,7 +769,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 'plugin_tracker_formelement_admin',
                 'field_used_in_workflow'
                 ). ' ';
-            $canRemove = false;
         }
 
         if($this->isUsedInFieldDependency()) {
@@ -780,7 +776,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 'plugin_tracker_formelement_admin',
                 'field_used_in_field_dependencies'
                 ). ' ';
-            $canRemove = false;
         }
 
         if($this->isUsedByAnotherField()) {
@@ -788,14 +783,26 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 'plugin_tracker_formelement_admin',
                 'field_used_by_another_field'
                 ). ' ';
-            $canRemove = false;
-        }
-
-        if ($canRemove == true ) {
-            return null;
         }
 
         return $message;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function canBeRemovedFromUsage() {
+        $is_used = $this->isUsedInSemantics() ||
+            $this->isUsedInWorkflow() ||
+            $this->isUsedInFieldDependency() ||
+            $this->isUsedByAnotherField();
+
+        if ($is_used) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

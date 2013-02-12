@@ -22,6 +22,7 @@ require_once('bootstrap.php');
 class Tracker_FormElement_StaticField_LineBreakTest extends UnitTestCase {
     
     public function testFetchDescription() {
+        $expected_message = '';
         $id = 2;
         $tracker_id = 254;
         $parent_id = 0;
@@ -39,7 +40,7 @@ class Tracker_FormElement_StaticField_LineBreakTest extends UnitTestCase {
 
         $this->assertEqual('Line Break Label', $line_break->getLabel());
         $this->assertEqual('', $line_break->getDescription());
-        $this->assertNull($line_break->getCannotRemoveMessage());
+        $this->assertEqual($expected_message, $line_break->getCannotRemoveMessage());
     }
 
 }
