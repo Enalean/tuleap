@@ -596,18 +596,18 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
-        $cannot_remove_message = $this->getCannotRemoveMessage();
-
+        
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
         $html .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        if ($cannot_remove_message === null) {
+        if ($this->canBeRemovedFromUsage()) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $tracker->id,
                 'func'     => 'admin-formElement-remove',
                 'formElement'    => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
+            $cannot_remove_message = $this->getCannotRemoveMessage();
             $html .= '<span style="color:gray;" title="'. $cannot_remove_message .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
@@ -798,7 +798,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $this->isUsedInFieldDependency() ||
             $this->isUsedByAnotherField();
 
-        if ($is_used) {
+        if ($is_used === true) {
             return false;
         }
 

@@ -74,6 +74,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '</label><span class="tracker-admin-field-controls">';
         $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
+
         if ($this->canBeRemovedFromUsage()) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $this->tracker_id,
