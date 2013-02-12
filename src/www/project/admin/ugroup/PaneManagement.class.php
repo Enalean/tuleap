@@ -52,26 +52,26 @@ class Project_Admin_UGroup_PaneManagement {
         $this->ugroup       = $ugroup;
         $this->view         = $view;
         $this->panes = array(
-            new Project_Admin_UGroup_PaneInfo(
-                $ugroup,
-                Project_Admin_UGroup_View_Settings::IDENTIFIER,
-                $GLOBALS['Language']->getText('global', 'settings')
-            ),
-            new Project_Admin_UGroup_PaneInfo(
-                $ugroup,
-                Project_Admin_UGroup_View_Members::IDENTIFIER,
-                $GLOBALS['Language']->getText('admin_grouplist', 'members')
-            ),
-            new Project_Admin_UGroup_PaneInfo(
-                $ugroup,
-                Project_Admin_UGroup_View_Permissions::IDENTIFIER,
-                $GLOBALS['Language']->getText('project_admin_utils', 'event_permission')
-            ),
-            new Project_Admin_UGroup_PaneInfo(
-                $ugroup,
-                Project_Admin_UGroup_View_Binding::IDENTIFIER,
-                $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding')
-            ),
+            Project_Admin_UGroup_View_Settings::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
+                                                                $ugroup,
+                                                                Project_Admin_UGroup_View_Settings::IDENTIFIER,
+                                                                $GLOBALS['Language']->getText('global', 'settings')
+                                                            ),
+            Project_Admin_UGroup_View_Members::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
+                                                                $ugroup,
+                                                                Project_Admin_UGroup_View_Members::IDENTIFIER,
+                                                                $GLOBALS['Language']->getText('admin_grouplist', 'members')
+                                                            ),
+            Project_Admin_UGroup_View_Permissions::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
+                                                                    $ugroup,
+                                                                    Project_Admin_UGroup_View_Permissions::IDENTIFIER,
+                                                                    $GLOBALS['Language']->getText('project_admin_utils', 'event_permission')
+                                                                ),
+            Project_Admin_UGroup_View_Binding::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
+                                                                $ugroup,
+                                                                Project_Admin_UGroup_View_Binding::IDENTIFIER,
+                                                                $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding')
+                                                            ),
         );
     }
 
@@ -83,7 +83,7 @@ class Project_Admin_UGroup_PaneManagement {
         echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.$GLOBALS['Language']->getText('project_admin_utils','ug_admin').'</a> - '.$this->ugroup->getName().'</h1>';
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
-        foreach ($this->panes as $pane) {
+        foreach ($this->panes as $key => $pane) {
             $this->displayTab($pane);
         }
         echo '</ul>';
@@ -93,6 +93,14 @@ class Project_Admin_UGroup_PaneManagement {
         echo '</div>';
         echo '</div>';
         $GLOBALS['HTML']->footer(array());
+    }
+
+    public function getPaneById($id) {
+        if ($this->panes[$id]) {
+            return $this->panes[$id];
+        } else {
+            return false;
+        }
     }
 
     private function displayTab($pane) {

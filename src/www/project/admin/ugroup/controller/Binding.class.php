@@ -30,6 +30,8 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         parent::__construct($request, $ugroup);
         $this->synchro    = null;
         $this->bindOption = null;
+        $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup, null);
+        $this->pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
     }
 
     public function edit_binding() {
@@ -209,13 +211,6 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         }
     }
 
-    private function redirect() {
-        return $GLOBALS['Response']->redirect('?group_id='. (int)$this->ugroup->getProjectId() .
-                                                '&ugroup_id='. (int)$this->ugroup->getId() .
-                                                '&func=edit'.
-                                                '&pane=binding'
-        );
-    }
 
     protected function getLdapPlugin() {
         return  PluginManager::instance()->getPluginByName('ldap');
@@ -237,7 +232,6 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         }
         return $bindOption;
     }
-
 }
 
 ?>

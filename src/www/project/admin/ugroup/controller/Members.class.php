@@ -25,6 +25,8 @@ class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup
 
     public function __construct(Codendi_Request $request, UGroup $ugroup) {
         parent::__construct($request, $ugroup);
+        $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup, null);
+        $this->pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Members::IDENTIFIER);
     }
 
     public function edit_ugroup_members() {
@@ -42,17 +44,7 @@ class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup
                 $this->addUserByName($groupId, $ugroupId, $add_user_name);
             }
         }
-        //$GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_View_Members::IDENTIFIER]->getUrl());
-        $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
-                '&ugroup_id='. (int)$ugroupId .
-                '&func=edit'.
-                '&pane=members'.
-                '&offset='. (int)$validRequest['offset'] .
-                '&number_per_page='. (int)$validRequest['number_per_page'] .
-                '&search='. urlencode($validRequest['search']) .
-                '&begin='. urlencode($validRequest['begin']) .
-                '&in_project='. (int)$validRequest['in_project']
-        );
+        $this->redirect();
     }
 
     /**
@@ -128,7 +120,6 @@ class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup
         $result['add_user_name']   = $request->get('add_user_name');
         return $result;
     }
-
 }
 
 ?>

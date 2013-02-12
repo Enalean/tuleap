@@ -28,6 +28,7 @@ class Project_Admin_UGroup_UGroupController {
     protected $ugroup_manager;
     protected $ugroup;
     protected $ugroup_binding;
+    protected $pane;
 
     public function __construct(Codendi_Request $request, UGroup $ugroup) {
         $this->request = $request;
@@ -67,6 +68,10 @@ class Project_Admin_UGroup_UGroupController {
         } else {
             $controller_binding->edit_binding();
         }
+    }
+
+    protected function redirect(){
+        return $GLOBALS['Response']->redirect($this->pane->getUrl());
     }
 }
 
