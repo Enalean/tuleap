@@ -47,8 +47,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
                     name="ugroup_description"
                     wrap="virtual"
                     cols="40"
-                    rows="3"
-                    required="required">'.$this->ugroup->getDescription().'</textarea>
+                    rows="3"">'.$this->ugroup->getDescription().'</textarea>
             </div>
         </div>
         <div class="control-group">
