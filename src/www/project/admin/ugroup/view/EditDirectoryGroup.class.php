@@ -26,6 +26,11 @@ require_once('common/plugin/PluginManager.class.php');
 require_once('../../../../plugins/ldap/include/LDAP_UserGroupManager.class.php');
 
 class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_View_Binding {
+
+    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding) {
+        parent::__construct($ugroup, $ugroup_binding);
+    }
+
     public function getContent(){
 
     $content = '';

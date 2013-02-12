@@ -66,14 +66,13 @@ class Project_Admin_UGroup_UGroupController {
     }
 
     public function edit_directory_group() {
-        $source_project_id = $this->request->getValidated('source_project', 'GroupId', 0);
-        $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $source_project_id);
+        $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding);
         $this->render($view);
     }
 
     public function binding() {
         if ($binding = $this->displayUgroupBinding()) {
-            $view = new Project_Admin_UGroup_View_ShowBinding($this->ugroup, $this->ugroup_binding, $binding);
+            $view = new Project_Admin_UGroup_View_ShowBinding($this->ugroup, $this->ugroup_binding, $binding, $this->getLdapPlugin());
             $this->render($view);
         } else {
             $this->edit_binding();
@@ -121,21 +120,7 @@ class Project_Admin_UGroup_UGroupController {
 
     public function edit_directory() {
 
-        // Check if user have choosen the preserve members option.
-        $bindOption = LDAP_GroupManager::BIND_OPTION;
-        if($this->request->exist('preserve_members') && $this->request->get('preserve_members') == 'on') {
-            $bindOption = LDAP_GroupManager::PRESERVE_MEMBERS_OPTION;
-        }
-
-        // Check if user has checked the Synchronization option.
-        $synchro = LDAP_GroupManager::NO_SYNCHRONIZATION;
-        if ($this->request->existAndNonEmpty('synchronize')) {
-            $synchro = LDAP_GroupManager::AUTO_SYNCHRONIZATION;
-        }
-
-        // LDAP plugin enabled
-        $pluginManager = PluginManager::instance();
-        $ldapPlugin = $pluginManager->getPluginByName('ldap');
+        $ldapPlugin = $this->getLdapPlugin();
 
         $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
         $ldapUserGroupManager->setGroupName($this->request->get('bind_with_group'));
@@ -143,17 +128,28 @@ class Project_Admin_UGroup_UGroupController {
 
         $btn_update = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_update');
         $btn_unlink = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_unlink');
+        
         $vSubmit = new Valid_WhiteList('submit', array($btn_update, $btn_unlink));
         $vSubmit->required();
+        
         if($this->request->isPost() && $this->request->valid($vSubmit)) {
+
+            // Check if user have choosen the preserve members option.
+            $bindOption = LDAP_GroupManager::BIND_OPTION;
+            if($this->request->exist('preserve_members') && $this->request->get('preserve_members') == 'on') {
+                $bindOption = LDAP_GroupManager::PRESERVE_MEMBERS_OPTION;
+            }
+
+            // Check if user has checked the Synchronization option.
+            $synchro = LDAP_GroupManager::NO_SYNCHRONIZATION;
+            if ($this->request->existAndNonEmpty('synchronize')) {
+                $synchro = LDAP_GroupManager::AUTO_SYNCHRONIZATION;
+            }
+
             if($this->request->get('submit') == $btn_unlink) {
                 if($ldapUserGroupManager->unbindFromBindLdap()) {
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink'));
-                    $GLOBALS['Response']->redirect('?group_id='. (int)$this->ugroup->getProjectId() .
-                                                    '&ugroup_id='. (int)$this->ugroup->getId() .
-                                                    '&func=edit'.
-                                                    '&pane=binding'
-                    );
+                    $this->redirect_edit_directory();
                 }
             } else {
                 $vBindWithGroup = new Valid_String('bind_with_group');
@@ -164,11 +160,7 @@ class Project_Admin_UGroup_UGroupController {
                         // Perform Ugroup <-> LDAP Group synchro
                         //
                         $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
-                        $GLOBALS['Response']->redirect('?group_id='. (int)$this->ugroup->getProjectId() .
-                                                        '&ugroup_id='. (int)$this->ugroup->getId() .
-                                                        '&func=edit'.
-                                                        '&pane=binding'
-                        );
+                        $this->redirect_edit_directory();
 
                     } elseif($this->request->exist('cancel')) {
                         // Display the screen below!
@@ -186,12 +178,14 @@ class Project_Admin_UGroup_UGroupController {
                 }
             }
         }
+    }
 
-//        $GLOBALS['Response']->redirect('?group_id='. (int)$groupId .
-//                '&ugroup_id='. (int)$ugroupId .
-//                '&func=edit'.
-//                '&pane=binding'
-//        );
+    private function redirect_edit_directory() {
+        return $GLOBALS['Response']->redirect('?group_id='. (int)$this->ugroup->getProjectId() .
+                                                '&ugroup_id='. (int)$this->ugroup->getId() .
+                                                '&func=edit'.
+                                                '&pane=binding'
+        );
     }
 
     public function edit_ugroup_members() {
@@ -294,6 +288,11 @@ class Project_Admin_UGroup_UGroupController {
         $result['user']            = $request->get('user');
         $result['add_user_name']   = $request->get('add_user_name');
         return $result;
+    }
+
+    private function getLdapPlugin() {
+        return  PluginManager::instance()->getPluginByName('ldap');
+        
     }
 }
 
