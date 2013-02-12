@@ -188,7 +188,7 @@ class Project_Admin_UGroup_UGroupController {
         
         $vSubmit = new Valid_WhiteList('submit', array($btn_update, $btn_unlink));
         $vSubmit->required();
-        
+
         if($this->request->isPost() && $this->request->valid($vSubmit)) {
             if($this->request->get('submit') == $btn_unlink) {
                 $this->unlinkLDAPGroup($ldapUserGroupManager);
@@ -196,7 +196,7 @@ class Project_Admin_UGroup_UGroupController {
                 $this->linkLDAPGroup($ldapUserGroupManager);
             }
         } else {
-            $this->redirect_edit_directory();
+            $this->edit_directory_group();
         }
     }
 
