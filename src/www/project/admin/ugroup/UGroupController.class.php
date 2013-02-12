@@ -165,7 +165,8 @@ class Project_Admin_UGroup_UGroupController {
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
         }
-        $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_View_ShowBinding::IDENTIFIER]->getUrl());
+        //$GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_View_ShowBinding::IDENTIFIER]->getUrl());
+        $this->redirect_binding();
     }
 
     public function remove_binding() {
@@ -173,7 +174,8 @@ class Project_Admin_UGroup_UGroupController {
         if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
             $historyDao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());
         }
-        $GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_View_ShowBinding::IDENTIFIER]->getUrl());
+        //$GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_View_ShowBinding::IDENTIFIER]->getUrl());
+        $this->redirect_binding();
     }
 
     public function edit_directory() {
@@ -203,7 +205,7 @@ class Project_Admin_UGroup_UGroupController {
     private function unlinkLDAPGroup($ldapUserGroupManager) {
         if($ldapUserGroupManager->unbindFromBindLdap()) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink'));
-            $this->redirect_edit_directory();
+            $this->redirect_binding();
         }
     }
 
@@ -222,7 +224,7 @@ class Project_Admin_UGroup_UGroupController {
                 //
                 $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', array($this->request->get('bind_with_group'))));
-                $this->redirect_edit_directory();
+                $this->redirect_binding();
 
             } elseif($this->request->exist('cancel')) {
                 // Display the screen below!
@@ -243,7 +245,7 @@ class Project_Admin_UGroup_UGroupController {
         }
     }
 
-    private function redirect_edit_directory() {
+    private function redirect_binding() {
         return $GLOBALS['Response']->redirect('?group_id='. (int)$this->ugroup->getProjectId() .
                                                 '&ugroup_id='. (int)$this->ugroup->getId() .
                                                 '&func=edit'.
