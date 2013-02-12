@@ -22,6 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once 'UGroupController.class.php';
+require_once 'controller/Members.class.php';
 
 class Project_Admin_UGroup_UGroupRouter {
     const DEFAULT_ACTION = 'settings';
@@ -35,19 +36,21 @@ class Project_Admin_UGroup_UGroupRouter {
     public function process(Codendi_Request $request) {
         $action       = self::DEFAULT_ACTION;
         $current_pane = $this->getPane($request);
+        $ugroup       = $this->getUGroup($request);
         switch($current_pane) {
             case Project_Admin_UGroup_View_Binding::IDENTIFIER:
+                $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup);
                 $action = $this->getBindingAction($request);
                 break;
             case Project_Admin_UGroup_View_Members::IDENTIFIER:
+                $controller = new Project_Admin_UGroup_UGroupController_Members($request, $ugroup);
                 $action = $this->getMembersAction($request);
                 break;
             default:
+                $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup);
                 $action = $current_pane;
                 break;
         }
-        $ugroup       = $this->getUGroup($request);
-        $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup);
         $controller->$action();
     }
 
