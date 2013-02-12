@@ -32,15 +32,34 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
     }
 
     public function getContent() {
+        $hp = Codendi_HTMLPurifier::instance();
         $content = '';
         
         $urlAdd     = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_binding';
-        $linkAdd    = '<br/><a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
-        $content .= $this->plugin_binding;
+        $linkAdd    = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
+
+        // LDAP plugin enabled
+        $pluginManager = PluginManager::instance();
+        $ldapPlugin = $pluginManager->getPluginByName('ldap');
+
+        $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
+
+        $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($this->ugroup->getId());
+        if($ldapGroup !== null) {
+            $grpName = $hp->purify($ldapGroup->getCommonName());
+            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $grpName);
+        } else {
+            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding');
+        }
+
         $urlDirectoryGroup    = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_directory_group';
-        $linkDirectoryGroup    = '<br/><a href="'.$urlDirectoryGroup.'">- '. $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding').'</a><br/>';
+        $linkDirectoryGroup    = '<br/><a href="'.$urlDirectoryGroup.'">- '. $title .'</a><br/>';
+
+        $content .= $this->plugin_binding;
+
         $content .= $linkDirectoryGroup;
         $content .= $linkAdd;
+
         $content .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
         $clones = $this->ugroup_binding->getUGroupsByBindingSource($this->ugroup->getId());
         $content .= $this->getClonesHTML($clones);

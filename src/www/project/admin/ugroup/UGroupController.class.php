@@ -165,9 +165,9 @@ class Project_Admin_UGroup_UGroupController {
                         //
                         $ldapUserGroupManager->bindWithLdap($bindOption, $synchro);
                         $GLOBALS['Response']->redirect('?group_id='. (int)$this->ugroup->getProjectId() .
-                                                    '&ugroup_id='. (int)$this->ugroup->getId() .
-                                                    '&func=edit'.
-                                                    '&pane=binding'
+                                                        '&ugroup_id='. (int)$this->ugroup->getId() .
+                                                        '&func=edit'.
+                                                        '&pane=binding'
                         );
 
                     } elseif($this->request->exist('cancel')) {
