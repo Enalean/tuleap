@@ -51,19 +51,25 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private $user;
 
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    private $milestone_factory;
 
     public function __construct(
             Cardwall_PaneInfo $info,
             Planning_Milestone $milestone,
             $enable_qr_code,
             Cardwall_OnTop_Config $config,
-            User $user
+            User $user,
+            Planning_MilestoneFactory $milestone_factory
             ) {
         $this->info           = $info;
         $this->milestone      = $milestone;
         $this->enable_qr_code = $enable_qr_code;
         $this->config         = $config;
         $this->user           = $user;
+        $this->milestone_factory = $milestone_factory;
     }
 
     public function getIdentifier() {
@@ -101,6 +107,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
      */
     private function getPresenterUsingMappedFields(Cardwall_OnTop_Config_ColumnCollection $columns) {
         $board_factory      = new Cardwall_BoardFactory();
+        $this->milestone_factory->updateMilestoneWithPlannedArtifacts($this->user, $this->milestone);
         $planned_artifacts  = $this->milestone->getPlannedArtifacts();
 
         $field_retriever    = new Cardwall_OnTop_Config_MappedFieldProvider($this->config,
