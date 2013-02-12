@@ -25,10 +25,10 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
 
     private $ldapUserGroupManager;
 
-    public function __construct($ugroup, $ldapUserGroupManager, $request, $bindOption, $synchro) {
+    public function __construct($ugroup, $ugroup_binding, $ldapUserGroupManager, $request, $bindOption, $synchro) {
+        parent::__construct($ugroup, $ugroup_binding);
         $this->ldapUserGroupManager = $ldapUserGroupManager;
         $this->request = $request;
-        $this->ugroup = $ugroup;
         $this->bindOption = $bindOption;
         $this->synchro = $synchro;
     }

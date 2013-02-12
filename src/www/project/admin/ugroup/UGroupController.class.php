@@ -66,8 +66,69 @@ class Project_Admin_UGroup_UGroupController {
     }
 
     public function edit_directory_group() {
-        $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding);
-        $this->render($view);
+        $pluginManager = PluginManager::instance();
+        $ldapPlugin = $pluginManager->getPluginByName('ldap');
+
+        $pluginPath = $this->verifyLDAPAvailable($pluginManager,$ldapPlugin);
+
+        if ($pluginPath) {
+            $ugroupId   = $this->verifyUGroupExists($this->request);
+            if ($ugroupId) {
+                $ugroup_row  = $this->getUGroupRow($ugroupId);
+                if ($ugroup_row) {
+                    $group_id    = $ugroup_row['group_id'];
+
+                    $vFunc = new Valid_String('func', array('bind_with_group'));
+                    $vFunc->required();
+                    if(!$this->request->valid($vFunc)) {
+                        $GLOBALS['Response']->redirect('/project/admin/ugroup.php?group_id='.$group_id);
+                    }
+
+                    $ldapUserGroupManager = new LDAP_UserGroupManager($ldapPlugin->getLdap());
+                    $ldapUserGroupManager->setGroupName($this->request->get('bind_with_group'));
+                    $ldapUserGroupManager->setId($ugroupId);
+
+                    $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $ldapUserGroupManager, $pluginPath);
+                    $this->render($view);
+                }
+            }
+        }
+    }
+
+    private function verifyLDAPAvailable($pluginManager, $ldapPlugin) {
+        if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
+            $pluginPath = $ldapPlugin->getPluginPath();
+        } else {
+            $pluginPath = null;
+            exit_error($GLOBALS['Language']->getText('global','error'), 'No ldap plugin');
+        }
+        return $pluginPath;
+    }
+
+    private function verifyUGroupExists($request) {
+        $vUgroupId = new Valid_UInt('ugroup_id');
+        $vUgroupId->required();
+        if($request->valid($vUgroupId)) {
+            $ugroupId = $request->get('ugroup_id');
+        } else {
+            $ugroupId = null;
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found'));
+        }
+        return $ugroupId;
+    }
+
+    private function getUGroupRow($ugroupId) {
+        $res = ugroup_db_get_ugroup($ugroupId);
+        if($res && !db_error($res) && db_numrows($res) == 1) {
+            $row = db_fetch_array($res);
+            session_require(array('group'=>$row['group_id'],'admin_flags'=>'A'));
+            if($row['group_id'] == 100) {
+                 exit_error($GLOBALS['Language']->getText('global','error'), "Cannot modify this ugroup with LDAP plugin");
+            }
+        } else {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
+        }
+        return $row;
     }
 
     public function binding() {
@@ -171,7 +232,7 @@ class Project_Admin_UGroup_UGroupController {
 
             } else {
                 if ($ldapUserGroupManager->getGroupDn()) {
-                    $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $ldapUserGroupManager, $this->request, $bindOption, $synchro);
+                    $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $this->ugroup_binding, $ldapUserGroupManager, $this->request, $bindOption, $synchro);
                     $this->render($view);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', 'directory doesn\'t exist');
