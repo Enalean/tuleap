@@ -42,37 +42,9 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     // Verify common requirement
     //
 
-    // LDAP plugin enabled
-    $pluginManager = PluginManager::instance();
-    $ldapPlugin = $pluginManager->getPluginByName('ldap');
-    if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
-        $pluginPath = $ldapPlugin->getPluginPath();
-    } else {
-        exit_error($GLOBALS['Language']->getText('global','error'), 'No ldap plugin');
-    }
-
-    // User group id exists
-    $vUgroupId = new Valid_UInt('ugroup_id');
-    $vUgroupId->required();
-    $request = HTTPRequest::instance();
-    if($request->valid($vUgroupId)) {
-        $ugroupId = $request->get('ugroup_id');
-    } else {
-        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found'));
-    }
-
-    // Do not try to modify ugroups of project 100
-    $res = ugroup_db_get_ugroup($ugroupId);
-    if($res && !db_error($res) && db_numrows($res) == 1) {
-        $row = db_fetch_array($res);
-        session_require(array('group'=>$row['group_id'],'admin_flags'=>'A'));
-        if($row['group_id'] == 100) {
-             exit_error($GLOBALS['Language']->getText('global','error'), "Cannot modify this ugroup with LDAP plugin");
-        }
-    } else {
-        exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
-    }
-    $group_id = $row['group_id'];
+    $pluginPath = $this->verifyLDAPAvailable();
+    $ugroupId   = $this->verifyUGroupExists();
+    $group_id   = $this->getGroupId();
 
     $vFunc = new Valid_String('func', array('bind_with_group'));
     $vFunc->required();
@@ -173,6 +145,44 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
 
     return $content;
     
+    }
+
+    private function verifyLDAPAvailable() {
+        $pluginManager = PluginManager::instance();
+        $ldapPlugin = $pluginManager->getPluginByName('ldap');
+        if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
+            $pluginPath = $ldapPlugin->getPluginPath();
+        } else {
+            exit_error($GLOBALS['Language']->getText('global','error'), 'No ldap plugin');
+        }
+        return $pluginPath;
+    }
+
+    private function verifyUGroupExists() {
+        $vUgroupId = new Valid_UInt('ugroup_id');
+        $vUgroupId->required();
+        $request = HTTPRequest::instance();
+        if($request->valid($vUgroupId)) {
+            $ugroupId = $request->get('ugroup_id');
+        } else {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found'));
+        }
+        return $ugroupId;
+    }
+
+    private function getGroupId() {
+        // Do not try to modify ugroups of project 100
+        $res = ugroup_db_get_ugroup($ugroupId);
+        if($res && !db_error($res) && db_numrows($res) == 1) {
+            $row = db_fetch_array($res);
+            session_require(array('group'=>$row['group_id'],'admin_flags'=>'A'));
+            if($row['group_id'] == 100) {
+                 exit_error($GLOBALS['Language']->getText('global','error'), "Cannot modify this ugroup with LDAP plugin");
+            }
+        } else {
+            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
+        }
+        return $row['group_id'];
     }
 }
 
