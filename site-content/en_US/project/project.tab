@@ -1000,3 +1000,11 @@ project_ugroup_binding	not_source	This user group is not the source of any other
 project_ugroup_binding	update_user_not_allowed	Update users is not allowed for the ugroup $1
 project_ugroup_binding	reset_error	Unable to reset ugroup $1
 project_ugroup_binding	clone_error	Unable to clone ugroup $1
+
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup/UGroupController.class.php
+#
+
+project_ugroup_binding	ldap_group_error	The LDAP group '$1' does not exist.
+project_ugroup_binding	link_ldap_group	The LDAP group '$1' has been linked with your project.
+project_ugroup_binding	ldap_group_empty	LDAP group name cannot be empty.

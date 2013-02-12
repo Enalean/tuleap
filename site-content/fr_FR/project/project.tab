@@ -996,3 +996,11 @@ project_ugroup_binding	not_source	Ce groupe d'utilisateurs n'est la source d'auc
 project_ugroup_binding	update_user_not_allowed	La mise à jour d'utilisateurs n'est pas autorisée pour le groupe d'utilisateurs $1
 project_ugroup_binding	reset_error	Impossible de réinitialiser le groupe d'utilisateurs $1
 project_ugroup_binding	clone_error	Impossible de cloner le groupe d'utilisateurs $1
+
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup/UGroupController.class.php
+#
+
+project_ugroup_binding	ldap_group_error	Le groupe LDAP '$1' n'existe pas.
+project_ugroup_binding	link_ldap_group	Le groupe LDAP '$1' a correctement été lié au projet.
+project_ugroup_binding	ldap_group_empty	Le groupe LDAP doit être renseigné.

@@ -30,13 +30,17 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     private $row;
     private $ldap_user_group_manager;
     private $pluginPath;
+    private $bindOption;
+    private $synchro;
 
-    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $row, $ldapUserGroupManager, $pluginPath) {
+    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $row, $ldapUserGroupManager, $pluginPath, $bindOption, $synchro) {
         parent::__construct($ugroup, $ugroup_binding);
         $this->row = $row;
         $this->ldap_user_group_manager = $ldapUserGroupManager;
         $this->pluginPath = $pluginPath;
         $this->purifier = Codendi_HTMLPurifier::instance();
+        $this->bindOption = $bindOption;
+        $this->synchro = $synchro;
     }
 
     public function getContent() {
@@ -89,7 +93,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
         $content .= '<p>'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_bind_with_group').' <input type="text" name="bind_with_group" id="group_add" value="'.$clean_ldapGroupName.'"  size="60" /></p>';
 
         $preservingChecked = '';
-        if ($this->ldap_user_group_manager->isMembersPreserving($this->ugroup->getId())) {
+        if ($this->ldap_user_group_manager->isMembersPreserving($this->ugroup->getId()) || $this->bindOption === LDAP_GroupManager::PRESERVE_MEMBERS_OPTION) {
             $preservingChecked = 'checked';
         }
         $content .= '<p><input type="checkbox" id="preserve_members" name="preserve_members" '.$preservingChecked.'/>';
@@ -97,7 +101,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
         $content .= '<label for="preserve_members">'.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_option').' ('.$GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_group_preserve_members_info').')</label></p>';
 
         $synchroChecked = '';
-        if ($this->ldap_user_group_manager->isSynchronizedUgroup($this->ugroup->getId())) {
+        if ($this->ldap_user_group_manager->isSynchronizedUgroup($this->ugroup->getId()) || $this->synchro === LDAP_GroupManager::AUTO_SYNCHRONIZATION) {
             $synchroChecked = 'checked';
         }
         $content .= '<p><input type="checkbox" id="synchronize" name="synchronize" '.$synchroChecked.'/>';
