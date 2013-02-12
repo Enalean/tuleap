@@ -836,7 +836,7 @@ class User implements PFO_User {
      *
      * However we need real objects. Maybe it would be great to force getProjects to return POPO...
      *
-     * @return array of Projects.
+     * @return Project[]
      */
     public function getGroups() {
         $projects = array();

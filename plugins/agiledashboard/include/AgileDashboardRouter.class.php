@@ -105,6 +105,9 @@ class AgileDashboardRouter {
                     $this->renderAction($controller, 'index', $request);
                 }
                 break;
+            case 'generate_systray_data':
+                $this->executeAction($controller, 'generateSystrayData', $request->params);
+                break;
             case 'index':
             default:
                 $this->renderAction($controller, 'index', $request);
@@ -158,6 +161,17 @@ class AgileDashboardRouter {
     private function displayHeader(MVC2_Controller $controller,
                                    Codendi_Request $request,
                                                    $title) {
+        $service = $this->getService($request);
+        if (! $service) {
+            exit_error(
+                $GLOBALS['Language']->getText('global', 'error'),
+                $GLOBALS['Language']->getText(
+                    'project_service',
+                    'service_not_used',
+                    $GLOBALS['Language']->getText('plugin_agiledashboard', 'service_lbl_key'))
+            );
+        }
+
         $toolbar     = array();
         $breadcrumbs = $controller->getBreadcrumbs($this->plugin->getPluginPath());
         if ($this->userIsAdmin($request)) {
@@ -169,7 +183,7 @@ class AgileDashboardRouter {
                 ))
             );
         }
-        $this->getService($request)->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar);
+        $service->displayHeader($title, $breadcrumbs->getCrumbs(), $toolbar);
     }
     
     private function userIsAdmin(Codendi_Request $request) {
