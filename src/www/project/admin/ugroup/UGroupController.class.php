@@ -61,7 +61,7 @@ class Project_Admin_UGroup_UGroupController {
         $this->ugroup_binding = new UGroupBinding(new UGroupUserDao(), $this->ugroup_manager);
     }
 
-    protected function render($view) {
+    protected function render(Project_Admin_UGroup_View $view) {
         $pane_management = new Project_Admin_UGroup_PaneManagement(
             $this->ugroup,
             $view
@@ -86,7 +86,8 @@ class Project_Admin_UGroup_UGroupController {
 
     public function binding() {
         $controller_binding = new Project_Admin_UGroup_UGroupController_Binding($this->request, $this->ugroup);
-        if ($binding = $controller_binding->displayUgroupBinding()) {
+        $binding = $controller_binding->displayUgroupBinding();
+        if ($binding) {
             $view = new Project_Admin_UGroup_View_ShowBinding($this->ugroup, $this->ugroup_binding, $binding, $controller_binding->getLdapPlugin());
             $this->render($view);
         } else {
