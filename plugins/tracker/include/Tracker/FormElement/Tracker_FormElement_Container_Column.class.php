@@ -163,7 +163,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         if ($format == 'text') {
             return '';
         } else {
-            return $this->fetchArtifactPrefix();
+            return '';
         }
     }
     
@@ -171,7 +171,7 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         if ($format == 'text') {
             return '';
         } else {
-            return $this->fetchArtifactSuffix();
+            return '';
         }
     }
     

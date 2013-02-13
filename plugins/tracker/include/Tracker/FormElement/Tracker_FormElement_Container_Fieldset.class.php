@@ -55,7 +55,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
             $label = $this->getLabel();
             return $label . PHP_EOL . str_pad('', strlen($label), '-') . PHP_EOL;
         } else {
-            return $this->fetchArtifactPrefix();
+            return '';
         }
     }
     
@@ -63,7 +63,7 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         if ($format == 'text') {
             return PHP_EOL;
         } else {
-            return $this->fetchArtifactSuffix();
+            return '';
         }
     }
     
