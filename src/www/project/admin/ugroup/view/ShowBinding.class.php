@@ -34,10 +34,26 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
     }
 
     public function getContent() {
-        $urlAdd     = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_binding';
+        $urlAdd     = '/project/admin/editugroup.php?'.
+            http_build_query(array(
+                'group_id' => $this->ugroup->getProjectId(),
+                'ugroup_id' => $this->ugroup->getId(),
+                'func' => 'edit',
+                'pane' => 'binding',
+                'action' => 'edit_binding',
+            )
+        );
         $linkAdd    = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
 
-        $urlDirectoryGroup    = '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane=binding&action=edit_directory_group';
+        $urlDirectoryGroup    = '/project/admin/editugroup.php?'.
+            http_build_query(array(
+                'group_id' => $this->ugroup->getProjectId(),
+                'ugroup_id' => $this->ugroup->getId(),
+                'func' => 'edit',
+                'pane' => 'binding',
+                'action' => 'edit_directory_group',
+            )
+        );
         $linkDirectoryGroup    = '<br/><a href="'.$urlDirectoryGroup.'">- '. $this->getLDAPTitle() .'</a><br/>';
 
         $content = '';
