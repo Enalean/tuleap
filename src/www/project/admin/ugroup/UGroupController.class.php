@@ -24,10 +24,34 @@
 require_once 'PaneManagement.class.php';
 
 class Project_Admin_UGroup_UGroupController {
+    /**
+     *
+     * @var Codendi_Request
+     */
     protected $request;
+
+    /**
+     *
+     * @var UGroupManager
+     */
     protected $ugroup_manager;
+
+    /**
+     *
+     * @var UGroup
+     */
     protected $ugroup;
+
+    /**
+     *
+     * @var UGroupBinding
+     */
     protected $ugroup_binding;
+
+    /**
+     *
+     * @var type Project_Admin_UGroup_PaneInfo
+     */
     protected $pane;
 
     public function __construct(Codendi_Request $request, UGroup $ugroup) {

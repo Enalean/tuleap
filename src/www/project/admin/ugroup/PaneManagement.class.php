@@ -106,7 +106,7 @@ class Project_Admin_UGroup_PaneManagement {
     /**
      *
      * @param type $id
-     * @return Project_Admin_UGroup_View object if exists, false if not
+     * @return Project_Admin_UGroup_PaneInfo object if exists, false if not
      */
     public function getPaneById($id) {
         if ($this->panes[$id]) {
