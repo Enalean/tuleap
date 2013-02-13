@@ -51,11 +51,18 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
     }
 
     protected function fetchMailArtifactPrefix($format) {
+        $label = $this->getLabel();
         if ($format == 'text') {
-            $label = $this->getLabel();
+            
             return $label . PHP_EOL . str_pad('', strlen($label), '-') . PHP_EOL;
         } else {
-            return '';
+            return '<tr style="background-color:#B8C2B9">
+                <td align="left">'.
+                    $label.'
+                </td>
+                <td>
+                </td>
+            </tr>';
         }
     }
     
