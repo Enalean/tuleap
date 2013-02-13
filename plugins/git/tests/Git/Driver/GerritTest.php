@@ -25,8 +25,6 @@ require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 require_once 'common/include/Config.class.php';
 abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
 
-    protected $host = 'tuleap.example.com';
-
     /**
      * @var GitRepository
      */
@@ -43,9 +41,6 @@ abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        Config::store();
-        Config::set('sys_default_domain', $this->host);
-
 
         $project = stub('Project')->getUnixName()->returns('firefox');
 
@@ -62,14 +57,8 @@ abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
         $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
     }
 
-    public function tearDown() {
-        parent::tearDown();
-        Config::restore();
-    }
 }
 class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
-
-    protected $host = 'tuleap.example.com';
 
     /**
      * @var GitRepository
@@ -87,13 +76,13 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
 
 
     public function itExecutesTheCreateCommandOnTheGerritServer() {
-        expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project tuleap.example.com-firefox/jean-claude/dusse")->once();
+        expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project firefox/jean-claude/dusse")->once();
         $this->driver->createProject($this->gerrit_server, $this->repository);
     }
 
     public function itReturnsTheNameOfTheCreatedProject() {
         $project_name = $this->driver->createProject($this->gerrit_server, $this->repository);
-        $this->assertEqual($project_name, $this->host."-firefox/jean-claude/dusse");
+        $this->assertEqual($project_name, "firefox/jean-claude/dusse");
     }
 
     public function _itCallsTheRealThing() {
@@ -110,7 +99,7 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
 
     public function itRaisesAGerritDriverExceptionOnProjectCreation() {
         $std_err = 'fatal: project "someproject" exists';
-        $command = "gerrit create-project tuleap.example.com-firefox/jean-claude/dusse";
+        $command = "gerrit create-project firefox/jean-claude/dusse";
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
         try {
             $this->driver->createProject($this->gerrit_server, $this->repository);
@@ -128,7 +117,7 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itInformsAboutProjectInitialization() {
-        $remote_project = $this->host."-firefox/jean-claude/dusse";
+        $remote_project = "firefox/jean-claude/dusse";
         expect($this->logger)->info("Gerrit: Project $remote_project successfully initialized")->once();
         $this->driver->createProject($this->gerrit_server, $this->repository);
 
@@ -138,7 +127,7 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
 class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
 
     public function itCreatesGroups() {
-        $project_name = $this->host."-firefox/jean-claude/dusse";
+        $project_name = "firefox/jean-claude/dusse";
         $group_name = $project_name."-contributors";
         $create_group_command = "gerrit create-group $group_name";
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
@@ -146,7 +135,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itCreatesGroupsWithMembers() {
-        $project_name = $this->host."-firefox/jean-claude/dusse";
+        $project_name = "firefox/jean-claude/dusse";
         $group_name = $project_name."-contributors";
         $create_group_command = "gerrit create-group $group_name --member ''\''johan'\''' --member ''\''goyotm'\'''";
         $user_list = array('johan', 'goyotm');
@@ -157,14 +146,14 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     public function itInformsAboutGroupCreation() {
         $group_name   = 'contributors';
         $user_list    = array ();
-        $gerrit_group = "$this->host-firefox/jean-claude/dusse-$group_name";
+        $gerrit_group = "firefox/jean-claude/dusse-$group_name";
         expect($this->logger)->info("Gerrit: Group $gerrit_group successfully created")->once();
         $this->driver->createGroup($this->gerrit_server, $this->repository, $group_name, $user_list);
     }
 
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
         $std_err = 'fatal: group "somegroup" already exists';
-        $command = "gerrit create-group tuleap.example.com-firefox/jean-claude/dusse-contributors --member ''\''johan'\'''";
+        $command = "gerrit create-group firefox/jean-claude/dusse-contributors --member ''\''johan'\'''";
         $user_list = array('johan');
 
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
@@ -178,7 +167,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itEscapesTwiceUsernameInCommandLine() {
-        $project_name         = $this->host."-firefox/jean-claude/dusse";
+        $project_name         = "firefox/jean-claude/dusse";
         $group_name           = $project_name."-contributors";
         $create_group_command = "gerrit create-group $group_name --member ''\''Johan Martinsson'\'''";
         $user_list            = array('Johan Martinsson',);
@@ -190,8 +179,8 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
 
 class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
 
-    private $groupname = 'host-project/repo-contributors';
-    private $expected_query = 'gerrit gsql --format json -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\\\'host-project/repo-contributors\\\'"';
+    private $groupname = 'project/repo-contributors';
+    private $expected_query = 'gerrit gsql --format json -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\\\'project/repo-contributors\\\'"';
 
     public function itAsksGerritForTheGroupUUID() {
         $uuid         = 'lsalkj4jlk2jj3452lkj23kj421465';
