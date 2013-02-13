@@ -291,24 +291,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
             switch ($format) {
                 case 'html':
-                    $followup = $comment->fetchFollowUp($format, true, true);
-                    if(!empty($followup) || $changes) {
+                    $followup = $comment->fetchFollowUp($format, true);
+                    if(!empty($followup)) {
                         if($output == '') {
                             $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>';
                         }
                         $output .= '<div class="tracker_artifact_followup_header">';
-                        if ($followup) {
-                            $output .= $followup;
-                        }
-                        
-                        if ($changes) {
-                            if (!empty($comment->body)) {
-                                $output .= '<hr size="1" />';
-                            }
-                            $output .= '<ul class="tracker_artifact_followup_changes">';
-                            $output .= $changes;
-                            $output .= '</ul>';
-                        }
+                        $output .= $followup;
                         $output .= '</div>';
                     }
                     break;
