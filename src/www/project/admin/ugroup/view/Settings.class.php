@@ -24,7 +24,7 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
 
     public function getContent() {
         $content = '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'upd_ug_name').'</p>
-        <form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'" onSubmit="return selIt();">
+        <form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">
         <input type="hidden" name="func" value="do_update">
         <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'">
         <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'">
