@@ -42,20 +42,30 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
     public function edit_directory_group() {
         $pluginManager = PluginManager::instance();
         $ldapPlugin = $pluginManager->getPluginByName('ldap');
+        $pluginPath = $this->getLDAPPath($pluginManager,$ldapPlugin);
 
-        $pluginPath = $this->verifyLDAPAvailable($pluginManager,$ldapPlugin);
-
-        if ($pluginPath) {
-            $ugroupId   = $this->verifyUGroupExists($this->request);
-            if ($ugroupId) {
-                $ugroup_row  = $this->getUGroupRow($ugroupId);
-                if ($ugroup_row) {
-                    $ldapUserGroupManager = $this->setldapUserGroupManager($ldapPlugin, $ugroupId);
-                    $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $ldapUserGroupManager, $pluginPath, $this->bindOption,  $this->synchro);
-                    $this->render($view);
-                }
-            }
+        if (! $pluginPath) {
+            exit_error($GLOBALS['Language']->getText('global','error'), 'No ldap plugin');
         }
+
+        $ugroupId   = $this->getUGroupIdInRequest($this->request);
+
+        if (! $ugroupId) {
+            exit_error(
+                $GLOBALS['Language']->getText('global','error'),
+                $GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found')
+            );
+        }
+
+        $ugroup_row  = $this->getUGroupRow($ugroupId);
+
+        if (! $ugroup_row) {
+            exit_error($GLOBALS['Language']->getText('global','error'), "Cannot modify this ugroup with LDAP plugin");
+        }
+
+        $ldapUserGroupManager = $this->setldapUserGroupManager($ldapPlugin, $ugroupId);
+        $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $ldapUserGroupManager, $pluginPath, $this->bindOption,  $this->synchro);
+        $this->render($view);
     }
 
     private function setldapUserGroupManager($ldapPlugin, $ugroupId) {
@@ -66,24 +76,22 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         return $ldapUserGroupManager;
     }
 
-    private function verifyLDAPAvailable($pluginManager, $ldapPlugin) {
+    private function getLDAPPath($pluginManager, $ldapPlugin) {
         if ($ldapPlugin && $pluginManager->isPluginAvailable($ldapPlugin)) {
             $pluginPath = $ldapPlugin->getPluginPath();
         } else {
             $pluginPath = null;
-            exit_error($GLOBALS['Language']->getText('global','error'), 'No ldap plugin');
         }
         return $pluginPath;
     }
 
-    private function verifyUGroupExists($request) {
+    private function getUGroupIdInRequest($request) {
         $vUgroupId = new Valid_UInt('ugroup_id');
         $vUgroupId->required();
         if($request->valid($vUgroupId)) {
             $ugroupId = $request->get('ugroup_id');
         } else {
             $ugroupId = null;
-            exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found'));
         }
         return $ugroupId;
     }
@@ -94,7 +102,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
             $row = db_fetch_array($res);
             session_require(array('group'=>$row['group_id'],'admin_flags'=>'A'));
             if($row['group_id'] == 100) {
-                 exit_error($GLOBALS['Language']->getText('global','error'), "Cannot modify this ugroup with LDAP plugin");
+                $row = null;
             }
         } else {
             exit_error($GLOBALS['Language']->getText('global','error'),$GLOBALS['Language']->getText('project_admin_editugroup','ug_not_found',array($ugroupId,db_error())));
@@ -130,7 +138,6 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
         }
-        //$GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_View_ShowBinding::IDENTIFIER]->getUrl());
         $this->redirect();
     }
 
@@ -139,7 +146,6 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
             $historyDao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());
         }
-        //$GLOBALS['Response']->redirect($this->panes[Project_Admin_UGroup_View_ShowBinding::IDENTIFIER]->getUrl());
         $this->redirect();
     }
 
