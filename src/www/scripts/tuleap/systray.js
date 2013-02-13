@@ -27,73 +27,89 @@ tuleap.systray = {
             systray_links_cachekey    = 'systray-links';
 
         if (! body.hasClassName('lab-mode')) {
+            // we assume that anonymous user is never in lab-mode
+            // In order to avoid security issues regarding links, we
+            // assume that on logout user will fall in anonymous mode.
+            clearLinksCache();
             return;
         }
 
-        createSystray();
+        loadLinks();
 
-        function createSystray() {
-            var systray = '<div class="systray">' +
-                        '<div class="systray_content">' +
-                            '<img class="systray_icon" src="/themes/Tuleap/images/ic/systray.png">' +
-                            '<div class="systray_links dropup"></div>' +
-                        '</div>' +
-                      '</div>';
-            body.insert(systray);
-            body.select('.systray_icon').each(function (icon) {
-                var systray = icon.up('.systray');
-
-                loadTogglePreference(systray);
-                loadLinks(systray);
-                icon.observe('click', function (evt) {
-                    toggleSystray(systray)
-                });
-            });
-        }
-
-        function loadLinks(systray) {
-            var link_template = new Template('<a href="#{href}">#{label}</a>'),
-                links         = storage.load(systray_links_cachekey);
+        function loadLinks() {
+            var links = storage.load(systray_links_cachekey);
 
             if (links) {
-                insertLinksInSystray(links);
+                createSystray(links);
             } else {
                 new Ajax.Request('/systray.json', { method: 'GET', onSuccess: getLinksFromJSONRequest });
             }
+        }
 
-            function getLinksFromJSONRequest(transport) {
-                var links = transport.responseJSON;
+        function getLinksFromJSONRequest(transport) {
+            var links = transport.responseJSON;
 
-                if (links) {
-                    saveLinks(links);
-                    insertLinksInSystray(links);
-                }
+            if (links) {
+                saveLinks(links);
+                createSystray(links);
+            }
+        }
+
+        function createSystray(links) {
+            if (links.length === 0) {
+                return;
             }
 
-            function insertLinksInSystray(links) {
-                var menu,
-                    systray_links = systray.down('.systray_links'),
-                    first_link = link_template.evaluate(links.shift()),
-                    dropdown ='<div class="dropdown">' + first_link +
-                            '<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-angle-up"></i> </a>' +
-                            '<ul class="dropdown-menu" role="menu"></ul>' +
-                        '</div>';
+            var systray = insertSystrayInBody();
 
-                systray_links.update(dropdown);
-                menu = systray_links.down('.dropdown-menu');
+            loadTogglePreference(systray);
+            registerCollapseEvent(systray);
+            insertLinks(systray, links);
+        }
 
-                links.each(function (link) {
-                    menu.insert('<li>' + link_template.evaluate(link) + '</li>');
-                });
-            }
+        function insertSystrayInBody() {
+            var systray_html = '<div class="systray">' +
+                    '<div class="systray_content">' +
+                        '<img class="systray_icon" src="/themes/Tuleap/images/ic/systray.png">' +
+                        '<div class="systray_links dropup"></div>' +
+                    '</div>' +
+                  '</div>',
+                systray = body.insert(systray_html).select('.systray')[0];
+            return systray;
+        }
 
-            function saveLinks(links) {
-                storage.save(
-                    systray_links_cachekey,
-                    links,
-                    cache_duration_2_hours
-                );
-            }
+        function insertLinks(systray, links) {
+            var menu,
+                systray_links = systray.down('.systray_links'),
+                link_template = new Template('<a href="#{href}">#{label}</a>'),
+                first_link    = link_template.evaluate(links.shift()),
+                dropdown      = '<div class="dropdown">' + first_link +
+                                    '<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-angle-up"></i> </a>' +
+                                    '<ul class="dropdown-menu" role="menu"></ul>' +
+                                '</div>';
+
+            systray_links.update(dropdown);
+            menu = systray_links.down('.dropdown-menu');
+
+            links.each(function (link) {
+                menu.insert('<li>' + link_template.evaluate(link) + '</li>');
+            });
+        }
+
+        function registerCollapseEvent(systray) {
+            var icon = systray.down('.systray_icon');
+
+            icon.observe('click', function (evt) {
+                toggleSystray(systray)
+            });
+        }
+
+        function saveLinks(links) {
+            storage.save(
+                systray_links_cachekey,
+                links,
+                cache_duration_2_hours
+            );
         }
 
         function loadTogglePreference(systray) {
@@ -113,6 +129,10 @@ tuleap.systray = {
                 systray.hasClassName(collapse_classname) ? systray_collapse : systray_expand,
                 cache_duration_1_week
             );
+        }
+
+        function clearLinksCache() {
+            storage.save(systray_links_cachekey, []);
         }
     }
 }
