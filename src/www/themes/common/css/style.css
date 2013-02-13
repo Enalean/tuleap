@@ -1440,7 +1440,7 @@ div.avatar > img {
             box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.05);
 }
 
-.admin_group_members ul {
+.admin_group_members > ul {
     list-style: none;
     padding-left: 0;
 }

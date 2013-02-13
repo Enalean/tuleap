@@ -28,33 +28,30 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
         <input type="hidden" name="func" value="do_update">
         <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'">
         <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'">
-        <div class="control-group">
-            <label class="control-label">'.$GLOBALS['Language']->getText('project_admin_editugroup', 'name').'</label>
-            <div class="controls">
-                <input size="40"
-                       type="text"
-                       name="ugroup_name"
-                       value="'.$this->ugroup->getName().'"
-                       required
-                       autofocus/>
-                <div class="help">'.$GLOBALS['Language']->getText('project_admin_editugroup', 'avoid_special_ch').'</div>
-            </div>
-        </div>
-        <div class="control-group">
-            <label class="control-label">'.$GLOBALS['Language']->getText('project_admin_editugroup', 'desc').'</label>
-            <div class="controls">
-                <textarea
-                    name="ugroup_description"
-                    wrap="virtual"
-                    cols="40"
-                    rows="3"">'.$this->ugroup->getDescription().'</textarea>
-            </div>
-        </div>
-        <div class="control-group">
-            <div class="controls">
-                <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />
-            </div>
-        </div>
+        <p>
+            <label for="ugroup_name"><strong>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'name').'</strong></label>
+            <br />
+            <input size="40"
+                   type="text"
+                   name="ugroup_name"
+                   value="'.$this->ugroup->getName().'"
+                   required
+                   autofocus/>
+            <br />
+            <span class="help">'.$GLOBALS['Language']->getText('project_admin_editugroup', 'avoid_special_ch').'</span>
+        </p>
+        <p>
+            <label for="ugroup_description"><strong>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'desc').'</strong></label>
+            <br />
+            <textarea
+                name="ugroup_description"
+                wrap="virtual"
+                cols="40"
+                rows="3"">'.$this->ugroup->getDescription().'</textarea>
+        </p>
+        <p>
+            <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'btn_update').'" />
+        </p>
         </form>';
         return $content;
     }
