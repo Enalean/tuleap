@@ -22,6 +22,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Class to create panes and display menu with them
+ */
+
 require_once 'PaneInfo.class.php';
 require_once 'View.class.php';
 require_once 'view/Settings.class.php';
@@ -34,12 +38,12 @@ require_once 'view/UGroupAction.class.php';
 
 class Project_Admin_UGroup_PaneManagement {
     /**
-     * @var type 
+     * @var array
      */
     private $panes = array();
 
     /**
-     * @var type
+     * @var Project_Admin_UGroup_View
      */
     private $view;
     
@@ -48,30 +52,30 @@ class Project_Admin_UGroup_PaneManagement {
      */
     private $ugroup;
 
-    public function __construct(UGroup $ugroup, $view) {
+    public function __construct(UGroup $ugroup, Project_Admin_UGroup_View $view) {
         $this->ugroup       = $ugroup;
         $this->view         = $view;
         $this->panes = array(
             Project_Admin_UGroup_View_Settings::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
-                                                                $ugroup,
-                                                                Project_Admin_UGroup_View_Settings::IDENTIFIER,
-                                                                $GLOBALS['Language']->getText('global', 'settings')
-                                                            ),
+                $ugroup,
+                Project_Admin_UGroup_View_Settings::IDENTIFIER,
+                $GLOBALS['Language']->getText('global', 'settings')
+            ),
             Project_Admin_UGroup_View_Members::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
-                                                                $ugroup,
-                                                                Project_Admin_UGroup_View_Members::IDENTIFIER,
-                                                                $GLOBALS['Language']->getText('admin_grouplist', 'members')
-                                                            ),
+                $ugroup,
+                Project_Admin_UGroup_View_Members::IDENTIFIER,
+                $GLOBALS['Language']->getText('admin_grouplist', 'members')
+            ),
             Project_Admin_UGroup_View_Permissions::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
-                                                                    $ugroup,
-                                                                    Project_Admin_UGroup_View_Permissions::IDENTIFIER,
-                                                                    $GLOBALS['Language']->getText('project_admin_utils', 'event_permission')
-                                                                ),
+                $ugroup,
+                Project_Admin_UGroup_View_Permissions::IDENTIFIER,
+                $GLOBALS['Language']->getText('project_admin_utils', 'event_permission')
+            ),
             Project_Admin_UGroup_View_Binding::IDENTIFIER => new Project_Admin_UGroup_PaneInfo(
-                                                                $ugroup,
-                                                                Project_Admin_UGroup_View_Binding::IDENTIFIER,
-                                                                $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding')
-                                                            ),
+                $ugroup,
+                Project_Admin_UGroup_View_Binding::IDENTIFIER,
+                $GLOBALS['Language']->getText('project_admin_utils', 'ugroup_binding')
+            ),
         );
     }
 
@@ -79,8 +83,12 @@ class Project_Admin_UGroup_PaneManagement {
      * Output repo management sub screen to the browser
      */
     public function display() {
-        project_admin_header(array('title' => $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug'), 'group' => $this->ugroup->getProjectId(), 'help' => 'UserGroups.html#UGroupCreation'));
-        echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.$GLOBALS['Language']->getText('project_admin_utils','ug_admin').'</a> - '.$this->ugroup->getName().'</h1>';
+        project_admin_header(array(
+            'title' => $GLOBALS['Language']->getText('project_admin_editugroup', 'edit_ug'),
+            'group' => $this->ugroup->getProjectId(), 'help' => 'UserGroups.html#UGroupCreation'));
+        echo '<h1><a href="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">'.
+                $GLOBALS['Language']->getText('project_admin_utils','ug_admin').
+                '</a> - '.$this->ugroup->getName().'</h1>';
         echo '<div class="tabbable tabs-left">';
         echo '<ul class="nav nav-tabs">';
         foreach ($this->panes as $key => $pane) {
@@ -95,6 +103,11 @@ class Project_Admin_UGroup_PaneManagement {
         $GLOBALS['HTML']->footer(array());
     }
 
+    /**
+     *
+     * @param type $id
+     * @return Project_Admin_UGroup_View object if exists, false if not
+     */
     public function getPaneById($id) {
         if ($this->panes[$id]) {
             return $this->panes[$id];
