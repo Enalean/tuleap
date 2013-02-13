@@ -48,6 +48,11 @@ class PaneInfo {
         return $this->title;
     }
 
+    /**
+     * Return the URL to access to the pane
+     *
+     * @return String
+     */
     public function getUrl() {
         return $this->url;
     }
@@ -63,7 +68,13 @@ class Project_Admin_UGroup_PaneInfo extends PaneInfo {
     }
 
     public function getUrl() {
-        return '/project/admin/editugroup.php?group_id='.$this->ugroup->getProjectId().'&ugroup_id='.$this->ugroup->getId().'&func=edit&pane='.$this->getIdentifier();
+        return '/project/admin/editugroup.php? '.
+        http_build_query(array(
+            'group_id'  => $this->ugroup->getProjectId(),
+            'ugroup_id' => $this->ugroup->getId(),
+            'func'      => 'edit',
+            'pane' => $this->getIdentifier(),
+        ));
     }
 }
 
