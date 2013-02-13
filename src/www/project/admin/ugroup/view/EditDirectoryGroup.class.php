@@ -52,17 +52,10 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
         $ugroupName = util_translate_name_ugroup($this->row['name']);
         $ldapGroup = $this->ldap_user_group_manager->getLdapGroupByGroupId($this->ugroup->getId());
         $clean_ugroupName = $this->purifier->purify($ugroupName);
-        $clean_ldapGroupName = $this->getCleanGroupName($ldapGroup);
+        $clean_ldapGroupName = $this->purifyLDAPGroupName($ldapGroup);
 
         $btn_update = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_update');
         $btn_unlink = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_edit_btn_unlink');
-
-        $content .= '
-        <script type="text/javascript" src="/scripts/prototype/prototype.js"></script>
-        <script type="text/javascript" src="/scripts/scriptaculous/scriptaculous.js"></script>
-        <script type="text/javascript" src="/scripts/autocomplete.js"></script>
-        <script type="text/javascript" src="'.$this->pluginPath.'/scripts/autocomplete.js"></script>
-        ';
 
         $content .= '<h2>'.$GLOBALS['Language']->getText('project_admin_editugroup','ug_admin', $clean_ugroupName).'</h2>';
 
@@ -126,7 +119,7 @@ class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_
     
     }
 
-    private function getCleanGroupName($ldapGroup) {
+    private function purifyLDAPGroupName($ldapGroup) {
         if($ldapGroup !== null) {
             $clean_ldapGroupName = $this->purifier->purify($ldapGroup->getCommonName());
         } else {
