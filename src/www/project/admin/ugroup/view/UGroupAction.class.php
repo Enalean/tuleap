@@ -100,9 +100,6 @@ class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_B
             $content .= '</table>';
 
             return $content;
-        } else {
-          /*  $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_ldap', 'invalid_ldap_group_name'));
-            $GLOBALS['Response']->redirect('/project/admin/index.php?group_id='.$group_id);*/
         }
     }
 }
