@@ -26,12 +26,11 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
     private $bindOption;
     private $synchro;
 
-    public function __construct(Codendi_Request $request, UGroup $ugroup) {
+    public function __construct(Codendi_Request $request, UGroup $ugroup, Project_Admin_UGroup_PaneInfo $pane) {
         parent::__construct($request, $ugroup);
         $this->synchro    = null;
         $this->bindOption = null;
-        $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup, null);
-        $this->pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
+        $this->pane       = $pane;
     }
 
     public function edit_binding() {

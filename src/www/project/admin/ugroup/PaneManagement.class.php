@@ -52,7 +52,7 @@ class Project_Admin_UGroup_PaneManagement {
      */
     private $ugroup;
 
-    public function __construct(UGroup $ugroup, Project_Admin_UGroup_View $view) {
+    public function __construct(UGroup $ugroup, Project_Admin_UGroup_View $view = null) {
         $this->ugroup       = $ugroup;
         $this->view         = $view;
         $this->panes = array(

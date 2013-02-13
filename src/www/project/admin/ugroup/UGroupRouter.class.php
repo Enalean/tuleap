@@ -38,17 +38,21 @@ class Project_Admin_UGroup_UGroupRouter {
         $action       = self::DEFAULT_ACTION;
         $current_pane = $this->getPane($request);
         $ugroup       = $this->getUGroup($request);
+        $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup);
+        $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Settings::IDENTIFIER);
         switch($current_pane) {
             case Project_Admin_UGroup_View_Binding::IDENTIFIER:
-                $controller   = new Project_Admin_UGroup_UGroupController_Binding($request, $ugroup);
+                $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
+                $controller   = new Project_Admin_UGroup_UGroupController_Binding($request, $ugroup, $pane);
                 $action = $this->getBindingAction($request);
                 break;
             case Project_Admin_UGroup_View_Members::IDENTIFIER:
-                $controller = new Project_Admin_UGroup_UGroupController_Members($request, $ugroup);
+                $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Members::IDENTIFIER);
+                $controller = new Project_Admin_UGroup_UGroupController_Members($request, $ugroup, $pane);
                 $action = $this->getMembersAction($request);
                 break;
             default:
-                $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup);
+                $controller   = new Project_Admin_UGroup_UGroupController($request, $ugroup, $pane);
                 $action = $current_pane;
                 break;
         }

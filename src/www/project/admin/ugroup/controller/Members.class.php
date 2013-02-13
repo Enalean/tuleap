@@ -23,10 +23,9 @@ require_once dirname(__FILE__).'/../UGroupController.class.php';
 
 class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup_UGroupController {
 
-    public function __construct(Codendi_Request $request, UGroup $ugroup) {
+    public function __construct(Codendi_Request $request, UGroup $ugroup, Project_Admin_UGroup_PaneInfo $pane) {
         parent::__construct($request, $ugroup);
-        $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup, null);
-        $this->pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Members::IDENTIFIER);
+        $this->pane = $pane;
     }
 
     public function edit_ugroup_members() {
