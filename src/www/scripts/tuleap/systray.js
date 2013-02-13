@@ -27,6 +27,10 @@ tuleap.systray = {
             systray_links_cachekey    = 'systray-links';
 
         if (! body.hasClassName('lab-mode')) {
+            // we assume that anonymous user is never in lab-mode
+            // In order to avoid security issues regarding links, we
+            // assume that on logout user will fall in anonymous mode.
+            clearLinksCache();
             return;
         }
 
@@ -113,6 +117,10 @@ tuleap.systray = {
                 systray.hasClassName(collapse_classname) ? systray_collapse : systray_expand,
                 cache_duration_1_week
             );
+        }
+
+        function clearLinksCache() {
+            storage.save(systray_links_cachekey, []);
         }
     }
 }

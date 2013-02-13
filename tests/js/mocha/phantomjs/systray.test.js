@@ -47,6 +47,12 @@ describe('Le systray', function() {
 
             expect(body.down('.systray')).to.not.exist;
         });
+
+        it('clear the cache to be sure that no information is leaked', function () {
+            tuleap.systray.load(body, storage);
+
+            storage.save.should.have.been.calledWith('systray-links', []);
+        });
     });
 
     describe(', when in lab mode,', function() {
