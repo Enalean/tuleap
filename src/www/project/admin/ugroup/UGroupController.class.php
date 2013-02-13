@@ -54,11 +54,18 @@ class Project_Admin_UGroup_UGroupController {
      */
     protected $pane;
 
+    /**
+     *
+     * @var Project_Admin_UGroup_PaneManagement
+     */
+    private $pane_management;
+
     public function __construct(Codendi_Request $request, UGroup $ugroup) {
         $this->request = $request;
         $this->ugroup = $ugroup;
         $this->ugroup_manager = new UGroupManager();
         $this->ugroup_binding = new UGroupBinding(new UGroupUserDao(), $this->ugroup_manager);
+        $this->pane_management = new Project_Admin_UGroup_PaneManagement($this->ugroup, null);
     }
 
     protected function render(Project_Admin_UGroup_View $view) {
@@ -75,7 +82,10 @@ class Project_Admin_UGroup_UGroupController {
     }
 
     public function members() {
-        $view = new Project_Admin_UGroup_View_Members($this->ugroup, $this->request, $this->ugroup_manager);
+        $pane = $this->pane_management->getPaneById(Project_Admin_UGroup_View_Members::IDENTIFIER);
+        $controller_members = new Project_Admin_UGroup_UGroupController_Members($this->request, $this->ugroup, $pane);
+        $validated_request = $controller_members->validateRequest($this->ugroup->getProjectId(), $this->request);
+        $view = new Project_Admin_UGroup_View_Members($this->ugroup, $this->request, $this->ugroup_manager, $validated_request);
         $this->render($view);
     }
 
@@ -85,8 +95,7 @@ class Project_Admin_UGroup_UGroupController {
     }
 
     public function binding() {
-        $pane_management = new Project_Admin_UGroup_PaneManagement($this->ugroup, null);
-        $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
+        $pane = $this->pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
         $controller_binding = new Project_Admin_UGroup_UGroupController_Binding($this->request, $this->ugroup, $pane);
         $binding = $controller_binding->displayUgroupBinding();
         if ($binding) {

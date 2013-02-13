@@ -35,48 +35,21 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
      */
     private $request;
 
-    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager) {
+    /**
+     *
+     * @var Array
+     */
+    private $validated_request;
+
+    public function __construct(UGroup $ugroup, Codendi_Request $request, UGroupManager $ugroup_manager, array $validated_request) {
         parent::__construct($ugroup);
         $this->request = $request;
         $this->ugroup_manager = $ugroup_manager;
+        $this->validated_request = $validated_request;
     }
 
     public function getContent() {
-        //$this->processEditMembersAction($this->ugroup->getProjectId(), $this->ugroup->getId(), $this->request);
         return $this->displayUgroupMembers($this->ugroup->getProjectId(), $this->ugroup->getId(), $this->request);
-    }
-
-    /**
-     * Validate the HTTP request for the user members pane
-     *
-     * @param Integer     $groupId Id of the project
-     * @param HTTPRequest $request HTTP request
-     *
-     * @return Array
-     */
-    private function validateRequest($groupId, $request) {
-        $userDao            = new UserDao();
-        $res                = $userDao->firstUsernamesLetters();
-        $allowedBeginValues = array();
-        foreach ($res as $data) {
-            $allowedBeginValues[] = $data['capital'];
-        }
-        $result['allowed_begin_values'] = $allowedBeginValues;
-
-        $validBegin = new Valid_WhiteList('begin', $allowedBeginValues);
-        $validBegin->required();
-
-        $validInProject = new Valid_UInt('in_project');
-        $validInProject->required();
-
-        $result['offset']          = $request->exist('browse') ? 0 : $request->getValidated('offset', 'uint', 0);
-        $result['number_per_page'] = $request->exist('number_per_page') ? $request->getValidated('number_per_page', 'uint', 0) : 15;
-        $result['search']          = $request->getValidated('search', 'string', '');
-        $result['begin']           = $request->getValidated('begin', $validBegin, '');
-        $result['in_project']      = $request->getValidated('in_project', $validInProject, $groupId);
-        $result['user']            = $request->get('user');
-        $result['add_user_name']   = $request->get('add_user_name');
-        return $result;
     }
 
     /**
@@ -111,7 +84,6 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $GLOBALS['HTML']->addUserAutocompleteOn('ugroup_add_user', true);
         }
         //ugroup binding link
-        //$content .= '<P> You can also choose to <a href="editugroup.php?group_id='.$groupId.'&ugroup_id='.$ugroupId.'&func=edit&pane=bind"><b>bind to another group</b></a></p>';
 
         $content .= '<h2>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</h2>';
         $content .= '<div style="padding-left:10px">';
@@ -138,10 +110,8 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup', 'nobody_yet');
         }
         $content .= '</div>';
-        //$content .= '</fieldset>';
 
         if ($ugroupUpdateUsersAllowed) {
-            $validRequest = $this->validateRequest($groupId, $request);
 
             //Display the form
             $selected = 'selected="selected"';
@@ -154,25 +124,24 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '<input type="hidden" name="func" value="edit" />';
             $content .= '<input type="hidden" name="pane" value="members" />';
             $content .= '<input type="hidden" name="action" value="edit_ugroup_members" />';
-            $content .= '<input type="hidden" name="offset" value="'. (int)$validRequest['offset'] .'" />';
+            $content .= '<input type="hidden" name="offset" value="'. (int)$this->validated_request['offset'] .'" />';
 
             //Filter
-            //$content .= '<fieldset><legend>'.$GLOBALS['Language']->getText('project_admin_editugroup','users').'</legend>';
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup','search_in').' ';
             $content .= '<select name="in_project">';
-            $content .= '<option value="0" '. ( !$validRequest['in_project'] ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
-            $content .= '<option value="'. (int)$groupId .'" '. ($validRequest['in_project'] == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
+            $content .= '<option value="0" '. ( !$this->validated_request['in_project'] ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
+            $content .= '<option value="'. (int)$groupId .'" '. ($this->validated_request['in_project'] == $groupId ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','this_project') .'</option>';
             $content .= '</select>';
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup','name_contains').' ';
 
             //contains
-            $content .= '<input type="text" name="search" value="'.  $hp->purify($validRequest['search'], CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
+            $content .= '<input type="text" name="search" value="'.  $hp->purify($this->validated_request['search'], CODENDI_PURIFIER_CONVERT_HTML) .'" class="textfield_medium" /> ';
             //begin
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup','begins').' ';
             $content .= '<select name="begin">';
-            $content .= '<option value="" '. (in_array($validRequest['begin'], $validRequest['allowed_begin_values']) ? $selected : '') .'></option>';
-            foreach($validRequest['allowed_begin_values'] as $b) {
-                $content .= '<option value="'. $b .'" '. ($b == $validRequest['begin'] ? $selected : '') .'>'. $b .'</option>';
+            $content .= '<option value="" '. (in_array($this->validated_request['begin'], $this->validated_request['allowed_begin_values']) ? $selected : '') .'></option>';
+            foreach($this->validated_request['allowed_begin_values'] as $b) {
+                $content .= '<option value="'. $b .'" '. ($b == $this->validated_request['begin'] ? $selected : '') .'>'. $b .'</option>';
             }
             $content .= '</select>. ';
 
@@ -180,11 +149,11 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '<span style="white-space:nowrap;">'.$GLOBALS['Language']->getText('project_admin_editugroup','show').' ';
             //number per page
             $content .= '<select name="number_per_page">';
-            $content .= '<option '. ($validRequest['number_per_page'] == 15 ? $selected : '') .'>15</option>';
-            $content .= '<option '. ($validRequest['number_per_page'] == 30 ? $selected : '') .'>30</option>';
-            $content .= '<option '. ($validRequest['number_per_page'] == 60 ? $selected : '') .'>60</option>';
-            if (!in_array($validRequest['number_per_page'], array(15, 30, 60))) {
-                $content .= '<option '. $selected .'>'. (int)$validRequest['number_per_page'] .'</option>';
+            $content .= '<option '. ($this->validated_request['number_per_page'] == 15 ? $selected : '') .'>15</option>';
+            $content .= '<option '. ($this->validated_request['number_per_page'] == 30 ? $selected : '') .'>30</option>';
+            $content .= '<option '. ($this->validated_request['number_per_page'] == 60 ? $selected : '') .'>60</option>';
+            if (!in_array($this->validated_request['number_per_page'], array(15, 30, 60))) {
+                $content .= '<option '. $selected .'>'. (int)$this->validated_request['number_per_page'] .'</option>';
             }
             $content .= '</select> ';
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup','users_per_page').' ';
@@ -193,7 +162,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '</p>';
 
             $dao          = new UGroupUserDao();
-            $result       = $dao->searchUsersToAdd($ugroupId, $validRequest);
+            $result       = $dao->searchUsersToAdd($ugroupId, $this->validated_request);
             $res          = $result['result'];
             $res          = $result['result'];
             $numTotalRows = $result['num_total_rows'];
@@ -201,8 +170,8 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= $this->displayUserResultTable($res);
 
             //Jump to page
-            $nbOfPages = ceil($numTotalRows / $validRequest['number_per_page']);
-            $currentPage = round($validRequest['offset'] / $validRequest['number_per_page']);
+            $nbOfPages = ceil($numTotalRows / $this->validated_request['number_per_page']);
+            $currentPage = round($this->validated_request['offset'] / $this->validated_request['number_per_page']);
             $content .= '<div style="font-family:Verdana">Page: ';
             $width = 10;
             for ($i = 0 ; $i < $nbOfPages ; ++$i) {
@@ -212,11 +181,11 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
                         '&amp;ugroup_id='. (int)$ugroupId .
                         '&amp;func=edit'.
                         '&amp;pane=members'.
-                        '&amp;offset='. (int)($i * $validRequest['number_per_page']) .
-                        '&amp;number_per_page='. (int)$validRequest['number_per_page'] .
-                        '&amp;search='. urlencode($validRequest['search']) .
-                        '&amp;begin='. urlencode($validRequest['begin']) .
-                        '&amp;in_project='. (int)$validRequest['in_project'] .
+                        '&amp;offset='. (int)($i * $this->validated_request['number_per_page']) .
+                        '&amp;number_per_page='. (int)$this->validated_request['number_per_page'] .
+                        '&amp;search='. urlencode($this->validated_request['search']) .
+                        '&amp;begin='. urlencode($this->validated_request['begin']) .
+                        '&amp;in_project='. (int)$this->validated_request['in_project'] .
                         '">';
                     if ($i == $currentPage) {
                         $content .= '<b>'. ($i + 1) .'</b>';
@@ -229,9 +198,6 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
                 }
             }
             $content .= '</div>';
-
-            //$content .= '</fieldset>';
-
             $content .= '</form>';
         }
         $content .= '</td></tr></table>';

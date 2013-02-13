@@ -95,7 +95,7 @@ class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup
      *
      * @return Array
      */
-    private function validateRequest($groupId, $request) {
+    public function validateRequest($groupId, $request) {
         $userDao            = new UserDao();
         $res                = $userDao->firstUsernamesLetters();
         $allowedBeginValues = array();
