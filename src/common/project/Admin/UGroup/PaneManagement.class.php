@@ -26,17 +26,8 @@
  * Class to create panes and display menu with them
  */
 
-require_once 'PaneInfo.class.php';
-require_once 'View.class.php';
-require_once 'view/Settings.class.php';
-require_once 'view/Members.class.php';
-require_once 'view/Permissions.class.php';
-require_once 'view/ShowBinding.class.php';
-require_once 'view/EditBinding.class.php';
-require_once 'view/EditDirectoryGroup.class.php';
-require_once 'view/UGroupAction.class.php';
-
 class Project_Admin_UGroup_PaneManagement {
+
     /**
      * @var array
      */
@@ -46,7 +37,7 @@ class Project_Admin_UGroup_PaneManagement {
      * @var Project_Admin_UGroup_View
      */
     private $view;
-    
+
     /**
      * @var UGroup
      */

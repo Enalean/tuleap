@@ -23,6 +23,7 @@
  */
 
 abstract class Project_Admin_UGroup_View_Binding extends Project_Admin_UGroup_View {
+
     const IDENTIFIER = 'binding';
 
     /**

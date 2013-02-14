@@ -21,9 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'Binding.class.php';
 
 class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Binding {
+
     private $plugin_binding;
     private $ldap_plugin;
 
@@ -107,7 +107,7 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
 
         $ldapUserGroupManager = new LDAP_UserGroupManager($this->ldap_plugin->getLdap());
         $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($this->ugroup->getId());
-        
+
         if($ldapGroup !== null) {
             $grpName = $hp->purify($ldapGroup->getCommonName());
             $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $grpName);

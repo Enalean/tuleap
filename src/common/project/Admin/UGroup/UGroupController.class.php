@@ -21,9 +21,9 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'PaneManagement.class.php';
 
 class Project_Admin_UGroup_UGroupController {
+
     /**
      *
      * @var Codendi_Request

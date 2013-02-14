@@ -25,8 +25,9 @@
 require_once 'common/pane/PaneInfo.class.php';
 
 class Project_Admin_UGroup_PaneInfo extends PaneInfo {
+
     private $ugroup;
-    
+
     public function __construct(UGroup $ugroup, $identifier, $title) {
         parent::__construct($identifier, $title, '');
         $this->ugroup = $ugroup;

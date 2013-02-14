@@ -20,6 +20,7 @@
  */
 
 class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
+
     const IDENTIFIER = 'settings';
 
     public function getContent() {

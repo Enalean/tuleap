@@ -12,7 +12,7 @@ require_once('www/project/admin/permissions.php');
 require_once('www/file/file_utils.php');
 require_once('www/docman/doc_utils.php');
 require_once 'common/project/UGroupManager.class.php';
-require_once 'ugroup/UGroupRouter.class.php';
+require_once 'common/project/Admin/UGroup/UGroupRouter.class.php';
 
 $request = HTTPRequest::instance();
 

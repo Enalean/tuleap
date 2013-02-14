@@ -19,8 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../UGroupController.class.php';
-
 class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup_UGroupController {
 
     private $bindOption;

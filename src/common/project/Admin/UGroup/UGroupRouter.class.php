@@ -21,13 +21,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once 'UGroupController.class.php';
-require_once 'controller/Members.class.php';
-require_once 'controller/Binding.class.php';
 
 class Project_Admin_UGroup_UGroupRouter {
+
     const DEFAULT_ACTION = 'settings';
-    
+
     private $ugroup_manager;
 
     public function __construct() {

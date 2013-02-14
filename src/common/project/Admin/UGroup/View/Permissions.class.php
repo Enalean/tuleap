@@ -23,6 +23,7 @@
  */
 
 class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
+
     const IDENTIFIER = 'permissions';
 
     /**

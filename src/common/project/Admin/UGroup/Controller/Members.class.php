@@ -19,8 +19,6 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once dirname(__FILE__).'/../UGroupController.class.php';
-
 class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup_UGroupController {
 
     public function __construct(Codendi_Request $request, UGroup $ugroup, Project_Admin_UGroup_PaneInfo $pane) {

@@ -23,8 +23,9 @@
  */
 
 class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
+
     const IDENTIFIER = 'members';
-    
+
     /**
      * @var UGroupManager
      */

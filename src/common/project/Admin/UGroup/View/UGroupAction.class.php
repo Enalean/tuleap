@@ -23,9 +23,6 @@
  * Second view for 'Binding' pane which provides users to see futur changes with
  * LDAP group synchronization
  */
-
-require_once 'Binding.class.php';
-
 class Project_Admin_UGroup_View_UGroupAction extends Project_Admin_UGroup_View_Binding {
 
     private $ldapUserGroupManager;
