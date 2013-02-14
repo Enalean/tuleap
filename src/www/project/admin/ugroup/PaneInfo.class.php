@@ -22,7 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__). '/../../../../common/pane/PaneInfo.class.php';
+require_once 'common/pane/PaneInfo.class.php';
 
 class Project_Admin_UGroup_PaneInfo extends PaneInfo {
     private $ugroup;
