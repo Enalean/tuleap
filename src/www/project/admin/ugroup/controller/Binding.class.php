@@ -138,7 +138,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         } else {
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
         }
-        $this->redirect(array());
+        $this->redirect();
     }
 
     public function remove_binding() {
@@ -146,7 +146,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
         if ($this->ugroup_binding->removeBinding($this->ugroup->getId())) {
             $historyDao->groupAddHistory("ugroup_remove_binding", $this->ugroup->getId(), $this->ugroup->getProjectId());
         }
-        $this->redirect(array());
+        $this->redirect();
     }
 
     public function edit_directory() {
@@ -176,7 +176,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
     private function unlinkLDAPGroup($ldapUserGroupManager) {
         if($ldapUserGroupManager->unbindFromBindLdap()) {
             $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_manager_unlink'));
-            $this->redirect(array());
+            $this->redirect();
         }
     }
 
@@ -195,7 +195,7 @@ class Project_Admin_UGroup_UGroupController_Binding extends Project_Admin_UGroup
                 //
                 $ldapUserGroupManager->bindWithLdap($this->bindOption, $this->synchro);
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('project_ugroup_binding', 'link_ldap_group', array($this->request->get('bind_with_group'))));
-                $this->redirect(array());
+                $this->redirect();
 
             } elseif($this->request->exist('cancel')) {
                 // Display the screen below!
