@@ -68,30 +68,12 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
         $em->processEvent(Event::UGROUP_UPDATE_USERS_ALLOWED, array('ugroup_id' => $ugroupId, 'allowed' => &$ugroupUpdateUsersAllowed));
         $content = '';
 
-        if ($ugroupUpdateUsersAllowed) {
-            $content .= '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($this->ugroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
-
-            $content .= '
-                <form method="post" action="">
-                    <input type="hidden" name="func" value="edit" />
-                    <input type="hidden" name="action" value="edit_ugroup_members" />
-                    <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'" />
-                    <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'" />
-                    <label> ' . $GLOBALS['Language']->getText('project_ugroup_user', 'add_username') . ' <input type="text" name="add_user_name" id="ugroup_add_user" value="" /></label>
-                    <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'add').'" />
-                </form>
-            ';
-            $GLOBALS['HTML']->addUserAutocompleteOn('ugroup_add_user', true);
-        }
-        //ugroup binding link
-
-        $content .= '<h2>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</h2>';
         $content .= '<div style="padding-left:10px">';
         $content .= '<table><tr valign="top"><td>';
 
         // Get existing members from group
+        $content .= '<h2>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'group_members').'</h2>';
         $content .= '<div class="admin_group_members">';
-        $content .= $GLOBALS['Language']->getText('project_admin_editugroup','members');
         $members = $this->ugroup->getMembers();
         if (count($members) > 0) {
             $i = 0;
@@ -112,13 +94,25 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
         $content .= '</div>';
 
         if ($ugroupUpdateUsersAllowed) {
-
             //Display the form
             $selected = 'selected="selected"';
-            $content .= '<form action="" method="GET">';
 
             $content .= '</td><td style="padding-left: 1em;">';
+            $content .= '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','add_users_to').' '.  $hp->purify($this->ugroup->getName(), CODENDI_PURIFIER_CONVERT_HTML)  .'</h2>';
 
+            $content .= '
+                <form method="post" action="">
+                    <input type="hidden" name="func" value="edit" />
+                    <input type="hidden" name="action" value="edit_ugroup_members" />
+                    <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'" />
+                    <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'" />
+                    <label> ' . $GLOBALS['Language']->getText('project_ugroup_user', 'add_username') . ' <input type="text" name="add_user_name" id="ugroup_add_user" value="" /></label>
+                    <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'add').'" />
+                </form>
+            ';
+            $GLOBALS['HTML']->addUserAutocompleteOn('ugroup_add_user', true);
+
+            $content .= '<form action="" method="GET">';
             $content .= '<input type="hidden" name="group_id" value="'. (int)$groupId .'" />';
             $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
             $content .= '<input type="hidden" name="func" value="edit" />';

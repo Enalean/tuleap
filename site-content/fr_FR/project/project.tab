@@ -136,7 +136,7 @@ project_admin_editugroup	go_back	Retourner à la liste des groupes d'utilisateur
 project_admin_editugroup	add_user	Ajouter des utilisateurs à ce groupe
 project_admin_editugroup	members	Membres
 project_admin_editugroup	users	Utilisateurs
-project_admin_editugroup	search_in	Chercher dans 
+project_admin_editugroup	search_in	Ou chercher dans 
 project_admin_editugroup	any_project	tous les projets
 project_admin_editugroup	this_project	ce projet
 project_admin_editugroup	name_contains	 les utilisateurs dont le nom ou l'adresse email contient 
