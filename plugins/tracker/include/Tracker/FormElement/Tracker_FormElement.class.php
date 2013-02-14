@@ -592,6 +592,15 @@ abstract class Tracker_FormElement implements Tracker_FormElement_Interface, Tra
     }
 
     /**
+     * Prepare the element to be displayed
+     *
+     * @return void
+     */
+    public function prepareForDisplay() {
+        //do nothing per default
+    }
+
+    /**
      * Returns the value that will be displayed in a mail
      * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue $value
