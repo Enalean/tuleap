@@ -123,7 +123,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '<input type="hidden" name="ugroup_id" value="'. (int)$ugroupId .'" />';
             $content .= '<input type="hidden" name="func" value="edit" />';
             $content .= '<input type="hidden" name="pane" value="members" />';
-            $content .= '<input type="hidden" name="action" value="edit_ugroup_members" />';
+            $content .= '<input type="hidden" name="action" value="filter_users" />';
             $content .= '<input type="hidden" name="offset" value="'. (int)$this->validated_request['offset'] .'" />';
 
             //Filter

@@ -33,7 +33,7 @@ class Project_Admin_UGroup_PaneInfo extends PaneInfo {
     }
 
     public function getUrl() {
-        return '/project/admin/editugroup.php? '.
+        return '/project/admin/editugroup.php?'.
         http_build_query(array(
             'group_id'  => $this->ugroup->getProjectId(),
             'ugroup_id' => $this->ugroup->getId(),
