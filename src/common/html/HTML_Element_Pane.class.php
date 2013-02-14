@@ -63,5 +63,4 @@ class HTML_Element_Pane extends HTML_Element {
     }
 
 }
-
 ?>

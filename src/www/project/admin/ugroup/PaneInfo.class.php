@@ -22,42 +22,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class PaneInfo {
-
-    private $identifier;
-    private $title;
-    private $url;
-
-    public function __construct($identifier, $title, $url) {
-        $this->identifier = $identifier;
-        $this->title = $title;
-        $this->url = $url;
-    }
-
-    /**
-     * @return string eg: 'perms'
-     */
-    public function getIdentifier() {
-        return $this->identifier;
-    }
-
-    /**
-     * @return string eg: 'Accesss Control'
-     */
-    public function getTitle() {
-        return $this->title;
-    }
-
-    /**
-     * Return the URL to access to the pane
-     *
-     * @return String
-     */
-    public function getUrl() {
-        return $this->url;
-    }
-
-}
+require_once dirname(__FILE__). '/../../../../common/pane/PaneInfo.class.php';
 
 class Project_Admin_UGroup_PaneInfo extends PaneInfo {
     private $ugroup;

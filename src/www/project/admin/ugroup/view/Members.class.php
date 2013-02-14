@@ -100,7 +100,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             foreach ($members as $user) {
                 $content .= '<li>';
                 if ($ugroupUpdateUsersAllowed) {
-                    $content .= $this->project_admin_display_bullet_user($user->getId(), 'remove');
+                    $content .= $this->project_admin_bullet_user_content($user->getId(), 'remove');
                 }
                 $content .= ' '.$hp->purify($userHelper->getDisplayNameFromUser($user));
                 $content .= '</li>';
@@ -234,7 +234,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
                 $output .= '<div style="border:1px solid #CCC; background: #'. $background .'; padding:10px 5px; position:relative">';
                 $output .= '<table width="100%"><tr><td><a href="/users/'. $hp->purify($data['user_name']) .'/">'. $hp->purify($userHelper->getDisplayName($data['user_name'], $data['realname'])) .'</a></td>';
                 $output .= '<td style="text-align:right;">';
-                $output .= $this->project_admin_display_bullet_user($data['user_id'], $action);
+                $output .= $this->project_admin_bullet_user_content($data['user_id'], $action);
                 $output .= '</td></tr></table>';
                 $output .= '<div style="color:#666; ">'. $data['email'] .'</div>';
                 $output .= '</div>';
@@ -254,7 +254,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
         return self::IDENTIFIER;
     }
 
-    private function project_admin_display_bullet_user($user_id, $action, $url = null) {
+    private function project_admin_bullet_user_content($user_id, $action, $url = null) {
         if ($action == 'add') {
             $icon       = '/ic/add.png';
         } else {
