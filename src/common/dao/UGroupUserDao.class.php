@@ -146,7 +146,7 @@ class UGroupUserDao extends DataAccessObject {
     }
 
     private function getBeginsWithFilter($filters) {
-        if ($filters['search']) {
+        if ($filters['begin']) {
             $begin = $this->da->quoteSmart($filters['begin']."%");
             return "user.realname LIKE $begin
                 OR user.user_name LIKE $begin
