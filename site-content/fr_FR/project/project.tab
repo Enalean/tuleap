@@ -1004,3 +1004,4 @@ project_ugroup_binding	clone_error	Impossible de cloner le groupe d'utilisateurs
 project_ugroup_binding	ldap_group_error	Le groupe LDAP '$1' n'existe pas.
 project_ugroup_binding	link_ldap_group	Le groupe LDAP '$1' a correctement été lié au projet.
 project_ugroup_binding	ldap_group_empty	Le groupe LDAP doit être renseigné.
+project_ugroup_user	add_username	Entrez le nom d'utilisateur

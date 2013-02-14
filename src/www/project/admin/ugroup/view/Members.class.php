@@ -77,7 +77,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
                     <input type="hidden" name="action" value="edit_ugroup_members" />
                     <input type="hidden" name="ugroup_id" value="'.$this->ugroup->getId().'" />
                     <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'" />
-                    <label>Type username <input type="text" name="add_user_name" id="ugroup_add_user" value="" /></label>
+                    <label> ' . $GLOBALS['Language']->getText('project_ugroup_user', 'add_username') . ' <input type="text" name="add_user_name" id="ugroup_add_user" value="" /></label>
                     <input type="submit" value="'.$GLOBALS['Language']->getText('global', 'add').'" />
                 </form>
             ';

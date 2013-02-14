@@ -1008,3 +1008,4 @@ project_ugroup_binding	clone_error	Unable to clone ugroup $1
 project_ugroup_binding	ldap_group_error	The LDAP group '$1' does not exist.
 project_ugroup_binding	link_ldap_group	The LDAP group '$1' has been linked with your project.
 project_ugroup_binding	ldap_group_empty	LDAP group name cannot be empty.
+project_ugroup_user	add_username	Type username
