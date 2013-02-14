@@ -127,6 +127,7 @@ class Project_Admin_UGroup_View_Members extends Project_Admin_UGroup_View {
             $content .= '<input type="hidden" name="offset" value="'. (int)$this->validated_request['offset'] .'" />';
 
             //Filter
+            $content .= '<p>';
             $content .= $GLOBALS['Language']->getText('project_admin_editugroup','search_in').' ';
             $content .= '<select name="in_project">';
             $content .= '<option value="0" '. ( !$this->validated_request['in_project'] ? $selected : '') .'>'. $GLOBALS['Language']->getText('project_admin_editugroup','any_project') .'</option>';
