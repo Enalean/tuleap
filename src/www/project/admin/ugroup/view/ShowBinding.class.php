@@ -43,7 +43,7 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
                 'action' => 'edit_binding',
             )
         );
-        $linkAdd    = '<a href="'.$urlAdd.'">- '.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
+        $linkAdd    = '<a href="'.$urlAdd.'">'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
 
         $urlDirectoryGroup    = '/project/admin/editugroup.php?'.
             http_build_query(array(
@@ -54,9 +54,9 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
                 'action' => 'edit_directory_group',
             )
         );
-        $linkDirectoryGroup    = '<br/><a href="'.$urlDirectoryGroup.'">- '. $this->getLDAPTitle() .'</a><br/>';
+        $linkDirectoryGroup    = '<a href="'.$urlDirectoryGroup.'">'. $this->getLDAPTitle() .'</a><br/>';
 
-        $content = '';
+        $content = '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','binding_title') .'</h2>';
         $content .= $linkDirectoryGroup;
         $content .= $linkAdd;
 

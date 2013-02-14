@@ -145,6 +145,9 @@ project_admin_editugroup	show	Afficher
 project_admin_editugroup	users_per_page	utilisateurs par page.
 project_admin_editugroup	add_users_to	Ajouter des utilisateurs à 
 project_admin_editugroup	group_empty	le groupe est vide
+project_admin_editugroup	permissions_title	Gestion des permissions
+project_admin_editugroup	settings_title	Paramètres
+project_admin_editugroup	binding_title	Lier des groupes
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php

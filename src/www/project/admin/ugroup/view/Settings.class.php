@@ -23,7 +23,8 @@ class Project_Admin_UGroup_View_Settings extends Project_Admin_UGroup_View {
     const IDENTIFIER = 'settings';
 
     public function getContent() {
-        $content = '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'upd_ug_name').'</p>
+        $content = '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','settings_title') .'</h2>' .
+        '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'upd_ug_name').'</p>
         <form method="post" name="form_create" action="/project/admin/ugroup.php?group_id='.$this->ugroup->getProjectId().'">
         <input type="hidden" name="func" value="do_update">
         <input type="hidden" name="group_id" value="'.$this->ugroup->getProjectId().'">

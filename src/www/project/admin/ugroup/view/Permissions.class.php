@@ -38,7 +38,7 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
     }
 
     public function getContent() {
-        $content = '';
+        $content = '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','permissions_title') .'</h2>';
         $this->permissions_manager = PermissionsManager::instance();
         $dar = $this->permissions_manager->searchByUgroupId($this->ugroup->getId());
         if ($dar && !$dar->isError() && $dar->rowCount() >0) {
