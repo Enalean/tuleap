@@ -209,6 +209,97 @@ class Tracker_Artifact_Changeset_Comment {
     }
 
     /**
+     * Returns the HTML code of this comment
+     *
+     * @param String  $format          Format of the output
+     * @param Boolean $forMail         If the output is intended for mail notification then value should be true
+     * @param Boolean $ignoreEmptyBody If true then display the user and the time even if the body is empty
+     *
+     * @return string the HTML code of this comment
+     */
+    public function fetchMailFollowUp($format='html') {
+        $uh = UserHelper::instance();
+        $hp = Codendi_HTMLPurifier::instance();
+        switch ($format) {
+            case 'html':
+                $user = UserManager::instance()->getUserById($this->submitted_by);
+                if ($user && !$user->isAnonymous()) {
+                    $user_info =
+                        '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.
+                            $hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')
+                        </a>';
+                } else {
+                    $user = UserManager::instance()->getUserAnonymous();
+                    $user->setEmail($this->changeset->getEmail());
+                    $user_info = $GLOBALS['Language']->getText('tracker_include_artifact','anon_user');
+                }
+
+                $timezone = '';
+                if ($user->getId() != 0) {
+                    $timezone = ' ('.$user->getTimezone().')';
+                }
+
+                $avatar = '';
+                if (Config::get('sys_enable_avatars')) {
+                    $avatar =$user->fetchHtmlAvatar();
+                }
+
+                $formatted_comment = '';
+                if (!empty($this->body)) {
+                   if ($this->parent_id && !trim($this->body)) {
+                       $comment =
+                           '<em>'.
+                               $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'
+                           </em>';
+                   } else {
+                       $comment = $this->getPurifiedBodyForHTML();
+                   }
+
+                   $formatted_comment =
+                       '<input type="hidden"
+                            id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                            name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                            value="'.$this->bodyFormat.'">
+                        <div class="tracker_artifact_followup_comment_body">'.
+                            $comment.'
+                        </div>';
+                   }
+
+                $html =
+                    '<tr>
+                        <td align="left" rowspan="2" valign="top">'.
+                            $avatar.'
+                        </td>
+                        <td align="left" valign="top">
+                                <span>'.
+                                    $user_info.'
+                                </span>
+                        </td>
+                        <td align="right" valign="top">
+                            <div class="tracker_artifact_followup_date">'.
+                                format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).
+                                $timezone.'
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">'.
+                            $formatted_comment.'
+                        </td>
+                    </tr>';
+                
+                return $html;
+            default:
+                $output = '';
+                if ( !empty($this->body) ) {
+                    $body    = $this->getPurifiedBodyForText();
+                    $output .= PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
+                }
+                return $output;
+        }
+    }
+
+    /**
      * Check the comment format, to ensure it is in
      * a known one.
      *

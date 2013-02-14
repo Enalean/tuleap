@@ -510,61 +510,62 @@ display:inline;
      <center>
          <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="backgroundTable">
              <tr>
-                 <td align="center" valign="top">
-                        <!-- // Begin Template Preheader \\ -->
-                        <table border="0" cellpadding="10" cellspacing="0" width="750" id="templatePreheader">
-                            <tr>
-                                <td valign="top" class="preheaderContent">
-                                
-                                 <!-- // Begin Module: Standard Preheader \ -->
-                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
-                                       <tr>
-                                          <td valign="bottom">
-                                             <div>
-                                                 <img src="<?= $img_path ?>/organization_logo_mail.png" alt="<?= $GLOBALS['sys_name'] ?>" />
-                                             </div>
-                                          </td>
-                                          <td valign="bottom" width="300">
-                                             <div style="float:right;">
-                                                 <?= $txt_display_not_correct ?><br /><a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= $txt_update_prefs ?></a>.
-                                             </div>
-                                          </td>
-                                        </tr>
-                                    </table>
-                                 <!-- // End Module: Standard Preheader \ -->
-                                </td>
-                            </tr>
-                        </table>
-                        <!-- // End Template Preheader \\ -->
+                 <td valign="top">
+
+
+                    <!-- // Begin Template Preheader \\ -->
+                    <table border="0" cellpadding="10" cellspacing="0" width="750" id="templatePreheader">
+                        <tr>
+                            <td valign="top" class="preheaderContent">
+
+                             <!-- // Begin Module: Standard Preheader \ -->
+                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                   <tr>
+                                      <td valign="bottom">
+                                         <div>
+                                             <img src="<?= $img_path ?>/organization_logo_mail.png" alt="<?= $GLOBALS['sys_name'] ?>" />
+                                         </div>
+                                      </td>
+                                      <td valign="bottom" width="300">
+                                         <div style="float:right;">
+                                             <?= $txt_display_not_correct ?><br /><a href="<?= get_server_url() ?>/account/preferences.php" target="_blank"><?= $txt_update_prefs ?></a>.
+                                         </div>
+                                      </td>
+                                    </tr>
+                                </table>
+                             <!-- // End Module: Standard Preheader \ -->
+                            </td>
+                        </tr>
+                    </table>
+                    <!-- // End Template Preheader \\ -->
+
+
                      <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateContainer">
-                         <tr>
-                             <td align="center" valign="top">
-                                    <!-- // Begin Template Body \\ -->
-                                 <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateBody">
-                                     <tr>
-                                            <td valign="top" class="bodyContent">
-                                
-                                                <!-- // Begin Module: Standard Content \\ -->
-                                                <table border="0" cellpadding="20" cellspacing="0" width="100%">
-                                                    <tr>
-                                                        <td valign="top">
-                                                            <?= !empty($breadcrumbs) ? '<div class="breadcrumbs">'. implode(' &raquo; ', $breadcrumbs) .'</div>' : ''; ?>
-                                                            <div>
-                                                            <?= $body ?>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </table>
-                                                <!-- // End Module: Standard Content \\ -->
-                                                
-                                            </td>
-                                        </tr>
-                                    </table>
-                                    <!-- // End Template Body \\ -->
-                                </td>
-                            </tr>
-                         <tr>
-                             <td align="center" valign="top">
+                        <tr>
+                            <td valign="top">
+                                <!-- // Begin Template Body \\ -->
+                                <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateBody">
+                                    <tr>
+                                        <td valign="top" class="bodyContent">
+
+                                            <!-- // Begin Module: Standard Content \\ -->
+                                            <table border="0" cellpadding="20" cellspacing="0" width="100%">
+                                                <tr>
+                                                    <td valign="top">
+                                                        <?= !empty($breadcrumbs) ? '<div class="breadcrumbs">'. implode(' &raquo; ', $breadcrumbs) .'</div>' : ''; ?>
+                                                        <?= $body ?>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!-- // End Module: Standard Content \\ -->
+                                        </td>
+                                    </tr>
+                                </table>
+                                <!-- // End Template Body \\ -->
+                            </td>
+                        </tr>
+                        <tr>
+                             <td valign="top">
                                     <!-- // Begin Template Footer \\ -->
                                  <table border="0" cellpadding="10" cellspacing="0" width="750" id="templateFooter">
                                      <tr>
