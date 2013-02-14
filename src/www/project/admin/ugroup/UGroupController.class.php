@@ -106,8 +106,17 @@ class Project_Admin_UGroup_UGroupController {
         }
     }
 
-    protected function redirect(){
-        return $GLOBALS['Response']->redirect($this->pane->getUrl());
+    /**
+     *
+     * @param array $additional_params must be http_build_query friendly :
+     * option => value
+     */
+    protected function redirect(array $additional_params = array()){
+        $url = $this->pane->getUrl();
+        if (! empty($additional_params)) {
+            $url = $url . '&' . http_build_query($additional_params);
+        }
+        return $GLOBALS['Response']->redirect($url);
     }
 }
 

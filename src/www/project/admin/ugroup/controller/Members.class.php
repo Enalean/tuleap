@@ -32,6 +32,7 @@ class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup
         $ugroupUpdateUsersAllowed = !$this->ugroup->isBound();
         $groupId  = $this->ugroup->getProjectId();
         $ugroupId = $this->ugroup->getId();
+        $url_additional_params = array();
         if ($ugroupUpdateUsersAllowed) {
             $validRequest = $this->validateRequest($groupId, $this->request);
             $user = $validRequest['user'];
@@ -42,8 +43,16 @@ class Project_Admin_UGroup_UGroupController_Members extends Project_Admin_UGroup
             if ($add_user_name) {
                 $this->addUserByName($groupId, $ugroupId, $add_user_name);
             }
+
+            $url_additional_params = array(
+                'offset'          => (int)$validRequest['offset'],
+                'number_per_page' => (int)$validRequest['number_per_page'],
+                'search'          => urlencode($validRequest['search']),
+                'begin'           => urlencode($validRequest['begin']),
+                'in_project'      => (int)$validRequest['in_project'],
+            );
         }
-        $this->redirect();
+        $this->redirect($url_additional_params);
     }
 
     /**
