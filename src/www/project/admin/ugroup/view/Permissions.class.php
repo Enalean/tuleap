@@ -42,12 +42,17 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
         $this->permissions_manager = PermissionsManager::instance();
         $dar = $this->permissions_manager->searchByUgroupId($this->ugroup->getId());
         if ($dar && !$dar->isError() && $dar->rowCount() >0) {
-            $content .= '<p><b>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'ug_perms').'</b><p>';
+            $content .= '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'ug_perms').'<p>';
 
             $title_arr = array();
             $title_arr[] = $GLOBALS['Language']->getText('project_admin_editugroup', 'permission');
             $title_arr[] = $GLOBALS['Language']->getText('project_admin_editugroup', 'resource_name');
-            $content .= html_build_list_table_top($title_arr, false, false, false);
+            $content .= '<table class="admin_permissions table table-bordered table-striped">';
+            $content .= '<thead><tr>';
+            $content .= '<th>'. $GLOBALS['Language']->getText('project_admin_editugroup', 'permission') .'</th>';
+            $content .= '<th>'. $GLOBALS['Language']->getText('project_admin_editugroup', 'resource_name') .'</th>';
+            $content .= '</tr></thead>';
+            $content .= '<tbody>';
             $row_num = 0;
 
             foreach ($dar as $row) {
@@ -60,7 +65,7 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
                 } else {
                     $objname = permission_get_object_name($row['permission_type'], $row['object_id']);
                 }
-                $content .= '<TR class="'. util_get_alt_row_color($row_num) .'">';
+                $content .= '<TR>';
                 $content .= '<TD>'.permission_get_name($row['permission_type']).'</TD>';
                 if ($row['permission_type'] == 'PACKAGE_READ') {
                     $content .= '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'package')
@@ -123,7 +128,7 @@ class Project_Admin_UGroup_View_Permissions extends Project_Admin_UGroup_View {
                 $content .= '</TR>';
                 $row_num++;
             }
-            $content .= '</table><p>';
+            $content .= '</tbody></table><p>';
         } else {
             $content .= '<p>'.$GLOBALS['Language']->getText('project_admin_editugroup', 'no_perms').'.</p>';
         }

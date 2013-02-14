@@ -146,7 +146,7 @@ project_admin_editugroup	users_per_page	users per page.
 project_admin_editugroup	add_users_to	Add users to
 project_admin_editugroup	group_empty	The group is empty
 project_admin_editugroup	permissions_title	Permissions
-project_admin_editugroup	settings_title	Settings
+project_admin_editugroup	settings_title	General settings
 project_admin_editugroup	binding_title	Groups binding
 #
 #-----------------------------------------------
