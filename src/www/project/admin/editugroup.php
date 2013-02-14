@@ -16,7 +16,7 @@ require_once 'ugroup/UGroupRouter.class.php';
 
 $request = HTTPRequest::instance();
 
-function display_name_and_desc_form($ugroup_name, $ugroup_description) {
+function get_name_and_desc_form_content($ugroup_name, $ugroup_description) {
     global $Language;
 
     return ' <table width="100%" border="0" cellpadding="5">
@@ -37,8 +37,6 @@ function display_name_and_desc_form($ugroup_name, $ugroup_description) {
 
 $group_id = $request->getValidated('group_id', 'GroupId', 0);
 session_require(array('group' => $group_id, 'admin_flags' => 'A'));
-$pm = ProjectManager::instance();
-$project=$pm->getProject($group_id);
 
 $vFunc = new Valid_WhiteList('func', array('create', 'do_create', 'edit'));
 $vFunc->required();
@@ -54,16 +52,14 @@ if ($request->isPost() && $func == 'do_create') {
 
 if ($func=='create') {
     project_admin_header(array('title' => $Language->getText('project_admin_editugroup', 'create_ug'), 'group' => $group_id, 'help' => 'UserGroups.html#UGroupCreation'));
-    //print '<P><h2>'.$Language->getText('project_admin_editugroup', 'create_ug_for', $project->getPublicName()).'</h2>';
     echo '<p>'.$Language->getText('project_admin_editugroup', 'fill_ug_desc').'</p>';
     echo '<form method="post" name="form_create" action="/project/admin/editugroup.php?group_id='.$group_id.'">
     <input type="hidden" name="func" value="do_create">
     <input type="hidden" name="group_id" value="'.$group_id.'">';
-    echo display_name_and_desc_form(isset($ugroup_name)?$ugroup_name:'', isset($ugroup_description)?$ugroup_description:'');
+    echo get_name_and_desc_form_content(isset($ugroup_name)?$ugroup_name:'', isset($ugroup_description)?$ugroup_description:'');
     echo '<tr> 
       <td width="21%"><b>'.$Language->getText('project_admin_editugroup', 'create_from').'</b>:</td>
       <td width="79%">';
-    //<textarea name="ugroup_description" rows="3" cols="50">'.$ugroup_description.'</textarea>
     $group_arr         = array();
     $group_arr[]       = $Language->getText('project_admin_editugroup', 'empty_g');
     $group_arr_value[] = 'cx_empty';
