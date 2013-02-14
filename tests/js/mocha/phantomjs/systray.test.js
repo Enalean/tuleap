@@ -47,6 +47,12 @@ describe('Le systray', function() {
 
             expect(body.down('.systray')).to.not.exist;
         });
+
+        it('clear the cache to be sure that no information is leaked', function () {
+            tuleap.systray.load(body, storage);
+
+            storage.save.should.have.been.calledWith('systray-links', []);
+        });
     });
 
     describe(', when in lab mode,', function() {
@@ -55,79 +61,98 @@ describe('Le systray', function() {
             body.addClassName('lab-mode');
         });
 
-        it('inject a systray in body', function () {
-            tuleap.systray.load(body, storage);
+        describe('load links', function () {
 
-            expect(body.down('.systray')).to.exist;
-        });
+            describe('retrieves links in the cache,', function () {
 
-        describe('is collapsable', function () {
-
-            beforeEach(function () {
-                storage.save.returns([]);
-            });
-
-            it('is expanded by default', function () {
-                tuleap.systray.load(body, storage);
-
-                body.down('.systray').className.should.not.include('.systray-collapsed');
-            });
-
-            it('is collapsed if the user wants it that way', function () {
-                storage.load.withArgs('systray-collapse').returns('collapse');
-
-                tuleap.systray.load(body, storage);
-
-                body.down('.systray').className.should.include('systray-collapsed');
-            });
-
-            it('is expanded if the user wants it that way', function () {
-                storage.load.withArgs('systray-collapse').returns('expanded');
-
-                tuleap.systray.load(body, storage);
-
-                body.down('.systray').className.should.not.include('systray-collapsed');
-            });
-        });
-
-        describe('has links', function () {
-
-            describe('cached.', function () {
-
-                it('retrieves links in the cache', function () {
-                    var some_links = [{ label: 'toto', href: '/path' }];
-                    storage.load.withArgs('systray-links').returns(some_links);
-
-                    tuleap.systray.load(body, storage);
-
-                    body.down('.systray_links a[href=/path]').text.should.contain('toto');
-                });
-
-                describe('if not found, retrieves links from the server,', function () {
+                describe('there is at least one link,', function () {
 
                     beforeEach(function () {
-                        server.respondWith(
-                            "GET", "/systray.json",
-                            [
-                                200,
-                                { "Content-type": "application/json" },
-                                '[{"label":"titi","href":"/path/to/titi"}]'
-                            ]
-                        );
-                        storage.load.withArgs('systray-links').returns(undefined);
+                        var some_links = [{ label: 'toto', href: '/path' }];
+                        storage.load.withArgs('systray-links').returns(some_links);
+                    });
+
+                    it('inject links in the systray', function () {
+                        tuleap.systray.load(body, storage);
+
+                        body.down('.systray_links a[href=/path]').text.should.contain('toto');
+                    });
+
+                    describe('inject a systray', function () {
+
+                        it('is in the body', function () {
+                            tuleap.systray.load(body, storage);
+
+                            expect(body.down('.systray')).to.exist;
+                        });
+
+                        describe('the systray is collapsable', function () {
+
+                            beforeEach(function () {
+                                storage.save.returns([]);
+                            });
+
+                            it('is expanded by default', function () {
+                                tuleap.systray.load(body, storage);
+
+                                body.down('.systray').className.should.not.include('.systray-collapsed');
+                            });
+
+                            it('is collapsed if the user wants it that way', function () {
+                                storage.load.withArgs('systray-collapse').returns('collapse');
+
+                                tuleap.systray.load(body, storage);
+
+                                body.down('.systray').className.should.include('systray-collapsed');
+                            });
+
+                            it('is expanded if the user wants it that way', function () {
+                                storage.load.withArgs('systray-collapse').returns('expanded');
+
+                                tuleap.systray.load(body, storage);
+
+                                body.down('.systray').className.should.not.include('systray-collapsed');
+                            });
+                        });
+                    });
+                });
+
+                describe('there is no link,', function () {
+
+                    it('does not inject a systray in the body', function () {
+                        storage.load.withArgs('systray-links').returns([]);
 
                         tuleap.systray.load(body, storage);
-                        server.respond();
-                    });
 
-                    it('injects links coming from the server', function () {
-                        body.down('.systray_links a[href=/path/to/titi]').text.should.contain('titi');
+                        expect(body.down('.systray')).to.not.exist;
                     });
+                });
+            });
 
-                    it.skip('store links in the cache to save the rainforest', function () {
-                        //skip it until we know what to do: https://groups.google.com/d/topic/sinonjs/vD1xUXTy9LM/discussion
-                        storage.save.should.have.been.calledWith('systray-links', [{"label":"titi","href":"/path/to/titi"}]);
-                    });
+            describe('if not found, retrieves links from the server,', function () {
+
+                beforeEach(function () {
+                    server.respondWith(
+                        "GET", "/systray.json",
+                        [
+                            200,
+                            { "Content-type": "application/json" },
+                            '[{"label":"titi","href":"/path/to/titi"}]'
+                        ]
+                    );
+                    storage.load.withArgs('systray-links').returns(undefined);
+
+                    tuleap.systray.load(body, storage);
+                    server.respond();
+                });
+
+                it('injects links coming from the server', function () {
+                    body.down('.systray_links a[href=/path/to/titi]').text.should.contain('titi');
+                });
+
+                it.skip('store links in the cache to save the rainforest', function () {
+                    //skip it until we know what to do: https://groups.google.com/d/topic/sinonjs/vD1xUXTy9LM/discussion
+                    storage.save.should.have.been.calledWith('systray-links', [{"label":"titi","href":"/path/to/titi"}]);
                 });
             });
         });
