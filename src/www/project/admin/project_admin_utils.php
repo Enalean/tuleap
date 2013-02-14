@@ -502,19 +502,4 @@ function export_grouphistory ($group_id, $event = null, $subEventsBox = null, $v
     }
     echo build_csv_header($col_list, array()).$eol;
 }
-
-function project_admin_display_bullet_user($user_id, $action, $url = null) {
-    if ($action == 'add') {
-        $icon       = '/ic/add.png';
-    } else {
-        $icon       = '/ic/cross.png';
-    }
-    if (!$url) {
-        $url = $_SERVER['REQUEST_URI'] .'&action=edit_ugroup_members&user['. $user_id .']='. $action;
-    }
-    $html = '<a href="'. $url .'">';
-    $html .= '<img alt="'. $action .'" src="'. util_get_dir_image_theme() . $icon .'" />';
-    $html .= '</a>';
-    return $html;
-}
 ?>
