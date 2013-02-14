@@ -90,36 +90,68 @@ class UGroupUserDao extends DataAccessObject {
      * @return Array
      */
     public function searchUsersToAdd($ugroupId, $filters) {
+        $ugroup_id              = $this->da->escapeInt($ugroupId);
+        $offset                 = $this->da->escapeInt($filters['offset']);
+        $number_per_page        = $this->da->escapeInt($filters['number_per_page']);
+        $order_by               = (user_get_preference("username_display") > 1 ? 'realname' : 'user_name');
+        $join_user_group        = $this->getJoinUserGroup($filters);
+        $and_username_filter    = $this->getUsernameFilter($filters);
+
         $sql = "SELECT SQL_CALC_FOUND_ROWS user.user_id, user_name, realname, email, IF(R.user_id = user.user_id, 1, 0) AS is_on
-                FROM user NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id=". $this->da->escapeInt($ugroupId) .") AS R
-                ";
-        if ($filters['in_project']) {
-            $sql .= " INNER JOIN user_group USING ( user_id ) ";
-        }
-        $sql .= "
-                WHERE status in ('A', 'R') ";
-        if ($filters['in_project']) {
-            $sql .= " AND user_group.group_id = ". $this->da->escapeInt($filters['in_project']) ." ";
-        }
-        if ($filters['search'] || $filters['begin']) {
-            $sql .= ' AND ( ';
-            if ($filters['search']) {
-                $sql .= " user.realname LIKE ". $this->da->quoteSmart("%".$filters['search']."%") ." OR user.user_name LIKE ". $this->da->quoteSmart("%".$filters['search']."%") ." OR user.email LIKE ". $this->da->quoteSmart("%".$filters['search']."%") ." ";
-                if ($filters['begin']) {
-                    $sql .= " OR ";
-                }
-            }
-            if ($filters['begin']) {
-                $sql .= " user.realname LIKE ". $this->da->quoteSmart($filters['begin']."%") ." OR user.user_name LIKE ". $this->da->quoteSmart($filters['begin']."%") ." OR user.email LIKE ". $this->da->quoteSmart($filters['begin']."%") ." ";
-            }
-            $sql .= " ) ";
-        }
-        $sql .= "ORDER BY ". (user_get_preference("username_display") > 1 ? 'realname' : 'user_name') ."
-                LIMIT ". $this->da->escapeInt($filters['offset']) .", ". $this->da->escapeInt($filters['number_per_page']);
+                FROM user
+                    NATURAL LEFT JOIN (SELECT user_id FROM ugroup_user WHERE ugroup_id = $ugroup_id ) AS R
+                    $join_user_group
+                WHERE status in ('A', 'R')
+                  $and_username_filter
+                ORDER BY $order_by
+                LIMIT $offset, $number_per_page";
+
         $res  = $this->retrieve($sql);
         $res2 = $this->retrieve('SELECT FOUND_ROWS() as nb');
         $numTotalRows = $res2->getRow();
+
         return array('result' => $res, 'num_total_rows' => $numTotalRows['nb']);
+    }
+
+    private function getJoinUserGroup($filters) {
+        $group_id = $this->da->escapeInt($filters['in_project']);
+        if ($group_id) {
+            return "INNER JOIN user_group ON (
+                user_group.user_id = user.user_id
+                AND user_group.group_id = $group_id
+            )";
+        }
+        return '';
+    }
+
+    private function getUsernameFilter($filters) {
+        $username_filters = array(
+            $this->getContainsFilter($filters),
+            $this->getBeginsWithFilter($filters)
+        );
+        $username_filters = array_filter($username_filters);
+        if ($username_filters) {
+            return 'AND ('. implode(' OR ', $username_filters) .')';
+        }
+        return '';
+    }
+
+    private function getContainsFilter($filters) {
+        if ($filters['search']) {
+            $contain = $this->da->quoteSmart("%".$filters['search']."%");
+            return "user.realname LIKE $contain
+                OR user.user_name LIKE $contain
+                OR user.email LIKE $contain";
+        }
+    }
+
+    private function getBeginsWithFilter($filters) {
+        if ($filters['search']) {
+            $begin = $this->da->quoteSmart($filters['begin']."%");
+            return "user.realname LIKE $begin
+                OR user.user_name LIKE $begin
+                OR user.email LIKE $begin";
+        }
     }
 
     /**
