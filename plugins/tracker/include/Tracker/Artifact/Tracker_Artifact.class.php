@@ -230,12 +230,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'html':
                 $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 if ($content) {
-                    $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
+                    $output .=
+                    '<table style="width:100%">
+                        <tr>
+                            <td colspan="3" align="left">
+                                <h2>'.
+                                    $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'
+                                </h2>
+                            </td>
+                        </tr>
+                    </table>';
                     $output .= $content;
                 }
                 $output .=
                 '<table style="width:100%">'.
-                    $this->fetchMailFollowUp($recipient, $format, $ignore_perms).
+                        $this->fetchMailFollowUp($recipient, $format, $ignore_perms).
                 '</table>';
                 break;
             default:
