@@ -39,7 +39,7 @@ class Project_Admin_UGroup_UGroupRouter {
         $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup);
         $pane            = $pane_management->getPaneById($current_pane);
         $controller      = null;
-        EventManager::instance()->processEvent('project_admin_ugroup_router', array('request' => $request, 'pane' => $pane, 'ugroup' => $ugroup));
+        EventManager::instance()->processEvent(Event::PROJECT_ADMIN_UGROUP_ROUTER, array('request' => $request, 'pane' => $pane, 'ugroup' => $ugroup));
         switch ($current_pane) {
             case Project_Admin_UGroup_View_Binding::IDENTIFIER:
                 $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);

@@ -391,6 +391,14 @@ class Event {
 
     /**
      * Create route to good controller in LDAP
+     *
+     * Parameters:
+     *    'ugroup'  => UGroup
+     *    'pane'    => PaneInfo
+     *    'request' => Request
+     *
+     * Expected results:
+     *    No expected results, listeners do smthg if needed and exit or do nothing
      */
     const PROJECT_ADMIN_UGROUP_ROUTER = 'project_admin_ugroup_router';
 }

@@ -965,11 +965,14 @@ class LdapPlugin extends Plugin {
         return $title;
     }
 
+    /**
+     * @see Event::PROJECT_ADMIN_UGROUP_ROUTER
+     */
     public function project_admin_ugroup_router($params) {
         include_once 'UGroup/Controller/Binding.class.php';
         if ($params['pane']->getIdentifier() == Project_Admin_UGroup_View_Binding::IDENTIFIER) {
             $action = $params['request']->get('action');
-            switch($action) {
+            switch ($action) {
                 case 'edit_directory_group':
                 case 'edit_directory':
                     $controller = new LDAP_Controller_Binding($params['request'], $params['ugroup'], $params['pane'], new LDAP_UserGroupManager($this->getLdap()), $this->getPluginPath());
