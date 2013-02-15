@@ -284,18 +284,18 @@ class Tracker_Artifact_Changeset_Comment {
                             $avatar.'
                         </td>
                         <td align="left" valign="top" colspan="2">
-                            <div style="-webkit-border-radius:20px;
-                                border-radius:20px;
-                                -moz-border-radius:20px;
-                                border-bottom-left-radius:20px;
+                            <div style="
+                                padding:15px;
+                                margin:10px;
+                                min-height:50px;
                                 border: 1px solid #f6f6f6;
                                 border-top: none;
-                                padding:15px;
-                                margin:5px;
-                                min-height:50px;
+                                -webkit-border-radius:20px;
+                                border-radius:20px;
+                                -moz-border-radius:20px;
                                 background-color:#F6F6F6;"
                             >
-                                <table style="width:100%">
+                                <table style="width:100%; background-color:#F6F6F6;">
                                     <tr>
                                         <td>
                                             <span> '.
@@ -303,14 +303,14 @@ class Tracker_Artifact_Changeset_Comment {
                                             </span>
                                         </td>
                                         <td align="right" valign="top">
-                                            <div class="tracker_artifact_followup_date">'.
+                                            <div style="text-align:right;font-size:0.95em;color:#666;">'.
                                                 format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).
                                                 $timezone.'
                                             </div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td colspan="2">'.
+                                        <td colspan="2" >'.
                                             $formatted_comment . ' ' .'
                                         </td>
                                     </tr>
