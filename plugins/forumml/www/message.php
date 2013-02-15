@@ -192,7 +192,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 			// Call to show_thread() function to display the archives			
 			if (isset($topic) && $topic != 0) {
 				// specific thread
-				plugin_forumml_show_thread($p, $list_id, $topic, $purgeCache);
+				plugin_forumml_show_thread($p, $list_id, $topic, $purgeCache, $user);
 			} else {
 				plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset);
 			}	
@@ -200,7 +200,6 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 			echo "<H2>".$GLOBALS["Language"]->getText('plugin_forumml','empty_archives')."</H2>";
 		}
 	} else {
-            
 		// search archives		
 		$pattern = "%".$request->get('search')."%";
 		$sql = sprintf('SELECT mh.id_message, mh.value'.
