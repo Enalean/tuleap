@@ -121,7 +121,7 @@ class LdapPlugin extends Plugin {
         $this->_addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
 
         $this->_addHook(Event::UGROUP_VIEW_SHOW_BINDING);
-        $this->_addHook('project_admin_ugroup_router');
+        $this->_addHook(Event::PROJECT_ADMIN_UGROUP_ROUTER);
     }
     
     /**
