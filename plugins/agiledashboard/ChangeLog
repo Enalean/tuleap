@@ -1,3 +1,6 @@
+Version 0.72 - Tuleap 5.11
+    * Fix integration of search in follow-up comments and cross tracker search
+
 Version 0.71 - Tuleap 5.11
     * Enhancement: first version of a systray
 

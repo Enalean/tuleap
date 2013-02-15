@@ -1,13 +1,13 @@
 Version 5.11 (Not Released Yet)
 
 	== Plugins ==
-	* tracker: 5.80
-	* agiledashboard: 0.71
+	* tracker: 5.81
+	* agiledashboard: 0.72
 	* cardwall: 0.9.16
 	* git: 2.7.26
 	* ldap: 3.24
 	* forumml: 2.6.8
-	* fulltextsearch: 0.14
+	* fulltextsearch: 0.15
 	* tests: 5.16
 
    == Enhancement ==
