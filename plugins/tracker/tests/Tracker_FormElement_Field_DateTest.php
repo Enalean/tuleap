@@ -396,7 +396,7 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
     function testFieldDateShouldSendEmptyMailValueWhenValueIsEmpty() {
         $artifact = new MockTracker_Artifact();
         $date = new Tracker_FormElement_Field_DateTestVersion();
-        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, null, null));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, null, null));
     }
     
     function testFieldDateShouldSendAMailWithAReadableDate() {
@@ -420,8 +420,8 @@ class Tracker_FormElement_Field_DateTest extends TuleapTestCase {
         $value = new MockTracker_Artifact_ChangesetValue_Date();
         $value->setReturnValue('getTimestamp', 0);
         
-        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, $value, 'text'));
-        $this->assertEqual('', $date->fetchMailArtifactValue($artifact, $value, 'html'));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $value, 'text'));
+        $this->assertEqual('-', $date->fetchMailArtifactValue($artifact, $value, 'html'));
     }
 }
 
