@@ -290,7 +290,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if($format == 'html'){
             $output .=
             '<tr>
-                <td colspan="3">
+                <td colspan="3" align="left">
                     <h2>'.
                         $GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'
                     </h2>

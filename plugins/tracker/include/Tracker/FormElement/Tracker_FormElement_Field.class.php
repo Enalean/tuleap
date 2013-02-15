@@ -370,11 +370,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         } else {
             $hp = Codendi_HTMLPurifier::instance();
             $output = '<tr>
-                <td valign="top" >
+                <td valign="top" align="left" >
                     <label id = "tracker_artifact_'. $this->id.'"
                         for = "tracker_artifact_'. $this->id.'"
                         title = "'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML).'"
-                        class = "tracker_formelement_label">
+                        class = "tracker_formelement_label"
+                    >
                         <b>'.
                             $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML).'
                         </b>
