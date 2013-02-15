@@ -45,19 +45,8 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
         );
         $linkAdd    = '<a href="'.$urlAdd.'">'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding_title').'</a><br/>';
 
-        $urlDirectoryGroup    = '/project/admin/editugroup.php?'.
-            http_build_query(array(
-                'group_id' => $this->ugroup->getProjectId(),
-                'ugroup_id' => $this->ugroup->getId(),
-                'func' => 'edit',
-                'pane' => 'binding',
-                'action' => 'edit_directory_group',
-            )
-        );
-        $linkDirectoryGroup    = '<a href="'.$urlDirectoryGroup.'">'. $this->getLDAPTitle() .'</a><br/>';
-
         $content = '<h2>'. $GLOBALS['Language']->getText('project_admin_editugroup','binding_title') .'</h2>';
-        $content .= $linkDirectoryGroup;
+        EventManager::instance()->processEvent(Event::UGROUP_VIEW_SHOW_BINDING, array('ugroup' => $this->ugroup, 'content' => &$content));
         $content .= $linkAdd;
 
         $content .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
@@ -95,27 +84,6 @@ class Project_Admin_UGroup_View_ShowBinding extends Project_Admin_UGroup_View_Bi
         }
         $clonesHTML .= '</table>';
         return $clonesHTML;
-    }
-
-    /**
-     * Create the good title link if we have already a ldap group linked or not
-     *
-     * @return String
-     */
-    private function getLDAPTitle() {
-        $hp = Codendi_HTMLPurifier::instance();
-
-        $ldapUserGroupManager = new LDAP_UserGroupManager($this->ldap_plugin->getLdap());
-        $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($this->ugroup->getId());
-
-        if($ldapGroup !== null) {
-            $grpName = $hp->purify($ldapGroup->getCommonName());
-            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $grpName);
-        } else {
-            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding');
-        }
-
-        return $title;
     }
 }
 

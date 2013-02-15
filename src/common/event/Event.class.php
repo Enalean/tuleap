@@ -383,5 +383,10 @@ class Event {
      *    'login' => String, ldap username
      */
     const GET_LDAP_LOGIN_NAME_FOR_USER = 'get_ldap_login_name_for_user';
+
+    /**
+     *
+     */
+    const UGROUP_VIEW_SHOW_BINDING = 'ugroup_view_show_binding';
 }
 ?>

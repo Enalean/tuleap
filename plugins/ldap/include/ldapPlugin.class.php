@@ -119,6 +119,8 @@ class LdapPlugin extends Plugin {
 
         // Ask for LDAP Username of a User
         $this->_addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
+
+        $this->_addHook(Event::UGROUP_VIEW_SHOW_BINDING);
     }
     
     /**
@@ -926,6 +928,40 @@ class LdapPlugin extends Plugin {
                 $params['login'] = strtolower($ldap_result->getLogin());
             }
         }
+    }
+
+    public function ugroup_view_show_binding($params) {
+        $urlDirectoryGroup    = '/project/admin/editugroup.php?'.
+            http_build_query(array(
+                'group_id' => $params['ugroup']->getProjectId(),
+                'ugroup_id' => $params['ugroup']->getId(),
+                'func' => 'edit',
+                'pane' => 'binding',
+                'action' => 'edit_directory_group',
+            )
+        );
+        $params['content'] .= '<a href="'.$urlDirectoryGroup.'">'. $this->getLDAPTitle($params['ugroup']) .'</a><br/>';
+    }
+
+     /**
+     * Create the good title link if we have already a ldap group linked or not
+     *
+     * @return String
+     */
+    private function getLDAPTitle(UGroup $ugroup) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        $ldapUserGroupManager = new LDAP_UserGroupManager($this->getLdap());
+        $ldapGroup = $ldapUserGroupManager->getLdapGroupByGroupId($ugroup->getId());
+
+        if($ldapGroup !== null) {
+            $grpName = $hp->purify($ldapGroup->getCommonName());
+            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_upd_binding', $grpName);
+        } else {
+            $title = $GLOBALS['Language']->getText('plugin_ldap', 'ugroup_list_add_set_binding');
+        }
+
+        return $title;
     }
 }
 
