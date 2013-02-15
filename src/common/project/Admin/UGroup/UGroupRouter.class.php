@@ -37,7 +37,9 @@ class Project_Admin_UGroup_UGroupRouter {
         $current_pane    = $this->getPane($request);
         $ugroup          = $this->getUGroup($request);
         $pane_management = new Project_Admin_UGroup_PaneManagement($ugroup);
-        $pane            = $pane_management->getPaneById(Project_Admin_UGroup_View_Settings::IDENTIFIER);
+        $pane            = $pane_management->getPaneById($current_pane);
+        $controller      = null;
+        EventManager::instance()->processEvent('project_admin_ugroup_router', array('request' => $request, 'pane' => $pane, 'ugroup' => $ugroup));
         switch ($current_pane) {
             case Project_Admin_UGroup_View_Binding::IDENTIFIER:
                 $pane = $pane_management->getPaneById(Project_Admin_UGroup_View_Binding::IDENTIFIER);
@@ -58,7 +60,7 @@ class Project_Admin_UGroup_UGroupRouter {
     }
 
     private function getBindingAction($request) {
-        $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding', 'edit_directory_group', 'edit_directory'));
+        $vAction = new Valid_WhiteList('action', array('add_binding', 'remove_binding', 'edit_binding'));
         $vAction->required();
         return $request->getValidated('action', $vAction, Project_Admin_UGroup_View_ShowBinding::IDENTIFIER);
     }

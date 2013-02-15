@@ -121,6 +121,7 @@ class LdapPlugin extends Plugin {
         $this->_addHook(Event::GET_LDAP_LOGIN_NAME_FOR_USER);
 
         $this->_addHook(Event::UGROUP_VIEW_SHOW_BINDING);
+        $this->_addHook('project_admin_ugroup_router');
     }
     
     /**
@@ -943,7 +944,7 @@ class LdapPlugin extends Plugin {
         $params['content'] .= '<a href="'.$urlDirectoryGroup.'">'. $this->getLDAPTitle($params['ugroup']) .'</a><br/>';
     }
 
-     /**
+    /**
      * Create the good title link if we have already a ldap group linked or not
      *
      * @return String
@@ -962,6 +963,20 @@ class LdapPlugin extends Plugin {
         }
 
         return $title;
+    }
+
+    public function project_admin_ugroup_router($params) {
+        include_once 'Binding.class.php';
+        if ($params['pane']->getIdentifier() == Project_Admin_UGroup_View_Binding::IDENTIFIER) {
+            $action = $params['request']->get('action');
+            switch($action) {
+                case 'edit_directory_group':
+                case 'edit_directory':
+                    $controller = new LDAP_Controller_Binding($params['request'], $params['ugroup'], $params['pane'], new LDAP_UserGroupManager($this->getLdap()), $this->getPluginPath());
+                    $controller->$action();
+                    exit;
+            }
+        }
     }
 }
 
