@@ -438,6 +438,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $output = '';
         switch($format) {
             case 'html':
+                if ( empty($value) ||  !$value->getListValues()) {
+                    return '-';
+                }
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
@@ -460,9 +463,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {        
         $html = '';
-        $selected_values = $value ? $value->getListValues() : array();
+        $selected_values = $value ? $value->getListValues() : array();        
         $tablo = array();
         foreach ($selected_values as $id => $value) {
             $tablo[] = $this->getBind()->formatArtifactValue($id);

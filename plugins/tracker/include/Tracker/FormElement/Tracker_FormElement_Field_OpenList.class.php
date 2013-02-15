@@ -178,8 +178,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || ! $value->getListValues()) {
+            return '-';
         }
         $output = '';
         switch ($format) {
