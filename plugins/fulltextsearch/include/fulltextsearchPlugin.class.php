@@ -204,9 +204,9 @@ class fulltextsearchPlugin extends Plugin {
      */
     public function tracker_report_followup_search($params) {
         if ($this->tracker_followup_check_preconditions($params['group_id'])) {
-            $filter = '';
-            $hp     = Codendi_HTMLPurifier::instance();
-            $filter = $hp->purify($params['request']->getValidated('search_followups', 'string', ''));
+            $request = new HTTPRequest();
+            $hp      = Codendi_HTMLPurifier::instance();
+            $filter  = $hp->purify($request->getValidated('search_followups', 'string', ''));
             $params['html'] .='<span class ="lab_features">';
             $params['html'] .= '<label title="'.$GLOBALS['Language']->getText('plugin_fulltextsearch', 'search_followup_comments').'" for="tracker_report_crit_followup_search">';
             $params['html'] .= $GLOBALS['Language']->getText('plugin_fulltextsearch', 'followups_search');
