@@ -260,35 +260,62 @@ class Tracker_Artifact_Changeset_Comment {
                    }
 
                    $formatted_comment =
-                       '<input type="hidden"
-                            id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
-                            name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
-                            value="'.$this->bodyFormat.'">
-                        <div class="tracker_artifact_followup_comment_body">'.
-                            $comment.'
+                       '<div>
+                            <input type="hidden"
+                                id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                                name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                                value="'.$this->bodyFormat.'"
+                            />
+                            <div style="border-color: #e8ebb5;
+                                -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+                                -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+                                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+                                margin: 1em 0;
+                                padding: 0.5em 1em;"
+                            >'.
+                                $comment.'
+                            </div>
                         </div>';
                    }
 
                 $html =
                     '<tr>
-                        <td align="left" rowspan="2" valign="top">'.
+                        <td align="left">'.
                             $avatar.'
                         </td>
-                        <td align="left" valign="top">
-                                <span>'.
-                                    $user_info.'
-                                </span>
-                        </td>
-                        <td align="right" valign="top">
-                            <div class="tracker_artifact_followup_date">'.
-                                format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).
-                                $timezone.'
+                        <td align="left" valign="top" colspan="2">
+                            <div style="-webkit-border-radius:20px;
+                                border-radius:20px;
+                                -moz-border-radius:20px;
+                                border-bottom-left-radius:20px;
+                                border: 1px solid #f6f6f6;
+                                border-top: none;
+                                padding:15px;
+                                margin:5px;
+                                min-height:50px;
+                                background-color:#F6F6F6;"
+                            >
+                                <table style="width:100%">
+                                    <tr>
+                                        <td>
+                                            <span> '.
+                                                $user_info.'
+                                            </span>
+                                        </td>
+                                        <td align="right" valign="top">
+                                            <div class="tracker_artifact_followup_date">'.
+                                                format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).
+                                                $timezone.'
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2">'.
+                                            $formatted_comment . ' ' .'
+                                        </td>
+                                    </tr>
+                                </table>
                             </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">'.
-                            $formatted_comment.'
                         </td>
                     </tr>';
                 
