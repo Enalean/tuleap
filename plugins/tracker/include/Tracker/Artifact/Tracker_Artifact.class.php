@@ -307,7 +307,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
             switch ($format) {
                 case 'html':
-                    $followup = $comment->fetchMailFollowUp($format);
+                    $ignoreEmptyBody = true;
+                    $followup = $comment->fetchMailFollowUp($format, $ignoreEmptyBody);
                     $output .=  $followup;
                     
                     break;

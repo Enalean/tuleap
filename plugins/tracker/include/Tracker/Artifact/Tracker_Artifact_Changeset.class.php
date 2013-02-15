@@ -705,7 +705,8 @@ class Tracker_Artifact_Changeset {
         $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
         // Display latest changes (diff)
         if ($comment = $this->getComment()) {
-            $followup = $comment->fetchMailFollowUp($format);
+            $ignoreEmptyBody = false;
+            $followup = $comment->fetchMailFollowUp($format, $ignoreEmptyBody);
         }
         
         $output = 
