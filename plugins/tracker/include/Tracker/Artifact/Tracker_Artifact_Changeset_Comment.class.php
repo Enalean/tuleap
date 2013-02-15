@@ -212,16 +212,20 @@ class Tracker_Artifact_Changeset_Comment {
      * Returns the HTML code of this comment
      *
      * @param String  $format          Format of the output
-     * @param Boolean $forMail         If the output is intended for mail notification then value should be true
      * @param Boolean $ignoreEmptyBody If true then display the user and the time even if the body is empty
      *
      * @return string the HTML code of this comment
      */
-    public function fetchMailFollowUp($format='html') {
-        $uh = UserHelper::instance();
-        $hp = Codendi_HTMLPurifier::instance();
+    public function fetchMailFollowUp($format = 'html', $ignoreEmptyBody = true) {
         switch ($format) {
             case 'html':
+                if ($ignoreEmptyBody && empty($this->body)) {
+                    return '';
+                }
+                
+                $uh = UserHelper::instance();
+                $hp = Codendi_HTMLPurifier::instance();
+
                 $user = UserManager::instance()->getUserById($this->submitted_by);
                 if ($user && !$user->isAnonymous()) {
                     $user_info =
