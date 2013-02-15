@@ -385,8 +385,13 @@ class Event {
     const GET_LDAP_LOGIN_NAME_FOR_USER = 'get_ldap_login_name_for_user';
 
     /**
-     *
+     * Create view for binding action related to LDAP
      */
     const UGROUP_VIEW_SHOW_BINDING = 'ugroup_view_show_binding';
+
+    /**
+     * Create route to good controller in LDAP
+     */
+    const PROJECT_ADMIN_UGROUP_ROUTER = 'project_admin_ugroup_router';
 }
 ?>

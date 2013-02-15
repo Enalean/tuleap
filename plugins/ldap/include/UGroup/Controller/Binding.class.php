@@ -19,8 +19,8 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once 'UGroupAction.class.php';
-require_once 'EditDirectoryGroup.class.php';
+require_once dirname(__FILE__).'/../View/UGroupAction.class.php';
+require_once dirname(__FILE__).'/../View/EditDirectoryGroup.class.php';
 
 class LDAP_Controller_Binding extends Project_Admin_UGroup_UGroupController {
 

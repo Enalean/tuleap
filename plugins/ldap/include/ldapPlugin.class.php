@@ -966,7 +966,7 @@ class LdapPlugin extends Plugin {
     }
 
     public function project_admin_ugroup_router($params) {
-        include_once 'Binding.class.php';
+        include_once 'UGroup/Controller/Binding.class.php';
         if ($params['pane']->getIdentifier() == Project_Admin_UGroup_View_Binding::IDENTIFIER) {
             $action = $params['request']->get('action');
             switch($action) {
