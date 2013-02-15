@@ -510,9 +510,7 @@ display:inline;
      <center>
          <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="backgroundTable">
              <tr>
-                 <td valign="top">
-
-
+                 <td align="center" valign="top">
                     <!-- // Begin Template Preheader \\ -->
                     <table border="0" cellpadding="10" cellspacing="0" width="750" id="templatePreheader">
                         <tr>
@@ -538,11 +536,9 @@ display:inline;
                         </tr>
                     </table>
                     <!-- // End Template Preheader \\ -->
-
-
                      <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateContainer">
                         <tr>
-                            <td valign="top">
+                             <td align="center" valign="top">
                                 <!-- // Begin Template Body \\ -->
                                 <table border="0" cellpadding="0" cellspacing="0" width="750" id="templateBody">
                                     <tr>
@@ -565,7 +561,7 @@ display:inline;
                             </td>
                         </tr>
                         <tr>
-                             <td valign="top">
+                             <td align="center" valign="top">
                                     <!-- // Begin Template Footer \\ -->
                                  <table border="0" cellpadding="10" cellspacing="0" width="750" id="templateFooter">
                                      <tr>
