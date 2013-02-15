@@ -975,7 +975,7 @@ class LdapPlugin extends Plugin {
             switch ($action) {
                 case 'edit_directory_group':
                 case 'edit_directory':
-                    $controller = new LDAP_Controller_Binding($params['request'], $params['ugroup'], $params['pane'], new LDAP_UserGroupManager($this->getLdap()), $this->getPluginPath());
+                    $controller = new LDAP_Ugroup_Controller_Binding($params['request'], $params['ugroup'], $params['pane'], new LDAP_UserGroupManager($this->getLdap()), $this->getPluginPath());
                     $controller->$action();
                     exit;
             }

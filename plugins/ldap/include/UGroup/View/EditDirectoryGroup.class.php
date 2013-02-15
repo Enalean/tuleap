@@ -19,7 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-class Project_Admin_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_View_Binding {
+class LDAP_UGroup_View_EditDirectoryGroup extends Project_Admin_UGroup_View_Binding {
 
     private $row;
     private $ldap_user_group_manager;

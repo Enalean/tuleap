@@ -22,7 +22,7 @@
 require_once dirname(__FILE__).'/../View/UGroupAction.class.php';
 require_once dirname(__FILE__).'/../View/EditDirectoryGroup.class.php';
 
-class LDAP_Controller_Binding extends Project_Admin_UGroup_UGroupController {
+class LDAP_Ugroup_Controller_Binding extends Project_Admin_UGroup_UGroupController {
 
     private $bindOption;
     private $synchro;
@@ -56,7 +56,7 @@ class LDAP_Controller_Binding extends Project_Admin_UGroup_UGroupController {
         }
 
         $this->setldapUserGroupManager($ugroupId);
-        $view = new Project_Admin_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $this->ldap_user_group_manager, $this->plugin_path, $this->bindOption,  $this->synchro);
+        $view = new LDAP_UGroup_View_EditDirectoryGroup($this->ugroup, $this->ugroup_binding, $ugroup_row, $this->ldap_user_group_manager, $this->plugin_path, $this->bindOption,  $this->synchro);
         $this->render($view);
     }
 
@@ -140,7 +140,7 @@ class LDAP_Controller_Binding extends Project_Admin_UGroup_UGroupController {
 
             } else {
                 if ($ldapUserGroupManager->getGroupDn()) {
-                    $view = new Project_Admin_UGroup_View_UGroupAction($this->ugroup, $this->ugroup_binding, $ldapUserGroupManager, $this->request, $this->bindOption, $this->synchro);
+                    $view = new LDAP_UGroup_View_UGroupAction($this->ugroup, $this->ugroup_binding, $ldapUserGroupManager, $this->request, $this->bindOption, $this->synchro);
                     $this->render($view);
                 } else {
                     $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'ldap_group_error', array($this->request->get('bind_with_group'))));
