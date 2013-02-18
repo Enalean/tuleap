@@ -732,23 +732,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
     
     /**
-     * Is the field used in another field?
-     *
-     * @return boolean returns true if the field is used in field named 'capacity', false otherwise
-     */
-    private function isUsedByAnotherField() {
-        if ($this->name === Tracker_FormElement_Field_Burndown::CAPACITY_FIELD_NAME) {
-            $burndown_fields = $this->getFormElementFactory()->getUsedBurndownFields($this->getTracker());
-            foreach ($burndown_fields as $burndown_field) {
-                if ($burndown_field->doesBurndownUseCapacityField()) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-    
-    /**
      * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
@@ -778,13 +761,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 ). ' ';
         }
 
-        if($this->isUsedByAnotherField()) {
-            $message .= $GLOBALS['Language']->getText(
-                'plugin_tracker_formelement_admin',
-                'field_used_by_another_field'
-                ). ' ';
-        }
-
         return $message;
     }
 
@@ -795,8 +771,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public function canBeRemovedFromUsage() {
         $is_used = $this->isUsedInSemantics() ||
             $this->isUsedInWorkflow() ||
-            $this->isUsedInFieldDependency() ||
-            $this->isUsedByAnotherField();
+            $this->isUsedInFieldDependency();
 
         if ($is_used === true) {
             return false;

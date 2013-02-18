@@ -64,12 +64,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
         return $GLOBALS['HTML']->getImagePath('ic/burndown--plus.png');
     }
 
-    public $default_properties = array(
-        'use_capacity' => array(
-            'value' => 0,
-            'type'  => 'checkbox',
-        )
-    );
     /**
      * Returns the previously injected factory (e.g. in tests), or a new
      * instance (e.g. in production).
@@ -160,7 +154,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
 
     public function getBurndownData(Tracker_Artifact $artifact, User $user, $start_date, $duration) {
         $capacity = null;
-        if ($this->doesBurndownUseCapacityField()) {
+        if ($this->doesCapacityFieldExist()) {
             $capacity = $this->getCapacity($artifact);
         }
         $field         = $this->getBurndownRemainingEffortField($artifact, $user);
@@ -205,17 +199,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
             return false;
         }
         return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function doesBurndownUseCapacityField() {
-        if(! $this->doesCapacityFieldExist()) {
-            return false;
-        }
-
-        return $this->getProperty('use_capacity');
     }
 
     /**
@@ -366,10 +349,6 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
     protected function validate(Tracker_Artifact $artifact, $value) {
         //No need to validate artifact id (read only for all)
         return true;
-    }
-
-    protected function getDao() {
-       return new Tracker_FormElement_Field_BurndownDao();
     }
 
     /**
