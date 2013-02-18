@@ -1,3 +1,6 @@
+Version 0.9.16 - Tuleap 5.11
+    * Delegate milestone building to each Pane
+
 Version 0.9.15 - Tuleap 5.11
     * Fix bug with multiple-assigned to on card editions
 

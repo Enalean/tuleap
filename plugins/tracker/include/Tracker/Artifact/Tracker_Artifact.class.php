@@ -230,12 +230,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'html':
                 $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 if ($content) {
-                    $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
+                    $output .=
+                    '<table style="width:100%">
+                        <tr>
+                            <td colspan="3" align="left">
+                                <h2>'.
+                                    $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'
+                                </h2>
+                            </td>
+                        </tr>
+                    </table>';
                     $output .= $content;
                 }
                 $output .=
                 '<table style="width:100%">'.
-                    $this->fetchMailFollowUp($recipient, $format, $ignore_perms).
+                        $this->fetchMailFollowUp($recipient, $format, $ignore_perms).
                 '</table>';
                 break;
             default:
@@ -259,8 +268,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchMailFormElements($recipient, $format, $ignore_perms=false) {
         $output = '<table width="100%">';
-        foreach ($this->getTracker()->getFormElements() as $formElement) {   
-            $formElement->prepareForDisplay();
+        $toplevel_form_elements = $this->getTracker()->getFormElements();
+        $this->prepareElementsForDisplay($toplevel_form_elements);
+        foreach ($toplevel_form_elements as $formElement) {
             $output .= $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
 
             if ($format == 'text' && $output) {
@@ -269,6 +279,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         $output .= '</table>';
         return $output;
+    }
+
+    /** @param Tracker_FormElement[] */
+    private function prepareElementsForDisplay($toplevel_form_elements) {
+        foreach ($toplevel_form_elements as $formElement) {
+            $formElement->prepareForDisplay();
+        }
     }
 
     /**
@@ -290,7 +307,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if($format == 'html'){
             $output .=
             '<tr>
-                <td colspan="3">
+                <td colspan="3" align="left">
                     <h2>'.
                         $GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'
                     </h2>
@@ -1367,7 +1384,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Tracker_FormElement_Field  $field     The field
      * @param Tracker_Artifact_Changeset $changeset The changeset. if null given take the last changeset of the artifact
      *
-     * @return Tracker_Artifact_ChangesetValue
+     * @return Tracker_Artifact_ChangesetValue | null
      */
     function getValue(Tracker_FormElement_Field $field, Tracker_Artifact_Changeset $changeset = null) {
         if (!$changeset) {

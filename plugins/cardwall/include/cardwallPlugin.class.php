@@ -234,7 +234,7 @@ class cardwallPlugin extends Plugin {
             $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
             if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
                 $pane_info->setActive(true);
-                $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
+                $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
             }
             $params['panes'][] = $pane_info;
         }
@@ -242,10 +242,10 @@ class cardwallPlugin extends Plugin {
 
     public function agiledashboard_event_index_page($params) {
         $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
-        $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
+        $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
     }
 
-    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, User $user) {
+    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, User $user, Planning_MilestoneFactory $milestone_factory) {
         $tracker = $milestone->getArtifact()->getTracker();
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);
@@ -254,7 +254,8 @@ class cardwallPlugin extends Plugin {
                 $milestone,
                 $this->getPluginInfo()->getPropVal('display_qr_code'),
                 $config,
-                $user
+                $user,
+                $milestone_factory
             );
         }
         return null;

@@ -20,6 +20,11 @@
 
 class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPresenter {
 
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    private $milestone_factory;
+
     /** @var bool */
     private $is_latest = false;
 
@@ -35,8 +40,9 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var array of AgileDashboard_PaneInfo */
     private $pane_info_list;
 
-    public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, User $user, $theme_path) {
+    public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, Planning_MilestoneFactory $milestone_factory, User $user, $theme_path) {
         parent::__construct($milestone);
+        $this->milestone_factory = $milestone_factory;
         $this->short_access = $short_access;
         $this->user         = $user;
         $this->theme_path   = $theme_path;
@@ -53,11 +59,12 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
                 array(
-                    'milestone'   => $this->milestone,
-                    'user'        => $this->user,
-                    'request'     => HTTPRequest::instance(),
-                    'panes'       => &$this->pane_info_list,
-                    'active_pane' => &$active_pane,
+                    'milestone'         => $this->milestone,
+                    'user'              => $this->user,
+                    'request'           => HTTPRequest::instance(),
+                    'panes'             => &$this->pane_info_list,
+                    'active_pane'       => &$active_pane,
+                    'milestone_factory' => $this->milestone_factory,
                 )
             );
         }
@@ -84,6 +91,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
                 'milestone'   => $this->milestone,
                 'user'        => $this->user,
                 'pane'        => &$pane,
+                'milestone_factory' => $this->milestone_factory,
             )
         );
         if ($pane) {

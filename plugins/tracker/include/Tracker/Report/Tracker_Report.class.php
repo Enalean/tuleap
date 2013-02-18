@@ -50,6 +50,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     
     public $renderers;
     public $criteria;
+
     /**
      * Constructor
      *
@@ -76,7 +77,18 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $this->updated_by          = $updated_by;
         $this->updated_at          = $updated_at;
     }
-    
+
+    public function setProjectId($id) {
+        $this->group_id = $id;
+    }
+
+    protected function getProjectId() {
+        if (!$this->group_id) {
+            $this->group_id = $this->tracker->getGroupId();
+        }
+        return $this->group_id;
+    }
+
     public function registerInSession() {
         $this->report_session = new Tracker_Report_Session($this->id);
     }
@@ -486,8 +498,9 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, Codendi_Request $request, User $current_user = null) {
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null) {
         $hp = Codendi_HTMLPurifier::instance();
+
         $html = '';
         
         $html .= '<div class="tracker_report_query">';
@@ -511,7 +524,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         }
 
         $followupSearchForm = '';
-        $params = array('html' => &$followupSearchForm, 'request' => $request, 'group_id' => $this->tracker->getGroupId());
+        $params = array('html' => &$followupSearchForm, 'group_id' => $this->getProjectId());
         EventManager::instance()->processEvent('tracker_report_followup_search', $params);
         if (!empty($followupSearchForm)) {
             $criteria_fetched[] = '<li id="tracker_report_crit_followup_search">' . $followupSearchForm. '</li>';
@@ -595,7 +608,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                     }
                 }
             }
-            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $request, $current_user);
+            $html .= $this->fetchDisplayQuery($registered_criteria, $report_can_be_modified, $current_user);
             
             //Display Renderers
             $html .= '<div>';
@@ -784,7 +797,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
                 //Warning about Full text in Tracker Report...
                 $fts_warning = '';
-                $params = array('html' => &$fts_warning, 'request' => $request, 'group_id' => $this->tracker->getGroupId());
+                $params = array('html' => &$fts_warning, 'request' => $request, 'group_id' => $this->getProjectId());
                 EventManager::instance()->processEvent('tracker_report_followup_warning', $params);
                 $html .= $fts_warning;
 
@@ -811,7 +824,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
     private function joinResults($request) {
         $result          = array();
         $searchPerformed = false;
-        $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed, 'group_id' => $this->tracker->getGroupId());
+        $params          = array('request' => $request, 'result' => &$result, 'search_performed' => &$searchPerformed, 'group_id' => $this->getProjectId());
         EventManager::instance()->processEvent('tracker_report_followup_search_process', $params);
         $matchingIds = $this->getLastChangesetIdByArtifactId($request, false);
         if ($searchPerformed && is_array($params['result']) && $params['search_performed']) {

@@ -112,6 +112,37 @@ class Tracker_Chart_Data_BurndownTest extends TuleapTestCase {
 
         $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
     }
+
+    public function testBurndownWillUseCapacityIfSet() {
+        $capacity = 100;
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+
+        $this->assertEqual($burndown_data->getIdealEffort(), array(100, 80, 60, 40, 20, 0));
+    }
+
+    public function testBurndownWillGivePriorityToCapacity() {
+        $capacity = 100;
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data->pushRemainingEffort(5);
+
+        $this->assertEqual($burndown_data->getIdealEffort(), array(100, 80, 60, 40, 20, 0));
+    }
+
+    public function testBurndownWillIgnoreNullCapacity() {
+        $capacity = null;
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data->pushRemainingEffort(5);
+
+        $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
+    }
+
+    public function testBurndownWillIgnoreZeroCapacity() {
+        $capacity = 0;
+        $burndown_data = new Tracker_Chart_Data_Burndown($this->time_period, $capacity);
+        $burndown_data->pushRemainingEffort(5);
+
+        $this->assertEqual($burndown_data->getIdealEffort(), array(5, 4, 3, 2, 1, 0));
+    }
 }
 
 class Tracker_Chart_Data_EmptyBurndownTest extends TuleapTestCase {
