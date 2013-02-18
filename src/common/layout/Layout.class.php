@@ -874,6 +874,12 @@ class Layout extends Response {
         return UserManager::instance()->getCurrentUser();
     }
 
+    public function addUserAutocompleteOn($element_id, $multiple=false) {
+        $jsbool = $multiple ? "true" : "false";
+        $js = "new UserAutoCompleter('".$element_id."', '".util_get_dir_image_theme()."', ".$jsbool.");";
+        $this->includeFooterJavascriptSnippet($js);
+    }
+
     function includeCalendarScripts() {
         $this->includeJavascriptSnippet("var useLanguage = '". substr($this->getUser()->getLocale(), 0, 2) ."';");
         $this->includeJavascriptFile("/scripts/datepicker/datepicker.js");
