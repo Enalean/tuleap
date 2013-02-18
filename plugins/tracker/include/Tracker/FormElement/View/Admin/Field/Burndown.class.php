@@ -25,46 +25,12 @@ class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_
         
         //required
         $html .= $this->fetchRequired();
-        
-        //use capacity field value
-        $html .= $this->fetchUseCapacity();
-        
+
         return $html;
     }
     
     protected function fetchRequired() {
         return '';
-    }    
-    
-    /**
-     * Fetch the "required" part of field admin
-     *
-     * @return string the HTML for the part of form for required checkbox
-     */
-    protected function fetchUseCapacity() {
-        $key = 'use_capacity';
-        $disabled = 'disabled="disabled"';
-        if ($this->formElement->doesCapacityFieldExist()) {
-            $disabled = '';
-        }
-        $checked = '';
-        if ($this->formElement->doesBurndownUseCapacityField()) {
-            $checked = 'checked="checked"';
-        }
-        $html = '';
-        $html .= '<p>';
-        $html .= '<input type="hidden" name="formElement_data[specific_properties]['. $key .']"  value="0" />';
-        $html .= '<input 
-            type="checkbox"
-            name="formElement_data[specific_properties]['. $key .']"
-            id="formElement_properties_'. $key .'"
-            value="1" '. 
-            $disabled .
-            $checked .
-            ' />';
-        $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
-        $html .= '</p>';
-        return $html;
     }
 }
 
