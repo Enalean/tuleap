@@ -189,12 +189,6 @@ CREATE TABLE tracker_field_computed (
     target_field_name VARCHAR(255) NULL
 ) ENGINE=InnoDB;
 
-DROP TABLE IF EXISTS tracker_field_burndown;
-CREATE TABLE tracker_field_burndown (
-    field_id INT(11) NOT NULL PRIMARY KEY,
-    use_capacity tinyint(1) NOT NULL
-) ENGINE=InnoDB;
-
 DROP TABLE IF EXISTS tracker_field_openlist_value;
 CREATE TABLE tracker_field_openlist_value(
     id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
