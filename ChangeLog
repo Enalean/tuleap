@@ -18,6 +18,7 @@ Version 5.11 (Not Released Yet)
   == Bug Fix ==
     * Add missing php53-process dependency for posix functions
 	* Fix sla #813: Project administration page is distorded on IE when the custom notification message is long
+	* Fix bug #2317: Fatal error on the AccessLogs
 
 Version 5.9.1 (Thursday, January 24rd 2013)
 
