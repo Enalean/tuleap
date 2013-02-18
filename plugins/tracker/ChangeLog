@@ -1,3 +1,6 @@
+Version 5.83 - Tuleap 5.11
+    * Improve user experience with user group management (contrib STMicroelectronics)
+
 Version 5.82 - Tuleap 5.11
     * Fix missing closing tag that broke layout
 
