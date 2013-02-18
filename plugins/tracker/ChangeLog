@@ -1,3 +1,6 @@
+Version 5.85 - Tuleap 5.11
+    * Burndown field makes always use of capacity field when it exists
+
 Version 5.84 - Tuleap 5.11
     * Fix art #2513: PHP Fatal error: Class 'TreeNode' not found
 
