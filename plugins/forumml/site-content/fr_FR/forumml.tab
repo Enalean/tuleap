@@ -68,6 +68,7 @@ plugin_forumml	author	Auteur
 plugin_forumml	empty_archives	Archives vides
 plugin_forumml	search_result	Résultat de recherche pour '$1'
 plugin_forumml	found	Fil(s) trouvés
+plugin_forumml	not_logged_in	<strong><span class="highlight">Vous n'êtes pas connecté<br /> <a href="$1">Connectez vous afin de répondre à la liste</a>
 #
 #-----------------------------------------------
 # Script:plugins/forumml/www/upload.php

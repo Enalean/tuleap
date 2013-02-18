@@ -1,3 +1,9 @@
+Version 5.81 - Tuleap 5.11
+    * Fix integration of search in follow-up comments and cross tracker search
+
+Version 5.80 - Tuleap 5.11
+    * Enhancement: capacity field can be used to force the start of the burndown ideal line
+
 Version 5.79 - Tuleap 5.11
     * Allow to search in tracker follow-up comments via Full Text Search Engine. This feature is in Beta and available only through Lab mode. (Contrib STMicroeletronics).
 

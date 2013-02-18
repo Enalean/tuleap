@@ -83,19 +83,23 @@
             <div class="control-group">
                 <label class="control-label">{{getDescriptionContainerProjectPrivacy}}</label>
                 <div class="controls">
+                    <label>
                     <input type="radio"
                            name="{{is_public_label}}"
                            value="1"
                            {{#isPublic}}checked="checked"{{/isPublic}}
                         />
                     {{getDescriptionContainerPublicLabel}}
+                    </label>
                     <br>
+                    <label>
                     <input type="radio"
                            name="{{is_public_label}}"
                            value="0"
                            {{^isPublic}}checked="checked"{{/isPublic}}
                         />
                     {{getDescriptionContainerPrivateLabel}}
+                    </label>
                 </div>
             </div><div class="control-group">
                 <label class="control-label">{{getDescriptionContainerProjectLicense}}</label>

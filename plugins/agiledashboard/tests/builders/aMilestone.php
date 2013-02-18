@@ -84,16 +84,10 @@ class Test_Planning_MilestoneBuilder {
         return $this;
     }
     
-    public function withSubMilestones(array $sub_milestones) {
-        $this->sub_milestones = $sub_milestones;
-        return $this;
-    }
-    
     public function build() {
         $milestone = new Planning_ArtifactMilestone($this->project,
                                             $this->planning,
                                             $this->artifact);
-        $milestone->addSubMilestones($this->sub_milestones);
         return $milestone;
     }
 }

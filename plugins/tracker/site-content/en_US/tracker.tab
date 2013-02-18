@@ -720,6 +720,7 @@ plugin_tracker_common_field	val_exist	This value id already exists.
 plugin_tracker_common_field	val_id_requ	Value id and value name are required.
 plugin_tracker_common_field	required	Required
 plugin_tracker_common_field	notifications	Send notifications to selected people
+plugin_tracker_common_field	use_capacity	Use "capacity" field for ideal initial effort
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldFactory.class.php
@@ -1090,7 +1091,10 @@ plugin_tracker_formelement_admin	switch_msb	Switch to Multi Select Box
 plugin_tracker_formelement_admin	switch_sb	Switch to Select Box
 plugin_tracker_formelement_admin	switch_cb	Switch to CheckBox
 plugin_tracker_formelement_admin	switch_type_confirm	Are you sure you want to change the type of thie field?
-plugin_tracker_formelement_admin	delete_field_impossible	Impossible to delete this field (used in semantics, workflow or field dependency)
+plugin_tracker_formelement_admin	field_used_in_semantics	Impossible to delete this field (used in semantics)
+plugin_tracker_formelement_admin	field_used_in_workflow	Impossible to delete this field (used in workflow)
+plugin_tracker_formelement_admin	field_used_in_field_dependencies	Impossible to delete this field (field dependencies)
+plugin_tracker_formelement_admin	field_used_by_another_field	Impossible to delete this field (used by another field)
 plugin_tracker_formelement_admin	hide_value_impossible	You can't hide this value since it is used in status semantic, in workflow or in  field dependency
 plugin_tracker_formelement_admin	hide_value	Show/hide this value
 plugin_tracker_formelement_admin	checkbox	Checkbox
@@ -1108,6 +1112,7 @@ plugin_tracker_formelement_property	cols	Columns
 plugin_tracker_formelement_property	static_value	Static value
 plugin_tracker_formelement_property	default_value_today	Today
 plugin_tracker_formelement_property	target_field_name	Target field
+plugin_tracker_formelement_property	use_capacity	Use "capacity" field for ideal initial effort
 
 plugin_tracker_formelement_exception	wrong_field_id	There is no field with ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permission Denied

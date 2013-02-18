@@ -606,18 +606,19 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
-
+        
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
         $html .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        if ($this->canBeUnused()) {
+        if ($this->canBeRemovedFromUsage()) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $tracker->id,
                 'func'     => 'admin-formElement-remove',
                 'formElement'    => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
-            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field_impossible') .'">';
+            $cannot_remove_message = $this->getCannotRemoveMessage();
+            $html .= '<span style="color:gray;" title="'. $cannot_remove_message .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
@@ -739,17 +740,79 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance());
         return $rm->isUsedInFieldDependency($this);
     }
-
+    
     /**
-     * Is the field can be set as unused?
-     * You can't set a field unused if it is used in the tracker
+     * Is the field used in another field?
+     *
+     * @return boolean returns true if the field is used in field named 'capacity', false otherwise
+     */
+    private function isUsedByAnotherField() {
+        if ($this->name === Tracker_FormElement_Field_Burndown::CAPACITY_FIELD_NAME) {
+            $burndown_fields = $this->getFormElementFactory()->getUsedBurndownFields($this->getTracker());
+            foreach ($burndown_fields as $burndown_field) {
+                if ($burndown_field->doesBurndownUseCapacityField()) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    
+    /**
+     * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return boolean returns true if the field can be unused, false otherwise
+     * @return string returns null if the field can be unused, a message otherwise
      */
-    public function canBeUnused() {
-        // a field deletable if it not used in semantics nor in workflow
-        return  ! ($this->isUsedInSemantics() || $this->isUsedInWorkflow() || $this->isUsedInFieldDependency());
+    public function getCannotRemoveMessage() {
+        $message = '';
+
+        if($this->isUsedInSemantics()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'field_used_in_semantics'
+                ). ' ';
+        }
+
+        if($this->isUsedInWorkflow()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'field_used_in_workflow'
+                ). ' ';
+        }
+
+        if($this->isUsedInFieldDependency()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'field_used_in_field_dependencies'
+                ). ' ';
+        }
+
+        if($this->isUsedByAnotherField()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'field_used_by_another_field'
+                ). ' ';
+        }
+
+        return $message;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function canBeRemovedFromUsage() {
+        $is_used = $this->isUsedInSemantics() ||
+            $this->isUsedInWorkflow() ||
+            $this->isUsedInFieldDependency() ||
+            $this->isUsedByAnotherField();
+
+        if ($is_used === true) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
