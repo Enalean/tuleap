@@ -1,3 +1,6 @@
+Version 5.0.6 - Tuleap 5.11
+    * This fix art #2192 - Cannot sort the Gantt renderer
+
 Version 5.0.5 - Tuleap 5.7
     * Convert tracker v3 structure to a tracker v5
 
