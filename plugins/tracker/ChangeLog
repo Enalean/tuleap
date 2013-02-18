@@ -1,3 +1,6 @@
+Version 5.82 - Tuleap 5.11
+    * Fix missing closing tag that broke layout
+
 Version 5.81 - Tuleap 5.11
     * Fix integration of search in follow-up comments and cross tracker search
 
