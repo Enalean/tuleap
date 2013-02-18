@@ -534,6 +534,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $html .= '<div align="center">';
         $html .= '<input type="submit" name="tracker_query_submit" value="' . $GLOBALS['Language']->getText('global', 'btn_submit') . '" /></div>';
         $html .= '</form>';
+        $html .= '</div>';
         return $html;
     }
 

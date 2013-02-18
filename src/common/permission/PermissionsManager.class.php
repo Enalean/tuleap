@@ -336,5 +336,15 @@ class PermissionsManager {
         return $this->_permission_dao->clearPermission($permissionType, $objectId);
     }
 
+    /**
+    * Searches Permissions by UgroupId
+    *
+    * @param Integer $ugroupId Id of the user group
+    *
+    * @return DataAccessResult
+    */
+    public function searchByUgroupId($ugroupId) {
+        return $this->_permission_dao->searchByUgroupId($ugroupId);
+    }
 }
 ?>

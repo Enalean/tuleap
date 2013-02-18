@@ -1,7 +1,10 @@
 <?php
-
-/**
- * Copyright (c) Enalean, 2012. All Rights Reserved.
+/*
+ * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -19,22 +22,26 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'common/TreeNode/TreeNode.class.php';
+abstract class Project_Admin_UGroup_View {
 
-/**
- * A TreeNode that holds an Tracker_Artifact
- */
-class ArtifactNode extends TreeNode {
-    
-    public function __construct(Tracker_Artifact $artifact, array $data = null) {
-        parent::__construct($data, $artifact->getId());
-        $this->setObject($artifact);
-    }
-    
-    public function getArtifact() {
-        return $this->getObject();
+    /**
+     * @var UGroup
+     */
+    protected $ugroup;
+
+    public function __construct(UGroup $ugroup) {
+        $this->ugroup = $ugroup;
     }
 
+    /**
+     * @return string eg: 'perms'
+     */
+    public abstract function getIdentifier();
+
+    /**
+     * @return string eg: '<form>...</form>'
+     */
+    public abstract function getContent();
 }
 
 ?>

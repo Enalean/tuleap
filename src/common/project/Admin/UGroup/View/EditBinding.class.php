@@ -1,6 +1,10 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics, 2012. All Rights Reserved.
+ * Copyright Enalean (c) 2011, 2012, 2013. All rights reserved.
+ *
+ * Tuleap and Enalean names and logos are registrated trademarks owned by
+ * Enalean SAS. All other trademarks or names are properties of their respective
+ * owners.
  *
  * This file is a part of Tuleap.
  *
@@ -18,76 +22,43 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once('common/project/UGroupManager.class.php');
-require_once('common/project/UGroupBinding.class.php');
+class Project_Admin_UGroup_View_EditBinding extends Project_Admin_UGroup_View_Binding {
 
-/**
- * UGroup binding viewer
- */
-class UGroupBindingViewer {
-
-    /**
-     * @var UGroupBinding
-     */
-    private $ugroupBinding;
-
-    /**
-     * @var ProjectManager
-     */
-    private $projectManager;
-
-    /**
-     * Constructor of the class
-     *
-     * @param UGroupBinding  $ugroupBinding  Ugroup binding instance
-     * @param ProjectManager $projectManager ProjectManager instance
-     *
-     * @return Void
-     */
-    public function __construct(UGroupBinding $ugroupBinding, ProjectManager $projectManager) {
-        $this->ugroupBinding  = $ugroupBinding;
-        $this->projectManager = $projectManager;
+    public function __construct(UGroup $ugroup, UGroupBinding $ugroup_binding, $source_project_id) {
+        parent::__construct($ugroup, $ugroup_binding);
+        $this->source_project_id = $source_project_id;
     }
 
-    /**
-     * The form that will be displayed to add/edit user group binding
-     *
-     * @param Integer $groupId         Id of the current project
-     * @param Integer $ugroupId        Id of the user group
-     * @param Integer $sourceProjectId Id of the project from which the source ugroup may be taken
-     *
-     * @return String
-     */
-    public function getHTMLContent($groupId, $ugroupId, $sourceProjectId = null) {
+    public function getContent() {
         $currentProject = null;
         $currentSource  = null;
-        $dar = $this->ugroupBinding->getUGroupManager()->getUgroupBindingSource($ugroupId);
+        $dar = $this->ugroup_binding->getUGroupManager()->getUgroupBindingSource($this->ugroup->getId());
         if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
             $row            = $dar->getRow();
-            $currentSource  = $this->ugroupBinding->getUGroupManager()->getById($row['source_id']);
-            $currentProject = $this->projectManager->getProject($row['group_id']);
+            $currentSource  = $this->ugroup_binding->getUGroupManager()->getById($row['source_id']);
+            $currentProject = $this->project_manager->getProject($row['group_id']);
             if ($currentProject && $currentProject->userIsAdmin()) {
-                if (!$sourceProjectId) {
-                    $sourceProjectId = $currentProject->getID();
+                if (!$this->source_project_id) {
+                    $this->source_project_id = $currentProject->getID();
                 }
             }
         }
-        $clones = $this->ugroupBinding->getUGroupsByBindingSource($ugroupId);
+
         $html = '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'current_binding').'</h3>';
         $html .= $this->getCurrentBindingHTML($currentProject, $currentSource);
-        $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'binding_sources').'</h3>';
-        $html .= $this->getClonesHTML($clones);
+
         $html .= '<h3>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'</h3>';
         $html .= '<table>';
-        $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_project').'</td><td><form action="" method="post">'.$this->getProjectsSelect($groupId, $sourceProjectId).'</td>';
+        $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_project').'</td><td><form action="" method="post">'
+            .$this->getProjectsSelect($this->ugroup->getProjectId(), $this->source_project_id).'</td>';
         $html .= '<td><noscript><input type="submit" value="Select Project"/></noscript></form></td></tr>';
 
-        $sourceProject = $this->projectManager->getProject($sourceProjectId);
-        if ($sourceProjectId && $sourceProject->userIsAdmin()) {
+        $sourceProject = $this->project_manager->getProject($this->source_project_id);
+        if ($this->source_project_id && $sourceProject->userIsAdmin()) {
             $html .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'source_ugroup').'</td>';
             $html .= '<td><form action="" method="post">';
-            $html .= '<input type="hidden" name="source_project" value="'.$sourceProjectId.'" />';
-            $html .= '<input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($sourceProjectId, $currentSource).'</td>';
+            $html .= '<input type="hidden" name="source_project" value="'.$this->source_project_id.'" />';
+            $html .= '<input type="hidden" name="action" value="add_binding" />'.$this->getUgroupSelect($this->source_project_id, $currentSource).'</td>';
             $html .= '<td><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'edit_binding').'"/></form></td></tr>';
         }
         $html .= '</table>';
@@ -106,44 +77,21 @@ class UGroupBindingViewer {
         if ($currentSource) {
             $currentBindHTML = '';
             if ($currentSource && $currentProject->userIsAdmin()) {
-                $currentBindHTML .= $GLOBALS['Language']->getText('project_ugroup_binding', 'current_binded', array('<a href="/project/admin/editugroup.php?group_id='.$currentProject->getID().'&ugroup_id='.$currentSource->getId().'&func=edit" ><b>'.$currentSource->getName().'</b></a>', '<a href="/projects/'.$currentProject->getUnixName().'" ><b>'.$currentProject->getPublicName().'</b></a>'));
+                $currentBindHTML .= $GLOBALS['Language']->getText(
+                    'project_ugroup_binding', 'current_binded',
+                    array(
+                        '<a href="/project/admin/editugroup.php?group_id='.$currentProject->getID().'&ugroup_id='
+                            .$currentSource->getId().'&func=edit" ><b>'.$currentSource->getName().'</b></a>',
+                        '<a href="/projects/'.$currentProject->getUnixName().'" ><b>'.$currentProject->getPublicName().'</b></a>'
+                    )
+                );
             }
-            $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="'.$GLOBALS['Language']->getText('project_ugroup_binding', 'remove_binding').'"/></form>';
+            $currentBindHTML .= '<form action="" method="post"><input type="hidden" name="action" value="remove_binding" /><input type="submit" value="'
+                .$GLOBALS['Language']->getText('project_ugroup_binding', 'remove_binding').'"/></form>';
         } else {
             $currentBindHTML = $GLOBALS['Language']->getText('project_ugroup_binding', 'no_binding');
         }
         return $currentBindHTML;
-    }
-
-    /**
-     * Get the HTML output for ugroups bound to the current one
-     *
-     * @param Array $clones List of ugroups bound to this one
-     *
-     * @return String
-     */
-    private function getClonesHTML($clones) {
-        $clonesHTML = '<table>';
-        if (!empty($clones)) {
-            $clonesHTML .= html_build_list_table_top(array($GLOBALS['Language']->getText('project_reference', 'ref_scope_P'), $GLOBALS['Language']->getText('project_ugroup_binding', 'ugroup')), false, false, false);
-            $count      = 0;
-            $i          = 0;
-            foreach ($clones as $cloneId => $clone) {
-                $project = $this->projectManager->getProject($clone['group_id']);
-                if ($project->userIsAdmin()) {
-                    $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'"><td><a href="/projects/'.$project->getUnixName().'" >'.$project->getPublicName().'</a></td><td><a href="/project/admin/ugroup.php?group_id='.$project->getID().'" >'.$clone['cloneName'].'</a></td></tr>';
-                } else {
-                    $count ++;
-                }
-            }
-            if ($count) {
-                $clonesHTML .= '<tr class="'. html_get_alt_row_color(++$i) .'" colspan="2" ><td>and '.$count.' other ugroups you\'re not allowed to administrate</td></tr>';
-            }
-        } else {
-            $clonesHTML .= '<tr><td>'.$GLOBALS['Language']->getText('project_ugroup_binding', 'not_source').'</td></tr>';
-        }
-        $clonesHTML .= '</table>';
-        return $clonesHTML;
     }
 
     /**
@@ -160,7 +108,7 @@ class UGroupBindingViewer {
         $projectSelect .= '<option value="" >'.$GLOBALS['Language']->getText('global', 'none').'</option>';
         foreach ($projects as $project) {
             if ($groupId != $project['group_id']) {
-                $project = $this->projectManager->getProject($project['group_id']);
+                $project = $this->project_manager->getProject($project['group_id']);
                 if ($project->userIsAdmin()) {
                     $ugroupList = $this->getUgroupList($project->getID());
                     if (!empty($ugroupList)) {
@@ -223,7 +171,6 @@ class UGroupBindingViewer {
         $ugroupSelect .= '</select>';
         return $ugroupSelect;
     }
-
 }
 
 ?>

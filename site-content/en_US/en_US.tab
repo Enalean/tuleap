@@ -90,3 +90,5 @@ global	show_frame	Show only this frame
 global	null	NULL
 global	error_synchronizertoken	Your request doesn't appear to be valid. Please retry.
 global	operation_not_allowed	Operation not allowed
+global	settings	Settings
+global	usage	Usage
