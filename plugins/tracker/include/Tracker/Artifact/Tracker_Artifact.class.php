@@ -268,8 +268,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function fetchMailFormElements($recipient, $format, $ignore_perms=false) {
         $output = '<table width="100%">';
-        foreach ($this->getTracker()->getFormElements() as $formElement) {   
-            $formElement->prepareForDisplay();
+        $toplevel_form_elements = $this->getTracker()->getFormElements();
+        $this->prepareElementsForDisplay($toplevel_form_elements);
+        foreach ($toplevel_form_elements as $formElement) {
             $output .= $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
 
             if ($format == 'text' && $output) {
@@ -278,6 +279,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         $output .= '</table>';
         return $output;
+    }
+
+    /** @param Tracker_FormElement[] */
+    private function prepareElementsForDisplay($toplevel_form_elements) {
+        foreach ($toplevel_form_elements as $formElement) {
+            $formElement->prepareForDisplay();
+        }
     }
 
     /**
