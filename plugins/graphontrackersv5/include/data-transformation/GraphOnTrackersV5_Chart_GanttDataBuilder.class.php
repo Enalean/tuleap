@@ -111,8 +111,24 @@ class GraphOnTrackersV5_Chart_GanttDataBuilder extends ChartDataBuilderV5 {
                 }
             }
         }
+        usort($engine->data, array($this, 'sortByDate'));
         return $engine->data;
     }
 
+    private function sortByDate($a, $b) {
+        $a_date = $this->getSuitableDateForSorting($a);
+        $b_date = $this->getSuitableDateForSorting($b);
+
+        return strcmp($a_date, $b_date);
+    }
+
+    private function getSuitableDateForSorting($artifact_data) {
+        $date = $artifact_data['start'];
+        // a milestone has no start date, only a end one
+        if (! $date) {
+            $date = $artifact_data['finish'];
+        }
+        return $date;
+    }
 }
 ?>
