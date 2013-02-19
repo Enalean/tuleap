@@ -79,17 +79,26 @@ tuleap.systray = {
         }
 
         function insertLinks(systray, links) {
-            var menu,
-                systray_links = systray.down('.systray_links'),
+            var systray_links = systray.down('.systray_links'),
                 link_template = new Template('<a href="#{href}">#{label}</a>'),
                 first_link    = link_template.evaluate(links.shift()),
-                dropdown      = '<div class="dropdown">' + first_link +
-                                    '<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-angle-up"></i> </a>' +
-                                    '<ul class="dropdown-menu" role="menu"></ul>' +
-                                '</div>';
+                dropdown      = '<div class="dropdown">' + first_link + '</div>';
 
             systray_links.update(dropdown);
-            menu = systray_links.down('.dropdown-menu');
+
+            if (links.length) {
+                insertMenu(systray_links.down('.dropdown'), links, link_template);
+            }
+        }
+
+        function insertMenu(dropdown, links, link_template) {
+            var menu;
+
+            dropdown.insert(
+                '<a class="dropdown-toggle" data-toggle="dropdown" href="#"> <i class="icon-angle-up"></i> </a>' +
+                '<ul class="dropdown-menu" role="menu"></ul>'
+            );
+            menu = dropdown.down('.dropdown-menu'),
 
             links.each(function (link) {
                 menu.insert('<li>' + link_template.evaluate(link) + '</li>');

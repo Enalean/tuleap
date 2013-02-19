@@ -127,6 +127,36 @@ describe('Le systray', function() {
                         expect(body.down('.systray')).to.not.exist;
                     });
                 });
+
+                describe('there is no more than one link', function () {
+
+                    it('does not add a dropdown', function () {
+                        storage.load.withArgs('systray-links').returns([
+                            {label: 'le link', href: '/path/to/link'}
+                        ]);
+
+                        tuleap.systray.load(body, storage);
+
+                        expect(body.down('.systray .dropdown-menu')).to.not.exist;
+                        expect(body.down('.systray .dropdown-toggle')).to.not.exist;
+                    });
+                });
+
+                describe('there is more than one link', function () {
+
+                    it('adds a dropdown menu', function () {
+                        storage.load.withArgs('systray-links').returns([
+                            {label: 'le link',  href: '/path/to/link'},
+                            {label: 'le link2', href: '/path/to/link2'}
+                        ]);
+
+                        tuleap.systray.load(body, storage);
+
+                        expect(body.down('.systray .dropdown-toggle')).to.exist;
+                        expect(body.down('.systray .dropdown-menu')).to.exist;
+                        body.down('.systray .dropdown-menu a[href=/path/to/link2]').text.should.be.equal('le link2');
+                    });
+                });
             });
 
             describe('if not found, retrieves links from the server,', function () {
