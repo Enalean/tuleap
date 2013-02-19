@@ -720,10 +720,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         switch($format) {
             case 'html':
                 $artifactlink_infos = $value->getValue();
+                $url = array();
                 foreach ($artifactlink_infos as $artifactlink_info) {
-                    $output .= $artifactlink_info->getUrl() . ' , ';
+                    $url[] = $artifactlink_info->getUrl();
                 }
-                break;
+                return implode(' , ', $url);
             default:
                 $output = PHP_EOL;
                 $artifactlink_infos = $value->getValue();
