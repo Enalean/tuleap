@@ -55,15 +55,13 @@ class Tracker_FormElement_Container_Fieldset extends Tracker_FormElement_Contain
         if ($format == 'text') {
             return $label . PHP_EOL . str_pad('', strlen($label), '-') . PHP_EOL;
         } else {
-            return '<tr style="color: #444444; background-color: #F6F6F6;">
-                <td align="left">
-                    <h3>'.
-                        $label.'
-                    </h3>
-                </td>
-                <td>
-                </td>
-            </tr>';
+            return '
+                <tr><td colspan="2">&nbsp;</td></tr>
+                <tr style="color: #444444; background-color: #F6F6F6;">
+                    <td align="left" colspan="2">
+                        <h3>'. $label .'</h3>
+                    </td>
+                </tr>';
         }
     }
     
