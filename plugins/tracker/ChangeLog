@@ -1,3 +1,6 @@
+Version 5.86 - Tuleap 5.11
+    * Better display of html emails in outlook
+
 Version 5.85 - Tuleap 5.11
     * Burndown field makes always use of capacity field when it exists
 
