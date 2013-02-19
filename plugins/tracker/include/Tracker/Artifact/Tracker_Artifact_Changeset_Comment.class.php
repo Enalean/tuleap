@@ -127,49 +127,37 @@ class Tracker_Artifact_Changeset_Comment {
     /**
      * Returns the HTML code of this comment
      *
-     * @param String  $format          Format of the output
-     * @param Boolean $forMail         If the output is intended for mail notification then value should be true
-     * @param Boolean $ignoreEmptyBody If true then display the user and the time even if the body is empty
-     *
      * @return string the HTML code of this comment
      */
-    public function fetchFollowUp($format='html', $forMail = false, $ignoreEmptyBody = false) {
-        if ($ignoreEmptyBody || !empty($this->body)) {
-            $uh = UserHelper::instance();
-            switch ($format) {
-                case 'html':
-                    $html = '<div class="tracker_artifact_followup_comment_edited_by">';
-                    if ($this->parent_id) {
-                        $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
-                        $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
-                        $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
-                    }
-                    $html .= '</div>';
-                    
-                    if (!empty($this->body)) {
-                        $html .= '<input type="hidden" id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'" name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'" value="'.$this->bodyFormat.'" >';
-                        $html .= '<div class="tracker_artifact_followup_comment_body">';
-                        if ($this->parent_id && !trim($this->body)) {
-                            $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
-                        } else {
-                            $html .= $this->getPurifiedBodyForHTML();
-                        }
-                        $html .= '</div>';
-                    }
-                    return $html;
-                    break;
-                default:
-                    $output = '';
-                    if ( !empty($this->body) ) {
-                        $body    = $this->getPurifiedBodyForText();
-                        $output .= PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
-                    }
-                    return $output;
-                    break;
-            }
-        } else {
+    public function fetchFollowUp() {
+        if (empty($this->body)) {
             return null;
         }
+
+        $uh   = UserHelper::instance();
+        $html = '<div class="tracker_artifact_followup_comment_edited_by">';
+        if ($this->parent_id) {
+            $html .= $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'last_edited');
+            $html .= ' '. $uh->getLinkOnUserFromUserId($this->submitted_by) .' ';
+            $html .= DateHelper::timeAgoInWords($this->submitted_on, false, true);
+        }
+        $html .= '</div>';
+
+        if (!empty($this->body)) {
+            $html .= '<input type="hidden"
+                id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                value="'.$this->bodyFormat.'" />';
+            $html .= '<div class="tracker_artifact_followup_comment_body">';
+            if ($this->parent_id && !trim($this->body)) {
+                $html .= '<em>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'</em>';
+            } else {
+                $html .= $this->getPurifiedBodyForHTML();
+            }
+            $html .= '</div>';
+        }
+
+        return $html;
     }
 
     /**

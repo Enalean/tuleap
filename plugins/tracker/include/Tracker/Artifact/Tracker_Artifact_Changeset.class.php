@@ -674,7 +674,7 @@ class Tracker_Artifact_Changeset {
         $output .= ' on '.DateHelper::formatForLanguage($language, $this->submitted_on);
         if ( $comment = $this->getComment() ) {
             $output .= PHP_EOL;
-            $output .= $comment->fetchFollowUp($format);
+            $output .= $comment->fetchMailFollowUp($format);
         }
         $output .= PHP_EOL;
         $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
