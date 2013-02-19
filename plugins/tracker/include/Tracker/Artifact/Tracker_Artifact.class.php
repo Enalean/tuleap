@@ -323,18 +323,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $comment = $changeset->getComment();
             /* @var $comment Tracker_Artifact_Changeset_Comment */
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
-            if (empty($comment)) {
+            if (empty($comment) || $comment->hasEmptyBody()) {
                 //do not display empty comment
                 continue;
             }
             switch ($format) {
-                case 'html':
-                    if ($comment->hasEmptyBody()) {
-                        break;
-                    }
+                case 'html':               
                     $followup = $comment->fetchMailFollowUp($format);
                     $output .=  $followup;
-                    
                     break;
                 case 'text':
                     $user = $um->getUserById($comment->submitted_by);
