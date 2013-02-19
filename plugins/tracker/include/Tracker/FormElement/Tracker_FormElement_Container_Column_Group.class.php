@@ -44,25 +44,20 @@ class Tracker_FormElement_Container_Column_Group {
         return $this->fetchMailGroup($columns, 'fetchMailArtifactInGroup', array($recipient, $artifact, $format, $ignore_perms), $format);
     }
     
-    protected function fetchGroup($columns, $method, $params, $format = 'html') {
+    protected function fetchGroup($columns, $method, $params) {
         $output = '';
         if (is_array($columns) && $columns) {
             $cells = array();
             foreach ($columns as $c) {
                 if ($content = call_user_func_array(array($c, $method), $params)) {
-                    if ($format == 'html') {
-                        $cells[] = '<td>' . $content . '</td>';
-                    } else {
-                        $output .= $content . PHP_EOL;
-                    }
+                    $cells[] = '<td>' . $content . '</td>';
                 }
             }
-            if ($format == 'html') {
-                if ($cells) {
-                    $output .= '<table width="100%"><tbody><tr valign="top">';
-                    $output .= implode('', $cells);
-                    $output .= '</tr></tbody></table>';
-                }
+
+            if ($cells) {
+                $output .= '<table width="100%"><tbody><tr valign="top">';
+                $output .= implode('', $cells);
+                $output .= '</tr></tbody></table>';
             }
         }
         return $output;
