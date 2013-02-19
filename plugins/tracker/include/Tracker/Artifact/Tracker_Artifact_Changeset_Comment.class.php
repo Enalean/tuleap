@@ -209,125 +209,75 @@ class Tracker_Artifact_Changeset_Comment {
     }
 
     /**
+     *
+     * @return bool
+     */
+    public function hasEmptyBody() {
+        return empty($this->body);
+    }
+
+    /**
      * Returns the HTML code of this comment
      *
-     * @param String  $format          Format of the output
-     * @param Boolean $ignoreEmptyBody If true then display the user and the time even if the body is empty
-     *
+     * @param String  $format Format of the output
      * @return string the HTML code of this comment
      */
-    public function fetchMailFollowUp($format = 'html', $ignoreEmptyBody = true) {
-        switch ($format) {
-            case 'html':
-                if ($ignoreEmptyBody && empty($this->body)) {
-                    return '';
-                }
-                
-                $uh = UserHelper::instance();
-                $hp = Codendi_HTMLPurifier::instance();
+    public function fetchMailFollowUp($format = 'html') {
+        if ($format != 'html') {
+            if ($this->hasEmptyBody()) {
+                return '';
+            }
 
-                $user = UserManager::instance()->getUserById($this->submitted_by);
-                if ($user && !$user->isAnonymous()) {
-                    $user_info =
-                        '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.
-                            $hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')
-                        </a>';
-                } else {
-                    $user = UserManager::instance()->getUserAnonymous();
-                    $user->setEmail($this->changeset->getEmail());
-                    $user_info = $GLOBALS['Language']->getText('tracker_include_artifact','anon_user');
-                }
-
-                $timezone = '';
-                if ($user->getId() != 0) {
-                    $timezone = ' ('.$user->getTimezone().')';
-                }
-
-                $avatar = '';
-                if (Config::get('sys_enable_avatars')) {
-                    $avatar =$user->fetchHtmlAvatar();
-                }
-
-                $formatted_comment = '';
-                if (!empty($this->body)) {
-                   if ($this->parent_id && !trim($this->body)) {
-                       $comment =
-                           '<em>'.
-                               $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'
-                           </em>';
-                   } else {
-                       $comment = $this->getPurifiedBodyForHTML();
-                   }
-
-                   $formatted_comment =
-                       '<div>
-                            <input type="hidden"
-                                id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
-                                name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
-                                value="'.$this->bodyFormat.'"
-                            />
-                            <div style="border-color: #e8ebb5;
-                                -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-                                -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-                                box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-                                margin: 1em 0;
-                                padding: 0.5em 1em;"
-                            >'.
-                                $comment.'
-                            </div>
-                        </div>';
-                   }
-
-                $html =
-                    '<tr>
-                        <td align="left">'.
-                            $avatar.'
-                        </td>
-                        <td align="left" valign="top" colspan="2">
-                            <div style="
-                                padding:15px;
-                                margin:10px;
-                                min-height:50px;
-                                border: 1px solid #f6f6f6;
-                                border-top: none;
-                                -webkit-border-radius:20px;
-                                border-radius:20px;
-                                -moz-border-radius:20px;
-                                background-color:#F6F6F6;"
-                            >
-                                <table style="width:100%; background-color:#F6F6F6;">
-                                    <tr>
-                                        <td>
-                                            <span> '.
-                                                $user_info.'
-                                            </span>
-                                        </td>
-                                        <td align="right" valign="top">
-                                            <div style="text-align:right;font-size:0.95em;color:#666;">'.
-                                                format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).
-                                                $timezone.'
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td colspan="2" >'.
-                                            $formatted_comment . ' ' .'
-                                        </td>
-                                    </tr>
-                                </table>
-                            </div>
-                        </td>
-                    </tr>';
-                
-                return $html;
-            default:
-                $output = '';
-                if ( !empty($this->body) ) {
-                    $body    = $this->getPurifiedBodyForText();
-                    $output .= PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
-                }
-                return $output;
+            $body = $this->getPurifiedBodyForText();
+            return PHP_EOL.PHP_EOL.$body.PHP_EOL.PHP_EOL;
         }
+        
+        $user     = UserManager::instance()->getUserById($this->submitted_by);
+        $avatar   = (Config::get('sys_enable_avatars')) ? $user->fetchHtmlAvatar() : '';
+        $timezone = ($user->getId() != 0) ? ' ('.$user->getTimezone().')' : '';
+
+        $html =
+            '<tr>
+                <td align="left">'.
+                    $avatar.'
+                </td>
+                <td align="left" valign="top" colspan="2">
+                    <div style="
+                        padding:15px;
+                        margin:10px;
+                        min-height:50px;
+                        border: 1px solid #f6f6f6;
+                        border-top: none;
+                        -webkit-border-radius:20px;
+                        border-radius:20px;
+                        -moz-border-radius:20px;
+                        background-color:#F6F6F6;"
+                    >
+                        <table style="width:100%; background-color:#F6F6F6;">
+                            <tr>
+                                <td>
+                                    <span> '.
+                                        $this->fetchFormattedMailUserInfo($user).'
+                                    </span>
+                                </td>
+                                <td align="right" valign="top">
+                                    <div style="text-align:right;font-size:0.95em;color:#666;">'.
+                                        format_date($GLOBALS['Language']->getText('system', 'datefmt'), $this->submitted_on).
+                                        $timezone.'
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" >'.
+                                    $this->fetchFormattedMailComment() . ' ' .'
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td>
+            </tr>';
+        
+        return $html;
     }
 
     /**
@@ -363,6 +313,57 @@ class Tracker_Artifact_Changeset_Comment {
         if (! $this->changeset->getSubmittedBy()) {
             return $this->changeset->getEmail();
         }
+    }
+
+    private function fetchFormattedMailComment() {
+        $formatted_comment = '';
+        if (!empty($this->body)) {
+           if ($this->parent_id && !trim($this->body)) {
+               $comment =
+                '<em>'.
+                    $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'comment_cleared') .'
+                </em>';
+           } else {
+               $comment = $this->getPurifiedBodyForHTML();
+           }
+
+           $formatted_comment =
+            '<div>
+                 <input type="hidden"
+                     id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                     name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
+                     value="'.$this->bodyFormat.'"
+                 />
+                 <div style="border-color: #e8ebb5;
+                     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+                     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+                     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+                     margin: 1em 0;
+                     padding: 0.5em 1em;"
+                 >'.
+                     $comment.'
+                 </div>
+             </div>';
+        }
+
+        return $formatted_comment;
+    }
+
+    private function fetchFormattedMailUserInfo(User $user) {
+        $hp = Codendi_HTMLPurifier::instance();
+
+        if ($user && !$user->isAnonymous()) {
+            $user_info =
+                '<a href="mailto:'.$hp->purify($user->getEmail()).'">'.
+                    $hp->purify($user->getRealName()).' ('.$hp->purify($user->getUserName()) .')
+                </a>';
+        } else {
+            $user = UserManager::instance()->getUserAnonymous();
+            $user->setEmail($this->changeset->getEmail());
+            $user_info = $GLOBALS['Language']->getText('tracker_include_artifact','anon_user');
+        }
+
+        return $user_info;
     }
 }
 ?>

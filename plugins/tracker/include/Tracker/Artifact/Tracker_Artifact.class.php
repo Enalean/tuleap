@@ -321,6 +321,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
+            /* @var $comment Tracker_Artifact_Changeset_Comment */
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
             if (empty($comment)) {
                 //do not display empty comment
@@ -328,8 +329,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             }
             switch ($format) {
                 case 'html':
-                    $ignoreEmptyBody = true;
-                    $followup = $comment->fetchMailFollowUp($format, $ignoreEmptyBody);
+                    if ($comment->hasEmptyBody()) {
+                        break;
+                    }
+                    $followup = $comment->fetchMailFollowUp($format);
                     $output .=  $followup;
                     
                     break;
