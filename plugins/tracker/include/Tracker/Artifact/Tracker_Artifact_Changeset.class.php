@@ -707,11 +707,11 @@ class Tracker_Artifact_Changeset {
         if ($comment = $this->getComment()) {
             $followup = $comment->fetchMailFollowUp($format);
         }
-        
+
         $output = 
         '<table style="width:100%">
             <tr>
-                <td align = "left" colspan="3">
+                <td align="left" colspan="2">
                     <h1>'.$hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)).'
                     </h1>
                 </td>
@@ -721,7 +721,7 @@ class Tracker_Artifact_Changeset {
 
             $output .= 
                 '<tr>
-                    <td colspan="3" align="left">
+                    <td colspan="2" align="left">
                         <h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'
                         </h2>
                     </td>
@@ -736,16 +736,15 @@ class Tracker_Artifact_Changeset {
                 if (!empty($comment->body)) {
                     $output .= '
                         <tr>
-                            <td colspan="3">
+                            <td colspan="2">
                                 <hr size="1" />
                             </td>
                         </tr>';
                 }
                 $output .= 
                     '<tr>
-                        <td>
-                        </td>
-                        <td colspan="2" align="left">
+                        <td> </td>
+                        <td align="left">
                             <ul>'.
                                 $changes.'
                             </ul>
@@ -755,8 +754,7 @@ class Tracker_Artifact_Changeset {
 
             $output .=
                 '<tr>
-                    <td colspan="2">
-                    </td>
+                    <td> </td>
                     <td align="right">'.
                         $this->fetchHtmlAnswerButton(get_server_url().'/plugins/tracker/?aid='.(int)$art->getId()).
                     '</td>

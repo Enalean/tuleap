@@ -189,14 +189,15 @@ class Tracker_Artifact_Changeset_Comment {
         $timezone = ($user->getId() != 0) ? ' ('.$user->getTimezone().')' : '';
 
         $html =
-            '<tr>
+            '<tr valign="top">
                 <td align="left">'.
                     $avatar.'
                 </td>
-                <td align="left" valign="top" colspan="2">
+                <td align="left" valign="top">
                     <div style="
                         padding:15px;
-                        margin:10px;
+                        margin-bottom:20px;
+                        margin-left:10px;
                         min-height:50px;
                         border: 1px solid #f6f6f6;
                         border-top: none;
@@ -279,23 +280,7 @@ class Tracker_Artifact_Changeset_Comment {
                $comment = $this->getPurifiedBodyForHTML();
            }
 
-           $formatted_comment =
-            '<div>
-                 <input type="hidden"
-                     id="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
-                     name="tracker_artifact_followup_comment_body_format_'.$this->changeset->getId().'"
-                     value="'.$this->bodyFormat.'"
-                 />
-                 <div style="border-color: #e8ebb5;
-                     -moz-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-                     -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-                     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-                     margin: 1em 0;
-                     padding: 0.5em 1em;"
-                 >'.
-                     $comment.'
-                 </div>
-             </div>';
+           $formatted_comment = '<div style="margin: 1em 0; padding: 0.5em 1em;">'. $comment .'</div>';
         }
 
         return $formatted_comment;
