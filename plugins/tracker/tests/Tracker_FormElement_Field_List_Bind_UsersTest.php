@@ -54,35 +54,6 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
         $this->assertEqual($users->getSoapAvailableValues(), $soap_values);
     }
     
-    function testGetFieldData() {
-        $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv1->setReturnValue('getUsername', 'john.smith');
-        $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv2->setReturnValue('getUsername', 'sam.anderson');
-        $field = $is_rank_alpha = $default_values = $decorators = '';
-        $values = array(108 => $bv1, 110 => $bv2);
-        $f = new Tracker_FormElement_Field_List_Bind_UsersTestVersion($field, $is_rank_alpha, $values, $default_values, $decorators);
-        $f->setReturnReference('getAllValues', $values);
-        $this->assertEqual('108', $f->getFieldData('john.smith', false));
-    }
-    
-    function testGetFieldDataMultiple() {
-        $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv1->setReturnValue('getUsername', 'john.smith');
-        $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv2->setReturnValue('getUsername', 'sam.anderson');
-        $bv3 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv3->setReturnValue('getUsername', 'tom.brown');
-        $bv4 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv4->setReturnValue('getUsername', 'patty.smith');
-        $field = $is_rank_alpha = $default_values = $decorators = '';
-        $values = array(108 => $bv1, 110 => $bv2, 113 => $bv3, 115 => $bv4);
-        $f = new Tracker_FormElement_Field_List_Bind_UsersTestVersion($field, $is_rank_alpha, $values, $default_values, $decorators);
-        $f->setReturnReference('getAllValues', $values);
-        $res = array(108,113);
-        $this->assertEqual($res, $f->getFieldData('john.smith,tom.brown', true));
-    }
-    
     public function testGetRecipients() {
         //$recipients = array();
         //foreach ($changeset_value->getBindValues() as $user_value) {
@@ -134,6 +105,36 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
         $this->assertEqual($field->formatChangesetValue($value), '');
         $this->assertNotEqual($field2->formatChangesetValue($value2), '');
         $this->assertNotEqual($field3->formatChangesetValue($value3), '');
+    }
+
+     public function testGetFieldDataReturnsMultiIds() {
+        $field = new Tracker_FormElement_Field_List_Bind_UsersTestVersion();
+
+        $soap_values = '12,13,14,15';
+        $expected = array(12,13,14,15);
+
+        $this->assertEqual($expected, $field->getFieldData($soap_values, true));
+    }
+
+    public function testGetFieldDataReturnsOneId() {
+
+        $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv1->setReturnValue('getUsername', 'john.smith');
+        $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv2->setReturnValue('getUsername', 'sam.anderson');
+        $bv3 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv3->setReturnValue('getUsername', 'tom.brown');
+        $bv4 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv4->setReturnValue('getUsername', 'patty.smith');
+        $field_param = $is_rank_alpha = $default_values = $decorators = '';
+        $values = array(12 => $bv1, 110 => $bv2, 113 => $bv3, 115 => $bv4);
+        $field = new Tracker_FormElement_Field_List_Bind_UsersTestVersion($field_param, $is_rank_alpha, $values, $default_values, $decorators);
+        $field->setReturnReference('getAllValues', $values);
+
+        $soap_values = '12';
+        $expected = 12;
+
+        $this->assertEqual($expected, $field->getFieldData($soap_values, false));
     }
 }
 ?>

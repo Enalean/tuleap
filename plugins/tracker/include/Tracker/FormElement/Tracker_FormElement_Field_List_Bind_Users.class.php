@@ -268,22 +268,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     public function getFieldData($soap_value, $is_multiple) {
         $values = $this->getAllValues();
         if ($is_multiple) {
-            $return = array();
-            $soap_values = explode(',', $soap_value);
-            foreach ($values as $id => $value) {
-                if (in_array($value->getUsername(), $soap_values)) {
-                    $return[] = $id;
-                }
-            }
-            if (count($soap_values) == count($return)) {
-                return $return;
-            } else {
-                // if one value was not found, return null
-                return null;
-            }
+            $return = explode(',', $soap_value);
+            return $return;
         } else {
             foreach ($values as $id => $value) {
-                if ($value->getUsername() == $soap_value) {
+                if ($id == $soap_value) {
                     return $id;
                 }
             }

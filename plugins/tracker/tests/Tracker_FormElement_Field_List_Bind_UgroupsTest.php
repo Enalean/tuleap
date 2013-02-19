@@ -212,6 +212,13 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SOAPTest extends Tracker_FormE
 
         $this->assertEqual($expected, $this->bind->getFieldData($soap_values, true));
     }
+
+    public function testGetFieldDataReturnsOneId() {
+        $soap_values = '2';
+        $expected = 2;
+
+        $this->assertEqual($expected, $this->bind->getFieldData($soap_values, false));
+    }
 }
 
 class Tracker_FormElement_Field_List_Bind_Ugroups_CreateUpdateValuesTest extends Tracker_FormElement_Field_List_Bind_BaseTest {
