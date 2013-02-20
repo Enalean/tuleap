@@ -3,7 +3,7 @@ Version 5.11 (Not Released Yet)
 	== Plugins ==
 	* tracker: 5.88
 	* agiledashboard: 0.72
-	* cardwall: 0.9.17
+	* cardwall: 0.9.18
 	* git: 2.7.26
 	* ldap: 3.25
 	* forumml: 2.6.8
@@ -22,6 +22,7 @@ Version 5.11 (Not Released Yet)
 	* Fix bug #2317: Fatal error on the AccessLogs
 	* Fix sla #682 - Viewvc display issue for file which name contains "$"
 	* Fix missing blank.gif that pollutate error_log
+	* Fix footer link for Tuleap as well as copyright
 
 Version 5.9.1 (Thursday, January 24rd 2013)
 
