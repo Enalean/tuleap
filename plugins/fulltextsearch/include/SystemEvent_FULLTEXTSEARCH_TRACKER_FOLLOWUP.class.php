@@ -58,10 +58,7 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
      */
     public function process() {
         try {
-            $groupId     = (int)$this->getRequiredParameter(0);
-            $artifactId  = (int)$this->getRequiredParameter(1);
-            $changesetId = (int)$this->getRequiredParameter(2);
-            $text        = $this->getRequiredParameter(3);
+            list($groupId, $artifactId, $changesetId, $text) = $this->getFollowUpParameters();
 
             if ($this->action($groupId, $artifactId, $changesetId, $text)) {
                 $this->done();
@@ -97,19 +94,30 @@ abstract class SystemEvent_FULLTEXTSEARCH_TRACKER_FOLLOWUP extends SystemEvent {
      * @return String
      */
     public function verbalizeParameters($withLink) {
+        $txt = '';
         try {
-            $groupId     = (int)$this->getRequiredParameter(0);
-            $artifactId  = (int)$this->getRequiredParameter(1);
-            $changesetId = (int)$this->getRequiredParameter(2);
-            $text        = $this->getRequiredParameter(3);
+            list($groupId, $artifactId, $changesetId, $text) = $this->getFollowUpParameters();
+
             if (strlen($text)>15) {
                 $text = substr($text, 0, 15).'...';
             }
-            $preparedParams = 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$this->verbalizeArtifactId($artifactId, $changesetId, $withLink).', Text: '.$text;
+            $txt = 'Project: '.$this->verbalizeProjectId($groupId, $withLink).', Artifact: '.$this->verbalizeArtifactId($artifactId, $changesetId, $withLink).', Text: '.$text;
         } catch (Exception $e) {
-            return $e->getMessage().':<br>'.$preparedParams;
+            return $e->getMessage();
         }
-        return $preparedParams;
+        return $txt;
+    }
+
+    /**
+     * @return array(groupId, artifactId, changesetId, text)
+     */
+    private function getFollowUpParameters() {
+        return array(
+            (int)$this->getRequiredParameter(0),
+            (int)$this->getRequiredParameter(1),
+            (int)$this->getRequiredParameter(2),
+            ''. $this->getParameter(3),
+        );
     }
 
     /**
