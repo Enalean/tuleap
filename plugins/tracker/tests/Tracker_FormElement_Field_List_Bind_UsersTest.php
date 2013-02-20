@@ -136,5 +136,23 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
 
         $this->assertEqual($expected, $field->getFieldData($soap_values, false));
     }
+
+     public function testGetFieldDataReturns100If100IsTheSoapValue() {
+
+        $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv1->setReturnValue('getUsername', 'john.smith');
+        $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
+        $bv2->setReturnValue('getUsername', null);
+
+        $field_param = $is_rank_alpha = $default_values = $decorators = '';
+        $values = array(12 => $bv1, 100 => $bv2);
+        $field = new Tracker_FormElement_Field_List_Bind_UsersTestVersion($field_param, $is_rank_alpha, $values, $default_values, $decorators);
+        $field->setReturnReference('getAllValues', $values);
+
+        $soap_values = '100';
+        $expected = 100;
+
+        $this->assertEqual($expected, $field->getFieldData($soap_values, false));
+    }
 }
 ?>

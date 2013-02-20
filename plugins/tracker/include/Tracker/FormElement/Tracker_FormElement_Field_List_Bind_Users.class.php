@@ -258,30 +258,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     }
     
     /**
-     * Get the field data for artifact submission
-     *
-     * @param string  $soap_value  the soap field value (username(s))
-     * @param boolean $is_multiple if the soap value is multiple or not
-     *
-     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
-     */
-    public function getFieldData($soap_value, $is_multiple) {
-        $values = $this->getAllValues();
-        if ($is_multiple) {
-            $return = explode(',', $soap_value);
-            return $return;
-        } else {
-            foreach ($values as $id => $value) {
-                if ($id == $soap_value) {
-                    return $id;
-                }
-            }
-            // if not found, return null
-            return null;
-        }
-    }
-    
-    /**
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve 
      * the last changeset of all artifacts.

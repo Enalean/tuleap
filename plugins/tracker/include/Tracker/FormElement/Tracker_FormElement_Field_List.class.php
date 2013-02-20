@@ -1020,7 +1020,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
     public function getFieldData($soap_value) {
-        if ($soap_value === $GLOBALS['Language']->getText('global','none')) {
+        if ($soap_value === '100') {
             return 100;
         }
 
