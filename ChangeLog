@@ -21,6 +21,7 @@ Version 5.11 (Not Released Yet)
 	* Fix sla #813: Project administration page is distorded on IE when the custom notification message is long
 	* Fix bug #2317: Fatal error on the AccessLogs
 	* Fix sla #682 - Viewvc display issue for file which name contains "$"
+	* Fix missing blank.gif that pollutate error_log
 
 Version 5.9.1 (Thursday, January 24rd 2013)
 
