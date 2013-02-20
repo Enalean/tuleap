@@ -105,7 +105,7 @@ plugin_tracker_import	sample_cvs_file	Sample CSV file:
 plugin_tracker_import	import_new_hdr	Import Artifacts $1
 plugin_tracker_import	import_new_msg	You can import artifacts into this tracker by specifying a CSV file. <br>See the <a href="$1">CSV Import Format</a> for more details.
 plugin_tracker_import	upload_file	Upload File:	
-plugin_tracker_import	max_upload_size	(The maximum upload file size is $1 Mb)
+plugin_tracker_import	file_upload_instructions	(The maximum upload file size is $1 Mb. The file must be encoded in UTF-8)
 plugin_tracker_import	submit_info	Load artifacts
 plugin_tracker_import	send_notifications	Send Notifications:
 #
