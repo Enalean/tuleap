@@ -1,3 +1,6 @@
+Version 0.9.17 - Tuleap 5.11
+    * correct display of empty cells in IE
+
 Version 0.9.16 - Tuleap 5.11
     * Delegate milestone building to each Pane
 
