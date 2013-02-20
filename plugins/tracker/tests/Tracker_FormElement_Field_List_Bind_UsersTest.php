@@ -107,7 +107,7 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
         $this->assertNotEqual($field3->formatChangesetValue($value3), '');
     }
 
-     public function testGetFieldDataReturnsMultiIds() {
+    public function testGetFieldDataReturnsMultiIds() {
         $field = new Tracker_FormElement_Field_List_Bind_UsersTestVersion();
 
         $soap_values = '12,13,14,15';
