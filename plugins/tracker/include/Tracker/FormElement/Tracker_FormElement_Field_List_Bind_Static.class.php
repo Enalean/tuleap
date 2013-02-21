@@ -143,7 +143,6 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $values = $this->getAllValues();
         foreach ($values as $id => $value) {
             $soap_values[] = array(
-                            'field_id' => $this->field->getId(),
                             'bind_value_id' => $id,
                             'bind_value_label' => $value->getLabel(),
                         );

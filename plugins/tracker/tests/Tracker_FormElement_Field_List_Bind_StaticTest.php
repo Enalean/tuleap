@@ -49,12 +49,10 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         
         $this->assertEqual(count($static->getSoapAvailableValues()), 2);
         $soap_values = array(
-                        array('field_id' => 123,
-                              'bind_value_id' => 101,
+                        array('bind_value_id' => 101,
                               'bind_value_label' => 'bv label 1',
                              ),
-                        array('field_id' => 123,
-                              'bind_value_id' => 102,
+                        array('bind_value_id' => 102,
                               'bind_value_label' => 'bv label 2'
                              )
                         );

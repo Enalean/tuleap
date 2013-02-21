@@ -172,7 +172,6 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $soap_values = array();
         foreach ($values as $id => $value) {
             $soap_values[] = array(
-                'field_id'         => $this->field->getId(),
                 'bind_value_id'    => $id,
                 'bind_value_label' => $value->getUGroupName(),
             );
