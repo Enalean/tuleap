@@ -249,11 +249,14 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getSoapAvailableValues() {
         $soap_values = array();
-        $soap_values[] = array(
-                        'field_id' => $this->field->getId(),
-                        'bind_value_id' => 0,
-                        'bind_value_label' => implode(",", $this->getValueFunction()),
-                    );
+        $values = $this->getAllValues();
+        foreach ($values as $id => $value) {
+            $soap_values[] = array(
+                'field_id'         => $this->field->getId(),
+                'bind_value_id'    => $id,
+                'bind_value_label' => $value->getUserName(),
+            );
+        }
         return $soap_values;
     }
     

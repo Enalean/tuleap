@@ -39,17 +39,26 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
     public function testGetSoapAvailableValues() {
         $field = new MockTracker_FormElement_Field_List();
         $field->setReturnValue('getId', 123);
-        $value_function = 'project_members';
+
+        $user1 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('user1');
+        $user2 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('user2');
+        
+        $value_function = ',project_members,project_admins';
         $default_values = $decorators = '';
         
-        $users = new Tracker_FormElement_Field_List_Bind_Users($field, $value_function, $default_values, $decorators);
-        
-        $this->assertEqual(count($users->getSoapAvailableValues()), 1);
+        $users =  partial_mock('Tracker_FormElement_Field_List_Bind_Users', array('getAllValues'), array($field, $value_function, $default_values, $decorators));
+        stub($users)->getAllValues()->returns(array(10 => $user1, 20 => $user2));
+
+        $this->assertEqual(count($users->getSoapAvailableValues()), 2);
         $soap_values = array(
                         array('field_id' => 123,
-                              'bind_value_id' => 0,
-                              'bind_value_label' => 'project_members',
-                             )
+                              'bind_value_id' => 10,
+                              'bind_value_label' => 'user1',
+                             ),
+                        array('field_id' => 123,
+                              'bind_value_id' => 20,
+                              'bind_value_label' => 'user2',
+                             ),
                         );
         $this->assertEqual($users->getSoapAvailableValues(), $soap_values);
     }
