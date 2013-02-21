@@ -1247,6 +1247,7 @@ class Layout extends Response {
      */
     public function displayStylesheetElements($params) {
         // Stylesheet external files
+        echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/bootstrap-2.3.0.min.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/style.css" />';
         echo '<link rel="stylesheet" type="text/css" href="/themes/common/css/font-awesome.css" />';
         echo '<!--[if IE 7]><link rel="stylesheet" href="/themes/common/css/font-awesome-ie7.css"><![endif]-->';
