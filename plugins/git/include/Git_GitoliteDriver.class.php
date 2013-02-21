@@ -65,6 +65,9 @@ class Git_GitoliteDriver {
         Git::PERM_WPLUS => ' RW+'
     );
 
+    CONST OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
+    CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
+
     /**
      * Constructor
      *
@@ -164,10 +167,24 @@ class Git_GitoliteDriver {
      * Dump ssh keys into gitolite conf
      */
     public function dumpSSHKeys(User $user = null) {
+        $authorized_keys_file = $this->getAuthorizedKeysPath();
+
+        if (filesize($authorized_keys_file) == 0) {
+            $backend = Backend::instance();
+            $backend->log($authorized_keys_file." is empty", Backend::LOG_ERROR);
+        }
+
         if ($this->dumper->dumpSSHKeys($user)) {
             return $this->push();
         }
         return false;
+    }
+
+    private function getAuthorizedKeysPath() {
+        if (!file_exists(self::OLD_AUTHORIZED_KEYS_PATH)) {
+            return self::NEW_AUTHORIZED_KEYS_PATH;
+        }
+        return self::OLD_AUTHORIZED_KEYS_PATH;
     }
 
     /**
