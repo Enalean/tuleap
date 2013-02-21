@@ -97,10 +97,9 @@ class Git_Driver_Gerrit {
     }
 
     public function getGerritProjectName(GitRepository $repository) {
-        $host    = Config::get('sys_default_domain');
         $project = $repository->getProject()->getUnixName();
         $repo    = $repository->getFullName();
-        return "$host-$project/$repo";
+        return "$project/$repo";
     }
 
     private function compileMemberCommands($user_list) {
