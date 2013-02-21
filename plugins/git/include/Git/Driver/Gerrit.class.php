@@ -114,5 +114,37 @@ class Git_Driver_Gerrit {
     private function escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_identifier) {
         return escapeshellarg(escapeshellarg($user_identifier));
     }
+
+    public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, $project_name) {
+
+        $gerrit_user_id  = $this->getGerritUserId($server, $user);
+        $gerrit_group_id = $this->getGerritGroupId($server, $project_name);
+    }
+
+    private function getGerritUserId(Git_RemoteServer_GerritServer $server, User $user) {
+
+        $ldap_id = $user->getLdapId();
+        $query   = self::GSQL_COMMAND .' "SELECT\ account_id\ FROM\ accounts\ WHERE\ full_name=\\\''. $ldap_id .'\\\'"';
+
+        $command_result = $this->ssh->execute($server, $query);
+        $json_result    = json_decode(array_shift(explode("\n", $command_result)));
+
+        if (isset($json_result->columns->account_id)) {
+            return $json_result->columns->account_id;
+        }
+    }
+
+    private function getGerritGroupId(Git_RemoteServer_GerritServer $server, $project_name) {
+
+        $query = self::GSQL_COMMAND .' "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $project_name .'\\\'"';
+
+        $command_result = $this->ssh->execute($server, $query);
+        $json_result    = json_decode(array_shift(explode("\n", $command_result)));
+
+        if (isset($json_result->columns->group_id)) {
+            return $json_result->columns->group_id;
+        }
+    }
+
 }
 ?>

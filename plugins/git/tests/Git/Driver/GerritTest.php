@@ -200,4 +200,46 @@ class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
     }
 }
 
+class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
+
+    private $groupname;
+    private $ldap_id;
+    private $user;
+    private $account_id;
+    private $group_id;
+
+    public function setUp() {
+        parent::setUp();
+        $this->groupname      = 'project/repo-contributors';
+        $this->ldap_id        = 'someuser';
+        $this->user           = aUser()->withLdapId($this->ldap_id)->build();
+        $this->account_id     = 1000003;
+        $this->group_id       = 52;
+    }
+
+    public function _itExecutesTheInsertCommand() {
+        $expected_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_members\ (account_id, group_id)\ VALUES(1000003,\ 52)"';
+        $query_result   = '{"type":"row","columns":{"account_id":"'. $this->account_id .'"}}'.
+                          PHP_EOL .
+                          '{"type":"query-stats","rowCount":1,"runTimeMilliseconds":2}';
+        expect($this->ssh)->execute($this->gerrit_server, $expected_query)->once();
+    }
+
+    public function itAsksGerritForAccountId() {
+
+        $expected_query = 'gerrit gsql --format json -c "SELECT\ account_id\ FROM\ accounts\ WHERE\ full_name=\\\'someuser\\\'"';
+        expect($this->ssh)->execute($this->gerrit_server, $expected_query)->at(0);
+
+        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
+    }
+
+    public function itAsksGerritForGroupId() {
+
+        $expected_query = 'gerrit gsql --format json -c "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\'project/repo-contributors\\\'"';
+        expect($this->ssh)->execute($this->gerrit_server, $expected_query)->at(1);
+
+        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
+    }
+}
+
 ?>
