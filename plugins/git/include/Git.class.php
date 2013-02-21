@@ -39,6 +39,8 @@ class Git extends PluginController {
 
     const SPECIAL_PERM_ADMIN = 'PROJECT_ADMIN';
 
+    const SCOPE_PERSONAL = 'personal';
+
     /**
      * Lists all git-related permission types.
      * 
@@ -369,6 +371,7 @@ class Git extends PluginController {
                 $this->addView('forkRepositories');
                 break;
             case 'fork_repositories_permissions':
+                $scope = self::SCOPE_PERSONAL;
                 $valid = new Valid_UInt('repos');
                 $valid->required();
                 if($this->request->validArray($valid)) {
@@ -400,7 +403,7 @@ class Git extends PluginController {
                 break;
             case 'do_fork_repositories':
                 try {
-                    if ($this->request->get('choose_destination') == 'personal') {
+                    if ($this->request->get('choose_destination') == self::SCOPE_PERSONAL) {
                         if ($this->user->isMember($this->groupId)) {
                             $this->_doDispatchForkRepositories($this->request, $user);
                         } else {
