@@ -45,7 +45,7 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
         
         $value_function = ',project_members,project_admins';
         $default_values = $decorators = '';
-        
+
         $users =  partial_mock('Tracker_FormElement_Field_List_Bind_Users', array('getAllValues'), array($field, $value_function, $default_values, $decorators));
         stub($users)->getAllValues()->returns(array(10 => $user1, 20 => $user2));
 
@@ -125,14 +125,11 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
 
     public function testGetFieldDataReturnsOneId() {
 
-        $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv1->setReturnValue('getUsername', 'john.smith');
-        $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv2->setReturnValue('getUsername', 'sam.anderson');
-        $bv3 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv3->setReturnValue('getUsername', 'tom.brown');
-        $bv4 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv4->setReturnValue('getUsername', 'patty.smith');
+        $bv1 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('john.smith');
+        $bv2 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('sam.anderson');
+        $bv3 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('tom.brown');
+        $bv4 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('patty.smith');
+
         $field_param = $is_rank_alpha = $default_values = $decorators = '';
         $values = array(12 => $bv1, 110 => $bv2, 113 => $bv3, 115 => $bv4);
         $field = new Tracker_FormElement_Field_List_Bind_UsersTestVersion($field_param, $is_rank_alpha, $values, $default_values, $decorators);
@@ -146,10 +143,8 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
 
      public function testGetFieldDataReturns100If100IsTheSoapValue() {
 
-        $bv1 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv1->setReturnValue('getUsername', 'john.smith');
-        $bv2 = new MockTracker_FormElement_Field_List_Bind_UsersValue();
-        $bv2->setReturnValue('getUsername', null);
+        $bv1 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('john.smith');
+        $bv2= stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns(null);
 
         $field_param = $is_rank_alpha = $default_values = $decorators = '';
         $values = array(12 => $bv1, 100 => $bv2);
