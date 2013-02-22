@@ -42,12 +42,16 @@ abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $project = stub('Project')->getUnixName()->returns('firefox');
+        $this->project_name    = 'firefox';
+        $this->namespace       = 'jean-claude';
+        $this->repository_name ='dusse';
+
+        $project = stub('Project')->getUnixName()->returns($this->project_name);
 
         $this->repository = aGitRepository()
             ->withProject($project)
-            ->withNamespace('jean-claude')
-            ->withName('dusse')
+            ->withNamespace($this->namespace)
+            ->withName($this->repository_name)
             ->build();
 
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
@@ -210,7 +214,7 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
 
     public function setUp() {
         parent::setUp();
-        $this->groupname      = 'project/repo-contributors';
+        $this->groupname      = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name;
         $this->ldap_id        = 'someuser';
         $this->user           = aUser()->withLdapId($this->ldap_id)->build();
         $this->account_id     = 1000003;
@@ -236,19 +240,19 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
     public function itExecutesTheInsertCommand() {
         expect($this->ssh)->execute($this->gerrit_server, $this->insert_member_query)->at(2);
 
-        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
+        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->repository);
     }
 
     public function itAsksGerritForAccountId() {
         expect($this->ssh)->execute($this->gerrit_server, $this->get_account_query)->at(0);
 
-        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
+        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->repository);
     }
 
     public function itAsksGerritForGroupId() {
         expect($this->ssh)->execute($this->gerrit_server, $this->get_group_query)->at(1);
 
-        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->groupname);
+        $this->driver->addUserToGroup($this->gerrit_server, $this->user, $this->repository);
     }
 }
 
@@ -262,7 +266,7 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
 
     public function setUp() {
         parent::setUp();
-        $this->groupname      = 'project/repo-contributors';
+        $this->groupname      = $this->project_name.'/'.$this->namespace.'/'.$this->repository_name;
         $this->ldap_id        = 'someuser';
         $this->user           = aUser()->withLdapId($this->ldap_id)->build();
         $this->account_id     = 1000003;
@@ -287,19 +291,19 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
     public function itExecutesTheDeletionCommand() {
         expect($this->ssh)->execute($this->gerrit_server, $this->remove_member_query)->at(2);
 
-        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
+        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->repository);
     }
 
     public function itAsksGerritForAccountId() {
         expect($this->ssh)->execute($this->gerrit_server, $this->get_account_query)->at(0);
 
-        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
+        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->repository);
     }
 
     public function itAsksGerritForGroupId() {
         expect($this->ssh)->execute($this->gerrit_server, $this->get_group_query)->at(1);
 
-        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
+        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->repository);
     }
 }
 ?>

@@ -115,18 +115,18 @@ class Git_Driver_Gerrit {
         return escapeshellarg(escapeshellarg($user_identifier));
     }
 
-    public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, $project_name) {
+    public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, GitRepository $repository) {
         $gerrit_user_id  = $this->getGerritUserId($server, $user);
-        $gerrit_group_id = $this->getGerritGroupId($server, $project_name);
+        $gerrit_group_id = $this->getGerritGroupId($server, $repository);
 
         $query = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id, group_id)\ VALUES('. $gerrit_user_id .',\ '. $gerrit_group_id .')"';
 
         $this->ssh->execute($server, $query);
     }
 
-    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, $project_name) {
+    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, GitRepository $repository) {
         $gerrit_user_id  = $this->getGerritUserId($server, $user);
-        $gerrit_group_id = $this->getGerritGroupId($server, $project_name);
+        $gerrit_group_id = $this->getGerritGroupId($server, $repository);
 
         $query = self::GSQL_COMMAND .' "DELETE\ FROM\ account_group_members\ WHERE\ account_id='. $gerrit_user_id .'\ AND\ group_id='. $gerrit_group_id .'"';
 
@@ -146,7 +146,8 @@ class Git_Driver_Gerrit {
         }
     }
 
-    private function getGerritGroupId(Git_RemoteServer_GerritServer $server, $project_name) {
+    private function getGerritGroupId(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
+        $project_name = $this->getGerritProjectName($repository);
 
         $query = self::GSQL_COMMAND .' "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $project_name .'\\\'"';
 
