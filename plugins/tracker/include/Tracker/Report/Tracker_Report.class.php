@@ -507,10 +507,10 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         $html .= '<form action="" method="POST" id="tracker_report_query_form">';
         $html .= '<input type="hidden" name="report" value="' . $this->id . '" />';
         $id = 'tracker_report_query_' . $this->id;
-        $html .= '<h3 class="' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
+        $html .= '<h4 class="backlog-planning-search-title ' . Toggler::getClassname($id, $this->is_query_displayed ? true : false) . '" id="' . $id . '">';
 
         //  Query title
-        $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</h3>';
+        $html .= $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML) . '</h4>';
         $used = array();
         $criteria_fetched = array();
         foreach ($criteria as $criterion) {
