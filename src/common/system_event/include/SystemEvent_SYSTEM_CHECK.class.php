@@ -163,6 +163,13 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         if (!is_file($GLOBALS['svn_root_file'])) {
             $backendSVN->setSVNApacheConfNeedUpdate();
         }
+
+        EventManager::instance()->processEvent(
+                Event::CHECK_AUTHORIZED_KEYS,
+                array(
+                    'backend' => $backendSystem
+                )
+        );
         
         $this->done();
         return true;

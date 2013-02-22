@@ -395,5 +395,13 @@ class Event {
      *    The links are added in the collection
      */
     const SYSTRAY = 'systray';
+
+    /**
+     * Check if .ssh/authorized_keys is empty
+     *
+     * Expected results:
+     *    An error log message is raised if the file is empty
+     */
+    const CHECK_AUTHORIZED_KEYS = 'check_authorized_keys';
 }
 ?>

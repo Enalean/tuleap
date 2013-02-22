@@ -167,24 +167,11 @@ class Git_GitoliteDriver {
      * Dump ssh keys into gitolite conf
      */
     public function dumpSSHKeys(User $user = null) {
-        $authorized_keys_file = $this->getAuthorizedKeysPath();
-
-        if (filesize($authorized_keys_file) == 0) {
-            $backend = Backend::instance();
-            $backend->log($authorized_keys_file." is empty", Backend::LOG_ERROR);
-        }
 
         if ($this->dumper->dumpSSHKeys($user)) {
             return $this->push();
         }
         return false;
-    }
-
-    private function getAuthorizedKeysPath() {
-        if (!file_exists(self::OLD_AUTHORIZED_KEYS_PATH)) {
-            return self::NEW_AUTHORIZED_KEYS_PATH;
-        }
-        return self::OLD_AUTHORIZED_KEYS_PATH;
     }
 
     /**

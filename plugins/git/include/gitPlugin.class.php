@@ -22,6 +22,7 @@
 require_once 'constants.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
+require_once 'Git_GitoliteDriver.class.php';
 
 /**
  * GitPlugin
@@ -59,6 +60,7 @@ class GitPlugin extends Plugin {
 
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
+        $this->_addHook(Event::CHECK_AUTHORIZED_KEYS,                      'check_authorized_keys',                        false);
 
         $this->_addHook('permission_get_name',                             'permission_get_name',                          false);
         $this->_addHook('permission_get_object_type',                      'permission_get_object_type',                   false);
@@ -387,6 +389,20 @@ class GitPlugin extends Plugin {
         $params['types'][] = 'GIT_REPO_CREATE';
         $params['types'][] = 'GIT_REPO_DELETE';
         $params['types'][] = 'GIT_GERRIT_MIGRATION';
+    }
+
+    public function check_authorized_keys($params) {
+        $authorized_keys_file = $this->getAuthorizedKeysPath();
+        if (filesize($authorized_keys_file) == 0) {
+            $params['backend']->log($authorized_keys_file." is empty", Backend::LOG_ERROR);
+        }
+    }
+
+    private function getAuthorizedKeysPath() {
+        if (!file_exists(Git_GitoliteDriver::OLD_AUTHORIZED_KEYS_PATH)) {
+            return Git_GitoliteDriver::NEW_AUTHORIZED_KEYS_PATH;
+        }
+        return Git_GitoliteDriver::OLD_AUTHORIZED_KEYS_PATH;
     }
 
     /**
