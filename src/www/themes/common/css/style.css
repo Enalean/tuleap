@@ -2441,3 +2441,7 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
      vertical-align: top;
      text-align: left;
  }
+
+ .service-wiki .ServiceMenu td:nth-child(2) {
+    text-align:right;
+}
