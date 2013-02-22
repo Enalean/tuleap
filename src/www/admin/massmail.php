@@ -71,13 +71,13 @@ print '<h2>'.$Language->getText('admin_massmail','header',array($GLOBALS['sys_na
 </TEXTAREA>
 </PRE>
 </TD></TR><TR><TD>
-<P><NOSCRIPT><INPUT type="radio" name="destination" value="preview" CHECKED></NOSCRIPT>
+<P class="form-inline"><NOSCRIPT><INPUT type="radio" name="destination" value="preview" CHECKED></NOSCRIPT>
 '.$Language->getText('admin_massmail','to_preview').'
 <INPUT type="text" id="preview_destination" name="preview_destination" size="50" >
 <SPAN ID="preview_button"></SPAN>
 <DIV id="preview_result"></DIV>
 </P>
-<P><INPUT type="submit" name="Submit" value="'.$Language->getText('global','btn_submit').'">
+<P><INPUT type="submit" name="Submit" class="btn btn-primary" value="'.$Language->getText('global','btn_submit').'">
 </TD></TR></TABLE>
 </FORM>
 ';
@@ -97,6 +97,7 @@ document.observe('dom:loaded', function() {
                                                 'name'    : 'Submit',
                                                 'type'    : 'button',
                                                 'value'   : 'Preview'});
+            button.addClassName('btn');
             $('preview_button').appendChild(button);
 
             //launching initialize function on MassMail instance will observe Events on the  input built above

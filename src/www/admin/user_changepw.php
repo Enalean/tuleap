@@ -70,7 +70,7 @@ if (register_valid()) {
 <?php if (isset($register_error)) print '<p><span class="highlight">'. $register_error .'</span>'; ?>
 <form action="user_changepw.php" method="post">
 <?php user_display_choose_password('',$user_id); ?>
-<p><input type="submit" name="Update" value="<?php echo $Language->getText('global','btn_update'); ?>">
+<p><input type="submit" class="btn btn-primary" name="Update" value="<?php echo $Language->getText('global','btn_update'); ?>">
 </form>
 
 <?php

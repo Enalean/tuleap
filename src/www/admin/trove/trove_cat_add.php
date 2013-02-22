@@ -51,7 +51,7 @@ $HTML->header(array('title'=>$Language->getText('admin_trove_cat_add','title')))
 <?php echo $Language->getText('admin_trove_cat_add','description_note'); ?>
 <p><?php echo $Language->getText('admin_trove_cat_add','parent'); ?>:
 <?php echo trove_get_html_cat_select_parent(); ?>
-<p><input type="submit" name="Submit" value="<?php echo $Language->getText('global','btn_submit'); ?>">
+<p><input type="submit" name="Submit" class="btn btn-primary" value="<?php echo $Language->getText('global','btn_submit'); ?>">
 </form>
 
 <?php

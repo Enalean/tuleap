@@ -355,7 +355,7 @@ admin_userlist	restrict	Restrict
 admin_userlist	delete	Delete
 admin_userlist	suspend	Suspend
 admin_userlist	status	Status
-admin_userlist	active_sessions	There are currently $1 active sessions. You can <input type="submit" name="reset_all_sessions" value="purge all current sessions" onclick="return confirm('Are you sure that you want to force the reconnection for all of your users?');" />. This will force all users to login.
+admin_userlist	active_sessions	There are currently $1 active sessions. You can <input type="submit" class="btn" name="reset_all_sessions" value="purge all current sessions" onclick="return confirm('Are you sure that you want to force the reconnection for all of your users?');" />. This will force all users to login.
 
 #
 #-----------------------------------------------

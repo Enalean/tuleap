@@ -180,8 +180,7 @@ if($update_fields_desc_id){
 	echo "<INPUT TYPE='CHECKBOX' NAME='form_required' VALUE='1'";
 	echo (($row_update['desc_required']==1) ? " CHECKED" : "" )."></p>";
 
-	echo "<HR>";
-		echo "<INPUT type='submit' name='Update' value='".$Language->getText('global','btn_update')."'>";
+		echo "<INPUT type='submit' name='Update' class='btn btn-primary' value='".$Language->getText('global','btn_update')."'>";
 	echo "</form>";
 }else{
 
@@ -274,7 +273,7 @@ if($update_fields_desc_id){
 	echo (($desc_required==1) ? " CHECKED" : "" )."></p>";
 	
 	echo "<HR>
-		  <p><input type='submit' name='Add_desc' value=".$Language->getText('global','btn_submit')."></p>";
+		  <p><input type='submit' name='Add_desc' class='btn btn-primary' value=".$Language->getText('global','btn_submit')."></p>";
 	echo "</form>";
 }
 $HTML->footer(array());
