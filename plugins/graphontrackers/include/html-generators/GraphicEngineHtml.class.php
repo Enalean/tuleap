@@ -194,10 +194,9 @@ class graphicEngineHtml extends Error {
         $url = '/tracker/admin/?func=reportgraphic&amp;group_id='. (int)$group_id .'&amp;atid='. (int)$atid .'&amp;report_graphic_id='. (int)$gr->getId();
         $url_add = $url .'&amp;add_chart=';
         foreach($gr->getChartFactories() as $factory) {
-            echo '<a href="'. $url_add . $factory['chart_type'] .'"  style="border:1px solid #ccc; margin:10px; padding:5px 10px; vertical-align:middle">';
-            echo '<img style="vertical-align:middle; " src="'. $factory['icon'] .'" /> ';
-            echo '<label style="margin-left:4px;">'. $factory['title'] .'</label>';
-            echo '</a>';
+            $js = 'location.href=\''.$url_add . $factory['chart_type'].'\'';
+            $on_click = 'onClick="'.$js.';"';
+            echo '<button type="button" class="btn graphontrackers_add_btn" '.$on_click.' style="background-image: url(\''.$factory['icon'].'\');">'. $factory['title'] .'</button> ';
         }
         echo '</p>';
         foreach($gr->getCharts() as $chart) {
