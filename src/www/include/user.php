@@ -263,16 +263,16 @@ function user_display_choose_password($page,$user_id = false) {
     <br><input type="password" value="" name="form_pw2">
     <? } ?>
     </td><td>
-    <fieldset>
-        <legend><?=$GLOBALS['Language']->getText('account_check_pw', 'password_robustness')?> <span id="password_strategy_good_or_bad"></span></legend>
+    <div class="password_strategy">
+        <p><?=$GLOBALS['Language']->getText('account_check_pw', 'password_robustness')?> <span id="password_strategy_good_or_bad"></span></p>
         <?php
         $password_strategy = new PasswordStrategy();
         include($GLOBALS['Language']->getContent('account/password_strategy'));
         foreach($password_strategy->validators as $key => $v) {
-            echo '<div id="password_validator_msg_'. $key .'">'. $v->description() .'</div>';
+            echo '<p id="password_validator_msg_'. $key .'">'. $v->description() .'</p>';
         }
         ?>
-    </fieldset>
+    </blockquote>
     </td></tr></table>
     <script type="text/javascript">
     var password_validators = [<?= implode(', ', array_keys($password_strategy->validators)) ?>];

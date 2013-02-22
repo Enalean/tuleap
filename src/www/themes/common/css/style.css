@@ -602,6 +602,9 @@ table.release tr td img {
 /* }}} */
 
 /* {{{ password validator */
+.password_strategy {
+    margin-left: 1em;
+}
 .password_validator_ok,
 .password_validator_ko {
     background:transparent url(../images/ic/tick.png) left top no-repeat;
