@@ -27,7 +27,6 @@
 body {
     margin: 0;
     background: #bcbcad;
-    color:#333;
 }
 body.lab-mode {
     padding-bottom: 3em;
