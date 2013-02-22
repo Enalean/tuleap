@@ -163,34 +163,33 @@ class graphicEngineHtml extends Error {
                 $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','modify_report').' \''.$hp->purify($gr->name).'\' ';
 		echo help_button('TrackerAdministration.html#GraphTrackerReportSetting').'</H2>';
         echo '<p><a href="/tracker/admin/?func=reportgraphic&amp;group_id='. (int)$group_id .'&amp;atid='. (int)$atid .'">&laquo; '. $GLOBALS['Language']->getText('plugin_graphontrackers_include_report','return_reports') .'</a></p>';
-        echo '<FORM NAME="show_rep_graphic" ACTION="/tracker/admin/" METHOD="POST">
-              <INPUT TYPE="HIDDEN" NAME="func" VALUE="reportgraphic">
-              <INPUT TYPE="HIDDEN" NAME="update_report_graphic" VALUE="y">
-              <INPUT TYPE="HIDDEN" NAME="atid" VALUE="'.$hp->purify($atid).'">
-              <INPUT TYPE="HIDDEN" NAME="group_id" VALUE="'.$hp->purify($group_id).'">
-              <INPUT TYPE="HIDDEN" NAME="report_graphic_id" VALUE="'.$hp->purify($gr->getId()).'">
-              <INPUT TYPE="HIDDEN" NAME="post_changes_graphic" VALUE="y">
-              <table><tr valign="top"><td>
-              <B>'.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','name').': </B>
-              </td><td>
-              <INPUT TYPE="TEXT" NAME="rep_name" VALUE="'.$hp->purify($gr->getName()).'" SIZE="20" MAXLENGTH="20">
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <B>'.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','scope').': </B>';
+        echo '<form name="show_rep_graphic" action="/tracker/admin/" method="post" class="form-inline">
+              <input type="hidden" name="func" value="reportgraphic">
+              <input type="hidden" name="update_report_graphic" value="y">
+              <input type="hidden" name="atid" value="'.$hp->purify($atid).'">
+              <input type="hidden" name="group_id" value="'.$hp->purify($group_id).'">
+              <input type="hidden" name="report_graphic_id" value="'.$hp->purify($gr->getId()).'">
+              <input type="hidden" name="post_changes_graphic" value="y">
+
+              <label>'.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','name').': </label>
+              <input type="text" name="rep_name" value="'.$hp->purify($gr->getName()).'" maxlength="20" class="input-small">
+
+              <label>'.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','desc').':</label>
+              <input type="text" name="rep_desc" value="'.$hp->purify($gr->getDescription()).'" class="input-xlarge" />
+
+              <label>'.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','scope').': </label>';
     
         if ($GLOBALS['ath']->userIsAdmin()) {
-            echo '<SELECT NAME="rep_scope">
-                  <OPTION VALUE="I"'.($gr->getScope() =='I' ? 'SELECTED':'').'>'.$GLOBALS['Language']->getText('global','Personal').'</OPTION>
-                  <OPTION VALUE="P"'.($gr->getScope() =='P' ? 'SELECTED':'').'>'.$GLOBALS['Language']->getText('global','Project').'</OPTION>
-                  </SELECT>';
+            echo '<select name="rep_scope">
+                  <option value="i"'.($gr->getScope() =='I' ? 'selected="selected"':'').'>'.$GLOBALS['Language']->getText('global','Personal').'</option>
+                  <option value="p"'.($gr->getScope() =='P' ? 'selected="selected"':'').'>'.$GLOBALS['Language']->getText('global','Project').'</option>
+                  </select>';
         } else {
             echo ($gr->getScope() =='P' ? $GLOBALS['Language']->getText('global','Project'):$GLOBALS['Language']->getText('global','Personal'));
         }
 
-        echo '</td><td rowspan="2"  valign="middle"><input type="submit" name="update_report" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /></td></tr>
-              <tr valign="top"><td><B>'.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','desc').':</B></td><td>
-              <INPUT TYPE="TEXT" NAME="rep_desc" VALUE="'.$hp->purify($gr->getDescription()).'" class="textfield_medium" />
-              </td></tr></table>';
-
+        echo '<input type="submit" name="update_report" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" class="btn"/>';
+        
         echo '<hr /><p><strong>'.$GLOBALS['Language']->getText('plugin_graphontrackers_include_report','add_chart').'</strong> ';
         $url = '/tracker/admin/?func=reportgraphic&amp;group_id='. (int)$group_id .'&amp;atid='. (int)$atid .'&amp;report_graphic_id='. (int)$gr->getId();
         $url_add = $url .'&amp;add_chart=';
@@ -208,8 +207,8 @@ class graphicEngineHtml extends Error {
             $chart->display();
             echo '</div>';
         }
-        echo '<div style="clear:both;"></div>';
-        '</FORM>';
+        echo '<div style="clear:both;"></div>
+        </form>';
     }
 
     function showChartForm($chart) {
