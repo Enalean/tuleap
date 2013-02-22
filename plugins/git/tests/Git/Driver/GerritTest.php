@@ -252,4 +252,54 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 }
 
+class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTest {
+
+    private $groupname;
+    private $ldap_id;
+    private $user;
+    private $account_id;
+    private $group_id;
+
+    public function setUp() {
+        parent::setUp();
+        $this->groupname      = 'project/repo-contributors';
+        $this->ldap_id        = 'someuser';
+        $this->user           = aUser()->withLdapId($this->ldap_id)->build();
+        $this->account_id     = 1000003;
+        $this->group_id       = 52;
+
+        $this->get_account_query   = 'gerrit gsql --format json -c "SELECT\ account_id\ FROM\ accounts\ WHERE\ full_name=\\\''. $this->ldap_id .'\\\'"';
+        $this->get_group_query     = 'gerrit gsql --format json -c "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\'"';
+        $this->remove_member_query = 'gerrit gsql --format json -c "DELETE\ FROM\ account_group_members\ WHERE\ account_id='. $this->account_id .'\ AND\ group_id='. $this->group_id .'"';
+
+        $this->get_account_result = '{"type":"row","columns":{"account_id":"'. $this->account_id .'"}}'.
+                                    PHP_EOL .
+                                    '{"type":"query-stats","rowCount":1,"runTimeMilliseconds":2}';
+
+        $this->get_group_result   = '{"type":"row","columns":{"group_id":"'. $this->group_id .'"}}'.
+                                    PHP_EOL .
+                                    '{"type":"query-stats","rowCount":1,"runTimeMilliseconds":2}';
+
+        stub($this->ssh)->execute($this->gerrit_server, $this->get_account_query)->returns($this->get_account_result);
+        stub($this->ssh)->execute($this->gerrit_server, $this->get_group_query)->returns($this->get_group_result);
+    }
+
+    public function itExecutesTheDeletionCommand() {
+        expect($this->ssh)->execute($this->gerrit_server, $this->remove_member_query)->at(2);
+
+        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
+    }
+
+    public function itAsksGerritForAccountId() {
+        expect($this->ssh)->execute($this->gerrit_server, $this->get_account_query)->at(0);
+
+        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
+    }
+
+    public function itAsksGerritForGroupId() {
+        expect($this->ssh)->execute($this->gerrit_server, $this->get_group_query)->at(1);
+
+        $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
+    }
+}
 ?>

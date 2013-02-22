@@ -125,6 +125,12 @@ class Git_Driver_Gerrit {
     }
 
     public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, $project_name) {
+        $gerrit_user_id  = $this->getGerritUserId($server, $user);
+        $gerrit_group_id = $this->getGerritGroupId($server, $project_name);
+
+        $query = self::GSQL_COMMAND .' "DELETE\ FROM\ account_group_members\ WHERE\ account_id='. $gerrit_user_id .'\ AND\ group_id='. $gerrit_group_id .'"';
+
+        $this->ssh->execute($server, $query);
     }
 
     private function getGerritUserId(Git_RemoteServer_GerritServer $server, User $user) {
