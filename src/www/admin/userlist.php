@@ -21,7 +21,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
     $hp = Codendi_HTMLPurifier::instance();
     global $Language;
     echo '<P>'.$Language->getText('admin_userlist','legend').'</P>
-          <TABLE width=100% cellspacing=0 cellpadding=0 BORDER="1">';
+          <TABLE class="table table-bordered table-striped table-hover">';
     $odd_even = array('boxitem', 'boxitemalt');
     if ($user_name_search != "") {
         $user_name_param="&user_name_search=$user_name_search";
@@ -29,12 +29,14 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
         $user_name_param="";
     }
 
-    $i = 0;
+    echo '<thead>';
     echo "<tr><th>".$Language->getText('include_user_home','login_name')."</th>";
     echo "<th>".$Language->getText('include_user_home','real_name')."</th>";
     echo "<th>Profile</th>\n";
     echo "<th>".$Language->getText('admin_userlist','status')."</th>";
+    echo '</thead>';
     
+    echo '<tbody>';
     if ($res['numrows'] > 0) {
         foreach ($result as $usr) {
             switch ($usr['status']) {
@@ -67,7 +69,7 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
                     $name   = '(vr) '.$usr['user_name'];
                     break;
             }
-            echo "\n<TR class=\"". $odd_even[$i++ % count($odd_even)] ."\">";
+            echo "\n<TR>";
             echo "\n<TD><a href=\"usergroup.php?user_id=".$usr['user_id']."\">".$name."</a></TD>";
             echo "\n<TD>". $hp->purify($usr['realname'], CODENDI_PURIFIER_CONVERT_HTML) ."</TD>";
             echo "\n<TD><A HREF=\"/users/".$usr['user_name']."/\">[DevProfile]</A></TD>";
@@ -75,20 +77,18 @@ function show_users_list ($res, $offset, $limit, $user_name_search="") {
             echo "\n</TR>";
         }
     }
-    echo "</TABLE>";
-    echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
+    echo "</tbody></TABLE>";
+    echo '<div style="text-align:center">';
 
     if ($offset > 0) {
         echo  '<a href="?offset='.($offset-$limit).$user_name_param.'">[ '.$Language->getText('project_admin_utils', 'previous').'  ]</a>';
         echo '&nbsp;';
     }
+    echo ($offset + count($result)).'/'.$res['numrows'];
     if (($offset + $limit) < $res['numrows']) {
         echo '&nbsp;';
         echo '<a href="?offset='.($offset+$limit).$user_name_param.'">[ '.$Language->getText('project_admin_utils', 'next').' ]</a>';
     }
-    echo '</div>';
-    echo '<div style="text-align:center" class="'. util_get_alt_row_color($i++) .'">';
-    echo ($offset+$i-2).'/'.$res['numrows'];
     echo '</div>';
 }
 
@@ -97,7 +97,7 @@ $offset = $request->getValidated('offset', 'uint', 0);
 if ( !$offset || $offset < 0 ) {
     $offset = 0;
 }
-$limit  = 100;
+$limit  = 10;
 
 $vUserNameSearch  = new Valid_String('user_name_search');
 $user_name_search = '';

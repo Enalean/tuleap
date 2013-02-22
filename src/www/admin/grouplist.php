@@ -17,7 +17,7 @@ $offset = $request->getValidated('offset', 'uint', 0);
 if ( !$offset || $offset < 0 ) {
     $offset = 0;
 }
-$limit  = 50;
+$limit = 50;
 
 $group_name_search = "0";
 $vGroupNameSearch = new Valid_String('group_name_search');
@@ -54,19 +54,20 @@ if ($group_name_search !="0") {
 
 ?>
 
-<TABLE width="100%" border="1">
+<TABLE class="table table-bordered table-striped table-hover">
+<thead>
 <TR>
-<TD><b><?php echo $Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click');?></b></TD>
-<TD><b><?php echo $Language->getText('admin_groupedit','unix_grp'); ?></b></TD>
-<TD><b><?php echo $Language->getText('global','status'); ?></b></TD>
-<TD><B><?php echo $Language->getText('admin_groupedit','group_type'); ?></B></TD>
-<TD><b><?php echo $Language->getText('admin_groupedit','public'); ?></b></TD>
-<TD><b><?php echo $Language->getText('admin_groupedit','license'); ?></b></TD>
-<TD><B><?php echo $Language->getText('admin_grouplist','members'); ?></B></TD>
+<TH><b><?php echo $Language->getText('admin_groupedit','grp_name')." ".$Language->getText('admin_grouplist','click');?></b></TH>
+<TH><b><?php echo $Language->getText('admin_groupedit','unix_grp'); ?></b></TH>
+<TH><b><?php echo $Language->getText('global','status'); ?></b></TH>
+<TH><B><?php echo $Language->getText('admin_groupedit','group_type'); ?></B></TH>
+<TH><b><?php echo $Language->getText('admin_groupedit','public'); ?></b></TH>
+<TH><b><?php echo $Language->getText('admin_groupedit','license'); ?></b></TH>
+<TH><B><?php echo $Language->getText('admin_grouplist','members'); ?></B></TH>
 </TR>
-
+</thead>
+<tbody>
 <?php
-$odd_even = array('boxitem', 'boxitemalt');
 $i = 0;
 // Get project type label
 $template = TemplateSingleton::instance();
@@ -86,7 +87,7 @@ if ($status !="") {
 if ($res['numrows'] > 0) {
     $daoUsers = new UserGroupDao(CodendiDataAccess::instance());
     foreach ($res['projects'] as $grp) {
-        print "<tr class=\"". $odd_even[$i++ % count($odd_even)] ."\">";
+        print "<tr>";
         print '<td><a href="groupedit.php?group_id='.$grp['group_id'].'">'.$grp['group_name'].'</a></td>';
         print '<td>'.$grp['unix_group_name'].'</td>';
         print '<td><span class="site_admin_project_status_'.$grp['status'].'">&nbsp;</span>'.$Language->getText('admin_groupedit', 'status_'.$grp['status']).'</td>';
@@ -102,8 +103,8 @@ if ($res['numrows'] > 0) {
         print "</tr>\n";
     }
 
-    echo '</TABLE>'.PHP_EOL;
- 
+    echo '<tbody></TABLE>'.PHP_EOL;
+
     echo '<div style="text-align:center">';
 
     if ($offset > 0) {
@@ -111,7 +112,7 @@ if ($res['numrows'] > 0) {
         echo '&nbsp;';
     }
     
-    echo ($offset+$i).'/'.$res['numrows'];
+    echo ($offset+count($res['projects'])).'/'.$res['numrows'];
     
     if (($offset + $limit) < $res['numrows']) {
         echo '&nbsp;';
@@ -119,7 +120,7 @@ if ($res['numrows'] > 0) {
     }
     echo '</div>';
 } else {
-    echo '</TABLE>'.PHP_EOL;
+    echo '<tbody></TABLE>'.PHP_EOL;
 }
 
 site_admin_footer(array());
