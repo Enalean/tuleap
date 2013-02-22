@@ -611,15 +611,6 @@ img {
     background:white;
 }
 
-/* document manager */
-/* It is a plugin. Look in /etc/codendi/plugins/docman/www/themes/CodendiSTN */
-
-/* trackers */
-#artifacts_result table td {
-    margin: 0;
-    padding: 0;
-}
-
 /* }}}*/
 
 
