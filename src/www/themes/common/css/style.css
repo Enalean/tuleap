@@ -1282,7 +1282,10 @@ input.inputMessage { color: #ccc; font-size: 11px; }
 .site_admin .widget {
     margin-bottom: 20px;
 }
-
+.site_admin .user_name_search,
+.site_admin .group_name_search {
+    width: auto;
+}
 /* }}}*/
 
 /* {{{ Avatars */

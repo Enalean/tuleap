@@ -125,7 +125,7 @@ foreach(array_chunk($types, 5) as $row) {
 }
 echo '</table>';
 echo '<hr size="1" />';
-echo '<input type="submit" name="filter" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+echo '<input type="submit" name="filter" class="btn" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
 echo '</fieldset>';
 echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token);
 
@@ -163,8 +163,8 @@ foreach($dar as $row) {
     }
     echo '</td><td>';
     if ($request->get('edit') == $row['id']) {
-        echo '<input type="submit" name="save" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-        echo '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" />';
+        echo '<input type="submit" class="btn btn-primary" name="save" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" /> ';
+        echo '<input type="submit" class="btn" name="cancel" value="'. $GLOBALS['Language']->getText('global', 'btn_cancel') .'" /> ';
     } else {
         echo '<a href="?edit='. $row['id'] .'">'. $GLOBALS['HTML']->getImage('ic/edit.png') .'</a>';
     }
@@ -183,7 +183,7 @@ if (!$request->get('edit')) {
     echo '<option value="'. SystemEvent::STATUS_ERROR .'"   selected="true">'. SystemEvent::STATUS_ERROR   .'</option>';
     echo '</select>';
     echo '</td><td>';
-    echo '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+    echo '<input type="submit" class="btn" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
     echo '</td></tr>';
 }
 echo '</tbody>';
