@@ -252,28 +252,31 @@ $wPlugins->setContent('<ul>'.$pluginsContent.'</ul>');
 
 // Start output
 site_admin_header(array('title'=>$Language->getText('admin_main', 'title')));
+echo '<div class="container site_admin">';
 
 echo "<p><i>".$Language->getText('admin_main', 'message')."</i></p>";
 
-echo '<table id="site_admin_main_table"><tr>';
+echo '<div class="row">';
 
-echo '<td>';
+echo '<div class="span4">';
 $wUser->display();
 $wProject->display();
-echo "</td>";
+echo '</div>';
 
-echo '<td>';
+echo '<div class="span4">';
 $wUtils->display();
 $wConf->display();
-echo "</td>";
+echo '</div>';
 
-echo '<td>';
+echo '<div class="span4">';
 $wDoc->display();
 $wStats->display();
 $wPlugins->display();
-echo "</td>";
+echo '</div>';
 
-echo "</tr></table>";
+echo '</div>';
+
+echo '</div>';
 
 site_admin_footer(array());
 ?>
