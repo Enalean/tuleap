@@ -1,3 +1,13 @@
+2.0.4 - Tuleap 5.12
+    == /!\ Backward compatibility break /!\ ==
+    * updateArtifact method does not attempt no more values' labels for binded list fields, but attempts their ids.
+      -> impacted method : updateArtifact
+
+    == New behaviour ==
+    * updateArtifact method expects for every list fields the id of the value(s), and not the value(s) label(s). For None value, the id is always 100.
+    * getTrackerFields method exports now for a list binded on users the complete list of users with their ids
+    * WSDL type 'TrackerFieldBindValue' does not export the field id
+
 2.0.3 - Tuleap 5.9
     * Bug fix: rename TrackerWorkflowRules type to TrackerWorkflowRuleArray
 
