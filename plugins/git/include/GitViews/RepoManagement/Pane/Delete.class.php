@@ -64,7 +64,7 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
             $html .= '<p>'. 'You cannot delete' .'</p>';
             $disabled = 'readonly="readonly" disabled="disabled"';
         }
-        $html .= '<input type="submit" name="confirm_deletion" value="'. $GLOBALS['Language']->getText('plugin_git', 'admin_deletion_submit') .'" '. $disabled .'/>';
+        $html .= '<input type="submit" class="btn btn-danger" name="confirm_deletion" value="'. $GLOBALS['Language']->getText('plugin_git', 'admin_deletion_submit') .'" '. $disabled .'/>';
         return $html;
     }
 
@@ -75,14 +75,14 @@ class GitViews_RepoManagement_Pane_Delete extends GitViews_RepoManagement_Pane {
         $html .= '<p>'. $GLOBALS['Language']->getText('plugin_git', 'confirm_deletion_msg', array($this->repository->getFullName())) .'</p>';
         $html .= '<p>';
         $html .= '<input type="hidden" id="action" name="action" value="del" />';
-        $html .= '<input type="submit" id="submit" name="submit" value="'. $GLOBALS['Language']->getText('plugin_git', 'yes') .'"/>';
+        $html .= '<input type="submit" class="btn btn-danger" id="submit" name="submit" value="'. $GLOBALS['Language']->getText('plugin_git', 'yes') .'"/> ';
         $onclick = 'onclick="window.location=\'/plugins/git/?'. http_build_query(array(
             'action'   => 'repo_management',
             'pane'     => $this->getIdentifier(),
             'group_id' => $this->repository->getProjectId(),
             'repo_id'  => $this->repository->getId(),
         )) .'\'"';
-        $html .= '<input type="button" value="'. $GLOBALS['Language']->getText('plugin_git', 'no') .'" '. $onclick .'/>';
+        $html .= '<input type="button" class="btn" value="'. $GLOBALS['Language']->getText('plugin_git', 'no') .'" '. $onclick .'/>';
         $html .= '</p>';
         $html .= '</div>';
         return $html;

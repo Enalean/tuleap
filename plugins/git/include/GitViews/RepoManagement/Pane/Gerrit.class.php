@@ -86,7 +86,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
             $html .= '</select>';
             $html .= '</p>';
 
-            $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
+            $html .= '<p><input type="submit" name="save" class="btn" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
             $html .= '</form>';
         }
         return $html;

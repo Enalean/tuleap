@@ -308,8 +308,9 @@ class GitViews extends PluginViews {
                 $options = ' checked="true" ';
             }
             echo '<div>
+                <label class="radio">
                 <input id="choose_personal" type="radio" name="choose_destination" value="personal" '.$options.' />
-                <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
+                '.$this->getText('fork_choose_destination_personal').'</label>
             </div>';
 
             echo $this->fetchCopyToAnotherProject();
@@ -323,7 +324,7 @@ class GitViews extends PluginViews {
             echo '</td>';
 
             echo '<td class="last">';
-            echo '<input type="submit" value="'. $this->getText('fork_repositories') .'" />';
+            echo '<input type="submit" class="btn" value="'. $this->getText('fork_repositories') .'" />';
             echo '</td>';
 
             echo '</tr></tbody></table>';
@@ -368,8 +369,9 @@ class GitViews extends PluginViews {
                 $options = '';
             }
             $html .= '<div>
+            <label class="radio">
                 <input id="choose_project" type="radio" name="choose_destination" value="project" '.$options.' />
-                <label for="choose_project">'.$this->getText('fork_choose_destination_project').'</label>
+                '.$this->getText('fork_choose_destination_project').'</label>
             </div>';
             
             $html .= '<select name="to_project" id="fork_destination">';

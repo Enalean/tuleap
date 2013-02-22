@@ -53,7 +53,7 @@ class GitViews_RepoManagement_Pane_Notification extends GitViews_RepoManagement_
         $html .= '<h4>'. $GLOBALS['Language']->getText('plugin_git', 'notified_mails_title') .'</h4>';
         $html .= $this->listOfMails();
         $html .= $this->notifiedPeople();
-        $html .= '<input type="submit" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+        $html .= '<input type="submit" class="btn" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
         $html .= '</form>';
         return $html;
     }
