@@ -116,9 +116,15 @@ class Git_Driver_Gerrit {
     }
 
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, $project_name) {
-
         $gerrit_user_id  = $this->getGerritUserId($server, $user);
         $gerrit_group_id = $this->getGerritGroupId($server, $project_name);
+
+        $query = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id, group_id)\ VALUES('. $gerrit_user_id .',\ '. $gerrit_group_id .')"';
+
+        $this->ssh->execute($server, $query);
+    }
+
+    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, $project_name) {
     }
 
     private function getGerritUserId(Git_RemoteServer_GerritServer $server, User $user) {
