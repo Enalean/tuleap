@@ -2416,6 +2416,25 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
      width: auto;
  }
 
+.service-wiki .wiki-dl-table {
+   border-collapse: separate;
+   border-style: outset;
+   border-width: thin;
+}
+
 .service-wiki h1 {
      font-size: 2em;
+ }
+
+ .service-wiki h2 {
+     font-size: 1.5em;
+ }
+
+ .service-wiki h3 {
+     font-size: 1.17em;
+ }
+
+ .service-wiki td{
+     vertical-align: top;
+     text-align: left;
  }

@@ -1697,6 +1697,11 @@ class Layout extends Response {
         } else {
                 print html_blankimage(1,140) . '<br>';
         }
+
+        $main_body_class = '';
+        if (isset($params['toptab']) && is_string($params['toptab'])) {
+            $main_body_class = 'service-' . $params['toptab'];
+        }
         ?>
 
 
@@ -1716,7 +1721,7 @@ class Layout extends Response {
 
         <td width="15" background="<? echo util_get_image_theme("fade.png"); ?>" nowrap>&nbsp;</td>
     
-        <td class="contenttable">
+        <td class="contenttable <?=$main_body_class?>">
         <BR>
 <?php
         if (isset($params['group']) && $params['group']) {
