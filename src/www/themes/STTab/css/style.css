@@ -54,11 +54,6 @@ a:hover {
 	color: blue; 
 }
 
-fieldset {
-    border: 1px solid rgb(196,196,196);
-    margin-bottom: 1em;
-}
-
 /******** priorities **********/
 .priora { background-color: #dadada; }
 .priorb { background-color: #dad0d0; }

@@ -22,21 +22,19 @@ echo '<h3>'. $Language->getText('account_options', 'preferences') .'</h3>';
     $csrf = new CSRFSynchronizerToken('/account/preferences.php');
     echo $csrf->fetchHTMLInput();
 ?>
-<table>
-    <tr><td width="50%"></td><td></td></tr>
-    <tr valign="top">
-        <td>
+<div class="row">
+    <div class="span6">
             <fieldset>
                 <legend><?php echo $Language->getText('account_preferences', 'email_settings'); ?></legend>
-<p>
-  <INPUT type="checkbox" name="form_mail_site" value="1" <?= $user->getMailSiteUpdates() ? 'checked="checked"' : '' ?> />
-  <?= $Language->getText('account_register', 'siteupdate'); ?>
-</p>
+  <label class="checkbox">
+    <input type="checkbox" name="form_mail_site" value="1" <?= $user->getMailSiteUpdates() ? 'checked="checked"' : '' ?> />
+    <?= $Language->getText('account_register', 'siteupdate'); ?>
+  </label>
 
-<p>
-  <INPUT type="checkbox" name="form_mail_va" value="1"   <?= $user->getMailVA() ? 'checked="checked"' : '' ?> />
-  <?= $Language->getText('account_register', 'communitymail'); ?>
-</p>
+  <label class="checkbox">
+    <input type="checkbox" name="form_mail_va" value="1"   <?= $user->getMailVA() ? 'checked="checked"' : '' ?> />
+    <?= $Language->getText('account_register', 'communitymail'); ?>
+  </label>
 
 <p>
 
@@ -59,19 +57,22 @@ print "</select>\n";
 </p>
 
             </fieldset>
-            <fieldset>
+
+        <fieldset>
                 <legend><?php echo $Language->getText('account_preferences', 'session'); ?></legend>
-<p>
+    <label class="checkbox">
   <input type="checkbox"  name="form_sticky_login" value="1" <?= $user->getStickyLogin() ? 'checked="checked"' : '' ?> />
   <?= $Language->getText('account_options', 'remember_me', $GLOBALS['sys_name']) ?>
-</p>
+    </label>
             </fieldset>
+        
             <fieldset id="account_preferences_lab_features">
               <legend><?= $Language->getText('account_preferences', 'lab_features_title',  array($GLOBALS['sys_name']))?></legend>
               <p><?= $Language->getText('account_preferences', 'lab_features_description', array($GLOBALS['sys_name'])) ?></p>
               <p>
+                <label class="checkbox">
                 <input type="checkbox" name="form_lab_features" id="form_lab_features" value="1" <?= $user->useLabFeatures() ? 'checked="checked"' : '' ?> />
-                <label for="form_lab_features"><?= $Language->getText('account_preferences', 'lab_features_cblabel', $GLOBALS['sys_name']) ?></label>
+                <?= $Language->getText('account_preferences', 'lab_features_cblabel', $GLOBALS['sys_name']) ?></label>
               </p>
               <?php 
                   $labs = array();
@@ -96,8 +97,10 @@ print "</select>\n";
                   }
               ?>
             </fieldset>
-        </td>
-        <td>
+    </div>
+
+    <div class="span6">
+
             <fieldset>
                 <legend><?php echo $Language->getText('account_preferences', 'appearance'); ?></legend>
                 <table>
@@ -147,17 +150,19 @@ echo '<tr><td>'.$Language->getText('account_options', 'font_size').': </td>
       </tr>';
 ?>
                     <tr>
+                        <td><?php echo $Language->getText('account_options', 'language'); ?>: </td>
                         <td>
-<?php echo $Language->getText('account_options', 'language'); ?>: </td><td>
 <?php
 // display supported languages
 echo html_get_language_popup($Language,'language_id',UserManager::instance()->getCurrentUser()->getLocale());
 ?>
+                        </td>
                     </tr>
                    <tr>
                         <td>
  	  	 <?php echo $Language->getText('account_options', 'username_display').':'; ?>
- 	  	 </TD><TD>
+                        </td>
+                        <td>
  	  	 <?php
  	  	 // build the username_display select-box
  	  	 print '<select name="username_display">'."\n";
@@ -184,7 +189,8 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
                  print '>'.$Language->getText('account_options','real_name').'</option>';
                  print '</select>';
  	  	 ?>
-                    </tr>
+                        </td>
+                  </tr>
                 <?php
                 $plugins_prefs = array();
                 $em = EventManager::instance();
@@ -197,6 +203,7 @@ echo html_get_language_popup($Language,'language_id',UserManager::instance()->ge
                 ?>
                 </table>
             </fieldset>
+        
             <fieldset>
                 <legend><?php echo $Language->getText('account_preferences', 'import_export'); ?></legend>
                  <table>
@@ -250,10 +257,13 @@ print "</select>\n";
                  </tr>
                 </table>
             </fieldset>
-        </td>
-    </tr>
-</table>
-<P align=center><CENTER><INPUT type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>"></CENTER>
+    </div>
+</div>
+    <div class="row">
+        <div class="span12">
+            <INPUT type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
+        </div>
+    </div>
 </FORM>
 <?php 
 $HTML->footer(array());
