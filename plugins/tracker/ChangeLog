@@ -1,3 +1,6 @@
+Version 5.82 - Tuleap 5.12
+    * Fix two bugs : bug #2396 and bug #2234. We modify the behaviour of update_artifact by passing id of list values instead of their labels
+
 Version 5.81 - Tuleap 5.11
     * Fix integration of search in follow-up comments and cross tracker search
 
