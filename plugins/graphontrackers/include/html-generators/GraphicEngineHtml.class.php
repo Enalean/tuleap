@@ -269,7 +269,7 @@ class graphicEngineHtml extends Error {
         } else {
             $image = 'ic/toggle_minus.png';
         }
-        echo $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
+        echo $GLOBALS['HTML']->getImage($image);
         echo '</a>';
         echo $GLOBALS['Language']->getText('plugin_graphontrackers_report','title') .'</h3>';
         echo '<div id="artifacts_charts" style="padding-left:16px;">';
