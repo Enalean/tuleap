@@ -27,7 +27,6 @@
 body {
     margin: 0;
     background: #bcbcad;
-    color:#333;
 }
 body.lab-mode {
     padding-bottom: 3em;
@@ -85,7 +84,6 @@ fieldset {
 
 /* .footer { color: #333333; } */
 .footer {
-    width: 100%;
     padding-top: 1.5em;
 } 
 .standardtable { width: 99%; border-spacing: 0; border: 0; color: #333333; }
@@ -1326,22 +1324,8 @@ input.inputMessage { color: #ccc; font-size: 11px; }
     background-image:url('../images/ic/tick.png');
 }
 
-#site_admin_main_table {
-    width: 100%;
-}
-
-#site_admin_main_table td {
-    width: 30%;
-    vertical-align: top;
-}
-
-#site_admin_main_table ul {
-    padding: 0;
-    margin: 0;
-}
-
-#site_admin_main_table li {
-    margin-left: 1em;
+.site_admin .widget {
+    margin-bottom: 20px;
 }
 
 /* }}}*/
