@@ -68,7 +68,7 @@ print "</select>\n";
         
             <fieldset id="account_preferences_lab_features">
               <legend><?= $Language->getText('account_preferences', 'lab_features_title',  array($GLOBALS['sys_name']))?></legend>
-              <p><?= $Language->getText('account_preferences', 'lab_features_description', array($GLOBALS['sys_name'])) ?></p>
+              <p class="lab_features"><?= $Language->getText('account_preferences', 'lab_features_description', array($GLOBALS['sys_name'])) ?></p>
               <p>
                 <label class="checkbox">
                 <input type="checkbox" name="form_lab_features" id="form_lab_features" value="1" <?= $user->useLabFeatures() ? 'checked="checked"' : '' ?> />
