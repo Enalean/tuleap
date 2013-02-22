@@ -210,12 +210,6 @@ a.sortbutton { font-size: 90%; color: white; }
   background-color: #ffffff;
 }
 
-/* text with tooltips (e.g. artifact fields) */
-.tooltip { text-decoration:none; color: #000000}
-.tooltip:hover { text-decoration:none; color: #ff0000}
-
-
-
 /************* Tabs *************/
 a.tabsellink, a.tabsellink:visited, 
 a.tablink, a.tablink:visited {

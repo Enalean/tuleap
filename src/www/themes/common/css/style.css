@@ -180,8 +180,8 @@ tr.boxitemalt:hover {
 }
 
 /* text with tooltips (e.g. artifact fields) */
-.tooltip { text-decoration:none; color: #000000}
-.tooltip:hover { text-decoration:none; color: #ff0000}
+.artifact_field_tooltip { text-decoration:none; color: #000000}
+.artifact_field_tooltip:hover { text-decoration:none; color: #ff0000}
 
 #footer_debug {
     background: white url(../images/debug_gradient.png) top left repeat-x;
