@@ -1358,6 +1358,12 @@ div.avatar > img {
 .rte_clear {
     clear: both;
 }
+#mail_message {
+    width: auto;
+}
+#mail_message_label {
+    margin-bottom: 0.5em;
+}
 /* }}} */
 
 /* {{{ Admin delegation */
