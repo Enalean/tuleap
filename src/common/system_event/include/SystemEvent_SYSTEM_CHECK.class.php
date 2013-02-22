@@ -164,12 +164,17 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
             $backendSVN->setSVNApacheConfNeedUpdate();
         }
 
-        EventManager::instance()->processEvent(
+        try {
+            EventManager::instance()->processEvent(
                 Event::CHECK_AUTHORIZED_KEYS,
                 array(
-                    'backend' => $backendSystem
+                    'backend' => $backendSystem,
                 )
-        );
+            );
+        } catch(Exception $exception) {
+            $this->error($exception->getMessage());
+            return false;
+        }
         
         $this->done();
         return true;
