@@ -253,7 +253,7 @@ function user_display_choose_password($page,$user_id = false) {
     if ($page == 'admin_creation') {
         echo $GLOBALS['Language']->getText('account_change_pw', 'new_password');
 ?>:
-     <br><input type="text" value="" id="form_pw" name="form_pw">
+     <br><div class="input-append"><input type="text" value="" id="form_pw" name="form_pw"></div>
      <script type="text/javascript" src="/scripts/user.js"></script>
      
     

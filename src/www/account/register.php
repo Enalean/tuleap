@@ -164,29 +164,31 @@ function display_account_form($register_error)	{
 <P><?php print $Language->getText('account_register', 'tz').'&nbsp;'.$star; ?>:<BR>
 <?php
     echo html_get_timezone_popup ('timezone',$timezone); ?>
-<P>
+<p>
+<label class="checkbox">
 <?php
 if($request->isPost() && $request->exist('Register') && !($request->get('form_mail_site')==1)){
 
-	echo '<P><INPUT type="checkbox" name="form_mail_site" value="1" >';
+	echo '<INPUT type="checkbox" name="form_mail_site" value="1" > ';
 
 }else{
 
-	echo '<P><INPUT type="checkbox" name="form_mail_site" value="1" checked>';
+	echo '<INPUT type="checkbox" name="form_mail_site" value="1" checked> ';
 
 }
-print $Language->getText('account_register', 'siteupdate');
+print $Language->getText('account_register', 'siteupdate') .'</label>';
 
+echo '<label class="checkbox">';
 if($request->isPost() && $request->exist('Register') && ($request->get('form_mail_va')==1)){
 
-	echo '<P><INPUT type="checkbox" name="form_mail_va" value="1" checked>';
+	echo '<INPUT type="checkbox" name="form_mail_va" value="1" checked> ';
 
 }else{
 
-	echo '<P><INPUT type="checkbox" name="form_mail_va" value="1" >';
+	echo '<INPUT type="checkbox" name="form_mail_va" value="1" > ';
 
 }
-print $Language->getText('account_register', 'communitymail');
+print $Language->getText('account_register', 'communitymail') . '</label>';
 
 ?>
 
@@ -202,7 +204,7 @@ if ($GLOBALS['sys_user_approval'] == 1 || $page == "admin_creation") {
         print ":<br>";
         print $Language->getText('account_register', 'purpose_directions_admin');
     }
-    echo '<textarea wrap="virtual" rows="5" cols="70" name="form_register_purpose">'.$form_register_purpose.'</textarea></p>';
+    echo '<textarea wrap="virtual" rows="5" cols="70" style="width:auto;" name="form_register_purpose">'.$form_register_purpose.'</textarea></p>';
 }
 ?>
 
@@ -211,40 +213,33 @@ if ($GLOBALS['sys_user_approval'] == 1 || $page == "admin_creation") {
 </p>
 <?php
 
-if($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users'] == 1){
+if ($page == "admin_creation" && $GLOBALS['sys_allow_restricted_users'] == 1) {
 
-	if($request->isPost() && $request->exist('Register') && !($request->get('form_restricted')==1)){
+    echo '<label class="checkbox">';
+    if($request->isPost() && $request->exist('Register') && !($request->get('form_restricted')==1)){
+        echo '<INPUT type="checkbox" name="form_restricted" value="1" > ';
+    } else {
+        echo '<INPUT type="checkbox" name="form_restricted" value="1" checked> ';
+    }
+    print $Language->getText('account_register', 'restricted_user') . '</label>';
+}
 
-		echo '<INPUT type="checkbox" name="form_restricted" value="1" >';
-
-	}else{
-
-		echo '<INPUT type="checkbox" name="form_restricted" value="1" checked>';
-
-	}
-
-	print $Language->getText('account_register', 'restricted_user');
+if ($page == "admin_creation") {
+    echo '<label class="checkbox">';
+    if ($request->isPost() && $request->exist('Register') && ($request->get('form_send_email')==1)){
+        echo '<INPUT type="checkbox" name="form_send_email" value="1" checked> ';
+    } else {
+        echo '<INPUT type="checkbox" name="form_send_email" value="1" > ';
+    }
+    print $Language->getText('account_register', 'send_email') . '</label>';
 }
 ?>
 
-
-
 <P>
-<p><input type="submit" name="Register" value="<?php if($page != "admin_creation") print $Language->getText('account_register', 'btn_register');
+<p><input type="submit" name="Register" class="btn btn-primary" value="<?php if($page != "admin_creation") print $Language->getText('account_register', 'btn_register');
 else print $Language->getText('account_register', 'btn_activate');?>">
 <?php
-if($page == "admin_creation") {
-	if($request->isPost() && $request->exist('Register') && ($request->get('form_send_email')==1)){
-
-		echo '<INPUT type="checkbox" name="form_send_email" value="1" checked>';
-
-	}else{
-
-		echo '<INPUT type="checkbox" name="form_send_email" value="1" >';
-
-	}
-	print $Language->getText('account_register', 'send_email');
-} else {
+if($page !== "admin_creation") {
     include $Language->getContent('account/user_legal');
 }
 
