@@ -126,7 +126,9 @@ foreach(array_chunk($types, ceil(count($types) / 3)) as $col) {
 }
 echo '</div>';
 echo '<hr />';
+echo '<p>';
 echo '<input type="submit" name="filter" class="btn" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+echo '</p>';
 echo '</fieldset>';
 echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token);
 
