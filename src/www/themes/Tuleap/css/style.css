@@ -68,11 +68,6 @@ a:hover {
 
 }
 
-fieldset {
-    border: 1px solid gray;
-    margin-bottom: 1em;
-}
-
 /******** priorities **********/
 .priora { background-color: #dadada; }
 .priorb { background-color: #dad0d0; }
@@ -214,12 +209,6 @@ a.sortbutton { font-size: 90%; color: white; }
 .bg_help {
   background-color: #ffffff;
 }
-
-/* text with tooltips (e.g. artifact fields) */
-.tooltip { text-decoration:none; color: #000000}
-.tooltip:hover { text-decoration:none; color: #ff0000}
-
-
 
 /************* Tabs *************/
 a.tabsellink, a.tabsellink:visited, 
@@ -590,14 +579,6 @@ td.artifact {
 	padding: 2em;
     border: 1px solid #bcbcad;
 width: 100%;
-}
-
-.artifact fieldset {
-    margin-bottom:10px;
-}
-.artifact fieldset legend {
-    font-size:1.2em;
-    font-weight: bold;
 }
 
 /* {{{ Date Picker */

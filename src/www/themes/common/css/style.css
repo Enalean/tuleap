@@ -62,10 +62,6 @@ a:hover {
     color:#ff0000; 
 }
 
-fieldset {
-    padding: 0.5em;
-}
-
 /******** priorities **********/
 .priora { background-color: #dadada; }
 .priorb { background-color: #dad0d0; }
@@ -184,8 +180,8 @@ tr.boxitemalt:hover {
 }
 
 /* text with tooltips (e.g. artifact fields) */
-.tooltip { text-decoration:none; color: #000000}
-.tooltip:hover { text-decoration:none; color: #ff0000}
+.artifact_field_tooltip { text-decoration:none; color: #000000}
+.artifact_field_tooltip:hover { text-decoration:none; color: #ff0000}
 
 #footer_debug {
     background: white url(../images/debug_gradient.png) top left repeat-x;
@@ -283,38 +279,6 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
-/* {{{ File Release System */
-.frs_filename_col {
-    width: 44%;
-}
-.frs_size_col {
-    width: 8%;
-}
-.frs_downloads_col {
-    width: 8%;
-}
-.frs_architecture_col {
-    width: 8%;
-}
-.frs_filetype_col {
-    width: 8%;
-}
-.frs_date_col {
-    width: 8%;
-}
-.frs_md5sum_col {
-    width: 8%;
-}
-.frs_user_col {
-    width: 8%;
-}
-fieldset.package {
-    margin-bottom: 20px;
-}
-fieldset.package legend {
-    font-size: larger;
-    padding-right: 10px;
-}
 .release {
     background-color: #D1CEC4;
     border-spacing: 0px;
@@ -676,15 +640,6 @@ table.release tr td img {
     font-size: 1.3em;
 }
 
-.artifact fieldset {
-    margin-bottom:10px;
-}
-
-.artifact fieldset legend {
-    font-size:1.3em;
-    font-weight: bold;
-    white-space: normal;
-}
 /* }}} */
 
 /* {{{ follow-up comments */
@@ -1941,8 +1896,7 @@ a#lightwindow_title_bar_close_link:hover {
 }
 /* }}} */
 
-/* {{{ Admin delegation */
-#account_preferences_lab_features legend,
+/* {{{ Lab feature */
 .lab_features {
     background:   no-repeat url('../images/ic/flask.png') 4px 2px;
     padding-left: 20px;

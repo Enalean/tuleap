@@ -971,14 +971,14 @@ class ArtifactHtml extends Artifact {
     
                         if ( ($sz > $max_size) || ($field->getName()=='details') ) {
                             $fieldset_html .= "\n<TR>".
-                            '<TD valign="top"><a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODENDI_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
+                            '<TD valign="top"><a class="artifact_field_tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODENDI_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
                                 '<TD valign="middle" colspan="'.($columns_number-1).'">'.
                                 $value.'</TD>'.                   
                                 "\n</TR>";
                             $i=0;
                         } else {
                             $fieldset_html .= ($i % $fields_per_line ? '':"\n<TR>");
-                            $fieldset_html .= '<TD valign="middle"><a class="tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODENDI_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
+                            $fieldset_html .= '<TD valign="middle"><a class="artifact_field_tooltip" href="#" title="'. $hp->purify(SimpleSanitizer::unsanitize($field->getDescription()), CODENDI_PURIFIER_CONVERT_HTML) .'">'.$label.$star.'</a></td>'.
                                   '<TD valign="middle">'.$value.'</TD>';
                             $i++;
                             $fieldset_html .= ($i % $fields_per_line ? '<td class="artifact_spacer">&nbsp;</td>':"\n</TR>");
