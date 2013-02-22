@@ -23,7 +23,7 @@ plugin_git	tree_title_available_repo	Project repositories
 plugin_git	tree_msg_no_available_repo	No repository found
 
 plugin_git	admin_reference_creation_title	Reference creation
-plugin_git	admin_reference_creation_input_name	Name
+plugin_git	admin_reference_creation_input_name	Name:
 plugin_git	admin_reference_creation_textarea_name	Description
 plugin_git	admin_reference_creation_submit	Create
 plugin_git	admin_reference_creation_input_type	Enable fine grain permissions on this repository <em>(EXPERIMENTAL)</em>.

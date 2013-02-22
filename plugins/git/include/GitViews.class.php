@@ -231,13 +231,13 @@ class GitViews extends PluginViews {
 <h3><?php echo $this->getText('admin_reference_creation_title');
         ?><a href="#" onclick="$('help_create').toggle();$('help_init').toggle()"> [?]</a></h3>
 <p>
-<form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST">
+<form id="addRepository" action="/plugins/git/?group_id=<?php echo $this->groupId ?>" method="POST" class="form-inline">
     <input type="hidden" id="action" name="action" value="add" />
     
     <label for="repo_name"><?= $this->getText('admin_reference_creation_input_name'); ?></label>
     <input id="repo_name" name="repo_name" class="" type="text" value=""/>
 
-    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>">
+    <input type="submit" id="repo_add" name="repo_add" value="<?php echo $this->getText('admin_reference_creation_submit')?>" class="btn">
 </form>
 </p>
         <?php
