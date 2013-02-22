@@ -1,5 +1,6 @@
 Version 5.89 - Tuleap 5.12
     * Fix two bugs : bug #2396 and bug #2234. We modify the behaviour of update_artifact by passing id of list values instead of their labels
+    * SOAP API Version 2.0.4
 
 Version 5.88 - Tuleap 5.11
     * Fix bugs #2601 - Should not have to click twice in IE to choose the bind

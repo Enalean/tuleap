@@ -1,7 +1,6 @@
 2.0.4 - Tuleap 5.12
     == /!\ Backward compatibility break /!\ ==
-    * updateArtifact method does not attempt no more values' labels for binded list fields, but attempts their ids.
-      -> impacted method : updateArtifact
+    * updateArtifact method no longer expects labels for binded list fields, but their numerical ids.
 
     == New behaviour ==
     * updateArtifact method expects for every list fields the id of the value(s), and not the value(s) label(s). For None value, the id is always 100.
