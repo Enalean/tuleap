@@ -2451,3 +2451,17 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     margin-left: 1em;
 }
 /* }}} */
+.service-wiki label[for="edit[minor_edit]"],
+.service-wiki label[for=useOldMarkup],
+.service-wiki label[for="edit[lock]"] {
+     display: inline;
+     font-weight: bold;
+ }
+
+.service-wiki .wikitext {
+     width: auto;
+ }
+
+.service-wiki h1 {
+     font-size: 2em;
+ }

@@ -132,12 +132,18 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
 <div id="navigation">
 <?php 
 echo $this->outerTabs($params);
+
+$main_body_class = '';
+if (isset($params['toptab']) && is_string($params['toptab'])) {
+    $main_body_class = 'service-' . $params['toptab'];
+}
+
 ?>
 </div> <!-- headertab -->
 
-<div class="main_body_row">  
+<div class="main_body_row <?= $main_body_class;?>">
 
-  <div class="contenttable">      
+  <div class="contenttable">
 	<?php
         echo $this->getBreadCrumbs();
         echo $this->getToolbar();
