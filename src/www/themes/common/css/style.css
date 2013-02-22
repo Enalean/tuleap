@@ -640,6 +640,11 @@ table.release tr td img {
     font-size: 1.3em;
 }
 
+/* Disable boostrap fixed size of input area (enforced by tracker config) */
+#artifact_section_details input, textarea {
+    width: auto;
+}
+
 /* }}} */
 
 /* {{{ follow-up comments */
