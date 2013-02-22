@@ -134,7 +134,6 @@ class GitViews extends PluginViews {
     public function repoManagement() {
         $params = $this->getData();
         $repository   = $params['repository'];
-        echo "<br/>";
         $this->_getBreadCrumb();
         echo '<h2>'. $repository->getHTMLLink() .' - '. $GLOBALS['Language']->getText('global', 'Settings') .'</h2>';
 
