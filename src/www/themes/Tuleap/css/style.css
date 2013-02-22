@@ -32,8 +32,6 @@ html {
 	background: #D8E7EE;
 }
 body {
-    font-family: "Lucida Grande", sans-serif;
-    font-size: 13px;
 	margin: 0;
 	background: #D8E7EE;
 	color: black;
@@ -55,8 +53,6 @@ body {
 .command { font-family: "Courier New", courier,sans-serif;}
 .subdomain { color: green; }
 .bg_confirmdownload { background-color: gray; }
-
-PRE,TT { font-family: "Courier New", courier, sans-serif; }
 
 /********   links    **********/
 a:link, a:visited { 

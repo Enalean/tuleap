@@ -28,7 +28,6 @@ body {
     margin: 0;
     background: #bcbcad;
     color:#333;
-    font-family: helvetica,arial,verdana,sans-serif;
 }
 body.lab-mode {
     padding-bottom: 3em;
@@ -49,8 +48,6 @@ body.lab-mode {
 .bg_confirmdownload { background-color: #F7F7F7; }
 
 img { border: none; }
-
-PRE,TT { font-family: "Courier New", courier,sans-serif; }
 
 /********   links    **********/
 a:link, a:visited { 
