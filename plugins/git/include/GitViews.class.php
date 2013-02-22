@@ -122,8 +122,6 @@ class GitViews extends PluginViews {
         $params = $this->getData();
         $repository = $params['repository'];
 
-        echo '<br />';
-        
         $this->_getBreadCrumb();
 
         $index_view = new GitViews_ShowRepo($repository, $this->controller, $this->controller->getRequest(), $params['driver'], $params['gerrit_servers']);
