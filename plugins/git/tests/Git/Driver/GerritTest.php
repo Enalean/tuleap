@@ -44,7 +44,7 @@ abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
 
         $this->project_name    = 'firefox';
         $this->namespace       = 'jean-claude';
-        $this->repository_name ='dusse';
+        $this->repository_name = 'dusse';
 
         $project = stub('Project')->getUnixName()->returns($this->project_name);
 

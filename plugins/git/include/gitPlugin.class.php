@@ -22,6 +22,7 @@
 require_once 'constants.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
+require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/MembershipManager.class.php';
 
 /**
  * GitPlugin
@@ -77,6 +78,9 @@ class GitPlugin extends Plugin {
         $this->_addHook('logs_daily',                                       'logsDaily',                                   false);
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
+
+        $this->_addHook('project_admin_ugroup_add_user');
+        $this->_addHook('project_admin_ugroup_remove_user');
     }
 
     public function site_admin_option_hook() {
@@ -579,6 +583,34 @@ class GitPlugin extends Plugin {
             default:
                 break;
         }
+    }
+
+    function project_admin_ugroup_add_user($params) {
+        $u_group_manager = new UGroupManager();
+        $u_group         = $u_group_manager->getById($params['ugroup_id']);
+
+        $user_manager    = UserManager::instance();
+        $user            = $user_manager->getUserById($params['user_id']);
+
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($params['group_id']);
+
+        $membership_manager = new Git_Driver_Gerrit_MembershipManager();
+        $membership_manager->addUserToGroup($user, $u_group, $project);
+    }
+
+    function project_admin_ugroup_remove_user($params) {
+        $u_group_manager = new UGroupManager();
+        $u_group         = $u_group_manager->getById($params['ugroup_id']);
+
+        $user_manager    = UserManager::instance();
+        $user            = $user_manager->getUserById($params['user_id']);
+
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($params['group_id']);
+
+        $membership_manager = new Git_Driver_Gerrit_MembershipManager();
+        $membership_manager->removeUserFromGroup($user, $u_group, $project);
     }
 
     /**
