@@ -57,57 +57,27 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
             $where  = " WHERE a.id IN (". $this->artifacts['id'] .") 
                           AND c.id IN (". $this->artifacts['last_changeset_id'] .") ";
             $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . $group_group . ' ORDER BY '. $af->getQueryOrderby() . $order_group;
-           //echo($sql);
+            //echo($sql);
+            $none = $GLOBALS['Language']->getText('global','none');
             $res = db_query($sql);
-            while($data = db_fetch_array($res)) {
-                if ($data[$af->name] !== null) {
-                    if ($select_group) {
-                        if(isset($data['red'])) {
-                            $engine->colors[$data[$af->name]] =  array($data['red'], $data['green'], $data['blue']);
-                        } else {
-                            $engine->colors[$data[$af->name]] =  array(null, null, null);
-                        }
-                        $engine->data[$data[$af->name]][$data[$gf->name]]   = $data['nb'];
-                        if($data[$gf->name] !== null) {
-                            $engine->xaxis[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
-                            $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
-                        } else {
-                            $engine->xaxis[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
-                            $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
-                        }
-                    } else {
-                        if(isset($data['red'])) {
-                            $engine->colors[] =  array($data['red'], $data['green'], $data['blue']);
-                        } else {
-                            $engine->colors[] =  array(null, null, null);
-                        }
-                        $engine->data[]   = $data['nb'];
+            while ($data = db_fetch_array($res)) {
+                $color = $this->getColor($data);
+                if ($select_group) {
+                    $engine->colors[$data[$af->name]] = $color;
+                    $engine->data[$data[$af->name]][$data[$gf->name]] = $data['nb'];
+                    $engine->xaxis[$data[$gf->name]]  = $none;
+                    $engine->labels[$data[$gf->name]] = $none;
+                    if($data[$gf->name] !== null) {
+                        $engine->xaxis[$data[$gf->name]]  = $gf->fetchRawValue($data[$gf->name]);
+                        $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
                     }
-                    $engine->legend[$data[$af->name]] = $af->fetchRawValue($data[$af->name]);
                 } else {
-                    if ($select_group) {
-                        $engine->data[$data[$af->name]][$data[$gf->name]]   = $data['nb'];
-                        if(isset($data['red'])) {
-                            $engine->colors[$data[$af->name]] =  array($data['red'], $data['green'], $data['blue']);
-                        } else {
-                            $engine->colors[$data[$af->name]] =  array(null, null, null);
-                        }
-                        if($data[$gf->name] !== null) {
-                            $engine->xaxis[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
-                            $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
-                        } else {
-                            $engine->xaxis[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
-                            $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
-                        }
-                    } else {
-                        $engine->data[]   = $data['nb'];
-                        if(isset($data['red'])) {
-                            $engine->colors[] =  array($data['red'], $data['green'], $data['blue']);
-                        } else {
-                            $engine->colors[] =  array(null, null, null);
-                        }
-                    }
-                    $engine->legend[$data[$af->name]] = $GLOBALS['Language']->getText('global','none');
+                    $engine->colors[] = $color;
+                    $engine->data[]   = $data['nb'];
+                }
+                $engine->legend[$data[$af->name]] = $none;
+                if ($data[$af->name] !== null) {
+                    $engine->legend[$data[$af->name]] = $af->fetchRawValue($data[$af->name]);
                 }
             }
         }
