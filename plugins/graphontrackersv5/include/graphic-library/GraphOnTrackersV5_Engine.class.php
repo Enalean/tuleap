@@ -42,27 +42,44 @@ abstract class GraphOnTrackersV5_Engine {
             return false;
         }
     }
-    
-    public function getColors() {
-        if ($this->graph) {
-            $availableColors = $this->graph->getThemedColors();
-            $length = count($this->colors);
-            $i = 0;
-            foreach ($this->colors as $group => $color) {
-                //We fill the blanks
-                if ($color[0] == NULL || $color[1] == NULL || $color[2] == NULL ) {
-                    $this->colors[$group] = $availableColors[$i];
-                    $i++;
-                } else {
-                    //We convert RGB array to hex
-                    $this->colors[$group]= ColorHelper::RGBToHexa($color[0], $color[1], $color[2]);
-                }
-            }
+
+    /**
+     * @return array of hexa colors
+     */
+    protected function getColors() {
+        $available_colors = $this->graph->getThemedColors();
+        $max_colors       = count($available_colors);
+        $i = 0;
+        foreach ($this->colors as $group => $color) {
+            $this->colors[$group] = $this->fillTheBlanks($color, $available_colors, $max_colors, $i);
         }
-        
+
         return $this->colors;
     }
-    
+
+    /**
+     * If the given color is undefined(null), then we must take one from the current 
+     * theme (in available_colors).
+     *
+     * @return string hexadecimal representation of the color
+     */
+    private function fillTheBlanks($color, $available_colors, $max_colors, &$i) {
+        if ($this->isColorUndefined($color)) {
+            return $available_colors[$i++ % $max_colors];
+        }
+        return $this->getHexaColor($color);
+    }
+
+    /** @return bool */
+    private function isColorUndefined($color) {
+        return $color[0] == NULL || $color[1] == NULL || $color[2] == NULL;
+    }
+
+    /** @return string hexadecimal representation of the color */
+    private function getHexaColor($color) {
+        return ColorHelper::RGBToHexa($color[0], $color[1], $color[2]);
+    }
+
     /**
      * Build graph based on data, title, description given to the engine
      */
