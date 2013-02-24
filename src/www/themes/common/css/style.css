@@ -102,6 +102,14 @@ a:hover {
     background:#909090;
 }
 
+.form_search_box {
+    margin-right: 1em;
+}
+
+select[name=type_of_search] {
+    width: auto;
+}
+
 /* left menu specific */
 .menuframe { background-color: #e8e8e0; vertical-align: top; text-align: left; width: 60px; }
 .menutable { background-color: #e8e8e0; vertical-align: top; width: 150px; border-spacing: 0; border: 0; }

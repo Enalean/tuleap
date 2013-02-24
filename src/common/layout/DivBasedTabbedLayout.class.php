@@ -469,9 +469,10 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
         $em =& EventManager::instance();
 
 		$output = '
-		<form action="/search/" method="post"><table style="text-align:left;float:right"><tr style="vertical-align:top;"><td>
+		<form action="/search/" method="post" class="form-inline form_search_box">
 		';
-		$output .= '<select style="font-size: x-small" name="type_of_search">';
+        $output .= '<div class="input-prepend input-append">';
+		$output .= '<select name="type_of_search">';
         if ($is_bug_page && $group_id) {
             $output .= "\t<OPTION value=\"bugs\"".( $type_of_search == "bugs" ? " SELECTED" : "" ).">".$Language->getText('include_menu','bugs')."</OPTION>\n";
         } else if ($is_pm_page && $group_id) {
@@ -502,7 +503,7 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
         $em->processEvent('search_type_entry', $eParams);      
         $output .= $search_type_entry_output;
        
-        $output .= "\t</select></td><td>";
+        $output .= "</select>";
         
 
 		if ( isset($atid) ) {
@@ -539,12 +540,10 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
 
 		$output .= '';
         
-		$output .= '<input style="font-size:0.8em" type="text" size="22" name="words" value="'. htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8').'" /><br />';
-        $output .= '<input type="CHECKBOX" name="exact" value="1"'.( $exact ? ' CHECKED' : ' UNCHECKED' ).'><span style="font-size:0.8em">'.$Language->getText('include_menu','require_all_words').'</span>';
-
-		$output .= '</td><td>';
-		$output .= '<input style="font-size:0.8em" type="submit" name="Search" value="'.$Language->getText('searchbox','search').'" />';
-		$output .= '</td></tr></table></form>';
+		$output .= '<input type="text" name="words" class="search-query" value="'. htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8').'" />';
+		$output .= '<button type="submit" class="btn" name="Search" value="1"><i class="icon-search"></i></button>';
+        $output .= '<input type="hidden" name="exact" value="1">';
+		$output .= '</form>';
         return $output;
     }   
 
