@@ -36,7 +36,7 @@ abstract class ChartDataBuilderV5 {
     }
 
     /**
-     * @return array (r, g, b) of data if exist
+     * @return array (r,g,b) color from $data if exist, else a null triple
      */
     protected function getColor(array $data) {
         if (! isset($data['red'])) {
