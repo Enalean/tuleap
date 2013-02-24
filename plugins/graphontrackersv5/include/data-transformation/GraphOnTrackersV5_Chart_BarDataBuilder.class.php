@@ -37,6 +37,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
         $engine->legend = null;
         $result = array();
         $ff = Tracker_FormElementFactory::instance();
+        /** @var Tracker_FormElement_Field_List $af */
         $af = $ff->getFormElementById($this->chart->getField_base());
         if ($af && $af->userCanRead()) {
             $select_group = $from_group = $group_group = $order_group = '';

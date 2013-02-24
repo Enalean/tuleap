@@ -35,6 +35,7 @@ class GraphOnTrackersV5_Chart_PieDataBuilder extends ChartDataBuilderV5 {
         $engine->legend = null;
         $result = array();
         $ff = Tracker_FormElementFactory::instance();
+        /** @var Tracker_FormElement_Field_List $af */
         $af = $ff->getFormElementById($this->chart->getField_base());
         if ($af && $af->userCanRead()) {
             $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelectWithDecorator();
