@@ -20,25 +20,24 @@
 
 require_once 'common/layout/ColorHelper.class.php';
 
-
 class ColorHelperTest extends UnitTestCase {
 
     private $colorSet = array(
-                        '#FFFFFF' => array(255, 255, 255),
-                        '#000000' => array(0, 0, 0),
-                        '#FF0000' => array(255, 0, 0),
-                        '#00FF00' => array(0, 255, 0),
-                        '#0000FF' => array(0, 0, 255),
-                        '#38CDAF' => array(56, 205, 175),
-                        '#E025DC' => array(224, 37, 220)
-                          );
-                          
+        '#FFFFFF' => array(255, 255, 255),
+        '#000000' => array(0, 0, 0),
+        '#FF0000' => array(255, 0, 0),
+        '#00FF00' => array(0, 255, 0),
+        '#0000FF' => array(0, 0, 255),
+        '#38CDAF' => array(56, 205, 175),
+        '#E025DC' => array(224, 37, 220)
+    );
+
     function testRGBToHexa() {
         foreach ($this->colorSet as $hexa => $rgb) {
            $this->assertEqual($hexa, ColorHelper::RGBToHexa($rgb[0], $rgb[1], $rgb[2])); 
         } 
     }
-    
+
     function testHexaToRGB() {
         foreach ($this->colorSet as $hexa => $rgb) {
            $this->assertEqual(array($rgb[0], $rgb[1], $rgb[2]), ColorHelper::HexaToRGB($hexa)); 
