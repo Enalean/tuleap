@@ -111,6 +111,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getQuerySelect() {
         return $this->getBind()->getQuerySelect();
     }
+    
+    /**
+     * Get the "select" statement to retrieve field values with the RGB values of their decorator
+     * Has no sense for fields other than lists
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getBind()->getQuerySelectWithDecorator();
+    }
 
     /**
      * Get the "from" statement to retrieve field values
@@ -120,6 +130,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getQueryFrom() {
         return $this->getBind()->getQueryFrom();
+    }
+    
+	/**
+     * Get the "from" statement to retrieve field values
+     * You can join on artifact AS a, tracker_changeset AS c
+     * which tables used to retrieve the last changeset of matching artifacts.
+     * @return string
+     */
+    public function getQueryFromWithDecorator() {
+        return $this->getBind()->getQueryFromWithDecorator();
     }
 
     /**
