@@ -54,21 +54,17 @@ class Git_Driver_Gerrit_MembershipManager {
         }
 
         foreach ($repositories as $repository) {
-            $this->addUserToGerritGroupsRegardingPermissions($user, $ugroup, $project, $repository);
+            $this->addUserToGerritGroupsAccordingToPermissions($user, $ugroup, $project, $repository);
         }
     }
 
-    private function addUserToGerritGroupsRegardingPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository) {
+    private function addUserToGerritGroupsAccordingToPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository) {
         $remote_server   = $this->gerrit_server_factory->getServer($repository);
-        foreach (self::$GERRIT_GROUPS as $group_name => $permission) {
+        $groups_full_names = $this->getConcernedGerritGroups($ugroup, $project, $repository);
 
-            if ($this->permissions_manager->userHasPermission($repository->getId(), $permission, $ugroup)) {
-
-                $full_group_name = $this->getGerritGroupName($project, $repository, $group_name);
-                $this->gerrit_driver->addUserToGroup($remote_server, $user, $full_group_name);
-            }
+        foreach ($groups_full_names as $group_full_name) {
+            $this->gerrit_driver->addUserToGroup($remote_server, $user, $group_full_name);
         }
-
     }
 
     public function removeUserFromGroup(User $user, UGroup $ugroup, Project $project) {
@@ -79,21 +75,17 @@ class Git_Driver_Gerrit_MembershipManager {
         }
 
         foreach ($repositories as $repository) {
-            $this->removeUserFromGerritGroupsRegardingPermissions($user, $ugroup, $project, $repository);
+            $this->removeUserFromGerritGroupsAccordingToPermissions($user, $ugroup, $project, $repository);
         }
     }
 
-    private function removeUserFromGerritGroupsRegardingPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository) {
-        $remote_server   = $this->gerrit_server_factory->getServer($repository);
-        foreach (self::$GERRIT_GROUPS as $group_name => $permission) {
+    private function removeUserFromGerritGroupsAccordingToPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository) {
+        $remote_server     = $this->gerrit_server_factory->getServer($repository);
+        $groups_full_names = $this->getConcernedGerritGroups($ugroup, $project, $repository);
 
-            if ($this->permissions_manager->userHasPermission($repository->getId(), $permission, $ugroup)) {
-
-                $full_group_name = $this->getGerritGroupName($project, $repository, $group_name);
-                $this->gerrit_driver->removeUserFromGroup($remote_server, $user, $full_group_name);
-            }
+        foreach ($groups_full_names as $group_full_name) {
+            $this->gerrit_driver->removeUserFromGroup($remote_server, $user, $group_full_name);
         }
-
     }
 
     private function getGerritGroupName(Project $project, GitRepository $repo, $group_name) {
@@ -114,6 +106,18 @@ class Git_Driver_Gerrit_MembershipManager {
         }
 
         return $migrated_repositories;
+    }
+
+    private function getConcernedGerritGroups(UGroup $ugroup, Project $project, GitRepository $repository) {
+        $groups_full_names = array();
+
+        foreach (self::$GERRIT_GROUPS as $group_name => $permission) {
+            if ($this->permissions_manager->userHasPermission($repository->getId(), $permission, $ugroup)) {
+                $groups_full_names[] = $this->getGerritGroupName($project, $repository, $group_name);
+            }
+        }
+
+        return $groups_full_names;
     }
 }
 ?>
