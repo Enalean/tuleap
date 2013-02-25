@@ -139,7 +139,7 @@ file_admin_editreleases	file_type	File Type
 file_admin_editreleases	update_refresh	Update/Refresh
 file_admin_editreleases	delete_file	Delete File
 file_admin_editreleases	im_sure	I'm Sure
-file_admin_editreleases	mail_file_rel_notice	Email File Release Notice
+file_admin_editreleases	mail_file_rel_notice	Email File Release Notice: 
 file_admin_editreleases	send_notice	Send Notice
 file_admin_editreleases	users_monitor	$1 user(s) are monitoring your package. You should send a notice of your file release.
 file_admin_editreleases	create_auto_news	Create Automatic News

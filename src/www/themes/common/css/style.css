@@ -287,6 +287,11 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
+#frs_form select,
+#frs_form input {
+    width: auto;
+}
+
 .release {
     background-color: #D1CEC4;
     border-spacing: 0px;
