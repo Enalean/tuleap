@@ -1321,3 +1321,7 @@ td.first-column {
 .workflow_rule_date_comparator {
     margin: auto 0.5em;
 }
+
+#date_field_reminder_form input, #date_field_reminder_form select {
+    width: auto;
+}
