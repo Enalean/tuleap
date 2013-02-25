@@ -115,9 +115,9 @@ class Git_Driver_Gerrit {
         return escapeshellarg(escapeshellarg($user_identifier));
     }
 
-    public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, GitRepository $repository) {
+    public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
         $gerrit_user_id  = $this->getGerritUserId($server, $user);
-        $gerrit_group_id = $this->getGerritGroupId($server, $repository);
+        $gerrit_group_id = $this->getGerritGroupId($server, $group_name);
 
         if ($gerrit_user_id && $gerrit_group_id) {
             $query = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id, group_id)\ VALUES('. $gerrit_user_id .',\ '. $gerrit_group_id .')"';
@@ -126,9 +126,9 @@ class Git_Driver_Gerrit {
 
     }
 
-    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, GitRepository $repository) {
+    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
         $gerrit_user_id  = $this->getGerritUserId($server, $user);
-        $gerrit_group_id = $this->getGerritGroupId($server, $repository);
+        $gerrit_group_id = $this->getGerritGroupId($server, $group_name);
 
         if ($gerrit_user_id && $gerrit_group_id) {
             $query = self::GSQL_COMMAND .' "DELETE\ FROM\ account_group_members\ WHERE\ account_id='. $gerrit_user_id .'\ AND\ group_id='. $gerrit_group_id .'"';
@@ -152,10 +152,9 @@ class Git_Driver_Gerrit {
         return null;
     }
 
-    private function getGerritGroupId(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
-        $project_name = $this->getGerritProjectName($repository);
+    private function getGerritGroupId(Git_RemoteServer_GerritServer $server, $group_name) {
 
-        $query = self::GSQL_COMMAND .' "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $project_name .'\\\'"';
+        $query = self::GSQL_COMMAND .' "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $group_name .'\\\'"';
 
         $command_result = $this->ssh->execute($server, $query);
         $json_result    = json_decode(array_shift(explode("\n", $command_result)));
