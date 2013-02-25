@@ -97,7 +97,7 @@ $offset = $request->getValidated('offset', 'uint', 0);
 if ( !$offset || $offset < 0 ) {
     $offset = 0;
 }
-$limit  = 10;
+$limit  = 100;
 
 $vUserNameSearch  = new Valid_String('user_name_search');
 $user_name_search = '';
