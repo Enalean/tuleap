@@ -552,7 +552,7 @@ project_admin_userperms	cannot_remove_admin_stat	Impossible d'enlever le statut 
 project_admin_userperms	perm_fail_for	Erreur de permissions pour $1
 project_admin_userperms	perm_upd	Permissions mises à jour
 project_admin_userperms	user_name	Nom d'utilisateur
-project_admin_userperms	proj_admin	Admin<BR>projet
+project_admin_userperms	proj_admin	Admin projet
 project_admin_userperms	cvs_write	Ecriture CVS
 project_admin_userperms	bug_track	Suivi de bugs
 project_admin_userperms	forums	Forums
@@ -564,7 +564,7 @@ project_admin_userperms	patch_man	Suivi de corrections
 project_admin_userperms	supp_man	Suivi de support
 project_admin_userperms	doc_man	Gestion Documentation
 project_admin_userperms	file_man	Gestion fichiers
-project_admin_userperms	tracker	Suivi&nbsp;:<br>$1
+project_admin_userperms	tracker	Suivi&nbsp;: $1
 project_admin_userperms	member_ug	Membre des groupes d'utilisateurs&nbsp;:
 project_admin_userperms	no_users_found	Aucun membre de projet trouvé
 project_admin_userperms	tech_only	Technicien

@@ -555,7 +555,7 @@ project_admin_userperms	cannot_remove_admin_stat	Cannot remove your admin status
 project_admin_userperms	perm_fail_for	Permissions Failed For $1
 project_admin_userperms	perm_upd	Permissions Updated
 project_admin_userperms	user_name	User name
-project_admin_userperms	proj_admin	Project<BR>Admin
+project_admin_userperms	proj_admin	Project Admin
 project_admin_userperms	cvs_write	CVS Write
 project_admin_userperms	bug_track	Bug Tracking
 project_admin_userperms	forums	Forums
@@ -567,7 +567,7 @@ project_admin_userperms	patch_man	Patch Manager
 project_admin_userperms	supp_man	Support Manager
 project_admin_userperms	doc_man	Doc. Manager
 project_admin_userperms	file_man	File Manager
-project_admin_userperms	tracker	Tracker:<br>$1
+project_admin_userperms	tracker	Tracker: $1
 project_admin_userperms	member_ug	Member of user groups:
 project_admin_userperms	no_users_found	No corresponding project members found
 project_admin_userperms	tech_only	Tech Only

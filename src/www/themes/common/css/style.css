@@ -2358,3 +2358,7 @@ h3.toggler-hide-noajax {
      display: inline;
      padding-left: 0.5em;
  }
+
+.service-admin table select {
+    width: auto;
+}
