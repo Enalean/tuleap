@@ -92,5 +92,21 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
 
         $this->membership_manager->addUserToGroup($this->user, $this->u_group, $this->project);
     }
+
+    public function itAsksTheGerritDriverToRemoveAUserFromThreeGroups() {
+        stub($this->git_repository)->isMigratedToGerrit()->returns(true);
+
+        $first_group_expected = 'someProject/some/git/project-contributors';
+        $second_group_expected = 'someProject/some/git/project-integrators';
+        $third_group_expected = 'someProject/some/git/project-supermen';
+
+        $this->driver->expectCallCount('removeUserFromGroup', 3);
+        expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $first_group_expected)->at(0);
+        expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
+        expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
+
+        $this->membership_manager->removeUserFromGroup($this->user, $this->u_group, $this->project);
+
+    }
 }
 ?>
