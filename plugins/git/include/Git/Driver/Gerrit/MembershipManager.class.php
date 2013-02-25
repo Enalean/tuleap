@@ -24,10 +24,10 @@ class Git_Driver_Gerrit_MembershipManager {
     const GROUP_SUPERMEN     = 'supermen';
     const GROUP_OWNERS       = 'owners';
 
-    private $gerrit_groups = array(self::GROUP_CONTRIBUTORS => Git::PERM_READ,
-                                   self::GROUP_INTEGRATORS  => Git::PERM_WRITE,
-                                   self::GROUP_SUPERMEN     => Git::PERM_WPLUS,
-                                   self::GROUP_OWNERS       => Git::SPECIAL_PERM_ADMIN);
+    public static $GERRIT_GROUPS = array(self::GROUP_CONTRIBUTORS => Git::PERM_READ,
+                                         self::GROUP_INTEGRATORS  => Git::PERM_WRITE,
+                                         self::GROUP_SUPERMEN     => Git::PERM_WPLUS,
+                                         self::GROUP_OWNERS       => Git::SPECIAL_PERM_ADMIN);
 
     private $git_repository_factory;
     private $gerrit_server_factory;
@@ -60,7 +60,7 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private function addUserToGerritGroupsRegardingPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository) {
         $remote_server   = $this->gerrit_server_factory->getServer($repository);
-        foreach ($this->gerrit_groups as $group_name => $permission) {
+        foreach (self::$GERRIT_GROUPS as $group_name => $permission) {
 
             if ($this->permissions_manager->userHasPermission($repository->getId(), $permission, $ugroup)) {
 
@@ -85,7 +85,7 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private function removeUserFromGerritGroupsRegardingPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository) {
         $remote_server   = $this->gerrit_server_factory->getServer($repository);
-        foreach ($this->gerrit_groups as $group_name => $permission) {
+        foreach (self::$GERRIT_GROUPS as $group_name => $permission) {
 
             if ($this->permissions_manager->userHasPermission($repository->getId(), $permission, $ugroup)) {
 
