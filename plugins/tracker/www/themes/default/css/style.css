@@ -784,6 +784,11 @@ div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([c
     background: #ffC;
 }
 
+/* bootstrap: avoid wrapping between toggler and ['details'] in workflow */
+.pc_checkbox {
+    display: inline;
+}
+
 #tracker_workflow_matrix .pc_check_unchecked,
 #tracker_field_dependencies_matrix .pc_check_unchecked {
     background-image: url(../images/ic/bullet_grey.png);
