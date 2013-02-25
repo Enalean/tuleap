@@ -40,6 +40,10 @@ class HTML_Table_BoostrapTest extends HTML_TableTest {
     public function itHasTheBootstrapTableClass() {
         $this->assertPattern('%<table class="table">%', $this->html_table->render());
     }
+
+    public function itHasTableClasses() {
+        $this->assertPattern('%<table class="table bla">%', $this->html_table->addTableClass('bla')->render());
+    }
 }
 
 ?>

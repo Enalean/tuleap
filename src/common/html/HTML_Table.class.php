@@ -40,6 +40,11 @@ class HTML_Table {
         return $this;
     }
 
+    public function addTableClass($class) {
+        $this->table_classes[] = $class;
+        return $this;
+    }
+
     public function render() {
         return '<table class="'.implode(' ', $this->table_classes).'">
                  '.$this->renderHead().'
