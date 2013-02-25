@@ -409,33 +409,26 @@ EOS;
         $Language =& $GLOBALS['Language'];
         $output = '';
         $output .= '<fieldset class="pluginsadministration"><legend>'.$Language->getText('plugin_pluginsadministration','plugins').'&nbsp;'.$this->_getHelp('manage').'</legend><form>';
-        $titles = array();
-        $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin');
-        $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Available?');
-        $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Scope');
-        $titles[] = $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions');
-        $output .= html_build_list_table_top($titles);
+        $output .= '<table class="table table-striped table-bordered table- table-hover">';
+        $output .= '<thead>';
+        $output .= '<tr>';
+        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Plugin') .'</th>';
+        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Available?') .'</th>';
+        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Scope') .'</th>';
+        $output .= '<th>'. $GLOBALS['Language']->getText('plugin_pluginsadministration','Actions') .'</th>';
+        $output .= '</tr>';
+        $output .= '</thead>';
+        $output .= '<tbody>';
         usort($this->_plugins, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
         for($i = 0; $i < count($this->_plugins) ; $i++) {
-            $output .= '<tr class="'.util_get_alt_row_color($i).'" >';
+            $output .= '<tr>';
             
             $output .= '<td class="pluginsadministration_plugin_descriptor '.($this->_plugins[$i]['available']?'':' pluginsadministration_unavailable ').'"><span class="pluginsadministration_name_of_plugin">'.$this->_plugins[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$this->_plugins[$i]['version'].'</span>';
             $output .= '<br/><span class="pluginsadministration_description_of_plugin">'.$this->_plugins[$i]['description'].'</span></td>';
             $output .= '<td>';
-            if ($this->_plugins[$i]['available']) {
-                $string = $Language->getText('plugin_pluginsadministration','available');
-                $action = 'unavailable';
-                $title  = $Language->getText('plugin_pluginsadministration','change_to_unavailable');
-            } else {
-                $string = $Language->getText('plugin_pluginsadministration','unavailable');
-                $action = 'available';
-                $title  = $Language->getText('plugin_pluginsadministration','change_to_available');
-            }
-            if (!$this->_plugins[$i]['dont_touch']) {
-                $output .= '<a href="?action='.$action.'&plugin_id='.$this->_plugins[$i]['plugin_id'].'" title="'.$title.'">'.$string.'</a></td>';
-            } else {
-                $output .= $string;
-            }
+            $output .= $this->getPluginAvailableFlags($this->_plugins[$i]);
+            $output .= '</td>';
+
             //Scope
             $output .= '<td>';
             $output .= $Language->getText('plugin_pluginsadministration','scope_'.$this->_plugins[$i]['scope']);
@@ -454,13 +447,38 @@ EOS;
                 $output .=   '</a>';
             }
             $output .= '</td>';
-            $output .= '<tr>';
+            $output .= '</tr>';
         }
+        $output .= '</tbody>';
         $output .= '</table>';
         $output .= '</form></fieldset>';
         return $output;
     }
-    
+
+    private function getPluginAvailableFlags(array $plugin_data) {
+        $unavailable_flag = $this->getFlag($plugin_data['plugin_id'], 'unavailable', ! $plugin_data['available'], $plugin_data['dont_touch']);
+        $available_flag   = $this->getFlag($plugin_data['plugin_id'], 'available', $plugin_data['available'], $plugin_data['dont_touch']);
+
+        return $unavailable_flag .' '. $available_flag;
+    }
+
+    private function getFlag($plugin_id, $state, $is_active, $dont_touch) {
+        $style  = '';
+        $badge  = '';
+        $output = '';
+        $content = $GLOBALS['Language']->getText('plugin_pluginsadministration', $state);
+        if ($is_active) {
+            $badge = 'badge badge-'. ($state == 'available' ? 'success' : 'important');
+        } else if ($dont_touch) {
+            $style = 'style="visibility:hidden;"';
+        } else {
+            $title   = $GLOBALS['Language']->getText('plugin_pluginsadministration','change_to_'. $state);
+            $content = '<a href="?action='. $state .'&plugin_id='. $plugin_id .'" title="'.$title.'">'. $content .'</a>';
+        }
+        $output .= '<span class="'. $badge .'" '. $style .'>'. $content .'</span>';
+        return $output;
+    }
+
     function _installNewPlugin() {
         //Not yet implemented
         /**

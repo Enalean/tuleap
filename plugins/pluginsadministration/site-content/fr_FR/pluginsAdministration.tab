@@ -8,12 +8,12 @@ plugin_pluginsadministration	descriptor_name	Administration des Plugins
 #
 #
 plugin_pluginsadministration	Actions	Actions
-plugin_pluginsadministration	change_to_unavailable	Changer à Non
-plugin_pluginsadministration	change_to_available	Changer à Oui
+plugin_pluginsadministration	change_to_unavailable	Ne pas utiliser le plugin
+plugin_pluginsadministration	change_to_available	Utiliser le plugin
 plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Annuler les modifications ?
-plugin_pluginsadministration	unavailable	Non
-plugin_pluginsadministration	available	Oui
+plugin_pluginsadministration	unavailable	non
+plugin_pluginsadministration	available	oui
 plugin_pluginsadministration	feedback_available	$1 est maintenant disponible.
 plugin_pluginsadministration	feedback_unavailable	$1 est maintenant indisponible. L'espace web et les scripts cgi sont toujours accessibles !
 plugin_pluginsadministration	Hook:	Hook :
