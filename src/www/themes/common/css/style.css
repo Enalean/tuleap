@@ -2038,6 +2038,13 @@ h3.toggler-hide-noajax {
     list-style-type:none;
     padding:4px;
 }
+.dropdown_panel label {
+    display: inline;
+}
+.dropdown_panel select,
+.dropdown_panel input {
+    width: auto;
+}
 /* }}} */
 /* {{{ TreeNode */
 

@@ -197,6 +197,15 @@ ul.tracker_function_aggregate_results {
     vertical-align:top
 }
 
+#tracker_report_form select {
+    width: auto;
+}
+
+#tracker_report_query_form h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .tracker_report_criteria_advanced_toggle {
     vertical-align:bottom;
     cursor:pointer;
@@ -772,6 +781,10 @@ a.tracker_report_table_column_title:hover {
 }
 a.tracker_report_table_column_title:hover span {
     cursor: pointer;
+}
+
+#renderer_table_chunksz_input {
+    width: auto;
 }
 
 div.tracker_report_table_hide_masschange #tracker_report_table_masschange_form,

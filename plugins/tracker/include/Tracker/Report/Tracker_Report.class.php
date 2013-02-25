@@ -457,24 +457,24 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
             }
             $update_report .= '<ul>';
             if ($this->userCanUpdate($current_user)) {
-                    $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVE  .'" id="tracker_report_updater_save"  /> <label for="tracker_report_updater_save" >'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save') .'</label></li>';
+                    $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVE  .'" id="tracker_report_updater_save"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save') .'</label></li>';
             }
             if (!$current_user->isAnonymous()) {
-                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVEAS  .'" id="tracker_report_updater_saveas"  /> <label for="tracker_report_updater_saveas" >'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as') .'</label> <input type="text" name="report_copy_name" value="Copy of '.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /></li>';
+                $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SAVEAS  .'" id="tracker_report_updater_saveas"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'save_as') .'</label> <input type="text" name="report_copy_name" value="Copy of '.  $hp->purify($this->name, CODENDI_PURIFIER_CONVERT_HTML)  .'" /></li>';
             }
             if ($this->getTracker()->userIsAdmin($current_user)) {
                 $h = new HTML_Element_Input_Checkbox('Public', 'report_scope_public', ($this->user_id ? 0 : 1));
-                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SCOPE  .'" id="tracker_report_updater_scope"  /> <label for="tracker_report_updater_scope" >'. $GLOBALS['Language']->getText('plugin_tracker_report', 'change_visibility') .'</label> '. $h->render() .'</li>';
+                $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_SCOPE  .'" id="tracker_report_updater_scope"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'change_visibility') .'</label> '. $h->render() .'</li>';
             }
             
             if(count($reports) > 1 && $this->getTracker()->userIsAdmin($current_user)) { 
                 $h = new HTML_Element_Input_Checkbox('Default', 'report_default', ($this->is_default ? 1 : 0));
-                $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DEFAULT  .'" id="tracker_report_updater_default"  /> <label for="tracker_report_updater_default" >'. $GLOBALS['Language']->getText('plugin_tracker_report', 'set_default_report') .'</label> '. $h->render() .'</li>';
+                $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DEFAULT  .'" id="tracker_report_updater_default"  />'. $GLOBALS['Language']->getText('plugin_tracker_report', 'set_default_report') .'</label> '. $h->render() .'</li>';
             }
             
             if (count($reports) > 1) { 
                 if ($this->user_id || ($this->user_id == null && $this->getTracker()->userIsAdmin($current_user) && $this->nbPublicReport($reports) >1)) {
-                        $update_report .= '<li><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DELETE  .'" id="tracker_report_updater_delete"  /> <label for="tracker_report_updater_delete" >'. $GLOBALS['Language']->getText('global', 'delete') .'</label></li>';
+                        $update_report .= '<li><label><input type="radio" autocomplete="off" name="func" value="'. self::ACTION_DELETE  .'" id="tracker_report_updater_delete"  />'. $GLOBALS['Language']->getText('global', 'delete') .'</label></li>';
                 }
             }
             $update_report .= '</ul>';
