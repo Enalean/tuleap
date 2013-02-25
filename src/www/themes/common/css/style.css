@@ -2414,10 +2414,8 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     margin-left: 1em;
 }
 /* }}} */
-.service-wiki label[for="edit[minor_edit]"],
-.service-wiki label[for=useOldMarkup],
-.service-wiki label[for="edit[lock]"] {
-     display: inline;
+.service-wiki .toolbar label {
+     display: inline !important;
      font-weight: bold;
  }
 
@@ -2431,7 +2429,7 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
    border-width: thin;
 }
 
-.service-wiki h1 {
+ .service-wiki h1 {
      font-size: 2em;
  }
 
@@ -2451,3 +2449,21 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
  .service-wiki .ServiceMenu td:nth-child(2) {
     text-align:right;
 }
+
+ .service-docman h1 {
+     font-size: 2em;
+ }
+
+ .service-docman h2 {
+     font-size: 1.5em;
+ }
+
+ .service-docman h3 {
+     font-size: 1.17em;
+ }
+
+ .service-docman .docman_new_item label[for*="item_item_type_"] {
+     display: inline;
+     padding-left: 0.5em;
+     font-weight: bold;
+ }
