@@ -6,6 +6,7 @@ system	locale	fr_FR
 system	strftimefmt	%e %B %Y  %H:%M
 system	datefmt	d/m/Y H:i
 system	datefmt_short	d/m/Y
+system	datefmt_day_and_month	j M
 system	decimal_separator	,
 system	thousand_separator	' '
 conf	content_encoding	utf-8
@@ -83,3 +84,5 @@ global	show_frame	Montrer seulement ce cadre
 global	null	NULL
 global	error_synchronizertoken	Votre requête ne semble pas être valide. Merci de recommencer.
 global	operation_not_allowed	Opération non permise
+global	settings	Propriétés
+global	usage	Utilisation

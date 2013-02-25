@@ -37,6 +37,7 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
         $engine->legend = null;
         $result = array();
         $ff = Tracker_FormElementFactory::instance();
+        /** @var Tracker_FormElement_Field_List $af */
         $af = $ff->getFormElementById($this->chart->getField_base());
         if ($af && $af->userCanRead()) {
             $select_group = $from_group = $group_group = $order_group = '';
@@ -49,45 +50,35 @@ class GraphOnTrackersV5_Chart_BarDataBuilder extends ChartDataBuilderV5 {
                     $order_group  = ', '. $gf->getQueryOrderby();
                 }
             }
-            $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelect() . $select_group;
+            $select = " SELECT count(a.id) AS nb, ". $af->getQuerySelectWithDecorator() . $select_group;
             $from   = " FROM tracker_artifact AS a 
                              INNER JOIN tracker_changeset AS c ON (c.artifact_id = a.id) " . 
-                             $af->getQueryFrom() . 
+                             $af->getQueryFromWithDecorator() . 
                              $from_group;
             $where  = " WHERE a.id IN (". $this->artifacts['id'] .") 
                           AND c.id IN (". $this->artifacts['last_changeset_id'] .") ";
             $sql = $select . $from . $where . ' GROUP BY ' . $af->getQueryGroupBy() . $group_group . ' ORDER BY '. $af->getQueryOrderby() . $order_group;
-            //syntax($sql, 'sql');
+            //echo($sql);
+            $none = $GLOBALS['Language']->getText('global','none');
             $res = db_query($sql);
-            while($data = db_fetch_array($res)) {
-                if ($data[$af->name] !== null) {
-                    if ($select_group) {
-                        $engine->data[$data[$af->name]][$data[$gf->name]]   = $data['nb'];
-                        if($data[$gf->name] !== null) {
-                            $engine->xaxis[] = $gf->fetchRawValue($data[$gf->name]);
-                            $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
-                        } else {
-                            $engine->xaxis[] = $GLOBALS['Language']->getText('global','none');
-                            $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
-                        }
-                    } else {
-                        $engine->data[]   = $data['nb'];
+            while ($data = db_fetch_array($res)) {
+                $color = $this->getColor($data);
+                if ($select_group) {
+                    $engine->colors[$data[$af->name]] = $color;
+                    $engine->data[$data[$af->name]][$data[$gf->name]] = $data['nb'];
+                    $engine->xaxis[$data[$gf->name]]  = $none;
+                    $engine->labels[$data[$gf->name]] = $none;
+                    if($data[$gf->name] !== null) {
+                        $engine->xaxis[$data[$gf->name]]  = $gf->fetchRawValue($data[$gf->name]);
+                        $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
                     }
-                    $engine->legend[$data[$af->name]] = $af->fetchRawValue($data[$af->name]);
                 } else {
-                    if ($select_group) {
-                        $engine->data[$data[$af->name]][$data[$gf->name]]   = $data['nb'];
-                        if($data[$gf->name] !== null) {
-                            $engine->xaxis[] = $gf->fetchRawValue($data[$gf->name]);
-                            $engine->labels[$data[$gf->name]] = $gf->fetchRawValue($data[$gf->name]);
-                        } else {
-                            $engine->xaxis[] = $GLOBALS['Language']->getText('global','none');
-                            $engine->labels[$data[$gf->name]] = $GLOBALS['Language']->getText('global','none');
-                        }
-                    } else {
-                        $engine->data[]   = $data['nb'];
-                    }
-                    $engine->legend[$data[$af->name]] = $GLOBALS['Language']->getText('global','none');
+                    $engine->colors[] = $color;
+                    $engine->data[]   = $data['nb'];
+                }
+                $engine->legend[$data[$af->name]] = $none;
+                if ($data[$af->name] !== null) {
+                    $engine->legend[$data[$af->name]] = $af->fetchRawValue($data[$af->name]);
                 }
             }
         }

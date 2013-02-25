@@ -63,7 +63,7 @@ function plugin_forumml_show_search_results($p,$result,$group_id,$list_id) {
 					$GLOBALS['Language']->getText('plugin_forumml','author')."
 				</th>
 			</tr>";
-					
+
 	$idx = 0;
 	// Build a table full of search results
 	while ($rows = db_fetch_array($result)) {
@@ -292,6 +292,7 @@ function plugin_forumml_nb_children($parents, $list_id) {
     if (count($parents) == 0) {
         return 0;
     } else {
+        $list_id = db_ei($list_id);
         $sql = 'SELECT id_message'.
             ' FROM plugin_forumml_message m'.
             ' WHERE m.id_parent IN ('.implode(',', $parents).')
@@ -461,17 +462,17 @@ function plugin_forumml_build_flattened_thread($topic, $list_id) {
 }
 
 // List all messages inside a thread
-function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache) {
+function plugin_forumml_show_thread($p, $list_id, $parentId, $purgeCache, User $current_user) {
     $hp     = ForumML_HTMLPurifier::instance();
     $thread = plugin_forumml_build_flattened_thread($parentId, $list_id);
     foreach ($thread as $message) {
-        plugin_forumml_show_message($p, $hp, $message, $parentId, $purgeCache);
+        plugin_forumml_show_message($p, $hp, $message, $parentId, $purgeCache, $current_user);
     }
 }
 
 
 // Display a message
-function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache) {
+function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache, User $current_user) {
 	$body    = $msg['body'];
 	$request = HTTPRequest::instance();
 
@@ -636,11 +637,21 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache) {
             } else {
                 $body = $hp->purify($body, CODENDI_PURIFIER_CONVERT_HTML);
             }
-            plugin_forumml_reply($hp,$msg['subject'],$msg['id_message'],$id_parent,$body,$msg['sender']);            		
+            plugin_forumml_reply($hp,$msg['subject'],$msg['id_message'],$id_parent,$body,$msg['sender'], $current_user);
         }
     } else {
-            
-        print "<a href='message.php?group_id=".$request->get('group_id')."&topic=".$id_parent."&id_mess=".$msg['id_message']."&reply=1&list=".$request->get('list')."#reply-".$msg['id_message']."'>
+
+        $link = "/plugins/forumml/message.php?group_id=".
+                    $request->get('group_id')."&topic=".$id_parent."&id_mess=".
+                    $msg['id_message']."&reply=1&list=".
+                    $request->get('list')."#reply-".
+                    $msg['id_message'];
+
+        if ($current_user->isAnonymous()) {
+            $link = getAnonymousForumMLReplyURL($link);
+        }
+
+        print "<a href='$link'>
                             <img src='".$p->getThemePath()."/images/ic/comment_add.png'/>
                             ".$GLOBALS['Language']->getText('plugin_forumml','reply')."
                         </a>";
@@ -650,9 +661,13 @@ function plugin_forumml_show_message($p, $hp, $msg, $id_parent, $purgeCache) {
     echo '</div>';
 }
 
+function getAnonymousForumMLReplyURL($link) {
+        return '/account/login.php?return_to='.urlencode($link);
+}
+
 // Display the post form under the current post
 function plugin_forumml_reply($hp,$subject,$in_reply_to,$id_parent,$body,$author) {
-  	
+
     $request =& HTTPRequest::instance();
     $tab_tmp = explode("\n",$body);
     $tab_tmp = array_pad($tab_tmp,-count($tab_tmp)-1,"$author wrote :");
@@ -681,9 +696,9 @@ function plugin_forumml_reply($hp,$subject,$in_reply_to,$id_parent,$body,$author
     }
 
     echo        "</textarea></p>
-				<p>
+                                <p>
                 <input type='submit' name='send_reply' value='".$GLOBALS['Language']->getText('global','btn_submit')."'/>
-				<input type='reset' value='".$GLOBALS['Language']->getText('plugin_forumml','erase')."'/>
+                                <input type='reset' value='".$GLOBALS['Language']->getText('plugin_forumml','erase')."'/>
                 </p>
         </form>
         </div>";

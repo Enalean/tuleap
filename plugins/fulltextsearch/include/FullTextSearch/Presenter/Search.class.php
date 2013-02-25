@@ -20,8 +20,7 @@
 
 
 class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
-    public $template = 'search';
-
+    public $template;
     /**
      * @var FullTextSearch_SearchResultCollection
      */
@@ -30,6 +29,7 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public function __construct($index_status, $terms, FullTextSearch_SearchResultCollection $query_result) {
         parent::__construct($index_status, $terms);
         $this->query_result = $query_result;
+        $this->template     = 'search';
     }
     
     public function has_results() {
@@ -59,7 +59,6 @@ class FullTextSearch_Presenter_Search extends FullTextSearch_Presenter_Index {
     public function elapsed_time() {
         return $this->query_result->getQueryTime();
     }
-
 }
 
 ?>

@@ -68,7 +68,7 @@ abstract class Tracker_CrossSearch_ViewBuilder {
         return $this->criteria_builder->getCriteria($user, $project, $report, $cross_search_query);
     }
     
-    protected function getReport(PFUser $user) {
+    protected function getReport(PFUser $user, Project $project) {
         $name               = $GLOBALS['Language']->getText('plugin_tracker_homenav', 'search');
         $is_query_displayed = Toggler::shouldBeDisplayed($user, 'tracker_report_query_0', true);
         
@@ -76,17 +76,21 @@ abstract class Tracker_CrossSearch_ViewBuilder {
                    = $user_id = $is_default = $tracker_id = $updated_by = $updated_at
                    = 0;
         
-        return new Tracker_Report($report_id, 
-                                  $name, 
-                                  $description, 
-                                  $current_renderer_id, 
-                                  $parent_report_id, 
-                                  $user_id, 
-                                  $is_default, 
-                                  $tracker_id, 
-                                  $is_query_displayed, 
-                                  $updated_by, 
-                                  $updated_at);
+        $report = new Tracker_Report(
+            $report_id,
+            $name,
+            $description,
+            $current_renderer_id,
+            $parent_report_id,
+            $user_id,
+            $is_default,
+            $tracker_id,
+            $is_query_displayed,
+            $updated_by,
+            $updated_at
+        );
+        $report->setProjectId($project->getID());
+        return $report;
     }
     
 }

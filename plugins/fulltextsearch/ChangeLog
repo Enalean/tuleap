@@ -1,3 +1,12 @@
+Version 0.16 - Tuleap 5.11
+    * Fix bugs #2600: FT indexing of TV5 follow-ups fails
+
+Version 0.15 - Tuleap 5.11
+    * Fix integration of search in follow-up comments and cross tracker search
+
+Version 0.14 - Tuleap 5.11
+    * Allow to search in tracker follow-up comments via Full Text Search Engine. This feature is in Beta and available only through Lab mode. (Contrib STMicroeletronics).
+
 Version 0.13 - Tuleap 5.9
     * Refactoring
 

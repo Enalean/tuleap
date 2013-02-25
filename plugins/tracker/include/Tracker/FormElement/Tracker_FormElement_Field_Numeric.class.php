@@ -253,8 +253,8 @@ abstract class Tracker_FormElement_Field_Numeric extends Tracker_FormElement_Fie
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || !$value->getNumeric()) {
+            return '-';
         }
         $output = '';
         switch($format) {

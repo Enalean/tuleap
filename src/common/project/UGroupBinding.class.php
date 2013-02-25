@@ -279,48 +279,6 @@ class UGroupBinding {
             return false;
         }
     }
-
-    /**
-     * Perform actions on user group binding
-     *
-     * @param Integer         $ugroupId Id of the user group
-     * @param Codendi_Request $request  the HTTP request
-     *
-     * @return Void
-     */
-    public function processRequest($ugroupId, Codendi_Request $request) {
-        $func        = $request->getValidated('action', new Valid_WhiteList('add_binding', 'remove_binding'), null);
-        $groupId     = $request->getValidated('group_id', 'GroupId');
-        $validUgroup = $this->checkUGroupValidity($groupId, $ugroupId);
-        if ($validUgroup) {
-            $historyDao = new ProjectHistoryDao(CodendiDataAccess::instance());
-            switch($func) {
-                case 'add_binding':
-                    $projectSourceId   = $request->getValidated('source_project', 'GroupId');
-                    $sourceId          = $request->get('source_ugroup');
-                    $validSourceUgroup = $this->checkUGroupValidity($projectSourceId, $sourceId);
-                    $projectSource     = ProjectManager::instance()->getProject($projectSourceId);
-                    if ($validSourceUgroup && $projectSource->userIsAdmin()) {
-                        if ($this->addBinding($ugroupId, $sourceId)) {
-                            $historyDao->groupAddHistory("ugroup_add_binding", $ugroupId.":".$sourceId, $groupId);
-                        }
-                    } else {
-                        $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
-                    }
-                    break;
-                case 'remove_binding':
-                    if ($this->removeBinding($ugroupId)) {
-                        $historyDao->groupAddHistory("ugroup_remove_binding", $ugroupId, $groupId);
-                    }
-                    break;
-                default:
-                    break;
-            }
-        } else {
-            $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('project_ugroup_binding', 'add_error'));
-        }
-    }
-
 }
 
 ?>

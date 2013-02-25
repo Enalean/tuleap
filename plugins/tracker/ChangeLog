@@ -1,3 +1,48 @@
+Version 5.90 - Tuleap 5.12
+    * Slices in pie/bar charts now is the same that the color attributed to the field in the tracker. (Contrib JTEKT)
+
+Version 5.89 - Tuleap 5.12
+    * Fix two bugs : bug #2396 and bug #2234. We modify the behaviour of update_artifact by passing id of list values instead of their labels
+    * SOAP API Version 2.0.4
+
+Version 5.88 - Tuleap 5.11
+    * Fix bugs #2601 - Should not have to click twice in IE to choose the bind
+
+Version 5.87 - Tuleap 5.11
+    * Fix sla #2291: add help message on artifact csv import
+
+Version 5.86 - Tuleap 5.11
+    * Better display of html emails in outlook
+
+Version 5.85 - Tuleap 5.11
+    * Burndown field makes always use of capacity field when it exists
+
+Version 5.84 - Tuleap 5.11
+    * Fix art #2513: PHP Fatal error: Class 'TreeNode' not found
+
+Version 5.83 - Tuleap 5.11
+    * Improve user experience with user group management (contrib STMicroelectronics)
+
+Version 5.82 - Tuleap 5.11
+    * Fix missing closing tag that broke layout
+
+Version 5.81 - Tuleap 5.11
+    * Fix integration of search in follow-up comments and cross tracker search
+
+Version 5.80 - Tuleap 5.11
+    * Enhancement: capacity field can be used to force the start of the burndown ideal line
+
+Version 5.79 - Tuleap 5.11
+    * Allow to search in tracker follow-up comments via Full Text Search Engine. This feature is in Beta and available only through Lab mode. (Contrib STMicroeletronics).
+
+Version 5.78 - Tuleap 5.11
+    == Development ==
+    * Allow to update artifact from an Ajax request
+    * Retreive list of values of a list through an Ajax Call
+
+Version 5.77 - Tuleap 5.11
+    * Enhancement: displays start and end date of a sprint on the agile dashboard
+
 Version 5.76 - Tuleap 5.11
     * Fix for story #2223 - Retrieve my default fields value after tracker migration.
 

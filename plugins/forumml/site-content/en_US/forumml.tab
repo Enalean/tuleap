@@ -68,6 +68,7 @@ plugin_forumml	author	Author
 plugin_forumml	empty_archives	Empty Archives
 plugin_forumml	search_result	Search results for '$1'
 plugin_forumml	found	thread(s) found
+plugin_forumml	not_logged_in	<strong><span class="highlight">You Are NOT Logged In<br />Please <a href="$1">log in in order to replay to the list</a>
 #
 #-----------------------------------------------
 # Script:plugins/forumml/www/upload.php

@@ -118,6 +118,7 @@ project_admin_editugroup	sel01	Selection 01 - please ignore
 project_admin_editugroup	please_wait	Please wait...
 project_admin_editugroup	filter	Filter:
 project_admin_editugroup	ug_perms	This user group is granted the following permissions:
+project_admin_editugroup	no_perms	This user group is not granted any permissions yet
 project_admin_editugroup	permission	Permission
 project_admin_editugroup	resource_name	Resource Name
 project_admin_editugroup	release	Release
@@ -135,7 +136,7 @@ project_admin_editugroup	go_back	Go back to the user groups list
 project_admin_editugroup	add_user	Add users to this group
 project_admin_editugroup	members	Members
 project_admin_editugroup	users	Users
-project_admin_editugroup	search_in	Search in
+project_admin_editugroup	search_in	Or search in 
 project_admin_editugroup	any_project	any project
 project_admin_editugroup	this_project	this project
 project_admin_editugroup	name_contains	 users whose name or email contains
@@ -144,6 +145,9 @@ project_admin_editugroup	show	Show
 project_admin_editugroup	users_per_page	users per page.
 project_admin_editugroup	add_users_to	Add users to
 project_admin_editugroup	group_empty	The group is empty
+project_admin_editugroup	permissions_title	Permissions
+project_admin_editugroup	settings_title	General settings
+project_admin_editugroup	binding_title	Groups binding
 #
 #-----------------------------------------------
 # Script: SF/www/project/admin/grouptrove.php
@@ -461,6 +465,7 @@ project_admin_utils	ugroup_remove_binding	Ugroup binding removed
 project_admin_utils	frs_self_add_monitor_package	Add package monitoring to himself
 project_admin_utils	frs_add_monitor_package	Add package monitoring
 project_admin_utils	frs_stop_monitor_package	Stop package monitoring
+project_admin_utils	ugroup_binding	Binding
 #... end of values
 #
 #-----------------------------------------------
@@ -998,3 +1003,12 @@ project_ugroup_binding	not_source	This user group is not the source of any other
 project_ugroup_binding	update_user_not_allowed	Update users is not allowed for the ugroup $1
 project_ugroup_binding	reset_error	Unable to reset ugroup $1
 project_ugroup_binding	clone_error	Unable to clone ugroup $1
+
+#-----------------------------------------------
+# Script: /www/project/admin/ugroup/UGroupController.class.php
+#
+
+project_ugroup_binding	ldap_group_error	The LDAP group '$1' does not exist.
+project_ugroup_binding	link_ldap_group	The LDAP group '$1' has been linked with your project.
+project_ugroup_binding	ldap_group_empty	LDAP group name cannot be empty.
+project_ugroup_user	add_username	Type username

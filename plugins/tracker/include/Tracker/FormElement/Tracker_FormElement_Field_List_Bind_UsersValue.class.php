@@ -80,12 +80,20 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         if ($this->getId() == 100) {
             return '';
         }
-        return '<div style="display: inline-block;">'. $this->getUser()->fetchHtmlAvatar(16) .'</div>';
+        return $this->getUser()->fetchHtmlAvatar(16);
     }
     
     public function fetchFormattedForCSV() {
         return $this->getUsername();
     }
-    
+
+    /**
+     * @see Tracker_FormElement_Field_List_Value::fetchValuesForJson()
+     */
+    public function fetchValuesForJson() {
+        $json = parent::fetchValuesForJson();
+        $json['username'] = $this->getUsername();
+        return $json;
+    }
 }
 ?>

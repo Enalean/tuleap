@@ -126,6 +126,33 @@ class AgileDashboard_MilestonePresenter {
     public function getPaneInfoList() {
         return $this->additional_panes;
     }
+
+    public function startDate() {
+        $start_date = $this->milestone->getStartDate();
+        if (! $start_date) {
+            return null;
+        }
+        return $this->formatDate($start_date);
+    }
+
+    public function endDate() {
+        $end_date = $this->milestone->getEndDate();
+        if (! $end_date) {
+            return null;
+        }
+        return $this->formatDate($end_date);
+    }
+
+    public function displayMilestoneDates() {
+        $start_date = $this->startDate();
+        $end_date   = $this->endDate();
+
+        return $start_date && $end_date;
+    }
+
+    private function formatDate($date) {
+        return date($GLOBALS['Language']->getText('system', 'datefmt_day_and_month'), $date);
+    }
 }
 
 ?>

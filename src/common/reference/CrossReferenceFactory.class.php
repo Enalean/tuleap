@@ -277,6 +277,35 @@ class CrossReferenceFactory {
         return $display;
     }
 
+    public function getHTMLCrossRefsForMail() {
+        $html              = '';
+        $cross_refs        = $this->getCrossReferences();
+        $reference_manager = ReferenceManager::instance();
+        $available_natures = $reference_manager->getAvailableNatures();
+
+        foreach ($cross_refs as $nature => $references_by_destination) {
+            $html .= '<div>';
+            $refs = array();
+            foreach ($references_by_destination as $key => $references) {
+                foreach ($references as $reference) {
+                    if ($key === 'source') {
+                        $ref = $reference->getRefSourceKey() ." #". $reference->getRefSourceId();
+                        $url = $reference->getRefSourceUrl();
+                    } else {
+                        $ref = $reference->getRefTargetKey() ." #". $reference->getRefTargetId();
+                        $url = $reference->getRefTargetUrl();
+                    }
+                    $title = $available_natures[$nature]['label'];
+                    $refs[] = '<a title="'. $title .'" href="'. $url .'">'. $ref .'</a>';
+                }
+            }
+            $html .= implode(', ', $refs);
+            $html .= '</div>';
+        }
+
+        return $html;
+    }
+
     /**
      * This function retrieves all cross references for given entity id, a group id, and a type
      * @return array cross references data

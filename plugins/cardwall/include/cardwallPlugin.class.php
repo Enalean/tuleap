@@ -55,6 +55,7 @@ class cardwallPlugin extends Plugin {
             $this->addHook(TRACKER_EVENT_TRACKERS_DUPLICATED);
             $this->addHook(TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION);
             $this->addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE);
+            $this->_addHook(Event::JAVASCRIPT);
 
             if (defined('AGILEDASHBOARD_BASE_DIR')) {
                 $this->addHook(AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE);
@@ -140,32 +141,56 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    function getPluginInfo() {
+    public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'CardwallPluginInfo')) {
             $this->pluginInfo = new CardwallPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    function cssfile($params) {
+    public function cssfile($params) {
         // Only show the stylesheet if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
-        if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0 ||
+        if ($this->isAgileDashboardOrTrackerUrl() ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
             echo '<link rel="stylesheet" type="text/css" href="'. $this->getThemePath() .'/css/style.css" />';
+            echo '<link rel="stylesheet" type="text/css" href="'. $this->getPluginPath() .'/themes/default/select2/select2.css" />';
         }
     }
 
-    function javascript_file($params) {
+    public function javascript_file($params) {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
-        if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/script.js"></script>'."\n";
+        if ($this->isAgileDashboardOrTrackerUrl()) {
+            echo $this->getJavascriptIncludesForScripts(array(
+                'ajaxInPlaceEditorExtensions.js',
+                'cardwall.js',
+                'script.js',
+                'admin.js',
+                'select2.min.js',
+            ));
         }
+    }
+
+    private function getJavascriptIncludesForScripts(array $script_names) {
+        $html = '';
+        foreach ($script_names as $script_name) {
+            $html .= '<script type="text/javascript" src="'.$this->getPluginPath().'/js/'.$script_name.'"></script>'."\n";
+        }
+        return $html;
+    }
+
+    private function isAgileDashboardOrTrackerUrl() {
+        return (defined('AGILEDASHBOARD_BASE_DIR') &&
+                strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
+                strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0);
+    }
+
+    public function javascript($params) {
+        include $GLOBALS['Language']->getContent('script_locale', null, 'cardwall', '.js');
+        echo PHP_EOL;
     }
 
     function tracker_event_admin_items($params) {
@@ -224,7 +249,7 @@ class cardwallPlugin extends Plugin {
             $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
             if ($params['request']->get('pane') == Cardwall_PaneInfo::IDENTIFIER) {
                 $pane_info->setActive(true);
-                $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
+                $params['active_pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
             }
             $params['panes'][] = $pane_info;
         }
@@ -232,10 +257,10 @@ class cardwallPlugin extends Plugin {
 
     public function agiledashboard_event_index_page($params) {
         $pane_info = new Cardwall_PaneInfo($params['milestone'], $this->getThemePath());
-        $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user']);
+        $params['pane'] = $this->getCardwallPane($pane_info, $params['milestone'], $params['user'], $params['milestone_factory']);
     }
 
-    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, PFUser $user) {
+    protected function getCardwallPane(Cardwall_PaneInfo $info, Planning_Milestone $milestone, PFUser $user, Planning_MilestoneFactory $milestone_factory) {
         $tracker = $milestone->getArtifact()->getTracker();
         if ($this->getOnTopDao()->isEnabled($tracker->getId())) {
             $config = $this->getConfigFactory()->getOnTopConfig($tracker);
@@ -244,7 +269,8 @@ class cardwallPlugin extends Plugin {
                 $milestone,
                 $this->getPluginInfo()->getPropVal('display_qr_code'),
                 $config,
-                $user
+                $user,
+                $milestone_factory
             );
         }
         return null;

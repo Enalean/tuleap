@@ -31,7 +31,7 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
     /**
      * @var Planning_Milestone
      */
-    private $milestone;
+    private $milestone_plan;
 
     /**
      * @var Tracker_CrossSearch_SearchContentView
@@ -57,17 +57,17 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
      * Instanciates a new presenter.
      *
      * @param Tracker_CrossSearch_SearchContentView $backlog_search_view         The view allowing to search through the backlog artifacts.
-     * @param Planning_Milestone                    $milestone                   The artifact with planning being displayed right now.
+     * @param Planning_Milestone                    $milestone_plan                   The artifact with planning being displayed right now.
      * @param PFUser                                  $current_user                The user to which the artifact plannification UI is presented.
      */
     public function __construct(
         Tracker_CrossSearch_SearchContentView $backlog_search_view,
-        Planning_Milestone                    $milestone,
+        Planning_MilestonePlan                $milestone_plan,
         PFUser                                  $current_user,
                                               $planning_redirect_parameter
     ) {
-        parent::__construct($milestone->getPlanning());
-        $this->milestone                   = $milestone;
+        parent::__construct($milestone_plan->getMilestone()->getPlanning());
+        $this->milestone_plan              = $milestone_plan;
         $this->backlog_search_view         = $backlog_search_view;
         $this->current_user                = $current_user;
         $this->planning_redirect_parameter = $planning_redirect_parameter;
@@ -86,7 +86,7 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
      * @return bool
      */
     public function hasSelectedArtifact() {
-        return !is_a($this->milestone, 'Planning_NoMilestone');
+        return !is_a($this->milestone_plan->getMilestone(), 'Planning_NoMilestone');
     }
 
     /**
@@ -96,13 +96,13 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
         $presenter_root_node = null;
 
         if ($this->canAccessPlannedItem()) {
-            $root_node = $this->milestone->getPlannedArtifacts();
+            $root_node = $this->milestone_plan->getMilestone()->getPlannedArtifacts();
 
             //TODO use null object pattern while still possible?
             if ($root_node) {
                 $card_mapper = new TreeNodeMapper(
                     new Planning_ItemCardPresenterCallback(
-                        $this->milestone->getPlanning(),
+                        $this->milestone_plan->getMilestone()->getPlanning(),
                         new Tracker_CardFields(),
                         $this->current_user,
                         'planning-draggable-alreadyplanned'
@@ -118,8 +118,14 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
         return $this->planned_artifacts_tree;
     }
 
+    /**
+     * @todo (later) we should not check if we can display things when we are in
+     *       the presenter but rather build only things that can be displayed
+     *       therefore permission checking should be done in Model or Controller
+     * @return boolean
+     */
     private function canAccessPlannedItem() {
-        return $this->milestone && $this->milestone->userCanView($this->current_user);
+        return $this->milestone_plan->getMilestone() && $this->milestone_plan->getMilestone()->userCanView($this->current_user);
     }
 
 
@@ -153,8 +159,8 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
      * @return bool
      */
     public function canDrop() {
-        if ($this->milestone) {
-            $art_link_field = $this->milestone->getArtifact()->getAnArtifactLinkField($this->current_user);
+        if ($this->milestone_plan->getMilestone()) {
+            $art_link_field = $this->milestone_plan->getMilestone()->getArtifact()->getAnArtifactLinkField($this->current_user);
             if ($art_link_field && $art_link_field->userCanUpdate($this->current_user)) {
                 return true;
             }
@@ -163,11 +169,11 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
     }
 
     public function hasSubMilestones() {
-        return $this->milestone->hasSubMilestones();
+        return $this->milestone_plan->hasSubMilestones();
     }
 
     public function getSubMilestones() {
-        return array_map(array($this, 'getMilestoneLinkPresenter'), $this->milestone->getSubMilestones());
+        return array_map(array($this, 'getMilestoneLinkPresenter'), $this->milestone_plan->getSubMilestones());
     }
 
     private function getMilestoneLinkPresenter(Planning_Milestone $milestone) {
@@ -192,12 +198,12 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
     }
 
     public function canDisplayRemainingEffort() {
-        return $this->milestone->getRemainingEffort() !== null && $this->milestone->getCapacity() !== null;
+        return $this->milestone_plan->getRemainingEffort() !== null && $this->milestone_plan->getCapacity() !== null;
     }
 
     public function getRemainingEffort() {
-        $remaining_effort = $this->milestone->getRemainingEffort() != null ? $this->milestone->getRemainingEffort() : 0;
-        $capacity         = $this->milestone->getCapacity() != null ? $this->milestone->getCapacity() : 0;
+        $remaining_effort = $this->milestone_plan->getRemainingEffort() != null ? $this->milestone_plan->getRemainingEffort() : 0;
+        $capacity         = $this->milestone_plan->getCapacity() != null ? $this->milestone_plan->getCapacity() : 0;
 
         $html  = '';
         $html .= $GLOBALS['Language']->getText('plugin_agiledashboard', 'capacity');
@@ -208,7 +214,7 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
 
     public function isOverCapacity() {
         return $this->canDisplayRemainingEffort() &&
-               $this->milestone->getRemainingEffort() > $this->milestone->getCapacity();
+               $this->milestone_plan->getRemainingEffort() > $this->milestone_plan->getCapacity();
     }
 }
 

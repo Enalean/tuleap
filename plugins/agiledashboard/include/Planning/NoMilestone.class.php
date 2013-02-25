@@ -98,26 +98,6 @@ class Planning_NoMilestone implements Planning_Milestone {
         return $this->project->getID();
     }
 
-    public function getSubMilestones() {
-
-    }
-
-    public function hasSubMilestones() {
-
-    }
-
-    public function addSubMilestones(array $new_sub_milestones) {
-
-    }
-
-    public function getRemainingEffort() {
-        return null;
-    }
-
-    public function getCapacity() {
-        return null;
-    }
-
     public function hasAncestors() {
         return false;
     }
@@ -127,6 +107,14 @@ class Planning_NoMilestone implements Planning_Milestone {
     }
 
     public function setAncestors(array $ancestors) {
+    }
+
+    public function getStartDate() {
+        return null;
+    }
+
+    public function getEndDate() {
+        return null;
     }
 }
 ?>

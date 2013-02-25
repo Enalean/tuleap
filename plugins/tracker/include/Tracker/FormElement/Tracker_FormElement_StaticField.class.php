@@ -152,13 +152,16 @@ abstract class Tracker_FormElement_StaticField extends Tracker_FormElement {
     }
     
     /**
-     * Is the field can be set as unused?
-     * You can't set a field unused if it is used in the tracker
+     * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return boolean returns true if the field can be unused, false otherwise
+     * @return string returns null if the field can be unused, a message otherwise
      */
-    public function canBeUnused() {
+    public function getCannotRemoveMessage() {
+        return '';
+    }
+
+    public function canBeRemovedFromUsage() {
         return true;
     }
     

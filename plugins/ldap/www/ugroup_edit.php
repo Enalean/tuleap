@@ -37,6 +37,7 @@ ini_set('max_execution_time', 0);
 // LDAP plugin enabled
 $pluginManager = PluginManager::instance();
 $ldapPlugin = $pluginManager->getPluginByName('ldap');
+
 if ($ldapPlugin && $plugin_manager->isPluginAvailable($ldapPlugin)) {
     $pluginPath = $ldapPlugin->getPluginPath();
 } else {

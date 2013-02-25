@@ -9,6 +9,11 @@
             <li><a href="{{createNewItemToPlanUrl}}">{{createNewItemToPlan}}</a></li>
         </ul>
     </div>
+    {{#displayMilestoneDates}}
+        <div class="release-date-info">
+            {{startDate}} – {{endDate}}
+        </div>
+    {{/displayMilestoneDates}}
     <ul class="nav nav-tabs">
         {{#getPaneInfoList}}
             <li class="{{#isActive}}active{{/isActive}}">

@@ -1,3 +1,24 @@
+Version 0.72 - Tuleap 5.11
+    * Fix integration of search in follow-up comments and cross tracker search
+
+Version 0.71 - Tuleap 5.11
+    * Enhancement: first version of a systray
+
+Version 0.70 - Tuleap 5.11
+    * Delegate milestone building to each Pane
+
+Version 0.69 - Tuleap 5.11
+    * Fix bug: start date and end_date are displayed 2 times
+
+Version 0.68 - Tuleap 5.11
+    * Add css rules for avatars
+
+Version 0.67 - Tuleap 5.11
+    * Fix displaybug on milestone selector
+
+Version 0.66 - Tuleap 5.11
+    * Enhancement: displays start and end date of a sprint on the agile dashboard
+
 Version 0.65 - Tuleap 5.11
     * Refactor rendering of AgileDashboard Panes
 

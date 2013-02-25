@@ -172,47 +172,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
         $soap_values = array();
         foreach ($values as $id => $value) {
             $soap_values[] = array(
-                'field_id'         => $this->field->getId(),
                 'bind_value_id'    => $id,
                 'bind_value_label' => $value->getUGroupName(),
             );
         }
         return $soap_values;
-    }
-
-    /**
-     * Get the field data for artifact submission
-     *
-     * @param string  $soap_value  the soap field value (username(s))
-     * @param boolean $is_multiple if the soap value is multiple or not
-     *
-     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
-     */
-    public function getFieldData($soap_value, $is_multiple) {
-        $values = $this->getAllValues();
-        if ($is_multiple) {
-            $return = array();
-            $soap_values = explode(',', $soap_value);
-            foreach ($values as $id => $value) {
-                if (in_array($value->getUGroupName(), $soap_values)) {
-                    $return[] = $id;
-                }
-            }
-            if (count($soap_values) == count($return)) {
-                return $return;
-            } else {
-                // if one value was not found, return null
-                return null;
-            }
-        } else {
-            foreach ($values as $id => $value) {
-                if ($value->getUGroupName() == $soap_value) {
-                    return $id;
-                }
-            }
-            // if not found, return null
-            return null;
-        }
     }
 
     /**

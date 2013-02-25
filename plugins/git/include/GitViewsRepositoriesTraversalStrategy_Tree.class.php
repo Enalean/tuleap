@@ -35,9 +35,8 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      *
      * @param GitViews $view The GitViews
      */
-    public function __construct(GitViews $view, $lastPushes) {
+    public function __construct($lastPushes) {
         parent::__construct();
-        $this->view = $view;
         $this->lastPushes = $lastPushes;
     }
     
@@ -147,7 +146,7 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
     
     protected function fetchGitRepositoryRow(GitRepository $repository, $name, $depth) {
         $trclass     = 'boxitem';
-        $label       = $repository->getHTMLLink();
+        $label       = $repository->getBasenameHTMLLink();
 
         $description = $repository->getDescription();
         

@@ -41,32 +41,42 @@ class Tracker_FormElement_Container_Column_Group {
     }
     
     public function fetchMailArtifact($columns, $recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
-        return $this->fetchGroup($columns, 'fetchMailArtifactInGroup', array($recipient, $artifact, $format, $ignore_perms), $format);
+        return $this->fetchMailGroup($columns, 'fetchMailArtifactInGroup', array($recipient, $artifact, $format, $ignore_perms), $format);
     }
     
-    protected function fetchGroup($columns, $method, $params, $format = 'html') {
+    protected function fetchGroup($columns, $method, $params) {
         $output = '';
         if (is_array($columns) && $columns) {
             $cells = array();
             foreach ($columns as $c) {
                 if ($content = call_user_func_array(array($c, $method), $params)) {
+                    $cells[] = '<td>' . $content . '</td>';
+                }
+            }
+
+            if ($cells) {
+                $output .= '<table width="100%"><tbody><tr valign="top">';
+                $output .= implode('', $cells);
+                $output .= '</tr></tbody></table>';
+            }
+        }
+        return $output;
+    }
+
+    protected function fetchMailGroup($columns, $method, $params, $format = 'html') {
+        $output = '';
+        if (is_array($columns) && $columns) {
+            foreach ($columns as $c) {
+                if ($content = call_user_func_array(array($c, $method), $params)) {
                     if ($format == 'html') {
-                        $cells[] = '<td>' . $content . '</td>';
+                        $output .= $content ;
                     } else {
                         $output .= $content . PHP_EOL;
                     }
                 }
             }
-            if ($format == 'html') {
-                if ($cells) {
-                    $output .= '<table width="100%"><tbody><tr valign="top">';
-                    $output .= implode('', $cells);
-                    $output .= '</tr></tbody></table>';
-                }
-            }
         }
         return $output;
     }
-    
 }
 ?>

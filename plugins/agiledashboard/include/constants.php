@@ -25,9 +25,10 @@ define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
  * Get the additional panes to display next to a milestone in the agiledashboard
  *
  * Parameters:
- * 'milestone' => The current Planning_Milestone
- * 'user'      => The current user
- * 'request'   => The current HTTP request
+ * 'milestone'         => The current Planning_Milestone
+ * 'user'              => The current user
+ * 'request'           => The current HTTP request
+ * 'milestone_factory' => Planning_MilestoneFactory
  *
  * Expected results
  * 'panes'       => Input/Output parameter, array of type AgileDashboard_PaneInfo
@@ -39,8 +40,9 @@ define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE', 'agiledashboard_eve
  * Get the pane to display on agile dashboard index page
  *
  * Parameters:
- * 'milestone'   => The current Planning_Milestone
- * 'user'        => The current user
+ * 'milestone'         => The current Planning_Milestone
+ * 'user'              => The current user
+ * 'milestone_factory' => Planning_MilestoneFactory
  *
  * Expected results
  * 'pane'        => Input/Output parameter, and AgileDashboard_Pane
