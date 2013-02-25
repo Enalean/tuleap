@@ -1,3 +1,6 @@
+Version 0.73 - Tuleap 5.12
+    * Fix bug on tuleap.net with empty burndown
+
 Version 0.72 - Tuleap 5.11
     * Fix integration of search in follow-up comments and cross tracker search
 
