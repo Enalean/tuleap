@@ -8,12 +8,12 @@ plugin_pluginsadministration	descriptor_name	Plugins Administration
 #
 #
 plugin_pluginsadministration	Actions	Actions
-plugin_pluginsadministration	change_to_unavailable	Change to No
-plugin_pluginsadministration	change_to_available	Change to Yes
+plugin_pluginsadministration	change_to_unavailable	Do not avail this plugin
+plugin_pluginsadministration	change_to_available	Avail this plugin
 plugin_pluginsadministration	Description	Description
 plugin_pluginsadministration	discard_changes	Discard changes ?
-plugin_pluginsadministration	unavailable	No
-plugin_pluginsadministration	available	Yes
+plugin_pluginsadministration	unavailable	no
+plugin_pluginsadministration	available	yes
 plugin_pluginsadministration	feedback_available	$1 is now available.
 plugin_pluginsadministration	feedback_unavailable	$1 is now unavailable. Web space and CGI remain accessible!
 plugin_pluginsadministration	Hook:	Hook:
