@@ -95,23 +95,15 @@ class Git_Ci {
                 }
                 $selectBox .= '</select>';
 
-                $addForm  = '<p>
-                                 <div id="hudson_use_plugin_git_trigger_form">
-                                     <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
-                                     '.$selectBox.'
-                                 </div>
-                                 <div id="hudson_use_plugin_git_trigger_checkbox">
-                                     Git 
-                                     <input onclick="toggle_checkbox()" type="checkbox" '.$checked.' />
-                                 </div>
-                                 <script>
-                                     function toggle_checkbox() {
-                                         Effect.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 });
-                                         Effect.toggle(\'hudson_use_plugin_git_trigger_checkbox\', \'slide\', { duration: 0.3 });
-                                     }
-                                     Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
-                                 </script>
-                             </p>';
+                $addForm  = '<div id="hudson_use_plugin_git_trigger_checkbox">
+                                 <label class="checkbox">
+                                    <input onclick="$(\'hudson_use_plugin_git_trigger_form\').toggle()" type="checkbox" '.$checked.' /> Git
+                                </label>
+                                <blockquote id="hudson_use_plugin_git_trigger_form">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': '.$selectBox.'</blockquote>
+                             </div>
+                             <script>
+                                 $(\'hudson_use_plugin_git_trigger_form\').hide();
+                             </script>';
                 $editForm = '<label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_field_description').': </label>'.$selectBox;
                 return array('service'       => GitPlugin::SERVICE_SHORTNAME,
                              'title'         => $GLOBALS['Language']->getText('plugin_git', 'ci_trigger'),

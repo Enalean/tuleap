@@ -430,43 +430,50 @@ class hudsonViews extends Views {
         // function toggle_addurlform is in script plugins/hudson/www/hudson_tab.js
         echo '<a href="#" onclick="toggle_addurlform(); return false;">' . $GLOBALS["HTML"]->getimage("ic/add.png") . ' '.$GLOBALS['Language']->getText('plugin_hudson','addjob_title').'</a>';
         echo ' '.$this->_getHelp('HudsonService', true);
-        echo '<div id="hudson_add_job">';
-        echo ' <form>';
-        echo '   <label for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>';
-        echo '   <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" />';
-        echo '   <input type="hidden" name="group_id" value="'.$group_id.'" />';
-        echo '   <input type="hidden" name="action" value="add_job" />';
-        echo '   <br />';
-        echo '   <span class="legend">'.$GLOBALS['Language']->getText('plugin_hudson','form_joburl_example').'</span>';
-        echo '   <br />';
-        //echo '  <p>';
+        echo '<div id="hudson_add_job">
+                <form class="form-horizontal">
+                    <input type="hidden" name="group_id" value="'.$group_id.'" />
+                    <input type="hidden" name="action" value="add_job" />
+                    <div class="control-group">
+                        <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_url').'</label>
+                        <div class="controls">
+                            <input id="hudson_job_url" name="hudson_job_url" type="text" size="64" />
+                            <div class="help">'. $GLOBALS['Language']->getText('plugin_hudson','form_joburl_example') .'</div>
+                        </div>
+                    </div>';
         if ($project->usesSVN() || $project->usesCVS() || !empty($services)) {
-            echo $GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger');
+            echo '  <div class="control-group">
+                        <label class="control-label" for="hudson_job_url">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_use_trigger').'</label>
+                            <div class="controls">';
             if ($project->usesSVN()) {
-                echo '  <p>';
-                echo '   <label for="hudson_use_svn_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn').'</label>';
-                echo '   <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" />';
-                echo '  </p>';
+                echo '<label class="checkbox">
+                        <input id="hudson_use_svn_trigger" name="hudson_use_svn_trigger" type="checkbox" />
+                        '. $GLOBALS['Language']->getText('plugin_hudson','form_job_scm_svn') .'
+                        </label>';
             }
-            if ($project->usesCVS()) {
-                echo '  <p>';
-                echo '   <label for="hudson_use_cvs_trigger">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs').'</label>';
-                echo '   <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" />';
-                echo '  </p>';
+            if (!$project->usesCVS()) {
+                echo '<label class="checkbox">
+                        <input id="hudson_use_cvs_trigger" name="hudson_use_cvs_trigger" type="checkbox" />
+                        '. $GLOBALS['Language']->getText('plugin_hudson','form_job_scm_cvs') .'
+                        </label>';
             }
             foreach ($services as $service) {
                 echo $service['add_form'];
             }
-            //echo '  </p>';
-            //echo '  <p>';
-            echo '   <label for="hudson_trigger_token">'.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'</label>';
-            echo '   <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" />';
-            //echo '  </p>';
-            echo '   <br />';
+            echo '          <label>
+                                '.$GLOBALS['Language']->getText('plugin_hudson','form_job_with_token').'
+                                <input id="hudson_trigger_token" name="hudson_trigger_token" type="text" size="32" />
+                            </label>
+                        </div>
+                  </div>';
         }
-        echo '   <input type="submit" value="Add job" />';
-        echo ' </form>';
-        echo '</div>';
+        echo '    <div class="control-group">
+                    <div class="controls">
+                        <input type="submit" class="btn btn-primary" value="Add job" />
+                    </div>
+                  </div>
+                </form>
+              </div>';
         echo "<script>Element.toggle('hudson_add_job', 'slide');</script>";
     }
     

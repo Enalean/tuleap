@@ -78,7 +78,7 @@ class DataAccessObject {
         if ($error = $result->isError()) {
             $trace = debug_backtrace();
             $i = isset($trace[1]) ? 1 : 0;
-            trigger_error($error .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line']);
+            trigger_error(mysql_error() .' '. $error .' ==> '. $sql ." @@ ". $trace[$i]['file'] .' at line '. $trace[$i]['line']);
             $result = false;
         }
         return $result;
