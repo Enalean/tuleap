@@ -186,9 +186,9 @@ require_once('Docman_View_PermissionsForItem.class.php');
 
             $html .= '<table><tr style="vertical-align:top"><td><b>'. $GLOBALS['Language']->getText('news_submit','news_privacy') .'</b></td><td>';
             $html .= '<input type="radio" name="news[is_private]" id="news_is_private_no" value="0" '. $default_news_public_check .' />';
-            $html .= '<label for="news_is_private_no">'. $GLOBALS['Language']->getText('news_submit','public_news') .'</label><br />';
+            $html .= '<label class="docman-create-news-option" for="news_is_private_no">'. $GLOBALS['Language']->getText('news_submit','public_news') .'</label><br />';
             $html .= '<input type="radio" name="news[is_private]" id="news_is_private_yes" value="1" '. $default_news_private_check .' />';
-            $html .= '<label for="news_is_private_yes">'. $GLOBALS['Language']->getText('news_submit','private_news') .'</label>';
+            $html .= '<label class="docman-create-news-option" for="news_is_private_yes">'. $GLOBALS['Language']->getText('news_submit','private_news') .'</label>';
             $html .= '</td></tr></table>';
 
             $html .= '</div>';

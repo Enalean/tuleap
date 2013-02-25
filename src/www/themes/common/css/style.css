@@ -2478,8 +2478,17 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
      font-size: 1.17em;
  }
 
- .service-docman .docman_new_item label[for*="item_item_type_"] {
+ .service-docman .docman-create-doctype {
      display: inline;
      padding-left: 0.5em;
      font-weight: bold;
+ }
+
+ .service-docman #plugin_docman_report_form_global input.text_field {
+     margin-bottom: 0px;
+ }
+
+ .service-docman .docman-create-news-option {
+     display: inline;
+     padding-left: 0.5em;
  }
