@@ -19,19 +19,19 @@
   */
 }}
 <div class="one_step_project container">
-    <form class="one_step_project" action="" method="POST">
+    <form class="one_step_project form-horizontal" action="" method="POST">
         <input type="hidden" name="onestep" value="true" />
 
-        <h1 class="one_step_project">{{getTitle}}</h1>
+        <h1>{{getTitle}}</h1>
 
-        <p class="one_step_project">{{getPageDescriptionBeg}} {{getSysName}} {{getPageDescriptionEnd}}</p>
+        <p>{{getPageDescriptionBeg}} {{getSysName}} {{getPageDescriptionEnd}}</p>
         
         {{#isProjectApprovalEnabled}}
             <p><span class="label label-warning">{{getWarning}}</span> {{getWarningMessage}}</p>
         {{/isProjectApprovalEnabled}}
 
-        <h2>{{getDescriptionContainerTitle}}</h2>
-        <table>
+        <fieldset>
+            <legend>{{getDescriptionContainerTitle}}</legend>
             <div class="control-group">
                 <label class="control-label">{{getDescriptionContainerFullName}} <span class="mandatory_field">*</span></label>
                 <div class="controls">
@@ -84,21 +84,20 @@
                 <label class="control-label">{{getDescriptionContainerProjectPrivacy}}</label>
                 <div class="controls">
                     <label>
-                    <input type="radio"
-                           name="{{is_public_label}}"
-                           value="1"
-                           {{#isPublic}}checked="checked"{{/isPublic}}
-                        />
-                    {{getDescriptionContainerPublicLabel}}
+                        <input type="radio"
+                               name="{{is_public_label}}"
+                               value="1"
+                               {{#isPublic}}checked="checked"{{/isPublic}}
+                            />
+                        {{getDescriptionContainerPublicLabel}}
                     </label>
-                    <br>
                     <label>
-                    <input type="radio"
-                           name="{{is_public_label}}"
-                           value="0"
-                           {{^isPublic}}checked="checked"{{/isPublic}}
-                        />
-                    {{getDescriptionContainerPrivateLabel}}
+                        <input type="radio"
+                               name="{{is_public_label}}"
+                               value="0"
+                               {{^isPublic}}checked="checked"{{/isPublic}}
+                            />
+                        {{getDescriptionContainerPrivateLabel}}
                     </label>
                 </div>
             </div><div class="control-group">
@@ -118,10 +117,11 @@
                     </div>
                 </div>
             </div>
-        </table>
+        </fieldset>
 
         {{#hasMoreThanOneAvailableTemplate}}
-            <h2>{{getChooseTemplateContainerTitle}}</h2>
+        <fieldset>
+            <legend>{{getChooseTemplateContainerTitle}}</legend>
 
             <p>{{getChooseTemplateContainerDescriptionPartOne}}</p>
 
@@ -129,14 +129,14 @@
 
             <div class="control-group">
                 <div class="controls">
-                    <h3 class="one_step_project">{{getDefaultTemplatesTitle}}</h3>
+                    <h3>{{getDefaultTemplatesTitle}}</h3>
                     <div class="one_step_project_templates">
                        {{#getDefaultTemplates}}
                            {{> register-templates }}
                        {{/getDefaultTemplates}}
                     </div>
                     {{#hasUserTemplates}}
-                        <h3 class="one_step_project">{{getAdminProjectsTitle}}</h3>
+                        <h3>{{getAdminProjectsTitle}}</h3>
                         <div class="one_step_project_templates">
                            {{#getUserTemplates}}
                               {{> register-templates }}
@@ -145,25 +145,28 @@
                     {{/hasUserTemplates}}
                 </div>
             </div>
+        </fieldset>
         {{/hasMoreThanOneAvailableTemplate}}
 
-        <h2>That's it !</h2>
-        <p>{{getAboutToCreateLabel}}</p>
-        <p>{{getAboutToCreateOptionalLabel}}</p>
-        <div class="control-group">
-            <div class="controls">
-                <label class="checkbox">
-                    <input type="checkbox" name="{{term_of_service_approval_label}}" value="approved" required />
-                    {{getAgreeTOSLabel}}
-                    <a href="/tos/tos.php">{{getTOSLabel}}</a>
-                </label>
+        <fieldset>
+            <legend>That's it !</legend>
+            <p>{{getAboutToCreateLabel}}</p>
+            <p>{{getAboutToCreateOptionalLabel}}</p>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="checkbox">
+                        <input type="checkbox" name="{{term_of_service_approval_label}}" value="approved" required />
+                        {{getAgreeTOSLabel}}
+                        <a href="/tos/tos.php">{{getTOSLabel}}</a>
+                    </label>
+                </div>
             </div>
-        </div>
 
-        <div class="control-group">
-            <div class="controls">
-                <input type="submit" value="{{getCreateProjectButtonLabel}}" name="create_project" class="btn btn-primary"/>
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="{{getCreateProjectButtonLabel}}" name="create_project" class="btn btn-primary"/>
+                </div>
             </div>
-        </div>
+        </fieldset>
     </form>
 </div>

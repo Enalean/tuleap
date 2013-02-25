@@ -2202,135 +2202,13 @@ h3.toggler-hide-noajax {
   content: "";
 }
 
-/* One step project part */
-.container.one_step_project {
-    margin-left: auto;
-    margin-right: auto;
+/* {{{ One step project part */
+.one_step_project {
     margin-top: 20px;
-}
-.container.one_step_project p {
-    margin: 10px 0;
-    line-height: 20px;
-    display: block;
-    -webkit-margin-before: 1em;
-    -webkit-margin-after: 1em;
-    -webkit-margin-start: 0px;
-    -webkit-margin-end: 0px;
-}
-form.one_step_project {
-    color: #333333;
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 14px;
-    line-height: 20px;
-}
-h1.one_step_project {
-    font-size: 36px;
-}
-h2.one_step_project {
-    font-size: 31.5px;
-}
-h5.one_step_project {
-    font-size: 14px;
-    line-height: 20px;
-}
-h1.one_step_project, h2.one_step_project, h3.one_step_project {
-    line-height: 40px;
-}
-h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_project, h5.one_step_project, h6.one_step_project{
-    color: inherit;
-    font-family: inherit;
-    font-weight: bold;
-    line-height: 20px;
-    /*margin: 10px 0;*/
-    text-rendering: optimizelegibility;
-}
-
-.container.one_step_project h2 {
-    font-weight: 600;
-    -webkit-padding-start: 2px;
-    -webkit-padding-end: 2px;
-    display: block;
-    background-color: #F2F1F0;
-    width: 100%;
-    padding: 0 0 0 10px;
-    margin-bottom: 20px;
-    margin-top: 20px;
-    font-size: 21px;
-    line-height: 40px;
-    color: #333;
-    border: 0;
-    border-bottom: 1px solid #E5E5E5;
-    border: 1px solid #E5E5E5;
-}
-.container.one_step_project div.control-group {
-    margin-bottom: 20px;
-    margin-top: 20px;
-    -webkit-margin-top-collapse: separate;
-}
-.container.one_step_project label.control-label {
-    cursor: default;
-    font-size: 14px;
-    font-weight: normal;
-    line-height: 20px;
-    display: block;
-    margin-bottom: 5px;
-    float: left;
-    width: 160px;
-    padding-top: 5px;
-    text-align: right;
-}
-.container.one_step_project div.controls {
-    margin-left: 180px;
-}
-.container.one_step_project input[type="text"],
-.container.one_step_project textarea {
-    display: inline-block;
-    padding: 4px 6px;
-    margin-bottom: 10px;
-    font-size: 14px;
-    color: #555555;
-    vertical-align: middle;
-    -webkit-border-radius: 4px;
-    -moz-border-radius: 4px;
-    border-radius: 4px;
-    background-color: #ffffff;
-    border: 1px solid #cccccc;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
-    -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
-    -o-transition: border linear 0.2s, box-shadow linear 0.2s;
-    transition: border linear 0.2s, box-shadow linear 0.2s;
-}
-.container.one_step_project input[type="text"] {
-    width: 206px;
-}
-.container.one_step_project input[type="text"]:focus,
-.container.one_step_project textarea:focus {
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-    -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(82, 168, 236, 0.6);
-}
-.container.one_step_project input:focus:invalid:focus,
-.container.one_step_project textarea:focus:invalid:focus {
-    border-color: #e9322d;
-    -webkit-box-shadow: 0 0 6px #f8b9b7;
-    -moz-box-shadow: 0 0 6px #f8b9b7;
-    box-shadow: 0 0 6px #f8b9b7;
-}
-.container.one_step_project input[type="checkbox"] {
-    vertical-align: middle;
-}
-
-.container.one_step_project div.controls span.help-block {
-    color: #595959;
-    display: block;
 }
 
 .one_step_project_templates {
-  width: 100%;
-  margin-bottom: 3em;
+  margin-bottom: 2em;
 }
 
 .one_step_project_choose_template {
@@ -2364,21 +2242,9 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
           border-bottom-right-radius: 4px;
   -moz-border-radius-bottomright: 4px;
 }
-
-.one_step_project_choose_template > label {
-    display:block;
-}
-
-.container.one_step_project input,
-.container.one_step_project button,
-.container.one_step_project select,
-.container.one_step_project textarea {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-}
 .container.one_step_project span.mandatory_field {
     color: red;
 }
-
 /* }}} */
 
 /* {{{ systray */
