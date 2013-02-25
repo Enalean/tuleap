@@ -37,8 +37,8 @@ class HTML_Table_BoostrapTest extends HTML_TableTest {
         $this->html_table = new HTML_Table_Bootstrap();
     }
 
-    public function itHasTheBootstrapTableClass() {
-        $this->assertPattern('%<table class="table">%', $this->html_table->render());
+    public function itBuildsATable() {
+        $this->assertPattern('%<table class="table">.*</table>%s', $this->html_table->render());
     }
 
     public function itHasTableClasses() {

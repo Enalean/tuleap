@@ -37,7 +37,7 @@ class HTML_TableTest extends TuleapTestCase {
     }
 
     public function itBuildsATable() {
-        //$this->assertPattern('%<table>.*</table>%', $this->html_table->render());
+        $this->assertPattern('%<table>.*</table>%s', $this->html_table->render());
     }
 
     public function itBuildsTableWithTitles() {
@@ -52,12 +52,20 @@ class HTML_TableTest extends TuleapTestCase {
         $this->assertNoPattern('%<thead>.*</thead>%', $this->html_table->render());
     }
 
+    public function itHasColumnTitleWhenWeAddTitles() {
+        $this->assertPattern('%<th>foo</th><th>bar</th>%', $this->html_table->addColumnTitle('foo')->addColumnTitle('bar')->render());
+    }
+
     public function itHasNoTableBodyIfNoBoby() {
         $this->assertNoPattern('%<tbody>.*</tbody>%', $this->html_table->render());
     }
 
     public function itHasTableClasses() {
         $this->assertPattern('%<table class="bla">%', $this->html_table->addTableClass('bla')->render());
+    }
+
+    public function itHasAnId() {
+        $this->assertPattern('%<table.*id="bla".*>%', $this->html_table->setId('bla')->render());
     }
 }
 

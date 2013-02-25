@@ -23,6 +23,7 @@
  */
 
 class HTML_Table {
+    private $id            = '';
     private $titles        = array();
     private $table_classes = array();
     private $body          = '';
@@ -32,6 +33,16 @@ class HTML_Table {
 
     public function setColumnsTitle(array $titles) {
         $this->titles = $titles;
+        return $this;
+    }
+
+    public function addColumnTitle($title) {
+        $this->titles[] = $title;
+        return $this;
+    }
+
+    public function setId($id) {
+        $this->id = $id;
         return $this;
     }
 
@@ -46,10 +57,24 @@ class HTML_Table {
     }
 
     public function render() {
-        return '<table class="'.implode(' ', $this->table_classes).'">
+        return '<table'.$this->getTableAttributes().'>
                  '.$this->renderHead().'
                  '.$this->renderBody().'
                 </table>';
+    }
+
+    private function getTableAttributes() {
+        $attributes = array();
+        if (count($this->table_classes)) {
+            $attributes[] = 'class="'.implode(' ', $this->table_classes).'"';
+        }
+        if ($this->id) {
+            $attributes[] = 'id="'.$this->id.'"';
+        }
+        if (count($attributes)) {
+            return ' '.implode(' ', $attributes);
+        }
+        return '';
     }
 
     private function renderHead() {

@@ -19,12 +19,13 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Renders both the cross-tracker search form and results. 
- */
 require_once 'common/TreeNode/InjectSpanPaddingInTreeNodeVisitor.class.php';
+require_once 'common/html/HTML_Table_Bootstrap.class.php';
 require_once 'html.php';
 
+/**
+ * Renders both the cross-tracker search form and results.
+ */
 class Tracker_CrossSearch_SearchContentView {
     /**
      * @var Tracker_Report
@@ -103,12 +104,11 @@ class Tracker_CrossSearch_SearchContentView {
     }
 
     protected function fetchTable() {
-        $html  = '';
-        $html .= '<table id="treeTable" class="tree-view">';
-        $html .= $this->fetchTHead();
-        $html .= $this->fetchTBody();
-        $html .= '</table>';
-        return $html;
+        $html_table = new HTML_Table_Bootstrap();
+        $html_table->setId('treeTable')->addTableClass('tree-view');
+        $this->appendTableTitles($html_table);
+        $this->appendTableBody($html_table);
+        return $html_table->render();
     }
     
     public function visit(TreeNode $node) {
@@ -133,31 +133,21 @@ class Tracker_CrossSearch_SearchContentView {
         return $html;
     }
     
-    private function fetchTBody() {
+    private function appendTableBody(HTML_Table $html_table) {
         $this->current_index = 0;
         
         $html  = '';
-        $html .= '<tbody>';
         foreach ($this->tree_of_artifacts->getChildren() as $child) {
-            $html.= $child->accept($this);
+            $html .= $child->accept($this);
         }
-        $html .= '</tbody>';
-        
-        return $html;
+        $html_table->setBody($html);
     }
     
-    private function fetchTHead() {
-        $html  = '';
-        $html .= '<thead>';
-        $html .= '  <tr class="boxtable">';
-        $html .= '    <th class="boxtitle"><span class="label">id</span></th>';
+    private function appendTableTitles(HTML_Table $html_table) {
+        $html_table->addColumnTitle('Id');
         foreach ($this->criteria as $criteria) {
-            $html .= '<th class="boxtitle"><span class="label">'. $criteria->field->getLabel().'</span></th>';
+            $html_table->addColumnTitle($criteria->field->getLabel());
         }
-        $html .= '  </tr>';
-        $html .= '</thead>';
-        
-        return $html;
     }
     
     private function fetchColumnsValues(Tracker_Artifact $artifact, array $row) {
