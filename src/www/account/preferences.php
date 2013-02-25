@@ -261,7 +261,7 @@ print "</select>\n";
 </div>
     <div class="row">
         <div class="span12">
-            <INPUT type="submit" name="Submit" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
+            <INPUT type="submit" name="Submit" class="btn btn-primary" value="<?php echo $Language->getText('global', 'btn_submit'); ?>">
         </div>
     </div>
 </FORM>

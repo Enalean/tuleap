@@ -1687,7 +1687,7 @@ class Layout extends Response {
         <div align="left">
         <table style=menus cellpadding="0" cellspacing="0" border="0" width="100%">
 
-                <tr>
+                <tr valign="top">
                     <td class="menuframe">
 
         <!-- VA Linux Stats Counter -->
@@ -2051,7 +2051,7 @@ class Layout extends Response {
 
         $em->processEvent('layout_searchbox_hiddenInputs', array('input_html' => &$output));
         
-        $output .= '<INPUT TYPE="text" SIZE="16" NAME="words" VALUE="'. htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8') .'">';
+        $output .= '<INPUT TYPE="text" SIZE="16" NAME="words" style="width:auto;" VALUE="'. htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8') .'">';
         $output .= "\t<BR>\n";
         $output .= "\t<INPUT TYPE=\"submit\" NAME=\"Search\" VALUE=\"".$Language->getText('include_menu','search')."\">\n";
         $output .= "\t</FORM>\n";

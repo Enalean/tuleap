@@ -193,7 +193,7 @@ class PluginsAdministrationViews extends Views {
                 
                 $output  = '<h3>'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_plugin', array($name)).'</h3>';
                 $output .= '<form action="'. $_SERVER['REQUEST_URI'] .'" method="POST"><div><input type="hidden" name="plugin_id" value="'.$request->get('plugin_id').'" /></div>';
-                $output .= '<table border="0" cellpadding="0" cellspacing="2" class="pluginsadministration_plugin_properties">';
+                $output .= '<table border="0" cellpadding="0" cellspacing="2" class="pluginsadministration_plugin_properties table table-striped table-bordered table-condensed">';
                 $output .= '<tbody>';
                 $output .=   '<tr>';
                 $output .=     '<td class="pluginsadministration_label">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','properties_name:').' </td>';
@@ -289,11 +289,10 @@ EOS;
                     
                 }
                 if ($props !== '') {
-                    $output .=   '<tr><td colspan="2"><hr /></td></tr>';
                     $output .=   $props;
                 }
                 if(($props !== '') || ($plugin->getScope() == Plugin::SCOPE_PROJECT)) {
-                    $output .=   '<tr><td>&nbsp;</td><td><input type="hidden" name="action" value="change_plugin_properties" /><input type="submit" value="Change Properties" /></td></tr>';
+                    $output .=   '<tr><td>&nbsp;</td><td><input type="hidden" name="action" value="change_plugin_properties" /><input type="submit" class="btn btn-primary" value="Change Properties" /></td></tr>';
                 }
                 $output .= '</tbody>';
                 $output .= '</table>';
