@@ -30,81 +30,67 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
     private $git_repository_factory;
     private $git_repository_factory_without_gerrit;
     private $permissions_manager;
+    private $user;
+    private $project;
+    private $u_group;
+    private $git_repository;
 
     public function setUp() {
 
-        $this->driver = mock('Git_Driver_Gerrit');
-        $this->permissions_manager = mock('PermissionsManager');
-        $this->remote_server_factory = mock('Git_RemoteServer_GerritServerFactory');
-        $this->remote_server = mock ('Git_RemoteServer_GerritServer');
+        $this->user                                  = aUser()->build();
+        $this->driver                                = mock('Git_Driver_Gerrit');
+        $this->permissions_manager                   = mock('PermissionsManager');
+        $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
+        $this->remote_server                         = mock ('Git_RemoteServer_GerritServer');
+        $this->project                               = mock('Project');
+        $this->u_group                               = mock('UGroup');
+        $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
+        $this->git_repository_factory                = mock('GitRepositoryFactory');
+        $this->git_repository                        = mock('GitRepository');
+
+        $this->git_repository_id    = 20;
 
         stub($this->remote_server_factory)->getServer()->returns($this->remote_server);
+        stub($this->git_repository_factory)->getAllRepositories($this->project)->returns(array($this->git_repository));
+        stub($this->git_repository_factory_without_gerrit)->getAllRepositories($this->project)->returns(array());
+        stub($this->project)->getUnixName()->returns('someProject');
+        stub($this->git_repository)->getFullName()->returns('some/git/project');
+        stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
+        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_READ, $this->u_group)->returns(true);
+        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_WRITE, $this->u_group)->returns(true);
+        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_WPLUS, $this->u_group)->returns(true);
+        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::SPECIAL_PERM_ADMIN, $this->u_group)->returns(false);
+
+        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager($this->git_repository_factory, $this->driver, $this->permissions_manager, $this->remote_server_factory);
     }
 
     public function itDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit() {
-        $user    = aUser()->build();
-        $project = mock('Project');
-        $u_group = mock('UGroup');
-
-        $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
-        stub($this->git_repository_factory_without_gerrit)->getAllRepositories($project)->returns(array());
-
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager($this->git_repository_factory_without_gerrit, $this->driver, $this->permissions_manager, $this->remote_server_factory);
-
         expect($this->driver)->addUserToGroup()->never();
 
-        $this->membership_manager->addUserToGroup($user, $u_group, $project);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group, $this->project);
     }
 
     public function itAsksForAllTheRepositoriesOfAProject() {
-        $user    = aUser()->build();
-        $project = mock('Project');
-        $u_group = mock('UGroup');
+        expect($this->git_repository_factory)->getAllRepositories($this->project)->once();
 
-        $this->git_repository_factory = mock('GitRepositoryFactory');
-        stub($this->git_repository_factory)->getAllRepositories($project)->returns(array());
-
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager($this->git_repository_factory, $this->driver, $this->permissions_manager, $this->remote_server_factory);
-
-        expect($this->git_repository_factory)->getAllRepositories($project)->once();
-
-        $this->membership_manager->addUserToGroup($user, $u_group, $project);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group, $this->project);
     }
 
     public function itAsksTheGerritDriverToAddAUserToThreeGroups() {
-        $user                 = aUser()->build();
-        $project              = mock('Project');
-        $u_group              = mock('UGroup');
-        $git_repository       = mock('GitRepository');
-        $git_repository_id    = 20;
-        $permissions_manager  = mock('PermissionsManager');
-
-        stub($project)->getUnixName()->returns('someProject');
-        stub($git_repository)->getFullName()->returns('some/git/project');
-        stub($git_repository)->isMigratedToGerrit()->returns(true);
-        stub($git_repository)->getId()->returns($git_repository_id);
-
-        stub($permissions_manager)->userHasPermission($git_repository_id, Git::PERM_READ, $u_group)->returns(true);
-        stub($permissions_manager)->userHasPermission($git_repository_id, Git::PERM_WRITE, $u_group)->returns(true);
-        stub($permissions_manager)->userHasPermission($git_repository_id, Git::PERM_WPLUS, $u_group)->returns(true);
-        stub($permissions_manager)->userHasPermission($git_repository_id, Git::SPECIAL_PERM_ADMIN, $u_group)->returns(false);
+        stub($this->git_repository)->isMigratedToGerrit()->returns(true);
 
         $first_group_expected = 'someProject/some/git/project-contributors';
         $second_group_expected = 'someProject/some/git/project-integrators';
         $third_group_expected = 'someProject/some/git/project-supermen';
 
-        $this->git_repository_factory = mock('GitRepositoryFactory');
-        stub($this->git_repository_factory)->getAllRepositories($project)->returns(array($git_repository));
-
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager($this->git_repository_factory, $this->driver, $permissions_manager, $this->remote_server_factory);
-
         $this->driver->expectCallCount('addUserToGroup', 3);
-        expect($this->driver)->addUserToGroup($this->remote_server, $user, $first_group_expected)->at(0);
-        expect($this->driver)->addUserToGroup($this->remote_server, $user, $second_group_expected)->at(1);
-        expect($this->driver)->addUserToGroup($this->remote_server, $user, $third_group_expected)->at(2);
+        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $first_group_expected)->at(0);
+        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
+        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
 
-        $this->membership_manager->addUserToGroup($user, $u_group, $project);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group, $this->project);
     }
 }
 ?>
