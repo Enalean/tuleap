@@ -941,6 +941,7 @@ ul.plugin_tracker_my_artifacts_list {
 #tracker_admin_menu {
     border:none;
     border-spacing:2em;
+    border-collapse: inherit;
 }
 
 #tracker_admin_menu td {
