@@ -2202,7 +2202,7 @@ h3.toggler-hide-noajax {
   content: "";
 }
 
-/* {{{ One step project part */
+/* {{{ One step project creation */
 .one_step_project {
     margin-top: 20px;
 }
@@ -2244,6 +2244,15 @@ h3.toggler-hide-noajax {
 }
 .container.one_step_project span.mandatory_field {
     color: red;
+}
+/* }}} */
+
+/* {{{ Multi steps project creation */
+.register_project {
+    margin-top: 20px;
+}
+.register_project label {
+    display: inline;
 }
 /* }}} */
 
