@@ -544,20 +544,6 @@ function util_double_diff_array($arr1, $arr2) {
     return array($deleted, $added);
 }
 
-function show_priority_colors_key($msg='') {
-  global $Language;
-
-	echo '<P class="small"><B>'.($msg ? $msg : $Language->getText('include_utils','prio_colors').':').'</B><BR>
-
-		<TABLE BORDER=0><TR>';
-
-	for ($i=1; $i<10; $i++) {
-		echo '
-			<TD class="'.get_priority_color($i).'">'.$i.'</TD>';
-	}
-	echo '</tr></table>';
-}
-
 // Deprecated
 function get_priority_color ($index) {
     return $GLOBALS['HTML']->getPriorityColor($index);

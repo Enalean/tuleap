@@ -668,7 +668,7 @@ class ArtifactReportHtml extends ArtifactReport {
                     } else {
                         $image = 'ic/toggle_minus.png';
                     }
-                    $html_result .= $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
+                    $html_result .= $GLOBALS['HTML']->getimage($image);
                     $html_result .= '</a>';
                     $html_result .= $Language->getText('tracker_include_report','query') .'</h3>';
                     $html_result .= '<div id="artifacts_query" style="padding-left:16px;">';
@@ -713,7 +713,7 @@ class ArtifactReportHtml extends ArtifactReport {
                             } else {
                                 $image = 'ic/toggle_minus.png';
                             }
-                            $html_result .= $GLOBALS['HTML']->getimage($image, array('style' => 'vertical-align:bottom; padding-right:5px;'));
+                            $html_result .= $GLOBALS['HTML']->getimage($image);
                             $html_result .= '</a>';
                         }
                         $html_result .= (int)$totalrows.' '.$Language->getText('tracker_include_report','matching').' '. $order_statement .'</h3>';

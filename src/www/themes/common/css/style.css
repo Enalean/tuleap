@@ -102,6 +102,14 @@ a:hover {
     background:#909090;
 }
 
+.form_search_box {
+    margin-right: 1em;
+}
+
+select[name=type_of_search] {
+    width: auto;
+}
+
 /* left menu specific */
 .menuframe { background-color: #e8e8e0; vertical-align: top; text-align: left; width: 60px; }
 .menutable { background-color: #e8e8e0; vertical-align: top; width: 150px; border-spacing: 0; border: 0; }
@@ -602,6 +610,9 @@ table.release tr td img {
 /* }}} */
 
 /* {{{ password validator */
+.password_strategy {
+    margin-left: 1em;
+}
 .password_validator_ok,
 .password_validator_ko {
     background:transparent url(../images/ic/tick.png) left top no-repeat;
@@ -638,6 +649,11 @@ table.release tr td img {
 
 #tracker_toolbar_tracker_name {
     font-size: 1.3em;
+}
+
+/* Disable boostrap fixed size of input area (enforced by tracker config) */
+#artifact_section_details input, textarea {
+    width: auto;
 }
 
 /* }}} */
@@ -1100,11 +1116,11 @@ td.forum_reference_separator {
     color:white;
     text-align:center;
 }
-.system_event_status_NEW     { background-color: gray; }
-.system_event_status_RUNNING { background-color: blue; }
-.system_event_status_DONE    { background-color: green; }
-.system_event_status_WARNING { background-color: orange; }
-.system_event_status_ERROR   { background-color: red; }
+td.system_event_status_NEW     { background-color: gray !important; }
+td.system_event_status_RUNNING { background-color: blue !important; }
+td.system_event_status_DONE    { background-color: green !important; }
+td.system_event_status_WARNING { background-color: orange !important; }
+td.system_event_status_ERROR   { background-color: red !important; }
 
 /* }}} */
 
@@ -1944,7 +1960,7 @@ h3.toggler-hide-noajax {
 
 .toggler-noajax, .toggler-hide-noajax,
 .toggler, .toggler-hide {
-    background-position:left middle;
+    background-position:left center;
     background-repeat:no-repeat;
     padding-left:16px;
     cursor:pointer;

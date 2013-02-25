@@ -95,37 +95,40 @@ foreach(array(
     SystemEvent::STATUS_WARNING, 
     SystemEvent::STATUS_ERROR,) as $status
 ) {
+    echo '<label class="checkbox inline">';
     echo '<input type="checkbox" 
                  name="filter_status[]" 
                  value="'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
                  id="filter_'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'"
                  '. (in_array($status, $filter_status) ? 'checked="checked"' : '') .'
-                 />';
-    echo '<label for="filter_'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'">'.  $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
+                 /> ';
+    echo $hp->purify($status, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
 }
-echo '<hr size="1" />';
+echo '<hr />';
 echo '<strong>'. 'Types:'. '</strong> <input type="hidden" name="filter_type[]" value="-" />';
-echo '<table>';
+echo '<div class="row-fluid">';
 $types = $se->getTypes();
+array_shift($types);
 uksort($types, 'strnatcasecmp');
-foreach(array_chunk($types, 5) as $row) {
-    echo '<tr>';
-    foreach ($row as $type) {
-        echo '<td>';
+foreach(array_chunk($types, ceil(count($types) / 3)) as $col) {
+    echo '<div class="span4">';
+    foreach ($col as $type) {
+        echo '<label class="checkbox">';
         echo '<input type="checkbox" 
                      name="filter_type[]" 
                      value="'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'" 
                      id="filter_'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'"
                      '. (in_array($type, $filter_type) ? 'checked="checked"' : '') .'
                      />';
-        echo '<label for="filter_'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'">'.  $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
-        echo '</td>';
+        echo $hp->purify($type, CODENDI_PURIFIER_CONVERT_HTML)  .'</label> ';
     }
-    echo '</tr>';
+    echo '</div>';
 }
-echo '</table>';
-echo '<hr size="1" />';
+echo '</div>';
+echo '<hr />';
+echo '<p>';
 echo '<input type="submit" name="filter" class="btn" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
+echo '</p>';
 echo '</fieldset>';
 echo $se->fetchLastEventsStatus($offset, $limit, $full, $filter_status, $filter_type, $token);
 
@@ -135,9 +138,9 @@ $dar = $sefdao->searchAll();
 if (!$dar->rowCount()) {
     echo '<em>'. $GLOBALS['Language']->getText('admin_system_events', 'nobody') .'</em>';
 }
-echo '<table>';
+echo '<table class="table table-striped table-bordered">';
 echo '<thead>';
-echo '<tr><th class="boxtitle">'. 'emails' .'</th><th class="boxtitle">'. 'listen' .'</th></tr>';
+echo '<tr><th>'. 'emails' .'</th><th>'. 'listen' .'</th><th>&nbsp;</th></tr>';
 echo '</thead>';
 echo '<tbody>';
 foreach($dar as $row) {
