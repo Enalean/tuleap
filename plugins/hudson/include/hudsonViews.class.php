@@ -311,42 +311,43 @@ class hudsonViews extends Views {
             $project_manager = ProjectManager::instance();
             $project = $project_manager->getProject($group_id);
             
-            echo '<table id="jobs_table">';
-            echo ' <tr class="boxtable">';
-            echo '  <th class="boxtitle">&nbsp;</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_job').'</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess').'</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure').'</th>';
-            echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_rss').'</th>';
+            echo '<table id="jobs_table" class="table table-bordered table-striped">';
+            echo ' <thead><tr>';
+            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_job').'</th>';
+            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastsuccess').'</th>';
+            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_lastfailure').'</th>';
+            echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_rss').'</th>';
             if ($project->usesSVN()) {
-                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_svn_trigger').'</th>';
+                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_svn_trigger').'</th>';
             }
             if ($project->usesCVS()) {
-                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger').'</th>';
+                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_cvs_trigger').'</th>';
             }
             if (!empty($services)) {
                 foreach ($services as $service) {
-                    echo '  <th class="boxtitle">'.$service['title'].'</th>';
+                    echo '  <th>'.$service['title'].'</th>';
                 }
             }
             if ($user->isMember($request->get('group_id'), 'A')) {
-                echo '  <th class="boxtitle">'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
+                echo '  <th>'.$GLOBALS['Language']->getText('plugin_hudson','header_table_actions').'</th>';
             }
-            echo ' </tr>';
-            
+            echo ' </tr></thead>';
+            echo '<tbody>';
             $cpt = 1;
             while ($dar->valid()) {
                 $row = $dar->current();
                 $job_id = $row['job_id'];
 
-                echo ' <tr class="'. util_get_alt_row_color($cpt) .'">';
+                echo ' <tr>';
                 
                 try {
                     $job = new HudsonJob($row['job_url']);
                     
-                    echo '  <td><img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /></td>';
                     // function toggle_iframe is in script plugins/hudson/www/hudson_tab.js
-                    echo '  <td class="boxitem"><a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name'])).'">'.$row['name'].'</a></td>';
+                    echo '<td>';
+                    echo '<img src="'.$job->getStatusIcon().'" alt="'.$job->getStatus().'" title="'.$job->getStatus().'" /> ';
+                    echo '<a href="'.$job->getUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_job', array($row['name'])).'">'.$row['name'].'</a>';
+                    echo '</td>';
                     if ($job->getLastSuccessfulBuildNumber() != '') {
                         echo '  <td><a href="'.$job->getLastSuccessfulBuildUrl().'" onclick="toggle_iframe(this); return false;" title="'.$GLOBALS['Language']->getText('plugin_hudson','show_build', array($job->getLastSuccessfulBuildNumber(), $row['name'])).'">'.$GLOBALS['Language']->getText('plugin_hudson','build').' #'.$job->getLastSuccessfulBuildNumber().'</a></td>';
                     } else {
