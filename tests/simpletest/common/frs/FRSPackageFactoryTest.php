@@ -26,7 +26,7 @@ Mock::generate('DataAccessResult');
 require_once('common/dao/FRSPackageDao.class.php');
 Mock::generatePartial('FRSPackageDao', 'FRSPackageDaoTestVersion', array('retrieve'));
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('PermissionsManager');
 Mock::generate('FRSPackage');

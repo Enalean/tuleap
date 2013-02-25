@@ -19,7 +19,7 @@
  */
 
 require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
 Mock::generate('Project');
 require_once (dirname(__FILE__).'/../include/WebDAVUtils.class.php');

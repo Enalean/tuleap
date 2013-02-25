@@ -31,7 +31,7 @@ Mock::generatePartial('Docman_ApprovalTableNotificationCycle', 'Docman_ApprovalT
 // For  testLastReviewerApprove
 
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Mail');
 Mock::generate('Docman_ApprovalReviewer');
 Mock::generate('Docman_ApprovalTable');

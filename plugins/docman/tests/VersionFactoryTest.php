@@ -25,7 +25,7 @@ require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
 
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_VersionDao');

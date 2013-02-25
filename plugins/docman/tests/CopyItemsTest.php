@@ -45,7 +45,7 @@ Mock::generate('Docman_Folder');
 Mock::generate('Iterator');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 /**
  * Test how items are copied.

@@ -43,7 +43,7 @@ require_once (dirname(__FILE__).'/../include/FS/WebDAVFRSPackage.class.php');
 require_once(dirname(__FILE__).'/../include/WebDAVTree.class.php');
 require_once(dirname(__FILE__).'/../include/WebDAVUtils.class.php');
 Mock::generate('WebDAVUtils');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 /**
  * This is the unit test of WebDAVTree

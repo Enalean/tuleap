@@ -1,6 +1,6 @@
 <?php
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generatePartial(
     'PFUser',
     'UserTestVersion',

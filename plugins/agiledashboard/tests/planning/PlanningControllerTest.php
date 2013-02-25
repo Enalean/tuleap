@@ -98,7 +98,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
     public function setUp() {
         parent::setUp();
 
-        $this->user = mock('User');
+        $this->user = mock('PFUser');
         $this->links = new Systray_LinksCollection();
 
         $params = array(

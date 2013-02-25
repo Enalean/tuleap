@@ -100,7 +100,7 @@ Mock::generatePartial('Tracker_FormElement_Field', 'MockTracker_FormElement_Fiel
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');

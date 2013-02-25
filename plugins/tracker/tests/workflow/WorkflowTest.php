@@ -30,7 +30,7 @@ Mock::generate('Tracker_Artifact_Changeset');
 Mock::generate('Tracker_Artifact');
 Mock::generate('Tracker_Artifact_ChangesetValue_List');
 Mock::generate('Tracker_Artifact_Changeset_Null');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 Mock::generate('PermissionsManager');
 

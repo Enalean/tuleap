@@ -32,7 +32,7 @@ require_once('common/include/Response.class.php');
 Mock::generate('Response');
 Mock::generate('Project');
 Mock::generate('GitRepositoryFactory');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('SystemEventManager');
 Mock::generate('Layout');
 require_once(dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php');

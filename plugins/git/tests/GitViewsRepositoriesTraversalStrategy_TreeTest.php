@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../include/constants.php');
 require_once 'GitViewsRepositoriesTraversalStrategyTest.class.php';
 require_once dirname(__FILE__) .'/../include/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
 Mock::generate('GitViews');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('GitRepository');
 
 class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositoriesTraversalStrategyTest {

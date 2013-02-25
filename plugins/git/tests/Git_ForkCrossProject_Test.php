@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/Git.class.php';
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');

@@ -29,7 +29,7 @@ Mock::generate('GitBackend');
 require_once(dirname(__FILE__).'/../include/GitDao.class.php');
 Mock::generate('GitDao');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('ProjectManager');
 Mock::generate('Project');
 Mock::generate('DataAccessResult');

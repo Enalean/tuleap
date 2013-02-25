@@ -100,7 +100,7 @@ require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');

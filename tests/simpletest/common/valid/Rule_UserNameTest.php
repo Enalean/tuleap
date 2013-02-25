@@ -27,7 +27,7 @@ Mock::generatePartial('Rule_UserName', 'Rule_UserNameTestVersion', array('_getPr
 
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');

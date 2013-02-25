@@ -37,7 +37,7 @@ Mock::generate('Tracker_FormElement_Field_Date');
 
 Mock::generate('Tracker');
 Mock::generate('TrackerManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Project');
 
 require_once 'common/include/HTTPRequest.class.php';

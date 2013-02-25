@@ -20,7 +20,7 @@
 
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/mail/Codendi_Mail.class.php');
 Mock::generatePartial('Codendi_Mail', 'Codendi_MailTestVersion', array('getMail'));
 Mock::generate('Tuleap_Template_Mail');

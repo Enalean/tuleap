@@ -26,7 +26,7 @@ require_once(dirname(__FILE__).'/../include/LDAP_UserManager.class.php');
 Mock::generatePartial('LDAP_UserManager', 'LDAP_UserManagerGenerateLogin', array('getLoginFromString', 'userNameIsAvailable'));
 Mock::generate('LDAP');
 Mock::generate('LDAP_UserDao');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('BackendSVN');
 Mock::generate('SystemEventManager');
 

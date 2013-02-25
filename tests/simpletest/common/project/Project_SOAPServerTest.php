@@ -19,7 +19,7 @@
 
 require_once 'common/project/Project_SOAPServer.class.php';
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 
 Mock::generate('Project');

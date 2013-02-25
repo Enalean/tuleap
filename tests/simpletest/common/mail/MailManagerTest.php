@@ -20,7 +20,7 @@
 
 require_once 'common/mail/MailManager.class.php';
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 
 class MailManagerTest extends UnitTestCase {

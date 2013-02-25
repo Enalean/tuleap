@@ -28,7 +28,7 @@ Mock::generate('Project');
 require_once('common/dao/ProjectDao.class.php');
 Mock::generate('ProjectDao');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 

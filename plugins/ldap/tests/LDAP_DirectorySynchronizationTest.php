@@ -32,7 +32,7 @@ Mock::generate('LDAPResultIterator');
 Mock::generate('LDAPResult');
 Mock::generate('BaseLanguage');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('LDAP_UserManager');
 Mock::generate('LDAP_UserSync');
 

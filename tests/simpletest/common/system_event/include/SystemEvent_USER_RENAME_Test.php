@@ -22,7 +22,7 @@ require_once('common/system_event/include/SystemEvent_USER_RENAME.class.php');
 Mock::generatePartial('SystemEvent_USER_RENAME', 'SystemEvent_USER_RENAME_TestVersion', array('done', 'getUser', 'getBackend', 'updateDB'));
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/backend/BackendSystem.class.php');
 Mock::generate('BackendSystem');

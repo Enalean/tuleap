@@ -1,7 +1,7 @@
 <?php
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
 require_once('common/dao/include/DataAccessResult.class.php');

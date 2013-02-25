@@ -36,7 +36,7 @@ require_once dirname(__FILE__).'/../include/Docman_Path.class.php';
 Mock::generate('Docman_Path');
 
 require_once 'common/user/User.class.php';
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once 'common/mail/Mail.class.php';
 Mock::generate('Mail');

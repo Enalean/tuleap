@@ -29,7 +29,7 @@ Mock::generate('AdminDelegation_UserServiceDao');
 Mock::generate('AdminDelegation_UserServiceLogDao');
 
 require_once 'common/user/User.class.php';
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class AdminDelegation_UserServiceTest extends UnitTestCase {
     protected $_keepCurrentTime;

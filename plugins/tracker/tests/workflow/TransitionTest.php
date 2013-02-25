@@ -20,7 +20,7 @@
 require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 Mock::generate('Tracker_FormElement_Field_List_Value');
 Mock::generate('Transition_PostAction');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class Transition_baseTest extends TuleapTestCase {
 

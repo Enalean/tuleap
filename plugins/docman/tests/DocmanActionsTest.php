@@ -59,7 +59,7 @@ Mock::generate('BaseLanguage');
 
 Mock::generate('EventManager');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class DocmanActionsTest extends UnitTestCase {
 

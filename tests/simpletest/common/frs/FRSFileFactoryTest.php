@@ -6,7 +6,7 @@ require_once('common/backend/BackendSystem.class.php');
 require_once 'common/valid/Rule.class.php';
 require_once('common/language/BaseLanguage.class.php');
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('EventManager');
 require_once('common/project/Project.class.php');

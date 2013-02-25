@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/../../include/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php');
 
 Mock::generate('Project');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 
 class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {

@@ -22,7 +22,7 @@ require_once('common/system_event/include/SystemEvent_COMPUTE_MD5SUM.class.php')
 Mock::generatePartial('SystemEvent_COMPUTE_MD5SUM', 'SystemEvent_COMPUTE_MD5SUM_TestVersion', array('getUser','getFileFactory', 'done', 'computeFRSMd5Sum', 'compareMd5Checksums', 'sendNotificationMail', 'updateDB'));
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/frs/FRSFileFactory.class.php');
 Mock::generate('FRSFileFactory');

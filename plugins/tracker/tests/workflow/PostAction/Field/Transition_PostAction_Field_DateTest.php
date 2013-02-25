@@ -23,7 +23,7 @@ Mock::generate('Transition');
 Mock::generate('BaseLanguage');
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker_FormElement_Field_Date');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class Transition_PostAction_Field_DateTest extends UnitTestCase {
     

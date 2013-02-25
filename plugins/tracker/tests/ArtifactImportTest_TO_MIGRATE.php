@@ -29,7 +29,7 @@ Mock::generatePartial('Tracker_Import','ArtifactImportFollowUpCommentsTestVersio
 Mock::generatePartial('Tracker_Import', 'ArtifactImportTestVersion', array('getUserManager', 'getUserByUserName'));
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once(dirname(__FILE__).'/../include/ArtifactFieldFactory.class.php');
 Mock::generate('ArtifactFieldFactory');

@@ -35,7 +35,7 @@ Mock::generate('Docman_Version');
 Mock::generate('Docman_VersionFactory');
 Mock::generate('Docman_FileStorage');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('EventManager');
 Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManager');

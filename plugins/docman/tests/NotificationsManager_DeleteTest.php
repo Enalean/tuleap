@@ -32,7 +32,7 @@ require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php');
 Mock::generate('Docman_PermissionsManager');

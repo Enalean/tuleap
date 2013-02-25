@@ -19,7 +19,7 @@
  */
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
 require_once('common/project/ProjectManager.class.php');
@@ -643,7 +643,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 
@@ -665,7 +665,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 
@@ -687,7 +687,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 
@@ -709,7 +709,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 
@@ -731,7 +731,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 

@@ -21,7 +21,7 @@
 
 require_once('common/frs/FRSReleaseFactory.class.php');
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('PermissionsManager');
 Mock::generate('FRSPackageFactory');

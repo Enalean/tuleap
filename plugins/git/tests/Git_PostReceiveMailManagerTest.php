@@ -29,7 +29,7 @@ require_once dirname(__FILE__).'/../include/GitDao.class.php';
 require_once dirname(__FILE__).'/../include/GitRepository.class.php';
 require_once('common/user/User.class.php');
 Mock::generate('GitRepository');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Project');
 Mock::generate('GitDao');
 Mock::generate('GitBackend');

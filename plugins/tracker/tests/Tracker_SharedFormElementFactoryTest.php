@@ -22,7 +22,7 @@ require_once 'common/dao/include/DataAccessObject.class.php';
 
 Mock::generate('Tracker_FormElementFactory');
 Mock::generate('Tracker');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Tracker_FormElement_Field_String');
 Mock::generate('Tracker_FormElement_Field_Selectbox');
 Mock::generate('Tracker_FormElement_Field_List_BindFactory');

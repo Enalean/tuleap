@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__) .'/../include/Git_Backend_Gitolite.class.php';
 
 Mock::generate('GitViews');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Git_Backend_Gitolite');
 
 abstract class GitViewsRepositoriesTraversalStrategyTest extends TuleapTestCase {

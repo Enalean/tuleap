@@ -25,7 +25,7 @@ require_once(dirname(__FILE__).'/../include/Docman_BuildItemMappingVisitor.class
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_ItemDao');
 Mock::generate('Docman_PermissionsManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generatePartial('Docman_BuildItemMappingVisitor', 'BuildItemMappingVisitorTestVersion', array('getItemDao', 'getPermissionsManager', 'getCurrentUser'));
 
 class BuildItemMappingVisitorTest extends UnitTestCase {

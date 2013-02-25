@@ -21,7 +21,7 @@
 require_once('common/include/HTTPRequest.class.php');
 Mock::generate('HTTPRequest');
 require_once('common/valid/ValidFactory.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 require_once('common/mail/Codendi_Mail.class.php');
 Mock::generate('Codendi_Mail');

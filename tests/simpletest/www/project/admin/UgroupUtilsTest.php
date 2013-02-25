@@ -20,7 +20,7 @@
 require_once('www/project/admin/ugroup_utils.php');
 
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UGroup');
 
 class UgroupUtilsTest extends UnitTestCase {

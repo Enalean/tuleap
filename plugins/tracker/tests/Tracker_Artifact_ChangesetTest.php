@@ -50,7 +50,7 @@ require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
 Mock::generate('UserHelper');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('BaseLanguageFactory');
 
 class Tracker_Artifact_ChangesetTest extends UnitTestCase {

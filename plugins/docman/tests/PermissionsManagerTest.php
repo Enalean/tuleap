@@ -26,7 +26,7 @@ require_once(dirname(__FILE__).'/../include/Docman_PermissionsManager.class.php'
 require_once('common/user/User.class.php');
 
 Mock::generatePartial('Docman_PermissionsManager', 'Docman_PermissionsManagerTestVersion', array('_getPermissionManagerInstance', '_isUserDocmanAdmin', 'getDao', '_itemIsLockedForUser'));
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Project');
 Mock::generate('PermissionsManager');
 Mock::generate('Docman_PermissionsManagerDao');
