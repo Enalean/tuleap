@@ -426,7 +426,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $current_user->addRecentElement($this);
         $from_aid = $request->get('from_aid');
 
-        $html = '';
+        $html = '<div id="tracker_artifact">';
 
         $redirect = new Tracker_Artifact_Redirect();
         $redirect->base_url = TRACKER_BASE_URL;
@@ -461,6 +461,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         //$html .= $this->_fetchHistory();
 
         $html .= '</form>';
+        $html .= '</div>'; // tracker_artifact;
         $trm = new Tracker_RulesManager($tracker, $this->getFormElementFactory());
         $html .= $trm->displayRulesAsJavascript();
 

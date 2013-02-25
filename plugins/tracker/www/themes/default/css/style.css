@@ -384,6 +384,11 @@ ul.tracker_function_aggregate_results {
     color:gray;
 }
 
+/* Disable bootrap width for elements controled by tracker config  */
+#tracker_artifact input, #tracker_artifact select {
+    width: auto;
+}
+
 #tracker_artifact_tabs {
     padding: 3px 1em;
     margin: 0;
