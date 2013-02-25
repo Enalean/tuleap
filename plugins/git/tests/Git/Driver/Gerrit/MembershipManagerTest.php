@@ -21,6 +21,8 @@
 require_once dirname(__FILE__).'/../../../../include/constants.php';
 require_once dirname(__FILE__).'/../../../builders/aGitRepository.php';
 require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
+require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/AddUser.class.php';
+require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/RemoveUser.class.php';
 require_once GIT_BASE_DIR .'/Git/Driver/Gerrit.class.php';
 require_once 'common/include/Config.class.php';
 
@@ -34,6 +36,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
     private $project;
     private $u_group;
     private $git_repository;
+    private $membership_command;
 
     public function setUp() {
 
@@ -47,6 +50,8 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
         $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
         $this->git_repository_factory                = mock('GitRepositoryFactory');
         $this->git_repository                        = mock('GitRepository');
+        $this->membership_command_add                = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver);
+        $this->membership_command_remove             = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver);
 
         $this->git_repository_id    = 20;
 
@@ -62,20 +67,31 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
         stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_WPLUS, $this->u_group)->returns(true);
         stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::SPECIAL_PERM_ADMIN, $this->u_group)->returns(false);
 
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager($this->git_repository_factory, $this->driver, $this->permissions_manager, $this->remote_server_factory);
+        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            $this->git_repository_factory,
+            $this->driver,
+            $this->permissions_manager,
+            $this->remote_server_factory
+        );
     }
 
     public function itDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit() {
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager($this->git_repository_factory_without_gerrit, $this->driver, $this->permissions_manager, $this->remote_server_factory);
+        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            $this->git_repository_factory_without_gerrit,
+            $this->driver,
+            $this->permissions_manager,
+            $this->remote_server_factory
+        );
+
         expect($this->driver)->addUserToGroup()->never();
 
-        $this->membership_manager->addUserToGroup($this->user, $this->u_group, $this->project);
+        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
     }
 
     public function itAsksForAllTheRepositoriesOfAProject() {
         expect($this->git_repository_factory)->getAllRepositories($this->project)->once();
 
-        $this->membership_manager->addUserToGroup($this->user, $this->u_group, $this->project);
+        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
     }
 
     public function itAsksTheGerritDriverToAddAUserToThreeGroups() {
@@ -90,7 +106,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
         expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
         expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
 
-        $this->membership_manager->addUserToGroup($this->user, $this->u_group, $this->project);
+        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
     }
 
     public function itAsksTheGerritDriverToRemoveAUserFromThreeGroups() {
@@ -105,7 +121,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
 
-        $this->membership_manager->removeUserFromGroup($this->user, $this->u_group, $this->project);
+        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_remove);
 
     }
 }

@@ -46,7 +46,7 @@ class Git_Driver_Gerrit_MembershipManager {
         $this->gerrit_server_factory  = $gerrit_server_factory;
     }
 
-    public function addUserToGroup(User $user, UGroup $ugroup, Project $project) {
+    public function updateUserMembership(User $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
         $repositories = $this->getMigratedRepositoriesOfAProject($project);
 
         if (empty($repositories)) {
@@ -54,37 +54,16 @@ class Git_Driver_Gerrit_MembershipManager {
         }
 
         foreach ($repositories as $repository) {
-            $this->addUserToGerritGroupsAccordingToPermissions($user, $ugroup, $project, $repository);
+            $this->updateUserGerritGroupsAccordingToPermissions($user, $ugroup, $project, $repository, $command);
         }
     }
 
-    private function addUserToGerritGroupsAccordingToPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository) {
+    private function updateUserGerritGroupsAccordingToPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository, Git_Driver_Gerrit_MembershipCommand $command) {
         $remote_server   = $this->gerrit_server_factory->getServer($repository);
         $groups_full_names = $this->getConcernedGerritGroups($ugroup, $project, $repository);
 
         foreach ($groups_full_names as $group_full_name) {
-            $this->gerrit_driver->addUserToGroup($remote_server, $user, $group_full_name);
-        }
-    }
-
-    public function removeUserFromGroup(User $user, UGroup $ugroup, Project $project) {
-        $repositories = $this->getMigratedRepositoriesOfAProject($project);
-
-        if (empty($repositories)) {
-            return;
-        }
-
-        foreach ($repositories as $repository) {
-            $this->removeUserFromGerritGroupsAccordingToPermissions($user, $ugroup, $project, $repository);
-        }
-    }
-
-    private function removeUserFromGerritGroupsAccordingToPermissions(User $user, UGroup $ugroup, Project $project, GitRepository $repository) {
-        $remote_server     = $this->gerrit_server_factory->getServer($repository);
-        $groups_full_names = $this->getConcernedGerritGroups($ugroup, $project, $repository);
-
-        foreach ($groups_full_names as $group_full_name) {
-            $this->gerrit_driver->removeUserFromGroup($remote_server, $user, $group_full_name);
+            $command->process($remote_server, $user, $group_full_name);
         }
     }
 
