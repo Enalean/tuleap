@@ -146,14 +146,14 @@ function display_account_form($register_error)	{
     <form action="/account/register.php" method="post">
 <?php }?>
 <p><?php print $Language->getText('account_register', 'login').'&nbsp;'.$star; ?>:<br>
-<input type="text" name="form_loginname" value="<?php echo $form_loginname; ?>">
+<input type="text" name="form_loginname" value="<?php echo $form_loginname; ?>" required="required">
 <?php print $Language->getText('account_register', 'login_directions'); ?>
 <?php user_display_choose_password($page); ?>
 <P><?php print $Language->getText('account_register', 'realname').'&nbsp;'.$star; ?>:<br>
-<INPUT size=40 type="text" name="form_realname" value="<?php echo $form_realname; ?>">
+<INPUT size=40 type="text" name="form_realname" value="<?php echo $form_realname; ?>" required="required">
 <?php print $Language->getText('account_register', 'realname_directions'); ?>
 <P><?php print $Language->getText('account_register', 'email').'&nbsp;'.$star; ?>:<BR>
-<INPUT size=40 type="text" name="form_email" value="<?php echo $form_email; ?>"><BR>
+<INPUT size=40 type="text" name="form_email" value="<?php echo $form_email; ?>" required="required"><BR>
 <?php print $Language->getText('account_register', 'email_directions'); ?>
 <?php if($page == "admin_creation"){ ?>
     <P><?php print $Language->getText('account_register', 'expiry_date')?>:<BR>

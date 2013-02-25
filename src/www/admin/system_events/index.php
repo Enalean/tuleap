@@ -138,9 +138,9 @@ $dar = $sefdao->searchAll();
 if (!$dar->rowCount()) {
     echo '<em>'. $GLOBALS['Language']->getText('admin_system_events', 'nobody') .'</em>';
 }
-echo '<table>';
+echo '<table class="table table-striped table-bordered">';
 echo '<thead>';
-echo '<tr><th class="boxtitle">'. 'emails' .'</th><th class="boxtitle">'. 'listen' .'</th></tr>';
+echo '<tr><th>'. 'emails' .'</th><th>'. 'listen' .'</th><th>&nbsp;</th></tr>';
 echo '</thead>';
 echo '<tbody>';
 foreach($dar as $row) {
