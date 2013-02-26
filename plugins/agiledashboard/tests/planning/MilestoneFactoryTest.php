@@ -353,7 +353,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
     
     public function itReturnsMilestones() {
-        $artifact         = anArtifact()->build();
+        $artifact         = anArtifact()->withInTrackerId(3)->build();
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
