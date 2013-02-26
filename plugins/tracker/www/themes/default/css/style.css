@@ -984,6 +984,16 @@ ul.plugin_tracker_my_artifacts_list {
     padding-left: 56px;
 }
 
+/* {{{ fix bootstrap width on form elements and rendering on fieldset */
+.tracker-admin-group input,
+.tracker-admin-group select {
+    width: auto;
+}
+.tracker-admin-group legend label {
+    display: inline;
+}
+/* }}} */
+
 .widget-preview-plugin_tracker_myartifacts-en_US,
 .widget-preview-plugin_tracker_myartifacts-fr_FR {
     background-image: url(../images/widget-preview-myartifact.png);
