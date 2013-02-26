@@ -141,18 +141,17 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    function getPluginInfo() {
+    public function getPluginInfo() {
         if (!is_a($this->pluginInfo, 'CardwallPluginInfo')) {
             $this->pluginInfo = new CardwallPluginInfo($this);
         }
         return $this->pluginInfo;
     }
 
-    function cssfile($params) {
+    public function cssfile($params) {
         // Only show the stylesheet if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
-        if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0 ||
+        if ($this->isAgileDashboardOrTrackerUrl() ||
             strpos($_SERVER['REQUEST_URI'], '/my/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/projects/') === 0 ||
             strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0 ) {
@@ -161,16 +160,32 @@ class cardwallPlugin extends Plugin {
         }
     }
 
-    function javascript_file($params) {
+    public function javascript_file($params) {
         // Only show the js if we're actually in the Cardwall pages.
         // This stops styles inadvertently clashing with the main site.
-        if (defined('AGILEDASHBOARD_BASE_DIR') && strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
-            strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0) {
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/ajaxInPlaceEditorExtensions.js"></script>'."\n";
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/cardwall.js"></script>'."\n";
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/script.js"></script>'."\n";
-            echo '<script type="text/javascript" src="'.$this->getPluginPath().'/js/select2.min.js"></script>'."\n";
+        if ($this->isAgileDashboardOrTrackerUrl()) {
+            echo $this->getJavascriptIncludesForScripts(array(
+                'ajaxInPlaceEditorExtensions.js',
+                'cardwall.js',
+                'script.js',
+                'admin.js',
+                'select2.min.js',
+            ));
         }
+    }
+
+    private function getJavascriptIncludesForScripts(array $script_names) {
+        $html = '';
+        foreach ($script_names as $script_name) {
+            $html .= '<script type="text/javascript" src="'.$this->getPluginPath().'/js/'.$script_name.'"></script>'."\n";
+        }
+        return $html;
+    }
+
+    private function isAgileDashboardOrTrackerUrl() {
+        return (defined('AGILEDASHBOARD_BASE_DIR') &&
+                strpos($_SERVER['REQUEST_URI'], AGILEDASHBOARD_BASE_URL.'/') === 0 ||
+                strpos($_SERVER['REQUEST_URI'], TRACKER_BASE_URL.'/') === 0);
     }
 
     public function javascript($params) {

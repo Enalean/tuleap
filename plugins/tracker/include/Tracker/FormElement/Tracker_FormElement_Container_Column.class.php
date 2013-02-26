@@ -163,19 +163,11 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     }
 
     protected function fetchMailArtifactPrefix($format) {
-        if ($format == 'text') {
-            return '';
-        } else {
-            return $this->fetchArtifactPrefix();
-        }
+        return '';
     }
     
     protected function fetchMailArtifactSuffix($format) {
-        if ($format == 'text') {
-            return '';
-        } else {
-            return $this->fetchArtifactSuffix();
-        }
+        return '';
     }
     
     /**

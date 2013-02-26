@@ -1,13 +1,20 @@
-Version 5.11 (Not Released Yet)
+Version 5.12 (Not released yet)
+	== Plugins ==
+	* tracker 5.89
+	* graphontrackersv5: 5.0.7
+	* tracker: 5.90
+	* agiledashboard: 0.73
+
+Version 5.11 (Thursday, February 21st 2013)
 
 	== Plugins ==
-	* tracker: 5.85
+	* tracker: 5.88
 	* agiledashboard: 0.72
-	* cardwall: 0.9.16
+	* cardwall: 0.9.18
 	* git: 2.7.26
 	* ldap: 3.25
 	* forumml: 2.6.8
-	* fulltextsearch: 0.15
+	* fulltextsearch: 0.16
 	* tests: 5.16
 	* graphontrackersv5: 5.0.6
 
@@ -21,6 +28,8 @@ Version 5.11 (Not Released Yet)
 	* Fix sla #813: Project administration page is distorded on IE when the custom notification message is long
 	* Fix bug #2317: Fatal error on the AccessLogs
 	* Fix sla #682 - Viewvc display issue for file which name contains "$"
+	* Fix missing blank.gif that pollutate error_log
+	* Fix footer link for Tuleap as well as copyright
 
 Version 5.9.1 (Thursday, January 24rd 2013)
 

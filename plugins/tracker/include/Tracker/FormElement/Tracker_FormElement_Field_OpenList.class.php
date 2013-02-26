@@ -158,14 +158,14 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $html = '';
+        $labels = array();
         $selected_values = $value ? $value->getListValues() : array();
         foreach($selected_values as $id => $v) {
             if ($id != 100) {
-                $html .= $v->getLabel();
+                $labels[] = $v->getLabel();
             }
         }
-        return $html;
+        return implode(', ', $labels);
     }
 
     /**
@@ -178,8 +178,8 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || ! $value->getListValues()) {
+            return '-';
         }
         $output = '';
         switch ($format) {

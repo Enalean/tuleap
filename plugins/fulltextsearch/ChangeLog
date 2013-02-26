@@ -1,3 +1,6 @@
+Version 0.16 - Tuleap 5.11
+    * Fix bugs #2600: FT indexing of TV5 follow-ups fails
+
 Version 0.15 - Tuleap 5.11
     * Fix integration of search in follow-up comments and cross tracker search
 

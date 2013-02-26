@@ -81,7 +81,6 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'field_id' => array('name'=>'field_id', 'type' => 'xsd:int'),
         'bind_value_id' => array('name'=>'baind_value_id', 'type' => 'xsd:int'),
         'bind_value_label' => array('name'=>'bind_value_label', 'type' => 'xsd:string')
     )

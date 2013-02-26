@@ -1,3 +1,19 @@
+Version 5.90 - Tuleap 5.12
+    * Slices in pie/bar charts now is the same that the color attributed to the field in the tracker. (Contrib JTEKT)
+
+Version 5.89 - Tuleap 5.12
+    * Fix two bugs : bug #2396 and bug #2234. We modify the behaviour of update_artifact by passing id of list values instead of their labels
+    * SOAP API Version 2.0.4
+
+Version 5.88 - Tuleap 5.11
+    * Fix bugs #2601 - Should not have to click twice in IE to choose the bind
+
+Version 5.87 - Tuleap 5.11
+    * Fix sla #2291: add help message on artifact csv import
+
+Version 5.86 - Tuleap 5.11
+    * Better display of html emails in outlook
+
 Version 5.85 - Tuleap 5.11
     * Burndown field makes always use of capacity field when it exists
 

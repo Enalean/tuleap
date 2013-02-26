@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/layout/ColorHelper.class.php';
 
 abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElement_Field_Shareable {
 
@@ -60,15 +61,31 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return mixed The values or null if there are no specific available values
      */
     public abstract function getSoapAvailableValues();
+
     /**
      * Get the field data for artifact submission
      *
-     * @param string $soap_value  of soap field value
-     * @param bool   $is_multiple if the soap value is multiple or not
+     * @param string  $soap_value  the soap field value (username(s))
+     * @param boolean $is_multiple if the soap value is multiple or not
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
      */
-    public abstract function getFieldData($soap_value, $is_multiple);
+    public function getFieldData($soap_value, $is_multiple) {
+        $values = $this->getAllValues();
+        if ($is_multiple) {
+            $return = explode(',', $soap_value);
+            return $return;
+        } else {
+            foreach ($values as $id => $value) {
+                if ($id == $soap_value) {
+                    return $id;
+                }
+            }
+            // if not found, return null
+            return null;
+        }
+    }
+
     /**
      * @return array
      */
@@ -125,6 +142,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     public function formatArtifactValue($value_id) {
         if ($value_id != 100) {
             return $this->formatCriteriaValue($value_id);
+        } else {
+            return '-';
         }
     }
 
@@ -159,6 +178,15 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      */
     public abstract function getQuerySelect();
     
+    /**
+     * Get the "select" statement to retrieve field values with their decorator if they exist
+     * @return string
+     * @see getQuerySelect
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getQuerySelect();
+    }
+    
     
     /**
      * Get the "from" statement to retrieve field values
@@ -170,6 +198,15 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return string
      */
     public abstract function getQueryFrom($changesetvalue_table = 'tracker_changeset_value_list');
+    
+	/**
+     * Get the "from" statement to retrieve field values with their decorator if they exist
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list') {
+        return $this->getQueryFrom($changesetvalue_table);
+    }
     
     /**
      * Get the field
@@ -398,7 +435,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         if (is_array($this->decorators) && !empty($this->decorators)) {
             $values = $this->getBindValues();
             foreach ( $this->decorators as $decorator) {
-                $hexacolor = Tracker_FormElement_Field_List_BindDecorator::toHexa($decorator->r, $decorator->g, $decorator->b);
+                $hexacolor = ColorHelper::RGBtoHexa($decorator->r, $decorator->g, $decorator->b);
                 Tracker_FormElement_Field_List_BindDecorator::save($this->field->getId(), $values[$decorator->value_id]->getId(), $hexacolor);
             }
         }

@@ -95,7 +95,7 @@ plugin_tracker_import	sample_cvs_file	Exemple de fichier CSV&nbsp;:
 plugin_tracker_import	import_new_hdr	Importer des artefacts $1 
 plugin_tracker_import	import_new_msg	Vous pouvez importer des artefacts dans cet outil de suivi en indiquant un fichier au format CSV. <br>Voir le <a href="$1">Format d'importation CSV</a> pour plus de détails.
 plugin_tracker_import	upload_file	Télécharger le fichier&nbsp;:	
-plugin_tracker_import	max_upload_size	(La taille maximum du fichier est de $1 Mb)
+plugin_tracker_import	file_upload_instructions	(La taille maximum du fichier est de $1 Mb. Le fichier doit être encodé en UTF-8)
 plugin_tracker_import	submit_info	Charger les artefacts
 plugin_tracker_import	send_notifications	Envoyer les notifications&nbsp;:
 #

@@ -21,6 +21,7 @@
  */
 require_once('common/chart/Chart_Pie.class.php');
 require_once('GraphOnTrackersV5_Engine.class.php');
+require_once('common/layout/ColorHelper.class.php');
 
 class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
 
@@ -55,11 +56,12 @@ class GraphOnTrackersV5_Engine_Pie extends GraphOnTrackersV5_Engine {
         }
         $this->graph->subtitle->Set($this->description);
         
-                
+        $colors = $this->getColors();
+        
         if ((is_array($this->data)) && (array_sum($this->data)>0)) {
             $p = new PiePlot($this->data);
             
-            $p->setSliceColors($this->graph->getThemedColors());
+            $p->setSliceColors($colors);
             
             $p->SetCenter(0.4,0.6);
             $p->SetLegends($this->legend);

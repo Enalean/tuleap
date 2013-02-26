@@ -447,7 +447,7 @@ class Tracker_Artifact_Changeset {
         switch($format) {
             case 'html':
                 $result .= '<li>';
-                $result .= '<span class="tracker_artifact_followup_changes_field">'. $field->getLabel() .'</span> ';
+                $result .= '<span class="tracker_artifact_followup_changes_field"><b>'. $field->getLabel() .'</b></span> ';
                 $result .= '<span class="tracker_artifact_followup_changes_changes">'. $diff .'</span>';
                 $result .= '</li>';
             break;
@@ -674,7 +674,7 @@ class Tracker_Artifact_Changeset {
         $output .= ' on '.DateHelper::formatForLanguage($language, $this->submitted_on);
         if ( $comment = $this->getComment() ) {
             $output .= PHP_EOL;
-            $output .= $comment->fetchFollowUp($format);
+            $output .= $comment->fetchMailFollowUp($format);
         }
         $output .= PHP_EOL;
         $output .= ' -------------- ' . $language->getText('plugin_tracker_artifact_changeset', 'header_changeset') . ' ---------------- ' ;
@@ -701,34 +701,66 @@ class Tracker_Artifact_Changeset {
         $format = 'html';
         $art = $this->getArtifact();
         $hp = Codendi_HTMLPurifier::instance();
-        
-        $output ='<h1>'.$hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)).'</h1>'.PHP_EOL;
         $followup = '';
+        $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
         // Display latest changes (diff)
         if ($comment = $this->getComment()) {
-            $followup = $comment->fetchFollowUp($format, true, true);
+            $followup = $comment->fetchMailFollowUp($format);
         }
-        $changes = $this->diffToPrevious($format, $recipient_user, $ignore_perms);
+
+        $output = 
+        '<table style="width:100%">
+            <tr>
+                <td align="left" colspan="2">
+                    <h1>'.$hp->purify($art->fetchMailTitle($recipient_user, $format, $ignore_perms)).'
+                    </h1>
+                </td>
+            </tr>';
+
         if ($followup || $changes) {
-            $output .= '<h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'</h2>';
-            $output .= '<div class="tracker_artifact_followup_header">';
+
+            $output .= 
+                '<tr>
+                    <td colspan="2" align="left">
+                        <h2>'.$language->getText('plugin_tracker_artifact_changeset', 'header_html_changeset').'
+                        </h2>
+                    </td>
+                </tr>';
             // Last comment
             if ($followup) {
-                $output .= $followup.PHP_EOL;
+                $output .= $followup;
             }
             // Last changes
             if ($changes) {
                 //TODO check that the following is PHP compliant (what if I made a changes without a comment? -- comment is null)
                 if (!empty($comment->body)) {
-                    $output .= '<hr size="1" />';
+                    $output .= '
+                        <tr>
+                            <td colspan="2">
+                                <hr size="1" />
+                            </td>
+                        </tr>';
                 }
-                $output .= '<ul class="tracker_artifact_followup_changes">';
-                $output .= $changes;
-                $output .= '</ul>';
+                $output .= 
+                    '<tr>
+                        <td> </td>
+                        <td align="left">
+                            <ul>'.
+                                $changes.'
+                            </ul>
+                        </td>
+                    </tr>';
             }
-            $output .= '</div>'.PHP_EOL;
-            $output .= $this->fetchHtmlAnswerButton(get_server_url().'/plugins/tracker/?aid='.(int)$art->getId());
+
+            $output .=
+                '<tr>
+                    <td> </td>
+                    <td align="right">'.
+                        $this->fetchHtmlAnswerButton(get_server_url().'/plugins/tracker/?aid='.(int)$art->getId()).
+                    '</td>
+                </tr>';
         }
+        $output .= '</table>';
 
         //Display of snapshot
         $snapshot = $art->fetchMail($recipient_user, $format, $ignore_perms);

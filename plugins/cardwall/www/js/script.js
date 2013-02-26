@@ -16,6 +16,11 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
+
+ /**
+  * This script manage the update of the cardwall (drag'n drop of card, edit of
+  * fields, etc).
+  */
 document.observe('dom:loaded', function () {
     $$('.cardwall_board').each(function ( board ) {
         (function checkForLatestCardWallVersion() {
@@ -127,17 +132,5 @@ document.observe('dom:loaded', function () {
                 new tuleap.agiledashboard.cardwall.card.SelectElementEditor( assigned_to_container );
             })
         })();
-
-        $$('.cardwall_admin_ontop_mappings input[name^=custom_mapping]').each(function (input) {
-            input.observe('click', function (evt) {
-                if (this.checked) {
-                    this.up('td').down('select').enable().focus().readonly = false;
-                } else {
-                    this.up('td').down('select').disable().readonly = true;
-                }
-            });
-        });
-
     });
-
 });

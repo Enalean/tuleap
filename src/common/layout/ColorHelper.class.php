@@ -18,11 +18,25 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * ColorHelper
+ * All the color manupilation related functions
+ */
+class ColorHelper {
 
-?><h3>À propos</h3>
-<ul class="unstyled">
-    <li>Propulsé par <a href="https://tuleap.net/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank">Tuleap&trade;</a> version <?php echo $version; ?>.</li>
-    <li>Copyright &copy; 2011-2013 <a href="http://www.enalean.com/?utm_source=forge&utm_medium=forge&utm_campaign=forge" target="_blank">Enalean</a>.</li>
-</ul>
-<?php
+    /** @return string like '#efdabc' */
+    public static function RGBToHexa($r, $g, $b) {
+        return sprintf('#%02X%02X%02X', $r, $g, $b);
+    }
+
+    /** @return array like {232, 123, 312} */
+    public static function HexatoRGB($hex) {
+        $delta = strlen($hex) == 4 ? 1 : 2;
+        return array(
+            hexdec(substr($hex, 1 + 0 * $delta, $delta)),
+            hexdec(substr($hex, 1 + 1 * $delta, $delta)),
+            hexdec(substr($hex, 1 + 2 * $delta, $delta)),
+        );
+    }
+}
 ?>
