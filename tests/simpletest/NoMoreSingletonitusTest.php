@@ -26,7 +26,10 @@ require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/S
  */
 class NoMoreSingletonitusTest extends TuleapTestCase {
     
-    public function testThereAreNoNewSingletonLookups() {
+    /**
+     * DISABLED until it stops behaving with random appearence
+     */
+    public function _testThereAreNoNewSingletonLookups() {
         $singleton_counter          = new SingletonCounter();
         $expected_singleton_lookups = $singleton_counter->expectedSingletonCount();
         $actual_singleton_lookups   = $singleton_counter->countSingletonLookupsInProject();
