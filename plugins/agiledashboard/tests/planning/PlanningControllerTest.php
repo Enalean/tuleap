@@ -80,7 +80,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
     /** @var Planning_Controller */
     private $controller;
 
-    /** @var User */
+    /** @var PFUser */
     private $user;
 
     /** @var Systray_LinksCollection */
