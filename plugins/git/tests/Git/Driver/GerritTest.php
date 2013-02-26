@@ -223,7 +223,7 @@ class Git_Driver_Gerrit_addUserToGroupTest extends Git_Driver_Gerrit_baseTest {
 
         $this->get_account_query   = 'gerrit gsql --format json -c "SELECT\ account_id\ FROM\ accounts\ WHERE\ full_name=\\\''. $this->ldap_id .'\\\'"';
         $this->get_group_query     = 'gerrit gsql --format json -c "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $this->groupname .'\\\'"';
-        $this->insert_member_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_members\ (account_id, group_id)\ VALUES('. $this->account_id .',\ '. $this->group_id .')"';
+        $this->insert_member_query = 'gerrit gsql --format json -c "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ VALUES('. $this->account_id .',\ '. $this->group_id .')"';
 
         $this->get_account_result = '{"type":"row","columns":{"account_id":"'. $this->account_id .'"}}'.
                                     PHP_EOL .
