@@ -602,7 +602,7 @@ if (isset($params['toptab']) && is_string($params['toptab'])) {
 
         $output .= '<input type="text" name="words" class="search-query" value="'. htmlentities(stripslashes($words), ENT_QUOTES, 'UTF-8').'" />';
         $output .= '<button type="submit" class="btn" name="Search" value="1"><i class="icon-search"></i></button>';
-        $output .= '<input type="hidden" name="exact" value="1">';
+        $output .= '<input type="hidden" name="exact" value="1"></form>';
         return $output;
     }
     
