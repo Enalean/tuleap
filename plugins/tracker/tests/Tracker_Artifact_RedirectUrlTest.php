@@ -67,7 +67,7 @@ class Tracker_Artifact_RedirectUrlTest extends TuleapTestCase {
 
     private function getRedirectUrlFor($request_data, $tracker_id, $artifact_id) {
         $request  = new Codendi_Request($request_data);
-        $artifact = new Tracker_Artifact_RedirectUrlTestVersion($artifact_id, $tracker_id, null, null, false);
+        $artifact = new Tracker_Artifact_RedirectUrlTestVersion($artifact_id, $tracker_id, 0, null, null, false);
         return $artifact->getRedirectUrlAfterArtifactUpdate($request);
 
     }

@@ -60,8 +60,8 @@ class Tracker_Artifact_getArtifactLinks_Test extends TuleapTestCase {
 
     public function itReturnsAlistOfTheLinkedArtifacts() {
         $expected_list = array(
-            new Tracker_Artifact(111, null, null, null, null),
-            new Tracker_Artifact(222, null, null, null, null)
+            new Tracker_Artifact(111, null, 0, null, null, null),
+            new Tracker_Artifact(222, null, 0, null, null, null)
         );
 
         $field = mock('Tracker_FormElement_Field_ArtifactLink');
