@@ -2362,3 +2362,7 @@ h3.toggler-hide-noajax {
 .service-admin table select {
     width: auto;
 }
+
+.service-wiki #UserPreferencesPlugin td input {
+    display: block;
+}
