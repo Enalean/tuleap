@@ -32,6 +32,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public $id;
     public $tracker_id;
+    public $in_tracker_id;
     public $use_artifact_permissions;
     protected $submitted_by;
     protected $submitted_on;
@@ -71,14 +72,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param int     $id                       The Id of the artifact
      * @param int     $tracker_id               The tracker Id the artifact belongs to
+     * @param int     $in_tracker_id            The Id of the artifact in this tracker
      * @param int     $submitted_by             The id of the user who's submitted the artifact
      * @param int     $submitted_on             The timestamp of artifact submission
      *
      * @param boolean $use_artifact_permissions True if this artifact uses permission, false otherwise
      */
-    public function __construct($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {
+    public function __construct($id, $tracker_id, $in_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {
         $this->id                       = $id;
         $this->tracker_id               = $tracker_id;
+        $this->in_tracker_id           = $in_tracker_id;
         $this->submitted_by             = $submitted_by;
         $this->submitted_on             = $submitted_on;
         $this->use_artifact_permissions = $use_artifact_permissions;
