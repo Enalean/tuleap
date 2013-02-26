@@ -22,10 +22,7 @@
 class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_MultiSelectbox {
 
     protected function fetchFieldContainerStart($id, $name) {
-        $class = 'class="tracker-form-element-checkbox"';
-        $html  = '';
-        $html .= "<ul $class $id>";
-        return $html;
+        return '';
     }
 
     protected function fetchFieldValue(Tracker_FormElement_Field_List_Value $value, $name, $is_selected) {
@@ -33,14 +30,15 @@ class Tracker_FormElement_Field_Checkbox extends Tracker_FormElement_Field_Multi
         $html    = '';
         $checked = $is_selected ? 'checked="checked"' : '';
 
-        $html .= '<li><input type="checkbox" '. $name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
-        $html .= '<label for="cb_'. $id .'" >'. $this->getBind()->formatChangesetValue($value) .'</label>';
-        $html .= '</li>';
+        $html .= '<label class="checkbox">';
+        $html .= '<input type="checkbox" '. $name .' value="'. $id .'" id=cb_'. $id .' '. $checked .' valign="middle" />';
+        $html .= $this->getBind()->formatChangesetValue($value);
+        $html .= '</label>';
         return $html;
     }
 
     protected function fetchFieldContainerEnd() {
-        return '</ul>';
+        return '';
     }
 
     /**

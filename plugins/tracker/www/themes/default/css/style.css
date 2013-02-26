@@ -590,11 +590,6 @@ ul.tracker-form-element-artifactlink-list {
     padding-left: 0.5em;
     margin-top: 0;
 }
-ul.tracker-form-element-checkbox {
-    list-style-type:none;
-    padding-left:0.5em; 
-    margin-top: 0px;
-}
 .tracker_alltrackers dd {
     margin-left:1.5em;
     margin-bottom:1.5em;
