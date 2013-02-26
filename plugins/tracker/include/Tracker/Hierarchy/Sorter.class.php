@@ -18,11 +18,10 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+require_once 'common/TreeNode/TreeNode.class.php';
 /**
  * Sorts artifacts in a TreeNode structure 
  */
-
 class Tracker_Hierarchy_Sorter {
     
     /**
