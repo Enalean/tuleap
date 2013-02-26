@@ -81,7 +81,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function __construct($id, $tracker_id, $in_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions) {
         $this->id                       = $id;
         $this->tracker_id               = $tracker_id;
-        $this->in_tracker_id           = $in_tracker_id;
+        $this->in_tracker_id            = $in_tracker_id;
         $this->submitted_by             = $submitted_by;
         $this->submitted_on             = $submitted_on;
         $this->use_artifact_permissions = $use_artifact_permissions;
