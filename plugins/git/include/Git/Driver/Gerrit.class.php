@@ -120,8 +120,9 @@ class Git_Driver_Gerrit {
         $gerrit_group_id = $this->getGerritGroupId($server, $group_name);
 
         if ($gerrit_user_id && $gerrit_group_id) {
-            $query = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id, group_id)\ VALUES('. $gerrit_user_id .',\ '. $gerrit_group_id .')"';
+            $query = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ VALUES('. $gerrit_user_id .',\ '. $gerrit_group_id .')"';
             $this->ssh->execute($server, $query);
+            $this->flushGerritCaches($server);
         }
 
     }
@@ -133,8 +134,14 @@ class Git_Driver_Gerrit {
         if ($gerrit_user_id && $gerrit_group_id) {
             $query = self::GSQL_COMMAND .' "DELETE\ FROM\ account_group_members\ WHERE\ account_id='. $gerrit_user_id .'\ AND\ group_id='. $gerrit_group_id .'"';
             $this->ssh->execute($server, $query);
+            $this->flushGerritCaches($server);
         }
 
+    }
+
+    private function flushGerritCaches($server) {
+        $query = self::COMMAND .' flush-caches';
+        $this->ssh->execute($server, $query);
     }
 
     private function getGerritUserId(Git_RemoteServer_GerritServer $server, User $user) {

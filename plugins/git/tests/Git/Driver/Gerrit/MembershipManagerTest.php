@@ -46,7 +46,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
         $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
         $this->remote_server                         = mock ('Git_RemoteServer_GerritServer');
         $this->project                               = mock('Project');
-        $this->u_group                               = mock('UGroup');
+        $this->u_group                               = 115;
         $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
         $this->git_repository_factory                = mock('GitRepositoryFactory');
         $this->git_repository                        = mock('GitRepository');
@@ -62,10 +62,10 @@ class Git_Driver_Gerrit_MembershipManagerTest extends TuleapTestCase {
         stub($this->git_repository)->getFullName()->returns('some/git/project');
         stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
-        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_READ, $this->u_group)->returns(true);
-        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_WRITE, $this->u_group)->returns(true);
-        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_WPLUS, $this->u_group)->returns(true);
-        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::SPECIAL_PERM_ADMIN, $this->u_group)->returns(false);
+        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_READ, array($this->u_group))->returns(true);
+        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_WRITE, array($this->u_group))->returns(true);
+        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_WPLUS, array($this->u_group))->returns(true);
+        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::SPECIAL_PERM_ADMIN, array($this->u_group))->returns(false);
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory,
