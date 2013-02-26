@@ -134,7 +134,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function anArtifactWithAMockedCrossReferenceFactory($id, $tracker, $changesets) {
-        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'), array($id, $tracker->getId(), null, null, null));
+        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'), array($id, $tracker->getId(), 0, null, null, null));
         $artifact->setTracker($tracker);
         $artifact->setChangesets($changesets);
         $cross_reference_factory = mock('CrossReferenceFactory');

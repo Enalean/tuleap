@@ -156,8 +156,8 @@ class Tracker_CrossSearch_CriteriaBuilder_WithAllCriteriaTypesTest extends Track
         $this->artifact_criteria     = array($release_tracker_id => array(3, 6));
         $this->planning_trackers     = array($release_tracker);
         
-        $returnValue   = array(New Tracker_Artifact(3, 133, null, null, null));
-        $returnValue[] = New Tracker_Artifact(6, 133, null, null, null);
+        $returnValue   = array(New Tracker_Artifact(3, 133, 1, null, null, null));
+        $returnValue[] = New Tracker_Artifact(6, 133, 2, null, null, null);
         
         return $this->getCriteria($returnValue);
     }
@@ -278,7 +278,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithOneArtifactListTest extends Tracke
         $criteria                = aCrossSearchCriteria()->withArtifactIds(array($release_tracker_id => array(1)))->build();
         $report                  = new MockTracker_Report();
         
-        $artifact                = new Tracker_Artifact(1, $release_tracker_id, null, null, null);
+        $artifact                = new Tracker_Artifact(1, $release_tracker_id, 1,null, null, null);
         $this->planning_trackers = array($release_tracker);
         $builder                 = $this->givenACriteriaBuilderForArtifacts(array($artifact));
         $user                    = new MockUser();
@@ -306,9 +306,9 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         $criteria                = aCrossSearchCriteria()->withArtifactIds($artifacts_ids)->build();
         $report                  = new MockTracker_Report();
         
-        $artifact1               = new Tracker_Artifact(1, $release_tracker_id, null, null, null);
-        $artifact512             = new Tracker_Artifact(512, $release_tracker_id, null, null, null);
-        $artifact33              = new Tracker_Artifact(33, $sprint_tracker_id, null, null, null);
+        $artifact1               = new Tracker_Artifact(1, $release_tracker_id, 1,null, null, null);
+        $artifact512             = new Tracker_Artifact(512, $release_tracker_id, 2,null, null, null);
+        $artifact33              = new Tracker_Artifact(33, $sprint_tracker_id, 3,null, null, null);
         
         $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanView', array($artifact1, $artifact512), array($user, $release_tracker_id));
         $this->artifact_factory->setReturnValue('getArtifactsByTrackerIdUserCanView', array($artifact33), array($user, $sprint_tracker_id));
@@ -341,7 +341,7 @@ class Tracker_CrossSearch_CriteriaBuilder_WithSeveralArtifactListsTest extends T
         
         $report                  = new MockTracker_Report();
         
-        $artifact1               = new Tracker_Artifact(1, $release_tracker_id, null, null, null);
+        $artifact1               = new Tracker_Artifact(1, $release_tracker_id, 1, null, null, null);
         
         stub($this->artifact_factory)->getArtifactsByTrackerIdUserCanView($user, $release_tracker_id)
                                      ->returns(array($artifact1));
