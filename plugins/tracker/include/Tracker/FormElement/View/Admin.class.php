@@ -242,17 +242,17 @@ class Tracker_FormElement_View_Admin {
                 if ($this->formElement->getProperty($key) == $choice['radio_value']) {
                     $checked = 'checked="checked"';
                 }
-                $html .= '<label class="radio"><input type="radio"
+                $html .= '<div class="form-inline"><input type="radio"
                                  name="formElement_data[specific_properties]['. $key .']" 
                                  value="'. $choice['radio_value'] .'" 
                                  id="formElement_properties_'. $key_choice .'" 
                                  '. $checked .' />';
-                $html .= $this->fetchAdminSpecificProperty($key_choice, $choice);
-                $html .= '</label>';
+                $html .= '&nbsp;'.$this->fetchAdminSpecificProperty($key_choice, $choice);
+                $html .= '</div>';
             }
             break;
         case 'label':
-            $html .= '<label for="formElement_properties_'. $key .'">'. $this->formElement->getPropertyLabel($key) .'</label>';
+            $html .= $this->formElement->getPropertyLabel($key);
             
         default:
             //Unknown type. raise exception?
