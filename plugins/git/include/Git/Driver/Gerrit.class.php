@@ -147,7 +147,7 @@ class Git_Driver_Gerrit {
     private function getGerritUserId(Git_RemoteServer_GerritServer $server, User $user) {
 
         $ldap_id = $user->getLdapId();
-        $query   = self::GSQL_COMMAND .' "SELECT\ account_id\ FROM\ accounts\ WHERE\ full_name=\\\''. $ldap_id .'\\\'"';
+        $query   = self::GSQL_COMMAND .' "SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\'username:'. $ldap_id .'\\\'"';
 
         $command_result = $this->ssh->execute($server, $query);
         $json_result    = json_decode(array_shift(explode("\n", $command_result)));
