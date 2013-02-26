@@ -18,14 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_Field_Integer implements Tracker_FormElement_Field_ReadOnly {
-    
-    public $default_properties = array();
-    
-    public function getCriteriaFrom($criteria) {
-        return '';
-    }
-    
+class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_Field_ArtifactId {
+          
     public function getCriteriaWhere($criteria) {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             return $this->buildMatchExpression("c.artifact_in_tracker_id", $criteria_value);
@@ -35,10 +29,6 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
     
     public function getQuerySelect() {
         return "a.in_tracker_id AS `". $this->name ."`";
-    }
-    
-    public function getQueryFrom() {
-        return '';
     }
     
     /**
@@ -55,40 +45,6 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
         return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact_id )).'">'. $value .'</a>';
     }
     
-    /**
-     * @return array the available aggreagate functions for this field. empty array if none or irrelevant.
-     */
-    public function getAggregateFunctions() {
-        return array();
-    }
-    
-    /**
-     * Display the field as a Changeset value.
-     * Used in CSV data export.
-     *
-     * @param int $artifact_id the corresponding artifact id
-     * @param int $changeset_id the corresponding changeset
-     * @param mixed $value the value of the field
-     *
-     * @return string
-     */
-    public function fetchCSVChangesetValue($artifact_id, $changeset_id, $value) {
-        return $value;
-    }
-    
-    /**
-     * Fetch the html code to display the field value in artifact
-     *
-     * @param Tracker_Artifact                $artifact         The artifact
-     * @param Tracker_Artifact_ChangesetValue $value            The actual value of the field
-     * @param array                           $submitted_values The value already submitted by the user
-     *
-     * @return string
-     */
-    protected function fetchArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $submitted_values = array()) {
-        return $this->fetchArtifactValueReadOnly($artifact, $value);
-    }
-
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
@@ -116,7 +72,7 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
                 $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">##'. $value .'</a>';
                 break;
             default:
-                $output .= '##'.$value;
+                $output .= '##'.$artifact->in_tracker_id;
                 break;
         }
         return $output;
@@ -144,21 +100,7 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
      */
     public static function getFactoryDescription() {
         return "Display the in-tracker numerotation";//$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_description');
-    }
-    
-    /**
-     * @return the path to the icon
-     */
-    public static function getFactoryIconUseIt() {
-        return $GLOBALS['HTML']->getImagePath('ic/tracker-aid.png');
-    }
-    
-    /**
-     * @return the path to the icon
-     */
-    public static function getFactoryIconCreate() {
-        return $GLOBALS['HTML']->getImagePath('ic/tracker-aid--plus.png');
-    }
+    }    
     
     /**
      * Fetch the html code to display the field value in tooltip
@@ -169,49 +111,8 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        $html .= $value;
+        $html .= $artifact->in_tracker_id;
         return $html;
     }
-
-    /**
-     * Verifies the consistency of the imported Tracker
-     * 
-     * @return true if Tracler is ok 
-     */
-    public function testImport() {
-        return true;
-    }
-
-    
-    /**
-     * Validate a value
-     *
-     * @param Tracker_Artifact $artifact The artifact 
-     * @param mixed            $value    data coming from the request. 
-     *
-     * @return bool true if the value is considered ok
-     */
-    protected function validate(Tracker_Artifact $artifact, $value) {
-        //No need to validate artifact id (read only for all)
-        return true;
-    }
-    
-    /**
-     * Fetch the element for the submit new artifact form
-     *
-     * @return string html
-     */
-     public function fetchSubmit() {
-         return '';
-     }
-     
-     /**
-     * Fetch the element for the submit new artifact form
-     *
-     * @return string html
-     */
-     public function fetchSubmitMasschange($submitted_values=array()) {
-         return '';
-     }
 }
 ?>
