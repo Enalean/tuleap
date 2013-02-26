@@ -95,29 +95,23 @@ class Git_Ci {
                 }
                 $selectBox .= '</select>';
 
-                $addForm  = '<p>
-                                 <div id="hudson_use_plugin_git_trigger_form">
-                                     <label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': </label>
-                                     '.$selectBox.'
-                                 </div>
-                                 <div id="hudson_use_plugin_git_trigger_checkbox">
-                                     Git 
-                                     <input onclick="toggle_checkbox()" type="checkbox" '.$checked.' />
-                                 </div>
-                                 <script>
-                                     function toggle_checkbox() {
-                                         Effect.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 });
-                                         Effect.toggle(\'hudson_use_plugin_git_trigger_checkbox\', \'slide\', { duration: 0.3 });
-                                     }
-                                     Element.toggle(\'hudson_use_plugin_git_trigger_form\', \'slide\', { duration: 0.3 })
-                                 </script>
-                             </p>';
-                $editForm = '<label for="hudson_use_plugin_git_trigger">'.$GLOBALS['Language']->getText('plugin_git', 'ci_field_description').': </label>'.$selectBox;
+                $form  = '<div id="hudson_use_plugin_git_trigger_checkbox">
+                                 <label class="checkbox">
+                                    <input onclick="toggle_checkbox(this)" onload="toggle_checkbox(this)" type="checkbox" '.$checked.' /> Git
+                                </label>
+                                <blockquote id="hudson_use_plugin_git_trigger_form">'.$GLOBALS['Language']->getText('plugin_git', 'ci_repo_id').': '.$selectBox.'</blockquote>
+                             </div>
+                             <script>
+                                 function toggle_checkbox(checkbox) {
+                                     var use_git = checkbox.checked;
+                                     $(\'hudson_use_plugin_git_trigger_checkbox\').down(\'select\').disabled = !use_git;
+                                 }
+                             </script>';
                 return array('service'       => GitPlugin::SERVICE_SHORTNAME,
                              'title'         => $GLOBALS['Language']->getText('plugin_git', 'ci_trigger'),
                              'used'          => $used,
-                             'add_form'      => $addForm,
-                             'edit_form'     => $editForm);
+                             'add_form'      => $form,
+                             'edit_form'     => $form);
             }
         }
     }

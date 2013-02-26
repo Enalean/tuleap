@@ -62,7 +62,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
             echo '</SELECT>';
 
             echo '<input type="submit" name="create" value="'. $GLOBALS['Language']->getText('global', 'btn_submit') .'" />';
-            echo '</from>';
+            echo '</form>';
 
         }
         echo '</div>';

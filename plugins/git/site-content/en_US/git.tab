@@ -190,7 +190,7 @@ plugin_git	missing_parameter_to_project	No project selected for the fork
 plugin_git	missing_parameter_repos	No repository selected for thr fork
 
 plugin_git	ci_trigger	Git trigger
-plugin_git	ci_repo_id	Git repository
+plugin_git	ci_repo_id	repository
 plugin_git	ci_field_description	Trigger a build after Git pushes in repository
 plugin_git	ci_trigger_not_saved	Git trigger not saved
 plugin_git	ci_bad_repo_id	Bad repository id

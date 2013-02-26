@@ -197,6 +197,15 @@ ul.tracker_function_aggregate_results {
     vertical-align:top
 }
 
+#tracker_report_form select {
+    width: auto;
+}
+
+#tracker_report_query_form h4 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .tracker_report_criteria_advanced_toggle {
     vertical-align:bottom;
     cursor:pointer;
@@ -382,6 +391,11 @@ ul.tracker_function_aggregate_results {
 .tracker_report_table_sort_controls a:link,
 .tracker_report_table_sort_controls a:visited {
     color:gray;
+}
+
+/* Disable bootrap width for elements controled by tracker config  */
+#tracker_artifact input, #tracker_artifact select {
+    width: auto;
 }
 
 #tracker_artifact_tabs {
@@ -769,6 +783,10 @@ a.tracker_report_table_column_title:hover span {
     cursor: pointer;
 }
 
+#renderer_table_chunksz_input {
+    width: auto;
+}
+
 div.tracker_report_table_hide_masschange #tracker_report_table_masschange_form,
 div.tracker_report_table_hide_masschange .tracker_report_table_masschange {
     display:none;
@@ -777,6 +795,11 @@ div.tracker_report_table_show_masschange #tracker_report_table_next_previous_for
 div.tracker_report_table_show_masschange #tracker_report_table_masschange_form,
 div.tracker_report_table_show_masschange .tracker_report_table_masschange:not([class~=boxtitle]) {
     background: #ffC;
+}
+
+/* bootstrap: avoid wrapping between toggler and ['details'] in workflow */
+.pc_checkbox {
+    display: inline;
 }
 
 #tracker_workflow_matrix .pc_check_unchecked,
@@ -931,6 +954,7 @@ ul.plugin_tracker_my_artifacts_list {
 #tracker_admin_menu {
     border:none;
     border-spacing:2em;
+    border-collapse: inherit;
 }
 
 #tracker_admin_menu td {
@@ -1315,4 +1339,8 @@ td.first-column {
 
 .workflow_rule_date_comparator {
     margin: auto 0.5em;
+}
+
+#date_field_reminder_form input, #date_field_reminder_form select {
+    width: auto;
 }

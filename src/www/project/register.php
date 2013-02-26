@@ -105,34 +105,38 @@ echo '<style>
 </style>';
 echo '<form action="" method="POST">';
 echo $csrf->fetchHTMLInput();
-echo '<table>';
-echo '<tr style="vertical-align:top;">';
-
-echo '<td>';
+echo '<div class="container-fluid register_project">
+        <div class="row-fluid">
+            <div class="span9">';
 echo '<h2>'. $steps[$current_step]->name .' ';
 echo help_button($steps[$current_step]->help);
 echo '</h2>';
 $steps[$current_step]->display($data);
-echo '</td>';
+echo '<div style="text-align:center">';
+echo '<input type="submit" name="cancel" class="btn" value="'. $GLOBALS['Language']->getText('register_form', 'cancel') .'" /> ';
+echo '<input type="hidden" name="current_step" value="'. $current_step .'" />';
+echo '<input type="hidden" name="data" value="'. htmlentities(serialize($data), ENT_QUOTES, 'UTF-8') .'" />';
+echo '<input type="submit" name="next" class="btn btn-primary" id="project_register_next" value="'. ($current_step < count($steps) - 1 ? $GLOBALS['Language']->getText('register_form', 'next') : $GLOBALS['Language']->getText('register_title', 'intro')) .'" />';
+echo '</div>';
+echo '      </div>';
 
-echo '<td rowspan="2"><ol>';
+echo '      <div class="span3">
+                <div class="well">
+                    <ol>';
 foreach($steps as $key => $step) {
     $classname = $key == $current_step ? 'current_step' : ($key < $current_step ? 'previous_step' : 'next_step');
     echo '<li class="'. $classname .'">'. $step->name .'</li>';
 }
-echo '</ol></td>';
+echo '              </ol>
+                </div>
+            </div>';
+echo '  </div>
+     </div>
+     </form>';
 
-echo '</tr><tr>';
-echo '<td style="text-align:center">';
-echo '<input type="submit" name="cancel" value="'. $GLOBALS['Language']->getText('register_form', 'cancel') .'" /> ';
-echo '<input type="hidden" name="current_step" value="'. $current_step .'" />';
-echo '<input type="hidden" name="data" value="'. htmlentities(serialize($data), ENT_QUOTES, 'UTF-8') .'" />';
-echo '<input type="submit" name="next" id="project_register_next" value="'. ($current_step < count($steps) - 1 ? $GLOBALS['Language']->getText('register_form', 'next') : $GLOBALS['Language']->getText('register_title', 'intro')) .'" />';
-echo '</td></tr>';
 //{{{ Debug
-//echo '<tr><td colspan="2"><pre>';var_dump($data);echo '</pre></td></tr>';
 //echo '<tr><td colspan="2"><pre>';var_dump($_REQUEST);echo '</pre></td></tr>';
+//echo '<tr><td colspan="2"><pre>';var_dump($data);echo '</pre></td></tr>';
 //}}}
-echo '</table></form>';
 $HTML->footer(array());
 ?>

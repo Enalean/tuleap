@@ -287,6 +287,11 @@ td.artifact_spacer { width: 5%; }
 }
 /* }}} */
 
+#frs_form select,
+#frs_form input {
+    width: auto;
+}
+
 .release {
     background-color: #D1CEC4;
     border-spacing: 0px;
@@ -2033,6 +2038,13 @@ h3.toggler-hide-noajax {
     list-style-type:none;
     padding:4px;
 }
+.dropdown_panel label {
+    display: inline;
+}
+.dropdown_panel select,
+.dropdown_panel input {
+    width: auto;
+}
 /* }}} */
 /* {{{ TreeNode */
 
@@ -2202,7 +2214,7 @@ h3.toggler-hide-noajax {
   content: "";
 }
 
-/* {{{ One step project part */
+/* {{{ One step project creation */
 .one_step_project {
     margin-top: 20px;
 }
@@ -2244,6 +2256,15 @@ h3.toggler-hide-noajax {
 }
 .container.one_step_project span.mandatory_field {
     color: red;
+}
+/* }}} */
+
+/* {{{ Multi steps project creation */
+.register_project {
+    margin-top: 20px;
+}
+.register_project label {
+    display: inline;
 }
 /* }}} */
 
