@@ -59,7 +59,7 @@ class Tracker_FormElementFactory {
 
     protected $special_classnames     = array(
         'aid'       => 'Tracker_FormElement_Field_ArtifactId',
-    	'atid'      => 'Tracker_FormElement_Field_ArtifactInTrackerId',
+        'atid'      => 'Tracker_FormElement_Field_ArtifactInTrackerId',
         'lud'       => 'Tracker_FormElement_Field_LastUpdateDate',
         'subby'     => 'Tracker_FormElement_Field_SubmittedBy',
         'subon'     => 'Tracker_FormElement_Field_SubmittedOn',

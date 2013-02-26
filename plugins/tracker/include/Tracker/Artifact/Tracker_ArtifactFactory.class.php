@@ -270,7 +270,7 @@ class Tracker_ArtifactFactory {
         $artifact = new Tracker_Artifact(
             $row['id'],
             $row['tracker_id'],
-            $row['in_tracker_id'], 
+            $row['in_tracker_id'],
             $row['submitted_by'], 
             $row['submitted_on'], 
             $row['use_artifact_permissions']
@@ -310,7 +310,7 @@ class Tracker_ArtifactFactory {
             array(
                 'id'                       => 0, 
                 'tracker_id'               => $tracker->id,
-                'in_tracker_id'			   => 4, 
+                'in_tracker_id'            => 0,
                 'submitted_by'             => $user->getId(), 
                 'submitted_on'             => $_SERVER['REQUEST_TIME'], 
                 'use_artifact_permissions' => 0,
