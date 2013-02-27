@@ -21,8 +21,16 @@ require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
 
 class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand {
 
-    public function process(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
-        $this->driver->addUserToGroup($server, $user, $group_name);
+    public function process(Git_RemoteServer_GerritServer $server, User $user, Project $project, GitRepository $repository) {
+        $groups_full_names = $this->getConcernedGerritGroups($user, $project, $repository);
+
+        foreach ($groups_full_names as $group_full_name) {
+            $this->driver->addUserToGroup($server, $user, $group_full_name);
+        }
+    }
+
+    protected function isStuff(User $user, Project $project, $groups) {
+        return $this->isUserInGroups($user, $project, $groups);
     }
 
 }
