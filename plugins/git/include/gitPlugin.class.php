@@ -78,7 +78,9 @@ class GitPlugin extends Plugin {
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
 
+        $this->_addHook('project_admin_add_user', 'project_admin_ugroup_add_user');
         $this->_addHook('project_admin_ugroup_add_user');
+        $this->_addHook('project_admin_remove_user', 'project_admin_ugroup_remove_user');
         $this->_addHook('project_admin_ugroup_remove_user');
     }
 
