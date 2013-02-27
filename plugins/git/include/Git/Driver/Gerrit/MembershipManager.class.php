@@ -33,17 +33,20 @@ class Git_Driver_Gerrit_MembershipManager {
     private $gerrit_server_factory;
     private $gerrit_driver;
     private $permissions_manager;
+    private $ugroup_manager;
 
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
         Git_Driver_Gerrit $gerrit_driver,
         PermissionsManager $permissions_manager,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        UGroupManager $ugroup_manager
     ) {
         $this->git_repository_factory = $git_repository_factory;
         $this->gerrit_driver          = $gerrit_driver;
         $this->permissions_manager    = $permissions_manager;
         $this->gerrit_server_factory  = $gerrit_server_factory;
+        $this->ugroup_manager         = $ugroup_manager;
     }
 
     public function updateUserMembership(User $user, $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
@@ -91,12 +94,31 @@ class Git_Driver_Gerrit_MembershipManager {
         $groups_full_names = array();
 
         foreach (self::$GERRIT_GROUPS as $group_name => $permission) {
-            if ($this->permissions_manager->userHasPermission($repository->getId(), $permission, array($ugroup))) {
-                $groups_full_names[] = $this->getGerritGroupName($project, $repository, $group_name);
+            $users = $this->getUsersWithPermission($project, $repository, $permission);
+
+            if (! $this->isUserInUsersList($user, $users)) {
+                $groups_full_names[] = $this->getGerritGroupName($project, $repositoriy, $group_name);
             }
         }
 
         return $groups_full_names;
+    }
+
+    private function getUsersWithPermission(Project $project, GitRepository $repository, $permission) {
+
+        $dar_ugroups = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($repository->getId(), $permission);
+
+        while ($dar_ugroups->valid()) {
+            $ugroup_result = $dar_ugroups->current();
+            $ugroup_id     = $ugroup_result['ugroup_id'];
+
+            $ugroup        = $this->ugroup_manager->getUGroup($project, $ugroup_id);
+        }
+
+    }
+
+    private function isUserInUsersList(User $user, $users_list) {
+
     }
 }
 ?>
