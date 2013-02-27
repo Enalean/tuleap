@@ -20,6 +20,11 @@
 
 class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPresenter {
 
+    /**
+     * @var Planning_MilestoneFactory
+     */
+    private $milestone_factory;
+
     /** @var bool */
     private $is_latest = false;
 
@@ -29,32 +34,70 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var Planning_ShortAccess */
     private $short_access;
 
-    /** @var array of AgileDashboard_Pane */
-    private $additional_panes;
-
     /** @var string */
-    public $access_to_planning;
+    private $theme_path;
 
-    public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, User $user) {
+    /** @var array of AgileDashboard_PaneInfo */
+    private $pane_info_list;
+
+    public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, Planning_MilestoneFactory $milestone_factory, User $user, $theme_path) {
         parent::__construct($milestone);
-        $this->short_access       = $short_access;
-        $this->user               = $user;
-        $this->access_to_planning = $GLOBALS['Language']->getText('plugin_agiledashboard', 'access_to_planning');
+        $this->milestone_factory = $milestone_factory;
+        $this->short_access = $short_access;
+        $this->user         = $user;
+        $this->theme_path   = $theme_path;
     }
 
-    public function additionalPanes() {
-        if (!$this->additional_panes) {
-            $this->additional_panes = array();
+    /**
+     *
+     * @return AgileDashboard_PaneInfo[]
+     */
+    private function getPaneInfoList() {
+        if (!$this->pane_info_list) {
+            $active_pane          = null;
+            $this->pane_info_list = array();
             EventManager::instance()->processEvent(
                 AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE,
                 array(
-                    'milestone' => $this->milestone,
-                    'panes'     => &$this->additional_panes,
-                    'user'      => $this->user,
+                    'milestone'         => $this->milestone,
+                    'user'              => $this->user,
+                    'request'           => HTTPRequest::instance(),
+                    'panes'             => &$this->pane_info_list,
+                    'active_pane'       => &$active_pane,
+                    'milestone_factory' => $this->milestone_factory,
                 )
             );
         }
-        return $this->additional_panes;
+        return $this->pane_info_list;
+    }
+
+    public function getQuickLinkIconList() {
+        $pane_info_list = $this->getPaneInfoList();
+        $milestone_planning_pane_info = new AgileDashboard_MilestonePlanningPaneInfo($this->milestone, $this->theme_path);
+        $panes = array(
+            $milestone_planning_pane_info->getIconTemplateParametersForMilestone($this->milestone)
+        );
+        foreach ($pane_info_list as $pane_info) {
+            $panes[] = $pane_info->getIconTemplateParametersForMilestone($this->milestone);
+        }
+        return $panes;
+    }
+
+    public function getContent() {
+        $pane = null;
+        EventManager::instance()->processEvent(
+            AGILEDASHBOARD_EVENT_INDEX_PAGE,
+            array(
+                'milestone'   => $this->milestone,
+                'user'        => $this->user,
+                'pane'        => &$pane,
+                'milestone_factory' => $this->milestone_factory,
+            )
+        );
+        if ($pane) {
+            return $pane->getMinimalContent();
+        }
+        return '';
     }
 
     public function getBacklogTrackerId() {
@@ -70,7 +113,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     }
 
     public function is_active() {
-        return $this->isLatest() && $this->short_access->isLatest() && count($this->additionalPanes());
+        return $this->isLatest() && $this->short_access->isLatest() && count($this->getPaneInfoList());
     }
 }
 ?>

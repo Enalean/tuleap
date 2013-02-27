@@ -19,7 +19,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ColumnDefinition.class.php';
 
 class Cardwall_OnTop_Config_View_FreestyleColumnDefinition extends Cardwall_OnTop_Config_View_ColumnDefinition {
 

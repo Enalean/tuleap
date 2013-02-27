@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+require_once 'common/event/EventManager.class.php';
 require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
 
 /**
@@ -25,7 +25,8 @@ require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/RemoteSSHConfig.class.php';
  */
 class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig {
 
-    const DEFAULT_HTTP_PORT = 80;
+    const DEFAULT_HTTP_PORT       = 80;
+    const DEFAULT_GERRIT_USERNAME = 'gerrit_username';
 
     private $id;
     private $host;
@@ -96,12 +97,26 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return "ext::ssh -p $this->ssh_port -i $this->identity_file $this->login@$this->host %S $gerrit_project";
     }
 
+    public function getEndUserCloneUrl($gerrit_project, User $user) {
+        $login  = self::DEFAULT_GERRIT_USERNAME;
+        $params = array('login' => &$login, 'user' => $user);
+        EventManager::instance()->processEvent(Event::GET_LDAP_LOGIN_NAME_FOR_USER, $params);
+        return 'ssh://'.$login.'@'.$this->host.':'.$this->ssh_port.'/'.$gerrit_project.'.git';
+    }
+
     public function getProjectAdminUrl($gerrit_project) {
+        return $this->getGerritServerBaseUrl()."/#/admin/projects/$gerrit_project";
+    }
+
+    public function getProjectUrl($gerrit_project) {
+        return $this->getGerritServerBaseUrl()."/#/q/project:$gerrit_project,n,z";
+    }
+
+    private function getGerritServerBaseUrl() {
         $url = "http://$this->host";
         if ($this->http_port != self::DEFAULT_HTTP_PORT) {
             $url .= ":$this->http_port";
         }
-        $url .= "/#/admin/projects/$gerrit_project";
         return $url;
     }
 }

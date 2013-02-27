@@ -483,6 +483,9 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
+        if ( empty($value) || !$value->getTimestamp()) {
+            return '-';
+        }
         return $this->fetchArtifactValueReadOnly($artifact, $value);
     }
 
@@ -495,7 +498,7 @@ class Tracker_FormElement_Field_Date extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        $html = '';
+        $html  = '';
         if ( empty($value) ) {
             return '';
         }

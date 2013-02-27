@@ -358,23 +358,33 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return <type>
      */
     public function fetchMailArtifact($recipient, Tracker_Artifact $artifact, $format='text', $ignore_perms=false) {
-        $output = '';
-        if ( $ignore_perms || $this->userCanRead($recipient) ) {
-            $value = $artifact->getLastChangeset()->getValue($this);
+        if (! $ignore_perms && ! $this->userCanRead($recipient) ) {
+            return '';
+        }
 
-            if ($format =='text') {
-                $output .= ' * ';
-                $output .= $this->getLabel();
-                $output .= ' : ';
-                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
-            } else {
-                $hp = Codendi_HTMLPurifier::instance();
-                $output .= '<div class="tracker_artifact_field '. ($this->has_errors ? 'has_errors' : '') .'">';
-                $output .= '<label id="tracker_artifact_'. $this->id .'" for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'" class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . '</label>';
-                $output .= '<br />';
-                $output .= $this->fetchMailArtifactValue($artifact, $value, $format);
-                $output .= '</div>';
-            }
+        $value = $artifact->getLastChangeset()->getValue($this);
+        $mail_formatted_value = $this->fetchMailArtifactValue($artifact, $value, $format);
+
+        if ($format == 'text') {
+            $output = ' * '.$this->getLabel().' : '.$mail_formatted_value;
+        } else {
+            $hp = Codendi_HTMLPurifier::instance();
+            $output = '<tr>
+                <td valign="top" align="left" >
+                    <label id = "tracker_artifact_'. $this->id.'"
+                        for = "tracker_artifact_'. $this->id.'"
+                        title = "'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML).'"
+                        class = "tracker_formelement_label"
+                    >
+                        <b>'.
+                            $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML).'
+                        </b>
+                    </label>
+                </td>
+                <td align = "left">' .
+                    $mail_formatted_value.'
+                </td>
+            </tr>';
         }
         return $output;
     }
@@ -521,10 +531,27 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return string
      */
     public function fetchCard(Tracker_Artifact $artifact) {
-        $html  = null;
+
         $value = $this->fetchCardValue($artifact);
-        $html .= '<tr><td>'. $this->getLabel().':</td>';
-        $html .= '<td class="valueOf_'. $this->getName() .'">'. $value .'</td></tr>';
+        $data_field_id   = '';
+        $data_field_type = '';
+        
+        if ($this->userCanUpdate()) {
+            $data_field_id   = 'data-field-id="'.$this->getId().'"';
+            $data_field_type = 'data-field-type="'.$this->getFormElementFactory()->getType($this).'"';
+        }
+
+        $html = '<tr>
+                    <td>'. $this->getLabel().':
+                    </td>
+                    <td class="valueOf_'.$this->getName().'"'.
+                        $data_field_id.
+                        $data_field_type.
+                        '>'.
+                        $value .
+                    '</td>
+                </tr>';
+
         return $html;
     }
 
@@ -579,18 +606,19 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         $required = $this->required ? ' <span class="highlight">*</span>' : '';
-
+        
         $html .= '<div class="tracker-admin-field" id="tracker-admin-formElements_'. $this->id .'">';
         $html .= '<div class="tracker-admin-field-controls">';
                 $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        if ($this->canBeUnused()) {
+        if ($this->canBeRemovedFromUsage()) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $tracker->id,
                 'func'     => 'admin-formElement-remove',
                 'formElement'    => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
-            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('plugin_tracker_formelement_admin','delete_field_impossible') .'">';
+            $cannot_remove_message = $this->getCannotRemoveMessage();
+            $html .= '<span style="color:gray;" title="'. $cannot_remove_message .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
@@ -712,17 +740,54 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $rm = new Tracker_RulesManager($this->getTracker(), Tracker_FormElementFactory::instance());
         return $rm->isUsedInFieldDependency($this);
     }
-
+    
     /**
-     * Is the field can be set as unused?
-     * You can't set a field unused if it is used in the tracker
+     * Is the form element can be removed from usage?
      * This method is to prevent tracker inconsistency
      *
-     * @return boolean returns true if the field can be unused, false otherwise
+     * @return string returns null if the field can be unused, a message otherwise
      */
-    public function canBeUnused() {
-        // a field deletable if it not used in semantics nor in workflow
-        return  ! ($this->isUsedInSemantics() || $this->isUsedInWorkflow() || $this->isUsedInFieldDependency());
+    public function getCannotRemoveMessage() {
+        $message = '';
+
+        if($this->isUsedInSemantics()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'field_used_in_semantics'
+                ). ' ';
+        }
+
+        if($this->isUsedInWorkflow()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'field_used_in_workflow'
+                ). ' ';
+        }
+
+        if($this->isUsedInFieldDependency()) {
+            $message .= $GLOBALS['Language']->getText(
+                'plugin_tracker_formelement_admin',
+                'field_used_in_field_dependencies'
+                ). ' ';
+        }
+
+        return $message;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function canBeRemovedFromUsage() {
+        $is_used = $this->isUsedInSemantics() ||
+            $this->isUsedInWorkflow() ||
+            $this->isUsedInFieldDependency();
+
+        if ($is_used === true) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -1047,6 +1112,17 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         if ( $valueDao   = $this->getValueDao() ) {
                 $valueDao->createNoneValue($tracker_id, $this->id);
         }
+    }
+
+    /**
+     * Get the last ChangesetValue of the field
+     *
+     * @param Tracker_Artifact
+     *
+     * @return Tracker_Artifact_ChangesetValue
+     */
+    public function getLastChangesetValue(Tracker_Artifact $artifact) {
+        return $artifact->getValue($this);
     }
 
 }

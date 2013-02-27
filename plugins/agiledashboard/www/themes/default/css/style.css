@@ -216,3 +216,10 @@
     margin-left:0.5em;
     float:right;
 }
+
+.release-date-info {
+    margin-top: -0.5em;
+    margin-bottom: 1em;
+    font-size: 1.5em;
+    color: #999;
+}

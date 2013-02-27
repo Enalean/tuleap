@@ -111,6 +111,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getQuerySelect() {
         return $this->getBind()->getQuerySelect();
     }
+    
+    /**
+     * Get the "select" statement to retrieve field values with the RGB values of their decorator
+     * Has no sense for fields other than lists
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getBind()->getQuerySelectWithDecorator();
+    }
 
     /**
      * Get the "from" statement to retrieve field values
@@ -120,6 +130,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getQueryFrom() {
         return $this->getBind()->getQueryFrom();
+    }
+    
+	/**
+     * Get the "from" statement to retrieve field values
+     * You can join on artifact AS a, tracker_changeset AS c
+     * which tables used to retrieve the last changeset of matching artifacts.
+     * @return string
+     */
+    public function getQueryFromWithDecorator() {
+        return $this->getBind()->getQueryFromWithDecorator();
     }
 
     /**
@@ -438,6 +458,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $output = '';
         switch($format) {
             case 'html':
+                if ( empty($value) ||  !$value->getListValues()) {
+                    return '-';
+                }
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
@@ -460,9 +483,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {        
         $html = '';
-        $selected_values = $value ? $value->getListValues() : array();
+        $selected_values = $value ? $value->getListValues() : array();        
         $tablo = array();
         foreach ($selected_values as $id => $value) {
             $tablo[] = $this->getBind()->formatArtifactValue($id);
@@ -1020,7 +1043,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
     public function getFieldData($soap_value) {
-        if ($soap_value === $GLOBALS['Language']->getText('global','none')) {
+        if ($soap_value === '100') {
             return 100;
         }
 
@@ -1147,6 +1170,20 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function fixOriginalValueIds(array $value_mapping) {
         $this->getBind()->fixOriginalValueIds($value_mapping);
+    }
+
+    /**
+     * @see Tracker_FormElement::process()
+     */
+    public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
+        parent::process($layout, $request, $current_user);
+        if ($request->get('func') == 'get-values') {
+            $json_values = array();
+            foreach ($this->getAllValues() as $value) {
+                $json_values[$value->getId()] = $value->fetchValuesForJson();
+            }
+            $GLOBALS['Response']->sendJSON($json_values);
+        }
     }
 }
 ?>

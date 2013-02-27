@@ -68,12 +68,16 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/tracker/www/group_selection.php',
             'src/www/scripts/check_pw.js.php',
             'src/www/scripts/cross_references.js.php',
+            'plugins/tests/www/mocha/scripts/check_pw.js.php',
+            'plugins/tests/www/mocha/scripts/cross_references.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerArtifact.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerReports.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerAdminFields.js.php',
             'site-content/en_US/others/default_page.php',
             'site-content/fr_FR/others/default_page.php',
             'site-content/en_US/mail/html_template.php',
+            'plugins/git/site-content/en_US/git_url_example.php',
+            'plugins/git/site-content/fr_FR/git_url_example.php',
             'autoload.php',
         );
     }

@@ -18,13 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/Planning/ArtifactMilestone.class.php';
-require_once dirname(__FILE__).'/../../include/Planning/NoMilestone.class.php';
-require_once dirname(__FILE__).'/../builders/aPlanning.php';
-require_once dirname(__FILE__).'/../../../tracker/tests/builders/anArtifact.php';
-require_once dirname(__FILE__).'/../builders/aMilestone.php';
+require_once dirname(__FILE__).'/../common.php';
 require_once dirname(__FILE__).'/../../../../tests/simpletest/common/include/builders/aTreeNode.php';
-require_once dirname(__FILE__).'/../../../tracker/tests/builders/aMockArtifact.php';
 
 abstract class Planning_MilestoneTest extends TuleapTestCase {
     public function setUp() {
@@ -92,7 +87,7 @@ class Planning_ArtifactMilestoneTest extends Planning_MilestoneTest {
     public function itMayHavePlannedArtifacts() {
         $this->assertEqual($this->milestone->getPlannedArtifacts(), null);
         
-        $planned_artifacts = new TreeNode();
+        $planned_artifacts = new ArtifactNode(aMockArtifact()->build());
         $this->milestone   = new Planning_ArtifactMilestone($this->project,
                                                      $this->planning,
                                                      $this->artifact,
@@ -136,10 +131,10 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
         $child1_artifact   = aMockArtifact()->withId(1111)->withTitle('child artifact 1')->build();
         $child2_artifact   = aMockArtifact()->withId(2222)->withTitle('child artifact 2')->build();
-        $planned_artifacts = aNode()->withObject($root_artifact)
+        $planned_artifacts = anArtifactNode()->withArtifact($root_artifact)
                                     ->withChildren(
-                                        aNode()->withObject($child1_artifact),
-                                        aNode()->withObject($child2_artifact))
+                                        anArtifactNode()->withArtifact($child1_artifact),
+                                        anArtifactNode()->withArtifact($child2_artifact))
                                     ->build();
 
         
@@ -152,10 +147,10 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $root_artifact     = aMockArtifact()->withId(9999)->withTitle('root artifact')->build();
         $depth1_artifact   = aMockArtifact()->withId(1111)->withTitle('depth 1 artifact')->build();
         $depth2_artifact   = aMockArtifact()->withId(2222)->withTitle('depth 2 artifact')->build();
-        $planned_artifacts = aNode()->withObject($root_artifact)
+        $planned_artifacts = anArtifactNode()->withArtifact($root_artifact)
                                     ->withChild(
-                                        aNode()->withObject($depth1_artifact)
-                                               ->withChild(aNode()->withObject($depth2_artifact)))
+                                        anArtifactNode()->withArtifact($depth1_artifact)
+                                               ->withChild(anArtifactNode()->withArtifact($depth2_artifact)))
                                     ->build();
 
         
@@ -171,9 +166,9 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
         $artifact          = aMockArtifact()->withId(1111)
                                             ->withUniqueLinkedArtifacts(array($linked_artifact_1, $linked_artifact_2))
                                             ->build();
-        $planned_artifacts = aNode()->withObject($root_artifact)
+        $planned_artifacts = anArtifactNode()->withArtifact($root_artifact)
                                     ->withChild(
-                                        aNode()->withObject($artifact))
+                                        anArtifactNode()->withArtifact($artifact))
                                     ->build();
 
         
@@ -184,7 +179,8 @@ class Milestone_linkedArtifactTest extends TuleapTestCase {
 }
 
 class Planning_Milestone_WhenFirstCreatedTest extends TuleapTestCase {
-    
+    private $milestone;
+
     public function setUp() {
         $this->project  = stub('Project')->getID()->returns(123);
         $this->planning  = mock('Planning');
@@ -195,32 +191,18 @@ class Planning_Milestone_WhenFirstCreatedTest extends TuleapTestCase {
     }
     
     public function itHasNoSubMilestones() {
-        $this->assertIdentical($this->milestone->getSubMilestones(), array());
+        $milestone_plan = new Planning_MilestonePlan($this->milestone, array(), 0, 0);
+        $this->assertIdentical($milestone_plan->getSubMilestones(), array());
     }
     
     public function itAcceptsNewSubMilestones() {
         $sub_milestone_1 = aMilestone()->withinTheSameProjectAs($this->milestone)->build();
         $sub_milestone_2 = aMilestone()->withinTheSameProjectAs($this->milestone)->build();
         
-        $this->milestone->addSubMilestones(array($sub_milestone_1, $sub_milestone_2));
-        $this->assertIdentical($this->milestone->getSubMilestones(),
+        $milestone_plan = new Planning_MilestonePlan($this->milestone, array($sub_milestone_1, $sub_milestone_2), 0, 0);
+        $this->assertIdentical($milestone_plan->getSubMilestones(),
                                array($sub_milestone_1, $sub_milestone_2));
     }
 }
 
-class Planning_Milestone_WithSubMilestones extends TuleapTestCase {
-    public function itCanBeAddedNewSubMilestones() {
-        $sub_milestone_1 = aMilestone()->build();
-        $sub_milestone_2 = aMilestone()->withinTheSameProjectAs($sub_milestone_1)->build();
-        $sub_milestone_3 = aMilestone()->withinTheSameProjectAs($sub_milestone_1)->build();
-        $sub_milestone_4 = aMilestone()->withinTheSameProjectAs($sub_milestone_1)->build();
-        $this->milestone = aMilestone()->withinTheSameProjectAs($sub_milestone_1)
-                                       ->withSubMilestones(array($sub_milestone_1, $sub_milestone_2))->build();
-        
-        $this->milestone->addSubMilestones(array($sub_milestone_3, $sub_milestone_4));
-        
-        $this->assertIdentical($this->milestone->getSubMilestones(),
-                               array($sub_milestone_1, $sub_milestone_2, $sub_milestone_3, $sub_milestone_4));
-    }
-}
 ?>

@@ -713,19 +713,18 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || !$value->getValue()) {
+            return '-';
         }
         $output = '';
         switch($format) {
             case 'html':
                 $artifactlink_infos = $value->getValue();
-                $output .= '<ul>';
+                $url = array();
                 foreach ($artifactlink_infos as $artifactlink_info) {
-                    $output .= '<li>' . $artifactlink_info->getUrl() . '</li>';
+                    $url[] = $artifactlink_info->getUrl();
                 }
-                $output .= '<ul>';
-                break;
+                return implode(' , ', $url);
             default:
                 $output = PHP_EOL;
                 $artifactlink_infos = $value->getValue();
@@ -894,7 +893,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $lastChangeset = $artifact->getLastChangeset();
         $ids = array();
         if($lastChangeset) {
-            $ids = $artifact->getLastChangeset()->getValue($this)->getArtifactIds();
+            $ids = $lastChangeset->getValue($this)->getArtifactIds();
         }
         return $ids;
     }

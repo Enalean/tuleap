@@ -19,6 +19,7 @@
 
 require_once('common/plugin/Plugin.class.php');
 require_once 'constants.php';
+require_once 'autoload.php';
 
 /**
  * trackerPlugin
@@ -149,12 +150,17 @@ class trackerPlugin extends Plugin {
         $user     = $params['user'];
         $burndown_field = $artifact->getABurndownField($user);
         if ($burndown_field) {
-            $params['panes'][] = new Tracker_Artifact_Burndown_Pane(
-                    $artifact,
-                    $burndown_field,
-                    $params['user'],
-                    $this->getThemePath()
+            $pane_info = new Tracker_Artifact_Burndown_PaneInfo($params['milestone']);
+            if ($params['request']->get('pane') == Tracker_Artifact_Burndown_PaneInfo::IDENTIFIER) {
+                $pane_info->setActive(true);
+                $params['active_pane'] = new Tracker_Artifact_Burndown_Pane(
+                        $pane_info,
+                        $artifact,
+                        $burndown_field,
+                        $params['user']
                 );
+            }
+            $params['panes'][] = $pane_info;
         }
     }
     
@@ -280,32 +286,32 @@ class trackerPlugin extends Plugin {
             
             if (in_array($params['permission_type'], array('PLUGIN_TRACKER_ADMIN', 'PLUGIN_TRACKER_ACCESS_FULL', 'PLUGIN_TRACKER_ACCESS_SUBMITTER', 'PLUGIN_TRACKER_ACCESS_ASSIGNEE', 'PLUGIN_TRACKER_FIELD_SUBMIT', 'PLUGIN_TRACKER_FIELD_READ', 'PLUGIN_TRACKER_FIELD_UPDATE', 'PLUGIN_TRACKER_ARTIFACT_ACCESS', 'PLUGIN_TRACKER_WORKFLOW_TRANSITION'))) {
                 if (strpos($params['permission_type'], 'PLUGIN_TRACKER_ACCESS') === 0 || $params['permission_type'] === 'PLUGIN_TRACKER_ADMIN') {
-                    echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
+                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
                     .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$atid.'&func=admin-perms-tracker">'
-                    .$objname.'</a></TD>';
+                    .$objname.'</a>';
                     
                 } else if (strpos($params['permission_type'], 'PLUGIN_TRACKER_FIELD') === 0) {
                     $field = Tracker_FormElementFactory::instance()->getFormElementById($atid);
                     $tracker_id = $field->getTrackerId();
                     
-                    echo '<TD>'.$GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
+                    $params['results'] = $GLOBALS['Language']->getText('project_admin_editugroup','tracker') 
                     .' <a href="'.TRACKER_BASE_URL.'/?tracker='.$tracker_id.'&func=admin-perms-fields">'
-                    .$objname.'</a></TD>';
+                    .$objname.'</a>';
                     
                 } else if ($params['permission_type'] == 'PLUGIN_TRACKER_ARTIFACT_ACCESS') {
-                    echo '<td>'. $hp->purify($objname, CODENDI_PURIFIER_BASIC) .'</td>';
+                    $params['results'] = $hp->purify($objname, CODENDI_PURIFIER_BASIC);
                     
                 } else if ($params['permission_type'] == 'PLUGIN_TRACKER_WORKFLOW_TRANSITION') {
                     $transition = TransitionFactory::instance()->getTransition($atid);
                     $tracker_id = $transition->getWorkflow()->getTrackerId();
                     $edit_transition = $transition->getFieldValueFrom().'_'.$transition->getFieldValueTo();
-                    echo '<TD><a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
+                    $params['results'] = '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(
                         array(
                             'tracker'         => $tracker_id,
                             'func'            => Workflow::FUNC_ADMIN_TRANSITIONS,
                             'edit_transition' => $edit_transition
                         )
-                    ).'">'.$objname.'</a></TD>';
+                    ).'">'.$objname.'</a>';
                 }
             }
         }

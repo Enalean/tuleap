@@ -179,28 +179,43 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SaveObjectTest extends Tracker
 
 class Tracker_FormElement_Field_List_Bind_Ugroups_SOAPTest extends Tracker_FormElement_Field_List_Bind_BaseTest {
 
-    public function testGetSoapAvailableValues() {
+    public function setUp() {
+        parent::setUp();
         $values = array(
             1 => $this->project_members_ugroup_value,
             2 => $this->customers_ugroup_value,
         );
 
-        $bind = $this->buildBindUgroups($values);
+        $this->bind = $this->buildBindUgroups($values);
+    }
 
-        $this->assertEqual(count($bind->getSoapAvailableValues()), 2);
+    public function testGetSoapAvailableValues() {
+        $this->assertEqual(count($this->bind->getSoapAvailableValues()), 2);
         $soap_values = array(
             array(
-                'field_id'         => $this->field_id,
                 'bind_value_id'    => 1,
                 'bind_value_label' => 'ugroup_project_members_name_key',
             ),
             array(
-                'field_id'         => $this->field_id,
                 'bind_value_id'    => 2,
                 'bind_value_label' => 'Customers',
             )
         );
-        $this->assertEqual($bind->getSoapAvailableValues(), $soap_values);
+        $this->assertEqual($this->bind->getSoapAvailableValues(), $soap_values);
+    }
+
+    public function _testGetFieldDataReturnsIds() {
+        $soap_values = '12,13,14,15';
+        $expected = array(12,13,14,15);
+
+        $this->assertEqual($expected, $this->bind->getFieldData($soap_values, true));
+    }
+
+    public function testGetFieldDataReturnsOneId() {
+        $soap_values = '2';
+        $expected = 2;
+
+        $this->assertEqual($expected, $this->bind->getFieldData($soap_values, false));
     }
 }
 

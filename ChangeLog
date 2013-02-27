@@ -1,16 +1,63 @@
-Version 5.9 (Not Released Yet)
+Version 5.12 (Not released yet)
+	== Plugins ==
+	* tracker 5.89
+	* graphontrackersv5: 5.0.7
+	* tracker: 5.90
+	* agiledashboard: 0.73
+
+Version 5.11 (Thursday, February 21st 2013)
+
+	== Plugins ==
+	* tracker: 5.88
+	* agiledashboard: 0.72
+	* cardwall: 0.9.18
+	* git: 2.7.26
+	* ldap: 3.25
+	* forumml: 2.6.8
+	* fulltextsearch: 0.16
+	* tests: 5.16
+	* graphontrackersv5: 5.0.6
+
+   == Enhancement ==
+    * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)
+    * Allow site to customize robots.txt
+    * Fix for sla #2290: allow restricted users to search in trackers v3
+
+  == Bug Fix ==
+    * Add missing php53-process dependency for posix functions
+	* Fix sla #813: Project administration page is distorded on IE when the custom notification message is long
+	* Fix bug #2317: Fatal error on the AccessLogs
+	* Fix sla #682 - Viewvc display issue for file which name contains "$"
+	* Fix missing blank.gif that pollutate error_log
+	* Fix footer link for Tuleap as well as copyright
+
+Version 5.9.1 (Thursday, January 24rd 2013)
+
+	== Plugins ==
+	* tracker: 5.70
+
+Version 5.9 (Wednesday, January 23rd 2013)
+
+   == Enhancement ==
+    * Allow one to create a project in 1 step instead of 8. Must be activated in the local.inc.
 
    == Plugins ==
-    * cardwall: 0.9.10
-	* git: 2.7.22
+	* cardwall: 0.9.11
+	* git: 2.7.23
 	* tests: 5.15
-	* tracker: 5.68
-	* docman: 2.26.12
+	* tracker: 5.69
+	* docman: 2.26.13
 	* graphontrackers: 1.7
-	* agiledashboard: 0.62
+	* agiledashboard: 0.63
+	* fulltextsearch: 0.13
+
+  == Themes ==
+	* Tuleap: 2.5
 
   == Bug Fix ==
     * Do not rely on SimplePie escaping
+    * Prevent some user account pages to be cached (contrib STMicroelectronics).
+    * Fix bugs #2250: Restricted users are notified of wiki page update in public projects
 
   == Development ==
     * Include fundations for HTTP client and Jenkins job

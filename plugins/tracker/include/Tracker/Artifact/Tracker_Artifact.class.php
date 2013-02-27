@@ -23,6 +23,8 @@ require_once('common/reference/CrossReferenceFactory.class.php');
 require_once('common/reference/CrossReferenceManager.class.php');
 require_once('www/project/admin/permissions.php');
 require_once('common/include/Recent_Element_Interface.class.php');
+require_once 'common/project/UGroupLiteralizer.class.php';
+require_once 'common/project/ProjectManager.class.php';
 
 class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable_Interface {
     const PERMISSION_ACCESS = 'PLUGIN_TRACKER_ARTIFACT_ACCESS';
@@ -80,7 +82,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->submitted_by             = $submitted_by;
         $this->submitted_on             = $submitted_on;
         $this->use_artifact_permissions = $use_artifact_permissions;
+    }
 
+    /**
+     * Obtain event manager instance
+     *
+     * @return EventManager
+     */
+    private function getEventManager() {
+        return EventManager::instance();
     }
 
     /**
@@ -220,11 +230,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             case 'html':
                 $content = $this->fetchMailFormElements($recipient, $format, $ignore_perms);
                 if ($content) {
-                    $output .= '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'</h2>';
+                    $output .=
+                    '<table style="width:100%">
+                        <tr>
+                            <td colspan="3" align="left">
+                                <h2>'.
+                                    $GLOBALS['Language']->getText('plugin_tracker_artifact_changeset', 'header_html_snapshot').'
+                                </h2>
+                            </td>
+                        </tr>
+                    </table>';
                     $output .= $content;
                 }
-
-                $output .= $this->fetchMailFollowUp($recipient, $format, $ignore_perms);
+                $output .=
+                '<table style="width:100%">'.
+                        $this->fetchMailFollowUp($recipient, $format, $ignore_perms).
+                '</table>';
                 break;
             default:
                 $output .= PHP_EOL;
@@ -245,19 +266,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return String
      */
-    public function fetchMailFormElements($recipient, $format, $ignore_perms=false) {
-        $text = '';
-        foreach ($this->getTracker()->getFormElements() as $formElement) {
-            $formElement->prepareForDisplay();
-        }
-        foreach ($this->getTracker()->getFormElements() as $formElement) {
-            $output = $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
-            $text .= $output;
+    public function fetchMailFormElements($recipient, $format, $ignore_perms = false) {  
+        $output = '';
+        $toplevel_form_elements = $this->getTracker()->getFormElements();
+        $this->prepareElementsForDisplay($toplevel_form_elements);
+        
+        foreach ($toplevel_form_elements as $formElement) {
+            $output .= $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
             if ($format == 'text' && $output) {
-                $text .= PHP_EOL;
+                $output .= PHP_EOL;
             }
         }
-        return $text;
+        
+        if ($format == 'html') {
+            $output = '<table width="100%">'.$output.'</table>';
+        }
+        
+        return $output;
+    }
+
+    /** @param Tracker_FormElement[] */
+    private function prepareElementsForDisplay($toplevel_form_elements) {
+        foreach ($toplevel_form_elements as $formElement) {
+            $formElement->prepareForDisplay();
+        }
     }
 
     /**
@@ -275,24 +307,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $cs = $this->getChangesets();
         $hp = Codendi_HTMLPurifier::instance();
         $output = '';
+        
+        if($format == 'html'){
+            $output .=
+            '<tr>
+                <td colspan="3" align="left">
+                    <h2>'.
+                        $GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'
+                    </h2>
+                </td>
+            </tr>';
+        }
+        
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
+            /* @var $comment Tracker_Artifact_Changeset_Comment */
             $changes = $changeset->diffToPrevious($format, $recipient, $ignore_perms);
-            if (empty($comment)) {
+            if (empty($comment) || $comment->hasEmptyBody()) {
                 //do not display empty comment
                 continue;
             }
             switch ($format) {
-                case 'html':
-                    $followup = $comment->fetchFollowUp($format, true);
-                    if(!empty($followup)) {
-                        if(!isset($output)) {
-                            $output = '<h2>'.$GLOBALS['Language']->getText('plugin_tracker_include_artifact','follow_ups').'</h2>';
-                        }
-                        $output .= '<div class="tracker_artifact_followup_header">';
-                        $output .= $followup;
-                        $output .= '</div>';
-                    }
+                case 'html':               
+                    $followup = $comment->fetchMailFollowUp($format);
+                    $output .=  $followup;
                     break;
                 case 'text':
                     $user = $um->getUserById($comment->submitted_by);
@@ -400,7 +438,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($from_aid != null) {
             $redirect->query_parameters['from_aid'] = $from_aid;
         }
-        EventManager::instance()->processEvent(
+        $this->getEventManager()->processEvent(
             TRACKER_EVENT_BUILD_ARTIFACT_FORM_ACTION,
             array(
                 'request'  => $request,
@@ -724,11 +762,17 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 break;
             case 'artifact-update':
                 //TODO : check permissions on this action?
-                $fields_data   = $request->get('artifact');
                 $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
+                
+                $fields_data   = $request->get('artifact');
+                
+                $fields_data['request_method_called'] = 'artifact-update';
                 $this->getTracker()->augmentDataFromRequest($fields_data);
+                unset($fields_data['request_method_called']);
+
                 try {
+
                     $this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format);
                     
                     $art_link = $this->fetchDirectLinkToArtifact();
@@ -736,6 +780,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                     $redirect = $this->getRedirectUrlAfterArtifactUpdate($request, $this->tracker_id, $this->getId());
                     $this->summonArtifactRedirectors($request, $redirect);
+
                     if ($request->isAjax()) {
                         $this->sendAjaxCardsUpdateInfo($current_user);
                     } else {
@@ -1002,7 +1047,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $list_errors = array();
         $is_valid = true;
         $used_fields    = $this->getFormElementFactory()->getUsedFields($this->getTracker());
-        $last_changeset = $this->getLastChangeset();
         foreach ($used_fields as $field) {
             if ($field->hasErrors()) {
                 $list_errors[] = $field->getId();
@@ -1048,7 +1092,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
        
         $is_submission = false;
         //Store the comment
-        $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
+        $commentAdded = $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
+        if ($commentAdded) {
+            $params = array('group_id'     => $this->getTracker()->getGroupId(),
+                            'artifact_id'  => $this->getId(),
+                            'changeset_id' => $changeset_id,
+                            'text'         => $comment);
+            $this->getEventManager()->processEvent('tracker_followup_event_add', $params);
+        }
 
         //extract references from the comment
         $this->getReferenceManager()->extractCrossRef($comment, $this->getId(), self::REFERENCE_NATURE, $this->getTracker()->getGroupID(), $submitter->getId(), $this->getTracker()->getItemName());
@@ -1169,6 +1220,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         if ($last_changeset) {
             return $last_changeset;
         }
+        return null;
     }
 
     /**
@@ -1335,7 +1387,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Tracker_FormElement_Field  $field     The field
      * @param Tracker_Artifact_Changeset $changeset The changeset. if null given take the last changeset of the artifact
      *
-     * @return Tracker_Artifact_ChangesetValue
+     * @return Tracker_Artifact_ChangesetValue | null
      */
     function getValue(Tracker_FormElement_Field $field, Tracker_Artifact_Changeset $changeset = null) {
         if (!$changeset) {
@@ -1641,7 +1693,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @param Codendi_Request $request The request
      */
     public function summonArtifactRedirectors(Codendi_Request $request, Tracker_Artifact_Redirect $redirect) {
-        EventManager::instance()->processEvent(
+        $this->getEventManager()->processEvent(
             TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE,
             array(
                 'request'  => $request,
@@ -1652,7 +1704,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     private function summonArtifactAssociators(Codendi_Request $request, User $current_user, $linked_artifact_id) {
-        EventManager::instance()->processEvent(
+        $this->getEventManager()->processEvent(
             TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED,
             array(
                 'artifact'             => $this,
@@ -1675,6 +1727,53 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->getDao()->deletePriority($this->getId());
         $this->getDao()->delete($this->getId());
         $this->getDao()->commit();
+    }
+
+    /**
+     * Return the authorised ugroups to see the artifact
+     *
+     * @return Array
+     */
+    private function getAuthorisedUgroups () {
+        $ugroups = array();
+        //Individual artifact permission
+        if ($this->useArtifactPermissions()) {
+            $rows = $this->permission_db_authorized_ugroups('PLUGIN_TRACKER_ARTIFACT_ACCESS');
+            if ( $rows !== false ) {
+                foreach ($rows as $row) {
+                    $ugroups[] = $row['ugroup_id'];
+                }
+            }
+        } else {
+            $permissions = $this->getTracker()->getPermissionsAuthorizedUgroups();
+            foreach ($permissions  as $permission => $ugroups) {
+                switch($permission) {
+                    // Full access
+                    case 'PLUGIN_TRACKER_ACCESS_FULL':
+                    // 'submitter' access
+                    case 'PLUGIN_TRACKER_ACCESS_SUBMITTER':
+                    // 'assignee' access
+                    case 'PLUGIN_TRACKER_ACCESS_ASSIGNEE':
+                        foreach ($ugroups as $ugroup) {
+                            $ugroups[] = $ugroup['ugroup_id'];
+                        }
+                    break;
+                }
+            }
+        }
+        return $ugroups;
+    }
+
+    /**
+     * Returns ugroups of an artifact in a human readable format
+     *
+     * @return array
+     */
+    public function exportPermissions() {
+        $project     = ProjectManager::instance()->getProject($this->getTracker()->getGroupId());
+        $literalizer = new UGroupLiteralizer();
+        $ugroupsId     = $this->getAuthorisedUgroups();
+        return $literalizer->ugroupIdsToString($ugroupsId, $project);
     }
 
     protected function getDao() {

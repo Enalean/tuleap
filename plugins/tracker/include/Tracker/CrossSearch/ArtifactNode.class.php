@@ -19,6 +19,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/TreeNode/TreeNode.class.php';
+
 /**
  * A TreeNode that holds an Tracker_Artifact
  */

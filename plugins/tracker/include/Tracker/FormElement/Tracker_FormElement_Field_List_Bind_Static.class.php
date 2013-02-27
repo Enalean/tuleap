@@ -143,46 +143,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         $values = $this->getAllValues();
         foreach ($values as $id => $value) {
             $soap_values[] = array(
-                            'field_id' => $this->field->getId(),
                             'bind_value_id' => $id,
                             'bind_value_label' => $value->getLabel(),
                         );
         }
         return $soap_values;
-    }
-    /**
-     * Get the field data for artifact submission
-     *
-     * @param string $soap_value  the soap field values
-     * @param bool   $is_multiple if the soap value is multiple or not
-     *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
-     */
-    public function getFieldData($soap_value, $is_multiple) {
-        $values = $this->getAllValues();
-        if ($is_multiple) {
-            $return = array();
-            $soap_values = explode(",", $soap_value);
-            foreach ($values as $id => $value) {
-                if (in_array($value->getLabel(), $soap_values)) {
-                    $return[] = $id;
-                }
-            }
-            if (count($soap_values) == count($return)) {
-                return $return;
-            } else {
-                // if one value was not found, return null
-                return null;
-            }
-        } else {
-            foreach ($values as $id => $value) {
-                if ($value->getLabel() == $soap_value) {
-                    return $id;
-                }
-            }
-            // if not found, return null
-            return null;
-        }
     }
     /**
      * @return array
@@ -306,6 +271,15 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
         return "$R2.id AS `". $this->field->name ."`";
     }
     
+	/**
+     * Get the "select" statement to retrieve field values with the RGB values of their decorator
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getQuerySelect() . ", color.red, color.green, color.blue";
+    }
+    
     /**
      * Get the "from" statement to retrieve field values
      * You can join on artifact AS a, tracker_changeset AS c 
@@ -326,6 +300,16 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                     LEFT JOIN tracker_field_list_bind_static_value AS $R2 ON ($R2.id = $R3.bindvalue_id AND $R2.field_id = ". $this->field->id ." )
                 ) ON ($R1.changeset_id = c.id AND $R1.field_id = ". $this->field->id ." )
                ";
+    }
+    
+/**
+     * Get the "from" statement to retrieve field values with the RGB values of their decorator
+     * Has no sense for fields other than lists
+     * @return string
+     */
+    public function getQueryFromWithDecorator($changesetvalue_table = 'tracker_changeset_value_list') {
+        $R2 = 'R2_'. $this->field->id;
+        return $this->getQueryFrom($changesetvalue_table) . " LEFT OUTER JOIN tracker_field_list_bind_decorator AS color ON (color.value_id = $R2.id)";
     }
     
     /**
@@ -660,7 +644,7 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
                         $params['decorator'] = array();
                         foreach ($params['decorators'] as $key => $deco) {
                             $params['decorator'][$valueMapping[$key]] = 
-                                   Tracker_FormElement_Field_List_BindDecorator::toHexa($deco->r, $deco->g, $deco->b);
+                                   ColorHelper::RGBtoHexa($deco->r, $deco->g, $deco->b);
                         }
                     }
                     break;

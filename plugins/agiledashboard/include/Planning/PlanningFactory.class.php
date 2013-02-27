@@ -56,10 +56,13 @@ class PlanningFactory {
         $planning_rows = $this->dao->searchByPlanningTrackerIds(array_keys($tracker_mapping));
 
         foreach($planning_rows as $row) {
-            $row['backlog_tracker_id']  = $tracker_mapping[$row['backlog_tracker_id']];
-            $row['planning_tracker_id'] = $tracker_mapping[$row['planning_tracker_id']];
-
-            $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
+            if(isset($tracker_mapping[$row['backlog_tracker_id']]) && 
+                    isset($tracker_mapping[$row['backlog_tracker_id']])) {
+                $row['backlog_tracker_id']  = $tracker_mapping[$row['backlog_tracker_id']];
+                $row['planning_tracker_id'] = $tracker_mapping[$row['planning_tracker_id']];
+                
+                $this->dao->createPlanning($group_id, PlanningParameters::fromArray($row));
+            }
         }
     }
 
@@ -113,11 +116,11 @@ class PlanningFactory {
      *
      * @return array of Planning_ShortAccess
      */
-    public function getPlanningsShortAccess(User $user, $group_id, Planning_MilestoneFactory $milestone_factory) {
+    public function getPlanningsShortAccess(User $user, $group_id, Planning_MilestoneFactory $milestone_factory, $theme_path) {
         $plannings    = $this->getPlannings($user, $group_id);
         $short_access = array();
         foreach ($plannings as $planning) {
-            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory);
+            $short_access[] = new Planning_ShortAccess($planning, $user, $milestone_factory, $theme_path);
         }
         if (!empty($short_access)) {
             end($short_access)->setIsLatest();

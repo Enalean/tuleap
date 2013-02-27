@@ -275,9 +275,9 @@ class Tracker_FormElement_Field_CrossReferences extends Tracker_FormElement_Fiel
         switch ($format) {
             case 'html':
                 if ($crf->getNbReferences()) {
-                    $output .= $crf->getHTMLDisplayCrossRefs(true, false, false);
+                    $output .= $crf->getHTMLCrossRefsForMail();
                 } else {
-                    $output .= '<div>'. $GLOBALS['Language']->getText('plugin_tracker_include_artifact', 'ref_list_empty') .'</div>';
+                    $output .= '-';
                 }
                 break;
             default:

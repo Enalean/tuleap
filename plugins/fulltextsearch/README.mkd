@@ -94,8 +94,7 @@ Create the index: (please note that the number of shards|replicas are for develo
       "settings" : { "index" : { "number_of_shards" : 1, "number_of_replicas" : 0 }}
       }'
 
-Define the attachment mapping:
-
+Define the attachment mapping for docman type:
     $ curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap/docman/_mapping" -d '{
       "docman" : {
         "properties" : {
@@ -113,10 +112,25 @@ Define the attachment mapping:
         }
       }
      }'
+Define the attachment mapping for tracker type:
+    $curl -u superuser:Adm1n -X PUT "localhost:9200/tuleap/tracker/_mapping" -d '{
+      "tracker" : {
+        "properties" : {
+          "followup" : {
+            "type" : "string",
+            "store" : "yes"
+          },
+          "permissions": {
+            "type": "string",
+            "index": "not_analyzed"
+          }
+        }
+       }
+      }'
 
 Check it worked:
 
-    $ curl -u superuser:Adm1n "localhost:9200/tuleap/docman/_mapping?pretty"
+    $ curl -u superuser:Adm1n "localhost:9200/tuleap/_mapping?pretty"
     ...
 
 Now you can activate the plugin in Tuleap admin interface and start uploading documents

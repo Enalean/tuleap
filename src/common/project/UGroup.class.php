@@ -136,11 +136,19 @@ class UGroup {
         return $this->id;
     }
 
+    public function getProjectId() {
+        return $this->group_id;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
     /**
      * @deprecated user getUsers($group_id)
      * Return DAR of all ugroup members as User objects
      *
-     * @return DataAccessResult
+     * @return Array of User
      */
     public function getMembers() {
         if (! $this->members) {

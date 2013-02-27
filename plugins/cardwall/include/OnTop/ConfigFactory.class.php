@@ -64,10 +64,6 @@ class Cardwall_OnTop_ConfigFactory {
      * @return \Cardwall_OnTop_Config
      */
     public function getOnTopConfig(Tracker $tracker) {
-        require_once 'Config.class.php';
-        require_once 'Config/ColumnFactory.class.php';
-        require_once 'Config/TrackerMappingFactory.class.php';
-        require_once 'Config/ValueMappingFactory.class.php';
 
         $column_factory = new Cardwall_OnTop_Config_ColumnFactory($this->getOnTopColumnDao(), $this->getOnTopDao());
 
@@ -106,15 +102,6 @@ class Cardwall_OnTop_ConfigFactory {
         $column_dao       = $this->getOnTopColumnDao();
         $mappingfield_dao = $this->getOnTopColumnMappingFieldDao();
         $mappingvalue_dao = $this->getOnTopColumnMappingFieldValueDao();
-        require_once 'Config/Updater.class.php';
-        require_once 'Config/Command/EnableCardwallOnTop.class.php';
-        require_once 'Config/Command/EnableFreestyleColumns.class.php';
-        require_once 'Config/Command/CreateColumn.class.php';
-        require_once 'Config/Command/UpdateColumns.class.php';
-        require_once 'Config/Command/DeleteColumns.class.php';
-        require_once 'Config/Command/CreateMappingField.class.php';
-        require_once 'Config/Command/UpdateMappingFields.class.php';
-        require_once 'Config/Command/DeleteMappingFields.class.php';
         $updater = new Cardwall_OnTop_Config_Updater();
         $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableCardwallOnTop($tracker, $dao));
         $updater->addCommand(new Cardwall_OnTop_Config_Command_EnableFreestyleColumns($tracker, $dao));
@@ -130,7 +117,6 @@ class Cardwall_OnTop_ConfigFactory {
      * @return Cardwall_OnTop_Dao
      */
     private function getOnTopDao() {
-        require_once 'Dao.class.php';
         return new Cardwall_OnTop_Dao();
     }
 
@@ -138,7 +124,6 @@ class Cardwall_OnTop_ConfigFactory {
      * @return Cardwall_OnTop_ColumnDao
      */
     private function getOnTopColumnDao() {
-        require_once 'ColumnDao.class.php';
         return new Cardwall_OnTop_ColumnDao();
     }
 
@@ -146,7 +131,6 @@ class Cardwall_OnTop_ConfigFactory {
      * @return Cardwall_OnTop_ColumnMappingFieldDao
      */
     private function getOnTopColumnMappingFieldDao() {
-        require_once 'ColumnMappingFieldDao.class.php';
         return new Cardwall_OnTop_ColumnMappingFieldDao();
     }
 
@@ -154,7 +138,6 @@ class Cardwall_OnTop_ConfigFactory {
      * @return Cardwall_OnTop_ColumnMappingFieldValueDao
      */
     private function getOnTopColumnMappingFieldValueDao() {
-        require_once 'ColumnMappingFieldValueDao.class.php';
         return new Cardwall_OnTop_ColumnMappingFieldValueDao();
     }
 

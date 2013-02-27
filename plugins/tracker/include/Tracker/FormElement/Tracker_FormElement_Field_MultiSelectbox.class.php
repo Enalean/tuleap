@@ -109,6 +109,19 @@ class Tracker_FormElement_Field_MultiSelectbox extends Tracker_FormElement_Field
      * @return void
      */
     public function augmentDataFromRequest(&$fields_data) {
+
+        if(isset($fields_data['request_method_called']) && $fields_data['request_method_called'] = 'artifact-update') {
+            return;
+            /* When updating an artifact, we do not want this method to reset the selected options.
+             *
+             * This method is in iteself somewhat of a hack. Its aim is to set default values for multiselect fields
+             * that do not have a value in the $fields_data array. However, this method assumes that EVERY field
+             * and its value(s) will be submitted. This is a BAD assumption since it is possible to submit only those 
+             * fields that have changed. In that case, we do not want to set a default value but, rather, use the 
+             * existing one.
+             */
+        }
+
         if ((!isset($fields_data[$this->getId()]) || !is_array($fields_data[$this->getId()])) && !$this->isRequired() && $this->userCanUpdate()) {
             $fields_data[$this->getId()] = array('100');
         }

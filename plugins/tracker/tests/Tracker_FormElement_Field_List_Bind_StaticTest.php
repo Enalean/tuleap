@@ -49,12 +49,10 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         
         $this->assertEqual(count($static->getSoapAvailableValues()), 2);
         $soap_values = array(
-                        array('field_id' => 123,
-                              'bind_value_id' => 101,
+                        array('bind_value_id' => 101,
                               'bind_value_label' => 'bv label 1',
                              ),
-                        array('field_id' => 123,
-                              'bind_value_id' => 102,
+                        array('bind_value_id' => 102,
                               'bind_value_label' => 'bv label 2'
                              )
                         );
@@ -69,7 +67,11 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         $field = $is_rank_alpha = $default_values = $decorators = '';
         $values = array(13564 => $bv1, 13987 => $bv2);
         $f = new Tracker_FormElement_Field_List_Bind_Static($field, $is_rank_alpha, $values, $default_values, $decorators);
-        $this->assertEqual('13564', $f->getFieldData('1 - Ordinary', false));
+
+        $soap_values = '13564';
+        $expected = 13564;
+
+        $this->assertEqual($expected, $f->getFieldData($soap_values, false));
     }
     
     function testGetFieldDataMultiple() {
@@ -83,9 +85,12 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         $bv4->setReturnValue('getLabel', 'Docman');
         $field = $is_rank_alpha = $default_values = $decorators = '';
         $values = array(13564 => $bv1, 13987 => $bv2, 125 => $bv3, 666 => $bv4);
-        $res = array('13564', '125', '666');
+        $res = '13564, 125, 666';
         $f = new Tracker_FormElement_Field_List_Bind_Static($field, $is_rank_alpha, $values, $default_values, $decorators);
-        $this->assertEqual($res, $f->getFieldData('Admin,User Interface,Docman', true));
+
+        $expected = array(13564,125,666);
+
+        $this->assertEqual($expected, $f->getFieldData($res, true));
     }
 }
 ?>

@@ -47,13 +47,56 @@ class ElasticSearch_SearchClientFacade extends ElasticSearch_ClientFacade implem
      *
      * @return ElasticSearch_SearchResultCollection
      */
+    public function searchFollowups($request, array $facets, $offset, User $user) {
+        $terms   = trim($request->getValidated('search_followups', 'string', ''));
+        $results = array();
+        if ($terms) {
+            $query        = $this->getSearchFollowupsQuery($terms, $facets, $offset, $user);
+            $searchResult = $this->client->search($query);
+            if (!empty($searchResult['hits']['total'])) {
+                foreach ($searchResult['hits']['hits'] as $hit) {
+                    $results[$hit['fields']['artifact_id']] = $hit['fields']['changeset_id'];
+                }
+            }
+        }
+        return $results;
+    }
+
+    /**
+     * @see ISearchDocuments::searchDocuments
+     *
+     * @return ElasticSearch_SearchResultCollection
+     */
     public function searchDocuments($terms, array $facets, $offset, User $user) {
         $query  = $this->getSearchDocumentsQuery($terms, $facets, $offset, $user);
         // For debugging purpose, uncomment the statement below to see the
         // content of the request (can be directly injected in a curl request)
         //var_dump(json_encode($query));
         $search = $this->client->search($query);
-        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager);
+        return new ElasticSearch_SearchResultCollection($search, $facets, $this->project_manager, $this->type);
+    }
+
+    /**
+     * @return array to be used for querying ES
+     */
+    protected function getSearchFollowupsQuery($terms, array $facets, $offset, User $user) {
+        $query = array(
+            'from' => (int)$offset,
+            'query' => array(
+                'query_string' => array(
+                    'query' => $terms
+                )
+            ),
+            'fields' => array(
+                'id',
+                'group_id',
+                'artifact_id',
+                'changeset_id'
+            )
+        );
+        //$this->filterWithGivenFacets($query, $facets);
+        //$this->filterQueryWithPermissions($query, $user);
+        return $query;
     }
 
     /**

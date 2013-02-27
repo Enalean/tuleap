@@ -51,6 +51,8 @@ class AgileDashboardPlugin extends Plugin {
             $this->_addHook(TRACKER_EVENT_REDIRECT_AFTER_ARTIFACT_CREATION_OR_UPDATE, 'tracker_event_redirect_after_artifact_creation_or_update', false);
             $this->_addHook(TRACKER_EVENT_ARTIFACT_PARENTS_SELECTOR, 'event_artifact_parents_selector', false);
 
+            $this->_addHook(Event::SYSTRAY);
+
             if (defined('CARDWALL_BASE_DIR')) {
                 $this->_addHook(CARDWALL_EVENT_GET_SWIMLINE_TRACKER, 'cardwall_event_get_swimline_tracker', false);
             }
@@ -189,7 +191,12 @@ class AgileDashboardPlugin extends Plugin {
     }
 
     public function process(Codendi_Request $request) {
-        $router = new AgileDashboardRouter($this, $this->getMilestoneFactory(), $this->getPlanningFactory(), $this->getHierarchyFactory(), $this->getThemePath());
+        $router = new AgileDashboardRouter(
+            $this,
+            $this->getMilestoneFactory(),
+            $this->getPlanningFactory(),
+            $this->getHierarchyFactory()
+        );
         $router->route($request);
     }
 
@@ -244,6 +251,16 @@ class AgileDashboardPlugin extends Plugin {
             return $field->getComputedValue($user, $artifact);
         }
         return 0;
+    }
+
+    /**
+     * @see Event::SYSTRAY
+     */
+    public function systray($params) {
+        $params['action'] = 'generate_systray_data';
+        $request = new Codendi_Request($params);
+
+        $this->process($request);
     }
 }
 

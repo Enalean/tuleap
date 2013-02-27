@@ -62,15 +62,15 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
     private function insertDefautValuesForInt($tv3_id, $tv5_id) {
         $sql = "REPLACE INTO tracker_field_int (field_id, default_value, maxchars, size)
                 SELECT f.id, 
-                    old.default_value,
-                    CAST(SUBSTRING_INDEX(display_size, '/', -1) AS SIGNED INTEGER) AS maxchars, 
-                    CAST(SUBSTRING_INDEX(display_size, '/', 1) AS SIGNED INTEGER) AS size
+                       IF (old.default_value = '',  NULL, old.default_value),
+                       IF (display_size LIKE '%/%', CAST(SUBSTRING_INDEX(display_size, '/', -1) AS SIGNED INTEGER), 0),
+                       IF (display_size LIKE '%/%', CAST(SUBSTRING_INDEX(display_size, '/', 1) AS SIGNED INTEGER), 5)
                 FROM tracker_field AS f
                     INNER JOIN artifact_field AS old ON (
                         f.old_id = old.field_id AND 
-                        f.tracker_id = $tv5_id AND old.group_artifact_id = $tv3_id AND 
-                        f.formElement_type = 'int' AND 
-                        display_size LIKE '%/%'
+                        f.tracker_id = $tv5_id AND
+                        old.group_artifact_id = $tv3_id AND
+                        f.formElement_type = 'int'
                     )";
         $this->update($sql);
     }
@@ -78,15 +78,14 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
     private function insertDefautValuesForFloat($tv3_id, $tv5_id) {
         $sql = "REPLACE INTO tracker_field_float (field_id, default_value, maxchars, size)
                 SELECT f.id, 
-                       old.default_value,
-                       CAST(SUBSTRING_INDEX(display_size, '/', -1) AS SIGNED INTEGER) AS maxchars, 
-                       CAST(SUBSTRING_INDEX(display_size, '/', 1) AS SIGNED INTEGER) AS size
+                       IF (old.default_value = '', NULL, old.default_value),
+                       IF (display_size LIKE '%/%', CAST(SUBSTRING_INDEX(display_size, '/', -1) AS SIGNED INTEGER), 0),
+                       IF (display_size LIKE '%/%', CAST(SUBSTRING_INDEX(display_size, '/', 1) AS SIGNED INTEGER), 5)
                 FROM tracker_field AS f
                     INNER JOIN artifact_field AS old ON (
                         f.old_id = old.field_id AND 
                         f.tracker_id = $tv5_id AND old.group_artifact_id = $tv3_id AND 
-                        f.formElement_type = 'float' AND 
-                        display_size LIKE '%/%'
+                        f.formElement_type = 'float'
                     )";
         $this->update($sql);
     }
@@ -95,14 +94,13 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $sql = "REPLACE INTO tracker_field_text (field_id, default_value, rows, cols)
                 SELECT f.id, 
                        old.default_value,
-                       CAST(SUBSTRING_INDEX(display_size, '/', -1) AS SIGNED INTEGER) AS rows, 
-                       CAST(SUBSTRING_INDEX(display_size, '/', 1) AS SIGNED INTEGER) AS cols
+                       IF (display_size LIKE '%/%', CAST(SUBSTRING_INDEX(display_size, '/', -1) AS SIGNED INTEGER), 10),
+                       IF (display_size LIKE '%/%', CAST(SUBSTRING_INDEX(display_size, '/', 1) AS SIGNED INTEGER), 50)
                 FROM tracker_field AS f
                     INNER JOIN artifact_field AS old ON (
                         f.old_id = old.field_id
                         AND f.tracker_id = $tv5_id AND old.group_artifact_id = $tv3_id
-                        AND f.formElement_type = 'text'
-                        AND display_size LIKE '%/%')";
+                        AND f.formElement_type = 'text')";
         $this->update($sql);
     }
     
@@ -110,14 +108,13 @@ class Tracker_Migration_V3_FieldsDefaultValuesDao extends DataAccessObject {
         $sql = "REPLACE INTO tracker_field_string (field_id, default_value, maxchars, size)
                 SELECT f.id, 
                        old.default_value,
-                       CAST(SUBSTRING_INDEX(display_size, '/', -1) AS SIGNED INTEGER) AS maxchars, 
-                       CAST(SUBSTRING_INDEX(display_size, '/', 1) AS SIGNED INTEGER) AS size
+                       IF (display_size LIKE '%/%', CAST(SUBSTRING_INDEX(display_size, '/', -1) AS SIGNED INTEGER), 0),
+                       IF (display_size LIKE '%/%', CAST(SUBSTRING_INDEX(display_size, '/', 1) AS SIGNED INTEGER), 30)
                 FROM tracker_field AS f
                     INNER JOIN artifact_field AS old ON (
                         f.old_id = old.field_id AND 
                         f.tracker_id = $tv5_id AND old.group_artifact_id = $tv3_id AND 
-                        f.formElement_type = 'string' AND 
-                        display_size LIKE '%/%'
+                        f.formElement_type = 'string'
                     )";
         $this->update($sql);
     }

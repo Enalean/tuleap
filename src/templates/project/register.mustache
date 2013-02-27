@@ -1,0 +1,169 @@
+{{!
+ /**
+  * Copyright (c) Enalean, 2013. All rights reserved
+  *
+  * This file is a part of Tuleap.
+  *
+  * Tuleap is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License as published by
+  * the Free Software Foundation; either version 2 of the License, or
+  * (at your option) any later version.
+  *
+  * Tuleap is distributed in the hope that it will be useful,
+  * but WITHOUT ANY WARRANTY; without even the implied warranty of
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+  * GNU General Public License for more details.
+  *
+  * You should have received a copy of the GNU General Public License
+  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
+  */
+}}
+<div class="one_step_project container">
+    <form class="one_step_project" action="" method="POST">
+        <input type="hidden" name="onestep" value="true" />
+
+        <h1 class="one_step_project">{{getTitle}}</h1>
+
+        <p class="one_step_project">{{getPageDescriptionBeg}} {{getSysName}} {{getPageDescriptionEnd}}</p>
+        
+        {{#isProjectApprovalEnabled}}
+            <p><span class="label label-warning">{{getWarning}}</span> {{getWarningMessage}}</p>
+        {{/isProjectApprovalEnabled}}
+
+        <h2>{{getDescriptionContainerTitle}}</h2>
+        <table>
+            <div class="control-group">
+                <label class="control-label">{{getDescriptionContainerFullName}} <span class="mandatory_field">*</span></label>
+                <div class="controls">
+                    <input size="40"
+                           type="text"
+                           name="{{full_name_label}}"
+                           value="{{getFullName}}"
+                           required
+                           autofocus/>
+                    <div class="help">{{getDescriptionContainerFullNameHelp}}</div>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">{{getDescriptionContainerShortName}} <span class="mandatory_field">*</span></label>
+                <div class="controls">
+                    <input type="text"
+                           maxlength="30"
+                           size="15"
+                           name="{{unix_name_label}}"
+                           value="{{getUnixName}}"
+                           required/>
+                    <div class="help">{{getDescriptionContainerShortNameHelp}}</div>
+                    <span class="label label-info">Info</span> {{getDescriptionContainerShortNameLabel}}
+                    </span>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">{{getDescriptionContainerShortDescription}} <span class="mandatory_field">*</span></label>
+                <div class="controls">
+                    <textarea
+                        name="{{short_description_label}}"
+                        wrap="virtual"
+                        cols="40"
+                        rows="3"
+                        required>{{getShortDescription}}</textarea>
+                        <div class="help">{{getDescriptionContainerShortDescriptionHelp}}</div>
+                </div>
+            </div>
+            {{#getProjectDescriptionFields}}
+            <div class="control-group">
+                <label class="control-label">{{getName}} <span class="mandatory_field">*</span></label>
+                <div class="controls">
+                    {{#isText}}<textarea name="{{getFormName}}" wrap="virtual" cols="40" rows="3" required="required">{{getValue}}</textarea>{{/isText}}
+                    {{^isText}}<input name="{{getFormName}}" size="40" maxlen="70" type="text" value="{{getValue}}" required="required" />{{/isText}}
+                    <div class="help">{{{getDescription}}}</div>
+                </div>
+            </div>
+            {{/getProjectDescriptionFields}}
+            <div class="control-group">
+                <label class="control-label">{{getDescriptionContainerProjectPrivacy}}</label>
+                <div class="controls">
+                    <label>
+                    <input type="radio"
+                           name="{{is_public_label}}"
+                           value="1"
+                           {{#isPublic}}checked="checked"{{/isPublic}}
+                        />
+                    {{getDescriptionContainerPublicLabel}}
+                    </label>
+                    <br>
+                    <label>
+                    <input type="radio"
+                           name="{{is_public_label}}"
+                           value="0"
+                           {{^isPublic}}checked="checked"{{/isPublic}}
+                        />
+                    {{getDescriptionContainerPrivateLabel}}
+                    </label>
+                </div>
+            </div><div class="control-group">
+                <label class="control-label">{{getDescriptionContainerProjectLicense}}</label>
+                <div class="controls">
+                    <select name="{{license_type_label}}">
+                        {{#getAvailableLicenses}}
+                            <option value="{{license_type}}" {{#isSelected}}selected="selected"{{/isSelected}}>{{license_description}}</option>
+                        {{/getAvailableLicenses}}
+                    </select>
+                    <div class="custom_license_block">
+                        <textarea name="{{custom_license_label}}"
+                            wrap=virtual
+                            cols=60
+                            rows=10>{{getCustomLicense}}</textarea>
+                        <div class="help">{{getDescriptionContainerProjectLicenseHelp}}</div>
+                    </div>
+                </div>
+            </div>
+        </table>
+
+        {{#hasMoreThanOneAvailableTemplate}}
+            <h2>{{getChooseTemplateContainerTitle}}</h2>
+
+            <p>{{getChooseTemplateContainerDescriptionPartOne}}</p>
+
+            <p>{{getChooseTemplateContainerDescriptionPartTwo}}</p>
+
+            <div class="control-group">
+                <div class="controls">
+                    <h3 class="one_step_project">{{getDefaultTemplatesTitle}}</h3>
+                    <div class="one_step_project_templates">
+                       {{#getDefaultTemplates}}
+                           {{> register-templates }}
+                       {{/getDefaultTemplates}}
+                    </div>
+                    {{#hasUserTemplates}}
+                        <h3 class="one_step_project">{{getAdminProjectsTitle}}</h3>
+                        <div class="one_step_project_templates">
+                           {{#getUserTemplates}}
+                              {{> register-templates }}
+                           {{/getUserTemplates}}
+                        </div>
+                    {{/hasUserTemplates}}
+                </div>
+            </div>
+        {{/hasMoreThanOneAvailableTemplate}}
+
+        <h2>That's it !</h2>
+        <p>{{getAboutToCreateLabel}}</p>
+        <p>{{getAboutToCreateOptionalLabel}}</p>
+        <div class="control-group">
+            <div class="controls">
+                <label class="checkbox">
+                    <input type="checkbox" name="{{term_of_service_approval_label}}" value="approved" required />
+                    {{getAgreeTOSLabel}}
+                    <a href="/tos/tos.php">{{getTOSLabel}}</a>
+                </label>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <div class="controls">
+                <input type="submit" value="{{getCreateProjectButtonLabel}}" name="create_project" class="btn btn-primary"/>
+            </div>
+        </div>
+    </form>
+</div>

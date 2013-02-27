@@ -1,3 +1,12 @@
+Version 3.25 - Tuleap 5.11
+    * Improve user experience with user group management (contrib STMicroelectronics)
+
+Version 3.24 - Tuleap 5.11
+    * Forbid login when user as an LDAP id but LDAP authentication failed
+
+Version 3.23 - Tuleap 5.11
+    * Development: add new hook to provide LDAP uid to other component of the application
+
 Version 3.22 - Tuleap 5.7
     * Fix art #1679: Not redirected to Personal Page after log in from Tuleap Home page
 

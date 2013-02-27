@@ -25,13 +25,29 @@ define('AGILEDASHBOARD_BASE_DIR', dirname(__FILE__));
  * Get the additional panes to display next to a milestone in the agiledashboard
  *
  * Parameters:
- * 'milestone' => The current Planning_Milestone
- * 'user'      => The current user
+ * 'milestone'         => The current Planning_Milestone
+ * 'user'              => The current user
+ * 'request'           => The current HTTP request
+ * 'milestone_factory' => Planning_MilestoneFactory
  *
  * Expected results
- * 'panes'     => Input/Output parameter, array of type AgileDashboard_Pane
+ * 'panes'       => Input/Output parameter, array of type AgileDashboard_PaneInfo
+ * 'active_pane' => Input/Output parameter, the current active pane (type AgileDashboard_Pane)
  */
 define('AGILEDASHBOARD_EVENT_ADDITIONAL_PANES_ON_MILESTONE', 'agiledashboard_event_additional_panes_on_milestone');
+
+/**
+ * Get the pane to display on agile dashboard index page
+ *
+ * Parameters:
+ * 'milestone'         => The current Planning_Milestone
+ * 'user'              => The current user
+ * 'milestone_factory' => Planning_MilestoneFactory
+ *
+ * Expected results
+ * 'pane'        => Input/Output parameter, and AgileDashboard_Pane
+ */
+define('AGILEDASHBOARD_EVENT_INDEX_PAGE', 'agiledashboard_event_index_page');
 
 /**
  * Modify the redirect parameters when attempt to display a planning without specific Milestone selected

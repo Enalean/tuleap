@@ -565,14 +565,15 @@ class Git extends PluginController {
             }
         }
         $to_project_id   = $request->get('to_project');
-        $forkPermissions = $request->get('repo_access');
         if ($user->isMember($to_project_id, 'A')) {
-            $to_project    = $this->projectManager->getProject($to_project_id);
-            $repos_ids     = explode(',', $request->get('repos'));
-            $repos         = $this->getRepositoriesFromIds($repos_ids);
-            $namespace     = '';
-            $scope         = GitRepository::REPO_SCOPE_PROJECT;
-            $redirect_url  = '/plugins/git/?group_id='. (int)$to_project_id;
+            $to_project      = $this->projectManager->getProject($to_project_id);
+            $repos_ids       = explode(',', $request->get('repos'));
+            $repos           = $this->getRepositoriesFromIds($repos_ids);
+            $namespace       = '';
+            $scope           = GitRepository::REPO_SCOPE_PROJECT;
+            $redirect_url    = '/plugins/git/?group_id='. (int)$to_project_id;
+            $forkPermissions = $this->getForkPermissionsFromRequest($request);
+
             $this->addAction('fork', array($repos, $to_project, $namespace, $scope, $user, $GLOBALS['HTML'], $redirect_url, $forkPermissions));
         } else {
             $this->addError($this->getText('must_be_admin_to_create_project_repo'));
@@ -598,7 +599,7 @@ class Git extends PluginController {
             $path = trim($request->get('path'));
         }
         $path = userRepoPath($user->getUserName(), $path);
-        $forkPermissions = $request->get('repo_access');
+        $forkPermissions = $this->getForkPermissionsFromRequest($request);
 
         $valid = new Valid_String('repos');
         $valid->required();
@@ -610,7 +611,22 @@ class Git extends PluginController {
         $this->addAction('fork', array($repos, $to_project, $path, $scope, $user, $GLOBALS['HTML'], $redirect_url, $forkPermissions));
         
     }
-    
+
+    /**
+     * @return array
+     */
+    private function getForkPermissionsFromRequest(Codendi_Request $request) {
+        $fork_permissions = $request->get('repo_access');
+        if ($fork_permissions) {
+            return $fork_permissions;
+        }
+        // when we fork a gerrit repository, the repo rights cannot
+        // be updated by the user on the intermediate screen and the
+        // repo_access is false. Forcing it to empty array to avoid
+        // fatal errors
+        return array();
+    }
+
     private function getRepositoriesFromIds(array $repoIds) {
         $repos = array();
         foreach ($repoIds as $id) {
