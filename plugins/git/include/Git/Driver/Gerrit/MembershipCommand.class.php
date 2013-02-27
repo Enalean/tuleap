@@ -19,12 +19,12 @@
  */
 
 abstract class Git_Driver_Gerrit_MembershipCommand {
-    private   $permissions_manager;
+    private   $user_finder;
     protected $driver;
 
-    public function __construct(Git_Driver_Gerrit $driver, PermissionsManager $permissions_manager) {
-        $this->driver              = $driver;
-        $this->permissions_manager = $permissions_manager;
+    public function __construct(Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder) {
+        $this->driver      = $driver;
+        $this->user_finder = $user_finder;
     }
 
     protected abstract function propagateToGerrit(Git_RemoteServer_GerritServer $server, User $user, $group_full_name);
@@ -42,11 +42,11 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
     protected function getConcernedGerritGroups(User $user, Project $project, GitRepository $repository) {
         $groups_full_names = array();
 
-        foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $group_name => $permission) {
-            $groups_with_permission = $this->getUgroupsWithPermission($repository, $permission);
+        foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $gerrit_role_name => $tuleap_permission_type) {
+            $groups_with_permission = $this->user_finder->getUgroups($repository->getId(), $tuleap_permission_type);
             if (count($groups_with_permission) > 0) {
                 if ($this->isUserConcernedByPermission($user, $project, $groups_with_permission)) {
-                    $groups_full_names[] = $this->getGerritGroupName($project, $repository, $group_name);
+                    $groups_full_names[] = $this->getGerritGroupName($project, $repository, $gerrit_role_name);
                 }
             }
         }
@@ -61,20 +61,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
                 return true;
             }
         }
-
         return false;
-
-    }
-
-    private function getUgroupsWithPermission(GitRepository $repository, $permission) {
-        $dar_ugroups = $this->permissions_manager->getAuthorizedUgroups($repository->getId(), $permission);
-        $ugroups     = array();
-
-        foreach ($dar_ugroups as $row) {
-            $ugroups[]     = $row['ugroup_id'];
-        }
-
-        return $ugroups;
     }
 
     private function getGerritGroupName(Project $project, GitRepository $repo, $group_name) {

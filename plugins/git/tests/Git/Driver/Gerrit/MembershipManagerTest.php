@@ -31,7 +31,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     protected $driver;
     protected $git_repository_factory;
     protected $git_repository_factory_without_gerrit;
-    protected $permissions_manager;
+    protected $user_finder;
     protected $user;
     protected $project;
     protected $u_group;
@@ -42,7 +42,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     public function setUp() {
         $this->user                                  = mock('User');
         $this->driver                                = mock('Git_Driver_Gerrit');
-        $this->permissions_manager                   = mock('PermissionsManager');
+        $this->user_finder                           = mock('Git_Driver_Gerrit_UserFinder');
         $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
         $this->remote_server                         = mock ('Git_RemoteServer_GerritServer');
         $this->project                               = mock('Project');
@@ -50,8 +50,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
         $this->git_repository_factory                = mock('GitRepositoryFactory');
         $this->git_repository                        = mock('GitRepository');
-        $this->membership_command_add                = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver, $this->permissions_manager);
-        $this->membership_command_remove             = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver, $this->permissions_manager);
+        $this->membership_command_add                = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver, $this->user_finder);
+        $this->membership_command_remove             = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver, $this->user_finder);
 
         $this->git_repository_id    = 20;
 
@@ -75,10 +75,10 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
     public function setUp() {
         parent::setUp();
 
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_READ)->returnsDar(array('ugroup_id' => $this->u_group));
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WRITE)->returnsDar(array('ugroup_id' => $this->u_group));
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WPLUS)->returnsDar(array('ugroup_id' => $this->u_group));
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returnsEmptyDar();
+        stub($this->user_finder)->getUgroups($this->git_repository_id, Git::PERM_READ)->returns(array($this->u_group));
+        stub($this->user_finder)->getUgroups($this->git_repository_id, Git::PERM_WRITE)->returns(array($this->u_group));
+        stub($this->user_finder)->getUgroups($this->git_repository_id, Git::PERM_WPLUS)->returns(array($this->u_group));
+        stub($this->user_finder)->getUgroups($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returns(array());
     }
 
     public function itDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit() {
@@ -140,10 +140,10 @@ class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_
     public function setUp() {
         parent::setUp();
 
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_READ)->returnsDar(array('ugroup_id' => $this->u_group_id_120), array('ugroup_id' => $this->u_group));
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WRITE)->returnsDar(array('ugroup_id' => $this->u_group_id_120));
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WPLUS)->returnsEmptyDar();
-        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returnsEmptyDar();
+        stub($this->user_finder)->getUgroups($this->git_repository_id, Git::PERM_READ)->returns(array($this->u_group_id_120, $this->u_group));
+        stub($this->user_finder)->getUgroups($this->git_repository_id, Git::PERM_WRITE)->returns(array($this->u_group_id_120));
+        stub($this->user_finder)->getUgroups($this->git_repository_id, Git::PERM_WPLUS)->returns(array());
+        stub($this->user_finder)->getUgroups($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returns(array());
 
         stub($this->git_repository)->isMigratedToGerrit()->returns(true);
     }

@@ -69,7 +69,15 @@ class Git_Driver_Gerrit_UserFinder {
         }
     }
 
-    private function getUgroups($repository_id, $permission_type) {
+    /**
+     * Return the list of UGroupIds according to Git permissions that can be managed by Gerrit
+     *
+     * @param Integer $repository_id
+     * @param String  $permission_type
+     *
+     * @return array
+     */
+    public function getUgroups($repository_id, $permission_type) {
         if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
             return array(UGroup::PROJECT_ADMIN);
         }

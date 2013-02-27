@@ -82,6 +82,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_ugroup_add_user',                   'add_user_to_ugroup',                           false);
         $this->_addHook('project_admin_remove_user',                       'remove_user_from_ugroup',                      false);
         $this->_addHook('project_admin_ugroup_remove_user',                'remove_user_from_ugroup',                      false);
+        $this->_addHook('project_admin_change_user_permissions');
     }
 
     public function site_admin_option_hook() {
@@ -586,13 +587,20 @@ class GitPlugin extends Plugin {
         }
     }
 
+    public function project_admin_change_user_permissions($params) {
+        if ($params['user_permissions']['admin_flags'] == 'A') {
+            $this->add_user_to_ugroup($params);
+        } else {
+            $this->remove_user_from_ugroup($params);
+        }
+    }
 
     public function add_user_to_ugroup($params) {
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/AddUser.class.php';
 
         $command = new Git_Driver_Gerrit_MembershipCommand_AddUser(
             $this->getGerritDriver(),
-            PermissionsManager::instance()
+            $this->getGerritUserFinder()
         );
 
         $this->updateUserMembership($command, $params);
@@ -603,7 +611,7 @@ class GitPlugin extends Plugin {
 
         $command = new Git_Driver_Gerrit_MembershipCommand_RemoveUser(
             $this->getGerritDriver(),
-            PermissionsManager::instance()
+            $this->getGerritUserFinder()
         );
 
         $this->updateUserMembership($command, $params);
@@ -648,11 +656,13 @@ class GitPlugin extends Plugin {
     }
 
     private function getProjectCreator() {
-        require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/UserFinder.class.php';
-        $user_finder = new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
-        //$dir, Git_Driver_Gerrit $driver, Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit_UserFinder $user_finder
         $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
-        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $user_finder);
+        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $this->getGerritUserFinder());
+    }
+
+    private function getGerritUserFinder() {
+        require_once GIT_BASE_DIR. '/Git/Driver/Gerrit/UserFinder.class.php';
+        return new Git_Driver_Gerrit_UserFinder(PermissionsManager::instance(), new UGroupManager());
     }
 }
 
