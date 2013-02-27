@@ -78,10 +78,10 @@ class GitPlugin extends Plugin {
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
 
-        $this->_addHook('project_admin_add_user', 'project_admin_ugroup_add_user');
-        $this->_addHook('project_admin_ugroup_add_user');
-        $this->_addHook('project_admin_remove_user', 'project_admin_ugroup_remove_user');
-        $this->_addHook('project_admin_ugroup_remove_user');
+        $this->_addHook('project_admin_add_user',                          'add_user_to_ugroup',                           false);
+        $this->_addHook('project_admin_ugroup_add_user',                   'add_user_to_ugroup',                           false);
+        $this->_addHook('project_admin_remove_user',                       'remove_user_from_ugroup',                      false);
+        $this->_addHook('project_admin_ugroup_remove_user',                'remove_user_from_ugroup',                      false);
     }
 
     public function site_admin_option_hook() {
@@ -587,7 +587,7 @@ class GitPlugin extends Plugin {
     }
 
 
-    public function project_admin_ugroup_add_user($params) {
+    public function add_user_to_ugroup($params) {
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/AddUser.class.php';
 
         $command = new Git_Driver_Gerrit_MembershipCommand_AddUser(
@@ -598,7 +598,7 @@ class GitPlugin extends Plugin {
         $this->updateUserMembership($command, $params);
     }
 
-    public function project_admin_ugroup_remove_user($params) {
+    public function remove_user_from_ugroup($params) {
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/RemoveUser.class.php';
 
         $command = new Git_Driver_Gerrit_MembershipCommand_RemoveUser(
