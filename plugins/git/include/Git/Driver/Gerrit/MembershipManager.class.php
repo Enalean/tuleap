@@ -41,9 +41,11 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     public function updateUserMembership(User $user, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
-        $repositories = $this->getMigratedRepositoriesOfAProject($project);
-        foreach ($repositories as $repository) {
-            $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repository, $command);
+        if ($user->getLdapId()) {
+            $repositories = $this->getMigratedRepositoriesOfAProject($project);
+            foreach ($repositories as $repository) {
+                $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repository, $command);
+            }
         }
     }
 

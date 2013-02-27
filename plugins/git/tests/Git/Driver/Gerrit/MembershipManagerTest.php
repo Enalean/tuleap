@@ -40,7 +40,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     protected $membership_command_remove;
 
     public function setUp() {
-        $this->user                                  = mock('User');
+        $this->user                                  = stub('User')->getLdapId()->returns('whatever');
         $this->driver                                = mock('Git_Driver_Gerrit');
         $this->user_finder                           = mock('Git_Driver_Gerrit_UserFinder');
         $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
@@ -130,7 +130,17 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
 
         $this->membership_manager->updateUserMembership($this->user, $this->project, $this->membership_command_remove);
+    }
 
+    public function itDoesntAddNonLDAPUsersToGerrit() {
+        stub($this->git_repository)->isMigratedToGerrit()->returns(true);
+
+        $non_ldap_user = mock('User');
+        stub($non_ldap_user)->getUgroups()->returns(array($this->u_group));
+
+        expect($this->driver)->addUserToGroup()->never();
+
+        $this->membership_manager->updateUserMembership($non_ldap_user, $this->project, $this->membership_command_add);
     }
 }
 

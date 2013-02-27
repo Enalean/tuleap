@@ -115,7 +115,14 @@ class Git_Driver_Gerrit {
         return escapeshellarg(escapeshellarg($user_identifier));
     }
 
+    public function setAccount(Git_RemoteServer_GerritServer $server, User $user) {
+        $query = self::COMMAND .' set-account '. $user->getLdapId();
+        $this->ssh->execute($server, $query);
+    }
+
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
+        $this->setAccount($server, $user);
+
         $gerrit_user_id  = $this->getGerritUserId($server, $user);
         $gerrit_group_id = $this->getGerritGroupId($server, $group_name);
 
