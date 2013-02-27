@@ -76,10 +76,10 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
     public function setUp() {
         parent::setUp();
 
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->git_repository_id, Git::PERM_READ)->returnsDar(array('ugroup_id' => $this->u_group));
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->git_repository_id, Git::PERM_WRITE)->returnsDar(array('ugroup_id' => $this->u_group));
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->git_repository_id, Git::PERM_WPLUS)->returnsDar(array('ugroup_id' => $this->u_group));
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returnsEmptyDar();
+        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_READ)->returnsDar(array('ugroup_id' => $this->u_group));
+        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WRITE)->returnsDar(array('ugroup_id' => $this->u_group));
+        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WPLUS)->returnsDar(array('ugroup_id' => $this->u_group));
+        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returnsEmptyDar();
     }
 
     public function itDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit() {
@@ -145,10 +145,10 @@ class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_
 
         stub($this->user)->getUgroups()->returns(array(120));
 
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->git_repository_id, Git::PERM_READ)->returnsDar(array('ugroup_id' => $this->u_group_id_120), array('ugroup_id' => $this->u_group));
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->git_repository_id, Git::PERM_WRITE)->returnsDar(array('ugroup_id' => $this->u_group_id_120));
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->git_repository_id, Git::PERM_WPLUS)->returnsEmptyDar();
-        stub($this->permissions_manager)->getUgroupIdByObjectIdAndPermissionType($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returnsEmptyDar();
+        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_READ)->returnsDar(array('ugroup_id' => $this->u_group_id_120), array('ugroup_id' => $this->u_group));
+        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WRITE)->returnsDar(array('ugroup_id' => $this->u_group_id_120));
+        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WPLUS)->returnsEmptyDar();
+        stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returnsEmptyDar();
 
         stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_READ, array($this->u_group_id_120))->returns(true);
 

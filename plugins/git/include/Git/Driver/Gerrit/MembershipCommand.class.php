@@ -67,7 +67,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
     }
 
     private function getUgroupsWithPermission(GitRepository $repository, $permission) {
-        $dar_ugroups = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($repository->getId(), $permission);
+        $dar_ugroups = $this->permissions_manager->getAuthorizedUgroups($repository->getId(), $permission);
         $ugroups     = array();
 
         foreach ($dar_ugroups as $row) {
