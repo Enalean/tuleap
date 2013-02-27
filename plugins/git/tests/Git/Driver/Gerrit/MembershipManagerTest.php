@@ -65,7 +65,6 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory,
-            $this->driver,
             $this->remote_server_factory
         );
     }
@@ -85,7 +84,6 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
     public function itDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit() {
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory_without_gerrit,
-            $this->driver,
             $this->remote_server_factory
         );
 

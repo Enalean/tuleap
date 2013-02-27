@@ -586,42 +586,43 @@ class GitPlugin extends Plugin {
         }
     }
 
-    private function getGerritMembershipManager() {
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
-        $repository_factory     = $this->getRepositoryFactory();
-        $server_factory         = $this->getGerritServerFactory();
-        return new Git_Driver_Gerrit_MembershipManager($repository_factory, $driver, $server_factory);
-    }
 
     public function project_admin_ugroup_add_user($params) {
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/AddUser.class.php';
 
-        $user_manager           = UserManager::instance();
-        $user                   = $user_manager->getUserById($params['user_id']);
-        $project_manager        = ProjectManager::instance();
-        $project                = $project_manager->getProject($params['group_id']);
-        $driver                 = $this->getGerritDriver();
-        $permissions_manager    = PermissionsManager::instance();
-        $membership_manager     = $this->getGerritMembershipManager();
-        $command                = new Git_Driver_Gerrit_MembershipCommand_AddUser($driver, $permissions_manager);
+        $command = new Git_Driver_Gerrit_MembershipCommand_AddUser(
+            $this->getGerritDriver(),
+            PermissionsManager::instance()
+        );
 
-        $membership_manager->updateUserMembership($user, $project, $command);
+        $this->updateUserMembership($command, $params);
     }
 
     public function project_admin_ugroup_remove_user($params) {
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/RemoveUser.class.php';
 
-        $user_manager           = UserManager::instance();
-        $user                   = $user_manager->getUserById($params['user_id']);
-        $project_manager        = ProjectManager::instance();
-        $project                = $project_manager->getProject($params['group_id']);
-        $driver                 = $this->getGerritDriver();
-        $permissions_manager    = PermissionsManager::instance();
-        $membership_manager     = $this->getGerritMembershipManager();
-        $command                = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($driver, $permissions_manager);
+        $command = new Git_Driver_Gerrit_MembershipCommand_RemoveUser(
+            $this->getGerritDriver(),
+            PermissionsManager::instance()
+        );
 
-        $membership_manager->updateUserMembership($user, $project, $command);
+        $this->updateUserMembership($command, $params);
     }
+
+    private function updateUserMembership(Git_Driver_Gerrit_MembershipCommand $command, $params) {
+        $user    = UserManager::instance()->getUserById($params['user_id']);
+        $project = ProjectManager::instance()->getProject($params['group_id']);
+
+        $this->getGerritMembershipManager()->updateUserMembership($user, $project, $command);
+    }
+
+    private function getGerritMembershipManager() {
+        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
+        $repository_factory = $this->getRepositoryFactory();
+        $server_factory     = $this->getGerritServerFactory();
+        return new Git_Driver_Gerrit_MembershipManager($repository_factory, $server_factory);
+    }
+
 
     /**
      * List plugin's widgets in customize menu

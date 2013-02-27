@@ -31,15 +31,12 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private $git_repository_factory;
     private $gerrit_server_factory;
-    private $gerrit_driver;
 
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
-        Git_Driver_Gerrit $gerrit_driver,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory
     ) {
         $this->git_repository_factory = $git_repository_factory;
-        $this->gerrit_driver          = $gerrit_driver;
         $this->gerrit_server_factory  = $gerrit_server_factory;
     }
 
