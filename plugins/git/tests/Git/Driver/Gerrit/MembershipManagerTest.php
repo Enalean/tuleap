@@ -135,28 +135,25 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
 }
 
 class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
-    private $u_group_id_120;
+    private $u_group_id_120 = 120;
 
     public function setUp() {
         parent::setUp();
-        $this->u_group_id_120 = 120;
-
-        stub($this->user)->getUgroups()->returns(array(120));
 
         stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_READ)->returnsDar(array('ugroup_id' => $this->u_group_id_120), array('ugroup_id' => $this->u_group));
         stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WRITE)->returnsDar(array('ugroup_id' => $this->u_group_id_120));
         stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::PERM_WPLUS)->returnsEmptyDar();
         stub($this->permissions_manager)->getAuthorizedUgroups($this->git_repository_id, Git::SPECIAL_PERM_ADMIN)->returnsEmptyDar();
 
-        stub($this->permissions_manager)->userHasPermission($this->git_repository_id, Git::PERM_READ, array($this->u_group_id_120))->returns(true);
-
         stub($this->git_repository)->isMigratedToGerrit()->returns(true);
     }
 
     public function itDoesntRemoveUserIfTheyBelongToAtLeastOneGroupThatHaveAccess() {
-
+        // User was removed from ugroup 115 but is still member of ugroup 120
+        stub($this->user)->getUgroups()->returns(array($this->u_group_id_120));
         expect($this->driver)->removeUserFromGroup()->never();
         $this->membership_manager->updateUserMembership($this->user, $this->project, $this->membership_command_remove);
     }
+
 }
 ?>
