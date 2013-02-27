@@ -38,7 +38,6 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     protected $git_repository;
     protected $membership_command_add;
     protected $membership_command_remove;
-    protected $ugroup_manager;
 
     public function setUp() {
         $this->user                                  = mock('User');
@@ -51,10 +50,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
         $this->git_repository_factory                = mock('GitRepositoryFactory');
         $this->git_repository                        = mock('GitRepository');
-        $this->membership_command_add                = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver);
-        $this->membership_command_remove             = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver);
-
-        $this->ugroup_manager                        = mock('UGroupManager');
+        $this->membership_command_add                = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver, $this->permissions_manager);
+        $this->membership_command_remove             = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver, $this->permissions_manager);
 
         $this->git_repository_id    = 20;
 
@@ -69,9 +66,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory,
             $this->driver,
-            $this->permissions_manager,
-            $this->remote_server_factory,
-            $this->ugroup_manager
+            $this->remote_server_factory
         );
     }
 }
@@ -91,20 +86,18 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory_without_gerrit,
             $this->driver,
-            $this->permissions_manager,
-            $this->remote_server_factory,
-            $this->ugroup_manager
+            $this->remote_server_factory
         );
 
         expect($this->driver)->addUserToGroup()->never();
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
+        $this->membership_manager->updateUserMembership($this->user, $this->project, $this->membership_command_add);
     }
 
     public function itAsksForAllTheRepositoriesOfAProject() {
         expect($this->git_repository_factory)->getAllRepositories($this->project)->once();
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
+        $this->membership_manager->updateUserMembership($this->user, $this->project, $this->membership_command_add);
     }
 
     public function itAsksTheGerritDriverToAddAUserToThreeGroups() {
@@ -121,7 +114,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
         expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
+        $this->membership_manager->updateUserMembership($this->user, $this->project, $this->membership_command_add);
     }
 
     public function itAsksTheGerritDriverToRemoveAUserFromThreeGroups() {
@@ -138,7 +131,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_remove);
+        $this->membership_manager->updateUserMembership($this->user, $this->project, $this->membership_command_remove);
 
     }
 }
@@ -165,7 +158,7 @@ class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_
     public function itDoesntRemoveUserIfTheyBelongToAtLeastOneGroupThatHaveAccess() {
 
         expect($this->driver)->removeUserFromGroup()->never();
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_remove);
+        $this->membership_manager->updateUserMembership($this->user, $this->project, $this->membership_command_remove);
     }
 }
 ?>

@@ -32,24 +32,18 @@ class Git_Driver_Gerrit_MembershipManager {
     private $git_repository_factory;
     private $gerrit_server_factory;
     private $gerrit_driver;
-    private $permissions_manager;
-    private $ugroup_manager;
 
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
         Git_Driver_Gerrit $gerrit_driver,
-        PermissionsManager $permissions_manager,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
-        UGroupManager $ugroup_manager
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
     ) {
         $this->git_repository_factory = $git_repository_factory;
         $this->gerrit_driver          = $gerrit_driver;
-        $this->permissions_manager    = $permissions_manager;
         $this->gerrit_server_factory  = $gerrit_server_factory;
-        $this->ugroup_manager         = $ugroup_manager;
     }
 
-    public function updateUserMembership(User $user, $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
+    public function updateUserMembership(User $user, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
         $repositories = $this->getMigratedRepositoriesOfAProject($project);
         foreach ($repositories as $repository) {
             $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repository, $command);
@@ -58,7 +52,6 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private function updateUserGerritGroupsAccordingToPermissions(User $user, Project $project, GitRepository $repository, Git_Driver_Gerrit_MembershipCommand $command) {
         $remote_server   = $this->gerrit_server_factory->getServer($repository);
-        $command->permissions_manager = $this->permissions_manager;
         $command->process($remote_server, $user, $project, $repository);
         
     }

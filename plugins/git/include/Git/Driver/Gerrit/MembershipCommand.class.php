@@ -19,11 +19,12 @@
  */
 
 abstract class Git_Driver_Gerrit_MembershipCommand {
-    public $permissions_manager;
+    private   $permissions_manager;
     protected $driver;
 
-    public function __construct(Git_Driver_Gerrit $driver) {
-        $this->driver = $driver;
+    public function __construct(Git_Driver_Gerrit $driver, PermissionsManager $permissions_manager) {
+        $this->driver              = $driver;
+        $this->permissions_manager = $permissions_manager;
     }
 
     public abstract function process(Git_RemoteServer_GerritServer $server, User $user, Project $project, GitRepository $repository);
