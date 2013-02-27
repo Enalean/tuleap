@@ -344,8 +344,8 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
     
     public function itReturnsAsManyMilestonesAsThereAreArtifacts() {
-        $artifacts        = array(anArtifact()->build(),
-                                  anArtifact()->build());
+        $artifacts        = array(anArtifact()->withChangesets(array(10,11))->build(),
+                                  anArtifact()->withChangesets(array(12,13))->build());
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns($artifacts);
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
@@ -353,7 +353,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
     
     public function itReturnsMilestones() {
-        $artifact         = anArtifact()->withInTrackerId(3)->build();
+        $artifact         = anArtifact()->withChangesets(array(10,11))->build();
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
@@ -362,7 +362,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
     
     public function itReturnsMilestonesWithPlannedArtifacts() {
-        $artifact         = anArtifact()->build();
+        $artifact         = anArtifact()->withChangesets(array(10,11))->build();
         $tracker_id       = 7777777;
         stub($this->planning_tracker)->getId()->returns($tracker_id);
         $planning         = aPlanning()->withPlanningTracker($this->planning_tracker)->build();
