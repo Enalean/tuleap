@@ -63,13 +63,6 @@ class Git_Driver_Gerrit_MembershipManager {
         
     }
 
-    private function getGerritGroupName(Project $project, GitRepository $repo, $group_name) {
-        $project_name    = $project->getUnixName();
-        $repository_name = $repo->getFullName();
-
-        return "$project_name/$repository_name-$group_name";
-    }
-
     private function getMigratedRepositoriesOfAProject(Project $project) {
         $migrated_repositories = array();
         $repositories          = $this->git_repository_factory->getAllRepositories($project);
@@ -83,42 +76,5 @@ class Git_Driver_Gerrit_MembershipManager {
         return $migrated_repositories;
     }
 
-    private function getConcernedGerritGroups(User $user, Project $project, GitRepository $repository) {
-        $groups_full_names = array();
-
-        foreach (self::$GERRIT_GROUPS as $group_name => $permission) { 
-            $groups_with_permission = $this->getUgroupsWithPermission($repository, $permission);
-            if (count($groups_with_permission) > 0) {
-                if (! $this->isUserInGroups($user, $project, $groups_with_permission)) {
-                    $groups_full_names[] = $this->getGerritGroupName($project, $repository, $group_name);
-                }
-            }
-        }
-
-        return $groups_full_names;
-    }
-
-    private function isUserInGroups($user, $project, $group_list) {
-        $user_groups = $user->getUgroups($project->getID(), null);
-        foreach ($user_groups as $user_group) {
-            if (in_array($user_group, $group_list)) {
-                return true;
-            }
-        }
-
-        return false;
-
-    }
-
-    private function getUgroupsWithPermission(GitRepository $repository, $permission) {
-        $dar_ugroups = $this->permissions_manager->getUgroupIdByObjectIdAndPermissionType($repository->getId(), $permission);
-        $ugroups     = array();
-
-        foreach ($dar_ugroups as $row) {
-            $ugroups[]     = $row['ugroup_id'];
-        }
-        
-        return $ugroups;
-    }
 }
 ?>
