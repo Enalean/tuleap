@@ -165,7 +165,7 @@ class Planning_MilestoneFactory {
      *
      * Only objects that should be visible for the given user are loaded.
      *
-     * @param User $user
+     * @param PFUser $user
      *
      */
     public function updateMilestoneWithPlannedArtifacts(PFUser $user, Planning_Milestone $milestone) {
@@ -178,7 +178,7 @@ class Planning_MilestoneFactory {
     /**
      * Return a MilestonePlan object properly configured
      *
-     * @param User               $user
+     * @param PFUser               $user
      * @param Planning_Milestone $milestone
      *
      * @return Planning_MilestonePlan

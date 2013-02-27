@@ -376,7 +376,7 @@ class Tracker_FormElement_Field_Burndown extends Tracker_FormElement_Field imple
      *
      * @throws Exception
      */
-    private function getLinkedArtifacts(Tracker_Artifact $artifact, User $user) {
+    private function getLinkedArtifacts(Tracker_Artifact $artifact, PFUser $user) {
         $linked_artifacts = $artifact->getLinkedArtifacts($user);
         if (count($linked_artifacts)) {
             return $linked_artifacts;

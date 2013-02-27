@@ -286,7 +286,7 @@ class Tracker_Artifact_Changeset_Comment {
         return $formatted_comment;
     }
 
-    private function fetchFormattedMailUserInfo(User $user) {
+    private function fetchFormattedMailUserInfo(PFUser $user) {
         $hp = Codendi_HTMLPurifier::instance();
 
         if ($user && !$user->isAnonymous()) {
