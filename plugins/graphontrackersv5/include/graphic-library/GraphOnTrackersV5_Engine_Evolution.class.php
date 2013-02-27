@@ -27,6 +27,7 @@ class GraphOnTrackersV5_Engine_Evolution extends GraphOnTrackersV5_Engine {
     public $unit;
     public $nb_step;
     public $start_date;
+    public $color_set;
     
     function validData(){
         
@@ -43,7 +44,6 @@ class GraphOnTrackersV5_Engine_Evolution extends GraphOnTrackersV5_Engine {
      */
     public function buildGraph() {
         require_once('common/chart/Chart.class.php');
-        //echo "<pre>"; var_dump($this->data); echo "</pre>";
 
         if ($this->width == 0) {
             $this->width = (count($this->data)*100)+(2*150);
@@ -55,10 +55,9 @@ class GraphOnTrackersV5_Engine_Evolution extends GraphOnTrackersV5_Engine {
             $dates[] = date('M-d', $date);
         
         $this->graph = new Chart($this->width,$this->height);
-        $colors = $this->graph->getThemedColors();
+        $colors = $this->getColors();
         $this->graph->SetScale("datlin");
         $this->graph->title->Set($this->title);
-        
         $this->graph->xaxis->SetTickLabels($dates);
         
         if (is_null($this->description)) {
@@ -83,24 +82,11 @@ class GraphOnTrackersV5_Engine_Evolution extends GraphOnTrackersV5_Engine {
                 $lineData[] = $row[$keys[$i]];
             }
             $line = new LinePlot($lineData);
-            $line->SetFillColor($colors[$i]);
+            $line->SetFillColor($colors[$keys[$i]]);
             $line->SetColor('#000');
             $line->SetLegend($keys[$i]);
             $this->graph->Add($line);
         }
-        //$this->graph->Stroke();
-        //echo "###<pre>"; var_dump($this->data); echo "</pre>@@@";
-        /*
-        $burndown = new Tracker_Chart_Burndown($this->data);
-        $burndown->setTitle($this->title);
-        $burndown->setDescription($this->description);
-        $burndown->setWidth($this->width);
-        $burndown->setHeight($this->height);
-        $burndown->setStartDate($this->start_date);
-        $burndown->setDuration($this->duration);
-        
-        $this->graph = $burndown->buildGraph();
-        //*/
         return $this->graph;
     }
 }
