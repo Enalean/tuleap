@@ -585,28 +585,18 @@ class GitPlugin extends Plugin {
     }
 
     function project_admin_ugroup_add_user($params) {
-        require_once('common/backend/BackendLogger.class.php');
-        require_once GIT_BASE_DIR .'/GitDao.class.php';
-        require_once GIT_BASE_DIR .'/GitRepositoryFactory.class.php';
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit.class.php';
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/AddUser.class.php';
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
-        require_once GIT_BASE_DIR .'/Git/RemoteServer/Dao.class.php';
-        require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
 
         $u_group                = $params['ugroup_id'];
         $user_manager           = UserManager::instance();
         $user                   = $user_manager->getUserById($params['user_id']);
         $project_manager        = ProjectManager::instance();
         $project                = $project_manager->getProject($params['group_id']);
-        $git_dao                = new GitDao();
-        $repository_factory     = new GitRepositoryFactory($git_dao, $project_manager);
-        $logger                 = new BackendLogger();
-        $ssh_command            = new Git_Driver_Gerrit_RemoteSSHCommand($logger);
-        $driver                 = new Git_Driver_Gerrit($ssh_command, $logger);
+        $repository_factory     = $this->getRepositoryFactory();
+        $driver                 = $this->getGerritDriver();
         $permissions_manager    = PermissionsManager::instance();
-        $remote_server_dao      = new Git_RemoteServer_Dao();
-        $server_factory         = new Git_RemoteServer_GerritServerFactory($remote_server_dao, $git_dao);
+        $server_factory         = $this->getGerritServerFactory();
         $membership_manager     = new Git_Driver_Gerrit_MembershipManager($repository_factory, $driver, $permissions_manager, $server_factory);
         $command                = new Git_Driver_Gerrit_MembershipCommand_AddUser($driver);
 
@@ -614,28 +604,18 @@ class GitPlugin extends Plugin {
     }
 
     function project_admin_ugroup_remove_user($params) {
-        require_once('common/backend/BackendLogger.class.php');
-        require_once GIT_BASE_DIR .'/GitDao.class.php';
-        require_once GIT_BASE_DIR .'/GitRepositoryFactory.class.php';
-        require_once GIT_BASE_DIR .'/Git/Driver/Gerrit.class.php';
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/RemoveUser.class.php';
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
-        require_once GIT_BASE_DIR .'/Git/RemoteServer/Dao.class.php';
-        require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
 
         $u_group                = $params['ugroup_id'];
         $user_manager           = UserManager::instance();
         $user                   = $user_manager->getUserById($params['user_id']);
         $project_manager        = ProjectManager::instance();
         $project                = $project_manager->getProject($params['group_id']);
-        $git_dao                = new GitDao();
-        $repository_factory     = new GitRepositoryFactory($git_dao, $project_manager);
-        $logger                 = new BackendLogger();
-        $ssh_command            = new Git_Driver_Gerrit_RemoteSSHCommand($logger);
-        $driver                 = new Git_Driver_Gerrit($ssh_command, $logger);
+        $repository_factory     = $this->getRepositoryFactory();
+        $driver                 = $this->getGerritDriver();
         $permissions_manager    = PermissionsManager::instance();
-        $remote_server_dao      = new Git_RemoteServer_Dao();
-        $server_factory         = new Git_RemoteServer_GerritServerFactory($remote_server_dao, $git_dao);
+        $server_factory         = $this->getGerritServerFactory();
         $membership_manager     = new Git_Driver_Gerrit_MembershipManager($repository_factory, $driver, $permissions_manager, $server_factory);
         $command                = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($driver);
 
