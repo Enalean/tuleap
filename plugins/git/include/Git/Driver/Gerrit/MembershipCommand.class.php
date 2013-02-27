@@ -27,9 +27,17 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
         $this->permissions_manager = $permissions_manager;
     }
 
-    public abstract function process(Git_RemoteServer_GerritServer $server, User $user, Project $project, GitRepository $repository);
-    
-    protected abstract function isStuff(User $user, Project $project, $groups);
+    protected abstract function propagateToGerrit(Git_RemoteServer_GerritServer $server, User $user, $group_full_name);
+
+    protected abstract function isUserConcernedByPermission(User $user, Project $project, $groups);
+
+    public function process(Git_RemoteServer_GerritServer $server, User $user, Project $project, GitRepository $repository) {
+        $groups_full_names = $this->getConcernedGerritGroups($user, $project, $repository);
+
+        foreach ($groups_full_names as $group_full_name) {
+            $this->propagateToGerrit($server, $user, $group_full_name);
+        }
+    }
 
     protected function getConcernedGerritGroups(User $user, Project $project, GitRepository $repository) {
         $groups_full_names = array();
@@ -37,7 +45,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
         foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $group_name => $permission) {
             $groups_with_permission = $this->getUgroupsWithPermission($repository, $permission);
             if (count($groups_with_permission) > 0) {
-                if ($this->isStuff($user, $project, $groups_with_permission)) {
+                if ($this->isUserConcernedByPermission($user, $project, $groups_with_permission)) {
                     $groups_full_names[] = $this->getGerritGroupName($project, $repository, $group_name);
                 }
             }
