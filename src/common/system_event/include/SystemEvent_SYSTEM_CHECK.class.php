@@ -172,7 +172,9 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
                 )
             );
         } catch(Exception $exception) {
-            $this->error($exception->getMessage());
+            $this->error($exception->getMessage().
+                '. In order to retrieve a file with the gitolite admin public key, run the script : '
+                .$GLOBALS['codendi_dir'].'/tools/utils/recreate_authorized_keys.sh');
             return false;
         }
         
