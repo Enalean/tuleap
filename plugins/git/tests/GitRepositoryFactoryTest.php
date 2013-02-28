@@ -26,40 +26,40 @@ Mock::generate('ProjectManager');
 Mock::generate('Project');
 
 class GitRepositoryFactoryTest extends UnitTestCase {
-    
+
     function testGetRepositoryFromFullPath() {
         $dao            = new MockGitDao();
         $projectManager = new MockProjectManager();
         $project        = new MockProject();
-        
+
         $project->setReturnValue('getID', 101);
         $project->setReturnValue('getUnixName', 'garden');
-        
+
         $projectManager->setReturnValue('getProjectByUnixName', $project, array('garden'));
-        
+
         $factory        = new GitRepositoryFactory($dao, $projectManager);
-        
+
         $dao->expectOnce('searchProjectRepositoryByPath', array(101, 'garden/u/manuel/grou/ping/diskinstaller.git'));
         $dao->setReturnValue('searchProjectRepositoryByPath', new MockDataAccessResult());
-        
+
         $factory->getFromFullPath('/data/tuleap/gitolite/repositories/garden/u/manuel/grou/ping/diskinstaller.git');
     }
-    
+
     function testGetRepositoryFromFullPathAndGitRoot() {
         $dao            = new MockGitDao();
         $projectManager = new MockProjectManager();
         $project        = new MockProject();
-        
+
         $project->setReturnValue('getID', 101);
         $project->setReturnValue('getUnixName', 'garden');
-        
+
         $projectManager->setReturnValue('getProjectByUnixName', $project, array('garden'));
-        
+
         $factory        = new GitRepositoryFactory($dao, $projectManager);
-        
+
         $dao->expectOnce('searchProjectRepositoryByPath', array(101, 'garden/diskinstaller.git'));
         $dao->setReturnValue('searchProjectRepositoryByPath', new MockDataAccessResult());
-        
+
         $factory->getFromFullPath('/data/tuleap/gitroot/garden/diskinstaller.git');
     }
 }
@@ -220,4 +220,91 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
     }
 }
 
+class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->dao = mock('GitDao');
+        $this->project_manager = mock('ProjectManager');
+
+        $this->factory = partial_mock(
+            'GitRepositoryFactory',
+            array('getGerritRepositoriesWithPermissionsForUGroup'),
+            array(
+                $this->dao,
+                $this->project_manager
+            )
+        );
+
+        $this->repository = mock('GitRepository');
+
+        $this->project_id = 320;
+        $this->ugroup_id = 115;
+
+        $this->user_ugroups = array(404, 416);
+        $this->user         = stub('User')->getUgroups($this->project_id, null)->returns($this->user_ugroups);
+
+        $this->project = stub('Project')->getID()->returns($this->project_id);
+        $this->ugroup  = stub('UGroup')->getId()->returns($this->ugroup_id);
+    }
+
+    public function itFetchAllGerritRepositoriesFromDao() {
+        expect($this->dao)->searchAllGerritRepositoriesOfProject($this->project_id)->once();
+        stub($this->dao)->searchAllGerritRepositoriesOfProject()->returnsEmptyDar();
+        $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
+    }
+
+    public function itInstanciateGitRepositoriesObjects() {
+        stub($this->dao)->searchAllGerritRepositoriesOfProject()->returnsDar(
+            array('repository_id' => 12),
+            array('repository_id' => 23)
+        );
+        expect($this->dao)->instanciateFromRow()->count(2);
+        expect($this->dao)->instanciateFromRow(array('repository_id' => 12))->at(0);
+        expect($this->dao)->instanciateFromRow(array('repository_id' => 23))->at(1);
+        stub($this->dao)->instanciateFromRow()->returns(mock('GitRepository'));
+
+        stub($this->factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array());
+
+        $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
+    }
+
+    public function itMergesPermissions() {
+        stub($this->dao)->searchAllGerritRepositoriesOfProject()->returnsDar(
+            array('repository_id' => 12)
+        );
+        stub($this->dao)->instanciateFromRow()->returns($this->repository);
+
+        stub($this->factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(
+            array(
+                12 => new GitRepositoryWithPermissions(
+                    $this->repository,
+                    array(
+                        Git::PERM_READ          => array(),
+                        Git::PERM_WRITE         => array(UGroup::PROJECT_ADMIN, 404),
+                        Git::PERM_WPLUS         => array(),
+                        Git::SPECIAL_PERM_ADMIN => array()
+                    )
+                )
+            )
+        );
+
+        $repositories_with_permissions = $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
+
+        $this->assertEqual(
+            $repositories_with_permissions,
+            array(
+                12 => new GitRepositoryWithPermissions(
+                    $this->repository,
+                    array(
+                        Git::PERM_READ          => array(),
+                        Git::PERM_WRITE         => array(UGroup::PROJECT_ADMIN, 404),
+                        Git::PERM_WPLUS         => array(),
+                        Git::SPECIAL_PERM_ADMIN => array(UGroup::PROJECT_ADMIN)
+                    )
+                )
+            )
+        );
+    }
+}
 ?>

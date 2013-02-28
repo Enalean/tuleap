@@ -65,7 +65,7 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
 
     public function setUp() {
         parent::setUp();
-        
+
         $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
         stub($this->git_repository_factory_without_gerrit)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array());
 
@@ -90,13 +90,24 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
 
 }
 
-class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
+abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
+    public function setUp() {
+        parent::setUp();
+
+        stub($this->git_repository)->getFullName()->returns($this->git_repository_name);
+        stub($this->git_repository)->getId()->returns($this->git_repository_id);
+
+        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            $this->git_repository_factory,
+            $this->remote_server_factory
+        );
+    }
+}
+
+class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
 
     public function setUp() {
         parent::setUp();
-        
-        stub($this->git_repository)->getFullName()->returns($this->git_repository_name);
-        stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
         $git_permissions = new GitRepositoryWithPermissions(
             $this->git_repository,
@@ -109,16 +120,9 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         );
 
         stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array($git_permissions));
-
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            $this->git_repository_factory,
-            $this->remote_server_factory
-        );
     }
 
     public function itAsksTheGerritDriverToAddAUserToThreeGroups() {
-        stub($this->git_repository)->isMigratedToGerrit()->returns(true);
-
         stub($this->user)->getUgroups()->returns(array($this->u_group_id));
 
         $gerrit_group_name_prefix = $this->project_name.'/'.$this->git_repository_name;
@@ -135,8 +139,6 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
     }
 
     public function itAsksTheGerritDriverToRemoveAUserFromThreeGroups() {
-        stub($this->git_repository)->isMigratedToGerrit()->returns(true);
-
         stub($this->user)->getUgroups()->returns(array());
 
         $gerrit_group_name_prefix = $this->project_name.'/'.$this->git_repository_name;
@@ -153,8 +155,6 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
     }
 
     public function itDoesntAddNonLDAPUsersToGerrit() {
-        stub($this->git_repository)->isMigratedToGerrit()->returns(true);
-
         $non_ldap_user = mock('User');
         stub($non_ldap_user)->getUgroups()->returns(array($this->u_group_id));
 
@@ -164,14 +164,11 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
     }
 }
 
-class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
+class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
     private $u_group_id_120 = 120;
 
     public function setUp() {
         parent::setUp();
-        
-        stub($this->git_repository)->getFullName()->returns($this->git_repository_name);
-        stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
         $git_permissions = new GitRepositoryWithPermissions(
             $this->git_repository,
@@ -184,11 +181,6 @@ class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_
         );
 
         stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array($git_permissions));
-
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            $this->git_repository_factory,
-            $this->remote_server_factory
-        );
     }
 
     public function itDoesntRemoveUserIfTheyBelongToAtLeastOneGroupThatHaveAccess() {
@@ -196,6 +188,78 @@ class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_
         stub($this->user)->getUgroups()->returns(array($this->u_group_id_120));
         expect($this->driver)->removeUserFromGroup()->never();
         $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_remove);
+    }
+}
+
+class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
+
+    public function setUp() {
+        parent::setUp();
+
+        $git_permissions = new GitRepositoryWithPermissions(
+            $this->git_repository,
+            array(
+                Git::PERM_READ          => array(),
+                Git::PERM_WRITE         => array(),
+                Git::PERM_WPLUS         => array(),
+                Git::SPECIAL_PERM_ADMIN => array(),
+            )
+        );
+
+        $this->admin_ugroup = mock('UGroup');
+        stub($this->admin_ugroup)->getId()->returns(UGroup::PROJECT_ADMIN);
+
+        stub($this->user)->getUgroups()->returns(array($this->u_group_id, UGroup::PROJECT_ADMIN));
+
+        stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array($git_permissions));
+    }
+
+    public function itProcessesTheListOfGerritRepositoriresWhenWeModifyProjectAdminGroup() {
+        expect($this->git_repository_factory)->getAllGerritRepositoriesFromProject($this->project, $this->user)->once();
+        stub($this->git_repository_factory)->getAllGerritRepositoriesFromProject()->returns(array());
+
+        $this->membership_manager->updateUserMembership($this->user, $this->admin_ugroup, $this->project, $this->membership_command_add);
+    }
+
+    public function itUpdatesGerritProjectOwnersWhenIAddANewProjectAdmin() {
+        stub($this->git_repository_factory)->getAllGerritRepositoriesFromProject()->returns(array(
+            new GitRepositoryWithPermissions(
+                $this->git_repository,
+                array(
+                    Git::PERM_READ          => array(),
+                    Git::PERM_WRITE         => array(),
+                    Git::PERM_WPLUS         => array(),
+                    Git::SPECIAL_PERM_ADMIN => array(UGroup::PROJECT_ADMIN),
+                )
+            )
+        ));
+
+        $gerrit_project_owners_group_name = $this->project_name.'/'.$this->git_repository_name.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_OWNERS;
+        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $gerrit_project_owners_group_name)->once();
+
+        $this->membership_manager->updateUserMembership($this->user, $this->admin_ugroup, $this->project, $this->membership_command_add);
+    }
+
+    public function itUpdatesAllGerritGroupsWhenIAddANewProjectAdmin() {
+        stub($this->git_repository_factory)->getAllGerritRepositoriesFromProject()->returns(array(
+            new GitRepositoryWithPermissions(
+                $this->git_repository,
+                array(
+                    Git::PERM_READ          => array(),
+                    Git::PERM_WRITE         => array(UGroup::PROJECT_ADMIN),
+                    Git::PERM_WPLUS         => array(),
+                    Git::SPECIAL_PERM_ADMIN => array(UGroup::PROJECT_ADMIN),
+                )
+            )
+        ));
+
+        expect($this->driver)->addUserToGroup()->count(2);
+        $gerrit_project_integrators_group_name = $this->project_name.'/'.$this->git_repository_name.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_INTEGRATORS;
+        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $gerrit_project_integrators_group_name)->at(0);
+        $gerrit_project_owners_group_name = $this->project_name.'/'.$this->git_repository_name.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_OWNERS;
+        expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $gerrit_project_owners_group_name)->at(1);
+
+        $this->membership_manager->updateUserMembership($this->user, $this->admin_ugroup, $this->project, $this->membership_command_add);
     }
 }
 

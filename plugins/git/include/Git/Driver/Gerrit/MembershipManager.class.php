@@ -48,7 +48,12 @@ class Git_Driver_Gerrit_MembershipManager {
 
     public function updateUserMembership(User $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
         if ($user->getLdapId()) {
-            $repositories = $this->git_repository_factory->getGerritRepositoriesWithPermissionsForUGroup($project, $ugroup, $user);
+
+            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                $repositories = $this->git_repository_factory->getAllGerritRepositoriesFromProject($project, $user);
+            } else {
+                $repositories = $this->git_repository_factory->getGerritRepositoriesWithPermissionsForUGroup($project, $ugroup, $user);
+            }
             foreach ($repositories as $repository_with_permissions) {
                 $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repository_with_permissions, $command);
             }
