@@ -604,7 +604,8 @@ class GitPlugin extends Plugin {
         foreach ($users as $user) {
             $calling = array(
                 'group_id' => $params['group_id'],
-                'user_id'  => $user->getId()
+                'user_id'  => $user->getId(),
+                'ugroup'   => $ugroup
             );
             $this->remove_user_from_ugroup($calling);
         }
