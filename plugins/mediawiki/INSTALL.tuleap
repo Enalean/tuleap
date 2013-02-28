@@ -13,6 +13,10 @@ Then, you have to check if the plugin is activated or not. If it doesn't, activa
 ####------------ CAN WE ACTIVATE MW w/o FUSION FORGE?------------############################
 
 
+#
+# Begin install
+#
+
 #get mediawiki (1.20) /!\ needs php 5.3.x
 cd /usr/share
 wget http://download.wikimedia.org/mediawiki/1.20/mediawiki-1.20.2.tar.gz
@@ -45,7 +49,7 @@ CREATE VIEW plugins
         FROM plugin
         );
 
-# open c (located in usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc)
+# open /etc/httpd/conf.d/codendi_aliases.conf
 # locate the 'Plugin directories' section title.
 # paste the following row of code straight after it
 include /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc
@@ -63,15 +67,10 @@ $config_path = "/etc/codendi";
 $src_path = "/usr/share/mediawiki_tuleap";
 
 # "Install" tuleap theme
-rm /usr/share/codendi/plugins/mediawiki/www/load.php
-ln -s /usr/share/mediawiki_tuleap/load.php /usr/share/codendi/plugins/mediawiki/www/
-
-# THIS LOOKS BACK TO FRONT
 ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki_tuleap/skins/
 
 #Go to the mediawiki skin folder
 cd /usr/share/mediawiki_tuleap/skins
-
 #############################################
 ### Potentially doesn't exist, don't care ###
 #############################################
@@ -82,11 +81,17 @@ cp -r monobook tuleap
 ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/mediawiki_tuleap/skins/tuleap
 
 
-###################################################
-#  end mediawiki install                          #
-###################################################
+#
+#  end mediawiki install 
+#
 
-## activate for a project
+
+
+
+
+###################################################
+### activate for a project                      ###
+###################################################
 
 #run these commands /!\ Be careful, you have to run these 2 commands in the following order. You have to launch these commands each time you create a project :
 
@@ -94,9 +99,15 @@ ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/sh
 # @todo: see if these commands can be run be codendiadm user
 #
 /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
+#/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis.php
 /usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis.php
 
+# if the above cannot be run by codendiadm then
+chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
+
 You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
+
+
 
 
 ####################
