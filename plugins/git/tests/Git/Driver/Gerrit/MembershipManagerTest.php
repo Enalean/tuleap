@@ -33,8 +33,10 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
     protected $git_repository_factory_without_gerrit;
     protected $user_finder;
     protected $user;
+    protected $project_name = 'someProject';
     protected $project;
     protected $u_group;
+    protected $git_repository_name = 'some/git/project';
     protected $git_repository;
     protected $membership_command_add;
     protected $membership_command_remove;
@@ -58,8 +60,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         stub($this->remote_server_factory)->getServer()->returns($this->remote_server);
         stub($this->git_repository_factory)->getAllRepositories($this->project)->returns(array($this->git_repository));
         stub($this->git_repository_factory_without_gerrit)->getAllRepositories($this->project)->returns(array());
-        stub($this->project)->getUnixName()->returns('someProject');
-        stub($this->git_repository)->getFullName()->returns('some/git/project');
+        stub($this->project)->getUnixName()->returns($this->project_name);
+        stub($this->git_repository)->getFullName()->returns($this->git_repository_name);
         stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
 
@@ -103,9 +105,10 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
 
         stub($this->user)->getUgroups()->returns(array($this->u_group));
 
-        $first_group_expected = 'someProject/some/git/project-contributors';
-        $second_group_expected = 'someProject/some/git/project-integrators';
-        $third_group_expected = 'someProject/some/git/project-supermen';
+        $gerrit_group_name_prefix = $this->project_name.'/'.$this->git_repository_name;
+        $first_group_expected     = $gerrit_group_name_prefix.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_CONTRIBUTORS;
+        $second_group_expected    = $gerrit_group_name_prefix.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_INTEGRATORS;
+        $third_group_expected     = $gerrit_group_name_prefix.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_SUPERMEN;
 
         $this->driver->expectCallCount('addUserToGroup', 3);
         expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $first_group_expected)->at(0);
@@ -120,9 +123,10 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
 
         stub($this->user)->getUgroups()->returns(array());
 
-        $first_group_expected = 'someProject/some/git/project-contributors';
-        $second_group_expected = 'someProject/some/git/project-integrators';
-        $third_group_expected = 'someProject/some/git/project-supermen';
+        $gerrit_group_name_prefix = $this->project_name.'/'.$this->git_repository_name;
+        $first_group_expected     = $gerrit_group_name_prefix.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_CONTRIBUTORS;
+        $second_group_expected    = $gerrit_group_name_prefix.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_INTEGRATORS;
+        $third_group_expected     = $gerrit_group_name_prefix.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_SUPERMEN;
 
         $this->driver->expectCallCount('removeUserFromGroup', 3);
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $first_group_expected)->at(0);
