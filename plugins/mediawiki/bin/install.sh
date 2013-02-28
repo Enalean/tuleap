@@ -1,10 +1,14 @@
+MEDIAWIKI_SRC_DIR="mediawiki_tuleap_delete"
+
 #get mediawiki (1.20) /!\ needs php 5.3.x
+echo "Start download Mediawiki 1.20"
 cd /usr/share
 wget http://download.wikimedia.org/mediawiki/1.20/mediawiki-1.20.2.tar.gz
 tar -xvf mediawiki-1.20.2.tar.gz
-mv mediawiki-1.20.2 mediawiki_tuleap
+mv mediawiki-1.20.2 $MEDIAWIKI_SRC_DIR
+echo "Mediawiki fully downloaded into $MEDIAWIKI_SRC_DIR"
 
-#create folder master. Then, grant the rights to codendiadm user
+echo "Initializing Mediawiki repository"
 mkdir -p /var/lib/codendi/plugins/mediawiki/master
 chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
 
@@ -16,22 +20,19 @@ chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
 # -then
 # mkdir /etc/httpd/conf.d/plugins (if not exists)
 
-#add mediawiki httpd plugin
+echo "Updating httpd configuration"
 cp /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/plugins/
-
-#Then restart yout httpd service
 service httpd restart
 
 # "Install" tuleap theme
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki_tuleap/skins/
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/$MEDIAWIKI_SRC_DIR/skins/
 
 #Go to the mediawiki skin folder
 cd /usr/share/mediawiki_tuleap/skins
-#############################################
-### Potentially doesn't exist, don't care ###
-#############################################
-cp MonoBook.deps.php Tuleap.deps.php        #
-#############################################
+if [ -f MonoBook.deps.php ]
+then
+ cp MonoBook.deps.php Tuleap.deps.php
+fi
 
 cp -r monobook tuleap
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/mediawiki_tuleap/skins/tuleap
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/$MEDIAWIKI_SRC_DIR/skins/tuleap/.
