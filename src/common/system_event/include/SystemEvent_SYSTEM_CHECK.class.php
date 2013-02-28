@@ -167,9 +167,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         try {
             EventManager::instance()->processEvent(
                 Event::CHECK_AUTHORIZED_KEYS,
-                array(
-                    'backend' => $backendSystem,
-                )
+                null
             );
         } catch(Exception $exception) {
             $this->error($exception->getMessage());
