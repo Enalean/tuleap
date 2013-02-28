@@ -125,7 +125,7 @@ class Git_Driver_Gerrit {
 
         $username = $user->getLdapId();
 
-        $query    = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ SELECT\ a.account_id,\ g.group_id\ FROM\ account_external_ids\ A,\ account_groups\ G\ WHERE A.external_id=\\\'username:'. $username .'\\\'\ and\ G.name=\\\''. $group_name .'\\\'"';
+        $query = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ SELECT\ A.account_id,\ G.group_id\ FROM\ account_external_ids\ A,\ account_groups\ G\ WHERE\ A.external_id=\\\'username:'. $username .'\\\'\ AND\ G.name=\\\''. $group_name .'\\\'"';
 
         $this->ssh->execute($server, $query);
         $this->flushGerritCaches($server);
@@ -134,7 +134,7 @@ class Git_Driver_Gerrit {
     public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
         $username = $user->getLdapId();
 
-        $query = self::GSQL_COMMAND .' "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=i\\\''. $username .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $group_name .'\\\')"';
+        $query = self::GSQL_COMMAND .' "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\''. $username .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $group_name .'\\\')"';
 
         $this->ssh->execute($server, $query);
         $this->flushGerritCaches($server);
