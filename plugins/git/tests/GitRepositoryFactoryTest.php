@@ -76,14 +76,18 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         $this->project_id = 320;
         $this->ugroup_id = 115;
 
+        $this->user_ugroups = array(404, 416);
+        $this->user         = stub('User')->getUgroups($this->project_id, null)->returns($this->user_ugroups);
+
         $this->project = stub('Project')->getID()->returns($this->project_id);
         $this->ugroup  = stub('UGroup')->getId()->returns($this->ugroup_id);
     }
 
     public function itCallsDaoWithArguments() {
-        expect($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup($this->project_id, $this->ugroup_id)->once();
+        $ugroups = array(404, 416, 115);
+        expect($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup($this->project_id, $ugroups)->once();
         stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsEmptyDar();
-        $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+        $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
     }
 
     public function itHydratesTheRepositoriesWithDao() {
@@ -99,7 +103,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         expect($this->dao)->instanciateFromRow($db_row_for_repo_23)->at(1);
         stub($this->dao)->instanciateFromRow()->returns(mock('GitRepository'));
 
-        $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+        $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
     }
 
     public function itReturnsOneRepositoryWithOnePermission() {
@@ -115,7 +119,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         stub($this->dao)->instanciateFromRow()->returns($repository);
 
-        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
 
         $this->assertEqual(
             $git_with_permission,
@@ -151,7 +155,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         stub($this->dao)->instanciateFromRow()->returns($repository);
 
-        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
 
         $this->assertEqual(
             $git_with_permission,
@@ -187,7 +191,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         stub($this->dao)->instanciateFromRow()->returns($repository);
 
-        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
 
         $this->assertEqual(
             $git_with_permission,

@@ -122,9 +122,11 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
-    public function getGerritRepositoriesWithPermissionsForUGroup(Project $project, UGroup $ugroup) {
+    public function getGerritRepositoriesWithPermissionsForUGroup(Project $project, UGroup $ugroup, User $user) {
         $repositories = array();
-        $dar = $this->dao->searchGerritRepositoriesWithPermissionsForUGroup($project->getID(), $ugroup->getId());
+        $ugroups      = $user->getUgroups($project->getID(), null);
+        $ugroups[]    = $ugroup->getId();
+        $dar          = $this->dao->searchGerritRepositoriesWithPermissionsForUGroup($project->getID(), $ugroups);
         foreach ($dar as $row) {
             if (isset($repositories[$row['repository_id']])) {
                 $repo_with_perms = $repositories[$row['repository_id']];

@@ -548,13 +548,15 @@ class GitDao extends DataAccessObject {
         return count($this->retrieve($sql)) > 0;
     }
 
-    public function searchGerritRepositoriesWithPermissionsForUGroup($project_id, $ugroup_id) {
+    public function searchGerritRepositoriesWithPermissionsForUGroup($project_id, $ugroup_ids) {
         $project_id = $this->da->escapeInt($project_id);
-        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+        $ugroup_ids = $this->da->escapeIntImplode($ugroup_ids);
         $sql = "SELECT * FROM plugin_git git
-                    JOIN permissions ON (permissions.object_id = CAST(git.repository_id as CHAR) AND permissions.permission_type LIKE 'PLUGIN_GIT%')
+                    JOIN permissions ON (
+                        permissions.object_id = CAST(git.repository_id as CHAR)
+                        AND permissions.permission_type LIKE 'PLUGIN_GIT_%')
                 WHERE git.remote_server_id IS NOT NULL
-                    AND permissions.ugroup_id = $ugroup_id
+                    AND permissions.ugroup_id IN ($ugroup_ids)
                     AND git.project_id = $project_id";
         return $this->retrieve($sql);
 

@@ -67,20 +67,27 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
         parent::setUp();
         
         $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
-
-        stub($this->git_repository_factory_without_gerrit)->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->u_group)->returns(array());
+        stub($this->git_repository_factory_without_gerrit)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array());
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory_without_gerrit,
             $this->remote_server_factory
         );
     }
-    
-    public function itDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit() {
-        expect($this->driver)->addUserToGroup()->never();
+
+    public function itAsksForAllTheRepositoriesOfAProject() {
+        expect($this->git_repository_factory_without_gerrit)->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->u_group, $this->user)->once();
 
         $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
     }
+
+    public function itDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit() {
+        expect($this->driver)->addUserToGroup()->never();
+        expect($this->driver)->removeUserFromGroup()->never();
+
+        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
+    }
+
 }
 
 class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
@@ -107,15 +114,6 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
             $this->git_repository_factory,
             $this->remote_server_factory
         );
-    }
-
-
-    public function itAsksForAllTheRepositoriesOfAProject() {
-        stub($this->user)->getUgroups()->returns(array());
-
-        expect($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->u_group)->once();
-
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
     }
 
     public function itAsksTheGerritDriverToAddAUserToThreeGroups() {
@@ -186,8 +184,6 @@ class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_
         );
 
         stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array($git_permissions));
-
-        stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->u_group)->returns(array($this->git_repository));
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory,
