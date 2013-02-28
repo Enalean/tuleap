@@ -89,8 +89,6 @@ ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codendi/plugins/$1"
     Allow from all
 </Directory>
 
-Include /usr/share/codendi/plugins/mediawiki/etc/plugin-mediawiki.inc
-
 # 2- plugins web/php pages 
 AliasMatch ^/plugins/([^/]*)/(.*) /usr/share/codendi/plugins/$1/www/$2
 <DirectoryMatch "/usr/share/codendi/plugins/([^/]*)/www/">
