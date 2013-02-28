@@ -55,6 +55,9 @@ RedirectMatch 301 ^({sys_urlprefix}plugins/mediawiki/wiki/[-a-zA-Z0-9_]*)/*$ $1/
 6. Add the cronjob in etc/cron.d/mediawiki to the FusionForge
    crontab. To do that, the script "setup" might be helpful.
 
+7. add on the beginning of the codendi_aliases file :
+Include /usr/share/codendi/plugins/mediawiki/etc/plugin-mediawiki.inc
+
 Customizing the plugin
 ----------------------
 

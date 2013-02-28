@@ -163,6 +163,16 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         if (!is_file($GLOBALS['svn_root_file'])) {
             $backendSVN->setSVNApacheConfNeedUpdate();
         }
+
+        try {
+            EventManager::instance()->processEvent(
+                Event::PROCCESS_SYSTEM_CHECK,
+                null
+            );
+        } catch(Exception $exception) {
+            $this->error($exception->getMessage());
+            return false;
+        }
         
         $this->done();
         return true;

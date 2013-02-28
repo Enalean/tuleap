@@ -1,3 +1,6 @@
+Version 2.7.27 - Tuleap 5.12
+    * Check that gitolite authorized_keys is not empty && add a script to automaticaly recover this file
+
 Version 2.7.26 - Tuleap 5.11
     * Fix regression introduced in git 2.7.24
     * No longer need to pass a view to the tree strategy

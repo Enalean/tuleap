@@ -323,7 +323,6 @@ class Planning_MilestoneFactory {
     }
 
     /**
-<<<<<<< HEAD
      * Loads the milestone matching the given planning and artifact ids.
      *
      * Also loads:
@@ -347,8 +346,6 @@ class Planning_MilestoneFactory {
     }
 
     /**
-=======
->>>>>>> stable/master
      * Loads all open milestones for the given project and planning
      *
      * @param PFUser $user
@@ -362,8 +359,15 @@ class Planning_MilestoneFactory {
         $milestones = array();
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
-            $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
-            $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
+            /** @todo: this test is only here if we have crappy data in the db
+             * ie. an artifact creation failure that leads to an incomplete artifact.
+             * this should be fixed in artifact creation (transaction & co) and after
+             * DB clean, the following test can be removed.
+             */
+            if ($artifact->getLastChangeset()) {
+                $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
+                $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
+            }
         }
         return $milestones;
     }

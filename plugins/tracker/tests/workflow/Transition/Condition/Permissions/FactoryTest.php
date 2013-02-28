@@ -69,7 +69,7 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
     }
 
-    public function _itDelegatesDuplicateToPermissionsManager() {
+    public function itDelegatesDuplicateToPermissionsManager() {
         $new_transition_id = 2;
         $field_mapping     = array('some fields mapping');
         $ugroup_mapping    = array('some ugroups mapping');

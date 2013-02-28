@@ -51,6 +51,7 @@ class MediaWikiPlugin extends Plugin {
 		$this->_addHook("project_admin_plugins"); // to show up in the admin page for group
 		$this->_addHook("clone_project_from_template") ;
 		$this->_addHook('group_delete');
+                $this->_addHook('cssfile');
                 // Search
                 $this->_addHook('search_type_entry', 'search_type_entry', false);
                 $this->_addHook('search_type', 'search_type', false);
@@ -69,6 +70,14 @@ class MediaWikiPlugin extends Plugin {
             if ($params['type_of_search'] == $this->name) {
                 $project = group_get_object($params['group_id']);
                 util_return_to('/plugins/mediawiki/wiki/'. $project->getUnixName() .'/index.php?title=Special%3ASearch&search=' . urlencode($params['words']) . '&go=Go');
+            }
+        }
+
+        public function cssFile($params) {
+            // Only show the stylesheet if we're actually in the Mediawiki pages.
+            if (strpos($_SERVER['REQUEST_URI'], $this->getPluginPath()) === 0 ||
+                strpos($_SERVER['REQUEST_URI'], '/widgets/') === 0) {
+                echo '<link rel="stylesheet" type="text/css" href="/plugins/mediawiki/themes/default/css/style.css" />';
             }
         }
 
