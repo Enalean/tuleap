@@ -22,7 +22,7 @@
  */
 require_once('GraphOnTrackersV5_Engine.class.php');
 
-class GraphOnTrackersV5_Engine_Evolution extends GraphOnTrackersV5_Engine {
+class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
     
     public $unit;
     public $nb_step;

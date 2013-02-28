@@ -21,15 +21,15 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 require_once('GraphOnTrackersV5_Chart.class.php');
-require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_Evolution_DataBuilder.class.php');
-require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_Evolution.class.php');
-require_once('GraphOnTrackersV5_Chart_EvolutionDao.class.php');
+require_once(dirname(__FILE__).'/../data-transformation/GraphOnTrackersV5_CumulativeFlow_DataBuilder.class.php');
+require_once(dirname(__FILE__).'/../graphic-library/GraphOnTrackersV5_Engine_CumulativeFlow.class.php');
+require_once('GraphOnTrackersV5_Chart_CumulativeFlowDao.class.php');
 require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
 
 /**
- * Base class to provide a temporal cumulative_flow Chart
+ * Base class to provide a cumulative flow Chart
  */
-class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
+class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
     
     /**
      * The date (timestamp) the sprint start
@@ -101,7 +101,7 @@ class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
     }
     
     protected function getDao() {
-        return new GraphOnTrackersV5_Chart_EvolutionDao();
+        return new GraphOnTrackersV5_Chart_CumulativeFlowDao();
     }
     
     public static function create($graphic_report, $id, $rank, $title, $description, $width, $height) {
@@ -111,7 +111,7 @@ class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
         $session->set("$id.start_date", 0);
         $session->set("$id.nb_step", 0);
         $session->set("$id.unit", 0);
-        $c = new GraphOnTrackersV5_Chart_Evolution($graphic_report, $id, $rank, $title, $description, $width, $height);
+        $c = new GraphOnTrackersV5_Chart_CumulativeFlow($graphic_report, $id, $rank, $title, $description, $width, $height);
         $c->registerInSession();
         return $c;
     }
@@ -141,14 +141,14 @@ class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
      * @return GraphOnTrackerV5_Engine The engine associated to the concrete chart
      */
     protected function getEngine() {
-        return new GraphOnTrackersV5_Engine_Evolution();
+        return new GraphOnTrackersV5_Engine_CumulativeFlow();
     }
     
     /**
      * @return ChartDataBuilder The data builder associated to the concrete chart
      */
     protected function getChartDataBuilder($artifacts) {
-        return new GraphOnTrackersV5_Evolution_DataBuilder($this,$artifacts);
+        return new GraphOnTrackersV5_CumulativeFlow_DataBuilder($this,$artifacts);
     }
     
     /**

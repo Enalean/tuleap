@@ -23,12 +23,12 @@
 
 require_once 'common/user/UserManager.class.php';
 
-class GraphOnTrackersV5_Evolution_DataBuilder extends ChartDataBuilderV5 {
+class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
     
     /**
      * build cumulative_flow chart properties
      *
-     * @param Evolution_Engine $engine object
+     * @param CumulativeFlow_Engine $engine object
      */
     public function buildProperties($engine) {
         parent::buildProperties($engine);
@@ -38,7 +38,7 @@ class GraphOnTrackersV5_Evolution_DataBuilder extends ChartDataBuilderV5 {
         $type                 = $form_element_factory->getType($observed_field);
         
         if ($this->isValidObservedField($observed_field, $type) && $this->isValidType($type)) {
-            $engine->data    = $this->getEvolutionData($engine, $observed_field->getId(), $type);
+            $engine->data    = $this->getCumulativeFlowData($engine, $observed_field->getId(), $type);
         }
         
         $engine->legend      = null;
@@ -47,7 +47,7 @@ class GraphOnTrackersV5_Evolution_DataBuilder extends ChartDataBuilderV5 {
         $engine->nb_step     = $this->chart->getNbStep();
     }
     
-    protected function getEvolutionData($engine, $observed_field_id, $type) {
+    protected function getCumulativeFlowData($engine, $observed_field_id, $type) {
         $result = array();
         $timeFiller = array(3600*24, 3600*24*7, 3600*24*30.45);
         $artifact_ids = explode(',', $this->artifacts['id']);

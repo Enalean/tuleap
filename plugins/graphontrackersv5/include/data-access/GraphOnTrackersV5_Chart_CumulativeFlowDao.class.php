@@ -22,7 +22,7 @@
 
 require_once('common/dao/include/DataAccessObject.class.php');
         
-class GraphOnTrackersV5_Chart_EvolutionDao extends DataAccessObject {
+class GraphOnTrackersV5_Chart_CumulativeFlowDao extends DataAccessObject {
     
     function __construct($da = null) {
         parent::__construct($da);
