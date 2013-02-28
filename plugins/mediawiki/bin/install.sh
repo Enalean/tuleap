@@ -8,23 +8,19 @@ mv mediawiki-1.20.2 mediawiki_tuleap
 mkdir -p /var/lib/codendi/plugins/mediawiki/master
 chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
 
+# (this bit needs to be done before the next Tuleap package release)
+# -open /etc/httpd/conf.d/codendi_aliases.conf
+# -locate the 'Plugin directories' section title.
+# -paste the following row of code straight after it
+# include /etc/httpd/conf.d/plugins/*.inc
+# -then
+# mkdir /etc/httpd/conf.d/plugins (if not exists)
+
+#add mediawiki httpd plugin
 cp /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/plugins/
-# open /etc/httpd/conf.d/codendi_aliases.conf
-# locate the 'Plugin directories' section title.
-# paste the following row of code straight after it
-include /etc/httpd/conf.d/plugins/*.inc
 
 #Then restart yout httpd service
 service httpd restart
-
-# add conf param in local.inc
-// Mediawiki
-$master_path = "/var/lib/codendi/plugins/mediawiki/master" ;
-$mwdata_path = "/var/lib/codendi/plugins/mediawiki";
-$mw_dbtype = "mysql";
-$projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
-$config_path = "/etc/codendi";
-$src_path = "/usr/share/mediawiki_tuleap";
 
 # "Install" tuleap theme
 ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki_tuleap/skins/
