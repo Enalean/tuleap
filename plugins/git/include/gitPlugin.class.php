@@ -633,10 +633,12 @@ class GitPlugin extends Plugin {
     }
 
     private function updateUserMembership(Git_Driver_Gerrit_MembershipCommand $command, $params) {
+        $ugroup_manager = new UGroupManager();
         $user    = UserManager::instance()->getUserById($params['user_id']);
         $project = ProjectManager::instance()->getProject($params['group_id']);
+        $ugroup  = $ugroup_manager->getById($params['ugroup_id']);
 
-        $this->getGerritMembershipManager()->updateUserMembership($user, $project, $command);
+        $this->getGerritMembershipManager()->updateUserMembership($user, $ugroup, $project, $command);
     }
 
     private function getGerritMembershipManager() {
