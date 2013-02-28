@@ -139,7 +139,6 @@ class Git_Driver_Gerrit {
         $sql_query = '"DELETE FROM account_group_members WHERE account_id=(SELECT account_id FROM account_external_ids WHERE external_id=\\\'username:'. $username .'\\\') AND group_id=(SELECT group_id FROM account_groups WHERE name=\\\''. $group_name .'\\\')"';
 
         $query = self::GSQL_COMMAND .' '. $this->escapeSQLQuery($sql_query);
-        var_dump($query);
 
         $this->ssh->execute($server, $query);
         $this->flushGerritCaches($server);
