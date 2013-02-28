@@ -28,6 +28,7 @@ require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'PathJoinUtil.php';
 require_once 'Git_Exec.class.php';
+require_once dirname(__FILE__).'/exceptions/GitAuthorizedKeysFileException.class.php';
 
 
 /**
@@ -390,6 +391,21 @@ class Git_GitoliteDriver {
         } else {
             throw new Git_Command_Exception($cmd, $output, $retVal);
         }
+    }
+
+    public function checkAuthorizedKeys($params) {
+        $authorized_keys_file = $this->getAuthorizedKeysPath();
+        if (filesize($authorized_keys_file) == 0) {
+            //$params['backend']->log($authorized_keys_file." is empty", Backend::LOG_ERROR);
+            throw new GitAuthorizedKeysFileException($authorized_keys_file);
+        }
+    }
+
+    private function getAuthorizedKeysPath() {
+        if (!file_exists(self::OLD_AUTHORIZED_KEYS_PATH)) {
+            return self::NEW_AUTHORIZED_KEYS_PATH;
+        }
+        return self::OLD_AUTHORIZED_KEYS_PATH;
     }
 
 }

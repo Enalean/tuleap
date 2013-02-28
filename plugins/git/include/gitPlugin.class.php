@@ -23,7 +23,6 @@ require_once 'constants.php';
 require_once('common/plugin/Plugin.class.php');
 require_once('common/system_event/SystemEvent.class.php');
 require_once 'Git_GitoliteDriver.class.php';
-require_once 'exceptions/GitAuthorizedKeysFileException.class.php';
 
 /**
  * GitPlugin
@@ -393,18 +392,8 @@ class GitPlugin extends Plugin {
     }
 
     public function check_authorized_keys($params) {
-        $authorized_keys_file = $this->getAuthorizedKeysPath();
-        if (filesize($authorized_keys_file) == 0) {
-            $params['backend']->log($authorized_keys_file." is empty", Backend::LOG_ERROR);
-            throw new GitAuthorizedKeysFileException($authorized_keys_file);
-        }
-    }
-
-    private function getAuthorizedKeysPath() {
-        if (!file_exists(Git_GitoliteDriver::OLD_AUTHORIZED_KEYS_PATH)) {
-            return Git_GitoliteDriver::NEW_AUTHORIZED_KEYS_PATH;
-        }
-        return Git_GitoliteDriver::OLD_AUTHORIZED_KEYS_PATH;
+        $gitolite_driver = new Git_GitoliteDriver();
+        $gitolite_driver->checkAuthorizedKeys($params);
     }
 
     /**
