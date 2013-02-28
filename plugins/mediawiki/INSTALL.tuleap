@@ -9,25 +9,21 @@ As forge admin, go to your tuleap instance in the administration pannel -> plugi
 If the plugin isn't yet installed, install it !
 Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
 
+
+####------------ CAN WE ACTIVATE MW w/o FUSION FORGE?------------############################
+
+
 #get mediawiki (1.20) /!\ needs php 5.3.x
 cd /usr/share
 wget http://download.wikimedia.org/mediawiki/1.20/mediawiki-1.20.2.tar.gz
 tar -xvf mediawiki-1.20.2.tar.gz
+mv mediawiki-1.20.2 mediawiki_tuleap
 
-#If the tar command doesn't extract mediawiki in a mediawiki115 folder, please run these commands :
-cd /usr/share
-ln -s YOUR_FOLDER_WHERE_MEDIAWIKI_IS_EXTRACTED mediawiki115
-
-#create folder master
-
+#create folder master. Then, grant the rights to codendiadm user
 mkdir -p /var/lib/codendi/plugins/mediawiki/master
-
-#Then, grant the rights to codendiadm user
-
 chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
 
 #Create MySQL views in codendi scheme
-
 USE codendi;
 CREATE VIEW group_plugin 
     AS (
@@ -49,9 +45,9 @@ CREATE VIEW plugins
         FROM plugin
         );
 
-# open /etc/httpd/conf.d/codendi_aliases.conf (located in usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc)
-# locate the place between the aliases section for plugins, which is just after the Plugin directories section title.
-# paste the following row of code
+# open c (located in usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc)
+# locate the 'Plugin directories' section title.
+# paste the following row of code straight after it
 include /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc
 
 #Then restart yout httpd service
@@ -64,15 +60,17 @@ $mwdata_path = "/var/lib/codendi/plugins/mediawiki";
 $mw_dbtype = "mysql";
 $projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
 $config_path = "/etc/codendi";
-$src_path = "/usr/share/mediawiki115";
+$src_path = "/usr/share/mediawiki_tuleap";
 
 # "Install" tuleap theme
 rm /usr/share/codendi/plugins/mediawiki/www/load.php
-ln -s /usr/share/mediawiki115/load.php /usr/share/codendi/plugins/mediawiki/www/
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki115/skins/
+ln -s /usr/share/mediawiki_tuleap/load.php /usr/share/codendi/plugins/mediawiki/www/
+
+# THIS LOOKS BACK TO FRONT
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/mediawiki_tuleap/skins/
 
 #Go to the mediawiki skin folder
-cd /usr/share/mediawiki115/skins
+cd /usr/share/mediawiki_tuleap/skins
 
 #############################################
 ### Potentially doesn't exist, don't care ###
@@ -81,7 +79,7 @@ cp MonoBook.deps.php Tuleap.deps.php        #
 #############################################
 
 cp -r monobook tuleap
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/mediawiki115/skins/tuleap
+ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/mediawiki_tuleap/skins/tuleap
 
 
 ###################################################
@@ -92,6 +90,9 @@ ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/sh
 
 #run these commands /!\ Be careful, you have to run these 2 commands in the following order. You have to launch these commands each time you create a project :
 
+#
+# @todo: see if these commands can be run be codendiadm user
+#
 /usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
 /usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis.php
 
