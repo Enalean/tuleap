@@ -393,7 +393,7 @@ class Git_GitoliteDriver {
         }
     }
 
-    public function checkAuthorizedKeys($params) {
+    public function checkAuthorizedKeys() {
         $authorized_keys_file = $this->getAuthorizedKeysPath();
         if (filesize($authorized_keys_file) == 0) {
             throw new GitAuthorizedKeysFileException($authorized_keys_file);

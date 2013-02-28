@@ -397,11 +397,11 @@ class Event {
     const SYSTRAY = 'systray';
 
     /**
-     * Check if .ssh/authorized_keys is empty
+     * Event launched during the system check event
      *
      * Expected results:
-     *    An error log message is raised if the file is empty
+     *    An exception is raised if the system check is in error
      */
-    const CHECK_AUTHORIZED_KEYS = 'check_authorized_keys';
+    const PROCCESS_SYSTEM_CHECK = 'proccess_system_check';
 }
 ?>

@@ -60,7 +60,7 @@ class GitPlugin extends Plugin {
 
         $this->_addHook(Event::DUMP_SSH_KEYS,                              'dump_ssh_keys',                                false);
         $this->_addHook(Event::SYSTEM_EVENT_GET_TYPES,                     'system_event_get_types',                       false);
-        $this->_addHook(Event::CHECK_AUTHORIZED_KEYS,                      'check_authorized_keys',                        false);
+        $this->_addHook(Event::PROCCESS_SYSTEM_CHECK);
 
         $this->_addHook('permission_get_name',                             'permission_get_name',                          false);
         $this->_addHook('permission_get_object_type',                      'permission_get_object_type',                   false);
@@ -391,9 +391,9 @@ class GitPlugin extends Plugin {
         $params['types'][] = 'GIT_GERRIT_MIGRATION';
     }
 
-    public function check_authorized_keys($params) {
+    public function proccess_system_check($params) {
         $gitolite_driver = new Git_GitoliteDriver();
-        $gitolite_driver->checkAuthorizedKeys($params);
+        $gitolite_driver->checkAuthorizedKeys();
     }
 
     /**
