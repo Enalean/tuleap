@@ -122,6 +122,19 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
+    public function getGerritRepositoriesWithPermissionsForUGroup(Project $project, UGroup $ugroup) {
+        $repositories = array();
+        $dar = $this->dao->searchGerritRepositoriesWithPermissionsForUGroup($project->getID(), $ugroup->getId());
+        foreach ($dar as $row) {
+            $repository = $this->dao->instanciateFromRow($row);
+            $repositories[] = array(
+                'repository' => $repository,
+                'permissions' => array($row['permission_type'] => array($row['ugroup_id']))
+            );
+        }
+        return $repositories;
+    }
+
     /**
      * Attempt to get repository if path match given base directory
      * 

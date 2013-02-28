@@ -96,5 +96,8 @@ class Git_Driver_Gerrit_UserFinder {
         return ! in_array($ugroup_id, array(Ugroup::REGISTERED, UGroup::ANONYMOUS));
     }
 
+    public function getStuff() {
+        
+    }
 }
 ?>

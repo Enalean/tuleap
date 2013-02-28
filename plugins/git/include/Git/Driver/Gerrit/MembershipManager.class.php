@@ -28,6 +28,12 @@ class Git_Driver_Gerrit_MembershipManager {
                                          self::GROUP_INTEGRATORS  => Git::PERM_WRITE,
                                          self::GROUP_SUPERMEN     => Git::PERM_WPLUS,
                                          self::GROUP_OWNERS       => Git::SPECIAL_PERM_ADMIN);
+    public static $PERMS_TO_GROUPS = array(
+        Git::PERM_READ          => self::GROUP_CONTRIBUTORS,
+        Git::PERM_WRITE         => self::GROUP_INTEGRATORS,
+        Git::PERM_WPLUS         => self::GROUP_SUPERMEN,
+        Git::SPECIAL_PERM_ADMIN => self::GROUP_OWNERS,
+    );
 
     private $git_repository_factory;
     private $gerrit_server_factory;
@@ -40,33 +46,19 @@ class Git_Driver_Gerrit_MembershipManager {
         $this->gerrit_server_factory  = $gerrit_server_factory;
     }
 
-    public function updateUserMembership(User $user, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
+    public function updateUserMembership(User $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
         if ($user->getLdapId()) {
-            $repositories = $this->getMigratedRepositoriesOfAProject($project);
-            foreach ($repositories as $repository) {
-                $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repository, $command);
+            $repositories = $this->git_repository_factory->getGerritRepositoriesWithPermissionsForUGroup($project, $ugroup);
+            foreach ($repositories as $repository_with_permissions) {
+                $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repository_with_permissions, $command);
             }
         }
     }
 
-    private function updateUserGerritGroupsAccordingToPermissions(User $user, Project $project, GitRepository $repository, Git_Driver_Gerrit_MembershipCommand $command) {
-        $remote_server   = $this->gerrit_server_factory->getServer($repository);
-        $command->process($remote_server, $user, $project, $repository);
+    private function updateUserGerritGroupsAccordingToPermissions(User $user, Project $project,  $repository_with_permissions, Git_Driver_Gerrit_MembershipCommand $command) {
+        $remote_server   = $this->gerrit_server_factory->getServer($repository_with_permissions['repository']);
+        $command->process($remote_server, $user, $project, $repository_with_permissions);
         
     }
-
-    private function getMigratedRepositoriesOfAProject(Project $project) {
-        $migrated_repositories = array();
-        $repositories          = $this->git_repository_factory->getAllRepositories($project);
-
-        foreach ($repositories as $repository) {
-            if ($repository->isMigratedToGerrit()) {
-                $migrated_repositories[] = $repository;
-            }
-        }
-
-        return $migrated_repositories;
-    }
-
 }
 ?>

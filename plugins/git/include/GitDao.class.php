@@ -467,6 +467,17 @@ class GitDao extends DataAccessObject {
     }
 
     /**
+     * Instanciate a new GitRepository object based on row entry
+     * @param array $row
+     * @return GitRepository
+     */
+    public function instanciateFromRow($row) {
+        $repository = new GitRepository();
+        $this->hydrateRepositoryObject($repository, $row);
+        return $repository;
+    }
+
+    /**
      * Count number of repositories grouped by backend type
      *
      * @param String  $startDate   Start date
@@ -535,6 +546,18 @@ class GitDao extends DataAccessObject {
                 WHERE remote_server_id = $remote_server_id
                 LIMIT 1";
         return count($this->retrieve($sql)) > 0;
+    }
+
+    public function searchGerritRepositoriesWithPermissionsForUGroup($project_id, $ugroup_id) {
+        $project_id = $this->da->escapeInt($project_id);
+        $ugroup_id  = $this->da->escapeInt($ugroup_id);
+        $sql = "SELECT * FROM plugin_git git
+                JOIN permissions ON (permissions.object_id = CAST(git.repository_id as CHAR) AND permissions.permission_type LIKE 'PLUGIN_GIT%')
+                WHERE git.remote_server_id IS NOT NULL
+                AND permissions.ugroup_id = $ugroup_id
+                AND git.project_id = $project_id";
+        return $this->retrieve($sql);
+
     }
 }
 

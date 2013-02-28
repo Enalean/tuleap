@@ -64,4 +64,70 @@ class GitRepositoryFactoryTest extends UnitTestCase {
     }
 }
 
+class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->dao = mock('GitDao');
+        $this->project_manager = mock('ProjectManager');
+
+        $this->factory = new GitRepositoryFactory($this->dao, $this->project_manager);
+
+        $this->project_id = 320;
+        $this->ugroup_id = 115;
+
+        $this->project = stub('Project')->getID()->returns($this->project_id);
+        $this->ugroup  = stub('UGroup')->getId()->returns($this->ugroup_id);
+    }
+
+    public function itCallsDaoWithArguments() {
+        expect($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup($this->project_id, $this->ugroup_id)->once();
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsEmptyDar();
+        $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+    }
+
+    public function itHydratesTheRepositoriesWithDao() {
+        $db_row_for_repo_12 = array('repository_id' => 12, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115);
+        $db_row_for_repo_23 = array('repository_id' => 23, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115);
+
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsDar(
+            $db_row_for_repo_12,
+            $db_row_for_repo_23
+        );
+        expect($this->dao)->instanciateFromRow()->count(2);
+        expect($this->dao)->instanciateFromRow($db_row_for_repo_12)->at(0);
+        expect($this->dao)->instanciateFromRow($db_row_for_repo_23)->at(1);
+        
+        $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+    }
+
+    public function itReturnsOneRepositoryWithOnePermission() {
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsDar(
+            array(
+                'repository_id'   => 12,
+                'permission_type' => Git::PERM_READ,
+                'ugroup_id'       => 115
+            )
+        );
+
+        $repository = mock('GitRepository');
+
+        stub($this->dao)->instanciateFromRow()->returns($repository);
+
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+
+        $this->assertEqual(
+            $git_with_permission,
+            array(
+                array(
+                    'repository'  => $repository,
+                    'permissions' => array(
+                        Git::PERM_READ => array(115)
+                    ),
+                ),
+            )
+        );
+    }
+}
+
 ?>
