@@ -123,62 +123,26 @@ class Git_Driver_Gerrit {
     public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
         $this->setAccount($server, $user);
 
-        $gerrit_user_id  = $this->getGerritUserId($server, $user);
-        $gerrit_group_id = $this->getGerritGroupId($server, $group_name);
+        $username = $user->getLdapId();
 
-        if ($gerrit_user_id && $gerrit_group_id) {
-            $query = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ VALUES('. $gerrit_user_id .',\ '. $gerrit_group_id .')"';
-            $this->ssh->execute($server, $query);
-            $this->flushGerritCaches($server);
-        }
+        $query    = self::GSQL_COMMAND .' "INSERT\ INTO\ account_group_members\ (account_id,\ group_id)\ SELECT\ a.account_id,\ g.group_id\ FROM\ account_external_ids\ A,\ account_groups\ G\ WHERE A.external_id=\\\'username:'. $username .'\\\'\ and\ G.name=\\\''. $group_name .'\\\'"';
 
+        $this->ssh->execute($server, $query);
+        $this->flushGerritCaches($server);
     }
 
     public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
-        $gerrit_user_id  = $this->getGerritUserId($server, $user);
-        $gerrit_group_id = $this->getGerritGroupId($server, $group_name);
+        $username = $user->getLdapId();
 
-        if ($gerrit_user_id && $gerrit_group_id) {
-            $query = self::GSQL_COMMAND .' "DELETE\ FROM\ account_group_members\ WHERE\ account_id='. $gerrit_user_id .'\ AND\ group_id='. $gerrit_group_id .'"';
-            $this->ssh->execute($server, $query);
-            $this->flushGerritCaches($server);
-        }
+        $query = self::GSQL_COMMAND .' "DELETE\ FROM\ account_group_members\ WHERE\ account_id=(SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=i\\\''. $username .'\\\')\ AND\ group_id=(SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $group_name .'\\\')"';
 
+        $this->ssh->execute($server, $query);
+        $this->flushGerritCaches($server);
     }
 
     private function flushGerritCaches($server) {
         $query = self::COMMAND .' flush-caches';
         $this->ssh->execute($server, $query);
     }
-
-    private function getGerritUserId(Git_RemoteServer_GerritServer $server, User $user) {
-
-        $ldap_id = $user->getLdapId();
-        $query   = self::GSQL_COMMAND .' "SELECT\ account_id\ FROM\ account_external_ids\ WHERE\ external_id=\\\'username:'. $ldap_id .'\\\'"';
-
-        $command_result = $this->ssh->execute($server, $query);
-        $json_result    = json_decode(array_shift(explode("\n", $command_result)));
-
-        if (isset($json_result->columns->account_id)) {
-            return $json_result->columns->account_id;
-        }
-
-        return null;
-    }
-
-    private function getGerritGroupId(Git_RemoteServer_GerritServer $server, $group_name) {
-
-        $query = self::GSQL_COMMAND .' "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $group_name .'\\\'"';
-
-        $command_result = $this->ssh->execute($server, $query);
-        $json_result    = json_decode(array_shift(explode("\n", $command_result)));
-
-        if (isset($json_result->columns->group_id)) {
-            return $json_result->columns->group_id;
-        }
-
-        return null;
-    }
-
 }
 ?>
