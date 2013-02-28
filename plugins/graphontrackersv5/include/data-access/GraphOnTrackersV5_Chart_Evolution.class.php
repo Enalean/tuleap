@@ -27,7 +27,7 @@ require_once('GraphOnTrackersV5_Chart_EvolutionDao.class.php');
 require_once(dirname(__FILE__).'/../common/HTML_Element_Selectbox_TrackerFields_NumericFieldsV5.class.php');
 
 /**
- * Base class to provide a temporal evolution Chart
+ * Base class to provide a temporal cumulative_flow Chart
  */
 class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
     
@@ -134,7 +134,7 @@ class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
      * Return the chart type (gantt, bar, pie, ...)
      */
     public function getChartType() {
-        return "evolution";
+        return "cumulative_flow";
     }
     
     /**
@@ -191,27 +191,27 @@ class GraphOnTrackersV5_Chart_Evolution extends GraphOnTrackersV5_Chart {
      */
     public function getProperties() {
         $unitSelect = new HTML_Element_Selectbox(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_unit'), 
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_unit'), 
                     'chart[unit]', 
                     'value');
         $unitSelect->addMultipleOptions(array(
-                                              0 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_day'),
-                                              1 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_week'),
-                                              2 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_month'),
+                                              0 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_day'),
+                                              1 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_week'),
+                                              2 => $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_month'),
                                               ), $this->getUnit());
         return array_merge(parent::getProperties(),
             array(
                 'field_id'   => new HTML_Element_Selectbox_TrackerFields_SelectboxesV5(
                     $this->getTracker(), 
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_field'),
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_field'),
                     'chart[field_id]', 
                     $this->getFieldId()),
                 'start_date' => new HTML_Element_Input_Date(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_start_date'), 
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_start_date'), 
                     'chart[start_date]', 
                     $this->getStartDate()),
                 'nb_step'   => new HTML_Element_Input_Text(
-                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_evolution','evolution_property_nb_step'), 
+                    $GLOBALS['Language']->getText('plugin_graphontrackersv5_cumulative_flow','cumulative_flow_property_nb_step'), 
                     'chart[nb_step]', 
                     $this->getNbStep(), 
                     4),

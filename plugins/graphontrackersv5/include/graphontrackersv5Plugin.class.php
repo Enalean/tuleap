@@ -323,15 +323,15 @@ class GraphOnTrackersV5Plugin extends Plugin {
             //The title for the button 'Add a chart'
             'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_scrum', 'add_title_burnup'),
         );*/
-        $params['factories']['evolution'] = array(
+        $params['factories']['cumulative_flow'] = array(
             //The type of the chart
-            'chart_type'      => 'evolution',
+            'chart_type'      => 'cumulative_flow',
             //The classname of the chart. The class must be already declared.
             'chart_classname' => 'GraphOnTrackersV5_Chart_Evolution',
             //The icon used for the button 'Add a chart'
-            'icon'            => $this->getThemePath().'/images/evolution.png',
+            'icon'            => $this->getThemePath().'/images/cumulative_flow.png',
             //The title for the button 'Add a chart'
-            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','evolution'),
+            'title'           => $GLOBALS['Language']->getText('plugin_graphontrackersv5_include_report','cumulative_flow'),
         );
     }
 }

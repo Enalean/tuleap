@@ -26,7 +26,7 @@ require_once 'common/user/UserManager.class.php';
 class GraphOnTrackersV5_Evolution_DataBuilder extends ChartDataBuilderV5 {
     
     /**
-     * build evolution chart properties
+     * build cumulative_flow chart properties
      *
      * @param Evolution_Engine $engine object
      */
