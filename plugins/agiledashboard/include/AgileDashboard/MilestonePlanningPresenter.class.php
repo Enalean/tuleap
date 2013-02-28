@@ -57,7 +57,7 @@ class AgileDashboard_MilestonePlanningPresenter extends PlanningPresenter {
      * Instanciates a new presenter.
      *
      * @param Tracker_CrossSearch_SearchContentView $backlog_search_view         The view allowing to search through the backlog artifacts.
-     * @param Planning_Milestone                    $milestone_plan                   The artifact with planning being displayed right now.
+     * @param Planning_MilestonePlan                   $milestone_plan                   The artifact with planning being displayed right now.
      * @param PFUser                                  $current_user                The user to which the artifact plannification UI is presented.
      */
     public function __construct(
