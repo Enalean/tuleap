@@ -39,14 +39,13 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
         }
     }
 
-    protected function getConcernedGerritGroups(User $user, Project $project, $repository) {
+    protected function getConcernedGerritGroups(User $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions) {
         $groups_full_names = array();
 
-        foreach ($repository['permissions'] as $tuleap_permission_type => $groups_with_permission) {
-            //$groups_with_permission = $this->user_finder->getUgroups($repository->getId(), $tuleap_permission_type);
+        foreach ($repository_with_permissions->getPermissions() as $tuleap_permission_type => $groups_with_permission) {
             if (count($groups_with_permission) > 0) {
                 if ($this->isUserConcernedByPermission($user, $project, $groups_with_permission)) {
-                    $groups_full_names[] = $this->getGerritGroupName($project, $repository['repository'], Git_Driver_Gerrit_MembershipManager::$PERMS_TO_GROUPS[$tuleap_permission_type]);
+                    $groups_full_names[] = $this->getGerritGroupName($project, $repository_with_permissions->getRepository(), Git_Driver_Gerrit_MembershipManager::$PERMS_TO_GROUPS[$tuleap_permission_type]);
                 }
             }
         }

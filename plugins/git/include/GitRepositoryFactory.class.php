@@ -207,6 +207,10 @@ class GitRepositoryWithPermissions {
         $this->permissions[$permission_type][] = $ugroup_id;
     }
 
+    public function getRepository() {
+        return $this->repository;
+    }
+
     public function getPermissions() {
         return $this->permissions;
     }

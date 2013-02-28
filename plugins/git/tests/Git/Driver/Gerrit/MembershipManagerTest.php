@@ -91,19 +91,17 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         stub($this->git_repository)->getFullName()->returns($this->git_repository_name);
         stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
-        $git_permissions = array(
-                array(
-                'repository' => $this->git_repository,
-                'permissions' => array(
-                    Git::PERM_READ          => array($this->u_group_id),
-                    Git::PERM_WRITE         => array($this->u_group_id),
-                    Git::PERM_WPLUS         => array($this->u_group_id),
-                    Git::SPECIAL_PERM_ADMIN => array(),
-                )
+        $git_permissions = new GitRepositoryWithPermissions(
+            $this->git_repository,
+            array(
+                Git::PERM_READ          => array($this->u_group_id),
+                Git::PERM_WRITE         => array($this->u_group_id),
+                Git::PERM_WPLUS         => array($this->u_group_id),
+                Git::SPECIAL_PERM_ADMIN => array(),
             )
         );
 
-        stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns($git_permissions);
+        stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array($git_permissions));
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory,
@@ -177,19 +175,17 @@ class Git_Driver_Gerrit_MembershipManager_SeveralUGroupsTest extends Git_Driver_
         stub($this->git_repository)->getFullName()->returns($this->git_repository_name);
         stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
-        $git_permissions = array(
-                array(
-                'repository' => $this->git_repository,
-                'permissions' => array(
-                    Git::PERM_READ          => array($this->u_group_id_120, $this->u_group_id),
-                    Git::PERM_WRITE         => array($this->u_group_id_120),
-                    Git::PERM_WPLUS         => array(),
-                    Git::SPECIAL_PERM_ADMIN => array(),
-                )
+        $git_permissions = new GitRepositoryWithPermissions(
+            $this->git_repository,
+            array(
+                Git::PERM_READ          => array($this->u_group_id_120, $this->u_group_id),
+                Git::PERM_WRITE         => array($this->u_group_id_120),
+                Git::PERM_WPLUS         => array(),
+                Git::SPECIAL_PERM_ADMIN => array(),
             )
         );
 
-        stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns($git_permissions);
+        stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array($git_permissions));
 
         stub($this->git_repository_factory)->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->u_group)->returns(array($this->git_repository));
 
