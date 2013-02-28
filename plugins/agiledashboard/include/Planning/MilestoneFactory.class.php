@@ -323,7 +323,6 @@ class Planning_MilestoneFactory {
     }
 
     /**
-<<<<<<< HEAD
      * Loads the milestone matching the given planning and artifact ids.
      *
      * Also loads:
@@ -347,8 +346,6 @@ class Planning_MilestoneFactory {
     }
 
     /**
-=======
->>>>>>> stable/master
      * Loads all open milestones for the given project and planning
      *
      * @param PFUser $user
