@@ -78,9 +78,9 @@ class GitPlugin extends Plugin {
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
 
-        $this->_addHook('project_admin_add_user',                          'add_user_to_ugroup',                           false);
+        $this->_addHook('project_admin_add_user');
         $this->_addHook('project_admin_ugroup_add_user',                   'add_user_to_ugroup',                           false);
-        $this->_addHook('project_admin_remove_user',                       'remove_user_from_ugroup',                      false);
+        $this->_addHook('project_admin_remove_user');
         $this->_addHook('project_admin_ugroup_remove_user',                'remove_user_from_ugroup',                      false);
         $this->_addHook('project_admin_change_user_permissions');
         $this->_addHook('project_admin_ugroup_deletion');
@@ -591,8 +591,10 @@ class GitPlugin extends Plugin {
 
     public function project_admin_change_user_permissions($params) {
         if ($params['user_permissions']['admin_flags'] == 'A') {
+            $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
             $this->add_user_to_ugroup($params);
         } else {
+            $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
             $this->remove_user_from_ugroup($params);
         }
     }
@@ -609,6 +611,16 @@ class GitPlugin extends Plugin {
             );
             $this->remove_user_from_ugroup($calling);
         }
+    }
+
+    public function project_admin_add_user($params) {
+        $params['ugroup_id'] = UGroup::PROJECT_MEMBERS;
+        $this->add_user_to_ugroup($params);
+    }
+
+    public function project_admin_remove_user($params) {
+        $params['ugroup_id'] = UGroup::PROJECT_MEMBERS;
+        $this->remove_user_from_ugroup($params);
     }
 
     public function add_user_to_ugroup($params) {
@@ -640,9 +652,8 @@ class GitPlugin extends Plugin {
             $ugroup = $params['ugroup'];
         } else {
             $ugroup_manager = new UGroupManager();
-            $ugroup = $ugroup_manager->getById($params['ugroup_id']);
+            $ugroup = $ugroup_manager->getUGroup($project, $params['ugroup_id']);
         }
-
         $this->getGerritMembershipManager()->updateUserMembership($user, $ugroup, $project, $command);
     }
 
