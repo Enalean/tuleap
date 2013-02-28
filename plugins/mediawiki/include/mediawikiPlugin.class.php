@@ -51,6 +51,9 @@ class MediaWikiPlugin extends Plugin {
 		$this->_addHook("project_admin_plugins"); // to show up in the admin page for group
 		$this->_addHook("clone_project_from_template") ;
 		$this->_addHook('group_delete');
+		$this->_addHook('service_is_used');
+		$this->_addHook('register_project_creation');
+
                 // Search
                 $this->_addHook('search_type_entry', 'search_type_entry', false);
                 $this->_addHook('search_type', 'search_type', false);
@@ -396,7 +399,25 @@ class MediaWikiPlugin extends Plugin {
 			}
 		}
 	}
-  }
+
+    public function register_project_creation($params) {
+        $this->createWikis();
+    }
+
+    public function service_is_used($params) {
+        if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
+            $this->createWikis();
+        }
+    }
+
+    /**
+     * @todo do not create *all* mediawiki
+     */
+    private function createWikis() {
+        include dirname(__FILE__) .'/../cronjobs/create-wikis-mysql.php';
+        include dirname(__FILE__) .'/../cronjobs/create-wikis.php';
+    }
+}
 
 // Local Variables:
 // mode: php
