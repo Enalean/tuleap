@@ -438,13 +438,5 @@ $sys_lists_suffix = '';
 // If disabled (0), only the project name is displayed
 $sys_display_project_privacy_in_service_bar = 1;
 
-// Mediawiki
-$master_path = "/var/lib/codendi/plugins/mediawiki/master" ;
-$mwdata_path = "/var/lib/codendi/plugins/mediawiki";
-$mw_dbtype = "mysql";
-$projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
-$config_path = "/etc/codendi";
-$src_path = "/usr/share/mediawiki115";
-
 // End of customizations -- place nothing after the closing PHP tag!
 ?>
