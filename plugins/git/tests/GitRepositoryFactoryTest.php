@@ -97,7 +97,8 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         expect($this->dao)->instanciateFromRow()->count(2);
         expect($this->dao)->instanciateFromRow($db_row_for_repo_12)->at(0);
         expect($this->dao)->instanciateFromRow($db_row_for_repo_23)->at(1);
-        
+        stub($this->dao)->instanciateFromRow()->returns(mock('GitRepository'));
+
         $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
     }
 
@@ -119,12 +120,97 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         $this->assertEqual(
             $git_with_permission,
             array(
-                array(
-                    'repository'  => $repository,
-                    'permissions' => array(
-                        Git::PERM_READ => array(115)
-                    ),
-                ),
+                12 => new GitRepositoryWithPermissions(
+                    $repository,
+                    array(
+                        Git::PERM_READ          => array(115),
+                        Git::PERM_WRITE         => array(),
+                        Git::PERM_WPLUS         => array(),
+                        Git::SPECIAL_PERM_ADMIN => array(),
+                    )
+                )
+            )
+        );
+    }
+
+    public function itReturnsOneRepositoryWithTwoPermissions() {
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsDar(
+            array(
+                'repository_id'   => 12,
+                'permission_type' => Git::PERM_READ,
+                'ugroup_id'       => 115
+            ),
+            array(
+                'repository_id'   => 12,
+                'permission_type' => Git::PERM_WRITE,
+                'ugroup_id'       => 115
+            )
+        );
+
+        $repository = mock('GitRepository');
+
+        stub($this->dao)->instanciateFromRow()->returns($repository);
+
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+
+        $this->assertEqual(
+            $git_with_permission,
+            array(
+                12 => new GitRepositoryWithPermissions(
+                    $repository,
+                    array(
+                        Git::PERM_READ          => array(115),
+                        Git::PERM_WRITE         => array(115),
+                        Git::PERM_WPLUS         => array(),
+                        Git::SPECIAL_PERM_ADMIN => array(),
+                    )
+                )
+            )
+        );
+    }
+
+    public function itReturnsOneRepositoryWithTwoGroupsForOnePermissionType() {
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsDar(
+            array(
+                'repository_id'   => 12,
+                'permission_type' => Git::PERM_READ,
+                'ugroup_id'       => 115
+            ),
+            array(
+                'repository_id'   => 12,
+                'permission_type' => Git::PERM_READ,
+                'ugroup_id'       => 120
+            )
+        );
+
+        $repository = mock('GitRepository');
+
+        stub($this->dao)->instanciateFromRow()->returns($repository);
+
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup);
+
+        $this->assertEqual(
+            $git_with_permission,
+            array(
+                12 => new GitRepositoryWithPermissions(
+                    $repository,
+                    array(
+                        Git::PERM_READ          => array(115, 120),
+                        Git::PERM_WRITE         => array(),
+                        Git::PERM_WPLUS         => array(),
+                        Git::SPECIAL_PERM_ADMIN => array()
+                    )
+                )
+            )
+        );
+
+        $this->assertEqual(
+            $git_with_permission[12]->getPermissions(),
+            array(
+                Git::PERM_READ          => array(115, 120),
+                Git::PERM_WRITE         => array(),
+                Git::PERM_WPLUS         => array(),
+                Git::SPECIAL_PERM_ADMIN => array()
             )
         );
     }

@@ -126,11 +126,15 @@ class GitRepositoryFactory {
         $repositories = array();
         $dar = $this->dao->searchGerritRepositoriesWithPermissionsForUGroup($project->getID(), $ugroup->getId());
         foreach ($dar as $row) {
-            $repository = $this->dao->instanciateFromRow($row);
-            $repositories[] = array(
-                'repository' => $repository,
-                'permissions' => array($row['permission_type'] => array($row['ugroup_id']))
-            );
+            if (isset($repositories[$row['repository_id']])) {
+                $repo_with_perms = $repositories[$row['repository_id']];
+            } else {
+                $repository = $this->dao->instanciateFromRow($row);
+                $repo_with_perms = new GitRepositoryWithPermissions($repository);
+                $repositories[$row['repository_id']] = $repo_with_perms;
+            }
+            $repo_with_perms->addUGroupForPermissionType($row['permission_type'], $row['ugroup_id']);
+
         }
         return $repositories;
     }
@@ -177,6 +181,34 @@ class GitRepositoryFactory {
             $this->dao->hydrateRepositoryObject($repository, $dar->getRow());
         }
         return $repository;
+    }
+}
+
+class GitRepositoryWithPermissions {
+    private $repository;
+    private $permissions = array(
+        Git::PERM_READ          => array(),
+        Git::PERM_WRITE         => array(),
+        Git::PERM_WPLUS         => array(),
+        Git::SPECIAL_PERM_ADMIN => array()
+    );
+
+    public function __construct(GitRepository $repository, array $permissions = array()) {
+        $this->repository  = $repository;
+        if (count($permissions) > 0) {
+            $this->permissions = $permissions;
+        }
+    }
+
+    public function addUGroupForPermissionType($permission_type, $ugroup_id) {
+        if (!isset($this->permissions[$permission_type])) {
+            throw new RuntimeException('Invalid GIT permission type '.$permission_type);
+        }
+        $this->permissions[$permission_type][] = $ugroup_id;
+    }
+
+    public function getPermissions() {
+        return $this->permissions;
     }
 }
 
