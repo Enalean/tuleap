@@ -395,5 +395,13 @@ class Event {
      *    The links are added in the collection
      */
     const SYSTRAY = 'systray';
+
+    /**
+     * Event launched during the system check event
+     *
+     * Expected results:
+     *    An exception is raised if the system check is in error
+     */
+    const PROCCESS_SYSTEM_CHECK = 'proccess_system_check';
 }
 ?>
