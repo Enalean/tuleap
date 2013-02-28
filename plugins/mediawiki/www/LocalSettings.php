@@ -28,8 +28,7 @@ if (!isset($fusionforge_plugin_mediawiki_LocalSettings_included)) {
 $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 
 require_once 'pre.php';
-require_once dirname(__FILE__) . '/../../../src/www/env.inc.php';
-require_once dirname(__FILE__) . '/../../../src/www/include/plugins_utils.php';
+require_once 'plugins_utils.php';
 
 //require_once 'common/include/RBACEngine.class.php';
 sysdebug_lazymode(true);
