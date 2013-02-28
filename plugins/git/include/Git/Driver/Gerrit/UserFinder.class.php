@@ -81,7 +81,7 @@ class Git_Driver_Gerrit_UserFinder {
         if ($permission_type == Git::SPECIAL_PERM_ADMIN) {
             return array(UGroup::PROJECT_ADMIN);
         }
-        $ugroup_ids = $this->permissions_manager->getAuthorizedUgroups($repository_id, $permission_type);
+        $ugroup_ids = $this->permissions_manager->getAuthorizedUgroups($repository_id, $permission_type, false);
         $result = array();
         foreach ($ugroup_ids as $row) {
             $id = $row['ugroup_id'];

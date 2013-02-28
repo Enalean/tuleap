@@ -110,4 +110,26 @@ class UGroupManager_getUGroupByName_Test extends UGroupManager_BaseTest {
         $this->assertNull($this->ugroup_manager->getUGroupByName($this->project, 'BLA'));
     }
 }
+
+class UGroupManager_getUGroupWithMembers_Test extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+
+        $this->ugroup_id = 112;
+        $this->project = mock('Project');
+
+        $this->ugroup_manager = partial_mock('UGroupManager', array('getUGroup'));
+    }
+
+    public function itReturnsAUGroupWithMembers() {
+        $ugroup = mock('UGroup');
+        stub($this->ugroup_manager)->getUGroup($this->project, $this->ugroup_id)->returns($ugroup);
+
+        expect($ugroup)->getMembers()->once();
+
+        $ugroup_with_members = $this->ugroup_manager->getUGroupWithMembers($this->project, $this->ugroup_id);
+        $this->assertIdentical($ugroup_with_members, $ugroup);
+    }
+}
+
 ?>
