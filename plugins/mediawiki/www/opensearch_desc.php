@@ -1,1 +1,1 @@
-/usr/share/mediawiki115/opensearch_desc.php
+/usr/share/mediawiki_tuleap/opensearch_desc.php

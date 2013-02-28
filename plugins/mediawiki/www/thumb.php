@@ -1,1 +1,1 @@
-/usr/share/mediawiki115/thumb.php
+/usr/share/mediawiki_tuleap/thumb.php

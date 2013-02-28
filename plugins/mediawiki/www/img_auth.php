@@ -1,1 +1,1 @@
-/usr/share/mediawiki115/img_auth.php
+/usr/share/mediawiki_tuleap/img_auth.php
