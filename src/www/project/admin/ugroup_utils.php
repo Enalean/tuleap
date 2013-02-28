@@ -338,18 +338,6 @@ function ugroup_get_all_dynamic_members($group_id, $atid=0) {
 }
 
 /**
- * Remove user from all ugroups
- *
- * @return false if access rights are insufficient (need to be site admin)
- */
-function ugroup_delete_user_from_all_ugroups($user_id) {
-    if (!user_is_super_user()) return false;
-    db_query("DELETE FROM ugroup_user WHERE user_id=$user_id");
-    return true;
-}
-
-
-/**
  * Remove user from all ugroups attached to the given project
  *
  * @return true
