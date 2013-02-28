@@ -28,11 +28,30 @@ chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
 
 #Create MySQL views in codendi scheme
 
-create view group_plugin as (select service.service_id group_plugin_id,service.group_id,plugin.id plugin_id,service.short_name from service,plugin where service.short_name=CONCAT('plugin_', plugin.name) and service.is_active=1 and service.is_used=1 and service.group_id != 100);
-create view plugins as (select id plugin_id, name plugin_name, name plugin_desc from plugin );
+USE codendi;
+CREATE VIEW group_plugin 
+    AS (
+        SELECT service.service_id group_plugin_id,
+            service.group_id,
+            plugin.id plugin_id,
+            service.short_name
+        FROM service,plugin
+        WERE service.short_name = CONCAT('plugin_', plugin.name)
+            AND service.is_active=1
+            AND service.is_used=1
+            AND service.group_id != 100
+        );
+CREATE VIEW plugins 
+    AS (
+        SELECT id plugin_id,
+            name plugin_name,
+            name plugin_desc
+        FROM plugin
+        );
 
-# modify /etc/httpd/conf.d/codendi_aliases.conf to add plugin-mediawiki.inc (usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc)
-# Be careful to add it before the aliases for plugins, just after the Plugin directories section title is a good place.
+# open /etc/httpd/conf.d/codendi_aliases.conf (located in usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc)
+# locate the place between the aliases section for plugins, which is just after the Plugin directories section title.
+# paste the following row of code
 include /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc
 
 #Then restart yout httpd service
@@ -46,13 +65,6 @@ $mw_dbtype = "mysql";
 $projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
 $config_path = "/etc/codendi";
 $src_path = "/usr/share/mediawiki115";
-
-#run these commands /!\ Be careful, you have to run these 2 commands in the following order. You have to launch these commands each time you create a project :
-
-/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
-/usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis.php
-
-You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
 
 # "Install" tuleap theme
 rm /usr/share/codendi/plugins/mediawiki/www/load.php
@@ -70,6 +82,21 @@ cp MonoBook.deps.php Tuleap.deps.php        #
 
 cp -r monobook tuleap
 ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/mediawiki115/skins/tuleap
+
+
+###################################################
+#  end mediawiki install                          #
+###################################################
+
+## activate for a project
+
+#run these commands /!\ Be careful, you have to run these 2 commands in the following order. You have to launch these commands each time you create a project :
+
+/usr/share/codendi/src/utils/php-launcher.sh /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis-mysql.php
+/usr/bin/php -q -d include_path=.:/etc/codendi:/usr/share/codendi/src:/usr/share/codendi/src/www/include:/usr/share/codendi/plugins /usr/share/codendi/plugins/mediawiki/cronjobs/create-wikis.php
+
+You can access a wiki using http://example.com/plugins/mediawiki/wiki/<projectname>/index.php
+
 
 ####################
 ### You're done! ###
