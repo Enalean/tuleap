@@ -590,12 +590,16 @@ class GitPlugin extends Plugin {
     }
 
     public function project_admin_change_user_permissions($params) {
-        if ($params['user_permissions']['admin_flags'] == 'A') {
-            $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
-            $this->add_user_to_ugroup($params);
-        } else {
-            $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
-            $this->remove_user_from_ugroup($params);
+        $previous_admin_flag = $params['previous_permissions']['admin_flags'];
+        $current_admin_flag  = $params['user_permissions']['admin_flags'];
+        if ($previous_admin_flag !== $current_admin_flag) {
+            if ($current_admin_flag == 'A') {
+                $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
+                $this->add_user_to_ugroup($params);
+            } else {
+                $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
+                $this->remove_user_from_ugroup($params);
+            }
         }
     }
 
