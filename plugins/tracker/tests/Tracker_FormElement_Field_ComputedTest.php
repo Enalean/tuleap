@@ -26,7 +26,7 @@ class Tracker_FormElement_Field_ComputedTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user  = mock('User');
+        $this->user  = mock('PFUser');
         $this->field = TestHelper::getPartialMock('Tracker_FormElement_Field_Computed', array('getProperty'));
         stub($this->field)->getProperty()->returns('effort');
 

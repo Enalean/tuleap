@@ -55,7 +55,7 @@ class Tracker_Workflow_Action_Rules_EditRules_processTest extends TuleapTestCase
         $this->rule_1       = $this->setUpRule(123, $this->planned_start_date, Tracker_Rule_Date::COMPARATOR_EQUALS, $this->planned_end_date);
         $this->rule_2       = $this->setUpRule(456, $this->actual_start_date, Tracker_Rule_Date::COMPARATOR_LESS_THAN, $this->actual_end_date);
         $this->layout       = mock('Tracker_IDisplayTrackerLayout');
-        $this->user         = mock('User');
+        $this->user         = mock('PFUser');
         stub($this->date_factory)->getRule($this->tracker, 123)->returns($this->rule_1);
         stub($this->date_factory)->getRule($this->tracker, 456)->returns($this->rule_2);
         stub($this->date_factory)->searchByTrackerId($this->tracker_id)->returns(array($this->rule_1, $this->rule_2));

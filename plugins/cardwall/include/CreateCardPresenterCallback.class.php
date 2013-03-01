@@ -28,11 +28,11 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
     private $card_fields;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
-    public function __construct($card_fields, User $user) {
+    public function __construct($card_fields, PFUser $user) {
          $this->card_fields = $card_fields;
          $this->user        = $user;
     }

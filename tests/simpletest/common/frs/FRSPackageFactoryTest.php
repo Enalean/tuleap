@@ -26,7 +26,7 @@ Mock::generate('DataAccessResult');
 require_once('common/dao/FRSPackageDao.class.php');
 Mock::generatePartial('FRSPackageDao', 'FRSPackageDaoTestVersion', array('retrieve'));
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('PermissionsManager');
 Mock::generate('FRSPackage');
@@ -102,7 +102,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
 
         $um = new MockUserManager($this);
@@ -117,7 +117,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
 
         $um = new MockUserManager($this);
@@ -131,7 +131,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frsrf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
 
         $um = new MockUserManager($this);
@@ -146,7 +146,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         $frspf = new FRSPackageFactoryTestVersion($this);
 
         // User
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->expectOnce('getUgroups', array($this->group_id, array()));
         $user->setReturnValue('getUgroups', array(1,2,76));
         $um = new MockUserManager($this);
@@ -181,7 +181,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         $frspf = new FRSPackageFactoryTestVersion($this);
 
         // User
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->expectOnce('getUgroups', array($this->group_id, array()));
         $user->setReturnValue('getUgroups', array(1,2,76));
         $um = new MockUserManager($this);
@@ -207,7 +207,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frspf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
 
         $um = new MockUserManager($this);
@@ -222,7 +222,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frspf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
 
         $um = new MockUserManager($this);
@@ -236,7 +236,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frspf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
 
         $um = new MockUserManager($this);
@@ -250,7 +250,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frspf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
 
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserById', $user);
@@ -267,7 +267,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frspf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true, array($this->group_id, 'R2'));
 
         $um = new MockUserManager($this);
@@ -282,7 +282,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frspf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true, array($this->group_id, 'A'));
 
         $um = new MockUserManager($this);
@@ -296,7 +296,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frspf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
 
         $um = new MockUserManager($this);
@@ -310,7 +310,7 @@ class FRSPackageFactoryTest extends UnitTestCase {
         // Setup test
         $frspf = new FRSPackageFactoryTestVersion($this);
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
 
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserById', $user);

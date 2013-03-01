@@ -1,0 +1,7 @@
+Package: @PACKAGE@-plugin-mediawiki
+Architecture: all
+Depends: @OLDPACKAGE@-common (>= 4.8), @OLDPACKAGE@-db-postgresql (>= 4.8) | @OLDPACKAGE@-db, @OLDPACKAGE@-web-apache2 (>= 4.8) | @OLDPACKAGE@-web, postgresql-contrib, mediawiki (>= 1:1.19.1-2~exp2), php5-cli, php5-gd, ${misc:Depends}
+Provides: @OLDPACKAGE@-plugin-mediawiki
+Conflicts: @OLDPACKAGE@-plugin-mediawiki (<< 5.0.51-2)
+Replaces: @OLDPACKAGE@-plugin-mediawiki (<< 5.0.51-2)
+Description: Mediawiki plugin for FusionForge

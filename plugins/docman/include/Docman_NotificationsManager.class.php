@@ -217,7 +217,7 @@ class Docman_NotificationsManager extends NotificationsManager {
     /**
      * Notify each user in his preferred language
      *
-     * @param User $user User to be notified
+     * @param PFUser $user User to be notified
      *
      * @return BaseLanguage
      */

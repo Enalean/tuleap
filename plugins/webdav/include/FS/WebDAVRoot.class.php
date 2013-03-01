@@ -39,7 +39,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
      * Constructor of the class
      *
      * @param Plugin $plugin
-     * @param User $user
+     * @param PFUser $user
      * @param Integer $maxFileSize
      *
      * @return void
@@ -152,7 +152,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     /**
      * Returns the User
      *
-     * @return User
+     * @return PFUser
      */
     function getUser() {
 
@@ -203,7 +203,7 @@ class WebDAVRoot extends Sabre_DAV_Directory {
     /**
      * Generates project list of the given user
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return Array
      */

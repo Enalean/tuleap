@@ -1,0 +1,87 @@
+== How to set up ==
+* Read plugins/mediawiki/INSTALL.tuleap
+
+== How it works ==
+It's mainly a wrapper around mediawiki:
+-> in plugins/mediawiki/www there are links to the mediawiki installation (not modified).
+-> in addition to that there is a LocalSettings.php (in plugins/mediawiki/www)
+   that does the glue between Tuleap and Mediawiki (manage authentication, permissions and stuff).
+
+== Resources ==
+* Log in mediawiki : LocalSettings.php : $wgDebugLogFile         = '/tmp/wiki.log';
+* Permissions management in mediawiki: http://www.mediawiki.org/wiki/Manual:User_rights
+
+== Version to use ==
+
+* Current integration was tested with mediawiki 1.15.
+* Latest version integrated with FusionForge is 1.19.
+* Latest version available 1.20 but requires PHP 5.3
+
+-> our recommendation is to start with the latest version to avoid "starting late".
+
+== Issues ==
+-> the view in README.codendi is supposed to get a table of projects where a plugin is activated.
+   It's done with a join between "service" and "plugin" tables but the issue is that service.short_name and plugin.name
+   doesn't match. Example:
+   * docman: service.short_name = 'docman' && plugin.name = 'docman'
+   * tracker: service.short_name = 'plugin_tracker' && plugin.name = 'tracker'
+
+-> Name clashes
+  Some classes exists both on Tuleap and Mediawiki
+  * User
+  * Sanitizer
+
+-> How to update
+  * When there is a new version of mediawiki, how do we update the code & the DBs ?
+  * Reading
+    * http://www.mediawiki.org/wiki/Manual:Upgrading
+    * https://gerrit.wikimedia.org/r/gitweb?p=mediawiki/core.git;a=blob;f=UPGRADE;hb=REL1_20
+  ==> MV: I managed to upgrade from 1.15 to 1.20 by tweaking a bit LocalSettings.php (I disabled
+      the discovery of '$fusionforgeproject' at the beginning of the script to set the name of
+      the project I wanted to upgrade. Then I ran
+      $> /usr/share/codendi/src/utils/php-launcher.sh update.php --conf /usr/share/codendi/plugins/mediawiki/www/LocalSettings.php --quick
+      This does the upgrade for one project. I suppose this should be done for all projects.
+      It seems to be the recommended way to do it: http://www.mediawiki.org/wiki/Wiki_farm#Updating_wikifarm_from_the_commandline
+
+      I also needed to re-create all links in plugins/mediawiki/www and to add a RewriteRule in plugin-mediawiki.inc (apache config) for 'load.php'
+      -> symptom: the wiki pages are displayed without any CSS.
+
+
+-> How to graphically integrate MW ?
+  * As of today, we browse the mediawiki instance without Tuleap integration (no header/footer).
+  * We should find a way to integrate visually things together.
+  * It will probably be done with a "Tuleap" skin for mediawiki (as done in fusionforge).
+
+-> Fix upload of images (need to activate enable_uploads in LocalSettings)
+
+
+== Differences between Codendi/Mediawiki & Tuleap == 
+*src/common/include/PFO-RBAC.interface.php
+*src/common/include/RBAC.php
+*src/common/include/RBACEngine.class.php
+layout::BodyHeader() ??
+*Project::getRolesId()
+*Project::getRoles()
+Ugroup/UserManager  ->  new PFUser($row) (renommage User -> PFUser) => won't be modified on Tuleap side
+SystemEventManager::fetchEvents() => not used
+*database_pforole.sql
+*codendi_aliases.conf.dist -> Include /usr/share/codendi/plugins/mediawiki/etc/plugin-mediawiki.inc
+*local.inc.dist ->  $master_path $mwdata_path $mw_dbtype  $projects_path $config_path $src_path
+*database.php -> db_query_from_file (+ db_begin, db_commit, db_rollback qui ne font rien)
+*src/www/include/env.inc.php (vide)
+*src/www/include/plugins_utils.php
+*/src/www/include/preplugins.php (vide)
+*/src/www/env.inc.php ($gfcommon)
+*/FusionForge.php
+*/cron_utils.php
+*/externals.txt
+*/LocalSettings.php
+*/Makefile.extraplugins
+*/Makefile.mediawiki
+*/mediawikiactivate.sql
+*/mediawikiviews.sql
+*/pfo.sql
+*/plugin-mediawiki.inc
+*/plugins/mediaawiki
+/3rd-party/mediawiki/Makefile
+/tests/func/PluginsMediawiki/mediawikiTest.php

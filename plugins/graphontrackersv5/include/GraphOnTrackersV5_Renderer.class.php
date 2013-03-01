@@ -65,7 +65,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
      * @param Request $request
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified, User $user) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user) {
         $html = '';
         $this->initiateSession();
         $readonly = !$report_can_be_modified || $user->isAnonymous();
@@ -114,7 +114,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget(User $user) {
+    public function fetchWidget(PFUser $user) {
         $html = '';
         $in_dashboard = $readonly = true;
         $store_in_session = false;
@@ -123,7 +123,7 @@ class GraphOnTrackersV5_Renderer extends Tracker_Report_Renderer {
         return $html;
     }
     
-    protected function fetchCharts($matching_ids, User $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true) {
+    protected function fetchCharts($matching_ids, PFUser $current_user, $in_dashboard = false, $readonly = null, $store_in_session = true) {
         $html = '';
         $hp = Codendi_HTMLPurifier::instance();
         if (!$readonly) {

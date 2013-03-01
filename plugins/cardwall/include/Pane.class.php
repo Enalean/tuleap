@@ -47,7 +47,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
     private $config;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
@@ -61,7 +61,7 @@ class Cardwall_Pane extends AgileDashboard_Pane {
             Planning_Milestone $milestone,
             $enable_qr_code,
             Cardwall_OnTop_Config $config,
-            User $user,
+            PFUser $user,
             Planning_MilestoneFactory $milestone_factory
             ) {
         $this->info           = $info;

@@ -419,7 +419,7 @@ class BackendSVN extends Backend {
      * + projects the user is member of 
      * + projects that have user groups that contains the user
      * 
-     * @param User $user
+     * @param PFUser $user
      * 
      * @return Boolean
      */

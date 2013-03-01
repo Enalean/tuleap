@@ -24,7 +24,7 @@ require_once dirname(__FILE__).'/../include/Git.class.php';
 require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
 
 Mock::generate('Project');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('GitDao');
 Mock::generate('PermissionsManager');
 Mock::generate('DataAccessResult');

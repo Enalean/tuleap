@@ -110,7 +110,7 @@ class Docman_Actions extends Actions {
      * Raise "Lock add" event
      *
      * @param Docman_Item $item Locked item
-     * @param User        $user Who locked the item
+     * @param PFUser        $user Who locked the item
      *
      * @return void
      */
@@ -125,7 +125,7 @@ class Docman_Actions extends Actions {
      * Raise "Lock deletion" event
      *
      * @param Docman_Item $item Unlocked item
-     * @param User        $user Who unlocked the item
+     * @param PFUser        $user Who unlocked the item
      *
      * @return void
      */
@@ -721,7 +721,7 @@ class Docman_Actions extends Actions {
      *
      * @param Docman_Item   $itemToMove    Item to move
      * @param Docman_Folder $newParentItem New parent item
-     * @param User          $user          User who perform the paste
+     * @param PFUser          $user          User who perform the paste
      * @param String        $ordering      Where the item should be paste within the new folder
      *
      * @return void
@@ -755,7 +755,7 @@ class Docman_Actions extends Actions {
      *
      * @param Docman_Item   $itemToPaste   Item to paste
      * @param Docman_Folder $newParentItem New parent item
-     * @param User          $user          User who perform the paste
+     * @param PFUser          $user          User who perform the paste
      * @param String        $ordering      Where the item should be paste within the new folder
      * @param Boolean       $importMd      Do we need to import metadata from another project
      * @param String        $dataRoot      Where the docman data stand on hard drive
@@ -966,9 +966,9 @@ class Docman_Actions extends Actions {
     /**
      * @param Docman_Item  $item  The id of the item
      * @param bool         $force true if you want to bypass permissions checking (@see permission_add_ugroup)
-     * @param User         $user  The current user
+     * @param PFUser         $user  The current user
      */
-    private function setPermissionsOnItem(Docman_Item $item, $force, User $user) {
+    private function setPermissionsOnItem(Docman_Item $item, $force, PFUser $user) {
         $permission_definition = array(
             100 => array(
                 'order' => 0,
@@ -1644,7 +1644,7 @@ class Docman_Actions extends Actions {
                 $dpm = $this->_getDocmanPermissionsManagerInstance($params['item']->getGroupId());
                 $invalidUsers = $params['invalid_users'];
                 foreach ($params['listeners_to_add'] as $user) {
-                    if ($user instanceof User) {
+                    if ($user instanceof PFUser) {
                         if (!$this->_controler->notificationsManager->exist($user->getId(), $params['item']->getId())) {
                             if ($dpm->userCanRead($user, $params['item']->getId())) {
                                 if ($this->_controler->notificationsManager->add($user->getId(), $params['item']->getId())) {

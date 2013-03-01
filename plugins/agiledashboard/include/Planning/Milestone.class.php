@@ -45,7 +45,7 @@ interface Planning_Milestone {
     /**
      * @return Boolean
      */
-    public function userCanView(User $user);
+    public function userCanView(PFUser $user);
 
     /**
      * @return int
@@ -85,10 +85,10 @@ interface Planning_Milestone {
 
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
-     * @param User $user
+     * @param PFUser $user
      * @return Array of Tracker_Artifact
      */
-    public function getLinkedArtifacts(User $user);
+    public function getLinkedArtifacts(PFUser $user);
 
     /**
      * Return true of the milestone is inside hierarchy.

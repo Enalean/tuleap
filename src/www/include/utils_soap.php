@@ -80,7 +80,7 @@ function ugroups_to_soap($ugroups) {
     return $return;
 }
 
-function user_to_soap(User $user = null, User $current_user) {
+function user_to_soap(PFUser $user = null, PFUser $current_user) {
     if ($user !== null && ($user->isActive() || $user->isRestricted())) {
         if ($current_user->canSee($user)) {
             return array('username'   => $user->getUserName(),

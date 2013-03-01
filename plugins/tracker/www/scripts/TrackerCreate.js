@@ -37,5 +37,41 @@ document.observe('dom:loaded', function () {
             displayMode(mode);
         });
     });
+
+    // read xml template that has been choosen and prefill the form (name, desc, …)
+    // Depends on presence of FileReader api (bye bye IE)
+    var input_file = $('tracker_new_xml_file');
+    if (!! window.FileReader && input_file) {
+        var file_reader = new FileReader(),
+            filter      = /^text\/xml$/;
+
+        file_reader.onload = function (event) {
+            var parsed   = new DOMParser().parseFromString(event.target.result, "text/xml"),
+                trackers = parsed.getElementsByTagName('tracker'),
+                tracker  = trackers[0] || undefined;
+
+            if (! tracker) {
+                alert("You must select a valid template xml file!");
+                return;
+            }
+
+            $('newtracker_name').highlight().value        = tracker.getElementsByTagName('name')[0].textContent;
+            $('newtracker_description').highlight().value = tracker.getElementsByTagName('description')[0].textContent;
+            $('newtracker_itemname').highlight().value    = tracker.getElementsByTagName('item_name')[0].textContent;
+        }
+
+        input_file.observe('change', function (evt) {
+            if (input_file.files.length === 0) {
+                return;
+            }
+            var file = input_file.files[0];
+            if (!filter.test(file.type)) {
+                alert("Not an xml file! (" + file.type + ")");
+                return;
+            }
+
+            file_reader.readAsText(file);
+        });
+    }
 });
 

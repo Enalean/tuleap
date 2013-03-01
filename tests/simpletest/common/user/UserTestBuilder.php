@@ -63,7 +63,7 @@ class UserTestBuilder {
     }
 
     function build() {
-        return new User($this->params);
+        return new PFUser($this->params);
     }
 }
 

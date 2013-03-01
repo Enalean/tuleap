@@ -78,7 +78,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
 
-        $this->current_user        = mock('User');
+        $this->current_user        = mock('PFUser');
         stub($this->current_user)->getId()->returns($this->user_id);
         stub($this->current_user)->isSuperUser()->returns(true);
         stub($this->current_user)->isLoggedIn()->returns(true);
@@ -86,6 +86,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
         $this->user_manager  = stub('UserManager')->getCurrentUser($this->session_key)->returns($this->current_user);
 
         $this->permissions_manager = mock('PermissionsManager');
+
         $project_manager     = mock('ProjectManager');
         $project             = mock('Project');
         $private_project     = mock('Project');
@@ -786,7 +787,7 @@ class Tracker_SOAPServer_PurgeTemporaryAttachments_Test extends Tracker_SOAPServ
 
         $this->another_session_key = 'sdf54564dsfsd';
         $this->another_user_id     = 357159;
-        $another_user = mock('User');
+        $another_user = mock('PFUser');
         stub($another_user)->getId()->returns($this->another_user_id);
         stub($another_user)->isSuperUser()->returns(true);
         stub($another_user)->isLoggedIn()->returns(true);

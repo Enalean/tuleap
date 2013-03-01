@@ -1,7 +1,7 @@
 <?php
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/dao/UserDao.class.php');
 Mock::generate('UserDao');
 require_once('common/dao/include/DataAccessResult.class.php');
@@ -68,10 +68,10 @@ class UserManagerTest extends UnitTestCase {
         
         $dao->expectOnce('searchByUserId', array(123));
         
-        $user123 = new MockUser($this);
+        $user123 = mock('PFUser');
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
-        $user456 = new MockUser($this);
+        $user456 = mock('PFUser');
         $user456->setReturnValue('getId', 456);
         $user456->setReturnValue('getUserName', 'user_456');
         
@@ -94,10 +94,10 @@ class UserManagerTest extends UnitTestCase {
         
         $dao->expectOnce('searchByUserName', array('user_123'));
         
-        $user123 = new MockUser($this);
+        $user123 = mock('PFUser');
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
-        $user456 = new MockUser($this);
+        $user456 = mock('PFUser');
         $user456->setReturnValue('getId', 456);
         $user456->setReturnValue('getUserName', 'user_456');
         
@@ -125,10 +125,10 @@ class UserManagerTest extends UnitTestCase {
         $dao->expectOnce('searchByUserId', array(123));
         $dao->expectOnce('searchByUserName', array('user_456'));
         
-        $user123 = new MockUser($this);
+        $user123 = mock('PFUser');
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
-        $user456 = new MockUser($this);
+        $user456 = mock('PFUser');
         $user456->setReturnValue('getId', 456);
         $user456->setReturnValue('getUserName', 'user_456');
         
@@ -154,7 +154,7 @@ class UserManagerTest extends UnitTestCase {
         
         $dao->expectOnce('searchByUserId', array(123));
         
-        $user123 = new MockUser($this);
+        $user123 = mock('PFUser');
         $user123->setReturnValue('getId', 123);
         $user123->setReturnValue('getUserName', 'user_123');
         
@@ -171,7 +171,7 @@ class UserManagerTest extends UnitTestCase {
     
     function testEmptySessionHash() {
         $cm               = new MockCookieManager($this);
-        $userAnonymous    = new MockUser($this);
+        $userAnonymous    = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
         
@@ -196,7 +196,7 @@ class UserManagerTest extends UnitTestCase {
     function testValidSessionHash() {
         $cm               = new MockCookieManager($this);
         $dar_valid_hash   = new MockDataAccessResult($this);
-        $user123          = new MockUser($this);
+        $user123          = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
         
@@ -224,7 +224,7 @@ class UserManagerTest extends UnitTestCase {
     function testInvalidSessionHash() {
         $cm               = new MockCookieManager($this);
         $dar_invalid_hash = new MockDataAccessResult($this);
-        $userAnonymous    = new MockUser($this);
+        $userAnonymous    = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
         
@@ -247,7 +247,7 @@ class UserManagerTest extends UnitTestCase {
     function testInvalidIp() {
         $cm               = new MockCookieManager($this);
         $dar_invalid      = new MockDataAccessResult($this);
-        $userAnonymous    = new MockUser($this);
+        $userAnonymous    = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
         
@@ -271,8 +271,8 @@ class UserManagerTest extends UnitTestCase {
         $cm               = new MockCookieManager($this);
         $dar_invalid_hash = new MockDataAccessResult($this);
         $dar_valid_hash   = new MockDataAccessResult($this);
-        $user123          = new MockUser($this);
-        $userAnonymous    = new MockUser($this);
+        $user123          = mock('PFUser');
+        $userAnonymous    = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
         
@@ -314,7 +314,7 @@ class UserManagerTest extends UnitTestCase {
     function testLogout() {
         $cm               = new MockCookieManager($this);
         $dar_valid_hash   = new MockDataAccessResult($this);
-        $user123          = new MockUser($this);
+        $user123          = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
         
@@ -345,7 +345,7 @@ class UserManagerTest extends UnitTestCase {
         $cm               = new MockCookieManager($this);
         $dao              = new MockUserDao($this);
         $dar              = new MockDataAccessResult($this);
-        $user123          = new MockUser($this);
+        $user123          = mock('PFUser');
         $um               = new UserManagerTestVersion($this);
         $em               = new MockEventManager($this);
         
@@ -378,8 +378,8 @@ class UserManagerTest extends UnitTestCase {
         $cm               = new MockCookieManager($this);
         $dao              = new MockUserDao($this);
         $dar              = new MockDataAccessResult($this);
-        $user123          = new MockUser($this);
-        $userAnonymous    = new MockUser($this);
+        $user123          = mock('PFUser');
+        $userAnonymous    = mock('PFUser');
         $um               = new UserManagerTestVersion($this);
         $em               = new MockEventManager($this);
         
@@ -413,8 +413,8 @@ class UserManagerTest extends UnitTestCase {
         
         $cm               = new MockCookieManager($this);
         $dar_valid_hash   = new MockDataAccessResult($this);
-        $user123          = new MockUser($this);
-        $userAnonymous    = new MockUser($this);
+        $user123          = mock('PFUser');
+        $userAnonymous    = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
         
@@ -445,8 +445,8 @@ class UserManagerTest extends UnitTestCase {
     function testDeletedUserGetSession() {
         $cm               = new MockCookieManager($this);
         $dar_valid_hash   = new MockDataAccessResult($this);
-        $user123          = new MockUser($this);
-        $userAnonymous    = new MockUser($this);
+        $user123          = mock('PFUser');
+        $userAnonymous    = mock('PFUser');
         $dao              = new MockUserDao($this);
         $um               = new UserManagerTestVersion($this);
         
@@ -496,7 +496,7 @@ class UserManagerTest extends UnitTestCase {
         $um->setReturnReference('_getEventManager', $em);
 
         $um->expectOnce('getUserByUserName');
-        $u1 = new MockUser($this);
+        $u1 = mock('PFUser');
         $um->setReturnReference('getUserByUserName', $u1);
 
         $user = $um->getUserByIdentifier('test');
@@ -517,7 +517,7 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testGetUserByIdentifierPluginAnswer() {
-        $u1 = new MockUser($this);
+        $u1 = mock('PFUser');
         $em = new MockEM4UserManager($this);
         $em->setReturnValue('processEvent', array('tokenFound' => true, 'user' => &$u1));
 
@@ -531,7 +531,7 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testGetUserByIdentifierPluginAnswerNotFound() {
-        $u1 = new MockUser($this);
+        $u1 = mock('PFUser');
         $em = new MockEM4UserManager($this);
         $em->setReturnValue('processEvent', array('tokenFound' => false));
 
@@ -546,7 +546,7 @@ class UserManagerTest extends UnitTestCase {
     }
     
     function testUpdateFailureWhenAnonymous() {
-    	$user = new MockUser($this);
+    	$user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
         
         $dao = new MockUserDao($this);
@@ -556,7 +556,7 @@ class UserManagerTest extends UnitTestCase {
     }
     
     function testUpdateDaoResultPropagated() {
-    	$user = new MockUser($this);
+    	$user = mock('PFUser');
     	$user->setReturnValue('isAnonymous', false);
     	$user->setReturnValue('isSuspended', false);
     	$user->setReturnValue('isDeleted',   false);
@@ -582,7 +582,7 @@ class UserManagerTest extends UnitTestCase {
     function testUpdatePassword() {
     	$password = "coco l'asticot";
     	
-    	$user = new MockUser($this);
+    	$user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('toRow', array());
         $user->setReturnValue('getPassword', $password);
@@ -599,7 +599,7 @@ class UserManagerTest extends UnitTestCase {
     function testUpdateNoPasswordChange() {
         $password = "coco l'asticot";
         
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('toRow', array());
         $user->setReturnValue('getPassword', $password);
@@ -614,7 +614,7 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testUpdateToSuspendedDeleteSessions() {
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('isSuspended', true);
@@ -631,7 +631,7 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testUpdateToDeletedDeleteSessions() {
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 123);
         $user->setReturnValue('isAnonymous', false);
         $user->setReturnValue('isDeleted', true);
@@ -648,7 +648,7 @@ class UserManagerTest extends UnitTestCase {
     }
 
     function testAssignNextUnixUidUpdateUser() {
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->expectOnce('setUnixUid', array(1789));
         
         $dao = new MockUserDao($this);
@@ -663,7 +663,7 @@ class UserManagerTest extends UnitTestCase {
         //$this->assertEqual(1789, $user->getUnixUid());
     }
     function testLoginAsCallsGetCurrentUser() {
-        $ordinaryUser = new MockUser($this);
+        $ordinaryUser = mock('PFUser');
         $ordinaryUser->setReturnValue('isSuperUser', false);
         $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
 
@@ -675,7 +675,7 @@ class UserManagerTest extends UnitTestCase {
     
     function testLoginAsReturnsAnExceptionWhenNotCallByTheSuperUser() {
         $hash_is_not_important = null;
-        $ordinaryUser = new MockUser($this);
+        $ordinaryUser = mock('PFUser');
         $ordinaryUser->setReturnValue('isSuperUser', false);
         $um = $this->aUserManagerWithCurrentUser($ordinaryUser);
         
@@ -731,7 +731,7 @@ class UserManagerTest extends UnitTestCase {
     }
     
     private function aUserWithStatusAndId($status, $id) {
-        $userLoginAs = new MockUser();
+        $userLoginAs = mock('PFUser');
         $userLoginAs->setReturnValue('getStatus', $status);
         $userLoginAs->setReturnValue('getId', $id);
         return $userLoginAs;
@@ -752,7 +752,7 @@ class UserManagerTest extends UnitTestCase {
     }
 
     private function anAdminUser() {
-        $adminUser = new MockUser($this);
+        $adminUser = mock('PFUser');
         $adminUser->setReturnValue('isSuperUser', true);
         return $adminUser;
     }

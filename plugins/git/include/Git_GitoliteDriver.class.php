@@ -28,6 +28,7 @@ require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'PathJoinUtil.php';
 require_once 'Git_Exec.class.php';
+require_once dirname(__FILE__).'/exceptions/GitAuthorizedKeysFileException.class.php';
 
 
 /**
@@ -64,6 +65,9 @@ class Git_GitoliteDriver {
         Git::PERM_WRITE => ' RW ',
         Git::PERM_WPLUS => ' RW+'
     );
+
+    CONST OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
+    CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
 
     /**
      * Constructor
@@ -163,7 +167,7 @@ class Git_GitoliteDriver {
     /**
      * Dump ssh keys into gitolite conf
      */
-    public function dumpSSHKeys(User $user = null) {
+    public function dumpSSHKeys(PFUser $user = null) {
         if ($this->dumper->dumpSSHKeys($user)) {
             return $this->push();
         }
@@ -386,6 +390,20 @@ class Git_GitoliteDriver {
         } else {
             throw new Git_Command_Exception($cmd, $output, $retVal);
         }
+    }
+
+    public function checkAuthorizedKeys() {
+        $authorized_keys_file = $this->getAuthorizedKeysPath();
+        if (filesize($authorized_keys_file) == 0) {
+            throw new GitAuthorizedKeysFileException($authorized_keys_file);
+        }
+    }
+
+    private function getAuthorizedKeysPath() {
+        if (!file_exists(self::OLD_AUTHORIZED_KEYS_PATH)) {
+            return self::NEW_AUTHORIZED_KEYS_PATH;
+        }
+        return self::OLD_AUTHORIZED_KEYS_PATH;
     }
 
 }

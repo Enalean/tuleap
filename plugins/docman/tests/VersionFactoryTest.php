@@ -25,7 +25,7 @@ require_once('common/event/EventManager.class.php');
 Mock::generate('EventManager');
 
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 Mock::generate('DataAccessResult');
 Mock::generate('Docman_VersionDao');
@@ -152,7 +152,7 @@ function testPurgeDeletedVersion() {
         $if->setReturnValue('getItemFromDb', $file);
         $versionFactory->setReturnValue('_getItemFactory', $if);
         
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $um   = new MockUserManager($this);
         $um->setReturnValue('getCurrentUser', $user);
         $versionFactory->setReturnValue('_getUserManager', $um);

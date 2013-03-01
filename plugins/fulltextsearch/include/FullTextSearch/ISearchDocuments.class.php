@@ -30,10 +30,10 @@ interface FullTextSearch_ISearchDocuments {
      * @param String $term   terms
      * @param array  $facets submitted by user for faceted navigation
      * @param int    $offset The offset of the search
-     * @param User   $user   The user which do the request
+     * @param PFUser   $user   The user which do the request
      * 
      * @return FullTextSearch_SearchResultCollection
      */
-    public function searchDocuments($terms, array $facets, $offset, User $user);
+    public function searchDocuments($terms, array $facets, $offset, PFUser $user);
 }
 ?>

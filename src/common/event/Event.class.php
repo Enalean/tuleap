@@ -395,5 +395,27 @@ class Event {
      *    The links are added in the collection
      */
     const SYSTRAY = 'systray';
+
+    /**
+     * Event launched during the system check event
+     *
+     * Expected results:
+     *    An exception is raised if the system check is in error
+     */
+    const PROCCESS_SYSTEM_CHECK = 'proccess_system_check';
+
+    /**
+     * Event launched during the project creation
+     * when we have to rewrite some service URLs
+     *
+     * Parameters:
+     *    'link'  => The service link to modify
+     *    'template' => The project used as a template
+     *    'project' => The project newly created
+     *
+     * Expected results:
+     *  The link contains the right project information
+     */
+    const SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK = 'service_replace_template_name_in_link';
 }
 ?>

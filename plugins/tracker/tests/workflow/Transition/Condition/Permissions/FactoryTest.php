@@ -54,7 +54,7 @@ class Workflow_Transition_Condition_Permissions_FactoryTest extends TuleapTestCa
         $this->assertIsA($condition, 'Workflow_Transition_Condition_Permissions');
     }
 
-    public function itReconstitutesPermissions() {
+    public function _itReconstitutesPermissions() {
         $xml = new SimpleXMLElement('
             <condition type="perms">
                 <permissions>

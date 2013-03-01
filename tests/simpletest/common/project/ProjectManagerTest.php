@@ -28,7 +28,7 @@ Mock::generate('Project');
 require_once('common/dao/ProjectDao.class.php');
 Mock::generate('ProjectDao');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/language/BaseLanguage.class.php');
 Mock::generate('BaseLanguage');
 
@@ -203,7 +203,7 @@ class ProjectManagerTest extends UnitTestCase {
         $GLOBALS['sys_allow_restricted_users'] = 1;
         $pm = new ProjectManagerTestVersion();
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $um->setReturnValue('getCurrentUser', $user);
         $pm->setReturnValue('_getUserManager', $um);
@@ -216,7 +216,7 @@ class ProjectManagerTest extends UnitTestCase {
         $GLOBALS['sys_allow_restricted_users'] = 1;
         $pm = new ProjectManagerTestVersion();
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $um->setReturnValue('getCurrentUser', $user);
         $pm->setReturnValue('_getUserManager', $um);
@@ -230,7 +230,7 @@ class ProjectManagerTest extends UnitTestCase {
         $GLOBALS['sys_allow_restricted_users'] = 1;
         $pm = new ProjectManagerTestVersion();
         $um = new MockUserManager();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $um->setReturnValue('getCurrentUser', $user);
         $pm->setReturnValue('_getUserManager', $um);

@@ -42,7 +42,7 @@ class AgileDashboard_MilestonePresenter {
     private $milestone;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $current_user;
 
@@ -63,7 +63,7 @@ class AgileDashboard_MilestonePresenter {
 
     public function __construct(
             Planning_Milestone $milestone,
-            User $current_user,
+            PFUser $current_user,
             Codendi_Request $request,
             $active_pane,
             array $additional_panes,

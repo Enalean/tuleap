@@ -108,11 +108,11 @@ class Project_SOAPServer {
      * Return a project the user is authorized to use as template
      * 
      * @param Integer $id
-     * @param User    $requester
+     * @param PFUser    $requester
      * 
      * @return Project
      */
-    private function getTemplateById($id, User $requester) {
+    private function getTemplateById($id, PFUser $requester) {
         $project = $this->projectManager->getProject($id);
         if ($project && !$project->isError()) {
             if ($project->isTemplate() || $requester->isMember($project->getID(), 'A')) {
@@ -128,7 +128,7 @@ class Project_SOAPServer {
      * 
      * @param String  $adminSessionKey Session key of a site admin
      * 
-     * @return User
+     * @return PFUser
      */
     private function continueAdminSession($adminSessionKey) {
         $admin = $this->userManager->getCurrentUser($adminSessionKey);
@@ -286,7 +286,7 @@ class Project_SOAPServer {
      * @param Project $project
      * @param String  $userLogin
      * 
-     * @return User
+     * @return PFUser
      */
     private function getProjectMember(Project $project, $userLogin) {
         $user = $this->userManager->getUserByUserName($userLogin);
@@ -355,7 +355,7 @@ class Project_SOAPServer {
      * 
      * @param String $sessionKey
      * 
-     * @return User
+     * @return PFUser
      */
     private function continueSession($sessionKey) {
         $user = $this->userManager->getCurrentUser($sessionKey);

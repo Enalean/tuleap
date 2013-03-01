@@ -61,7 +61,7 @@ class Project_OneStepCreation_OneStepCreationPresenter {
     private $available_licenses;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $creator;
 

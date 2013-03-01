@@ -145,7 +145,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function artifactListToSoap(User $user, $id_list, $offset, $max_rows) {
+    private function artifactListToSoap(PFUser $user, $id_list, $offset, $max_rows) {
         $return = array(
             'artifacts' => array(),
             'total_artifacts_number' => 0
@@ -222,7 +222,7 @@ class Tracker_SOAPServer {
      * @param array of Object{Tracker} $tf_arr the array of ArtifactTrackers to convert.
      * @return array the SOAPArrayOfTracker corresponding to the array of Trackers Object
      */
-    private function trackerlist_to_soap($tf_arr, User $user) {
+    private function trackerlist_to_soap($tf_arr, PFUser $user) {
         $return = array();
         foreach ($tf_arr as $tracker_id => $tracker) {
 
@@ -290,7 +290,7 @@ class Tracker_SOAPServer {
      * @param array of Object{Field} $tracker_fields the array of TrackerFields to convert.
      * @return array the SOAPArrayOfTrackerField corresponding to the array of Tracker Fields Object
      */
-    private function trackerfields_to_soap(User $user, Tracker $tracker, $tracker_fields) {
+    private function trackerfields_to_soap(PFUser $user, Tracker $tracker, $tracker_fields) {
         $return = array();
         foreach ($tracker_fields as $tracker_field) {
             if ($tracker_field->userCanRead($user)) {
@@ -328,7 +328,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function checkUserCanViewArtifact(Tracker_Artifact $artifact, User $user) {
+    private function checkUserCanViewArtifact(Tracker_Artifact $artifact, PFUser $user) {
         if (!$artifact->userCanView($user)) {
             throw new SoapFault(get_artifact_fault, 'Permission Denied: you cannot access this artifact');
         }
@@ -345,7 +345,7 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't view the tracker
      */
-    private function checkUserCanViewTracker(Tracker $tracker, User $user) {
+    private function checkUserCanViewTracker(Tracker $tracker, PFUser $user) {
         if (! $tracker->userCanView($user)) {
             throw new Exception('Permission Denied: You are not granted sufficient permission to perform this operation.', (string)get_tracker_factory_fault);
         }
@@ -355,7 +355,7 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't view the tracker
      */
-    private function checkUserCanAdminTracker(User $user, $tracker) {
+    private function checkUserCanAdminTracker(PFUser $user, $tracker) {
         $this->checkUserCanViewTracker($tracker, $user);
         if (! $tracker->userIsAdmin($user)) {
             throw new SoapFault(user_is_not_tracker_admin,' Permission Denied: You are not granted sufficient permission to perform this operation.', 'getTrackerSemantic');
@@ -365,7 +365,7 @@ class Tracker_SOAPServer {
     /**
      * @throws SoapFault if user can't access the project
      */
-    private function checkUserCanAccessProject(User $user, Project $project) {
+    private function checkUserCanAccessProject(PFUser $user, Project $project) {
         $this->soap_request_validator->assertUserCanAccessProject($user, $project);
     }
 
@@ -378,7 +378,7 @@ class Tracker_SOAPServer {
      * @param Object{Artifact} $artifact the artifact to convert.
      * @return array the SOAPArtifact corresponding to the Artifact Object
      */
-    private function artifact_to_soap(User $user, Tracker_Artifact $artifact) {
+    private function artifact_to_soap(PFUser $user, Tracker_Artifact $artifact) {
         $soap_artifact = array();
 
         // We check if the user can view this artifact

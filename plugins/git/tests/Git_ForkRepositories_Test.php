@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/Git.class.php';
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
@@ -40,7 +40,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $factory = new MockGitRepositoryFactory();
         $git->setFactory($factory);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true);
         $git->user = $user;
 
@@ -51,7 +51,7 @@ class Git_ForkRepositories_Test extends TuleapTestCase {
         $groupId = 101;
         $repo = new GitRepository();
         $repos = array($repo);
-        $user = new User();
+        $user = new PFUser();
         $user->setId(42);
         $user->setUserName('Ben');
         $path = userRepoPath('Ben', 'toto');

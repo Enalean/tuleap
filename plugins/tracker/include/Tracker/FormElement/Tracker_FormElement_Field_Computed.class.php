@@ -32,13 +32,13 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
     /**
      * Given an artifact, return a numerical value of the field for this artifact.
      *
-     * @param User             $user                  The user who see the results
+     * @param PFUser             $user                  The user who see the results
      * @param Tracker_Artifact $artifact              The artifact on which the value is computed
      * @param Array            $computed_artifact_ids Hash map to store artifacts already computed (avoid cycles)
      *
      * @return float
      */
-    public function getComputedValue(User $user, Tracker_Artifact $artifact, $timestamp = null, &$computed_artifact_ids = array()) {
+    public function getComputedValue(PFUser $user, Tracker_Artifact $artifact, $timestamp = null, &$computed_artifact_ids = array()) {
         $sum = null;
         foreach ($artifact->getLinkedArtifacts($user) as $linked_artifact) {
             $value = $this->getUniqueFieldValue($user, $linked_artifact, $timestamp, $computed_artifact_ids);
@@ -54,7 +54,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         return $sum;
     }
 
-    private function getUniqueFieldValue(User $user, Tracker_Artifact $artifact, $timestamp, &$computed_artifact_ids) {
+    private function getUniqueFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, &$computed_artifact_ids) {
         if ($this->notAlreadyComputed($artifact, $computed_artifact_ids)) {
             return $this->getFieldValue($user, $artifact, $timestamp, $computed_artifact_ids);
         }
@@ -69,7 +69,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         return false;
     }
 
-    private function getFieldValue(User $user, Tracker_Artifact $artifact, $timestamp, &$computed_artifact_ids) {
+    private function getFieldValue(PFUser $user, Tracker_Artifact $artifact, $timestamp, &$computed_artifact_ids) {
         $field = $this->getTargetField($user, $artifact);
         if ($field) {
             return $field->getComputedValue($user, $artifact, $timestamp, $computed_artifact_ids);
@@ -77,7 +77,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         return null;
     }
 
-    private function getTargetField(User $user, Tracker_Artifact $artifact) {
+    private function getTargetField(PFUser $user, Tracker_Artifact $artifact) {
         return $this->getFormElementFactory()->getComputableFieldByNameForUser(
             $artifact->getTracker()->getId(),
             $this->getProperty('target_field_name'),

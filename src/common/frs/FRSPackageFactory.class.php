@@ -264,7 +264,7 @@ class FRSPackageFactory {
     /**
      * Test is user can administrate FRS service of given project
      *
-     * @param User    $user    User to test
+     * @param PFUser    $user    User to test
      * @param Integer $groupId Project
      *
      * @return Boolean

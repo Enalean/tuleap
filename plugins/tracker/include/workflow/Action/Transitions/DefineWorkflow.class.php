@@ -32,7 +32,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $this->form_element_factory = $form_element_factory;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $workflow = $this->workflow_factory->getWorkflowByTrackerId($this->tracker->id);
         $this->displayHeader($layout);
@@ -69,7 +69,7 @@ class Tracker_Workflow_Action_Transitions_DefineWorkflow  extends Tracker_Workfl
         $this->displayFooter($layout);
     }
 
-     private function displayAdminWorkflow(TrackerManager $layout, Codendi_Request $request, User $current_user, Workflow $workflow) {
+     private function displayAdminWorkflow(TrackerManager $layout, Codendi_Request $request, PFUser $current_user, Workflow $workflow) {
         echo '<form action="'.TRACKER_BASE_URL.'/?'. http_build_query(
             array(
                 'tracker' => (int)$this->tracker->id,

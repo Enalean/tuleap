@@ -126,11 +126,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * userCanView - determine if the user can view this artifact.
      *
-     * @param User $user if not specified, use the current user
+     * @param PFUser $user if not specified, use the current user
      *
      * @return boolean user can view the artifact
      */
-    public function userCanView(User $user = null) {
+    public function userCanView(PFUser $user = null) {
         $um = $this->getUserManager();
         if (!$user) {
             $user = $um->getCurrentUser();
@@ -354,7 +354,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Fetch the tooltip displayed on an artifact reference
      *
-     * @param User $user The user who fetch the tooltip
+     * @param PFUser $user The user who fetch the tooltip
      *
      * @return string html
      */
@@ -405,7 +405,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
-     * @param User                           $current_user    The current user
+     * @param PFUser                           $current_user    The current user
      *
      * @return void
      */
@@ -626,7 +626,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Returns HTML code to display the artifact follow-up comments
      *
-     * @param User $current_user the current user
+     * @param PFUser $current_user the current user
      *
      * @return string The HTML code for artifact follow-up comments
      */
@@ -720,7 +720,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data from the user
-     * @param User                           $current_user    The current user
+     * @param PFUser                           $current_user    The current user
      *
      * @return void
      */
@@ -831,7 +831,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
     }
 
-    private function sendAjaxCardsUpdateInfo(User $current_user) {
+    private function sendAjaxCardsUpdateInfo(PFUser $current_user) {
         $cards_info = $this->getCardUpdateInfo($this, $current_user);
         $parent = $this->getParent($current_user);
         if ($parent) {
@@ -841,7 +841,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $GLOBALS['Response']->sendJSON($cards_info);
     }
 
-    private function getCardUpdateInfo(Tracker_Artifact $artifact, User $current_user) {
+    private function getCardUpdateInfo(Tracker_Artifact $artifact, PFUser $current_user) {
         $card_info               = array();
         $tracker_id              = $artifact->getTracker()->getId();
         $form_element_factory    = $this->getFormElementFactory();
@@ -947,7 +947,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Create the initial changeset of this artifact
      *
      * @param array  $fields_data The artifact fields values
-     * @param User   $submitter   The user who did the artifact submission
+     * @param PFUser   $submitter   The user who did the artifact submission
      * @param string $email       The email of the person who subvmitted the artifact if submission is done in anonymous mode
      *
      * @return int The Id of the initial changeset, or null if fields were not valid
@@ -1060,7 +1060,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @param array   $fields_data       Artifact fields values
      * @param string  $comment           The comment (follow-up) associated with the artifact update
-     * @param User    $submitter         The user who is doing the update
+     * @param PFUser    $submitter         The user who is doing the update
      * @param string  $email             The email of the person who updates the artifact if modification is done in anonymous mode
      * @param boolean $send_notification true if a notification must be sent, false otherwise
      * @param string  $comment_format     The comment (follow-up) type ("text" | "html")
@@ -1135,7 +1135,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * 
      * @param array $fields_data
      * @param string $comment
-     * @param User $submitter
+     * @param PFUser $submitter
      * @param string $email
      * @return boolean
      * @throws Tracker_Exception
@@ -1438,11 +1438,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * User want to link an artifact to the current one
      *
      * @param int  $linked_artifact_id The id of the artifact to link
-     * @param User $current_user       The user who made the link
+     * @param PFUser $current_user       The user who made the link
      *
      * @return bool true if success false otherwise
      */
-    public function linkArtifact($linked_artifact_id, User $current_user) {
+    public function linkArtifact($linked_artifact_id, PFUser $current_user) {
         $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());  
         if (count($artlink_fields)) {
             $comment       = '';
@@ -1469,11 +1469,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get artifacts linked to the current artifact
      *
-     * @param User $user The user who should see the artifacts
+     * @param PFUser $user The user who should see the artifacts
      *
      * @return Array of Tracker_Artifact
      */
-    public function getLinkedArtifacts(User $user) {
+    public function getLinkedArtifacts(PFUser $user) {
         $artifact_links      = array();
         $artifact_link_field = $this->getAnArtifactLinkField($user);
         if ($artifact_link_field) {
@@ -1485,11 +1485,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get artifacts linked to the current artifact and sub artifacts
      *
-     * @param User $user The user who should see the artifacts
+     * @param PFUser $user The user who should see the artifacts
      *
      * @return Array of Tracker_Artifact
      */
-    public function getLinkedArtifactsOfHierarchy(User $user) {
+    public function getLinkedArtifactsOfHierarchy(PFUser $user) {
         $artifact_links = $this->getLinkedArtifacts($user);
         $allowed_trackers = $this->getAllowedChildrenTypes();
         foreach ($artifact_links as $artifact_link) {
@@ -1505,11 +1505,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Get artifacts linked to the current artifact if they belongs to the hierarchy
      *
-     * @param User $user The user who should see the artifacts
+     * @param PFUser $user The user who should see the artifacts
      *
      * @return Array of Tracker_Artifact
      */
-    public function getHierarchyLinkedArtifacts(User $user) {
+    public function getHierarchyLinkedArtifacts(PFUser $user) {
         $allowed_trackers = $this->getAllowedChildrenTypes();
         $artifact_links   = $this->getLinkedArtifacts($user);
         foreach ($artifact_links as $key => $artifact) {
@@ -1531,11 +1531,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * Get artifacts linked to the current artifact if
      * they are not in children.
      *
-     * @param User $user The user who should see the artifacts
+     * @param PFUser $user The user who should see the artifacts
      *
      * @return Array of Tracker_Artifact
      */
-    public function getUniqueLinkedArtifacts(User $user) {
+    public function getUniqueLinkedArtifacts(PFUser $user) {
         $sub_artifacts = $this->getLinkedArtifacts($user);
         $grandchild_artifacts = array();
         foreach ($sub_artifacts as $artifact) {
@@ -1552,11 +1552,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Returns all ancestors of current artifact (from direct parent to oldest ancestor)
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return Array of Tracker_Artifact
      */
-    public function getAllAncestors(User $user) {
+    public function getAllAncestors(PFUser $user) {
         if (!isset($this->ancestors)) {
             $this->ancestors = $this->getHierarchyFactory()->getAllAncestors($user, $this);
         }
@@ -1570,22 +1570,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     /**
      * Return the parent artifact of current artifact if any
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return Tracker_Artifact
      */
-    public function getParent(User $user) {
+    public function getParent(PFUser $user) {
         return array_shift($this->getAllAncestors($user));
     }
 
     /**
      * Get artifacts
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return Array of Tracker_Artifact
      */
-    public function getSiblings(User $user) {
+    public function getSiblings(PFUser $user) {
         return $this->getHierarchyFactory()->getSiblings($user, $this);
     }
 
@@ -1626,7 +1626,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return Tracker_FormElement_Field_ArtifactLink
      */
-    public function getAnArtifactLinkField(User $user) {
+    public function getAnArtifactLinkField(PFUser $user) {
         return $this->getFormElementFactory()->getAnArtifactLinkField($user, $this->getTracker());
     }
 
@@ -1635,11 +1635,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return Tracker_FormElement_Field_Burndown
      */
-    public function getABurndownField(User $user) {
+    public function getABurndownField(PFUser $user) {
         return $this->getFormElementFactory()->getABurndownField($user, $this->getTracker());
     }
 
-    private function unlinkArtifact($artlink_fields, $linked_artifact_id, User $current_user) {
+    private function unlinkArtifact($artlink_fields, $linked_artifact_id, PFUser $current_user) {
         $comment       = '';
         $email         = '';
         $artlink_field = $artlink_fields[0];
@@ -1703,7 +1703,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
     }
 
-    private function summonArtifactAssociators(Codendi_Request $request, User $current_user, $linked_artifact_id) {
+    private function summonArtifactAssociators(Codendi_Request $request, PFUser $current_user, $linked_artifact_id) {
         $this->getEventManager()->processEvent(
             TRACKER_EVENT_ARTIFACT_ASSOCIATION_EDITED,
             array(
@@ -1716,7 +1716,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         );
     }
 
-    public function delete(User $user) {
+    public function delete(PFUser $user) {
         $this->getDao()->startTransaction();
         foreach($this->getChangesets() as $changeset) {
             $changeset->delete($user);

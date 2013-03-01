@@ -1,0 +1,22 @@
+usr/share/mediawiki/api.php			@PLUGIN_PATH@/mediawiki/www/api.php
+usr/share/mediawiki/extensions			@PLUGIN_PATH@/mediawiki/www/extensions
+usr/share/mediawiki/img_auth.php		@PLUGIN_PATH@/mediawiki/www/img_auth.php
+usr/share/mediawiki/includes			@PLUGIN_PATH@/mediawiki/www/includes
+usr/share/mediawiki/index.php			@PLUGIN_PATH@/mediawiki/www/index.php
+usr/share/mediawiki/languages			@PLUGIN_PATH@/mediawiki/www/languages
+usr/share/mediawiki/load.php			@PLUGIN_PATH@/mediawiki/www/load.php
+usr/share/mediawiki/maintenance			@PLUGIN_PATH@/mediawiki/www/maintenance
+usr/share/mediawiki/opensearch_desc.php		@PLUGIN_PATH@/mediawiki/www/opensearch_desc.php
+usr/share/mediawiki/profileinfo.php		@PLUGIN_PATH@/mediawiki/www/profileinfo.php
+usr/share/mediawiki/redirect.php		@PLUGIN_PATH@/mediawiki/www/redirect.php
+usr/share/mediawiki/StartProfiler.php		@PLUGIN_PATH@/mediawiki/www/StartProfiler.php
+usr/share/mediawiki/thumb.php			@PLUGIN_PATH@/mediawiki/www/thumb.php
+usr/share/mediawiki/trackback.php		@PLUGIN_PATH@/mediawiki/www/trackback.php
+
+usr/share/mediawiki/skins			@PLUGIN_PATH@/mediawiki/www/skins
+usr/share/mediawiki/skins/monobook/headbg.jpg	@SOURCE_PATH@/www/themes/css/mw-headbg.jpg
+
+usr/share/mediawiki				@DATA_PATH@/plugins/mediawiki/master
+
+@PLUGIN_PATH@/mediawiki/www @SOURCE_PATH@/www/plugins/mediawiki
+@PLUGIN_PATH@/mediawiki/mediawiki-skin/FusionForge.php /usr/share/mediawiki/skins/FusionForge.php

@@ -22,7 +22,7 @@ require_once('common/system_event/include/SystemEvent_USER_RENAME.class.php');
 Mock::generatePartial('SystemEvent_USER_RENAME', 'SystemEvent_USER_RENAME_TestVersion', array('done', 'getUser', 'getBackend', 'updateDB'));
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/backend/BackendSystem.class.php');
 Mock::generate('BackendSystem');
@@ -40,11 +40,6 @@ Mock::generate('EventManager');
 
 
 class SystemEvent_USER_RENAME_Test extends UnitTestCase {
-
-    public function __construct($name = 'SystemEvent_USER_RENAME test') {
-        parent::__construct($name);
-    }
-
     
     /**
      * Rename user 142 'mickey' in 'tazmani'
@@ -54,7 +49,7 @@ class SystemEvent_USER_RENAME_Test extends UnitTestCase {
         $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'mickey');
         $evt->setReturnValue('getUser', $user, array('142'));
         
@@ -92,7 +87,7 @@ class SystemEvent_USER_RENAME_Test extends UnitTestCase {
         $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'mickey');
         $evt->setReturnValue('getUser', $user, array('142'));
         
@@ -134,7 +129,7 @@ class SystemEvent_USER_RENAME_Test extends UnitTestCase {
         $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'mickey');
         $evt->setReturnValue('getUser', $user, array('142'));
         
@@ -175,7 +170,7 @@ class SystemEvent_USER_RENAME_Test extends UnitTestCase {
         $evt->__construct('1', SystemEvent::TYPE_USER_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'tazmani', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getUserName', 'mickey');
         $evt->setReturnValue('getUser', $user, array('142'));
         

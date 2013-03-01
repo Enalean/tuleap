@@ -138,12 +138,12 @@ class Tracker_HierarchyFactory {
     /**
      * Return the parent artifact
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Tracker_Artifact $child
      *
      * @return null| Tracker_Artifact
      */
-    public function getParentArtifact(User $user, Tracker_Artifact $child) {
+    public function getParentArtifact(PFUser $user, Tracker_Artifact $child) {
         $dar = $this->hierarchy_dao->getParentsInHierarchy($child->getId());
         if ($dar && !$dar->isError()) {
             $parents = array();
@@ -184,13 +184,13 @@ class Tracker_HierarchyFactory {
      *     `-- Task
      * getAllAncestors(User, Task) -> ['Story', 'Epic']
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Tracker_Artifact $child
      * @param array $stack (purly internal for recursion, should not be used
      *
      * @return Array of Tracker_Artifact
      */
-    public function getAllAncestors(User $user, Tracker_Artifact $child, array &$stack = array()) {
+    public function getAllAncestors(PFUser $user, Tracker_Artifact $child, array &$stack = array()) {
         if (!isset($this->cache_ancestors[$user->getId()][$child->getId()])) {
             $parent = $this->getParentArtifact($user, $child);
             if ($parent === null || $parent->getId() == $child->getId() || isset($stack[$parent->getId()])) {
@@ -206,12 +206,12 @@ class Tracker_HierarchyFactory {
     /**
      * Get artifacts that share the same parent than given artifact
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Tracker_Artifact $artifact
      *
      * @return Array of Tracker_Artifact
      */
-    public function getSiblings(User $user, Tracker_Artifact $artifact) {
+    public function getSiblings(PFUser $user, Tracker_Artifact $artifact) {
         $siblings = array();
         $parent   = $this->getParentArtifact($user, $artifact);
         if ($parent) {

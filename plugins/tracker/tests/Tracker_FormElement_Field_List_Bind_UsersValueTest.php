@@ -31,7 +31,7 @@ require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
     
@@ -47,7 +47,7 @@ class Tracker_FormElement_Field_List_Bind_UsersValueTest extends UnitTestCase {
     }
     
     public function testGetUser() {
-        $u = new MockUser();
+        $u = mock('PFUser');
         
         $uh = new MockUserManager();
         $uh->setReturnValue('getUserById', $u, array(123));

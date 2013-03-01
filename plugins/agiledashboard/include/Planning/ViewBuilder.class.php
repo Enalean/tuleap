@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../../../tracker/include/Tracker/CrossSearch/Vi
  */
 class Planning_ViewBuilder extends Tracker_CrossSearch_ViewBuilder {
 
-    public function build(User $user, 
+    public function build(PFUser $user, 
                           Project $project,
                           Tracker_CrossSearch_Query $cross_search_query, 
                           array $already_planned_artifact_ids,

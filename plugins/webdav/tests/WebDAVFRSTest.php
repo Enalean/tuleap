@@ -22,7 +22,7 @@ require_once (dirname(__FILE__).'/../../../src/common/language/BaseLanguage.clas
 Mock::generate('BaseLanguage');
 require_once ('requirements.php');
 require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackage.class.php');
 Mock::generate('FRSPackage');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackageFactory.class.php');
@@ -166,7 +166,7 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), false);
@@ -182,7 +182,7 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), true);
@@ -198,7 +198,7 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), false);
@@ -214,7 +214,7 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), true);
@@ -230,7 +230,7 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), true);
@@ -246,7 +246,7 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', false);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), true);
@@ -262,7 +262,7 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', false);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), false);
@@ -278,7 +278,7 @@ class WebDAVFRSTest extends UnitTestCase {
         $project->setReturnValue('userIsMember', true);
         $webDAVFRS->setReturnValue('getProject', $project);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isRestricted', true);
         $webDAVFRS->setReturnValue('getUser', $user);
         $this->assertEqual($webDAVFRS->userCanRead(), true);

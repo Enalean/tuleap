@@ -41,8 +41,7 @@ class AgileDashboard_MilestonePlanningPresenterTest extends AgileDashboard_Miles
 
     public function setUp() {
         parent::setUp();
-
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $this->planning_tracker_id = 191;
         $this->planning_tracker    = mock('Tracker');
         $this->planning            = mock('Planning');
@@ -184,7 +183,7 @@ class AgileDashboard_MilestonePlanningPresenter_AssertPermissionsTest extends Ag
 
     public function setUp() {
         parent::setUp();
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $this->planning            = mock('Planning');
         $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
         $this->artifacts_to_select = array();
@@ -214,7 +213,7 @@ class AgileDashboard_MilestonePlanningPresenter_OverCapacityTest extends AgileDa
 
     public function setUp() {
         parent::setUp();
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $this->planning            = mock('Planning');
         $this->content_view        = mock('Tracker_CrossSearch_SearchContentView');
         $this->artifacts_to_select = array();

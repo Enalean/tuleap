@@ -241,7 +241,7 @@ class AgileDashboardPlugin extends Plugin {
         }
     }
 
-    private function getFieldValue(Tracker_FormElementFactory $form_element_factory, User $user, Tracker_Artifact $artifact, $field_name) {
+    private function getFieldValue(Tracker_FormElementFactory $form_element_factory, PFUser $user, Tracker_Artifact $artifact, $field_name) {
         $field = $form_element_factory->getComputableFieldByNameForUser(
             $artifact->getTracker()->getId(),
             $field_name,

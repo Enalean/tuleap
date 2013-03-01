@@ -1,0 +1,23 @@
+# 61plugin-mediawiki begin
+RedirectMatch 301 ^({sys_urlprefix}plugins/mediawiki/wiki/[-a-zA-Z0-9_]*)/*$ $1/index.php
+AliasMatch ^{sys_urlprefix}plugins/mediawiki/wiki/[-a-zA-Z0-9_]*/api.php {usr_share_gforge}/www/plugins/mediawiki/api.php
+AliasMatch ^{sys_urlprefix}plugins/mediawiki/wiki/[-a-zA-Z0-9_]*/index.php {usr_share_gforge}/www/plugins/mediawiki/index.php
+AliasMatch ^{sys_urlprefix}plugins/mediawiki/wiki/([-a-zA-Z0-9_]*)/images/(.*) {var_lib_gforge}/plugins/mediawiki/projects/$1/images/$2
+AliasMatch ^{sys_urlprefix}plugins/mediawiki/wiki/([-a-zA-Z0-9_]*)/skins/(.*) /usr/share/gforge/www/plugins/mediawiki/skins/$2
+
+<Directory {var_lib_gforge}/plugins/mediawiki>
+        Options +FollowSymLinks -Indexes
+        AllowOverride All
+        order allow,deny
+        allow from all
+        # Allow mediawiki to connect to gforge
+        Include {gforge_etc}/httpd.secrets
+        php_admin_value include_path "{sys_custom_path}:/etc/gforge:{usr_share_gforge}:{usr_share_gforge}/www/include:{usr_share_gforge}/plugins:/usr/share/php:."
+</Directory>
+
+# some directories must be protected
+<DirectoryMatch {var_lib_gforge}/plugins/mediawiki/projects/[-a-zA-Z0-9_]*/images>
+        Options -FollowSymLinks
+        AllowOverride None
+</DirectoryMatch>
+# 61plugin-mediawiki end

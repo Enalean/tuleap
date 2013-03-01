@@ -28,7 +28,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var bool */
     private $is_latest = false;
 
-    /** @var User */
+    /** @var PFUser */
     private $user;
 
     /** @var Planning_ShortAccess */
@@ -40,7 +40,7 @@ class Planning_ShortAccessMilestonePresenter extends Planning_MilestoneLinkPrese
     /** @var array of AgileDashboard_PaneInfo */
     private $pane_info_list;
 
-    public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, Planning_MilestoneFactory $milestone_factory, User $user, $theme_path) {
+    public function __construct(Planning_ShortAccess $short_access, Planning_Milestone $milestone, Planning_MilestoneFactory $milestone_factory, PFUser $user, $theme_path) {
         parent::__construct($milestone);
         $this->milestone_factory = $milestone_factory;
         $this->short_access = $short_access;

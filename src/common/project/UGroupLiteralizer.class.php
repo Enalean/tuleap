@@ -27,8 +27,8 @@ require_once 'common/permission/PermissionsManager.class.php';
 class UGroupLiteralizer {
 
     private static $user_status = array(
-        User::STATUS_RESTRICTED => 'site_restricted',
-        User::STATUS_ACTIVE     => 'site_active'
+        PFUser::STATUS_RESTRICTED => 'site_restricted',
+        PFUser::STATUS_ACTIVE     => 'site_active'
     );
 
     private static $ugroups_templates = array(
@@ -56,11 +56,11 @@ class UGroupLiteralizer {
     /**
      * Return User groups for a given user
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return array Ex: array('site_active', 'gpig1_project_members')
      */
-    public function getUserGroupsForUser(User $user) {
+    public function getUserGroupsForUser(PFUser $user) {
         if (!$this->isValidUser($user)) {
             return array();
         }
@@ -74,11 +74,11 @@ class UGroupLiteralizer {
     /**
      * Return User groups for a given user
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @return array Ex: array('site_active', 'gpig1_project_members')
      */
-    public function getUserGroupsForUserWithArobase(User $user) {
+    public function getUserGroupsForUserWithArobase(PFUser $user) {
         $groups = $this->getUserGroupsForUser($user);
 
         return array_map(array($this, 'injectArobase'), $groups);
@@ -87,12 +87,12 @@ class UGroupLiteralizer {
     /**
      * Append project dynamic ugroups of user
      *
-     * @param User  $user
+     * @param PFUser  $user
      * @param array $user_ugroups
      *
      * @return array the new array of user's ugroup
      */
-    private function appendDynamicUGroups( User $user, array $user_ugroups = array()) {
+    private function appendDynamicUGroups( PFUser $user, array $user_ugroups = array()) {
         $user_projects = $user->getProjects(true);
         foreach ($user_projects as $user_project) {
             $project_name = strtolower($user_project['unix_group_name']);
@@ -108,12 +108,12 @@ class UGroupLiteralizer {
     /**
      * Append project static ugroups of user
      *
-     * @param User  $user
+     * @param PFUser  $user
      * @param array $user_ugroups
      *
      * @return array the new array of user's ugroup
      */
-    private function appendStaticUgroups( User $user, array $user_ugroups = array()) {
+    private function appendStaticUgroups( PFUser $user, array $user_ugroups = array()) {
         $ugroups = $user->getAllUgroups();
         foreach ($ugroups as $row) {
             $user_ugroups[] = 'ug_'.$row['ugroup_id'];
@@ -124,7 +124,7 @@ class UGroupLiteralizer {
     /**
      * @return bool true if the user is considered valid (active or restricted)
      */
-    private function isValidUser(User $user) {
+    private function isValidUser(PFUser $user) {
         return isset(self::$user_status[$user->getStatus()]);
     }
 

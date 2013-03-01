@@ -80,7 +80,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
     /** @var Planning_Controller */
     private $controller;
 
-    /** @var User */
+    /** @var PFUser */
     private $user;
 
     /** @var Systray_LinksCollection */
@@ -98,7 +98,7 @@ class PlanningControllerTest_systrayTest extends PlanningControllerTest {
     public function setUp() {
         parent::setUp();
 
-        $this->user = mock('User');
+        $this->user = mock('PFUser');
         $this->links = new Systray_LinksCollection();
 
         $params = array(

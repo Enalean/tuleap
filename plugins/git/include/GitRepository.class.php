@@ -770,7 +770,7 @@ class GitRepository implements DVCSRepository {
     /**
      * Test is user can read the content of this repository and metadata
      *
-     * @param User $user The user to test
+     * @param PFUser $user The user to test
      *
      * @return Boolean
      */
@@ -782,7 +782,7 @@ class GitRepository implements DVCSRepository {
     /**
      * Test if user can modify repository configuration
      *
-     * @param User $user The user to test
+     * @param PFUser $user The user to test
      *
      * @return Boolean
      */
@@ -833,11 +833,11 @@ class GitRepository implements DVCSRepository {
     /**
      * Say if a repo belongs to a user
      *
-     * @param User $user the user
+     * @param PFUser $user the user
      *
      * @return true if the repo is a personnal rep and if it is created by $user
      */
-    public function belongsTo(User $user) {
+    public function belongsTo(PFUser $user) {
         return $this->getScope() == self::REPO_SCOPE_INDIVIDUAL && $this->getCreatorId() == $user->getId();
     }
     

@@ -82,6 +82,6 @@ abstract class Tracker_Workflow_Action {
     /**
      * Process the request
      */
-    public abstract function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user);
+    public abstract function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user);
 }
 ?>

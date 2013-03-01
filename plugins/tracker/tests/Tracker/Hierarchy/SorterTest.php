@@ -123,7 +123,7 @@ class Tracker_Hierarchy_Sorter_BuildTreeWithMissingChildrenTest extends TuleapTe
 //            $sorter = new Tracker_Hierarchy_Sorter($artifact_factory);
 //            $artifacts_dar = $this->getResultsForTrackerOutsideHierarchy();
 //
-//            $user = mock('User');
+//            $user = mock('PFUser');
 //            $artifacts = $sorter->buildTreeWithMissingChildren($user, $artifacts_dar);
 //            $all_artifact_nodes = $artifacts->flattenChildren();
 //

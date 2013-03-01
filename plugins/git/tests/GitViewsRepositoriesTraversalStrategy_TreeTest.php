@@ -22,7 +22,7 @@ require_once(dirname(__FILE__).'/../include/constants.php');
 require_once 'GitViewsRepositoriesTraversalStrategyTest.class.php';
 require_once dirname(__FILE__) .'/../include/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
 Mock::generate('GitViews');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('GitRepository');
 
 class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositoriesTraversalStrategyTest {
@@ -33,7 +33,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     
     public function testEmptyListShouldReturnEmptyString() {
         $lastPushes = array();
-        $user = new MockUser();
+        $user = mock('PFUser');
         $repositories = array();
         $strategy = new $this->classname($lastPushes);
         $this->assertIdentical('', $strategy->fetch($repositories, $user));
@@ -105,7 +105,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
         
         // Magic call that do stuff we want, yeah!
         $repositories = $this->getFlatTree($traversal);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $tree = $traversal->getTree($repositories, $user);
         $this->assertTrue(is_array($tree['automaticTests']));
         $this->assertIsA(($tree['automaticTests']['Python']), 'GitRepository');
@@ -123,7 +123,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
     
     public function testFetchShouldReturnOneRowPerDepthLevel() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $lastPushes = array();
         
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));
@@ -146,7 +146,7 @@ class GitViewsRepositoriesTraversalStrategy_TreeTest extends GitViewsRepositorie
     }
   
     public function testFetchShouldReturnFolderBeforeLeaves() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $lastPushes = array();
 
         $strategy = TestHelper::getPartialMock($this->classname, array('getRepository'));

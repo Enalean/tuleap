@@ -67,11 +67,11 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      * Obtain the tree of git repositories for a user
      *
      * @param Array $repositories Array of raw representation of repositories, indexed by repository id (the person that made the choice of the format must be executed)
-     * @param User  $user         The user who traverse the forest (yet another foolish expression)
+     * @param PFUser  $user         The user who traverse the forest (yet another foolish expression)
      *
      * @result Array
      */
-    public function getTree(array $repositories, User $user) {
+    public function getTree(array $repositories, PFUser $user) {
         $tree = array();
         foreach ($repositories as $repoId => $row) {
             $path = explode('/', unixPathJoin(array($row['repository_namespace'], $row['repository_name'])));
@@ -98,11 +98,11 @@ class GitViewsRepositoriesTraversalStrategy_Tree extends GitViewsRepositoriesTra
      * Display the list of repositories
      *
      * @param array $repositories Array of raw representation of repositories, indexed by repository id
-     * @param User  $user         The user who traverse the forest
+     * @param PFUser  $user         The user who traverse the forest
      *
      * @return string
      */
-    public function fetch(array $repositories, User $user) {
+    public function fetch(array $repositories, PFUser $user) {
         $html = '';
         if (empty($repositories)) {
             return '';

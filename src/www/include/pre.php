@@ -25,6 +25,7 @@ require($GLOBALS['db_config_file']);
 require_once('common/include/Config.class.php');
 Config::load($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
 Config::load($local_inc);
+Config::load($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
     Config::load($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
     Config::load(dirname($local_inc).'/development.inc');
