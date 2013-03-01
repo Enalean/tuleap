@@ -1,3 +1,6 @@
+Version 3.26 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 3.25 - Tuleap 5.11
     * Improve user experience with user group management (contrib STMicroelectronics)
 

@@ -1,3 +1,6 @@
+Version 5.92 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 5.91 - Tuleap 5.12
     * Autofill tracker name/description/shortname based on XML file content (not supported under IE)
 
