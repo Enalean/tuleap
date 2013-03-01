@@ -123,7 +123,7 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
-    public function getGerritRepositoriesWithPermissionsForUGroup(Project $project, UGroup $ugroup, User $user) {
+    public function getGerritRepositoriesWithPermissionsForUGroup(Project $project, UGroup $ugroup, PFUser $user) {
         $repositories = array();
         $ugroups      = $user->getUgroups($project->getID(), null);
         $ugroups[]    = $ugroup->getId();
@@ -142,7 +142,7 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
-    public function getAllGerritRepositoriesFromProject(Project $project, User $user) {
+    public function getAllGerritRepositoriesFromProject(Project $project, PFUser $user) {
         $all_repositories_dar = $this->dao->searchAllGerritRepositoriesOfProject($project->getId());
         $all_repositories     = array();
 

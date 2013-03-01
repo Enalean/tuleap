@@ -77,7 +77,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         $this->ugroup_id = 115;
 
         $this->user_ugroups = array(404, 416);
-        $this->user         = stub('User')->getUgroups($this->project_id, null)->returns($this->user_ugroups);
+        $this->user         = stub('PFUser')->getUgroups($this->project_id, null)->returns($this->user_ugroups);
 
         $this->project = stub('Project')->getID()->returns($this->project_id);
         $this->ugroup  = stub('UGroup')->getId()->returns($this->ugroup_id);
@@ -242,7 +242,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
         $this->ugroup_id = 115;
 
         $this->user_ugroups = array(404, 416);
-        $this->user         = stub('User')->getUgroups($this->project_id, null)->returns($this->user_ugroups);
+        $this->user         = stub('PFUser')->getUgroups($this->project_id, null)->returns($this->user_ugroups);
 
         $this->project = stub('Project')->getID()->returns($this->project_id);
         $this->ugroup  = stub('UGroup')->getId()->returns($this->ugroup_id);

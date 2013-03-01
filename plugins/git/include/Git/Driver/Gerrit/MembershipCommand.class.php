@@ -27,11 +27,11 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
         $this->user_finder = $user_finder;
     }
 
-    protected abstract function propagateToGerrit(Git_RemoteServer_GerritServer $server, User $user, $group_full_name);
+    protected abstract function propagateToGerrit(Git_RemoteServer_GerritServer $server, PFUser $user, $group_full_name);
 
-    protected abstract function isUserConcernedByPermission(User $user, Project $project, $groups);
+    protected abstract function isUserConcernedByPermission(PFUser $user, Project $project, $groups);
 
-    public function process(Git_RemoteServer_GerritServer $server, User $user, Project $project, $repository) {
+    public function process(Git_RemoteServer_GerritServer $server, PFUser $user, Project $project, $repository) {
         $groups_full_names = $this->getConcernedGerritGroups($user, $project, $repository);
 
         foreach ($groups_full_names as $group_full_name) {
@@ -39,7 +39,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
         }
     }
 
-    protected function getConcernedGerritGroups(User $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions) {
+    protected function getConcernedGerritGroups(PFUser $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions) {
         $groups_full_names = array();
 
         foreach ($repository_with_permissions->getPermissions() as $tuleap_permission_type => $groups_with_permission) {

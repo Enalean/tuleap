@@ -115,12 +115,12 @@ class Git_Driver_Gerrit {
         return escapeshellarg(escapeshellarg($user_identifier));
     }
 
-    public function setAccount(Git_RemoteServer_GerritServer $server, User $user) {
+    public function setAccount(Git_RemoteServer_GerritServer $server, PFUser $user) {
         $query = self::COMMAND .' set-account '. $user->getLdapId();
         $this->ssh->execute($server, $query);
     }
 
-    public function addUserToGroup(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
+    public function addUserToGroup(Git_RemoteServer_GerritServer $server, PFUser $user, $group_name) {
         $this->setAccount($server, $user);
 
         $username = $user->getLdapId();
@@ -133,7 +133,7 @@ class Git_Driver_Gerrit {
         $this->flushGerritCaches($server);
     }
 
-    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, User $user, $group_name) {
+    public function removeUserFromGroup(Git_RemoteServer_GerritServer $server, PFUser $user, $group_name) {
         $username = $user->getLdapId();
 
         $sql_query = '"DELETE FROM account_group_members WHERE account_id=(SELECT account_id FROM account_external_ids WHERE external_id=\\\'username:'. $username .'\\\') AND group_id=(SELECT group_id FROM account_groups WHERE name=\\\''. $group_name .'\\\')"';

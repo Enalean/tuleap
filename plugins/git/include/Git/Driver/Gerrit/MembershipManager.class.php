@@ -46,7 +46,7 @@ class Git_Driver_Gerrit_MembershipManager {
         $this->gerrit_server_factory  = $gerrit_server_factory;
     }
 
-    public function updateUserMembership(User $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
+    public function updateUserMembership(PFUser $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
         if ($user->getLdapId()) {
 
             if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
@@ -60,7 +60,7 @@ class Git_Driver_Gerrit_MembershipManager {
         }
     }
 
-    private function updateUserGerritGroupsAccordingToPermissions(User $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions, Git_Driver_Gerrit_MembershipCommand $command) {
+    private function updateUserGerritGroupsAccordingToPermissions(PFUser $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions, Git_Driver_Gerrit_MembershipCommand $command) {
         $remote_server   = $this->gerrit_server_factory->getServer($repository_with_permissions->getRepository());
         $command->process($remote_server, $user, $project, $repository_with_permissions);
         

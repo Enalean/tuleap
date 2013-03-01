@@ -147,7 +147,7 @@ class UGroup {
     /**
      * Return array of users members of the ugroup
      *
-     * @return User[]
+     * @return PFUser[]
      */
     public function getMembers() {
         if (! $this->members) {
