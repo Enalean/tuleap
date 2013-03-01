@@ -86,12 +86,12 @@ class Tracker_ArtifactFactory {
     /**
      * Return the artifact corresponding to $id the user can access
      * 
-     * @param User    $user
+     * @param PFUser    $user
      * @param Integer $id
      * 
      * @return Tracker_Artifact
      */
-    public function getArtifactByIdUserCanView(User $user, $id) {
+    public function getArtifactByIdUserCanView(PFUser $user, $id) {
         $artifact = $this->getArtifactById($id);
         if ($artifact && $artifact->userCanView($user)) {
             return $artifact;
@@ -134,12 +134,12 @@ class Tracker_ArtifactFactory {
     /**
      * Returns all the artifacts of the tracker with id $tracker_id the User $user can read
      *
-     * @param User $user       User who want to access to artifacts
+     * @param PFUser $user       User who want to access to artifacts
      * @param int  $tracker_id the id of the tracker
      *
      * @return array of Tracker_Artifact identified by id (array() if not found)
      */
-    public function getArtifactsByTrackerIdUserCanView(User $user, $tracker_id) {
+    public function getArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchByTrackerId($tracker_id) as $row) {
             $artifact = $this->getInstanceFromRow($row);
@@ -150,7 +150,7 @@ class Tracker_ArtifactFactory {
         return $artifacts;
     }
     
-    public function getOpenArtifactsByTrackerIdUserCanView(User $user, $tracker_id) {
+    public function getOpenArtifactsByTrackerIdUserCanView(PFUser $user, $tracker_id) {
         $artifacts = array();
         foreach ($this->getDao()->searchOpenByTrackerId($tracker_id) as $row) {
             $artifact = $this->getInstanceFromRow($row);
@@ -298,13 +298,13 @@ class Tracker_ArtifactFactory {
      * 
      * @param Tracker $tracker           The tracker this artifact belongs to
      * @param array   $fields_data       The data of the artifact to create
-     * @param User    $user              The user that want to create the artifact
+     * @param PFUser    $user              The user that want to create the artifact
      * @param string  $email             The email if the user is anonymous (null if anonymous)
      * @param boolean $send_notification true if a notification must be sent, false otherwise
      * 
      * @return Tracker_Artifact or false if an error occured
      */
-    public function createArtifact(Tracker $tracker, $fields_data, User $user, $email, $send_notification = true) {
+    public function createArtifact(Tracker $tracker, $fields_data, PFUser $user, $email, $send_notification = true) {
         $artifact = $this->getInstanceFromRow(
             array(
                 'id'                       => 0, 

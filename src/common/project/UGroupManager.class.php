@@ -77,7 +77,7 @@ class UGroupManager {
     /**
      * Return all UGroups the user belongs to
      *
-     * @param User $user The user
+     * @param PFUser $user The user
      *
      * @return DataAccessResult
      */

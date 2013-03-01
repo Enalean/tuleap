@@ -690,7 +690,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
      *
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The request
-     * @param User                           $current_user    The user who made the request
+     * @param PFUser                           $current_user    The user who made the request
      *
      * @return void
      */
@@ -2068,7 +2068,7 @@ EOS;
      * @return boolean true if the user can view the tracker.
      */
     public function userCanView($user = 0) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             if (!$user) {
                 $user = $um->getCurrentUser();
@@ -2169,7 +2169,7 @@ EOS;
      * @return boolean True if the user is tracker admin, false otherwise
      */
     function userIsAdmin($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             if (!$user) {
                 $user = $um->getCurrentUser();
@@ -2196,12 +2196,12 @@ EOS;
     /**
      * Check if user has permission to submit artifact or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to submit artifacts, false otherwise
      */
     function userCanSubmitArtifact($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2216,12 +2216,12 @@ EOS;
     /**
      * Check if user has permission to delete a tracker or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to delete trackers, false otherwise
      */
     function userCanDeleteTracker($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2231,12 +2231,12 @@ EOS;
     /**
      * Check if user has full access to a tracker or not
      *
-     * @param User $user The user to test (current user if not defined)
+     * @param PFUser $user The user to test (current user if not defined)
      *
      * @return boolean true if user has full access to tracker, false otherwise
      */
     function userHasFullAccess($user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -2426,7 +2426,7 @@ EOS;
     }
     
     private function _getCSVSeparator($current_user) {
-        if ( ! $current_user || ! is_a($current_user, 'User')) {
+        if ( ! $current_user || ! ($user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         
@@ -2447,7 +2447,7 @@ EOS;
     }
     
     private function _getCSVDateformat($current_user) {
-        if ( ! $current_user || ! is_a($current_user, 'User')) {
+        if ( ! $current_user || ! ($user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         $dateformat_csv_export_pref = $current_user->getPreference('user_csv_dateformat');

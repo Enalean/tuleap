@@ -38,7 +38,7 @@ interface Tracker_Dispatchable_Interface {
      *
      * @param Tracker_IDisplayTrackerLayout  $layout       The tracker manager
      * @param Codendi_Request                $request      The data coming from the user
-     * @param User                           $current_user The user who mades the request
+     * @param PFUser                           $current_user The user who mades the request
      *
      * @return void
      */

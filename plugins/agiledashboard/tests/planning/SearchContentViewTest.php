@@ -31,7 +31,7 @@ class Planning_SearchContentViewTest extends Tracker_CrossSearch_SearchContentVi
         $tree_of_artifacts = new TreeNode();
         $artifact_factory = mock('Tracker_ArtifactFactory');
         $form_element_factory = mock('Tracker_FormElementFactory');
-        $user = mock('User');
+        $user = mock('PFUser');
         $backlog_actions_presenter = mock('Planning_BacklogActionsPresenter');
         $planning = mock('Planning');
         $planning_redirect_param = '';

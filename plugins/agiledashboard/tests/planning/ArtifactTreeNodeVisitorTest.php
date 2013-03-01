@@ -47,7 +47,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
         $node     = new TreeNode(array('id' => 123));
         $node->setObject($artifact);
         
-        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, mock('Tracker_CardFields'), mock('User'), 'baz'));
+        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, mock('Tracker_CardFields'), mock('PFUser'), 'baz'));
         $visited_node = $card_mapper->map($node);
         $presenter    = $visited_node->getCardPresenter();
         
@@ -65,7 +65,7 @@ class Planning_ArtifactTreeNodeVisitorTest extends TuleapTestCase {
                                    aNode()->withObject(anArtifact()->withTracker(mock('Tracker'))->withoutParent()->build()))
                                ->build();
         
-        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(mock('Planning'), mock('Tracker_CardFields'), mock('User'), 'whatever-class'));
+        $card_mapper  = new TreeNodeMapper(new Planning_ItemCardPresenterCallback(mock('Planning'), mock('Tracker_CardFields'), mock('PFUser'), 'whatever-class'));
         
         $visited_node = $card_mapper->map($root_node);
         $all_nodes    = $visited_node->flattenChildren();
@@ -92,7 +92,7 @@ class Planning_ArtifactTreeNodeVisitor_PlanningDraggableTest extends TuleapTestC
         $this->artifact = mock('Tracker_Artifact');
         $this->node     = new TreeNode();
         $this->node->setObject($this->artifact);
-        $this->card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, mock('Tracker_CardFields'), mock('User'), 'whatever'));
+        $this->card_mapper = new TreeNodeMapper(new Planning_ItemCardPresenterCallback($planning, mock('Tracker_CardFields'), mock('PFUser'), 'whatever'));
     }
     
     public function itKnowsDraggablePlanningItems() {

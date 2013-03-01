@@ -126,7 +126,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     /**
      * @return Boolean
      */
-    public function userCanView(User $user) {
+    public function userCanView(PFUser $user) {
         return $this->artifact->getTracker()->userCanView($user);
     }
 
@@ -189,10 +189,10 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
 
     /**
      * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
-     * @param User $user
+     * @param PFUser $user
      * @return Tracker_Artifact[]
      */
-    public function getLinkedArtifacts(User $user) {
+    public function getLinkedArtifacts(PFUser $user) {
         $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
         $root_node = $this->getPlannedArtifacts();
         // TODO get rid of this if, in favor of an empty treenode

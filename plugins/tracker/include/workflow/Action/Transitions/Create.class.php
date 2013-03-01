@@ -28,7 +28,7 @@ class Tracker_Workflow_Action_Transitions_Create extends Tracker_Workflow_Action
         $this->workflow_factory = $workflow_factory;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
         if ($request->existAndNonEmpty('field_id')) {
             if ($this->workflow_factory->create((int)$this->tracker->id, $request->get('field_id'))) {
                 $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('workflow_admin','created'));

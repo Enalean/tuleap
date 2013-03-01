@@ -103,12 +103,12 @@ abstract class Transition_PostAction {
     /**
      * Execute actions before transition happens
      *
-     * @param Array &$fields_data Request field data (array[field_id] => data)
-     * @param User  $current_user The user who are performing the update
+     * @param Array  &$fields_data Request field data (array[field_id] => data)
+     * @param PFUser $current_user The user who are performing the update
      *
      * @return void
      */
-    public function before(array &$fields_data, User $current_user) {
+    public function before(array &$fields_data, PFUser $current_user) {
     }
 
     /**

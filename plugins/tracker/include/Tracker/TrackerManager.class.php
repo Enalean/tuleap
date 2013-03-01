@@ -49,7 +49,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Check that tracker can be accessed by user
      *
      * @param Tracker         $tracker
-     * @param User            $user
+     * @param PFUser            $user
      * @param Codendi_Request $request
      *
      * @throws Tracker_CannotAccessTrackerException
@@ -70,9 +70,9 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      *
      * @param Tracker_Dispatchable_Interface $object
      * @param Codendi_Request                $request
-     * @param User                           $user
+     * @param PFUser                           $user
      */
-    protected function processSubElement(Tracker_Dispatchable_Interface $object, Codendi_Request $request, User $user) {
+    protected function processSubElement(Tracker_Dispatchable_Interface $object, Codendi_Request $request, PFUser $user) {
         // Tracker related check
         $this->checkUserCanAccessTracker($object->getTracker(), $user, $request);
         $GLOBALS['group_id'] = $object->getTracker()->getGroupId();
@@ -112,7 +112,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Controler
      *
      * @param Codendi_Request $request The request
-     * @param User            $user    The user that execute the request
+     * @param PFUser            $user    The user that execute the request
      *
      * @return void
      */
@@ -471,7 +471,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Display all trackers of project $project that $user is able to see
      *
      * @param Project $project The project
-     * @param User    $user    The user
+     * @param PFUser    $user    The user
      *
      * @return void
      */
@@ -600,7 +600,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         $this->displayFooter($project);
     }
     
-    public function fetchTrackerSwitcher(User $user, $separator, Project $include_project = null, Tracker $current_tracker = null) {
+    public function fetchTrackerSwitcher(PFUser $user, $separator, Project $include_project = null, Tracker $current_tracker = null) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         
@@ -761,12 +761,12 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * Check if user has permission to create a tracker or not
      *
      * @param int  $group_id The Id of the project where the user wants to create a tracker
-     * @param User $user     The user to test (current user if not defined)
+     * @param PFUser $user     The user to test (current user if not defined)
      *
      * @return boolean true if user has persission to create trackers, false otherwise
      */
     public function userCanCreateTracker($group_id, $user = false) {
-        if (!is_a($user, 'User')) {
+        if (!($user instanceof PFUser)) {
             $um = UserManager::instance();
             $user = $um->getCurrentUser();
         }
@@ -816,7 +816,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         return $search;
     }
     
-    public function getCrossSearchViewBuilder($group_id, User $user) {
+    public function getCrossSearchViewBuilder($group_id, PFUser $user) {
         $form_element_factory    = Tracker_FormElementFactory::instance();
         $planning_trackers       = $this->getPlanningTrackers($group_id, $user);
         $art_link_field_ids      = $form_element_factory->getArtifactLinkFieldsOfTrackers($planning_trackers);
@@ -840,7 +840,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
      * 
      * @return Array of Integer
      */
-    private function getPlanningTrackers($group_id, User $user) {
+    private function getPlanningTrackers($group_id, PFUser $user) {
         $trackers = array();
         @include_once dirname(__FILE__).'/../../../agiledashboard/include/Planning/PlanningFactory.class.php';
         if (class_exists('PlanningFactory')) {

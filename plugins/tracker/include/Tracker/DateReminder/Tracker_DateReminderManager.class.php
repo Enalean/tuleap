@@ -64,7 +64,7 @@ class Tracker_DateReminderManager {
      *
      * @param TrackerManager $trackerManager
      * @param HTTPRequest    $request
-     * @param User           $currentUser
+     * @param PFUser           $currentUser
      *
      * @return Void
      */
@@ -140,7 +140,7 @@ class Tracker_DateReminderManager {
      * @param Tracker_DateReminder $reminder Reminder that will send notifications
      * @param Tracker_Artifact $artifact Artifact for which reminders will be sent
      * @param Array            $messages Messages
-     * @param User             $user     Receipient
+     * @param PFUser             $user     Receipient
      *
      * return Array
      */

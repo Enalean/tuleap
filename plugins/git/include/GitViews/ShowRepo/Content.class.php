@@ -30,7 +30,7 @@ class GitViews_ShowRepo_Content {
     private $gitphp_viewer;
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $current_user;
 
@@ -57,7 +57,7 @@ class GitViews_ShowRepo_Content {
     public function __construct(
         GitRepository $repository,
         GitViews_GitPhpViewer $gitphp_viewer,
-        User $current_user,
+        PFUser $current_user,
         Git $controller,
         Git_Driver_Gerrit $driver,
         array $gerrit_servers,

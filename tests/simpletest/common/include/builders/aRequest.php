@@ -28,7 +28,7 @@ class Codendi_Request_TestBuilder {
     private $params = array();
 
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
@@ -52,7 +52,7 @@ class Codendi_Request_TestBuilder {
         return $this;
     }
 
-    public function withUser(User $user) {
+    public function withUser(PFUser $user) {
         $this->user = $user;
         return $this;
     }

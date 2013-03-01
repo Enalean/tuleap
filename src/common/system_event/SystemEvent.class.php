@@ -339,7 +339,7 @@ abstract class SystemEvent {
     /**
      * Initialize a user from the given $user_id
      * @param int $user_id the id of the User
-     * @return User
+     * @return PFUser
      */
     protected function getUser($user_id) {
         if (!$user_id) {

@@ -203,7 +203,7 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         $this->repository = mock('GitRepository');
         stub($this->repository)->getBackend()->returns($this->backend);
 
-        $this->user    = stub('User')->getId()->returns(123);
+        $this->user    = stub('PFUser')->getId()->returns(123);
         $this->project = stub('Project')->getId()->returns(101);
         $this->manager = partial_mock('GitRepositoryManager', array('isRepositoryNameAlreadyUsed'));
         $this->forkPermissions = array();
@@ -213,14 +213,14 @@ class GitRepositoryManager_ForkTest extends TuleapTestCase {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(true);
 
         $this->expectException();
-        $this->manager->fork($this->repository, mock('Project'), mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
 
     public function itForkInRepositoryBackendIfEverythingIsClean() {
         stub($this->manager)->isRepositoryNameAlreadyUsed($this->repository)->returns(false);
 
         $this->backend->expectOnce('fork');
-        $this->manager->fork($this->repository, mock('Project'), mock('User'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
+        $this->manager->fork($this->repository, mock('Project'), mock('PFUser'), 'namespace', GitRepository::REPO_SCOPE_INDIVIDUAL, $this->forkPermissions);
     }
 
     function testForkIndividualRepositories() {

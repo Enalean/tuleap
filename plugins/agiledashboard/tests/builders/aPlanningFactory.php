@@ -30,7 +30,7 @@ require_once('common/user/User.class.php');
 
 Mock::generate('PlanningDao');
 Mock::generate('TrackerFactory');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 function aPlanningFactory() {
     return new TestPlanningFactoryBuilder();

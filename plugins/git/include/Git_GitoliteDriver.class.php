@@ -167,8 +167,7 @@ class Git_GitoliteDriver {
     /**
      * Dump ssh keys into gitolite conf
      */
-    public function dumpSSHKeys(User $user = null) {
-
+    public function dumpSSHKeys(PFUser $user = null) {
         if ($this->dumper->dumpSSHKeys($user)) {
             return $this->push();
         }

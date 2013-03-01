@@ -632,7 +632,7 @@ class Tracker_FormElement_Field_FileTest extends Tracker_FormElement_Field_File_
 
 
 abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_FormElement_Field_File_BaseTest {
-    /** @var User */
+    /** @var PFUser */
     protected $current_user;
     protected $tmp_dir;
 

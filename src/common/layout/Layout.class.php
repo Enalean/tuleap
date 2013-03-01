@@ -868,7 +868,7 @@ class Layout extends Response {
     }
 
     /**
-     * @return User
+     * @return PFUser
      */
     protected function getUser() {
         return UserManager::instance()->getCurrentUser();

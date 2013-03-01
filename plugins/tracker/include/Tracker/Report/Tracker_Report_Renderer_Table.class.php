@@ -284,7 +284,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
      * Fetch content of the renderer
      * @return string
      */
-    public function fetch($matching_ids, $request, $report_can_be_modified, User $user) {
+    public function fetch($matching_ids, $request, $report_can_be_modified, PFUser $user) {
         $html = '';
         $total_rows = $matching_ids['id'] ? substr_count($matching_ids['id'], ',') + 1 : 0;
         $offset     = (int)$request->get('offset');
@@ -435,7 +435,7 @@ class Tracker_Report_Renderer_Table extends Tracker_Report_Renderer implements T
     /**
      * Fetch content to be displayed in widget
      */
-    public function fetchWidget(User $user) {
+    public function fetchWidget(PFUser $user) {
         $html = '';
         $use_data_from_db = true;
         $store_in_session = false;

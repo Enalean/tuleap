@@ -270,7 +270,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $matchingIds;
     }
 
-    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, User $user, array $criteria) {
+    protected function getMatchingIdsInDb(DataAccessObject $dao, PermissionsManager $permissionManager, Tracker $tracker, PFUser $user, array $criteria) {
         $dump_criteria = array();
         foreach ($criteria as $c) {
             $dump_criteria[$c->field->getName()] = $c->field->getCriteriaValue($c);
@@ -498,7 +498,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
         return $i;
     }
     
-    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, User $current_user = null) {
+    public function fetchDisplayQuery(array $criteria, $report_can_be_modified, PFUser $current_user = null) {
         $hp = Codendi_HTMLPurifier::instance();
 
         $html = '';
@@ -890,7 +890,7 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
      * Only owners of a report can update it.
      * owner = report->user_id
      * or if null, owner = tracker admin or site admins
-     * @param User $user the user who wants to update the report
+     * @param PFUser $user the user who wants to update the report
      * @return boolean
      */
     public function userCanUpdate($user) {

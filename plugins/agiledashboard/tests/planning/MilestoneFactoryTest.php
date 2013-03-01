@@ -59,7 +59,7 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         $this->milestone_tracker_id = 112;
         $this->milestone_tracker    = stub('Tracker')->getId()->returns($this->milestone_tracker_id);
 
-        $this->user              = mock('User');
+        $this->user              = mock('PFUser');
         $this->planning          = aPlanning()->withId($this->planning_id)->build();
         $this->artifact          = mock('Tracker_Artifact');
         $this->planning_factory  = mock('PlanningFactory');
@@ -329,7 +329,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
       
     public function setUp() {
         parent::setUp();
-        $this->user             = mock('User');
+        $this->user             = mock('PFUser');
         $this->project          = stub('Project')->getID()->returns(99);
         $this->planning_tracker = stub('Tracker')->getProject()->returns($this->project);
         $this->planning_id      = 3333;
@@ -394,7 +394,7 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
         $root_artifact    = $this->anArtifactWithIdAndUniqueLinkedArtifacts(100, array($depth1_artifact));
 
         $factory = new Planning_MileStoneFactory(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'));
-        $planning_items_tree = $factory->getPlannedArtifacts(mock('User'), $root_artifact);
+        $planning_items_tree = $factory->getPlannedArtifacts(mock('PFUser'), $root_artifact);
 
         $children = $planning_items_tree->flattenChildren();
 

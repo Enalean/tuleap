@@ -106,11 +106,11 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return string html
      */
-    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
+    public function displayAdmin(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         $hp = Codendi_HTMLPurifier::instance();
         $sm->displaySemanticHeader($this, $tracker_manager);
         $html = '';
@@ -155,11 +155,11 @@ class Tracker_Semantic_Title extends Tracker_Semantic {
      * @param Tracker_SemanticManager $sm              The semantic manager
      * @param TrackerManager          $tracker_manager The tracker manager
      * @param Codendi_Request         $request         The request
-     * @param User                    $current_user    The user who made the request
+     * @param PFUser                    $current_user    The user who made the request
      *
      * @return void
      */
-    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_SemanticManager $sm, TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user) {
         if ($request->exist('update')) {
             if ($field = Tracker_FormElementFactory::instance()->getUsedTextFieldById($this->tracker, $request->get('text_field_id'))) {
                 $this->text_field = $field;

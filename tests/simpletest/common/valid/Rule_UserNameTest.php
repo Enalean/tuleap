@@ -27,7 +27,7 @@ Mock::generatePartial('Rule_UserName', 'Rule_UserNameTestVersion', array('_getPr
 
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
@@ -203,7 +203,7 @@ class Rule_UserNameTest extends UnitTestCase {
     }
 
     function testUserNameExists() {
-        $u = new MockUser($this);
+        $u = mock('PFUser');
 
         $um = new MockUserManager($this);
         $um->setReturnValue('getUserByUserName', $u, array("usertest"));

@@ -39,7 +39,7 @@ class Git_Gitolite_SSHKeyDumper {
    /**
      * Dump ssh keys into gitolite conf
      */
-    public function dumpSSHKeys(User $user = null) {
+    public function dumpSSHKeys(PFUser $user = null) {
         if (is_dir($this->admin_path)) {
             $this->createKeydir();
             if ($user) {
@@ -79,7 +79,7 @@ class Git_Gitolite_SSHKeyDumper {
         }
     }
 
-    private function initUserKeys(User $user) {
+    private function initUserKeys(PFUser $user) {
         $this->dumpKeys($user);
     }
 
@@ -92,7 +92,7 @@ class Git_Gitolite_SSHKeyDumper {
         }
     }
 
-    private function dumpKeys(User $user) {
+    private function dumpKeys(PFUser $user) {
         $i = 0;
         foreach ($user->getAuthorizedKeysArray() as $key) {
             $filePath = $this->keydir.'/'.$user->getUserName().'@'.$i.'.pub';
@@ -118,7 +118,7 @@ class Git_Gitolite_SSHKeyDumper {
     /**
      * Remove all pub SSH keys previously associated to a user
      *
-     * @param User $user
+     * @param PFUser $user
      */
     private function removeUserExistingKeys($user, $last_key_id) {
         if (is_dir($this->keydir)) {

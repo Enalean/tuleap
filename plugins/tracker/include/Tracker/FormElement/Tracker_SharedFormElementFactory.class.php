@@ -34,7 +34,7 @@ class Tracker_SharedFormElementFactory {
     }
 
     
-    public function createFormElement(Tracker $tracker, array $formElement_data, User $user) {
+    public function createFormElement(Tracker $tracker, array $formElement_data, PFUser $user) {
         $formElement = $this->factory->getFormElementById($formElement_data['field_id']);
         if (!$formElement) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'wrong_field_id', $formElement_data['field_id']);
@@ -58,12 +58,12 @@ class Tracker_SharedFormElementFactory {
         return $this->getRootOriginalField($originalField);
     }
     
-    private function assertFieldCanBeCopied(Tracker_FormElement $field, User $user) {
+    private function assertFieldCanBeCopied(Tracker_FormElement $field, PFUser $user) {
         $this->assertFieldIsReadable($field, $user);
         $this->assertFieldIsStaticSelectbox($field);
     }
     
-    private function assertFieldIsReadable(Tracker_FormElement $field, User $user) {
+    private function assertFieldIsReadable(Tracker_FormElement $field, PFUser $user) {
         if ( ! ($field->userCanRead($user) 
               && $field->getTracker()->userCanView($user))) {
             $exception_message = $GLOBALS['Language']->getText('plugin_tracker_formelement_exception', 'permission_denied');

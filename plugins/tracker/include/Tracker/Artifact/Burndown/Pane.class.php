@@ -39,7 +39,7 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
     private $field;
     
     /**
-     * @var User
+     * @var PFUser
      */
     private $user;
 
@@ -47,7 +47,7 @@ class Tracker_Artifact_Burndown_Pane extends AgileDashboard_Pane {
             Tracker_Artifact_Burndown_PaneInfo $info,
             Tracker_Artifact $artifact,
             Tracker_FormElement_Field_Burndown $field,
-            User $user) {
+            PFUser $user) {
         $this->info              = $info;
         $this->artifact          = $artifact;
         $this->field             = $field;

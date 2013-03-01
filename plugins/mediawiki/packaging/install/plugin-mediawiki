@@ -1,0 +1,8 @@
+plugins/mediawiki/*                @PLUGIN_PATH@/mediawiki/
+plugins/mediawiki/bin/*            @PLUGIN_PATH@/mediawiki/bin/
+plugins/mediawiki/include/*        @PLUGIN_PATH@/mediawiki/include/
+plugins/mediawiki/cronjobs/*       @PLUGIN_PATH@/mediawiki/cronjobs/
+plugins/mediawiki/db/*		   @PLUGIN_PATH@/mediawiki/lib/
+plugins/mediawiki/www/*            @PLUGIN_PATH@/mediawiki/www/
+plugins/mediawiki/etc/httpd.d/*    @SOURCE_PATH@/etc/httpd.d/
+plugins/mediawiki/etc/*.ini 	   etc/@PACKAGE@/config.ini.d/

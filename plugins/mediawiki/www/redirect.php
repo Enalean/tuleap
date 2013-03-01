@@ -1,0 +1,1 @@
+/usr/share/mediawiki115/redirect.php

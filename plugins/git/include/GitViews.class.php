@@ -382,7 +382,7 @@ class GitViews extends PluginViews {
         return $html;
     }
 
-    public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
+    public function getUserProjectsAsOptions(PFUser $user, ProjectManager $manager, $currentProjectId) {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
         $option     = '<option value="%d" title="%s">%s</option>';

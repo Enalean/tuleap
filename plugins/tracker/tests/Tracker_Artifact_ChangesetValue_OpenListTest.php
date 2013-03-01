@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
+require_once('Tracker_Artifact_ChangesetValue_ListTest.php');
 Mock::generate('Tracker_FormElement_Field_OpenList');
 Mock::generate('Tracker_FormElement_Field_List_OpenValue');
 

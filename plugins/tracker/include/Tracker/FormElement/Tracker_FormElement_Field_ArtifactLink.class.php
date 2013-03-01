@@ -232,7 +232,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return new Tracker_Report_Criteria_ArtifactLink_ValueDao();
     }
 
-    private function fetchParentSelector($prefill_parent, $name, Tracker $parent_tracker, User $user, Codendi_HTMLPurifier $hp) {
+    private function fetchParentSelector($prefill_parent, $name, Tracker $parent_tracker, PFUser $user, Codendi_HTMLPurifier $hp) {
         $html  = '';
         $html .= '<p>';
         list($label, $possible_parents, $display_selector) = $this->getPossibleArtifactParents($parent_tracker, $user);
@@ -268,7 +268,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return $html;
     }
 
-    private function getPossibleArtifactParents(Tracker $parent_tracker, User $user) {
+    private function getPossibleArtifactParents(Tracker $parent_tracker, PFUser $user) {
         $label            = '';
         $possible_parents = array();
         $display_selector = true;
@@ -416,7 +416,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * 
      * @param Tracker_IDisplayTrackerLayout  $layout          Displays the page header and footer
      * @param Codendi_Request                $request         The data coming from the user
-     * @param User                           $current_user    The user who mades the request
+     * @param PFUser                           $current_user    The user who mades the request
      *
      * @return void
      */
@@ -1028,7 +1028,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @return bool true if success
      */
-    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, User $submitter, $is_submission = false, $bypass_permissions = false) {
+    public function saveNewChangeset(Tracker_Artifact $artifact, $old_changeset, $new_changeset_id, $submitted_value, PFUser $submitter, $is_submission = false, $bypass_permissions = false) {
         $submitted_value = $this->updateLinkingDirection($artifact, $old_changeset, $submitted_value, $submitter);
         return parent::saveNewChangeset($artifact, $old_changeset, $new_changeset_id, $submitted_value, $submitter, $is_submission, $bypass_permissions);
     }
@@ -1047,11 +1047,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @param Tracker_Artifact           $artifact
      * @param Tracker_Artifact_Changeset $old_changeset
      * @param mixed                      $submitted_value
-     * @param User                       $submitter
+     * @param PFUser                       $submitter
      * 
      * @return mixed The submitted value expurged from updated links
      */
-    protected function updateLinkingDirection(Tracker_Artifact $artifact, $old_changeset, $submitted_value, User $submitter) {
+    protected function updateLinkingDirection(Tracker_Artifact $artifact, $old_changeset, $submitted_value, PFUser $submitter) {
         $previous_changesetvalue = $this->getPreviousChangesetValue($old_changeset);
         $artifacts               = $this->getArtifactsFromChangesetValue($submitted_value, $previous_changesetvalue);
         $artifact_id_already_linked = array();
@@ -1197,11 +1197,11 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * Retrieve linked artifacts according to user's permissions
      * 
      * @param Tracker_Artifact_Changeset $changeset The changeset you want to retrieve artifact from
-     * @param User                       $user      The user who will see the artifacts
+     * @param PFUser                       $user      The user who will see the artifacts
      * 
      * @return array of Tracker_Artifact
      */
-    public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset, User $user) {
+    public function getLinkedArtifacts(Tracker_Artifact_Changeset $changeset, PFUser $user) {
         $artifacts = array();
         $changeset_value = $changeset->getValue($this);
         if ($changeset_value) {

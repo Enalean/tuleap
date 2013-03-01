@@ -29,7 +29,7 @@ Mock::generate('AdminDelegation_UserServiceDao');
 Mock::generate('AdminDelegation_UserServiceLogDao');
 
 require_once 'common/user/User.class.php';
-Mock::generate('User');
+Mock::generate('PFUser');
 
 class AdminDelegation_UserServiceTest extends UnitTestCase {
     protected $_keepCurrentTime;
@@ -59,7 +59,7 @@ class AdminDelegation_UserServiceTest extends UnitTestCase {
         $usm->setReturnValue('_getUserServiceDao', $usDao);
         $usm->setReturnValue('_getUserServiceLogDao', $uslDao);
         
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 112);
         
         $usm->addUserService($user, AdminDelegation_Service::SHOW_PROJECT_ADMINS);
@@ -77,7 +77,7 @@ class AdminDelegation_UserServiceTest extends UnitTestCase {
         $usm->setReturnValue('_getUserServiceDao', $usDao);
         $usm->setReturnValue('_getUserServiceLogDao', $uslDao);
         
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 112);
         
         $usm->removeUserService($user, AdminDelegation_Service::SHOW_PROJECT_ADMINS);

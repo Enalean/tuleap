@@ -222,11 +222,11 @@ class Tracker_FormElementFactory {
      *
      * @param int    $tracker_id
      * @param string $field_name
-     * @param User   $user
+     * @param PFUser   $user
      *
      * @return Tracker_FormElement_Field
      */
-    public function getUsedFieldByNameForUser($tracker_id, $field_name, User $user) {
+    public function getUsedFieldByNameForUser($tracker_id, $field_name, PFUser $user) {
         $field = $this->getUsedFieldByName($tracker_id, $field_name);
         if ($field && $field->userCanRead($user)) {
             return $field;
@@ -239,11 +239,11 @@ class Tracker_FormElementFactory {
      *
      * @param int    $tracker_id
      * @param string $field_name
-     * @param User   $user
+     * @param PFUser   $user
      *
      * @return Tracker_FormElement_IComputeValues
      */
-    public function getComputableFieldByNameForUser($tracker_id, $field_name, User $user) {
+    public function getComputableFieldByNameForUser($tracker_id, $field_name, PFUser $user) {
         $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
         if ($field && $field instanceof Tracker_FormElement_IComputeValues) {
             return $field;
@@ -411,7 +411,7 @@ class Tracker_FormElementFactory {
      *
      * @return Tracker_FormElement_Field_ArtifactLink
      */
-    public function getAnArtifactLinkField(User $user, Tracker $tracker) {
+    public function getAnArtifactLinkField(PFUser $user, Tracker $tracker) {
         $artifact_link_fields = $this->getUsedArtifactLinkFields($tracker);
         if (count($artifact_link_fields) > 0 && $artifact_link_fields[0]->userCanRead($user)) {
             return $artifact_link_fields[0];
@@ -432,7 +432,7 @@ class Tracker_FormElementFactory {
      *
      * @return Tracker_FormElement_Field_ArtifactLink
      */
-    public function getABurndownField(User $user, Tracker $tracker) {
+    public function getABurndownField(PFUser $user, Tracker $tracker) {
         $burndown_fields = $this->getUsedBurndownFields($tracker);
         if (count($burndown_fields) > 0 && $burndown_fields[0]->userCanRead($user)) {
             return $burndown_fields[0];
@@ -844,7 +844,7 @@ class Tracker_FormElementFactory {
      *
      * @return Array of Tracker_FormElement_Field
      */
-    public function getSharedFieldsReadableBy(User $user, Project $project) {
+    public function getSharedFieldsReadableBy(PFUser $user, Project $project) {
         $fields = $this->getProjectSharedFields($project);
         foreach ($fields as $k => $field) {
             if (!$this->userCanReadSharedField($user, $field)) {
@@ -854,11 +854,11 @@ class Tracker_FormElementFactory {
         return $fields;
     }
 
-    protected function userCanReadSharedField(User $user, Tracker_FormElement $field) {
+    protected function userCanReadSharedField(PFUser $user, Tracker_FormElement $field) {
         return ($field->userCanRead($user) && $this->canReadAllTargets($user, $field));
     }
 
-    private function canReadAllTargets(User $user, Tracker_FormElement $field) {
+    private function canReadAllTargets(PFUser $user, Tracker_FormElement $field) {
         foreach ($this->getSharedTargets($field) as $target_field) {
             if (!$target_field->userCanRead($user)) {
                 return false;
@@ -1080,7 +1080,7 @@ class Tracker_FormElementFactory {
         return false;
     }
 
-    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, User $current_user, $type, Tracker $tracker) {
+    public function displayAdminCreateFormElement(TrackerManager $tracker_manager, Codendi_Request $request, PFUser $current_user, $type, Tracker $tracker) {
         $row = array(
                         'formElement_type'  => $type,
                         'id'                => 0,

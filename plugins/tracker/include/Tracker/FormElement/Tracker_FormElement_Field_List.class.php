@@ -1106,11 +1106,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Check if the user can make the transition
      *
      * @param int  $transition_id The id of the transition
-     * @param User $user          The user. If null, take the current user
+     * @param PFUser $user          The user. If null, take the current user
      *
      *@return boolean true if user has permission on this field
      */
-    public function userCanMakeTransition($transition_id, User $user = null) {
+    public function userCanMakeTransition($transition_id, PFUser $user = null) {
         if ($transition_id) {
             $group_id = $this->getTracker()->getGroupId();
 

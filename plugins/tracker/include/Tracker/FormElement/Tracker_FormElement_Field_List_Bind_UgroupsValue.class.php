@@ -58,7 +58,7 @@ class Tracker_FormElement_Field_List_Bind_UgroupsValue extends Tracker_FormEleme
         return  $this->ugroup->getUsers($this->getUgroupId())->getNames();
     }
 
-    private function getUserName(User $user) {
+    private function getUserName(PFUser $user) {
         return $user->getUserName();
     }
 

@@ -90,7 +90,7 @@ Mock::generate('Tracker');
 Mock::generate('TransitionFactory');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 
 class Tracker_FormElement_Field_ListTest extends UnitTestCase {
@@ -227,7 +227,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $changeset_value_list = new $this->mockcv_class();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -288,7 +288,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $bind                 = new MockTracker_FormElement_Field_List_Bind();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -326,7 +326,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $bind                 = new MockTracker_FormElement_Field_List_Bind();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -448,7 +448,7 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
     public function setUp() {
         parent::setUp();
         $this->layout  = mock('Tracker_IDisplayTrackerLayout');
-        $this->user    = mock('User');
+        $this->user    = mock('PFUser');
         $this->request = aRequest()->with('func', 'get-values')->build();
         $this->bind    = mock('Tracker_FormElement_Field_List_Bind');
         $this->list    = new Tracker_FormElement_Field_ListTestVersion();

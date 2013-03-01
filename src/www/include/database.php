@@ -182,4 +182,113 @@ function db_ei($val, $null = CODENDI_DB_NOT_NULL) {
     return db_escape_int($val, $null);
 }
 
+function db_begin(){
+	echo "db_begin()\n";
+}
+function db_commit(){
+	echo "db_commit()\n";
+}
+function db_rollback(){
+	echo "db_rollback()\n";
+}
+
+/**
+ *  db_query_from_file() - Query the database, from a file.
+ *
+ *  @param string File that contains the SQL statements.
+ *  @param int How many rows do you want returned.
+ *  @param int Of matching rows, return only rows starting here.
+ *  @param int ability to spread load to multiple db servers.
+ *  @return int result set handle.
+ */
+function db_query_from_file($file,$limit='-1',$offset=0,$dbserver=NULL) {
+/*      
+        db_connect_if_needed () ;
+        $dbconn = db_switcher($dbserver) ;
+
+        global $QUERY_COUNT;
+        $QUERY_COUNT++;
+
+        $qstring = file_get_contents($file);
+        if (!$qstring) {
+                error_log('db_query_from_file(): Cannot read file $file!');
+                return false;
+        }
+        if (!$limit || !is_numeric($limit) || $limit < 0) {
+                $limit=0;
+        }
+        if ($limit > 0) {
+                if (!$offset || !is_numeric($offset) || $offset < 0) {
+                        $offset=0;
+                }
+                $qstring=$qstring." LIMIT $limit OFFSET $offset";
+        }
+        $res = @pg_query($dbconn,$qstring);
+        if (!$res) {
+                error_log('SQL: ' . preg_replace('/\n\t+/', ' ',$qstring));
+                error_log('SQL> ' . db_error($dbserver));
+        }
+        return $res;
+*/
+	// inspired from /usr/share/mediawiki115/includes/db/Database.php
+        $fp = fopen( $file, 'r' );
+        if ( false === $fp ) {
+                error_log('db_query_from_file(): Cannot read file $file!');
+        	fclose( $fp );
+		return false;
+        }
+
+	$cmd = "";
+	$done = false;
+	$dollarquote = false;
+
+	while ( ! feof( $fp ) ) {
+		$line = trim( fgets( $fp, 1024 ) );
+		$sl = strlen( $line ) - 1;
+
+		if ( $sl < 0 ) { continue; }
+		if ( '-' == $line{0} && '-' == $line{1} ) { continue; }
+
+		## Allow dollar quoting for function declarations
+		if (substr($line,0,4) == '$mw$') {
+			if ($dollarquote) {
+				$dollarquote = false;
+				$done = true;
+			}
+			else {
+				$dollarquote = true;
+			}
+		}
+		else if (!$dollarquote) {
+			if ( ';' == $line{$sl} && ($sl < 2 || ';' != $line{$sl - 1})) {
+				$done = true;
+				$line = substr( $line, 0, $sl );
+			}
+		}
+
+		if ( '' != $cmd ) { $cmd .= ' '; }
+		$cmd .= "$line\n";
+
+		if ( $done ) {
+			$cmd = str_replace(';;', ";", $cmd);
+			// next 2 lines are for mediawiki subst
+			$cmd = preg_replace(":/\*_\*/:","mw",$cmd );
+                        // TOCHECK WITH CHRISTIAN: Do not change indexes for mediawiki (doesn't seems well supported)
+			//$cmd = preg_replace(":/\*i\*/:","mw",$cmd );
+			$res = db_query( $cmd );
+
+        		if (!$res) {
+                		error_log('SQL: ' . preg_replace('/\n\t+/', ' ',$cmd));
+                		error_log('SQL> ' . db_error($dbserver));
+        			return $res;
+        		}
+
+			$cmd = '';
+			$done = false;
+		}
+	}
+        fclose( $fp );
+	return true;
+}
+
 ?>

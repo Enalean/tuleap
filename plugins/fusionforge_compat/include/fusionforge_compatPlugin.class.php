@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-set_include_path(get_include_path() . PATH_SEPARATOR . dirname(__FILE__));
+set_include_path(get_include_path()
+        . PATH_SEPARATOR . dirname(__FILE__)
+        . PATH_SEPARATOR . dirname(__FILE__). '/include');
 
 class fusionforge_compatPlugin extends Plugin {
     

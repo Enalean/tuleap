@@ -68,8 +68,8 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
         //}
         //return $recipients;
         
-        //$user1 = new MockUser(); $user1->setReturnValue('getUserName', 'u1');
-        //$user2 = new MockUser(); $user2->setReturnValue('getUserName', 'u2');
+        //$user1 = mock('PFUser'); $user1->setReturnValue('getUserName', 'u1');
+        //$user2 = mock('PFUser'); $user2->setReturnValue('getUserName', 'u2');
         
         $changeset_value = new MockTracker_Artifact_ChangesetValue_List();
         $changeset_value->setReturnValue(
