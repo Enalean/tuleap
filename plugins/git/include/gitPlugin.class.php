@@ -78,13 +78,14 @@ class GitPlugin extends Plugin {
         $this->_addHook('widget_instance',                                  'myPageBox',                                   false);
         $this->_addHook('widgets',                                          'widgets',                                     false);
 
+        // User Group membership modification
         $this->_addHook('project_admin_add_user');
         $this->_addHook('project_admin_ugroup_add_user',                   'add_user_to_ugroup',                           false);
         $this->_addHook('project_admin_remove_user');
         $this->_addHook('project_admin_ugroup_remove_user',                'remove_user_from_ugroup',                      false);
         $this->_addHook('project_admin_change_user_permissions');
         $this->_addHook('project_admin_ugroup_deletion');
-        //project_admin_remove_user_from_project_ugroups
+        $this->_addHook('project_admin_remove_user_from_project_ugroups');
     }
 
     public function site_admin_option_hook() {
@@ -589,17 +590,25 @@ class GitPlugin extends Plugin {
         }
     }
 
+    public function project_admin_remove_user_from_project_ugroups($params) {
+        foreach ($params['ugroups'] as $ugroup_id) {
+            $this->remove_user_from_ugroup(
+                array(
+                    'group_id'  => $params['group_id'],
+                    'user_id'   => $params['user_id'],
+                    'ugroup_id' => $ugroup_id,
+                )
+            );
+        }
+    }
+
     public function project_admin_change_user_permissions($params) {
-        $previous_admin_flag = $params['previous_permissions']['admin_flags'];
-        $current_admin_flag  = $params['user_permissions']['admin_flags'];
-        if ($previous_admin_flag !== $current_admin_flag) {
-            if ($current_admin_flag == 'A') {
-                $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
-                $this->add_user_to_ugroup($params);
-            } else {
-                $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
-                $this->remove_user_from_ugroup($params);
-            }
+        if ($params['user_permissions']['admin_flags'] == 'A') {
+            $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
+            $this->add_user_to_ugroup($params);
+        } else {
+            $params['ugroup_id'] = UGroup::PROJECT_ADMIN;
+            $this->remove_user_from_ugroup($params);
         }
     }
 

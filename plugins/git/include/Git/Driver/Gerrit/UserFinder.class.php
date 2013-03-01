@@ -95,9 +95,5 @@ class Git_Driver_Gerrit_UserFinder {
     private function isNeitherRegisteredNorAnonymous($ugroup_id) {
         return ! in_array($ugroup_id, array(Ugroup::REGISTERED, UGroup::ANONYMOUS));
     }
-
-    public function getStuff() {
-        
-    }
 }
 ?>
