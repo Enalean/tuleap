@@ -24,6 +24,7 @@
  */
 
 require_once 'plugins_utils.php';
+
 if(is_dir("/usr/share/mediawiki")){
 forge_define_config_item('src_path','mediawiki', "/usr/share/mediawiki");
 forge_define_config_item('mwdata_path', 'mediawiki', '$core/data_path/plugins/mediawiki');
@@ -414,7 +415,7 @@ class MediaWikiPlugin extends Plugin {
 
     public function service_is_used($params) {
         if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
-            $this->createWikis();
+            $this->createWikis($params);
         }
     }
 
@@ -430,8 +431,9 @@ class MediaWikiPlugin extends Plugin {
         } else {
             $group_id=null;
         }
-
-        $project = group_get_object($group_id);
+        $pm = ProjectManager::instance();
+        $project = $pm->getProject($group_id);
+        
         if (!$project || !is_object($project)) {
             return;
         }
