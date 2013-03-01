@@ -23,15 +23,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-require_once 'plugins_utils.php';
-if(is_dir("/usr/share/mediawiki")){
-forge_define_config_item('src_path','mediawiki', "/usr/share/mediawiki");
-forge_define_config_item('mwdata_path', 'mediawiki', '$core/data_path/plugins/mediawiki');
-forge_define_config_item('projects_path', 'mediawiki', '$mediawiki/mwdata_path/projects');
-forge_define_config_item('master_path', 'mediawiki', '$mediawiki/mwdata_path/master');
-forge_define_config_item('enable_uploads', 'mediawiki', false);
-forge_set_config_item_bool('enable_uploads', 'mediawiki');
-}
+require_once 'common/plugin/Plugin.class.php';
 
 class MediaWikiPlugin extends Plugin {
 	function __construct ($id=0) {
@@ -52,10 +44,24 @@ class MediaWikiPlugin extends Plugin {
 		$this->_addHook("clone_project_from_template") ;
 		$this->_addHook('group_delete');
                 $this->_addHook('cssfile');
+                $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
                 // Search
                 $this->_addHook('search_type_entry', 'search_type_entry', false);
                 $this->_addHook('search_type', 'search_type', false);
 	}
+
+        public function loaded() {
+            parent::loaded();
+            require_once 'plugins_utils.php';
+            if(is_dir("/usr/share/mediawiki")){
+                forge_define_config_item('src_path','mediawiki', "/usr/share/mediawiki");
+                forge_define_config_item('mwdata_path', 'mediawiki', '$core/data_path/plugins/mediawiki');
+                forge_define_config_item('projects_path', 'mediawiki', '$mediawiki/mwdata_path/projects');
+                forge_define_config_item('master_path', 'mediawiki', '$mediawiki/mwdata_path/master');
+                forge_define_config_item('enable_uploads', 'mediawiki', false);
+                forge_set_config_item_bool('enable_uploads', 'mediawiki');
+            }
+        }
 
         public function search_type_entry($params) {
                 $params['output'] .= '<option value="'. $this->name .'" ';
@@ -93,6 +99,14 @@ class MediaWikiPlugin extends Plugin {
 		}
 		return $this->pluginInfo;
 	}
+
+        public function service_replace_template_name_in_link($params) {
+            $params['link'] = preg_replace(
+                '#/plugins/mediawiki/wiki/'.preg_quote($params['template']['name']).'(/|$)#',
+                '/plugins/mediawiki/wiki/'. $params['project']->getUnixName().'$1',
+                $params['link']
+            );
+        }
 
 	function CallHook ($hookname, &$params) {
 		if (isset($params['group_id'])) {
