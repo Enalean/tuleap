@@ -20,6 +20,7 @@
 
 require_once 'GitDao.class.php';
 require_once 'GitRepository.class.php';
+require_once 'GitRepositoryWithPermissions.class.php';
 
 class GitRepositoryFactory {
     /**
@@ -209,38 +210,6 @@ class GitRepositoryFactory {
             $this->dao->hydrateRepositoryObject($repository, $dar->getRow());
         }
         return $repository;
-    }
-}
-
-class GitRepositoryWithPermissions {
-    private $repository;
-    private $permissions = array(
-        Git::PERM_READ          => array(),
-        Git::PERM_WRITE         => array(),
-        Git::PERM_WPLUS         => array(),
-        Git::SPECIAL_PERM_ADMIN => array()
-    );
-
-    public function __construct(GitRepository $repository, array $permissions = array()) {
-        $this->repository  = $repository;
-        if (count($permissions) > 0) {
-            $this->permissions = $permissions;
-        }
-    }
-
-    public function addUGroupForPermissionType($permission_type, $ugroup_id) {
-        if (!isset($this->permissions[$permission_type])) {
-            throw new RuntimeException('Invalid GIT permission type '.$permission_type);
-        }
-        $this->permissions[$permission_type][] = $ugroup_id;
-    }
-
-    public function getRepository() {
-        return $this->repository;
-    }
-
-    public function getPermissions() {
-        return $this->permissions;
     }
 }
 
