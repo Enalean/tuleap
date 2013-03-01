@@ -409,7 +409,7 @@ class MediaWikiPlugin extends Plugin {
 	}
 
     public function register_project_creation($params) {
-        $this->createWikis();
+        $this->createWikis($params);
     }
 
     public function service_is_used($params) {
@@ -421,9 +421,33 @@ class MediaWikiPlugin extends Plugin {
     /**
      * @todo do not create *all* mediawiki
      */
-    private function createWikis() {
+    private function createWikis($params) {
+
+        if (isset($params['group_id'])) {
+            $group_id=$params['group_id'];
+        } elseif (isset($params['group'])) {
+            $group_id=$params['group'];
+        } else {
+            $group_id=null;
+        }
+
+        $project = group_get_object($group_id);
+        if (!$project || !is_object($project)) {
+            return;
+        }
+
+        if ($project->isError()) {
+            return;
+        }
+
+        if (!$project->isProject()) {
+            return;
+        }
+
+        $project_name = $project->getUnixName();
+
         include dirname(__FILE__) .'/../cronjobs/create-wikis-mysql.php';
-        include dirname(__FILE__) .'/../cronjobs/create-wikis.php';
+        //include dirname(__FILE__) .'/../cronjobs/create-wikis.php';
     }
 }
 

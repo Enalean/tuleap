@@ -62,7 +62,6 @@ INSERT
         'system',
         160
     );
-
 INSERT
     INTO service(
         `group_id`,
