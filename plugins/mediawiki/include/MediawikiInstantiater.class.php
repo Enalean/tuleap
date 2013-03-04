@@ -1,4 +1,5 @@
 <?php
+
 /*
  * Copyright (C) 2010  Olaf Lenz
  *
@@ -24,6 +25,7 @@ require_once 'pre.php';
 require_once 'common/backend/BackendLogger.class.php';
 
 class MediaWiki_Instantiater {
+
     /**
      *
      * @var BackendLogger
@@ -45,81 +47,85 @@ class MediaWiki_Instantiater {
      */
     public function instantiate() {
         if ($this->projectExists()) {
-            $this->logger->info('Project dir '.$this->getProjectDirectory().' exists, so I assume the project already exists.');
+            $this->logger->info('Project dir ' . $this->getProjectDirectory() . ' exists, so I assume the project already exists.');
         } else {
             $this->createDirectory();
             $this->createDatabase();
         }
     }
-    
+
     private function projectExists() {
         $project_name_dir = $this->getProjectDirectory($this->project_name);
-        $this->logger->info('Checking '.$this->project_name);
-        
+        $this->logger->info('Checking ' . $this->project_name);
+
         return is_dir($project_name_dir);
     }
 
     private function createDirectory() {
         $project_name_dir = $this->getProjectDirectory($this->project_name);
 
-        $this->logger->info('Creating project dir '.$project_name_dir);
+        $this->logger->info('Creating project dir ' . $project_name_dir);
         mkdir($project_name_dir, 0775, true);
     }
 
     private function getProjectDirectory() {
-        return forge_get_config('projects_path', 'mediawiki').'/'.$this->project_name;
+        return forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
     }
 
     private function createDatabase() {
-        $schema     = strtr('plugin_mediawiki_'.$this->project_name, '-', '_');
-        $src_path   = forge_get_config('src_path', 'mediawiki');
-        $table_file = $src_path.'/maintenance/tables.sql';
+        $schema = strtr('plugin_mediawiki_' . $this->project_name, '-', '_');
+        $src_path = forge_get_config('src_path', 'mediawiki');
+        $table_file = $src_path . '/maintenance/tables.sql';
 
-        db_begin();
+        db_query('START TRANSACTION;');
 
-        try{
-            $this->logger->info('Creating schema '.$schema);
-            $create_db = db_query_params('CREATE SCHEMA '.$schema, array());
-            if (! $create_db) {
-                throw new Exception('Error: Schema Creation Failed: '.db_error());
+        try {
+            $this->logger->info('Creating schema ' . $schema);
+            $create_db = db_query_params('CREATE SCHEMA ' . $schema, array());
+            if (!$create_db) {
+                throw new Exception('Error: Schema Creation Failed: ' . db_error());
             }
 
             $this->logger->info('Updating mediawiki database.');
-            if (! file_exists($table_file)) {
-                throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File '.$table_file);
+            if (!file_exists($table_file)) {
+                throw new Exception('Error: Couldn\'t find Mediawiki Database Creation File ' . $table_file);
             }
 
-            $this->logger->info('Using schema: '. $schema);
-            $use_new_schema = db_query_params('USE '.$schema, array());
-            if (! $use_new_schema) {
-                throw new Exception('Error: DB Query Failed: '.db_error());
+            $this->logger->info('Using schema: ' . $schema);
+            $use_new_schema = db_query('USE ' . $schema);
+            if (!$use_new_schema) {
+                throw new Exception('Error: DB Query Failed: ' . db_error());
             }
 
-            $this->logger->info('Running db_query_from_file('.$table_file.')');
+            $this->logger->info('Running db_query_from_file(' . $table_file . ')');
             $add_tables = db_query_from_file($table_file);
-            if (! $add_tables) {
-                throw new Exception('Error: Mediawiki Database Creation Failed: '.db_error());
+            if (!$add_tables) {
+                throw new Exception('Error: Mediawiki Database Creation Failed: ' . db_error());
             }
 
-            $this->cleanUp();
-
+            $this->cleanUp();      
         } catch (Exception $e) {
-            db_rollback();
+             db_query('ROLLBACK;');
             $this->logger->error($e->getMessage());
         }
 
-        db_commit();
+        db_query('COMMIT;');
+        
+        $this->logger->info('Using schema: codendi');
+        $main_db = Config::get('sys_dbname');
+        db_query('USE '.$main_db);
     }
 
     private function cleanUp() {
-        $mwwrapper = forge_get_config('source_path').'/plugins/mediawiki/bin/mw-wrapper.php' ;
-        $dumpfile  = forge_get_config('config_path').'/mediawiki/initial-content.xml' ;
+        $mwwrapper = forge_get_config('source_path') . '/plugins/mediawiki/bin/mw-wrapper.php';
+        $dumpfile = forge_get_config('config_path') . '/mediawiki/initial-content.xml';
 
-        if (file_exists ($dumpfile)) {
-            $this->logger->info('Dumping using '.$mwwrapper);
-            system ("$mwwrapper $this->project_name importDump.php $dumpfile") ;
-            system ("$mwwrapper $this->project_name rebuildrecentchanges.php") ;
+        if (file_exists($dumpfile)) {
+            $this->logger->info('Dumping using ' . $mwwrapper);
+            system("$mwwrapper $this->project_name importDump.php $dumpfile");
+            system("$mwwrapper $this->project_name rebuildrecentchanges.php");
         }
     }
 }
+
 ?>
