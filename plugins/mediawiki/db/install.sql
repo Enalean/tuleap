@@ -57,7 +57,7 @@ INSERT
         'plugin_mediawiki:service_desc_key' ,
         'plugin_mediawiki',
         CONCAT('/plugins/mediawiki/wiki/',
-        groups.unix_group_name),
+        LOWER(groups.unix_group_name)),
         1 ,
         0 ,
         'system',
