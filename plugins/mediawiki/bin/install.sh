@@ -12,14 +12,6 @@ echo "Initializing Mediawiki repository"
 mkdir -p /var/lib/codendi/plugins/mediawiki/master
 chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
 
-# (this bit needs to be done before the next Tuleap package release)
-# -open /etc/httpd/conf.d/codendi_aliases.conf
-# -locate the 'Plugin directories' section title.
-# -paste the following row of code straight after it
-# include /etc/httpd/conf.d/plugins/*.inc
-# -then
-# mkdir /etc/httpd/conf.d/plugins (if not exists)
-
 echo "Updating httpd configuration"
 cp /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/plugins/
 service httpd restart

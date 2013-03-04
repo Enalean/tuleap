@@ -9,8 +9,13 @@ As forge admin, go to your tuleap instance in the administration pannel -> plugi
 If the plugin isn't yet installed, install it !
 Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
 
-
-####------------ CAN WE ACTIVATE MW w/o FUSION FORGE?------------############################
+# (this bit needs to be done before the next Tuleap package release)
+# -open /etc/httpd/conf.d/codendi_aliases.conf
+# -locate the 'Plugin directories' section title.
+# -paste the following row of code straight after it
+# include /etc/httpd/conf.d/plugins/*.inc
+# -then
+# mkdir /etc/httpd/conf.d/plugins (if not exists)
 
 # run db/install.sql
 # run bin/install.sh
