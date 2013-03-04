@@ -111,24 +111,27 @@ switch ($export) {
      break;
      
  case 'project_db':
-     project_admin_header(array('title'=>$pg_title));
-     if ($project->usesSurvey()) {     
-         require('./survey_responses_export.php');
-     }
-     if ($project->usesTracker()) {     
-         require('./artifact_export.php');
-         require('./artifact_history_export.php');
-         require('./artifact_deps_export.php');
-     }
+        if ($project->usesSurvey() || $project->usesTracker()) {
+            project_admin_header(array('title' => $pg_title));
+            if ($project->usesSurvey()) {
+                require('./survey_responses_export.php');
+            }
+            if ($project->usesTracker()) {
+                require('./artifact_export.php');
+                require('./artifact_history_export.php');
+                require('./artifact_deps_export.php');
+            }
 
-echo '
-   <P>'.$Language->getText('project_export_index','proj_db_success').'
-<p>';
-     display_db_params ();
-     site_project_footer( array() );
-     break;
+            echo '<p>' . $Language->getText('project_export_index', 'proj_db_success') . '</p>';
+            display_db_params();
+            site_project_footer(array());
+        } else {
+            $GLOBALS['Response']->addFeedback('info', $Language->getText('project_export_index', 'proj_db_no_data'), CODENDI_PURIFIER_DISABLED);
+            $GLOBALS['Response']->redirect('index.php?group_id='.$group_id);
+        }
+        break;
 
- default:
+    default:
      project_admin_header(array('title'=>$pg_title, 'help' => 'ProjectDataExport.html'));
      // Display the welcome screen
 
@@ -268,16 +271,21 @@ echo '
     echo '</TABLE>';
     echo '
 <br>
-<h3>'.$Language->getText('project_export_index','direct_db_access').' '.help_button('ProjectDataExport.html#DirectDatabaseAccess').'</h3>
+<h3>'.$Language->getText('project_export_index','direct_db_access').' '.help_button('ProjectDataExport.html#DirectDatabaseAccess').'</h3>';
 
-<ol>';
+    if ($project->usesSurvey() || $project->usesTracker()) {
+        echo '<ol>';
 
-    echo '<li><b><a href="?group_id='.$group_id.'&export=project_db">'.$Language->getText('project_export_index','generate_full_db')."\n";
-    echo '<li>'.$Language->getText('project_export_index','db_connection_params').' ';
+        echo '<li><b><a href="?group_id='.$group_id.'&export=project_db">'.$Language->getText('project_export_index','generate_full_db')."\n";
+        echo '<li>'.$Language->getText('project_export_index','db_connection_params').' ';
 
-    echo '</ol>';
+        echo '</ol>';
 
-    display_db_params ();
+        display_db_params ();
+    } else {
+        echo '<p>'.$Language->getText('project_export_index', 'proj_db_no_data').'</p>';
+    }
+
     site_project_footer( array() );
     break;
 }
