@@ -1,1 +1,1 @@
-/usr/share/mediawiki115/redirect.php
+/usr/share/mediawiki_tuleap/redirect.php

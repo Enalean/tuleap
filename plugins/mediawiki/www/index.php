@@ -1,1 +1,1 @@
-/usr/share/mediawiki115/index.php
+/usr/share/mediawiki_tuleap/index.php

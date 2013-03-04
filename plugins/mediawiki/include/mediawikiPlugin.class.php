@@ -44,7 +44,12 @@ class MediaWikiPlugin extends Plugin {
 		$this->_addHook("clone_project_from_template") ;
 		$this->_addHook('group_delete');
                 $this->_addHook('cssfile');
+
+		$this->_addHook('service_is_used');
+		$this->_addHook('register_project_creation');
+
                 $this->_addHook(Event::SERVICE_REPLACE_TEMPLATE_NAME_IN_LINK);
+
                 // Search
                 $this->_addHook('search_type_entry', 'search_type_entry', false);
                 $this->_addHook('search_type', 'search_type', false);
@@ -419,7 +424,33 @@ class MediaWikiPlugin extends Plugin {
 			}
 		}
 	}
-  }
+
+    public function register_project_creation($params) {
+        $this->createWiki($params['group_id']);
+    }
+
+    public function service_is_used($params) {
+        if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
+            $this->createWiki($params['group_id']);
+        }
+    }
+
+    private function createWiki($group_id) {
+        $project_manager = ProjectManager::instance();
+        $project = $project_manager->getProject($group_id);
+        
+        if (! $project instanceof Project || $project->isError()) {
+            return;
+        }
+
+        include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
+
+        $project_name = $project->getUnixName();
+        $mediawiki_instantiater = new MediaWikiInstantiater($project_name);
+
+        $mediawiki_instantiater->instantiate();
+    }
+}
 
 // Local Variables:
 // mode: php

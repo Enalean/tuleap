@@ -1,1 +1,0 @@
-/usr/share/mediawiki115/StartProfiler.php

@@ -25,7 +25,7 @@ require_once dirname(__FILE__).'/../../tools/continuous_integration/singletons/S
  * Avoid contaminating new classes with singleton lookup
  */
 class NoMoreSingletonitusTest extends TuleapTestCase {
-    
+
     public function _testThereAreNoNewSingletonLookups() {
         $singleton_counter          = new SingletonCounter();
         $expected_singleton_lookups = $singleton_counter->expectedSingletonCount();
