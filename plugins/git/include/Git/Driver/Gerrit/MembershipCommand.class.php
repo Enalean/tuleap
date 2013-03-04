@@ -18,6 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * I'm responsible of managing propagation of user membership changes (add/remove) to gerrit.
+ */
 abstract class Git_Driver_Gerrit_MembershipCommand {
     private   $user_finder;
     protected $driver;
