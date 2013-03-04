@@ -1,3 +1,6 @@
+Version 2.7.30 - Tuleap 5.12
+    * Replicate user groups modification to gerrit for migrate repositories
+
 Version 2.7.29 - Tuleap 5.12
     * Rename User class to PFUser to allow integration of mediawiki
 
