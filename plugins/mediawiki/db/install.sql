@@ -16,29 +16,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-USE `codendi`;
-
-CREATE VIEW group_plugin
-    AS (
-        SELECT service.service_id group_plugin_id,
-            service.group_id,
-            plugin.id plugin_id,
-            service.short_name
-        FROM service,plugin
-        WHERE service.short_name = CONCAT('plugin_', plugin.name)
-            AND service.is_active=1
-            AND service.is_used=1
-            AND service.group_id != 100
-        );
-
-CREATE VIEW plugins
-    AS (
-        SELECT id plugin_id,
-            name plugin_name,
-            name plugin_desc
-        FROM plugin
-        );
-
 INSERT
     INTO service(
             `group_id`,

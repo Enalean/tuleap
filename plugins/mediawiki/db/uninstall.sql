@@ -1,7 +1,1 @@
-USE codendi;
-
-DELETE FROM codendi.plugin
-    WHERE name = 'mediawiki';
-
-DROP VIEW group_plugin;
-DROP VIEW plugins;
+DELETE FROM service WHERE short_name='plugin_mediawiki';
