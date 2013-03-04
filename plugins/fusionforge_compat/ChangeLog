@@ -1,0 +1,3 @@
+Version 0.2 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+

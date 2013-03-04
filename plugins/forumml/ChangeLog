@@ -1,3 +1,6 @@
+Version 2.6.9 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 2.6.8 - Tuleap 5.11
     * Fix bugs #1868: tuleap-devel get posts from email-not-found@tuleap.net
 

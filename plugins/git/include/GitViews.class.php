@@ -311,7 +311,7 @@ class GitViews extends PluginViews {
                 $options = ' checked="true" ';
             }
             echo '<div>
-                <input id="choose_personal" type="radio" name="choose_destination" value="personal" '.$options.' />
+                <input id="choose_personal" type="radio" name="choose_destination" value="'. Git::SCOPE_PERSONAL .'" '.$options.' />
                 <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
             </div>';
 

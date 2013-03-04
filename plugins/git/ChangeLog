@@ -1,3 +1,9 @@
+Version 2.7.29 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
+Version 2.7.28 - Tuleap 5.12
+    * Fix a warning when non project admin does a personal fork
+
 Version 2.7.27 - Tuleap 5.12
     * Check that gitolite authorized_keys is not empty && add a script to automaticaly recover this file
 

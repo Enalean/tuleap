@@ -1,3 +1,6 @@
+Version 2.4 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 2.3 - Tuleap 4.0.24
     * Fix user realname output
 

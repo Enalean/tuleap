@@ -1,10 +1,22 @@
 Version 5.12 (Not released yet)
 	== Plugins ==
 	* tracker 5.89
-	* graphontrackersv5: 5.0.7
-	* tracker: 5.90
-	* agiledashboard: 0.73
-	* git: 2.7.27
+	* graphontrackersv5: 5.0.8
+	* tracker: 5.92
+	* agiledashboard: 0.74
+	* git: 2.7.29
+	* IM: 1.5.6
+	* admindelegation: 2.5
+	* cardwall: 0.9.19
+	* docman: 2.26.14
+	* docmanwatermark: 2.4
+	* forumml: 2.6.9
+	* fulltextsearch: 0.17
+	* fusionforge_compat: 0.2
+	* ldap: 3.26
+	* requesthelp: 1.3.2
+	* statistics: 0.23
+	* webdav: 1.9.2
 
 Version 5.11 (Thursday, February 21st 2013)
 

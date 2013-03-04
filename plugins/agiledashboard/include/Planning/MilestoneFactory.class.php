@@ -323,29 +323,6 @@ class Planning_MilestoneFactory {
     }
 
     /**
-     * Loads the milestone matching the given planning and artifact ids.
-     *
-     * Also loads:
-     *   - the planning this milestone belongs to
-     *   - the planning tracker and the backlog trackers of this planning
-     *   - the artifacts planned for this milestone
-     *   - the sub-milestones
-     *
-     * @param PFUser $user
-     * @param int  $group_id
-     * @param int  $planning_id
-     * @param int  $artifact_id
-     *
-     * @return Planning_Milestone
-     */
-    public function getMilestoneWithPlannedArtifactsAndSubMilestones(PFUser $user, $group_id, $planning_id, $artifact_id) {
-        $milestone = $this->getMilestoneWithPlannedArtifacts($user, $group_id, $planning_id, $artifact_id);
-        $milestone->addSubMilestones($this->getSubMilestones($user, $milestone));
-        $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
-        return $milestone;
-    }
-
-    /**
      * Loads all open milestones for the given project and planning
      *
      * @param PFUser $user
