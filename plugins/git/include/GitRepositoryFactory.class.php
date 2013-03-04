@@ -132,8 +132,7 @@ class GitRepositoryFactory {
             if (isset($repositories[$row['repository_id']])) {
                 $repo_with_perms = $repositories[$row['repository_id']];
             } else {
-                $repository = $this->dao->instanciateFromRow($row);
-                $repo_with_perms = new GitRepositoryWithPermissions($repository);
+                $repo_with_perms = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
                 $repositories[$row['repository_id']] = $repo_with_perms;
             }
             $repo_with_perms->addUGroupForPermissionType($row['permission_type'], $row['ugroup_id']);
@@ -151,7 +150,7 @@ class GitRepositoryFactory {
         }
 
         foreach ($all_repositories_dar as $row) {
-            $all_repositories[$row['repository_id']] = new GitRepositoryWithPermissions($this->dao->instanciateFromRow($row));
+            $all_repositories[$row['repository_id']] = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
         }
         $admin_ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN));
         $repositories_with_admin_permissions = $this->getGerritRepositoriesWithPermissionsForUGroup($project, $admin_ugroup, $user);
@@ -204,11 +203,15 @@ class GitRepositoryFactory {
      * @return GitRepository 
      */
     private function getRepositoryFromDar(DataAccessResult $dar) {
-        $repository = null;
         if ($dar->rowCount() == 1) {
-            $repository = new GitRepository();
-            $this->dao->hydrateRepositoryObject($repository, $dar->getRow());
+            return $this->instanciateFromRow($dar->getRow());
         }
+        return null;
+    }
+
+    protected function instanciateFromRow(array $row) {
+        $repository = new GitRepository();
+        $this->dao->hydrateRepositoryObject($repository, $row);
         return $repository;
     }
 }

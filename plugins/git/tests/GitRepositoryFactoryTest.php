@@ -83,7 +83,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
     }
 
-    public function itHydratesTheRepositoriesWithDao() {
+    public function itHydratesTheRepositoriesWithFactory() {
         $db_row_for_repo_12 = array('repository_id' => 12, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115);
         $db_row_for_repo_23 = array('repository_id' => 23, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115);
 
@@ -91,10 +91,10 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
             $db_row_for_repo_12,
             $db_row_for_repo_23
         );
-        expect($this->dao)->instanciateFromRow()->count(2);
-        expect($this->dao)->instanciateFromRow($db_row_for_repo_12)->at(0);
-        expect($this->dao)->instanciateFromRow($db_row_for_repo_23)->at(1);
-        stub($this->dao)->instanciateFromRow()->returns(mock('GitRepository'));
+        expect($this->factory)->instanciateFromRow()->count(2);
+        expect($this->factory)->instanciateFromRow($db_row_for_repo_12)->at(0);
+        expect($this->factory)->instanciateFromRow($db_row_for_repo_23)->at(1);
+        stub($this->factory)->instanciateFromRow()->returns(mock('GitRepository'));
 
         $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
     }
@@ -110,7 +110,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         $repository = mock('GitRepository');
 
-        stub($this->dao)->instanciateFromRow()->returns($repository);
+        stub($this->factory)->instanciateFromRow()->returns($repository);
 
         $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
 
@@ -146,7 +146,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         $repository = mock('GitRepository');
 
-        stub($this->dao)->instanciateFromRow()->returns($repository);
+        stub($this->factory)->instanciateFromRow()->returns($repository);
 
         $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
 
@@ -182,7 +182,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         $repository = mock('GitRepository');
 
-        stub($this->dao)->instanciateFromRow()->returns($repository);
+        stub($this->factory)->instanciateFromRow()->returns($repository);
 
         $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
 
@@ -222,7 +222,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
 
         $this->factory = partial_mock(
             'GitRepositoryFactory',
-            array('getGerritRepositoriesWithPermissionsForUGroup'),
+            array('instanciateFromRow', 'getGerritRepositoriesWithPermissionsForUGroup'),
             array(
                 $this->dao,
                 $this->project_manager
@@ -252,10 +252,10 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
             array('repository_id' => 12),
             array('repository_id' => 23)
         );
-        expect($this->dao)->instanciateFromRow()->count(2);
-        expect($this->dao)->instanciateFromRow(array('repository_id' => 12))->at(0);
-        expect($this->dao)->instanciateFromRow(array('repository_id' => 23))->at(1);
-        stub($this->dao)->instanciateFromRow()->returns(mock('GitRepository'));
+        expect($this->factory)->instanciateFromRow()->count(2);
+        expect($this->factory)->instanciateFromRow(array('repository_id' => 12))->at(0);
+        expect($this->factory)->instanciateFromRow(array('repository_id' => 23))->at(1);
+        stub($this->factory)->instanciateFromRow()->returns(mock('GitRepository'));
 
         stub($this->factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array());
 
@@ -266,7 +266,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
         stub($this->dao)->searchAllGerritRepositoriesOfProject()->returnsDar(
             array('repository_id' => 12)
         );
-        stub($this->dao)->instanciateFromRow()->returns($this->repository);
+        stub($this->factory)->instanciateFromRow()->returns($this->repository);
 
         stub($this->factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(
             array(

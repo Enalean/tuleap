@@ -444,6 +444,11 @@ class GitDao extends DataAccessObject {
         return $this->retrieve($query);
     }
 
+    /**
+     * @deprecated Should use GitRepository::getInstanceFrom row instead.
+     * @param GitRepository $repository
+     * @param type $result
+     */
     public function hydrateRepositoryObject(GitRepository $repository, $result) {
         $repository->setName($result[self::REPOSITORY_NAME]);
         $repository->setPath($result[self::REPOSITORY_PATH]);
@@ -464,17 +469,6 @@ class GitDao extends DataAccessObject {
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
         $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
         $repository->loadNotifiedMails();
-    }
-
-    /**
-     * Instanciate a new GitRepository object based on row entry
-     * @param array $row
-     * @return GitRepository
-     */
-    public function instanciateFromRow($row) {
-        $repository = new GitRepository();
-        $this->hydrateRepositoryObject($repository, $row);
-        return $repository;
     }
 
     /**
