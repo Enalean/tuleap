@@ -1,4 +1,3 @@
-#! /usr/bin/php
 <?php
 /*
  * Copyright (C) 2010  Olaf Lenz
@@ -20,24 +19,30 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-# TODO: How to use cronjob history?
-# Required config variables:
-#   src_path: the directory where the mediawiki sources are installed
-
 require_once 'www/env.inc.php';
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../fusionforge/cron_utils.php';
 require_once 'common/backend/BackendLogger.class.php';
 
 class MediaWiki_Instantiater {
+    /**
+     *
+     * @var BackendLogger
+     */
     private $logger;
     private $project_name;
 
+    /**
+     *
+     * @param string $project_name
+     */
     public function __construct($project_name) {
         $this->logger = new BackendLogger();
         $this->project_name = $project_name;
     }
 
+    /**
+     * Creates a mediawiki plugin instance for the project
+     */
     public function instantiate() {
         if ($this->projectExists()) {
             $this->logger->info('Project dir '.$this->getProjectDirectory().' exists, so I assume the project already exists.');
@@ -66,15 +71,15 @@ class MediaWiki_Instantiater {
     }
 
     private function createDatabase() {
-        $schema = strtr('plugin_mediawiki_'.$this->project_name, '-', '_');
-        $src_path = forge_get_config('src_path', 'mediawiki');
+        $schema     = strtr('plugin_mediawiki_'.$this->project_name, '-', '_');
+        $src_path   = forge_get_config('src_path', 'mediawiki');
         $table_file = $src_path.'/maintenance/tables.sql';
 
         db_begin();
 
         try{
             $this->logger->info('Creating schema '.$schema);
-            $create_db = db_query_params('CREATE SCHEMA'.$schema, array());
+            $create_db = db_query_params('CREATE SCHEMA '.$schema, array());
             if (! $create_db) {
                 throw new Exception('Error: Schema Creation Failed: '.db_error());
             }
@@ -90,7 +95,7 @@ class MediaWiki_Instantiater {
                 throw new Exception('Error: DB Query Failed: '.db_error());
             }
 
-            $this->logger->info('db_query_from_file('.$table_file.')');
+            $this->logger->info('Running db_query_from_file('.$table_file.')');
             $add_tables = db_query_from_file($table_file);
             if (! $add_tables) {
                 throw new Exception('Error: Mediawiki Database Creation Failed: '.db_error());
@@ -108,7 +113,7 @@ class MediaWiki_Instantiater {
 
     private function cleanUp() {
         $mwwrapper = forge_get_config('source_path').'/plugins/mediawiki/bin/mw-wrapper.php' ;
-        $dumpfile = forge_get_config('config_path').'/mediawiki/initial-content.xml' ;
+        $dumpfile  = forge_get_config('config_path').'/mediawiki/initial-content.xml' ;
 
         if (file_exists ($dumpfile)) {
             $this->logger->info('Dumping using '.$mwwrapper);

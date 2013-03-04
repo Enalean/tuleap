@@ -447,37 +447,28 @@ class MediaWikiPlugin extends Plugin {
         }
     }
 
-    /**
-     * @todo do not create *all* mediawiki
-     */
     private function createWikis($params) {
-
-        if (isset($params['group_id'])) {
-            $group_id=$params['group_id'];
-        } elseif (isset($params['group'])) {
-            $group_id=$params['group'];
+        if (isset ($params['group_id']) ) {
+            $group_id = $params['group_id'];
+        } elseif (isset ($params['group']) ) {
+            $group_id = $params['group'];
         } else {
-            $group_id=null;
+            $group_id = null;
         }
-        $pm = ProjectManager::instance();
-        $project = $pm->getProject($group_id);
+
+        $projectManager = ProjectManager::instance();
+        $project = $projectManager->getProject($group_id);
         
-        if (!$project || !is_object($project)) {
+        if (! $projectManager->isProjectValid($project) ) {
             return;
         }
 
-        if ($project->isError()) {
-            return;
-        }
-
-        if (!$project->isProject()) {
-            return;
-        }
+        include dirname(__FILE__) .'/MediawikiInstantiater.class.php';
 
         $project_name = $project->getUnixName();
+        $mediawiki_instantiater = new MediaWiki_Instantiater($project_name);
 
-        include dirname(__FILE__) .'/../cronjobs/create-wikis-mysql.php';
-        //include dirname(__FILE__) .'/../cronjobs/create-wikis.php';
+        $mediawiki_instantiater->instantiate();
     }
 }
 
