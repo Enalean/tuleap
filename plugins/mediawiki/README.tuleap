@@ -54,6 +54,12 @@ It's mainly a wrapper around mediawiki:
 
 -> Fix upload of images (need to activate enable_uploads in LocalSettings)
 
+-> How to deactivate the mediawiki service of a project to conduct tests
+  * rm -rf /var/lib/codendi/plugins/mediawiki/projects/theprojectname
+  * mysql -u codendiadm -p codendi -e "UPDATE service SET is_active = 1, is_used = 0 WHERE group_id = 104 AND short_name = 'plugin_mediawiki';"
+  * mysql -u codendiadm -p -e "DROP DATABASE plugin_mediawiki_theprojectname;"
+
+
 
 == Differences between Codendi/Mediawiki & Tuleap == 
 *src/common/include/PFO-RBAC.interface.php
