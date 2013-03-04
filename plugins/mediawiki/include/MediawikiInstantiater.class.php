@@ -24,7 +24,7 @@ require_once 'www/env.inc.php';
 require_once 'pre.php';
 require_once 'common/backend/BackendLogger.class.php';
 
-class MediaWiki_Instantiater {
+class MediaWikiInstantiater {
 
     /**
      *
