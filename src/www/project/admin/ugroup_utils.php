@@ -338,18 +338,6 @@ function ugroup_get_all_dynamic_members($group_id, $atid=0) {
 }
 
 /**
- * Remove user from all ugroups
- *
- * @return false if access rights are insufficient (need to be site admin)
- */
-function ugroup_delete_user_from_all_ugroups($user_id) {
-    if (!user_is_super_user()) return false;
-    db_query("DELETE FROM ugroup_user WHERE user_id=$user_id");
-    return true;
-}
-
-
-/**
  * Remove user from all ugroups attached to the given project
  *
  * @return true
@@ -606,9 +594,11 @@ function ugroup_delete($group_id, $ugroup_id) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_ugroup_utils','ug_not_given'));
         return false;
     }
-    $ugroup_name=ugroup_get_name_from_id($ugroup_id);
+    $project        = ProjectManager::instance()->getProject($group_id);
+    $ugroup_manager = new UGroupManager();
+    $ugroup         = $ugroup_manager->getUGroupWithMembers($project, $ugroup_id);
+
     $sql = "DELETE FROM ugroup WHERE group_id=$group_id AND ugroup_id=$ugroup_id";
-        
     $result=db_query($sql);
     if (!$result || db_affected_rows($result) < 1) {
         $GLOBALS['Response']->addFeedback('error', $Language->getText('project_admin_editgroupinfo','upd_fail',(db_error() ? db_error() : ' ' )));
@@ -626,10 +616,11 @@ function ugroup_delete($group_id, $ugroup_id) {
     $GLOBALS['Response']->addFeedback('info', $Language->getText('project_admin_ugroup_utils','all_u_removed'));
     
     // raise an event for ugroup deletion
-    $em =& EventManager::instance();
+    $em = EventManager::instance();
     $em->processEvent('project_admin_ugroup_deletion', array(
         'group_id'  => $group_id,
-        'ugroup_id' => $ugroup_id
+        'ugroup_id' => $ugroup_id,
+        'ugroup'    => $ugroup,
     ));
     
     // Last, remove permissions for this group
@@ -642,7 +633,7 @@ function ugroup_delete($group_id, $ugroup_id) {
         $GLOBALS['Response']->addFeedback('warning', $Language->getText('project_admin_ugroup_utils','perm_warning',$perm_cleared));
     } 
     // Now log in project history
-    group_add_history('del_ug','',$group_id,array($ugroup_name));
+    group_add_history('del_ug','',$group_id,array($ugroup->getName()));
 
     return true;
 }

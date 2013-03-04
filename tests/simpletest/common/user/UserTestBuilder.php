@@ -57,6 +57,11 @@ class UserTestBuilder {
         return $this;
     }
 
+    function withLdapId($id) {
+        $this->params['ldap_id'] = $id;
+        return $this;
+    }
+
     function build() {
         return new PFUser($this->params);
     }

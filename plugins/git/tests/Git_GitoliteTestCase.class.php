@@ -30,7 +30,7 @@ Mock::generate('PermissionsManager');
 Mock::generate('DataAccessResult');
 Mock::generate('Git_PostReceiveMailManager');
 
-class Git_GitoliteTestCase extends TuleapTestCase {
+abstract class Git_GitoliteTestCase extends TuleapTestCase {
     
     /** @var Git_GitoliteDriver */
     protected $driver;
@@ -43,7 +43,7 @@ class Git_GitoliteTestCase extends TuleapTestCase {
         parent::setUp();
         $this->cwd           = getcwd();
         $this->_fixDir       = dirname(__FILE__).'/_fixtures';
-        $tmpDir              = '/tmp';
+        $tmpDir              = $this->getTmpDir();
         $this->_glAdmDirRef  = $tmpDir.'/gitolite-admin-ref';
         $this->_glAdmDir     = $tmpDir.'/gitolite-admin';
         $this->repoDir       = $tmpDir.'/repositories';
@@ -74,10 +74,6 @@ class Git_GitoliteTestCase extends TuleapTestCase {
         parent::tearDown();
         chdir($this->cwd);
     
-        system('rm -rf '. $this->_glAdmDirRef);
-        system('rm -rf '. $this->_glAdmDir .'/repositories/*');
-        system('rm -rf '. $this->repoDir);
-        unlink($this->_glAdmDir);
         $GLOBALS['sys_https_host'] = $this->httpsHost;
         PermissionsManager::clearInstance();
     }

@@ -20,6 +20,7 @@
 
 require_once 'GitDao.class.php';
 require_once 'GitRepository.class.php';
+require_once 'GitRepositoryWithPermissions.class.php';
 
 class GitRepositoryFactory {
     /**
@@ -122,6 +123,50 @@ class GitRepositoryFactory {
         return $repositories;
     }
 
+    public function getGerritRepositoriesWithPermissionsForUGroup(Project $project, UGroup $ugroup, PFUser $user) {
+        $repositories = array();
+        $ugroups      = $user->getUgroups($project->getID(), null);
+        $ugroups[]    = $ugroup->getId();
+        $dar          = $this->dao->searchGerritRepositoriesWithPermissionsForUGroup($project->getID(), $ugroups);
+        foreach ($dar as $row) {
+            if (isset($repositories[$row['repository_id']])) {
+                $repo_with_perms = $repositories[$row['repository_id']];
+            } else {
+                $repo_with_perms = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
+                $repositories[$row['repository_id']] = $repo_with_perms;
+            }
+            $repo_with_perms->addUGroupForPermissionType($row['permission_type'], $row['ugroup_id']);
+
+        }
+        return $repositories;
+    }
+
+    public function getAllGerritRepositoriesFromProject(Project $project, PFUser $user) {
+        $all_repositories_dar = $this->dao->searchAllGerritRepositoriesOfProject($project->getId());
+        $all_repositories     = array();
+
+        if (count($all_repositories_dar) == 0) {
+            return array();
+        }
+
+        foreach ($all_repositories_dar as $row) {
+            $all_repositories[$row['repository_id']] = new GitRepositoryWithPermissions($this->instanciateFromRow($row));
+        }
+        $admin_ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN));
+        $repositories_with_admin_permissions = $this->getGerritRepositoriesWithPermissionsForUGroup($project, $admin_ugroup, $user);
+
+        foreach ($repositories_with_admin_permissions as $repository_id => $repository) {
+            $all_repositories[$repository_id] = $repository;
+        }
+
+        foreach ($all_repositories as $repository) {
+            $repository->addUGroupForPermissionType(Git::SPECIAL_PERM_ADMIN, UGroup::PROJECT_ADMIN);
+        }
+
+        return $all_repositories;
+
+    }
+
     /**
      * Attempt to get repository if path match given base directory
      * 
@@ -158,11 +203,15 @@ class GitRepositoryFactory {
      * @return GitRepository 
      */
     private function getRepositoryFromDar(DataAccessResult $dar) {
-        $repository = null;
         if ($dar->rowCount() == 1) {
-            $repository = new GitRepository();
-            $this->dao->hydrateRepositoryObject($repository, $dar->getRow());
+            return $this->instanciateFromRow($dar->getRow());
         }
+        return null;
+    }
+
+    protected function instanciateFromRow(array $row) {
+        $repository = new GitRepository();
+        $this->dao->hydrateRepositoryObject($repository, $row);
         return $repository;
     }
 }

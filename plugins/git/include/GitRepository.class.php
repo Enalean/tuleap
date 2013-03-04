@@ -854,6 +854,14 @@ class GitRepository implements DVCSRepository {
         return $this->remote_server_id;
     }
 
+    public function isMigratedToGerrit() {
+        if ($this->remote_server_id) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * @return string html <a href="/path/to/repo">repo/name</a>
      */

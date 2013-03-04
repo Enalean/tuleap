@@ -22,13 +22,10 @@
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/RemoteSSHCommand.class.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 require_once GIT_BASE_DIR . '/GitRepository.class.php';
+require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/MembershipManager.class.php';
 require_once 'UserFinder.class.php';
 
 class Git_Driver_Gerrit_ProjectCreator {
-    const GROUP_CONTRIBUTORS = 'contributors';
-    const GROUP_INTEGRATORS  = 'integrators';
-    const GROUP_SUPERMEN     = 'supermen';
-    const GROUP_OWNERS       = 'owners';
     const GERRIT_REMOTE_NAME = 'gerrit';
 
     /** @var Git_Driver_Gerrit */
@@ -40,12 +37,6 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_UserFinder */
     private $user_finder;
 
-    private $gerrit_groups = array(self::GROUP_CONTRIBUTORS => Git::PERM_READ,
-                                   self::GROUP_INTEGRATORS  => Git::PERM_WRITE,
-                                   self::GROUP_SUPERMEN     => Git::PERM_WPLUS,
-                                   self::GROUP_OWNERS       => Git::SPECIAL_PERM_ADMIN);
-
-    
     public function __construct($dir, Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder) {
         $this->dir           = $dir;
         $this->driver        = $driver;
@@ -55,7 +46,7 @@ class Git_Driver_Gerrit_ProjectCreator {
     public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
         $gerrit_project = $this->driver->createProject($gerrit_server, $repository);
 
-        foreach ($this->gerrit_groups as $group_name => $permission_level) {
+        foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $group_name => $permission_level) {
             try {
                 $user_list = $this->user_finder->getUsersForPermission($permission_level, $repository);
                 $this->driver->createGroup($gerrit_server, $repository, $group_name, $user_list);
@@ -68,10 +59,10 @@ class Git_Driver_Gerrit_ProjectCreator {
             $repository,
             $gerrit_server,
             $gerrit_server->getCloneSSHUrl($gerrit_project),
-            $gerrit_project.'-'.self::GROUP_CONTRIBUTORS,
-            $gerrit_project.'-'.self::GROUP_INTEGRATORS,
-            $gerrit_project.'-'.self::GROUP_SUPERMEN,
-            $gerrit_project.'-'.self::GROUP_OWNERS
+            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_CONTRIBUTORS,
+            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_INTEGRATORS,
+            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_SUPERMEN,
+            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_OWNERS
         );
         
         $this->exportGitBranches($gerrit_server, $gerrit_project, $repository);
