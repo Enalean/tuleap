@@ -21,46 +21,39 @@
 require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/GitRepositoryFactory.class.php';
 
-Mock::generate('GitDao');
-Mock::generate('ProjectManager');
-Mock::generate('Project');
+class GitRepositoryFactoryTest extends TuleapTestCase {
+    private $dao;
+    private $project_manager;
+    private $project;
+    private $factory;
 
-class GitRepositoryFactoryTest extends UnitTestCase {
+    public function setUp() {
+        parent::setUp();
+
+        $this->dao             = mock('GitDao');
+        $this->project_manager = mock('ProjectManager');
+        $this->project         = mock('Project');
+
+        stub($this->project)->getID()->returns(101);
+        stub($this->project)->getUnixName()->returns('garden');
+
+        stub($this->project_manager)->getProjectByUnixName('garden')->returns($this->project);
+
+        $this->factory        = new GitRepositoryFactory($this->dao, $this->project_manager);
+    }
 
     function testGetRepositoryFromFullPath() {
-        $dao            = new MockGitDao();
-        $projectManager = new MockProjectManager();
-        $project        = new MockProject();
+        expect($this->dao)->searchProjectRepositoryByPath(101, 'garden/u/manuel/grou/ping/diskinstaller.git')->once();
+        stub($this->dao)->searchProjectRepositoryByPath()->returnsEmptyDar();
 
-        $project->setReturnValue('getID', 101);
-        $project->setReturnValue('getUnixName', 'garden');
-
-        $projectManager->setReturnValue('getProjectByUnixName', $project, array('garden'));
-
-        $factory        = new GitRepositoryFactory($dao, $projectManager);
-
-        $dao->expectOnce('searchProjectRepositoryByPath', array(101, 'garden/u/manuel/grou/ping/diskinstaller.git'));
-        $dao->setReturnValue('searchProjectRepositoryByPath', new MockDataAccessResult());
-
-        $factory->getFromFullPath('/data/tuleap/gitolite/repositories/garden/u/manuel/grou/ping/diskinstaller.git');
+        $this->factory->getFromFullPath('/data/tuleap/gitolite/repositories/garden/u/manuel/grou/ping/diskinstaller.git');
     }
 
     function testGetRepositoryFromFullPathAndGitRoot() {
-        $dao            = new MockGitDao();
-        $projectManager = new MockProjectManager();
-        $project        = new MockProject();
+        expect($this->dao)->searchProjectRepositoryByPath(101, 'garden/diskinstaller.git')->once();
+        stub($this->dao)->searchProjectRepositoryByPath()->returnsEmptyDar();
 
-        $project->setReturnValue('getID', 101);
-        $project->setReturnValue('getUnixName', 'garden');
-
-        $projectManager->setReturnValue('getProjectByUnixName', $project, array('garden'));
-
-        $factory        = new GitRepositoryFactory($dao, $projectManager);
-
-        $dao->expectOnce('searchProjectRepositoryByPath', array(101, 'garden/diskinstaller.git'));
-        $dao->setReturnValue('searchProjectRepositoryByPath', new MockDataAccessResult());
-
-        $factory->getFromFullPath('/data/tuleap/gitroot/garden/diskinstaller.git');
+        $this->factory->getFromFullPath('/data/tuleap/gitroot/garden/diskinstaller.git');
     }
 }
 
@@ -71,7 +64,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         $this->dao = mock('GitDao');
         $this->project_manager = mock('ProjectManager');
 
-        $this->factory = new GitRepositoryFactory($this->dao, $this->project_manager);
+        $this->factory = partial_mock('GitRepositoryFactory', array('instanciateFromRow'), array($this->dao, $this->project_manager));
 
         $this->project_id = 320;
         $this->ugroup_id = 115;
