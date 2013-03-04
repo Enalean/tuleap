@@ -102,8 +102,6 @@ class MediaWiki_Instantiater {
             if (!$add_tables) {
                 throw new Exception('Error: Mediawiki Database Creation Failed: ' . db_error());
             }
-
-            $this->cleanUp();      
         } catch (Exception $e) {
              db_query('ROLLBACK;');
             $this->logger->error($e->getMessage());
@@ -114,17 +112,6 @@ class MediaWiki_Instantiater {
         $this->logger->info('Using schema: codendi');
         $main_db = Config::get('sys_dbname');
         db_query('USE '.$main_db);
-    }
-
-    private function cleanUp() {
-        $mwwrapper = forge_get_config('source_path') . '/plugins/mediawiki/bin/mw-wrapper.php';
-        $dumpfile = forge_get_config('config_path') . '/mediawiki/initial-content.xml';
-
-        if (file_exists($dumpfile)) {
-            $this->logger->info('Dumping using ' . $mwwrapper);
-            system("$mwwrapper $this->project_name importDump.php $dumpfile");
-            system("$mwwrapper $this->project_name rebuildrecentchanges.php");
-        }
     }
 }
 
