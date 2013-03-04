@@ -62,7 +62,7 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private function updateUserGerritGroupsAccordingToPermissions(PFUser $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions, Git_Driver_Gerrit_MembershipCommand $command) {
         $remote_server   = $this->gerrit_server_factory->getServer($repository_with_permissions->getRepository());
-        $command->process($remote_server, $user, $project, $repository_with_permissions);
+        $command->execute($remote_server, $user, $project, $repository_with_permissions);
         
     }
 }

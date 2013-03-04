@@ -34,7 +34,7 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
 
     protected abstract function isUserConcernedByPermission(PFUser $user, Project $project, $groups);
 
-    public function process(Git_RemoteServer_GerritServer $server, PFUser $user, Project $project, $repository) {
+    public function execute(Git_RemoteServer_GerritServer $server, PFUser $user, Project $project, $repository) {
         $groups_full_names = $this->getConcernedGerritGroups($user, $project, $repository);
 
         foreach ($groups_full_names as $group_full_name) {
