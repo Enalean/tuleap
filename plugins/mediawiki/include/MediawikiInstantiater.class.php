@@ -1,7 +1,7 @@
 <?php
-
 /*
  * Copyright (C) 2010  Olaf Lenz
+ * Copyright (c) Enalean, 2013. All Rights Reserved.
  *
  * This file is part of FusionForge.
  *
@@ -26,20 +26,22 @@ require_once 'common/backend/BackendLogger.class.php';
 
 class MediaWikiInstantiater {
 
-    /**
-     *
-     * @var BackendLogger
-     */
+    /** @var BackendLogger */
     private $logger;
+
+    /** @var string */
     private $project_name;
 
+    /** @var string */
+    private $project_name_dir;
+
     /**
-     *
      * @param string $project_name
      */
     public function __construct($project_name) {
         $this->logger = new BackendLogger();
         $this->project_name = $project_name;
+        $this->project_name_dir = forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
     }
 
     /**
@@ -47,7 +49,7 @@ class MediaWikiInstantiater {
      */
     public function instantiate() {
         if ($this->projectExists()) {
-            $this->logger->info('Project dir ' . $this->getProjectDirectory() . ' exists, so I assume the project already exists.');
+            $this->logger->info('Project dir ' . $this->project_name_dir . ' exists, so I assume the project already exists.');
         } else {
             $this->createDirectory();
             $this->createDatabase();
@@ -55,21 +57,13 @@ class MediaWikiInstantiater {
     }
 
     private function projectExists() {
-        $project_name_dir = $this->getProjectDirectory($this->project_name);
         $this->logger->info('Checking ' . $this->project_name);
-
-        return is_dir($project_name_dir);
+        return is_dir($this->project_name_dir);
     }
 
     private function createDirectory() {
-        $project_name_dir = $this->getProjectDirectory($this->project_name);
-
-        $this->logger->info('Creating project dir ' . $project_name_dir);
-        mkdir($project_name_dir, 0775, true);
-    }
-
-    private function getProjectDirectory() {
-        return forge_get_config('projects_path', 'mediawiki') . '/' . $this->project_name;
+        $this->logger->info('Creating project dir ' . $this->project_name_dir);
+        mkdir($this->project_name_dir, 0775, true);
     }
 
     private function createDatabase() {

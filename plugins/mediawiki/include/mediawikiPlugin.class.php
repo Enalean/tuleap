@@ -438,28 +438,20 @@ class MediaWikiPlugin extends Plugin {
 	}
 
     public function register_project_creation($params) {
-        $this->createWikis($params);
+        $this->createWiki($params['group_id']);
     }
 
     public function service_is_used($params) {
         if ($params['shortname'] == 'plugin_mediawiki' && $params['is_used']) {
-            $this->createWikis($params);
+            $this->createWiki($params['group_id']);
         }
     }
 
-    private function createWikis($params) {
-        if (isset ($params['group_id']) ) {
-            $group_id = $params['group_id'];
-        } elseif (isset ($params['group']) ) {
-            $group_id = $params['group'];
-        } else {
-            $group_id = null;
-        }
-
-        $projectManager = ProjectManager::instance();
-        $project = $projectManager->getProject($group_id);
+    private function createWiki($group_id) {
+        $project_manager = ProjectManager::instance();
+        $project = $project_manager->getProject($group_id);
         
-        if (! $projectManager->isProjectValid($project) ) {
+        if (! $project instanceof Project || $project->isError()) {
             return;
         }
 

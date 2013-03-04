@@ -97,15 +97,6 @@ class ProjectManager {
     }
 
     /**
-     * 
-     * @param any $project
-     * @return boolean
-     */
-    public function isProjectValid($project) {
-         return ($project && is_object($project) && ! $project->isError() && $project->isProject() );
-    }
-
-    /**
      * Instanciate a project based on a database row
      *
      * @param array $row
