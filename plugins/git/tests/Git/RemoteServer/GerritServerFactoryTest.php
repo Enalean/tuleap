@@ -25,12 +25,13 @@ require_once dirname(__FILE__).'/../../builders/aGitRepository.php';
 
 class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
-    private $server_id     = 1;
-    private $host          = 'g.tuleap.net';
-    private $ssh_port      = 32915;
-    private $http_port     = 8080;
-    private $login         = 'chuck';
-    private $identity_file = '/home/chuck/.ssh/id_rsa';
+    private $server_id          = 1;
+    private $host               = 'g.tuleap.net';
+    private $ssh_port           = 32915;
+    private $http_port          = 8080;
+    private $login              = 'chuck';
+    private $identity_file      = '/home/chuck/.ssh/id_rsa';
+    private $replication_key    = 'my_replication-key';
 
     private $alternate_server_id = 2;
     private $alternate_host      = 'h.tuleap.net';
@@ -38,20 +39,22 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $dar_1 = array(
-            'id'            => $this->server_id,
-            'host'          => $this->host,
-            'ssh_port'      => $this->ssh_port,
-            'http_port'     => $this->http_port,
-            'login'         => $this->login,
-            'identity_file' => $this->identity_file
+            'id'                => $this->server_id,
+            'host'              => $this->host,
+            'ssh_port'          => $this->ssh_port,
+            'http_port'         => $this->http_port,
+            'login'             => $this->login,
+            'identity_file'     => $this->identity_file,
+            'replication_key'   =>  $this->replication_key,
         );
         $dar_2 = array(
-            'id'            => $this->alternate_server_id,
-            'host'          => $this->alternate_host,
-            'ssh_port'      => $this->ssh_port,
-            'http_port'     => $this->http_port,
-            'login'         => $this->login,
-            'identity_file' => $this->identity_file
+            'id'                => $this->alternate_server_id,
+            'host'              => $this->alternate_host,
+            'ssh_port'          => $this->ssh_port,
+            'http_port'         => $this->http_port,
+            'login'             => $this->login,
+            'identity_file'     => $this->identity_file,
+            'replication_key'   =>  $this->replication_key,
         );
 
         $git_dao   = mock('GitDao');
@@ -67,7 +70,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->ssh_port,
             $this->http_port,
             $this->login,
-            $this->identity_file
+            $this->identity_file,
+            $this->replication_key
         );
         $this->alternate_gerrit_server  = new Git_RemoteServer_GerritServer(
             $this->alternate_server_id,
@@ -75,7 +79,8 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             $this->ssh_port,
             $this->http_port,
             $this->login,
-            $this->identity_file
+            $this->identity_file,
+            $this->replication_key
         );
         stub($git_dao)->isRemoteServerUsed($this->server_id)->returns(true);
         stub($git_dao)->isRemoteServerUsed($this->alternate_server_id)->returns(false);

@@ -83,7 +83,15 @@ class Git_RemoteServer_GerritServerFactory {
     }
 
     private function instantiateFromRow(array $row) {
-        return new Git_RemoteServer_GerritServer($row['id'], $row['host'], $row['ssh_port'], $row['http_port'], $row['login'], $row['identity_file']);
+        return new Git_RemoteServer_GerritServer(
+            $row['id'],
+            $row['host'],
+            $row['ssh_port'],
+            $row['http_port'],
+            $row['login'],
+            $row['identity_file'],
+            $row['replication_key']
+        );
     }
 
 }

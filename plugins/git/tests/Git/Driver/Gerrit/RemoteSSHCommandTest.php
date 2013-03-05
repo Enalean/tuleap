@@ -36,6 +36,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
     protected $identity_file = '/path/to/codendiadm/.ssh/id_rsa';
 
+    protected $replication_key = '458rfregfrehjf ghvghh@dfrdgf';
+
     /** @var Git_Driver_Gerrit_RemoteSSHConfig */
     private $config;
 
@@ -54,7 +56,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
         $this->logger = mock('Logger');
 
         $this->ssh->__construct($this->logger);
-        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->ssh_port, $this->http_port, $this->login, $this->identity_file);
+        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->ssh_port, $this->http_port, $this->login, $this->identity_file, $this->replication_key);
     }
 
     public function itExecutesTheCreateCommandOnTheRemoteServer() {
