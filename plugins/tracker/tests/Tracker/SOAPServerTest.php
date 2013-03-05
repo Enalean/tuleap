@@ -313,29 +313,6 @@ class Tracker_SOAPServer_getTrackerFields_Test extends Tracker_SOAPServer_BaseTe
     }
 }
 
-class Tracker_SOAPServer_getArtifact_Test extends Tracker_SOAPServer_BaseTest {
-
-    public function itHasAnArtifactId() {
-        $soap_values = $this->server->getArtifact($this->session_key, '*', '*', 9999);
-        $this->assertIdentical($soap_values['artifact_id'], 9999);
-    }
-
-    public function itHasATrackerId() {
-        $soap_values = $this->server->getArtifact($this->session_key, '*', '*', 9999);
-        $this->assertIdentical($soap_values['tracker_id'], 1235);
-    }
-
-    public function itRaisesASoapFaultIfTheProjectIsNotReadableByTheUser() {
-        $soap_fault = $this->server->getArtifact($this->session_key, '*', '*', $this->private_artifact_id);
-        $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
-    }
-
-    public function itContainsCrossReferencesValue() {
-        $soap_values = $this->server->getArtifact($this->session_key, '*', '*', 9999);
-        $this->assertEqual($soap_values['cross_references'][0], array('ref' => 'art #123', 'url' => '/path/to/art=123'));
-    }
-}
-
 class Tracker_SOAPServer_addArtifact_Test extends Tracker_SOAPServer_BaseTest {
 
     public function itRaisesASoapFaultIfTheProjectIsNotReadableByTheUser() {
