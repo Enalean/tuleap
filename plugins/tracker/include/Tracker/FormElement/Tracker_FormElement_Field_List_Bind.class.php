@@ -62,7 +62,11 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return mixed The values or null if there are no specific available values
      */
     public function getSoapAvailableValues() {
-        return array_map(array($this, 'getSoapBindValue'), $this->getAllValues());
+        $soap_values = array();
+        foreach($this->getAllValues() as $value) {
+            $soap_values[] = $this->getSoapBindValue($value);
+        }
+        return $soap_values;
     }
 
     private function getSoapBindValue($value) {

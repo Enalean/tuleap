@@ -40,8 +40,12 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
         $field = new MockTracker_FormElement_Field_List();
         $field->setReturnValue('getId', 123);
 
-        $user1 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('user1');
-        $user2 = stub('Tracker_FormElement_Field_List_Bind_UsersValue')->getUsername()->returns('user2');
+        $user1 = mock('Tracker_FormElement_Field_List_Bind_UsersValue');
+        stub($user1)->getSoapValue()->returns('user1');
+        stub($user1)->getId()->returns(10);
+        $user2 = mock('Tracker_FormElement_Field_List_Bind_UsersValue');
+        stub($user2)->getSoapValue()->returns('user2');
+        stub($user2)->getId()->returns(20);
         
         $value_function = ',project_members,project_admins';
         $default_values = $decorators = '';

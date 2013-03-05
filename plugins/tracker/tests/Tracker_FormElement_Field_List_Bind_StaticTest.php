@@ -38,9 +38,11 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
     
     public function testGetSoapAvailableValues() {
         $bv1 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv1->setReturnValue('getLabel', 'bv label 1');
+        $bv1->setReturnValue('getId', 101);
+        $bv1->setReturnValue('getSoapValue', 'bv label 1');
         $bv2 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv2->setReturnValue('getLabel', 'bv label 2');
+        $bv2->setReturnValue('getId', 102);
+        $bv2->setReturnValue('getSoapValue', 'bv label 2');
         $field = new MockTracker_FormElement_Field_List();
         $field->setReturnValue('getId', 123);
         $is_rank_alpha = $default_values = $decorators = '';
@@ -49,13 +51,15 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         
         $this->assertEqual(count($static->getSoapAvailableValues()), 2);
         $soap_values = array(
-                        array('bind_value_id' => 101,
-                              'bind_value_label' => 'bv label 1',
-                             ),
-                        array('bind_value_id' => 102,
-                              'bind_value_label' => 'bv label 2'
-                             )
-                        );
+            array(
+                'bind_value_id' => 101,
+                'bind_value_label' => 'bv label 1',
+            ),
+            array(
+                'bind_value_id' => 102,
+                'bind_value_label' => 'bv label 2'
+            )
+        );
         $this->assertEqual($static->getSoapAvailableValues(), $soap_values);
     }
     
