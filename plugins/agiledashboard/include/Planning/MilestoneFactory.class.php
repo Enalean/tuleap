@@ -371,6 +371,10 @@ class Planning_MilestoneFactory {
     public function getMilestoneFromArtifact(Tracker_Artifact $artifact, TreeNode $planned_artifacts = null) {
         $tracker  = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        if ( ! $planning) {
+            return null;
+        }
+
         return new Planning_ArtifactMilestone($tracker->getProject(), $planning, $artifact, $planned_artifacts);
     }
 
@@ -394,6 +398,7 @@ class Planning_MilestoneFactory {
                 $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
             }
         }
+        $parent_milestone = array_filter($parent_milestone);
         return $parent_milestone;
     }
 
