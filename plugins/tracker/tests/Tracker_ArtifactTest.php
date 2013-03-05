@@ -2282,4 +2282,70 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
     }
 }
+
+class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
+    private $artifact;
+    private $user;
+    private $id = 1235;
+    private $tracker_id = 567;
+    private $submitted_by = 891;
+    private $submitted_on = 111213;
+    private $use_artifact_permissions = true;
+    private $last_update_date = 654683;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user     = mock('PFUser');
+
+        $last_changeset = stub('Tracker_Artifact_Changeset')->getSubmittedOn()->returns($this->last_update_date);
+
+        $this->artifact = partial_mock(
+            'Tracker_Artifact',
+            array(
+                'userCanView',
+                'getCrossReferencesSOAPValues',
+            ),
+            array($this->id, $this->tracker_id, $this->submitted_by, $this->submitted_on, $this->use_artifact_permissions)
+        );
+        stub($this->artifact)->userCanView()->returns(true);
+        stub($this->artifact)->getCrossReferencesSOAPValues()->returns(array(array('ref' => 'art #123', 'url' => '/path/to/art=123')));
+        $this->artifact->setChangesets(array($last_changeset));
+    }
+
+    public function itReturnsEmptyArrayIfUserCannotViewArtifact() {
+        $artifact = partial_mock('Tracker_Artifact', array('userCanView'));
+        $user     = mock('PFUser');
+        stub($artifact)->userCanView($user)->returns(false);
+
+        $this->assertArrayEmpty($artifact->getSoapValue($user));
+    }
+
+    public function itReturnsDataIfUserCanViewArtifact() {
+        $artifact = partial_mock('Tracker_Artifact', array('userCanView', 'getCrossReferencesSOAPValues'), array('whatever', 'whatever', 'whatever', 'whatever', 'whatever'));
+        $artifact->setChangesets(array(mock('Tracker_Artifact_Changeset')));
+        $user     = mock('PFUser');
+        stub($artifact)->userCanView($user)->returns(true);
+
+        $this->assertArrayNotEmpty($artifact->getSoapValue($user));
+    }
+
+    public function itHasBasicArtifactInfo() {
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertIdentical($soap_value['artifact_id'], $this->id);
+        $this->assertIdentical($soap_value['tracker_id'], $this->tracker_id);
+        $this->assertIdentical($soap_value['submitted_by'], $this->submitted_by);
+        $this->assertIdentical($soap_value['submitted_on'], $this->submitted_on);
+    }
+
+    public function itContainsCrossReferencesValue() {
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertEqual($soap_value['cross_references'][0], array('ref' => 'art #123', 'url' => '/path/to/art=123'));
+    }
+
+    public function itHasALastUpdateDate() {
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertIdentical($soap_value['last_update_date'], $this->last_update_date);
+    }
+
+}
 ?>

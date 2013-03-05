@@ -1816,6 +1816,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
          return $soap_value;
     }
 
+    public function getSoapValue(PFUser $user) {
+        $soap_artifact = array();
+        if ($this->userCanView($user)) {
+            $last_changeset = $this->getLastChangeset();
+
+            $soap_artifact['artifact_id']      = $this->getId();
+            $soap_artifact['tracker_id']       = $this->getTrackerId();
+            $soap_artifact['submitted_by']     = $this->getSubmittedBy();
+            $soap_artifact['submitted_on']     = $this->getSubmittedOn();
+            $soap_artifact['cross_references'] = $this->getCrossReferencesSOAPValues();
+            $soap_artifact['last_update_date'] = $last_changeset->getSubmittedOn();
+        }
+        return $soap_artifact;
+
+    }
+
     /**
      * Used when validating the rules of a new/ initial changset creating.
      * 
