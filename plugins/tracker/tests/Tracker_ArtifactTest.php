@@ -2353,7 +2353,6 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
 class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
     private $artifact;
     private $user;
-    private $last_update_date;
 
     public function setUp() {
         parent::setUp();
@@ -2365,7 +2364,7 @@ class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
         $this->field_name = 'field_name';
         $this->field_label = 'Field Label';
         $this->field = aMockField()->withId($this->field_id)->withLabel($this->field_label)->withName($this->field_name)->build();
-        $this->changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getSoapValue()->returns($this->integer_value);
+        $this->changeset_value = new Tracker_Artifact_ChangesetValue_Integer('whatever', $this->field, true, $this->integer_value);
         $this->last_changeset = stub('Tracker_Artifact_Changeset')->getValues()->returns(array($this->field_id => $this->changeset_value));
 
         stub($this->field)->userCanRead()->returns(true);
@@ -2394,7 +2393,7 @@ class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
 
     public function itHasAnIntegerValueReturnedAsStringInValueField() {
         $soap_value = $this->artifact->getSoapValue($this->user);
-        $this->assertEqual($soap_value['value'][0]['field_value']['value'], $this->integer_value);
+        $this->assertIdentical($soap_value['value'][0]['field_value']['value'], "$this->integer_value");
     }
 }
 ?>

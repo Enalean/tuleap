@@ -1833,18 +1833,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 if ($field_value &&
                         ($field = $this->getFormElementFactory()->getFormElementById($field_id)) &&
                         ($field->userCanRead($user))) {
-                    $soap_field_value = array(
+                    $soap_artifact['value'][] = array(
                         'field_name' => $field->getName(),
                         'field_label' => $field->getLabel(),
+                        'field_value' => $field_value->getSoapValue(),
                     );
-                    
-                    if ($field instanceof Tracker_FormElement_Field_File) {
-                        $soap_field_value['field_value'] = $field_value->getSoapValue();
-                    } else {
-                        // TODO: refactor to move 'value' into Field
-                        $soap_field_value['field_value'] = array('value' => $field_value->getSoapValue());
-                    }
-                    $soap_artifact['value'][] = $soap_field_value;
                 }
             }
         }
