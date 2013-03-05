@@ -105,7 +105,7 @@ class Git_Admin {
      */
     private function getGerritServers() {
         $servers = $this->gerrit_server_factory->getServers();
-        $servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '');
+        $servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '');
         return $servers;
     }
 

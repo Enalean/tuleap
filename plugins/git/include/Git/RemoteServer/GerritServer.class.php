@@ -34,14 +34,16 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
     private $http_port;
     private $login;
     private $identity_file;
+    private $replication_key;
 
-    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file) {
-        $this->id            = $id;
-        $this->host          = $host;
-        $this->ssh_port      = $ssh_port;
-        $this->http_port     = $http_port;
-        $this->login         = $login;
-        $this->identity_file = $identity_file;
+    public function __construct($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key) {
+        $this->id               = $id;
+        $this->host             = $host;
+        $this->ssh_port         = $ssh_port;
+        $this->http_port        = $http_port;
+        $this->login            = $login;
+        $this->identity_file    = $identity_file;
+        $this->replication_key  = $replication_key;
     }
 
     public function getId() {
@@ -110,6 +112,10 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
 
     public function getProjectUrl($gerrit_project) {
         return $this->getGerritServerBaseUrl()."/#/q/project:$gerrit_project,n,z";
+    }
+
+    public function getReplicationKey() {
+        return $this->replication_key;
     }
 
     private function getGerritServerBaseUrl() {
