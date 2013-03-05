@@ -35,11 +35,15 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
      */
     private $card_fields;
 
-    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, Tracker_Artifact $parent = null) {
+    /** @var string */
+    private $accent_color;
+
+    public function __construct(Tracker_Artifact $artifact, Tracker_CardFields $card_fields, $accent_color, Tracker_Artifact $parent = null) {
         $this->artifact     = $artifact;
         $this->parent       = $parent;
         $this->details      = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
         $this->card_fields  = $card_fields;
+        $this->accent_color = $accent_color;
     }
 
     /**
@@ -121,6 +125,13 @@ class Cardwall_CardPresenter implements Tracker_CardPresenter{
      */
     public function getCssClasses() {
         return '';
+    }
+
+    /**
+     * @see Tracker_CardPresenter::getAccentColor()
+     */
+    public function getAccentColor() {
+        return $this->accent_color;
     }
 
     /**

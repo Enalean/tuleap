@@ -860,6 +860,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $card_info;
     }
 
+    /**
+     * @see Tracker_CardPresenter::getAccentColor()
+     *
+     * @return string
+     */
+    public function getCardAccentColor(PFUser $current_user) {
+        $selectbox = $this->getFormElementFactory()->getSelectboxFieldByNameForUser(
+            $this->getTrackerId(),
+            Tracker::TYPE_FIELD_NAME,
+            $current_user
+        );
+        if (! $selectbox) {
+            return '';
+        }
+
+        return $selectbox->getCurrentDecoratorColor($this);
+    }
 
     /**
      * @return string html

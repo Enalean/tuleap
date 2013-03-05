@@ -2282,4 +2282,26 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
     }
 }
+
+class Tracker_Artifact_getCardAccentColorTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->user     = mock('PFUser');
+        $this->field    = mock('Tracker_FormElement_Field_Selectbox');
+        $this->factory  = mock('Tracker_FormElementFactory');
+        $this->artifact = anArtifact()->withFormElementFactory($this->factory)->build();
+    }
+
+    public function itReturnsEmptyStringIfNoField() {
+        stub($this->factory)->getSelectboxFieldByNameForUser()->returns(null);
+        $this->assertEqual('', $this->artifact->getCardAccentColor($this->user));
+    }
+
+    public function itDelegatesToTheField() {
+        stub($this->field)->getCurrentDecoratorColor($this->artifact)->returns('red');
+        stub($this->factory)->getSelectboxFieldByNameForUser()->returns($this->field);
+        $this->assertEqual('red', $this->artifact->getCardAccentColor($this->user));
+    }
+}
 ?>
