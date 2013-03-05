@@ -183,16 +183,16 @@ class Tracker_Artifact_ChangesetValue_List extends Tracker_Artifact_ChangesetVal
      * @return string The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
-        $soap_array = array();
-        foreach ($this->getListValues() as $value) {
-            $soap_array[] = array(
-                'bind_value_id'    => $value->getId(),
-                'bind_value_label' => $value->getSoapValue()
-            );
-        }
-        return array('bind_value' => $soap_array);
+        return array('bind_value' => array_map(array($this, 'getSoapBindValue'), $this->getListValues()));
     }
-    
+
+    private function getSoapBindValue($value) {
+        return array(
+            'bind_value_id'    => $value->getId(),
+            'bind_value_label' => $value->getSoapValue()
+        );
+    }
+
     /**
      * Get the diff between this changeset value and the one passed in param
      *
