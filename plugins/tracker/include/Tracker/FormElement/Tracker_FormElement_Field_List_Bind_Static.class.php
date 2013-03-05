@@ -127,28 +127,12 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
     }
     
     /**
-     * @return array
+     * @return Tracker_FormElement_Field_List_Bind_StaticValue[]
      */
     public function getAllValues() {
         return $this->values;
     }
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-    public function getSoapAvailableValues() {
-        $soap_values = array();
-        $values = $this->getAllValues();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                            'bind_value_id' => $id,
-                            'bind_value_label' => $value->getLabel(),
-                        );
-        }
-        return $soap_values;
-    }
+
     /**
      * @return array
      */

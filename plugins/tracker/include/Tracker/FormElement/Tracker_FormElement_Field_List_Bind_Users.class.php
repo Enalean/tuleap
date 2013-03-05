@@ -129,7 +129,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @param string $keyword
      *
-     * @return array
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
     public function getAllValues($keyword = null) {
         $sql = array();
@@ -240,25 +240,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             'join_on_id' => 'user.user_id',
         );
     }
-    
-    /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-    public function getSoapAvailableValues() {
-        $soap_values = array();
-        $values = $this->getAllValues();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                'bind_value_id'    => $id,
-                'bind_value_label' => $value->getUserName(),
-            );
-        }
-        return $soap_values;
-    }
-    
+
     /**
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve 

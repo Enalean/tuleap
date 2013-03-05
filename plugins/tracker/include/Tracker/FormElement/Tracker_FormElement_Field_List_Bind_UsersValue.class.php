@@ -95,5 +95,9 @@ class Tracker_FormElement_Field_List_Bind_UsersValue extends Tracker_FormElement
         $json['username'] = $this->getUsername();
         return $json;
     }
+
+    public function getSoapValue() {
+        return $this->getUsername();
+    }
 }
 ?>

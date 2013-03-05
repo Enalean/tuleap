@@ -162,24 +162,6 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-    public function getSoapAvailableValues() {
-        $values      = $this->getAllValues();
-        $soap_values = array();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                'bind_value_id'    => $id,
-                'bind_value_label' => $value->getUGroupName(),
-            );
-        }
-        return $soap_values;
-    }
-
-    /**
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve
      * the last changeset of all artifacts.

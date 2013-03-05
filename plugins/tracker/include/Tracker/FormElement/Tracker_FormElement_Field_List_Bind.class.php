@@ -54,13 +54,23 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      * @return array all values of the field
      */
     public abstract function getAllValues();
+
     /**
      * Get available values of this field for SOAP usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public abstract function getSoapAvailableValues();
+    public function getSoapAvailableValues() {
+        return array_map(array($this, 'getSoapBindValue'), $this->getAllValues());
+    }
+
+    private function getSoapBindValue($value) {
+        return array(
+            'bind_value_id'    => $value->getId(),
+            'bind_value_label' => $value->getSoapValue()
+        );
+    }
 
     /**
      * Get the field data for artifact submission
