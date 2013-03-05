@@ -28,8 +28,7 @@ class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase {
         parent::setUp();
         $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
-        chdir($this->_glAdmDir);
-
+        chdir('/var');
     }
 }
 
@@ -109,72 +108,5 @@ class Git_Gitolite_SSHKeyDumper_OneUserTest extends Git_Gitolite_SshKeyTestCase 
     }
 }
 
-class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase {
-
-    public function itDumpsSshKeysForOneUser() {
-        stub($this->user_manager)->getUsersWithSshKey()->returnsDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')));
-
-        $this->dumper->dumpSSHKeys();
-
-        $this->assertTrue(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir . '/keydir/john_do@0.pub'), $this->key1);
-
-        $this->assertEmptyGitStatus();
-    }
-
-    public function itRemovesSshKeyFileWhenUserDeletedAllHisKeys() {
-        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
-        $this->dumper->dumpSSHKeys();
-
-        $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::emptyDar());
-        $this->dumper->dumpSSHKeys();
-
-        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
-    }
-
-    public function itRemovesOnlySshFilesForUsersWithoutKeys() {
-        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')), new PFUser(array('authorized_keys' => $this->key2, 'user_name' => 'do_john'))));
-        $this->dumper->dumpSSHKeys();
-
-        $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key2, 'user_name' => 'do_john'))));
-        $this->dumper->dumpSSHKeys();
-
-        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
-        $this->assertTrue(is_file($this->_glAdmDir . '/keydir/do_john@0.pub'));
-
-        $this->assertEmptyGitStatus();
-    }
-
-    public function itRemovesSshFilesWhenKeysAreDeleted() {
-        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do')), new PFUser(array('authorized_keys' => $this->key2 . '###' . $this->key1, 'user_name' => 'do_john'))));
-        $this->dumper->dumpSSHKeys();
-
-        $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'do_john'))));
-        $this->dumper->dumpSSHKeys();
-
-        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
-        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/do_john@1.pub'));
-        $this->assertTrue(is_file($this->_glAdmDir . '/keydir/do_john@0.pub'));
-        $this->assertEqual(file_get_contents($this->_glAdmDir . '/keydir/do_john@0.pub'), $this->key1);
-
-        $this->assertEmptyGitStatus();
-    }
-
-    public function itDoesntRemoveTheGitoliteAdminSSHKey() {
-        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
-        $this->dumper->dumpSSHKeys();
-
-        touch($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub');
-        $this->gitExec->add('keydir/id_rsa_gl-adm.pub');
-        $this->gitExec->commit("Admin key");
-        $this->assertEmptyGitStatus();
-
-        $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::emptyDar());
-        $this->dumper->dumpSSHKeys();
-
-        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
-        $this->assertTrue(is_file($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub'));
-    }
-}
 
 ?>

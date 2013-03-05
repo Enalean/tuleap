@@ -26,7 +26,8 @@ require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/MembershipManager.class.php';
 require_once 'UserFinder.class.php';
 
 class Git_Driver_Gerrit_ProjectCreator {
-    const GERRIT_REMOTE_NAME = 'gerrit';
+
+    const GROUP_REPLICATION = 'replication';
 
     /** @var Git_Driver_Gerrit */
     private $driver;
@@ -62,11 +63,11 @@ class Git_Driver_Gerrit_ProjectCreator {
             $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_CONTRIBUTORS,
             $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_INTEGRATORS,
             $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_SUPERMEN,
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_OWNERS
+            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_OWNERS,
+            Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION
         );
         
         $this->exportGitBranches($gerrit_server, $gerrit_project, $repository);
-        $this->addRemoteGerritServer($repository, $gerrit_server);
 
         return $gerrit_project;
     }
@@ -77,15 +78,16 @@ class Git_Driver_Gerrit_ProjectCreator {
         `$cmd`;
     }
 
-    private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners) {
+    private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners, $replication_group) {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         $this->addGroupToGroupFile($gerrit_server, $contributors);
         $this->addGroupToGroupFile($gerrit_server, $integrators);
         $this->addGroupToGroupFile($gerrit_server, $supermen);
         $this->addGroupToGroupFile($gerrit_server, $owners);
+        $this->addGroupToGroupFile($gerrit_server, $replication_group);
         $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();
-        $this->addPermissionsToProjectConf($repository, $contributors, $integrators, $supermen, $owners);
+        $this->addPermissionsToProjectConf($repository, $contributors, $integrators, $supermen, $owners, $replication_group);
         $this->pushToServer();
     }
 
@@ -119,12 +121,13 @@ class Git_Driver_Gerrit_ProjectCreator {
         file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
-    private function addPermissionsToProjectConf(GitRepository $repository, $contributors, $integrators, $supermen, $owners) {
+    private function addPermissionsToProjectConf(GitRepository $repository, $contributors, $integrators, $supermen, $owners, $replication_group) {
         // https://groups.google.com/d/msg/repo-discuss/jTAY2ApcTGU/DPZz8k0ZoUMJ
         // Project owners are those who own refs/* within that project... which
         // means they can modify the permissions for any reference in the
         // project.
         $this->addToSection('refs', 'owner', "group $owners");
+        $this->addToSection('refs', 'Read', "group $replication_group");
 
         if ($this->shouldAddRegisteredUsers($repository)) {
             $this->addToSection('refs/heads', 'Read', "group Registered Users");
@@ -177,24 +180,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         `cd $this->dir; git add project.config groups`;
         `cd $this->dir; git commit -m 'Updated project config and access rights'`; //TODO: what about author name?
         `cd $this->dir; git push origin HEAD:refs/meta/config`;
-    }
-    
-    /**
-     * 
-     * @param GitRepository $repository
-     * @param Git_RemoteServer_GerritServer $gerrit_server
-     */
-    private function addRemoteGerritServer(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server) {
-        $port          = $gerrit_server->getSSHPort();
-        $identity_file = $gerrit_server->getIdentityFile();
-        $host_login    = $gerrit_server->getLogin() . '@' . $gerrit_server->getHost();
-        $gerrit_repo   = $this->driver->getGerritProjectName($repository);
-        $remote        = self::GERRIT_REMOTE_NAME;
-        $repository_path = $repository->getFullPath();
-
-        // e.g git remote add gerrit "ext::ssh -p 29418 -i $HOME/.ssh/id_rsa-gerrit admin-shunt.cro.enalean.com@gerrit-shunt.cro.enalean.com %S shunt.cro.enalean.com-gerrit-devs/funky"
-        // e.g git remote add gerrit "ext::ssh -p 29418 -i /home/codendiadm/.ssh/id_rsa-gerrit  admin-chamoix.cro.enalean.com@chamoix %S chamoix.cro.enalean.com-cod/depot2"
-        `cd $repository_path && git remote add $remote "ext::ssh -p $port -i $identity_file $host_login %S $gerrit_repo"`;  
     }
 
     public function removeTemporaryDirectory() {
