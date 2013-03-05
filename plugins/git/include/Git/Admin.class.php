@@ -84,17 +84,32 @@ class Git_Admin {
         $html .= '<dt><h3>'. $title .'</h3></dt>';
         $html .= '<dd>';
         $html .= '<table><tbody>';
-        $fields = array(array('Host:',          'host',          $server->getHost()), 
-                        array('HTTP Port:',     'http_port',     $server->getHTTPPort()),
-                        array('SSH Port:',      'ssh_port',      $server->getSSHPort()),
-                        array('Login:',         'login',         $server->getLogin()),
-                        array('Identity File:', 'identity_file', $server->getIdentityFile()));
+        $fields = array(
+            array('Host:',              'host',             $server->getHost()),
+            array('HTTP Port:',         'http_port',        $server->getHTTPPort()),
+            array('SSH Port:',          'ssh_port',         $server->getSSHPort()),
+            array('Login:',             'login',            $server->getLogin()),
+            array('Identity File:',     'identity_file',    $server->getIdentityFile())
+        );
         foreach ($fields as $field) {
-            $html .= '<td><label>'. $field[0].'<br /><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></label></td>';
+            $html .= '<td valign="top"><label>'. $field[0].'<br /><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></label></td>';
         }
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
             $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
         }
+        $html .= '
+            <td valign="top">
+                <label>
+                    Replication Key
+                    <br />
+                    <textarea
+                        type="checkbox"
+                        name="gerrit_servers['. $id .'][replication_key]"
+                        cols="30"
+                        rows="5">'.$server->getReplicationKey().'</textarea>
+                </label>
+            </td>';
+
         $html .= '</tbody></table>';
         $html .= '</dd>';
         return $html;
