@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-
+require_once 'common/dao/include/DataAccessObject.class.php';
 class Git_RemoteServer_Dao extends DataAccessObject {
 
     public function searchById($id) {
