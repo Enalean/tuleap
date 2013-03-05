@@ -2297,7 +2297,9 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
         parent::setUp();
         $this->user     = mock('PFUser');
 
-        $last_changeset = stub('Tracker_Artifact_Changeset')->getSubmittedOn()->returns($this->last_update_date);
+        $this->last_changeset = mock('Tracker_Artifact_Changeset');
+        stub($this->last_changeset)->getSubmittedOn()->returns($this->last_update_date);
+        stub($this->last_changeset)->getValues()->returns(array());
 
         $this->artifact = partial_mock(
             'Tracker_Artifact',
@@ -2309,7 +2311,7 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
         );
         stub($this->artifact)->userCanView()->returns(true);
         stub($this->artifact)->getCrossReferencesSOAPValues()->returns(array(array('ref' => 'art #123', 'url' => '/path/to/art=123')));
-        $this->artifact->setChangesets(array($last_changeset));
+        $this->artifact->setChangesets(array($this->last_changeset));
     }
 
     public function itReturnsEmptyArrayIfUserCannotViewArtifact() {
@@ -2322,7 +2324,7 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
 
     public function itReturnsDataIfUserCanViewArtifact() {
         $artifact = partial_mock('Tracker_Artifact', array('userCanView', 'getCrossReferencesSOAPValues'), array('whatever', 'whatever', 'whatever', 'whatever', 'whatever'));
-        $artifact->setChangesets(array(mock('Tracker_Artifact_Changeset')));
+        $artifact->setChangesets(array($this->last_changeset));
         $user     = mock('PFUser');
         stub($artifact)->userCanView($user)->returns(true);
 
@@ -2346,6 +2348,53 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
         $soap_value = $this->artifact->getSoapValue($this->user);
         $this->assertIdentical($soap_value['last_update_date'], $this->last_update_date);
     }
+}
 
+class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
+    private $artifact;
+    private $user;
+    private $last_update_date;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user = mock('PFUser');
+
+        $this->integer_value = '1981';
+
+        $this->field_id = 123242;
+        $this->field_name = 'field_name';
+        $this->field_label = 'Field Label';
+        $this->field = aMockField()->withId($this->field_id)->withLabel($this->field_label)->withName($this->field_name)->build();
+        $this->changeset_value = stub('Tracker_Artifact_ChangesetValue_Integer')->getSoapValue()->returns($this->integer_value);
+        $this->last_changeset = stub('Tracker_Artifact_Changeset')->getValues()->returns(array($this->field_id => $this->changeset_value));
+
+        stub($this->field)->userCanRead()->returns(true);
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        stub($this->formelement_factory)->getFormElementById()->returns($this->field);
+
+        $this->artifact = partial_mock(
+            'Tracker_Artifact',
+            array(
+                'userCanView',
+                'getCrossReferencesSOAPValues',
+            ),
+            array('whatever', 'whatever', 'whatever', 'whatever', 'whatever')
+        );
+        stub($this->artifact)->userCanView()->returns(true);
+        $this->artifact->setChangesets(array($this->last_changeset));
+        $this->artifact->setFormElementFactory($this->formelement_factory);
+    }
+
+    public function itHasAValueForAFieldWithANameAndALabel() {
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertEqual($soap_value['value'][0]['field_name'], $this->field_name);
+        $this->assertEqual($soap_value['value'][0]['field_label'], $this->field_label);
+    }
+
+    public function itHasAnIntegerValueReturnedAsStringInValueField() {
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertEqual($soap_value['value'][0]['field_value']['value'], $this->integer_value);
+    }
 }
 ?>
