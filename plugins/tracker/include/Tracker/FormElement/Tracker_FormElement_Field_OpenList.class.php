@@ -718,7 +718,28 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
     protected function criteriaCanBeAdvanced() {
         return false;
     }
-    
+
+    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+        if (isset($soap_value->field_value->bind_value)) {
+            return $this->joinFieldDataFromArray(
+                array_map(
+                    array($this, 'getSOAPBindValueLabel'),
+                    $soap_value->field_value->bind_value
+                )
+            );
+        } else {
+            return $this->getFieldData($soap_value->field_value->value);
+        }
+    }
+
+    private function getSOAPBindValueLabel(stdClass $field_bind_value) {
+        return $this->getFieldDataFromStringValue($field_bind_value->bind_value_label);
+    }
+
+    private function joinFieldDataFromArray(array $field_data) {
+        return implode(',', array_filter($field_data));
+    }
+
     /**
      * Get the field data for artifact submission
      *
@@ -728,34 +749,37 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
      */
     public function getFieldData($soap_value) {
         if (trim($soap_value) != '') {
-            $return = array();
-            $bind = $this->getBind();
-            $soap_values = explode(',', $soap_value);
-            foreach ($soap_values as $v) {
-                $sv = $bind->getFieldData($v, false);   // false because we are walking all values one by one
-                if ($sv) {
-                    // existing bind value
-                    $return[] = 'b'.$sv;
-                } else {
-                    $dar = $this->getOpenValueDao()->searchByExactLabel($this->getId(), $v);
-                    $row = $dar->getRow();
-                    if ($row) {
-                        // existing open value
-                        $return[] = 'o'.$row['id'];
-                    } else {
-                        if ($v != '') {
-                            // new open value
-                            $return[] = '!'.$v;
-                        }
-                    }
-                }
-            }
-            return implode(',', $return);
+            return $this->joinFieldDataFromArray(
+                array_map(
+                    array($this, 'getFieldDataFromStringValue'),
+                    explode(',', $soap_value)
+                )
+            );
         } else {
-            return null;
+            return '';
         }
     }
-    
+
+    protected function getFieldDataFromStringValue($value) {
+        if ($value == '') {
+            return;
+        }
+        $sv = $this->getBind()->getFieldData($value, false);   // false because we are walking all values one by one
+        if ($sv) {
+            // existing bind value
+            return 'b'.$sv;
+        } else {
+            $row = $this->getOpenValueDao()->searchByExactLabel($this->getId(), $value)->getRow();
+            if ($row) {
+                // existing open value
+                return 'o'.$row['id'];
+            } else {
+                // new open value
+                return '!'.$value;
+            }
+        }
+    }
+
     /**
      * Validate a value
      *

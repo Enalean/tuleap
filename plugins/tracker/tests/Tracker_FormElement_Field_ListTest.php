@@ -94,17 +94,13 @@ Mock::generate('PFUser');
 
 
 class Tracker_FormElement_Field_ListTest extends UnitTestCase {
-    
-    function __construct($name = 'Open List test') {
-        parent::__construct($name);
+
+    function setUp() {
         $this->field_class            = 'Tracker_FormElement_Field_ListTestVersion';
         $this->field_class_for_import = 'Tracker_FormElement_Field_ListTestVersion_ForImport';
         $this->dao_class              = 'MockTracker_FormElement_Field_Value_ListDao';
         $this->cv_class               = 'Tracker_Artifact_ChangesetValue_List';
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_List';
-    }
-    
-    function setUp() {
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
     }
@@ -482,4 +478,5 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
         $this->list->process($this->layout, $this->request, $this->user);
     }
 }
+
 ?>

@@ -56,6 +56,10 @@ function aSelectBoxField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_Selectbox');
 }
 
+function aMultiSelectBoxField() {
+    return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_MultiSelectbox');
+}
+
 function aFileField() {
     return new Test_Tracker_FormElement_Builder('Tracker_FormElement_Field_File');
 }

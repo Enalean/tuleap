@@ -58,9 +58,13 @@ if ($request->exist('wsdl')) {
 } else {
     require_once TRACKER_BASE_DIR.'/Tracker/SOAPServer.class.php';
 
+    $soap_options = array();
+    if (Config::get('DEBUG_MODE')) {
+        $soap_options['cache_wsdl'] = WSDL_CACHE_NONE;
+    }
+
     $formelement_factory = Tracker_FormElementFactory::instance();
-    $server = new SoapServer($uri.'/?wsdl',
-                             array('cache_wsdl' => WSDL_CACHE_NONE));
+    $server = new SoapServer($uri.'/?wsdl', $soap_options);
 
     $server->setClass(
         'Tracker_SOAPServer',

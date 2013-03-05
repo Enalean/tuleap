@@ -51,41 +51,40 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     }
 
     /**
-     * @return array all values of the field
+     * @return Tracker_FormElement_Field_List_BindValue[]
      */
     public abstract function getAllValues();
+
     /**
      * Get available values of this field for SOAP usage
      * Fields like int, float, date, string don't have available values
      *
      * @return mixed The values or null if there are no specific available values
      */
-    public abstract function getSoapAvailableValues();
+    public function getSoapAvailableValues() {
+        $soap_values = array();
+        foreach($this->getAllValues() as $value) {
+            $soap_values[] = $this->getSoapBindValue($value);
+        }
+        return $soap_values;
+    }
+
+    private function getSoapBindValue($value) {
+        return array(
+            'bind_value_id'    => $value->getId(),
+            'bind_value_label' => $value->getSoapValue()
+        );
+    }
 
     /**
      * Get the field data for artifact submission
      *
-     * @param string  $soap_value  the soap field value (username(s))
-     * @param boolean $is_multiple if the soap value is multiple or not
+     * @param string $soap_value  of soap field value
+     * @param bool   $is_multiple if the soap value is multiple or not
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
+     * @return mixed the field data corresponding to the soap_value for artifact submision
      */
-    public function getFieldData($soap_value, $is_multiple) {
-        $values = $this->getAllValues();
-        if ($is_multiple) {
-            $return = explode(',', $soap_value);
-            return $return;
-        } else {
-            foreach ($values as $id => $value) {
-                if ($id == $soap_value) {
-                    return $id;
-                }
-            }
-            // if not found, return null
-            return null;
-        }
-    }
-
+    public abstract function getFieldData($soap_value, $is_multiple);
     /**
      * @return array
      */
