@@ -207,29 +207,37 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         stub($this->field)->getId()->returns(1);
     }
 
-
-    function itCreatesANewValueAndReuseABindValueAndCreatesAnOpenValue() {
-        expect($this->bind)->getFieldData()->count(3);
-        stub($this->bind)->getFieldData('new value', '*')->returns(null);
-        stub($this->bind)->getFieldData('existing open value', '*')->returns(null);
-        stub($this->bind)->getFieldData('existing value', '*')->returns(115);
-
-        expect($this->dao)->searchByExactLabel()->count(2);
-        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
-        stub($this->dao)->searchByExactLabel(1, 'existing open value')->returnsDar(array('id' => '30', 'field_id' => '1', 'label' => 'existing open value'));
-
-        $this->assertEqual("!new value,o30,b115", $this->field->getFieldData('new value,existing open value,existing value', true));
+    function itResetsTheFieldValueWhenSubmittedValueIsEmpty() {
+        $this->assertIdentical('', $this->field->getFieldData('', true));
     }
 
-    function itCreatesANewValueAndReuseABindValueSetByAdmin() {
-        expect($this->bind)->getFieldData()->count(2);
+    function itCreatesOneValue() {
+        expect($this->bind)->getFieldData()->count(1);
         stub($this->bind)->getFieldData('new value', '*')->returns(null);
-        stub($this->bind)->getFieldData('existing value', '*')->returns(115);
 
         expect($this->dao)->searchByExactLabel()->count(1);
         stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
 
-        $this->assertEqual("!new value,b115", $this->field->getFieldData('new value,existing value', true));
+        $this->assertEqual("!new value", $this->field->getFieldData('new value', true));
+    }
+
+    function itUsesOneValueDefinedByAdmin() {
+        expect($this->bind)->getFieldData()->count(1);
+        stub($this->bind)->getFieldData('existing value', '*')->returns(115);
+
+        expect($this->dao)->searchByExactLabel()->never();
+
+        $this->assertEqual("b115", $this->field->getFieldData('existing value', true));
+    }
+
+    function itUsesOneOpenValueDefinedPreviously() {
+        expect($this->bind)->getFieldData()->count(1);
+        stub($this->bind)->getFieldData('existing open value', '*')->returns(null);
+
+        expect($this->dao)->searchByExactLabel()->count(1);
+        stub($this->dao)->searchByExactLabel(1, 'existing open value')->returnsDar(array('id' => '30', 'field_id' => '1', 'label' => 'existing open value'));
+
+        $this->assertEqual("o30", $this->field->getFieldData('existing open value', true));
     }
 
     function itCreatesTwoNewValues() {
@@ -246,8 +254,28 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         
     }
 
-    function itResetsTheFieldValueWhenSubmittedValueIsEmpty() {
-        $this->assertIdentical('', $this->field->getFieldData('', true));
+    function itCreatesANewValueAndReuseABindValueSetByAdmin() {
+        expect($this->bind)->getFieldData()->count(2);
+        stub($this->bind)->getFieldData('new value', '*')->returns(null);
+        stub($this->bind)->getFieldData('existing value', '*')->returns(115);
+
+        expect($this->dao)->searchByExactLabel()->count(1);
+        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+
+        $this->assertEqual("!new value,b115", $this->field->getFieldData('new value,existing value', true));
+    }
+
+    function itCreatesANewValueAndReuseABindValueAndCreatesAnOpenValue() {
+        expect($this->bind)->getFieldData()->count(3);
+        stub($this->bind)->getFieldData('new value', '*')->returns(null);
+        stub($this->bind)->getFieldData('existing open value', '*')->returns(null);
+        stub($this->bind)->getFieldData('existing value', '*')->returns(115);
+
+        expect($this->dao)->searchByExactLabel()->count(2);
+        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+        stub($this->dao)->searchByExactLabel(1, 'existing open value')->returnsDar(array('id' => '30', 'field_id' => '1', 'label' => 'existing open value'));
+
+        $this->assertEqual("!new value,o30,b115", $this->field->getFieldData('new value,existing open value,existing value', true));
     }
 }
 ?>
