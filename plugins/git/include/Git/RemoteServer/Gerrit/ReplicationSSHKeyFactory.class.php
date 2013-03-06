@@ -23,16 +23,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
     /**
      *
-     * @var Git_Exec
-     */
-    private $git_executer;
-
-    public function __construct(Git_Exec $git_executer) {
-        $this->git_executer = $git_executer;
-    }
-
-    /**
-     *
      * @param int $id
      * @return \Git_RemoteServer_Gerrit_ReplicationSSHKey
      */
@@ -41,8 +31,10 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
     }
 
 
-    public function save(Git_RemoteServer_GerritReplicationSSHKey $key, $gitolite_admin_path = null) {
-        
+    public function save(Git_RemoteServer_Gerrit_ReplicationSSHKey $key, $gitolite_admin_path = null) {
+//        if (! $gitolite_admin_path) {
+//            $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+//        }
 
         return $this;
     }
