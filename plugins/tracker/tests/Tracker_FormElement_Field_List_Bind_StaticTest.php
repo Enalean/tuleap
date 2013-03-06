@@ -67,12 +67,8 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         $bv1 = aFieldListStaticValue()->withLabel('1 - Ordinary')->build();
         $bv2 = aFieldListStaticValue()->withLabel('9 - Critical')->build();
         $values = array(13564 => $bv1, 13987 => $bv2);
-        $field_bind = aBindStatic()->withValues($values)->build();
-
-        $soap_values = '13564';
-        $expected = 13564;
-
-        $this->assertEqual($expected, $field_bind->getFieldData($soap_values, false));
+        $f = aBindStatic()->withValues($values)->build();
+        $this->assertEqual('13564', $f->getFieldData('1 - Ordinary', false));
     }
     
     function testGetFieldDataMultiple() {
@@ -81,13 +77,10 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
         $bv3 = aFieldListStaticValue()->withLabel('User Interface')->build();
         $bv4 = aFieldListStaticValue()->withLabel('Docman')->build();
         $values = array(13564 => $bv1, 13987 => $bv2, 125 => $bv3, 666 => $bv4);
-        $field_bind = aBindStatic()->withValues($values)->build();
 
-        $soap_values = '13564, 125, 666';
-
-        $expected = array(13564,125,666);
-
-        $this->assertEqual($expected, $field_bind->getFieldData($soap_values, true));
+        $res = array('13564', '125', '666');
+        $f = aBindStatic()->withValues($values)->build();
+        $this->assertEqual($res, $f->getFieldData('Admin,User Interface,Docman', true));
     }
 }
 ?>

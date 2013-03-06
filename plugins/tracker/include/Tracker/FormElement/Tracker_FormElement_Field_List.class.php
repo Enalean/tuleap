@@ -1047,10 +1047,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
                  return $soap_value->field_value->bind_value[0]->bind_value_id;
              }
          } else {
-             if ($this->isMultiple()) {
-                 return array_map('intval', explode(',', $soap_value->field_value->value));
-             }
-             return (int) $soap_value->field_value->value;
+             return $this->getFieldData($soap_value->field_value->value);
          }
      }
 
@@ -1062,7 +1059,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
     public function getFieldData($soap_value) {
-        if ($soap_value === '100') {
+        if ($soap_value === $GLOBALS['Language']->getText('global','none')) {
             return 100;
         }
 

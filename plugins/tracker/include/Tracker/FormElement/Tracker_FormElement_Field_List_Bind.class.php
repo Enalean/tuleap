@@ -79,27 +79,12 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     /**
      * Get the field data for artifact submission
      *
-     * @param string  $soap_value  the soap field value (username(s))
-     * @param boolean $is_multiple if the soap value is multiple or not
+     * @param string $soap_value  of soap field value
+     * @param bool   $is_multiple if the soap value is multiple or not
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
+     * @return mixed the field data corresponding to the soap_value for artifact submision
      */
-    public function getFieldData($soap_value, $is_multiple) {
-        $values = $this->getAllValues();
-        if ($is_multiple) {
-            $return = explode(',', $soap_value);
-            return $return;
-        } else {
-            foreach ($values as $id => $value) {
-                if ($id == $soap_value) {
-                    return $id;
-                }
-            }
-            // if not found, return null
-            return null;
-        }
-    }
-
+    public abstract function getFieldData($soap_value, $is_multiple);
     /**
      * @return array
      */
