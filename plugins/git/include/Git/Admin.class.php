@@ -116,11 +116,11 @@ class Git_Admin {
     }
 
     /**
-     * @return array of Git_RemoteServer_GerritServer
+     * @return Git_RemoteServer_GerritServer[]
      */
     private function getGerritServers() {
         $servers = $this->gerrit_server_factory->getServers();
-        $servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', '');
+        $servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', new Git_RemoteServer_Gerrit_ReplicationSSHKey());
         return $servers;
     }
 

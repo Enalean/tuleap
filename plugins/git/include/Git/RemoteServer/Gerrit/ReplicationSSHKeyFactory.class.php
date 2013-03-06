@@ -22,7 +22,7 @@ require_once 'ReplicationSSHKey.class.php';
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
     public function fetchForGerritServerId($id) {
-        return null;
+        return new Git_RemoteServer_Gerrit_ReplicationSSHKey();
     }
 
 
