@@ -447,7 +447,11 @@ class GitPlugin extends Plugin {
 
     private function getGerritServerFactory() {
         require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
-        $replication_key_factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory();
+
+        $gitolite_admin_path = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+        $gitExec = new Git_Exec($gitolite_admin_path);
+
+        $replication_key_factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($gitExec);
 
         return new Git_RemoteServer_GerritServerFactory(new Git_RemoteServer_Dao(), $this->getGitDao(), $replication_key_factory);
     }

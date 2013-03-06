@@ -21,12 +21,29 @@
 require_once 'ReplicationSSHKey.class.php';
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
+    /**
+     *
+     * @var Git_Exec
+     */
+    private $git_executer;
+
+    public function __construct(Git_Exec $git_executer) {
+        $this->git_executer = $git_executer;
+    }
+
+    /**
+     *
+     * @param int $id
+     * @return \Git_RemoteServer_Gerrit_ReplicationSSHKey
+     */
     public function fetchForGerritServerId($id) {
         return new Git_RemoteServer_Gerrit_ReplicationSSHKey();
     }
 
 
-    public function save(Git_RemoteServer_GerritReplicationSSHKey $key) {
+    public function save(Git_RemoteServer_GerritReplicationSSHKey $key, $gitolite_admin_path = null) {
+        
+
         return $this;
     }
 }
