@@ -64,37 +64,30 @@ class Tracker_FormElement_Field_List_Bind_StaticTest extends UnitTestCase {
     }
     
     function testGetFieldData() {
-        $bv1 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv1->setReturnValue('getLabel', '1 - Ordinary');
-        $bv2 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv2->setReturnValue('getLabel', '9 - Critical');
-        $field = $is_rank_alpha = $default_values = $decorators = '';
+        $bv1 = aFieldListStaticValue()->withLabel('1 - Ordinary')->build();
+        $bv2 = aFieldListStaticValue()->withLabel('9 - Critical')->build();
         $values = array(13564 => $bv1, 13987 => $bv2);
-        $f = new Tracker_FormElement_Field_List_Bind_Static($field, $is_rank_alpha, $values, $default_values, $decorators);
+        $field_bind = aBindStatic()->withValues($values)->build();
 
         $soap_values = '13564';
         $expected = 13564;
 
-        $this->assertEqual($expected, $f->getFieldData($soap_values, false));
+        $this->assertEqual($expected, $field_bind->getFieldData($soap_values, false));
     }
     
     function testGetFieldDataMultiple() {
-        $bv1 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv1->setReturnValue('getLabel', 'Admin');
-        $bv2 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv2->setReturnValue('getLabel', 'Tracker');
-        $bv3 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv3->setReturnValue('getLabel', 'User Interface');
-        $bv4 = new MockTracker_FormElement_Field_List_Bind_StaticValue();
-        $bv4->setReturnValue('getLabel', 'Docman');
-        $field = $is_rank_alpha = $default_values = $decorators = '';
+        $bv1 = aFieldListStaticValue()->withLabel('Admin')->build();
+        $bv2 = aFieldListStaticValue()->withLabel('Tracker')->build();
+        $bv3 = aFieldListStaticValue()->withLabel('User Interface')->build();
+        $bv4 = aFieldListStaticValue()->withLabel('Docman')->build();
         $values = array(13564 => $bv1, 13987 => $bv2, 125 => $bv3, 666 => $bv4);
-        $res = '13564, 125, 666';
-        $f = new Tracker_FormElement_Field_List_Bind_Static($field, $is_rank_alpha, $values, $default_values, $decorators);
+        $field_bind = aBindStatic()->withValues($values)->build();
+
+        $soap_values = '13564, 125, 666';
 
         $expected = array(13564,125,666);
 
-        $this->assertEqual($expected, $f->getFieldData($res, true));
+        $this->assertEqual($expected, $field_bind->getFieldData($soap_values, true));
     }
 }
 ?>
