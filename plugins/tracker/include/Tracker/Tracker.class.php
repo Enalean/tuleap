@@ -2426,7 +2426,7 @@ EOS;
     }
     
     private function _getCSVSeparator($current_user) {
-        if ( ! $current_user || ! ($user instanceof PFUser)) {
+        if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         
@@ -2447,7 +2447,7 @@ EOS;
     }
     
     private function _getCSVDateformat($current_user) {
-        if ( ! $current_user || ! ($user instanceof PFUser)) {
+        if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         $dateformat_csv_export_pref = $current_user->getPreference('user_csv_dateformat');
