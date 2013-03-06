@@ -1037,11 +1037,20 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
 
      public function getFieldDataFromSoapValue(stdClass $soap_value) {
          if (isset($soap_value->field_value->bind_value)) {
-             foreach ($soap_value->field_value->bind_value as $bind_value) {
-                 return $this->getFieldData($bind_value->bind_value_id);
+             if ($this->isMultiple()) {
+                 $values = array();
+                 foreach ($soap_value->field_value->bind_value as $bind_value) {
+                    $values[] = $bind_value->bind_value_id;
+                 }
+                 return $values;
+             } else {
+                 return $soap_value->field_value->bind_value[0]->bind_value_id;
              }
          } else {
-             return $this->getFieldData($soap_value->field_value->value);
+             if ($this->isMultiple()) {
+                 return array_map('intval', explode(',', $soap_value->field_value->value));
+             }
+             return (int) $soap_value->field_value->value;
          }
      }
 

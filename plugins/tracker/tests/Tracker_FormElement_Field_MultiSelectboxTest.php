@@ -20,14 +20,14 @@
 
 require_once('bootstrap.php');
 
-class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends TuleapTestCase {
+class Tracker_FormElement_Field_MultiSelectbox_getFieldDataFromSoapValue extends TuleapTestCase {
     private $field;
     private $bind;
     
     public function setUp() {
         parent::setUp();
         $this->bind  = mock('Tracker_FormElement_Field_List_Bind');
-        $this->field = aSelectBoxField()->withBind($this->bind)->build();
+        $this->field = aMultiSelectBoxField()->withBind($this->bind)->build();
     }
 
 
@@ -36,11 +36,11 @@ class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends Tule
             'field_name'  => '',
             'field_label' => '',
             'field_value' => (object) array(
-                'value' => '1586'
+                'value' => '1586,2894'
             )
         );
 
-        $this->assertEqual(1586, $this->field->getFieldDataFromSoapValue($soap_value));
+        $this->assertIdentical(array(1586,2894), $this->field->getFieldDataFromSoapValue($soap_value));
     }
     
     public function itExtractsDataFromBindValue() {
@@ -49,26 +49,12 @@ class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends Tule
             'field_label' => '',
             'field_value' => (object) array(
                 'bind_value' => array(
-                    (object) array('bind_value_id' => 1586, 'bind_value_label' => '')
+                    (object) array('bind_value_id' => 1586, 'bind_value_label' => ''),
+                    (object) array('bind_value_id' => 2894, 'bind_value_label' => '')
                 )
             )
         );
-
-        $this->assertEqual(1586, $this->field->getFieldDataFromSoapValue($soap_value));
-    }
-
-    public function itPrefersBindValueOnStringValue() {
-        $soap_value = (object) array(
-            'field_name'  => '',
-            'field_label' => '',
-            'field_value' => (object) array(
-                'value'      => '1586',
-                'bind_value' => array(
-                    (object) array('bind_value_id' => 2331, 'bind_value_label' => '')
-                )
-            )
-        );
-        $this->assertEqual(2331, $this->field->getFieldDataFromSoapValue($soap_value));
+        $this->assertIdentical(array(1586,2894), $this->field->getFieldDataFromSoapValue($soap_value));
     }
 }
 ?>
