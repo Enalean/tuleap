@@ -90,7 +90,7 @@ class Git_RemoteServer_GerritServerFactory {
             $row['http_port'],
             $row['login'],
             $row['identity_file'],
-            $row['replication_key']
+            null
         );
     }
 

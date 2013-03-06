@@ -31,7 +31,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     private $http_port          = 8080;
     private $login              = 'chuck';
     private $identity_file      = '/home/chuck/.ssh/id_rsa';
-    private $replication_key    = 'my_replication-key';
+    private $replication_key    = null;
 
     private $alternate_server_id = 2;
     private $alternate_host      = 'h.tuleap.net';
@@ -44,8 +44,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'ssh_port'          => $this->ssh_port,
             'http_port'         => $this->http_port,
             'login'             => $this->login,
-            'identity_file'     => $this->identity_file,
-            'replication_key'   =>  $this->replication_key,
+            'identity_file'     => $this->identity_file
         );
         $dar_2 = array(
             'id'                => $this->alternate_server_id,
@@ -53,8 +52,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
             'ssh_port'          => $this->ssh_port,
             'http_port'         => $this->http_port,
             'login'             => $this->login,
-            'identity_file'     => $this->identity_file,
-            'replication_key'   =>  $this->replication_key,
+            'identity_file'     => $this->identity_file
         );
 
         $git_dao   = mock('GitDao');
