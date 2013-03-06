@@ -51,7 +51,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
     }
 
     /**
-     * @return array all values of the field
+     * @return Tracker_FormElement_Field_List_BindValue[]
      */
     public abstract function getAllValues();
 
