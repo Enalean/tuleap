@@ -416,7 +416,7 @@ class Tracker_SOAPServer {
                 if ($field) {
                     $field_data = $field->getFieldDataFromSoapValue($field_value);
 
-                    if ($field_data != null) {
+                    if ($field_data !== null) {
                         // $field_value is an object: SOAP must cast it in ArtifactFieldValue
                         if (isset($fields_data[$field->getId()])) {
                             if (!is_array($fields_data[$field->getId()])) {

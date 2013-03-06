@@ -30,7 +30,6 @@ class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends Tule
         $this->field = aSelectBoxField()->withBind($this->bind)->build();
     }
 
-
     public function itFallsBackToValueStringProcessing() {
         $soap_value = (object) array(
             'field_name'  => '',
@@ -45,7 +44,22 @@ class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends Tule
 
         $this->assertEqual(1586, $this->field->getFieldDataFromSoapValue($soap_value));
     }
-    
+
+    public function itAllowsValueStringToBeEmpty() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'value' => ''
+            )
+        );
+
+        expect($this->bind)->getFieldData('', false)->once();
+        stub($this->bind)->getFieldData()->returns(null);
+
+        $this->assertEqual(null, $this->field->getFieldDataFromSoapValue($soap_value));
+    }
+
     public function itExtractsDataFromBindValue() {
         $soap_value = (object) array(
             'field_name'  => '',

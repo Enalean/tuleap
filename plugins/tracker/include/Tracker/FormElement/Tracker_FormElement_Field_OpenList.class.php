@@ -752,7 +752,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
             }
             return implode(',', $return);
         } else {
-            return null;
+            return '';
         }
     }
     
