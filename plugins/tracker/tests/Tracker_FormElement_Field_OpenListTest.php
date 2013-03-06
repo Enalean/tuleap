@@ -64,7 +64,7 @@ Mock::generate('Tracker_Artifact_ChangesetValue_OpenList');
 
 Mock::generate('Tracker_FormElement_Field_List_OpenValueDao');
 
-class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
+class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
     
     function __construct($name = 'Open List test') {
         parent::__construct($name);
@@ -77,15 +77,15 @@ class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
     
     function testGetChangesetValue() {
         $open_value_dao = new MockTracker_FormElement_Field_List_OpenValueDao();
-        $odar_10 = new MockDataAccessResult();
+        $odar_10 = mock('DataAccessResult');
         $odar_10->setReturnValue('getRow', array('id' => '10', 'field_id' => '1', 'label' => 'Open_1'));
-        $odar_20 = new MockDataAccessResult();
+        $odar_20 = mock('DataAccessResult');
         $odar_20->setReturnValue('getRow', array('id' => '10', 'field_id' => '1', 'label' => 'Open_2'));
         $open_value_dao->setReturnReference('searchById', $odar_10, array(1, '10'));
         $open_value_dao->setReturnReference('searchById', $odar_20, array(1, '20'));
         
         $value_dao = new $this->dao_class();
-        $dar = new MockDataAccessResult();
+        $dar = mock('DataAccessResult');
         $dar->setReturnValueAt(0, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => '1000', 'openvalue_id' => null));
         $dar->setReturnValueAt(1, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => '1001', 'openvalue_id' => null));
         $dar->setReturnValueAt(2, 'current', array('id' => '123', 'field_id' => '1', 'bindvalue_id' => null, 'openvalue_id' => '10'));
@@ -105,9 +105,9 @@ class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
         
         $bind = new MockTracker_FormElement_Field_List_Bind();
         $bind_values = array(
-            1000 => new MockTracker_FormElement_Field_List_BindValue(),
-            1001 => new MockTracker_FormElement_Field_List_BindValue(),
-            1002 => new MockTracker_FormElement_Field_List_BindValue(),
+            1000 => mock('Tracker_FormElement_Field_List_BindValue'),
+            1001 => mock('Tracker_FormElement_Field_List_BindValue'),
+            1002 => mock('Tracker_FormElement_Field_List_BindValue'),
         );
         $bind->setReturnValue('getBindValues', $bind_values, array(array('1000', '1001', '1002')));
         
@@ -131,7 +131,7 @@ class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
     
     function testGetChangesetValue_doesnt_exist() {
         $value_dao = new $this->dao_class();
-        $dar = new MockDataAccessResult();
+        $dar = mock('DataAccessResult');
         $dar->setReturnValue('valid', false);
         $value_dao->setReturnReference('searchById', $dar);
         
@@ -189,29 +189,22 @@ class Tracker_FormElement_Field_OpenListTest extends UnitTestCase {
     }
     
     function testGetFieldData() {
-        $bind = new MockTracker_FormElement_Field_List_Bind();
-        $bind->setReturnValue('getFieldData', '115', array('existing value', '*'));
-        $bind->setReturnValue('getFieldData', '118', array('yet another existing value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('new value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('yet another new value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('existing open value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('yet another existing open value', '*'));
-        $bind->setReturnValue('getFieldData', null, array('', '*'));
+        $bind = mock('Tracker_FormElement_Field_List_Bind');
+        stub($bind)->getFieldData('existing value', '*')->returns(115);
+        stub($bind)->getFieldData('yet another existing value', '*')->returns(118);
+        stub($bind)->getFieldData('new value', '*')->returns(null);
+        stub($bind)->getFieldData('yet another new value', '*')->returns(null);
+        stub($bind)->getFieldData('existing open value', '*')->returns(null);
+        stub($bind)->getFieldData('yet another existing open value', '*')->returns(null);
+        stub($bind)->getFieldData('', '*')->returns(null);
         
-        $odar = new MockDataAccessResult();
-        $odar->setReturnValue('getRow', false);
+        $open_value_dao = mock('Tracker_FormElement_Field_List_OpenValueDao');
         
-        $open_value_dao = new MockTracker_FormElement_Field_List_OpenValueDao();
-        
-        $odar_30 = new MockDataAccessResult();
-        $odar_30->setReturnValue('getRow', array('id' => '30', 'field_id' => '1', 'label' => 'existing open value'));
-        $odar_40 = new MockDataAccessResult();
-        $odar_40->setReturnValue('getRow', array('id' => '40', 'field_id' => '1', 'label' => 'yet another existing open value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar_30, array(1, 'existing open value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar_40, array(1, 'yet another existing open value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar, array(1, 'new value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar, array(1, 'yet another new value'));
-        $open_value_dao->setReturnReference('searchByExactLabel', $odar, array(1, ''));
+        stub($open_value_dao)->searchByExactLabel(1, 'existing open value')->returnsDar(array('id' => '30', 'field_id' => '1', 'label' => 'existing open value'));
+        stub($open_value_dao)->searchByExactLabel(1, 'yet another existing open value')->returnsDar(array('id' => '40', 'field_id' => '1', 'label' => 'yet another existing open value'));
+        stub($open_value_dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+        stub($open_value_dao)->searchByExactLabel(1, 'yet another new value')->returnsEmptyDar();
+        stub($open_value_dao)->searchByExactLabel(1, '')->returnsEmptyDar();
         
         $f = new Tracker_FormElement_Field_OpenListTestVersion();
         $f->setReturnReference('getOpenValueDao', $open_value_dao);
