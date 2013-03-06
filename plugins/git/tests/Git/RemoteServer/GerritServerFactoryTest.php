@@ -57,10 +57,12 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
         $git_dao   = mock('GitDao');
         $this->dao = mock('Git_RemoteServer_Dao');
+        $replication_key_factory = new Git_RemoteServer_GerritReplicationSSHKeyFactory();
+
         stub($this->dao)->searchAll()->returnsDar($dar_1, $dar_2);
         stub($this->dao)->searchById($this->server_id)->returnsDar($dar_1);
         stub($this->dao)->searchById()->returnsEmptyDar();
-        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao);
+        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao, $replication_key_factory);
 
         $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
             $this->server_id,

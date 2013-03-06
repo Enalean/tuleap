@@ -23,6 +23,7 @@ require_once 'GerritServer.class.php';
 require_once 'NotFoundException.class.php';
 require_once 'Dao.class.php';
 require_once GIT_BASE_DIR .'/GitRepository.class.php';
+require_once GIT_BASE_DIR .'/Git/RemoteServer/Gerrit/ReplicationSSHKeyFactory.class.php';
 
 class Git_RemoteServer_GerritServerFactory {
 
@@ -32,9 +33,13 @@ class Git_RemoteServer_GerritServerFactory {
     /** @var GitDao */
     private $git_dao;
 
-    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao) {
+    /** @var Git_RemoteServer_GerritReplicationSSHKeyFactory */
+    private $replication_key_factory;
+
+    public function __construct(Git_RemoteServer_Dao $dao, GitDao $git_dao, Git_RemoteServer_GerritReplicationSSHKeyFactory $replication_key_factory) {
         $this->dao     = $dao;
         $this->git_dao = $git_dao;
+        $this->replication_key_factory = $replication_key_factory;
     }
 
     public function getServer(GitRepository $repository) {
