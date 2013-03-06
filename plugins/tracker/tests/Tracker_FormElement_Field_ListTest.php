@@ -482,4 +482,5 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
         $this->list->process($this->layout, $this->request, $this->user);
     }
 }
+
 ?>

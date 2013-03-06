@@ -1035,7 +1035,17 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
          return $values;
      }
 
-     /**
+     public function getFieldDataFromSoapValue(stdClass $soap_value) {
+         if (isset($soap_value->field_value->bind_value)) {
+             foreach ($soap_value->field_value->bind_value as $bind_value) {
+                 return $this->getFieldData($bind_value->bind_value_id);
+             }
+         } else {
+             return $this->getFieldData($soap_value->field_value->value);
+         }
+     }
+
+    /**
      * Get the field data for artifact submission
      *
      * @param string the soap field value
