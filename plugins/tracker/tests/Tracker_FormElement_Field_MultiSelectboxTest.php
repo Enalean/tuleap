@@ -36,9 +36,12 @@ class Tracker_FormElement_Field_MultiSelectbox_getFieldDataFromSoapValue extends
             'field_name'  => '',
             'field_label' => '',
             'field_value' => (object) array(
-                'value' => '1586,2894'
+                'value' => 'Bravo,Zoulou'
             )
         );
+
+        expect($this->bind)->getFieldData('Bravo,Zoulou', true)->once();
+        stub($this->bind)->getFieldData()->returns(array(1586, 2894));
 
         $this->assertIdentical(array(1586,2894), $this->field->getFieldDataFromSoapValue($soap_value));
     }

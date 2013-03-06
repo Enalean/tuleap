@@ -36,9 +36,12 @@ class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends Tule
             'field_name'  => '',
             'field_label' => '',
             'field_value' => (object) array(
-                'value' => '1586'
+                'value' => 'Zoulou'
             )
         );
+
+        expect($this->bind)->getFieldData('Zoulou', false)->once();
+        stub($this->bind)->getFieldData()->returns(1586);
 
         $this->assertEqual(1586, $this->field->getFieldDataFromSoapValue($soap_value));
     }
