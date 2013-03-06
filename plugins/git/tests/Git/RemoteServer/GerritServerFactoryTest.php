@@ -31,10 +31,15 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     private $http_port          = 8080;
     private $login              = 'chuck';
     private $identity_file      = '/home/chuck/.ssh/id_rsa';
-    private $replication_key    = null;
+    private $replication_key;
 
     private $alternate_server_id = 2;
     private $alternate_host      = 'h.tuleap.net';
+    private $replication_key_factory;
+    /** @var Git_RemoteServer_GerritServer  */
+    private $main_gerrit_server;
+    /** @var Git_RemoteServer_GerritServerFactory  */
+    private $factory;
 
     public function setUp() {
         parent::setUp();
@@ -57,12 +62,13 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
 
         $git_dao   = mock('GitDao');
         $this->dao = mock('Git_RemoteServer_Dao');
-        $replication_key_factory = new Git_RemoteServer_GerritReplicationSSHKeyFactory();
+        $this->replication_key_factory = mock('Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory');
+        $this->replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
 
         stub($this->dao)->searchAll()->returnsDar($dar_1, $dar_2);
         stub($this->dao)->searchById($this->server_id)->returnsDar($dar_1);
         stub($this->dao)->searchById()->returnsEmptyDar();
-        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao, $replication_key_factory);
+        $this->factory = new Git_RemoteServer_GerritServerFactory($this->dao, $git_dao, $this->replication_key_factory);
 
         $this->main_gerrit_server = new Git_RemoteServer_GerritServer(
             $this->server_id,
@@ -100,12 +106,13 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     public function itReturnsAGerritServer() {
         $repo   = aGitRepository()->withRemoteServerId($this->server_id)->build();
         $server = $this->factory->getServer($repo);
-        $this->assertEqual($server, $this->main_gerrit_server);
+        $this->assertIsA($server, 'Git_RemoteServer_GerritServer');
     }
 
     public function itGetsAllServers() {
         $servers = $this->factory->getServers();
-        $this->assertEqual($servers, array(1 => $this->main_gerrit_server, 2 => $this->alternate_gerrit_server));
+        $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
+        $this->assertIsA($servers[$this->alternate_server_id], 'Git_RemoteServer_GerritServer');
     }
 
     public function itSavesAnExistingServer() {
@@ -124,6 +131,11 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
         $this->factory->delete($this->main_gerrit_server);
     }
 
+    public function itSavesTheGerritReplicationSSHKey() {   
+        expect($this->replication_key_factory)->save($this->replication_key)->once();
+
+        $this->factory->save($this->main_gerrit_server);
+    }
 }
 
 ?>
