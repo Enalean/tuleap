@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_RemoteServer_GerritReplicationSSHKey {
+class Git_RemoteServer_Gerrit_ReplicationSSHKey {
 
     /** @var string */
     private $value;
@@ -31,7 +31,7 @@ class Git_RemoteServer_GerritReplicationSSHKey {
 
     /**
      * @param string $value
-     * @return \Git_RemoteServer_GerritReplicationSSHKey
+     * @return \Git_RemoteServer_Gerrit_ReplicationSSHKey
      */
     public function setValue($value) {
         $this->value = $value;
@@ -40,7 +40,7 @@ class Git_RemoteServer_GerritReplicationSSHKey {
 
     /**
      * @param string $userName
-     * @return \Git_RemoteServer_GerritReplicationSSHKey
+     * @return \Git_RemoteServer_Gerrit_ReplicationSSHKey
      */
     public function setUserName($user_name) {
         $this->user_name = $user_name;

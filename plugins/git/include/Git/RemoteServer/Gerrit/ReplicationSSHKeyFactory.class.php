@@ -18,17 +18,16 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_RemoteServer_GerritReplicationSSHKeyFactory {
+require_once 'ReplicationSSHKey.class.php';
+class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
-    /**
-     *
-     * @var Git_RemoteServer_GerritReplicationSSHKey 
-     */
-    private $key;
-
-    public function setKey(Git_RemoteServer_GerritReplicationSSHKey $key) {
-        $this->key = $key;
+    public function fetchForGerritServerId($id) {
+        return null;
     }
 
+
+    public function save(Git_RemoteServer_GerritReplicationSSHKey $key) {
+        return $this;
+    }
 }
 ?>
