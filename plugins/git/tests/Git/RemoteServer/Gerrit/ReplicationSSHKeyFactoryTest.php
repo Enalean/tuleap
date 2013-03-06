@@ -17,8 +17,31 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
+require_once dirname(__FILE__).'/../../../../include/constants.php';
+require_once GIT_BASE_DIR .'/Git/RemoteServer/Gerrit/ReplicationSSHKeyFactory.class.php';
+require_once GIT_BASE_DIR .'/Git/RemoteServer/Gerrit/ReplicationSSHKey.class.php';
+require_once GIT_BASE_DIR .'/Git_Exec.class.php';
+
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryTest extends TuleapTestCase {
     
+    public function testSaveWillNotAddsReplicationKeyThatHasNoHostId() {
+        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $git_executor = mock('Git_Exec');
+        $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
+
+        stub($git_executor)->add()->never();
+
+        $factory->save($key);
+}
+
+    public function testSaveWillNotAddsReplicationKeyThatHasNoUserName() {
+
+    }
+
+    public function testSaveWillNotAnEmptyValuedReplicationKey() {
+
+    }
+
 }
 
 ?>

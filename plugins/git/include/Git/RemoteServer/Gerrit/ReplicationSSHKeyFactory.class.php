@@ -41,7 +41,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
     }
 
 
-    public function save(Git_RemoteServer_GerritReplicationSSHKey $key, $gitolite_admin_path = null) {
+    public function save(Git_RemoteServer_Gerrit_ReplicationSSHKey $key, $gitolite_admin_path = null) {
         
 
         return $this;
