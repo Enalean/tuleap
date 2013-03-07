@@ -84,6 +84,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @param Git_RemoteServer_Gerrit_ReplicationSSHKey $key
      * @return \Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory
      * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
+     * @throw Git_Command_Exception
      */
     public function save(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
         if ($key->getGerritHostId() == null || $key->getUserName() == null) {
@@ -113,6 +114,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @param int $id
      * @return boolean
      * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
+     * @throw Git_Command_Exception
      */
     public function deleteForGerritServerId($id) {
         $key_dir_path  = $this->getGitoliteKeyDirectory();
