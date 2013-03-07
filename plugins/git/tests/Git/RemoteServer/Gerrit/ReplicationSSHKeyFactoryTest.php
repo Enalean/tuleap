@@ -245,7 +245,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_file_name;
         $this->assertFalse(is_file($file));
 
-        exec('touch ' . $file);
+        touch($file);
         $this->assertTrue(is_file($file));
         $file_contents = file_get_contents($file);
         $this->assertEqual($file_contents, null);
@@ -259,13 +259,10 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $id = 98;
         $expected_file_contents = 'I am an ssh key@someone';
 
-        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
-        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
-        $key_prefix      = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX;
-        $key_file_name = $key_prefix . $id . $key_file_suffix;
+        $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_filename  = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameForGerritServerId($id);
 
-
-        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_file_name;
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
 
         $handle = fopen($file, 'x');

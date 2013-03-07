@@ -33,6 +33,20 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      */
     private $git_executer;
 
+    /**
+     *
+     * @param int $id
+     * @return string
+     */
+    public static function getReplicationKeyFilenameForGerritServerId($id) {
+        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $key->setGerritHostId($id);
+
+        $file_name = $key->getUserName() . self::KEY_FILE_SUFFIX;
+        return $file_name;
+    }
+
+
     public function __construct(Git_Exec $git_executer) {
         $this->git_executer = $git_executer;
     }
@@ -47,7 +61,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         $key->setGerritHostId($id);
 
         $key_dir_path  = $this->getGitoliteKeyDirectory();
-        $expected_file_name = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX . $id . self::KEY_FILE_SUFFIX;
+        $expected_file_name = self::getReplicationKeyFilenameForGerritServerId($id);
 
         $directory_handle  = opendir($key_dir_path);
         while (false !== ($file_name = readdir($directory_handle))) {
@@ -83,7 +97,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         }
 
         $key_dir_path  = $this->getGitoliteKeyDirectory();
-        $key_file_name = $key->getUserName().self::KEY_FILE_SUFFIX;
+        $key_file_name = self::getReplicationKeyFilenameForGerritServerId($key->getGerritHostId());
         $key_path = $key_dir_path . $key_file_name;
 
         $this->saveKeyInFileSystem($key, $key_path);
