@@ -249,9 +249,17 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
         stub($this->dao)->searchByExactLabel(1, 'yet another new value')->returnsEmptyDar();
 
-
         $this->assertEqual("!new value,!yet another new value", $this->field->getFieldData('new value,yet another new value', true));
-        
+    }
+
+    function itIgnoresEmptyValues() {
+        stub($this->bind)->getFieldData('new value', '*')->returns(null);
+        stub($this->bind)->getFieldData('yet another new value', '*')->returns(null);
+
+        stub($this->dao)->searchByExactLabel(1, 'new value')->returnsEmptyDar();
+        stub($this->dao)->searchByExactLabel(1, 'yet another new value')->returnsEmptyDar();
+
+        $this->assertEqual("!new value,!yet another new value", $this->field->getFieldData('new value,,yet another new value', true));
     }
 
     function itCreatesANewValueAndReuseABindValueSetByAdmin() {
@@ -286,7 +294,7 @@ class Tracker_FormElement_Field_OpenList_getFieldDataFromSoapValueTest extends T
     public function setUp() {
         parent::setUp();
 
-        $this->field = partial_mock('Tracker_FormElement_Field_OpenList', array('getFieldData'));
+        $this->field = partial_mock('Tracker_FormElement_Field_OpenList', array('getFieldData', 'getFieldDataFromStringValue'));
     }
 
     public function itPassesStringValueStraightToGetFieldData() {
@@ -304,7 +312,7 @@ class Tracker_FormElement_Field_OpenList_getFieldDataFromSoapValueTest extends T
         $this->assertEqual('!Zoulou', $this->field->getFieldDataFromSoapValue($soap_value));
     }
 
-    /*public function itCallsGetFieldDataWithEachValueFromBindValueLabel() {
+    public function itCallsGetFieldDataWithOneValueFromBindValueLabel() {
         $soap_value = (object) array(
             'field_name'  => '',
             'field_label' => '',
@@ -315,11 +323,49 @@ class Tracker_FormElement_Field_OpenList_getFieldDataFromSoapValueTest extends T
             )
         );
 
-        expect($this->field)->getFieldData('Zoulou')->once();
-        stub($this->field)->getFieldData()->returns('!Zoulou');
+        expect($this->field)->getFieldDataFromStringValue('Zoulou')->once();
+        stub($this->field)->getFieldDataFromStringValue()->returns('!Zoulou');
 
         $this->assertEqual('!Zoulou', $this->field->getFieldDataFromSoapValue($soap_value));
-    }*/
+    }
+
+    public function itCallsGetFieldDataWithEachValueFromBindValueLabel() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'bind_value' => array(
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Zoulou'),
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Bravo')
+                )
+            )
+        );
+
+        expect($this->field)->getFieldDataFromStringValue()->count(2);
+        stub($this->field)->getFieldDataFromStringValue('Zoulou')->returns('!Zoulou');
+        stub($this->field)->getFieldDataFromStringValue('Bravo')->returns('o30');
+
+        $this->assertEqual('!Zoulou,o30', $this->field->getFieldDataFromSoapValue($soap_value));
+    }
+
+    public function itIgnoresEmptyStrings() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'bind_value' => array(
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Zoulou'),
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => ''),
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Bravo')
+                )
+            )
+        );
+
+        stub($this->field)->getFieldDataFromStringValue('Zoulou')->returns('!Zoulou');
+        stub($this->field)->getFieldDataFromStringValue('Bravo')->returns('o30');
+
+        $this->assertEqual('!Zoulou,o30', $this->field->getFieldDataFromSoapValue($soap_value));
+    }
 }
 
 ?>
