@@ -22,7 +22,7 @@ require_once GIT_BASE_DIR .'/Git/RemoteServer/Gerrit/ReplicationSSHKeyFactory.cl
 require_once GIT_BASE_DIR .'/Git/RemoteServer/Gerrit/ReplicationSSHKey.class.php';
 require_once GIT_BASE_DIR .'/Git_Exec.class.php';
 
-class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryTest extends TuleapTestCase {
+class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTestCase {
 
     private $key_user_name;
     /**
@@ -121,6 +121,24 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryTest extends TuleapTestCas
         $factory->save($this->key);
     }
 
+}
+
+class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+    }
+
+    public function itReturnsAReplicationSSHKey() {
+        $id = 98;
+        $git_executor = mock('Git_Exec');
+        $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
+
+        $key = $factory->fetchForGerritServerId($id);
+        $this->assertIsA($key, 'Git_RemoteServer_Gerrit_ReplicationSSHKey');
+    }
+    
 }
 
 ?>
