@@ -84,6 +84,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addGroupToGroupFile($gerrit_server, $integrators);
         $this->addGroupToGroupFile($gerrit_server, $supermen);
         $this->addGroupToGroupFile($gerrit_server, $owners);
+        $this->addGroupToGroupFile($gerrit_server, $replication_group);
         $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();
         $this->addPermissionsToProjectConf($repository, $contributors, $integrators, $supermen, $owners, $replication_group);
