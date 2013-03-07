@@ -43,8 +43,7 @@ class Git_Admin {
         if (is_array($request_gerrit_servers)) {
             $this->csrf->check();
             $this->fetchGerritServers();
-            
-            $this->updateServers($request_gerrit_servers);var_dump('process',$this->servers);
+            $this->updateServers($request_gerrit_servers);
         }
     }
 
