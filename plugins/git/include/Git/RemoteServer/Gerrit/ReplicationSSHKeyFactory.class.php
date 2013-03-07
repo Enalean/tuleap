@@ -25,7 +25,8 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
     const GOTOLITE_KEY_DIR   = 'keydir';
     const KEY_FILE_SUFFIX    = '@0.pub';
-    const KEY_COMMIT_MESSAGE = 'Saving key for Gerrit Server with ID: ';
+    const KEY_SAVE_COMMIT_MESSAGE = 'Saving key for Gerrit Server with ID: ';
+    const KEY_DELETE_COMMIT_MESSAGE = 'Deleting key for Gerrit Server with ID: ';
 
     /**
      *
@@ -97,10 +98,35 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         $this->saveKeyInFileSystem($key, $key_path);
 
         $this->git_executer->add($key_path);
-        $this->git_executer->commit(self::KEY_COMMIT_MESSAGE . $key->getGerritHostId());
+        $this->git_executer->commit(self::KEY_SAVE_COMMIT_MESSAGE . $key->getGerritHostId());
         $this->git_executer->push();
 
         return $this;
+    }
+
+    /**
+     *
+     * @param int $id
+     * @return boolean
+     * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
+     */
+    public function deleteForGerritServerId($id) {
+        $key_dir_path  = $this->getGitoliteKeyDirectory();
+        $file_name     = self::getReplicationKeyFilenameForGerritServerId($id);
+        $key_path      = $key_dir_path . $file_name;
+
+        if(! $this->findFileInDirectory($file_name, $key_dir_path)) {
+            return true;
+        }
+        
+        if (! unlink($key_path)) {
+            throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('Unable to delete replication ssh key for ID: '.$id);
+        }
+
+        $this->git_executer->commit(self::KEY_DELETE_COMMIT_MESSAGE . $id);
+        $this->git_executer->push();
+
+        return true;
     }
 
     private function saveKeyInFileSystem($key, $key_path) {
@@ -108,6 +134,8 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         fwrite($handle, $key->getValue());
         fclose($handle);
     }
+
+    
 
     /**
      *

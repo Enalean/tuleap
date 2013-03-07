@@ -285,4 +285,65 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
     }
 }
 
+class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTest extends TuleapTestCase {
+
+    /**
+     *
+     * @var Git_Exec
+     */
+    private $git_executor;
+
+    /**
+     *
+     * @var Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory
+     */
+    private $factory;
+
+    private $gitolite_directoy;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->git_executor = mock('Git_Exec');
+        $this->gitolite_directoy = '/var/tmp';
+        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+
+        if (!is_dir('/var/tmp/'.$key_dir)) {
+            exec('mkdir /var/tmp/'.$key_dir);
+        }
+        
+        stub($this->git_executor)->getPath()->returns($this->gitolite_directoy);
+        $this->factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($this->git_executor);
+    }
+
+    public function itReturnsTrueIfKeyDoesNotExist() {
+        $id = 86;
+        
+        $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_filename  = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameForGerritServerId($id);
+
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
+        $this->assertFalse(is_file($file));
+
+        $result = $this->factory->deleteForGerritServerId($id);
+        $this->assertTrue($result);
+    }
+
+    public function itCommitsAndPushesTheDeletion() {
+        $id = 86;
+
+        $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_filename  = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameForGerritServerId($id);
+
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
+        $this->assertFalse(is_file($file));
+
+        touch($file);
+
+        stub($this->git_executor)->commit()->once();
+        stub($this->git_executor)->push()->once();
+
+        $this->factory->deleteForGerritServerId($id);
+    }
+}
 ?>

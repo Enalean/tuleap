@@ -114,6 +114,7 @@ class Git_RemoteServer_GerritServerFactory {
     public function delete(Git_RemoteServer_GerritServer $server) {
         if (! $this->isServerUsed($server)) {
             $this->dao->delete($server->getId());
+            $this->replication_key_factory->deleteForGerritServerId($server->getId());
         }
     }
 
