@@ -86,7 +86,12 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
      */
     public function save(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
-        if ($key->getGerritHostId() == null || $key->getUserName() == null || $key->getValue() == null) {
+        if ($key->getGerritHostId() == null || $key->getUserName() == null) {
+            return;
+        }
+
+        if ($key->getValue() ==  null) {
+            $this->deleteForGerritServerId($key->getGerritHostId());
             return;
         }
 
@@ -122,6 +127,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('Unable to delete replication ssh key for ID: '.$id);
         }
 
+        $this->git_executer->add($key_path);
         $this->git_executer->commit(self::KEY_DELETE_COMMIT_MESSAGE . $id);
         $this->git_executer->push();
 

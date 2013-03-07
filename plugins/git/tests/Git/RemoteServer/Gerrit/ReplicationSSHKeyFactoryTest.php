@@ -84,12 +84,13 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
         $this->factory->save($key);
     }
 
-    public function testSaveWillNotAnEmptyValuedReplicationKey() {
+    public function testSaveWillDeleteAnEmptyValuedReplicationKey() {
         $this->key->setValue(null);
 
-        stub($this->git_executor)->add()->never();
+        $factory = partial_mock('Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory', array('deleteForGerritServerId'), array($this->git_executor));
+        stub($factory)->deleteForGerritServerId($this->key->getGerritHostId())->once();
 
-        $this->factory->save($this->key);
+        $factory->save($this->key);
     }
 
     public function testSaveWillGitAddValidReplicationKey() {
@@ -329,7 +330,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
         $this->assertTrue($result);
     }
 
-    public function itCommitsAndPushesTheDeletion() {
+    public function itAddsCommitsAndPushesTheDeletion() {
         $id = 86;
 
         $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
@@ -340,6 +341,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
 
         touch($file);
 
+        stub($this->git_executor)->add()->once();
         stub($this->git_executor)->commit()->once();
         stub($this->git_executor)->push()->once();
 
