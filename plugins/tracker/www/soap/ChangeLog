@@ -5,10 +5,12 @@ All the documentation can be found at https://tuleap-documentation.readthedocs.o
     * Restore updateArtifact and addArtifact behaviour at 2.0.3 for 'value' field of FieldValue type.
       It allows again to use strings and no longer understand ids.
 
-    However, the new recommended way to manage list values (Selectbox, MultiSelectBox, CheckBox and OpenList) is
-    to use the new field 'bind_value' of FieldValue type.
+      The new recommended way to manage list values (Selectbox, MultiSelectBox, CheckBox and OpenList) is
+      to use the new field 'bind_value' of FieldValue type.
 
     * WSDL update: FieldValue 'field_value' as a new choice 'ArrayOfTrackerFieldBindValue'.
+
+    * Performances: Activate WSDL cache. ~20% performance boost on average operations.
 
 2.0.4 - Tuleap 5.12
     == /!\ Backward compatibility break /!\ ==
