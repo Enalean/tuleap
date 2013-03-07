@@ -1,3 +1,15 @@
+All the documentation can be found at https://tuleap-documentation.readthedocs.org/en/latest/soap/tracker.html
+
+2.0.5 - Tuleap 5.12
+    == /!\ Backward compatibility restore /!\ ==
+    * Restore updateArtifact and addArtifact behaviour at 2.0.3 for 'value' field of FieldValue type.
+      It allows again to use strings and no longer understand ids.
+
+    However, the new recommended way to manage list values (Selectbox, MultiSelectBox, CheckBox and OpenList) is
+    to use the new field 'bind_value' of FieldValue type.
+
+    * WSDL update: FieldValue 'field_value' as a new choice 'ArrayOfTrackerFieldBindValue'.
+
 2.0.4 - Tuleap 5.12
     == /!\ Backward compatibility break /!\ ==
     * updateArtifact method no longer expects labels for binded list fields, but their numerical ids.
