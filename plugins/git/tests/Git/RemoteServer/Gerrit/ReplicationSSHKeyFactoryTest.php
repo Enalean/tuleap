@@ -112,6 +112,28 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
         $this->assertEqual($file_contents, $this->key->getValue());
     }
 
+    public function testSaveWillOverwriteExistingKeyFile() {
+        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $this->key->getUserName() . $key_file_suffix;
+        $this->assertFalse(is_file($file));
+
+        $this->factory->save($this->key);
+
+        $this->assertTrue(is_file($file));
+        $file_contents = file_get_contents($file);
+        $this->assertEqual($file_contents, $this->key->getValue());
+
+        $new_value = 'I am the new key value';
+        $this->key->setValue($new_value);
+        $this->factory->save($this->key);
+
+        $this->assertTrue(is_file($file));
+        $new_file_contents = file_get_contents($file);
+        $this->assertEqual($new_file_contents, $new_value);
+    }
+
     public function testSaveWillThrowExceptionIfKeyDirectoyDoesNotExist() {
         $this->expectException('Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException');
         
