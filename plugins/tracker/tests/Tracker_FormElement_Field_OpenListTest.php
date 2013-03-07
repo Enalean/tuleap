@@ -278,4 +278,48 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         $this->assertEqual("!new value,o30,b115", $this->field->getFieldData('new value,existing open value,existing value', true));
     }
 }
+
+class Tracker_FormElement_Field_OpenList_getFieldDataFromSoapValueTest extends TuleapTestCase {
+
+    private $field;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->field = partial_mock('Tracker_FormElement_Field_OpenList', array('getFieldData'));
+    }
+
+    public function itPassesStringValueStraightToGetFieldData() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'value' => 'Zoulou'
+            )
+        );
+
+        expect($this->field)->getFieldData('Zoulou')->once();
+        stub($this->field)->getFieldData()->returns('!Zoulou');
+
+        $this->assertEqual('!Zoulou', $this->field->getFieldDataFromSoapValue($soap_value));
+    }
+
+    /*public function itCallsGetFieldDataWithEachValueFromBindValueLabel() {
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'bind_value' => array(
+                    (object) array('bind_value_id' => -1, 'bind_value_label' => 'Zoulou')
+                )
+            )
+        );
+
+        expect($this->field)->getFieldData('Zoulou')->once();
+        stub($this->field)->getFieldData()->returns('!Zoulou');
+
+        $this->assertEqual('!Zoulou', $this->field->getFieldDataFromSoapValue($soap_value));
+    }*/
+}
+
 ?>
