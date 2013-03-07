@@ -25,6 +25,7 @@ require_once GIT_BASE_DIR .'/Git/RemoteServer/GerritServerFactory.class.php';
  */
 class Git_Admin {
     
+    private $servers;
 
     /** @var Git_RemoteServer_GerritServerFactory */
     private $gerrit_server_factory;
@@ -41,13 +42,15 @@ class Git_Admin {
         $request_gerrit_servers = $request->get('gerrit_servers');
         if (is_array($request_gerrit_servers)) {
             $this->csrf->check();
-            $gerrit_servers = $this->getGerritServers();
-            $this->updateServers($request_gerrit_servers, $gerrit_servers);
+            $this->fetchGerritServers();
+            
+            $this->updateServers($request_gerrit_servers);var_dump('process',$this->servers);
         }
     }
 
     public function display() {
-        $servers = $this->getGerritServers();
+        $this->fetchGerritServers();
+
         $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
         $html  = '';
@@ -59,7 +62,7 @@ class Git_Admin {
         $html .= $this->csrf->fetchHTMLInput();
         $html .= '<h2>'. 'Admin gerrit servers' .'</h2>';
         $html .= '<dl>';
-        foreach ($servers as $server) {
+        foreach ($this->servers as $server) {
             $html .= $this->getInputForm($server->getHost(), $server);
         }
         $html .= '</dl>';
@@ -117,22 +120,24 @@ class Git_Admin {
         return $html;
     }
 
-    /**
-     * @return Git_RemoteServer_GerritServer[]
-     */
-    private function getGerritServers() {
-        $servers = $this->gerrit_server_factory->getServers();
-        $servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', new Git_RemoteServer_Gerrit_ReplicationSSHKey());
-        return $servers;
+    private function fetchGerritServers() {
+        if (empty($this->servers)) {
+            $this->servers = $this->gerrit_server_factory->getServers();
+        }
+ 
+        $this->servers["0"] = new Git_RemoteServer_GerritServer(0, '', '', '', '', '', new Git_RemoteServer_Gerrit_ReplicationSSHKey());
     }
 
-    private function updateServers(array $request_gerrit_servers, array $gerrit_servers) {
+    private function updateServers(array $request_gerrit_servers) {
         foreach ($request_gerrit_servers as $id => $settings) {
-            if (empty($gerrit_servers[$id])) {
+            $server = $this->servers[$id];
+
+            if (empty($server)) {
                 continue;
             }
             if (! empty($settings['delete'])) {
-                $this->gerrit_server_factory->delete($gerrit_servers[$id]);
+                $this->gerrit_server_factory->delete($server);
+                unset($this->servers[$id]);
                 continue;
             }
 
@@ -143,25 +148,26 @@ class Git_Admin {
             $identity_file          = isset($settings['identity_file'])     ? $settings['identity_file']    : '';
             $replication_ssh_key    = isset($settings['replication_key'])   ? $settings['replication_key']  : '';
             if ($host &&
-                $host != $gerrit_servers[$id]->getHost() ||
-                $ssh_port != $gerrit_servers[$id]->getSSHPort() ||
-                $http_port != $gerrit_servers[$id]->getHTTPPort() ||
-                $login != $gerrit_servers[$id]->getLogin() ||
-                $identity_file != $gerrit_servers[$id]->getIdentityFile() ||
-                $replication_ssh_key != $gerrit_servers[$id]->getReplicationKey()->getGerritHostId()
+                $host != $server->getHost() ||
+                $ssh_port != $server->getSSHPort() ||
+                $http_port != $server->getHTTPPort() ||
+                $login != $server->getLogin() ||
+                $identity_file != $server->getIdentityFile() ||
+                $replication_ssh_key != $server->getReplicationKey()->getGerritHostId()
             ) {
                 $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
                 $key->setGerritHostId($id)
                     ->setValue($replication_ssh_key);
 
-                $gerrit_servers[$id]
+                $server
                     ->setHost($host)
                     ->setSSHPort($ssh_port)
                     ->setHTTPPort($http_port)
                     ->setLogin($login)
                     ->setIdentityFile($identity_file)
                     ->setReplicationKey($key)  ;
-                $this->gerrit_server_factory->save($gerrit_servers[$id]);
+                $this->gerrit_server_factory->save($server);
+                $this->servers[$server->getId()] = $server;
             }
         }
     }
