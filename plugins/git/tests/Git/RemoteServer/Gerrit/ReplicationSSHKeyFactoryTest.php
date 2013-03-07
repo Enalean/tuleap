@@ -52,7 +52,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
         $this->key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $this->key->setGerritHostId(25)
-            ->setUserName($this->key_user_name)
             ->setValue('abc');
 
         $this->gitolite_directoy = '/var/tmp';
@@ -77,11 +76,12 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
     }
 
     public function testSaveWillNotAddsReplicationKeyThatHasNoUserName() {
-        $this->key->setUserName(null);
+        $key = mock('Git_RemoteServer_Gerrit_ReplicationSSHKey');
+        stub($key)->getUserName()->returns(null);
 
         stub($this->git_executor)->add()->never();
 
-        $this->factory->save($this->key);
+        $this->factory->save($key);
     }
 
     public function testSaveWillNotAnEmptyValuedReplicationKey() {
@@ -99,8 +99,10 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
     }
 
     public function testSaveWillCreateKeyFile() {
-        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
-        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $this->key->getUserName() . '.pub';
+        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $this->key->getUserName() . $key_file_suffix;
         $this->assertFalse(is_file($file));
 
         $this->factory->save($this->key);
@@ -119,6 +121,13 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
         $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
         
         $factory->save($this->key);
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        exec('rm -rf ' . $this->gitolite_directoy.'/'.$key_dir);
     }
 
 }

@@ -24,6 +24,7 @@ require_once 'ReplicationSSHKeyFactoryException.class.php';
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
     const GOTOLITE_KEY_DIR = 'keydir';
+    const KEY_FILE_SUFFIX = '@0.pub';
 
     /**
      *
@@ -55,10 +56,10 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('gitolite admin key directory does not exist');
         }
 
-        $key_file_name = $key->getUserName() . '.pub';
+        $key_file_name = $key->getUserName().self::KEY_FILE_SUFFIX;
         $key_path = $key_dir_path . $key_file_name;
 
-        $handle = fopen($key_path, 'x');
+        $handle = fopen($key_path, 'wx+');
         fwrite($handle, $key->getValue());
         fclose($handle);
 
