@@ -56,9 +56,10 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryTest extends TuleapTestCas
             ->setValue('abc');
 
         $this->gitolite_directoy = '/var/tmp';
+        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
 
-        if (!is_dir('/var/tmp/key')) {
-            exec('mkdir /var/tmp/key');
+        if (!is_dir('/var/tmp/'.$key_dir)) {
+            exec('mkdir /var/tmp/'.$key_dir);
         }
 
         $this->git_executor = mock('Git_Exec');
@@ -98,7 +99,8 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryTest extends TuleapTestCas
     }
 
     public function testSaveWillCreateKeyFile() {
-        $file = $this->gitolite_directoy . '/key/' . $this->key->getUserName() . '.pub';
+        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $this->key->getUserName() . '.pub';
         $this->assertFalse(is_file($file));
 
         $this->factory->save($this->key);

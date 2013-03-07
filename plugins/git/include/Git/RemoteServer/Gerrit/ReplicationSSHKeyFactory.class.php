@@ -23,6 +23,8 @@ require_once 'ReplicationSSHKeyFactoryException.class.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
+    const GOTOLITE_KEY_DIR = 'keydir';
+
     /**
      *
      * @var Git_Exec
@@ -48,7 +50,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             return;
         }
 
-        $key_dir_path  = $this->git_executer->getPath() . '/key/';
+        $key_dir_path  = $this->git_executer->getPath(). '/'.self::GOTOLITE_KEY_DIR.'/';
         if (! is_dir($key_dir_path)) {
             throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('gitolite admin key directory does not exist');
         }
