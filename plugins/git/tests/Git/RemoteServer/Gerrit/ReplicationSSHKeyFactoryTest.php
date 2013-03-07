@@ -241,7 +241,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $key_prefix      = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX;
         $key_file_name = $key_prefix . $id . $key_file_suffix;
 
-
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_file_name;
         $this->assertFalse(is_file($file));
 

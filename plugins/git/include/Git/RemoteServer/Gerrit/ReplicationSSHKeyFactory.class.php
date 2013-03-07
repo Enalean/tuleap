@@ -55,22 +55,16 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      *
      * @param int $id
      * @return \Git_RemoteServer_Gerrit_ReplicationSSHKey
+     * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
      */
     public function fetchForGerritServerId($id) {
+        $key_dir_path  = $this->getGitoliteKeyDirectory();
+        $file_name     = self::getReplicationKeyFilenameForGerritServerId($id);
+
         $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key->setGerritHostId($id);
-
-        $key_dir_path  = $this->getGitoliteKeyDirectory();
-        $expected_file_name = self::getReplicationKeyFilenameForGerritServerId($id);
-
-        $directory_handle  = opendir($key_dir_path);
-        while (false !== ($file_name = readdir($directory_handle))) {
-            if (preg_match('|'.$expected_file_name.'|', $file_name)) {
-                break;
-            }
-        }
-
-        if(! $file_name) {
+        
+        if(! $this->findFileInDirectory($file_name, $key_dir_path)) {
             return $key;
         }
 
@@ -127,6 +121,23 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         }
 
         return $key_dir_path;
+    }
+
+    /**
+     *
+     * @param string $filename
+     * @param string $directory
+     * @return string | false
+     */
+    private function findFileInDirectory($filename, $directory) {
+        $directory_handle  = opendir($directory);
+        while (false !== ($file = readdir($directory_handle))) {
+            if (preg_match('|'.$filename.'|', $file)) {
+                break;
+            }
+        }
+
+        return $file;
     }
 }
 ?>
