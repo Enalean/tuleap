@@ -168,20 +168,125 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTest extends TuleapTestCase {
 
+    /**
+     *
+     * @var Git_Exec
+     */
+    private $git_executor;
+
+    /**
+     *
+     * @var Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory
+     */
+    private $factory;
+
+    private $gitolite_directoy;
+
     public function setUp() {
         parent::setUp();
+        
+        $this->git_executor = mock('Git_Exec');
+        $this->gitolite_directoy = '/var/tmp';
+        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
 
+        if (!is_dir('/var/tmp/'.$key_dir)) {
+            exec('mkdir /var/tmp/'.$key_dir);
+        }
+        
+        stub($this->git_executor)->getPath()->returns($this->gitolite_directoy);
+        $this->factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($this->git_executor);
     }
 
     public function itReturnsAReplicationSSHKey() {
         $id = 98;
-        $git_executor = mock('Git_Exec');
-        $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
-
-        $key = $factory->fetchForGerritServerId($id);
+        
+        $key = $this->factory->fetchForGerritServerId($id);
         $this->assertIsA($key, 'Git_RemoteServer_Gerrit_ReplicationSSHKey');
     }
-    
+
+    public function itThrowsAnExceptionIfKeyDirectoryDoesNotExist() {
+        $this->expectException('Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException');
+
+        $id = 98;
+        $fake_dir = '/over/the/rainbow';
+        $git_executor = mock('Git_Exec');
+        stub($git_executor)->getPath()->returns($fake_dir);
+
+        $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
+        $factory->fetchForGerritServerId($id);
+    }
+
+    public function itReturnsAKeyWithNoValueIfFileDoesNotExist() {
+        $id = 98;
+
+        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_prefix      = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX;
+        $key_file_name = $key_prefix . $id . $key_file_suffix;
+
+
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_file_name;
+        $this->assertFalse(is_file($file));
+
+        $key = $this->factory->fetchForGerritServerId($id);
+        $this->assertNull($key->getValue());
+        $this->assertEqual($id, $key->getGerritHostId());
+    }
+
+    public function itReturnsAKeyWithNoValueIfFileIsEmpty() {
+        $id = 98;
+
+        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_prefix      = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX;
+        $key_file_name = $key_prefix . $id . $key_file_suffix;
+
+
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_file_name;
+        $this->assertFalse(is_file($file));
+
+        exec('touch ' . $file);
+        $this->assertTrue(is_file($file));
+        $file_contents = file_get_contents($file);
+        $this->assertEqual($file_contents, null);
+
+        $key = $this->factory->fetchForGerritServerId($id);
+        $this->assertNull($key->getValue());
+        $this->assertEqual($id, $key->getGerritHostId());
+    }
+
+    public function itReturnsAPopulatedKeyIfFileExistsAndHasData() {
+        $id = 98;
+        $expected_file_contents = 'I am an ssh key@someone';
+
+        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_prefix      = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX;
+        $key_file_name = $key_prefix . $id . $key_file_suffix;
+
+
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_file_name;
+        $this->assertFalse(is_file($file));
+
+        $handle = fopen($file, 'x');
+        fwrite($handle, $expected_file_contents);
+        fclose($handle);
+        
+        $this->assertTrue(is_file($file));
+        $file_contents = file_get_contents($file);
+        $this->assertEqual($expected_file_contents, $file_contents);
+
+        $key = $this->factory->fetchForGerritServerId($id);
+        $this->assertEqual($key->getValue(), $expected_file_contents);
+        $this->assertEqual($id, $key->getGerritHostId());
+    }
+
+    public function tearDown() {
+        parent::tearDown();
+
+        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        exec('rm -rf ' . $this->gitolite_directoy.'/'.$key_dir);
+    }
 }
 
 ?>

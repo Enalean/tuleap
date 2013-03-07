@@ -43,7 +43,29 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @return \Git_RemoteServer_Gerrit_ReplicationSSHKey
      */
     public function fetchForGerritServerId($id) {
-        return new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $key->setGerritHostId($id);
+
+        $key_dir_path  = $this->getGitoliteKeyDirectory();
+        $expected_file_name = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX . $id . self::KEY_FILE_SUFFIX;
+
+        $directory_handle  = opendir($key_dir_path);
+        while (false !== ($file_name = readdir($directory_handle))) {
+            if (preg_match('|'.$expected_file_name.'|', $file_name)) {
+                break;
+            }
+        }
+
+        if(! $file_name) {
+            return $key;
+        }
+
+        $file = $key_dir_path . $file_name;
+        if (file_get_contents($file)) {
+            $key->setValue(file_get_contents($file));
+        }
+        
+        return $key;
     }
 
 
@@ -60,11 +82,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             return;
         }
 
-        $key_dir_path  = $this->git_executer->getPath(). '/'.self::GOTOLITE_KEY_DIR.'/';
-        if (! is_dir($key_dir_path)) {
-            throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('gitolite admin key directory does not exist');
-        }
-
+        $key_dir_path  = $this->getGitoliteKeyDirectory();
         $key_file_name = $key->getUserName().self::KEY_FILE_SUFFIX;
         $key_path = $key_dir_path . $key_file_name;
 
@@ -81,6 +99,20 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         $handle = fopen($key_path, 'wx+');
         fwrite($handle, $key->getValue());
         fclose($handle);
+    }
+
+    /**
+     *
+     * @return string Path of key directory
+     * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
+     */
+    private function getGitoliteKeyDirectory() {
+        $key_dir_path  = $this->git_executer->getPath(). '/'.self::GOTOLITE_KEY_DIR.'/';
+        if (! is_dir($key_dir_path)) {
+            throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('gitolite admin key directory does not exist');
+        }
+
+        return $key_dir_path;
     }
 }
 ?>
