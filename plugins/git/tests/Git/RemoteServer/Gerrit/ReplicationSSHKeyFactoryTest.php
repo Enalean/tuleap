@@ -108,6 +108,17 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryTest extends TuleapTestCas
         $this->assertEqual($file_contents, $this->key->getValue());
     }
 
+    public function testSaveWillThrowExceptionIfKeyDirectoyDoesNotExist() {
+        $this->expectException('Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException');
+        
+        $fake_dir = '/over/the/rainbow';
+        $git_executor = mock('Git_Exec');
+        stub($git_executor)->getPath()->returns($fake_dir);
+        $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
+        
+        $factory->save($this->key);
+    }
+
 }
 
 ?>
