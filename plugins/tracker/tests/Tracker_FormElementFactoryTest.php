@@ -478,4 +478,51 @@ class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase {
     }
 
 }
+
+class ArrayDoesntContainExpectation extends SimpleExpectation {
+    private $should_not_exist;
+    public function __construct(array $should_not_exist) {
+        parent::__construct();
+        $this->should_not_exist = $should_not_exist;
+    }
+
+    public function test(array $array_to_test) {
+        return count(array_intersect($array_to_test, $this->should_not_exist)) === 0;
+    }
+
+    public function testMessage(array $array_to_test) {
+        return "Submitted array still contains: (".implode(', ', array_intersect($array_to_test, $this->should_not_exist)).")";
+    }
+}
+
+class Tracker_FormElementFactory_GetUsedFieldsForSOAP extends TuleapTestCase {
+
+    private $tracker;
+    private $factory;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker = mock('Tracker');
+        $this->factory = partial_mock('Tracker_FormElementFactory', array('getUsedFormElementsByType'), array());
+    }
+
+    public function itFiltersOutFieldsThatAreAlreadyReturnedBySOAPBasicInfo() {
+        $elements_to_exclude_for_soap = array(
+            'aid',
+            'lud',
+            'subby',
+            'subon',
+            'cross',
+            'fieldset',
+            'column',
+            'linebreak',
+            'separator',
+            'staticrichtext',
+        );
+        expect($this->factory)->getUsedFormElementsByType($this->tracker, new ArrayDoesntContainExpectation($elements_to_exclude_for_soap))->once();
+
+        $this->factory->getUsedFieldsForSOAP($this->tracker);
+    }
+}
+
 ?>

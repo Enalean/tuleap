@@ -1829,20 +1829,14 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $soap_artifact['last_update_date'] = $last_changeset->getSubmittedOn();
             
             $soap_artifact['value'] = array();
-            foreach ($last_changeset->getValues() as $field_id => $field_value) {
-                if ($field_value &&
-                        ($field = $this->getFormElementFactory()->getFormElementById($field_id)) &&
-                        ($field->userCanRead($user))) {
-                    $soap_artifact['value'][] = array(
-                        'field_name' => $field->getName(),
-                        'field_label' => $field->getLabel(),
-                        'field_value' => $field_value->getSoapValue(),
-                    );
+            foreach ($this->getFormElementFactory()->getUsedFieldsForSoap($this->getTracker()) as $field) {
+                $value = $field->getSoapValue($user, $last_changeset);
+                if ($value !== null) {
+                    $soap_artifact['value'][] = $value;
                 }
             }
         }
         return $soap_artifact;
-
     }
 
     /**
