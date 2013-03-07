@@ -162,21 +162,38 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
+     * Get the field data for artifact submission
      *
-     * @return mixed The values or null if there are no specific available values
+     * @param string  $soap_value  the soap field value (username(s))
+     * @param boolean $is_multiple if the soap value is multiple or not
+     *
+     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
      */
-    public function getSoapAvailableValues() {
-        $values      = $this->getAllValues();
-        $soap_values = array();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                'bind_value_id'    => $id,
-                'bind_value_label' => $value->getUGroupName(),
-            );
+    public function getFieldData($soap_value, $is_multiple) {
+        $values = $this->getAllValues();
+        if ($is_multiple) {
+            $return = array();
+            $soap_values = explode(',', $soap_value);
+            foreach ($values as $id => $value) {
+                if (in_array($value->getUGroupName(), $soap_values)) {
+                    $return[] = $id;
+                }
+            }
+            if (count($soap_values) == count($return)) {
+                return $return;
+            } else {
+                // if one value was not found, return null
+                return null;
+            }
+        } else {
+            foreach ($values as $id => $value) {
+                if ($value->getUGroupName() == $soap_value) {
+                    return $id;
+                }
+            }
+            // if not found, return null
+            return null;
         }
-        return $soap_values;
     }
 
     /**

@@ -57,7 +57,7 @@ class Tracker_Artifact_ChangesetValue_Text extends Tracker_Artifact_ChangesetVal
      * @return string The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
-        return $this->getText();
+        return $this->encapsulateRawSoapValue($this->getText());
     }
     
     /**
