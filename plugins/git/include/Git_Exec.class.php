@@ -133,7 +133,6 @@ class Git_Exec {
      * @return string The git repository path where we operate
      */
     public function getPath() {
-        var_dump($this->path);
         return $this->path;
     }
 
