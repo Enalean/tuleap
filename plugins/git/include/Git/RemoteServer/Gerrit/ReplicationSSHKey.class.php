@@ -54,14 +54,14 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey {
     }
 
     /**
-     * @return string
+     * @return string | null
      */
     public function getUserName() {
         if ($this->getGerritHostId() == null) {
             return null;
         }
 
-        return self::USER_NAME_PREFIX . $this->getGerritHostId();
+        return self::USER_NAME_PREFIX.$this->getGerritHostId();
     }
 
     /**

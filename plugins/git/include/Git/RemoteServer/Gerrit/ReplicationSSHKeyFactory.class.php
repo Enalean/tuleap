@@ -23,8 +23,9 @@ require_once 'ReplicationSSHKeyFactoryException.class.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
-    const GOTOLITE_KEY_DIR = 'keydir';
-    const KEY_FILE_SUFFIX = '@0.pub';
+    const GOTOLITE_KEY_DIR   = 'keydir';
+    const KEY_FILE_SUFFIX    = '@0.pub';
+    const KEY_COMMIT_MESSAGE = 'Saving key for Gerrit Server with ID: ';
 
     /**
      *
@@ -46,6 +47,14 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
     }
 
 
+    /**
+     * Saves a Replication SSH Key by creating a new file
+     * and pushing it to remote git location.
+     *
+     * @param Git_RemoteServer_Gerrit_ReplicationSSHKey $key
+     * @return \Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory
+     * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
+     */
     public function save(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
         if ($key->getGerritHostId() == null || $key->getUserName() == null || $key->getValue() == null) {
             return;
@@ -59,13 +68,19 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         $key_file_name = $key->getUserName().self::KEY_FILE_SUFFIX;
         $key_path = $key_dir_path . $key_file_name;
 
+        $this->saveKeyInFileSystem($key, $key_path);
+
+        $this->git_executer->add($key_path);
+        $this->git_executer->commit(self::KEY_COMMIT_MESSAGE . $key->getGerritHostId());
+        $this->git_executer->push();
+
+        return $this;
+    }
+
+    private function saveKeyInFileSystem($key, $key_path) {
         $handle = fopen($key_path, 'wx+');
         fwrite($handle, $key->getValue());
         fclose($handle);
-
-        $this->git_executer->add($key_path);
-
-        return $this;
     }
 }
 ?>

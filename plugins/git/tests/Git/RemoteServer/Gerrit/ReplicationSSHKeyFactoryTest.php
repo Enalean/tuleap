@@ -98,6 +98,18 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
         $this->factory->save($this->key);
     }
 
+    public function testSaveWillGitCommitValidReplicationKey() {
+        stub($this->git_executor)->commit()->once();
+
+        $this->factory->save($this->key);
+    }
+
+    public function testSaveWillGitPushValidReplicationKey() {
+        stub($this->git_executor)->push()->once();
+
+        $this->factory->save($this->key);
+    }
+
     public function testSaveWillCreateKeyFile() {
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
         $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
