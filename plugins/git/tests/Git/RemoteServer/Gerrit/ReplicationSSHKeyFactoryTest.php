@@ -330,7 +330,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
         $this->assertTrue($result);
     }
 
-    public function itAddsCommitsAndPushesTheDeletion() {
+    public function itRemovesCommitsAndPushesTheDeletion() {
         $id = 86;
 
         $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
@@ -341,7 +341,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
 
         touch($file);
 
-        stub($this->git_executor)->add()->once();
+        stub($this->git_executor)->rm()->once();
         stub($this->git_executor)->commit()->once();
         stub($this->git_executor)->push()->once();
 

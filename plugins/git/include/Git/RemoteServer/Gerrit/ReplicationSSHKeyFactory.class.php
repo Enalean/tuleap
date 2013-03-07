@@ -123,11 +123,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             return true;
         }
 
-        if (! unlink($key_path)) {
-            throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('Unable to delete replication ssh key for ID: '.$id);
-        }
-
-        $this->git_executer->add($key_path);
+        $this->git_executer->rm($key_path);
         $this->git_executer->commit(self::KEY_DELETE_COMMIT_MESSAGE . $id);
         $this->git_executer->push();
 
