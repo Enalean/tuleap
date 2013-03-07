@@ -318,19 +318,21 @@ class Tracker_FormElement_Field_getSoapValueTest extends TuleapTestCase {
         $this->user = aUser()->build();
 
         $this->changesetvalue = mock('Tracker_Artifact_ChangesetValue');
+        $this->last_changeset  = mock('Tracker_Artifact_Changeset');
+        stub($this->last_changeset)->getValue($this->field)->returns($this->changesetvalue);
     }
 
     public function itReturnsNullIfUserCannotAccessField() {
         expect($this->field)->userCanRead($this->user)->once();
         stub($this->field)->userCanRead()->returns(false);
-        $this->assertIdentical($this->field->getSoapValue($this->user, $this->changesetvalue), null);
+        $this->assertIdentical($this->field->getSoapValue($this->user, $this->last_changeset), null);
     }
 
     public function itReturnsTheSoapFieldValue() {
         stub($this->changesetvalue)->getSoapValue()->returns(array('value' => 'bla'));
         stub($this->field)->userCanRead()->returns(true);
         $this->assertIdentical(
-            $this->field->getSoapValue($this->user, $this->changesetvalue),
+            $this->field->getSoapValue($this->user, $this->last_changeset),
             array(
                 'field_name'  => 'foo',
                 'field_label' => 'Foo Bar',

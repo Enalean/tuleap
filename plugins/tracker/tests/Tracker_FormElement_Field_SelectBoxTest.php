@@ -101,18 +101,26 @@ class Tracker_FormElement_Field_Selectbox__getSoapValueTest extends TuleapTestCa
         $name = 'foo';
         $label = 'Foo Bar';
         $this->field = partial_mock('Tracker_FormElement_Field_Selectbox', array('userCanRead'), array($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank));
-        stub($this->field)->userCanRead()->returns(true);
-
+        
         $this->list_values = array(
             aFieldListStaticValue()->withId(100)->withLabel('None')->build(),
             aFieldListStaticValue()->withId(101)->withLabel('Bla')->build()
         );
         $this->changeset_value = new Tracker_Artifact_ChangesetValue_List('whatever', $this->field, true, $this->list_values);
+        $this->last_changeset  = mock('Tracker_Artifact_Changeset');
+        stub($this->last_changeset)->getValue($this->field)->returns($this->changeset_value);
+    }
+
+    public function itReturnsNullIfUserCannotAccessField() {
+        expect($this->field)->userCanRead($this->user)->once();
+        stub($this->field)->userCanRead()->returns(false);
+        $this->assertIdentical($this->field->getSoapValue($this->user, $this->last_changeset), null);
     }
 
     public function itHasAnListValueReturnedAsAnArrayOfFieldBindValue() {
+        stub($this->field)->userCanRead()->returns(true);
         $this->assertIdentical(
-            $this->field->getSoapValue($this->user, $this->changeset_value),
+            $this->field->getSoapValue($this->user, $this->last_changeset),
             array(
                 'field_name' => 'foo',
                 'field_label' => 'Foo Bar',
