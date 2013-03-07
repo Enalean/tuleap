@@ -88,7 +88,9 @@ class Git_RemoteServer_GerritServerFactory {
      * @param Git_RemoteServer_GerritServer $server
      */
     public function save(Git_RemoteServer_GerritServer $server) {
-        $this->dao->save(
+        $new_server = ($server->getId() === 0);
+
+        $last_saved_id = $this->dao->save(
             $server->getId(),
             $server->getHost(),
             $server->getSSHPort(),
@@ -96,7 +98,12 @@ class Git_RemoteServer_GerritServerFactory {
             $server->getLogin(),
             $server->getIdentityFile()
         );
-        
+
+        if ($new_server && $last_saved_id) {
+            $server->setId($last_saved_id);
+            $server->getReplicationKey()->setGerritHostId($last_saved_id);
+        }
+
         $this->replication_key_factory->save($server->getReplicationKey());
     }
 

@@ -42,7 +42,8 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         $identity_file = $this->da->quoteSmart($identity_file);
         $sql = "REPLACE INTO plugin_git_remote_servers (id, host, ssh_port, http_port, login, identity_file)
                 VALUES ($id, $host, $ssh_port, $http_port, $login, $identity_file)";
-        return $this->update($sql);
+
+        return $this->updateAndGetLastId($sql);
     }
 
     public function delete($id) {
