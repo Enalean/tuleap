@@ -211,6 +211,7 @@ class Git_GitoliteDriver {
         $repository->setDescription($row[GitDao::REPOSITORY_DESCRIPTION]);
         $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
         $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
+        $repository->setRemoteServerId($row[GitDao::REMOTE_SERVER_ID]);
         return $repository;
     }
     
@@ -219,8 +220,12 @@ class Git_GitoliteDriver {
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        if ($repository->isMigratedToGerrit()) {
+            $repo_config .= self::$permissions_types[Git::PERM_WPLUS] . ' = forge_gerrit_' . $repository->getRemoteServerId() . PHP_EOL;
+        } else {
+            $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
+            $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        }
         
         $description = preg_replace( "%\s+%", ' ', $repository->getDescription());
         $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
