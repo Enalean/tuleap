@@ -64,7 +64,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
         $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key->setGerritHostId($id);
-        
+
         if(! $this->findFileInDirectory($file_name, $key_dir_path)) {
             return $key;
         }
@@ -73,10 +73,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         if (file_get_contents($file)) {
             $key->setValue(file_get_contents($file));
         }
-        
+
         return $key;
     }
-
 
     /**
      * Saves a Replication SSH Key by creating a new file
@@ -118,7 +117,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         if(! $this->findFileInDirectory($file_name, $key_dir_path)) {
             return true;
         }
-        
+
         if (! unlink($key_path)) {
             throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('Unable to delete replication ssh key for ID: '.$id);
         }
@@ -134,8 +133,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         fwrite($handle, $key->getValue());
         fclose($handle);
     }
-
-    
 
     /**
      *

@@ -19,7 +19,7 @@
  */
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKey {
-    
+
     const USER_NAME_PREFIX = 'forge_gerrit_';
 
     /** @var string */
