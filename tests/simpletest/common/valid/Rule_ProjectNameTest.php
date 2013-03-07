@@ -139,7 +139,13 @@ class Rule_ProjectNameTest extends UnitTestCase {
         $this->assertTrue($r->isReservedName("MIRRORS"));
         $this->assertTrue($r->isReservedName("MIRROR"));
     }
-    
+
+    function testReservedPrefix() {
+        $r = new Rule_UserName();
+        $this->assertTrue($r->isReservedName("forge_"));
+        $this->assertFalse($r->isReservedName("forgeron"));
+    }
+
     function testIsNameAvailableSuccess() {
         $r = new Rule_ProjectNameTestVersion();
     
