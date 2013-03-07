@@ -88,4 +88,49 @@ class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends Tule
         $this->assertEqual(2331, $this->field->getFieldDataFromSoapValue($soap_value));
     }
 }
+
+class Tracker_FormElement_Field_Selectbox__getSoapValueTest extends TuleapTestCase {
+    private $user;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user = mock('PFUser');
+
+
+        $id = $tracker_id = $parent_id = $description = $use_it = $scope = $required = $notifications = $rank = '';
+        $name = 'foo';
+        $label = 'Foo Bar';
+        $this->field = partial_mock('Tracker_FormElement_Field_Selectbox', array('userCanRead'), array($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank));
+        stub($this->field)->userCanRead()->returns(true);
+
+        $this->list_values = array(
+            aFieldListStaticValue()->withId(100)->withLabel('None')->build(),
+            aFieldListStaticValue()->withId(101)->withLabel('Bla')->build()
+        );
+        $this->changeset_value = new Tracker_Artifact_ChangesetValue_List('whatever', $this->field, true, $this->list_values);
+    }
+
+    public function itHasAnListValueReturnedAsAnArrayOfFieldBindValue() {
+        $this->assertIdentical(
+            $this->field->getSoapValue($this->user, $this->changeset_value),
+            array(
+                'field_name' => 'foo',
+                'field_label' => 'Foo Bar',
+                'field_value' => array(
+                    'bind_value' => array(
+                        array(
+                            'bind_value_id'    => 100,
+                            'bind_value_label' => 'None'
+                        ),
+                        array(
+                            'bind_value_id'    => 101,
+                            'bind_value_label' => 'Bla'
+                        ),
+                    )
+                )
+            )
+        );
+    }
+}
+
 ?>

@@ -275,4 +275,68 @@ class Tracker_FormElement_FieldTest extends UnitTestCase {
         $this->assertFalse($field->hasErrors());
     }
 }
+
+class Tracker_FormElement_Field_getSoapValueTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+
+        $field_abstract_methods = array(
+            'fetchCriteriaValue',
+            'fetchChangesetValue',
+            'fetchRawValue',
+            'getCriteriaFrom',
+            'getCriteriaWhere',
+            'getCriteriaDao',
+            'fetchArtifactValue',
+            'fetchArtifactValueReadOnly',
+            'fetchSubmitValue',
+            'fetchTooltipValue',
+            'getValueDao',
+            'fetchFollowUp',
+            'fetchRawValueFromChangeset',
+            'saveValue',
+            'fetchAdminFormElement',
+            'getFactoryLabel',
+            'getFactoryDescription',
+            'getFactoryIconUseIt',
+            'getFactoryIconCreate',
+            'getChangesetValue',
+            'isRequired',
+            'validate',
+            'getSoapAvailableValues',
+            'fetchSubmitValueMasschange',
+            // Methods we want to mock
+            'userCanRead',
+        );
+
+        $id = $tracker_id = $parent_id = $description = $use_it = $scope = $required = $notifications = $rank = '';
+        $name = 'foo';
+        $label = 'Foo Bar';
+        $this->field = partial_mock('Tracker_FormElement_Field', $field_abstract_methods, array($id, $tracker_id, $parent_id, $name, $label, $description, $use_it, $scope, $required, $notifications, $rank));
+
+        $this->user = aUser()->build();
+
+        $this->changesetvalue = mock('Tracker_Artifact_ChangesetValue');
+    }
+
+    public function itReturnsNullIfUserCannotAccessField() {
+        expect($this->field)->userCanRead($this->user)->once();
+        stub($this->field)->userCanRead()->returns(false);
+        $this->assertIdentical($this->field->getSoapValue($this->user, $this->changesetvalue), null);
+    }
+
+    public function itReturnsTheSoapFieldValue() {
+        stub($this->changesetvalue)->getSoapValue()->returns(array('value' => 'bla'));
+        stub($this->field)->userCanRead()->returns(true);
+        $this->assertIdentical(
+            $this->field->getSoapValue($this->user, $this->changesetvalue),
+            array(
+                'field_name'  => 'foo',
+                'field_label' => 'Foo Bar',
+                'field_value' => array('value' => 'bla')
+            )
+        );
+    }
+}
 ?>
