@@ -122,6 +122,16 @@ class Git_RemoteServer_GerritServer implements Git_Driver_Gerrit_RemoteSSHConfig
         return $this->replication_key;
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_Gerrit_ReplicationSSHKey $key
+     * @return \Git_RemoteServer_GerritServer
+     */
+    public function setReplicationKey(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
+        $this->replication_key = $key;
+        return $this;
+    }
+
     private function getGerritServerBaseUrl() {
         $url = "http://$this->host";
         if ($this->http_port != self::DEFAULT_HTTP_PORT) {

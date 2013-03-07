@@ -91,11 +91,9 @@ class Git_Admin {
             array('Login:',             'login',            $server->getLogin()),
             array('Identity File:',     'identity_file',    $server->getIdentityFile())
         );
+
         foreach ($fields as $field) {
             $html .= '<td valign="top"><label>'. $field[0].'<br /><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></label></td>';
-        }
-        if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
-            $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
         }
         $html .= '
             <td valign="top">
@@ -110,6 +108,9 @@ class Git_Admin {
                 </label>
             </td>';
 
+        if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
+            $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
+        }
         $html .= '</tbody></table>';
         $html .= '</dd>';
         return $html;
@@ -134,24 +135,31 @@ class Git_Admin {
                 continue;
             }
 
-            $host          = isset($settings['host'])          ? $settings['host']          : '';
-            $ssh_port      = isset($settings['ssh_port'])      ? $settings['ssh_port']      : '';
-            $http_port     = isset($settings['http_port'])     ? $settings['http_port']     : '';
-            $login         = isset($settings['login'])         ? $settings['login']         : '';
-            $identity_file = isset($settings['identity_file']) ? $settings['identity_file'] : '';
+            $host                   = isset($settings['host'])              ? $settings['host']             : '';
+            $ssh_port               = isset($settings['ssh_port'])          ? $settings['ssh_port']         : '';
+            $http_port              = isset($settings['http_port'])         ? $settings['http_port']        : '';
+            $login                  = isset($settings['login'])             ? $settings['login']            : '';
+            $identity_file          = isset($settings['identity_file'])     ? $settings['identity_file']    : '';
+            $replication_ssh_key    = isset($settings['replication_key'])   ? $settings['replication_key']  : '';
             if ($host &&
                 $host != $gerrit_servers[$id]->getHost() ||
                 $ssh_port != $gerrit_servers[$id]->getSSHPort() ||
                 $http_port != $gerrit_servers[$id]->getHTTPPort() ||
                 $login != $gerrit_servers[$id]->getLogin() ||
-                $identity_file != $gerrit_servers[$id]->getIdentityFile()
+                $identity_file != $gerrit_servers[$id]->getIdentityFile() ||
+                $replication_ssh_key != $gerrit_servers[$id]->getReplicationKey()->getGerritHostId()
             ) {
+                $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+                $key->setGerritHostId($id)
+                    ->setValue($replication_ssh_key);
+
                 $gerrit_servers[$id]
                     ->setHost($host)
                     ->setSSHPort($ssh_port)
                     ->setHTTPPort($http_port)
                     ->setLogin($login)
-                    ->setIdentityFile($identity_file);
+                    ->setIdentityFile($identity_file)
+                    ->setReplicationKey($key)  ;
                 $this->gerrit_server_factory->save($gerrit_servers[$id]);
             }
         }
