@@ -95,6 +95,13 @@ class Rule_UserNameTest extends UnitTestCase {
         $this->assertTrue($r->isReservedName("DUMMY"));
     }
 
+    function testReservedPrefix() {
+        $r = new Rule_UserName();
+        $this->assertTrue($r->isReservedName("forge_"));
+        $this->assertTrue($r->isReservedName("forge_tutu"));
+        $this->assertFalse($r->isReservedName("forgeron"));
+    }
+
     function testCVSNames() {
         $r = new Rule_UserName();
         $this->assertTrue($r->isCvsAccount("anoncvs_"));
