@@ -41,8 +41,27 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
     }
 
 
-    public function save(Git_RemoteServer_Gerrit_ReplicationSSHKey $key, $gitolite_admin_path = null) {
+    public function save(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
         
+        
+        if ($key->getGerritHostId() == null || $key->getUserName() == null || $key->getValue() == null) {
+            return;
+        }
+
+        $key_dir_path  = $this->git_executer->getPath() . '/key/';
+
+        if (!is_dir($key_dir_path)) {
+            throw new Exception('gitolite admin key directoy does not exist');
+        }
+
+        $key_file_name = $key->getUserName() . '.pub';
+        $key_path = $key_dir_path . $key_file_name;
+
+        $handle = fopen($key_path, 'x');
+        fwrite($handle, $key->getValue());
+        fclose($handle);
+
+        $this->git_executer->add('$file');
 
         return $this;
     }

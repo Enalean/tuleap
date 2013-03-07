@@ -100,13 +100,13 @@ class Git_Admin {
         $html .= '
             <td valign="top">
                 <label>
-                    Replication Key
+                    Replication SSH Key
                     <br />
                     <textarea
                         type="checkbox"
                         name="gerrit_servers['. $id .'][replication_key]"
                         cols="30"
-                        rows="5">'.$server->getReplicationKey().'</textarea>
+                        rows="5">'.$server->getReplicationKey()->getValue().'</textarea>
                 </label>
             </td>';
 

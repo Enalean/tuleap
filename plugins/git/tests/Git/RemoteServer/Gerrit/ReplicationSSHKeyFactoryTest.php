@@ -23,23 +23,89 @@ require_once GIT_BASE_DIR .'/Git/RemoteServer/Gerrit/ReplicationSSHKey.class.php
 require_once GIT_BASE_DIR .'/Git_Exec.class.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryTest extends TuleapTestCase {
-    
+
+    private $key_user_name;
+    /**
+     *
+     * @var Git_RemoteServer_Gerrit_ReplicationSSHKey
+     */
+    private $key;
+
+    /**
+     *
+     * @var Git_Exec
+     */
+    private $git_executor;
+
+    /**
+     *
+     * @var Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory
+     */
+    private $factory;
+
+    private $gitolite_directoy;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->key_user_name = 'someone'.  rand(1025, 999999);
+
+        $this->key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $this->key->setGerritHostId(25)
+            ->setUserName($this->key_user_name)
+            ->setValue('abc');
+
+        $this->gitolite_directoy = '/var/tmp';
+
+        if (!is_dir('/var/tmp/key')) {
+            exec('mkdir /var/tmp/key');
+        }
+
+        $this->git_executor = mock('Git_Exec');
+        stub($this->git_executor)->getPath()->returns($this->gitolite_directoy);
+        $this->factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($this->git_executor);
+    }
+
+
     public function testSaveWillNotAddsReplicationKeyThatHasNoHostId() {
-        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-        $git_executor = mock('Git_Exec');
-        $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
+        $this->key->setGerritHostId(null);
 
-        stub($git_executor)->add()->never();
+        stub($this->git_executor)->add()->never();
 
-        $factory->save($key);
-}
+        $this->factory->save($this->key);
+    }
 
     public function testSaveWillNotAddsReplicationKeyThatHasNoUserName() {
+        $this->key->setUserName(null);
 
+        stub($this->git_executor)->add()->never();
+
+        $this->factory->save($this->key);
     }
 
     public function testSaveWillNotAnEmptyValuedReplicationKey() {
+        $this->key->setValue(null);
 
+        stub($this->git_executor)->add()->never();
+
+        $this->factory->save($this->key);
+    }
+
+    public function testSaveWillGitAddValidReplicationKey() {
+        stub($this->git_executor)->add()->once();
+
+        $this->factory->save($this->key);
+    }
+
+    public function testSaveWillCreateKeyFile() {
+        $file = $this->gitolite_directoy . '/key/' . $this->key->getUserName() . '.pub';
+        $this->assertFalse(is_file($file));
+
+        $this->factory->save($this->key);
+
+        $this->assertTrue(is_file($file));
+        $file_contents = file_get_contents($file);
+        $this->assertEqual($file_contents, $this->key->getValue());
     }
 
 }

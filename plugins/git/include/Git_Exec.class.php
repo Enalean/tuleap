@@ -128,6 +128,15 @@ class Git_Exec {
         return false;
     }
 
+    /**
+     *
+     * @return string The git repository path where we operate
+     */
+    public function getPath() {
+        var_dump($this->path);
+        return $this->path;
+    }
+
     protected function gitCmd($cmd) {
         $output = array();
         return $this->execInPath($cmd, $output);
