@@ -1,3 +1,6 @@
+Version 5.93 - Tuleap 5.12
+    * Fix bugs #2705: solve inconsitency issues between getTrackerFields, getArtifact and add/update artifact
+
 Version 5.92 - Tuleap 5.12
     * Rename User class to PFUser to allow integration of mediawiki
 
