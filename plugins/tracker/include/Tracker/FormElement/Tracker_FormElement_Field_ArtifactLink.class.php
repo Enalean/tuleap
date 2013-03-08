@@ -133,7 +133,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      */
     public function getFieldData($soap_value, Tracker_Artifact $artifact) {
         $existing_links   = $this->getChangesetValues($artifact->getLastChangeset()->getId());
-        $submitted_values = explode(',', $soap_value);
+        $submitted_values = array_filter(array_map('intval', explode(',', $soap_value)));
         $new_values = array();
         $removed_values = array();
         foreach ($submitted_values as $submitted_id) {

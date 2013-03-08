@@ -590,7 +590,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         stub($this->field)->getChangesetValues()->returns(array());
         $this->assertEqual(
             $this->field->getFieldData('55, 66', $this->artifact),
-            array('new_values' => '55, 66', 'removed_values' => '')
+            array('new_values' => '55,66', 'removed_values' => '')
         );
     }
 
@@ -606,6 +606,18 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
     }
 
     public function itRemovesAllExistingArtifactLinks() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('', $this->artifact),
+            array('new_values' => '', 'removed_values' => '55,66')
+        );
+    }
+
+    public function itRemovesOneArtifactLinks() {
         stub($this->field)->getChangesetValues()->returns(array(
             new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
             new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
