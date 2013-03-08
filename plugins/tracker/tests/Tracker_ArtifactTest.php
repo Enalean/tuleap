@@ -2302,7 +2302,7 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
         stub($this->last_changeset)->getValues()->returns(array());
 
         $this->formelement_factory = mock('Tracker_FormElementFactory');
-        stub($this->formelement_factory)->getUsedFields()->returns(array());
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
 
         $this->artifact = partial_mock(
             'Tracker_Artifact',
@@ -2393,60 +2393,20 @@ class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
     }
 
     public function itFetchFieldFromFactory() {
-        expect($this->formelement_factory)->getUsedFields($this->tracker)->once();
-        stub($this->formelement_factory)->getUsedFields()->returns(array());
+        expect($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->once();
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
         $this->artifact->getSoapValue($this->user);
     }
 
 
     public function itHasAValueFromField() {
-        stub($this->formelement_factory)->getUsedFields()->returns(array($this->field));
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array($this->field));
 
         expect($this->field)->getSoapValue($this->user, $this->last_changeset)->once();
         stub($this->field)->getSoapValue()->returns('whatever');
 
         $soap_value = $this->artifact->getSoapValue($this->user);
         $this->assertEqual($soap_value['value'][0], 'whatever');
-    }
-
-    public function itSkipsArtifactIdBecauseItsAlreadyABasicInfo() {
-        $field = mock('Tracker_FormElement_Field_ArtifactId');
-        expect($field)->getSoapValue()->never();
-
-        stub($this->formelement_factory)->getUsedFields()->returns(array($field));
-        $this->artifact->getSoapValue($this->user);
-    }
-
-    public function itSkipsSubmittedByBecauseItsAlreadyABasicInfo() {
-        $field = mock('Tracker_FormElement_Field_SubmittedBy');
-        expect($field)->getSoapValue()->never();
-
-        stub($this->formelement_factory)->getUsedFields()->returns(array($field));
-        $this->artifact->getSoapValue($this->user);
-    }
-
-    public function itSkipsSubmittedOnBecauseItsAlreadyABasicInfo() {
-        $field = mock('Tracker_FormElement_Field_SubmittedOn');
-        expect($field)->getSoapValue()->never();
-
-        stub($this->formelement_factory)->getUsedFields()->returns(array($field));
-        $this->artifact->getSoapValue($this->user);
-    }
-
-    public function itSkipsLastUpdateDateBecauseItsAlreadyABasicInfo() {
-        $field = mock('Tracker_FormElement_Field_LastUpdateDate');
-        expect($field)->getSoapValue()->never();
-
-        stub($this->formelement_factory)->getUsedFields()->returns(array($field));
-        $this->artifact->getSoapValue($this->user);
-    }
-
-    public function itSkipsCrossReferencesBecauseItsAlreadyABasicInfo() {
-        $field = mock('Tracker_FormElement_Field_CrossReferences');
-        expect($field)->getSoapValue()->never();
-
-        stub($this->formelement_factory)->getUsedFields()->returns(array($field));
-        $this->artifact->getSoapValue($this->user);
     }
 }
 ?>
