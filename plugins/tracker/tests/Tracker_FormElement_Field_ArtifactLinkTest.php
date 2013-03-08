@@ -571,12 +571,26 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         $this->artifact->setChangesets(array($last_changeset));
     }
 
-    public function itGetValuesFromArtifactChangeset() {
+    public function itGetValuesFromArtifactChangesetWhenThereIsAnArtifact() {
         expect($this->field)->getChangesetValues($this->last_changset_id)->once();
         stub($this->field)->getChangesetValues()->returns(array());
 
         $this->field->getFieldData('55', $this->artifact);
     }
+
+    public function itDoesntFetchValuesWhenNoArtifactGiven() {
+        expect($this->field)->getChangesetValues($this->last_changset_id)->never();
+
+        $this->field->getFieldData('55');
+    }
+
+    public function itOnlyAddNewValuesWhenNoArifactGiven() {
+        $this->assertEqual(
+            $this->field->getFieldData('55'),
+            array('new_values' => '55', 'removed_values' => '')
+        );
+    }
+
 
     public function itAddsOneValue() {
         stub($this->field)->getChangesetValues()->returns(array());

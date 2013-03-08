@@ -124,9 +124,6 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return null;
     }
 
-    private function getArtifactLinkId(Tracker_ArtifactLinkInfo $link_info) {
-        return $link_info->getArtifactId();
-    }
 
     /**
      * Get the field data for artifact submission
@@ -135,14 +132,28 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
-    public function getFieldData($soap_value, Tracker_Artifact $artifact) {
-        $existing_links   = array_map(array($this, 'getArtifactLinkId'), $this->getChangesetValues($artifact->getLastChangeset()->getId()));
-        $submitted_values = array_filter(array_map('intval', explode(',', $soap_value)));
+    public function getFieldData($string_value, Tracker_Artifact $artifact = null) {
+        $existing_links   = $this->getArtifactLinkIdsOfLastChangeset($artifact);
+        $submitted_values = $this->getArrayOfIdsFromString($string_value);
         $new_values       = array_diff($submitted_values, $existing_links);
         $removed_values   = array_diff($existing_links, $submitted_values);
         return array('new_values' => implode(',', $new_values), 'removed_values' => implode(',', $removed_values));
     }
     
+    private function getArtifactLinkIdsOfLastChangeset(Tracker_Artifact $artifact = null) {
+        if ($artifact) {
+            return array_map(array($this, 'getArtifactLinkId'), $this->getChangesetValues($artifact->getLastChangeset()->getId()));
+        }
+        return array();
+    }
+
+    private function getArtifactLinkId(Tracker_ArtifactLinkInfo $link_info) {
+        return $link_info->getArtifactId();
+    }
+
+    private function getArrayOfIdsFromString($value) {
+        return array_filter(array_map('intval', explode(',', $value)));
+    }
     /**
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve 
