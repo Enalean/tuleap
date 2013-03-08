@@ -152,6 +152,7 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
                 'field_value' => array('value' => (string) $this->getComputedValue($user, $changeset->getArtifact()))
             );
         }
+        return null;
     }
 
     /**

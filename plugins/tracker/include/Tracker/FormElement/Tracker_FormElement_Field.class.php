@@ -1017,6 +1017,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 'field_value' => $value ? $value->getSoapValue() : '',
             );
         }
+        return null;
     }
 
 
