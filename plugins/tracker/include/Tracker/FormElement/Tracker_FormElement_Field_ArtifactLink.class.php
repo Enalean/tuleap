@@ -124,6 +124,10 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return null;
     }
 
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        return $this->getFieldData($soap_value->field_value->value, $artifact);
+    }
+
 
     /**
      * Get the field data for artifact submission

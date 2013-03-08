@@ -591,7 +591,6 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         );
     }
 
-
     public function itAddsOneValue() {
         stub($this->field)->getChangesetValues()->returns(array());
         $this->assertEqual(
@@ -681,6 +680,31 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
             $this->field->getFieldData('55,66,88', $this->artifact),
             array('new_values' => '88', 'removed_values' => '77')
         );
+    }
+}
+
+class Tracker_FormElement_Field_ArtifactLink_getFieldDataFromSoapValue extends TuleapTestCase {
+    
+    public function setUp() {
+        parent::setUp();
+        $this->field = partial_mock('Tracker_FormElement_Field_ArtifactLink', array('getFieldData'));
+    }
+
+    public function itPassesArtifactToGetFieldData() {
+        $artifact = anArtifact()->build();
+
+        $soap_value = (object) array(
+            'field_name'  => '',
+            'field_label' => '',
+            'field_value' => (object) array(
+                'value' => '55'
+            )
+        );
+
+        expect($this->field)->getFieldData('55', $artifact)->once();
+        stub($this->field)->getFieldData()->returns('whatever');
+
+        $this->assertEqual($this->field->getFieldDataFromSoapValue($soap_value, $artifact), 'whatever');
     }
 }
 ?>
