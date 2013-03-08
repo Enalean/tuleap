@@ -324,12 +324,6 @@ class Tracker_FormElementFactory {
         }
     }
 
-    private function getFieldsSQLTypes() {
-        $field_classnames = array_merge($this->classnames, $this->special_classnames);
-        EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
-        return array_keys($field_classnames);
-    }
-
     /**
      * All fields used by the tracker
      *
@@ -358,6 +352,12 @@ class Tracker_FormElementFactory {
         );
         $field_types = array_diff($this->getFieldsSQLTypes(), $element_already_in_soap_basic_info);
         return $this->getUsedFormElementsByType($tracker, $field_types);
+    }
+
+    private function getFieldsSQLTypes() {
+        $field_classnames = array_merge($this->classnames, $this->special_classnames);
+        EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
+        return array_keys($field_classnames);
     }
 
     /**
