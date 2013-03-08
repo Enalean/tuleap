@@ -617,15 +617,55 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         );
     }
 
-    public function itRemovesOneArtifactLinks() {
+    public function itRemovesFirstArtifactLink() {
         stub($this->field)->getChangesetValues()->returns(array(
             new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
             new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
         ));
 
         $this->assertEqual(
-            $this->field->getFieldData('', $this->artifact),
-            array('new_values' => '', 'removed_values' => '55,66')
+            $this->field->getFieldData('66,77', $this->artifact),
+            array('new_values' => '', 'removed_values' => '55')
+        );
+    }
+
+    public function itRemovesMiddleArtifactLink() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('55,77', $this->artifact),
+            array('new_values' => '', 'removed_values' => '66')
+        );
+    }
+
+    public function itRemovesLastArtifactLink() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('55,66', $this->artifact),
+            array('new_values' => '', 'removed_values' => '77')
+        );
+    }
+
+    public function itAddsAndRemovesInOneCall() {
+        stub($this->field)->getChangesetValues()->returns(array(
+            new Tracker_ArtifactLinkInfo(55, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(66, '', '', '', ''),
+            new Tracker_ArtifactLinkInfo(77, '', '', '', ''),
+        ));
+
+        $this->assertEqual(
+            $this->field->getFieldData('55,66,88', $this->artifact),
+            array('new_values' => '88', 'removed_values' => '77')
         );
     }
 }
