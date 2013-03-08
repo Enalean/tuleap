@@ -123,18 +123,70 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function getSoapAvailableValues() {
         return null;
     }
-    
+
     /**
-     * Get the field data for artifact submission
+     * Return data that can be proceced by createArtifact or updateArtifact based on SOAP request
      *
-     * @param string the soap field value
+     * @param stdClass         $soap_value
+     * @param Tracker_Artifact $artifact
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return array
      */
-    public function getFieldData($soap_value) {
-        return array('new_values' => $soap_value);
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+        return $this->getFieldData($soap_value->field_value->value, $artifact);
     }
-    
+
+
+    /**
+     * Get the field data (SOAP or CSV) for artifact submission
+     *
+     * @param string           $string_value The soap field value
+     * @param Tracker_Artifact $artifact     The artifact the value is to be added/removed
+     *
+     * @return array
+     */
+    public function getFieldData($string_value, Tracker_Artifact $artifact = null) {
+        $existing_links   = $this->getArtifactLinkIdsOfLastChangeset($artifact);
+        $submitted_values = $this->getArrayOfIdsFromString($string_value);
+        $new_values       = array_diff($submitted_values, $existing_links);
+        $removed_values   = array_diff($existing_links, $submitted_values);
+        return $this->getDataLikeWebUI($new_values, $removed_values);
+    }
+
+    private function getArtifactLinkIdsOfLastChangeset(Tracker_Artifact $artifact = null) {
+        if ($artifact) {
+            return array_map(array($this, 'getArtifactLinkId'), $this->getChangesetValues($artifact->getLastChangeset()->getId()));
+        }
+        return array();
+    }
+
+    private function getArtifactLinkId(Tracker_ArtifactLinkInfo $link_info) {
+        return $link_info->getArtifactId();
+    }
+
+    private function getArrayOfIdsFromString($value) {
+        return array_filter(array_map('intval', explode(',', $value)));
+    }
+
+    private function getDataLikeWebUI(array $new_values, array $removed_values) {
+        return array(
+            'new_values'     => $this->formatNewValuesLikeWebUI($new_values),
+            'removed_values' => $this->formatRemovedValuesLikeWebUI($removed_values)
+        );
+    }
+
+    private function formatNewValuesLikeWebUI(array $new_values) {
+        return implode(',', $new_values);
+    }
+
+    private function formatRemovedValuesLikeWebUI(array $removed_values) {
+        $values = array();
+        foreach ($removed_values as $value) {
+            $values[$value] = array($value);
+        }
+        return $values;
+    }
+
     /**
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve 
@@ -784,7 +836,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return array
      */
     protected $artifact_links_by_changeset = array();
-    
+
+    /**
+     *
+     * @param Integer $changeset_id
+     *
+     * @return Tracker_ArtifactLinkInfo[]
+     */
     protected function getChangesetValues($changeset_id) {
         if (!isset($this->artifact_links_by_changeset[$changeset_id])) {
             $this->artifact_links_by_changeset[$changeset_id] = array();

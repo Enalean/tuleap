@@ -406,7 +406,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function getArtifactDataFromSoapRequest(Tracker $tracker, $values) {
+    private function getArtifactDataFromSoapRequest(Tracker $tracker, $values, Tracker_Artifact $artifact = null) {
         $fields_data = array();
         foreach ($values as $field_value) {
             // field are identified by name, we need to retrieve the field id
@@ -414,7 +414,7 @@ class Tracker_SOAPServer {
 
                 $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_value->field_name);
                 if ($field) {
-                    $field_data = $field->getFieldDataFromSoapValue($field_value);
+                    $field_data = $field->getFieldDataFromSoapValue($field_value, $artifact);
 
                     if ($field_data !== null) {
                         // $field_value is an object: SOAP must cast it in ArtifactFieldValue
@@ -461,7 +461,7 @@ class Tracker_SOAPServer {
             $user = $this->soap_request_validator->continueSession($session_key);
             $artifact = $this->getArtifactById($artifact_id, $user, 'updateArtifact');
 
-            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value);
+            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value, $artifact);
             try {
                 $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;
