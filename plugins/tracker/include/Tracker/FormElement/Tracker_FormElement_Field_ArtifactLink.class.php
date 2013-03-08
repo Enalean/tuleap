@@ -141,9 +141,9 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         $submitted_values = $this->getArrayOfIdsFromString($string_value);
         $new_values       = array_diff($submitted_values, $existing_links);
         $removed_values   = array_diff($existing_links, $submitted_values);
-        return array('new_values' => implode(',', $new_values), 'removed_values' => implode(',', $removed_values));
+        return $this->getDataLikeWebUI($new_values, $removed_values);
     }
-    
+
     private function getArtifactLinkIdsOfLastChangeset(Tracker_Artifact $artifact = null) {
         if ($artifact) {
             return array_map(array($this, 'getArtifactLinkId'), $this->getChangesetValues($artifact->getLastChangeset()->getId()));
@@ -158,6 +158,26 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     private function getArrayOfIdsFromString($value) {
         return array_filter(array_map('intval', explode(',', $value)));
     }
+
+    private function getDataLikeWebUI(array $new_values, array $removed_values) {
+        return array(
+            'new_values'     => $this->formatNewValuesLikeWebUI($new_values),
+            'removed_values' => $this->formatRemovedValuesLikeWebUI($removed_values)
+        );
+    }
+
+    private function formatNewValuesLikeWebUI(array $new_values) {
+        return implode(',', $new_values);
+    }
+
+    private function formatRemovedValuesLikeWebUI(array $removed_values) {
+        $values = array();
+        foreach ($removed_values as $value) {
+            $values[$value] = array($value);
+        }
+        return $values;
+    }
+
     /**
      * Get the "from" statement to allow search with this field
      * You can join on 'c' which is a pseudo table used to retrieve 

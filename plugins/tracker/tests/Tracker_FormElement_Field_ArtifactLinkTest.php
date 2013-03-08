@@ -587,7 +587,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
     public function itOnlyAddNewValuesWhenNoArifactGiven() {
         $this->assertEqual(
             $this->field->getFieldData('55'),
-            array('new_values' => '55', 'removed_values' => '')
+            array('new_values' => '55', 'removed_values' => array())
         );
     }
 
@@ -595,7 +595,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         stub($this->field)->getChangesetValues()->returns(array());
         $this->assertEqual(
             $this->field->getFieldData('55', $this->artifact),
-            array('new_values' => '55', 'removed_values' => '')
+            array('new_values' => '55', 'removed_values' => array())
         );
     }
 
@@ -603,7 +603,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
         stub($this->field)->getChangesetValues()->returns(array());
         $this->assertEqual(
             $this->field->getFieldData('55, 66', $this->artifact),
-            array('new_values' => '55,66', 'removed_values' => '')
+            array('new_values' => '55,66', 'removed_values' => array())
         );
     }
 
@@ -614,7 +614,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
         $this->assertEqual(
             $this->field->getFieldData('55, 66', $this->artifact),
-            array('new_values' => '66', 'removed_values' => '')
+            array('new_values' => '66', 'removed_values' => array())
         );
     }
 
@@ -626,7 +626,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
         $this->assertEqual(
             $this->field->getFieldData('', $this->artifact),
-            array('new_values' => '', 'removed_values' => '55,66')
+            array('new_values' => '', 'removed_values' => array(55 => array('55'), 66 => array('66')))
         );
     }
 
@@ -639,7 +639,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
         $this->assertEqual(
             $this->field->getFieldData('66,77', $this->artifact),
-            array('new_values' => '', 'removed_values' => '55')
+            array('new_values' => '', 'removed_values' => array(55 => array('55')))
         );
     }
 
@@ -652,7 +652,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
         $this->assertEqual(
             $this->field->getFieldData('55,77', $this->artifact),
-            array('new_values' => '', 'removed_values' => '66')
+            array('new_values' => '', 'removed_values' => array(66 => array('66')))
         );
     }
 
@@ -665,7 +665,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
         $this->assertEqual(
             $this->field->getFieldData('55,66', $this->artifact),
-            array('new_values' => '', 'removed_values' => '77')
+            array('new_values' => '', 'removed_values' => array(77 => array('77')))
         );
     }
 
@@ -678,7 +678,7 @@ class Tracker_FormElement_Field_ArtifactLink_getFieldData extends TuleapTestCase
 
         $this->assertEqual(
             $this->field->getFieldData('55,66,88', $this->artifact),
-            array('new_values' => '88', 'removed_values' => '77')
+            array('new_values' => '88', 'removed_values' => array(77 => array('77')))
         );
     }
 }
