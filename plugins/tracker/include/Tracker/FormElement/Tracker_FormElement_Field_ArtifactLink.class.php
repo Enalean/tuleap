@@ -123,7 +123,7 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
     public function getSoapAvailableValues() {
         return null;
     }
-    
+
     /**
      * Get the field data for artifact submission
      *
@@ -131,8 +131,28 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      *
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
-    public function getFieldData($soap_value) {
-        return array('new_values' => $soap_value);
+    public function getFieldData($soap_value, Tracker_Artifact $artifact) {
+        $existing_links   = $this->getChangesetValues($artifact->getLastChangeset()->getId());
+        $submitted_values = explode(',', $soap_value);
+        $new_values = array();
+        $removed_values = array();
+        foreach ($submitted_values as $submitted_id) {
+            $found = false;
+            foreach ($existing_links as $link) {
+                if ($link->getArtifactId() == $submitted_id) {
+                    $found = true;
+                }
+            }
+            if (!$found) {
+                $new_values[] = $submitted_id;
+            }
+        }
+        foreach ($existing_links as $link) {
+            if (!in_array($link->getArtifactId(), $submitted_values)) {
+                $removed_values[] = $link->getArtifactId();
+            }
+        }
+        return array('new_values' => implode(',', $new_values), 'removed_values' => implode(',', $removed_values));
     }
     
     /**
@@ -784,7 +804,13 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
      * @return array
      */
     protected $artifact_links_by_changeset = array();
-    
+
+    /**
+     *
+     * @param Integer $changeset_id
+     *
+     * @return Tracker_ArtifactLinkInfo[]
+     */
     protected function getChangesetValues($changeset_id) {
         if (!isset($this->artifact_links_by_changeset[$changeset_id])) {
             $this->artifact_links_by_changeset[$changeset_id] = array();
