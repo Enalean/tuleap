@@ -868,7 +868,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return array();
     }
 
-    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
         return $this->getFieldData($soap_value->field_value);
     }
 
