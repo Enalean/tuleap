@@ -80,6 +80,7 @@ class trackerPlugin extends Plugin {
             // Cannot be moved in combined (it conflicts with same implementation in tracker v3)
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>'."\n";
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerRichTextEditor.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/plugins/tracker/scripts/artifactChildren.js"></script>'."\n";
         }
     }
     

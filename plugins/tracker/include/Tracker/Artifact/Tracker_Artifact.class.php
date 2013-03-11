@@ -453,6 +453,25 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html .= $this->fetchTitleInHierarchy($hierarchy);
 
+        $html .= '
+            <table id="artifactChildren">
+                <thead>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            Title
+                        </td>
+                        <td>
+                            Status
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+    ';
+
         $html .= $this->fetchFields($request->get('artifact'));
 
         $html .= $this->fetchFollowUps($current_user, $request->get('artifact_followup_comment'));
