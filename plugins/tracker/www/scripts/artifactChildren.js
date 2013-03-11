@@ -38,6 +38,10 @@ tuleap.artifact.HierarchyViewer = Class.create({
     receiveChildren: function (transport) {
         var children = transport.responseJSON;
 
-        this.container.update(children[0].title);
+        children.map(this.insertChild.bind(this));
+    },
+
+    insertChild: function (child) {
+        this.container.insert(child.title);
     }
 });

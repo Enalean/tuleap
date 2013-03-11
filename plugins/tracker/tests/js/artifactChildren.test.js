@@ -19,7 +19,10 @@
 
 describe('HierarchyViewer', function () {
 
-    var story_1 = {"title":"titi","id":"121"};
+    var stories = [
+        {"title":"tea", "id":"121"},
+        {"title":"coffee", "id":"122"}
+    ];
 
     it('retrieves the children', function () {
         var container   = new Element('div'),
@@ -33,13 +36,15 @@ describe('HierarchyViewer', function () {
             [
                 200,
                 { "Content-type": "application/json" },
-                JSON.stringify([story_1])
+                JSON.stringify(stories)
             ]
         );
 
         viewer.getArtifactChildren(artifact_id);
 
         server.respond();
-        container.innerText.should.contain(story_1.title);
+        stories.map(function (story) {
+            container.innerText.should.contain(story.title);
+        });
     });
 });
