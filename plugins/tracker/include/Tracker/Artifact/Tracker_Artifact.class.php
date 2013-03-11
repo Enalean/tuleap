@@ -470,7 +470,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 <tbody>
                 </tbody>
             </table>
-    ';
+            <script type="text/template" data-template-name="artifactChildTemplate">
+                <tr data-artifact-id={{id}}>
+                    <td>
+                        {{xref}}
+                    </td>
+                    <td>
+                        {{title}}
+                    </td>
+                    <td>
+                        {{status}}
+                    </td>
+                </tr>
+            </script>';
 
         $html .= $this->fetchFields($request->get('artifact'));
 

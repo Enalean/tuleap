@@ -16,4 +16,30 @@
   * You should have received a copy of the GNU General Public License
   * along with Tuleap. If not, see <http://www.gnu.org/licenses/
   */
- 
+
+var tuleap = tuleap || { };
+tuleap.artifact = tuleap.artifact || { };
+
+tuleap.artifact.HierarchyViewer = Class.create({
+    baseUrl : codendi.tracker.base_url,
+
+    initialize : function() {
+
+    },
+
+    getArtifactChildren : function() {
+        var url = this.baseUrl + 'resources/fixtures/artifactChildren.json';
+
+        new Ajax.Request( url, {
+            method : 'GET',
+            onComplete : function( transport ) {
+                console.log(transport);
+            }
+        });
+    }
+
+});
+
+var myTest = new tuleap.artifact.HierarchyViewer();
+
+myTest.getArtifactChildren();
