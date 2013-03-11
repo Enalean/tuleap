@@ -20,8 +20,8 @@
 describe('HierarchyViewer', function () {
 
     var stories = [
-        {"title":"tea",    "id":"121", "status":"open"},
-        {"title":"coffee", "id":"122", "status":"closed"}
+        {title:"tea",    id:"121", status:"open",   xref:"story #121"},
+        {title:"coffee", id:"122", status:"closed", xref:"story #122"}
     ];
 
     describe('retrieves the children', function () {
@@ -69,6 +69,12 @@ describe('HierarchyViewer', function () {
             });
 
             it('displays the status', function () {
+                stories.map(function (story) {
+                    table.innerText.should.contain(story.status);
+                });
+            });
+
+            it('displays the xref', function () {
                 stories.map(function (story) {
                     table.innerText.should.contain(story.status);
                 });
