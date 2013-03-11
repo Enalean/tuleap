@@ -453,6 +453,24 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html .= $this->fetchTitleInHierarchy($hierarchy);
 
+        $html .= '
+            <div class="tabForStory1693" id="artifactChildrenChangeMe" style="display:none">
+                <table>
+                    <thead>
+                        <tr>
+                            <td>
+                            </td>
+                            <td>
+                                Title
+                            </td>
+                            <td>
+                                Status
+                            </td>
+                        </tr>
+                    </thead>
+                </table>
+            </div>';
+
         $html .= $this->fetchFields($request->get('artifact'));
 
         $html .= $this->fetchFollowUps($current_user, $request->get('artifact_followup_comment'));
@@ -607,11 +625,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return string The HTML code for artifact fields
      */
     protected function fetchFields($submitted_values=array()) {
-        $html = '';
-        $html .= '<table cellspacing="0" cellpadding="0" border="0"><tr valign="top"><td style="padding-right:1em;">';
-        $html .= $this->getTracker()->fetchFormElements($this, array($submitted_values));
-
-        return $html;
+        return
+            '<div class="tabForStory1693" id="fieldsFetchedChangeMe">
+                <table cellspacing="0" cellpadding="0" border="0">
+                    <tr valign="top">
+                        <td style="padding-right:1em;">'.
+                            $this->getTracker()->fetchFormElements($this, array($submitted_values)).
+                        '</td>
+                    </tr>
+                </table>
+            </div>';
     }
 
     protected function fetchAnonymousEmailForm() {
