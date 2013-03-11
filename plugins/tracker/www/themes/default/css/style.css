@@ -64,6 +64,10 @@ input[name=tracker_query_submit] {
     border-right: none;
 }
 
+.tracker-artifact-nav {
+    margin-bottom: 1em;
+}
+
 #tracker_report_renderers li,
 #tracker-home-nav li,
 .tracker-form-element-artifactlink-list-nav li,

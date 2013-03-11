@@ -453,45 +453,19 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html .= $this->fetchTitleInHierarchy($hierarchy);
 
-        $html .= $this->fetchTabs();
+        $view  = $request->get('view') === 'children' ? 'children' : 'edit';
+        $html .= $this->fetchTabs($view);
 
-        $html .= '
-            <table id="artifactChildren">
-                <thead>
-                    <tr>
-                        <td>
-                        </td>
-                        <td>
-                            Title
-                        </td>
-                        <td>
-                            Status
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <script type="text/template" data-template-name="artifactChildTemplate">
-                <tr data-artifact-id={{id}}>
-                    <td>
-                        {{xref}}
-                    </td>
-                    <td>
-                        {{title}}
-                    </td>
-                    <td>
-                        {{status}}
-                    </td>
-                </tr>
-            </script>';
+        if ($view == 'children') {
+            $html .= $this->fetchChildren();
+        } else {
+            $html .= $this->fetchFields($request->get('artifact'));
 
-        $html .= $this->fetchFields($request->get('artifact'));
+            $html .= $this->fetchFollowUps($current_user, $request->get('artifact_followup_comment'));
 
-        $html .= $this->fetchFollowUps($current_user, $request->get('artifact_followup_comment'));
-
-        // We don't need History since we have changesets
-        //$html .= $this->_fetchHistory();
+            // We don't need History since we have changesets
+            //$html .= $this->_fetchHistory();
+        }
 
         $html .= '</form>';
         $trm = new Tracker_RulesManager($tracker, $this->getFormElementFactory());
@@ -1927,12 +1901,69 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         return $tracker_data;
     }
 
-    private function fetchTabs() {
+    private function fetchTabs($view) {
         $html  = '';
-        $html .= '<ul class="tracker-artifact-nav">
-                    <li class="tracker-artifact-nav-current"><a href="#">Artifact</a></li>
-                    <li><a href="#">Children</a></li>
-                  </ul>';
+        $tabs = array(
+            array(
+                'label' => 'Edit',
+                'class' => $view === 'edit' ? 'tracker-artifact-nav-current' : '',
+                'url'   => TRACKER_BASE_URL .'/?'. http_build_query(
+                    array(
+                        'aid' => $this->id,
+                    )
+                ),
+            ),
+            array(
+                'label' => 'Children',
+                'class' => $view === 'children' ? 'tracker-artifact-nav-current' : '',
+                'url'   => TRACKER_BASE_URL .'/?'. http_build_query(
+                    array(
+                        'aid' => $this->id,
+                        'view' => 'children'
+                    )
+                ),
+            ),
+        );
+        $html .= '<ul class="tracker-artifact-nav">';
+        foreach ($tabs as $tab) {
+            $html .= '<li class="'. $tab['class'] .'"><a href="'. $tab['url'] .'">'. $tab['label'] .'</a></li>';
+        }
+        $html .= '</ul>';
+        return $html;
+    }
+
+    private function fetchChildren() {
+        $html  = '';
+        $html .= '
+            <table id="artifactChildren">
+                <thead>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            Title
+                        </td>
+                        <td>
+                            Status
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <script type="text/template" data-template-name="artifactChildTemplate">
+                <tr data-artifact-id={{id}}>
+                    <td>
+                        {{xref}}
+                    </td>
+                    <td>
+                        {{title}}
+                    </td>
+                    <td>
+                        {{status}}
+                    </td>
+                </tr>
+            </script>';
         return $html;
     }
 }
