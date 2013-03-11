@@ -454,22 +454,35 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $html .= $this->fetchTitleInHierarchy($hierarchy);
 
         $html .= '
-            <div class="tabForStory1693" id="artifactChildrenChangeMe" style="display:none">
-                <table>
-                    <thead>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                                Title
-                            </td>
-                            <td>
-                                Status
-                            </td>
-                        </tr>
-                    </thead>
-                </table>
-            </div>';
+            <table id="artifactChildren">
+                <thead>
+                    <tr>
+                        <td>
+                        </td>
+                        <td>
+                            Title
+                        </td>
+                        <td>
+                            Status
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <script type="text/template" data-template-name="artifactChildTemplate">
+                <tr data-artifact-id={{id}}>
+                    <td>
+                        {{xref}}
+                    </td>
+                    <td>
+                        {{title}}
+                    </td>
+                    <td>
+                        {{status}}
+                    </td>
+                </tr>
+            </script>';
 
         $html .= $this->fetchFields($request->get('artifact'));
 

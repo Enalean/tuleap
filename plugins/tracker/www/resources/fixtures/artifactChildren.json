@@ -1,0 +1,24 @@
+/* 
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+[
+    {
+        "title"     : "tea",
+        "status"    : "cold",
+        "xref"      : "beverage #4545",
+        "id"        : "45"
+    },
+    {
+        "title"     : "coffee",
+        "status"    : "hot",
+        "xref"      : "beverage #698",
+        "id"        : "89"
+    },
+    {
+        "title"     : "cake",
+        "status"    : "cold",
+        "xref"      : "food #123",
+        "id"        : "888"
+    }
+]
