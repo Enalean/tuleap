@@ -24,27 +24,49 @@ describe('HierarchyViewer', function () {
         {"title":"coffee", "id":"122"}
     ];
 
-    it('retrieves the children', function () {
-        var container   = new Element('div'),
-            url         = '/plugins/tracker/artifactChildren.json',
-            viewer      = new tuleap.artifact.HierarchyViewer(url, container),
-            server      = sinon.fakeServer.create(),
-            artifact_id = 12;
+    describe('retrieves the children', function () {
 
-        server.respondWith(
-            "GET", url + '?aid=12',
-            [
-                200,
-                { "Content-type": "application/json" },
-                JSON.stringify(stories)
-            ]
-        );
+        var container,
+            viewer;
 
-        viewer.getArtifactChildren(artifact_id);
+        beforeEach(function () {
+            var url         = '/plugins/tracker/artifactChildren.json',
+                server      = sinon.fakeServer.create(),
+                artifact_id = 12;
 
-        server.respond();
-        stories.map(function (story) {
-            container.innerText.should.contain(story.title);
+            container = new Element('div');
+            viewer    = new tuleap.artifact.HierarchyViewer(url, container);
+            server.respondWith(
+                "GET", url + '?aid=12',
+                [
+                    200,
+                    { "Content-type": "application/json" },
+                    JSON.stringify(stories)
+                ]
+            );
+
+            viewer.getArtifactChildren(artifact_id);
+
+            server.respond();
+        });
+
+        it('inserts a table', function () {
+            container.down('table').should.exist;
+        });
+
+        describe('for each child', function () {
+
+            var table;
+
+            beforeEach(function () {
+                table = container.down('table');
+            });
+
+            it('displays the title of the child', function () {
+                stories.map(function (story) {
+                    table.innerText.should.contain(story.title);
+                });
+            });
         });
     });
 });
