@@ -1,3 +1,6 @@
+Version 5.95 - Tuleap 5.12
+    * Story #2524: see colour type at a glance on cardwall.
+
 Version 5.94 - Tuleap 5.12
     * Fix bugs #2728 - [SOAP] Problem with the update of an artifact field value of type artifact link.
 
