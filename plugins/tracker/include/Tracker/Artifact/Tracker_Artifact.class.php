@@ -453,6 +453,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html .= $this->fetchTitleInHierarchy($hierarchy);
 
+        $html .= $this->fetchTabs();
+
         $html .= '
             <table id="artifactChildren">
                 <thead>
@@ -1923,6 +1925,15 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
 
         return $tracker_data;
+    }
+
+    private function fetchTabs() {
+        $html  = '';
+        $html .= '<ul class="tracker-artifact-nav">
+                    <li class="tracker-artifact-nav-current"><a href="#">Artifact</a></li>
+                    <li><a href="#">Children</a></li>
+                  </ul>';
+        return $html;
     }
 }
 
