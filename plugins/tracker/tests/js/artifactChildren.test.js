@@ -19,10 +19,11 @@
 
 describe('HierarchyViewer', function () {
 
-    var stories = [
-        {title:"tea",    id:"121", status:"open",   xref:"story #121"},
-        {title:"coffee", id:"122", status:"closed", xref:"story #122"}
-    ];
+    var base_url = '/plugins/tracker',
+        stories  = [
+            {title:"tea",    id:"121", status:"open",   xref:"story #121"},
+            {title:"coffee", id:"122", status:"closed", xref:"story #122"}
+        ];
 
     describe('retrieves the children', function () {
 
@@ -30,14 +31,13 @@ describe('HierarchyViewer', function () {
             viewer;
 
         beforeEach(function () {
-            var url         = '/plugins/tracker/artifactChildren.json',
-                server      = sinon.fakeServer.create(),
+            var server      = sinon.fakeServer.create(),
                 artifact_id = 12;
 
             container = new Element('div');
-            viewer    = new tuleap.artifact.HierarchyViewer(url, container);
+            viewer    = new tuleap.artifact.HierarchyViewer(base_url, container);
             server.respondWith(
-                "GET", url + '?aid=12',
+                "GET", base_url + '/artifactChildren.json?aid=12',
                 [
                     200,
                     { "Content-type": "application/json" },
@@ -74,9 +74,10 @@ describe('HierarchyViewer', function () {
                 });
             });
 
-            it('displays the xref', function () {
+            it('displays the xref as a link', function () {
                 stories.map(function (story) {
-                    table.innerText.should.contain(story.status);
+                    var href = base_url + '/?aid=' + story.id;
+                    table.down('a[href=' + href + ']').text.should.contain(story.xref);
                 });
             });
         });
