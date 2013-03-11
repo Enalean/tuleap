@@ -2456,6 +2456,7 @@ class Tracker_Artifact_getCardAccentColorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
+        $this->user     = mock('PFUser');
         $this->field    = mock('Tracker_FormElement_Field_Selectbox');
         $this->factory  = mock('Tracker_FormElementFactory');
         $this->artifact = anArtifact()->withFormElementFactory($this->factory)->build();
