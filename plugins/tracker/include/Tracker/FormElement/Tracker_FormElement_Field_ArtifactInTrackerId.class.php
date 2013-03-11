@@ -95,14 +95,14 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
-        return "Per tracker id";//$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_label');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactInTrackerId_label');
     }
     
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
-        return "Display the in-tracker numerotation";//$GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactid_description');
+        return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactInTrackerId_description');
     }    
     
     /**
