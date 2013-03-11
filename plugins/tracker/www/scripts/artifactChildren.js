@@ -21,25 +21,23 @@ var tuleap = tuleap || { };
 tuleap.artifact = tuleap.artifact || { };
 
 tuleap.artifact.HierarchyViewer = Class.create({
-    baseUrl : codendi.tracker.base_url,
 
-    initialize : function() {
-
+    initialize : function(url, container) {
+        this.url = url;
+        this.container = container;
     },
 
-    getArtifactChildren : function() {
-        var url = this.baseUrl + 'resources/fixtures/artifactChildren.json';
-
-        new Ajax.Request( url, {
+    getArtifactChildren : function(artifact_id) {
+        new Ajax.Request( this.url, {
             method : 'GET',
-            onComplete : function( transport ) {
-                console.log(transport);
-            }
+            parameters : { aid : artifact_id },
+            onSuccess : this.receiveChildren.bind(this)
         });
+    },
+
+    receiveChildren: function (transport) {
+        var children = transport.responseJSON;
+
+        this.container.update(children[0].title);
     }
-
 });
-
-var myTest = new tuleap.artifact.HierarchyViewer();
-
-myTest.getArtifactChildren();
