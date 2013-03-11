@@ -48,9 +48,11 @@ tuleap.artifact.HierarchyViewer = Class.create({
 
     insertChild: function (table, child) {
         var row = new Element('tr'),
+            cell_status = new Element('td').update(child.status),
             cell_title = new Element('td').update(child.title);
 
         row.insert(cell_title);
+        row.insert(cell_status);
         table.insert(row);
     }
 });
