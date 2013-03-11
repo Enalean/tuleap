@@ -1,5 +1,12 @@
 All the documentation can be found at https://tuleap-documentation.readthedocs.org/en/latest/soap/tracker.html
 
+2.0.6 - Tuleap 5.12
+    * addArtifact and updateArtifact and ArtifactLinks
+      Both methods now takes the full list of artifact links. Example:
+      field_value.value = '' => clears the artifact links
+      field_value.value = '5' => add a link on artifact id 5
+      field_value.value = '5,6' => add a link on artifact id 6 (5 was add by preivous call).
+
 2.0.5 - Tuleap 5.12
     == /!\ Backward compatibility restore /!\ ==
     * Restore updateArtifact and addArtifact behaviour at 2.0.3 for 'value' field of FieldValue type.
