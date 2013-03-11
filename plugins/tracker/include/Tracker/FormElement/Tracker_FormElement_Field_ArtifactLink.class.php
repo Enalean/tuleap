@@ -124,17 +124,26 @@ class Tracker_FormElement_Field_ArtifactLink extends Tracker_FormElement_Field {
         return null;
     }
 
+    /**
+     * Return data that can be proceced by createArtifact or updateArtifact based on SOAP request
+     *
+     * @param stdClass         $soap_value
+     * @param Tracker_Artifact $artifact
+     *
+     * @return array
+     */
     public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
         return $this->getFieldData($soap_value->field_value->value, $artifact);
     }
 
 
     /**
-     * Get the field data for artifact submission
+     * Get the field data (SOAP or CSV) for artifact submission
      *
-     * @param string the soap field value
+     * @param string           $string_value The soap field value
+     * @param Tracker_Artifact $artifact     The artifact the value is to be added/removed
      *
-     * @return mixed the field data corresponding to the soap_value for artifact submision
+     * @return array
      */
     public function getFieldData($string_value, Tracker_Artifact $artifact = null) {
         $existing_links   = $this->getArtifactLinkIdsOfLastChangeset($artifact);
