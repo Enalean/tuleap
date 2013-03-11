@@ -66,9 +66,10 @@ class Planning_ItemCardPresenterCallback implements TreeNodeCallback {
         $artifact = $node->getObject();
 
         if ($artifact) {
+            $color          = $artifact->getCardAccentColor($this->user);
             $parent         = $artifact->getParent($this->user);
             $planning_item  = new Planning_Item($artifact, $this->planning, $parent);
-            $presenter      = new Planning_ItemPresenter($planning_item, $this->card_fields, $this->classname);
+            $presenter      = new Planning_ItemPresenter($planning_item, $this->card_fields, $color, $this->classname);
             $presenter_node = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
             return $presenter_node;
         }

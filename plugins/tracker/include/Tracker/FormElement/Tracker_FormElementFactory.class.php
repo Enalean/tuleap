@@ -235,6 +235,23 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * Return a selectbox field. This field is used and the user can see its value.
+     *
+     * @param int    $tracker_id
+     * @param string $field_name
+     * @param PFUser   $user
+     *
+     * @return Tracker_FormElement_Field_Selectbox | null
+     */
+    public function getSelectboxFieldByNameForUser($tracker_id, $field_name, PFUser $user) {
+        $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
+        if ($field && $field instanceof Tracker_FormElement_Field_Selectbox) {
+            return $field;
+        }
+        return null;
+    }
+
+    /**
      * Return a field that provides a computable value. This field is used and the user can see its value.
      *
      * @param int    $tracker_id
