@@ -1028,6 +1028,8 @@ plugin_tracker_formelement_admin	lastupdatedate_help	Le champ est automatiquemen
 plugin_tracker_formelement_admin	artifactid_label	ID de l'artéfact
 plugin_tracker_formelement_admin	artifactid_description	Affiche l'identifiant de l'artéfact
 plugin_tracker_formelement_admin	artifactid_help	Le champ est automatiquement renseigné avec un Identifiant unique
+plugin_tracker_formelement_admin	artifactInTrackerId_label	ID dans le tracker
+plugin_tracker_formelement_admin	artifactInTrackerId_description	Affiche l'identifiant de cet artéfact dans le tracker
 plugin_tracker_formelement_admin	artifact_link_label	Liens vers des artéfacts
 plugin_tracker_formelement_admin	artifact_link_description	Liens vers d'autres artéfacts
 plugin_tracker_formelement_admin	line_break_label	Saut de ligne
