@@ -96,20 +96,16 @@ class Git_Admin {
         );
 
         foreach ($fields as $field) {
-            $html .= '<td valign="top"><label>'. $field[0].'<br /><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></label></td>';
+            $html .= '<tr valign="top"><td>'. $field[0].'</td><td><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></td></tr>';
         }
-        $html .= '
-            <td valign="top">
-                <label>
-                    Replication SSH Key
-                    <br />
-                    <textarea
-                        type="checkbox"
-                        name="gerrit_servers['. $id .'][replication_key]"
-                        cols="30"
-                        rows="5">'.$server->getReplicationKey()->getValue().'</textarea>
-                </label>
-            </td>';
+        $html .= '<tr valign="top">
+            <td>Replication SSH Key</td>
+            <td><textarea
+                type="checkbox"
+                name="gerrit_servers['. $id .'][replication_key]"
+                cols="30"
+                rows="5">'.$server->getReplicationKey()->getValue().'</textarea>
+            </td></tr>';
 
         if ($id && ! $this->gerrit_server_factory->isServerUsed($server)) {
             $html .= '<td><label>'. 'Delete?' .'<br /><input type="checkbox" name="gerrit_servers['. $id .'][delete]" value="1" /></label></td>';
