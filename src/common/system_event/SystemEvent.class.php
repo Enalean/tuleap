@@ -32,6 +32,7 @@ abstract class SystemEvent {
 
     protected $id;
     protected $type;
+    protected $owner;
     protected $parameters;
     protected $priority;
     protected $status;
@@ -78,7 +79,11 @@ abstract class SystemEvent {
     
     const PARAMETER_SEPARATOR        = '::';
     const PARAMETER_SEPARATOR_ESCAPE = '\:\:';
-    
+
+    // Who should execute the event
+    const OWNER_ROOT = 'root';
+    const OWNER_APP  = 'app';
+
     /**
      * Constructor
      * @param int $id The id of the event
@@ -91,9 +96,10 @@ abstract class SystemEvent {
      * @param string $end_date
      * @param string $log
      */
-    function __construct($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log) {
+    function __construct($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log) {
         $this->id           = $id;
         $this->type         = $type;
+        $this->owner        = $owner;
         $this->parameters   = $parameters;
         $this->priority     = $priority;
         $this->status       = $status;
@@ -121,6 +127,10 @@ abstract class SystemEvent {
 
     function getType() {
         return $this->type;
+    }
+
+    function getOwner() {
+        return $this->owner;
     }
 
     function getParameters() {

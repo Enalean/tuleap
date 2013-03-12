@@ -47,7 +47,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends UnitTestCase {
      */
     public function testUgroupModifyProcessUgroupModifyFail() {
         $evt = new SystemEvent_UGROUP_MODIFY_TestVersion();
-        $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, SystemEvent::OWNER_ROOT, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->setReturnValue('getParametersAsArray', array(1, 2));
 
         $evt->setReturnValue('processUgroupBinding', false);
@@ -76,7 +76,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends UnitTestCase {
      */
     public function testUgroupModifyProcessSVNFail() {
         $evt = new SystemEvent_UGROUP_MODIFY_TestVersion();
-        $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, SystemEvent::OWNER_ROOT, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->setReturnValue('getParametersAsArray', array(1, 2));
 
         $evt->setReturnValue('processUgroupBinding', true);
@@ -106,7 +106,7 @@ class SystemEvent_UGROUP_MODIFY_Test extends UnitTestCase {
      */
     public function testUgroupModifyProcessSuccess() {
         $evt = new SystemEvent_UGROUP_MODIFY_TestVersion();
-        $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_UGROUP_MODIFY, SystemEvent::OWNER_ROOT, '1', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
         $evt->setReturnValue('getParametersAsArray', array(1, 2));
 
         $evt->setReturnValue('processUgroupBinding', true);

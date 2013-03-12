@@ -51,6 +51,10 @@ require_once('common/include/URL.class.php');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (php_sapi_name() == "cli") {
+    // Backend scripts should never ends because of lack of time or memory
+    ini_set('max_execution_time', 0);
+    ini_set('memory_limit', -1);
+
     define('IS_SCRIPT', true);
 } else {
     define('IS_SCRIPT', false);

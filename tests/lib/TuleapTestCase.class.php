@@ -222,6 +222,14 @@ abstract class TuleapTestCase extends UnitTestCase {
         return $this->assertEqual(count($array), $expected_count);
     }
 
+    protected function assertFileExists($path) {
+        return $this->assertTrue(is_file($path));
+    }
+
+    protected function assertFileDoesntExist($path) {
+        return $this->assertFalse(is_file($path));
+    }
+
     /**
      * Recursive rm function.
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385

@@ -39,8 +39,8 @@ class Test_SystemEvent_Builder {
     }
 
     public function build() {
-        $id = $type = $priority = $status = $create_date = $process_date = $end_date = $log = null;
-        return new SysteEvent_For_Testing_Purpose($id, $type, $this->parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
+        $id = $type = $owner = $priority = $status = $create_date = $process_date = $end_date = $log = null;
+        return new SysteEvent_For_Testing_Purpose($id, $type, $owner, $this->parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
     }
 }
 ?>
