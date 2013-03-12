@@ -415,6 +415,9 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
         $this->release_tracker  = aTracker()->withId(2)->withProject($this->project)->build();
         $this->release_artifact = aMockArtifact()->withTracker($this->release_tracker)->build();
 
+        $this->task_tracker  = aTracker()->withId(21)->withProject($this->project)->build();
+        $this->task_artifact = aMockArtifact()->withTracker($this->task_tracker)->build();
+
         $planning_factory        = stub('PlanningFactory')->getPlanningByPlanningTracker($this->release_tracker)->returns($this->release_planning);
         $this->milestone_factory = new Planning_MilestoneFactory($planning_factory, mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'));
     }
@@ -427,6 +430,11 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
     private function assertEqualToReleaseMilestone($actual_release_milestone) {
         $expected_release_milestone = new Planning_ArtifactMilestone($this->project, $this->release_planning, $this->release_artifact);
         $this->assertEqual($actual_release_milestone, $expected_release_milestone);
+    }
+
+    public function itReturnsNullWhenThereIsNoPlanningForTheTracker() {
+        $task_milestone = $this->milestone_factory->getMilestoneFromArtifact($this->task_artifact);
+        $this->assertNull($task_milestone);
     }
 }
 
@@ -502,6 +510,16 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
         $this->assertEqual($milestones, array($release_milestone, $product_milestone));
+    }
+
+    public function itFiltersOutTheEmptyMilestones() {
+        $release_artifact = aMockArtifact()->withId(1)->build();
+        stub($this->sprint_artifact)->getAllAncestors($this->current_user)->returns(array($release_artifact));
+
+        stub($this->milestone_factory)->getMilestoneFromArtifact($release_artifact)->returns(null);
+
+        $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
+        $this->assertEqual($milestones, array());
     }
 }
 

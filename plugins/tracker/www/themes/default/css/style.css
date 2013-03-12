@@ -1210,13 +1210,13 @@ td.first-column {
     padding-left: 5px;
     color: #333;
     position:relative;
-    min-height: 50px;
 }
 .card-container {
     background: #ffe;
     padding: 0.25em;
     padding-left: 0.5em;
     padding-right: 0.5em;
+    min-height: 50px;
 }
 .card.placeholder {
     border:1px dashed #3A87AD;
