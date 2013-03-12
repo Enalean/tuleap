@@ -119,13 +119,12 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
     public function deleteForGerritServerId($id) {
         $key_dir_path  = $this->getGitoliteKeyDirectory();
         $file_name     = self::getReplicationKeyFilenameForGerritServerId($id);
-        $key_path      = $key_dir_path . $file_name;
 
         if(! $this->findFileInDirectory($file_name, $key_dir_path)) {
             return true;
         }
 
-        $this->git_executer->rm($key_path);
+        $this->git_executer->rm(self::GOTOLITE_KEY_DIR.'/'.$file_name);
         $this->git_executer->commit(self::KEY_DELETE_COMMIT_MESSAGE . $id);
         $this->git_executer->push();
 

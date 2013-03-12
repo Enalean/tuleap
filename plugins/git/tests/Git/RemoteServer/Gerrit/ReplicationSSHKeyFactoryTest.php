@@ -353,9 +353,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
 
         touch($file);
 
-        stub($this->git_executor)->rm()->once();
-        stub($this->git_executor)->commit()->once();
-        stub($this->git_executor)->push()->once();
+        expect($this->git_executor)->rm($key_dir.'/'. $key_filename)->once();
+        expect($this->git_executor)->commit()->once();
+        expect($this->git_executor)->push()->once();
 
         $this->factory->deleteForGerritServerId($id);
     }
