@@ -55,8 +55,8 @@ describe('HierarchyViewer', function () {
         });
 
         it('the table has a header with title & status', function () {
-            container.down('table').down('thead').innerText.should.contain('Title');
-            container.down('table').down('thead').innerText.should.contain('Status');
+            container.down('table').down('thead').textContent.should.contain('Title');
+            container.down('table').down('thead').textContent.should.contain('Status');
         });
 
         describe('for each child', function () {
@@ -69,13 +69,13 @@ describe('HierarchyViewer', function () {
 
             it('displays the title', function () {
                 stories.map(function (story) {
-                    table.innerText.should.contain(story.title);
+                    table.textContent.should.contain(story.title);
                 });
             });
 
             it('displays the status', function () {
                 stories.map(function (story) {
-                    table.innerText.should.contain(story.status);
+                    table.textContent.should.contain(story.status);
                 });
             });
 
