@@ -23,7 +23,12 @@ describe('HierarchyViewer', function () {
         stories  = [
             {title:"tea",    id:"121", status:"open",   xref:"story #121", url:"/path/to/121"},
             {title:"coffee", id:"122", status:"closed", xref:"story #122", url:"/path/to/122"}
-        ];
+        ],
+        locales = {
+            tracker_hierarchy: {
+                no_child_artifacts: 'whatever'
+            }
+        };
 
     describe('retrieves the children', function () {
 
@@ -38,7 +43,7 @@ describe('HierarchyViewer', function () {
                 var server = sinon.fakeServer.create();
 
                 container = new Element('div');
-                viewer    = new tuleap.artifact.HierarchyViewer(base_url, container);
+                viewer    = new tuleap.artifact.HierarchyViewer(base_url, container, locales);
                 server.respondWith(
                     "GET", base_url + '?aid=' + artifact_id + '&func=get-children',
                     [
@@ -54,7 +59,7 @@ describe('HierarchyViewer', function () {
             });
 
             it('displays that there is no child', function () {
-                container.down('em').textContent.should.contain('There is not any children yet');
+                container.down('.info-no-child').textContent.should.contain(locales.tracker_hierarchy.no_child_artifacts);
             });
         });
 

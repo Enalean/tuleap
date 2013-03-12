@@ -22,9 +22,11 @@ tuleap.artifact = tuleap.artifact || { };
 
 tuleap.artifact.HierarchyViewer = Class.create({
 
-    initialize : function(base_url, container) {
-        this.base_url = base_url;
+
+    initialize : function(base_url, container, locales) {
+        this.base_url  = base_url;
         this.container = container;
+        this.locales   = locales;
     },
 
     getArtifactChildren : function(artifact_id) {
@@ -56,8 +58,8 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     displaysNoChild: function () {
-        var message = codendi.locales.tracker_hierarchy.no_child_artifacts;
-        this.container.insert('<em>' + message + '</em>');
+        var message = this.locales.tracker_hierarchy.no_child_artifacts;
+        this.container.insert('<em class="info-no-child">' + message + '</em>');
     },
 
     insertTable: function () {
