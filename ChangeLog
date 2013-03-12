@@ -18,6 +18,9 @@ Version 5.12 (Not released yet)
 	* webdav: 1.9.2
 	* mediawiki: 0.2
 
+  == Bug Fix ==
+	* Fix request #2817: When a service in iframe is created in template project, the "is in iframe" information were not propagated to other projects.
+
 Version 5.11 (Thursday, February 21st 2013)
 
 	== Plugins ==
