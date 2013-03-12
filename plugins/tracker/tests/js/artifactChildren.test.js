@@ -21,8 +21,8 @@ describe('HierarchyViewer', function () {
 
     var base_url = '/plugins/tracker',
         stories  = [
-            {title:"tea",    id:"121", status:"open",   xref:"story #121"},
-            {title:"coffee", id:"122", status:"closed", xref:"story #122"}
+            {title:"tea",    id:"121", status:"open",   xref:"story #121", url:"/path/to/121"},
+            {title:"coffee", id:"122", status:"closed", xref:"story #122", url:"/path/to/122"}
         ];
 
     describe('retrieves the children', function () {
@@ -54,6 +54,11 @@ describe('HierarchyViewer', function () {
             container.down('table').should.exist;
         });
 
+        it('the table has a header with title & status', function () {
+            container.down('table').down('thead').innerText.should.contain('Title');
+            container.down('table').down('thead').innerText.should.contain('Status');
+        });
+
         describe('for each child', function () {
 
             var table;
@@ -76,8 +81,7 @@ describe('HierarchyViewer', function () {
 
             it('displays the xref as a link', function () {
                 stories.map(function (story) {
-                    var href = base_url + '/?aid=' + story.id;
-                    table.down('a[href=' + href + ']').text.should.contain(story.xref);
+                    table.down('a[href=' + story.url + ']').text.should.contain(story.xref);
                 });
             });
         });

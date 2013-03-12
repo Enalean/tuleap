@@ -36,29 +36,44 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     receiveChildren: function (transport) {
-        var children = transport.responseJSON;
+        var children = transport.responseJSON,
+            tbody;
 
-        var table = new Element('table');
-        this.container.insert(table);
+        this.insertTable();
+        tbody = this.container.down('tbody');
 
         children.map(function (child) {
-            this.insertChild(table, child, this.base_url);
+            this.insertChild(tbody, child);
         }.bind(this));
     },
 
-    insertChild: function (table, child, base_url) {
-        var row = new Element('tr'),
-            cell_xref = new Element('td').update(
-                new Element('a', {
-                    href: base_url + '/?aid=' + child.id
-                }).update(child.xref)
-            ),
-            cell_status = new Element('td').update(child.status),
-            cell_title = new Element('td').update(child.title);
+    insertTable: function () {
+        this.container.insert('<table> \
+                <thead> \
+                    <tr> \
+                        <td></td> \
+                        <td>Title</td> \
+                        <td>Status</td> \
+                    </tr> \
+                </thead> \
+                <tbody> \
+                </tbody> \
+            </table>');
+    },
 
-        row.insert(cell_xref);
-        row.insert(cell_title);
-        row.insert(cell_status);
-        table.insert(row);
+    insertChild: function (tbody, child) {
+        var template = new Template('<tr> \
+                <td><a href="#{url}">#{xref}</a></td> \
+                <td>#{title}</td> \
+                <td>#{status}</td> \
+            </tr>')
+
+        tbody.insert(template.evaluate(child));
     }
 });
+
+//var base_url = codendi.tracker.base_url;
+//console.log(base_url);
+//var hv =  new tuleap.artifact.HierarchyViewer(base_url);
+//
+//hv.getArtifactChildren(16);

@@ -456,9 +456,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $view  = $request->get('view') === 'children' ? 'children' : 'edit';
         $html .= $this->fetchTabs($view);
 
-        if ($view == 'children') {
-            $html .= $this->fetchChildren();
-        } else {
+        if ($view == 'edit') {
             $html .= $this->fetchFields($request->get('artifact'));
 
             $html .= $this->fetchFollowUps($current_user, $request->get('artifact_followup_comment'));
@@ -1929,41 +1927,6 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $html .= '<li class="'. $tab['class'] .'"><a href="'. $tab['url'] .'">'. $tab['label'] .'</a></li>';
         }
         $html .= '</ul>';
-        return $html;
-    }
-
-    private function fetchChildren() {
-        $html  = '';
-        $html .= '
-            <table id="artifactChildren">
-                <thead>
-                    <tr>
-                        <td>
-                        </td>
-                        <td>
-                            Title
-                        </td>
-                        <td>
-                            Status
-                        </td>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
-            <script type="text/template" data-template-name="artifactChildTemplate">
-                <tr data-artifact-id={{id}}>
-                    <td>
-                        {{xref}}
-                    </td>
-                    <td>
-                        {{title}}
-                    </td>
-                    <td>
-                        {{status}}
-                    </td>
-                </tr>
-            </script>';
         return $html;
     }
 }
