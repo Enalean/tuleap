@@ -56,7 +56,8 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     displaysNoChild: function () {
-        this.container.insert('<em>There is not any children yet</em>');
+        var message = codendi.locales.tracker_hierarchy.no_child_artifacts;
+        this.container.insert('<em>' + message + '</em>');
     },
 
     insertTable: function () {
@@ -83,9 +84,3 @@ tuleap.artifact.HierarchyViewer = Class.create({
         tbody.insert(template.evaluate(child));
     }
 });
-
-//var base_url = codendi.tracker.base_url;
-//console.log(base_url);
-//var hv =  new tuleap.artifact.HierarchyViewer(base_url);
-//
-//hv.getArtifactChildren(16);

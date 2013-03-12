@@ -25,3 +25,6 @@ codendi.locales['tracker_crosssearch'] = {
     expand_all: 'Déplier tout',
     collapse_all: 'Replier tout'
 };
+codendi.locales['tracker_hierarchy'] = {
+    no_child_artifacts: 'Cet artefact n'as pas encore d'enfants'
+};

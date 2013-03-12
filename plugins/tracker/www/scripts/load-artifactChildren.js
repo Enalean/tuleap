@@ -20,8 +20,8 @@
 document.observe('dom:loaded', function () {
     
     $$('.artifact-hierarchy').each(function (container) {
-        var hv =  new tuleap.artifact.HierarchyViewer(codendi.tracker.base_url, container);
+        var hierarchy_viewer =  new tuleap.artifact.HierarchyViewer(codendi.tracker.base_url, container);
 
-        hv.getArtifactChildren(container.getAttribute('data-artifact-id'));
+        hierarchy_viewer.getArtifactChildren(container.getAttribute('data-artifact-id'));
     });
 });
