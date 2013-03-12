@@ -970,7 +970,7 @@ The integration of CVS and Subversion in &SYS_PRODUCT_NAME; precisely provide th
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
-	  <para><emphasis role="bold">Tracker</emphasis>: the
+	  <para><emphasis role="bold">Tracker version 3</emphasis>: the
 	  artifacts data, the changes history and the artifacts
 	  dependencies can be exported for each tracker.</para>
 	</listitem>
@@ -1239,7 +1239,7 @@ The integration of CVS and Subversion in &SYS_PRODUCT_NAME; precisely provide th
 
 
     <section id="TrackerImport">
-      <title>Tracker Artifact Import</title>
+      <title>Tracker Artifact Import (version 3)</title>
 
       <para><emphasis>Location: Project Administration Menu</emphasis></para>
 
