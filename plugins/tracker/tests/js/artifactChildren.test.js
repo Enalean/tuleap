@@ -27,61 +27,91 @@ describe('HierarchyViewer', function () {
 
     describe('retrieves the children', function () {
 
-        var container,
+        var artifact_id = 12,
+            container,
             viewer;
 
-        beforeEach(function () {
-            var server      = sinon.fakeServer.create(),
-                artifact_id = 12;
 
-            container = new Element('div');
-            viewer    = new tuleap.artifact.HierarchyViewer(base_url, container);
-            server.respondWith(
-                "GET", base_url + '?aid=12&func=get-children',
-                [
-                    200,
-                    { "Content-type": "application/json" },
-                    JSON.stringify(stories)
-                ]
-            );
-
-            viewer.getArtifactChildren(artifact_id);
-
-            server.respond();
-        });
-
-        it('inserts a table', function () {
-            container.down('table').should.exist;
-        });
-
-        it('the table has a header with title & status', function () {
-            container.down('table').down('thead').innerText.should.contain('Title');
-            container.down('table').down('thead').innerText.should.contain('Status');
-        });
-
-        describe('for each child', function () {
-
-            var table;
+        describe('it does not have any children', function () {
 
             beforeEach(function () {
-                table = container.down('table');
+                var server = sinon.fakeServer.create();
+
+                container = new Element('div');
+                viewer    = new tuleap.artifact.HierarchyViewer(base_url, container);
+                server.respondWith(
+                    "GET", base_url + '?aid=' + artifact_id + '&func=get-children',
+                    [
+                        200,
+                        { "Content-type": "application/json" },
+                        JSON.stringify([])
+                    ]
+                );
+
+                viewer.getArtifactChildren(artifact_id);
+
+                server.respond();
             });
 
-            it('displays the title', function () {
-                stories.map(function (story) {
-                    table.innerText.should.contain(story.title);
+            it('displays that there is no child', function () {
+                container.down('em').innerText.should.contain('There is not any children yet');
+            });
+        });
+
+        describe('it has children', function () {
+
+            beforeEach(function () {
+                var server = sinon.fakeServer.create();
+
+                container = new Element('div');
+                viewer    = new tuleap.artifact.HierarchyViewer(base_url, container);
+                server.respondWith(
+                    "GET", base_url + '?aid=' + artifact_id + '&func=get-children',
+                    [
+                        200,
+                        { "Content-type": "application/json" },
+                        JSON.stringify(stories)
+                    ]
+                );
+
+                viewer.getArtifactChildren(artifact_id);
+
+                server.respond();
+            });
+
+            it('inserts a table', function () {
+                container.down('table').should.exist;
+            });
+
+            it('the table has a header with title & status', function () {
+                container.down('table').down('thead').innerText.should.contain('Title');
+                container.down('table').down('thead').innerText.should.contain('Status');
+            });
+
+            describe('for each child', function () {
+
+                var table;
+
+                beforeEach(function () {
+                    table = container.down('table');
                 });
-            });
 
-            it('displays the status', function () {
-                stories.map(function (story) {
-                    table.innerText.should.contain(story.status);
+                it('displays the title', function () {
+                    stories.map(function (story) {
+                        table.innerText.should.contain(story.title);
+                    });
                 });
-            });
 
-            it('displays the xref as a link', function () {
-                stories.map(function (story) {
-                    table.down('a[href=' + story.url + ']').text.should.contain(story.xref);
+                it('displays the status', function () {
+                    stories.map(function (story) {
+                        table.innerText.should.contain(story.status);
+                    });
+                });
+
+                it('displays the xref as a link', function () {
+                    stories.map(function (story) {
+                        table.down('a[href=' + story.url + ']').text.should.contain(story.xref);
+                    });
                 });
             });
         });
