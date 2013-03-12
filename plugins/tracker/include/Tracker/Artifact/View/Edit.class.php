@@ -148,3 +148,4 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         return $html;
     }
 }
+?>

@@ -71,3 +71,4 @@ class Tracker_Artifact_View_ViewCollection {
         return $html;
     }
 }
+?>

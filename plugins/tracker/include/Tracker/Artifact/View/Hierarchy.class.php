@@ -35,3 +35,4 @@ class Tracker_Artifact_View_Hierarchy extends Tracker_Artifact_View_View {
         return '<div data-artifact-id="'. $this->artifact->getId() .'" class="artifact-hierarchy"></div>';
     }
 }
+?>

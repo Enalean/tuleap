@@ -65,3 +65,4 @@ abstract class Tracker_Artifact_View_View {
      */
     public abstract function fetch();
 }
+?>
