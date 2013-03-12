@@ -1,5 +1,5 @@
 Version 5.96 - Tuleap 5.12
-    * SOAP method related to tracker fields now returns computed field value
+    * SOAP methods related to tracker v5 fields now return computed field value
 
 Version 5.95 - Tuleap 5.12
     * Story #2524: see colour type at a glance on cardwall.
