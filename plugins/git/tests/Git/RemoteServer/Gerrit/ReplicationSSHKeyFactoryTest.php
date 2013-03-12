@@ -105,6 +105,18 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
         $this->factory->save($this->key);
     }
 
+    public function testSaveAddRepliationKeyWithRelativePath() {
+        // otherwise, git fails to manage symlinks on admin repo
+        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_relative_path = $key_dir.'/' . $this->key->getUserName() . $key_file_suffix;
+
+        expect($this->git_executor)->add($key_relative_path)->once();
+
+        $this->factory->save($this->key);
+    }
+
+
     public function testSaveWillGitPushValidReplicationKey() {
         stub($this->git_executor)->push()->once();
 

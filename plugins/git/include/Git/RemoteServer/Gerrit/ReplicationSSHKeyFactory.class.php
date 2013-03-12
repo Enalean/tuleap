@@ -102,7 +102,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
         $this->saveKeyInFileSystem($key, $key_path);
 
-        $this->git_executer->add($key_path);
+        $this->git_executer->add(self::GOTOLITE_KEY_DIR.'/'.$key_file_name);
         $this->git_executer->commit(self::KEY_SAVE_COMMIT_MESSAGE . $key->getGerritHostId());
         $this->git_executer->push();
 
