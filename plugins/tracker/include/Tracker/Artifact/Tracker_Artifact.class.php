@@ -739,11 +739,30 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case 'get-children':
-                $stories = array(
-                    array('title' => "tea",    'id' => "121", 'status' => "open",   'xref' => "story #121", 'url' => "/path/to/121"),
-                    array('title' => "coffee", 'id' => "122", 'status' => "closed", 'xref' => "story #122", 'url' => "/path/to/122")
-                );
-                $GLOBALS['Response']->sendJSON(array());
+                $tracker_id = $this->getTrackerId();
+                $child_trackers = $this->getHierarchyFactory()->getChildren($tracker_id);
+
+                $children = array();
+                $base_url = get_server_url();
+
+                foreach ($child_trackers as $tracker) {
+                    $tracker_artifacts = $this->getArtifactFactory()->getArtifactsByTrackerId($tracker->getId());
+                    foreach($tracker_artifacts as $artifact) {
+                        $parent = $artifact->getParent($current_user);
+
+                        if($parent && $parent->getId() == $this->getId()) {
+                            $children[] = array(
+                                'xref'  => $artifact->getXRef(),
+                                'title' => $artifact->getTitle(),
+                                'id'    => $artifact->getId(),
+                                'url'   => $base_url.$artifact->getUri()
+                            );
+                        }
+
+                    }
+                }
+
+                $GLOBALS['Response']->sendJSON($children);
                 break;
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
