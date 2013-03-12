@@ -641,27 +641,21 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case 'get-children':
-                $tracker_id = $this->getTrackerId();
-                $child_trackers = $this->getHierarchyFactory()->getChildren($tracker_id);
+                $children         = array();
+                $base_url         = get_server_url();
+                $artifact_links   = $this->getLinkedArtifacts($current_user);
+                $allowed_trackers = $this->getAllowedChildrenTypes();
 
-                $children = array();
-                $base_url = get_server_url();
-
-                foreach ($child_trackers as $tracker) {
-                    $tracker_artifacts = $this->getArtifactFactory()->getArtifactsByTrackerId($tracker->getId());
-                    foreach ($tracker_artifacts as $artifact) {
-                        $parent = $artifact->getParent($current_user);
-
-                        if ($parent && $parent->getId() == $this->getId()) {
-                            $children[] = array(
-                                'xref'  => $artifact->getXRef(),
-                                'title' => $artifact->getTitle(),
-                                'id'    => $artifact->getId(),
-                                'url'   => $base_url.$artifact->getUri(),
-                                'status'=> $artifact->getStatus()
-                            );
-                        }
-
+                foreach ($artifact_links as $artifact_link) {
+                    $tracker = $artifact_link->getTracker();
+                    if (in_array($tracker, $allowed_trackers)) {
+                        $children[] = array(
+                            'xref'  => $artifact_link->getXRef(),
+                            'title' => $artifact_link->getTitle(),
+                            'id'    => $artifact_link->getId(),
+                            'url'   => $base_url.$artifact_link->getUri(),
+                            'status'=> $artifact_link->getStatus()
+                        );
                     }
                 }
 
