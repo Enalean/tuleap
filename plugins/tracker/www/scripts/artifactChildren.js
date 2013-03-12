@@ -63,12 +63,15 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     insertTable: function () {
+        var title  = this.locales.tracker_hierarchy.title_column_name,
+            status = this.locales.tracker_hierarchy.status_column_name;
+
         this.container.insert('<table class="tree-view artifact-children-table"> \
                 <thead> \
                     <tr class="boxtable artifact-children-table-head"> \
                         <th class="boxtitle"></th> \
-                        <th class="boxtitle">Title</th> \
-                        <th class="boxtitle">Status</th> \
+                        <th class="boxtitle">'+ title +'</th> \
+                        <th class="boxtitle">'+ status +'</th> \
                     </tr> \
                 </thead> \
                 <tbody> \

@@ -26,7 +26,9 @@ describe('HierarchyViewer', function () {
         ],
         locales = {
             tracker_hierarchy: {
-                no_child_artifacts: 'whatever'
+                no_child_artifacts: 'whatever',
+                title_column_name: 'Title',
+                status_column_name: 'Status'
             }
         };
 
@@ -69,7 +71,7 @@ describe('HierarchyViewer', function () {
                 var server = sinon.fakeServer.create();
 
                 container = new Element('div');
-                viewer    = new tuleap.artifact.HierarchyViewer(base_url, container);
+                viewer    = new tuleap.artifact.HierarchyViewer(base_url, container, locales);
                 server.respondWith(
                     "GET", base_url + '?aid=' + artifact_id + '&func=get-children',
                     [

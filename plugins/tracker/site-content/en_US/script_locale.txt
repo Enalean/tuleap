@@ -26,5 +26,8 @@ codendi.locales['tracker_crosssearch'] = {
     collapse_all: 'Collapse all'
 };
 codendi.locales['tracker_hierarchy'] = {
-    no_child_artifacts: 'This artifact has no children yet'
+    no_child_artifacts: 'This artifact has no children yet',
+    title_column_name: 'Title',
+    status_column_name: 'Status'
+
 };
