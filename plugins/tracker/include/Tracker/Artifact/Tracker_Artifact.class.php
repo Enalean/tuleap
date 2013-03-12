@@ -743,7 +743,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     array('title' => "tea",    'id' => "121", 'status' => "open",   'xref' => "story #121", 'url' => "/path/to/121"),
                     array('title' => "coffee", 'id' => "122", 'status' => "closed", 'xref' => "story #122", 'url' => "/path/to/122")
                 );
-                $GLOBALS['Response']->sendJSON($stories);
+                $GLOBALS['Response']->sendJSON(array());
                 break;
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {

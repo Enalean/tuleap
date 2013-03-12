@@ -30,7 +30,7 @@ tuleap.artifact.HierarchyViewer = Class.create({
     getArtifactChildren : function(artifact_id) {
         new Ajax.Request( this.base_url, {
             method : 'GET',
-            parameters : { 
+            parameters : {
                 aid : artifact_id,
                 func : 'get-children'
             },
@@ -42,12 +42,21 @@ tuleap.artifact.HierarchyViewer = Class.create({
         var children = transport.responseJSON,
             tbody;
 
+        if (! children.length) {
+            this.displaysNoChild();
+            return;
+        }
+
         this.insertTable();
         tbody = this.container.down('tbody');
 
         children.map(function (child) {
             this.insertChild(tbody, child);
         }.bind(this));
+    },
+
+    displaysNoChild: function () {
+        this.container.insert('<em>There is not any children yet</em>');
     },
 
     insertTable: function () {
