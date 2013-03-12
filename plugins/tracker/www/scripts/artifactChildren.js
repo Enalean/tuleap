@@ -51,12 +51,12 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     insertTable: function () {
-        this.container.insert('<table> \
+        this.container.insert('<table class="tree-view"> \
                 <thead> \
-                    <tr> \
-                        <td></td> \
-                        <td>Title</td> \
-                        <td>Status</td> \
+                    <tr class="boxtable"> \
+                        <th class="boxtitle"></th> \
+                        <th class="boxtitle">Title</th> \
+                        <th class="boxtitle">Status</th> \
                     </tr> \
                 </thead> \
                 <tbody> \
