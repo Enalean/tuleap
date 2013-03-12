@@ -747,10 +747,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
                 foreach ($child_trackers as $tracker) {
                     $tracker_artifacts = $this->getArtifactFactory()->getArtifactsByTrackerId($tracker->getId());
-                    foreach($tracker_artifacts as $artifact) {
+                    foreach ($tracker_artifacts as $artifact) {
                         $parent = $artifact->getParent($current_user);
 
-                        if($parent && $parent->getId() == $this->getId()) {
+                        if ($parent && $parent->getId() == $this->getId()) {
                             $children[] = array(
                                 'xref'  => $artifact->getXRef(),
                                 'title' => $artifact->getTitle(),
