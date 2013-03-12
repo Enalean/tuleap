@@ -81,6 +81,7 @@ class trackerPlugin extends Plugin {
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerFieldDependencies.js"></script>'."\n";
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/TrackerRichTextEditor.js"></script>'."\n";
             echo '<script type="text/javascript" src="/plugins/tracker/scripts/artifactChildren.js"></script>'."\n";
+            echo '<script type="text/javascript" src="/plugins/tracker/scripts/load-artifactChildren.js"></script>'."\n";
         }
     }
     

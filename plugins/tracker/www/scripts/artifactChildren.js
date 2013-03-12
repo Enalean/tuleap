@@ -28,9 +28,12 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     getArtifactChildren : function(artifact_id) {
-        new Ajax.Request( this.base_url + '/artifactChildren.json', {
+        new Ajax.Request( this.base_url, {
             method : 'GET',
-            parameters : { aid : artifact_id },
+            parameters : { 
+                aid : artifact_id,
+                func : 'get-children'
+            },
             onSuccess : this.receiveChildren.bind(this)
         });
     },

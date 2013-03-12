@@ -19,7 +19,7 @@
 
 describe('HierarchyViewer', function () {
 
-    var base_url = '/plugins/tracker',
+    var base_url = '/plugins/tracker/',
         stories  = [
             {title:"tea",    id:"121", status:"open",   xref:"story #121", url:"/path/to/121"},
             {title:"coffee", id:"122", status:"closed", xref:"story #122", url:"/path/to/122"}
@@ -37,7 +37,7 @@ describe('HierarchyViewer', function () {
             container = new Element('div');
             viewer    = new tuleap.artifact.HierarchyViewer(base_url, container);
             server.respondWith(
-                "GET", base_url + '/artifactChildren.json?aid=12',
+                "GET", base_url + '?aid=12&func=get-children',
                 [
                     200,
                     { "Content-type": "application/json" },

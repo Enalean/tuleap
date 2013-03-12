@@ -456,7 +456,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $view  = $request->get('view') === 'children' ? 'children' : 'edit';
         $html .= $this->fetchTabs($view);
 
-        if ($view == 'edit') {
+        if ($view == 'children') {
+            $html .= $this->fetchChildren();
+        } else {
             $html .= $this->fetchFields($request->get('artifact'));
 
             $html .= $this->fetchFollowUps($current_user, $request->get('artifact_followup_comment'));
@@ -736,6 +738,13 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      */
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
+            case 'get-children':
+                $stories = array(
+                    array('title' => "tea",    'id' => "121", 'status' => "open",   'xref' => "story #121", 'url' => "/path/to/121"),
+                    array('title' => "coffee", 'id' => "122", 'status' => "closed", 'xref' => "story #122", 'url' => "/path/to/122")
+                );
+                $GLOBALS['Response']->sendJSON($stories);
+                break;
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
                     if ($changeset = $this->getChangeset($request->get('changeset_id'))) {
@@ -1928,6 +1937,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         }
         $html .= '</ul>';
         return $html;
+    }
+
+    private function fetchChildren() {
+        return '<div data-artifact-id="'. $this->getId() .'" class="artifact-hierarchy"></div>';
     }
 }
 
