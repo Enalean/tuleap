@@ -755,7 +755,8 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                                 'xref'  => $artifact->getXRef(),
                                 'title' => $artifact->getTitle(),
                                 'id'    => $artifact->getId(),
-                                'url'   => $base_url.$artifact->getUri()
+                                'url'   => $base_url.$artifact->getUri(),
+                                'status'=> $artifact->getStatus()
                             );
                         }
 
