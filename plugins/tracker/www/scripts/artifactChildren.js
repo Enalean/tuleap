@@ -61,9 +61,9 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     insertTable: function () {
-        this.container.insert('<table class="tree-view"> \
+        this.container.insert('<table class="tree-view artifact-children-table"> \
                 <thead> \
-                    <tr class="boxtable"> \
+                    <tr class="boxtable artifact-children-table-head"> \
                         <th class="boxtitle"></th> \
                         <th class="boxtitle">Title</th> \
                         <th class="boxtitle">Status</th> \
@@ -75,7 +75,7 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     insertChild: function (tbody, child) {
-        var template = new Template('<tr> \
+        var template = new Template('<tr class="artifact-child"> \
                 <td><a href="#{url}">#{xref}</a></td> \
                 <td>#{title}</td> \
                 <td>#{status}</td> \

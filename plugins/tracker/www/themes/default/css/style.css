@@ -1329,3 +1329,20 @@ td.first-column {
 .workflow_rule_date_comparator {
     margin: auto 0.5em;
 }
+
+.artifact-children-table {
+    min-width: 50%;
+}
+
+tr.artifact-children-table-head {
+    vertical-align: middle;
+    height: 2em;
+}
+
+.artifact-child:hover {
+    background-color: #D8E7EE;
+}
+
+.artifact-child > td {
+    border-left: 0 none;
+}
