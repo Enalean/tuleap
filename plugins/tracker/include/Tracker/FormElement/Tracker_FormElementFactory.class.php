@@ -325,13 +325,39 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * All fields used by the tracker
+     *
      * @param Tracker $tracker
-     * @return array of Tracker_FormElement - All fields used by the tracker
+     *
+     * @return Tracker_FormElement_Field[]
      */
     public function getUsedFields($tracker) {
+        return $this->getUsedFormElementsByType($tracker, $this->getFieldsSQLTypes());
+    }
+
+    /**
+     * Returns FormElements used by a tracker, except those already in SOAP Basic Info
+     *
+     * @param Tracker $tracker
+     *
+     * @return Tracker_FormElement_Field[]
+     */
+    public function getUsedFieldsForSoap(Tracker $tracker) {
+        $element_already_in_soap_basic_info = array(
+            'aid',
+            'lud',
+            'subby',
+            'subon',
+            'cross',
+        );
+        $field_types = array_diff($this->getFieldsSQLTypes(), $element_already_in_soap_basic_info);
+        return $this->getUsedFormElementsByType($tracker, $field_types);
+    }
+
+    private function getFieldsSQLTypes() {
         $field_classnames = array_merge($this->classnames, $this->special_classnames);
         EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
-        return $this->getUsedFormElementsByType($tracker, array_keys($field_classnames));
+        return array_keys($field_classnames);
     }
 
     /**
