@@ -468,7 +468,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     private function fechView(Codendi_Request $request, PFUser $user) {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
         $view_collection->add(new Tracker_Artifact_View_Edit($this, $request, $user));
-        $view_collection->add(new Tracker_Artifact_View_Hierarchy($this, $request, $user));
+        if ($this->getTracker()->getChildren()) {
+            $view_collection->add(new Tracker_Artifact_View_Hierarchy($this, $request, $user));
+        }
 
         return $view_collection->fetchRequestedView($request);
     }
