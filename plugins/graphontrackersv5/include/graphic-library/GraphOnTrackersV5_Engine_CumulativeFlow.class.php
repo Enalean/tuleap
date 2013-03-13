@@ -25,13 +25,13 @@ require_once('GraphOnTrackersV5_Engine.class.php');
 class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
     
     public $unit;
-    public $nb_step;
+    public $stop_date;
     public $start_date;
     public $color_set;
     
     function validData(){
         
-        if ($this->nb_step && $this->nb_step > 0){
+        if ($this->start_date && $this->start_date > 0){
             return true;
         }else{
             echo " <p class='feedback_info'>".$GLOBALS['Language']->getText('plugin_graphontrackersv5_engine','no_datas',array($this->title))."</p>";

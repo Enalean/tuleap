@@ -44,16 +44,25 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $engine->legend      = null;
         $engine->start_date  = $this->chart->getStartDate();
         $engine->unit        = $this->chart->getUnit();
-        $engine->nb_step     = $this->chart->getNbStep();
+        $engine->stop_date   = $this->chart->getStopDate();
     }
     
     protected function getCumulativeFlowData($engine, $observed_field_id, $type) {
         $result = array();
         $timeFiller = array(3600*24, 3600*24*7, 3600*24*30.45);
         $artifact_ids = explode(',', $this->artifacts['id']);
-        $nbSteps = $this->chart->getNbStep();
+        
         $start = $this->chart->getStartDate();
+        $stop = $this->chart->getStopDate() | time();
         $unit = $this->chart->getUnit();
+        $nbSteps = ceil(($stop - $start)/$timeFiller[$unit]);
+        /*
+        echo("<pre>");
+        var_dump($start);
+        var_dump($stop);
+        var_dump($unit);
+        var_dump($nbSteps);
+        //*/
         
         for ($i = 0 ; $i <= $nbSteps; $i++ ) {
             $timestamp = $start + ($i * $timeFiller[$unit]) ;
@@ -82,7 +91,9 @@ ORDER BY rank
 ) as r
 ON r.label = val2.label
 WHERE val2.field_id = ". $observed_field_id;
-            //echo $sql;
+            /*
+            echo $sql."
+            ";//*/
             $res = db_query($sql);
             
             $result[$timestamp] = array();
@@ -90,8 +101,8 @@ WHERE val2.field_id = ". $observed_field_id;
                $engine->colors[$data['label']] = $this->getColor($data);
                $result[$timestamp][$data['label']] =  $data['count'] | 0; //Switch null for 0
             }
-        }
-
+        }//var_dump($result);echo("</pre>");
+        
         return $result;
     }
     

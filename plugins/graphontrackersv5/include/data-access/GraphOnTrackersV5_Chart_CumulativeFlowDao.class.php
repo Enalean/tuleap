@@ -41,22 +41,23 @@ class GraphOnTrackersV5_Chart_CumulativeFlowDao extends DataAccessObject {
         return $this->update($sql);
     }
     
-    public function save($id, $field_id, $start_date, $nb_step, $unit) {
+    public function save($id, $field_id, $start_date, $stop_date, $unit) {
         $id         = $this->da->escapeInt($id);
         $field_id   = $this->da->escapeInt($field_id);
         $start_date = $this->da->escapeInt($start_date);
-        $nb_step   = $this->da->escapeInt($nb_step);
-        $unit   = $this->da->escapeInt($unit);
-        $sql = "REPLACE INTO $this->table_name (id, field_id, start_date, nb_step, unit)
-                VALUES ($id, $field_id, $start_date, $nb_step, $unit)";
+        $stop_date  = $this->da->escapeInt($stop_date);
+        $unit       = $this->da->escapeInt($unit);
+        $sql = "REPLACE INTO $this->table_name (id, field_id, start_date, stop_date, unit)
+                VALUES ($id, $field_id, $start_date, $stop_date, $unit)";
+        echo $sql;
         return $this->update($sql);
     }
     
     public function duplicate($from_chart_id, $to_chart_id, $field_mapping) {
         $from_chart_id = $this->da->escapeInt($from_chart_id);
         $to_chart_id   = $this->da->escapeInt($to_chart_id);
-        $sql = "INSERT INTO $this->table_name (id, field_id, start_date, nb_step, unit)
-                SELECT $to_chart_id, id, field_id, start_date, nb_step, unit
+        $sql = "INSERT INTO $this->table_name (id, field_id, start_date, stop_date, unit)
+                SELECT $to_chart_id, id, field_id, start_date, stop_date, unit
                 FROM $this->table_name
                 WHERE id = $from_chart_id";
 
