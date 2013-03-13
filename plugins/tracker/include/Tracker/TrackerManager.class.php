@@ -132,6 +132,10 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 $GLOBALS['Response']->send401UnauthorizedHeader();
             }
         } catch (Tracker_NoMachingResourceException $e) {
+
+            if ($request->isAjax()) {
+                $GLOBALS['Response']->sendJSON(array());
+            }
             //show, admin all trackers
             if ((int)$request->get('group_id')) {
                 $group_id = (int)$request->get('group_id');
