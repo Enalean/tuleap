@@ -104,6 +104,27 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     }
 
     /**
+     *
+     * @return array
+     */
+    public function getOpenLabels() {
+        $labels = array();
+        
+        if (! $this->list_field instanceof Tracker_FormElement_Field_List) {
+            return $labels;
+        }
+        $field_values = $this->list_field->getAllValues();
+        
+        foreach ($this->open_values as $value) {
+            if (isset($field_values[$value])) {
+                $labels[] = $field_values[$value]->getLabel();
+            }
+        }
+
+        return $labels;
+    }
+
+    /**
      * Display the basic info about this semantic
      *
      * @return string html

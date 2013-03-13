@@ -651,12 +651,20 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 foreach ($artifact_links as $artifact_link) {
                     $tracker = $artifact_link->getTracker();
                     if (in_array($tracker, $allowed_trackers)) {
+
+                        $semantics = Tracker_Semantic_Status::load($tracker);
+                        if (! $artifact_link->getStatus()) {
+                            $status = null;
+                        } else {
+                            $status = ( in_array($artifact_link->getStatus(), $semantics->getOpenLabels()) ) ? 'Open' : 'Closed';
+                        }
+                        
                         $children[] = array(
                             'xref'  => $artifact_link->getXRef(),
                             'title' => $artifact_link->getTitle(),
                             'id'    => $artifact_link->getId(),
                             'url'   => $base_url.$artifact_link->getUri(),
-                            'status'=> $artifact_link->getStatus()
+                            'status'=> $status
                         );
                     }
                 }
