@@ -49,12 +49,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
      * The date (timestamp) the sprint stop
      */
     protected $stop_date;
-    public function getStopDate() { 
-        if(1)//$this->stop_date)
-            return $this->stop_date;
-        else
-            return time();
-    }
+    public function getStopDate() { return $this->stop_date; }
     public function setStopDate($stop_date) { return $this->stop_date = $stop_date; }
     
     /**

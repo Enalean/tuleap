@@ -56,13 +56,6 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $stop = $this->chart->getStopDate() | time();
         $unit = $this->chart->getUnit();
         $nbSteps = ceil(($stop - $start)/$timeFiller[$unit]);
-        /*
-        echo("<pre>");
-        var_dump($start);
-        var_dump($stop);
-        var_dump($unit);
-        var_dump($nbSteps);
-        //*/
         
         for ($i = 0 ; $i <= $nbSteps; $i++ ) {
             $timestamp = $start + ($i * $timeFiller[$unit]) ;
@@ -91,9 +84,7 @@ ORDER BY rank
 ) as r
 ON r.label = val2.label
 WHERE val2.field_id = ". $observed_field_id;
-            /*
-            echo $sql."
-            ";//*/
+
             $res = db_query($sql);
             
             $result[$timestamp] = array();
@@ -101,7 +92,7 @@ WHERE val2.field_id = ". $observed_field_id;
                $engine->colors[$data['label']] = $this->getColor($data);
                $result[$timestamp][$data['label']] =  $data['count'] | 0; //Switch null for 0
             }
-        }//var_dump($result);echo("</pre>");
+        }
         
         return $result;
     }
