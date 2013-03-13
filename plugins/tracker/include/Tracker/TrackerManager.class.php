@@ -121,8 +121,16 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
         
         try {
             $object = $url->getDispatchableFromRequest($request, $user);
+            $this->processSubElement($object, $request, $user);
         } catch (Tracker_ResourceDoesntExistException $e) {
              exit_error($GLOBALS['Language']->getText('global', 'error'), $e->getMessage());
+        } catch (Tracker_CannotAccessTrackerException $e) {
+            if (! $request->isAjax()) {
+                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
+                $this->displayAllTrackers($object->getTracker()->getProject(), $user);
+            } else {
+                $GLOBALS['Response']->send401UnauthorizedHeader();
+            }
         } catch (Tracker_NoMachingResourceException $e) {
             //show, admin all trackers
             if ((int)$request->get('group_id')) {
@@ -166,16 +174,8 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
                 }
             }
         }
-        try {
-            $this->processSubElement($object, $request, $user);
-        } catch (Tracker_CannotAccessTrackerException $e) {
-            if (! $request->isAjax()) {
-                $GLOBALS['Response']->addFeedback('error', $e->getMessage());
-                $this->displayAllTrackers($object->getTracker()->getProject(), $user);
-            } else {
-                $GLOBALS['Response']->send401UnauthorizedHeader();
-            }
-        }
+        
+        
     }
     
     /**
