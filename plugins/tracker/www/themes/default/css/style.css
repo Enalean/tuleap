@@ -1334,13 +1334,13 @@ td.first-column {
     min-width: 50%;
 }
 
+.artifact-children-table > tbody > tr:nth-child(odd) > td {
+  background-color: #f9f9f9;
+}
+
 tr.artifact-children-table-head {
     vertical-align: middle;
     height: 2em;
-}
-
-.artifact-child:hover {
-    background-color: #D8E7EE;
 }
 
 .artifact-child > td {
