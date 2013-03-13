@@ -135,6 +135,7 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
 
             if ($request->isAjax()) {
                 $GLOBALS['Response']->sendJSON(array());
+                return;
             }
             //show, admin all trackers
             if ((int)$request->get('group_id')) {
