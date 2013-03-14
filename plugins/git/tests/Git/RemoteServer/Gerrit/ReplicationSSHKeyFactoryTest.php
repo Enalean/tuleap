@@ -234,7 +234,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
 
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
         $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
-        $key_prefix      = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX;
+        $key_prefix      = 'forge__gerrit_';
         $key_file_name = $key_prefix . $id . $key_file_suffix;
 
 
@@ -251,7 +251,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
 
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
         $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
-        $key_prefix      = Git_RemoteServer_Gerrit_ReplicationSSHKey::USER_NAME_PREFIX;
+        $key_prefix      = 'forge__gerrit_';
         $key_file_name = $key_prefix . $id . $key_file_suffix;
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_file_name;

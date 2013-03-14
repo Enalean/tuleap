@@ -61,7 +61,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey {
             return null;
         }
 
-        return self::USER_NAME_PREFIX.$this->getGerritHostId();
+        return Rule_UserName::RESERVED_PREFIX.'gerrit_'.$this->getGerritHostId();
     }
 
     /**

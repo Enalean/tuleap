@@ -41,10 +41,6 @@ Mock::generate('BaseLanguage');
 
 class Rule_UserNameTest extends UnitTestCase {
 
-    function UnitTestCase($name = 'Rule_UserName test') {
-        $this->UnitTestCase($name);
-    }
-
     function setUp() {
         $GLOBALS['Language'] = new MockBaseLanguage($this);
     }
@@ -97,8 +93,9 @@ class Rule_UserNameTest extends UnitTestCase {
 
     function testReservedPrefix() {
         $r = new Rule_UserName();
-        $this->assertTrue($r->isReservedName("forge_"));
-        $this->assertTrue($r->isReservedName("forge_tutu"));
+        $this->assertTrue($r->isReservedName("forge__"));
+        $this->assertTrue($r->isReservedName("forge__tutu"));
+        $this->assertFalse($r->isReservedName("forge_loic"));
         $this->assertFalse($r->isReservedName("forgeron"));
     }
 

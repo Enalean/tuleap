@@ -307,6 +307,8 @@ extends Rule {
 class Rule_UserName
 extends Rule {
 
+    const RESERVED_PREFIX = 'forge__';
+
     /**
      * Test if value is a name on underlying OS.
      * 
@@ -434,7 +436,7 @@ extends Rule {
      * @return bool
      */
     private function isReservedPrefix($val) {
-        if (strpos($val, 'forge_') === 0) {
+        if (strpos($val, self::RESERVED_PREFIX) === 0) {
             return true;
         }
         return false;
