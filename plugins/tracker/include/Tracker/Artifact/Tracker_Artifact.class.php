@@ -656,7 +656,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                         if (! $artifact_link->getStatus()) {
                             $status = null;
                         } else {
-                            $status = ( in_array($artifact_link->getStatus(), $semantics->getOpenLabels()) ) ? 'Open' : 'Closed';
+                            $status = ( in_array($artifact_link->getStatus(), $semantics->getOpenLabels()) ) ? 1 : 0;
                         }
                         
                         $children[] = array(

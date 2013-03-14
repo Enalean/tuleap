@@ -28,5 +28,7 @@ codendi.locales['tracker_crosssearch'] = {
 codendi.locales['tracker_hierarchy'] = {
     no_child_artifacts: 'Cet artefact n\'as pas encore d\'enfants',
     title_column_name: 'Titre',
-    status_column_name: 'Status'
+    status_column_name: 'Status',
+    open_status: 'Ouvert',
+    closed_status: 'Fermé'
 };

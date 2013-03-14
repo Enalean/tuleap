@@ -18,36 +18,39 @@
   */
 
 describe('HierarchyViewer', function () {
-
     var base_url = '/plugins/tracker/',
         stories  = [
-            {title:"tea",    id:"121", status:"open",   xref:"story #121", url:"/path/to/121"},
-            {title:"coffee", id:"122", status:"closed", xref:"story #122", url:"/path/to/122"}
+            {title:"tea",    id:"121", status:"1",   xref:"story #121", url:"/path/to/121"},
+            {title:"coffee", id:"122", status:"0", xref:"story #122", url:"/path/to/122"},
+            {title:"cake",   id:"122", status:"0", xref:"story #122", url:"/path/to/122"}
         ],
         locales = {
             tracker_hierarchy: {
                 no_child_artifacts: 'whatever',
                 title_column_name: 'Title',
-                status_column_name: 'Status'
+                status_column_name: 'Status',
+                open_status     : 'ongoing',
+                closed_status   : 'rejected'
             }
         };
 
     describe('retrieves the children', function () {
-
         var artifact_id = 12,
             container,
             viewer;
 
-
         describe('it does not have any children', function () {
+            
 
             beforeEach(function () {
-                var server = sinon.fakeServer.create();
+                var server      = sinon.fakeServer.create();
 
-                container = new Element('div');
-                viewer    = new tuleap.artifact.HierarchyViewer(base_url, container, locales);
+                container   = new Element('div');
+                viewer      = new tuleap.artifact.HierarchyViewer(base_url, container, locales);
+
                 server.respondWith(
-                    "GET", base_url + '?aid=' + artifact_id + '&func=get-children',
+                    "GET",
+                    base_url + '?aid=' + artifact_id + '&func=get-children',
                     [
                         200,
                         { "Content-type": "application/json" },
@@ -56,7 +59,6 @@ describe('HierarchyViewer', function () {
                 );
 
                 viewer.getArtifactChildren(artifact_id);
-
                 server.respond();
             });
 
@@ -66,7 +68,7 @@ describe('HierarchyViewer', function () {
         });
 
         describe('it has children', function () {
-
+          
             beforeEach(function () {
                 var server = sinon.fakeServer.create();
 
@@ -96,11 +98,14 @@ describe('HierarchyViewer', function () {
             });
 
             describe('for each child', function () {
-
                 var table;
 
                 beforeEach(function () {
                     table = container.down('table');
+                });
+
+                it('modifies the status', function() {
+                    
                 });
 
                 it('displays the title', function () {
