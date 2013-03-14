@@ -221,7 +221,7 @@ class Git_GitoliteDriver {
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
         if ($repository->isMigratedToGerrit()) {
-            $repo_config .= self::$permissions_types[Git::PERM_WPLUS] . ' = forge_gerrit_' . $repository->getRemoteServerId() . PHP_EOL;
+            $repo_config .= self::$permissions_types[Git::PERM_WPLUS] . ' = ' .Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getGitoliteUserNameForGerritServerId($repository->getRemoteServerId()) . PHP_EOL;
         } else {
             $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
             $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
