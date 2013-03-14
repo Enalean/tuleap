@@ -31,4 +31,5 @@ codendi.locales['tracker_hierarchy'] = {
     status_column_name: 'Status',
     open_status: 'Ouvert',
     closed_status: 'Fermé'
+    null_status: null
 };

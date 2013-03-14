@@ -82,12 +82,15 @@ tuleap.artifact.HierarchyViewer = Class.create({
 
     purifyChild : function(child) {
         var open_status   = this.locales.tracker_hierarchy.open_status,
-            closed_status = this.locales.tracker_hierarchy.closed_status;
+            closed_status = this.locales.tracker_hierarchy.closed_status,
+            null_status   = this.locales.tracker_hierarchy.null_status;
 
-        if (child.status === 1 ) {
+        if (child.status == 1 ) {
             child.status = open_status;
-        } else if (child.status === 0 ) {
+        } else if (child.status == 0 ) {
             child.status = closed_status;
+        } else {
+            child.status = null_status;
         }
     },
 
