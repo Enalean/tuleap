@@ -235,6 +235,23 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * Return a selectbox field. This field is used and the user can see its value.
+     *
+     * @param int    $tracker_id
+     * @param string $field_name
+     * @param PFUser   $user
+     *
+     * @return Tracker_FormElement_Field_Selectbox | null
+     */
+    public function getSelectboxFieldByNameForUser($tracker_id, $field_name, PFUser $user) {
+        $field = $this->getUsedFieldByNameForUser($tracker_id, $field_name, $user);
+        if ($field && $field instanceof Tracker_FormElement_Field_Selectbox) {
+            return $field;
+        }
+        return null;
+    }
+
+    /**
      * Return a field that provides a computable value. This field is used and the user can see its value.
      *
      * @param int    $tracker_id
@@ -325,13 +342,39 @@ class Tracker_FormElementFactory {
     }
 
     /**
+     * All fields used by the tracker
+     *
      * @param Tracker $tracker
-     * @return array of Tracker_FormElement - All fields used by the tracker
+     *
+     * @return Tracker_FormElement_Field[]
      */
     public function getUsedFields($tracker) {
+        return $this->getUsedFormElementsByType($tracker, $this->getFieldsSQLTypes());
+    }
+
+    /**
+     * Returns FormElements used by a tracker, except those already in SOAP Basic Info
+     *
+     * @param Tracker $tracker
+     *
+     * @return Tracker_FormElement_Field[]
+     */
+    public function getUsedFieldsForSoap(Tracker $tracker) {
+        $element_already_in_soap_basic_info = array(
+            'aid',
+            'lud',
+            'subby',
+            'subon',
+            'cross',
+        );
+        $field_types = array_diff($this->getFieldsSQLTypes(), $element_already_in_soap_basic_info);
+        return $this->getUsedFormElementsByType($tracker, $field_types);
+    }
+
+    private function getFieldsSQLTypes() {
         $field_classnames = array_merge($this->classnames, $this->special_classnames);
         EventManager::instance()->processEvent('tracker_formElement_classnames', array('classnames' => &$field_classnames));
-        return $this->getUsedFormElementsByType($tracker, array_keys($field_classnames));
+        return array_keys($field_classnames);
     }
 
     /**

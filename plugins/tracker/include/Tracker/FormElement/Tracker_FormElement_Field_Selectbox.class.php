@@ -223,5 +223,38 @@ class Tracker_FormElement_Field_Selectbox extends Tracker_FormElement_Field_List
     public function isNone($value) {
         return $value === null || $value === '' || $value === '100';
     }
+
+    /**
+     * Get the color for the current value of the field for an artifact.
+     *
+     * If no value, null is returned.
+     *
+     * @param Tracker_Artifact $artifact
+     *
+     * @return string | null
+     */
+    public function getCurrentDecoratorColor(Tracker_Artifact $artifact) {
+        $changeset = $artifact->getLastChangeset();
+        if (! $changeset) {
+            return null;
+        };
+
+        $values = $this->getBind()->getChangesetValues($changeset->getId());
+        if (! $values) {
+            return null;
+        }
+
+        // We might have many values selected in a list field (eg:
+        // multi-selectbox, checkbox). As we want only one color,
+        // arbitrary take the color of the first selected value.
+        $value_id = $values[0]['id'];
+
+        $decorators = $this->getDecorators();
+        if (! isset($decorators[$value_id])) {
+            return null;
+        }
+
+        return $decorators[$value_id]->css(null);
+    }
 }
 ?>

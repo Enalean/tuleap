@@ -33,16 +33,20 @@ $sql = $ath->buildExportQuery($fields,$col_list,$lbl_list,$dsc_list,$export_sele
 
 $lbl_list['follow_ups']      = $Language->getText('project_export_artifact_export', 'follow_up_comments');
 $lbl_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on');
+$lbl_list['cc']              = $Language->getText('project_export_artifact_export', 'add_cc_lbl');
 
-$dsc_list['follow_ups'] = $Language->getText('project_export_artifact_export', 'all_followup_comments');
+$dsc_list['follow_ups']      = $Language->getText('project_export_artifact_export', 'all_followup_comments');
 $dsc_list['is_dependent_on'] = $Language->getText('project_export_artifact_export', 'depend_on_list');
+$dsc_list['cc']              = $Language->getText('project_export_artifact_export', 'add_cc_dsc');
 
 // Add the 2 fields that we build ourselves for user convenience
 // - All follow-up comments
 // - Dependencies
+// - CC List
 
 $col_list[] = 'follow_ups';
 $col_list[] = 'is_dependent_on';
+$col_list[] = 'cc';
 
 $eol = "\n";
 

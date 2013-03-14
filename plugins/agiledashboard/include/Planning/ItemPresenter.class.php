@@ -36,16 +36,22 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
      * @var Tracker_CardFields
      */
     private $card_fields;
+
+    /** @var string */
+    private $accent_color;
     
     /**
      * @param Planning_Item $planning_item The planning item to be presented.
+     * @param string        $card_fields   The fields of the card
+     * @param string        $accent_color  The accent color
      * @param string        $css_classes   The space-separated CSS classes to add to the main item HTML tag.
      */
-    public function __construct(Planning_Item $planning_item, Tracker_CardFields $card_fields, $css_classes = '') {
+    public function __construct(Planning_Item $planning_item, Tracker_CardFields $card_fields, $accent_color, $css_classes = '') {
         $this->planning_item = $planning_item;
         $this->css_classes   = $css_classes;
-        $this->details  = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
-        $this->card_fields  = $card_fields;
+        $this->details       = $GLOBALS['Language']->getText('plugin_cardwall', 'details');
+        $this->card_fields   = $card_fields;
+        $this->accent_color  = $accent_color;
     }
     
     public function getId() {
@@ -111,6 +117,13 @@ class Planning_ItemPresenter implements Tracker_CardPresenter {
     
     public function hasFields() {
         return count($this->getFields()) > 0;
+    }
+
+    /**
+     * @see Tracker_CardPresenter::getAccentColor()
+     */
+    public function getAccentColor() {
+        return $this->accent_color;
     }
 }
 ?>

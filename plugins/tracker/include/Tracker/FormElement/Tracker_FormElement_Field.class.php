@@ -1001,6 +1001,27 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     public abstract function getSoapAvailableValues();
 
     /**
+     * Returns the SOAP value of a field for the given changeset.
+     *
+     * @param PFUser $user
+     * @param Tracker_Artifact_Changeset $changeset
+     *
+     * @return array
+     */
+    public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead($user)) {
+            $value = $changeset->getValue($this);
+            return array(
+                'field_name'  => $this->getName(),
+                'field_label' => $this->getLabel(),
+                'field_value' => $value ? $value->getSoapValue() : '',
+            );
+        }
+        return null;
+    }
+
+
+    /**
      * Get the field data for artifact submission
      *
      * @param string the soap field value
@@ -1019,7 +1040,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return mixed
      */
-    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
         return $this->getFieldData($soap_value->field_value->value);
     }
 

@@ -719,7 +719,7 @@ class Tracker_FormElement_Field_OpenList extends Tracker_FormElement_Field_List 
         return false;
     }
 
-    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
         if (isset($soap_value->field_value->bind_value)) {
             return $this->joinFieldDataFromArray(
                 array_map(

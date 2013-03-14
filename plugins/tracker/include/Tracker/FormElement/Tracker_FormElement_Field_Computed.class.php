@@ -144,6 +144,16 @@ class Tracker_FormElement_Field_Computed extends Tracker_FormElement_Field imple
         return $this->getComputedValue($current_user, $artifact);
     }
 
+    public function getSoapValue(PFUser $user, Tracker_Artifact_Changeset $changeset) {
+        if ($this->userCanRead($user)) {
+            return array(
+                'field_name'  => $this->getName(),
+                'field_label' => $this->getLabel(),
+                'field_value' => array('value' => (string) $this->getComputedValue($user, $changeset->getArtifact()))
+            );
+        }
+        return null;
+    }
 
     /**
      * Display the html field in the admin ui

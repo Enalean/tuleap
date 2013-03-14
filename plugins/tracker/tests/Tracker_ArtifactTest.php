@@ -2301,6 +2301,9 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
         stub($this->last_changeset)->getSubmittedOn()->returns($this->last_update_date);
         stub($this->last_changeset)->getValues()->returns(array());
 
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
+
         $this->artifact = partial_mock(
             'Tracker_Artifact',
             array(
@@ -2312,10 +2315,14 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
         stub($this->artifact)->userCanView()->returns(true);
         stub($this->artifact)->getCrossReferencesSOAPValues()->returns(array(array('ref' => 'art #123', 'url' => '/path/to/art=123')));
         $this->artifact->setChangesets(array($this->last_changeset));
+        $this->artifact->setFormElementFactory($this->formelement_factory);
+        $this->artifact->setTracker(aTracker()->withId($this->tracker_id)->build());
     }
 
     public function itReturnsEmptyArrayIfUserCannotViewArtifact() {
         $artifact = partial_mock('Tracker_Artifact', array('userCanView'));
+        $artifact->setTracker(aTracker()->build());
+        $artifact->setFormElementFactory($this->formelement_factory);
         $user     = mock('PFUser');
         stub($artifact)->userCanView($user)->returns(false);
 
@@ -2325,6 +2332,8 @@ class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
     public function itReturnsDataIfUserCanViewArtifact() {
         $artifact = partial_mock('Tracker_Artifact', array('userCanView', 'getCrossReferencesSOAPValues'), array('whatever', 'whatever', 'whatever', 'whatever', 'whatever'));
         $artifact->setChangesets(array($this->last_changeset));
+        $artifact->setTracker(aTracker()->build());
+        $artifact->setFormElementFactory($this->formelement_factory);
         $user     = mock('PFUser');
         stub($artifact)->userCanView($user)->returns(true);
 
@@ -2358,19 +2367,16 @@ class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
         parent::setUp();
         $this->user = mock('PFUser');
 
-        $this->integer_value = '1981';
-
         $this->field_id = 123242;
-        $this->field_name = 'field_name';
-        $this->field_label = 'Field Label';
-        $this->field = aMockField()->withId($this->field_id)->withLabel($this->field_label)->withName($this->field_name)->build();
-        $this->changeset_value = new Tracker_Artifact_ChangesetValue_Integer('whatever', $this->field, true, $this->integer_value);
-        $this->last_changeset = stub('Tracker_Artifact_Changeset')->getValues()->returns(array($this->field_id => $this->changeset_value));
 
-        stub($this->field)->userCanRead()->returns(true);
+        $this->field           = aMockField()->build();
+        $this->changeset_value = mock('Tracker_Artifact_ChangesetValue');
+        $this->last_changeset  = stub('Tracker_Artifact_Changeset')->getValues()->returns(array($this->field_id => $this->changeset_value));
 
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         stub($this->formelement_factory)->getFormElementById()->returns($this->field);
+
+        $this->tracker = aTracker()->build();
 
         $this->artifact = partial_mock(
             'Tracker_Artifact',
@@ -2383,72 +2389,55 @@ class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
         stub($this->artifact)->userCanView()->returns(true);
         $this->artifact->setChangesets(array($this->last_changeset));
         $this->artifact->setFormElementFactory($this->formelement_factory);
+        $this->artifact->setTracker($this->tracker);
     }
 
-    public function itHasAValueForAFieldWithANameAndALabel() {
+    public function itFetchFieldFromFactory() {
+        expect($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->once();
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
+        $this->artifact->getSoapValue($this->user);
+    }
+
+    public function itHasAValueFromField() {
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array($this->field));
+
+        expect($this->field)->getSoapValue($this->user, $this->last_changeset)->once();
+        stub($this->field)->getSoapValue()->returns('whatever');
+
         $soap_value = $this->artifact->getSoapValue($this->user);
-        $this->assertEqual($soap_value['value'][0]['field_name'], $this->field_name);
-        $this->assertEqual($soap_value['value'][0]['field_label'], $this->field_label);
+        $this->assertEqual($soap_value['value'][0], 'whatever');
     }
 
-    public function itHasAnIntegerValueReturnedAsStringInValueField() {
+    public function itDoesntModifySoapValueIfNoFieldValues() {
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array($this->field));
+
+        stub($this->field)->getSoapValue()->returns(null);
+
         $soap_value = $this->artifact->getSoapValue($this->user);
-        $this->assertIdentical($soap_value['value'][0]['field_value']['value'], "$this->integer_value");
+        $this->assertArrayEmpty($soap_value['value']);
     }
-
 }
 
-class Tracker_Artifact_getSoapValueWithFieldValuesForSelectBoxTest extends TuleapTestCase {
-    private $artifact;
-    private $user;
+class Tracker_Artifact_getCardAccentColorTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user = mock('PFUser');
-
-        $this->list_values = array(
-            aFieldListStaticValue()->withId(100)->withLabel('None')->build(),
-            aFieldListStaticValue()->withId(101)->withLabel('Bla')->build()
-        );
-
-        $this->field_id = 123242;
-        $this->field_name = 'field_name';
-        $this->field_label = 'Field Label';
-        $this->field = aMockField()->withId($this->field_id)->withLabel($this->field_label)->withName($this->field_name)->build();
-        $this->changeset_value = new Tracker_Artifact_ChangesetValue_List('whatever', $this->field, true, $this->list_values);
-        $this->last_changeset = stub('Tracker_Artifact_Changeset')->getValues()->returns(array($this->field_id => $this->changeset_value));
-
-        stub($this->field)->userCanRead()->returns(true);
-
-        $this->formelement_factory = mock('Tracker_FormElementFactory');
-        stub($this->formelement_factory)->getFormElementById()->returns($this->field);
-
-        $this->artifact = partial_mock(
-            'Tracker_Artifact',
-            array(
-                'userCanView',
-                'getCrossReferencesSOAPValues',
-            ),
-            array('whatever', 'whatever', 'whatever', 'whatever', 'whatever')
-        );
-        stub($this->artifact)->userCanView()->returns(true);
-        $this->artifact->setChangesets(array($this->last_changeset));
-        $this->artifact->setFormElementFactory($this->formelement_factory);
+        $this->user     = mock('PFUser');
+        $this->field    = mock('Tracker_FormElement_Field_Selectbox');
+        $this->factory  = mock('Tracker_FormElementFactory');
+        $this->artifact = anArtifact()->withFormElementFactory($this->factory)->build();
     }
 
-    public function itHasAnListValueReturnedAsAnArrayOfFieldBindValue() {
-        $soap_value = $this->artifact->getSoapValue($this->user);
-        $bind_value = $soap_value['value'][0]['field_value']['bind_value'];
-        $this->assertIdentical($bind_value, array(
-            array(
-                'bind_value_id'    => 100,
-                'bind_value_label' => 'None'
-            ),
-            array(
-                'bind_value_id'    => 101,
-                'bind_value_label' => 'Bla'
-            ),
-        ));
+    public function itReturnsEmptyStringIfNoField() {
+        stub($this->factory)->getSelectboxFieldByNameForUser()->returns(null);
+        $this->assertEqual('', $this->artifact->getCardAccentColor($this->user));
+    }
+
+    public function itDelegatesToTheField() {
+        stub($this->field)->getCurrentDecoratorColor($this->artifact)->returns('red');
+        stub($this->factory)->getSelectboxFieldByNameForUser()->returns($this->field);
+        $this->assertEqual('red', $this->artifact->getCardAccentColor($this->user));
     }
 }
+
 ?>
