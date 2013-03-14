@@ -99,7 +99,7 @@ class Git_Admin {
             $html .= '<tr valign="top"><td>'. $field[0].'</td><td><input type="text" name="gerrit_servers['. $id .']['.$field[1].']" value="'. $hp->purify($field[2]) .'" /></td></tr>';
         }
         $html .= '<tr valign="top">
-            <td>Replication SSH Key</td>
+            <td>Replication SSH Key (SSH key of the user who runs gerrit server)</td>
             <td><textarea
                 type="checkbox"
                 name="gerrit_servers['. $id .'][replication_key]"
