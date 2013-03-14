@@ -23,7 +23,7 @@ require_once 'ReplicationSSHKeyFactoryException.class.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
-    const GOTOLITE_KEY_DIR   = 'keydir';
+    const GITOLITE_KEY_DIR   = 'keydir';
     const KEY_FILE_SUFFIX    = '@0.pub';
     const KEY_SAVE_COMMIT_MESSAGE = 'Saving key for Gerrit Server with ID: ';
     const KEY_DELETE_COMMIT_MESSAGE = 'Deleting key for Gerrit Server with ID: ';
@@ -113,7 +113,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
         $this->saveKeyInFileSystem($key, $key_path);
 
-        $this->git_executer->add(self::GOTOLITE_KEY_DIR.'/'.$key_file_name);
+        $this->git_executer->add(self::GITOLITE_KEY_DIR.'/'.$key_file_name);
         $this->git_executer->commit(self::KEY_SAVE_COMMIT_MESSAGE . $key->getGerritHostId());
         $this->git_executer->push();
 
@@ -135,7 +135,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             return true;
         }
 
-        $this->git_executer->rm(self::GOTOLITE_KEY_DIR.'/'.$file_name);
+        $this->git_executer->rm(self::GITOLITE_KEY_DIR.'/'.$file_name);
         $this->git_executer->commit(self::KEY_DELETE_COMMIT_MESSAGE . $id);
         $this->git_executer->push();
 
@@ -154,7 +154,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
      */
     private function getGitoliteKeyDirectory() {
-        $key_dir_path  = $this->git_executer->getPath(). '/'.self::GOTOLITE_KEY_DIR.'/';
+        $key_dir_path  = $this->git_executer->getPath(). '/'.self::GITOLITE_KEY_DIR.'/';
         if (! is_dir($key_dir_path)) {
             throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('gitolite admin key directory does not exist');
         }
