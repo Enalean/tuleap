@@ -35,16 +35,27 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
     private $git_executer;
 
     /**
-     *
+     * @param Git_RemoteServer_Gerrit_ReplicationSSHKey $key
+     * @return string
+     */
+    public static function getReplicationKeyFilenameFromKey(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
+        return self::getReplicationKeyFilenameForGerritServerId($key->getGerritHostId());
+    }
+
+    /**
      * @param int $id
      * @return string
      */
     public static function getReplicationKeyFilenameForGerritServerId($id) {
-        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-        $key->setGerritHostId($id);
+        return self::getGitoliteUserNameForGerritServerId($id) . self::KEY_FILE_SUFFIX;
+    }
 
-        $file_name = $key->getUserName() . self::KEY_FILE_SUFFIX;
-        return $file_name;
+    /**
+     * @param int $id
+     * @return string
+     */
+    public static function getGitoliteUserNameForGerritServerId($id) {
+        return Rule_UserName::RESERVED_PREFIX.'gerrit_'.$id;
     }
 
 
@@ -87,7 +98,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @throw Git_Command_Exception
      */
     public function save(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
-        if ($key->getGerritHostId() == null || $key->getUserName() == null) {
+        if ($key->getGerritHostId() == null) {
             return;
         }
 

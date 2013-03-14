@@ -75,15 +75,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
         $this->factory->save($this->key);
     }
 
-    public function testSaveWillNotAddsReplicationKeyThatHasNoUserName() {
-        $key = mock('Git_RemoteServer_Gerrit_ReplicationSSHKey');
-        stub($key)->getUserName()->returns(null);
-
-        stub($this->git_executor)->add()->never();
-
-        $this->factory->save($key);
-    }
-
     public function testSaveWillDeleteAnEmptyValuedReplicationKey() {
         $this->key->setValue(null);
 
@@ -107,9 +98,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
     public function testSaveAddRepliationKeyWithRelativePath() {
         // otherwise, git fails to manage symlinks on admin repo
-        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
-        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
-        $key_relative_path = $key_dir.'/' . $this->key->getUserName() . $key_file_suffix;
+        $key_dir           = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
+        $key_filename      = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameFromKey($this->key);
+        $key_relative_path = $key_dir.'/'.$key_filename;
 
         expect($this->git_executor)->add($key_relative_path)->once();
 
@@ -125,9 +116,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
     public function testSaveWillCreateKeyFile() {
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
-        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_filename    = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameFromKey($this->key);
 
-        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $this->key->getUserName() . $key_file_suffix;
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
 
         $this->factory->save($this->key);
@@ -139,9 +130,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
     public function testSaveWillOverwriteExistingKeyFile() {
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GOTOLITE_KEY_DIR;
-        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_filename    = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameFromKey($this->key);
 
-        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $this->key->getUserName() . $key_file_suffix;
+        $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
 
         $this->factory->save($this->key);

@@ -20,8 +20,6 @@
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKey {
 
-    const USER_NAME_PREFIX = 'forge_gerrit_';
-
     /** @var string */
     private $value;
 
@@ -51,17 +49,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey {
      */
     public function getValue() {
         return $this->value;
-    }
-
-    /**
-     * @return string | null
-     */
-    public function getUserName() {
-        if ($this->getGerritHostId() == null) {
-            return null;
-        }
-
-        return Rule_UserName::RESERVED_PREFIX.'gerrit_'.$this->getGerritHostId();
     }
 
     /**
