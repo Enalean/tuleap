@@ -453,7 +453,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
         $html .= $this->fetchTitleInHierarchy($hierarchy);
 
-        $html .= $this->fechView($request, $current_user);
+        $html .= $this->fetchView($request, $current_user);
 
         $html .= '</form>';
         $trm = new Tracker_RulesManager($tracker, $this->getFormElementFactory());
@@ -465,7 +465,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         exit();
     }
 
-    private function fechView(Codendi_Request $request, PFUser $user) {
+    private function fetchView(Codendi_Request $request, PFUser $user) {
         $view_collection = new Tracker_Artifact_View_ViewCollection();
         $view_collection->add(new Tracker_Artifact_View_Edit($this, $request, $user));
         if ($this->getTracker()->getChildren()) {

@@ -41,14 +41,9 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     /** @see Tracker_Artifact_View_View::fetch() */
     public function fetch() {
-        $html  = '';
-
-        $html .= $this->fetchFields($this->request->get('artifact'));
-
+        $html = $this->fetchFields($this->request->get('artifact'));
         $html .= $this->fetchFollowUps($this->request->get('artifact_followup_comment'));
 
-        // We don't need History since we have changesets
-        //$html .= $this->_fetchHistory();
         return $html;
     }
 
