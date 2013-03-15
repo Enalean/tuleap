@@ -1044,8 +1044,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->getFieldData($soap_value->field_value->value);
     }
     
-    //public abstract function getSoapBindingProperties();
-    
+    /**
+     * Get binding data for Soap
+     * 
+     * @return array the binding data
+     */
     public function getSoapBindingProperties() {
         return array();
     }

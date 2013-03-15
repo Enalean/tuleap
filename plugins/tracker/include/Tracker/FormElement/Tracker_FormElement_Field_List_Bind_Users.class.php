@@ -162,6 +162,11 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         );
     }
     
+    /**
+     * Get the list of of ugroups used in this field     * 
+     * 
+     * @return array, the list of all ugroups with id and name
+     */
     public function getList() {
         $ugroups = array();
         foreach($this->value_function as $ugroup) {
@@ -199,6 +204,15 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         }
         return $ugroups;  
     }
+    
+    /**
+     * Get all values to be displayed in the field depending of a ugroup list
+     * 
+     * @param array  $ugroups, a list of ugroups
+     * @param string $keyword
+     *
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
+     */
     
     private function getAllValuesByUGroupList($ugroups, $keyword = null) {
         $sql = array();
@@ -255,7 +269,10 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         }
         return $this->values;
     }
+    
     /**
+     * Get all values to be displayed in the field
+     * 
      * @param string $keyword
      *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
