@@ -26,7 +26,7 @@ class Tracker_FormElement_Field_Selectbox_getFieldDataFromSoapValue extends Tule
     
     public function setUp() {
         parent::setUp();
-        $this->bind  = mock('Tracker_FormElement_Field_List_Bind');
+        $this->bind  = mock('Tracker_FormElement_Field_List_Bind_Static');
         $this->field = aSelectBoxField()->withBind($this->bind)->build();
     }
 

@@ -328,4 +328,34 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 0");
     }
 }
+
+class UGroup_GetsNameTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->setText('membre_de_projet', array('project_ugroup', 'ugroup_project_members_name_key'));
+        $this->setText('administrateur_de_le_projet', array('project_ugroup', 'ugroup_project_admins_name_key'));
+    }
+
+    public function itReturnsProjectMembers() {
+        $ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key'));
+        $this->assertEqual('ugroup_project_members_name_key', $ugroup->getName());
+        $this->assertEqual('membre_de_projet', $ugroup->getTranslatedName());
+        $this->assertEqual('project_members', $ugroup->getNormalizedName());
+    }
+
+    public function itReturnsProjectAdmins() {
+        $ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN, 'name' => 'ugroup_project_admins_name_key'));
+        $this->assertEqual('ugroup_project_admins_name_key', $ugroup->getName());
+        $this->assertEqual('administrateur_de_le_projet', $ugroup->getTranslatedName());
+        $this->assertEqual('project_admins', $ugroup->getNormalizedName());
+    }
+
+    public function itReturnsAStaticGroup() {
+        $ugroup = new UGroup(array('ugroup_id' => 120, 'name' => 'Zoum_zoum_zen'));
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getName());
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getTranslatedName());
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getNormalizedName());
+    }
+}
 ?>

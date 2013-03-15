@@ -204,5 +204,7 @@ class Tracker_FormElement_Field_List_Bind_Null extends Tracker_FormElement_Field
     public function fixOriginalValueIds(array $value_mapping) { return array(); }
     
     public function getQuerySelectAggregate($functions) { return array(); }
+
+    protected function getSoapBindingList() { return array(); }
 }
 ?>

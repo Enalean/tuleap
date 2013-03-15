@@ -76,6 +76,11 @@ class Tracker_FormElement_Field_List_Bind_Static extends Tracker_FormElement_Fie
             'join_on_id' => 'tracker_field_list_bind_static_value.id',
         );
     }
+
+    protected function getSoapBindingList() {
+        // returns empty array as static are already listed in 'values'
+        return array();
+    }
     
     /**
      * @return string

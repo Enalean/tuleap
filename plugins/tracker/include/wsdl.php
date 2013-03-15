@@ -59,6 +59,7 @@ $GLOBALS['server']->wsdl->addComplexType(
         'label' => array('name'=>'label', 'type' => 'xsd:string'),
         'type' => array('name'=>'type', 'type' => 'xsd:string'),
         'values' => array('name'=>'type', 'type' => 'tns:ArrayOfTrackerFieldBindValue'),
+        'binding' => array('name'=>'bind', 'type' => 'tns:TrackerFieldBindType'),
         'permissions' => array('name' => 'permissions', 'type' => 'tns:ArrayOfString')
     )
 );
@@ -81,7 +82,7 @@ $GLOBALS['server']->wsdl->addComplexType(
     'sequence',
     '',
     array(
-        'bind_value_id' => array('name'=>'baind_value_id', 'type' => 'xsd:int'),
+        'bind_value_id' => array('name'=>'bind_value_id', 'type' => 'xsd:int'),
         'bind_value_label' => array('name'=>'bind_value_label', 'type' => 'xsd:string')
     )
 );
@@ -95,6 +96,42 @@ $GLOBALS['server']->wsdl->addComplexType(
     array(),
     array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:TrackerFieldBindValue[]')),
     'tns:TrackerFieldBindValue'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'TrackerFieldBindType',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'bind_type' => array('name'=>'bind_type', 'type' => 'xsd:string'),
+        'bind_list' => array('name'=>'bind_list', 'type' => 'tns:ArrayOfUgroup')
+    )
+);
+
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'ArrayOfUgroup',
+    'complexType',
+    'array',
+    '',
+    'SOAP-ENC:Array',
+    array(),
+    array(array('ref'=>'SOAP-ENC:arrayType','wsdl:arrayType'=>'tns:UGroup[]')),
+    'tns:UGroup'
+);
+
+$GLOBALS['server']->wsdl->addComplexType(
+    'UGroup',
+    'complexType',
+    'struct',
+    'sequence',
+    '',
+    array(
+        'ugroup_id' => array('name'=>'ugroup_id', 'type' => 'xsd:int'),
+        'name' => array('name'=>'bind_list', 'type' => 'xsd:string')
+    )
 );
 
 $GLOBALS['server']->wsdl->addComplexType(
