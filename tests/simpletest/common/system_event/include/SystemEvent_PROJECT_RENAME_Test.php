@@ -47,7 +47,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
      */
     public function testRenameOps() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT,'142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -109,7 +109,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
 
     public function testRenameSvnRepositoryFailure() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -166,7 +166,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
 
     public function testRenameSvnRepositoryNotAvailable() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -222,7 +222,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
 
     public function testRenameCVSRepositoryFailure() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -282,7 +282,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
 
     public function testRenameHomeRepositoryFailure() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -340,7 +340,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
 
     public function testRenameFRSRepositoryFailure() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -395,7 +395,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
     
     public function testRenameFTPRepositoryFailure() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -448,7 +448,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
 
     public function testRenameDBUpdateFailure() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
@@ -497,7 +497,7 @@ class SystemEvent_PROJECT_RENAME_Test extends UnitTestCase {
 
     function testMultipleErrorLogs() {
         $evt = new SystemEvent_PROJECT_RENAME_TestVersion($this);
-        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
+        $evt->__construct('1', SystemEvent::TYPE_PROJECT_RENAME, SystemEvent::OWNER_ROOT, '142'.SystemEvent::PARAMETER_SEPARATOR.'FooBar', SystemEvent::PRIORITY_HIGH, SystemEvent::STATUS_RUNNING, $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], $_SERVER['REQUEST_TIME'], '');
 
         // The project
         $project = new MockProject($this);
