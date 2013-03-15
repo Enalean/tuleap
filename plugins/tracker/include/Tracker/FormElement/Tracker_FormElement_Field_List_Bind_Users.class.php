@@ -24,7 +24,9 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     protected $userManager;
     protected $value_function;
     protected $values;
-
+    
+    const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
+    
     public function __construct($field, $value_function, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
         $this->value_function = array();
@@ -127,15 +129,120 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     }
     
     /**
+     * Get available values of this field for SOAP usage
+     * Fields like int, float, date, string don't have available values
+     *
+     * @return mixed The values or null if there are no specific available values
+     */
+    public function getSoapAvailableValues() {
+        $ugroups = $this->value_function;
+        /*foreach ($ugroups as $ugroup) {
+            if ($ugroup != self::REGISTERED_USERS_UGROUP_NAME && $ugroup != '') {
+                $ugroups_limited[] = $ugroup;
+            }
+        }
+        $ugroups = $ugroups_limited;*/
+        
+        /*foreach ($ugroups as $ugroup) {
+            $soap_values[] = array(
+            'bind_value_id'    => $ugroup,
+            'bind_value_label' => $ugroup
+        );
+        }
+        return $soap_values;*/
+        if (in_array(self::REGISTERED_USERS_UGROUP_NAME, $ugroups)) {
+            unset($ugroups[self::REGISTERED_USERS_UGROUP_NAME]);
+        }
+        
+        $soap_values = array();
+        foreach($this->getAllValuesByUGroupList($ugroups) as $value) {
+            $soap_values[] = $this->getSoapBindValue($value);
+        }        
+        return $soap_values;
+    }
+
+    private function getSoapBindValue($value) {
+        return array(
+            'bind_value_id'    => $value->getId(),
+            'bind_value_label' => $value->getSoapValue()
+        );
+    }
+    
+    public function getSoapBindingProperties() {
+        return array(
+            'bind_type' => 'users',
+            'bind_list' => $this->value_function
+        );
+    }
+    
+    private function getAllValuesByUGroupList($ugroups, $keyword = null) {
+        $sql = array();
+        $da  = CodendiDataAccess::instance();
+        if (!$this->values) {
+            if (count($ugroups) > 0 ) {
+                $sql = array();
+                $uh = UserHelper::instance();
+                $tracker = $this->field->getTracker();
+                foreach($ugroups as $ugroup) {
+                    if ($ugroup) {
+                        switch ($ugroup) {
+                            case 'group_members':
+                                $sql[] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_MEMBERS'], $tracker->id, $tracker->group_id, true, $keyword);
+                                break;
+                            case 'group_admins':
+                                $sql[] = ugroup_db_get_dynamic_members($GLOBALS['UGROUP_PROJECT_ADMIN'], $tracker->id, $tracker->group_id, true, $keyword);
+                                break;
+                            case 'artifact_submitters':
+                                $da = CodendiDataAccess::instance();
+                                $field_id   = $da->escapeInt($this->field->id);
+                                $tracker_id = $da->escapeInt($tracker->id);
+                                if ($keyword) {
+                                    $keyword = $da->quoteSmart('%'. $keyword .'%');
+                                }
+                                $sql[] = "(SELECT DISTINCT user.user_id, ". $uh->getDisplayNameSQLQuery() .", user.user_name
+                                          FROM tracker_artifact AS a
+                                               INNER JOIN user
+                                               ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker->id )
+                                          ". ($keyword ? "HAVING full_name LIKE $keyword" : "") ."
+                                          ORDER BY ". $uh->getDisplayNameSQLOrder() ."
+                                          )";
+                                break;
+                            default:
+                                if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
+                                    if (strlen($matches[1]) > 2) {
+                                        $sql[] = ugroup_db_get_members($matches[1], true, $keyword);
+                                    } else {
+                                        $sql[] = ugroup_db_get_dynamic_members($matches[1], $tracker->id, $tracker->group_id, true, $keyword);
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                }
+                if ($sql) {
+                    $dao = new DataAccessObject();
+                    $this->values = array();
+                    foreach($dao->retrieve(implode(' UNION ', $sql)) as $row) {
+                        $this->values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue($row['user_id'], $row['user_name'], $row['full_name']);
+                    }
+                }
+            }
+        }
+        return $this->values;
+    }
+    /**
      * @param string $keyword
      *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
     public function getAllValues($keyword = null) {
+        return $this->getAllValuesByUGroupList($this->value_function, $keyword = null);
         $sql = array();
         $da  = CodendiDataAccess::instance();
+
         if (!$this->values) {
-            $this->values = array();
+            $this->values = $this->getAllValuesByUGroupList($this->value_function, $keyword = null);
+            
             if ( count($this->value_function) > 0 ) {
                 $sql = array();
                 $uh = UserHelper::instance();

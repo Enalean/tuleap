@@ -75,7 +75,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             'bind_value_label' => $value->getSoapValue()
         );
     }
-
+    
     /**
      * Get the field data for artifact submission
      *
