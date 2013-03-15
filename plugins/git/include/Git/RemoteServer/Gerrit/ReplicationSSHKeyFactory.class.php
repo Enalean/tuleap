@@ -25,7 +25,6 @@ require_once dirname(__FILE__).'/../../../Git_Gitolite_SSHKeyDumper.class.php';
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
     const GITOLITE_KEY_DIR   = 'keydir';
-    const KEY_FILE_SUFFIX    = '@0.pub';
 
     /**
      *
@@ -50,7 +49,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key->setGerritHostId($id);
 
-        $file_name = $key->getUserName().self::KEY_FILE_SUFFIX;
+        $file_name = $key->getGitoliteKeyFile();
 
         if(! $this->findFileInDirectory($file_name, $key_dir_path)) {
             return $key;

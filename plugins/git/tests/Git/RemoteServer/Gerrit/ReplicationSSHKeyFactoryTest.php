@@ -104,7 +104,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
     public function testSaveWillCreateKeyFile() {
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename    = $this->key->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_filename    = $this->key->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
@@ -118,7 +118,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
     public function testSaveWillOverwriteExistingKeyFile() {
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename    = $this->key->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_filename    = $this->key->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
@@ -201,7 +201,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $id = 98;
 
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKey::KEYNAME_SUFFIX;
         $key_prefix      = 'forge__gerrit_';
         $key_file_name = $key_prefix . $id . $key_file_suffix;
 
@@ -218,7 +218,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $id = 98;
 
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKey::KEYNAME_SUFFIX;
         $key_prefix      = 'forge__gerrit_';
         $key_file_name = $key_prefix . $id . $key_file_suffix;
 
@@ -241,7 +241,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
 
         $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename  = $key_ref->setGerritHostId($id)->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_filename  = $key_ref->setGerritHostId($id)->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
@@ -303,7 +303,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
 
         $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename  = $key_ref->setGerritHostId($id)->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_filename  = $key_ref->setGerritHostId($id)->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
@@ -317,7 +317,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
 
         $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename  = $key_ref->setGerritHostId($id)->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
+        $key_filename  = $key_ref->setGerritHostId($id)->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
