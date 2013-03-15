@@ -24,10 +24,7 @@ require_once dirname(__FILE__).'/../../../Git_Gitolite_SSHKeyDumper.class.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
-    const GITOLITE_KEY_DIR   = 'keydir';
-
     /**
-     *
      * @var Git_Exec
      */
     private $git_executer;
@@ -55,7 +52,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             return $key;
         }
 
-        $file = $key_dir_path . $file_name;
+        $file = $key_dir_path . '/' . $file_name;
         if (file_get_contents($file)) {
             $key->setValue(file_get_contents($file));
         }
@@ -116,7 +113,8 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
      */
     private function getGitoliteKeyDirectory() {
-        $key_dir_path  = $this->git_executer->getPath(). '/'.self::GITOLITE_KEY_DIR.'/';
+        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer, UserManager::instance());
+        $key_dir_path  = $key_dumper->getKeyDirPath();
         if (! is_dir($key_dir_path)) {
             throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('gitolite admin key directory does not exist');
         }

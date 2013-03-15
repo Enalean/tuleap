@@ -56,7 +56,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
         $this->gitolite_directoy = '/var/tmp';
 
-        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir = Git_Gitolite_SSHKeyDumper::KEYDIR;
 
         if (!is_dir('/var/tmp/'.$key_dir)) {
             exec('mkdir /var/tmp/'.$key_dir);
@@ -103,7 +103,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
     }
 
     public function testSaveWillCreateKeyFile() {
-        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir         = Git_Gitolite_SSHKeyDumper::KEYDIR;
         $key_filename    = $this->key->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
@@ -117,7 +117,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
     }
 
     public function testSaveWillOverwriteExistingKeyFile() {
-        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir         = Git_Gitolite_SSHKeyDumper::KEYDIR;
         $key_filename    = $this->key->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
@@ -141,7 +141,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
     public function tearDown() {
         parent::tearDown();
 
-        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir = Git_Gitolite_SSHKeyDumper::KEYDIR;
         exec('rm -rf ' . $this->gitolite_directoy.'/'.$key_dir);
     }
 
@@ -168,7 +168,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
 
         $this->git_executor = mock('Git_Exec');
         $this->gitolite_directoy = '/var/tmp';
-        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir = Git_Gitolite_SSHKeyDumper::KEYDIR;
 
         if (!is_dir('/var/tmp/'.$key_dir)) {
             exec('mkdir /var/tmp/'.$key_dir);
@@ -200,7 +200,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
     public function itReturnsAKeyWithNoValueIfFileDoesNotExist() {
         $id = 98;
 
-        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir         = Git_Gitolite_SSHKeyDumper::KEYDIR;
         $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKey::KEYNAME_SUFFIX;
         $key_prefix      = 'forge__gerrit_';
         $key_file_name = $key_prefix . $id . $key_file_suffix;
@@ -217,7 +217,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
     public function itReturnsAKeyWithNoValueIfFileIsEmpty() {
         $id = 98;
 
-        $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir         = Git_Gitolite_SSHKeyDumper::KEYDIR;
         $key_file_suffix = Git_RemoteServer_Gerrit_ReplicationSSHKey::KEYNAME_SUFFIX;
         $key_prefix      = 'forge__gerrit_';
         $key_file_name = $key_prefix . $id . $key_file_suffix;
@@ -240,7 +240,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $expected_file_contents = 'I am an ssh key@someone';
 
         $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-        $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir       = Git_Gitolite_SSHKeyDumper::KEYDIR;
         $key_filename  = $key_ref->setGerritHostId($id)->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
@@ -262,7 +262,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
     public function tearDown() {
         parent::tearDown();
 
-        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir = Git_Gitolite_SSHKeyDumper::KEYDIR;
         exec('rm -rf ' . $this->gitolite_directoy.'/'.$key_dir);
     }
 }
@@ -288,7 +288,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
 
         $this->git_executor = mock('Git_Exec');
         $this->gitolite_directoy = '/var/tmp';
-        $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir = Git_Gitolite_SSHKeyDumper::KEYDIR;
 
         if (!is_dir('/var/tmp/'.$key_dir)) {
             exec('mkdir /var/tmp/'.$key_dir);
@@ -302,7 +302,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
         $id = 86;
 
         $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-        $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir       = Git_Gitolite_SSHKeyDumper::KEYDIR;
         $key_filename  = $key_ref->setGerritHostId($id)->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
@@ -316,7 +316,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
         $id = 86;
 
         $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
-        $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
+        $key_dir       = Git_Gitolite_SSHKeyDumper::KEYDIR;
         $key_filename  = $key_ref->setGerritHostId($id)->getGitoliteKeyFile();
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
