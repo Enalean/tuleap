@@ -74,6 +74,19 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
             'bind_value_id'    => $value->getId(),
             'bind_value_label' => $value->getSoapValue()
         );
+    }  
+    
+    public function getSoapBindingProperties($bind) {
+        $bind_factory = new Tracker_FormElement_Field_List_BindFactory();
+        $bind_type = $bind_factory->getType($bind);
+        return array(
+            'bind_type' => $bind_type,
+            'bind_list' => $this->getList()
+        );
+    }
+    
+    public function getList() {
+        return array();
     }
     
     /**

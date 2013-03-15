@@ -1015,7 +1015,6 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
                 'field_name'  => $this->getName(),
                 'field_label' => $this->getLabel(),
                 'field_value' => $value ? $value->getSoapValue() : '',
-                'field_bind'  => array(),
             );
         }
         return null;
@@ -1045,9 +1044,12 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         return $this->getFieldData($soap_value->field_value->value);
     }
     
+    //public abstract function getSoapBindingProperties();
+    
     public function getSoapBindingProperties() {
         return array();
     }
+    
     /**
      * Get data from CSV value in order to be saved in DB (create/update DB)
      *

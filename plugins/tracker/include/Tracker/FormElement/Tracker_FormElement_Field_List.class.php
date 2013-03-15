@@ -1034,7 +1034,12 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
          }
          return $values;
      }
-
+     
+     public function getSoapBindingProperties() {
+         $bind = $this->getBind();
+         return $bind->getSoapBindingProperties($bind);
+     }
+    
      public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
          if (isset($soap_value->field_value->bind_value)) {
              if ($this->isMultiple()) {
