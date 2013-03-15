@@ -104,7 +104,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
     public function testSaveWillCreateKeyFile() {
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename    = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameFromKey($this->key);
+        $key_filename    = $this->key->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
@@ -118,7 +118,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
     public function testSaveWillOverwriteExistingKeyFile() {
         $key_dir         = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename    = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameFromKey($this->key);
+        $key_filename    = $this->key->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
@@ -239,8 +239,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $id = 98;
         $expected_file_contents = 'I am an ssh key@someone';
 
+        $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename  = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameForGerritServerId($id);
+        $key_filename  = $key_ref->setGerritHostId($id)->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
@@ -300,8 +301,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
     public function itReturnsTrueIfKeyDoesNotExist() {
         $id = 86;
 
+        $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename  = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameForGerritServerId($id);
+        $key_filename  = $key_ref->setGerritHostId($id)->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));
@@ -313,8 +315,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
     public function itRemovesCommitsAndPushesTheDeletion() {
         $id = 86;
 
+        $key_ref       = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key_dir       = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename  = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameForGerritServerId($id);
+        $key_filename  = $key_ref->setGerritHostId($id)->getUserName().Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::KEY_FILE_SUFFIX;
 
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_filename;
         $this->assertFalse(is_file($file));

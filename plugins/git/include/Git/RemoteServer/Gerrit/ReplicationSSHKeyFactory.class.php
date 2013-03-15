@@ -26,39 +26,12 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
     const GITOLITE_KEY_DIR   = 'keydir';
     const KEY_FILE_SUFFIX    = '@0.pub';
-    const KEY_SAVE_COMMIT_MESSAGE = 'Saving key for Gerrit Server with ID: ';
-    const KEY_DELETE_COMMIT_MESSAGE = 'Deleting key for Gerrit Server with ID: ';
 
     /**
      *
      * @var Git_Exec
      */
     private $git_executer;
-
-    /**
-     * @param Git_RemoteServer_Gerrit_ReplicationSSHKey $key
-     * @return string
-     */
-    public static function getReplicationKeyFilenameFromKey(Git_RemoteServer_Gerrit_ReplicationSSHKey $key) {
-        return self::getReplicationKeyFilenameForGerritServerId($key->getGerritHostId());
-    }
-
-    /**
-     * @param int $id
-     * @return string
-     */
-    public static function getReplicationKeyFilenameForGerritServerId($id) {
-        return self::getGitoliteUserNameForGerritServerId($id) . self::KEY_FILE_SUFFIX;
-    }
-
-    /**
-     * @param int $id
-     * @return string
-     */
-    public static function getGitoliteUserNameForGerritServerId($id) {
-        return Rule_UserName::RESERVED_PREFIX.'gerrit_'.$id;
-    }
-
 
     public function __construct(Git_Exec $git_executer) {
         $this->git_executer = $git_executer;
@@ -72,10 +45,12 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      */
     public function fetchForGerritServerId($id) {
         $key_dir_path  = $this->getGitoliteKeyDirectory();
-        $file_name     = self::getReplicationKeyFilenameForGerritServerId($id);
+        //$file_name     = self::getReplicationKeyFilenameForGerritServerId($id);
 
         $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key->setGerritHostId($id);
+
+        $file_name = $key->getUserName().self::KEY_FILE_SUFFIX;
 
         if(! $this->findFileInDirectory($file_name, $key_dir_path)) {
             return $key;
