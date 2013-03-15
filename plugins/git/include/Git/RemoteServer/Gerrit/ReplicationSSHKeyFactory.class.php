@@ -135,7 +135,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
                 break;
             }
         }
-
+        closedir($directory_handle);
         return $file;
     }
 }
