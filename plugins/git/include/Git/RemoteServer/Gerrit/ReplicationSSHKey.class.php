@@ -18,7 +18,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_RemoteServer_Gerrit_ReplicationSSHKey {
+require_once 'common/user/IHaveAnSSHKey.php';
+
+class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
 
     /** @var string */
     private $value;
@@ -56,6 +58,14 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey {
      */
     public function getGerritHostId() {
         return $this->host_id;
+    }
+
+    public function getAuthorizedKeysArray() {
+        return array($this->value);
+    }
+
+    public function getUserName() {
+        return Rule_UserName::RESERVED_PREFIX.'gerrit_'.$this->getGerritHostId();
     }
 }
 ?>

@@ -19,6 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
+require_once 'common/user/IHaveAnSSHKey.php';
 require_once 'Git_Exec.class.php';
 
 class Git_Gitolite_SSHKeyDumper {
@@ -35,16 +36,15 @@ class Git_Gitolite_SSHKeyDumper {
         $this->keydir       = 'keydir';
     }
 
-
    /**
      * Dump ssh keys into gitolite conf
      */
-    public function dumpSSHKeys(PFUser $user = null) {
+    public function dumpSSHKeys(IHaveAnSSHKey $user = null) {
         if (is_dir($this->admin_path)) {
             $this->createKeydir();
             if ($user) {
                 $this->initUserKeys($user);
-                $commit_msg = 'Update '.$user->getUserName().' (Id: '.$user->getId().') SSH keys';
+                $commit_msg = 'Update '.$user->getUserName().' SSH keys';
             } else {
                 $this->dumpAllKeys();
                 $commit_msg = 'SystemEvent update all user keys';
@@ -79,7 +79,7 @@ class Git_Gitolite_SSHKeyDumper {
         }
     }
 
-    private function initUserKeys(PFUser $user) {
+    private function initUserKeys(IHaveAnSSHKey $user) {
         $this->dumpKeys($user);
     }
 
@@ -92,10 +92,10 @@ class Git_Gitolite_SSHKeyDumper {
         }
     }
 
-    private function dumpKeys(PFUser $user) {
+    private function dumpKeys(IHaveAnSSHKey $user) {
         $i = 0;
         foreach ($user->getAuthorizedKeysArray() as $key) {
-            $filePath = $this->keydir.'/'.$user->getUserName().'@'.$i.'.pub';
+            $filePath = $this->admin_path.'/'.$this->keydir.'/'.$user->getUserName().'@'.$i.'.pub';
             $this->writeKeyIfChanged($filePath, $key);
             $i++;
         }
@@ -118,9 +118,9 @@ class Git_Gitolite_SSHKeyDumper {
     /**
      * Remove all pub SSH keys previously associated to a user
      *
-     * @param PFUser $user
+     * @param IHaveAnSSHKey $user
      */
-    private function removeUserExistingKeys($user, $last_key_id) {
+    private function removeUserExistingKeys(IHaveAnSSHKey $user, $last_key_id) {
         if (is_dir($this->keydir)) {
             $userbase = $user->getUserName().'@';
             foreach (glob("$this->keydir/$userbase*.pub") as $file) {

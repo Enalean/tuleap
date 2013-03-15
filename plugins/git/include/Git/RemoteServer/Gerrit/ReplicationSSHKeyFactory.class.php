@@ -20,6 +20,7 @@
 
 require_once 'ReplicationSSHKey.class.php';
 require_once 'ReplicationSSHKeyFactoryException.class.php';
+require_once dirname(__FILE__).'/../../../Git_Gitolite_SSHKeyDumper.class.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
 
@@ -107,14 +108,9 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             return;
         }
 
-        $key_dir_path  = $this->getGitoliteKeyDirectory();
-        $key_file_name = self::getReplicationKeyFilenameForGerritServerId($key->getGerritHostId());
-        $key_path = $key_dir_path . $key_file_name;
+        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer, UserManager::instance());
+        $key_dumper->dumpSSHKeys($key);
 
-        $this->saveKeyInFileSystem($key, $key_path);
-
-        $this->git_executer->add(self::GITOLITE_KEY_DIR.'/'.$key_file_name);
-        $this->git_executer->commit(self::KEY_SAVE_COMMIT_MESSAGE . $key->getGerritHostId());
         $this->git_executer->push();
 
         return $this;
@@ -140,12 +136,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         $this->git_executer->push();
 
         return true;
-    }
-
-    private function saveKeyInFileSystem($key, $key_path) {
-        $handle = fopen($key_path, 'wx+');
-        fwrite($handle, $key->getValue());
-        fclose($handle);
     }
 
     /**

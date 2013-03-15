@@ -55,6 +55,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
             ->setValue('abc');
 
         $this->gitolite_directoy = '/var/tmp';
+
         $key_dir = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
 
         if (!is_dir('/var/tmp/'.$key_dir)) {
@@ -65,7 +66,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
         stub($this->git_executor)->getPath()->returns($this->gitolite_directoy);
         $this->factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($this->git_executor);
     }
-
 
     public function testSaveWillNotAddsReplicationKeyThatHasNoHostId() {
         $this->key->setGerritHostId(null);
@@ -95,18 +95,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
 
         $this->factory->save($this->key);
     }
-
-    public function testSaveAddRepliationKeyWithRelativePath() {
-        // otherwise, git fails to manage symlinks on admin repo
-        $key_dir           = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::GITOLITE_KEY_DIR;
-        $key_filename      = Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory::getReplicationKeyFilenameFromKey($this->key);
-        $key_relative_path = $key_dir.'/'.$key_filename;
-
-        expect($this->git_executor)->add($key_relative_path)->once();
-
-        $this->factory->save($this->key);
-    }
-
 
     public function testSaveWillGitPushValidReplicationKey() {
         stub($this->git_executor)->push()->once();
@@ -148,17 +136,6 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_SaveTest extends TuleapTe
         $this->assertTrue(is_file($file));
         $new_file_contents = file_get_contents($file);
         $this->assertEqual($new_file_contents, $new_value);
-    }
-
-    public function testSaveWillThrowExceptionIfKeyDirectoyDoesNotExist() {
-        $this->expectException('Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException');
-
-        $fake_dir = '/over/the/rainbow';
-        $git_executor = mock('Git_Exec');
-        stub($git_executor)->getPath()->returns($fake_dir);
-        $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
-
-        $factory->save($this->key);
     }
 
     public function tearDown() {
