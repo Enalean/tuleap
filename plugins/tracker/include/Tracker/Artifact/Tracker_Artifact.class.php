@@ -651,13 +651,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     $tracker = $artifact_link->getTracker();
                     if (in_array($tracker, $allowed_trackers)) {
                         $semantics = Tracker_Semantic_Status::load($tracker);
-                        $child     = new Tracker_Artifact_View_Child($artifact_link, $semantics);
 
-                        $children[] = $child->toArray();
+                        $children[] = new Tracker_ArtifactChildPresenter($artifact_link, $semantics);
                     }
                 }
 
-                $GLOBALS['Response']->sendJSON($children);
+                $GLOBALS['Response']->sendJSON($children);exit;
                 break;
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {

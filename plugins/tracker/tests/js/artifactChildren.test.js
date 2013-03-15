@@ -20,18 +20,15 @@
 describe('HierarchyViewer', function () {
     var base_url = '/plugins/tracker/',
         stories  = [
-            {title:"tea",    id:"121", status:"1",   xref:"story #121", url:"/path/to/121"},
-            {title:"coffee", id:"122", status:"0",   xref:"story #122", url:"/path/to/122"},
-            {title:"cake",   id:"19",  status:null,  xref:"task #19",   url:"/path/to/19"}
+            {title:"tea",    id:"121", status:"Open",   xref:"story #121", url:"/path/to/121"},
+            {title:"coffee", id:"122", status:"Closed", xref:"story #122", url:"/path/to/122"},
+            {title:"cake",   id:"19",  status:"",       xref:"task #19",   url:"/path/to/19"}
         ],
         locales = {
             tracker_hierarchy: {
                 no_child_artifacts: 'whatever',
                 title_column_name: 'Title',
-                status_column_name: 'Status',
-                open_status     : 'ongoing',
-                closed_status   : 'rejected',
-                null_status     : 'not available'
+                status_column_name: 'Status'
             }
         };
 
@@ -107,11 +104,9 @@ describe('HierarchyViewer', function () {
                     });
                 });
 
-                it('modifies and displays the status', function () {
+                it('displays the status', function () {
                     stories.map(function (story) {
-                        table.textContent.should.contain(locales.tracker_hierarchy.open_status);
-                        table.textContent.should.contain(locales.tracker_hierarchy.closed_status);
-                        table.textContent.should.contain(locales.tracker_hierarchy.null_status);
+                        table.textContent.should.contain(story.status);
                     });
                 });
 

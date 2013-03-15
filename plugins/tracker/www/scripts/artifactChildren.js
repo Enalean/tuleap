@@ -53,7 +53,6 @@ tuleap.artifact.HierarchyViewer = Class.create({
         tbody = this.container.down('tbody');
 
         children.map(function (child) {
-            this.purifyChild(child);
             this.insertChild(tbody, child);
         }.bind(this));
     },
@@ -67,7 +66,7 @@ tuleap.artifact.HierarchyViewer = Class.create({
         var title  = this.locales.tracker_hierarchy.title_column_name,
             status = this.locales.tracker_hierarchy.status_column_name;
 
-        this.container.insert('<table class="tree-view artifact-children-table"> \
+        this.container.insert('<table class="artifact-children-table"> \
                 <thead> \
                     <tr class="boxtable artifact-children-table-head"> \
                         <th class="boxtitle"></th> \
@@ -78,20 +77,6 @@ tuleap.artifact.HierarchyViewer = Class.create({
                 <tbody> \
                 </tbody> \
             </table>');
-    },
-
-    purifyChild : function(child) {
-        var open_status   = this.locales.tracker_hierarchy.open_status,
-            closed_status = this.locales.tracker_hierarchy.closed_status,
-            null_status   = this.locales.tracker_hierarchy.null_status;
-
-        if (child.status == 1 ) {
-            child.status = open_status;
-        } else if (child.status == 0 ) {
-            child.status = closed_status;
-        } else {
-            child.status = null_status;
-        }
     },
 
     insertChild: function (tbody, child) {

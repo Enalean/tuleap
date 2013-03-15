@@ -1181,6 +1181,8 @@ plugin_tracker_admin_semantic	bad_field_status	The field you submitted is not a 
 plugin_tracker_admin_semantic	status_impossible	You cannot define the <em>status</em> semantic since there isn't any list field in the tracker
 plugin_tracker_admin_semantic	status_now	The status is now bind to: $1
 plugin_tracker_admin_semantic	unable_save_status	Unable to save the status
+plugin_tracker_admin_semantic	status_Open	Open
+plugin_tracker_admin_semantic	status_Closed	Closed
 plugin_tracker_admin_semantic	tooltip_label	Tooltip
 plugin_tracker_admin_semantic	tooltip_description	Manage tooltip
 plugin_tracker_admin_semantic	tooltip_fields	The following fields will be displayed in the tooltip:

@@ -104,10 +104,26 @@ class Tracker_Semantic_Status extends Tracker_Semantic {
     }
 
     /**
+     * @return string
+     */
+    public function getStatus(Tracker_Artifact $artifact) {
+        $status = $artifact->getStatus();
+        if (! $status) {
+            return '';
+        }
+
+        $key = 'Closed';
+        if (in_array($artifact->getStatus(), $this->getOpenLabels())) {
+            $key = 'Open';
+        }
+        return $GLOBALS['Language']->getText('plugin_tracker_admin_semantic', 'status_'. $key);
+    }
+
+    /**
      *
      * @return array
      */
-    public function getOpenLabels() {
+    private function getOpenLabels() {
         $labels = array();
         
         if (! $this->list_field instanceof Tracker_FormElement_Field_List) {

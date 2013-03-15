@@ -1179,6 +1179,8 @@ plugin_tracker_admin_semantic	bad_field_status	Le champ soumis n'est pas un cham
 plugin_tracker_admin_semantic	status_impossible	Vous ne pouvez pas définir la sémantique <em>état</em> car il n'y a aucun champ liste dans votre outil de suivi.
 plugin_tracker_admin_semantic	status_now	L'état est maintenant lié au champ : $1
 plugin_tracker_admin_semantic	unable_save_status	Impossible de sauvegarder la sémantique état
+plugin_tracker_admin_semantic	status_Open	Ouvert
+plugin_tracker_admin_semantic	status_Closed	Clos
 plugin_tracker_admin_semantic	tooltip_label	Tooltip
 plugin_tracker_admin_semantic	tooltip_description	Gérer le tooltip
 plugin_tracker_admin_semantic	tooltip_fields	Les champs suivants seront affichés dans le tooltip :
