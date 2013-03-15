@@ -27,62 +27,27 @@ class Tracker_Artifact_View_Child {
     /** @var Tracker_Semantic_Status */
     private $semantics;
 
-    private $output_fields = array(
-        'xref',
-        'title',
-        'id',
-        'url',
-        'status'
-    );
-
     public function __construct(Tracker_Artifact $child, Tracker_Semantic_Status $semantics) {
         $this->child = $child;
         $this->semantics = $semantics;
     }
 
     public function toArray() {
-        $array = array();
-
-        $reflect = new ReflectionClass($this);
-        $class_methods = $reflect->getMethods();
-
-        foreach ($class_methods as $method) {
-            $method_name = $method->name;
-            $property = strtolower(substr($method_name, 3));
-            if (in_array($property, $this->output_fields) && method_exists($this, $method_name)) {
-                $array[$property] = $this->$method_name();
-            }
-        }
-
-        return $array;
-    }
-
-    private function getXref() {
-        return $this->child->getXRef();
-    }
-
-    private function getTitle() {
-        return $this->child->getTitle();
-    }
-
-    private function getId() {
-        return $this->child->getId();
-    }
-
-    private function getUrl() {
-        $base_url = get_server_url();
-        return $base_url.$this->child->getUri();
-    }
-
-    private function getStatus() {
         if (! $this->child->getStatus()) {
             $status = null;
         } else {
             $status = ( in_array($this->child->getStatus(), $this->semantics->getOpenLabels()) ) ? 1 : 0;
         }
 
-        return $status;
-    }
+        $base_url = get_server_url();
 
+        return array(
+            'xref'  => $this->child->getXRef(),
+            'title' => $this->child->getTitle(),
+            'id'    => $this->child->getId(),
+            'url'   => $base_url.$this->child->getUri(),
+            'status'=> $status
+        );
+    }
 }
 ?>
