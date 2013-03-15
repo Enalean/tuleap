@@ -43,7 +43,9 @@ class Git_Exec {
      * @throw Git_Command_Exception
      */
     public function mv($from, $to) {
-        $cmd = 'mv '.escapeshellarg($from) .' '. escapeshellarg($to);
+        $to_name = basename($to);
+        $to_path = realpath(dirname($to)).'/'.$to_name;
+        $cmd     = 'mv '.escapeshellarg(realpath($from)) .' '. escapeshellarg($to_path);
         return $this->gitCmd($cmd);
     }
 
