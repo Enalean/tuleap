@@ -55,10 +55,6 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
-    /**
-     * @var Git_Gitolite_SSHKeyDumper
-     */
-    protected $dumper;
 
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
@@ -75,14 +71,12 @@ class Git_GitoliteDriver {
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null, Git_Exec $gitExec = null, Git_Gitolite_SSHKeyDumper $dumper = null) {
+    public function __construct($adminPath = null, Git_Exec $gitExec = null) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
-        
-        $this->dumper = $dumper ? $dumper : new Git_Gitolite_SSHKeyDumper($this->adminPath, $this->gitExec, UserManager::instance());
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
@@ -162,16 +156,6 @@ class Git_GitoliteDriver {
             return false;
         }
         return true;
-    }
-    
-    /**
-     * Dump ssh keys into gitolite conf
-     */
-    public function dumpSSHKeys(PFUser $user = null) {
-        if ($this->dumper->dumpSSHKeys($user)) {
-            return $this->push();
-        }
-        return false;
     }
 
     /**

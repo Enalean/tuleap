@@ -79,7 +79,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
             return;
         }
 
-        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer, UserManager::instance());
+        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer);
         $key_dumper->dumpSSHKeys($key);
 
         $this->git_executer->push();
@@ -99,7 +99,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
         $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $key->setGerritHostId($id);
 
-        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer, UserManager::instance());
+        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer);
         $key_dumper->dumpSSHKeys($key);
 
         $this->git_executer->push();
@@ -113,7 +113,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
      */
     private function getGitoliteKeyDirectory() {
-        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer, UserManager::instance());
+        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer);
         $key_dir_path  = $key_dumper->getKeyDirPath();
         if (! is_dir($key_dir_path)) {
             throw new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException('gitolite admin key directory does not exist');

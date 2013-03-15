@@ -27,74 +27,68 @@ class Git_Gitolite_SSHKeyDumper {
 
     private $admin_path;
     private $git_exec;
-    private $user_manager;
 
-    public function __construct($admin_path, Git_Exec $git_exec, UserManager $user_manager) {
+    public function __construct($admin_path, Git_Exec $git_exec) {
         $this->admin_path   = $admin_path;
         $this->git_exec     = $git_exec;
-        $this->user_manager = $user_manager;
     }
 
+    /**
+     * Absolute path to gitolite keydir
+     *
+     * @return String
+     */
     public function getKeyDirPath() {
         return $this->admin_path.'/'.self::KEYDIR;
     }
 
     /**
-     * Dump ssh keys into gitolite conf
+     * Return Git_Exec object
+     *
+     * @return Git_Exec
      */
-    public function dumpSSHKeys(IHaveAnSSHKey $user = null) {
+    public function getGitExec() {
+        return $this->git_exec;
+    }
+
+    /**
+     * Dump ssh keys into gitolite conf
+     *
+     * @return Boolean
+     */
+    public function dumpSSHKeys(IHaveAnSSHKey $user) {
+        $this->dumpSSHKeysWithoutCommit($user);
+        return $this->commitKeyDir('Update '.$user->getUserName().' SSH keys');
+    }
+
+    /**
+     * Add pending modification to index and commit with message
+     *
+     * @param String $message
+     *
+     * @return Boolean
+     */
+    public function commitKeyDir($message) {
+        if (is_dir($this->getKeyDirPath())) {
+            $this->git_exec->add($this->getKeyDirPath());
+        }
+        return $this->git_exec->commit($message);
+    }
+
+    /**
+     * Dump user SSH key
+     *
+     * @param IHaveAnSSHKey $user
+     *
+     * @return boolean
+     */
+    public function dumpSSHKeysWithoutCommit(IHaveAnSSHKey $user) {
         if (is_dir($this->admin_path)) {
             $this->createKeydir();
-            if ($user) {
-                $this->initUserKeys($user);
-                $commit_msg = 'Update '.$user->getUserName().' SSH keys';
-            } else {
-                $this->dumpAllKeys();
-                $commit_msg = 'SystemEvent update all user keys';
-            }
-            if (is_dir($this->getKeyDirPath())) {
-                $this->git_exec->add($this->getKeyDirPath());
-            }
-            $this->git_exec->commit($commit_msg);
-            return true;
-        }
-        return false;
-    }
-
-    private function dumpAllKeys() {
-        $dumped_users = array();
-        foreach ($this->user_manager->getUsersWithSshKey() as $user) {
-            $dumped_users[$user->getUserName()] = true;
             $this->initUserKeys($user);
-        }
-        $this->purgeNotDumpedUsers($dumped_users);
-    }
-
-    private function purgeNotDumpedUsers(array $dumped_users) {
-        foreach (glob($this->getKeyDirPath().'/*.pub') as $file) {
-            $file_name = basename($file);
-            if (!$this->isReservedName($file_name)) {
-                $user_name = substr($file_name, 0, strpos($file_name, '@'));
-                if (!isset($dumped_users[$user_name])) {
-                    $this->git_exec->rm($file);
-                }
-            }
-        }
-    }
-
-    private function isReservedName($file_name) {
-        if ($this->isAdminKey($file_name) || $this->isGerritKey($file_name)) {
             return true;
         }
         return false;
-    }
-
-    private function isAdminKey($file_name) {
-        return $file_name == 'id_rsa_gl-adm.pub';
-    }
-
-    private function isGerritKey($file_name) {
-        return strpos($file_name, Rule_UserName::RESERVED_PREFIX.Git_RemoteServer_Gerrit_ReplicationSSHKey::KEYNAME_PREFIX) === 0;
     }
 
     private function initUserKeys(IHaveAnSSHKey $user) {
