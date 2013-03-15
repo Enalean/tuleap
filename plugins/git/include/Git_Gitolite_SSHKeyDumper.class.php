@@ -127,14 +127,19 @@ class Git_Gitolite_SSHKeyDumper {
         if (is_dir($this->getKeyDirPath())) {
             $userbase = $user->getUserName().'@';
             foreach (glob($this->getKeyDirPath()."/$userbase*.pub") as $file) {
-                $matches = array();
-                if (preg_match('%^'.$this->getKeyDirPath().'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
-                    if ($matches[1] >= $last_key_id) {
-                        $this->git_exec->rm($file);
-                    }
+                if ($this->getKeyNumber($userbase, $file) >= $last_key_id) {
+                    $this->git_exec->rm($file);
                 }
             }
         }
+    }
+
+    private function getKeyNumber($userbase, $file) {
+        $matches = array();
+        if (preg_match('%^'.$this->getKeyDirPath().'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
+            return intval($matches[1]);
+        }
+        return -1;
     }
 }
 
