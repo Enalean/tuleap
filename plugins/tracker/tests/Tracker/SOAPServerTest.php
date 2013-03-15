@@ -135,7 +135,7 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     }
 
     private function anArtifactWithAMockedCrossReferenceFactory($id, $tracker, $changesets) {
-        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory'), array($id, $tracker->getId(), null, null, null));
+        $artifact = partial_mock('Tracker_Artifact', array('getCrossReferenceFactory', 'getSoapValue'), array($id, $tracker->getId(), null, null, null));
         $artifact->setTracker($tracker);
         $artifact->setChangesets($changesets);
         $cross_reference_factory = mock('CrossReferenceFactory');
@@ -146,9 +146,12 @@ abstract class Tracker_SOAPServer_BaseTest extends TuleapTestCase {
     private function setUpArtifacts(Tracker_ArtifactFactory $artifact_factory) {
         $changesets = array(stub('Tracker_Artifact_Changeset')->getValues()->returns(array()));
         $artifact_42   = $this->anArtifactWithAMockedCrossReferenceFactory(42, $this->tracker, $changesets);
+        stub($artifact_42)->getSoapValue()->returns($this->expected_artifact_42);
         $artifact_66   = $this->anArtifactWithAMockedCrossReferenceFactory(66, $this->tracker, $changesets);
+        stub($artifact_66)->getSoapValue()->returns($this->expected_artifact_66);
         $artifact_5323 = $this->anArtifactWithAMockedCrossReferenceFactory($this->private_artifact_id, $this->private_unreadable_tracker, $changesets);
         $artifact_9001 = $this->anArtifactWithAMockedCrossReferenceFactory(9001, $this->tracker, $changesets);
+        stub($artifact_9001)->getSoapValue()->returns($this->expected_artifact_9001);
 
         $changesets       = stub('Tracker_Artifact_Changeset')->getValues()->returns(array("title" => "title"));
         $artifact_9999    = mock('Tracker_Artifact');
@@ -310,19 +313,6 @@ class Tracker_SOAPServer_getTrackerFields_Test extends Tracker_SOAPServer_BaseTe
     public function itRaisesASoapFaultIfTheProjectIsNotReadableByTheUser() {
         $soap_fault = $this->server->getTrackerFields($this->session_key, $this->i_should_not_have_access_to_this_private_project_id, $this->private_unreadable_tracker_id);
         $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
-    }
-}
-
-class Tracker_SOAPServer_getArtifact_Test extends Tracker_SOAPServer_BaseTest {
-
-    public function itRaisesASoapFaultIfTheProjectIsNotReadableByTheUser() {
-        $soap_fault = $this->server->getArtifact($this->session_key, '*', '*', $this->private_artifact_id);
-        $this->assertEqual($soap_fault->getMessage(), 'User do not have access to the project');
-    }
-
-    public function itContainsCrossReferencesValue() {
-        $soap_values = $this->server->getArtifact($this->session_key, '*', '*', 9999);
-        $this->assertEqual($soap_values['cross_references'][0], array('ref' => 'art #123', 'url' => '/path/to/art=123'));
     }
 }
 
@@ -905,4 +895,5 @@ class Tracker_SOAPServer_GetArtifactComments_Test extends Tracker_SOAPServer_Bas
         $this->assertIsA($return, 'SOAPFault');
     }
 }
+
 ?>

@@ -1,3 +1,12 @@
+Version 0.9.22 - Tuleap 5.12
+    * sla #2849 - Problem in the use of Cardwall on IE 7
+
+Version 0.9.21 - Tuleap 5.12
+    * SOAP method related to tracker fields now returns computed field value
+
+Version 0.9.20 - Tuleap 5.12
+    * Story #2524: see colour type at a glance on cardwall.
+
 Version 0.9.19 - Tuleap 5.12
     * Rename User class to PFUser to allow integration of mediawiki
 

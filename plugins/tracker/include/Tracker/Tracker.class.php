@@ -33,6 +33,7 @@ class Tracker implements Tracker_Dispatchable_Interface {
     const REMAINING_EFFORT_FIELD_NAME = "remaining_effort";
     const ASSIGNED_TO_FIELD_NAME      = "assigned_to";
     const IMPEDIMENT_FIELD_NAME       = "impediment";
+    const TYPE_FIELD_NAME             = "type";
 
     public $id;
     public $group_id;
@@ -2426,7 +2427,7 @@ EOS;
     }
     
     private function _getCSVSeparator($current_user) {
-        if ( ! $current_user || ! ($user instanceof PFUser)) {
+        if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         
@@ -2447,7 +2448,7 @@ EOS;
     }
     
     private function _getCSVDateformat($current_user) {
-        if ( ! $current_user || ! ($user instanceof PFUser)) {
+        if ( ! $current_user || ! ($current_user instanceof PFUser)) {
             $current_user = UserManager::instance()->getCurrentUser();
         }
         $dateformat_csv_export_pref = $current_user->getPreference('user_csv_dateformat');
@@ -3146,13 +3147,28 @@ EOS;
     }
 
     /**
+     * Return the children of the tracker
+     *
+     * @return Tracker[]
+     */
+    public function getChildren() {
+        return $this->getHierarchyFactory()->getChildren($this->getId());
+    }
+
+    /**
      * Return the hierarchy the tracker belongs to
      *
      * @return Tracker_Hierarchy
      */
     public function getHierarchy() {
-        $hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
-        return $hierarchy_factory->getHierarchy(array($this->getId()));
+        return $this->getHierarchyFactory()->getHierarchy(array($this->getId()));
+    }
+
+    /**
+     * @return Tracker_HierarchyFactory
+     */
+    private function getHierarchyFactory() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
     }
 
     /**

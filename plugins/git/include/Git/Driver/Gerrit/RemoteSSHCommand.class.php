@@ -29,6 +29,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     /** Logger */
     private $logger;
 
+    private $filepath = null;
+
     public function __construct(Logger $logger) {
         $this->logger = $logger;
     }
@@ -53,7 +55,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
     }
 
     protected function sshExec($cmd) {
-        $filename = tempnam(Config::get('tmp_dir'), 'stderr_');
+        $filename = $this->getStdErrFilePath();
         exec("ssh $cmd 2>$filename", $output, $exit_code);
         $stderr = file_get_contents($filename);
         unlink($filename);
@@ -62,6 +64,18 @@ class Git_Driver_Gerrit_RemoteSSHCommand {
             'std_out'   => implode(PHP_EOL, $output),
             'std_err'   => $stderr
         );
+    }
+
+    /**
+     * Return path of the file that contains ssh command stderr
+     *
+     * @return String
+     */
+    public function getStdErrFilePath() {
+        if (!$this->filepath) {
+            $this->filepath = tempnam(Config::get('tmp_dir'), 'stderr_');
+        }
+        return $this->filepath;
     }
 }
 ?>

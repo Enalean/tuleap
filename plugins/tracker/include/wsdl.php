@@ -133,7 +133,8 @@ $GLOBALS['server']->wsdl->addComplexType(
     '',
     array(
         'value'        => array('type' => 'xsd:string'),
-        'file_info'    => array('type' => 'tns:ArrayOfFieldValueFileInfo')
+        'file_info'    => array('type' => 'tns:ArrayOfFieldValueFileInfo'),
+        'bind_value'   => array('type' => 'tns:ArrayOfTrackerFieldBindValue')
     )
 );
 

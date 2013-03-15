@@ -129,7 +129,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     /**
      * @param string $keyword
      *
-     * @return array
+     * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
     public function getAllValues($keyword = null) {
         $sql = array();
@@ -240,23 +240,40 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
             'join_on_id' => 'user.user_id',
         );
     }
-    
+
     /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
+     * Get the field data for artifact submission
      *
-     * @return mixed The values or null if there are no specific available values
+     * @param string  $soap_value  the soap field value (username(s))
+     * @param boolean $is_multiple if the soap value is multiple or not
+     *
+     * @return mixed the field data corresponding to the soap_value for artifact submision (user_id)
      */
-    public function getSoapAvailableValues() {
-        $soap_values = array();
+    public function getFieldData($soap_value, $is_multiple) {
         $values = $this->getAllValues();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                'bind_value_id'    => $id,
-                'bind_value_label' => $value->getUserName(),
-            );
+        if ($is_multiple) {
+            $return = array();
+            $soap_values = explode(',', $soap_value);
+            foreach ($values as $id => $value) {
+                if (in_array($value->getUsername(), $soap_values)) {
+                    $return[] = $id;
+                }
+            }
+            if (count($soap_values) == count($return)) {
+                return $return;
+            } else {
+                // if one value was not found, return null
+                return null;
+            }
+        } else {
+            foreach ($values as $id => $value) {
+                if ($value->getUsername() == $soap_value) {
+                    return $id;
+                }
+            }
+            // if not found, return null
+            return null;
         }
-        return $soap_values;
     }
     
     /**

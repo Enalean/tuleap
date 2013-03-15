@@ -246,7 +246,7 @@ if ($func=='do_create') {
             }
             $my_link=str_replace('$group_id',$my_group_id,$my_link);
 
-            $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank) VALUES ($my_group_id, '$label', '$description', '$short_name', '$my_link', ".($is_active?"1":"0").", ".($is_used?"1":"0").", '$scope', $rank)";
+            $sql = "INSERT INTO service (group_id, label, description, short_name, link, is_active, is_used, scope, rank, is_in_iframe) VALUES ($my_group_id, '$label', '$description', '$short_name', '$my_link', ".($is_active?"1":"0").", ".($is_used?"1":"0").", '$scope', $rank, $is_in_iframe)";
             $result=db_query($sql);
             $nbproj++;
             if (!$result) {

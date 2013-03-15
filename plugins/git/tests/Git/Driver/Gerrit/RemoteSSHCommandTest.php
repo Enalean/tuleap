@@ -124,7 +124,6 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
     
     public function itRemovesTemporaryFiles() {
-        $nb_files_b4 = count(scandir('/tmp'));
         $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand(mock('Logger'));
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
@@ -132,9 +131,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             
         }
 
-        $nb_files_after = count(scandir('/tmp'));
-        $this->assertEqual($nb_files_b4, $nb_files_after, 
-                "expected number of files in /tmp to be the same before ($nb_files_b4) and after ($nb_files_after) the test");
+        $this->assertFalse(file_exists($ssh_command->getStdErrFilePath()));
     }
 
     public function itReturnsStdout(){

@@ -526,7 +526,8 @@ class GitActions extends PluginActions {
                 $this->systemEventManager->createEvent(
                     SystemEvent_GIT_GERRIT_MIGRATION::TYPE,
                     $repository->getId() . SystemEvent::PARAMETER_SEPARATOR . $remote_server_id,
-                    SystemEvent::PRIORITY_HIGH
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::OWNER_APP
                 );
             } catch (Git_RemoteServer_NotFoundException $e) {
                 // TODO log error to the syslog

@@ -155,7 +155,7 @@ class Tracker_SOAPServer {
             $return['total_artifacts_number'] = count($id_list);
             foreach (array_slice($id_list, $offset, $max_rows) as $artifact_id) {
                 $artifact      = $this->artifact_factory->getArtifactById((int)$artifact_id);
-                $soap_artifact = $this->artifact_to_soap($user, $artifact);
+                $soap_artifact = $artifact->getSoapValue($user);
                 if (count($soap_artifact)) {
                     $return['artifacts'][] = $soap_artifact;
                 }
@@ -322,7 +322,7 @@ class Tracker_SOAPServer {
         try {
             $current_user = $this->soap_request_validator->continueSession($session_key);
             $artifact     = $this->getArtifactById($artifact_id, $current_user, 'getArtifact');
-            return $this->artifact_to_soap($current_user, $artifact);
+            return $artifact->getSoapValue($current_user);
         } catch (Exception $e) {
             return new SoapFault((string) $e->getCode(), $e->getMessage());
         }
@@ -370,51 +370,6 @@ class Tracker_SOAPServer {
     }
 
     /**
-     * artifact_to_soap : return the soap artifact structure giving a PHP Artifact Object.
-     * @access private
-     *
-     * WARNING : We check the permissions here : only the readable fields are returned.
-     *
-     * @param Object{Artifact} $artifact the artifact to convert.
-     * @return array the SOAPArtifact corresponding to the Artifact Object
-     */
-    private function artifact_to_soap(PFUser $user, Tracker_Artifact $artifact) {
-        $soap_artifact = array();
-
-        // We check if the user can view this artifact
-        if ($artifact->userCanView($user)) {
-            $last_changeset = $artifact->getLastChangeset();
-
-            $soap_artifact['artifact_id']      = $artifact->getId();
-            $soap_artifact['tracker_id']       = $artifact->getTrackerId();
-            $soap_artifact['submitted_by']     = $artifact->getSubmittedBy();
-            $soap_artifact['submitted_on']     = $artifact->getSubmittedOn();
-            $soap_artifact['cross_references'] = $artifact->getCrossReferencesSOAPValues();
-            $soap_artifact['last_update_date'] = $last_changeset->getSubmittedOn();
-
-            $soap_artifact['value'] = array();
-            foreach ($last_changeset->getValues() as $field_id => $field_value) {
-                if ($field_value &&
-                        ($field = $this->formelement_factory->getFormElementById($field_id)) &&
-                        ($field->userCanRead($user))) {
-                    $soap_field_value = array(
-                        'field_name' => $field->getName(),
-                        'field_label' => $field->getLabel(),
-                    );
-                    if ($field instanceof Tracker_FormElement_Field_File) {
-                        $soap_field_value['field_value'] = $field_value->getSoapValue();
-                    } else {
-                        // TODO: refactor to move 'value' into Field
-                        $soap_field_value['field_value'] = array('value' => $field_value->getSoapValue());
-                    }
-                    $soap_artifact['value'][] = $soap_field_value;
-                }
-            }
-        }
-        return $soap_artifact;
-    }
-
-    /**
      * addArtifact - add an artifact in tracker $tracker_id of the project $group_id with given values
      *
      * @param string $session_key the session hash associated with the session opened by the person who calls the service
@@ -451,7 +406,7 @@ class Tracker_SOAPServer {
         }
     }
 
-    private function getArtifactDataFromSoapRequest(Tracker $tracker, $values) {
+    private function getArtifactDataFromSoapRequest(Tracker $tracker, $values, Tracker_Artifact $artifact = null) {
         $fields_data = array();
         foreach ($values as $field_value) {
             // field are identified by name, we need to retrieve the field id
@@ -459,9 +414,9 @@ class Tracker_SOAPServer {
 
                 $field = $this->formelement_factory->getUsedFieldByName($tracker->getId(), $field_value->field_name);
                 if ($field) {
-                    $field_data = $field->getFieldDataFromSoapValue($field_value);
+                    $field_data = $field->getFieldDataFromSoapValue($field_value, $artifact);
 
-                    if ($field_data != null) {
+                    if ($field_data !== null) {
                         // $field_value is an object: SOAP must cast it in ArtifactFieldValue
                         if (isset($fields_data[$field->getId()])) {
                             if (!is_array($fields_data[$field->getId()])) {
@@ -506,7 +461,7 @@ class Tracker_SOAPServer {
             $user = $this->soap_request_validator->continueSession($session_key);
             $artifact = $this->getArtifactById($artifact_id, $user, 'updateArtifact');
 
-            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value);
+            $fields_data = $this->getArtifactDataFromSoapRequest($artifact->getTracker(), $value, $artifact);
             try {
                 $artifact->createNewChangeset($fields_data, $comment, $user, null, true, $comment_format);
                 return $artifact_id;

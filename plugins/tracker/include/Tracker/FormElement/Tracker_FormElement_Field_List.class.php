@@ -1035,7 +1035,23 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
          return $values;
      }
 
-     /**
+     public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+         if (isset($soap_value->field_value->bind_value)) {
+             if ($this->isMultiple()) {
+                 $values = array();
+                 foreach ($soap_value->field_value->bind_value as $bind_value) {
+                    $values[] = $bind_value->bind_value_id;
+                 }
+                 return $values;
+             } else {
+                 return $soap_value->field_value->bind_value[0]->bind_value_id;
+             }
+         } else {
+             return $this->getFieldData($soap_value->field_value->value);
+         }
+     }
+
+    /**
      * Get the field data for artifact submission
      *
      * @param string the soap field value
@@ -1043,7 +1059,7 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * @return mixed the field data corresponding to the soap_value for artifact submision
      */
     public function getFieldData($soap_value) {
-        if ($soap_value === '100') {
+        if ($soap_value === $GLOBALS['Language']->getText('global','none')) {
             return 100;
         }
 

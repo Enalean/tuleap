@@ -100,7 +100,7 @@ class Tracker_Artifact_Changeset {
     /**
      * Return the changeset values of this changeset
      *
-     * @return array of Tracker_Artifact_ChangesetValue, or empty array if not found
+     * @return Tracker_Artifact_ChangesetValue[] or empty array if not found
      */
     public function getValues() {
         if (!$this->values) {

@@ -34,7 +34,7 @@ class Tracker_Artifact_ChangesetValue_TextTest extends TuleapTestCase {
         $field = new MockTracker_FormElement_Field_Text();
         $text = new Tracker_Artifact_ChangesetValue_Text(111, $field, false, 'Problems during installation');
         $this->assertEqual($text->getText(), 'Problems during installation');
-        $this->assertEqual($text->getSoapValue(), 'Problems during installation');
+        $this->assertEqual($text->getSoapValue(), array('value' => 'Problems during installation'));
         $this->assertEqual($text->getValue(), 'Problems during installation');
     }
     

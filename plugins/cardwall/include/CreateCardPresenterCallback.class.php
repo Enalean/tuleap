@@ -49,7 +49,8 @@ class Cardwall_CreateCardPresenterCallback implements TreeNodeCallback {
         }
 
         $artifact  = $node->getArtifact();
-        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $artifact->getParent($this->user));
+        $color     = $artifact->getCardAccentColor($this->user);
+        $presenter = new Cardwall_CardPresenter($artifact, $this->card_fields, $color, $artifact->getParent($this->user));
         $new_node  = new Tracker_TreeNode_CardPresenterNode($node, $presenter);
         return $new_node;
     }

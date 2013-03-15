@@ -40,9 +40,17 @@ $tracker_id  = 0;
 $artifact_id = $argv[1];
 $value       = array(
     array(
-        'field_name' => 'summary',
-        'field_label' => 'title',
-        'field_value' => array('value' => $argv[2])
+        'field_name'  => 'link',
+        'field_label' => '',
+        'field_value' => array('value' => '5791, 5792, 5793, 41297, 427')
+        /*'field_value' => array('bind_value' =>
+            array(
+                array(
+                    'bind_value_id' => 106,
+                    'bind_value_label' => ''
+                )
+            )
+        )*/
     )
 );
 
