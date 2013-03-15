@@ -174,6 +174,23 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
         $this->assertTrue(is_file($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub'));
     }
+
+    public function itDoesntRemoveTheGerritReservedKeys() {
+        $this->user_manager->setReturnValueAt(0, 'getUsersWithSshKey', TestHelper::arrayToDar(new PFUser(array('authorized_keys' => $this->key1, 'user_name' => 'john_do'))));
+        $this->dumper->dumpSSHKeys();
+
+        $keyfile = 'forge__gerrit_1@0.pub';
+        touch($this->_glAdmDir . '/keydir/'.$keyfile);
+        $this->gitExec->add($this->_glAdmDir . '/keydir/'.$keyfile);
+        $this->gitExec->commit("Gerrit key");
+        $this->assertEmptyGitStatus();
+
+        $this->user_manager->setReturnValueAt(1, 'getUsersWithSshKey', TestHelper::emptyDar());
+        $this->dumper->dumpSSHKeys();
+
+        $this->assertFalse(is_file($this->_glAdmDir . '/keydir/john_do@0.pub'));
+        $this->assertTrue(is_file($this->_glAdmDir . '/keydir/'.$keyfile));
+    }
 }
 
 ?>

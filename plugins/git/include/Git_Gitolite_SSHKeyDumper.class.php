@@ -73,13 +73,28 @@ class Git_Gitolite_SSHKeyDumper {
     private function purgeNotDumpedUsers(array $dumped_users) {
         foreach (glob($this->getKeyDirPath().'/*.pub') as $file) {
             $file_name = basename($file);
-            if ($file_name != 'id_rsa_gl-adm.pub') {
+            if (!$this->isReservedName($file_name)) {
                 $user_name = substr($file_name, 0, strpos($file_name, '@'));
                 if (!isset($dumped_users[$user_name])) {
                     $this->git_exec->rm($file);
                 }
             }
         }
+    }
+
+    private function isReservedName($file_name) {
+        if ($this->isAdminKey($file_name) || $this->isGerritKey($file_name)) {
+            return true;
+        }
+        return false;
+    }
+
+    private function isAdminKey($file_name) {
+        return $file_name == 'id_rsa_gl-adm.pub';
+    }
+
+    private function isGerritKey($file_name) {
+        return strpos($file_name, Rule_UserName::RESERVED_PREFIX.Git_RemoteServer_Gerrit_ReplicationSSHKey::KEYNAME_PREFIX) === 0;
     }
 
     private function initUserKeys(IHaveAnSSHKey $user) {

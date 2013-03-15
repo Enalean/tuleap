@@ -21,6 +21,7 @@
 require_once 'common/user/IHaveAnSSHKey.php';
 
 class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
+    const KEYNAME_PREFIX = 'gerrit_';
 
     /** @var string */
     private $value = null;
@@ -68,7 +69,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
     }
 
     public function getUserName() {
-        return Rule_UserName::RESERVED_PREFIX.'gerrit_'.$this->getGerritHostId();
+        return Rule_UserName::RESERVED_PREFIX.self::KEYNAME_PREFIX.$this->getGerritHostId();
     }
 }
 ?>
