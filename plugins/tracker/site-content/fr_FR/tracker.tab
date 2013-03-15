@@ -993,6 +993,9 @@ plugin_tracker_artifact	mail_followup_by	Par :
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">Vous n'êtes PAS connecté<br />Veuillez <a href="$1">vous connecter,</a> de façon à ce que les notifications de mise à jour puissent vous être envoyées.</span></strong><br />Si vous ne possédez pas de compte utilisateur, veuillez entrer votre adresse e-mail à la place&nbsp;:
 plugin_tracker_artifact	email_required	Votre adresse email est obligatoire si vous n'êtes pas connecté.
 
+plugin_tracker_artifact	edit_title	Artefact
+plugin_tracker_artifact	hierarchy_title	Enfants
+
 plugin_tracker_artifactlink	go_to_tracker	Aller voir cet outil de suivi
 plugin_tracker_artifactlink	manual_panel_desc	Si vous connaissez l'id de l'artefact, entrez-le manuellement dans le champs texte ci-dessous. Le champs attends une liste d'ids séparés par des virgules.
 plugin_tracker_artifactlink	manual_panel_label	Artefact id(s)

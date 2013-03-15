@@ -995,6 +995,9 @@ plugin_tracker_artifact	mail_followup_by	By:
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">You Are NOT Logged In<br />Please <a href="$1">log in,</a> so update notifications can be emailed to you.</span></strong><br />If you don't have a user account, then enter your email address instead:
 plugin_tracker_artifact	email_required	Email is required if you are not logged in.
 
+plugin_tracker_artifact	edit_title	Artifact
+plugin_tracker_artifact	hierarchy_title	Children
+
 plugin_tracker_artifactlink	go_to_tracker	Go see this tracker
 plugin_tracker_artifactlink	manual_panel_desc	If you know the artifact id, feel free to enter it manually in the text field below. Use a comma to separate each ids if you have more than one.
 plugin_tracker_artifactlink	manual_panel_label	Artifact id(s)

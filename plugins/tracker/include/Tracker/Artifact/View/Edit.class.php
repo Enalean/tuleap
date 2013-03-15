@@ -31,7 +31,7 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
 
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle() {
-        return 'Artifact';
+        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'edit_title');
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */

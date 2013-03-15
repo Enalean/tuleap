@@ -22,7 +22,7 @@ class Tracker_Artifact_View_Hierarchy extends Tracker_Artifact_View_View {
 
     /** @see Tracker_Artifact_View_View::getTitle() */
     public function getTitle() {
-        return 'Children';
+        return $GLOBALS['Language']->getText('plugin_tracker_artifact', 'hierarchy_title');
     }
 
     /** @see Tracker_Artifact_View_View::getIdentifier() */
