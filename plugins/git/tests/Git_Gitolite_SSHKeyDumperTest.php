@@ -28,6 +28,7 @@ class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase {
         parent::setUp();
         $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
+        chdir('/var');
     }
 }
 
@@ -163,7 +164,7 @@ class Git_Gitolite_SSHKeyDumper_AllUsersTest extends Git_Gitolite_SshKeyTestCase
         $this->dumper->dumpSSHKeys();
 
         touch($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub');
-        $this->gitExec->add('keydir/id_rsa_gl-adm.pub');
+        $this->gitExec->add($this->_glAdmDir . '/keydir/id_rsa_gl-adm.pub');
         $this->gitExec->commit("Admin key");
         $this->assertEmptyGitStatus();
 

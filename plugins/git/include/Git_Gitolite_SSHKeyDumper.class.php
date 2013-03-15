@@ -23,20 +23,23 @@ require_once 'common/user/IHaveAnSSHKey.php';
 require_once 'Git_Exec.class.php';
 
 class Git_Gitolite_SSHKeyDumper {
+    const KEYDIR = 'keydir';
 
     private $admin_path;
     private $git_exec;
     private $user_manager;
-    private $keydir;
 
     public function __construct($admin_path, Git_Exec $git_exec, UserManager $user_manager) {
         $this->admin_path   = $admin_path;
         $this->git_exec     = $git_exec;
         $this->user_manager = $user_manager;
-        $this->keydir       = 'keydir';
     }
 
-   /**
+    public function getKeyDirPath() {
+        return $this->admin_path.'/'.self::KEYDIR;
+    }
+
+    /**
      * Dump ssh keys into gitolite conf
      */
     public function dumpSSHKeys(IHaveAnSSHKey $user = null) {
@@ -49,8 +52,8 @@ class Git_Gitolite_SSHKeyDumper {
                 $this->dumpAllKeys();
                 $commit_msg = 'SystemEvent update all user keys';
             }
-            if (is_dir($this->admin_path.'/keydir')) {
-                $this->git_exec->add('keydir');
+            if (is_dir($this->getKeyDirPath())) {
+                $this->git_exec->add($this->getKeyDirPath());
             }
             $this->git_exec->commit($commit_msg);
             return true;
@@ -68,7 +71,7 @@ class Git_Gitolite_SSHKeyDumper {
     }
 
     private function purgeNotDumpedUsers(array $dumped_users) {
-        foreach (glob($this->keydir.'/*.pub') as $file) {
+        foreach (glob($this->getKeyDirPath().'/*.pub') as $file) {
             $file_name = basename($file);
             if ($file_name != 'id_rsa_gl-adm.pub') {
                 $user_name = substr($file_name, 0, strpos($file_name, '@'));
@@ -85,9 +88,9 @@ class Git_Gitolite_SSHKeyDumper {
 
     private function createKeydir() {
         clearstatcache();
-        if (!is_dir($this->keydir)) {
-            if (!mkdir($this->keydir)) {
-                throw new Exception('Unable to create "keydir" directory in '.getcwd());
+        if (!is_dir($this->getKeyDirPath())) {
+            if (!mkdir($this->getKeyDirPath())) {
+                throw new Exception('Unable to create "'.$this->getKeyDirPath().'" directory in ');
             }
         }
     }
@@ -95,7 +98,7 @@ class Git_Gitolite_SSHKeyDumper {
     private function dumpKeys(IHaveAnSSHKey $user) {
         $i = 0;
         foreach ($user->getAuthorizedKeysArray() as $key) {
-            $filePath = $this->admin_path.'/'.$this->keydir.'/'.$user->getUserName().'@'.$i.'.pub';
+            $filePath = $this->getKeyDirPath().'/'.$user->getUserName().'@'.$i.'.pub';
             $this->writeKeyIfChanged($filePath, $key);
             $i++;
         }
@@ -121,11 +124,11 @@ class Git_Gitolite_SSHKeyDumper {
      * @param IHaveAnSSHKey $user
      */
     private function removeUserExistingKeys(IHaveAnSSHKey $user, $last_key_id) {
-        if (is_dir($this->keydir)) {
+        if (is_dir($this->getKeyDirPath())) {
             $userbase = $user->getUserName().'@';
-            foreach (glob("$this->admin_path/$this->keydir/$userbase*.pub") as $file) {
+            foreach (glob($this->getKeyDirPath()."/$userbase*.pub") as $file) {
                 $matches = array();
-                if (preg_match('%^'.$this->admin_path.'/'.$this->keydir.'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
+                if (preg_match('%^'.$this->getKeyDirPath().'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
                     if ($matches[1] >= $last_key_id) {
                         $this->git_exec->rm($file);
                     }

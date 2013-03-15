@@ -56,7 +56,7 @@ class Git_Exec {
      * @throw Git_Command_Exception
      */
     public function add($file) {
-        $cmd = 'add '.escapeshellarg($file);
+        $cmd = 'add '.escapeshellarg(realpath($file));
         return $this->gitCmd($cmd);
     }
 
