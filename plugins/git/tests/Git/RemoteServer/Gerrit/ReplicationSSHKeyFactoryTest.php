@@ -321,11 +321,12 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_DeleteForGerritServerIdTe
 
         touch($file);
 
-        expect($this->git_executor)->rm($key_dir.'/'. $key_filename)->once();
+        expect($this->git_executor)->rm(new PatternExpectation('%keydir/forge__gerrit_86@0.pub$%'))->once();
         expect($this->git_executor)->commit()->once();
         expect($this->git_executor)->push()->once();
 
         $this->factory->deleteForGerritServerId($id);
+        unlink($file);
     }
 }
 ?>

@@ -124,15 +124,13 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @throw Git_Command_Exception
      */
     public function deleteForGerritServerId($id) {
-        $key_dir_path  = $this->getGitoliteKeyDirectory();
-        $file_name     = self::getReplicationKeyFilenameForGerritServerId($id);
 
-        if(! $this->findFileInDirectory($file_name, $key_dir_path)) {
-            return true;
-        }
+        $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+        $key->setGerritHostId($id);
 
-        $this->git_executer->rm(self::GITOLITE_KEY_DIR.'/'.$file_name);
-        $this->git_executer->commit(self::KEY_DELETE_COMMIT_MESSAGE . $id);
+        $key_dumper = new Git_Gitolite_SSHKeyDumper($this->git_executer->getPath(), $this->git_executer, UserManager::instance());
+        $key_dumper->dumpSSHKeys($key);
+
         $this->git_executer->push();
 
         return true;

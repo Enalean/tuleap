@@ -123,9 +123,9 @@ class Git_Gitolite_SSHKeyDumper {
     private function removeUserExistingKeys(IHaveAnSSHKey $user, $last_key_id) {
         if (is_dir($this->keydir)) {
             $userbase = $user->getUserName().'@';
-            foreach (glob("$this->keydir/$userbase*.pub") as $file) {
+            foreach (glob("$this->admin_path/$this->keydir/$userbase*.pub") as $file) {
                 $matches = array();
-                if (preg_match('%^'.$this->keydir.'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
+                if (preg_match('%^'.$this->admin_path.'/'.$this->keydir.'/'.$userbase.'([0-9]+).pub$%', $file, $matches)) {
                     if ($matches[1] >= $last_key_id) {
                         $this->git_exec->rm($file);
                     }

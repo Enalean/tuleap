@@ -38,7 +38,9 @@ abstract class Git_GitoliteTestCase extends TuleapTestCase {
     protected $user_manager;
     /** @var Git_Exec */
     protected $gitExec;
-    
+    /** @var Git_Gitolite_SSHKeyDumper */
+    protected $dumper;
+
     public function setUp() {
         parent::setUp();
         $this->cwd           = getcwd();

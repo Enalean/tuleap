@@ -28,8 +28,6 @@ class Git_Gitolite_SshKeyTestCase extends Git_GitoliteTestCase {
         parent::setUp();
         $this->key1 = 'ssh-rsa AAAAYZi1ju3FeZu6EKKltZ0uftOfj6w== marcel@labobine.net';
         $this->key2 = 'ssh-rsa AAAAXYiTICSgWURDPDGW/HeNUYZIRcznQ== marcel@shanon.net';
-        chdir($this->_glAdmDir);
-
     }
 }
 

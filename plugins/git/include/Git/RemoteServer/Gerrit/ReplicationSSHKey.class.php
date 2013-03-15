@@ -23,10 +23,10 @@ require_once 'common/user/IHaveAnSSHKey.php';
 class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
 
     /** @var string */
-    private $value;
+    private $value = null;
 
     /** @var int */
-    private $host_id;
+    private $host_id = null;
 
     /**
      * @param string $value
@@ -61,7 +61,10 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
     }
 
     public function getAuthorizedKeysArray() {
-        return array($this->value);
+        if ($this->value) {
+            return array($this->value);
+        }
+        return array();
     }
 
     public function getUserName() {
