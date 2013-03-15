@@ -62,6 +62,10 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
         return $this->host_id;
     }
 
+    /**
+     * SSH key of replication
+     * @return array
+     */
     public function getAuthorizedKeysArray() {
         if ($this->value) {
             return array($this->value);
@@ -69,10 +73,20 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKey implements IHaveAnSSHKey {
         return array();
     }
 
+    /**
+     * Fake username for replication
+     *
+     * @return String
+     */
     public function getUserName() {
         return Rule_UserName::RESERVED_PREFIX.self::KEYNAME_PREFIX.$this->getGerritHostId();
     }
 
+    /**
+     * File name of gitolite key
+     *
+     * @return String
+     */
     public function getGitoliteKeyFile() {
         return $this->getUserName().self::KEYNAME_SUFFIX;
     }
