@@ -1050,7 +1050,10 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      * @return array the binding data
      */
     public function getSoapBindingProperties() {
-        return array();
+        return array(
+            'bind_type' => null,
+            'bind_list' => array()
+        );
     }
     
     /**
