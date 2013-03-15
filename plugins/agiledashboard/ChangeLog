@@ -1,3 +1,6 @@
+Version 0.77 - Tuleap 5.12
+    * Enhancement: add a tab on top of artifact to display its children
+
 Version 0.76 - Tuleap 5.12
     * SOAP method related to tracker fields now returns computed field value
 

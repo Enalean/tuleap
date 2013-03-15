@@ -1,8 +1,8 @@
 Version 5.12 (Not released yet)
 	== Plugins ==
 	* graphontrackersv5: 5.0.8
-	* tracker: 5.96
-	* agiledashboard: 0.76
+	* tracker: 5.97
+	* agiledashboard: 0.77
 	* git: 2.7.30
 	* IM: 1.5.6
 	* admindelegation: 2.5
@@ -17,6 +17,7 @@ Version 5.12 (Not released yet)
 	* statistics: 0.23
 	* webdav: 1.9.2
 	* mediawiki: 0.2
+	* tests: 5.17
 
   == Bug Fix ==
 	* Fix request #2817: When a service in iframe is created in template project, the "is in iframe" information were not propagated to other projects.
