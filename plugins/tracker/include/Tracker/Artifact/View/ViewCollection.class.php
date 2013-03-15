@@ -65,7 +65,7 @@ class Tracker_Artifact_View_ViewCollection {
             if ($view == $current_view) {
                 $class = 'tracker-artifact-nav-current';
             }
-            $html .= '<li class="'. $class .'"><a href="'. $view->getURL() .'">'. $view->getLabel() .'</a></li>';
+            $html .= '<li class="'. $class .'"><a href="'. $view->getURL() .'">'. $view->getTitle() .'</a></li>';
         }
         $html .= '</ul>';
         return $html;

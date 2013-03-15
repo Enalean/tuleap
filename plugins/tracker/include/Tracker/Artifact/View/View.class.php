@@ -53,7 +53,7 @@ abstract class Tracker_Artifact_View_View {
     /**
      * @return string
      */
-    public abstract function getLabel();
+    public abstract function getTitle();
 
     /**
      * @return string unique identifier

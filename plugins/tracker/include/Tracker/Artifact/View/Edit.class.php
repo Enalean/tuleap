@@ -29,8 +29,8 @@ class Tracker_Artifact_View_Edit extends Tracker_Artifact_View_View {
         );
     }
 
-    /** @see Tracker_Artifact_View_View::getLabel() */
-    public function getLabel() {
+    /** @see Tracker_Artifact_View_View::getTitle() */
+    public function getTitle() {
         return 'Artifact';
     }
 
