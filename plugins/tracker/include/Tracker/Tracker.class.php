@@ -3147,13 +3147,28 @@ EOS;
     }
 
     /**
+     * Return the children of the tracker
+     *
+     * @return Tracker[]
+     */
+    public function getChildren() {
+        return $this->getHierarchyFactory()->getChildren($this->getId());
+    }
+
+    /**
      * Return the hierarchy the tracker belongs to
      *
      * @return Tracker_Hierarchy
      */
     public function getHierarchy() {
-        $hierarchy_factory = new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
-        return $hierarchy_factory->getHierarchy(array($this->getId()));
+        return $this->getHierarchyFactory()->getHierarchy(array($this->getId()));
+    }
+
+    /**
+     * @return Tracker_HierarchyFactory
+     */
+    private function getHierarchyFactory() {
+        return new Tracker_HierarchyFactory(new Tracker_Hierarchy_Dao(), $this->getTrackerFactory(), $this->getTrackerArtifactFactory());
     }
 
     /**

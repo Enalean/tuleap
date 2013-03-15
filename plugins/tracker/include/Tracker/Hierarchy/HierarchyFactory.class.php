@@ -84,6 +84,11 @@ class Tracker_HierarchyFactory {
         self::$_instance = null;
     }
 
+    /**
+     *
+     * @param int $tracker_id
+     * @return array
+     */
     public function getChildren($tracker_id) {
         if (!isset($this->cache_children_of_tracker[$tracker_id])) {
             $this->cache_children_of_tracker[$tracker_id] = array();
