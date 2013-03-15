@@ -644,28 +644,16 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         switch ($request->get('func')) {
             case 'get-children':
                 $children         = array();
-                $base_url         = get_server_url();
                 $artifact_links   = $this->getLinkedArtifacts($current_user);
                 $allowed_trackers = $this->getAllowedChildrenTypes();
 
                 foreach ($artifact_links as $artifact_link) {
                     $tracker = $artifact_link->getTracker();
                     if (in_array($tracker, $allowed_trackers)) {
-
                         $semantics = Tracker_Semantic_Status::load($tracker);
-                        if (! $artifact_link->getStatus()) {
-                            $status = null;
-                        } else {
-                            $status = ( in_array($artifact_link->getStatus(), $semantics->getOpenLabels()) ) ? 1 : 0;
-                        }
-                        
-                        $children[] = array(
-                            'xref'  => $artifact_link->getXRef(),
-                            'title' => $artifact_link->getTitle(),
-                            'id'    => $artifact_link->getId(),
-                            'url'   => $base_url.$artifact_link->getUri(),
-                            'status'=> $status
-                        );
+                        $child = new Tracker_Artifact_View_Child($artifact_link, $semantics);
+
+                        $children[] = $child->toArray();
                     }
                 }
 
