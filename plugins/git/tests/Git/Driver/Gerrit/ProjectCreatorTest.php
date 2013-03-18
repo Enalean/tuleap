@@ -28,11 +28,13 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     protected $integrators       = 'tuleap-localhost-mozilla/firefox-integrators';
     protected $supermen          = 'tuleap-localhost-mozilla/firefox-supermen';
     protected $owners            = 'tuleap-localhost-mozilla/firefox-owners';
+    protected $replication       = 'tuleap.example.com-replication';
 
     protected $contributors_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
     protected $integrators_uuid  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
     protected $supermen_uuid     = '8a7e856ce3c55f555c228bd90045412f95ff348';
     protected $owners_uuid       = 'f9427648913e6ff14190d81b7b0abc60fa325d3a';
+    protected $replication_uuid  = '2ce5c45e3b88415e51ce7e0d3a1ba0526dce6424';
 
     /** @var Git_RemoteServer_GerritServer */
     protected $server;
@@ -56,8 +58,9 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         $host  = $this->tmpdir;
         $login = $this->gerrit_admin_instance;
         $id = $ssh_port = $http_port = $identity_file = 0;
+        $replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
         $this->server = partial_mock('Git_RemoteServer_GerritServer', array('getCloneSSHUrl'), 
-                array($id, $host, $ssh_port, $http_port, $login, $identity_file));
+                array($id, $host, $ssh_port, $http_port, $login, $identity_file, $replication_key));
 
         $this->gerrit_git_url = "$host/$this->gerrit_project";
         stub($this->server)->getCloneSSHUrl($this->gerrit_project)->returns($this->gerrit_git_url);
@@ -78,6 +81,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->driver)->getGroupUUID($this->server, $this->integrators)->returns($this->integrators_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->supermen)->returns($this->supermen_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->owners)->returns($this->owners_uuid);
+        stub($this->driver)->getGroupUUID($this->server, $this->replication)->returns($this->replication_uuid);
 
         $this->userfinder = mock('Git_Driver_Gerrit_UserFinder');
         $this->project_creator = new Git_Driver_Gerrit_ProjectCreator($this->tmpdir, $this->driver, $this->userfinder);
@@ -204,6 +208,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $this->assertPattern("%$this->integrators_uuid\t$this->integrators\n%",   $group_file_contents);
         $this->assertPattern("%$this->supermen_uuid\t$this->supermen\n%",         $group_file_contents);
         $this->assertPattern("%$this->owners_uuid\t$this->owners\n%",             $group_file_contents);
+        $this->assertPattern("%$this->replication_uuid\t$this->replication\n%",             $group_file_contents);
         $this->assertPattern("%global:Registered-Users\tRegistered Users\n%",     $group_file_contents);
     }
 

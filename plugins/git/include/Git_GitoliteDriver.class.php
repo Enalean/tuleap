@@ -55,10 +55,6 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
-    /**
-     * @var Git_Gitolite_SSHKeyDumper
-     */
-    protected $dumper;
 
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
@@ -75,14 +71,12 @@ class Git_GitoliteDriver {
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null, Git_Exec $gitExec = null, Git_Gitolite_SSHKeyDumper $dumper = null) {
+    public function __construct($adminPath = null, Git_Exec $gitExec = null) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
-        
-        $this->dumper = $dumper ? $dumper : new Git_Gitolite_SSHKeyDumper($this->adminPath, $this->gitExec, UserManager::instance());
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
@@ -163,16 +157,6 @@ class Git_GitoliteDriver {
         }
         return true;
     }
-    
-    /**
-     * Dump ssh keys into gitolite conf
-     */
-    public function dumpSSHKeys(PFUser $user = null) {
-        if ($this->dumper->dumpSSHKeys($user)) {
-            return $this->push();
-        }
-        return false;
-    }
 
     /**
      * Save on filesystem all permission configuration for a project
@@ -211,6 +195,7 @@ class Git_GitoliteDriver {
         $repository->setDescription($row[GitDao::REPOSITORY_DESCRIPTION]);
         $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
         $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
+        $repository->setRemoteServerId($row[GitDao::REMOTE_SERVER_ID]);
         return $repository;
     }
     
@@ -219,8 +204,14 @@ class Git_GitoliteDriver {
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        if ($repository->isMigratedToGerrit()) {
+            $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+            $key->setGerritHostId($repository->getRemoteServerId());
+            $repo_config .= self::$permissions_types[Git::PERM_WPLUS] . ' = ' .$key->getUserName() . PHP_EOL;
+        } else {
+            $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
+            $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        }
         
         $description = preg_replace( "%\s+%", ' ', $repository->getDescription());
         $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;

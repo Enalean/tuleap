@@ -22,14 +22,14 @@ require_once('common/dao/UserPreferencesDao.class.php');
 require_once('common/dao/UserGroupDao.class.php');
 require_once('common/include/Recent_Element_Interface.class.php');
 require_once('common/language/BaseLanguageFactory.class.php');
-
+require_once('IHaveAnSSHKey.php');
 /**
  *
  * User object
  * 
  * Sets up database results and preferences for a user and abstracts this info
  */
-class PFUser implements PFO_User {
+class PFUser implements PFO_User, IHaveAnSSHKey {
     
     /**
      * The user is active

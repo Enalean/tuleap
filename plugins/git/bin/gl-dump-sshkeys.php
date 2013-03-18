@@ -22,15 +22,22 @@
  */
  
 require_once 'pre.php';
-require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
+require_once dirname(__FILE__).'/../include/Git_Gitolite_SSHKeyMassDumper.class.php';
 
-$user = null;
+$adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
+$gitExec   = new Git_Exec($adminPath);
+$dumper    = new Git_Gitolite_SSHKeyDumper($adminPath, $gitExec);
+
+$user_manager = UserManager::instance();
 if (isset($argv[1])) {
-    $user = UserManager::instance()->getUserById($argv[1]);
+    $user = $user_manager->getUserById($argv[1]);
+    $result = $dumper->dumpSSHKeys($user);
+} else {
+    $mass_dumper = new Git_Gitolite_SSHKeyMassDumper($dumper, $user_manager);
+    $result = $mass_dumper->dumpSSHKeys();
 }
 
-$driver = new Git_GitoliteDriver();
-if ($driver->dumpSSHKeys($user)) {
+if ($result) {
     echo "SSH Keys dump done!\n";
     exit(0);
 } else {
