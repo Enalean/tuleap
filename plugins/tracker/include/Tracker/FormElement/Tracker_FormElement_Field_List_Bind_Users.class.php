@@ -269,10 +269,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                         break;
                     case 'artifact_submitters':
                         $display_name_sql = $this->getUserHelper()->getDisplayNameSQLQuery();
+                        $order_by_sql = $this->getUserHelper()->getDisplayNameSQLOrder();
                         if ($keyword) {
                             $keyword = $da->quoteSmart('%'. $keyword .'%');
-                            $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
+                            
                         }
+                        $keyword_sql = ($keyword ? "HAVING full_name LIKE $keyword" : "");
 
                         $sql[] = "(
                             SELECT DISTINCT user.user_id, $display_name_sql, user.user_name
@@ -280,7 +282,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                                 INNER JOIN user
                                     ON ( user.user_id = a.submitted_by AND a.tracker_id = $tracker_id )
                                 $keyword_sql
-                                ORDER BY $display_name_sql
+                                ORDER BY $order_by_sql
                         )";
                         break;
                     default:
