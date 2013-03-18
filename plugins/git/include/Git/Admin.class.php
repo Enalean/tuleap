@@ -42,13 +42,13 @@ class Git_Admin {
         $request_gerrit_servers = $request->get('gerrit_servers');
         if (is_array($request_gerrit_servers)) {
             $this->csrf->check();
-            $this->fetchGerritServers();
+            $this->initGerritServers();
             $this->updateServers($request_gerrit_servers);
         }
     }
 
     public function display() {
-        $this->fetchGerritServers();
+        $this->initGerritServers();
 
         $title = $GLOBALS['Language']->getText('plugin_git', 'descriptor_name');
         $GLOBALS['HTML']->header(array('title' => $title, 'selected_top_tab' => 'admin'));
@@ -115,7 +115,7 @@ class Git_Admin {
         return $html;
     }
 
-    private function fetchGerritServers() {
+    private function initGerritServers() {
         if (empty($this->servers)) {
             $this->servers = $this->gerrit_server_factory->getServers();
         }
