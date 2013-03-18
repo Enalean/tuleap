@@ -210,7 +210,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $this->assertFalse(is_file($file));
 
         $key = $this->factory->getForGerritServerId($id);
-        $this->assertNull($key->getValue());
+        $this->assertEmpty($key->getValue());
         $this->assertEqual($id, $key->getGerritHostId());
     }
 
@@ -231,7 +231,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $this->assertEqual($file_contents, null);
 
         $key = $this->factory->getForGerritServerId($id);
-        $this->assertNull($key->getValue());
+        $this->assertEmpty($key->getValue());
         $this->assertEqual($id, $key->getGerritHostId());
     }
 

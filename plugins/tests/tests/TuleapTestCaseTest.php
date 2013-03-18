@@ -42,6 +42,14 @@ class TuleapTestCaseTest extends TuleapTestCase {
         return $result;
     }
 
+    public function testIsEmpty() {
+        $this->assertTrue($this->assertEmpty(''));
+        $this->assertTrue($this->assertEmpty(null));
+        $this->assertTrue($this->assertEmpty(0));
+        $this->assertTrue($this->assertEmpty(false));
+        $this->assertTrue($this->assertEmpty(array()));
+        $this->assertFalse($this->assertEmpty(new stdClass()));
+    }
 }
 class TuleapTestCase_isArrayEmptyTest extends TuleapTestCase {
 

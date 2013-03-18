@@ -155,6 +155,16 @@ abstract class TuleapTestCase extends UnitTestCase {
         return $this->assertNotNull($string) && $this->assertNotEqual($string, '');
     }
 
+    protected function assertEmpty($stuff) {
+        if (is_array($stuff)) {
+            return $this->assertArrayEmpty($stuff);
+        }
+        if (is_object($stuff)) {
+            return false;
+        }
+        return $this->assertEqual('', $stuff);
+    }
+
     protected function assertArrayNotEmpty($a) {
         $this->assertFalse(count($a) == 0, "expected array not to be empty, but it contains 0 elements");
     }
