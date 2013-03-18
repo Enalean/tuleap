@@ -41,7 +41,7 @@ class Git_Admin {
             $this->csrf->check();
             $servers = $this->getGerritServers();
             $this->updateServers($request_gerrit_servers, $servers);
-            $GLOBALS['Response']->redirect('/plugins/git/admin');
+            $GLOBALS['Response']->redirect('/plugins/git/admin/');
         }
     }
 
