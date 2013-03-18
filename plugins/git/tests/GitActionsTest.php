@@ -636,7 +636,7 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         $server_id = $this->server_id;
         $repo_id   = 456;
         stub($repo)->getId()->returns($repo_id);
-        $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, "$repo_id::$server_id", SystemEvent::PRIORITY_HIGH));
+        $this->em->expectOnce('createEvent', array(SystemEvent_GIT_GERRIT_MIGRATION::TYPE, "$repo_id::$server_id", SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP));
         $this->actions->migrateToGerrit($repo, $server_id);
     }
 }

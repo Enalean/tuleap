@@ -30,6 +30,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {
     function testUpdateShouldUpdateAllProjects() {
         $id           = 1002;
         $type         = LDAP_UserManager::EVENT_UPDATE_LOGIN;
+        $owner        = SystemEvent::OWNER_ROOT;
         $parameters   = '101::102';
         $priority     = SystemEvent::PRIORITY_MEDIUM;
         $status       = SystemEvent::STATUS_RUNNING;
@@ -65,7 +66,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {
         $backend->expect('updateProjectSVNAccessFile', array($prj3));
         $se->setReturnValue('getBackendSVN', $backend);
         
-        $se->__construct($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
+        $se->__construct($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
         $se->process();
     }
 }
