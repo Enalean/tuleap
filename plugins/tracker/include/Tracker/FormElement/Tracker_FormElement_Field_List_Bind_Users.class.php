@@ -203,28 +203,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         }
         return $ugroups;
     }
-
-    /**
-     *
-     * @return UserHelper
-     */
-    public function getUserHelper() {
-        if (! $this->user_helper) {
-            $this->user_helper = UserHelper::instance();
-        }
-
-        return $this->user_helper;
-    }
-
-    /**
-     *
-     * @param UserHelper $user_helper
-     * @return \Tracker_FormElement_Field_List_Bind_Users
-     */
-    public function setUserHelper(UserHelper $user_helper) {
-        $this->user_helper = $user_helper;
-        return $this;
-    }
     
     /**
      * Get all values to be displayed in the field depending of a ugroup list
