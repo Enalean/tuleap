@@ -69,6 +69,7 @@ class Git_Gitolite_SSHKeyDumper {
      * @return Boolean
      */
     public function commitKeyDir($message) {
+        clearstatcache();
         if (is_dir($this->getKeyDirPath())) {
             $this->git_exec->add($this->getKeyDirPath());
         }
