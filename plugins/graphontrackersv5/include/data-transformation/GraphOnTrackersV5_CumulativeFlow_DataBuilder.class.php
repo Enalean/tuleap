@@ -53,7 +53,7 @@ class GraphOnTrackersV5_CumulativeFlow_DataBuilder extends ChartDataBuilderV5 {
         $artifact_ids = explode(',', $this->artifacts['id']);
         
         $start = $this->chart->getStartDate();
-        $stop = $this->chart->getStopDate() | time();
+        $stop = $this->chart->getStopDate() ? $this->chart->getStopDate() : time();
         $unit = $this->chart->getUnit();
         $nbSteps = ceil(($stop - $start)/$timeFiller[$unit]);
         
