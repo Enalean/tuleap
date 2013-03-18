@@ -186,7 +186,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
     }
 
     public function itThrowsAnExceptionIfKeyDirectoryDoesNotExist() {
-        $this->expectException('Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException');
+        $this->expectException('Git_Gitolite_KeyDirNotExistException');
 
         $id = 98;
         $fake_dir = '/over/the/rainbow';

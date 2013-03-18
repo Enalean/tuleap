@@ -18,5 +18,5 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/
  */
 
-class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException extends Exception {}
+class Git_Gitolite_KeyDirNotExistException extends Exception {}
 ?>
