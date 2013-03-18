@@ -148,7 +148,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         
         $soap_values = array();
         if (! empty($ugroups)) {
-            foreach($this->getAllValuesByUGroupList($ugroups) as $value) {
+            foreach($this->getAllValues($ugroups) as $value) {
                 $soap_values[] = $this->getSoapBindValue($value);
             }
         }
