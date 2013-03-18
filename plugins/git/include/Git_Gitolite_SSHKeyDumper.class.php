@@ -100,7 +100,7 @@ class Git_Gitolite_SSHKeyDumper {
         clearstatcache();
         if (!is_dir($this->getKeyDirPath())) {
             if (!mkdir($this->getKeyDirPath())) {
-                throw new Exception('Unable to create "'.$this->getKeyDirPath().'" directory in ');
+                throw new Exception('Unable to create "'.$this->getKeyDirPath().'" directory');
             }
         }
     }

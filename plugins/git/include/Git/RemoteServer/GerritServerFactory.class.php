@@ -133,7 +133,7 @@ class Git_RemoteServer_GerritServerFactory {
      * @return \Git_RemoteServer_GerritServer
      */
     private function instantiateFromRow(array $row) {
-        $replictaion_key_value = $this->replication_key_factory->getForGerritServerId($row['id']);
+        $replictaion_key = $this->replication_key_factory->getForGerritServerId($row['id']);
 
         return new Git_RemoteServer_GerritServer(
             $row['id'],
@@ -142,7 +142,7 @@ class Git_RemoteServer_GerritServerFactory {
             $row['http_port'],
             $row['login'],
             $row['identity_file'],
-            $replictaion_key_value
+            $replictaion_key
         );
     }
 
