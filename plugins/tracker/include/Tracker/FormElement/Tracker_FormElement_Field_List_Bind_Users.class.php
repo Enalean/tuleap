@@ -27,12 +27,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
     protected $values;
     /** @var UserHelper */
     private $user_helper;
-    
+
     const REGISTERED_USERS_UGROUP_NAME = 'ugroup_2';
-    
+
     public function __construct($field, $value_function, $default_values, $decorators) {
         parent::__construct($field, $default_values, $decorators);
-        
+
         if ( !empty($value_function) ) {
             $this->value_function = explode(',', $value_function);
         }
@@ -139,13 +139,13 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     public function getSoapAvailableValues() {
         $ugroups = array();
-        
+
         foreach ($this->value_function as $ugroup) {
             if ($ugroup != self::REGISTERED_USERS_UGROUP_NAME && $ugroup != '') {
                 $ugroups[] = $ugroup;
             }
         }
-        
+
         $soap_values = array();
         if (! empty($ugroups)) {
             foreach($this->getAllValues($ugroups) as $value) {
@@ -177,7 +177,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                                     'ugroup_id' => $GLOBALS['UGROUP_PROJECT_MEMBERS'],
                                     'name'      => util_translate_name_ugroup(ugroup_get_name_from_id($GLOBALS['UGROUP_PROJECT_MEMBERS']))
                             );
-                            
                         break;
                     case 'group_admins':
                         $ugroups[] = array(
@@ -202,7 +201,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                 }
             }
         }
-        return $ugroups;  
+        return $ugroups;
     }
 
     /**
@@ -245,6 +244,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         $sql         = array();
         $tracker     = $this->field->getTracker();
         $tracker_id  = $da->escapeInt($tracker->id);
+        $user_helper = UserHelper::instance();
         
         foreach($ugroups as $ugroup) {
             if ($ugroup) {
@@ -268,8 +268,8 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                         );
                         break;
                     case 'artifact_submitters':
-                        $display_name_sql = $this->getUserHelper()->getDisplayNameSQLQuery();
-                        $order_by_sql = $this->getUserHelper()->getDisplayNameSQLOrder();
+                        $display_name_sql = $user_helper->getDisplayNameSQLQuery();
+                        $order_by_sql = $user_helper->getDisplayNameSQLOrder();
                         if ($keyword) {
                             $keyword = $da->quoteSmart('%'. $keyword .'%');
                             
