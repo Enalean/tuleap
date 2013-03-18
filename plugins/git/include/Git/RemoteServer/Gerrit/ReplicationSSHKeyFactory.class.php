@@ -39,7 +39,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory {
      * @return \Git_RemoteServer_Gerrit_ReplicationSSHKey
      * @throws Git_RemoteServer_Gerrit_ReplicationSSHKeyFactoryException
      */
-    public function fetchForGerritServerId($id) {
+    public function getForGerritServerId($id) {
         $key_dir_path  = $this->getGitoliteKeyDirectory();
         //$file_name     = self::getReplicationKeyFilenameForGerritServerId($id);
 

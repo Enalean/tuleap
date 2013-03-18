@@ -181,7 +181,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
     public function itReturnsAReplicationSSHKey() {
         $id = 98;
 
-        $key = $this->factory->fetchForGerritServerId($id);
+        $key = $this->factory->getForGerritServerId($id);
         $this->assertIsA($key, 'Git_RemoteServer_Gerrit_ReplicationSSHKey');
     }
 
@@ -194,7 +194,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         stub($git_executor)->getPath()->returns($fake_dir);
 
         $factory = new Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory($git_executor);
-        $factory->fetchForGerritServerId($id);
+        $factory->getForGerritServerId($id);
     }
 
     public function itReturnsAKeyWithNoValueIfFileDoesNotExist() {
@@ -209,7 +209,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $file = $this->gitolite_directoy . '/'.$key_dir.'/' . $key_file_name;
         $this->assertFalse(is_file($file));
 
-        $key = $this->factory->fetchForGerritServerId($id);
+        $key = $this->factory->getForGerritServerId($id);
         $this->assertNull($key->getValue());
         $this->assertEqual($id, $key->getGerritHostId());
     }
@@ -230,7 +230,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $file_contents = file_get_contents($file);
         $this->assertEqual($file_contents, null);
 
-        $key = $this->factory->fetchForGerritServerId($id);
+        $key = $this->factory->getForGerritServerId($id);
         $this->assertNull($key->getValue());
         $this->assertEqual($id, $key->getGerritHostId());
     }
@@ -254,7 +254,7 @@ class Git_RemoteServer_Gerrit_ReplicationSSHKeyFactory_FetchForGerritServerIdTes
         $file_contents = file_get_contents($file);
         $this->assertEqual($expected_file_contents, $file_contents);
 
-        $key = $this->factory->fetchForGerritServerId($id);
+        $key = $this->factory->getForGerritServerId($id);
         $this->assertEqual($key->getValue(), $expected_file_contents);
         $this->assertEqual($id, $key->getGerritHostId());
     }

@@ -104,7 +104,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     }
     
     public function itReturnsAGerritServer() {
-        stub($this->replication_key_factory)->fetchForGerritServerId()->returns($this->replication_key);
+        stub($this->replication_key_factory)->getForGerritServerId()->returns($this->replication_key);
         $repo   = aGitRepository()->withRemoteServerId($this->server_id)->build();
         
         $server = $this->factory->getServer($repo);
@@ -113,7 +113,7 @@ class Git_RemoteServer_GerritServerFactoryTest extends TuleapTestCase {
     }
 
     public function itGetsAllServers() {
-        stub($this->replication_key_factory)->fetchForGerritServerId()->returns($this->replication_key);
+        stub($this->replication_key_factory)->getForGerritServerId()->returns($this->replication_key);
         $servers = $this->factory->getServers();
         $this->assertIsA($servers[$this->server_id], 'Git_RemoteServer_GerritServer');
         $this->assertIsA($servers[$this->alternate_server_id], 'Git_RemoteServer_GerritServer');
