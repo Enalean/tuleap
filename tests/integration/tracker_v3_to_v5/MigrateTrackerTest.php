@@ -644,6 +644,7 @@ class MigrateTracker_TaskTrackerDateReminder_startDateTest extends MigrateDefaul
         $this->assertEqual($this->reminders[2]->getUgroups(true), $this->notified_ugroups);
     }
 }
+
 class MigrateTracker_TaskTrackerDateReminder_endDateTest extends MigrateDefaultTrackersTest {
 
     private $notified_ugroups = array(UGroup::PROJECT_MEMBERS);
@@ -670,6 +671,23 @@ class MigrateTracker_TaskTrackerDateReminder_endDateTest extends MigrateDefaultT
         $this->assertEqual($this->reminders[4]->getField(), $this->end_date_field);
         $this->assertEqual($this->reminders[4]->getStatus(), Tracker_DateReminder::ENABLED);
         $this->assertEqual($this->reminders[4]->getUgroups(true), $this->notified_ugroups);
+    }
+}
+class MigrateTracker_TaskTrackerDateReminder_edgeCasesTest extends MigrateDefaultTrackersTest {
+
+    private $notified_ugroups = array(UGroup::PROJECT_MEMBERS);
+
+    public function setUp() {
+        parent::setUp();
+        $this->due_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'due_date');
+
+        $factory = new Tracker_DateReminderFactory($this->task_tracker);
+        $this->reminders = $factory->getTrackerReminders();
+    }
+
+    public function itDoesNotCreateReminderWhenTheListOfUgroupsIsEmpty() {
+        // There is no more rules than what have been tested in the above tests
+        $this->assertCount($this->reminders, 5);
     }
 }
 ?>

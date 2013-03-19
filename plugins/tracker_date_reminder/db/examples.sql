@@ -12,3 +12,10 @@ VALUES      (1,           5,        2,                 2,                  0,   
 INSERT INTO artifact_date_reminder_settings
             (reminder_id, field_id, group_artifact_id, notification_start, notification_type, frequency, recurse, notified_people)
 VALUES      (2,           18,       2,                 1,                  1,                 2,         2,       '1,g3');
+
+-- For the default Task tracker, this will send only to submitter
+-- * 1 e-mail 1 days after 'Due Date' date
+-- * 1 e-mail 3 days after 'Due Date' date
+INSERT INTO artifact_date_reminder_settings
+            (reminder_id, field_id, group_artifact_id, notification_start, notification_type, frequency, recurse, notified_people)
+VALUES      (3,           17,       2,                 1,                  1,                 2,         2,       '1');
