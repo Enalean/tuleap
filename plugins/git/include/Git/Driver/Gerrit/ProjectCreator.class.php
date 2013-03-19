@@ -93,7 +93,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->addGroupToGroupFile($gerrit_server, $replication_group);
         $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();
-        $this->addPermissionsToProjectConf($repository, $contributors, $integrators, $supermen, $owners, $replication_group);
+        $this->addPermissionsToProjectConf($repository, $ugroups, $replication_group);
         $this->pushToServer();
     }
 
@@ -127,48 +127,96 @@ class Git_Driver_Gerrit_ProjectCreator {
         file_put_contents("$this->dir/groups", "$uuid\t$group_name\n", FILE_APPEND);
     }
 
-    private function addPermissionsToProjectConf(GitRepository $repository, $contributors, $integrators, $supermen, $owners, $replication_group) {
+    private function addPermissionsToProjectConf(GitRepository $repository, array $ugroups, $replication_group) {
         // https://groups.google.com/d/msg/repo-discuss/jTAY2ApcTGU/DPZz8k0ZoUMJ
         // Project owners are those who own refs/* within that project... which
         // means they can modify the permissions for any reference in the
         // project.
-        $this->addToSection('refs', 'owner', "group $owners");
+
+        $ugroup_ids_read = $this->user_finder->getUgroups($repository->getId(), Git::PERM_READ);
+        $ugroup_ids_write = $this->user_finder->getUgroups($repository->getId(), Git::PERM_WRITE);
+        $ugroup_ids_rewind = $this->user_finder->getUgroups($repository->getId(), Git::PERM_WPLUS);
+
+        $ugroups_read   = array();
+        $ugroups_write  = array();
+        $ugroups_rewind = array();
+
+        $admin_group = null;
+        foreach ($ugroups as $ugroup) {
+            if(in_array($ugroup->getId(), $ugroup_ids_read)) {
+                $ugroups_read[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+            }
+            if (in_array($ugroup->getId(), $ugroup_ids_write)) {
+                $ugroups_write[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+            }
+            if (in_array($ugroup->getId(), $ugroup_ids_rewind)) {
+                $ugroups_rewind[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+            }
+            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                $admin_group = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+            }
+        }
+
+        if (in_array(UGroup::REGISTERED, $ugroup_ids_read) && $this->shouldAddRegisteredUsers($repository)) {
+            $ugroups_read[] = 'Registered Users';
+        }
+
+        $this->addToSection('refs', 'owner', "group $admin_group");
         $this->addToSection('refs', 'Read', "group $replication_group");
 
-        if ($this->shouldAddRegisteredUsers($repository)) {
+        /*if ($this->shouldAddRegisteredUsers($repository) && !in_array(UGroup::REGISTERED, $ugroup_ids_read)) {
             $this->addToSection('refs/heads', 'Read', "group Registered Users");
+        }*/
+        foreach ($ugroups_read as $ugroup_read) {
+            $this->addToSection('refs/heads', 'Read', "group $ugroup_read");
+            $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $ugroup_read");
         }
-        $this->addToSection('refs/heads', 'Read', "group $contributors");
-        $this->addToSection('refs/heads', 'Read', "group $integrators");
-        $this->addToSection('refs/heads', 'create', "group $integrators");
-        $this->addToSection('refs/heads', 'forgeAuthor', "group $integrators");
-        $this->addToSection('refs/heads', 'label-Code-Review', "-2..+2 group $integrators");
-        $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $contributors");
-        $this->addToSection('refs/heads', 'label-Verified', "-1..+1 group $integrators");
-        $this->addToSection('refs/heads', 'submit', "group $integrators");
-        $this->addToSection('refs/heads', 'push', "group $integrators");
-        $this->addToSection('refs/heads', 'push', "+force group $supermen");
-        $this->addToSection('refs/heads', 'pushMerge', "group $integrators");
+        foreach ($ugroups_write as $ugroup_write) {
+            $this->addToSection('refs/heads', 'Read', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'create', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'forgeAuthor', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'label-Code-Review', "-2..+2 group $ugroup_write");
+            $this->addToSection('refs/heads', 'label-Verified', "-1..+1 group $ugroup_write");
+            $this->addToSection('refs/heads', 'submit', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'push', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'pushMerge', "group $ugroup_write");
+        }
+        foreach ($ugroups_rewind as $ugroup_rewind) {
+            $this->addToSection('refs/heads', 'push', "+force group $ugroup_rewind");
+        }
 
         $this->addToSection('refs/heads', 'create', "group Administrators");  // push initial ref
         $this->addToSection('refs/heads', 'forgeCommitter', "group Administrators"); // push initial ref
 
-        $this->addToSection('refs/changes', 'push', "group $contributors");
-        $this->addToSection('refs/changes', 'push', "group $integrators");
-        $this->addToSection('refs/changes', 'push', "+force group $supermen");
-        $this->addToSection('refs/changes', 'pushMerge', "group $integrators");
+        foreach ($ugroups_read as $ugroup_read) {
+            $this->addToSection('refs/changes', 'push', "group $ugroup_read");
+        }
+        foreach ($ugroups_write as $ugroup_write) {
+            $this->addToSection('refs/changes', 'push', "group $ugroup_write");
+            $this->addToSection('refs/changes', 'pushMerge', "group $ugroup_write");
+        }
+        foreach ($ugroups_rewind as $ugroup_rewind) {
+            $this->addToSection('refs/changes', 'push', "+force group $ugroup_rewind");
+        }
 
-        $this->addToSection('refs/for/refs/heads', 'push', "group $contributors");
-        $this->addToSection('refs/for/refs/heads', 'push', "group $integrators");
-        $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $integrators");
-
+        foreach ($ugroups_read as $ugroup_read) {
+            $this->addToSection('refs/for/refs/heads', 'push', "group $ugroup_read");
+        }
+        foreach ($ugroups_write as $ugroup_write) {
+            $this->addToSection('refs/for/refs/heads', 'push', "group $ugroup_write");
+            $this->addToSection('refs/for/refs/heads', 'pushMerge', "group $ugroup_write");
+        }
         // To be able to push merge commit on master, we need pushMerge on refs/for/*
         // http://code.google.com/p/gerrit/issues/detail?id=1072
         $this->addToSection('refs/for', 'pushMerge', "group Administrators"); // push initial ref
 
-        $this->addToSection('refs/tags', 'read', "group $contributors");
-        $this->addToSection('refs/tags', 'read', "group $integrators");
-        $this->addToSection('refs/tags', 'pushTag', "group $integrators");
+        foreach ($ugroups_read as $ugroup_read) {
+            $this->addToSection('refs/tags', 'read', "group $ugroup_read");
+        }
+        foreach ($ugroups_write as $ugroup_write) {
+            $this->addToSection('refs/tags', 'read', "group $ugroup_write");
+            $this->addToSection('refs/tags', 'pushTag', "group $ugroup_write");
+        }
 
         $this->addToSection('refs/tags', 'pushTag', "group Administrators"); // push initial ref
         $this->addToSection('refs/tags', 'create', "group Administrators");  // push initial ref

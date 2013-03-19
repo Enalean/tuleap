@@ -120,23 +120,37 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
     protected $project_members;
     protected $another_ugroup;
+    protected $project_admins;
     protected $project_members_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
     protected $another_ugroup_uuid  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
+    protected $project_admins_uuid  = '8a7e856ce3c55f555c228bd90045412f95ff348';
     protected $project_members_gerrit_name = 'mozilla/project_members';
     protected $another_ugroup_gerrit_name  = 'mozilla/another_ugroup';
+    protected $project_admins_gerrit_name  = 'mozilla/project_admins';
 
     public function setUp() {
         parent::setUp();
         $this->project_members = mock('UGroup');
         stub($this->project_members)->getNormalizedName()->returns('project_members');
+        stub($this->project_members)->getId()->returns(UGroup::PROJECT_MEMBERS);
 
         $this->another_ugroup = mock('UGroup');
         stub($this->another_ugroup)->getNormalizedName()->returns('another_ugroup');
+        stub($this->another_ugroup)->getId()->returns(120);
 
-        stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_members, $this->another_ugroup));
+        $this->project_admins = mock('UGroup');
+        stub($this->project_admins)->getNormalizedName()->returns('project_admins');
+        stub($this->project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+
+        stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_members, $this->another_ugroup, $this->project_admins));
 
         stub($this->driver)->getGroupUUID($this->server, $this->project_members_gerrit_name)->returns($this->project_members_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->another_ugroup_gerrit_name)->returns($this->another_ugroup_uuid);
+        stub($this->driver)->getGroupUUID($this->server, $this->project_admins_gerrit_name)->returns($this->project_admins_uuid);
+
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_READ)->returns(array(UGroup::REGISTERED));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WRITE)->returns(array(UGroup::PROJECT_MEMBERS, 120));
+        stub($this->userfinder)->getUgroups($this->repository->getId(), Git::PERM_WPLUS)->returns(array(UGroup::PROJECT_ADMIN));
     }
 
     public function tearDown() {
@@ -245,6 +259,11 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
 }
 
 class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
+
+    public function setUp() {
+        parent::setUp();
+        stub($this->userfinder)->getUgroups()->returns(array());
+    }
 
     public function tearDown() {
         parent::tearDown();
