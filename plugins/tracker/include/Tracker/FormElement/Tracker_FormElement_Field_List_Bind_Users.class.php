@@ -167,7 +167,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      * 
      * @return array, the list of all ugroups with id and name
      */
-    public function getList() {
+    protected function getSoapBindingList() {
         $ugroups = array();
         foreach($this->value_function as $ugroup) {
             if ($ugroup) {
