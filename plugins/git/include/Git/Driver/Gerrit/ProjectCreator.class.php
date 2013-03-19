@@ -62,20 +62,15 @@ class Git_Driver_Gerrit_ProjectCreator {
 //        }
 
         $ugroups = $this->ugroup_manager->getUGroups($repository->getProject());
-        if ($ugroups) {
-            foreach ($ugroups as $ugroup) {
-                $this->driver->createGroup($gerrit_server, $repository, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getMembers());
-            }
+        foreach ($ugroups as $ugroup) {
+            $this->driver->createGroup($gerrit_server, $repository, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getMembers());
         }
 
         $this->initiatePermissions(
             $repository,
             $gerrit_server,
             $gerrit_server->getCloneSSHUrl($gerrit_project),
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_CONTRIBUTORS,
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_INTEGRATORS,
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_SUPERMEN,
-            $gerrit_project.'-'.Git_Driver_Gerrit_MembershipManager::GROUP_OWNERS,
+            $ugroups,
             Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION
         );
         
@@ -90,12 +85,11 @@ class Git_Driver_Gerrit_ProjectCreator {
         `$cmd`;
     }
 
-    private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, $contributors, $integrators, $supermen, $owners, $replication_group) {
+    private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group) {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
-        $this->addGroupToGroupFile($gerrit_server, $contributors);
-        $this->addGroupToGroupFile($gerrit_server, $integrators);
-        $this->addGroupToGroupFile($gerrit_server, $supermen);
-        $this->addGroupToGroupFile($gerrit_server, $owners);
+        foreach ($ugroups as $ugroup) {
+            $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
+        }
         $this->addGroupToGroupFile($gerrit_server, $replication_group);
         $this->addGroupToGroupFile($gerrit_server, 'Administrators');
         $this->addRegisteredUsersGroupToGroupFile();

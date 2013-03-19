@@ -118,6 +118,26 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 }
 
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
+    protected $project_members;
+    protected $another_ugroup;
+    protected $project_members_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
+    protected $another_ugroup_uuid  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
+    protected $project_members_gerrit_name = 'mozilla/project_members';
+    protected $another_ugroup_gerrit_name  = 'mozilla/another_ugroup';
+
+    public function setUp() {
+        parent::setUp();
+        $this->project_members = mock('UGroup');
+        stub($this->project_members)->getNormalizedName()->returns('project_members');
+
+        $this->another_ugroup = mock('UGroup');
+        stub($this->another_ugroup)->getNormalizedName()->returns('another_ugroup');
+
+        stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_members, $this->another_ugroup));
+
+        stub($this->driver)->getGroupUUID($this->server, $this->project_members_gerrit_name)->returns($this->project_members_uuid);
+        stub($this->driver)->getGroupUUID($this->server, $this->another_ugroup_gerrit_name)->returns($this->another_ugroup_uuid);
+    }
 
     public function tearDown() {
         parent::tearDown();
@@ -216,10 +236,8 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
         $groups_file = "$this->tmpdir/groups";
         $group_file_contents = file_get_contents($groups_file);
 
-        $this->assertPattern("%$this->contributors_uuid\t$this->contributors\n%", $group_file_contents);
-        $this->assertPattern("%$this->integrators_uuid\t$this->integrators\n%",   $group_file_contents);
-        $this->assertPattern("%$this->supermen_uuid\t$this->supermen\n%",         $group_file_contents);
-        $this->assertPattern("%$this->owners_uuid\t$this->owners\n%",             $group_file_contents);
+        $this->assertPattern("%$this->project_members_uuid\t$this->project_members_gerrit_name\n%", $group_file_contents);
+        $this->assertPattern("%$this->another_ugroup_uuid\t$this->another_ugroup_gerrit_name\n%",   $group_file_contents);
         $this->assertPattern("%$this->replication_uuid\t$this->replication\n%",             $group_file_contents);
         $this->assertPattern("%global:Registered-Users\tRegistered Users\n%",     $group_file_contents);
     }
@@ -235,6 +253,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
     public function itCreatesAProjectAndExportGitBranchesAndTags() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
+        stub($this->ugroup_manager)->getUGroups()->returns(array());
         expect($this->driver)->createProject($this->server, $this->repository)->once();
         $project_name = $this->project_creator->createProject($this->server, $this->repository);
         $this->assertEqual($this->gerrit_project, $project_name);
@@ -319,14 +338,14 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
 
         $this->project_creator->createProject($this->server, $this->repository);
     }
-*/
-    public function _itDoesNotStopIfAGroupCannotBeCreated() {
+
+    public function itDoesNotStopIfAGroupCannotBeCreated() {
         stub($this->driver)->createGroup()->throwsAt(1, new Exception());
         $this->driver->expectCallCount('createGroup', 4);
 
         $this->project_creator->createProject($this->server, $this->repository);
     }
-
+*/
      private function assertAllGitBranchesPushedToTheServer() {
         $cwd = getcwd();
         chdir("$this->tmpdir/$this->gitolite_project");
