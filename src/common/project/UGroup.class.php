@@ -25,6 +25,7 @@ require_once 'common/user/User.class.php';
 require_once 'www/project/admin/ugroup_utils.php';
 require_once 'UGroup_Invalid_Exception.class.php';
 require_once 'common/user/Users.class.php';
+require_once 'utils.php';
 
 /**
  * UGroup object
@@ -45,6 +46,23 @@ class UGroup {
     const NEWS_ADMIN         = 17;
     const NEWS_EDITOR        = 18;
     const SVN_ADMIN          = 19;
+
+    private $normalized_names = array(
+        self::NONE               => 'nobody',
+        self::ANONYMOUS          => 'all_users',
+        self::REGISTERED         => 'registered_users',
+        self::PROJECT_MEMBERS    => 'project_members',
+        self::PROJECT_ADMIN      => 'project_admins',
+        self::FILE_MANAGER_ADMIN => 'file_manager_admins',
+        self::DOCUMENT_TECH      => 'document_techs',
+        self::DOCUMENT_ADMIN     => 'document_admins',
+        self::WIKI_ADMIN         => 'wiki_admins',
+        self::TRACKER_ADMIN      => 'tracker_admins',
+        self::FORUM_ADMIN        => 'forum_admins',
+        self::NEWS_ADMIN         => 'news_admins',
+        self::NEWS_EDITOR        => 'news_editors',
+        self::SVN_ADMIN          => 'svn_admins',
+    );
 
     protected $id    = 0;
     protected $group_id     = 0;
@@ -126,6 +144,20 @@ class UGroup {
     public function getTranslatedName() {
         return util_translate_name_ugroup($this->getName());
     }
+
+    /**
+     * return the string identifier for dynamic user groups
+     * or the name of static user groups
+     *
+     * @return String
+     */
+    public function getNormalizedName() {
+        if ($this->is_dynamic) {
+            return $this->normalized_names[$this->id];
+        }
+        return $this->name;
+    }
+
 
     /**
      * Get the ugroup id
@@ -429,9 +461,6 @@ class UGroup {
         } else {
             return false;
         }
-    }
-
-    public function getNormalizedName() {
     }
 }
 ?>
