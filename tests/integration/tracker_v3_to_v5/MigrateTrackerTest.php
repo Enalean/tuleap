@@ -19,6 +19,7 @@
  */
 
 require_once 'common/tracker/ArtifactType.class.php';
+require_once dirname(__FILE__).'/../../../plugins/tracker/include/autoload.php';
 require_once dirname(__FILE__).'/../../../plugins/tracker/include/constants.php';
 require_once TRACKER_BASE_DIR.'/Tracker/TrackerManager.class.php';
 require_once TRACKER_BASE_DIR.'/Tracker/Migration/V3.class.php';
