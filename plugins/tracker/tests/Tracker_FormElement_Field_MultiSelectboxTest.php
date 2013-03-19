@@ -26,7 +26,7 @@ class Tracker_FormElement_Field_MultiSelectbox_getFieldDataFromSoapValue extends
     
     public function setUp() {
         parent::setUp();
-        $this->bind  = mock('Tracker_FormElement_Field_List_Bind');
+        $this->bind  = mock('Tracker_FormElement_Field_List_Bind_Static');
         $this->field = aMultiSelectBoxField()->withBind($this->bind)->build();
     }
 
