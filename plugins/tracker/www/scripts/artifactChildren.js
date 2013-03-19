@@ -22,11 +22,18 @@ tuleap.artifact = tuleap.artifact || { };
 
 tuleap.artifact.HierarchyViewer = Class.create({
 
-
     initialize : function(base_url, container, locales) {
         this.base_url  = base_url;
         this.container = container;
         this.locales   = locales;
+        this.row_template = new Template('<tr class="artifact-child" data-parent-id="#{id}"> \
+                <td> \
+                    <a href="#" class="toggle"><img src="http://crampons.cro.enalean.com/themes/Tuleap/images/pointer_down.png" /></a> \
+                    <a href="#{url}">#{xref}</a> \
+                </td> \
+                <td>#{title}</td> \
+                <td>#{status}</td> \
+            </tr>');
     },
 
     getArtifactChildren : function(artifact_id) {
@@ -36,13 +43,22 @@ tuleap.artifact.HierarchyViewer = Class.create({
                 aid : artifact_id,
                 func : 'get-children'
             },
-            onSuccess : this.receiveChildren.bind(this)
+            onSuccess : function (transport) {
+                this.receiveChildren(artifact_id, transport.responseJSON);
+            }.bind(this)
         });
     },
 
-    receiveChildren: function (transport) {
-        var children = transport.responseJSON,
-            tbody;
+    receiveChildren: function (parent_id, children) {
+        var tbody,
+            existing_parent = this.container.down('tr[data-parent-id='+ parent_id +']');
+
+        if (existing_parent) {
+            children.map(function (child) {
+                this.insertChildAfter(existing_parent, child);
+            }.bind(this));
+            return;
+        }
 
         if (! children.length) {
             this.displaysNoChild();
@@ -79,13 +95,24 @@ tuleap.artifact.HierarchyViewer = Class.create({
             </table>');
     },
 
-    insertChild: function (tbody, child) {
-        var template = new Template('<tr class="artifact-child"> \
-                <td><a href="#{url}">#{xref}</a></td> \
-                <td>#{title}</td> \
-                <td>#{status}</td> \
-            </tr>')
+    insertChildAfter: function (parent, child) {
+        parent.insert({after: this.row_template.evaluate(child)});
+        var padding_left = ~~parent.down('td').getStyle('padding-left').sub('px', '') + 24;
+        parent.next().down('td').setStyle({
+                paddingLeft:  padding_left + 'px'
+        });
+        this.registerEvent(parent.up('tbody'), child);
+    },
 
-        tbody.insert(template.evaluate(child));
+    insertChild: function (tbody, child) {
+        tbody.insert(this.row_template.evaluate(child));
+        this.registerEvent(tbody, child);
+    },
+
+    registerEvent: function (tbody, child) {
+        tbody.down('tr[data-parent-id='+ child.id +'] a.toggle').observe('click', function (evt) {
+            this.getArtifactChildren(child.id);
+            Event.stop(evt);
+        }.bind(this));
     }
 });
