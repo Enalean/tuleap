@@ -23,14 +23,14 @@
 require_once('GraphOnTrackersV5_Engine.class.php');
 
 class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
-    
+
     public $unit;
     public $stop_date;
     public $start_date;
     public $color_set;
-    
+
     function validData(){
-        
+
         if ($this->start_date && $this->start_date > 0){
             return true;
         }else{
@@ -38,7 +38,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
             return false;
         }
     }
-    
+
     /**
      * @return Chart
      */
@@ -48,23 +48,23 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
         if ($this->width == 0) {
             $this->width = (count($this->data)*100)+(2*150);
         }
-        
+
         $right_margin = 50;
-        
+
         foreach ($this->data as $date => $label)
             $dates[] = date('M-d', $date);
-        
+
         $this->graph = new Chart($this->width,$this->height);
         $colors = $this->getColors();
         $this->graph->SetScale("datlin");
         $this->graph->title->Set($this->title);
         $this->graph->xaxis->SetTickLabels($dates);
-        
+
         if (is_null($this->description)) {
             $this->description = "";
         }
         $this->graph->subtitle->Set($this->description);
-        
+
         $keys = array_keys($this->data[$this->start_date]);
         $nbOpt = count($keys);
         foreach ($this->data as $date => $row) {
@@ -75,7 +75,7 @@ class GraphOnTrackersV5_Engine_CumulativeFlow extends GraphOnTrackersV5_Engine {
             }
         }
         $this->graph->ygrid->SetFill(true,'#F3FFFF@0.5','#FFFFFF@0.5');
-        
+
         for($i = $nbOpt-1; $i >= 0; $i--) {
             $lineData = array();
             foreach ($this->data as $data => $row) {
