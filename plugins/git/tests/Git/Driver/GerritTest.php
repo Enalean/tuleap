@@ -133,20 +133,20 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     public function itCreatesGroups() {
         $create_group_command = "gerrit create-group firefox/project_members";
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
-        $this->driver->createGroup($this->gerrit_server, $this->repository, 'project_members', array());
+        $this->driver->createGroup($this->gerrit_server, 'firefox/project_members', array());
     }
 
     public function itCreatesGroupsWithMembers() {
         $create_group_command = "gerrit create-group firefox/project_members --member ''\''johan'\''' --member ''\''goyotm'\'''";
         $user_list = array('johan', 'goyotm');
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
-        $this->driver->createGroup($this->gerrit_server, $this->repository, 'project_members', $user_list);
+        $this->driver->createGroup($this->gerrit_server, 'firefox/project_members', $user_list);
     }
 
     public function itInformsAboutGroupCreation() {
         $user_list    = array ();
         expect($this->logger)->info("Gerrit: Group firefox/project_members successfully created")->once();
-        $this->driver->createGroup($this->gerrit_server, $this->repository, 'project_members', $user_list);
+        $this->driver->createGroup($this->gerrit_server,  'firefox/project_members', $user_list);
     }
 
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
@@ -157,7 +157,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
 
         try {
-            $this->driver->createGroup($this->gerrit_server, $this->repository, 'project_members', $user_list);
+            $this->driver->createGroup($this->gerrit_server,  'firefox/project_members', $user_list);
             $this->fail('An exception was expected');
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->assertEqual($e->getMessage(), "Command: $command" . PHP_EOL . "Error: $std_err");
@@ -168,7 +168,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         $create_group_command = "gerrit create-group firefox/project_members --member ''\''Johan Martinsson'\'''";
         $user_list            = array('Johan Martinsson',);
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
-        $this->driver->createGroup($this->gerrit_server, $this->repository, 'project_members', $user_list);
+        $this->driver->createGroup($this->gerrit_server,  'firefox/project_members', $user_list);
     }
 
 }

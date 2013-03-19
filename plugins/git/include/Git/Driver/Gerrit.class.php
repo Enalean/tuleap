@@ -60,9 +60,8 @@ class Git_Driver_Gerrit {
 
     }
 
-    public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
-        $gerrit_group = $repository->getProject()->getUnixName()."/$group_name";
-        $base_command = array(self::COMMAND, "create-group", $gerrit_group);
+    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, $user_list){
+        $base_command = array(self::COMMAND, "create-group", $group_name);
         $members      = $this->compileMemberCommands($user_list);
         $command_line = implode(' ',array_merge($base_command, $members));
         try {
@@ -71,7 +70,7 @@ class Git_Driver_Gerrit {
             throw $this->computeException($e, $command_line);
         }
 
-        $this->logger->info("Gerrit: Group $gerrit_group successfully created");
+        $this->logger->info("Gerrit: Group $group_name successfully created");
     }
 
     public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
