@@ -61,7 +61,7 @@ class Git_Driver_Gerrit {
     }
 
     public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
-        $gerrit_group = $this->getGerritProjectName($repository)."-$group_name";
+        $gerrit_group = $repository->getProject()->getUnixName()."/$group_name";
         $base_command = array(self::COMMAND, "create-group", $gerrit_group);
         $members      = $this->compileMemberCommands($user_list);
         $command_line = implode(' ',array_merge($base_command, $members));
