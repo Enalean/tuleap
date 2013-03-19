@@ -29,34 +29,47 @@ class Tracker_Migration_V3_RemindersDao extends DataAccessObject {
                     INNER JOIN tracker_field ON (old_id = field_id AND tracker_id = $tv5_id AND formElement_type = 'date')
                 WHERE group_artifact_id = $tv3_id";
         foreach ($this->retrieve($sql) as $old_date_reminder) {
+            $ugroups = $this->extractUgroups($old_date_reminder['notified_people']);
+            if (! $ugroups) {
+                continue;
+            }
+
             $notification_type = $old_date_reminder['notification_type'];
             $nb_emails         = $old_date_reminder['recurse'];
             $frequency         = $old_date_reminder['frequency'];
             $field_id          = $old_date_reminder['field_id'];
-            $ugroups           = $this->extractUgroups($old_date_reminder['notified_people']);
-            $status            = Tracker_DateReminder::ENABLED;
+            $start             = $this->getStart($old_date_reminder);
 
-            if (! $ugroups) {
-                continue;
-            }
-            $ugroups = $this->da->quoteSmart($ugroups);
-
-            $start             = $old_date_reminder['notification_start'];
-            if ($notification_type == Tracker_DateReminder::AFTER) {
-                $start = -$start;
-            }
-
-            for ($i = 0 ; $i < $nb_emails ; $i++) {
-                $distance = $start - $i * $frequency;
-                if ($distance < 0) {
-                    $distance = abs($distance);
-                    $notification_type = Tracker_DateReminder::AFTER;
-                }
-                $sql = "INSERT INTO tracker_reminder (tracker_id, field_id, ugroups, notification_type, distance, status)
-                        VALUES ($tv5_id, $field_id, $ugroups, $notification_type, $distance, $status)";
-                $this->update($sql);
-            }
+            $this->createReminderList($nb_emails, $tv5_id, $field_id, $ugroups, $notification_type, $start, $frequency);
         }
+    }
+
+    private function getStart($old_date_reminder) {
+        $start = $old_date_reminder['notification_start'];
+        if ($old_date_reminder['notification_type'] == Tracker_DateReminder::AFTER) {
+            $start = -$start;
+        }
+        return $start;
+    }
+
+    private function createReminderList($nb_emails, $tv5_id, $field_id, $ugroups, $notification_type, $start, $frequency) {
+        for ($i = 0 ; $i < $nb_emails ; $i++) {
+            $this->createReminder($i, $tv5_id, $field_id, $ugroups, $notification_type, $start, $frequency);
+        }
+    }
+
+    private function createReminder($i, $tv5_id, $field_id, $ugroups, $notification_type, $start, $frequency) {
+        $status  = Tracker_DateReminder::ENABLED;
+        $ugroups = $this->da->quoteSmart($ugroups);
+
+        $distance = $start - $i * $frequency;
+        if ($distance < 0) {
+            $distance = abs($distance);
+            $notification_type = Tracker_DateReminder::AFTER;
+        }
+        $sql = "INSERT INTO tracker_reminder (tracker_id, field_id, ugroups, notification_type, distance, status)
+                VALUES ($tv5_id, $field_id, $ugroups, $notification_type, $distance, $status)";
+        $this->update($sql);
     }
 
     /**
