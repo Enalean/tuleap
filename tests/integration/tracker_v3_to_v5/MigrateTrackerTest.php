@@ -608,4 +608,18 @@ class MigrateTracker_TaskTrackerReportsTest extends MigrateDefaultTrackersTest {
 
 }
 
+class MigrateTracker_TaskTrackerDateReminderTest extends MigrateDefaultTrackersTest {
+
+    public function itSendsAnEmailToArtifactSubmitterAndAssigneeTwoDaysBeforeStartDate() {
+        $start_date_field = $this->form_element_factory->getFormElementByName(self::$task_tracker_id, 'start_date');
+
+        $factory = new Tracker_DateReminderFactory($this->task_tracker);
+        $reminders = $factory->getTrackerReminders();
+
+        $this->assertEqual($reminders[0]->getDistance(), 2);
+        $this->assertEqual($reminders[0]->getNotificationType(), Tracker_DateReminder::BEFORE);
+        $this->assertEqual($reminders[0]->getField(), $start_date_field);
+        $this->assertEqual($reminders[0]->getStatus(), Tracker_DateReminder::ENABLED);
+    }
+}
 ?>

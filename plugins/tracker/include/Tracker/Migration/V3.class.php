@@ -112,6 +112,10 @@ class Tracker_Migration_V3 {
             $field_dependencies_dao = new Tracker_Migration_V3_FieldDependenciesDao();
             $field_dependencies_dao->addDependencies($tv3->getID(), $id);
 
+            $logger->info("$log_prefix date reminders");
+            $reminder_dao = new Tracker_Migration_V3_RemindersDao();
+            $reminder_dao->create($tv3->getID(), $id);
+
             $logger->info("$log_prefix Complete");
             return $this->tracker_factory->getTrackerById($id);
         }
