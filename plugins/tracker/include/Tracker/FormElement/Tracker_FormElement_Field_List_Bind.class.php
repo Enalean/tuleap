@@ -81,7 +81,7 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
         $bind_type = $bind_factory->getType($this);
         return array(
             'bind_type' => $bind_type,
-            'bind_list' => $this->getList()
+            'bind_list' => $this->getSoapBindingList()
         );
     }
 
@@ -89,10 +89,8 @@ abstract class Tracker_FormElement_Field_List_Bind implements Tracker_FormElemen
      *
      * @return array
      */
-    public function getList() {
-        return array();
-    }
-
+    protected abstract function getSoapBindingList();
+    
     /**
      * Get the field data for artifact submission
      *
