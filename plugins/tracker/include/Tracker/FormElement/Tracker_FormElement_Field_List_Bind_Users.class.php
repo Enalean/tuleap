@@ -192,9 +192,12 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
                         break;
                     default:
                         if (preg_match('/ugroup_([0-9]+)/', $ugroup, $matches)) {
+                            $ugroup_data = db_fetch_array(ugroup_db_get_ugroup($matches[1]));
+                            $user_group = new UGroup($ugroup_data);
+
                             $ugroups[] = array(
                                     'ugroup_id' => $matches[1],
-                                    'name'      => util_translate_name_ugroup(ugroup_get_name_from_id($matches[1]))
+                                    'name'      => $user_group->getNormalizedName(),//util_translate_name_ugroup(ugroup_get_name_from_id($matches[1]))
                             );
                         }
                         break;
