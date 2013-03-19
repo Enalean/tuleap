@@ -228,7 +228,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         $start_date = $this->getStartDate();
         $unit       = $this->getUnit();
         $stop_date  = $this->getStopDate();
-        return $this->getDao()->save($id, $field_id, $stop_date, $unit);
+        return $this->getDao()->save($id, $field_id, $start_date, $stop_date, $unit);
     }
 
     public function updateDb() {
@@ -236,7 +236,7 @@ class GraphOnTrackersV5_Chart_CumulativeFlow extends GraphOnTrackersV5_Chart {
         $start_date = $this->getStartDate();
         $unit       = $this->getUnit();
         $stop_date  = $this->getStopDate();
-        return $this->getDao()->save($this->id, $field_id, $stop_date, $unit);
+        return $this->getDao()->save($this->id, $field_id, $start_date, $stop_date, $unit);
     }
 
     /**
