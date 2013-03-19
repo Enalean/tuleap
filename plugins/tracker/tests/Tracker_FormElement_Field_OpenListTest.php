@@ -103,7 +103,7 @@ class Tracker_FormElement_Field_OpenListTest extends TuleapTestCase {
         $dar->setReturnValueAt(11, 'valid', false);
         $value_dao->setReturnReference('searchById', $dar);
         
-        $bind = new MockTracker_FormElement_Field_List_Bind();
+        $bind = new MockTracker_FormElement_Field_List_Bind_Static();
         $bind_values = array(
             1000 => mock('Tracker_FormElement_Field_List_BindValue'),
             1001 => mock('Tracker_FormElement_Field_List_BindValue'),
@@ -199,7 +199,7 @@ class Tracker_FormElement_Field_OpenList_getFieldDataTest extends TuleapTestCase
         parent::setUp();
 
         $this->dao   = mock('Tracker_FormElement_Field_List_OpenValueDao');
-        $this->bind  = mock('Tracker_FormElement_Field_List_Bind');
+        $this->bind  = mock('Tracker_FormElement_Field_List_Bind_Static');
         $this->field = partial_mock('Tracker_FormElement_Field_OpenList', array('getOpenValueDao', 'getBind', 'getId'));
 
         stub($this->field)->getOpenValueDao()->returns($this->dao);
