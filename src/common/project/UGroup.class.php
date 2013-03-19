@@ -430,5 +430,8 @@ class UGroup {
             return false;
         }
     }
+
+    public function getNormalizedName() {
+    }
 }
 ?>

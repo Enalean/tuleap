@@ -38,24 +38,36 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var Git_Driver_Gerrit_UserFinder */
     private $user_finder;
 
-    public function __construct($dir, Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder) {
-        $this->dir           = $dir;
-        $this->driver        = $driver;
-        $this->user_finder   = $user_finder;
+    /** @var UGroupManager */
+    private $ugroup_manager;
+
+    public function __construct($dir, Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder, UGroupManager $ugroup_manager) {
+        $this->dir            = $dir;
+        $this->driver         = $driver;
+        $this->user_finder    = $user_finder;
+        $this->ugroup_manager = $ugroup_manager;
     }
 
     public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
         $gerrit_project = $this->driver->createProject($gerrit_server, $repository);
 
-        foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $group_name => $permission_level) {
-            try {
-                $user_list = $this->user_finder->getUsersForPermission($permission_level, $repository);
-                $this->driver->createGroup($gerrit_server, $repository, $group_name, $user_list);
-            } catch (Exception $e) {
-                // Continue with the next group
-                // Should we add a warning ?
+//        foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $group_name => $permission_level) {
+//            try {
+//                $user_list = $this->user_finder->getUsersForPermission($permission_level, $repository);
+//                $this->driver->createGroup($gerrit_server, $repository, $group_name, $user_list);
+//            } catch (Exception $e) {
+//                // Continue with the next group
+//                // Should we add a warning ?
+//            }
+//        }
+
+        $ugroups = $this->ugroup_manager->getUGroups($repository->getProject());
+        if ($ugroups) {
+            foreach ($ugroups as $ugroup) {
+                $this->driver->createGroup($gerrit_server, $repository, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getMembers());
             }
         }
+
         $this->initiatePermissions(
             $repository,
             $gerrit_server,
