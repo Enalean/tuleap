@@ -32,7 +32,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     public $id;
     public $tracker_id;
-    public $in_tracker_id;
+    public $per_tracker_id;
     public $use_artifact_permissions;
     protected $submitted_by;
     protected $submitted_on;
@@ -83,6 +83,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->submitted_by             = $submitted_by;
         $this->submitted_on             = $submitted_on;
         $this->use_artifact_permissions = $use_artifact_permissions;
+        $this->per_tracker_id           = $this->getDao()->getPerTrackerArtifactId($this->id);
     }
 
     /**
@@ -267,22 +268,22 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      *
      * @return String
      */
-    public function fetchMailFormElements($recipient, $format, $ignore_perms = false) {  
+    public function fetchMailFormElements($recipient, $format, $ignore_perms = false) {
         $output = '';
         $toplevel_form_elements = $this->getTracker()->getFormElements();
         $this->prepareElementsForDisplay($toplevel_form_elements);
-        
+
         foreach ($toplevel_form_elements as $formElement) {
             $output .= $formElement->fetchMailArtifact($recipient, $this, $format, $ignore_perms);
             if ($format == 'text' && $output) {
                 $output .= PHP_EOL;
             }
         }
-        
+
         if ($format == 'html') {
             $output = '<table width="100%">'.$output.'</table>';
         }
-        
+
         return $output;
     }
 
@@ -308,7 +309,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $cs = $this->getChangesets();
         $hp = Codendi_HTMLPurifier::instance();
         $output = '';
-        
+
         if($format == 'html'){
             $output .=
             '<tr>
@@ -319,7 +320,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 </td>
             </tr>';
         }
-        
+
         foreach ( $cs as $changeset ) {
             $comment = $changeset->getComment();
             /* @var $comment Tracker_Artifact_Changeset_Comment */
@@ -329,7 +330,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 continue;
             }
             switch ($format) {
-                case 'html':               
+                case 'html':
                     $followup = $comment->fetchMailFollowUp($format);
                     $output .=  $followup;
                     break;
@@ -765,9 +766,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 //TODO : check permissions on this action?
                 $comment_format = $this->validateCommentFormat($request, 'comment_formatnew');
                 $this->setUseArtifactPermissions( $request->get('use_artifact_permissions') ? 1 : 0 );
-                
+
                 $fields_data   = $request->get('artifact');
-                
+
                 $fields_data['request_method_called'] = 'artifact-update';
                 $this->getTracker()->augmentDataFromRequest($fields_data);
                 unset($fields_data['request_method_called']);
@@ -775,7 +776,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 try {
 
                     $this->createNewChangeset($fields_data, $request->get('artifact_followup_comment'), $current_user, $request->get('email'), true, $comment_format);
-                    
+
                     $art_link = $this->fetchDirectLinkToArtifact();
                     $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_tracker_index', 'update_success', array($art_link)), CODENDI_PURIFIER_LIGHT);
 
@@ -1074,10 +1075,10 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $this->validateNewChangeset($fields_data, $comment, $submitter, $email);
         $previous_changeset = $this->getLastChangeset();
         /*
-         * Post actions were run by validateNewChangeset but they modified a 
+         * Post actions were run by validateNewChangeset but they modified a
          * different set of $fields_data in the case of massChange or soap requests;
          * we run them again for the current $fields_data
-         * 
+         *
          */
         $this->getWorkflow()->before($fields_data, $submitter, $this);
         $changeset_id = $this->getChangesetDao()->create($this->getId(), $submitter->getId(), $email);
@@ -1085,12 +1086,12 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
             $GLOBALS['Response']->addFeedback('error', $GLOBALS['Language']->getText('plugin_tracker_artifact', 'unable_update'));
             return false;
         }
-        
+
         $comment = trim($comment);
         $new_changeset = $this->getLastChangeset();
         $comment_format = Tracker_Artifact_Changeset_Comment::checkCommentFormat($comment_format);
         $workflow = $this->getWorkflow();
-       
+
         $is_submission = false;
         //Store the comment
         $commentAdded = $this->getChangesetCommentDao()->createNewVersion($changeset_id, $comment, $submitter->getId(), 0, $comment_format);
@@ -1133,7 +1134,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     /**
-     * 
+     *
      * @param array $fields_data
      * @param string $comment
      * @param User $submitter
@@ -1171,11 +1172,11 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 throw new Tracker_Exception();
             }
         }
-        
+
         return true;
     }
 
-            
+
 
     /**
      * @return ReferenceManager
@@ -1444,7 +1445,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
      * @return bool true if success false otherwise
      */
     public function linkArtifact($linked_artifact_id, User $current_user) {
-        $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());  
+        $artlink_fields = $this->getFormElementFactory()->getUsedArtifactLinkFields($this->getTracker());
         if (count($artlink_fields)) {
             $comment       = '';
             $email         = '';
@@ -1647,7 +1648,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
         $fields_data   = array();
         $fields_data[$artlink_field->getId()]['new_values'] = '';
         $fields_data[$artlink_field->getId()]['removed_values'] = array($linked_artifact_id => 1);
-        
+
         try {
             $this->createNewChangeset($fields_data, $comment, $current_user, $email);
         } catch (Tracker_NoChangeException $e) {
@@ -1819,7 +1820,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
 
     /**
      * Used when validating the rules of a new/ initial changset creating.
-     * 
+     *
      * @param array $fields_data
      * @return array
      */
@@ -1834,23 +1835,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
             }
         }
-        
+
         //replace where appropriate with submitted values
         foreach ($fields_data as $key => $value) {
             $tracker_data[$key] = $value;
         }
 
         $elements = $this->getFormElementFactory()->getAllFormElementsForTracker($this->getTracker());
-        
-        //addlastUpdateDate and submitted on if available 
-        foreach ($elements as $elm ) {      
+
+        //addlastUpdateDate and submitted on if available
+        foreach ($elements as $elm ) {
             if($elm instanceof Tracker_FormElement_Field_LastUpdateDate ) {
                  $tracker_data[$elm->getId()] = date("Y-m-d");
             }
             if($elm instanceof Tracker_FormElement_Field_SubmittedOn ) {
                  $tracker_data[$elm->getId()] = $this->getSubmittedOn();
-            } 
-            
+            }
+
             if($elm instanceof Tracker_FormElement_Field_Date &&
                     ! array_key_exists($elm->getId(), $tracker_data)) {
                 //user doesn't have access to field
