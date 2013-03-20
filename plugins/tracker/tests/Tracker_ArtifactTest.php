@@ -184,8 +184,8 @@ class Tracker_ArtifactTest extends TuleapTestCase {
 
         $changeset->setReturnReference('getValue', $value);
 
-        $id = $tracker_id = $in_tracker_id = $use_artifact_permissions = $submitted_by = $submitted_on = '';
-        $artifact = new Tracker_Artifact($id, $tracker_id, $in_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions);
+        $id = $tracker_id = $use_artifact_permissions = $submitted_by = $submitted_on = '';
+        $artifact = new Tracker_Artifact($id, $tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions);
 
         $this->assertEqual($artifact->getValue($field, $changeset), $value);
     }
@@ -1818,7 +1818,7 @@ class Tracker_Artifact_DeleteArtifactTest extends TuleapTestCase {
         $this->artifact = partial_mock(
             'Tracker_Artifact',
             array('getChangesets', 'getDao', 'getPermissionsManager', 'getCrossReferenceManager'),
-            array($this->artifact_id, null, 0, null, null, null)
+            array($this->artifact_id, null, null, null, null)
         );
         $this->artifact->setTracker($tracker);
 
@@ -1866,9 +1866,6 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
 
     /** @var int */
     protected $tracker_id = 101;
-    
-    /** @var int */
-    protected $in_tracker_id = 1;
 
     /** @var Tracker_FormElement_Field_Computed */
     protected $computed_field;
@@ -1902,7 +1899,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
         $this->task = partial_mock(
             'Tracker_Artifact',
             array('createNewChangeset'),
-            array($this->artifact_id, $this->tracker_id, $this->in_tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
+            array($this->artifact_id, $this->tracker_id, $submitted_by, $submitted_on, $use_artifact_permissions)
         );
         $this->task->setTracker($tracker);
         $this->task->setFormElementFactory($this->formelement_factory);
