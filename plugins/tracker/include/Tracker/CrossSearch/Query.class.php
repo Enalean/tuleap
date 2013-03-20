@@ -142,7 +142,7 @@ class Tracker_CrossSearch_Query {
         $artifacts = array();
         if (isset($this->artifact_ids[$tracker_id])) {
             foreach($this->artifact_ids[$tracker_id] as $artifact_id) {
-                $artifacts[] = new Tracker_Artifact($artifact_id, $tracker_id, 0, null, null, null);
+                $artifacts[] = new Tracker_Artifact($artifact_id, $tracker_id, null, null, null);
             }
         }
         return $artifacts;

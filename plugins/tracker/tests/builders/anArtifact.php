@@ -31,7 +31,6 @@ function anArtifact() {
 class Test_Artifact_Builder {
     private $id;
     private $tracker;
-    private $in_tracker_id;
     private $tracker_id;
     private $formElementFactory;
     private $changesets;
@@ -46,11 +45,6 @@ class Test_Artifact_Builder {
     public function withTracker(Tracker $tracker) {
         $this->tracker    = $tracker;
         return $this->withTrackerId($tracker->getId());
-    }
-    
-    public function withInTrackerId($in_tracker_id) {
-        $this->in_tracker_id = $in_tracker_id;
-        return $this;
     }
 
     public function withTrackerId($tracker_id) {
@@ -79,7 +73,7 @@ class Test_Artifact_Builder {
     }
 
     public function build() {
-        $artifact = new Tracker_Artifact($this->id, $this->tracker_id, $this->in_tracker_id ,null, null, null);
+        $artifact = new Tracker_Artifact($this->id, $this->tracker_id, null, null, null);
         if ($this->tracker) {
             $artifact->setTracker($this->tracker);
         }
