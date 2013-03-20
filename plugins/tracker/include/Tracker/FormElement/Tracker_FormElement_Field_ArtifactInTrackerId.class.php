@@ -22,32 +22,32 @@
  */
 
 class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_Field_ArtifactId {
-          
+
     public function getCriteriaWhere($criteria) {
         if ($criteria_value = $this->getCriteriaValue($criteria)) {
             return $this->buildMatchExpression("c.artifact_in_tracker_id", $criteria_value);
         }
         return '';
     }
-    
+
     public function getQuerySelect() {
-        return "a.in_tracker_id AS `". $this->name ."`";
+        return "a.per_tracker_artifact_id AS `". $this->name ."`";
     }
-    
+
     /**
      * Get the "group by" statement to retrieve field values
      */
     public function getQueryGroupby() {
-        return "a.in_tracker_id";
+        return "a.per_tracker_artifact_id";
     }
-    
+
     public function fetchChangesetValue($artifact_id, $changeset_id, $value, $from_aid = null) {
         if ($from_aid != null) {
             return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact_id )).'&from_aid='.$from_aid.'">'. $value .'</a>';
         }
         return '<a class="direct-link-to-artifact" href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact_id )).'">'. $value .'</a>';
     }
-    
+
     /**
      * Fetch the html code to display the field value in artifact in read only mode
      *
@@ -57,7 +57,7 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
      * @return string
      */
     public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
-        return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">##'. (int)$artifact->in_tracker_id .'</a>';
+        return '<a href="'.TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">##'. (int)$artifact->per_tracker_id.'</a>';
     }
 
     /**
@@ -75,7 +75,7 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
                 $output .= '<a href= "'.$proto.'://'. $GLOBALS['sys_default_domain'].TRACKER_BASE_URL.'/?'. http_build_query(array('aid' => (int)$artifact->id )).'">##'. $value .'</a>';
                 break;
             default:
-                $output .= '##'.$artifact->in_tracker_id;
+                $output .= '##'.$artifact->per_tracker_id;
                 break;
         }
         return $output;
@@ -90,31 +90,31 @@ class Tracker_FormElement_Field_ArtifactInTrackerId extends Tracker_FormElement_
         $html .= '<a href="#'.TRACKER_BASE_URL.'/?aid=123" onclick="return false;">##3</a>';
         return $html;
     }
-    
+
     /**
      * @return the label of the field (mainly used in admin part)
      */
     public static function getFactoryLabel() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactInTrackerId_label');
     }
-    
+
     /**
      * @return the description of the field (mainly used in admin part)
      */
     public static function getFactoryDescription() {
         return $GLOBALS['Language']->getText('plugin_tracker_formelement_admin', 'artifactInTrackerId_description');
-    }    
-    
+    }
+
     /**
      * Fetch the html code to display the field value in tooltip
-     * 
+     *
      * @param Tracker_Artifact $artifact
      * @param Tracker_Artifact_ChangesetValue_Integer $value The changeset value of this field
      * @return string The html code to display the field value in tooltip
      */
     protected function fetchTooltipValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
         $html = '';
-        $html .= $artifact->in_tracker_id;
+        $html .= $artifact->per_tracker_id;
         return $html;
     }
 }
