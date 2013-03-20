@@ -21,6 +21,7 @@ Version 5.12 (Not released yet)
 
   == Bug Fix ==
 	* Fix request #2817: When a service in iframe is created in template project, the "is in iframe" information were not propagated to other projects.
+	* Fix bugs #2901: When there are permissions set on fields and tracker, there are edge cases when we got a fatal error while updating an artifact in tracker v3
 
 Version 5.11 (Thursday, February 21st 2013)
 
