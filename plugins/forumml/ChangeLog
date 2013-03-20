@@ -1,3 +1,6 @@
+Version 2.6.10 - Tuleap 5.12
+    * art #2898: private list archives no longer accessible.
+
 Version 2.6.9 - Tuleap 5.12
     * Rename User class to PFUser to allow integration of mediawiki
 
