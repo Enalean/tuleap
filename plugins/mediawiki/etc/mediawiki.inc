@@ -24,5 +24,6 @@ $mwdata_path = "/var/lib/codendi/plugins/mediawiki";
 $mw_dbtype = "mysql";
 $projects_path = "/var/lib/codendi/plugins/mediawiki/projects";
 $config_path = "/etc/codendi";
-$src_path = "/usr/share/mediawiki_tuleap";
+$src_path = "/usr/share/mediawiki_tuleap_delete";
+$mw_style_path = '/plugins/mediawiki/www/skins';
 ?>
