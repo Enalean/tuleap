@@ -13,9 +13,12 @@ require_once('common/plugin/PluginManager.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
 
 class PluginsAdministrationViews extends Views {
-    
+
+    private $plugin_manager;
+
     function PluginsAdministrationViews(&$controler, $view=null) {
         $this->View($controler, $view);
+        $this->plugin_manager = PluginManager::instance();
     }
     
     function header() {
@@ -54,7 +57,7 @@ class PluginsAdministrationViews extends Views {
         $request =& HTTPRequest::instance();
         $name = $request->get('name');
         if ($name) {
-            $plugin_manager =& PluginManager::instance();
+            $plugin_manager = $this->plugin_manager;
             $p =& $plugin_manager->getPluginByName($name);
             if ($p) {
                 echo '<h2>Congratulations!</h2>';
@@ -73,7 +76,7 @@ class PluginsAdministrationViews extends Views {
         $request =& HTTPRequest::instance();
         $browse = true;
         if ($request->exist('name')) {
-            $plugin_manager =& PluginManager::instance();
+            $plugin_manager = $this->plugin_manager;
             $plugin =& $plugin_manager->getPluginByName($request->get('name'));
             if(!$plugin) {
                 echo '<p>You\'re about to install '. $request->get('name') .'.</p>';
@@ -99,28 +102,50 @@ class PluginsAdministrationViews extends Views {
     
     function confirmUninstall() {
         $request =& HTTPRequest::instance();
-        $browse = true;
-        if ($request->exist('plugin_id')) {
-            $plugin_manager =& PluginManager::instance();
-            $plugin =& $plugin_manager->getPluginById((int)$request->get('plugin_id'));
-            if($plugin) {
-                $plug_info  =& $plugin->getPluginInfo();
-                $descriptor =& $plug_info->getPluginDescriptor();
-                $name = $descriptor->getFullName();
-                if (strlen(trim($name)) === 0) {
-                    $name = get_class($plugin);
-                }
-                $output = sprintf(file_get_contents($GLOBALS['Language']->getContent('confirm_uninstall', null, 'pluginsadministration')),
-                                                $name,
-                                                $plugin->getId());
-                echo $output;
-                $browse = false;
-            }
-        }
-        if ($browse) {
+        if (! $request->exist('plugin_id')) {
             $this->browse();
         }
+
+        $plugin_manager = $this->plugin_manager;
+        $plugin = $plugin_manager->getPluginById((int)$request->get('plugin_id'));
+        if (! $plugin) {
+            $this->browse();
+        }
+
+        $dependencies = $this->getInstalledDependencies($plugin);
+        if ($dependencies) {
+            $dependencies = implode('</strong>, <strong>', $dependencies);
+            echo '<p>You cannot uninstall <strong>'. $plugin->getName() .'</strong> since at least another plugin depends on it: <strong>'. $dependencies .'</strong></p>';
+            echo '<p><a href="/plugins/pluginsadministration/">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></p>';
+            return;
+        }
+
+        $this->displayUninstallationConfirmScreen($plugin);
     }
+
+    private function getInstalledDependencies(Plugin $plugin) {
+        $installed_dependencies = array();
+        foreach ($this->plugin_manager->getAllPlugins() as $installed_plugin) {
+            if (in_array($plugin->getName(), $installed_plugin->getDependencies())) {
+                $installed_dependencies[] = $installed_plugin->getName();
+            }
+        }
+        return $installed_dependencies;
+    }
+
+    private function displayUninstallationConfirmScreen(Plugin $plugin) {
+        $plug_info  =& $plugin->getPluginInfo();
+        $descriptor =& $plug_info->getPluginDescriptor();
+        $name = $descriptor->getFullName();
+        if (strlen(trim($name)) === 0) {
+            $name = get_class($plugin);
+        }
+        $output = sprintf(file_get_contents($GLOBALS['Language']->getContent('confirm_uninstall', null, 'pluginsadministration')),
+                                        $name,
+                                        $plugin->getId());
+        echo $output;
+    }
+
     function ajax_projects() {
         $request =& HTTPRequest::instance();
         $p = $request->get('gen_prop');
@@ -141,7 +166,7 @@ class PluginsAdministrationViews extends Views {
         $link_to_plugins = dirname($_SERVER['REQUEST_URI']).'/';
         $request =& HTTPRequest::instance();
         if ($request->exist('plugin_id')) {
-            $plugin_manager =& PluginManager::instance();
+            $plugin_manager = $this->plugin_manager;
             $plugin_factory =& PluginFactory::instance();
             $plugin =& $plugin_factory->getPluginById($request->get('plugin_id'));
             if(!$plugin) {
@@ -346,7 +371,7 @@ EOS;
             $this->_priorities =  array();
             
             $plugin_hook_priority_manager = new PluginHookPriorityManager();
-            $plugin_manager               =& PluginManager::instance();
+            $plugin_manager               = $this->plugin_manager;
             try {
                 $forgeUpgradeConfig = new ForgeUpgradeConfig();
                 $forgeUpgradeConfig->loadDefaults();
@@ -487,7 +512,7 @@ EOS;
     
     function _managePriorities() {
         $request        =& HTTPRequest::instance();
-        $plugin_manager =& PluginManager::instance();
+        $plugin_manager = $this->plugin_manager;
         $Language       =& $GLOBALS['Language'];
         $output = '';
         $this->_searchPlugins();
@@ -676,7 +701,7 @@ END;
     }
     
     function _notYetInstalledPlugins() {
-        $plugin_manager =& PluginManager::instance();
+        $plugin_manager = $this->plugin_manager;
         $Language       =& $GLOBALS['Language'];
         $output = '';
         $not_yet_installed =& $plugin_manager->getNotYetInstalledPlugins();
