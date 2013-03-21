@@ -4247,7 +4247,8 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     /*margin: 10px 0;*/
     text-rendering: optimizelegibility;
 }
-.label {
+.label,
+.badge {
     padding: 1px 4px 2px;
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
@@ -4260,6 +4261,13 @@ h1.one_step_project, h2.one_step_project, h3.one_step_project, h4.one_step_proje
     white-space: nowrap;
     vertical-align: baseline;
     background-color: #999;
+}
+.badge {
+  padding-right: 9px;
+  padding-left: 9px;
+  -webkit-border-radius: 9px;
+     -moz-border-radius: 9px;
+          border-radius: 9px;
 }
 .label-important,
 .badge-important {
