@@ -31,6 +31,9 @@ class Plugin implements PFO_Plugin {
     var $pluginInfo;
     var $hooks;
     protected $_scope;
+
+    /** @var bool */
+    private $is_custom = false;
     
     const SCOPE_SYSTEM  = 0;
     const SCOPE_PROJECT = 1;
@@ -255,6 +258,14 @@ class Plugin implements PFO_Plugin {
      */
     public function getDependencies() {
         return array();
+    }
+
+    public function setIsCustom($is_custom) {
+        $this->is_custom = $is_custom;
+    }
+
+    public function isCustom() {
+        return $this->is_custom;
     }
 }
 ?>
