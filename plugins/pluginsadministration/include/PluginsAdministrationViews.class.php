@@ -86,12 +86,7 @@ class PluginsAdministrationViews extends Views {
                     echo '<p>Please read the following:</p>';
                     echo $readme_content;
                 }
-                echo '<form action="?" method="GET">';
-                echo '<input type="hidden" name="action" value="install" />';
-                echo '<input type="hidden" name="name" value="'. $request->get('name') .'" />';
-                echo '<input type="submit" name="cancel" value="No, I do not want to install this plugin" />';
-                echo '<input type="submit" name="confirm" value="Yes, I am sure !" />';
-                echo '</form>';
+                $this->displayConfirmationInstallForm($request->get('name'));
                 $browse = false;
             }
         }
@@ -99,7 +94,34 @@ class PluginsAdministrationViews extends Views {
             $this->browse();
         }
     }
-    
+
+    private function displayConfirmationInstallForm($name) {
+        $dependencies = $this->getUnmetDependencies($name);
+        if ($dependencies) {
+            $dependencies = implode('</strong>, <strong>', $dependencies);
+            echo '<p>There are unmet dependencies that prevent you from installing this plugin: <strong>'. $dependencies .'</strong></p>';
+            echo '<p><a href="/plugins/pluginsadministration/">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></p>';
+        } else {
+            echo '<form action="?" method="GET">';
+            echo '<input type="hidden" name="action" value="install" />';
+            echo '<input type="hidden" name="name" value="'. $name .'" />';
+            echo '<input type="submit" name="cancel" value="No, I do not want to install this plugin" />';
+            echo '<input type="submit" name="confirm" value="Yes, I am sure !" />';
+            echo '</form>';
+        }
+    }
+
+    private function getUnmetDependencies($plugin_name) {
+        $unmet_dependencies = array();
+        $plugin = $this->plugin_manager->getTemporaryPlugin($plugin_name);
+        foreach ($plugin->getDependencies() as $dependency) {
+            if (! $this->plugin_manager->getPluginByName($dependency)) {
+                $unmet_dependencies[] = $dependency;
+            }
+        }
+        return $unmet_dependencies;
+    }
+
     function confirmUninstall() {
         $request =& HTTPRequest::instance();
         if (! $request->exist('plugin_id')) {
