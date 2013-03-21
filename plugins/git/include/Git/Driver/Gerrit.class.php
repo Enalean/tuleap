@@ -61,16 +61,20 @@ class Git_Driver_Gerrit {
     }
 
     public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, $user_list){
-        $base_command = array(self::COMMAND, "create-group", $group_name);
-        $members      = $this->compileMemberCommands($user_list);
-        $command_line = implode(' ',array_merge($base_command, $members));
-        try {
-            $this->ssh->execute($server, $command_line);
-        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-            throw $this->computeException($e, $command_line);
-        }
+        if (! $this->groupExists($server, $group_name)) {
+            $base_command = array(self::COMMAND, "create-group", $group_name);
+            $members      = $this->compileMemberCommands($user_list);
+            $command_line = implode(' ',array_merge($base_command, $members));
+            try {
+                $this->ssh->execute($server, $command_line);
+            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                throw $this->computeException($e, $command_line);
+            }
 
-        $this->logger->info("Gerrit: Group $group_name successfully created");
+            $this->logger->info("Gerrit: Group $group_name successfully created");
+        } else {
+            $this->logger->info("Gerrit: Group $group_name already exists on Gerrit");
+        }
     }
 
     public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
