@@ -51,6 +51,7 @@ plugin_pluginsadministration_properties	display_priorities	Afficher les priorit�
 plugin_pluginsadministration_properties	properties_addproject	Ajouter un projet :
 plugin_pluginsadministration_properties	properties_av_for_prj	Disponible pour tous les projets
 plugin_pluginsadministration_properties	properties_delproject	Enlever un projet :
+plugin_pluginsadministration_properties	properties_dependencies:	Dépendances :
 plugin_pluginsadministration_properties	properties_description:	Description :
 plugin_pluginsadministration_properties	properties_is_av_for_prj	Ce plugin est disponible pour tous les projets :
 plugin_pluginsadministration_properties	properties_hooks:	Hooks écoutés :
