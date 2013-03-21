@@ -23,6 +23,7 @@ require_once dirname(__FILE__).'/../../../include/constants.php';
 require_once dirname(__FILE__).'/../../builders/aGitRepository.php';
 require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
 require_once 'common/include/Config.class.php';
+
 abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
 
     /**
@@ -62,6 +63,7 @@ abstract class Git_Driver_Gerrit_baseTest extends TuleapTestCase {
     }
 
 }
+
 class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
 
     /**
@@ -257,4 +259,86 @@ class Git_Driver_Gerrit_removeUserFromGroupTest extends Git_Driver_Gerrit_baseTe
         $this->driver->removeUserFromGroup($this->gerrit_server, $this->user, $this->groupname);
     }
 }
+
+class Git_Driver_Gerrit_GroupExistsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->ls_group_return = array(
+            'Administrators',
+            'Anonymous Users',
+            'Non-Interactive Users',
+            'Project Owners',
+            'Registered Users',
+            'project/project_members',
+            'project/project_admins',
+            'project/group_from_ldap',
+        );
+
+        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('lsGroups'));
+        stub($this->gerrit_driver)->lsGroups()->returns($this->ls_group_return);
+
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
+    }
+
+    public function itCallsLsGroups() {
+        expect($this->gerrit_driver)->lsGroups($this->gerrit_server)->once();
+        $this->gerrit_driver->groupExists($this->gerrit_server, 'whatever');
+    }
+
+    public function itReturnsTrueIfGroupExists() {
+        $this->assertTrue($this->gerrit_driver->groupExists($this->gerrit_server, 'project/project_admins'));
+    }
+
+    public function itReturnsFalseIfGroupDoNotExists() {
+        $this->assertFalse($this->gerrit_driver->groupExists($this->gerrit_server, 'project/wiki_admins'));
+    }
+}
+
+class Git_Driver_Gerrit_LsGroupsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
+
+        $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
+        $this->logger = mock('BackendLogger');
+        $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
+    }
+
+    public function itUsesGerritSSHCommandToListGroups() {
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit ls-groups')->once();
+        $this->driver->lsGroups($this->gerrit_server);
+    }
+
+    public function itReturnsAllPlatformGroups() {
+        $ls_groups_expected_return = array(
+            'Administrators',
+            'Anonymous Users',
+            'Non-Interactive Users',
+            'Project Owners',
+            'Registered Users',
+            'project/project_members',
+            'project/project_admins',
+            'project/group_from_ldap',
+        );
+
+        $ssh_ls_groups = 'Administrators
+Anonymous Users
+Non-Interactive Users
+Project Owners
+Registered Users
+project/project_members
+project/project_admins
+project/group_from_ldap';
+
+        stub($this->ssh)->execute()->returns($ssh_ls_groups);
+
+        $this->assertEqual(
+            $ls_groups_expected_return,
+            $this->driver->lsGroups($this->gerrit_server)
+        );
+    }
+}
+
 ?>

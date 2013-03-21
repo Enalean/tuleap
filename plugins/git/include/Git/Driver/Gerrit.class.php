@@ -82,6 +82,15 @@ class Git_Driver_Gerrit {
         }
     }
 
+    public function groupExists(Git_RemoteServer_GerritServer $server, $group_name) {
+        return in_array($group_name, $this->lsGroups($server));
+    }
+
+    public function lsGroups(Git_RemoteServer_GerritServer $server) {
+        $command = self::COMMAND . ' ls-groups';
+        return explode(PHP_EOL, $this->ssh->execute($server, $command));
+    }
+
     private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command) {
         return $this->isGerritFailure($e) ? $this->gerritDriverException($e, $command) : $e;
 
