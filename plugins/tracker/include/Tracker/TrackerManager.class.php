@@ -133,10 +133,6 @@ class TrackerManager implements Tracker_IFetchTrackerSwitcher {
             }
         } catch (Tracker_NoMachingResourceException $e) {
 
-            if ($request->isAjax()) {
-                $GLOBALS['Response']->sendJSON(array());
-                return;
-            }
             //show, admin all trackers
             if ((int)$request->get('group_id')) {
                 $group_id = (int)$request->get('group_id');
