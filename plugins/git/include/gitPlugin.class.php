@@ -716,7 +716,7 @@ class GitPlugin extends Plugin {
 
     private function getProjectCreator() {
         $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
-        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $this->getGerritUserFinder());
+        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $this->getGerritUserFinder(), new UGroupManager());
     }
 
     private function getGerritUserFinder() {

@@ -62,15 +62,19 @@ class Git_Driver_Gerrit_ProjectCreator {
 //        }
 
         $ugroups = $this->ugroup_manager->getUGroups($repository->getProject());
+        $good_ugroups = array();
         foreach ($ugroups as $ugroup) {
-            $this->driver->createGroup($gerrit_server, $repository, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getMembers());
+            if ($ugroup->getId() > UGroup::NONE ||  $ugroup->getId() == UGroup::PROJECT_MEMBERS || $ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                $this->driver->createGroup($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getUserLdapIds($ugroup->getID()));
+                $good_ugroups[] = $ugroup;
+            }
         }
 
         $this->initiatePermissions(
             $repository,
             $gerrit_server,
             $gerrit_server->getCloneSSHUrl($gerrit_project),
-            $ugroups,
+            $good_ugroups,
             Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION
         );
         

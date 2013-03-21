@@ -289,26 +289,32 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         expect($this->ugroup_manager)->getUGroups($this->project)->once();
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup));
 
-        expect($this->driver)->createGroup($this->server, $this->repository, $this->project_unix_name.'/project_members', $user_list)->at(0);
+        expect($this->driver)->createGroup($this->server, $this->project_unix_name.'/project_members', $user_list)->at(0);
         $this->project_creator->createProject($this->server, $this->repository);
     }
 
     public function itCreatesAllGroups() {
-        $project_members_list = array(aUser()->withUserName('goyotm')->build(), aUser()->withUserName('martissonj')->build());
-        $ugroup_project_members = mock('UGroup');
-        stub($ugroup_project_members)->getMembers()->returns($project_members_list);
-        stub($ugroup_project_members)->getNormalizedName()->returns('project_members');
 
-        $another_group_list = array(aUser()->withUserName('goyotm')->build());
+        $user1 = aUser()->withUserName('goyotm')->withLdapId('goyotm')->build();
+        $user2 = aUser()->withUserName('martissonj')->withLdapId('martissonj')->build();
+
+        $project_members_list = array($user1->getLdapId(), $user2->getLdapId());
+        $ugroup_project_members = mock('UGroup');
+        stub($ugroup_project_members)->getUserLdapIds()->returns($project_members_list);
+        stub($ugroup_project_members)->getNormalizedName()->returns('project_members');
+        stub($ugroup_project_members)->getId()->returns(UGroup::PROJECT_MEMBERS);
+
+        $another_group_list = array($user1->getLdapId());
         $ugroup_another_group = mock('UGroup');
-        stub($ugroup_another_group)->getMembers()->returns($another_group_list);
+        stub($ugroup_another_group)->getUserLdapIds()->returns($another_group_list);
         stub($ugroup_another_group)->getNormalizedName()->returns('another_group');
+        stub($ugroup_another_group)->getId()->returns(120);
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup_project_members, $ugroup_another_group));
 
         expect($this->driver)->createGroup()->count(2);
-        expect($this->driver)->createGroup($this->server, $this->repository, $this->project_unix_name.'/project_members', $project_members_list)->at(0);
-        expect($this->driver)->createGroup($this->server, $this->repository, $this->project_unix_name.'/another_group', $another_group_list)->at(1);
+        expect($this->driver)->createGroup($this->server, $this->project_unix_name.'/project_members', $project_members_list)->at(0);
+        expect($this->driver)->createGroup($this->server, $this->project_unix_name.'/another_group', $another_group_list)->at(1);
 
         $this->project_creator->createProject($this->server, $this->repository);
     }
