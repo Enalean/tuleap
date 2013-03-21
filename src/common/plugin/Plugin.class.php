@@ -243,5 +243,12 @@ class Plugin implements PFO_Plugin {
     public function getReadme() {
         return $this->getFilesystemPath().'/README';
     }
+
+    /**
+     * @return array of strings (identifier of plugins this one depends on)
+     */
+    public function getDependencies() {
+        return array();
+    }
 }
 ?>
