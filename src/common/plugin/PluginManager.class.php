@@ -59,7 +59,11 @@ class PluginManager {
         }
         $this->plugins_loaded = true;
     }
-    
+
+    public function getAvailablePlugins() {
+        return $this->_getPluginFactory()->getAvailablePlugins();
+    }
+
     function _getPluginFactory() {
         return PluginFactory::instance();
     }

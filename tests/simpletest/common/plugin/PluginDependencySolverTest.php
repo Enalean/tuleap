@@ -57,7 +57,7 @@ class PluginDependencySolverTest extends TuleapTestCase {
         $solver = new PluginDependencySolver($this->plugin_manager);
 
         $this->assertEqual(
-            $solver->getUnmetDependencies('mediawiki'),
+            $solver->getUnmetInstalledDependencies('mediawiki'),
             array('fusionforge_compat')
         );
     }
@@ -70,7 +70,7 @@ class PluginDependencySolverTest extends TuleapTestCase {
         $solver = new PluginDependencySolver($this->plugin_manager);
 
         $this->assertEqual(
-            $solver->getUnmetDependencies('mediawiki'),
+            $solver->getUnmetInstalledDependencies('mediawiki'),
             array()
         );
     }
