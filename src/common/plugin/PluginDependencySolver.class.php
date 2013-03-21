@@ -31,7 +31,7 @@ class PluginDependencySolver {
     }
 
     /**
-     * Get plugin names that are still installed which depends on the given plugin
+     * Get plugin names that are still installed and which depends on the given plugin
      *
      * @return array of strings
      */
@@ -46,15 +46,46 @@ class PluginDependencySolver {
     }
 
     /**
-     * Get plugin names that should already installed for the given plugin name
+     * Get plugin names that are still available and which depends on the given plugin
      *
      * @return array of strings
      */
-    public function getUnmetDependencies($plugin_name) {
+    public function getAvailableDependencies(Plugin $plugin) {
+        $available_dependencies = array();
+        foreach ($this->plugin_manager->getAvailablePlugins() as $available_plugin) {
+            if (in_array($plugin->getName(), $available_plugin->getDependencies())) {
+                $available_dependencies[] = $available_plugin->getName();
+            }
+        }
+        return $available_dependencies;
+    }
+
+    /**
+     * Get plugin names that should already be installed for the given plugin name
+     *
+     * @return array of strings
+     */
+    public function getUnmetInstalledDependencies($plugin_name) {
         $unmet_dependencies = array();
         $plugin = $this->plugin_manager->getTemporaryPlugin($plugin_name);
         foreach ($plugin->getDependencies() as $dependency) {
             if (! $this->plugin_manager->getPluginByName($dependency)) {
+                $unmet_dependencies[] = $dependency;
+            }
+        }
+        return $unmet_dependencies;
+    }
+
+    /**
+     * Get plugin names that should already be available for the given plugin name
+     *
+     * @return array of strings
+     */
+    public function getUnmetAvailableDependencies(Plugin $plugin) {
+        $unmet_dependencies = array();
+        foreach ($plugin->getDependencies() as $dependency) {
+            $dependency_plugin = $this->plugin_manager->getPluginByName($dependency);
+            if (! $dependency_plugin || ! $this->plugin_manager->isPluginAvailable($dependency_plugin)) {
                 $unmet_dependencies[] = $dependency;
             }
         }

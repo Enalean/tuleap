@@ -15,11 +15,16 @@ require_once('common/plugin/PluginDependencySolver.class.php');
 
 class PluginsAdministrationViews extends Views {
 
+    /** @var PluginManager */
     private $plugin_manager;
+
+    /** @var PluginDependencySolver */
+    private $dependency_solver;
 
     function PluginsAdministrationViews(&$controler, $view=null) {
         $this->View($controler, $view);
         $this->plugin_manager = PluginManager::instance();
+        $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
     }
     
     function header() {
@@ -97,7 +102,7 @@ class PluginsAdministrationViews extends Views {
     }
 
     private function displayConfirmationInstallForm($name) {
-        $dependencies = $this->getDependencySolver()->getUnmetDependencies($name);
+        $dependencies = $this->dependency_solver->getUnmetInstalledDependencies($name);
         if ($dependencies) {
             $error_msg = 'There are unmet dependencies that prevent you from installing this plugin:';
             $this->displayDependencyError($dependencies, $error_msg);
@@ -110,10 +115,6 @@ class PluginsAdministrationViews extends Views {
         echo '<input type="submit" name="cancel" value="No, I do not want to install this plugin" />';
         echo '<input type="submit" name="confirm" value="Yes, I am sure !" />';
         echo '</form>';
-    }
-
-    private function getDependencySolver() {
-        return new PluginDependencySolver($this->plugin_manager);
     }
 
     private function displayDependencyError($dependencies, $error_message) {
@@ -136,7 +137,7 @@ class PluginsAdministrationViews extends Views {
             $this->browse();
         }
 
-        $dependencies = $this->getDependencySolver()->getInstalledDependencies($plugin);
+        $dependencies = $this->dependency_solver->getInstalledDependencies($plugin);
         if ($dependencies) {
             $error_msg = 'You cannot uninstall <em>'. $plugin->getName() .'</em> since at least another plugin depends on it:';
             $this->displayDependencyError($dependencies, $error_msg);
