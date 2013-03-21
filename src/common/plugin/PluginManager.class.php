@@ -287,6 +287,12 @@ class PluginManager {
         $p = $plugin_factory->getPluginByName($name);
         return $p;
     }
+    function getAvailablePluginByName($name) {
+        $plugin = $this->getPluginByName($name);
+        if ($plugin && $this->isPluginAvailable($plugin)) {
+            return $plugin;
+        }
+    }
     function getPluginById($id) {
         $plugin_factory = $this->_getPluginFactory();
         $p = $plugin_factory->getPluginById($id);

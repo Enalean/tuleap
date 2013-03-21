@@ -36,13 +36,7 @@ class PluginDependencySolver {
      * @return array of strings
      */
     public function getInstalledDependencies(Plugin $plugin) {
-        $installed_dependencies = array();
-        foreach ($this->plugin_manager->getAllPlugins() as $installed_plugin) {
-            if (in_array($plugin->getName(), $installed_plugin->getDependencies())) {
-                $installed_dependencies[] = $installed_plugin->getName();
-            }
-        }
-        return $installed_dependencies;
+        return $this->getMissingDependencies($plugin, $this->plugin_manager->getAllPlugins());
     }
 
     /**
@@ -51,13 +45,7 @@ class PluginDependencySolver {
      * @return array of strings
      */
     public function getAvailableDependencies(Plugin $plugin) {
-        $available_dependencies = array();
-        foreach ($this->plugin_manager->getAvailablePlugins() as $available_plugin) {
-            if (in_array($plugin->getName(), $available_plugin->getDependencies())) {
-                $available_dependencies[] = $available_plugin->getName();
-            }
-        }
-        return $available_dependencies;
+        return $this->getMissingDependencies($plugin, $this->plugin_manager->getAvailablePlugins());
     }
 
     /**
@@ -66,14 +54,8 @@ class PluginDependencySolver {
      * @return array of strings
      */
     public function getUnmetInstalledDependencies($plugin_name) {
-        $unmet_dependencies = array();
         $plugin = $this->plugin_manager->getTemporaryPlugin($plugin_name);
-        foreach ($plugin->getDependencies() as $dependency) {
-            if (! $this->plugin_manager->getPluginByName($dependency)) {
-                $unmet_dependencies[] = $dependency;
-            }
-        }
-        return $unmet_dependencies;
+        return $this->getUnmetMissingDependencies($plugin, 'getPluginByName');
     }
 
     /**
@@ -82,14 +64,28 @@ class PluginDependencySolver {
      * @return array of strings
      */
     public function getUnmetAvailableDependencies(Plugin $plugin) {
+        return $this->getUnmetMissingDependencies($plugin, 'getAvailablePluginByName');
+    }
+
+    private function getUnmetMissingDependencies(Plugin $plugin, $method) {
         $unmet_dependencies = array();
-        foreach ($plugin->getDependencies() as $dependency) {
-            $dependency_plugin = $this->plugin_manager->getPluginByName($dependency);
-            if (! $dependency_plugin || ! $this->plugin_manager->isPluginAvailable($dependency_plugin)) {
-                $unmet_dependencies[] = $dependency;
+        foreach ($plugin->getDependencies() as $dependency_name) {
+            $dependency_plugin = $this->plugin_manager->$method($dependency_name);
+            if (! $dependency_plugin) {
+                $unmet_dependencies[] = $dependency_name;
             }
         }
         return $unmet_dependencies;
+    }
+
+    private function getMissingDependencies(Plugin $plugin, array $plugins_collection) {
+        $missing_dependencies = array();
+        foreach ($plugins_collection as $candidate_plugin) {
+            if (in_array($plugin->getName(), $candidate_plugin->getDependencies())) {
+                $missing_dependencies[] = $candidate_plugin->getName();
+            }
+        }
+        return $missing_dependencies;
     }
 }
 ?>
