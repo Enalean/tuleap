@@ -121,8 +121,7 @@ class Plugin implements PFO_Plugin {
     }
 
     public function getPluginEtcRoot() {
-        $pm = $this->_getPluginManager();
-        return $GLOBALS['sys_custompluginsroot'] . '/' . $pm->getNameForPlugin($this) .'/etc';
+        return $GLOBALS['sys_custompluginsroot'] . '/' . $this->getName() .'/etc';
     }
     
     public function _getPluginPath() {
@@ -146,7 +145,7 @@ class Plugin implements PFO_Plugin {
         if ($pm->pluginIsCustom($this)) {
             $path = $GLOBALS['sys_custompluginspath'];
         }
-        return $path.'/'.$pm->getNameForPlugin($this);
+        return $path .'/'. $this->getName();
     }
 
     public function _getThemePath() {
@@ -160,7 +159,7 @@ class Plugin implements PFO_Plugin {
             return null;
         }
         
-        $pluginName = $this->_getPluginManager()->getNameForPlugin($this);
+        $pluginName = $this->getName();
         
         $paths  = array($GLOBALS['sys_custompluginspath'], $GLOBALS['sys_pluginspath']);
         $roots  = array($GLOBALS['sys_custompluginsroot'], $GLOBALS['sys_pluginsroot']);
@@ -197,7 +196,14 @@ class Plugin implements PFO_Plugin {
         if ($path[strlen($path) -1 ] != '/') {
             $path .= '/';
         }
-        return $path.$pm->getNameForPlugin($this);
+        return $path . $this->getName();
+    }
+
+    /**
+     * @return string the short name of the plugin (docman, tracker, …)
+     */
+    public function getName() {
+        return $this->_getPluginManager()->getNameForPlugin($this);
     }
 
     /**
