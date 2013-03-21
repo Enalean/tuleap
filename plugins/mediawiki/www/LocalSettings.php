@@ -117,7 +117,9 @@ $wgShowExceptionDetails = true ;
 $wgLanguageCode = strtolower(forge_get_config('default_country_code'));
 
 $wgDefaultSkin = 'tuleap';
+
 $wgHtml5 = false;
+$wgStyleDirectory = forge_get_config('codendi_dir').forge_get_config('mw_style_path');
 $wgWellFormedXml = true;
 $wgLogo = "";
 
