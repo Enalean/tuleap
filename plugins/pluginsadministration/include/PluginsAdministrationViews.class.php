@@ -417,7 +417,7 @@ EOS;
         $output .= html_build_list_table_top($titles);
         usort($this->_plugins, create_function('$a, $b', 'return strcasecmp($a["name"] , $b["name"]);'));
         for($i = 0; $i < count($this->_plugins) ; $i++) {
-            $output .= '<tr>';
+            $output .= '<tr class="'.util_get_alt_row_color($i).'">';
             
             $output .= '<td class="pluginsadministration_plugin_descriptor '.($this->_plugins[$i]['available']?'':' pluginsadministration_unavailable ').'"><span class="pluginsadministration_name_of_plugin">'.$this->_plugins[$i]['name'].'</span><span class="pluginsadministration_version_of_plugin">'.$this->_plugins[$i]['version'].'</span>';
             $output .= '<br/><span class="pluginsadministration_description_of_plugin">'.$this->_plugins[$i]['description'].'</span></td>';
