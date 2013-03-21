@@ -1,5 +1,6 @@
 Version 5.98 - Tuleap 5.12
     * Fix: SOAP getTrackerFields do not longer list members from registered_users in in list field
+    * Note: If registered_users is used in the list, use method getProjectGroupsAndUsers() to get the members list 
 
 Version 5.97 - Tuleap 5.12
     * Enhancement: add a tab on top of artifact to display its children
