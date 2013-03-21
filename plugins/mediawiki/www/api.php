@@ -1,1 +1,1 @@
-/usr/share/mediawiki_tuleap/api.php
+/usr/share/mediawiki_tuleap_delete/api.php

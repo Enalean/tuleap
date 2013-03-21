@@ -20,7 +20,7 @@ service httpd restart
 ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/$MEDIAWIKI_SRC_DIR/skins/
 
 #Go to the mediawiki skin folder
-cd /usr/share/mediawiki_tuleap/skins
+cd /usr/share/$MEDIAWIKI_SRC_DIR/skins
 if [ -f MonoBook.deps.php ]
 then
  cp MonoBook.deps.php Tuleap.deps.php

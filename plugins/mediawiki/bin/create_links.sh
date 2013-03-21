@@ -24,7 +24,7 @@ cat $LINKS | sed "s%@OLDPACKAGE@%$OLDPACKAGE%g" | sed "s%@PLUGIN_PATH@%$PLUGIN_P
 do
 	if [ ! -e /$src ]
 	then
-		newsrc=`echo $src | sed 's/mediawiki/mediawiki115/'`
+		newsrc=`echo $src | sed 's/mediawiki/mediawiki_to_delete/'`
 		if [ -e "/$newsrc" ]
 		then
 			src=$newsrc
