@@ -104,7 +104,7 @@ class PluginsAdministrationViews extends Views {
     private function displayConfirmationInstallForm($name) {
         $dependencies = $this->dependency_solver->getUnmetInstalledDependencies($name);
         if ($dependencies) {
-            $error_msg = 'There are unmet dependencies that prevent you from installing this plugin:';
+            $error_msg = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_install_dependency');
             $this->displayDependencyError($dependencies, $error_msg);
             return;
         }
@@ -139,7 +139,7 @@ class PluginsAdministrationViews extends Views {
 
         $dependencies = $this->dependency_solver->getInstalledDependencies($plugin);
         if ($dependencies) {
-            $error_msg = 'You cannot uninstall <em>'. $plugin->getName() .'</em> since at least another plugin depends on it:';
+            $error_msg = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_uninstall_dependency', $plugin->getName());
             $this->displayDependencyError($dependencies, $error_msg);
             return;
         }
