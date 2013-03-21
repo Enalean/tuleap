@@ -31,7 +31,7 @@ Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
-URL: http://codendi.org
+URL: http://tuleap.net
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
@@ -388,18 +388,22 @@ Group: Development/Tools
 Version: @@PLUGIN_ADMSSW_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}-plugin-doaprdf
+Requires: %{php_base}-pear-HTTP
 %description plugin-admssw
 This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
 
+%if %{php_base} == php53
 %package plugin-mediawiki
 Summary: Mediawiki plugin
 Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}-plugin-mediawiki
+Requires: %{PKG_NAME}
+Requires: php53-mediawiki-tuleap
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
+%endif
 
 #
 ## Themes
@@ -543,6 +547,9 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 %{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 
+# Apache conf dir
+%{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
+
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
 
@@ -570,7 +577,12 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 
 # Plugin mediawiki
+%if %{php_base} == php53
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
+%{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%endif
 
 ##
 ## On package install
@@ -585,7 +597,7 @@ if [ "$1" -eq "1" ]; then
 
     #
     # Make sure mandatory unix groups exist
-    #
+    #/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 
     # mailman
     if grep -q "^%{mailman_group}:" /etc/group 2> /dev/null ; then
@@ -824,7 +836,6 @@ fi
 %{APP_DIR}/src/www/project
 %{APP_DIR}/src/www/projects
 %{APP_DIR}/src/www/reference
-%{APP_DIR}/src/www/robots.txt.php
 %{APP_DIR}/src/www/scripts
 %{APP_DIR}/src/www/search
 %{APP_DIR}/src/www/service
@@ -991,10 +1002,15 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
 
+%if %{php_base} == php53
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
 %dir %{APP_DATA_DIR}/mediawiki
+%dir %{APP_DATA_DIR}/mediawiki/master
+%dir %{APP_DATA_DIR}/mediawiki/projects
+%attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%endif
 
 #
 # Themes

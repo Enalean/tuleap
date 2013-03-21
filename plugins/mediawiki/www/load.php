@@ -1,1 +1,1 @@
-/usr/share/mediawiki_tuleap/load.php
+/usr/share/mediawiki-tuleap/load.php
