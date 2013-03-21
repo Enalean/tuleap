@@ -66,6 +66,13 @@ class cardwallPlugin extends Plugin {
         return parent::getHooksAndCallbacks();
     }
 
+    /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('tracker');
+    }
+
     
     // TODO : transform into a OnTop_Config_Command, and move code to ConfigFactory
     public function tracker_event_trackers_duplicated($params) {
