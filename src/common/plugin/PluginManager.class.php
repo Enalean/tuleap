@@ -59,7 +59,11 @@ class PluginManager {
         }
         $this->plugins_loaded = true;
     }
-    
+
+    public function getAvailablePlugins() {
+        return $this->_getPluginFactory()->getAvailablePlugins();
+    }
+
     function _getPluginFactory() {
         return PluginFactory::instance();
     }
@@ -283,6 +287,12 @@ class PluginManager {
         $p = $plugin_factory->getPluginByName($name);
         return $p;
     }
+    function getAvailablePluginByName($name) {
+        $plugin = $this->getPluginByName($name);
+        if ($plugin && $this->isPluginAvailable($plugin)) {
+            return $plugin;
+        }
+    }
     function getPluginById($id) {
         $plugin_factory = $this->_getPluginFactory();
         $p = $plugin_factory->getPluginById($id);
@@ -382,6 +392,18 @@ class PluginManager {
         else {
             return true;
         }
+    }
+
+    /**
+     * This method instantiate a plugin that should not be used outside
+     * of temporary use case. It bypass all caches and do not check availability
+     * of the plugin.
+     *
+     * @param string $name The name of the plugin (docman, tracker, …)
+     * @return Plugin
+     */
+    public function getTemporaryPlugin($name) {
+        return $this->_getPluginFactory()->instantiatePlugin(0, $name);
     }
 }
 ?>

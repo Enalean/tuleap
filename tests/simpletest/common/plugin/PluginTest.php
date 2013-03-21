@@ -25,15 +25,7 @@ Mock::generatePartial('Plugin', 'PluginTestVersion', array('_getPluginManager'))
 require_once('common/plugin/PluginManager.class.php');
 Mock::generate('PluginManager');
 
-class PluginTest extends UnitTestCase {
-
-    function setUp() {
-        $this->globals = $GLOBALS;
-    }
-
-    function tearDown() {
-        $GLOBALS = $this->globals;
-    }
+class PluginTest extends TuleapTestCase {
 
     function testId() {
         $p =& new Plugin();
@@ -299,6 +291,11 @@ class PluginTest extends UnitTestCase {
         $p->setReturnValue('_getPluginManager', $pm);
 
         $this->assertEqual($p->getFilesystemPath(), '/my/application/zataz');
+    }
+
+    function itHasNoDependenciesByDefault() {
+        $plugin = new Plugin();
+        $this->assertArrayEmpty($plugin->getDependencies());
     }
 }
 ?>

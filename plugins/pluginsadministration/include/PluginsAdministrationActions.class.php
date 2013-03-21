@@ -12,19 +12,37 @@ require_once('common/plugin/PluginManager.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
 
 class PluginsAdministrationActions extends Actions {
-    
+
+    /** @var PluginManager */
+    private $plugin_manager;
+
+    /** @var PluginDependencySolver */
+    private $dependency_solver;
+
     function PluginsAdministrationActions(&$controler, $view=null) {
         $this->Actions($controler);
+        $this->plugin_manager = PluginManager::instance();
+        $this->dependency_solver = new PluginDependencySolver($this->plugin_manager);
     }
     
     // {{{ Actions
     function available() {
-        $plugin = $this->_getPluginFromRequest();
-        if ($plugin) {
-            $plugin_manager =& PluginManager::instance();
-            if (!$plugin_manager->isPluginAvailable($plugin['plugin'])) {
-                $plugin_manager->availablePlugin($plugin['plugin']);
-                $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_available', array($plugin['name'])).'</div>';
+        $plugin_data = $this->_getPluginFromRequest();
+        if ($plugin_data) {
+            $plugin_manager = $this->plugin_manager;
+            $dependencies = $this->dependency_solver->getUnmetAvailableDependencies($plugin_data['plugin']);
+            if ($dependencies) {
+                $error_msg = $GLOBALS['Language']->getText(
+                    'plugin_pluginsadministration',
+                    'error_unavail_dependency',
+                    array($plugin_data['plugin']->getName(), implode(', ', $dependencies))
+                );
+                $GLOBALS['Response']->addFeedback('error', $error_msg);
+                return;
+            }
+            if (!$plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
+                $plugin_manager->availablePlugin($plugin_data['plugin']);
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_available', array($plugin_data['name'])));
             }
         }
     }
@@ -33,18 +51,27 @@ class PluginsAdministrationActions extends Actions {
         $request =& HTTPRequest::instance();
         $name = $request->get('name');
         if ($name) {
-            $plugin_manager =& PluginManager::instance();
-            $plugin_manager->installPlugin($name);
+            $this->plugin_manager->installPlugin($name);
         }
     }
     
     function unavailable() {
-        $plugin = $this->_getPluginFromRequest();
-        if ($plugin) {
-            $plugin_manager =& PluginManager::instance();
-            if ($plugin_manager->isPluginAvailable($plugin['plugin'])) {
-                $plugin_manager->unavailablePlugin($plugin['plugin']);
-                $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_unavailable', array($plugin['name'])).'</div>';
+        $plugin_data = $this->_getPluginFromRequest();
+        if ($plugin_data) {
+            $plugin_manager = $this->plugin_manager;
+            $dependencies = $this->dependency_solver->getAvailableDependencies($plugin_data['plugin']);
+            if ($dependencies) {
+                $error_msg = $GLOBALS['Language']->getText(
+                    'plugin_pluginsadministration',
+                    'error_avail_dependency',
+                    array($plugin_data['plugin']->getName(), implode(', ', $dependencies))
+                );
+                $GLOBALS['Response']->addFeedback('error', $error_msg);
+                return;
+            }
+            if ($plugin_manager->isPluginAvailable($plugin_data['plugin'])) {
+                $plugin_manager->unavailablePlugin($plugin_data['plugin']);
+                $GLOBALS['Response']->addFeedback('info', $GLOBALS['Language']->getText('plugin_pluginsadministration', 'feedback_unavailable', array($plugin_data['name'])));
             }
         }
     }
@@ -52,7 +79,7 @@ class PluginsAdministrationActions extends Actions {
     function uninstall() {
         $plugin = $this->_getPluginFromRequest();
         if ($plugin) {
-            $plugin_manager =& PluginManager::instance();
+            $plugin_manager = $this->plugin_manager;
             $uninstalled = $plugin_manager->uninstallPlugin($plugin['plugin']);
             if (!$uninstalled) {
                  $GLOBALS['feedback'] .= '<div>'.$GLOBALS['Language']->getText('plugin_pluginsadministration', 'plugin_not_uninstalled', array($plugin['name'])).'</div>';
@@ -65,7 +92,7 @@ class PluginsAdministrationActions extends Actions {
     function updatePriorities() {
         $request        =& HTTPRequest::instance();
         if ($request->exist('priorities')) {
-            $plugin_manager               =& PluginManager::instance();
+            $plugin_manager               = $this->plugin_manager;
             $plugin_hook_priority_manager = new PluginHookPriorityManager();
             $updated = false;
             foreach($request->get('priorities') as $hook => $plugins) {
@@ -95,13 +122,13 @@ class PluginsAdministrationActions extends Actions {
 
     function _addAllowedProjects($prjList) {
         $plugin = $this->_getPluginFromRequest();
-        $plugin_manager =& PluginManager::instance();
+        $plugin_manager = $this->plugin_manager;
         $plugin_manager->addProjectForPlugin($plugin['plugin'], $prjList);
     }
 
     function _delAllowedProjects($prjList) {
         $plugin = $this->_getPluginFromRequest();
-        $plugin_manager =& PluginManager::instance();
+        $plugin_manager = $this->plugin_manager;
         $plugin_manager->delProjectForPlugin($plugin['plugin'], $prjList);
     }
 
@@ -120,7 +147,7 @@ class PluginsAdministrationActions extends Actions {
         }
         if(isset($properties['prj_restricted'])) {
             $plugin = $this->_getPluginFromRequest();
-            $plugin_manager =& PluginManager::instance();
+            $plugin_manager = $this->plugin_manager;
             $resricted = ($properties['prj_restricted'] == 1 ? true : false);
             $plugin_manager->updateProjectPluginRestriction($plugin['plugin'], $resricted);
         }
@@ -162,7 +189,7 @@ class PluginsAdministrationActions extends Actions {
         $return = false;
         $request =& HTTPRequest::instance();
         if ($request->exist('plugin_id') && is_numeric($request->get('plugin_id'))) {
-            $plugin_manager =& PluginManager::instance();
+            $plugin_manager = $this->plugin_manager;
             $plugin =& $plugin_manager->getPluginById($request->get('plugin_id'));
             if ($plugin) {
                 $plug_info  =& $plugin->getPluginInfo();
