@@ -98,17 +98,25 @@ class PluginsAdministrationViews extends Views {
     private function displayConfirmationInstallForm($name) {
         $dependencies = $this->getUnmetDependencies($name);
         if ($dependencies) {
-            $dependencies = implode('</strong>, <strong>', $dependencies);
-            echo '<p>There are unmet dependencies that prevent you from installing this plugin: <strong>'. $dependencies .'</strong></p>';
-            echo '<p><a href="/plugins/pluginsadministration/">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></p>';
-        } else {
-            echo '<form action="?" method="GET">';
-            echo '<input type="hidden" name="action" value="install" />';
-            echo '<input type="hidden" name="name" value="'. $name .'" />';
-            echo '<input type="submit" name="cancel" value="No, I do not want to install this plugin" />';
-            echo '<input type="submit" name="confirm" value="Yes, I am sure !" />';
-            echo '</form>';
+            $error_msg = 'There are unmet dependencies that prevent you from installing this plugin:';
+            $this->displayDependencyError($dependencies, $error_msg);
+            return;
         }
+
+        echo '<form action="?" method="GET">';
+        echo '<input type="hidden" name="action" value="install" />';
+        echo '<input type="hidden" name="name" value="'. $name .'" />';
+        echo '<input type="submit" name="cancel" value="No, I do not want to install this plugin" />';
+        echo '<input type="submit" name="confirm" value="Yes, I am sure !" />';
+        echo '</form>';
+    }
+
+    private function displayDependencyError($dependencies, $error_message) {
+        $dependencies = implode('</em>, <em>', $dependencies);
+        $return_msg   = $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return');
+
+        echo '<p class="feedback_error">'. $error_message .' <em>'. $dependencies .'</em></p>';
+        echo '<p><a href="/plugins/pluginsadministration/">'. $return_msg .'</a></p>';
     }
 
     private function getUnmetDependencies($plugin_name) {
@@ -136,9 +144,8 @@ class PluginsAdministrationViews extends Views {
 
         $dependencies = $this->getInstalledDependencies($plugin);
         if ($dependencies) {
-            $dependencies = implode('</strong>, <strong>', $dependencies);
-            echo '<p>You cannot uninstall <strong>'. $plugin->getName() .'</strong> since at least another plugin depends on it: <strong>'. $dependencies .'</strong></p>';
-            echo '<p><a href="/plugins/pluginsadministration/">'.$GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return').'</a></p>';
+            $error_msg = 'You cannot uninstall <em>'. $plugin->getName() .'</em> since at least another plugin depends on it:';
+            $this->displayDependencyError($dependencies, $error_msg);
             return;
         }
 
