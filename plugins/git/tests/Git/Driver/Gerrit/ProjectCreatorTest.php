@@ -343,59 +343,32 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         $this->project_creator->createProject($this->server, $this->repository);
     }
 
-/*    public function itCreatesContributorsGroup() {
-        $group_name = 'contributors';
-        $permissions_level = Git::PERM_READ;
-        $call_order = 0;
-
-        $this->expectGroupCreation($group_name, $permissions_level, $call_order);
-    }
-
-    //do not get members if dynamic group is registered or all users
-    //what if Userfinder returns read OR write users when I ask for write
-
-    public function itCreatesIntegratorsGroup() {
-        $group_name        = 'integrators';
-        $permissions_level = Git::PERM_WRITE;
-        $call_order        = 1;
-
-        $this->expectGroupCreation($group_name, $permissions_level, $call_order);
-    }
-
-    public function itCreatesSupermenGroup() {
-        $group_name        = 'supermen';
-        $permissions_level = Git::PERM_WPLUS;
-        $call_order        = 2;
-
-        $this->expectGroupCreation($group_name, $permissions_level, $call_order);
-    }
-
-    public function itCreatesOwnerGroup() {
-        $group_name        = 'owners';
-        $permissions_level = Git::SPECIAL_PERM_ADMIN;
-        $call_order        = 3;
-
-        $this->expectGroupCreation($group_name, $permissions_level, $call_order);
-    }
-
-    private function expectGroupCreation($group_name, $permissions_level, $call_order) {
-        $user_list = array(aUser()->withUserName('goyotm')->build(),  aUser()->withUserName('martissonj')->build());
-        stub($this->userfinder)->getUsersForPermission($permissions_level, $this->repository)->returns($user_list);
-
-        expect($this->driver)->createGroup($this->server, $this->repository, $group_name, $user_list)->at($call_order);
-        $this->driver->expectCallCount('createGroup', 4);
-
-        $this->project_creator->createProject($this->server, $this->repository);
-    }
-
     public function itDoesNotStopIfAGroupCannotBeCreated() {
+
+        $user1 = aUser()->withUserName('goyotm')->withLdapId('goyotm')->build();
+        $user2 = aUser()->withUserName('martissonj')->withLdapId('martissonj')->build();
+
+        $project_members_list = array($user1->getLdapId(), $user2->getLdapId());
+        $ugroup_project_members = mock('UGroup');
+        stub($ugroup_project_members)->getUserLdapIds()->returns($project_members_list);
+        stub($ugroup_project_members)->getNormalizedName()->returns('project_members');
+        stub($ugroup_project_members)->getId()->returns(UGroup::PROJECT_MEMBERS);
+
+        $another_group_list = array($user1->getLdapId());
+        $ugroup_another_group = mock('UGroup');
+        stub($ugroup_another_group)->getUserLdapIds()->returns($another_group_list);
+        stub($ugroup_another_group)->getNormalizedName()->returns('another_group');
+        stub($ugroup_another_group)->getId()->returns(120);
+
+        stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup_project_members, $ugroup_another_group));
+
         stub($this->driver)->createGroup()->throwsAt(1, new Exception());
-        $this->driver->expectCallCount('createGroup', 4);
+        $this->driver->expectCallCount('createGroup', 2);
 
         $this->project_creator->createProject($this->server, $this->repository);
     }
-*/
-     private function assertAllGitBranchesPushedToTheServer() {
+
+    private function assertAllGitBranchesPushedToTheServer() {
         $cwd = getcwd();
         chdir("$this->tmpdir/$this->gitolite_project");
 

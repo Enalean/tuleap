@@ -57,23 +57,18 @@ class Git_Driver_Gerrit_ProjectCreator {
 
         $gerrit_project = $this->driver->createProject($gerrit_server, $repository, $parent_project_name);
 
-//        foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $group_name => $permission_level) {
-//            try {
-//                $user_list = $this->user_finder->getUsersForPermission($permission_level, $repository);
-//                $this->driver->createGroup($gerrit_server, $repository, $group_name, $user_list);
-//            } catch (Exception $e) {
-//                // Continue with the next group
-//                // Should we add a warning ?
-//            }
-//        }
-
         $ugroups = $this->ugroup_manager->getUGroups($repository->getProject());
         $good_ugroups = array();
         foreach ($ugroups as $ugroup) {
-            if ($ugroup->getId() > UGroup::NONE ||  $ugroup->getId() == UGroup::PROJECT_MEMBERS || $ugroup->getId() == UGroup::PROJECT_ADMIN) {
-                $this->driver->createGroup($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getUserLdapIds($ugroup->getID()));
-                $good_ugroups[] = $ugroup;
+            try {
+                if ($ugroup->getId() > UGroup::NONE ||  $ugroup->getId() == UGroup::PROJECT_MEMBERS || $ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                    $this->driver->createGroup($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getUserLdapIds($ugroup->getID()));
+                    $good_ugroups[] = $ugroup;
+                }
+            } catch (Exception $e) {
+                // Continue with the next group
             }
+
         }
 
         $this->initiatePermissions(
