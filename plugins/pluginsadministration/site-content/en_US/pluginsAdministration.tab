@@ -44,6 +44,11 @@ plugin_pluginsadministration	Scope	Scope
 plugin_pluginsadministration	scope_0	System
 plugin_pluginsadministration	scope_1	Projects
 plugin_pluginsadministration	scope_2	Users
+plugin_pluginsadministration	error_avail_dependency	Unable to unavail $1. Please unavail the following plugins before:  $2
+plugin_pluginsadministration	error_unavail_dependency	Unable to avail $1. Please avail the following plugins before: $2
+plugin_pluginsadministration	error_install_dependency	There are unmet dependencies that prevent you from installing this plugin:
+plugin_pluginsadministration	error_uninstall_dependency	You cannot uninstall <em>$1</em> since at least another plugin depends on it:
+
 #
 #
 #

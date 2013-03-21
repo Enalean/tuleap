@@ -44,6 +44,10 @@ plugin_pluginsadministration	Scope	Portée
 plugin_pluginsadministration	scope_0	Système
 plugin_pluginsadministration	scope_1	Projets
 plugin_pluginsadministration	scope_2	Utilisateurs
+plugin_pluginsadministration	error_avail_dependency	Impossible de désactiver $1. Veuillez désactiver les plugins suivants : $2
+plugin_pluginsadministration	error_unavail_dependency	Impossible d'activer $1. Veuillez activer les plugins suivants : $2
+plugin_pluginsadministration	error_install_dependency	Impossible d'installer ce plugin sans avoir installé au préalable :
+plugin_pluginsadministration	error_uninstall_dependency	Vous ne pouvez pas désinstaller <em>$1</em> tant que ces plugins seront installés :
 #
 #
 #

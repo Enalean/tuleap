@@ -32,7 +32,11 @@ class PluginsAdministrationActions extends Actions {
             $plugin_manager = $this->plugin_manager;
             $dependencies = $this->dependency_solver->getUnmetAvailableDependencies($plugin_data['plugin']);
             if ($dependencies) {
-                $error_msg = 'Unable to avail '. $plugin_data['plugin']->getName() .'. Please avail the following plugins before: '. implode(', ', $dependencies);
+                $error_msg = $GLOBALS['Language']->getText(
+                    'plugin_pluginsadministration',
+                    'error_unavail_dependency',
+                    array($plugin_data['plugin']->getName(), implode(', ', $dependencies))
+                );
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
                 return;
             }
@@ -57,7 +61,11 @@ class PluginsAdministrationActions extends Actions {
             $plugin_manager = $this->plugin_manager;
             $dependencies = $this->dependency_solver->getAvailableDependencies($plugin_data['plugin']);
             if ($dependencies) {
-                $error_msg = 'Unable to unavail '. $plugin_data['plugin']->getName() .'. Please unavail the following plugins before: '. implode(', ', $dependencies);
+                $error_msg = $GLOBALS['Language']->getText(
+                    'plugin_pluginsadministration',
+                    'error_avail_dependency',
+                    array($plugin_data['plugin']->getName(), implode(', ', $dependencies))
+                );
                 $GLOBALS['Response']->addFeedback('error', $error_msg);
                 return;
             }
