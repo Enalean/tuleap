@@ -11,6 +11,7 @@ require_once('common/include/HTTPRequest.class.php');
 require_once('common/include/ForgeUpgradeConfig.class.php');
 require_once('common/plugin/PluginManager.class.php');
 require_once('common/plugin/PluginHookPriorityManager.class.php');
+require_once('common/plugin/PluginDependencySolver.class.php');
 
 class PluginsAdministrationViews extends Views {
 
@@ -96,7 +97,7 @@ class PluginsAdministrationViews extends Views {
     }
 
     private function displayConfirmationInstallForm($name) {
-        $dependencies = $this->getUnmetDependencies($name);
+        $dependencies = $this->getDependencySolver()->getUnmetDependencies($name);
         if ($dependencies) {
             $error_msg = 'There are unmet dependencies that prevent you from installing this plugin:';
             $this->displayDependencyError($dependencies, $error_msg);
@@ -111,23 +112,16 @@ class PluginsAdministrationViews extends Views {
         echo '</form>';
     }
 
+    private function getDependencySolver() {
+        return new PluginDependencySolver($this->plugin_manager);
+    }
+
     private function displayDependencyError($dependencies, $error_message) {
         $dependencies = implode('</em>, <em>', $dependencies);
         $return_msg   = $GLOBALS['Language']->getText('plugin_pluginsadministration_properties','return');
 
         echo '<p class="feedback_error">'. $error_message .' <em>'. $dependencies .'</em></p>';
         echo '<p><a href="/plugins/pluginsadministration/">'. $return_msg .'</a></p>';
-    }
-
-    private function getUnmetDependencies($plugin_name) {
-        $unmet_dependencies = array();
-        $plugin = $this->plugin_manager->getTemporaryPlugin($plugin_name);
-        foreach ($plugin->getDependencies() as $dependency) {
-            if (! $this->plugin_manager->getPluginByName($dependency)) {
-                $unmet_dependencies[] = $dependency;
-            }
-        }
-        return $unmet_dependencies;
     }
 
     function confirmUninstall() {
@@ -142,7 +136,7 @@ class PluginsAdministrationViews extends Views {
             $this->browse();
         }
 
-        $dependencies = $this->getInstalledDependencies($plugin);
+        $dependencies = $this->getDependencySolver()->getInstalledDependencies($plugin);
         if ($dependencies) {
             $error_msg = 'You cannot uninstall <em>'. $plugin->getName() .'</em> since at least another plugin depends on it:';
             $this->displayDependencyError($dependencies, $error_msg);
@@ -150,16 +144,6 @@ class PluginsAdministrationViews extends Views {
         }
 
         $this->displayUninstallationConfirmScreen($plugin);
-    }
-
-    private function getInstalledDependencies(Plugin $plugin) {
-        $installed_dependencies = array();
-        foreach ($this->plugin_manager->getAllPlugins() as $installed_plugin) {
-            if (in_array($plugin->getName(), $installed_plugin->getDependencies())) {
-                $installed_dependencies[] = $installed_plugin->getName();
-            }
-        }
-        return $installed_dependencies;
     }
 
     private function displayUninstallationConfirmScreen(Plugin $plugin) {
