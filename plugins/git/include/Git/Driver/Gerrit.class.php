@@ -46,18 +46,35 @@ class Git_Driver_Gerrit {
         $this->logger = $logger;
     }
 
-    public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
+    public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository, $parent_project_name) {
         $gerrit_project = $this->getGerritProjectName($repository);
-        $command = implode(' ',array(self::COMMAND, 'create-project', $gerrit_project));
+        $command = implode(' ',array(self::COMMAND, 'create-project --parent', $parent_project_name, $gerrit_project));
+        return $this->actionCreateProject($server, $command, $gerrit_project);
+    }
+
+    public function createParentProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
+        $project_parent_name = $repository->getProject()->getUnixName();
+        $command = implode(' ',array(self::COMMAND, 'create-project --permissions-only', $project_parent_name));
+        return $this->actionCreateProject($server, $command, $project_parent_name);
+    }
+
+    private function actionCreateProject(Git_RemoteServer_GerritServer $server, $command, $project_name) {
         try {
             $this->ssh->execute($server, $command);
-            $project_name = $this->getGerritProjectName($repository);
             $this->logger->info("Gerrit: Project $project_name successfully initialized");
             return $project_name;
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             throw $this->computeException($e, $command);
         }
+    }
 
+    public function parentProjectExists(Git_RemoteServer_GerritServer $server, $project_name) {
+        return in_array($project_name, $this->lsParentProjects($server));
+    }
+
+    public function lsParentProjects(Git_RemoteServer_GerritServer $server) {
+        $command = self::COMMAND . ' ls-projects --type PERMISSIONS';
+        return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
 
     public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, $user_list){

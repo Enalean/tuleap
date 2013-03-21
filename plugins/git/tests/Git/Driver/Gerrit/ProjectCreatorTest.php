@@ -79,11 +79,12 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->repository_in_a_private_project)->getFullPath()->returns($this->tmpdir.'/'.$this->gitolite_project);
         $this->repository_without_registered   = mock('GitRepository');
         stub($this->repository_without_registered)->getFullPath()->returns($this->tmpdir.'/'.$this->gitolite_project);
-        
+
         $this->driver = mock('Git_Driver_Gerrit');
-        stub($this->driver)->createProject($this->server, $this->repository)->returns($this->gerrit_project);
-        stub($this->driver)->createProject($this->server, $this->repository_in_a_private_project)->returns($this->gerrit_project);
-        stub($this->driver)->createProject($this->server, $this->repository_without_registered)->returns($this->gerrit_project);
+        stub($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->returns($this->gerrit_project);
+        stub($this->driver)->createProject($this->server, $this->repository_in_a_private_project, $this->project_unix_name)->returns($this->gerrit_project);
+        stub($this->driver)->createProject($this->server, $this->repository_without_registered, $this->project_unix_name)->returns($this->gerrit_project);
+        stub($this->driver)->createParentProject($this->server, $this->repository)->returns($this->project_unix_name);
 
         stub($this->driver)->getGroupUUID($this->server, $this->contributors)->returns($this->contributors_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->integrators)->returns($this->integrators_uuid);
@@ -270,10 +271,33 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         $this->project_creator->removeTemporaryDirectory();
     }
 
-    public function itCreatesAProjectAndExportGitBranchesAndTags() {
+    public function itCreatesAProjectAndExportGitBranchesAndTagsWithoutCreateParentProject() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
+
         stub($this->ugroup_manager)->getUGroups()->returns(array());
-        expect($this->driver)->createProject($this->server, $this->repository)->once();
+        stub($this->driver)->parentProjectExists()->returns(true);
+
+        expect($this->driver)->parentProjectExists($this->server, $this->repository->getProject()->getUnixName())->once();
+        expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
+        expect($this->driver)->createParentProject($this->server, $this->repository)->never();
+
+        $project_name = $this->project_creator->createProject($this->server, $this->repository);
+        $this->assertEqual($this->gerrit_project, $project_name);
+
+        $this->assertAllGitBranchesPushedToTheServer();
+        $this->assertAllGitTagsPushedToTheServer();
+    }
+
+    public function itCreatesAProjectAndExportGitBranchesAndTagsAndCreateParentProject() {
+        //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
+
+        stub($this->ugroup_manager)->getUGroups()->returns(array());
+        stub($this->driver)->parentProjectExists()->returns(false);
+
+        expect($this->driver)->parentProjectExists($this->server, $this->repository->getProject()->getUnixName())->once();
+        expect($this->driver)->createParentProject($this->server, $this->repository)->once();
+        expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
+
         $project_name = $this->project_creator->createProject($this->server, $this->repository);
         $this->assertEqual($this->gerrit_project, $project_name);
 

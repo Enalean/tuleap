@@ -49,7 +49,13 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
-        $gerrit_project = $this->driver->createProject($gerrit_server, $repository);
+        $parent_project_name = $repository->getProject()->getUnixName();
+
+        if (! $this->driver->parentProjectExists($gerrit_server, $parent_project_name)) {
+            $parent_project_name = $this->driver->createParentProject($gerrit_server, $repository);
+        }
+
+        $gerrit_project = $this->driver->createProject($gerrit_server, $repository, $parent_project_name);
 
 //        foreach (Git_Driver_Gerrit_MembershipManager::$GERRIT_GROUPS as $group_name => $permission_level) {
 //            try {

@@ -74,20 +74,24 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
     /** @var Git_RemoteServer_GerritServer */
     protected $gerrit_server;
 
-
     /**
      * @var RemoteSshCommand
      */
     protected $ssh;
 
 
-    public function itExecutesTheCreateCommandOnTheGerritServer() {
-        expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project firefox/jean-claude/dusse")->once();
-        $this->driver->createProject($this->gerrit_server, $this->repository);
+    public function itExecutesTheCreateCommandForProjectOnTheGerritServer() {
+        expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project --parent firefox firefox/jean-claude/dusse")->once();
+        $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
+    }
+
+    public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer() {
+        expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project --permissions-only firefox")->once();
+        $this->driver->createParentProject($this->gerrit_server, $this->repository);
     }
 
     public function itReturnsTheNameOfTheCreatedProject() {
-        $project_name = $this->driver->createProject($this->gerrit_server, $this->repository);
+        $project_name = $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
         $this->assertEqual($project_name, "firefox/jean-claude/dusse");
     }
 
@@ -105,10 +109,10 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
 
     public function itRaisesAGerritDriverExceptionOnProjectCreation() {
         $std_err = 'fatal: project "someproject" exists';
-        $command = "gerrit create-project firefox/jean-claude/dusse";
+        $command = "gerrit create-project --parent firefox firefox/jean-claude/dusse";
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(Git_Driver_Gerrit::EXIT_CODE, '', $std_err));
         try {
-            $this->driver->createProject($this->gerrit_server, $this->repository);
+            $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
             $this->fail('An exception was expected');
         } catch (Git_Driver_Gerrit_Exception $e) {
             $this->assertEqual($e->getMessage(),"Command: $command".PHP_EOL."Error: $std_err");
@@ -119,13 +123,13 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
         $std_err = 'some gerrit exception';
         $this->expectException('Git_Driver_Gerrit_RemoteSSHCommandFailure');
         stub($this->ssh)->execute()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure(255,'',$std_err));
-        $this->driver->createProject($this->gerrit_server, $this->repository);
+        $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
     }
 
     public function itInformsAboutProjectInitialization() {
         $remote_project = "firefox/jean-claude/dusse";
         expect($this->logger)->info("Gerrit: Project $remote_project successfully initialized")->once();
-        $this->driver->createProject($this->gerrit_server, $this->repository);
+        $this->driver->createProject($this->gerrit_server, $this->repository, $this->project_name);
 
     }
 }
@@ -360,6 +364,68 @@ project/group_from_ldap';
         $this->assertEqual(
             $ls_groups_expected_return,
             $this->driver->lsGroups($this->gerrit_server)
+        );
+    }
+}
+
+class Git_Driver_Gerrit_ProjectExistsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->ls_project_return = array(
+            'All-Projects',
+            'project',
+        );
+
+        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('lsParentProjects'));
+        stub($this->gerrit_driver)->lsParentProjects()->returns($this->ls_project_return);
+
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
+    }
+
+    public function itReturnsTrueIfParentProjectExists() {
+        $this->assertTrue($this->gerrit_driver->parentProjectExists($this->gerrit_server, 'project'));
+    }
+
+    public function itReturnsFalseIfParentProjectDoNotExists() {
+        $this->assertFalse($this->gerrit_driver->parentProjectExists($this->gerrit_server, 'project_not_existing'));
+    }
+}
+
+class Git_Driver_Gerrit_LsParentProjectsTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
+
+        $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
+        $this->logger = mock('BackendLogger');
+        $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
+    }
+
+    public function itUsesGerritSSHCommandToListParentProjects() {
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit ls-projects --type PERMISSIONS')->once();
+        $this->driver->lsParentProjects($this->gerrit_server);
+    }
+
+    public function itReturnsAllPlatformParentProjects() {
+        $ls_projects_expected_return = array(
+            'project',
+            'project/project_members',
+            'project/project_admins',
+            'project/group_from_ldap',
+        );
+
+        $ssh_ls_projects = 'project
+project/project_members
+project/project_admins
+project/group_from_ldap';
+
+        stub($this->ssh)->execute()->returns($ssh_ls_projects);
+
+        $this->assertEqual(
+            $ls_projects_expected_return,
+            $this->driver->lsParentProjects($this->gerrit_server)
         );
     }
 }
