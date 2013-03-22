@@ -54,7 +54,7 @@ class PluginDependencySolver {
      * @return array of strings
      */
     public function getUnmetInstalledDependencies($plugin_name) {
-        $plugin = $this->plugin_manager->getTemporaryPlugin($plugin_name);
+        $plugin = $this->plugin_manager->getPluginDuringInstall($plugin_name);
         return $this->getUnmetMissingDependencies($plugin, 'getPluginByName');
     }
 
