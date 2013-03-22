@@ -34,9 +34,9 @@ class PluginDependencySolverTest extends TuleapTestCase {
         stub($this->fusionforge_compat_plugin)->getDependencies()->returns(array());
 
         $this->plugin_manager = mock('PluginManager');
-        stub($this->plugin_manager)->getTemporaryPlugin('tracker')->returns($this->tracker_plugin);
-        stub($this->plugin_manager)->getTemporaryPlugin('mediawiki')->returns($this->mediawiki_plugin);
-        stub($this->plugin_manager)->getTemporaryPlugin('fusionforge_compat')->returns($this->fusionforge_compat_plugin);
+        stub($this->plugin_manager)->getPluginDuringInstall('tracker')->returns($this->tracker_plugin);
+        stub($this->plugin_manager)->getPluginDuringInstall('mediawiki')->returns($this->mediawiki_plugin);
+        stub($this->plugin_manager)->getPluginDuringInstall('fusionforge_compat')->returns($this->fusionforge_compat_plugin);
     }
 
     public function itReturnsTheInstalledDependencies() {
