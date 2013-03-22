@@ -1,3 +1,6 @@
+Version 5.0.9 - Tuleap 5.13
+    * Add a plugin dependency solver to force installation of needed plugins
+
 Version 5.0.8 - Tuleap 5.12
     * Rename User class to PFUser to allow integration of mediawiki
 
