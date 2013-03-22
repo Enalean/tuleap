@@ -574,9 +574,8 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin mediawiki
 %if %{php_base} == php53
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/mediawiki
 %{__mkdir} -p $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/mediawiki/master
-%{__chown} -R codendiadm:codendiadm $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/
 %endif
 ##
 ## On package install
@@ -1000,7 +999,7 @@ fi
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
-%dir %{APP_DATA_DIR}/mediawiki
+%dir %{APP_DATA_DIR}/plugins/mediawiki
 %endif
 
 #
