@@ -52,9 +52,9 @@ class Git_Driver_Gerrit {
         return $this->actionCreateProject($server, $command, $gerrit_project);
     }
 
-    public function createParentProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
+    public function createParentProject(Git_RemoteServer_GerritServer $server, GitRepository $repository, $admin_group) {
         $project_parent_name = $repository->getProject()->getUnixName();
-        $command = implode(' ',array(self::COMMAND, 'create-project --permissions-only', $project_parent_name));
+        $command = implode(' ',array(self::COMMAND, 'create-project --permissions-only', $project_parent_name, '--owner', $admin_group));
         return $this->actionCreateProject($server, $command, $project_parent_name);
     }
 

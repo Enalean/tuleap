@@ -36,6 +36,16 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
     protected $owners_uuid       = 'f9427648913e6ff14190d81b7b0abc60fa325d3a';
     protected $replication_uuid  = '2ce5c45e3b88415e51ce7e0d3a1ba0526dce6424';
 
+    protected $project_members;
+    protected $another_ugroup;
+    protected $project_admins;
+    protected $project_members_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
+    protected $another_ugroup_uuid  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
+    protected $project_admins_uuid  = '8a7e856ce3c55f555c228bd90045412f95ff348';
+    protected $project_members_gerrit_name = 'mozilla/project_members';
+    protected $another_ugroup_gerrit_name  = 'mozilla/another_ugroup';
+    protected $project_admins_gerrit_name  = 'mozilla/project_admins';
+
     /** @var Git_RemoteServer_GerritServer */
     protected $server;
 
@@ -84,7 +94,7 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
         stub($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->returns($this->gerrit_project);
         stub($this->driver)->createProject($this->server, $this->repository_in_a_private_project, $this->project_unix_name)->returns($this->gerrit_project);
         stub($this->driver)->createProject($this->server, $this->repository_without_registered, $this->project_unix_name)->returns($this->gerrit_project);
-        stub($this->driver)->createParentProject($this->server, $this->repository)->returns($this->project_unix_name);
+        stub($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->returns($this->project_unix_name);
 
         stub($this->driver)->getGroupUUID($this->server, $this->contributors)->returns($this->contributors_uuid);
         stub($this->driver)->getGroupUUID($this->server, $this->integrators)->returns($this->integrators_uuid);
@@ -119,15 +129,6 @@ class Git_Driver_Gerrit_ProjectCreator_BaseTest extends TuleapTestCase {
 }
 
 class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Driver_Gerrit_ProjectCreator_BaseTest {
-    protected $project_members;
-    protected $another_ugroup;
-    protected $project_admins;
-    protected $project_members_uuid = '8bd90045412f95ff348f41fa63606171f2328db3';
-    protected $another_ugroup_uuid  = '19b1241e78c8355c5c3d8a7e856ce3c55f555c22';
-    protected $project_admins_uuid  = '8a7e856ce3c55f555c228bd90045412f95ff348';
-    protected $project_members_gerrit_name = 'mozilla/project_members';
-    protected $another_ugroup_gerrit_name  = 'mozilla/another_ugroup';
-    protected $project_admins_gerrit_name  = 'mozilla/project_admins';
 
     public function setUp() {
         parent::setUp();
@@ -274,12 +275,16 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
     public function itCreatesAProjectAndExportGitBranchesAndTagsWithoutCreateParentProject() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
 
-        stub($this->ugroup_manager)->getUGroups()->returns(array());
+        $this->project_admins = mock('UGroup');
+        stub($this->project_admins)->getNormalizedName()->returns('project_admins');
+        stub($this->project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+
+        stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_admins));
         stub($this->driver)->parentProjectExists()->returns(true);
 
         expect($this->driver)->parentProjectExists($this->server, $this->repository->getProject()->getUnixName())->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
-        expect($this->driver)->createParentProject($this->server, $this->repository)->never();
+        expect($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->never();
 
         $project_name = $this->project_creator->createProject($this->server, $this->repository);
         $this->assertEqual($this->gerrit_project, $project_name);
@@ -291,11 +296,15 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
     public function itCreatesAProjectAndExportGitBranchesAndTagsAndCreateParentProject() {
         //ssh gerrit gerrit create tuleap.net-Firefox/all/mobile
 
-        stub($this->ugroup_manager)->getUGroups()->returns(array());
+        $this->project_admins = mock('UGroup');
+        stub($this->project_admins)->getNormalizedName()->returns('project_admins');
+        stub($this->project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
+
+        stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_admins));
         stub($this->driver)->parentProjectExists()->returns(false);
 
         expect($this->driver)->parentProjectExists($this->server, $this->repository->getProject()->getUnixName())->once();
-        expect($this->driver)->createParentProject($this->server, $this->repository)->once();
+        expect($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
 
         $project_name = $this->project_creator->createProject($this->server, $this->repository);

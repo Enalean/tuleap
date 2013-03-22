@@ -49,27 +49,30 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
-        $parent_project_name = $repository->getProject()->getUnixName();
-
-        if (! $this->driver->parentProjectExists($gerrit_server, $parent_project_name)) {
-            $parent_project_name = $this->driver->createParentProject($gerrit_server, $repository);
-        }
-
-        $gerrit_project = $this->driver->createProject($gerrit_server, $repository, $parent_project_name);
-
+        $admin_group = null;
         $ugroups = $this->ugroup_manager->getUGroups($repository->getProject());
         $good_ugroups = array();
         foreach ($ugroups as $ugroup) {
             try {
                 if ($ugroup->getId() > UGroup::NONE ||  $ugroup->getId() == UGroup::PROJECT_MEMBERS || $ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                    if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                        $admin_group = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+                    }
                     $this->driver->createGroup($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getUserLdapIds($ugroup->getID()));
                     $good_ugroups[] = $ugroup;
                 }
             } catch (Exception $e) {
                 // Continue with the next group
             }
-
         }
+
+        $parent_project_name = $repository->getProject()->getUnixName();
+
+        if (! $this->driver->parentProjectExists($gerrit_server, $parent_project_name)) {
+            $parent_project_name = $this->driver->createParentProject($gerrit_server, $repository, $admin_group);
+        }
+
+        $gerrit_project = $this->driver->createProject($gerrit_server, $repository, $parent_project_name);
 
         $this->initiatePermissions(
             $repository,
@@ -146,7 +149,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         $ugroups_write  = array();
         $ugroups_rewind = array();
 
-        $admin_group = null;
         foreach ($ugroups as $ugroup) {
             if(in_array($ugroup->getId(), $ugroup_ids_read)) {
                 $ugroups_read[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
@@ -157,16 +159,12 @@ class Git_Driver_Gerrit_ProjectCreator {
             if (in_array($ugroup->getId(), $ugroup_ids_rewind)) {
                 $ugroups_rewind[] = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
             }
-            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
-                $admin_group = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
-            }
         }
 
         if (in_array(UGroup::REGISTERED, $ugroup_ids_read) && $this->shouldAddRegisteredUsers($repository)) {
             $ugroups_read[] = 'Registered Users';
         }
 
-        $this->addToSection('refs', 'owner', "group $admin_group");
         $this->addToSection('refs', 'Read', "group $replication_group");
 
         /*if ($this->shouldAddRegisteredUsers($repository) && !in_array(UGroup::REGISTERED, $ugroup_ids_read)) {
