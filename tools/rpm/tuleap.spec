@@ -575,8 +575,8 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 # Plugin mediawiki
 %if %{php_base} == php53
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
-%{__mkdir} -p /var/lib/codendi/plugins/mediawiki/master
-%{__chown} -R codendiadm:codendiadm /var/lib/codendi/plugins/
+%{__mkdir} -p $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/mediawiki/master
+%{__chown} -R codendiadm:codendiadm $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/
 %endif
 ##
 ## On package install
