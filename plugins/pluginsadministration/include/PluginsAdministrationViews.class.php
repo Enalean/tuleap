@@ -79,36 +79,41 @@ class PluginsAdministrationViews extends Views {
     }
     
     function confirmInstall() {
-        $request =& HTTPRequest::instance();
-        $browse = true;
-        if ($request->exist('name')) {
-            $plugin_manager = $this->plugin_manager;
-            $plugin =& $plugin_manager->getPluginByName($request->get('name'));
-            if(!$plugin) {
-                echo '<p>You\'re about to install '. $request->get('name') .'.</p>';
-                $readme_file    = $plugin_manager->getInstallReadme($request->get('name'));
-                $readme_content = $plugin_manager->fetchFormattedReadme($readme_file);
-                if ($readme_content) {
-                    echo '<p>Please read the following:</p>';
-                    echo $readme_content;
-                }
-                $this->displayConfirmationInstallForm($request->get('name'));
-                $browse = false;
-            }
-        }
-        if ($browse) {
+        $name = HTTPRequest::instance()->get('name');
+        if ($this->isPluginAlreadyInstalled($name)) {
             $this->browse();
+            return;
         }
-    }
 
-    private function displayConfirmationInstallForm($name) {
         $dependencies = $this->dependency_solver->getUnmetInstalledDependencies($name);
         if ($dependencies) {
             $error_msg = $GLOBALS['Language']->getText('plugin_pluginsadministration', 'error_install_dependency');
             $this->displayDependencyError($dependencies, $error_msg);
+            $this->displayInstallReadme($name);
             return;
         }
 
+        echo '<p>You\'re about to install '. $name .'.</p>';
+        $this->displayInstallReadme($name);
+        $this->displayConfirmationInstallForm($name);
+    }
+
+    private function isPluginAlreadyInstalled($name) {
+        if ($this->plugin_manager->getPluginByName($name)) {
+            return true;
+        }
+        return false;
+    }
+
+    private function displayInstallReadme($name) {
+        $readme_file    = $this->plugin_manager->getInstallReadme($name);
+        $readme_content = $this->plugin_manager->fetchFormattedReadme($readme_file);
+        if ($readme_content) {
+            echo $readme_content;
+        }
+    }
+
+    private function displayConfirmationInstallForm($name) {
         echo '<form action="?" method="GET">';
         echo '<input type="hidden" name="action" value="install" />';
         echo '<input type="hidden" name="name" value="'. $name .'" />';
@@ -129,12 +134,14 @@ class PluginsAdministrationViews extends Views {
         $request =& HTTPRequest::instance();
         if (! $request->exist('plugin_id')) {
             $this->browse();
+            return;
         }
 
         $plugin_manager = $this->plugin_manager;
         $plugin = $plugin_manager->getPluginById((int)$request->get('plugin_id'));
         if (! $plugin) {
             $this->browse();
+            return;
         }
 
         $dependencies = $this->dependency_solver->getInstalledDependencies($plugin);
