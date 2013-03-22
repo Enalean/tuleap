@@ -1127,7 +1127,14 @@ class Tracker_Report extends Error implements Tracker_Dispatchable_Interface {
                 }
                 break;
             case 'toggle-advanced':
-                if ($this->userCanUpdate($current_user) && $request->get('field')) {
+                if ($request->get('field')) {
+                    
+                    $ff = $this->getFormElementFactory();
+                    $field = $ff->getFormElementById($request->get('field'));
+                    if (! $field->userCanRead($current_user)) {
+                        break;
+                    }
+
                     $this->toggleAdvancedCriterion($request->get('field'));
                     $this->report_session->setHasChanged();
                     if ($request->isAjax()) {
