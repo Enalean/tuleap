@@ -86,8 +86,8 @@ class Git_Driver_Gerrit_createProjectTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itExecutesTheCreateCommandForParentProjectOnTheGerritServer() {
-        expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project --permissions-only firefox")->once();
-        $this->driver->createParentProject($this->gerrit_server, $this->repository);
+        expect($this->ssh)->execute($this->gerrit_server, "gerrit create-project --permissions-only firefox --owner firefox/project_admins")->once();
+        $this->driver->createParentProject($this->gerrit_server, $this->repository, 'firefox/project_admins');
     }
 
     public function itReturnsTheNameOfTheCreatedProject() {
