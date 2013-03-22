@@ -50,21 +50,19 @@ class Git_Driver_Gerrit_MembershipManager {
         if ($user->getLdapId()) {
 
             //if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
-            $repositories = $this->git_repository_factory->getAllRepositories($project);
+            $remote_servers = $this->gerrit_server_factory->getServersForProject($project);
             //} else {
             //    $repositories = $this->git_repository_factory->getGerritRepositoriesWithPermissionsForUGroup($project, $ugroup, $user);
             //}
             //foreach ($repositories as $repository_with_permissions) {
-            if ($repositories) {
-                $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repositories[0], $ugroup, $command);
+            foreach ($remote_servers as $remote_server) {
+                $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $remote_server, $ugroup, $command);
             }
         }
     }
 
-    private function updateUserGerritGroupsAccordingToPermissions(PFUser $user, Project $project, GitRepository $repository, UGroup $ugroup, Git_Driver_Gerrit_MembershipCommand $command) {
-        $remote_server   = $this->gerrit_server_factory->getServer($repository);
+    private function updateUserGerritGroupsAccordingToPermissions(PFUser $user, Project $project, Git_RemoteServer_GerritServer $remote_server, UGroup $ugroup, Git_Driver_Gerrit_MembershipCommand $command) {
         $command->execute($remote_server, $user, $project, $ugroup);
-        
     }
 }
 ?>
