@@ -88,6 +88,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_change_user_permissions');
         $this->_addHook('project_admin_ugroup_deletion');
         $this->_addHook('project_admin_remove_user_from_project_ugroups');
+        $this->_addHook('project_admin_ugroup_creation');
     }
 
     public function site_admin_option_hook() {
@@ -689,6 +690,21 @@ class GitPlugin extends Plugin {
         return new Git_Driver_Gerrit_MembershipManager($repository_factory, $server_factory);
     }
 
+    public function project_admin_ugroup_creation($params) {
+
+        $project_manager = ProjectManager::instance();
+        $project = $project_manager->getProject($params['group_id']);
+
+        $ugroup_manager = new UGroupManager();
+        $ugroup = $ugroup_manager->getUGroup($project, $params['ugroup_id']);
+
+        $server_factory = $this->getGerritServerFactory();
+        $servers = $server_factory->getServersForProject($project);
+
+        foreach ($servers as $server) {
+            $this->getGerritDriver()->createGroup($server, $project->getUnixName() .'/'. $ugroup->getNormalizedName(), $ugroup->getUserLdapIds($ugroup->getID()));
+        }
+    }
 
     /**
      * List plugin's widgets in customize menu

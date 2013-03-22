@@ -33,6 +33,12 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchAllByProjectId($project_id) {
+        $sql = "SELECT * FROM plugin_git_remote_servers WHERE id IN
+            (SELECT distinct remote_server_id FROM plugin_git WHERE project_id = $project_id)";
+        return $this->retrieve($sql);
+    }
+
     public function save($id, $host, $ssh_port, $http_port, $login, $identity_file) {
         $id            = $this->da->escapeInt($id);
         $host          = $this->da->quoteSmart($host);
