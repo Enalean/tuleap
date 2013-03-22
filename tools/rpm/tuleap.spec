@@ -392,14 +392,17 @@ Requires: %{PKG_NAME}-plugin-doaprdf
 This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
 
+%if %{php_base} == php53
 %package plugin-mediawiki
 Summary: Mediawiki plugin
 Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}-plugin-mediawiki
+Requires: %{PKG_NAME}
+Requires: php53-mediawiki-tuleap
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
+%endif
 
 #
 ## Themes
@@ -570,8 +573,11 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 
 # Plugin mediawiki
+%if %{php_base} == php53
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
-
+%{__mkdir} -p /var/lib/codendi/plugins/mediawiki/master
+%{__chown} -R codendiadm:codendiadm /var/lib/codendi/plugins/
+%endif
 ##
 ## On package install
 ##
@@ -824,7 +830,6 @@ fi
 %{APP_DIR}/src/www/project
 %{APP_DIR}/src/www/projects
 %{APP_DIR}/src/www/reference
-%{APP_DIR}/src/www/robots.txt.php
 %{APP_DIR}/src/www/scripts
 %{APP_DIR}/src/www/search
 %{APP_DIR}/src/www/service
@@ -991,10 +996,12 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
 
+%if %{php_base} == php53
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
 %dir %{APP_DATA_DIR}/mediawiki
+%endif
 
 #
 # Themes
