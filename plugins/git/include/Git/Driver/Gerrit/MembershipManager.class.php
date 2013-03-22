@@ -49,20 +49,21 @@ class Git_Driver_Gerrit_MembershipManager {
     public function updateUserMembership(PFUser $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
         if ($user->getLdapId()) {
 
-            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
-                $repositories = $this->git_repository_factory->getAllGerritRepositoriesFromProject($project, $user);
-            } else {
-                $repositories = $this->git_repository_factory->getGerritRepositoriesWithPermissionsForUGroup($project, $ugroup, $user);
-            }
-            foreach ($repositories as $repository_with_permissions) {
-                $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repository_with_permissions, $command);
+            //if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
+            $repositories = $this->git_repository_factory->getAllRepositories($project);
+            //} else {
+            //    $repositories = $this->git_repository_factory->getGerritRepositoriesWithPermissionsForUGroup($project, $ugroup, $user);
+            //}
+            //foreach ($repositories as $repository_with_permissions) {
+            if ($repositories) {
+                $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repositories[0], $ugroup, $command);
             }
         }
     }
 
-    private function updateUserGerritGroupsAccordingToPermissions(PFUser $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions, Git_Driver_Gerrit_MembershipCommand $command) {
-        $remote_server   = $this->gerrit_server_factory->getServer($repository_with_permissions->getRepository());
-        $command->execute($remote_server, $user, $project, $repository_with_permissions);
+    private function updateUserGerritGroupsAccordingToPermissions(PFUser $user, Project $project, GitRepository $repository, UGroup $ugroup, Git_Driver_Gerrit_MembershipCommand $command) {
+        $remote_server   = $this->gerrit_server_factory->getServer($repository);
+        $command->execute($remote_server, $user, $project, $ugroup);
         
     }
 }

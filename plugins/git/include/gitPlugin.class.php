@@ -656,7 +656,6 @@ class GitPlugin extends Plugin {
             $this->getGerritDriver(),
             $this->getGerritUserFinder()
         );
-
         $this->updateUserMembership($command, $params);
     }
 
