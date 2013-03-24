@@ -47,6 +47,11 @@ abstract class TuleapTestCase extends UnitTestCase {
     private $globals;
 
     /**
+     * @var String Path to a directory where temporary things can be done
+     */
+    private $tmp_dir;
+
+    /**
      * SetUp a test (called before each test)
      */
     public function setUp() {
@@ -69,6 +74,7 @@ abstract class TuleapTestCase extends UnitTestCase {
         if ($this->globals !== null) {
             $GLOBALS = $this->globals;
         }
+        $this->removeTmpDir();
     }
 
     function getTests() {
@@ -216,6 +222,14 @@ abstract class TuleapTestCase extends UnitTestCase {
         return $this->assertEqual(count($array), $expected_count);
     }
 
+    protected function assertFileExists($path) {
+        return $this->assertTrue(is_file($path));
+    }
+
+    protected function assertFileDoesntExist($path) {
+        return $this->assertFalse(is_file($path));
+    }
+
     /**
      * Recursive rm function.
      * see: http://us2.php.net/manual/en/function.rmdir.php#87385
@@ -233,15 +247,39 @@ abstract class TuleapTestCase extends UnitTestCase {
 
                 $typepath = $mypath . "/" . $file ;
 
-                if ( is_dir($typepath) ) {
+                if (is_file($typepath) || is_link($typepath)) {
+                    unlink($typepath);
+                } else {
                     $this->recurseDeleteInDir($typepath);
                     rmdir($typepath);
-                } else {
-                    unlink($typepath);
                 }
             }
         }
         closedir($d);
+    }
+
+    /**
+     * Creates a tmpDir and returns the path (dir automtically deleted in tearDown)
+     */
+    protected function getTmpDir() {
+        if (!$this->tmp_dir) {
+            clearstatcache();
+            do {
+                $this->tmp_dir = '/tmp/tuleap_tests_'.rand(0,10000);
+            } while (file_exists($this->tmp_dir));
+        }
+        if (!is_dir($this->tmp_dir)) {
+            mkdir($this->tmp_dir, 0700, true);
+        }
+        return $this->tmp_dir;
+    }
+
+    private function removeTmpDir() {
+        if ($this->tmp_dir && file_exists($this->tmp_dir)) {
+            $this->recurseDeleteInDir($this->tmp_dir);
+            rmdir($this->tmp_dir);
+        }
+        clearstatcache();
     }
 }
 ?>

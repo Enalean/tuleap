@@ -1060,7 +1060,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
       <itemizedlist mark="bullet" spacing="compact">
 	<listitem>
-	  <para><emphasis role="bold">Outil de suivi</emphasis> :
+	  <para><emphasis role="bold">Outil de suivi version 3</emphasis> :
 	  toutes les données des artefacts, l'historique de leurs
 	  modifications et leurs dépendances peuvent être exportés
 	  pour chaque outil de suivi.</para>
@@ -1345,7 +1345,7 @@ ces patrons de référence sont définis par l'administrateur du site et sont co
 
 
    <section id="TrackerImport">
-      <title>Importation d'artefacts dans les outils de suivi</title>
+      <title>Importation d'artefacts dans les outils de suivi version 3</title>
 
       <para><emphasis>Emplacement : contenu de la page d'administration</emphasis></para>
       <para>Reportez vous à la <xref linkend="ArtifactImport" />.</para>

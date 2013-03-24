@@ -115,7 +115,7 @@ NB: Original OsdnNavBar has been removed from first cell. <td align="center">'.$
         $this->generic_header($params);
         ?>
 
-<body>
+<body class="<?php echo $this->getClassnamesForBodyTag() ?>">
 <div id="wrapper">
 
 <?php

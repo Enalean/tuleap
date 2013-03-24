@@ -1,3 +1,12 @@
+Version 5.0.8 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
+Version 5.0.7 - Tuleap 5.12
+    * Slices in pie/bar charts now is the same that the color attributed to the field in the tracker. (Contrib JTEKT)
+
+Version 5.0.6 - Tuleap 5.11
+    * This fix art #2192 - Cannot sort the Gantt renderer
+
 Version 5.0.5 - Tuleap 5.7
     * Convert tracker v3 structure to a tracker v5
 

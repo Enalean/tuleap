@@ -24,16 +24,12 @@ Mock::generatePartial('SystemEventManager', 'SystemEventManagerTestVersion', arr
 Mock::generate('SystemEventDao');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 
 class SystemEventManagerTest extends UnitTestCase {
-    
-    public function __construct($name = 'SystemEventManager test') {
-        parent::__construct($name);
-    }
     
     public function testConcatParameters() {
         $sem = new SystemEventManagerTestVersion($this);
@@ -53,7 +49,7 @@ class SystemEventManagerTest extends UnitTestCase {
      * 'toto' can be renamed if he is not already scheduled for rename
      */
     public function testCanRenameUser() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 102);
 
         $seDao = new MockSystemEventDao($this);
@@ -70,7 +66,7 @@ class SystemEventManagerTest extends UnitTestCase {
     }
 
     public function testCanRenameUserWithUserAlreadyQueudedForRename() {
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 102);
 
         $seDao = new MockSystemEventDao($this);

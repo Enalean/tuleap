@@ -94,5 +94,12 @@ abstract class Tracker_Artifact_ChangesetValue {
      * @return string The value of this artifact changeset value
      */
     public abstract function getValue();
+
+    /**
+     * By default, changeset values are returned as string in 'value' field
+     */
+    protected function encapsulateRawSoapValue($value) {
+        return array('value' => (string)$value);
+    }
 }
 ?>

@@ -72,7 +72,7 @@ class Planning_MilestoneFactory {
     /**
      * @return array of Planning_Milestone (the last $number_to_fetch open ones for the given $planning)
      */
-    public function getLastOpenMilestones(User $user, Planning $planning, $number_to_fetch) {
+    public function getLastOpenMilestones(PFUser $user, Planning $planning, $number_to_fetch) {
         $artifacts           = $this->getLastOpenArtifacts($user, $planning, $number_to_fetch);
         $number_of_artifacts = count($artifacts);
         $current_index       = 0;
@@ -84,59 +84,54 @@ class Planning_MilestoneFactory {
         return $milestones;
     }
 
-    private function getLastOpenArtifacts(User $user, Planning $planning, $number_to_fetch) {
+    private function getLastOpenArtifacts(PFUser $user, Planning $planning, $number_to_fetch) {
         $artifacts  = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         ksort($artifacts);
         return array_slice($artifacts, - $number_to_fetch);
     }
 
-    private function getPlannedArtifactsForLatestMilestone(User $user, Tracker_Artifact $artifact, $current_index, $number_of_artifacts) {
+    private function getPlannedArtifactsForLatestMilestone(PFUser $user, Tracker_Artifact $artifact, $current_index, $number_of_artifacts) {
         if ($current_index >= $number_of_artifacts) {
             return $this->getPlannedArtifacts($user, $artifact);
         }
     }
 
     /**
-     * Loads the milestone matching the given planning and artifact ids.
+     * A Bare Milestone is a milestone with minimal information to display (ie. without planned artifacts).
      *
-     * Also loads:
-     *   - the planning this milestone belongs to
-     *   - the planning tracker and the backlog trackers of this planning
-     *   - the artifacts planned for this milestone
+     * It would deserve a dedicated object but it's a bit complex to setup today due to
+     * MilestoneController::getAlreadyPlannedArtifacts()
      *
      * Only objects that should be visible for the given user are loaded.
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Project $project
-     * @param int $planning_id
-     * @param int $artifact_id
-     *
+     * @param Integer $planning_id
+     * @param Integer $artifact_id
+     * 
      * @return Planning_Milestone
      */
-    public function getMilestoneWithPlannedArtifacts(User $user, Project $project, $planning_id, $artifact_id) {
+    public function getBareMilestone(PFUser $user, Project $project, $planning_id, $artifact_id) {
         $planning = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifact = $this->artifact_factory->getArtifactById($artifact_id);
 
-        if ($artifact) {
-            $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
-            $this->removeSubMilestones($user, $artifact, $planned_artifacts);
-
-            $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
-            return $this->updateMilestoneContextualInfo($user, $milestone);
+        if ($artifact && $artifact->userCanView($user)) {
+            $milestone = new Planning_ArtifactMilestone($project, $planning, $artifact);
+            $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
+            $this->updateMilestoneContextualInfo($user, $milestone);
+            return $milestone;
         } else {
             return new Planning_NoMilestone($project, $planning);
         }
     }
 
-    private function updateMilestoneContextualInfo(User $user, Planning_ArtifactMilestone $milestone) {
+    private function updateMilestoneContextualInfo(PFUser $user, Planning_ArtifactMilestone $milestone) {
         return $milestone
-            ->setCapacity($this->getComputedFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME))
-            ->setRemainingEffort($this->getComputedFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME))
             ->setStartDate($this->getTimestamp($user, $milestone, Planning_Milestone::START_DATE_FIELD_NAME))
             ->setDuration($this->getComputedFieldValue($user, $milestone, Planning_Milestone::DURATION_FIELD_NAME));
     }
 
-    private function getTimestamp(User $user, Planning_ArtifactMilestone $milestone, $field_name) {
+    private function getTimestamp(PFUser $user, Planning_ArtifactMilestone $milestone, $field_name) {
         $milestone_artifact = $milestone->getArtifact();
         $field              = $this->formelement_factory->getUsedFieldByNameForUser($milestone_artifact->getTracker()->getId(), $field_name, $user);
 
@@ -152,7 +147,7 @@ class Planning_MilestoneFactory {
         return $value->getTimestamp();
     }
 
-    private function getComputedFieldValue(User $user, Planning_ArtifactMilestone $milestone, $field_name) {
+    protected function getComputedFieldValue(PFUser $user, Planning_ArtifactMilestone $milestone, $field_name) {
         $milestone_artifact = $milestone->getArtifact();
         $field = $this->formelement_factory->getComputableFieldByNameForUser(
             $milestone_artifact->getTracker()->getId(),
@@ -166,13 +161,46 @@ class Planning_MilestoneFactory {
     }
 
     /**
+     * Add planned artifacts to Planning_Milestone
+     *
+     * Only objects that should be visible for the given user are loaded.
+     *
+     * @param PFUser $user
+     *
+     */
+    public function updateMilestoneWithPlannedArtifacts(PFUser $user, Planning_Milestone $milestone) {
+        $planned_artifacts = $this->getPlannedArtifacts($user, $milestone->getArtifact());
+        $this->removeSubMilestones($user, $milestone->getArtifact(), $planned_artifacts);
+
+        $milestone->setPlannedArtifacts($planned_artifacts);
+    }
+
+    /**
+     * Return a MilestonePlan object properly configured
+     *
+     * @param PFUser               $user
+     * @param Planning_Milestone $milestone
+     *
+     * @return Planning_MilestonePlan
+     */
+    public function getMilestonePlan(PFUser $user, Planning_Milestone $milestone) {
+        $this->updateMilestoneWithPlannedArtifacts($user, $milestone);
+        return new Planning_MilestonePlan(
+            $milestone,
+            $this->getSubMilestones($user, $milestone),
+            $this->getComputedFieldValue($user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME),
+            $this->getComputedFieldValue($user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME)
+        );
+    }
+
+    /**
      * Removes the sub-milestone artifacts from an artifacts tree.
      *
-     * @param User             $user               The user accessing the data
+     * @param PFUser             $user               The user accessing the data
      * @param Tracker_Artifact $milestone_artifact The parent artifact of sub-milestones artifacts
      * @param TreeNode         $artifacts_tree     The artifacts tree to clean up
      */
-    private function removeSubMilestones(User $user, Tracker_Artifact $milestone_artifact, TreeNode $artifacts_tree) {
+    private function removeSubMilestones(PFUser $user, Tracker_Artifact $milestone_artifact, TreeNode $artifacts_tree) {
         $hierarchy_children_ids = $this->getSubMilestonesArtifactIds($user, $milestone_artifact);
 
         foreach ($artifacts_tree->getChildren() as $node) {
@@ -185,13 +213,13 @@ class Planning_MilestoneFactory {
     /**
      * Retrieves the artifacts planned for the given milestone artifact.
      *
-     * @param User             $user
+     * @param PFUser             $user
      * @param Planning         $planning
      * @param Tracker_Artifact $milestone_artifact
      *
      * @return TreeNode
      */
-    public function getPlannedArtifacts(User             $user,
+    public function getPlannedArtifacts(PFUser             $user,
                                         Tracker_Artifact $milestone_artifact) {
         if ($milestone_artifact == null) return; //it is not possible!
 
@@ -211,7 +239,7 @@ class Planning_MilestoneFactory {
      *
      * @return boolean
      */
-    private function addChildrenPlannedArtifacts(User             $user,
+    private function addChildrenPlannedArtifacts(PFUser             $user,
                                                  Tracker_Artifact $artifact,
                                                  TreeNode         $parent_node,
                                                  array            $parents) {
@@ -239,7 +267,7 @@ class Planning_MilestoneFactory {
      *
      * @return array of Planning_Milestone
      */
-    public function getSubMilestones(User $user, Planning_Milestone $milestone) {
+    public function getSubMilestones(PFUser $user, Planning_Milestone $milestone) {
         $milestone_artifact = $milestone->getArtifact();
         $sub_milestones     = array();
 
@@ -261,24 +289,24 @@ class Planning_MilestoneFactory {
     /**
      * Retrieves the sub-milestones of a given parent milestone artifact.
      *
-     * @param User             $user
+     * @param PFUser             $user
      * @param Tracker_Artifact $milestone_artifact
      *
      * @return array of Tracker_Artifact
      */
-    private function getSubMilestonesArtifacts(User $user, Tracker_Artifact $milestone_artifact) {
+    private function getSubMilestonesArtifacts(PFUser $user, Tracker_Artifact $milestone_artifact) {
         return array_values($milestone_artifact->getHierarchyLinkedArtifacts($user));
     }
 
     /**
      * Retrieves the sub-milestones aids of a given parent milestone artifact.
      *
-     * @param User             $user
+     * @param PFUser             $user
      * @param Tracker_Artifact $milestone_artifact
      *
      * @return array of int
      */
-    private function getSubMilestonesArtifactIds(User $user, Tracker_Artifact $milestone_artifact) {
+    private function getSubMilestonesArtifactIds(PFUser $user, Tracker_Artifact $milestone_artifact) {
         return array_map(array($this, 'getArtifactId'),
                          $this->getSubMilestonesArtifacts($user, $milestone_artifact));
     }
@@ -295,44 +323,28 @@ class Planning_MilestoneFactory {
     }
 
     /**
-     * Loads the milestone matching the given planning and artifact ids.
-     *
-     * Also loads:
-     *   - the planning this milestone belongs to
-     *   - the planning tracker and the backlog trackers of this planning
-     *   - the artifacts planned for this milestone
-     *   - the sub-milestones
-     *
-     * @param User $user
-     * @param int  $group_id
-     * @param int  $planning_id
-     * @param int  $artifact_id
-     *
-     * @return Planning_Milestone
-     */
-    public function getMilestoneWithPlannedArtifactsAndSubMilestones(User $user, $group_id, $planning_id, $artifact_id) {
-        $milestone = $this->getMilestoneWithPlannedArtifacts($user, $group_id, $planning_id, $artifact_id);
-        $milestone->addSubMilestones($this->getSubMilestones($user, $milestone));
-        $milestone->setAncestors($this->getMilestoneAncestors($user, $milestone));
-        return $milestone;
-    }
-
-    /**
      * Loads all open milestones for the given project and planning
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Project $project
      * @param Planning $planning
      *
      * @return Array of \Planning_Milestone
      */
-    public function getAllMilestones(User $user, Planning $planning) {
+    public function getAllMilestones(PFUser $user, Planning $planning) {
         $project = $planning->getPlanningTracker()->getProject();
         $milestones = array();
         $artifacts  = $this->artifact_factory->getArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         foreach ($artifacts as $artifact) {
-            $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
-            $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
+            /** @todo: this test is only here if we have crappy data in the db
+             * ie. an artifact creation failure that leads to an incomplete artifact.
+             * this should be fixed in artifact creation (transaction & co) and after
+             * DB clean, the following test can be removed.
+             */
+            if ($artifact->getLastChangeset()) {
+                $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
+                $milestones[]      = new Planning_ArtifactMilestone($project, $planning, $artifact, $planned_artifacts);
+            }
         }
         return $milestones;
     }
@@ -344,7 +356,7 @@ class Planning_MilestoneFactory {
      *
      * @return Planning_ArtifactMilestone
      */
-    public function getMilestoneFromArtifactWithPlannedArtifacts(Tracker_Artifact $artifact, User $user) {
+    public function getMilestoneFromArtifactWithPlannedArtifacts(Tracker_Artifact $artifact, PFUser $user) {
         $planned_artifacts = $this->getPlannedArtifacts($user, $artifact);
         return $this->getMilestoneFromArtifact($artifact, $planned_artifacts);
     }
@@ -359,6 +371,10 @@ class Planning_MilestoneFactory {
     public function getMilestoneFromArtifact(Tracker_Artifact $artifact, TreeNode $planned_artifacts = null) {
         $tracker  = $artifact->getTracker();
         $planning = $this->planning_factory->getPlanningByPlanningTracker($tracker);
+        if ( ! $planning) {
+            return null;
+        }
+
         return new Planning_ArtifactMilestone($tracker->getProject(), $planning, $artifact, $planned_artifacts);
     }
 
@@ -368,12 +384,12 @@ class Planning_MilestoneFactory {
      * The array starts with current milestone, until the "oldest" ancestor
      * 0 => Sprint, 1 => Release, 2=> Product
      *
-     * @param User               $user
+     * @param PFUser               $user
      * @param Planning_Milestone $milestone
      *
      * @return Array of Planning_Milestone
      */
-    public function getMilestoneAncestors(User $user, Planning_Milestone $milestone) {
+    public function getMilestoneAncestors(PFUser $user, Planning_Milestone $milestone) {
         $parent_milestone   = array();
         $milestone_artifact = $milestone->getArtifact();
         if ($milestone_artifact) {
@@ -382,18 +398,19 @@ class Planning_MilestoneFactory {
                 $parent_milestone[] = $this->getMilestoneFromArtifact($artifact);
             }
         }
+        $parent_milestone = array_filter($parent_milestone);
         return $parent_milestone;
     }
 
     /**
      * Get all milestones that share the same parent than given milestone.
      *
-     * @param User $user
+     * @param PFUser $user
      * @param Planning_Milestone $milestone
      *
      * @return Array of Planning_Milestone
      */
-    public function getSiblingMilestones(User $user, Planning_Milestone $milestone) {
+    public function getSiblingMilestones(PFUser $user, Planning_Milestone $milestone) {
         $sibling_milestones = array();
         $milestone_artifact = $milestone->getArtifact();
         if ($milestone_artifact) {
@@ -411,12 +428,12 @@ class Planning_MilestoneFactory {
     /**
      * Get the top most recent milestone (last created artifact in planning tracker)
      *
-     * @param User    $user
+     * @param PFUser    $user
      * @param Integer $planning_id
      *
      * @return Planning_Milestone
      */
-    public function getCurrentMilestone(User $user, $planning_id) {
+    public function getCurrentMilestone(PFUser $user, $planning_id) {
         $planning  = $this->planning_factory->getPlanningWithTrackers($planning_id);
         $artifacts = $this->artifact_factory->getOpenArtifactsByTrackerIdUserCanView($user, $planning->getPlanningTrackerId());
         if (count($artifacts) > 0) {

@@ -36,6 +36,8 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
 
     protected $identity_file = '/path/to/codendiadm/.ssh/id_rsa';
 
+    protected $replication_key;
+
     /** @var Git_Driver_Gerrit_RemoteSSHConfig */
     private $config;
 
@@ -51,10 +53,12 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             array('sshExec')
         );
 
+        $this->replication_key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+
         $this->logger = mock('Logger');
 
         $this->ssh->__construct($this->logger);
-        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->ssh_port, $this->http_port, $this->login, $this->identity_file);
+        $this->config = new Git_RemoteServer_GerritServer(1, $this->host, $this->ssh_port, $this->http_port, $this->login, $this->identity_file, $this->replication_key);
     }
 
     public function itExecutesTheCreateCommandOnTheRemoteServer() {
@@ -120,7 +124,6 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
     }
     
     public function itRemovesTemporaryFiles() {
-        $nb_files_b4 = count(scandir('/tmp'));
         $ssh_command = new Git_Driver_Gerrit_RemoteSSHCommand(mock('Logger'));
         try {
             $ssh_command->execute($this->config, 'someFailingCommand');
@@ -128,9 +131,7 @@ class Git_Driver_Gerrit_RemoteSSHCommand_Test extends TuleapTestCase {
             
         }
 
-        $nb_files_after = count(scandir('/tmp'));
-        $this->assertEqual($nb_files_b4, $nb_files_after, 
-                "expected number of files in /tmp to be the same before ($nb_files_b4) and after ($nb_files_after) the test");
+        $this->assertFalse(file_exists($ssh_command->getStdErrFilePath()));
     }
 
     public function itReturnsStdout(){

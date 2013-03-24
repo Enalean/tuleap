@@ -400,7 +400,7 @@ class Docman_ItemFactory {
      * Build the list in depth, level per level, from root to leaves.
      * 
      * @param Docman_Item $rootItem
-     * @param User $user
+     * @param PFUser $user
      * @param boolean $ignorePerms
      * @param boolean $expandAll
      * @param boolean $ignoreObsolete
@@ -1058,7 +1058,7 @@ class Docman_ItemFactory {
      * returned.
      * If no item match, returns false.
      * 
-     * @param User    $user
+     * @param PFUser    $user
      * @param Integer $groupId
      * 
      * @return Integer or false.
@@ -1243,12 +1243,12 @@ class Docman_ItemFactory {
      * It's the recommended and official way to delete a file in the docman
      *
      * @param Docman_Item $item        Item to delete
-     * @param User        $user        User who performs the delete
+     * @param PFUser        $user        User who performs the delete
      * @param Boolean     $cascadeWiki If there are wiki documents, do we delete corresponding in wiki page too ?
      * 
      * @return Boolean success
      */
-    public function deleteSubTree(Docman_Item $item, User $user, $cascadeWiki) {
+    public function deleteSubTree(Docman_Item $item, PFUser $user, $cascadeWiki) {
         if($item && !$this->isRoot($item)) {
             // Cannot delete one folder if at least on of the document inside
             // cannot be deleted

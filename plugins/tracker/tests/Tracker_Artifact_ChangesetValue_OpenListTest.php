@@ -18,6 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 require_once('bootstrap.php');
+require_once('Tracker_Artifact_ChangesetValue_ListTest.php');
 Mock::generate('Tracker_FormElement_Field_OpenList');
 Mock::generate('Tracker_FormElement_Field_List_OpenValue');
 
@@ -42,7 +43,7 @@ class Tracker_Artifact_ChangesetValue_OpenListTest extends Tracker_Artifact_Chan
         $value_list = new $this->changesetvalue_class(111, $field, false, array($bind_value));
         $this->assertEqual(count($value_list), 1);
         $this->assertEqual($value_list[0], $bind_value);
-        $this->assertEqual($value_list->getSoapValue(), "Reopen");
+        $this->assertEqual($value_list->getSoapValue(), array('bind_value' => array(array('bind_value_id' => 106, 'bind_value_label' => "Reopen"))));
         $this->assertEqual($value_list->getValue(), array('b106'));
     }
     

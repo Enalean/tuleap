@@ -203,7 +203,7 @@ class Tracker_Artifact_ChangesetValue_ArtifactLinkTest extends TuleapTestCase {
     function testSoapValue() {
         $field      = new $this->field_class();
         $value_list = new $this->changesetvalue_class(111, $field, false, array('123' => $this->artlink_info_123, '321' => $this->artlink_info_321, '999' => $this->artlink_info_999));
-        $this->assertEqual($value_list->getSoapValue(), "123, 321, 999");
+        $this->assertEqual($value_list->getSoapValue(), array('value' => "123, 321, 999"));
     }
 }
 

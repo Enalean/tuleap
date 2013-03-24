@@ -162,25 +162,6 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
     }
 
     /**
-     * Get available values of this field for SOAP usage
-     * Fields like int, float, date, string don't have available values
-     *
-     * @return mixed The values or null if there are no specific available values
-     */
-    public function getSoapAvailableValues() {
-        $values      = $this->getAllValues();
-        $soap_values = array();
-        foreach ($values as $id => $value) {
-            $soap_values[] = array(
-                'field_id'         => $this->field->getId(),
-                'bind_value_id'    => $id,
-                'bind_value_label' => $value->getUGroupName(),
-            );
-        }
-        return $soap_values;
-    }
-
-    /**
      * Get the field data for artifact submission
      *
      * @param string  $soap_value  the soap field value (username(s))
@@ -631,6 +612,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups extends Tracker_FormElement_Fi
      */
     public function fixOriginalValueIds(array $value_mapping) {
         // Nothing to do: user value ids stay the same accross projects.
+    }
+
+    protected function getSoapBindingList() {
+        // returns empty array as ugroups are already listed in 'values'
+        return array();
     }
 }
 

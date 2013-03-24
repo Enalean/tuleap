@@ -233,7 +233,7 @@ class Tracker_CrossSearch_SearchViewTest extends TuleapTestCase {
     }
 
     private function setContentView($report, $criteria, $root, $artifact_factory, $shared_factory) {
-        $user = mock('User');
+        $user = mock('PFUser');
         $this->content_view = new Tracker_CrossSearch_SearchContentView($report, $criteria, $root, $artifact_factory, $shared_factory, $user);
     }
 }

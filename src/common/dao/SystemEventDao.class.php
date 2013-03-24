@@ -29,13 +29,14 @@ class SystemEventDao extends DataAccessObject {
      * Create new SystemEvent and store it in the DB
      * @return true if there is no error
      */
-    function store($type, $parameters, $priority,$status, $create_date) {
-        $sql = sprintf("INSERT INTO system_event (type, parameters, priority, status, create_date) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d))",
+    function store($type, $parameters, $priority,$status, $create_date, $owner) {
+        $sql = sprintf("INSERT INTO system_event (type, parameters, priority, status, create_date, owner) VALUES (%s, %s, %d, %s, FROM_UNIXTIME(%d), %s)",
                        $this->da->quoteSmart($type),
                        $this->da->quoteSmart($parameters),
                        $this->da->escapeInt($priority),
                        $this->da->quoteSmart($status),
-                       $this->da->escapeInt($create_date));
+                       $this->da->escapeInt($create_date),
+                       $this->da->quoteSmart($owner));
         
         return $this->updateAndGetLastId($sql);
     }
@@ -64,9 +65,9 @@ class SystemEventDao extends DataAccessObject {
      * And set the event status to 'RUNNING'
      * @return DataAccessResult
     */
-    function checkOutNextEvent() {
+    function checkOutNextEvent($owner) {
         // Get Id of next event to process
-        $sql = "SELECT id FROM system_event WHERE status='".SystemEvent::STATUS_NEW."' ORDER BY priority, create_date LIMIT 1";
+        $sql = "SELECT id FROM system_event WHERE status='".SystemEvent::STATUS_NEW."' and owner=".$this->da->quoteSmart($owner)." ORDER BY priority, create_date LIMIT 1";
         $dar = $this->retrieve($sql);
         if($dar && !$dar->isError()) {
             // Mark event as 'RUNNING'

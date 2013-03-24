@@ -77,7 +77,7 @@ codendi.tracker.bind.Editor = Class.create({
     accordionForBindTypes: function () {
         if ($('tracker-bind-factory')) {
             $('tracker-bind-factory').select('input[name="formElement_data[bind-type]"]').each(function (selector) {
-                selector.observe('change', function () {
+                selector.observe('click', function () {
                     if (this.checked) {
                         this.up('#tracker-bind-factory').select('.tracker-bind-def').invoke('hide');
                         this.up('.tracker-bind-type').next('.tracker-bind-def').show();

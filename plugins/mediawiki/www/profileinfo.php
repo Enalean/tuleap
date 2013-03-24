@@ -1,0 +1,1 @@
+/usr/share/mediawiki_tuleap/profileinfo.php

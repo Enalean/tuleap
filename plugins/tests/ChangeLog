@@ -1,3 +1,9 @@
+Version 5.17 - Tuleap 5.12
+    * Enhancement: add a tab on top of artifact to display its children
+
+Version 5.16 - Tuleap 5.11
+    * include mocha test suite
+
 Version 5.15 - Tuleap 5.9
     * Add autoload to trackers
 

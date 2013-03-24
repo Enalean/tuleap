@@ -26,7 +26,7 @@ Mock::generate('FRSPackageFactory');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSReleaseFactory.class.php');
 Mock::generate('FRSReleaseFactory');
 require_once (dirname(__FILE__).'/../../../src/common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once (dirname(__FILE__).'/../../../src/common/project/Project.class.php');
 Mock::generate('Project');
 require_once (dirname(__FILE__).'/../../../src/common/frs/FRSPackage.class.php');
@@ -186,7 +186,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
 
@@ -205,7 +205,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
 
@@ -224,7 +224,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
 
@@ -243,7 +243,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
 
@@ -262,7 +262,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
 
@@ -281,7 +281,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', false);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
 
@@ -300,7 +300,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
 
@@ -320,7 +320,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
 
@@ -339,7 +339,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), false);
 
@@ -358,7 +358,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
 
@@ -377,7 +377,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
 
@@ -396,7 +396,7 @@ class WebDAVFRSPackageTest extends UnitTestCase {
         $webDAVFRSPackage->setReturnValue('userIsAdmin', true);
 
         $webDAVFRSPackage->setReturnValue('getPackage', $package);
-        $user = new MockUser();
+        $user = mock('PFUser');
 
         $this->assertEqual($webDAVFRSPackage->userCanRead($user), true);
 

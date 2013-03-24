@@ -22,7 +22,7 @@
 require_once(dirname(__FILE__).'/../../include/system_event/SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN.class.php');
 
 Mock::generate('Project');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 
 class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {
@@ -30,6 +30,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {
     function testUpdateShouldUpdateAllProjects() {
         $id           = 1002;
         $type         = LDAP_UserManager::EVENT_UPDATE_LOGIN;
+        $owner        = SystemEvent::OWNER_ROOT;
         $parameters   = '101::102';
         $priority     = SystemEvent::PRIORITY_MEDIUM;
         $status       = SystemEvent::STATUS_RUNNING;
@@ -40,10 +41,10 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {
         
         $se = TestHelper::getPartialMock('SystemEvent_PLUGIN_LDAP_UPDATE_LOGIN', array('getUserManager', 'getBackendSVN', 'getProject'));
         
-        $user1 = new MockUser();
+        $user1 = mock('PFUser');
         $user1->setReturnValue('getAllProjects', array(201, 202));
         $user1->setReturnValue('isActive', true);
-        $user2 = new MockUser();
+        $user2 = mock('PFUser');
         $user2->setReturnValue('getAllProjects', array(202, 203));
         $user2->setReturnValue('isActive', true);
         $um = new MockUserManager();
@@ -65,7 +66,7 @@ class SystemEvent_PLUGIN_LDAP_UPDATE_LOGINTest extends UnitTestCase {
         $backend->expect('updateProjectSVNAccessFile', array($prj3));
         $se->setReturnValue('getBackendSVN', $backend);
         
-        $se->__construct($id, $type, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
+        $se->__construct($id, $type, $owner, $parameters, $priority, $status, $create_date, $process_date, $end_date, $log);
         $se->process();
     }
 }

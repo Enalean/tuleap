@@ -43,7 +43,9 @@ class Git_Exec {
      * @throw Git_Command_Exception
      */
     public function mv($from, $to) {
-        $cmd = 'git mv '.escapeshellarg($from) .' '. escapeshellarg($to);
+        $to_name = basename($to);
+        $to_path = realpath(dirname($to)).'/'.$to_name;
+        $cmd     = 'mv '.escapeshellarg(realpath($from)) .' '. escapeshellarg($to_path);
         return $this->gitCmd($cmd);
     }
 
@@ -56,7 +58,7 @@ class Git_Exec {
      * @throw Git_Command_Exception
      */
     public function add($file) {
-        $cmd = 'git add '.escapeshellarg($file);
+        $cmd = 'add '.escapeshellarg(realpath($file));
         return $this->gitCmd($cmd);
     }
 
@@ -70,7 +72,7 @@ class Git_Exec {
      */
     public function rm($file) {
         if ($this->canRemove($file)) {
-            $cmd = 'git rm '.escapeshellarg($file);
+            $cmd = 'rm '.escapeshellarg(realpath($file));
             return $this->gitCmd($cmd);
         }
         return true;
@@ -78,7 +80,7 @@ class Git_Exec {
 
     private function canRemove($file) {
         $output = array();
-        $this->execInPath('git status --porcelain '.escapeshellarg($file), $output);
+        $this->gitCmdWithOutput('status --porcelain '.escapeshellarg(realpath($file)), $output);
         return count($output) == 0;
     }
 
@@ -94,7 +96,7 @@ class Git_Exec {
      */
     public function commit($message) {
         if ($this->isThereAnythingToCommit()) {
-            $cmd = 'git commit -m '.escapeshellarg($message);
+            $cmd = 'commit -m '.escapeshellarg($message);
             return $this->gitCmd($cmd);
         }
         return true;
@@ -107,7 +109,7 @@ class Git_Exec {
      * @throw Git_Command_Exception
      */
     public function push() {
-        $cmd = 'git push origin master';
+        $cmd = 'push origin master';
         return $this->gitCmd($cmd);
     }
 
@@ -119,7 +121,7 @@ class Git_Exec {
      */
     public function isThereAnythingToCommit() {
         $output = array();
-        $this->execInPath('git status --porcelain', $output);
+        $this->gitCmdWithOutput('status --porcelain', $output);
         foreach ($output as $status_line) {
             if (preg_match('/^[ADMR]/', $status_line)) {
                 return true;
@@ -128,16 +130,27 @@ class Git_Exec {
         return false;
     }
 
+    /**
+     *
+     * @return string The git repository path where we operate
+     */
+    public function getPath() {
+        return $this->path;
+    }
+
     protected function gitCmd($cmd) {
         $output = array();
+        return $this->gitCmdWithOutput($cmd, $output);
+    }
+
+    protected function gitCmdWithOutput($cmd, &$output) {
         return $this->execInPath($cmd, $output);
     }
 
     protected function execInPath($cmd, &$output) {
-        $cwd = getcwd();
-        chdir($this->path);
-        exec("$cmd 2>&1", $output, $retVal);
-        chdir($cwd);
+        $retVal = 1;
+        $git = 'git --work-tree='.escapeshellarg($this->path).' --git-dir='.escapeshellarg($this->path.'/.git');
+        exec("$git $cmd 2>&1", $output, $retVal);
         if ($retVal == 0) {
             return true;
         } else {

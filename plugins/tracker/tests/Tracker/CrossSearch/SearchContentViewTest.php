@@ -55,7 +55,7 @@ class Tracker_CrossSearch_SearchContentViewTest extends TuleapTestCase {
         $report   = $report ? $report : mock('Tracker_Report');
         $criteria = $this->buildCriteria($report);
         $factory  = $this->buildAFormElementFactory();
-        $user     = mock('User');
+        $user     = mock('PFUser');
         $view     = new Tracker_CrossSearch_SearchContentView($report,
                                                               $criteria,
                                                               $tree_of_artifacts,
@@ -143,7 +143,7 @@ class Tracker_CrossSearch_SearchContentView_ArtifactLinkTest extends TuleapTestC
         $factory           = new MockTracker_FormElementFactory();
         $tracker           = new MockTracker();
         $artifact          = new MockTracker_Artifact();
-        $this->user              = mock('User');
+        $this->user              = mock('PFUser');
         
         $artifact->setReturnValue('getTracker', $tracker);
         

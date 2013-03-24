@@ -1,0 +1,12 @@
+#
+# Regular cron jobs for the plugin-mediawiki package
+#
+
+PATH=@BINARY_PATH@:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+# Create new mediawikis four times an hour
+0,15,30,45 * * * * root forge_run_plugin_job mediawiki create-wikis.php
+1,16,31,46 * * * * root forge_run_plugin_job mediawiki create-imagedirs.php
+
+# Create wiki XML dumps every night
+55 1 * * * root forge_run_plugin_job mediawiki dump-wikis.php

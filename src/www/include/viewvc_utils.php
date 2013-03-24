@@ -82,7 +82,7 @@ function viewvc_utils_passcommand() {
            'HTTP_USER_AGENT="'.getStringFromServer('HTTP_USER_AGENT').'" '.
            'HTTP_ACCEPT_ENCODING="'.getStringFromServer('HTTP_ACCEPT_ENCODING').'" '.
            'HTTP_ACCEPT_LANGUAGE="'.getStringFromServer('HTTP_ACCEPT_LANGUAGE').'" '.
-           'PATH_INFO="'.$path.'" '.
+           'PATH_INFO='.escapeshellarg($path).' '.
            'PATH="'.getStringFromServer('PATH').'" '.
            'HTTP_HOST="'.getStringFromServer('HTTP_HOST').'" '.
            'DOCUMENT_ROOT="'.getStringFromServer('DOCUMENT_ROOT').'" '.

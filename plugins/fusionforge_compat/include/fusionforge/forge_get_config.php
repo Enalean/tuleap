@@ -25,10 +25,10 @@ function forge_get_config($key) {
         'forge_name'        => 'sys_name',
         //'lists_host'        => 'sys_lists_host',
         //'config_path'       => 'sys_custom_dir',
-        //'database_host'     => 'sys_dbhost',
-        //'database_user'     => 'sys_dbuser',
-        //'database_name'     => 'sys_dbname',
-        //'database_password' => 'sys_dbpasswd',
+        'database_host'     => 'sys_dbhost',
+        'database_user'     => 'sys_dbuser',
+        'database_name'     => 'sys_dbname',
+        'database_password' => 'sys_dbpasswd',
     );
     if (isset($conf_variables_mapping[$key])) {
         $key = $conf_variables_mapping[$key];

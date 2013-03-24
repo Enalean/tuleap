@@ -40,6 +40,7 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
                                 'plugins/foafprofiles',
                                 'plugins/fusionforge_compat',
                                 'tools/utils/releases_notes',
+                                'plugins/mediawiki',
                                 )) .')$`';
         
         //Those files are allowed to contains something before opening tag
@@ -68,6 +69,8 @@ class BlankAfterClosingPhpTagTest extends UnitTestCase {
             'plugins/tracker/www/group_selection.php',
             'src/www/scripts/check_pw.js.php',
             'src/www/scripts/cross_references.js.php',
+            'plugins/tests/www/mocha/src/core/check_pw.js.php',
+            'plugins/tests/www/mocha/src/core/cross_references.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerArtifact.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerReports.js.php',
             'plugins/tracker/www/scripts/codendi/TrackerAdminFields.js.php',

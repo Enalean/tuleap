@@ -1,3 +1,21 @@
+Version 2.7.32 - Tuleap 5.12
+    * Use Gerrit replication mecanism to propagate gerrit changes onto Tuleap
+
+Version 2.7.31 - Tuleap 5.12
+    * Development: SystemEvents can now be processed by application owner instead of root
+
+Version 2.7.30 - Tuleap 5.12
+    * Replicate user groups modification to gerrit for migrate repositories
+
+Version 2.7.29 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
+Version 2.7.28 - Tuleap 5.12
+    * Fix a warning when non project admin does a personal fork
+
+Version 2.7.27 - Tuleap 5.12
+    * Check that gitolite authorized_keys is not empty && add a script to automaticaly recover this file
+
 Version 2.7.26 - Tuleap 5.11
     * Fix regression introduced in git 2.7.24
     * No longer need to pass a view to the tree strategy

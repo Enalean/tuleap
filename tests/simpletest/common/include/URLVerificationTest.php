@@ -19,7 +19,7 @@
  */
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/project/Project.class.php');
 Mock::generate('Project');
 require_once('common/project/ProjectManager.class.php');
@@ -317,7 +317,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $GLOBALS['sys_allow_anon'] = 1;
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
@@ -336,7 +336,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $GLOBALS['sys_allow_anon'] = 1;
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
 
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
@@ -357,7 +357,7 @@ class URLVerificationTest extends TuleapTestCase {
         $GLOBALS['sys_allow_anon'] = 0;
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
@@ -380,7 +380,7 @@ class URLVerificationTest extends TuleapTestCase {
         $GLOBALS['sys_allow_anon'] = 0;
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
@@ -403,7 +403,7 @@ class URLVerificationTest extends TuleapTestCase {
         $GLOBALS['sys_allow_anon'] = 0;
         $GLOBALS['sys_https_host'] = 'secure.example.com';
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', true);
 
         $GLOBALS['Language']->setReturnValue('getContent', $this->fixtures.'/empty.txt');
@@ -424,7 +424,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $GLOBALS['sys_allow_anon'] = 0;
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isAnonymous', false);
 
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
@@ -514,7 +514,7 @@ class URLVerificationTest extends TuleapTestCase {
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $project = new MockProject();
         $project->setReturnValue('isActive', false);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
         $this->assertTrue($urlVerification->userCanAccessProject($project));
@@ -524,7 +524,7 @@ class URLVerificationTest extends TuleapTestCase {
         $urlVerification = partial_mock('URLVerification', array('getCurrentUser', 'getEventManager'));
         $project = new MockProject();
         $project->setReturnValue('isActive', false);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isSuperUser', false);
         $urlVerification->setReturnValue('getCurrentUser', $user);
         $this->assertFalse($urlVerification->userCanAccessProject($project));
@@ -613,7 +613,7 @@ class URLVerificationTest extends TuleapTestCase {
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project, array(120));
         $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true, array(120));
         $urlVerification->setReturnValue('getCurrentUser', $user);
         
@@ -629,7 +629,7 @@ class URLVerificationTest extends TuleapTestCase {
         $projectManager = new MockProjectManager();
         $projectManager->setReturnValue('getProject', $project, array(120));
         $urlVerification->setReturnValue('getProjectManager', $projectManager);
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', false);
         $urlVerification->setReturnValue('getCurrentUser', $user);
         
@@ -643,7 +643,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 
@@ -665,7 +665,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 
@@ -687,7 +687,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 
@@ -709,7 +709,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 
@@ -731,7 +731,7 @@ class URLVerificationTest extends TuleapTestCase {
 
         $urlVerification->setReturnValue('getUrl', '/search/');
 
-        $user = new MockUser();
+        $user = new MockPFUser();
         $user->setReturnValue('isRestricted', true);
         $urlVerification->setReturnValue('getCurrentUser', $user);
 

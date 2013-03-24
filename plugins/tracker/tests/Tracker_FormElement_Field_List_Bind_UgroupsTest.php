@@ -190,13 +190,11 @@ class Tracker_FormElement_Field_List_Bind_Ugroups_SOAPTest extends Tracker_FormE
         $this->assertEqual(count($bind->getSoapAvailableValues()), 2);
         $soap_values = array(
             array(
-                'field_id'         => $this->field_id,
-                'bind_value_id'    => 1,
+                'bind_value_id'    => 4545,
                 'bind_value_label' => 'ugroup_project_members_name_key',
             ),
             array(
-                'field_id'         => $this->field_id,
-                'bind_value_id'    => 2,
+                'bind_value_id'    => 687,
                 'bind_value_label' => 'Customers',
             )
         );

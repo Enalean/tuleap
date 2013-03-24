@@ -273,11 +273,12 @@ class SystemEventManager {
     /**
      * Create a new event, store it in the db and send notifications
      */
-    public function createEvent($type, $parameters, $priority) {
-        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'])) {
+    public function createEvent($type, $parameters, $priority,$owner=SystemEvent::OWNER_ROOT) {
+        if ($id = $this->dao->store($type, $parameters, $priority, SystemEvent::STATUS_NEW, $_SERVER['REQUEST_TIME'],$owner)) {
             $klass = 'SystemEvent_'. $type;
             $sysevent = new $klass($id, 
-                                   $type, 
+                                   $type,
+                                   $owner,
                                    $parameters,
                                    $priority, 
                                    SystemEvent::STATUS_NEW, 
@@ -343,6 +344,7 @@ class SystemEventManager {
         if (!empty($klass)) {
             $sysevent = new $klass($row['id'],
                                    $row['type'],
+                                   $row['owner'],
                                    $row['parameters'],
                                    $row['priority'],
                                    $row['status'],
@@ -397,6 +399,7 @@ class SystemEventManager {
             $html .= '<thead><tr>';
             $html .= '<th class="boxtitle">'. 'id' .'</td>';
             $html .= '<th class="boxtitle">'. 'type' .'</td>';
+            $html .= '<th class="boxtitle">'. 'owner' .'</td>';
             $html .= '<th class="boxtitle" style="text-align:center">'. 'status' .'</th>';
             $html .= '<th class="boxtitle" style="text-align:center">'. 'priority' .'</th>';
             $html .= '<th class="boxtitle">'. 'parameters' .'</th>';
@@ -437,6 +440,8 @@ class SystemEventManager {
                 
                 //name of the event
                 $html .= '<td>'. $sysevent->getType() .'</td>';
+
+                $html .= '<td>'. $sysevent->getOwner() .'</td>';
                 
                 //status
                 $html .= '<td class="system_event_status_'. $row['status'] .'"';
@@ -523,7 +528,7 @@ class SystemEventManager {
     /**
      * Return true if there is no pending rename event of this user, otherwise false
      * 
-     * @param User $user 
+     * @param PFUser $user 
      * @return Boolean
      */
     public function canRenameUser($user) {
@@ -533,7 +538,7 @@ class SystemEventManager {
     /**
      * Return true if there is no pending rename event of this project, otherwise false
      * 
-     * @param User $user 
+     * @param PFUser $user 
      * @return Boolean
      */
     public function canRenameProject($project) {

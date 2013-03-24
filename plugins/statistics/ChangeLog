@@ -1,3 +1,6 @@
+Version 0.23 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 0.22 - Tuleap 5.6
     * Fix git statistics (contrib STMicroelectronics)
 

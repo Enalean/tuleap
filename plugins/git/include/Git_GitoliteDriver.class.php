@@ -28,6 +28,7 @@ require_once 'GitDao.class.php';
 require_once 'Git_PostReceiveMailManager.class.php';
 require_once 'PathJoinUtil.php';
 require_once 'Git_Exec.class.php';
+require_once dirname(__FILE__).'/exceptions/GitAuthorizedKeysFileException.class.php';
 
 
 /**
@@ -54,10 +55,6 @@ class Git_GitoliteDriver {
     protected $oldCwd;
     protected $confFilePath;
     protected $adminPath;
-    /**
-     * @var Git_Gitolite_SSHKeyDumper
-     */
-    protected $dumper;
 
     public static $permissions_types = array(
         Git::PERM_READ  => ' R  ',
@@ -65,20 +62,21 @@ class Git_GitoliteDriver {
         Git::PERM_WPLUS => ' RW+'
     );
 
+    CONST OLD_AUTHORIZED_KEYS_PATH = "/usr/com/gitolite/.ssh/authorized_keys";
+    CONST NEW_AUTHORIZED_KEYS_PATH = "/var/lib/gitolite/.ssh/authorized_keys";
+
     /**
      * Constructor
      *
      * @param string $adminPath The path to admin folder of gitolite. 
      *                          Default is $sys_data_dir . "/gitolite/admin"
      */
-    public function __construct($adminPath = null, Git_Exec $gitExec = null, Git_Gitolite_SSHKeyDumper $dumper = null) {
+    public function __construct($adminPath = null, Git_Exec $gitExec = null) {
         if (!$adminPath) {
             $adminPath = $GLOBALS['sys_data_dir'] . '/gitolite/admin';
         }
         $this->setAdminPath($adminPath);
         $this->gitExec = $gitExec ? $gitExec : new Git_Exec($adminPath);
-        
-        $this->dumper = $dumper ? $dumper : new Git_Gitolite_SSHKeyDumper($this->adminPath, $this->gitExec, UserManager::instance());
     }
 
     public function repoFullName(GitRepository $repo, $unix_name) {
@@ -159,16 +157,6 @@ class Git_GitoliteDriver {
         }
         return true;
     }
-    
-    /**
-     * Dump ssh keys into gitolite conf
-     */
-    public function dumpSSHKeys(User $user = null) {
-        if ($this->dumper->dumpSSHKeys($user)) {
-            return $this->push();
-        }
-        return false;
-    }
 
     /**
      * Save on filesystem all permission configuration for a project
@@ -207,6 +195,7 @@ class Git_GitoliteDriver {
         $repository->setDescription($row[GitDao::REPOSITORY_DESCRIPTION]);
         $repository->setMailPrefix($row[GitDao::REPOSITORY_MAIL_PREFIX]);
         $repository->setNamespace($row[GitDao::REPOSITORY_NAMESPACE]);
+        $repository->setRemoteServerId($row[GitDao::REMOTE_SERVER_ID]);
         return $repository;
     }
     
@@ -215,8 +204,14 @@ class Git_GitoliteDriver {
         $repo_config  = 'repo '. $repo_full_name . PHP_EOL;
         $repo_config .= $this->fetchMailHookConfig($project, $repository);
         $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_READ);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
-        $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        if ($repository->isMigratedToGerrit()) {
+            $key = new Git_RemoteServer_Gerrit_ReplicationSSHKey();
+            $key->setGerritHostId($repository->getRemoteServerId());
+            $repo_config .= self::$permissions_types[Git::PERM_WPLUS] . ' = ' .$key->getUserName() . PHP_EOL;
+        } else {
+            $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WRITE);
+            $repo_config .= $this->fetchConfigPermissions($project, $repository, Git::PERM_WPLUS);
+        }
         
         $description = preg_replace( "%\s+%", ' ', $repository->getDescription());
         $repo_config .= "$repo_full_name = \"$description\"".PHP_EOL;
@@ -386,6 +381,20 @@ class Git_GitoliteDriver {
         } else {
             throw new Git_Command_Exception($cmd, $output, $retVal);
         }
+    }
+
+    public function checkAuthorizedKeys() {
+        $authorized_keys_file = $this->getAuthorizedKeysPath();
+        if (filesize($authorized_keys_file) == 0) {
+            throw new GitAuthorizedKeysFileException($authorized_keys_file);
+        }
+    }
+
+    private function getAuthorizedKeysPath() {
+        if (!file_exists(self::OLD_AUTHORIZED_KEYS_PATH)) {
+            return self::NEW_AUTHORIZED_KEYS_PATH;
+        }
+        return self::OLD_AUTHORIZED_KEYS_PATH;
     }
 
 }

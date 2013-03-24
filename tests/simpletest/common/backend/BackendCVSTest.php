@@ -26,7 +26,7 @@ require_once('common/backend/BackendCVS.class.php');
 require_once('common/user/UserManager.class.php');
 Mock::generate('UserManager');
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/project/ProjectManager.class.php');
 Mock::generate('ProjectManager');
 require_once('common/project/Project.class.php');
@@ -379,7 +379,7 @@ class BackendCVSTest extends UnitTestCase {
         $backend = new BackendCVS4RenameCVSNT($this);
 
         // The user
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('getId', array(142));
        
         $project1 = new MockProject($this);

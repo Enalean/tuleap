@@ -615,7 +615,7 @@ BODY {
 
 </head>
 
-<body>
+<body class="<?php echo $this->getClassnamesForBodyTag() ?>">
 
 <table border="0" width="100%" cellspacing="0" cellpadding="0">
 

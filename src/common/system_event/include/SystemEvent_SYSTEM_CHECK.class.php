@@ -89,7 +89,7 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // (re-)create missing home directories
         $user_manager     = UserManager::instance();
         $userdao          = new UserDao();
-        $allowed_statuses = array(User::STATUS_ACTIVE, User::STATUS_RESTRICTED);
+        $allowed_statuses = array(PFUser::STATUS_ACTIVE, PFUser::STATUS_RESTRICTED);
         $dar              = $userdao->searchByStatus($allowed_statuses);
         foreach($dar as $row) {
             $user = $user_manager->getUserInstanceFromRow($row);
@@ -162,6 +162,16 @@ class SystemEvent_SYSTEM_CHECK extends SystemEvent {
         // If no codendi_svnroot.conf file, force recreate.
         if (!is_file($GLOBALS['svn_root_file'])) {
             $backendSVN->setSVNApacheConfNeedUpdate();
+        }
+
+        try {
+            EventManager::instance()->processEvent(
+                Event::PROCCESS_SYSTEM_CHECK,
+                null
+            );
+        } catch(Exception $exception) {
+            $this->error($exception->getMessage());
+            return false;
         }
         
         $this->done();

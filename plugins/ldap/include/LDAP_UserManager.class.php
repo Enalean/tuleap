@@ -79,7 +79,7 @@ class LDAP_UserManager {
     /**
      * Get LDAPResult object corresponding to a User object
      * 
-     * @param  User $user
+     * @param  PFUser $user
      * @return LDAPResult
      */
     function getLdapFromUser($user) {
@@ -117,7 +117,7 @@ class LDAP_UserManager {
      *
      * @param LDAPResult $lr The LDAP result
      *
-     * @return User
+     * @return PFUser
      */
     function getUserFromLdap(LDAPResult $lr) {
         $user = $this->getUserManager()->getUserByLdapId($lr->getEdUid());
@@ -234,7 +234,7 @@ class LDAP_UserManager {
      * Create user account based on LDAPResult info.
      *
      * @param  LDAPResult $lr
-     * @return User
+     * @return PFUser
      */
     function createAccountFromLdap(LDAPResult $lr) {
     	return $this->createAccount($lr->getEdUid(), $lr->getLogin(), $lr->getCommonName(), $lr->getEmail());
@@ -247,14 +247,14 @@ class LDAP_UserManager {
      * @param  String $uid
      * @param  String $cn
      * @param  String $email
-     * @return User
+     * @return PFUser
      */
     function createAccount($eduid, $uid, $cn, $email) {
         if(trim($uid) == '' || trim($eduid) == '') {
             return false;
         }
 
-        $user = new User();
+        $user = new PFUser();
         $user->setUserName($this->generateLogin($uid));
         $user->setLdapId($eduid);
         $user->setRealName($cn);
@@ -284,12 +284,12 @@ class LDAP_UserManager {
     /**
      * Synchronize user account with LDAP informations
      *
-     * @param  User       $user
+     * @param  PFUser       $user
      * @param  LDAPResult $lr
      * @param  String     $password
      * @return Boolean
      */
-    function synchronizeUser(User $user, LDAPResult $lr, $password) {
+    function synchronizeUser(PFUser $user, LDAPResult $lr, $password) {
         $user->setPassword($password);
 
         $sync = LDAP_UserSync::instance();
@@ -314,12 +314,12 @@ class LDAP_UserManager {
      * Force update of SVNAccessFile in project the user belongs to as 
      * project member or user group member
      * 
-     * @param User    $user    The user to update 
+     * @param PFUser    $user    The user to update 
      * @param String  $ldapUid New LDAP login
      * 
      * @return Boolean
      */
-    function updateLdapUid(User $user, $ldapUid) {
+    function updateLdapUid(PFUser $user, $ldapUid) {
         if ($this->getDao()->updateLdapUid($user->getId(), $ldapUid)) {
             $this->addUserToRename($user);
             return true;
@@ -339,9 +339,9 @@ class LDAP_UserManager {
     /**
      * Add a user whom login changed to the rename pipe
      * 
-     * @param User $user A user to rename
+     * @param PFUser $user A user to rename
      */
-    public function addUserToRename(User $user) {
+    public function addUserToRename(PFUser $user) {
         $this->usersLoginChanged[] = $user;
     }
 

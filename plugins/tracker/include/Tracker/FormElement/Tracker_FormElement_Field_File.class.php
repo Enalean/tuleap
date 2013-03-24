@@ -181,8 +181,8 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
      * @return string
      */
     public function fetchMailArtifactValue(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null, $format='text') {
-        if ( empty($value) ) {
-            return '';
+        if ( empty($value) || ! $value->getFiles()) {
+            return '-';
         }
         $output = '';
         return $this->fetchMailAllAttachment($artifact->id, $value, $format);
@@ -868,7 +868,7 @@ class Tracker_FormElement_Field_File extends Tracker_FormElement_Field {
         return array();
     }
 
-    public function getFieldDataFromSoapValue(stdClass $soap_value) {
+    public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
         return $this->getFieldData($soap_value->field_value);
     }
 

@@ -45,7 +45,7 @@ Mock::generate('Tracker_CrossSearch_SearchController');
 require_once('common/include/Codendi_Request.class.php');
 Mock::generate('Codendi_Request');
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/layout/Layout.class.php');
 Mock::generate('Layout');
 require_once('common/project/Project.class.php');
@@ -57,7 +57,7 @@ class TrackerManagerTest extends TuleapTestCase {
     
     public function setUp() {
         parent::setUp();
-        $this->user = new MockUser($this);
+        $this->user = mock('PFUser');
         $this->user->setReturnValue('getId', 666);
         
         $this->url = new MockTracker_URL();

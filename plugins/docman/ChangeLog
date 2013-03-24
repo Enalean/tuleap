@@ -1,3 +1,6 @@
+Version 2.26.14 - Tuleap 5.12
+    * Rename User class to PFUser to allow integration of mediawiki
+
 Version 2.26.13 - Tuleap 5.9
     * Fix: typo
 

@@ -392,6 +392,15 @@ Requires: %{PKG_NAME}-plugin-doaprdf
 This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
 
+%package plugin-mediawiki
+Summary: Mediawiki plugin
+Group: Development/Tools
+Version: @@PLUGIN_MEDIAWIKI_VERSION@@
+Release: 1%{?dist}
+Requires: %{PKG_NAME}-plugin-mediawiki
+%description plugin-mediawiki
+This plugin provides Mediawiki integration in Tuleap.
+
 #
 ## Themes
 #
@@ -559,6 +568,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
+
+# Plugin mediawiki
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
 
 ##
 ## On package install
@@ -978,6 +990,11 @@ fi
 %files plugin-foafprofiles
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/foafprofiles
+
+%files plugin-mediawiki
+%defattr(-,%{APP_USER},%{APP_USER},-)
+%{APP_DIR}/plugins/mediawiki
+%dir %{APP_DATA_DIR}/mediawiki
 
 #
 # Themes

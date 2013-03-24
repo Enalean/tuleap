@@ -19,7 +19,16 @@
 
 
 class Tracker_FormElement_View_Admin_Field_Burndown extends Tracker_FormElement_View_Admin_Field {
+    
+    public function fetchAdminSpecificProperties() {
+        $html = '';
+        
+        //required
+        $html .= $this->fetchRequired();
 
+        return $html;
+    }
+    
     protected function fetchRequired() {
         return '';
     }

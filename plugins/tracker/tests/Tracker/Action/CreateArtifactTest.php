@@ -22,7 +22,7 @@ require_once TRACKER_BASE_DIR . '/../tests/bootstrap.php';
 
 class Tracker_Action_CreateArtifact_ProtectedToPublic extends Tracker_Action_CreateArtifact {
 
-    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, User $current_user, Tracker_Artifact_Redirect $redirect) {
+    public function redirectToParentCreationIfNeeded(Tracker_Artifact $artifact, PFUser $current_user, Tracker_Artifact_Redirect $redirect) {
         parent::redirectToParentCreationIfNeeded($artifact, $current_user, $redirect);
     }
 

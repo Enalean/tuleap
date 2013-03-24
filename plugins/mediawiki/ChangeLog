@@ -1,0 +1,6 @@
+Version 0.2 - Tuleap 5.12
+    * Create the mediawiki database/filesystem when the service is used for a project
+
+Version 0.1
+
+	* Initial version of the plugin borrowed from fusionforge

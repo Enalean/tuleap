@@ -89,7 +89,7 @@ class Git_PostReceiveMailManager {
      * Remove a notified mail address from all private repositories of a project
      *
      * @param Integer $groupId Porject ID to remove its repositories notification
-     * @param User    $user    User to exclude from notification
+     * @param PFUser    $user    User to exclude from notification
      *
      * @return void
      */

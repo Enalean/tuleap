@@ -1,13 +1,40 @@
-Version 5.11 (Not Released Yet)
+Version 5.12 (Thursday, March 21st 2013)
+	== Plugins ==
+	* graphontrackersv5: 5.0.8
+	* tracker: 5.98
+	* agiledashboard: 0.77
+	* git: 2.7.32
+	* IM: 1.5.6
+	* admindelegation: 2.5
+	* cardwall: 0.9.22
+	* docman: 2.26.14
+	* docmanwatermark: 2.4
+	* forumml: 2.6.10
+	* fulltextsearch: 0.18
+	* fusionforge_compat: 0.2
+	* ldap: 3.27
+	* requesthelp: 1.3.2
+	* statistics: 0.23
+	* webdav: 1.9.2
+	* mediawiki: 0.2
+	* tests: 5.17
+
+  == Bug Fix ==
+	* Fix request #2817: When a service in iframe is created in template project, the "is in iframe" information were not propagated to other projects.
+	* Fix bugs #2901: When there are permissions set on fields and tracker, there are edge cases when we got a fatal error while updating an artifact in tracker v3
+
+Version 5.11 (Thursday, February 21st 2013)
 
 	== Plugins ==
-	* tracker: 5.79
-	* agiledashboard: 0.69
-	* cardwall: 0.9.15
+	* tracker: 5.88
+	* agiledashboard: 0.72
+	* cardwall: 0.9.18
 	* git: 2.7.26
-	* ldap: 3.24
-	* forumml: 2.6.7
-	* fulltextsearch: 0.14
+	* ldap: 3.25
+	* forumml: 2.6.8
+	* fulltextsearch: 0.16
+	* tests: 5.16
+	* graphontrackersv5: 5.0.6
 
    == Enhancement ==
     * Let the admin choose if the privacy of a project should be displayed (in widgets and in service bar)
@@ -17,6 +44,10 @@ Version 5.11 (Not Released Yet)
   == Bug Fix ==
     * Add missing php53-process dependency for posix functions
 	* Fix sla #813: Project administration page is distorded on IE when the custom notification message is long
+	* Fix bug #2317: Fatal error on the AccessLogs
+	* Fix sla #682 - Viewvc display issue for file which name contains "$"
+	* Fix missing blank.gif that pollutate error_log
+	* Fix footer link for Tuleap as well as copyright
 
 Version 5.9.1 (Thursday, January 24rd 2013)
 

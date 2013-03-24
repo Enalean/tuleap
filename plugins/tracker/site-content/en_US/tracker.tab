@@ -105,7 +105,7 @@ plugin_tracker_import	sample_cvs_file	Sample CSV file:
 plugin_tracker_import	import_new_hdr	Import Artifacts $1
 plugin_tracker_import	import_new_msg	You can import artifacts into this tracker by specifying a CSV file. <br>See the <a href="$1">CSV Import Format</a> for more details.
 plugin_tracker_import	upload_file	Upload File:	
-plugin_tracker_import	max_upload_size	(The maximum upload file size is $1 Mb)
+plugin_tracker_import	file_upload_instructions	(The maximum upload file size is $1 Mb. The file must be encoded in UTF-8)
 plugin_tracker_import	submit_info	Load artifacts
 plugin_tracker_import	send_notifications	Send Notifications:
 #
@@ -720,6 +720,7 @@ plugin_tracker_common_field	val_exist	This value id already exists.
 plugin_tracker_common_field	val_id_requ	Value id and value name are required.
 plugin_tracker_common_field	required	Required
 plugin_tracker_common_field	notifications	Send notifications to selected people
+plugin_tracker_common_field	use_capacity	Use "capacity" field for ideal initial effort
 #
 #-----------------------------------------------
 # Script: SF/common/tracker/ArtifactFieldFactory.class.php
@@ -994,6 +995,9 @@ plugin_tracker_artifact	mail_followup_by	By:
 plugin_tracker_artifact	not_logged_in	<strong><span class="highlight">You Are NOT Logged In<br />Please <a href="$1">log in,</a> so update notifications can be emailed to you.</span></strong><br />If you don't have a user account, then enter your email address instead:
 plugin_tracker_artifact	email_required	Email is required if you are not logged in.
 
+plugin_tracker_artifact	edit_title	Artifact
+plugin_tracker_artifact	hierarchy_title	Children
+
 plugin_tracker_artifactlink	go_to_tracker	Go see this tracker
 plugin_tracker_artifactlink	manual_panel_desc	If you know the artifact id, feel free to enter it manually in the text field below. Use a comma to separate each ids if you have more than one.
 plugin_tracker_artifactlink	manual_panel_label	Artifact id(s)
@@ -1090,7 +1094,9 @@ plugin_tracker_formelement_admin	switch_msb	Switch to Multi Select Box
 plugin_tracker_formelement_admin	switch_sb	Switch to Select Box
 plugin_tracker_formelement_admin	switch_cb	Switch to CheckBox
 plugin_tracker_formelement_admin	switch_type_confirm	Are you sure you want to change the type of thie field?
-plugin_tracker_formelement_admin	delete_field_impossible	Impossible to delete this field (used in semantics, workflow or field dependency)
+plugin_tracker_formelement_admin	field_used_in_semantics	Impossible to delete this field (used in semantics)
+plugin_tracker_formelement_admin	field_used_in_workflow	Impossible to delete this field (used in workflow)
+plugin_tracker_formelement_admin	field_used_in_field_dependencies	Impossible to delete this field (field dependencies)
 plugin_tracker_formelement_admin	hide_value_impossible	You can't hide this value since it is used in status semantic, in workflow or in  field dependency
 plugin_tracker_formelement_admin	hide_value	Show/hide this value
 plugin_tracker_formelement_admin	checkbox	Checkbox
@@ -1108,6 +1114,7 @@ plugin_tracker_formelement_property	cols	Columns
 plugin_tracker_formelement_property	static_value	Static value
 plugin_tracker_formelement_property	default_value_today	Today
 plugin_tracker_formelement_property	target_field_name	Target field
+plugin_tracker_formelement_property	use_capacity	Use "capacity" field for ideal initial effort
 
 plugin_tracker_formelement_exception	wrong_field_id	There is no field with ID:$1
 plugin_tracker_formelement_exception	permission_denied	Permission Denied
@@ -1177,6 +1184,8 @@ plugin_tracker_admin_semantic	bad_field_status	The field you submitted is not a 
 plugin_tracker_admin_semantic	status_impossible	You cannot define the <em>status</em> semantic since there isn't any list field in the tracker
 plugin_tracker_admin_semantic	status_now	The status is now bind to: $1
 plugin_tracker_admin_semantic	unable_save_status	Unable to save the status
+plugin_tracker_admin_semantic	status_Open	Open
+plugin_tracker_admin_semantic	status_Closed	Closed
 plugin_tracker_admin_semantic	tooltip_label	Tooltip
 plugin_tracker_admin_semantic	tooltip_description	Manage tooltip
 plugin_tracker_admin_semantic	tooltip_fields	The following fields will be displayed in the tooltip:

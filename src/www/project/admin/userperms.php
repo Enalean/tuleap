@@ -41,7 +41,7 @@ if ($project->isError()) {
 if (isset($submit)) {
     group_add_history ('changed_member_perm','',$group_id);
     
-    $res_dev = db_query("SELECT user_id FROM user_group WHERE group_id=$group_id");
+    $res_dev = db_query("SELECT * FROM user_group WHERE group_id=$group_id");
     while ($row_dev = db_fetch_array($res_dev)) {
         
         if($request ->exist("admin_user_$row_dev[user_id]")){
@@ -128,7 +128,8 @@ if (isset($submit)) {
             $em->processEvent('project_admin_change_user_permissions', array(
                 'group_id' => $group_id,
                 'user_id' => $row_dev['user_id'],
-                'user_permissions' => $user_permissions
+                'user_permissions' => $user_permissions,
+                'previous_permissions' => $row_dev,
             ));
         }
 	}

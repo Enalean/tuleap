@@ -50,25 +50,25 @@ abstract class Tracker_CrossSearch_ViewBuilder {
         $this->criteria_builder       = $criteria_builder;
     }
     
-    protected function getHierarchicallySortedArtifacts(User $user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids = array()) {
+    protected function getHierarchicallySortedArtifacts(PFUser $user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids = array()) {
         return $this->search->getHierarchicallySortedArtifacts($user, $project, $tracker_ids, $cross_search_query, $excluded_artifact_ids);
     }
     
     /**
      * Call getCriteria on this criteria_builder 
      * 
-     * @param User                      $user			 	an user
+     * @param PFUser                      $user			 	an user
      * @param Project                   $project			a project
      * @param Tracker_Report            $report				a tracker report
      * @param Tracker_CrossSearch_Query $cross_search_query a cross search query
      * 
      * @return array of Tracker_Report_Criteria
      */
-    protected function getCriteria(User $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
+    protected function getCriteria(PFUser $user, Project $project, Tracker_Report $report, Tracker_CrossSearch_Query $cross_search_query) {
         return $this->criteria_builder->getCriteria($user, $project, $report, $cross_search_query);
     }
     
-    protected function getReport(User $user) {
+    protected function getReport(PFUser $user, Project $project) {
         $name               = $GLOBALS['Language']->getText('plugin_tracker_homenav', 'search');
         $is_query_displayed = Toggler::shouldBeDisplayed($user, 'tracker_report_query_0', true);
         
@@ -76,17 +76,21 @@ abstract class Tracker_CrossSearch_ViewBuilder {
                    = $user_id = $is_default = $tracker_id = $updated_by = $updated_at
                    = 0;
         
-        return new Tracker_Report($report_id, 
-                                  $name, 
-                                  $description, 
-                                  $current_renderer_id, 
-                                  $parent_report_id, 
-                                  $user_id, 
-                                  $is_default, 
-                                  $tracker_id, 
-                                  $is_query_displayed, 
-                                  $updated_by, 
-                                  $updated_at);
+        $report = new Tracker_Report(
+            $report_id,
+            $name,
+            $description,
+            $current_renderer_id,
+            $parent_report_id,
+            $user_id,
+            $is_default,
+            $tracker_id,
+            $is_query_displayed,
+            $updated_by,
+            $updated_at
+        );
+        $report->setProjectId($project->getID());
+        return $report;
     }
     
 }

@@ -20,7 +20,7 @@
 require_once('www/project/admin/ugroup_utils.php');
 
 Mock::generate('UserManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UGroup');
 
 class UgroupUtilsTest extends UnitTestCase {
@@ -59,7 +59,7 @@ class UgroupUtilsTest extends UnitTestCase {
             MockFunction::setReturnValueAt(1 ,'db_fetch_array', array('user_id' => 2));
             MockFunction::setReturnValueAt(2 ,'db_fetch_array', null);
             MockFunction::expectCallCount('db_fetch_array', 3);
-            $user = new MockUser();
+            $user = mock('PFUser');
             $user->setReturnValue('isMember', true);
             $user->expectCallCount('isMeMber', 2);
             $um = new MockUserManager();
@@ -78,7 +78,7 @@ class UgroupUtilsTest extends UnitTestCase {
             MockFunction::setReturnValueAt(1 ,'db_fetch_array', array('user_id' => 2));
             MockFunction::setReturnValueAt(2 ,'db_fetch_array', null);
             MockFunction::expectCallCount('db_fetch_array', 3);
-            $user = new MockUser();
+            $user = mock('PFUser');
             $user->setReturnValue('isMember', false);
             $user->expectCallCount('isMeMber', 2);
             $um = new MockUserManager();
@@ -97,7 +97,7 @@ class UgroupUtilsTest extends UnitTestCase {
             MockFunction::setReturnValueAt(1 ,'db_fetch_array', array('user_id' => 2));
             MockFunction::setReturnValueAt(2 ,'db_fetch_array', null);
             MockFunction::expectCallCount('db_fetch_array', 3);
-            $user = new MockUser();
+            $user = mock('PFUser');
             $user->setReturnValueAt(0, 'isMember', true);
             $user->setReturnValueAt(1, 'isMember', false);
             $user->expectCallCount('isMeMber', 2);

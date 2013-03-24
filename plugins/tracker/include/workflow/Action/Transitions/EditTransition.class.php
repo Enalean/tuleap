@@ -32,12 +32,12 @@ class Tracker_Workflow_Action_Transitions_EditTransition extends Tracker_Workflo
         $this->post_action_factory = $post_action_factory;
     }
 
-    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, User $current_user) {
+    public function process(Tracker_IDisplayTrackerLayout $layout, Codendi_Request $request, PFUser $current_user) {
         $transition = $this->transition_factory->getTransition($request->get('edit_transition'));
         $this->displayTransitionDetails($layout, $request, $current_user, $transition);
     }
 
-    private function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, User $current_user, Transition $transition) {
+    private function displayTransitionDetails(TrackerManager $engine, Codendi_Request $request, PFUser $current_user, Transition $transition) {
         $hp = Codendi_HTMLPurifier::instance();
         $this->displayHeader($engine);
 

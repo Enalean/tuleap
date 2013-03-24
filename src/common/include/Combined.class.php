@@ -22,6 +22,8 @@
 class Combined {
     protected function getCombinedScripts() {
         $arr = array(
+            '/scripts/polyphills/json2.js',
+            '/scripts/polyphills/storage.js',
             '/scripts/prototype/prototype.js',
             '/scripts/protocheck/protocheck.js',
             '/scripts/scriptaculous/scriptaculous.js',
@@ -31,12 +33,15 @@ class Combined {
             '/scripts/scriptaculous/controls.js',
             '/scripts/scriptaculous/slider.js',
             '/scripts/scriptaculous/sound.js',
-            '/scripts/jquery/jquery-1.7.2.min.js',
+            '/scripts/jquery/jquery-1.9.1.min.js',
             '/scripts/jquery/jquery-ui.min.js',
             '/scripts/jquery/jquery-noconflict.js',
             '/scripts/bootstrap/bootstrap-dropdown.js',
             '/scripts/bootstrap/bootstrap-button.js',
+            '/scripts/AZHU/storage.js',
             '/scripts/codendi/common.js',
+            '/scripts/tuleap/systray.js',
+            '/scripts/tuleap/load-systray.js',
             '/scripts/codendi/feedback.js',
             '/scripts/codendi/CreateProject.js',
             '/scripts/codendi/cross_references.js',

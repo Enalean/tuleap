@@ -58,7 +58,7 @@ Mock::generatePartial(
 
 Mock::generate('Tracker_FormElement_Field_List_BindFactory');
 
-Mock::generate('Tracker_FormElement_Field_List_Bind');
+Mock::generate('Tracker_FormElement_Field_List_Bind_Static');
 
 Mock::generate('Tracker_FormElement_Field_List_BindValue');
 
@@ -90,21 +90,17 @@ Mock::generate('Tracker');
 Mock::generate('TransitionFactory');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 
 class Tracker_FormElement_Field_ListTest extends UnitTestCase {
-    
-    function __construct($name = 'Open List test') {
-        parent::__construct($name);
+
+    function setUp() {
         $this->field_class            = 'Tracker_FormElement_Field_ListTestVersion';
         $this->field_class_for_import = 'Tracker_FormElement_Field_ListTestVersion_ForImport';
         $this->dao_class              = 'MockTracker_FormElement_Field_Value_ListDao';
         $this->cv_class               = 'Tracker_Artifact_ChangesetValue_List';
         $this->mockcv_class           = 'MockTracker_Artifact_ChangesetValue_List';
-    }
-    
-    function setUp() {
         $GLOBALS['Response'] = new MockResponse();
         $GLOBALS['Language'] = new MockBaseLanguage();
     }
@@ -124,7 +120,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         $dar->setReturnValueAt(3, 'valid', false);
         $value_dao->setReturnReference('searchById', $dar);
         
-        $bind = new MockTracker_FormElement_Field_List_Bind();
+        $bind = new MockTracker_FormElement_Field_List_Bind_Static();
         $bind->setReturnValue('getBindValues', array_fill(0, 3, new MockTracker_FormElement_Field_List_BindValue()));
         
         $list_field = new $this->field_class();
@@ -223,11 +219,11 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     function testIsTransitionExist() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset();
-        $bind                 = new MockTracker_FormElement_Field_List_Bind();
+        $bind                 = new MockTracker_FormElement_Field_List_Bind_Static();
         $changeset_value_list = new $this->mockcv_class();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -285,10 +281,10 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     function testTransitionIsValidOnSubmit() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset_Null();
-        $bind                 = new MockTracker_FormElement_Field_List_Bind();
+        $bind                 = new MockTracker_FormElement_Field_List_Bind_Static();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -323,10 +319,10 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     function testTransitionIsInvalidOnSubmit() {
         $artifact             = new MockTracker_Artifact();
         $changeset            = new MockTracker_Artifact_Changeset_Null();
-        $bind                 = new MockTracker_FormElement_Field_List_Bind();
+        $bind                 = new MockTracker_FormElement_Field_List_Bind_Static();
         $workflow             = new MockWorkflow();
         $tracker              = new MockTracker();
-        $user                 = new MockUser();
+        $user                 = mock('PFUser');
         
         $v1 = new MockTracker_FormElement_Field_List_BindValue();
         $v1->setReturnValue('__toString', '# 123');
@@ -365,7 +361,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     }
     
     function testSoapAvailableValues() {
-        $bind = new MockTracker_FormElement_Field_List_Bind();
+        $bind = new MockTracker_FormElement_Field_List_Bind_Static();
         $f = new $this->field_class();
         $f->setReturnReference('getBind', $bind);
         $bind->expectOnce('getSoapAvailableValues');
@@ -387,7 +383,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
         
         $mapping = array();
         
-        $bind    = new MockTracker_FormElement_Field_List_Bind();
+        $bind    = new MockTracker_FormElement_Field_List_Bind_Static();
         $factory = new MockTracker_FormElement_Field_List_BindFactory();
         
         $f = new $this->field_class_for_import();
@@ -402,7 +398,7 @@ class Tracker_FormElement_Field_ListTest extends UnitTestCase {
     
     public function test_afterSaveObject() {
         $tracker = new MockTracker();
-        $bind    = new MockTracker_FormElement_Field_List_Bind();
+        $bind    = new MockTracker_FormElement_Field_List_Bind_Static();
         $factory = new MockTracker_FormElement_Field_List_BindFactory();
         $dao     = new MockTracker_FormElement_Field_ListDao();
         
@@ -448,9 +444,9 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
     public function setUp() {
         parent::setUp();
         $this->layout  = mock('Tracker_IDisplayTrackerLayout');
-        $this->user    = mock('User');
+        $this->user    = mock('PFUser');
         $this->request = aRequest()->with('func', 'get-values')->build();
-        $this->bind    = mock('Tracker_FormElement_Field_List_Bind');
+        $this->bind    = mock('Tracker_FormElement_Field_List_Bind_Static');
         $this->list    = new Tracker_FormElement_Field_ListTestVersion();
         stub($this->list)->getBind()->returns($this->bind);
     }
@@ -482,4 +478,5 @@ class Tracker_FormElement_Field_List_processGetValuesTest extends TuleapTestCase
         $this->list->process($this->layout, $this->request, $this->user);
     }
 }
+
 ?>

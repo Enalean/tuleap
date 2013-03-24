@@ -24,7 +24,7 @@ class UGroup_AddUserTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->user_id = 400;
-        $this->user    = stub('User')->getId()->returns($this->user_id);
+        $this->user    = stub('PFUser')->getId()->returns($this->user_id);
     }
     
     function itAddUserIntoStaticGroup() {
@@ -109,7 +109,7 @@ class UGroup_RemoveUserTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         $this->user_id = 400;
-        $this->user    = stub('User')->getId()->returns($this->user_id);
+        $this->user    = stub('PFUser')->getId()->returns($this->user_id);
     }
     
     function itRemoveUserFromStaticGroup() {
@@ -218,8 +218,8 @@ class UGroup_getUsersBaseTest extends TuleapTestCase {
         $user_manager = mock('UserManager');
         UserManager::setInstance($user_manager);
 
-        $this->garfield = new User($this->garfield_incomplete_row);
-        $this->goofy = new User($this->goofy_incomplete_row);
+        $this->garfield = new PFUser($this->garfield_incomplete_row);
+        $this->goofy    = new PFUser($this->goofy_incomplete_row);
         stub($user_manager)->getUserById($this->garfield_incomplete_row['user_id'])->returns($this->garfield);
         stub($user_manager)->getUserById($this->goofy_incomplete_row['user_id'])->returns($this->goofy);
     }
@@ -326,6 +326,36 @@ class UGroup_DynamicGroupTest extends TuleapTestCase {
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::SVN_ADMIN),                     "svn_flags = 0");
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_ADMIN),                    "news_flags = 0");
         $this->assertEqual(UGroup::getRemoveFlagForUGroupId(UGroup::NEWS_EDITOR),                   "news_flags = 0");
+    }
+}
+
+class UGroup_GetsNameTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->setText('membre_de_projet', array('project_ugroup', 'ugroup_project_members_name_key'));
+        $this->setText('administrateur_de_le_projet', array('project_ugroup', 'ugroup_project_admins_name_key'));
+    }
+
+    public function itReturnsProjectMembers() {
+        $ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_MEMBERS, 'name' => 'ugroup_project_members_name_key'));
+        $this->assertEqual('ugroup_project_members_name_key', $ugroup->getName());
+        $this->assertEqual('membre_de_projet', $ugroup->getTranslatedName());
+        $this->assertEqual('project_members', $ugroup->getNormalizedName());
+    }
+
+    public function itReturnsProjectAdmins() {
+        $ugroup = new UGroup(array('ugroup_id' => UGroup::PROJECT_ADMIN, 'name' => 'ugroup_project_admins_name_key'));
+        $this->assertEqual('ugroup_project_admins_name_key', $ugroup->getName());
+        $this->assertEqual('administrateur_de_le_projet', $ugroup->getTranslatedName());
+        $this->assertEqual('project_admins', $ugroup->getNormalizedName());
+    }
+
+    public function itReturnsAStaticGroup() {
+        $ugroup = new UGroup(array('ugroup_id' => 120, 'name' => 'Zoum_zoum_zen'));
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getName());
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getTranslatedName());
+        $this->assertEqual('Zoum_zoum_zen', $ugroup->getNormalizedName());
     }
 }
 ?>

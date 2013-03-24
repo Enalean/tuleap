@@ -68,7 +68,7 @@ class Tracker_Artifact_ChangesetValue_PermissionsOnArtifact extends Tracker_Arti
      * @return string The value of this artifact changeset value for Soap API
      */
     public function getSoapValue() {
-        return implode(",", $this->getPerms());
+        return $this->encapsulateRawSoapValue(implode(",", $this->getPerms()));
     }
     
     /**

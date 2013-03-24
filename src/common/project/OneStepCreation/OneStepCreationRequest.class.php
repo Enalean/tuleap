@@ -148,7 +148,7 @@ class Project_OneStepCreation_OneStepCreationRequest {
     }
 
     /**
-     * @return USer
+     * @return PFUser
      */
     public function getCurrentUser() {
         return $this->request->getCurrentUser();

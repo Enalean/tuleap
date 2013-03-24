@@ -59,7 +59,7 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         $this->milestone_tracker_id = 112;
         $this->milestone_tracker    = stub('Tracker')->getId()->returns($this->milestone_tracker_id);
 
-        $this->user              = mock('User');
+        $this->user              = mock('PFUser');
         $this->planning          = aPlanning()->withId($this->planning_id)->build();
         $this->artifact          = mock('Tracker_Artifact');
         $this->planning_factory  = mock('PlanningFactory');
@@ -70,46 +70,46 @@ abstract class Planning_MilestoneFactory_GetMilestoneBaseTest extends Planning_M
         stub($this->artifact)->getUniqueLinkedArtifacts($this->user)->returns(array());
         stub($this->artifact)->getHierarchyLinkedArtifacts($this->user)->returns(array());
         stub($this->artifact)->getTracker()->returns($this->milestone_tracker);
+        stub($this->artifact)->userCanView()->returns(true);
+        stub($this->artifact)->getAllAncestors()->returns(array());
         stub($this->planning_factory)->getPlanningWithTrackers($this->planning_id)->returns($this->planning);
     }
 }
 
 class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
 
-    public function itCanRetrieveMilestoneWithItsPlanningItsArtifactItsPlannedItemsAndItsSubMilestones() {
+    public function itBuildsMilestonePlanOutOfMilestone() {
         $milestone_factory = partial_mock(
             'Planning_MilestoneFactory',
-             array('getMilestoneWithPlannedArtifacts', 'getSubMilestones', 'getMilestoneAncestors'),
+             array('updateMilestoneWithPlannedArtifacts', 'getSubMilestones', 'getComputedFieldValue'),
              array($this->planning_factory, $this->artifact_factory, $this->formelement_factory)
         );
-        
-        $milestone_with_planned_artifacts = aMilestone()->build();
-        stub($milestone_factory)->getMilestoneWithPlannedArtifacts($this->user,
-                                                                   $this->project,
-                                                                   $this->planning_id,
-                                                                   $this->artifact_id)
-                                ->returns($milestone_with_planned_artifacts);
+
+        $milestone = aMilestone()->build();
+
+        stub($milestone_factory)->updateMilestoneWithPlannedArtifacts($milestone)->returns($milestone);
 
         $sub_milestones = array(aMilestone()->build(),
                                 aMilestone()->build());
         stub($milestone_factory)
-            ->getSubMilestones($this->user, $milestone_with_planned_artifacts)
+            ->getSubMilestones($this->user, $milestone)
             ->returns($sub_milestones);
 
-        $parent_milestones = array(aMilestone()->build());
-        stub($milestone_factory)
-            ->getMilestoneAncestors($this->user, $milestone_with_planned_artifacts)
-            ->returns($parent_milestones);
+        $capacity = 123;
+        $remaining_effort = 654;
 
-        $milestone = $milestone_factory->getMilestoneWithPlannedArtifactsAndSubMilestones($this->user,
-                                                                                          $this->project,
-                                                                                          $this->planning_id,
-                                                                                          $this->artifact_id);
-        $this->assertIsA($milestone, 'Planning_ArtifactMilestone');
-        $this->assertEqual($milestone->getPlannedArtifacts(), $milestone_with_planned_artifacts->getPlannedArtifacts());
-        $this->assertEqual($milestone->getSubMilestones(), $sub_milestones);
-        $this->assertTrue($milestone->hasAncestors());
-        $this->assertEqual($milestone->getAncestors(), $parent_milestones);
+        stub($milestone_factory)->getComputedFieldValue($this->user, $milestone, Planning_Milestone::CAPACITY_FIELD_NAME)->returns($capacity);
+        stub($milestone_factory)->getComputedFieldValue($this->user, $milestone, Planning_Milestone::REMAINING_EFFORT_FIELD_NAME)->returns($remaining_effort);
+
+        $milestone_plan = $milestone_factory->getMilestonePlan(
+            $this->user,
+            $milestone
+        );
+        $this->assertIsA($milestone_plan, 'Planning_MilestonePlan');
+        $this->assertEqual($milestone_plan->getMilestone(), $milestone);
+        $this->assertEqual($milestone_plan->getSubMilestones(), $sub_milestones);
+        $this->assertEqual($milestone_plan->getCapacity(), $capacity);
+        $this->assertEqual($milestone_plan->getRemainingEffort(), $remaining_effort);
     }
     
     public function itCanRetrieveSubMilestonesOfAGivenMilestone() {
@@ -142,20 +142,18 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $this->assertEqual($sub_milestones[2]->getArtifact(), $hackfest_2012);
     }
 
-    public function itCanRetrievesAMilestoneWithItsPlanningItsArtifactAndItsPlannedItems() {
+    public function itBuildsBareMilestoneFromAnArtifact() {
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
 
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
+        $milestone = $this->milestone_factory->getBareMilestone($this->user, $this->project, $this->planning_id, $this->artifact_id);
 
         $this->assertEqual($milestone->getArtifact(), $this->artifact);
-
-        // TODO: merge tree-related presenter tests in factory tests
     }
 
     public function itReturnsNoMilestoneWhenThereIsNoArtifact() {
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns(null);
 
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
+        $milestone = $this->milestone_factory->getBareMilestone($this->user, $this->project, $this->planning_id, $this->artifact_id);
 
         $this->assertIsA($milestone, 'Planning_NoMilestone');
     }
@@ -167,10 +165,8 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
         $depth2_artifact = $this->anArtifactWithIdAndUniqueLinkedArtifacts(2, array($depth3_artifact));
         $depth1_artifact = $this->anArtifactWithIdAndUniqueLinkedArtifacts(1, array($depth2_artifact));
         $root_artifact   = $this->anArtifactWithIdAndUniqueLinkedArtifacts($artifact_id, array($depth1_artifact));
-        stub($this->artifact_factory)->getArtifactById($artifact_id)->returns($root_artifact);
 
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $artifact_id);
-        $tree_node = $milestone->getPlannedArtifacts();
+        $tree_node = $this->milestone_factory->getPlannedArtifacts($this->user, $root_artifact);
         $this->assertTrue($tree_node->hasChildren());
         $tree_node1 = $tree_node->getChild(0);
         $this->assertTrue($tree_node1->hasChildren());
@@ -183,15 +179,14 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
     public function itAddsTheArtifactsToTheRootNode() {
         $root_aid   = 100;
         $root_artifact = mock('Tracker_Artifact');
-        stub($this->artifact_factory)->getArtifactById($root_aid)->returns($root_artifact);
+
         stub($root_artifact)->getId()->returns($root_aid);
         stub($root_artifact)->getTracker()->returns($this->milestone_tracker);
         stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array());
         stub($root_artifact)->getHierarchyLinkedArtifacts()->returns(array());
         
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $root_aid);
+        $root_node = $this->milestone_factory->getPlannedArtifacts($this->user, $root_artifact);
         
-        $root_node = $milestone->getPlannedArtifacts();
         $root_note_data = $root_node->getObject();
         $this->assertEqual($root_aid, $root_node->getId());
         $this->assertIdentical($root_artifact, $root_note_data);
@@ -200,16 +195,15 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
     public function itAddsTheArtifactsToTheChildNodes() {
         $root_aid   = 100;
         $root_artifact = mock('Tracker_Artifact');
-        stub($this->artifact_factory)->getArtifactById($root_aid)->returns($root_artifact);
         stub($root_artifact)->getId()->returns($root_aid);
         stub($root_artifact)->getTracker()->returns($this->milestone_tracker);
         $depth1_artifact = $this->anArtifactWithId(9999);
         stub($root_artifact)->getUniqueLinkedArtifacts()->returns(array($depth1_artifact));
         stub($root_artifact)->getHierarchyLinkedArtifacts()->returns(array());
         
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $root_aid);
+        $root_node = $this->milestone_factory->getPlannedArtifacts($this->user, $root_artifact);
         
-        $child_node      = $milestone->getPlannedArtifacts()->getChild(0);
+        $child_node      = $root_node->getChild(0);
         $child_node_data = $child_node->getObject();
         $this->assertEqual(9999, $child_node->getId());
         $this->assertIdentical($depth1_artifact, $child_node_data);
@@ -217,7 +211,21 @@ class Planning_MilestoneFactory_getMilestoneTest extends Planning_MilestoneFacto
 
 }
 
-class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+abstract class MilestoneFactory_MilestoneAsComputedValues extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+
+    public function setUp() {
+        parent::setUp();
+        $this->milestone_factory = partial_mock(
+            'Planning_MilestoneFactory',
+            array('getSubMilestones', 'updateMilestoneWithPlannedArtifacts'),
+            array($this->planning_factory, $this->artifact_factory, $this->formelement_factory)
+        );
+        stub($this->milestone_factory)->getSubMilestones()->returns(array());
+        $this->milestone = aMilestone()->withArtifact($this->artifact)->build();
+    }
+}
+
+class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends MilestoneFactory_MilestoneAsComputedValues {
 
     public function testRemainingEffortIsNullWhenThereIsNoRemainingEffortField() {
         $this->assertEqual($this->getMilestoneRemainingEffort(), null);
@@ -233,13 +241,12 @@ class MilestoneFactory_MilestoneComesWithRemainingEffortTest extends Planning_Mi
     }
 
     private function getMilestoneRemainingEffort() {
-        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
-        return $milestone->getRemainingEffort();
+        $milestone_plan = $this->milestone_factory->getMilestonePlan($this->user, $this->milestone);
+        return $milestone_plan->getRemainingEffort();
     }
 }
 
-class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+class MilestoneFactory_MilestoneComesWithCapacityTest extends MilestoneFactory_MilestoneAsComputedValues {
 
     public function testCapacityIsNullWhenThereIsNoCapacityField() {
         $this->assertEqual($this->getMilestoneCapacity(), null);
@@ -255,13 +262,12 @@ class MilestoneFactory_MilestoneComesWithCapacityTest extends Planning_Milestone
     }
 
     private function getMilestoneCapacity() {
-        stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
-        return $milestone->getCapacity();
+        $milestone_plan = $this->milestone_factory->getMilestonePlan($this->user, $this->milestone);
+        return $milestone_plan->getCapacity();
     }
 }
 
-class MilestoneFactory_MilestoneComesWithStartDateTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+class MilestoneFactory_MilestoneComesWithStartDateTest extends MilestoneFactory_MilestoneAsComputedValues {
 
     public function testStartDateIsNullWhenThereIsNoStartDateField() {
         $this->assertEqual($this->getMilestoneStartDate(), null);
@@ -283,12 +289,12 @@ class MilestoneFactory_MilestoneComesWithStartDateTest extends Planning_Mileston
 
     private function getMilestoneStartDate() {
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
+        $milestone = $this->milestone_factory->getBareMilestone($this->user, $this->project, $this->planning_id, $this->artifact_id);
         return $milestone->getStartDate();
     }
 }
 
-class MilestoneFactory_MilestoneComesWithEndDateTest extends Planning_MilestoneFactory_GetMilestoneBaseTest {
+class MilestoneFactory_MilestoneComesWithEndDateTest extends MilestoneFactory_MilestoneAsComputedValues {
 
     public function testEndDateIsNullWhenThereIsNoStartDateOrDurationField() {
         $this->assertEqual($this->getMilestoneEndDate(), null);
@@ -313,7 +319,7 @@ class MilestoneFactory_MilestoneComesWithEndDateTest extends Planning_MilestoneF
 
     private function getMilestoneEndDate() {
         stub($this->artifact_factory)->getArtifactById($this->artifact_id)->returns($this->artifact);
-        $milestone = $this->milestone_factory->getMilestoneWithPlannedArtifacts($this->user, $this->project, $this->planning_id, $this->artifact_id);
+        $milestone = $this->milestone_factory->getBareMilestone($this->user, $this->project, $this->planning_id, $this->artifact_id);
         return $milestone->getEndDate();
     }
 }
@@ -323,7 +329,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
       
     public function setUp() {
         parent::setUp();
-        $this->user             = mock('User');
+        $this->user             = mock('PFUser');
         $this->project          = stub('Project')->getID()->returns(99);
         $this->planning_tracker = stub('Tracker')->getProject()->returns($this->project);
         $this->planning_id      = 3333;
@@ -338,8 +344,8 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
     
     public function itReturnsAsManyMilestonesAsThereAreArtifacts() {
-        $artifacts        = array(anArtifact()->build(),
-                                  anArtifact()->build());
+        $artifacts        = array(anArtifact()->withChangesets(array(10,11))->build(),
+                                  anArtifact()->withChangesets(array(12,13))->build());
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns($artifacts);
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
@@ -347,7 +353,7 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
     
     public function itReturnsMilestones() {
-        $artifact         = anArtifact()->build();
+        $artifact         = anArtifact()->withChangesets(array(10,11))->build();
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView()->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
@@ -356,20 +362,20 @@ class MilestoneFactory_GetAllMilestonesTest extends TuleapTestCase {
     }
     
     public function itReturnsMilestonesWithPlannedArtifacts() {
-        $artifact         = anArtifact()->build();
+        $artifact         = anArtifact()->withChangesets(array(10,11))->build();
         $tracker_id       = 7777777;
         stub($this->planning_tracker)->getId()->returns($tracker_id);
         $planning         = aPlanning()->withPlanningTracker($this->planning_tracker)->build();
         $artifact_factory = stub('Tracker_ArtifactFactory')->getArtifactsByTrackerIdUserCanView($this->user, $tracker_id)->returns(array($artifact));
         $planning_factory = mock('PlanningFactory');
         
-        $planned_artifacts= new TreeNode('sdfkjasf');   
+        $planned_artifacts= new ArtifactNode($artifact);
         $factory          = $this->newMileStoneFactory($planning_factory, $artifact_factory);
         stub($factory)->getPlannedArtifacts()->returns($planned_artifacts);
         
-        $mile_stone       = new Planning_ArtifactMilestone($this->project, $planning, $artifact, $planned_artifacts);
+        $milestone       = new Planning_ArtifactMilestone($this->project, $planning, $artifact, $planned_artifacts);
         $milestones       = $factory->getAllMilestones($this->user, $planning);
-        $this->assertEqual($mile_stone, $milestones[0]);
+        $this->assertEqual($milestone, $milestones[0]);
     }
 
     public function newMileStoneFactory($planning_factory, $artifact_factory) {
@@ -388,7 +394,7 @@ class MilestoneFactory_PlannedArtifactsTest extends Planning_MilestoneBaseTest {
         $root_artifact    = $this->anArtifactWithIdAndUniqueLinkedArtifacts(100, array($depth1_artifact));
 
         $factory = new Planning_MileStoneFactory(mock('PlanningFactory'), mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'));
-        $planning_items_tree = $factory->getPlannedArtifacts(mock('User'), $root_artifact);
+        $planning_items_tree = $factory->getPlannedArtifacts(mock('PFUser'), $root_artifact);
 
         $children = $planning_items_tree->flattenChildren();
 
@@ -409,6 +415,9 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
         $this->release_tracker  = aTracker()->withId(2)->withProject($this->project)->build();
         $this->release_artifact = aMockArtifact()->withTracker($this->release_tracker)->build();
 
+        $this->task_tracker  = aTracker()->withId(21)->withProject($this->project)->build();
+        $this->task_artifact = aMockArtifact()->withTracker($this->task_tracker)->build();
+
         $planning_factory        = stub('PlanningFactory')->getPlanningByPlanningTracker($this->release_tracker)->returns($this->release_planning);
         $this->milestone_factory = new Planning_MilestoneFactory($planning_factory, mock('Tracker_ArtifactFactory'), mock('Tracker_FormElementFactory'));
     }
@@ -421,6 +430,11 @@ class MilestoneFactory_GetMilestoneFromArtifactTest extends TuleapTestCase {
     private function assertEqualToReleaseMilestone($actual_release_milestone) {
         $expected_release_milestone = new Planning_ArtifactMilestone($this->project, $this->release_planning, $this->release_artifact);
         $this->assertEqual($actual_release_milestone, $expected_release_milestone);
+    }
+
+    public function itReturnsNullWhenThereIsNoPlanningForTheTracker() {
+        $task_milestone = $this->milestone_factory->getMilestoneFromArtifact($this->task_artifact);
+        $this->assertNull($task_milestone);
     }
 }
 
@@ -496,6 +510,16 @@ class MilestoneFactory_GetMilestoneWithAncestorsTest extends TuleapTestCase {
 
         $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
         $this->assertEqual($milestones, array($release_milestone, $product_milestone));
+    }
+
+    public function itFiltersOutTheEmptyMilestones() {
+        $release_artifact = aMockArtifact()->withId(1)->build();
+        stub($this->sprint_artifact)->getAllAncestors($this->current_user)->returns(array($release_artifact));
+
+        stub($this->milestone_factory)->getMilestoneFromArtifact($release_artifact)->returns(null);
+
+        $milestones = $this->milestone_factory->getMilestoneAncestors($this->current_user, $this->sprint_milestone);
+        $this->assertEqual($milestones, array());
     }
 }
 
@@ -589,4 +613,5 @@ class MilestoneFactory_GetCurrentMilestonesTest extends TuleapTestCase {
         $this->assertEqual($milestone, $this->sprint_1_milestone);
     }
 }
+
 ?>

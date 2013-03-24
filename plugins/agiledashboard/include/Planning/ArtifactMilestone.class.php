@@ -18,7 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
 /**
  * A planning milestone (e.g.: Sprint, Release...)
  */
@@ -56,20 +55,9 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      * And I defined a Sprint planning that associate Stories to Sprints
      * Then I will have an array of Sprint as planned artifacts.
      *
-     * @var TreeNode
+     * @var ArtifactNode
      */
     private $planned_artifacts;
-
-    /**
-     * A sub-milestone is a decomposition of the current one.
-     *
-     * Given current Milestone is a Release
-     * And there is a Parent/Child association between Release and Sprint
-     * Then $sub_milestone will be an array of sprint
-     *
-     * @var array of Planning_Milestone
-     */
-    private $sub_milestones = array();
 
     /**
      * A parent milestone is the milestone that contains the current one.
@@ -82,22 +70,6 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
      * @var array of Planning_Milestone
      */
     private $parent_milestones = array();
-
-    /**
-     * The effort needed to complete the milestone. It's a numerical quantification
-     * of the workload.
-     *
-     * @var Float
-     */
-    private $remaining_effort = null;
-
-    /**
-     * The estimated workforce of the team for given milestone.
-     * It's set at the beginning of the Milestone and shall not change during its life.
-     *
-     * @var Float
-     */
-    private $capacity = null;
 
     /**
      * The duration before hitting the end date of the milestone.
@@ -122,7 +94,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     public function __construct(Project          $project,
                                 Planning         $planning,
                                 Tracker_Artifact $artifact,
-                                TreeNode         $planned_artifacts = null) {
+                                ArtifactNode     $planned_artifacts = null) {
 
         $this->project           = $project;
         $this->planning          = $planning;
@@ -152,33 +124,9 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     }
 
     /**
-     * @return array of Planning_Milestone
-     */
-    public function getSubMilestones() {
-        return $this->sub_milestones;
-    }
-
-    /**
-     * @return Boolean True if milestone has at least 1 sub-milestone.
-     */
-    public function hasSubMilestones() {
-        return ! empty($this->sub_milestones);
-    }
-
-    /**
-     * Adds some sub-milestones. Ignores milestones which are already a
-     * sub-milestone of the current one.
-     *
-     * @param array $new_sub_milestones
-     */
-    public function addSubMilestones(array $new_sub_milestones) {
-        $this->sub_milestones = array_merge($this->sub_milestones, $new_sub_milestones);
-    }
-
-    /**
      * @return Boolean
      */
-    public function userCanView(User $user) {
+    public function userCanView(PFUser $user) {
         return $this->artifact->getTracker()->userCanView($user);
     }
 
@@ -226,18 +174,25 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
     }
 
     /**
-     * @return TreeNode
+     * @return ArtifactNode
      */
     public function getPlannedArtifacts() {
         return $this->planned_artifacts;
     }
 
     /**
-     * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
-     * @param User $user
-     * @return Array of Tracker_Artifact
+     * @param ArtifactNode $node
      */
-    public function getLinkedArtifacts(User $user) {
+    public function setPlannedArtifacts(ArtifactNode $node) {
+        $this->planned_artifacts = $node;
+    }
+
+    /**
+     * All artifacts linked by either the root artifact or any of the artifacts in plannedArtifacts()
+     * @param PFUser $user
+     * @return Tracker_Artifact[]
+     */
+    public function getLinkedArtifacts(PFUser $user) {
         $artifacts = $this->artifact->getUniqueLinkedArtifacts($user);
         $root_node = $this->getPlannedArtifacts();
         // TODO get rid of this if, in favor of an empty treenode
@@ -247,7 +202,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
         return $artifacts;
     }
 
-    private function addChildrenNodes(TreeNode $root_node, &$artifacts, $user) {
+    private function addChildrenNodes(ArtifactNode $root_node, &$artifacts, $user) {
         foreach ($root_node->getChildren() as $node) {
             $artifact    = $node->getObject();
             $artifacts[] = $artifact;
@@ -255,35 +210,7 @@ class Planning_ArtifactMilestone implements Planning_Milestone {
             $this->addChildrenNodes($node, $artifacts, $user);
         }
     }
-
-    public function getRemainingEffort() {
-        return $this->remaining_effort;
-    }
-
-    /**
-     * @param float $remaining_effort
-     *
-     * @return Planning_ArtifactMilestone
-     */
-    public function setRemainingEffort($remaining_effort) {
-        $this->remaining_effort = $remaining_effort;
-        return $this;
-    }
-
-    public function getCapacity() {
-        return $this->capacity;
-    }
-
-    /**
-     * @param float $capacity
-     *
-     * @return Planning_ArtifactMilestone
-     */
-    public function setCapacity($capacity) {
-        $this->capacity = $capacity;
-        return $this;
-    }
-
+    
     public function hasAncestors() {
         return !empty($this->parent_milestones);
     }

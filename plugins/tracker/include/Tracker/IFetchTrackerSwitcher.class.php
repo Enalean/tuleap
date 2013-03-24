@@ -37,13 +37,13 @@ interface Tracker_IFetchTrackerSwitcher extends Tracker_IDisplayTrackerLayout {
      * The additionnal project may be useful for example in the ArtifactLink selector,
      * To make sure that the project of the main artifact is included.
      *
-     * @param User    $user            the user
+     * @param PFUser    $user            the user
      * @param string  $separator       the separator between the title and the selectbox (eg: '<br />' or ' ')
      * @param Project $include_project the project to include in the selectbox (null if no one)
      * @param Tracker $current_tracker the current tracker (default is null, aka no current tracker)
      *
      * @return string html
      */
-    public function fetchTrackerSwitcher(User $user, $separator, Project $include_project = null, Tracker $current_tracker = null);
+    public function fetchTrackerSwitcher(PFUser $user, $separator, Project $include_project = null, Tracker $current_tracker = null);
 }
 ?>

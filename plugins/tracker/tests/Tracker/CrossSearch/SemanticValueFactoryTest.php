@@ -117,7 +117,7 @@ abstract class Tracker_CrossSearch_SemanticValueFactory_FieldAccessTest extends 
         $tracker_factory  = mock('TrackerFactory');
         
         $group_id = 456;
-        $this->user    = mock('User');
+        $this->user    = mock('PFUser');
         $this->project = stub('Project')->getId()->returns($group_id);
         
         $trackers = array(

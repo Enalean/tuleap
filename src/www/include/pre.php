@@ -25,6 +25,7 @@ require($GLOBALS['db_config_file']);
 require_once('common/include/Config.class.php');
 Config::load($GLOBALS['codendi_dir'] .'/src/etc/local.inc.dist'); //load the default settings
 Config::load($local_inc);
+Config::load($GLOBALS['db_config_file']);
 if (isset($GLOBALS['DEBUG_MODE'])) {
     Config::load($GLOBALS['codendi_dir'] .'/src/etc/development.inc.dist');
     Config::load(dirname($local_inc).'/development.inc');
@@ -50,6 +51,10 @@ require_once('common/include/URL.class.php');
 
 // Detect whether this file is called by a script running in cli mode, or in normal web mode
 if (php_sapi_name() == "cli") {
+    // Backend scripts should never ends because of lack of time or memory
+    ini_set('max_execution_time', 0);
+    ini_set('memory_limit', -1);
+
     define('IS_SCRIPT', true);
 } else {
     define('IS_SCRIPT', false);

@@ -100,7 +100,7 @@ Mock::generatePartial('Tracker_FormElement_Field', 'MockTracker_FormElement_Fiel
 require_once('common/dao/include/DataAccessResult.class.php');
 Mock::generate('DataAccessResult');
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 require_once('common/include/Response.class.php');
 Mock::generate('Response');
 require_once('common/language/BaseLanguage.class.php');
@@ -606,7 +606,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -684,7 +684,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectNever('create');
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -756,7 +756,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 0, null));
         $dao->expectNever('create');
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 0);
         $user->setReturnValue('isAnonymous', true);
         $email = null; // anonymous user but no email...
@@ -808,7 +808,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(0, 'create', 1001, array(66, 0, 'anonymous@codendi.org'));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 0);
         $user->setReturnValue('isAnonymous', true);
         $email = 'anonymous@codendi.org'; // anonymous user with email
@@ -878,7 +878,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(0, 'create', 1001, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -946,7 +946,7 @@ class Tracker_Artifact_createInitialChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1059,7 +1059,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1169,7 +1169,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectNever('create');
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1275,7 +1275,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $dao->setReturnValueAt(1, 'create', 1002, array(66, 1234, null));
         $dao->expectCallCount('create', 1);
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1378,7 +1378,7 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $dao = new MockTracker_Artifact_ChangesetDao();
         $dao->expectNever('create');
 
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('getId', 1234);
         $user->setReturnValue('isAnonymous', false);
 
@@ -1447,8 +1447,8 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         $c3 = new MockTracker_Artifact_Changeset();
         $c4 = new MockTracker_Artifact_Changeset();
 
-        $u1 = new MockUser(); $u1->setReturnValue('getUserName', 'sandrae');
-        $u2 = new MockUser(); $u2->setReturnValue('getUserName', 'marc');
+        $u1 = mock('PFUser'); $u1->setReturnValue('getUserName', 'sandrae');
+        $u2 = mock('PFUser'); $u2->setReturnValue('getUserName', 'marc');
 
         $um = new MockUserManager();
         $um->setReturnReference('getUserById', $u1, array(101));
@@ -1482,36 +1482,36 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         // $other and $u are neither in UgroupAss nor in UgroupSub
 
         //
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', 120);
         $u->setReturnValue('isMemberOfUgroup',false);
         $u->setReturnValue('isSuperUser', false);
         //
-        $assignee = new MockUser();
+        $assignee = mock('PFUser');
         $assignee->setReturnValue('getId', 121);
         $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
-        $u_ass = new MockUser();
+        $u_ass = mock('PFUser');
         $u_ass->setReturnValue('getId', 122);
         $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
-        $submitter = new MockUser();
+        $submitter = mock('PFUser');
         $submitter->setReturnValue('getId', 123);
         $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
-        $u_sub = new MockUser();
+        $u_sub = mock('PFUser');
         $u_sub->setReturnValue('getId', 124);
         $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
-        $other = new MockUser();
+        $other = mock('PFUser');
         $other->setReturnValue('getId', 125);
         $other->setReturnValue('isMemberOfUgroup', false);
         $other->setReturnValue('isSuperUser', false);
@@ -1556,36 +1556,36 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         // $submitter and $u_sub are in the same ugroup (UgroupSub - ugroup_id=102)
         // $other and $u are neither in UgroupAss nor in UgroupSub
         //
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', 120);
         $u->setReturnValue('isMemberOfUgroup',false);
         $u->setReturnValue('isSuperUser', false);
         //
-        $assignee = new MockUser();
+        $assignee = mock('PFUser');
         $assignee->setReturnValue('getId', 121);
         $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
-        $u_ass = new MockUser();
+        $u_ass = mock('PFUser');
         $u_ass->setReturnValue('getId', 122);
         $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
-        $submitter = new MockUser();
+        $submitter = mock('PFUser');
         $submitter->setReturnValue('getId', 123);
         $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
-        $u_sub = new MockUser();
+        $u_sub = mock('PFUser');
         $u_sub->setReturnValue('getId', 124);
         $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
-        $other = new MockUser();
+        $other = mock('PFUser');
         $other->setReturnValue('getId', 125);
         $other->setReturnValue('isMemberOfUgroup', false);
         $other->setReturnValue('isSuperUser', false);
@@ -1636,36 +1636,36 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         // $submitter and $u_sub are in the same ugroup (UgroupSub - ugroup_id=102)
         // $other and $u are neither in UgroupAss nor in UgroupSub
         //
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', 120);
         $u->setReturnValue('isMemberOfUgroup',false);
         $u->setReturnValue('isSuperUser', false);
         //
-        $assignee = new MockUser();
+        $assignee = mock('PFUser');
         $assignee->setReturnValue('getId', 121);
         $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
-        $u_ass = new MockUser();
+        $u_ass = mock('PFUser');
         $u_ass->setReturnValue('getId', 122);
         $u_ass->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $u_ass->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u_ass->setReturnValue('isSuperUser', false);
         //
-        $submitter = new MockUser();
+        $submitter = mock('PFUser');
         $submitter->setReturnValue('getId', 123);
         $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
-        $u_sub = new MockUser();
+        $u_sub = mock('PFUser');
         $u_sub->setReturnValue('getId', 124);
         $u_sub->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $u_sub->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $u_sub->setReturnValue('isSuperUser', false);
         //
-        $other = new MockUser();
+        $other = mock('PFUser');
         $other->setReturnValue('getId', 125);
         $other->setReturnValue('isMemberOfUgroup', false);
         $other->setReturnValue('isSuperUser', false);
@@ -1719,28 +1719,28 @@ class Tracker_Artifact_createNewChangesetTest extends Tracker_ArtifactTest {
         // $u is in (UgroupFul - ugroup_id=103);
         // $other do not belong to any ugroup
         //
-        $u = new MockUser();
+        $u = mock('PFUser');
         $u->setReturnValue('getId', 120);
         $u->setReturnValue('isMemberOfUgroup', true,  array(103, 222));
         $u->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $u->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $u->setReturnValue('isSuperUser', false);
         //
-        $assignee = new MockUser();
+        $assignee = mock('PFUser');
         $assignee->setReturnValue('getId', 121);
         $assignee->setReturnValue('isMemberOfUgroup', true,  array(101, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(102, 222));
         $assignee->setReturnValue('isMemberOfUgroup', false, array(103, 222));
         $assignee->setReturnValue('isSuperUser', false);
         //
-        $submitter = new MockUser();
+        $submitter = mock('PFUser');
         $submitter->setReturnValue('getId', 122);
         $submitter->setReturnValue('isMemberOfUgroup', false, array(101, 222));
         $submitter->setReturnValue('isMemberOfUgroup', true,  array(102, 222));
         $submitter->setReturnValue('isMemberOfUgroup', false,  array(103, 222));
         $submitter->setReturnValue('isSuperUser', false);
         //
-        $other = new MockUser();
+        $other = mock('PFUser');
         $other->setReturnValue('getId', 123);
         $other->setReturnValue('isMemberOfUgroup', false);
         $other->setReturnValue('isSuperUser', false);
@@ -1885,7 +1885,7 @@ class Tracker_Artifact_SendCardInfoOnUpdate_BaseTest extends TuleapTestCase {
         $tracker                   = aMockTracker()->withId($this->tracker_id)->build();
         $this->layout              = mock('Tracker_IDisplayTrackerLayout');
         $this->request             = aRequest()->with('func', 'artifact-update')->build();
-        $this->user                = mock('User');
+        $this->user                = mock('PFUser');
         $this->formelement_factory = mock('Tracker_FormElementFactory');
         $this->computed_field      = mock('Tracker_FormElement_Field_Computed');
         $this->us_computed_field   = mock('Tracker_FormElement_Field_Computed');
@@ -2282,4 +2282,162 @@ class Tracker_Artifact_PostActionsTest extends TuleapTestCase {
         $this->artifact->createNewChangeset($this->fields_data, '', $this->submitter, $this->email, false);
     }
 }
+
+class Tracker_Artifact_getSoapValueTest extends TuleapTestCase {
+    private $artifact;
+    private $user;
+    private $id = 1235;
+    private $tracker_id = 567;
+    private $submitted_by = 891;
+    private $submitted_on = 111213;
+    private $use_artifact_permissions = true;
+    private $last_update_date = 654683;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user     = mock('PFUser');
+
+        $this->last_changeset = mock('Tracker_Artifact_Changeset');
+        stub($this->last_changeset)->getSubmittedOn()->returns($this->last_update_date);
+        stub($this->last_changeset)->getValues()->returns(array());
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
+
+        $this->artifact = partial_mock(
+            'Tracker_Artifact',
+            array(
+                'userCanView',
+                'getCrossReferencesSOAPValues',
+            ),
+            array($this->id, $this->tracker_id, $this->submitted_by, $this->submitted_on, $this->use_artifact_permissions)
+        );
+        stub($this->artifact)->userCanView()->returns(true);
+        stub($this->artifact)->getCrossReferencesSOAPValues()->returns(array(array('ref' => 'art #123', 'url' => '/path/to/art=123')));
+        $this->artifact->setChangesets(array($this->last_changeset));
+        $this->artifact->setFormElementFactory($this->formelement_factory);
+        $this->artifact->setTracker(aTracker()->withId($this->tracker_id)->build());
+    }
+
+    public function itReturnsEmptyArrayIfUserCannotViewArtifact() {
+        $artifact = partial_mock('Tracker_Artifact', array('userCanView'));
+        $artifact->setTracker(aTracker()->build());
+        $artifact->setFormElementFactory($this->formelement_factory);
+        $user     = mock('PFUser');
+        stub($artifact)->userCanView($user)->returns(false);
+
+        $this->assertArrayEmpty($artifact->getSoapValue($user));
+    }
+
+    public function itReturnsDataIfUserCanViewArtifact() {
+        $artifact = partial_mock('Tracker_Artifact', array('userCanView', 'getCrossReferencesSOAPValues'), array('whatever', 'whatever', 'whatever', 'whatever', 'whatever'));
+        $artifact->setChangesets(array($this->last_changeset));
+        $artifact->setTracker(aTracker()->build());
+        $artifact->setFormElementFactory($this->formelement_factory);
+        $user     = mock('PFUser');
+        stub($artifact)->userCanView($user)->returns(true);
+
+        $this->assertArrayNotEmpty($artifact->getSoapValue($user));
+    }
+
+    public function itHasBasicArtifactInfo() {
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertIdentical($soap_value['artifact_id'], $this->id);
+        $this->assertIdentical($soap_value['tracker_id'], $this->tracker_id);
+        $this->assertIdentical($soap_value['submitted_by'], $this->submitted_by);
+        $this->assertIdentical($soap_value['submitted_on'], $this->submitted_on);
+    }
+
+    public function itContainsCrossReferencesValue() {
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertEqual($soap_value['cross_references'][0], array('ref' => 'art #123', 'url' => '/path/to/art=123'));
+    }
+
+    public function itHasALastUpdateDate() {
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertIdentical($soap_value['last_update_date'], $this->last_update_date);
+    }
+}
+
+class Tracker_Artifact_getSoapValueWithFieldValuesTest extends TuleapTestCase {
+    private $artifact;
+    private $user;
+
+    public function setUp() {
+        parent::setUp();
+        $this->user = mock('PFUser');
+
+        $this->field_id = 123242;
+
+        $this->field           = aMockField()->build();
+        $this->changeset_value = mock('Tracker_Artifact_ChangesetValue');
+        $this->last_changeset  = stub('Tracker_Artifact_Changeset')->getValues()->returns(array($this->field_id => $this->changeset_value));
+
+        $this->formelement_factory = mock('Tracker_FormElementFactory');
+        stub($this->formelement_factory)->getFormElementById()->returns($this->field);
+
+        $this->tracker = aTracker()->build();
+
+        $this->artifact = partial_mock(
+            'Tracker_Artifact',
+            array(
+                'userCanView',
+                'getCrossReferencesSOAPValues',
+            ),
+            array('whatever', 'whatever', 'whatever', 'whatever', 'whatever')
+        );
+        stub($this->artifact)->userCanView()->returns(true);
+        $this->artifact->setChangesets(array($this->last_changeset));
+        $this->artifact->setFormElementFactory($this->formelement_factory);
+        $this->artifact->setTracker($this->tracker);
+    }
+
+    public function itFetchFieldFromFactory() {
+        expect($this->formelement_factory)->getUsedFieldsForSoap($this->tracker)->once();
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array());
+        $this->artifact->getSoapValue($this->user);
+    }
+
+    public function itHasAValueFromField() {
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array($this->field));
+
+        expect($this->field)->getSoapValue($this->user, $this->last_changeset)->once();
+        stub($this->field)->getSoapValue()->returns('whatever');
+
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertEqual($soap_value['value'][0], 'whatever');
+    }
+
+    public function itDoesntModifySoapValueIfNoFieldValues() {
+        stub($this->formelement_factory)->getUsedFieldsForSoap()->returns(array($this->field));
+
+        stub($this->field)->getSoapValue()->returns(null);
+
+        $soap_value = $this->artifact->getSoapValue($this->user);
+        $this->assertArrayEmpty($soap_value['value']);
+    }
+}
+
+class Tracker_Artifact_getCardAccentColorTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->user     = mock('PFUser');
+        $this->field    = mock('Tracker_FormElement_Field_Selectbox');
+        $this->factory  = mock('Tracker_FormElementFactory');
+        $this->artifact = anArtifact()->withFormElementFactory($this->factory)->build();
+    }
+
+    public function itReturnsEmptyStringIfNoField() {
+        stub($this->factory)->getSelectboxFieldByNameForUser()->returns(null);
+        $this->assertEqual('', $this->artifact->getCardAccentColor($this->user));
+    }
+
+    public function itDelegatesToTheField() {
+        stub($this->field)->getCurrentDecoratorColor($this->artifact)->returns('red');
+        stub($this->factory)->getSelectboxFieldByNameForUser()->returns($this->field);
+        $this->assertEqual('red', $this->artifact->getCardAccentColor($this->user));
+    }
+}
+
 ?>

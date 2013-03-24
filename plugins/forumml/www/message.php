@@ -101,11 +101,11 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
     // If the list is private, search if the current user is a member of that list. If not, permission denied
     $list_name = mail_get_listname_from_list_id($list_id);
     if (!mail_is_list_public($list_id)) {
-            exec("{$GLOBALS['mailman_bin_dir']}/list_members ".$list_name,$members);
-            $user = user_getemail(user_getid());
-            if (! in_array($user,$members)) {
-                    exit_permission_denied();
-            }
+        $members = array();
+        exec("{$GLOBALS['mailman_bin_dir']}/list_members ".$list_name, $members);
+        if (! in_array($user->getEmail(), $members)) {
+                exit_permission_denied();
+        }
     }
 
 	// Build the mail to be sent
@@ -192,7 +192,7 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 			// Call to show_thread() function to display the archives			
 			if (isset($topic) && $topic != 0) {
 				// specific thread
-				plugin_forumml_show_thread($p, $list_id, $topic, $purgeCache);
+				plugin_forumml_show_thread($p, $list_id, $topic, $purgeCache, $user);
 			} else {
 				plugin_forumml_show_all_threads($p,$list_id,$list_name,$offset);
 			}	
@@ -200,7 +200,6 @@ if ($p && $plugin_manager->isPluginAvailable($p) && $p->isAllowed()) {
 			echo "<H2>".$GLOBALS["Language"]->getText('plugin_forumml','empty_archives')."</H2>";
 		}
 	} else {
-            
 		// search archives		
 		$pattern = "%".$request->get('search')."%";
 		$sql = sprintf('SELECT mh.id_message, mh.value'.

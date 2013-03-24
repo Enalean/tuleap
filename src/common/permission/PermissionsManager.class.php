@@ -150,6 +150,9 @@ class PermissionsManager {
      
     /**
      * Returns all ugroup id for a given object_id and permission_type
+     *
+     * @deprecated Use getAuthorizedUgroups instead (that takes default permissions into account)
+     *
      * @param  int     $object_id       The id of the object
      * @param  string  $permission_type The type of permission asked
      */
@@ -336,5 +339,15 @@ class PermissionsManager {
         return $this->_permission_dao->clearPermission($permissionType, $objectId);
     }
 
+    /**
+    * Searches Permissions by UgroupId
+    *
+    * @param Integer $ugroupId Id of the user group
+    *
+    * @return DataAccessResult
+    */
+    public function searchByUgroupId($ugroupId) {
+        return $this->_permission_dao->searchByUgroupId($ugroupId);
+    }
 }
 ?>

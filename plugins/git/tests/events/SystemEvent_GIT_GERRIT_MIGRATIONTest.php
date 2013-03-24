@@ -34,19 +34,18 @@ abstract class SystemEvent_GIT_GERRIT_MIGRATION_BaseTest extends TuleapTestCase 
     protected $repository;
     protected $gerrit_server;
     protected $server_factory;
+    protected $gitolite_backend;
 
     public function setUp() {
         parent::setUp();
 
-        $this->dao = mock('GitDao');
-
-
-        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
-        $this->repository = mock('GitRepository');
-
-        $this->server_factory = mock('Git_RemoteServer_GerritServerFactory');
-
-        $this->project_creator = mock('Git_Driver_Gerrit_ProjectCreator');
+        $this->dao              = mock('GitDao');
+        $this->gerrit_server    = mock('Git_RemoteServer_GerritServer');
+        $this->server_factory   = mock('Git_RemoteServer_GerritServerFactory');
+        $this->project_creator  = mock('Git_Driver_Gerrit_ProjectCreator');
+        $this->gitolite_backend = mock('Git_Backend_Gitolite');
+        $this->repository       = mock('GitRepository');
+        stub($this->repository)->getBackend()->returns($this->gitolite_backend);
 
         $factory = mock('GitRepositoryFactory');
         stub($factory)->getRepositoryById($this->repository_id)->returns($this->repository);
@@ -68,9 +67,16 @@ class SystemEvent_GIT_GERRIT_MIGRATION_BackendTest extends SystemEvent_GIT_GERRI
         expect($this->dao)->switchToGerrit($this->repository_id, $this->remote_server_id)->once();
         $this->event->process();
     }
+
     public function itCallsDoneAndReturnsTrue() {
         stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
         expect($this->event)->done()->once();
+        $this->assertTrue($this->event->process());
+    }
+
+    public function itUpdatesGitolitePermissionsToForbidPushesByAnyoneButGerrit() {
+        stub($this->server_factory)->getServer($this->repository)->returns($this->gerrit_server);
+        expect($this->gitolite_backend)->updateRepoConf()->once();
         $this->assertTrue($this->event->process());
     }
 

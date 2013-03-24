@@ -25,6 +25,7 @@ require_once 'common/user/User.class.php';
 require_once 'www/project/admin/ugroup_utils.php';
 require_once 'UGroup_Invalid_Exception.class.php';
 require_once 'common/user/Users.class.php';
+require_once 'utils.php';
 
 /**
  * UGroup object
@@ -45,6 +46,23 @@ class UGroup {
     const NEWS_ADMIN         = 17;
     const NEWS_EDITOR        = 18;
     const SVN_ADMIN          = 19;
+
+    private $normalized_names = array(
+        self::NONE               => 'nobody',
+        self::ANONYMOUS          => 'all_users',
+        self::REGISTERED         => 'registered_users',
+        self::PROJECT_MEMBERS    => 'project_members',
+        self::PROJECT_ADMIN      => 'project_admins',
+        self::FILE_MANAGER_ADMIN => 'file_manager_admins',
+        self::DOCUMENT_TECH      => 'document_techs',
+        self::DOCUMENT_ADMIN     => 'document_admins',
+        self::WIKI_ADMIN         => 'wiki_admins',
+        self::TRACKER_ADMIN      => 'tracker_admins',
+        self::FORUM_ADMIN        => 'forum_admins',
+        self::NEWS_ADMIN         => 'news_admins',
+        self::NEWS_EDITOR        => 'news_editors',
+        self::SVN_ADMIN          => 'svn_admins',
+    );
 
     protected $id    = 0;
     protected $group_id     = 0;
@@ -128,6 +146,20 @@ class UGroup {
     }
 
     /**
+     * return the string identifier for dynamic user groups
+     * or the name of static user groups
+     *
+     * @return String
+     */
+    public function getNormalizedName() {
+        if ($this->is_dynamic) {
+            return $this->normalized_names[$this->id];
+        }
+        return $this->name;
+    }
+
+
+    /**
      * Get the ugroup id
      *
      * @return Integer
@@ -136,11 +168,18 @@ class UGroup {
         return $this->id;
     }
 
+    public function getProjectId() {
+        return $this->group_id;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
     /**
-     * @deprecated user getUsers($group_id)
-     * Return DAR of all ugroup members as User objects
+     * Return array of users members of the ugroup
      *
-     * @return Array of User
+     * @return PFUser[]
      */
     public function getMembers() {
         if (! $this->members) {
@@ -198,7 +237,7 @@ class UGroup {
     }
 
     public function newUser($row) {
-        return new User($row);
+        return new PFUser($row);
     }
 
     public function newUserFromIncompleteRow($row) {
@@ -233,13 +272,13 @@ class UGroup {
      * Add the given user to the group
      * This method can add to any group, either dynamic or static.
      *
-     * @param User $user User to add
+     * @param PFUser $user User to add
      *
      * @throws UGroup_Invalid_Exception
      *
      * @return Void
      */
-    public function addUser(User $user) {
+    public function addUser(PFUser $user) {
         $this->assertProjectUGroupAndUserValidity($user);
         if ($this->is_dynamic) {
             $this->addUserToDynamicGroup($user);
@@ -255,7 +294,7 @@ class UGroup {
     /**
      * Test the status of the ugroup & the user
      *
-     * @param User $user User to test
+     * @param PFUser $user User to test
      *
      * @return Void
      */
@@ -287,11 +326,11 @@ class UGroup {
     /**
      * Add user to a dynamic ugroup
      *
-     * @param User $user User to add
+     * @param PFUser $user User to add
      *
      * @return Void
      */
-    protected function addUserToDynamicGroup(User $user) {
+    protected function addUserToDynamicGroup(PFUser $user) {
         $dao  = $this->_getUserGroupDao();
         $flag = $this->getAddFlagForUGroupId($this->id);
         $dao->updateUserGroupFlags($user->getId(), $this->group_id, $flag);
@@ -331,13 +370,13 @@ class UGroup {
      * Remove given user from user group
      * This method can remove from any group, either dynamic or static.
      *
-     * @param User $user
+     * @param PFUser $user
      *
      * @throws UGroup_Invalid_Exception
      *
      * @return Void
      */
-    public function removeUser(User $user) {
+    public function removeUser(PFUser $user) {
         $this->assertProjectUGroupAndUserValidity($user);
         if ($this->is_dynamic) {
             $this->removeUserFromDynamicGroup($user);
@@ -366,11 +405,11 @@ class UGroup {
     /**
      * Remove user from dynamic ugroup
      *
-     * @param User $user User to remove
+     * @param PFUser $user User to remove
      *
      * @return Boolean
      */
-    protected function removeUserFromDynamicGroup(User $user) {
+    protected function removeUserFromDynamicGroup(PFUser $user) {
         $dao  = $this->_getUserGroupDao();
         if ($this->id == self::PROJECT_ADMIN && $dao->returnProjectAdminsByGroupId($this->group_id)->rowCount() <= 1) {
             throw new Exception('Impossible to remove last admin of the project');

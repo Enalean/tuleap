@@ -30,7 +30,9 @@
                         {{#has_swimline_header}}
                             <td class="cardwall-cell">
                                 <ul class="nodrag">
-                                    <li id="cardwall_board_postit-{{swimline_id}}">{{> card}}</td>
+                                    <li id="cardwall_board_postit-{{swimline_id}}">
+                                        {{> card}}
+                                    </li>
                                 </ul>
                             </td>
                         {{/has_swimline_header}}
@@ -43,6 +45,7 @@
                                         </li>
                                     {{/cardincell_presenters}}
                                 </ul>
+                                &nbsp;
                             </td>
                         {{/cells}}
                     </tr>

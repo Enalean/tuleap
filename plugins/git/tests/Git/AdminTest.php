@@ -31,19 +31,21 @@ class Git_Admin_process_Test extends TuleapTestCase {
         $this->admin   = new Git_Admin($this->factory, $this->csrf);
 
         $this->request_new_server = array(
-            'host'          => 'host',
-            'port'          => '1234',
-            'login'         => 'login',
-            'identity_file' => '/path/to/file',
+            'host'              => 'host',
+            'port'              => '1234',
+            'login'             => 'login',
+            'identity_file'     => '/path/to/file',
+            'replication_key'   => new Git_RemoteServer_Gerrit_ReplicationSSHKey(),
         );
         $this->request_update_existing_server = array(
-            'host'          => 'g.example.com',
-            'port'          => '1234',
-            'login'         => 'new_login',
-            'identity_file' => '/path/to/file',
+            'host'              => 'g.example.com',
+            'port'              => '1234',
+            'login'             => 'new_login',
+            'identity_file'     => '/path/to/file',
+            'replication_key'   => new Git_RemoteServer_Gerrit_ReplicationSSHKey(),
         );
-        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file');
-        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file');
+        $this->a_brand_new_server = new Git_RemoteServer_GerritServer(0, 'host', '1234', '80', 'login', '/path/to/file', new Git_RemoteServer_Gerrit_ReplicationSSHKey());
+        $this->an_existing_server = new Git_RemoteServer_GerritServer(1, 'g.example.com', '1234', '80', 'login', '/path/to/file', new Git_RemoteServer_Gerrit_ReplicationSSHKey());
 
         stub($this->factory)->getServers()->returns(array(
             1 => $this->an_existing_server
@@ -56,7 +58,7 @@ class Git_Admin_process_Test extends TuleapTestCase {
      * @return CSRFSynchronizerToken
      */
     private function setUpCSRF() {
-        $user = mock('User');
+        $user = mock('PFUser');
         $csrf = TestHelper::getPartialMock('CSRFSynchronizerToken', array('getUser'));
         stub($csrf)->getUser()->returns($user);
         $csrf->__construct('/plugin/git/admin/');

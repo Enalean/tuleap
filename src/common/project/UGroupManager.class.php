@@ -36,6 +36,20 @@ class UGroupManager {
     }
 
     /**
+     *
+     * @param Project $project
+     * @param type $ugroup_id
+     *
+     * @return UGroup
+     */
+    public function getUGroupWithMembers(Project $project, $ugroup_id) {
+        $ugroup = $this->getUGroup($project, $ugroup_id);
+        $ugroup->getMembers();
+
+        return $ugroup;
+    }
+
+    /**
      * @return UGroup of the given project or null if not found
      */
     public function getUGroup(Project $project, $ugroup_id) {
@@ -77,7 +91,7 @@ class UGroupManager {
     /**
      * Return all UGroups the user belongs to
      *
-     * @param User $user The user
+     * @param PFUser $user The user
      *
      * @return DataAccessResult
      */

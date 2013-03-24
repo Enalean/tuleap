@@ -311,7 +311,7 @@ class GitViews extends PluginViews {
                 $options = ' checked="true" ';
             }
             echo '<div>
-                <input id="choose_personal" type="radio" name="choose_destination" value="personal" '.$options.' />
+                <input id="choose_personal" type="radio" name="choose_destination" value="'. Git::SCOPE_PERSONAL .'" '.$options.' />
                 <label for="choose_personal">'.$this->getText('fork_choose_destination_personal').'</label>
             </div>';
 
@@ -382,7 +382,7 @@ class GitViews extends PluginViews {
         return $html;
     }
 
-    public function getUserProjectsAsOptions(User $user, ProjectManager $manager, $currentProjectId) {
+    public function getUserProjectsAsOptions(PFUser $user, ProjectManager $manager, $currentProjectId) {
         $purifier   = Codendi_HTMLPurifier::instance();
         $html       = '';
         $option     = '<option value="%d" title="%s">%s</option>';

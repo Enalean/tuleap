@@ -1,0 +1,1 @@
+/usr/share/mediawiki_tuleap/opensearch_desc.php

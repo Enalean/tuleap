@@ -18,6 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'common/layout/ColorHelper.class.php';
+
 class Tracker_FormElement_Field_List_BindDecorator {
     public $field_id;
     public $value_id;
@@ -51,7 +53,7 @@ class Tracker_FormElement_Field_List_BindDecorator {
     }
     
     public function decorateSelectOption() {
-        return 'border-left: 16px solid '. $this->toHexa($this->r, $this->g, $this->b) .';';
+        return 'border-left: 16px solid '. ColorHelper::RGBToHexa($this->r, $this->g, $this->b) .';';
     }
     
     /**
@@ -62,7 +64,7 @@ class Tracker_FormElement_Field_List_BindDecorator {
      */
     public function decorateEdit() {
         $html = '';
-        $hexa = $this->toHexa($this->r, $this->g, $this->b);
+        $hexa = ColorHelper::RGBToHexa($this->r, $this->g, $this->b);
         $id   = 'decorator_'. $this->field_id .'_'. $this->value_id;
         $html .= self::fetchSquareColor($id, $hexa, 'colorpicker', $this->r, $this->g, $this->b);
         $html .= '<input id="'. $id .'_field" type="text" size="6" autocomplete="off" name="bind[decorator]['. $this->value_id .']" value="'. $hexa .'" />';
@@ -116,27 +118,11 @@ class Tracker_FormElement_Field_List_BindDecorator {
     }
     
     /**
-     * @return string
-     */
-    public function toHexa($r, $g, $b) {
-        return sprintf('#%02X%02X%02X', $r, $g, $b);
-    }
-    
-    public static function toRGB($hex) {
-        $delta = strlen($hex) == 4 ? 1 : 2;
-        return array(
-            hexdec(substr($hex, 1 + 0 * $delta, $delta)),
-            hexdec(substr($hex, 1 + 1 * $delta, $delta)),
-            hexdec(substr($hex, 1 + 2 * $delta, $delta)),
-        );
-    }
-    
-    /**
      * Save a decorator
      */
     public static function save($field_id, $value_id, $hexacolor) {
         $dao = new Tracker_FormElement_Field_List_BindDecoratorDao();
-        list($r, $g, $b) = self::toRGB($hexacolor);
+        list($r, $g, $b) = ColorHelper::HexaToRGB($hexacolor);
         $dao->save($field_id, $value_id, $r, $g, $b);
     }
     

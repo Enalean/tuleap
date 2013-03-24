@@ -111,6 +111,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
     public function getQuerySelect() {
         return $this->getBind()->getQuerySelect();
     }
+    
+    /**
+     * Get the "select" statement to retrieve field values with the RGB values of their decorator
+     * Has no sense for fields other than lists
+     * @return string
+     * @see getQueryFrom
+     */
+    public function getQuerySelectWithDecorator() {
+        return $this->getBind()->getQuerySelectWithDecorator();
+    }
 
     /**
      * Get the "from" statement to retrieve field values
@@ -120,6 +130,16 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      */
     public function getQueryFrom() {
         return $this->getBind()->getQueryFrom();
+    }
+    
+	/**
+     * Get the "from" statement to retrieve field values
+     * You can join on artifact AS a, tracker_changeset AS c
+     * which tables used to retrieve the last changeset of matching artifacts.
+     * @return string
+     */
+    public function getQueryFromWithDecorator() {
+        return $this->getBind()->getQueryFromWithDecorator();
     }
 
     /**
@@ -438,6 +458,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
         $output = '';
         switch($format) {
             case 'html':
+                if ( empty($value) ||  !$value->getListValues()) {
+                    return '-';
+                }
                 $output = $this->fetchArtifactValueReadOnly($artifact, $value);
                 break;
             default:
@@ -460,9 +483,9 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string
      */
-    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {
+    public function fetchArtifactValueReadOnly(Tracker_Artifact $artifact, Tracker_Artifact_ChangesetValue $value = null) {        
         $html = '';
-        $selected_values = $value ? $value->getListValues() : array();
+        $selected_values = $value ? $value->getListValues() : array();        
         $tablo = array();
         foreach ($selected_values as $id => $value) {
             $tablo[] = $this->getBind()->formatArtifactValue($id);
@@ -1012,7 +1035,28 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
          return $values;
      }
 
-     /**
+     public function getSoapBindingProperties() {
+         $bind = $this->getBind();
+         return $bind->getSoapBindingProperties();
+     }
+
+     public function getFieldDataFromSoapValue(stdClass $soap_value, Tracker_Artifact $artifact = null) {
+         if (isset($soap_value->field_value->bind_value)) {
+             if ($this->isMultiple()) {
+                 $values = array();
+                 foreach ($soap_value->field_value->bind_value as $bind_value) {
+                    $values[] = $bind_value->bind_value_id;
+                 }
+                 return $values;
+             } else {
+                 return $soap_value->field_value->bind_value[0]->bind_value_id;
+             }
+         } else {
+             return $this->getFieldData($soap_value->field_value->value);
+         }
+     }
+
+    /**
      * Get the field data for artifact submission
      *
      * @param string the soap field value
@@ -1083,11 +1127,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      * Check if the user can make the transition
      *
      * @param int  $transition_id The id of the transition
-     * @param User $user          The user. If null, take the current user
+     * @param PFUser $user          The user. If null, take the current user
      *
      *@return boolean true if user has permission on this field
      */
-    public function userCanMakeTransition($transition_id, User $user = null) {
+    public function userCanMakeTransition($transition_id, PFUser $user = null) {
         if ($transition_id) {
             $group_id = $this->getTracker()->getGroupId();
 

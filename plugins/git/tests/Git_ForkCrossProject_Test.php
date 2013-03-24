@@ -21,7 +21,7 @@
 require_once(dirname(__FILE__).'/../include/constants.php');
 require_once dirname(__FILE__).'/../include/Git.class.php';
 
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('Project');
 Mock::generate('ProjectManager');
@@ -40,7 +40,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $repos = array($repo);
         $repo_ids = '200';
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', true);
         
         $usermanager = new MockUserManager();
@@ -120,7 +120,7 @@ class Git_ForkCrossProject_Test extends TuleapTestCase {
         $adminMsg = 'must_be_admin_to_create_project_repo';
         $GLOBALS['Language']->setReturnValue('getText', $adminMsg, array('plugin_git', $adminMsg, '*'));
         
-        $user = new MockUser();
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', false, array(666, 'A'));
         
         $request = new Codendi_Request(array(

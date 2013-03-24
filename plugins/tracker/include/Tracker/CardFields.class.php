@@ -26,7 +26,7 @@ class Tracker_CardFields {
     private $displayed_fields;
     
     /**
-     * @var User
+     * @var PFUser
      */
     private $user_manager;
     

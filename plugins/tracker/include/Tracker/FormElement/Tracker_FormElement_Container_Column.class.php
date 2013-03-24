@@ -101,17 +101,20 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
         $html .= $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML);
         $html .= '<span class="tracker-admin-field-controls">';
         $html .= '<a class="edit-field" href="'. $this->getAdminEditUrl() .'">'. $GLOBALS['HTML']->getImage('ic/edit.png', array('alt' => 'edit')) .'</a> ';
-        if ($this->canBeUnused()) {
+
+        if ($this->canBeRemovedFromUsage()) {
             $html .= '<a href="?'. http_build_query(array(
                 'tracker'  => $this->tracker_id,
                 'func'     => 'admin-formElement-remove',
                 'formElement' => $this->id,
             )) .'">'. $GLOBALS['HTML']->getImage('ic/cross.png', array('alt' => 'remove')) .'</a>';
         } else {
-            $html .= '<span style="color:gray;" title="'. $GLOBALS['Language']->getText('plugin_tracker_common_fieldset_factory','delete_only_empty_fieldset') .'">';
+            $cannot_remove_message = $this->getCannotRemoveMessage();
+            $html .= '<span style="color:gray;" title="'. $cannot_remove_message .'">';
             $html .= $GLOBALS['HTML']->getImage('ic/cross-disabled.png', array('alt' => 'remove'));
             $html .= '</span>';
         }
+        
         $html .= '</span></label>';
         $html .= '</div>';
         $content = array();
@@ -160,19 +163,11 @@ class Tracker_FormElement_Container_Column extends Tracker_FormElement_Container
     }
 
     protected function fetchMailArtifactPrefix($format) {
-        if ($format == 'text') {
-            return '';
-        } else {
-            return $this->fetchArtifactPrefix();
-        }
+        return '';
     }
     
     protected function fetchMailArtifactSuffix($format) {
-        if ($format == 'text') {
-            return '';
-        } else {
-            return $this->fetchArtifactSuffix();
-        }
+        return '';
     }
     
     /**

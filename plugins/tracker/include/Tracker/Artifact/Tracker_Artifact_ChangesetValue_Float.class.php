@@ -63,7 +63,7 @@ class Tracker_Artifact_ChangesetValue_Float extends Tracker_Artifact_ChangesetVa
      * @return string The value of this artifact changeset value for SOAP
      */
     public function getSoapValue() {
-        return (string)$this->getFloat();
+        return $this->encapsulateRawSoapValue($this->getFloat());
     }
 
 }

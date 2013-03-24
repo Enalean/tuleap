@@ -45,7 +45,7 @@ Mock::generate('Docman_Folder');
 Mock::generate('Iterator');
 
 require_once('common/user/User.class.php');
-Mock::generate('User');
+Mock::generate('PFUser');
 
 /**
  * Test how items are copied.
@@ -112,7 +112,7 @@ class CopyItemsTest extends UnitTestCase {
         $cloneItemsVisitor->visitLink($item_to_clone, array(
             'parentId'        => $dest_folder->getId(),
             'srcRootId'       => 66,
-            'user'            => new MockUser($this),
+            'user'            => mock('PFUser'),
             'metadataMapping' => array(),
             'ugroupsMapping'  => array(),
             'data_root'       => '/tmp')

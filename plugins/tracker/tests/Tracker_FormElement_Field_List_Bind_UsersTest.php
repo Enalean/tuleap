@@ -34,23 +34,33 @@ Mock::generate('Tracker_Artifact_ChangesetValue_List');
 Mock::generate('Tracker_FormElement_Field_List_Bind_UsersValue');
 
 
-class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
+class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
     
     public function testGetSoapAvailableValues() {
         $field = new MockTracker_FormElement_Field_List();
         $field->setReturnValue('getId', 123);
-        $value_function = 'project_members';
+
+        $user1 = mock('Tracker_FormElement_Field_List_Bind_UsersValue');
+        stub($user1)->getSoapValue()->returns('user1');
+        stub($user1)->getId()->returns(10);
+        $user2 = mock('Tracker_FormElement_Field_List_Bind_UsersValue');
+        stub($user2)->getSoapValue()->returns('user2');
+        stub($user2)->getId()->returns(20);
+        
+        $value_function = ',project_members,project_admins';
         $default_values = $decorators = '';
-        
-        $users = new Tracker_FormElement_Field_List_Bind_Users($field, $value_function, $default_values, $decorators);
-        
-        $this->assertEqual(count($users->getSoapAvailableValues()), 1);
+
+        $users =  partial_mock('Tracker_FormElement_Field_List_Bind_Users', array('getAllValues'), array($field, $value_function, $default_values, $decorators));
+        stub($users)->getAllValues()->returns(array(10 => $user1, 20 => $user2));
+
         $soap_values = array(
-                        array('field_id' => 123,
-                              'bind_value_id' => 0,
-                              'bind_value_label' => 'project_members',
-                             )
-                        );
+            array('bind_value_id' => 10,
+                  'bind_value_label' => 'user1',
+            ),
+            array('bind_value_id' => 20,
+                  'bind_value_label' => 'user2',
+            ),
+        );
         $this->assertEqual($users->getSoapAvailableValues(), $soap_values);
     }
     
@@ -90,8 +100,8 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends UnitTestCase {
         //}
         //return $recipients;
         
-        //$user1 = new MockUser(); $user1->setReturnValue('getUserName', 'u1');
-        //$user2 = new MockUser(); $user2->setReturnValue('getUserName', 'u2');
+        //$user1 = mock('PFUser'); $user1->setReturnValue('getUserName', 'u1');
+        //$user2 = mock('PFUser'); $user2->setReturnValue('getUserName', 'u2');
         
         $changeset_value = new MockTracker_Artifact_ChangesetValue_List();
         $changeset_value->setReturnValue(

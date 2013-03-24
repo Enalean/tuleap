@@ -29,7 +29,7 @@ require_once dirname(__FILE__).'/../include/GitDao.class.php';
 require_once dirname(__FILE__).'/../include/GitRepository.class.php';
 require_once('common/user/User.class.php');
 Mock::generate('GitRepository');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Project');
 Mock::generate('GitDao');
 Mock::generate('GitBackend');
@@ -53,7 +53,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
     public function testRemoveMailByProjectPrivateRepositoryUserStillMember(){
         $prm = new PostReceiveMailManagerTestVersion();
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', True);
         $user->setReturnValue('getEmail', "codendiadm@codendi.org");
 
@@ -72,7 +72,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
     public function testRemoveMailByProjectPrivateRepository(){
         $prm = new PostReceiveMailManagerTestVersion();
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', False);
         $user->setReturnValue('getEmail', "codendiadm@codendi.org");
 
@@ -99,7 +99,7 @@ class Git_PostReceiveMailManagerTest extends UnitTestCase {
     public function testRemoveMailByProjectPrivateRepositoryErrorDaoRemoving(){
         $prm = new PostReceiveMailManagerTestVersion();
 
-        $user = new MockUser($this);
+        $user = mock('PFUser');
         $user->setReturnValue('isMember', False);
         $user->setReturnValue('getEmail', "codendiadm@codendi.org");
 

@@ -399,7 +399,7 @@ class LdapPlugin extends Plugin {
      * 
      * @param LDAPResultIterator $lri An LDAP result iterator
      * 
-     * @return User
+     * @return PFUser
      */
     protected function getUserFromLdapIterator($lri) {
         if($lri && count($lri) === 1) {

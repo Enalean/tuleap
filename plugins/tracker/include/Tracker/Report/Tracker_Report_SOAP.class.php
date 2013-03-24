@@ -27,7 +27,7 @@ class Tracker_Report_SOAP extends Tracker_Report {
     private $soap_criteria = array();
 
     public function __construct(
-            User $current_user,
+            PFUser $current_user,
             Tracker $tracker,
             PermissionsManager $permissions_manager,
             Tracker_ReportDao $dao,

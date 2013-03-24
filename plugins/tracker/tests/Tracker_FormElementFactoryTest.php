@@ -37,7 +37,7 @@ Mock::generate('Tracker_FormElement_Field_Date');
 
 Mock::generate('Tracker');
 Mock::generate('TrackerManager');
-Mock::generate('User');
+Mock::generate('PFUser');
 Mock::generate('Project');
 
 require_once 'common/include/HTTPRequest.class.php';
@@ -60,7 +60,7 @@ abstract class Tracker_FormElementFactoryAbstract extends TuleapTestCase {
 class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract {
 
     public function test_saveObject() {
-        $user          = new MockUser();
+        $user          = mock('PFUser');
         $tracker       = new MockTracker();
         
         $a_formelement = new MockTracker_FormElement_Container_Fieldset();
@@ -205,7 +205,7 @@ class Tracker_FormElementFactoryTest extends Tracker_FormElementFactoryAbstract 
         $GLOBALS['Language']->setReturnValue('getText', 'Separator', array('plugin_tracker_formelement_admin','separator_label'));
         
         $tracker_manager = new MockTrackerManager();
-        $user            = new MockUser();
+        $user            = mock('PFUser');
         $request         = new MockHTTPRequest();
         $tracker         = new MockTracker();
         
@@ -257,7 +257,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
     }
 
     public function itReturnsTheFieldsIfUserCanReadTheOriginalAndAllTargets() {
-        $user       = mock('User');
+        $user       = mock('PFUser');
         $project = new MockProject();
         
         $readableField   = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
@@ -274,7 +274,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
     }
     
     public function itDoesntReturnAnythingIfUserCannotReadTheOriginalAndAllTheTargets() {
-        $user       = mock('User');
+        $user       = mock('PFUser');
         $project = new MockProject();
         
         $aReadableField         = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
@@ -289,7 +289,7 @@ class Tracker_FormElementFactory_GetAllSharedFieldsOfATrackerTest extends Tracke
     }
     
     public function itReturnsACollectionOfUniqueOriginals() {
-        $user       = mock('User');
+        $user       = mock('PFUser');
         $project = new MockProject();
         
         $aReadableField         = stub('Tracker_FormElement_Field_SelectBox')->userCanRead($user)->returns(true);
@@ -453,7 +453,7 @@ class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
-        $this->user    = mock('User');
+        $this->user    = mock('PFUser');
         $this->tracker = mock('Tracker');
         $this->field   = mock('Tracker_FormElement_Field_ArtifactLink');
 
@@ -478,4 +478,51 @@ class Tracker_FormElementFactory_GetArtifactLinks extends TuleapTestCase {
     }
 
 }
+
+class ArrayDoesntContainExpectation extends SimpleExpectation {
+    private $should_not_exist;
+    public function __construct(array $should_not_exist) {
+        parent::__construct();
+        $this->should_not_exist = $should_not_exist;
+    }
+
+    public function test(array $array_to_test) {
+        return count(array_intersect($array_to_test, $this->should_not_exist)) === 0;
+    }
+
+    public function testMessage(array $array_to_test) {
+        return "Submitted array still contains: (".implode(', ', array_intersect($array_to_test, $this->should_not_exist)).")";
+    }
+}
+
+class Tracker_FormElementFactory_GetUsedFieldsForSOAP extends TuleapTestCase {
+
+    private $tracker;
+    private $factory;
+
+    public function setUp() {
+        parent::setUp();
+        $this->tracker = mock('Tracker');
+        $this->factory = partial_mock('Tracker_FormElementFactory', array('getUsedFormElementsByType'), array());
+    }
+
+    public function itFiltersOutFieldsThatAreAlreadyReturnedBySOAPBasicInfo() {
+        $elements_to_exclude_for_soap = array(
+            'aid',
+            'lud',
+            'subby',
+            'subon',
+            'cross',
+            'fieldset',
+            'column',
+            'linebreak',
+            'separator',
+            'staticrichtext',
+        );
+        expect($this->factory)->getUsedFormElementsByType($this->tracker, new ArrayDoesntContainExpectation($elements_to_exclude_for_soap))->once();
+
+        $this->factory->getUsedFieldsForSOAP($this->tracker);
+    }
+}
+
 ?>

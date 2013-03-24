@@ -206,7 +206,7 @@ class Git_Backend_Gitolite extends GitRepositoryCreatorImpl implements Git_Backe
     /**
      * Test is user can read the content of this repository and metadata
      *
-     * @param User          $user       The user to test
+     * @param PFUser          $user       The user to test
      * @param GitRepository $repository The repository to test
      *
      * @return Boolean
