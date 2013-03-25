@@ -134,8 +134,10 @@ class Git_Driver_Gerrit {
     private function compileMemberCommands($user_list) {
         $members = array();
         foreach ($user_list as $user) {
-            $user = $this->escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user);
-            $members[] = "--member $user";
+            if ($user != '') {
+                $user = $this->escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user);
+                $members[] = "--member $user";
+            }
         }
         return $members;
     }

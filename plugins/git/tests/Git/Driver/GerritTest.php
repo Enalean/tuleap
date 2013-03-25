@@ -166,6 +166,15 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
         $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', $user_list);
     }
 
+    public function itCreatesGroupsWithMembersAndDoesNotAddNonLdapUsers() {
+        stub($this->gerrit_driver)->groupExists()->returns(false);
+
+        $create_group_command = "gerrit create-group firefox/project_members --member ''\''johan'\''' --member ''\''goyotm'\'''";
+        $user_list = array('johan', '', 'goyotm');
+        expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
+        $this->gerrit_driver->createGroup($this->gerrit_server, 'firefox/project_members', $user_list);
+    }
+
     public function itInformsAboutGroupCreation() {
         stub($this->gerrit_driver)->groupExists()->returns(false);
 
