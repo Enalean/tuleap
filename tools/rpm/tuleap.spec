@@ -572,10 +572,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 # Plugin tracker
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/tracker
 
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/trololo
-
 # Plugin mediawiki
 %if %{php_base} == php53
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/mediawiki/master
 %endif
 ##
@@ -1001,6 +1000,8 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
 %dir %{APP_DATA_DIR}/plugins/mediawiki
+%dir %{APP_DATA_DIR}/plugins/mediawiki/master
+
 %endif
 
 #
