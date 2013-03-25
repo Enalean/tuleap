@@ -161,7 +161,7 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itPushesTheUpdatedConfigToTheServer() {
-        $this->project_creator->createProject($this->server, $this->repository);
+        $this->project_creator->createGerritProject($this->server, $this->repository);
 
         $this->assertItClonesTheDistantRepo();
         $this->assertCommitterIsConfigured();
@@ -173,13 +173,13 @@ class Git_Driver_Gerrit_ProjectCreator_InitiatePermissionsTest extends Git_Drive
     }
 
     public function itDoesNotSetPermsOnRegisteredUsersIfProjectIsPrivate() {
-        $this->project_creator->createProject($this->server, $this->repository_in_a_private_project);
+        $this->project_creator->createGerritProject($this->server, $this->repository_in_a_private_project);
 
         $this->assertNoPattern('/Registered Users/', file_get_contents("$this->tmpdir/project.config"));
     }
 
     public function itDoesNotSetPermsOnRegisteredUsersIfRepoHasNoReadForRegistered() {
-        $this->project_creator->createProject($this->server, $this->repository_without_registered);
+        $this->project_creator->createGerritProject($this->server, $this->repository_without_registered);
 
         $this->assertNoPattern('/Registered Users/', file_get_contents("$this->tmpdir/project.config"));
     }
@@ -286,7 +286,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
         expect($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->never();
 
-        $project_name = $this->project_creator->createProject($this->server, $this->repository);
+        $project_name = $this->project_creator->createGerritProject($this->server, $this->repository);
         $this->assertEqual($this->gerrit_project, $project_name);
 
         $this->assertAllGitBranchesPushedToTheServer();
@@ -307,7 +307,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         expect($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
 
-        $project_name = $this->project_creator->createProject($this->server, $this->repository);
+        $project_name = $this->project_creator->createGerritProject($this->server, $this->repository);
         $this->assertEqual($this->gerrit_project, $project_name);
 
         $this->assertAllGitBranchesPushedToTheServer();
@@ -323,7 +323,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup));
 
         expect($this->driver)->createGroup($this->server, $this->project_unix_name.'/project_members', $user_list)->at(0);
-        $this->project_creator->createProject($this->server, $this->repository);
+        $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 
     public function itCreatesAllGroups() {
@@ -349,7 +349,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         expect($this->driver)->createGroup($this->server, $this->project_unix_name.'/project_members', $project_members_list)->at(0);
         expect($this->driver)->createGroup($this->server, $this->project_unix_name.'/another_group', $another_group_list)->at(1);
 
-        $this->project_creator->createProject($this->server, $this->repository);
+        $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 
     public function itDoesNotStopIfAGroupCannotBeCreated() {
@@ -374,7 +374,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->driver)->createGroup()->throwsAt(1, new Exception());
         $this->driver->expectCallCount('createGroup', 2);
 
-        $this->project_creator->createProject($this->server, $this->repository);
+        $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 
     private function assertAllGitBranchesPushedToTheServer() {

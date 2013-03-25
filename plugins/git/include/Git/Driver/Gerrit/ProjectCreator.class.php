@@ -48,7 +48,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->ugroup_manager = $ugroup_manager;
     }
 
-    public function createProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
+    public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
         $admin_group = null;
         $ugroups = $this->ugroup_manager->getUGroups($repository->getProject());
         $good_ugroups = array();
