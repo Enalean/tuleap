@@ -23,6 +23,7 @@ require_once('events/SystemEvent_GIT_REPO_CREATE.class.php');
 require_once('events/SystemEvent_GIT_REPO_DELETE.class.php');
 require_once('events/SystemEvent_GIT_REPO_ACCESS.class.php');
 require_once('events/SystemEvent_GIT_GERRIT_MIGRATION.class.php');
+require_once('events/SystemEvent_GIT_CREATE_REFERENCE.class.php');
 require_once('common/system_event/SystemEventManager.class.php');
 require_once('GitBackend.class.php');
 require_once('GitRepository.class.php');
@@ -151,15 +152,22 @@ class GitActions extends PluginActions {
         $projectId = intval( $projectId );
 
         try {
-            $backend    = new Git_Backend_Gitolite(new Git_GitoliteDriver());
-            $repository = new GitRepository();
-            $repository->setBackend($backend);
-            $repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
-            $repository->setCreator(UserManager::instance()->getCurrentUser());
-            $repository->setProject(ProjectManager::instance()->getProject($projectId));
-            $repository->setName($repositoryName);
+            $this->systemEventManager->createEvent(
+                    SystemEvent_GIT_CREATE_REFERENCE::TYPE,
+                    $projectId . SystemEvent::PARAMETER_SEPARATOR . $repositoryName,
+                    SystemEvent::PRIORITY_HIGH,
+                    SystemEvent::OWNER_APP
+            );
 
-            $this->manager->create($repository, $backend);
+            //$backend    = new Git_Backend_Gitolite(new Git_GitoliteDriver());
+            //$repository = new GitRepository();
+            //$repository->setBackend($backend);
+            //$repository->setDescription(GitRepository::DEFAULT_DESCRIPTION);
+            //$repository->setCreator(UserManager::instance()->getCurrentUser());
+            //$repository->setProject(ProjectManager::instance()->getProject($projectId));
+            //$repository->setName($repositoryName);
+
+            //$this->manager->create($repository, $backend);
         } catch (Exception $exception) {
             $c->addError($exception->getMessage());
         }

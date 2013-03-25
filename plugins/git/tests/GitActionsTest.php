@@ -640,4 +640,29 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         $this->actions->migrateToGerrit($repo, $server_id);
     }
 }
+
+class GitActions_createRepositoryTest extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->system_events_manager = mock('SystemEventManager');
+        $this->project_id            = 103;
+        $this->repository_name       = "something";
+
+        $this->actions = new GitActions(
+            mock('Git'),
+            $this->system_events_manager,
+            mock('GitRepositoryFactory'),
+            mock('GitRepositoryManager'),
+            mock('Git_RemoteServer_GerritServerFactory'),
+            mock('Git_Driver_Gerrit')
+        );
+    }
+
+    public function itCreatesASystemEvent() {
+
+        $this->system_events_manager->expectOnce('createEvent', array(SystemEvent_GIT_CREATE_REFERENCE::TYPE, "$this->project_id::$this->repository_name", SystemEvent::PRIORITY_HIGH, SystemEvent::OWNER_APP));
+        $this->actions->createReference($this->project_id, $this->repository_name);
+    }
+}
 ?>
