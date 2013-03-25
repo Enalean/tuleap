@@ -49,42 +49,47 @@ class Git_Driver_Gerrit_ProjectCreator {
     }
 
     public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
-        $admin_group = null;
-        $ugroups = $this->ugroup_manager->getUGroups($repository->getProject());
-        $good_ugroups = array();
+        $admin_group_name = null;
+        $project          = $repository->getProject();
+        $ugroups          = $this->ugroup_manager->getUGroups($project);
+        $migrated_ugroups = array();
+        //We search all the groups linked to the git repository
         foreach ($ugroups as $ugroup) {
             try {
-                if ($ugroup->getId() > UGroup::NONE ||  $ugroup->getId() == UGroup::PROJECT_MEMBERS || $ugroup->getId() == UGroup::PROJECT_ADMIN) {
-                    if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
-                        $admin_group = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
-                    }
-                    $this->driver->createGroup($gerrit_server,
-                        $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(),
-                        $ugroup->getUserLdapIds($repository->getProject()->getID())
-                    );
-                    $good_ugroups[] = $ugroup;
+                if ($this->verifiyUGroupCannotBeMigrated($ugroup)){
+                    continue;
                 }
+
+                $gerrit_group_name = $project->getUnixName().'/'.$ugroup->getNormalizedName();
+
+                if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                    $admin_group_name = $gerrit_group_name;
+                }
+                //We create the user group in gerrit
+                $this->driver->createGroup($gerrit_server, $gerrit_group_name, $ugroup->getUserLdapIds($project->getID()));
+                $migrated_ugroups[] = $ugroup;
+
             } catch (Exception $e) {
                 // Continue with the next group
             }
         }
 
-        $parent_project_name = $repository->getProject()->getUnixName();
+        $parent_project_name = $project->getUnixName();
 
-        if (! $this->driver->parentProjectExists($gerrit_server, $parent_project_name)) {
-            $parent_project_name = $this->driver->createParentProject($gerrit_server, $repository, $admin_group);
+        if (! $this->driver->parentProjectExists($gerrit_server, $parent_project_name) && $admin_group_name) {
+            $parent_project_name = $this->driver->createParentProject($gerrit_server, $repository, $admin_group_name);
         }
 
         $gerrit_project = $this->driver->createProject($gerrit_server, $repository, $parent_project_name);
 
-        $this->initiatePermissions(
+        $this->initiateGerritPermissions(
             $repository,
             $gerrit_server,
             $gerrit_server->getCloneSSHUrl($gerrit_project),
-            $good_ugroups,
+            $migrated_ugroups,
             Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION
         );
-        
+
         $this->exportGitBranches($gerrit_server, $gerrit_project, $repository);
 
         return $gerrit_project;
@@ -96,7 +101,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         `$cmd`;
     }
 
-    private function initiatePermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group) {
+    private function initiateGerritPermissions(GitRepository $repository, Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project_url, array $ugroups, $replication_group) {
         $this->cloneGerritProjectConfig($gerrit_server, $gerrit_project_url);
         foreach ($ugroups as $ugroup) {
             $this->addGroupToGroupFile($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName());
@@ -246,6 +251,12 @@ class Git_Driver_Gerrit_ProjectCreator {
         $backend = Backend::instance('System');
         $backend->recurseDeleteInDir($this->dir);
         rmdir($this->dir);
+    }
+
+    private function verifiyUGroupCannotBeMigrated(Ugroup $ugroup) {
+         return ! $ugroup->getId() > UGroup::NONE &&
+            ! $ugroup->getId() == UGroup::PROJECT_MEMBERS &&
+            ! $ugroup->getId() == UGroup::PROJECT_ADMIN;
     }
 }
 

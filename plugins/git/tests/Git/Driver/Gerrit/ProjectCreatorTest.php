@@ -317,8 +317,10 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
     public function itCreatesProjectMembersGroup() {
         $user_list = array(aUser()->withUserName('goyotm')->build(),  aUser()->withUserName('martissonj')->build());
         $ugroup = mock('UGroup');
-        stub($ugroup)->getMembers()->returns($user_list);
+        stub($ugroup)->getUserLdapIds()->returns($user_list);
         stub($ugroup)->getNormalizedName()->returns('project_members');
+        stub($ugroup)->getId()->returns(Ugroup::PROJECT_MEMBERS);
+
         expect($this->ugroup_manager)->getUGroups($this->project)->once();
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup));
 
