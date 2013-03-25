@@ -58,7 +58,10 @@ class Git_Driver_Gerrit_ProjectCreator {
                     if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
                         $admin_group = $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
                     }
-                    $this->driver->createGroup($gerrit_server, $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(), $ugroup->getUserLdapIds($ugroup->getID()));
+                    $this->driver->createGroup($gerrit_server,
+                        $repository->getProject()->getUnixName().'/'.$ugroup->getNormalizedName(),
+                        $ugroup->getUserLdapIds($repository->getProject()->getID())
+                    );
                     $good_ugroups[] = $ugroup;
                 }
             } catch (Exception $e) {
