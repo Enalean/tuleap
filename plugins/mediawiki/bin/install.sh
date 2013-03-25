@@ -1,16 +1,4 @@
-MEDIAWIKI_SRC_DIR="mediawiki_tuleap_delete"
-
-#get mediawiki (1.20) /!\ needs php 5.3.x
-echo "Start download Mediawiki 1.20"
-cd /usr/share
-wget http://download.wikimedia.org/mediawiki/1.20/mediawiki-1.20.2.tar.gz
-tar -xvf mediawiki-1.20.2.tar.gz
-mv mediawiki-1.20.2 $MEDIAWIKI_SRC_DIR
-echo "Mediawiki fully downloaded into $MEDIAWIKI_SRC_DIR"
-
-echo "Initializing Mediawiki repository"
-mkdir -p /var/lib/codendi/plugins/mediawiki/master
-chown -R codendiadm:codendiadm /var/lib/codendi/plugins/
+MEDIAWIKI_SRC_DIR="mediawiki_tuleap"
 
 echo "Updating httpd configuration"
 cp /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/plugins/
