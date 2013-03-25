@@ -702,7 +702,11 @@ class GitPlugin extends Plugin {
         $servers = $server_factory->getServersForProject($project);
 
         foreach ($servers as $server) {
-            $this->getGerritDriver()->createGroup($server, $project->getUnixName() .'/'. $ugroup->getNormalizedName(), $ugroup->getUserLdapIds($ugroup->getID()));
+            try {
+                $this->getGerritDriver()->createGroup($server, $project->getUnixName() .'/'. $ugroup->getNormalizedName(), $ugroup->getUserLdapIds($ugroup->getID()));
+            } catch (Exception $e) {
+                //Do nothing : continue to the next server
+            }
         }
     }
 
