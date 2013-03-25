@@ -1001,7 +1001,6 @@ fi
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
 %dir %{APP_DATA_DIR}/plugins/mediawiki
-%dir %{APP_DATA_DIR}/plugins/mediawiki/master
 %endif
 
 #
