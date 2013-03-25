@@ -4,7 +4,7 @@ AliasMatch ^/plugins/mediawiki/wiki/[-a-zA-Z0-9_]*/index.php /usr/share/codendi/
 AliasMatch ^/plugins/mediawiki/wiki/[-a-zA-Z0-9_]*/load.php /usr/share/codendi/plugins/mediawiki/www/load.php
 AliasMatch ^/plugins/mediawiki/wiki/([-a-zA-Z0-9_]*)/images/(.*) /var/lib/codendi/plugins/mediawiki/projects/$1/images/$2
 AliasMatch ^/plugins/mediawiki/wiki/([-a-zA-Z0-9_]*)/skins/(.*) /usr/share/codendi/plugins/mediawiki/www/skins/$2
-AliasMatch ^/plugins/mediawiki/wiki/([-a-zA-Z0-9_]*)/extensions/(.*) /usr/share/mediawiki_tuleap_delete/extensions/$2
+AliasMatch ^/plugins/mediawiki/wiki/([-a-zA-Z0-9_]*)/extensions/(.*) /usr/share/mediawiki-tuleap/extensions/$2
 AliasMatch ^/plugins/mediawiki/dumps/(.*)$ /var/lib/codendi/plugins/mediawiki/dumps/$1
 
 <Directory /var/lib/codendi/plugins/mediawiki/dumps>

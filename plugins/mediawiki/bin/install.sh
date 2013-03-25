@@ -1,18 +1,22 @@
-MEDIAWIKI_SRC_DIR="mediawiki_tuleap"
+MEDIAWIKI_SRC_DIR="mediawiki-tuleap"
 
 echo "Updating httpd configuration"
-cp /usr/share/codendi/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/plugins/
+cp $INSTALL_DIR/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/plugins/
 service httpd restart
 
-# "Install" tuleap theme
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/Tuleap.php /usr/share/$MEDIAWIKI_SRC_DIR/skins/
+#Copy .dist in /etc
+cp $INSTALL_DIR/plugins/mediawiki/etc/mediawiki.inc.dist /etc/codendi/plugins/mediawiki/etc/mediawiki.inc
 
-#Go to the mediawiki skin folder
-cd /usr/share/$MEDIAWIKI_SRC_DIR/skins
-if [ -f MonoBook.deps.php ]
-then
- cp MonoBook.deps.php Tuleap.deps.php
-fi
-
-cp -r monobook tuleap
-ln -s /usr/share/codendi/plugins/mediawiki/mediawiki-skin/TuleapSkin.css /usr/share/$MEDIAWIKI_SRC_DIR/skins/tuleap/.
+#Symlinking for skin
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/api.php $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/extensions/ $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/img_auth.php $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/includes/ $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/index.php $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/languages/ $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/load.php $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/maintenance/ $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/opensearch_desc.php $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/profileinfo.php $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/redirect.php $INSTALL_DIR/plugins/mediawiki/www
+ln -s /usr/share/$MEDIAWIKI_SRC_DIR/thumb.php $INSTALL_DIR/plugins/mediawiki/www
