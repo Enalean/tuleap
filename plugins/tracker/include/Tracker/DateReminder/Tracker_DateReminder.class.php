@@ -20,6 +20,12 @@ require_once('common/project/UGroupManager.class.php');
 
 class Tracker_DateReminder {
 
+    const BEFORE = 0;
+    const AFTER  = 1;
+
+    const DISABLED = 0;
+    const ENABLED  = 1;
+
     protected $reminderId;
     protected $trackerId;
     protected $fieldId;
@@ -222,7 +228,7 @@ class Tracker_DateReminder {
      * @return String
      */
     public function getReminderStatusLabel() {
-        if ($this->getStatus() == 1) {
+        if ($this->getStatus() == self::ENABLED) {
             $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_enabled');
         } else {
             $reminderStatusLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_disabled');
@@ -236,7 +242,7 @@ class Tracker_DateReminder {
      * @return String
      */
     public function getNotificationTypeLabel() {
-        if ($this->getNotificationType() == 1) {
+        if ($this->getNotificationType() == self::AFTER) {
             $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_after');
         } else {
             $notificationTypeLabel = $GLOBALS['Language']->getText('project_admin_utils','tracker_date_reminder_before');

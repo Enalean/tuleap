@@ -47,7 +47,8 @@ class Tracker_DateReminderDao extends DataAccessObject {
         $sql = "SELECT *
                 FROM ".$this->tableName."
                 WHERE tracker_id = $trackerId
-                $condition";
+                $condition
+                ORDER BY reminder_id";
         return $this->retrieve($sql);
     }
 
@@ -59,7 +60,8 @@ class Tracker_DateReminderDao extends DataAccessObject {
     public function getTrackersHavingDateReminders() {
         $sql = "SELECT DISTINCT(tracker_id)
                 FROM ".$this->tableName."
-                WHERE status = 1";
+                WHERE status = 1
+                ORDER BY reminder_id";
         return $this->retrieve($sql);
     }
 
