@@ -31,7 +31,7 @@ Release: 1%{?dist}
 BuildArch: noarch
 License: GPL
 Group: Development/Tools
-URL: http://codendi.org
+URL: http://tuleap.net
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root
 Packager: Manuel VACELET <manuel.vacelet@st.com>
@@ -574,8 +574,20 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 
 # Plugin mediawiki
 %if %{php_base} == php53
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/mediawiki
-%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/plugins/mediawiki/master
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
+%{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
+%{__ln_s} %{_datadir}/mediawiki-tuleap/api.php %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/extensions/ %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/img_auth.php %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/includes/ %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/index.php %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/languages/ %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/load.php %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/maintenance/ %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/opensearch_desc.php %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/profileinfo.php %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/redirect.php %{APP_DIR}/plugins/mediawiki/www
+%{__ln_s} %{_datadir}/mediawiki-tuleap/thumb.php %{APP_DIR}/plugins/mediawiki/www
 %endif
 ##
 ## On package install
@@ -999,8 +1011,8 @@ fi
 %files plugin-mediawiki
 %defattr(-,%{APP_USER},%{APP_USER},-)
 %{APP_DIR}/plugins/mediawiki
-%dir %{APP_DATA_DIR}/plugins/mediawiki
-%dir %{APP_DATA_DIR}/plugins/mediawiki/master
+%dir %{APP_DATA_DIR}/mediawiki
+%dir %{APP_DATA_DIR}/mediawiki/master
 
 %endif
 
