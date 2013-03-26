@@ -7,6 +7,8 @@ service httpd restart
 #Copy .dist in /etc
 cp $INSTALL_DIR/plugins/mediawiki/etc/mediawiki.inc.dist /etc/codendi/plugins/mediawiki/etc/mediawiki.inc
 
+#Copy .dist content at the end of local.inc (get_forge_config do not get variables from mediawiki.inc)
+
 #Symlinking for skin
 ln -s /usr/share/$MEDIAWIKI_SRC_DIR/api.php $INSTALL_DIR/plugins/mediawiki/www
 ln -s /usr/share/$MEDIAWIKI_SRC_DIR/extensions/ $INSTALL_DIR/plugins/mediawiki/www

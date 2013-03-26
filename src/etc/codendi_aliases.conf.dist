@@ -79,7 +79,7 @@ Alias /wiki/themes "/usr/share/codendi/src/common/wiki/phpwiki/themes"
 #
 # Plugins directories
 #
-
+include /etc/httpd/conf.d/plugins/*.inc
 # 1- plugins CGI scripts
 ScriptAliasMatch /plugins/([^/]*/cgi-bin/.*) "/usr/share/codendi/plugins/$1"
 <Directory "/usr/share/codendi/plugins/[^/]*/cgi-bin">
