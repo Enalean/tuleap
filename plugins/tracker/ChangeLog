@@ -1,3 +1,6 @@
+Version 5.100 - Tuleap 5.13
+    * Fix: tracker template selection not working
+
 Version 5.99 - Tuleap 5.13
     * Migration of date reminder from tracker v3 to tracker v5
 
