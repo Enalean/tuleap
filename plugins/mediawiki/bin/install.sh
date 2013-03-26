@@ -9,13 +9,8 @@ echo "############################################"
 MEDIAWIKI_SRC_DIR="mediawiki-tuleap"
 
 echo "Updating httpd configuration"
-cp $INSTALL_DIR/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/plugins/
+cp $INSTALL_DIR/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 service httpd restart
-
-#Copy .dist in /etc
-cp $INSTALL_DIR/plugins/mediawiki/etc/mediawiki.inc.dist /etc/codendi/plugins/mediawiki/etc/mediawiki.inc
-
-#Copy .dist content at the end of local.inc (get_forge_config do not get variables from mediawiki.inc)
 
 echo "Symlinking for skin"
 ln -s /usr/share/$MEDIAWIKI_SRC_DIR/api.php $INSTALL_DIR/plugins/mediawiki/www
