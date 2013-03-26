@@ -415,11 +415,11 @@ abstract class Tracker_FormElement_Field_List extends Tracker_FormElement_Field 
      *
      * @return string html
      */
-    protected function fetchSubmitValue($submitted_values = array(), $ignore_default_values = false) {
+    protected function fetchSubmitValue($submitted_values = array()) {
         $selected_values = isset($submitted_values[$this->id]) ? $submitted_values[$this->id] : array();
 
         $transition_field_id = $this->getWorkflow()->getFieldId();
-        $default_values = ($ignore_default_values && $this->id == $transition_field_id) ? array() : $this->getBind()->getDefaultValues();
+        $default_values = ($this->id == $transition_field_id) ? array() : $this->getBind()->getDefaultValues();
 
         return $this->_fetchField(
             'tracker_field_'. $this->id,

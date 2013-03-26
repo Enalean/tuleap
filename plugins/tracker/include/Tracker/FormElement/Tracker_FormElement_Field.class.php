@@ -396,7 +396,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
      *
      * @return string html
      */
-    public function fetchSubmit($submitted_values = array(), $ignore_default_values = false) {
+    public function fetchSubmit($submitted_values = array()) {
         $hp = Codendi_HTMLPurifier::instance();
         $html = '';
         if ($this->userCanSubmit()) {
@@ -405,7 +405,7 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
             $html .= '<label for="tracker_artifact_'. $this->id .'" title="'. $hp->purify($this->description, CODENDI_PURIFIER_CONVERT_HTML) .'"  class="tracker_formelement_label">'.  $hp->purify($this->getLabel(), CODENDI_PURIFIER_CONVERT_HTML)  . $required .'</label>';
 
             $html .= '<br />';
-            $html .= $this->fetchSubmitValue($submitted_values, $ignore_default_values);
+            $html .= $this->fetchSubmitValue($submitted_values);
             $html .= $this->fetchSubmitAdditionnalInfo();
             $html .= '</div>';
         }

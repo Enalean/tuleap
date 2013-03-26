@@ -900,9 +900,8 @@ class Tracker implements Tracker_Dispatchable_Interface {
         }
         $html .= '<input type="hidden" value="67108864" name="max_file_size" />';
         $html .= '<table><tr><td>';
-        $ignore_default_values = true;
         foreach($this->getFormElements() as $formElement) {
-            $html .= $formElement->fetchSubmit($request->get('artifact'), $ignore_default_values);
+            $html .= $formElement->fetchSubmit($request->get('artifact'));
         }
         $html .= '</td></tr></table>';
         
