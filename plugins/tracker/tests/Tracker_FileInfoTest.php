@@ -36,7 +36,7 @@ class Tracker_FileInfo_CommonTest extends TuleapTestCase {
         parent::setUp();
         $field_id = 123;
         $this->fixture_data_dir  = dirname(__FILE__) .'/_fixtures/attachments';
-        $this->working_directory = $this->fixture_data_dir.'/'.$field_id;
+        $this->working_directory = '/tmp/'.$field_id;
         $this->field = mock('Tracker_FormElement_Field_File');
         stub($this->field)->getId()->returns($field_id);
         stub($this->field)->getRootPath()->returns($this->working_directory);
@@ -75,8 +75,8 @@ class Tracker_FileInfoTest extends Tracker_FileInfo_CommonTest {
     }
 
     function testGetPath() {
-        $this->assertEqual($this->file_info_1->getPath(), $this->fixture_data_dir .'/123/1');
-        $this->assertEqual($this->file_info_1->getThumbnailPath(), $this->fixture_data_dir .'/123/thumbnails/1');
+        $this->assertEqual($this->file_info_1->getPath(), $this->working_directory .'/1');
+        $this->assertEqual($this->file_info_1->getThumbnailPath(), $this->working_directory .'/thumbnails/1');
         $this->assertNull($this->file_info_2->getThumbnailPath(), "A file that is not an image doesn't have any thumbnail (for now)");
     }
 
