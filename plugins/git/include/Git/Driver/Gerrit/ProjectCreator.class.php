@@ -48,51 +48,80 @@ class Git_Driver_Gerrit_ProjectCreator {
         $this->ugroup_manager = $ugroup_manager;
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $gerrit_server
+     * @param GitRepository $repository
+     * @return string Gerrit project name
+     */
     public function createGerritProject(Git_RemoteServer_GerritServer $gerrit_server, GitRepository $repository) {
-        $admin_group_name = null;
         $project          = $repository->getProject();
+        $project_name     = $project->getUnixName();
         $ugroups          = $this->ugroup_manager->getUGroups($project);
+
+        $migrated_ugroups = $this->migrateUGroups($ugroups, $project, $gerrit_server);
+        $admin_ugroup     = $this->getAdminUGroup($ugroups);
+
+        if (! $this->driver->parentProjectExists($gerrit_server, $project_name) && $admin_ugroup) {
+            $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
+            $project_name = $this->driver->createParentProject($gerrit_server, $repository, $admin_group_name);
+        }
+
+        $gerrit_project_name = $this->driver->createProject($gerrit_server, $repository, $project_name);
+
+        $this->initiateGerritPermissions(
+            $repository,
+            $gerrit_server,
+            $gerrit_server->getCloneSSHUrl($gerrit_project_name),
+            $migrated_ugroups,
+            Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION
+        );
+
+        $this->exportGitBranches($gerrit_server, $gerrit_project_name, $repository);
+
+        return $gerrit_project_name;
+    }
+
+    /**
+     *
+     * @param UGroup[] $ugroups
+     * @return null | UGroup
+     */
+    private function getAdminUGroup(array $ugroups) {
+        foreach ($ugroups as $ugroup) {
+            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
+                return $ugroup;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     *
+     * @param UGroup[] $ugroups
+     * @param Project $project
+     * @param Git_RemoteServer_GerritServer $gerrit_server
+     * @return UGroup[]
+     */
+    private function migrateUGroups(array $ugroups, Project $project, Git_RemoteServer_GerritServer $gerrit_server) {
         $migrated_ugroups = array();
-        //We search all the groups linked to the git repository
+
         foreach ($ugroups as $ugroup) {
             try {
-                if ($this->verifiyUGroupCannotBeMigrated($ugroup)){
+                if (! $this->UGroupCanBeMigrated($ugroup)){
                     continue;
                 }
 
                 $gerrit_group_name = $project->getUnixName().'/'.$ugroup->getNormalizedName();
-
-                if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
-                    $admin_group_name = $gerrit_group_name;
-                }
-                //We create the user group in gerrit
                 $this->driver->createGroup($gerrit_server, $gerrit_group_name, $ugroup->getUserLdapIds($project->getID()));
                 $migrated_ugroups[] = $ugroup;
-
             } catch (Exception $e) {
                 // Continue with the next group
             }
         }
 
-        $parent_project_name = $project->getUnixName();
-
-        if (! $this->driver->parentProjectExists($gerrit_server, $parent_project_name) && $admin_group_name) {
-            $parent_project_name = $this->driver->createParentProject($gerrit_server, $repository, $admin_group_name);
-        }
-
-        $gerrit_project = $this->driver->createProject($gerrit_server, $repository, $parent_project_name);
-
-        $this->initiateGerritPermissions(
-            $repository,
-            $gerrit_server,
-            $gerrit_server->getCloneSSHUrl($gerrit_project),
-            $migrated_ugroups,
-            Config::get('sys_default_domain') .'-'. self::GROUP_REPLICATION
-        );
-
-        $this->exportGitBranches($gerrit_server, $gerrit_project, $repository);
-
-        return $gerrit_project;
+        return $migrated_ugroups;
     }
 
     private function exportGitBranches(Git_RemoteServer_GerritServer $gerrit_server, $gerrit_project, GitRepository $repository) {
@@ -253,10 +282,15 @@ class Git_Driver_Gerrit_ProjectCreator {
         rmdir($this->dir);
     }
 
-    private function verifiyUGroupCannotBeMigrated(Ugroup $ugroup) {
-         return ! $ugroup->getId() > UGroup::NONE &&
-            ! $ugroup->getId() == UGroup::PROJECT_MEMBERS &&
-            ! $ugroup->getId() == UGroup::PROJECT_ADMIN;
+    /**
+     *
+     * @param Ugroup $ugroup
+     * @return bool
+     */
+    private function UGroupCanBeMigrated(Ugroup $ugroup) {
+         return $ugroup->getId() > UGroup::NONE ||
+            $ugroup->getId() == UGroup::PROJECT_MEMBERS ||
+            $ugroup->getId() == UGroup::PROJECT_ADMIN;
     }
 }
 

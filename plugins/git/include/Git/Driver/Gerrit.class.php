@@ -46,6 +46,13 @@ class Git_Driver_Gerrit {
         $this->logger = $logger;
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param GitRepository $repository
+     * @param type $parent_project_name
+     * @return string Gerrit project name
+     */
     public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository, $parent_project_name) {
         $gerrit_project = $this->getGerritProjectName($repository);
         $command = implode(' ',array(self::COMMAND, 'create-project --parent', $parent_project_name, $gerrit_project));
@@ -58,6 +65,15 @@ class Git_Driver_Gerrit {
         return $this->actionCreateProject($server, $command, $project_parent_name);
     }
 
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param string $command
+     * @param string $project_name
+     * @return string Gerrit project name
+     * @throws Git_Driver_Gerrit_Exception
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
     private function actionCreateProject(Git_RemoteServer_GerritServer $server, $command, $project_name) {
         try {
             $this->ssh->execute($server, $command);

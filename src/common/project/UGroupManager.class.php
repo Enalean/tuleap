@@ -70,6 +70,12 @@ class UGroupManager {
         return new UGroup($row);
     }
 
+    /**
+     *
+     * @param Project $project
+     * @param array $exclude
+     * @return UGroup[]
+     */
     public function getUGroups(Project $project, array $exclude = array()) {
         $ugroups = array();
         foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
