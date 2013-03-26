@@ -1,3 +1,6 @@
+Version 0.9.23 - Tuleap 5.13
+    * Add a plugin dependency solver to force installation of needed plugins
+
 Version 0.9.22 - Tuleap 5.12
     * sla #2849 - Problem in the use of Cardwall on IE 7
 

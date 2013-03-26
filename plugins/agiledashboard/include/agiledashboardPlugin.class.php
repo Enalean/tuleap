@@ -60,6 +60,13 @@ class AgileDashboardPlugin extends Plugin {
         return parent::getHooksAndCallbacks();
     }
 
+    /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('tracker');
+    }
+
     public function cardwall_event_get_swimline_tracker($params) {
         $planning_factory = $this->getPlanningFactory();
         if ($planning = $planning_factory->getPlanningByPlanningTracker($params['tracker'])) {

@@ -1,5 +1,12 @@
 All the documentation can be found at https://tuleap-documentation.readthedocs.org/en/latest/soap/tracker.html
 
+2.0.7 - Tuleap 5.12
+    * TrackerField type as a new field 'binding' with TrackerFieldBindType. For List fields bound to users,
+      it lists the User Groups (UGroup) the user should belong to.
+      Example a field "CC", type OpenList bound to "registered_users" accepts any valid user. In 'binding' field
+      there will be 'registered_users' listed.
+      => Impacted methods: getTrackerFields
+
 2.0.6 - Tuleap 5.12
     * addArtifact and updateArtifact and ArtifactLinks
       Both methods now takes the full list of artifact links. Example:

@@ -1045,6 +1045,18 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     /**
+     * Get binding data for Soap
+     *
+     * @return array the binding data
+     */
+    public function getSoapBindingProperties() {
+        return array(
+            'bind_type' => null,
+            'bind_list' => array()
+        );
+    }
+
+    /**
      * Get data from CSV value in order to be saved in DB (create/update DB)
      *
      * @param string $csv_value

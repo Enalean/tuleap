@@ -55,6 +55,13 @@ class MediaWikiPlugin extends Plugin {
                 $this->_addHook('search_type', 'search_type', false);
 	}
 
+    /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('fusionforge_compat');
+    }
+
         public function loaded() {
             parent::loaded();
             require_once 'plugins_utils.php';

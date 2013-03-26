@@ -37,6 +37,13 @@ class foafprofilesPlugin extends Plugin {
 
 	}
 
+    /**
+     * @see Plugin::getDependencies()
+     */
+    public function getDependencies() {
+        return array('fusionforge_compat');
+    }
+
 	/**
 	 * Declares itself as accepting RDF XML on /users
 	 * @param unknown_type $params
