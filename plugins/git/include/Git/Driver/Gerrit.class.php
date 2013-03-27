@@ -97,7 +97,7 @@ class Git_Driver_Gerrit {
      * @param type $project_name
      * @return true if the gerrit project exists, else return false
      */
-    public function parentProjectExists(Git_RemoteServer_GerritServer $server, $project_name) {
+    public function DoesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
         return in_array($project_name, $this->listParentProjects($server));
     }
 
@@ -118,7 +118,7 @@ class Git_Driver_Gerrit {
      * @param array $user_name_list
      */
     public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, array $user_name_list){
-        if ($this->groupExists($server, $group_name)) {
+        if ($this->DoesTheGroupExist($server, $group_name)) {
             $this->logger->info("Gerrit: Group $group_name already exists on Gerrit");
             return;
         }
@@ -144,7 +144,7 @@ class Git_Driver_Gerrit {
         }
     }
 
-    public function groupExists(Git_RemoteServer_GerritServer $server, $group_name) {
+    public function DoesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name) {
         return in_array($group_name, $this->listGroups($server));
     }
 

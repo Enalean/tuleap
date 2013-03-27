@@ -280,9 +280,9 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_admins));
-        stub($this->driver)->parentProjectExists()->returns(true);
+        stub($this->driver)->DoesTheParentProjectExist()->returns(true);
 
-        expect($this->driver)->parentProjectExists($this->server, $this->repository->getProject()->getUnixName())->once();
+        expect($this->driver)->DoesTheParentProjectExist($this->server, $this->repository->getProject()->getUnixName())->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
         expect($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->never();
 
@@ -301,9 +301,9 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->project_admins)->getId()->returns(UGroup::PROJECT_ADMIN);
 
         stub($this->ugroup_manager)->getUGroups()->returns(array($this->project_admins));
-        stub($this->driver)->parentProjectExists()->returns(false);
+        stub($this->driver)->DoesTheParentProjectExist()->returns(false);
 
-        expect($this->driver)->parentProjectExists($this->server, $this->repository->getProject()->getUnixName())->once();
+        expect($this->driver)->DoesTheParentProjectExist($this->server, $this->repository->getProject()->getUnixName())->once();
         expect($this->driver)->createParentProject($this->server, $this->repository, $this->project_admins_gerrit_name)->once();
         expect($this->driver)->createProject($this->server, $this->repository, $this->project_unix_name)->once();
 

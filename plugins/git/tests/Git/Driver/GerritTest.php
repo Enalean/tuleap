@@ -138,11 +138,11 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
 
     public function setUp() {
         parent::setUp();
-        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('groupExists'), array($this->ssh, $this->logger));
+        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('DoesTheGroupExist'), array($this->ssh, $this->logger));
     }
 
     public function itCreatesGroupsIfItNotExistsOnGerrit() {
-        stub($this->gerrit_driver)->groupExists()->returns(false);
+        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $create_group_command = "gerrit create-group firefox/project_members";
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->once();
@@ -150,7 +150,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itDoesNotCreateGroupIfItAlreadyExistsOnGerrit() {
-        stub($this->gerrit_driver)->groupExists()->returns(true);
+        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(true);
 
         $create_group_command = "gerrit create-group firefox/project_members";
         expect($this->ssh)->execute($this->gerrit_server, $create_group_command)->never();
@@ -158,7 +158,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itCreatesGroupsWithMembers() {
-        stub($this->gerrit_driver)->groupExists()->returns(false);
+        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $create_group_command = "gerrit create-group firefox/project_members --member ''\''johan'\''' --member ''\''goyotm'\'''";
         $user_list = array('johan', 'goyotm');
@@ -167,7 +167,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itInformsAboutGroupCreation() {
-        stub($this->gerrit_driver)->groupExists()->returns(false);
+        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $user_list    = array ();
         expect($this->logger)->info("Gerrit: Group firefox/project_members successfully created")->once();
@@ -175,7 +175,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itRaisesAGerritDriverExceptionOnGroupsCreation(){
-        stub($this->gerrit_driver)->groupExists()->returns(false);
+        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $std_err = 'fatal: group "somegroup" already exists';
         $command = "gerrit create-group firefox/project_members --member ''\''johan'\'''";
@@ -192,7 +192,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
     }
 
     public function itEscapesTwiceUsernameInCommandLine() {
-        stub($this->gerrit_driver)->groupExists()->returns(false);
+        stub($this->gerrit_driver)->DoesTheGroupExist()->returns(false);
 
         $create_group_command = "gerrit create-group firefox/project_members --member ''\''Johan Martinsson'\'''";
         $user_list            = array('Johan Martinsson',);
@@ -310,15 +310,15 @@ class Git_Driver_Gerrit_GroupExistsTest extends TuleapTestCase {
 
     public function itCallsLsGroups() {
         expect($this->gerrit_driver)->listGroups($this->gerrit_server)->once();
-        $this->gerrit_driver->groupExists($this->gerrit_server, 'whatever');
+        $this->gerrit_driver->DoesTheGroupExist($this->gerrit_server, 'whatever');
     }
 
     public function itReturnsTrueIfGroupExists() {
-        $this->assertTrue($this->gerrit_driver->groupExists($this->gerrit_server, 'project/project_admins'));
+        $this->assertTrue($this->gerrit_driver->DoesTheGroupExist($this->gerrit_server, 'project/project_admins'));
     }
 
     public function itReturnsFalseIfGroupDoNotExists() {
-        $this->assertFalse($this->gerrit_driver->groupExists($this->gerrit_server, 'project/wiki_admins'));
+        $this->assertFalse($this->gerrit_driver->DoesTheGroupExist($this->gerrit_server, 'project/wiki_admins'));
     }
 }
 
@@ -384,11 +384,11 @@ class Git_Driver_Gerrit_ProjectExistsTest extends TuleapTestCase {
     }
 
     public function itReturnsTrueIfParentProjectExists() {
-        $this->assertTrue($this->gerrit_driver->parentProjectExists($this->gerrit_server, 'project'));
+        $this->assertTrue($this->gerrit_driver->DoesTheParentProjectExist($this->gerrit_server, 'project'));
     }
 
     public function itReturnsFalseIfParentProjectDoNotExists() {
-        $this->assertFalse($this->gerrit_driver->parentProjectExists($this->gerrit_server, 'project_not_existing'));
+        $this->assertFalse($this->gerrit_driver->DoesTheParentProjectExist($this->gerrit_server, 'project_not_existing'));
     }
 }
 

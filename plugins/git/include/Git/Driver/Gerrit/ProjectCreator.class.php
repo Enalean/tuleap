@@ -62,7 +62,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $migrated_ugroups = $this->migrateUGroups($ugroups, $project, $gerrit_server);
         $admin_ugroup     = $this->getAdminUGroup($ugroups);
 
-        if (! $this->driver->parentProjectExists($gerrit_server, $project_name) && $admin_ugroup) {
+        if (! $this->driver->DoesTheParentProjectExist($gerrit_server, $project_name) && $admin_ugroup) {
             $admin_group_name = $project_name.'/'.$admin_ugroup->getNormalizedName();
             $project_name = $this->driver->createParentProject($gerrit_server, $repository, $admin_group_name);
         }
