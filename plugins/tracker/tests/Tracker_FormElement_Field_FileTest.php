@@ -53,7 +53,7 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         Config::store();
-        $this->fixture_dir    = '/tmp'.'/_fixtures';
+        $this->fixture_dir    = '/var/tmp'.'/_fixtures';
         if(!is_dir($this->fixture_dir)) {
             mkdir($this->fixture_dir);
         }
@@ -649,7 +649,7 @@ abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_
 
     public function setUp() {
         parent::setUp();
-        $this->tmp_dir = '/tmp'.'/_fixtures/tmp';
+        $this->tmp_dir = '/var/tmp'.'/_fixtures/tmp';
         Config::set('codendi_cache_dir', $this->tmp_dir);
         if (! is_dir($this->tmp_dir)) {
             mkdir($this->tmp_dir);

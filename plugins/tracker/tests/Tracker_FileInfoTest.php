@@ -36,7 +36,7 @@ class Tracker_FileInfo_CommonTest extends TuleapTestCase {
         parent::setUp();
         $field_id = 123;
         $this->fixture_data_dir  = dirname(__FILE__) .'/_fixtures/attachments';
-        $this->working_directory = '/tmp/'.$field_id;
+        $this->working_directory = '/var/tmp/'.$field_id;
         $this->field = mock('Tracker_FormElement_Field_File');
         stub($this->field)->getId()->returns($field_id);
         stub($this->field)->getRootPath()->returns($this->working_directory);
