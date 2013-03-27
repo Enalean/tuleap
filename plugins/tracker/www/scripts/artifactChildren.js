@@ -26,7 +26,7 @@ tuleap.artifact.HierarchyViewer = Class.create({
         this.base_url  = base_url;
         this.container = container;
         this.locales   = locales;
-        this.row_template = new Template('<tr class="artifact-child" data-parent-id="#{id}"> \
+        this.row_template = new Template('<tr class="artifact-child" data-child-id="#{id}" data-parent-id="#{parent_id}"> \
                 <td> \
                     <a href="#" class="toggle"><img src="http://crampons.cro.enalean.com/themes/Tuleap/images/pointer_down.png" /></a> \
                     <a href="#{url}">#{xref}</a> \
@@ -51,7 +51,7 @@ tuleap.artifact.HierarchyViewer = Class.create({
 
     receiveChildren: function (parent_id, children) {
         var tbody,
-            existing_parent = this.container.down('tr[data-parent-id='+ parent_id +']');
+            existing_parent = this.container.down('tr[data-child-id='+ parent_id +']');
 
         if (existing_parent) {
             children.map(function (child) {
@@ -110,9 +110,32 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     registerEvent: function (tbody, child) {
-        tbody.down('tr[data-parent-id='+ child.id +'] a.toggle').observe('click', function (evt) {
-            this.getArtifactChildren(child.id);
+        tbody.down('tr[data-child-id='+ child.id +'] a.toggle').observe('click', function (evt) {
+            this.toggleItem(tbody, child.id);
             Event.stop(evt);
         }.bind(this));
+    },
+
+    toggleItem: function (tbody, item_id) {
+        var existing_child = tbody.select('tr[data-parent-id='+ item_id +']');
+        if (existing_child.size()) {
+            if (existing_child[0].visible()) {
+                existing_child.map(this.hideRecursive.bind(this));
+            } else {
+                existing_child.map(this.showRecursive.bind(this));
+            }
+        } else {
+            this.getArtifactChildren(item_id);
+        }
+    },
+
+    showRecursive: function (tr) {
+        tr.show();
+        tr.up().select('tr[data-parent-id='+ tr.getAttribute('data-child-id') +']').map(this.showRecursive.bind(this));
+    },
+
+    hideRecursive: function (tr) {
+        tr.hide();
+        tr.up().select('tr[data-parent-id='+ tr.getAttribute('data-child-id') +']').map(this.hideRecursive.bind(this));
     }
 });

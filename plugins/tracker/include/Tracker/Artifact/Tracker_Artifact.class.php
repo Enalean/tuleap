@@ -652,7 +652,7 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                     if (in_array($tracker, $allowed_trackers)) {
                         $semantics = Tracker_Semantic_Status::load($tracker);
 
-                        $children[] = new Tracker_ArtifactChildPresenter($artifact_link, $semantics);
+                        $children[] = new Tracker_ArtifactChildPresenter($artifact_link, $this, $semantics);
                     }
                 }
 
