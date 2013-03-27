@@ -302,14 +302,14 @@ class Git_Driver_Gerrit_GroupExistsTest extends TuleapTestCase {
             'project/group_from_ldap',
         );
 
-        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('lsGroups'));
-        stub($this->gerrit_driver)->lsGroups()->returns($this->ls_group_return);
+        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('listGroups'));
+        stub($this->gerrit_driver)->listGroups()->returns($this->ls_group_return);
 
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
     }
 
     public function itCallsLsGroups() {
-        expect($this->gerrit_driver)->lsGroups($this->gerrit_server)->once();
+        expect($this->gerrit_driver)->listGroups($this->gerrit_server)->once();
         $this->gerrit_driver->groupExists($this->gerrit_server, 'whatever');
     }
 
@@ -335,7 +335,7 @@ class Git_Driver_Gerrit_LsGroupsTest extends TuleapTestCase {
 
     public function itUsesGerritSSHCommandToListGroups() {
         expect($this->ssh)->execute($this->gerrit_server, 'gerrit ls-groups')->once();
-        $this->driver->lsGroups($this->gerrit_server);
+        $this->driver->listGroups($this->gerrit_server);
     }
 
     public function itReturnsAllPlatformGroups() {
@@ -363,7 +363,7 @@ project/group_from_ldap';
 
         $this->assertEqual(
             $ls_groups_expected_return,
-            $this->driver->lsGroups($this->gerrit_server)
+            $this->driver->listGroups($this->gerrit_server)
         );
     }
 }
@@ -377,8 +377,8 @@ class Git_Driver_Gerrit_ProjectExistsTest extends TuleapTestCase {
             'project',
         );
 
-        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('lsParentProjects'));
-        stub($this->gerrit_driver)->lsParentProjects()->returns($this->ls_project_return);
+        $this->gerrit_driver = partial_mock('Git_Driver_Gerrit', array('listParentProjects'));
+        stub($this->gerrit_driver)->listParentProjects()->returns($this->ls_project_return);
 
         $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
     }
@@ -405,7 +405,7 @@ class Git_Driver_Gerrit_LsParentProjectsTest extends TuleapTestCase {
 
     public function itUsesGerritSSHCommandToListParentProjects() {
         expect($this->ssh)->execute($this->gerrit_server, 'gerrit ls-projects --type PERMISSIONS')->once();
-        $this->driver->lsParentProjects($this->gerrit_server);
+        $this->driver->listParentProjects($this->gerrit_server);
     }
 
     public function itReturnsAllPlatformParentProjects() {
@@ -425,7 +425,7 @@ project/group_from_ldap';
 
         $this->assertEqual(
             $ls_projects_expected_return,
-            $this->driver->lsParentProjects($this->gerrit_server)
+            $this->driver->listParentProjects($this->gerrit_server)
         );
     }
 }

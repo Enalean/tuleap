@@ -50,8 +50,8 @@ class Git_Driver_Gerrit {
      *
      * @param Git_RemoteServer_GerritServer $server
      * @param GitRepository $repository
-     * @param type $parent_project_name
-     * @return string Gerrit project name
+     * @param String $parent_project_name
+     * @return String Gerrit project name
      */
     public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository, $parent_project_name) {
         $gerrit_project = $this->getGerritProjectName($repository);
@@ -63,8 +63,8 @@ class Git_Driver_Gerrit {
      *
      * @param Git_RemoteServer_GerritServer $server
      * @param GitRepository $repository
-     * @param type $admin_group_name
-     * @return string Gerrit parent project name
+     * @param String $admin_group_name
+     * @return String Gerrit parent project name
      */
     public function createParentProject(Git_RemoteServer_GerritServer $server, GitRepository $repository, $admin_group_name) {
         $project_parent_name = $repository->getProject()->getUnixName();
@@ -98,7 +98,7 @@ class Git_Driver_Gerrit {
      * @return true if the gerrit project exists, else return false
      */
     public function parentProjectExists(Git_RemoteServer_GerritServer $server, $project_name) {
-        return in_array($project_name, $this->lsParentProjects($server));
+        return in_array($project_name, $this->listParentProjects($server));
     }
 
     /**
@@ -106,26 +106,33 @@ class Git_Driver_Gerrit {
      * @param Git_RemoteServer_GerritServer $server
      * @return array : the list of the parent project created in the gerrit server
      */
-    public function lsParentProjects(Git_RemoteServer_GerritServer $server) {
+    public function listParentProjects(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' ls-projects --type PERMISSIONS';
         return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
 
-    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, $user_name_list){
-        if (! $this->groupExists($server, $group_name)) {
-            $base_command = array(self::COMMAND, "create-group", $group_name);
-            $member_args  = $this->compileMemberCommands($user_name_list);
-            $command_line = implode(' ', array_merge($base_command, $member_args));
-            try {
-                $this->ssh->execute($server, $command_line);
-            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-                throw $this->computeException($e, $command_line);
-            }
-
-            $this->logger->info("Gerrit: Group $group_name successfully created");
-        } else {
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param String $group_name
+     * @param array $user_name_list
+     */
+    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, array $user_name_list){
+        if ($this->groupExists($server, $group_name)) {
             $this->logger->info("Gerrit: Group $group_name already exists on Gerrit");
+            return;
         }
+
+        $base_command = array(self::COMMAND, "create-group", $group_name);
+        $member_args  = $this->compileMemberCommands($user_name_list);
+        $command_line = implode(' ', array_merge($base_command, $member_args));
+        try {
+            $this->ssh->execute($server, $command_line);
+        } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            throw $this->computeException($e, $command_line);
+        }
+
+        $this->logger->info("Gerrit: Group $group_name successfully created");
     }
 
     public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
@@ -138,10 +145,10 @@ class Git_Driver_Gerrit {
     }
 
     public function groupExists(Git_RemoteServer_GerritServer $server, $group_name) {
-        return in_array($group_name, $this->lsGroups($server));
+        return in_array($group_name, $this->listGroups($server));
     }
 
-    public function lsGroups(Git_RemoteServer_GerritServer $server) {
+    public function listGroups(Git_RemoteServer_GerritServer $server) {
         $command = self::COMMAND . ' ls-groups';
         return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
@@ -166,12 +173,12 @@ class Git_Driver_Gerrit {
     }
 
     private function compileMemberCommands($user_name_list) {
-        $member_agrs = array();
+        $member_args = array();
         foreach ($user_name_list as $user_name) {
             $user_name = $this->escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_name);
-            $member_agrs[] = "--member $user_name";
+            $member_args[] = "--member $user_name";
         }
-        return $member_agrs;
+        return $member_args;
     }
 
     private function escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_identifier) {
