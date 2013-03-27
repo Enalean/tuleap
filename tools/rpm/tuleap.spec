@@ -1007,6 +1007,7 @@ fi
 %{APP_DIR}/plugins/mediawiki
 %dir %{APP_DATA_DIR}/mediawiki
 %dir %{APP_DATA_DIR}/mediawiki/master
+%dir %{APP_DATA_DIR}/mediawiki/projects
 %attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 %endif
 
