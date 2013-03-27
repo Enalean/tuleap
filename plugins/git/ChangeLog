@@ -1,3 +1,6 @@
+Version 2.7.33 - Tuleap 5.13
+    * Fix: Gerrit replication seems to be picky on permission case
+
 Version 2.7.32 - Tuleap 5.12
     * Use Gerrit replication mecanism to propagate gerrit changes onto Tuleap
 
