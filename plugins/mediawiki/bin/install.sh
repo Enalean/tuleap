@@ -8,10 +8,6 @@ echo "############################################"
 
 MEDIAWIKI_SRC_DIR="mediawiki-tuleap"
 
-echo "Updating httpd configuration"
-cp $INSTALL_DIR/plugins/mediawiki/fusionforge/plugin-mediawiki.inc /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
-service httpd restart
-
 echo "Symlinking for skin"
 ln -s /usr/share/$MEDIAWIKI_SRC_DIR/api.php $INSTALL_DIR/plugins/mediawiki/www
 ln -s /usr/share/$MEDIAWIKI_SRC_DIR/extensions/ $INSTALL_DIR/plugins/mediawiki/www

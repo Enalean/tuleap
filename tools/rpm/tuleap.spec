@@ -547,6 +547,9 @@ done
 %{__install} -d $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 %{__install} src/utils/svn/Tuleap.pm $RPM_BUILD_ROOT/%{perl_vendorlib}/Apache
 
+# Apache conf dir
+%{__install} -d $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/
+
 # plugin webdav
 %{__install} -d $RPM_BUILD_ROOT/%{APP_CACHE_DIR}/plugins/webdav/locks
 
@@ -577,7 +580,9 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %if %{php_base} == php53
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
+%{__install} plugins/mediawiki/fusionforge/plugin-mediawiki.inc $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 %endif
+
 ##
 ## On package install
 ##
@@ -591,7 +596,7 @@ if [ "$1" -eq "1" ]; then
 
     #
     # Make sure mandatory unix groups exist
-    #
+    #/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 
     # mailman
     if grep -q "^%{mailman_group}:" /etc/group 2> /dev/null ; then
@@ -1002,7 +1007,7 @@ fi
 %{APP_DIR}/plugins/mediawiki
 %dir %{APP_DATA_DIR}/mediawiki
 %dir %{APP_DATA_DIR}/mediawiki/master
-
+%attr(644,%{APP_USER},%{APP_USER}) /etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
 %endif
 
 #
