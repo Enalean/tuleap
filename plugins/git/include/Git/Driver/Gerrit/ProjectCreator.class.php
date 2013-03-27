@@ -114,7 +114,7 @@ class Git_Driver_Gerrit_ProjectCreator {
                 }
 
                 $gerrit_group_name = $project->getUnixName().'/'.$ugroup->getNormalizedName();
-                $this->driver->createGroup($gerrit_server, $gerrit_group_name, $ugroup->getUserLdapIds($project->getID()));
+                $this->driver->createGroup($gerrit_server, $gerrit_group_name, $ugroup->getLdapMembersIds($project->getID()));
                 $migrated_ugroups[] = $ugroup;
             } catch (Exception $e) {
                 // Continue with the next group
