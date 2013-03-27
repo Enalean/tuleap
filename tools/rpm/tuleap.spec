@@ -388,6 +388,7 @@ Group: Development/Tools
 Version: @@PLUGIN_ADMSSW_VERSION@@
 Release: 1%{?dist}
 Requires: %{PKG_NAME}-plugin-doaprdf
+Requires: %{php_base}-pear-HTTP
 %description plugin-admssw
 This plugin provides ADMS.SW additions to the DOAP RDF documents for projects on
 /projects URLs with content-negociation (application/rdf+xml).
@@ -576,18 +577,6 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %if %{php_base} == php53
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
-%{__ln_s} %{_datadir}/mediawiki-tuleap/api.php %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/extensions/ %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/img_auth.php %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/includes/ %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/index.php %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/languages/ %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/load.php %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/maintenance/ %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/opensearch_desc.php %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/profileinfo.php %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/redirect.php %{APP_DIR}/plugins/mediawiki/www
-%{__ln_s} %{_datadir}/mediawiki-tuleap/thumb.php %{APP_DIR}/plugins/mediawiki/www
 %endif
 ##
 ## On package install
