@@ -730,7 +730,7 @@ abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker
         parent::setUp();
         Config::store();
 
-        $fixtures_dir = '/tmp/_fixtures';
+        $fixtures_dir = '/var/tmp/_fixtures';
         if (! is_dir($fixtures_dir)) {
             mkdir($fixtures_dir);
         }
