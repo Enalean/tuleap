@@ -1,3 +1,6 @@
+Version 5.102 - Tuleap 5.13
+    * Fix sla #1631: Workflow not applied when there is a default value
+
 Version 5.101 - Tuleap 5.13
     * SOAP: better error message
 

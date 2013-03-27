@@ -127,7 +127,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         // means they can modify the permissions for any reference in the
         // project.
         $this->addToSection('refs', 'owner', "group $owners");
-        $this->addToSection('refs', 'Read', "group $replication_group");
+        $this->addToSection('refs', 'read', "group $replication_group");
 
         if ($this->shouldAddRegisteredUsers($repository)) {
             $this->addToSection('refs/heads', 'Read', "group Registered Users");
