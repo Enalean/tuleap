@@ -73,13 +73,13 @@ class UGroupManager {
     /**
      *
      * @param Project $project
-     * @param array $exclude
+     * @param array $excluded_ugroups_id
      * @return UGroup[]
      */
-    public function getUGroups(Project $project, array $exclude = array()) {
+    public function getUGroups(Project $project, array $excluded_ugroups_id = array()) {
         $ugroups = array();
         foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
-            if (in_array($row['ugroup_id'], $exclude)) {
+            if (in_array($row['ugroup_id'], $excluded_ugroups_id)) {
                 continue;
             }
             $ugroups[] = $this->instanciateGroupForProject($project, $row);
