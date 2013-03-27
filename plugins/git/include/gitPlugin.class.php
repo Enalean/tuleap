@@ -693,19 +693,21 @@ class GitPlugin extends Plugin {
     public function project_admin_ugroup_creation($params) {
 
         $project_manager = ProjectManager::instance();
-        $project = $project_manager->getProject($params['group_id']);
+        $project         = $project_manager->getProject($params['group_id']);
 
         $ugroup_manager = new UGroupManager();
-        $ugroup = $ugroup_manager->getUGroup($project, $params['ugroup_id']);
+        $ugroup         = $ugroup_manager->getUGroup($project, $params['ugroup_id']);
 
         $server_factory = $this->getGerritServerFactory();
-        $servers = $server_factory->getServersForProject($project);
+        $servers        = $server_factory->getServersForProject($project);
 
         foreach ($servers as $server) {
             try {
                 $this->getGerritDriver()->createGroup($server, $project->getUnixName() .'/'. $ugroup->getNormalizedName(), $ugroup->getLdapMembersIds($project->getID()));
-            } catch (Exception $e) {
-                //Do nothing : continue to the next server
+            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                //continue to the next server
+            } catch (Git_Driver_Gerrit_Exception $e) {
+                //continue to the next server
             }
         }
     }
