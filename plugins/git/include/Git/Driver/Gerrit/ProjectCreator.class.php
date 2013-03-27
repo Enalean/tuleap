@@ -202,17 +202,17 @@ class Git_Driver_Gerrit_ProjectCreator {
             $ugroups_read[] = 'Registered Users';
         }
 
-        $this->addToSection('refs', 'Read', "group $replication_group");
+        $this->addToSection('refs', 'read', "group $replication_group");
 
         /*if ($this->shouldAddRegisteredUsers($repository) && !in_array(UGroup::REGISTERED, $ugroup_ids_read)) {
-            $this->addToSection('refs/heads', 'Read', "group Registered Users");
+            $this->addToSection('refs/heads', 'read', "group Registered Users");
         }*/
         foreach ($ugroups_read as $ugroup_read) {
-            $this->addToSection('refs/heads', 'Read', "group $ugroup_read");
+            $this->addToSection('refs/heads', 'read', "group $ugroup_read");
             $this->addToSection('refs/heads', 'label-Code-Review', "-1..+1 group $ugroup_read");
         }
         foreach ($ugroups_write as $ugroup_write) {
-            $this->addToSection('refs/heads', 'Read', "group $ugroup_write");
+            $this->addToSection('refs/heads', 'read', "group $ugroup_write");
             $this->addToSection('refs/heads', 'create', "group $ugroup_write");
             $this->addToSection('refs/heads', 'forgeAuthor', "group $ugroup_write");
             $this->addToSection('refs/heads', 'label-Code-Review', "-2..+2 group $ugroup_write");
