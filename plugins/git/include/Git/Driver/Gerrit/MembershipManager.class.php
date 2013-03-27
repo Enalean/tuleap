@@ -49,11 +49,12 @@ class Git_Driver_Gerrit_MembershipManager {
     public function updateUserMembership(PFUser $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
         if ($user->getLdapId()) {
             $remote_servers = $this->gerrit_server_factory->getServersForProject($project);
+            $logger         = new BackendLogger();
             foreach ($remote_servers as $remote_server) {
                 try {
                     $command->execute($remote_server, $user, $project, $ugroup);
-                } catch (Exception $e) {
-                    //Do nothing : continue excecution
+                } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                    $logger->error($e->getMessage());
                 }
             }
         }

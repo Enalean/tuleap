@@ -701,13 +701,19 @@ class GitPlugin extends Plugin {
         $server_factory = $this->getGerritServerFactory();
         $servers        = $server_factory->getServersForProject($project);
 
+        $logger = new BackendLogger();
+
         foreach ($servers as $server) {
             try {
                 $this->getGerritDriver()->createGroup($server, $project->getUnixName() .'/'. $ugroup->getNormalizedName(), $ugroup->getLdapMembersIds($project->getID()));
             } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
                 //continue to the next server
+                $logger->error($e->getMessage());
             } catch (Git_Driver_Gerrit_Exception $e) {
                 //continue to the next server
+                $logger->error($e->getMessage());
+            } catch (Exception $e) {
+                $logger->error('Unknown error : ' . $e->getMessage());
             }
         }
     }

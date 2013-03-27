@@ -185,7 +185,7 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server, $this->remote_server2));
         stub($this->user)->getUgroups()->returns(array($this->u_group_id));
         stub($this->u_group)->getNormalizedName()->returns('project_members');
-        stub($membership_command_add)->execute()->throwsAt(0, new Exception());
+        stub($membership_command_add)->execute()->throwsAt(0, new Git_Driver_Gerrit_RemoteSSHCommandFailure(1, 'error', 'error'));
 
         $membership_command_add->expectCallCount('execute', 2);
         expect($membership_command_add)->execute($this->remote_server, $this->user, $this->project, $this->u_group)->at(0);
