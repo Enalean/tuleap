@@ -217,15 +217,16 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      */
     
     private function getAllValuesByUGroupList($ugroups, $keyword = null) {
-        if ($this->values || count($ugroups) == 0 ) {
+        if ($this->values) {
             return $this->values;
         }
 
-        $da          = $this->getDefaultValueDao()->getDa();
-        $sql         = array();
-        $tracker     = $this->field->getTracker();
-        $tracker_id  = $da->escapeInt($tracker->id);
-        $user_helper = UserHelper::instance();
+        $this->values = array();
+        $da           = $this->getDefaultValueDao()->getDa();
+        $sql          = array();
+        $tracker      = $this->field->getTracker();
+        $tracker_id   = $da->escapeInt($tracker->id);
+        $user_helper  = UserHelper::instance();
         
         foreach($ugroups as $ugroup) {
             if ($ugroup) {
@@ -286,7 +287,6 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
         
         if (! empty($sql)) {
             $dao = $this->getDefaultValueDao();
-            $this->values = array();
             foreach($dao->retrieve(implode(' UNION ', $sql)) as $row) {
                 $this->values[$row['user_id']] = new Tracker_FormElement_Field_List_Bind_UsersValue(
                     $row['user_id'],
