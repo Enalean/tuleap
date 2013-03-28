@@ -399,7 +399,7 @@ Summary: Mediawiki plugin
 Group: Development/Tools
 Version: @@PLUGIN_MEDIAWIKI_VERSION@@
 Release: 1%{?dist}
-Requires: %{PKG_NAME}
+Requires: %{PKG_NAME}-plugin-fusionforge_compat
 Requires: php53-mediawiki-tuleap
 %description plugin-mediawiki
 This plugin provides Mediawiki integration in Tuleap.
@@ -597,7 +597,7 @@ if [ "$1" -eq "1" ]; then
 
     #
     # Make sure mandatory unix groups exist
-    #/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+    #
 
     # mailman
     if grep -q "^%{mailman_group}:" /etc/group 2> /dev/null ; then
@@ -867,6 +867,12 @@ fi
 %{APP_DIR}/plugins/statistics
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
+
+# As mediawiki requires php53, only declare the sources of the plugin if php
+%if %{php_base} == php
+%{APP_DIR}/plugins/mediawiki
+%endif
+
 # Data dir
 %dir %{APP_DATA_DIR}
 %dir %{APP_DATA_DIR}/user
