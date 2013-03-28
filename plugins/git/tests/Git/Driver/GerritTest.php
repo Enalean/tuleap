@@ -310,15 +310,15 @@ class Git_Driver_Gerrit_GroupExistsTest extends TuleapTestCase {
 
     public function itCallsLsGroups() {
         expect($this->gerrit_driver)->listGroups($this->gerrit_server)->once();
-        $this->gerrit_driver->DoesTheGroupExist($this->gerrit_server, 'whatever');
+        $this->gerrit_driver->doesTheGroupExist($this->gerrit_server, 'whatever');
     }
 
     public function itReturnsTrueIfGroupExists() {
-        $this->assertTrue($this->gerrit_driver->DoesTheGroupExist($this->gerrit_server, 'project/project_admins'));
+        $this->assertTrue($this->gerrit_driver->doesTheGroupExist($this->gerrit_server, 'project/project_admins'));
     }
 
     public function itReturnsFalseIfGroupDoNotExists() {
-        $this->assertFalse($this->gerrit_driver->DoesTheGroupExist($this->gerrit_server, 'project/wiki_admins'));
+        $this->assertFalse($this->gerrit_driver->doesTheGroupExist($this->gerrit_server, 'project/wiki_admins'));
     }
 }
 
@@ -384,11 +384,11 @@ class Git_Driver_Gerrit_ProjectExistsTest extends TuleapTestCase {
     }
 
     public function itReturnsTrueIfParentProjectExists() {
-        $this->assertTrue($this->gerrit_driver->DoesTheParentProjectExist($this->gerrit_server, 'project'));
+        $this->assertTrue($this->gerrit_driver->doesTheParentProjectExist($this->gerrit_server, 'project'));
     }
 
     public function itReturnsFalseIfParentProjectDoNotExists() {
-        $this->assertFalse($this->gerrit_driver->DoesTheParentProjectExist($this->gerrit_server, 'project_not_existing'));
+        $this->assertFalse($this->gerrit_driver->doesTheParentProjectExist($this->gerrit_server, 'project_not_existing'));
     }
 }
 
