@@ -729,7 +729,18 @@ abstract class Tracker_SOAPServer_TemproraryAttachments_BaseTest extends Tracker
     public function setUp() {
         parent::setUp();
         Config::store();
-        $this->fixture_dir = dirname(__FILE__).'/../_fixtures/attachments/tmp';
+
+        $fixtures_dir = '/var/tmp/_fixtures';
+        if (! is_dir($fixtures_dir)) {
+            mkdir($fixtures_dir);
+        }
+
+        $attachments_dir = $fixtures_dir . '/attachments';
+        if (! is_dir($attachments_dir)) {
+            mkdir($attachments_dir);
+        }
+
+        $this->fixture_dir = $attachments_dir . '/tmp';
         mkdir($this->fixture_dir);
         Config::set('codendi_cache_dir', $this->fixture_dir);
     }

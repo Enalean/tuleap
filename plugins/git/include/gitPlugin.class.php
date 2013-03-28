@@ -88,6 +88,7 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_change_user_permissions');
         $this->_addHook('project_admin_ugroup_deletion');
         $this->_addHook('project_admin_remove_user_from_project_ugroups');
+        $this->_addHook('project_admin_ugroup_creation');
     }
 
     public function site_admin_option_hook() {
@@ -656,7 +657,6 @@ class GitPlugin extends Plugin {
             $this->getGerritDriver(),
             $this->getGerritUserFinder()
         );
-
         $this->updateUserMembership($command, $params);
     }
 
@@ -690,6 +690,33 @@ class GitPlugin extends Plugin {
         return new Git_Driver_Gerrit_MembershipManager($repository_factory, $server_factory);
     }
 
+    public function project_admin_ugroup_creation($params) {
+
+        $project_manager = ProjectManager::instance();
+        $project         = $project_manager->getProject($params['group_id']);
+
+        $ugroup_manager = new UGroupManager();
+        $ugroup         = $ugroup_manager->getUGroup($project, $params['ugroup_id']);
+
+        $server_factory = $this->getGerritServerFactory();
+        $servers        = $server_factory->getServersForProject($project);
+
+        $logger = new BackendLogger();
+
+        foreach ($servers as $server) {
+            try {
+                $this->getGerritDriver()->createGroup($server, $project->getUnixName() .'/'. $ugroup->getNormalizedName(), $ugroup->getLdapMembersIds($project->getID()));
+            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                //continue to the next server
+                $logger->error($e->getMessage());
+            } catch (Git_Driver_Gerrit_Exception $e) {
+                //continue to the next server
+                $logger->error($e->getMessage());
+            } catch (Exception $e) {
+                $logger->error('Unknown error : ' . $e->getMessage());
+            }
+        }
+    }
 
     /**
      * List plugin's widgets in customize menu
@@ -716,7 +743,7 @@ class GitPlugin extends Plugin {
 
     private function getProjectCreator() {
         $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
-        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $this->getGerritUserFinder());
+        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $this->getGerritUserFinder(), new UGroupManager());
     }
 
     private function getGerritUserFinder() {

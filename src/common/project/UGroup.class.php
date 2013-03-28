@@ -214,6 +214,10 @@ class UGroup {
         return $this->getUsers($group_id)->getLdapIds();
     }
 
+    public function getLdapMembersIds($group_id) {
+        return $this->getUsers($group_id)->getNonEmptyLdapIds();
+    }
+
     /**
      * Return array containing the user_name of all ugroup members
      *

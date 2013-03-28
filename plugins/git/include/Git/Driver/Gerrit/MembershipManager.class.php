@@ -47,23 +47,19 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     public function updateUserMembership(PFUser $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
-        if ($user->getLdapId()) {
+        if (! $user->getLdapId()) {
+            return;
+        }
 
-            if ($ugroup->getId() == UGroup::PROJECT_ADMIN) {
-                $repositories = $this->git_repository_factory->getAllGerritRepositoriesFromProject($project, $user);
-            } else {
-                $repositories = $this->git_repository_factory->getGerritRepositoriesWithPermissionsForUGroup($project, $ugroup, $user);
-            }
-            foreach ($repositories as $repository_with_permissions) {
-                $this->updateUserGerritGroupsAccordingToPermissions($user, $project, $repository_with_permissions, $command);
+        $remote_servers = $this->gerrit_server_factory->getServersForProject($project);
+        $logger         = new BackendLogger();
+        foreach ($remote_servers as $remote_server) {
+            try {
+                $command->execute($remote_server, $user, $project, $ugroup);
+            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                $logger->error($e->getMessage());
             }
         }
-    }
-
-    private function updateUserGerritGroupsAccordingToPermissions(PFUser $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions, Git_Driver_Gerrit_MembershipCommand $command) {
-        $remote_server   = $this->gerrit_server_factory->getServer($repository_with_permissions->getRepository());
-        $command->execute($remote_server, $user, $project, $repository_with_permissions);
-        
     }
 }
 ?>

@@ -60,19 +60,29 @@ class UGroupManager {
 
         $row = $this->getDao()->searchByGroupIdAndUGroupId($project_id, $ugroup_id)->getRow();
         if ($row) {
-            // force group_id as it is set to 100 for dynamic groups
-            $row['group_id'] = $project_id;
-            return new UGroup($row);
+            return $this->instanciateGroupForProject($project, $row);
         }
     }
 
-    public function getUGroups(Project $project, array $exclude = array()) {
+    private function instanciateGroupForProject(Project $project, array $row) {
+        // force group_id as it is set to 100 for dynamic groups
+        $row['group_id'] = $project->getID();
+        return new UGroup($row);
+    }
+
+    /**
+     *
+     * @param Project $project
+     * @param array $excluded_ugroups_id
+     * @return UGroup[]
+     */
+    public function getUGroups(Project $project, array $excluded_ugroups_id = array()) {
         $ugroups = array();
         foreach ($this->getDao()->searchDynamicAndStaticByGroupId($project->getId()) as $row) {
-            if (in_array($row['ugroup_id'], $exclude)) {
+            if (in_array($row['ugroup_id'], $excluded_ugroups_id)) {
                 continue;
             }
-            $ugroups[] = new UGroup($row);
+            $ugroups[] = $this->instanciateGroupForProject($project, $row);
         }
         return $ugroups;
     }
