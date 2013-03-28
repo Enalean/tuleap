@@ -22,13 +22,13 @@ tuleap.artifact = tuleap.artifact || { };
 
 tuleap.artifact.HierarchyViewer = Class.create({
 
-    initialize : function(base_url, container, locales) {
+    initialize : function(base_url, container, locales, imgroot) {
         this.base_url  = base_url;
         this.container = container;
         this.locales   = locales;
         this.row_template = new Template('<tr class="artifact-child" data-child-id="#{id}" data-parent-id="#{parent_id}"> \
                 <td> \
-                    <a href="#" class="toggle"><img src="http://crampons.cro.enalean.com/themes/Tuleap/images/pointer_down.png" /></a> \
+                    <a href="#" class="toggle"><img src="'+ imgroot +'pointer_right.png" /></a> \
                     <a href="#{url}">#{xref}</a> \
                 </td> \
                 <td>#{title}</td> \
@@ -96,6 +96,8 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     insertChildAfter: function (parent, child) {
+        var icon = parent.down('a.toggle img');
+        icon.src = icon.src.sub(/right.png$/, 'down.png');
         parent.insert({after: this.row_template.evaluate(child)});
         var padding_left = ~~parent.down('td').getStyle('padding-left').sub('px', '') + 24;
         parent.next().down('td').setStyle({
@@ -111,6 +113,10 @@ tuleap.artifact.HierarchyViewer = Class.create({
 
     registerEvent: function (tbody, child) {
         tbody.down('tr[data-child-id='+ child.id +'] a.toggle').observe('click', function (evt) {
+            var icon = evt.element();
+            console.log(icon);
+            //.down('img');
+            icon.src = icon.src.sub(/down.png$/, 'right.png');
             this.toggleItem(tbody, child.id);
             Event.stop(evt);
         }.bind(this));
@@ -130,11 +136,15 @@ tuleap.artifact.HierarchyViewer = Class.create({
     },
 
     showRecursive: function (tr) {
+        var icon = tr.down('a.toggle img');
+        icon.src = icon.src.sub(/right.png$/, 'down.png');
         tr.show();
         tr.up().select('tr[data-parent-id='+ tr.getAttribute('data-child-id') +']').map(this.showRecursive.bind(this));
     },
 
     hideRecursive: function (tr) {
+        var icon = tr.down('a.toggle img');
+        icon.src = icon.src.sub(/down.png$/, 'right.png');
         tr.hide();
         tr.up().select('tr[data-parent-id='+ tr.getAttribute('data-child-id') +']').map(this.hideRecursive.bind(this));
     }

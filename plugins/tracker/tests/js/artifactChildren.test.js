@@ -30,7 +30,8 @@ describe('HierarchyViewer', function () {
                 title_column_name: 'Title',
                 status_column_name: 'Status'
             }
-        };
+        },
+        imgroot = '/path/to/imgages/';
 
     describe('retrieves the children', function () {
         var artifact_id = 12,
@@ -41,7 +42,7 @@ describe('HierarchyViewer', function () {
         beforeEach(function () {
             server      = sinon.fakeServer.create();
             container   = new Element('div');
-            viewer      = new tuleap.artifact.HierarchyViewer(base_url, container, locales);
+            viewer      = new tuleap.artifact.HierarchyViewer(base_url, container, locales, imgroot);
         });
 
         describe('it does not have any children', function () {
