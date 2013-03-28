@@ -1,0 +1,12 @@
+The plugin adds support for Mediawiki to Tuleap. When the plugin
+is activated for a project, a Mediawiki instance for the project is
+created, that can be edited by project members.
+
+If you installed this plugin from the package management system (RPM) all
+dependencies are already installed, you just need to activate the plugin
+to start using it.
+
+Current integration was tested with mediawiki 1.20.3.
+
+Based on Fusionforge mediawiki plugin.
+

@@ -9,7 +9,7 @@ As forge admin, go to your tuleap instance in the administration pannel -> plugi
 If the plugin isn't yet installed, install it !
 Then, you have to check if the plugin is activated or not. If it doesn't, activate it !
 
-# (this bit needs to be done before the next Tuleap package release)
+# Update codendi_aliases.conf
 # -open /etc/httpd/conf.d/codendi_aliases.conf
 # -locate the 'Plugin directories' section title.
 # -paste the following row of code straight after it
