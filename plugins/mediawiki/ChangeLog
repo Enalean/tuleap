@@ -1,3 +1,6 @@
+Version 0.4 - Tuleap 5.13
+    * Mediawiki packaging
+
 Version 0.3 - Tuleap 5.13
     * Add a plugin dependency solver to force installation of needed plugins
 
