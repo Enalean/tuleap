@@ -29,6 +29,7 @@ $fusionforge_plugin_mediawiki_LocalSettings_included = true;
 
 require_once 'pre.php';
 require_once 'plugins_utils.php';
+require_once 'common/user/UserManager.class.php';
 
 //require_once 'common/include/RBACEngine.class.php';
 sysdebug_lazymode(true);
@@ -259,7 +260,7 @@ function FusionForgeMWAuth( $user, &$result ) {
 function SetupPermissionsFromRoles () {
 	global $fusionforgeproject, $wgGroupPermissions ;
 
-	$group = group_get_object_by_name ($fusionforgeproject) ;
+        $group = group_get_object_by_name ($fusionforgeproject) ;
 	// Setup rights for all roles referenced by project
 	$role_ids = $group->getRolesID() ;
 	$rbac_engine = RBACEngine::getInstance();
@@ -273,9 +274,36 @@ function SetupPermissionsFromRoles () {
 	foreach ($role_ids as $rid) {
 		$roles[] = $rbac_engine->getRoleById($rid);
 	}
+
 	$wgGroupPermissions['*']['read'] = true;
         $wgGroupPermissions['*']['edit'] = true;
         $wgGroupPermissions['*']['createpage'] = true;
+
+        $user = UserManager::instance()->getCurrentUser();
+
+        if ($user->isAnonymous() || ! $user->isMember($group->getID())) {
+            $wgGroupPermissions['*']['edit']                = false;
+            $wgGroupPermissions['*']['createpage']          = false;
+            $wgGroupPermissions['*']['writeapi']            = false;
+            $wgGroupPermissions['*']['move-subpages']       = false;
+            $wgGroupPermissions['*']['move-rootuserpages']  = false;
+            $wgGroupPermissions['*']['reupload-shared']     = false;
+            $wgGroupPermissions['*']['createaccount']       = false;
+            $wgGroupPermissions['*']['createtalk']          = false;
+            $wgGroupPermissions['*']['minoredit']           = false;
+            $wgGroupPermissions['*']['move']                = false;
+            $wgGroupPermissions['*']['delete']              = false;
+            $wgGroupPermissions['*']['undelete']            = false;
+            $wgGroupPermissions['*']['upload']              = false;
+            $wgGroupPermissions['*']['reupload-own']        = false;
+            $wgGroupPermissions['*']['reupload']            = false;
+            $wgGroupPermissions['*']['upload_by_url']       = false;
+            $wgGroupPermissions['*']['editinterface']       = false;
+            $wgGroupPermissions['*']['import']              = false;
+            $wgGroupPermissions['*']['importupload']        = false;
+            $wgGroupPermissions['*']['siteadmin']           = false;
+            $wgGroupPermissions['*']['interwiki']           = false;
+        }
         
 	foreach ($roles as $role) {
 		$mw_group_name = FusionForgeRoleToMediawikiGroupName ($role, $group) ;
