@@ -1,3 +1,6 @@
+Version 2.7.34 - Tuleap 5.13
+    * Tuleap User groups migration into Gerrit
+
 Version 2.7.33 - Tuleap 5.13
     * Fix: Gerrit replication seems to be picky on permission case
 

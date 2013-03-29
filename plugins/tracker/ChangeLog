@@ -1,3 +1,6 @@
+Version 5.103 - Tuleap 5.13
+    * Tuleap User groups migration into Gerrit
+
 Version 5.102 - Tuleap 5.13
     * Fix sla #1631: Workflow not applied when there is a default value
 
