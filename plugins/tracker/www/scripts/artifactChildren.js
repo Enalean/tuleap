@@ -97,7 +97,7 @@ tuleap.artifact.HierarchyViewer = Class.create({
 
     insertChildAfter: function (parent, child) {
         var icon = parent.down('a.toggle img');
-        icon.src = icon.src.sub(/right.png$/, 'down.png');
+        this.useHideIcon(icon);
         parent.insert({after: this.row_template.evaluate(child)});
         var padding_left = ~~parent.down('td').getStyle('padding-left').sub('px', '') + 24;
         parent.next().down('td').setStyle({
@@ -113,17 +113,17 @@ tuleap.artifact.HierarchyViewer = Class.create({
 
     registerEvent: function (tbody, child) {
         tbody.down('tr[data-child-id='+ child.id +'] a.toggle').observe('click', function (evt) {
-            var icon = evt.element();
-            console.log(icon);
-            this.toggleIcon(icon);
             this.toggleItem(tbody, child.id);
             Event.stop(evt);
         }.bind(this));
     },
 
     toggleItem: function (tbody, item_id) {
-        var existing_child = tbody.select('tr[data-parent-id='+ item_id +']');
+        var existing_child = tbody.select('tr[data-parent-id='+ item_id +']'),
+            item = tbody.down('tr[data-child-id='+ item_id +']'),
+            icon = item.down('a.toggle > img');
         if (existing_child.size()) {
+            this.toggleIcon(icon);
             if (existing_child[0].visible()) {
                 existing_child.map(this.hideRecursive.bind(this));
             } else {
@@ -132,13 +132,17 @@ tuleap.artifact.HierarchyViewer = Class.create({
         } else {
             this.getArtifactChildren(item_id);
         }
+        item.setAttribute('data-children-displayed', 1 - item.getAttribute('data-children-displayed'));
     },
 
     showRecursive: function (tr) {
         var icon = tr.down('a.toggle img');
-        this.useHideIcon(icon);
         tr.show();
-        tr.up().select('tr[data-parent-id='+ tr.getAttribute('data-child-id') +']').map(this.showRecursive.bind(this));
+        if (tr.getAttribute('data-children-displayed')) {
+            this.useHideIcon(icon);
+            console.log(tr.getAttribute('data-child-id') +' '+ tr.getAttribute('data-children-displayed') +' ');
+            tr.up().select('tr[data-parent-id='+ tr.getAttribute('data-child-id') +']').map(this.showRecursive.bind(this));
+        }
     },
 
     hideRecursive: function (tr) {
