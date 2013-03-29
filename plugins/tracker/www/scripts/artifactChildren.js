@@ -115,8 +115,7 @@ tuleap.artifact.HierarchyViewer = Class.create({
         tbody.down('tr[data-child-id='+ child.id +'] a.toggle').observe('click', function (evt) {
             var icon = evt.element();
             console.log(icon);
-            //.down('img');
-            icon.src = icon.src.sub(/down.png$/, 'right.png');
+            this.toggleIcon(icon);
             this.toggleItem(tbody, child.id);
             Event.stop(evt);
         }.bind(this));
@@ -137,15 +136,35 @@ tuleap.artifact.HierarchyViewer = Class.create({
 
     showRecursive: function (tr) {
         var icon = tr.down('a.toggle img');
-        icon.src = icon.src.sub(/right.png$/, 'down.png');
+        this.useHideIcon(icon);
         tr.show();
         tr.up().select('tr[data-parent-id='+ tr.getAttribute('data-child-id') +']').map(this.showRecursive.bind(this));
     },
 
     hideRecursive: function (tr) {
         var icon = tr.down('a.toggle img');
-        icon.src = icon.src.sub(/down.png$/, 'right.png');
+        this.useShowIcon(icon);
         tr.hide();
         tr.up().select('tr[data-parent-id='+ tr.getAttribute('data-child-id') +']').map(this.hideRecursive.bind(this));
+    },
+
+    toggleIcon: function (icon) {
+        if (this.isShowIcon(icon)) {
+            this.useHideIcon(icon);
+        } else {
+            this.useShowIcon(icon);
+        }
+    },
+
+    useShowIcon: function (icon) {
+        icon.src = icon.src.sub(/down.png$/, 'right.png');
+    },
+
+    useHideIcon: function (icon) {
+        icon.src = icon.src.sub(/right.png$/, 'down.png');
+    },
+
+    isShowIcon: function (icon) {
+        return icon.src.match(/right.png$/);
     }
 });
