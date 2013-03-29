@@ -53,10 +53,21 @@ abstract class Tracker_FormElement_Field_File_BaseTest extends TuleapTestCase {
     public function setUp() {
         parent::setUp();
         Config::store();
-        $this->fixture_dir    = dirname(__FILE__).'/_fixtures';
+        $this->fixture_dir    = '/var/tmp'.'/_fixtures';
+        if(!is_dir($this->fixture_dir)) {
+            mkdir($this->fixture_dir);
+        }
+
         $this->attachment_dir = $this->fixture_dir.'/attachments';
+        if(!is_dir($this->attachment_dir)) {
+            mkdir($this->attachment_dir);
+        }
+
         $this->thumbnails_dir = $this->attachment_dir.'/thumbnails';
-        mkdir($this->thumbnails_dir);
+        if(!is_dir($this->thumbnails_dir)) {
+            mkdir($this->thumbnails_dir);
+        }
+ 
         $this->tmp_name         = $this->fixture_dir.'/uploaded_file.txt';
         $this->another_tmp_name = $this->fixture_dir.'/another_uploaded_file.txt';
     }
@@ -638,9 +649,12 @@ abstract class Tracker_FormElement_Field_File_TemporaryFileTest extends Tracker_
 
     public function setUp() {
         parent::setUp();
-        $this->tmp_dir = dirname(__FILE__).'/_fixtures/tmp';
+        $this->tmp_dir = '/var/tmp'.'/_fixtures/tmp';
         Config::set('codendi_cache_dir', $this->tmp_dir);
-        mkdir($this->tmp_dir);
+        if (! is_dir($this->tmp_dir)) {
+            mkdir($this->tmp_dir);
+        }
+        
         $this->current_user = aUser()->withId(123)->build();
         $user_manager = stub('UserManager')->getCurrentUser()->returns($this->current_user);
         UserManager::setInstance($user_manager);
@@ -674,7 +688,9 @@ class Tracker_FormElement_Field_File_PersistDataTest extends Tracker_FormElement
     public function setUp() {
         parent::setUp();
         $this->storage_dir = $this->fixture_dir.'/storage';
-        mkdir($this->storage_dir);
+        if(!is_dir($this->storage_dir)) {
+            mkdir($this->storage_dir);
+        }
 
         Config::set('sys_data_dir', $this->storage_dir);
         $this->field_id = 987;

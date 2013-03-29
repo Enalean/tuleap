@@ -34,26 +34,13 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
 
     protected abstract function isUserConcernedByPermission(PFUser $user, Project $project, $groups);
 
-    public function execute(Git_RemoteServer_GerritServer $server, PFUser $user, Project $project, $repository) {
-        $groups_full_names = $this->getConcernedGerritGroups($user, $project, $repository);
-
-        foreach ($groups_full_names as $group_full_name) {
-            $this->propagateToGerrit($server, $user, $group_full_name);
-        }
+    public function execute(Git_RemoteServer_GerritServer $server, PFUser $user, Project $project, UGroup $ugroup) {
+        $group_full_name = $this->getGerritGroupName($project, $ugroup->getNormalizedName());
+        $this->propagateToGerrit($server, $user, $group_full_name);
     }
-
-    protected function getConcernedGerritGroups(PFUser $user, Project $project, GitRepositoryWithPermissions $repository_with_permissions) {
-        $groups_full_names = array();
-
-        foreach ($repository_with_permissions->getPermissions() as $tuleap_permission_type => $groups_with_permission) {
-            if (count($groups_with_permission) > 0) {
-                if ($this->isUserConcernedByPermission($user, $project, $groups_with_permission)) {
-                    $groups_full_names[] = $this->getGerritGroupName($project, $repository_with_permissions->getRepository(), Git_Driver_Gerrit_MembershipManager::$PERMS_TO_GROUPS[$tuleap_permission_type]);
-                }
-            }
-        }
-
-        return $groups_full_names;
+    private function getGerritGroupName(Project $project, $ugroup_name) {
+        $project_name    = $project->getUnixName();
+        return "$project_name/$ugroup_name";
     }
 
     protected function isUserInGroups($user, $project, $group_list) {
@@ -64,13 +51,6 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
             }
         }
         return false;
-    }
-
-    private function getGerritGroupName(Project $project, GitRepository $repo, $group_name) {
-        $project_name    = $project->getUnixName();
-        $repository_name = $repo->getFullName();
-
-        return "$project_name/$repository_name-$group_name";
     }
 }
 ?>

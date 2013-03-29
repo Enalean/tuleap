@@ -46,32 +46,93 @@ class Git_Driver_Gerrit {
         $this->logger = $logger;
     }
 
-    public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository) {
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param GitRepository $repository
+     * @param String $parent_project_name
+     * @return String Gerrit project name
+     */
+    public function createProject(Git_RemoteServer_GerritServer $server, GitRepository $repository, $parent_project_name) {
         $gerrit_project = $this->getGerritProjectName($repository);
-        $command = implode(' ',array(self::COMMAND, 'create-project', $gerrit_project));
+        $command = implode(' ', array(self::COMMAND, 'create-project --parent', $parent_project_name, $gerrit_project));
+        return $this->actionCreateProject($server, $command, $gerrit_project);
+    }
+
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param GitRepository $repository
+     * @param String $admin_group_name
+     * @return String Gerrit parent project name
+     */
+    public function createParentProject(Git_RemoteServer_GerritServer $server, GitRepository $repository, $admin_group_name) {
+        $project_parent_name = $repository->getProject()->getUnixName();
+        $command = implode(' ', array(self::COMMAND, 'create-project --permissions-only', $project_parent_name, '--owner', $admin_group_name));
+        return $this->actionCreateProject($server, $command, $project_parent_name);
+    }
+
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param string $command
+     * @param string $project_name
+     * @return string Gerrit project name
+     * @throws Git_Driver_Gerrit_Exception
+     * @throws Git_Driver_Gerrit_RemoteSSHCommandFailure
+     */
+    private function actionCreateProject(Git_RemoteServer_GerritServer $server, $command, $project_name) {
         try {
             $this->ssh->execute($server, $command);
-            $project_name = $this->getGerritProjectName($repository);
             $this->logger->info("Gerrit: Project $project_name successfully initialized");
             return $project_name;
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             throw $this->computeException($e, $command);
         }
-
     }
 
-    public function createGroup(Git_RemoteServer_GerritServer $server, GitRepository $repository, $group_name, $user_list){
-        $gerrit_group = $this->getGerritProjectName($repository)."-$group_name";
-        $base_command = array(self::COMMAND, "create-group", $gerrit_group);
-        $members      = $this->compileMemberCommands($user_list);
-        $command_line = implode(' ',array_merge($base_command, $members));
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param type $project_name
+     * @return true if the gerrit project exists, else return false
+     */
+    public function doesTheParentProjectExist(Git_RemoteServer_GerritServer $server, $project_name) {
+        return in_array($project_name, $this->listParentProjects($server));
+    }
+
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @return array : the list of the parent project created in the gerrit server
+     */
+    public function listParentProjects(Git_RemoteServer_GerritServer $server) {
+        $command = self::COMMAND . ' ls-projects --type PERMISSIONS';
+        return explode(PHP_EOL, $this->ssh->execute($server, $command));
+    }
+
+    /**
+     *
+     * @param Git_RemoteServer_GerritServer $server
+     * @param String $group_name
+     * @param array $user_name_list
+     */
+    public function createGroup(Git_RemoteServer_GerritServer $server, $group_name, array $user_name_list){
+        if ($this->doesTheGroupExist($server, $group_name)) {
+            $this->logger->info("Gerrit: Group $group_name already exists on Gerrit");
+            return;
+        }
+
+        $base_command = array(self::COMMAND, "create-group", $group_name);
+        $member_args  = $this->compileMemberCommands($user_name_list);
+        $command_line = implode(' ', array_merge($base_command, $member_args));
         try {
             $this->ssh->execute($server, $command_line);
         } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             throw $this->computeException($e, $command_line);
         }
 
-        $this->logger->info("Gerrit: Group $gerrit_group successfully created");
+        $this->logger->info("Gerrit: Group $group_name successfully created");
     }
 
     public function getGroupUUID(Git_RemoteServer_GerritServer $server, $group_full_name) {
@@ -81,6 +142,15 @@ class Git_Driver_Gerrit {
         if (isset($json_result->columns->group_uuid)) {
             return $json_result->columns->group_uuid;
         }
+    }
+
+    public function doesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name) {
+        return in_array($group_name, $this->listGroups($server));
+    }
+
+    public function listGroups(Git_RemoteServer_GerritServer $server) {
+        $command = self::COMMAND . ' ls-groups';
+        return explode(PHP_EOL, $this->ssh->execute($server, $command));
     }
 
     private function computeException(Git_Driver_Gerrit_RemoteSSHCommandFailure $e, $command) {
@@ -102,13 +172,13 @@ class Git_Driver_Gerrit {
         return "$project/$repo";
     }
 
-    private function compileMemberCommands($user_list) {
-        $members = array();
-        foreach ($user_list as $user) {
-            $user = $this->escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user);
-            $members[] = "--member $user";
+    private function compileMemberCommands($user_name_list) {
+        $member_args = array();
+        foreach ($user_name_list as $user_name) {
+            $user_name = $this->escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_name);
+            $member_args[] = "--member $user_name";
         }
-        return $members;
+        return $member_args;
     }
 
     private function escapeUserIdentifierAsWeNeedToGiveTheParameterToGsqlBehindSSH($user_identifier) {
