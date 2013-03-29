@@ -891,6 +891,7 @@ fi
 %attr(00755,root,root) /etc/rc.d/init.d/%{APP_NAME}
 %attr(00644,root,root) /etc/cron.d/%{APP_NAME}
 %dir %{APP_CACHE_DIR}
+%dir /etc/httpd/conf.d/tuleap-plugins
 
 #
 # Install
