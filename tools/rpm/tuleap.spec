@@ -582,6 +582,8 @@ touch $RPM_BUILD_ROOT/%{APP_DATA_DIR}/gitolite/projects.list
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/master
 %{__install} -d $RPM_BUILD_ROOT/%{APP_DATA_DIR}/mediawiki/projects
 %{__install} plugins/mediawiki/etc/mediawiki.conf.dist $RPM_BUILD_ROOT/etc/httpd/conf.d/tuleap-plugins/mediawiki.conf
+%else
+%{__rm} -rf $RPM_BUILD_ROOT/%{APP_DIR}/plugins/mediawiki
 %endif
 
 ##
@@ -867,11 +869,6 @@ fi
 %{APP_DIR}/plugins/statistics
 %{APP_DIR}/plugins/tracker_date_reminder
 %{APP_DIR}/plugins/userlog
-
-# As mediawiki requires php53, only declare the sources of the plugin if php
-%if %{php_base} == php
-%{APP_DIR}/plugins/mediawiki
-%endif
 
 # Data dir
 %dir %{APP_DATA_DIR}
