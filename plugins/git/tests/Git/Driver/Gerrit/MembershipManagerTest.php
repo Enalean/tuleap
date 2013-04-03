@@ -75,6 +75,7 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
         stub($this->remote_server_factory_without_gerrit)->getServersForProject()->returns(array());
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            mock('Git_Driver_Gerrit_MembershipDao'),
             $this->git_repository_factory_without_gerrit,
             $this->remote_server_factory_without_gerrit,
             mock('Logger')
@@ -106,6 +107,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git
         stub($this->git_repository)->getId()->returns($this->git_repository_id);
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            mock('Git_Driver_Gerrit_MembershipDao'),
             $this->git_repository_factory,
             $this->remote_server_factory,
             mock('Logger')
@@ -287,6 +289,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
             'Git_Driver_Gerrit_MembershipManager',
             array('createGroupForServer'),
             array(
+                mock('Git_Driver_Gerrit_MembershipDao'),
                 $this->git_repository_factory,
                 $this->remote_server_factory,
                 mock('Logger')
@@ -333,6 +336,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
 class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase {
     private $ugroup;
     private $logger;
+    private $dao;
 
     public function setUp() {
         parent::setUp();
@@ -344,20 +348,26 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         $this->logger = mock('Logger');
 
+        $this->dao    = mock('Git_Driver_Gerrit_MembershipDao');
+
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            $this->dao,
             $this->git_repository_factory,
             $this->remote_server_factory,
             $this->logger
         );
 
 
+        $project_id    = 1236;
         $this->project = mock('Project');
-        stub($this->project)->getID()->returns(1236);
+        stub($this->project)->getID()->returns($project_id);
         stub($this->project)->getUnixName()->returns('w3c');
+
 
         $this->ugroup = mock('UGroup');
         stub($this->ugroup)->getNormalizedName()->returns('coders');
         stub($this->ugroup)->getProject()->returns($this->project);
+        stub($this->ugroup)->getProjectId()->returns($project_id);
 
         $this->driver = mock('Git_Driver_Gerrit');
     }
@@ -381,6 +391,17 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         $this->assertEqual($gerrit_group_name, 'w3c/coders');
     }
 
+    public function itStoresTheGroupInTheDb() {
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
+        stub($this->ugroup)->getId()->returns(444);
+        stub($this->remote_server)->getId()->returns(666);
+
+        expect($this->dao)->addReference(1236, 444, 666)->once();
+
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+    }
+
     public function itDoesntCreateAGroupThatAlreadyExist() {
         stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
 
@@ -391,6 +412,16 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         $gerrit_group_name = $this->membership_manager->createGroup($this->driver, $this->ugroup);
         $this->assertEqual($gerrit_group_name, 'w3c/coders');
+    }
+
+    public function itDoesntStoreInDbIfGroupAlreadyExists() {
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
+        stub($this->driver)->doesTheGroupExist()->returns(true);
+
+        expect($this->dao)->addReference()->never();
+
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
     }
 
     public function itCreatesGerritGroupOnEachServer() {
@@ -404,6 +435,22 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         expect($this->driver)->createGroup($remote_server1, 'w3c/coders', array('ldap_id'))->at(0);
         expect($this->driver)->createGroup($remote_server2, 'w3c/coders', array('ldap_id'))->at(1);
 
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+    }
+
+    public function itStoresTheGroupInTheDbForEachServer() {
+        $remote_server1 = mock('Git_RemoteServer_GerritServer');
+        $remote_server2 = mock('Git_RemoteServer_GerritServer');
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
+
+        stub($this->ugroup)->getId()->returns(444);
+        stub($remote_server1)->getId()->returns(666);
+        stub($remote_server2)->getId()->returns(667);
+
+        expect($this->dao)->addReference()->count(2);
+        expect($this->dao)->addReference(1236, 444, 666)->at(0);
+        expect($this->dao)->addReference(1236, 444, 667)->at(1);
+        
         $this->membership_manager->createGroup($this->driver, $this->ugroup);
     }
 
@@ -443,11 +490,13 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
     public function itContinuesToCreateGroupsEvenIfOneFails() {
         $remote_server1 = mock('Git_RemoteServer_GerritServer');
         $remote_server2 = mock('Git_RemoteServer_GerritServer');
+        stub($remote_server2)->getId()->returns(667);
         stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
 
         expect($this->driver)->createGroup()->count(2);
         stub($this->driver)->createGroup()->throwsAt(0, new Exception('whatever'));
         expect($this->driver)->createGroup($remote_server2, '*', '*')->at(1);
+        expect($this->dao)->addReference('*', '*', 667)->once();
 
         $gerrit_group_name = $this->membership_manager->createGroup($this->driver, $this->ugroup);
         $this->assertEqual($gerrit_group_name, 'w3c/coders');

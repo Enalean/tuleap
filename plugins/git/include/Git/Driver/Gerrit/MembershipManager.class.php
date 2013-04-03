@@ -18,6 +18,8 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once 'MembershipDao.class.php';
+
 class Git_Driver_Gerrit_MembershipManager {
     const GROUP_CONTRIBUTORS = 'contributors';
     const GROUP_INTEGRATORS  = 'integrators';
@@ -35,15 +37,18 @@ class Git_Driver_Gerrit_MembershipManager {
         Git::SPECIAL_PERM_ADMIN => self::GROUP_OWNERS,
     );
 
+    private $dao;
     private $git_repository_factory;
     private $gerrit_server_factory;
     private $logger;
 
     public function __construct(
+        Git_Driver_Gerrit_MembershipDao      $dao,
         GitRepositoryFactory $git_repository_factory,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Logger                               $logger
     ) {
+        $this->dao                    = $dao;
         $this->git_repository_factory = $git_repository_factory;
         $this->gerrit_server_factory  = $gerrit_server_factory;
         $this->logger                 = $logger;
@@ -101,6 +106,7 @@ class Git_Driver_Gerrit_MembershipManager {
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
         if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
             $driver->createGroup($server, $gerrit_group_name, $ugroup->getLdapMembersIds($ugroup->getProject()->getID()));
+            $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
         }
         return $gerrit_group_name;
     }
