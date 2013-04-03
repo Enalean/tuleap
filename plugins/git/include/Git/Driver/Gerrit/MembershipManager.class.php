@@ -67,7 +67,7 @@ class Git_Driver_Gerrit_MembershipManager {
     public function updateUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup = null) {
         $remote_servers = $this->gerrit_server_factory->getServersForProject($ugroup->getProject());
         foreach ($remote_servers as $remote_server) {
-            $group_name          = $ugroup->getProject()->getUnixName().'/'.$ugroup->getName();
+            $group_name = $ugroup->getProject()->getUnixName().'/'.$ugroup->getName();
             if ($source_ugroup) {
                 $included_group_name = $source_ugroup->getProject()->getUnixName().'/'.$source_ugroup->getName();
                 $driver->addIncludedGroup($remote_server, $group_name, $included_group_name);

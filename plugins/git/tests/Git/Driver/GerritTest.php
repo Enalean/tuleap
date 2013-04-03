@@ -202,7 +202,7 @@ class Git_Driver_Gerrit_createGroupTest extends Git_Driver_Gerrit_baseTest {
 
 }
 
-class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
+class Git_Driver_Gerrit_getGroupUUIDTest extends Git_Driver_Gerrit_baseTest {
 
     private $groupname = 'project/repo-contributors';
     private $expected_query = 'gerrit gsql --format json -c "SELECT\ group_uuid\ FROM\ account_groups\ WHERE\ name=\\\'project/repo-contributors\\\'"';
@@ -222,6 +222,29 @@ class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
         stub($this->ssh)->execute($this->gerrit_server, $this->expected_query)->once()->returns($query_result);
 
         $this->assertNull($this->driver->getGroupUUID($this->gerrit_server, $this->groupname));
+    }
+}
+
+class Git_Driver_Gerrit_getGroupIdTest extends Git_Driver_Gerrit_baseTest {
+
+    private $groupname = 'project/repo-contributors';
+    private $expected_query = 'gerrit gsql --format json -c "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\'project/repo-contributors\\\'"';
+
+    public function itAsksGerritForTheGroupId() {
+        $id         = '272';
+        $query_result = '{"type":"row","columns":{"group_id":"'. $id .'"}}'.
+                        PHP_EOL .
+                        '{"type":"query-stats","rowCount":1,"runTimeMilliseconds":1}';
+        stub($this->ssh)->execute($this->gerrit_server, $this->expected_query)->once()->returns($query_result);
+
+        $this->assertEqual($id, $this->driver->getGroupId($this->gerrit_server, $this->groupname));
+    }
+
+    public function itReturnsNullIfNotFound() {
+        $query_result = '{"type":"query-stats","rowCount":0,"runTimeMilliseconds":0}';
+        stub($this->ssh)->execute($this->gerrit_server, $this->expected_query)->once()->returns($query_result);
+
+        $this->assertNull($this->driver->getGroupId($this->gerrit_server, $this->groupname));
     }
 }
 
@@ -430,4 +453,52 @@ project/group_from_ldap';
     }
 }
 
+class Git_Driver_Gerrit_AddIncludedGroupTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
+
+        $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
+        $this->logger = mock('BackendLogger');
+        $this->driver = new Git_Driver_Gerrit($this->ssh, $this->logger);
+    }
+
+    public function itAddAnIncludedGroup() {
+        $group_name    = 'gdb/developers';
+        $included_group_name = 'gcc/coders';
+        $insert_included_query = 'gerrit gsql --format json -c "INSERT\ INTO\ ACCOUNT_GROUP_INCLUDES\ (GROUP_ID,\ INCLUDE_ID)\ SELECT\ G.GROUP_ID,\ I.GROUP_ID\ FROM\ ACCOUNT_GROUPS\ G,\ ACCOUNT_GROUPS\ I\ WHERE\ G.name=\\\''. $group_name .'\\\'\ AND\ I.name=\\\''. $included_group_name .'\\\'"';
+
+        expect($this->ssh)->execute()->count(2);
+        expect($this->ssh)->execute($this->gerrit_server, $insert_included_query)->at(0);
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches')->at(1);
+
+        $this->driver->addIncludedGroup($this->gerrit_server, $group_name, $included_group_name);
+    }
+}
+
+class Git_Driver_Gerrit_RemoveIncludedGroupTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+        $this->gerrit_server = mock('Git_RemoteServer_GerritServer');
+
+        $this->ssh    = mock('Git_Driver_Gerrit_RemoteSSHCommand');
+        $this->logger = mock('BackendLogger');
+        $this->driver = partial_mock('Git_Driver_Gerrit', array('getGroupId'), array($this->ssh, $this->logger));
+    }
+
+    public function itAddAnIncludedGroup() {
+        $id = 272;
+        $group_name    = 'gdb/developers';
+
+        stub($this->driver)->getGroupId($this->gerrit_server, $group_name)->returns($id);
+
+        $delete_included_query = 'gerrit gsql --format json -c "DELETE\ FROM\ ACCOUNT_GROUP_INCLUDES\ I\ WHERE\ I.GROUP_ID='.$id.'"';
+
+        expect($this->ssh)->execute()->count(2);
+        expect($this->ssh)->execute($this->gerrit_server, $delete_included_query)->at(0);
+        expect($this->ssh)->execute($this->gerrit_server, 'gerrit flush-caches')->at(1);
+
+        $this->driver->removeAllIncludedGroups($this->gerrit_server, $group_name);
+    }
+}
 ?>

@@ -144,6 +144,15 @@ class Git_Driver_Gerrit {
         }
     }
 
+    public function getGroupId(Git_RemoteServer_GerritServer $server, $group_full_name) {
+        $command = self::GSQL_COMMAND .' "SELECT\ group_id\ FROM\ account_groups\ WHERE\ name=\\\''. $group_full_name .'\\\'"';
+        $command_result = $this->ssh->execute($server, $command);
+        $json_result = json_decode(array_shift(explode("\n", $command_result)));
+        if (isset($json_result->columns->group_id)) {
+            return $json_result->columns->group_id;
+        }
+    }
+
     public function doesTheGroupExist(Git_RemoteServer_GerritServer $server, $group_name) {
         return in_array($group_name, $this->listGroups($server));
     }
@@ -215,9 +224,25 @@ class Git_Driver_Gerrit {
     }
 
     public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
+        $this->insertAccountGroupIncludes($server, $group_name, $included_group_name);
+        $this->flushGerritCaches($server);
+    }
+
+    private function insertAccountGroupIncludes(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
+        $sql_query = "INSERT INTO ACCOUNT_GROUP_INCLUDES (GROUP_ID, INCLUDE_ID) SELECT G.GROUP_ID, I.GROUP_ID FROM ACCOUNT_GROUPS G, ACCOUNT_GROUPS I WHERE G.name='".$group_name."' AND I.name='".$included_group_name."'";
+        $query = self::GSQL_COMMAND .' '. $this->escapeSQLQuery('"'.$sql_query.'"');
+        $this->ssh->execute($server, $query);
     }
 
     public function removeAllIncludedGroups(Git_RemoteServer_GerritServer $server, $group_name) {
+        $this->removeAccountGroupIncludes($server, $this->getGroupId($server, $group_name));
+        $this->flushGerritCaches($server);
+    }
+
+    private function removeAccountGroupIncludes(Git_RemoteServer_GerritServer $server, $gerrit_group_id) {
+        $sql_query = "DELETE FROM ACCOUNT_GROUP_INCLUDES I WHERE I.GROUP_ID=$gerrit_group_id";
+        $query = self::GSQL_COMMAND .' '. $this->escapeSQLQuery('"'.$sql_query.'"');
+        $this->ssh->execute($server, $query);
     }
 
     private function flushGerritCaches($server) {

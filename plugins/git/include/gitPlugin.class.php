@@ -720,7 +720,7 @@ class GitPlugin extends Plugin {
     }
 
     public function ugroup_manager_update_ugroup_binding($params) {
-        $this->getGerritMembershipManager()->updateUGroupBinding($params['ugroup'], $params['source']);
+        $this->getGerritMembershipManager()->updateUGroupBinding($this->getGerritDriver(), $params['ugroup'], $params['source']);
     }
 
     /**
