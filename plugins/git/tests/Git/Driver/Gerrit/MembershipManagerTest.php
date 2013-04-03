@@ -294,8 +294,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         );
 
         $this->driver = mock('Git_Driver_Gerrit');
-        stub($this->driver)->doesTheGroupExist()->returns(true);
-        
+
         $project = stub('Project')->getUnixName()->returns('mozilla');
         $this->ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
         $this->ugroup->setProject($project);
@@ -307,6 +306,9 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $gerrit_ugroup_name = 'mozilla/developers';
         $gerrit_source_name = 'mozilla/coders';
         expect($this->driver)->addIncludedGroup($this->remote_server, $gerrit_ugroup_name, $gerrit_source_name)->once();
+
+        expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->driver, $this->source)->once();
+        stub($this->membership_manager)->createGroupForServer()->returns('mozilla/coders');
 
         $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
     }
@@ -337,7 +339,6 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
         $this->remote_server                         = mock('Git_RemoteServer_GerritServer');
-        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
 
         $this->git_repository_factory                = mock('GitRepositoryFactory');
 
@@ -363,25 +364,33 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
     public function itCreateGroupOnAllGerritServersTheProjectUses() {
         expect($this->remote_server_factory)->getServersForProject($this->project)->once();
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
         $this->membership_manager->createGroup($this->driver, $this->ugroup);
     }
 
     public function itCreatesGerritGroupFromUGroup() {
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
         expect($this->ugroup)->getLdapMembersIds(1236)->once();
         stub($this->ugroup)->getLdapMembersIds()->returns(array('ldap_id'));
 
         expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', array('ldap_id'))->once();
+        stub($this->driver)->createGroup()->returns('w3c/coders');
 
-        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $gerrit_group_name = $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $this->assertEqual($gerrit_group_name, 'w3c/coders');
     }
 
     public function itDoesntCreateAGroupThatAlreadyExist() {
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
         stub($this->driver)->doesTheGroupExist()->returns(true);
         expect($this->driver)->doesTheGroupExist($this->remote_server, 'w3c/coders')->once();
 
         expect($this->driver)->createGroup()->never();
 
-        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $gerrit_group_name = $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $this->assertEqual($gerrit_group_name, 'w3c/coders');
     }
 
     public function itCreatesGerritGroupOnEachServer() {
@@ -391,34 +400,57 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         stub($this->ugroup)->getLdapMembersIds()->returns(array('ldap_id'));
 
-        expect($this->driver)->createGroup($remote_server1, 'w3c/coders', array('ldap_id'))->once();
-        expect($this->driver)->createGroup($remote_server2, 'w3c/coders', array('ldap_id'))->once();
+        expect($this->driver)->createGroup()->count(2);
+        expect($this->driver)->createGroup($remote_server1, 'w3c/coders', array('ldap_id'))->at(0);
+        expect($this->driver)->createGroup($remote_server2, 'w3c/coders', array('ldap_id'))->at(1);
 
         $this->membership_manager->createGroup($this->driver, $this->ugroup);
     }
 
     public function itLogsRemoteSSHErrors() {
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
         stub($this->driver)->createGroup()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure('whatever', 'whatever', 'whatever'));
 
         expect($this->logger)->error(new PatternExpectation('/^exit_code:/'))->once();
 
-        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $gerrit_group_name = $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $this->assertEqual($gerrit_group_name, '');
     }
 
     public function itLogsGerritExceptions() {
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
         stub($this->driver)->createGroup()->throws(new Git_Driver_Gerrit_Exception('whatever'));
 
         expect($this->logger)->error('whatever')->once();
 
-        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $gerrit_group_name = $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $this->assertEqual($gerrit_group_name, '');
     }
 
     public function itLogsAllOtherExceptions() {
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
         stub($this->driver)->createGroup()->throws(new Exception('whatever'));
 
         expect($this->logger)->error('Unknown error: whatever')->once();
 
-        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $gerrit_group_name = $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $this->assertEqual($gerrit_group_name, '');
+    }
+
+    public function itContinuesToCreateGroupsEvenIfOneFails() {
+        $remote_server1 = mock('Git_RemoteServer_GerritServer');
+        $remote_server2 = mock('Git_RemoteServer_GerritServer');
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
+
+        expect($this->driver)->createGroup()->count(2);
+        stub($this->driver)->createGroup()->throwsAt(0, new Exception('whatever'));
+        expect($this->driver)->createGroup($remote_server2, '*', '*')->at(1);
+
+        $gerrit_group_name = $this->membership_manager->createGroup($this->driver, $this->ugroup);
+        $this->assertEqual($gerrit_group_name, 'w3c/coders');
     }
 }
 

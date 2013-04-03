@@ -69,8 +69,7 @@ class Git_Driver_Gerrit_MembershipManager {
         foreach ($remote_servers as $remote_server) {
             $group_name = $ugroup->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
             if ($source_ugroup) {
-                $included_group_name = $source_ugroup->getProject()->getUnixName().'/'.$source_ugroup->getNormalizedName();
-                $this->createGroupForServer($remote_server, $driver, $source_ugroup);
+                $included_group_name = $this->createGroupForServer($remote_server, $driver, $source_ugroup);
                 $driver->addIncludedGroup($remote_server, $group_name, $included_group_name);
             } else {
                 $driver->removeAllIncludedGroups($remote_server, $group_name);
@@ -79,10 +78,11 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     public function createGroup(Git_Driver_Gerrit $driver, UGroup $ugroup) {
+        $group_name = '';
         $remote_servers    = $this->gerrit_server_factory->getServersForProject($ugroup->getProject());
         foreach ($remote_servers as $remote_server) {
             try {
-                $this->createGroupForServer($remote_server, $driver, $ugroup);
+                $group_name = $this->createGroupForServer($remote_server, $driver, $ugroup);
             }
             catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
                 $this->logger->error($e->getMessage());
@@ -94,6 +94,7 @@ class Git_Driver_Gerrit_MembershipManager {
                 $this->logger->error('Unknown error: ' . $e->getMessage());
             }
         }
+        return $group_name;
     }
 
     protected function createGroupForServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
@@ -101,6 +102,7 @@ class Git_Driver_Gerrit_MembershipManager {
         if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
             $driver->createGroup($server, $gerrit_group_name, $ugroup->getLdapMembersIds($ugroup->getProject()->getID()));
         }
+        return $gerrit_group_name;
     }
 
     private function getFullyQualifiedUGroupName(UGroup $ugroup) {
