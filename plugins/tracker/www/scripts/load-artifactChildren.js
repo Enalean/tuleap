@@ -20,14 +20,15 @@
 document.observe('dom:loaded', function () {
     
     $$('.artifact-hierarchy').each(function (container) {
-        var hierarchy_viewer =  new tuleap.artifact.HierarchyViewer(
+        var artifact_id = container.getAttribute('data-artifact-id'),
+            hierarchy_viewer =  new tuleap.artifact.HierarchyViewer(
                 codendi.tracker.base_url,
                 container,
                 codendi.locales,
-                codendi.imgroot
-            ),
-            artifact_id = container.getAttribute('data-artifact-id');
+                codendi.imgroot,
+                artifact_id
+            );
 
-        hierarchy_viewer.getArtifactChildren(artifact_id);
+        //hierarchy_viewer.getArtifactChildren(artifact_id);
     });
 });
