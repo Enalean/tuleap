@@ -643,20 +643,9 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     public function process(Tracker_IDisplayTrackerLayout $layout, $request, $current_user) {
         switch ($request->get('func')) {
             case 'get-children':
-                $children         = array();
-                $artifact_links   = $this->getLinkedArtifacts($current_user);
-                $allowed_trackers = $this->getAllowedChildrenTypes();
-
-                foreach ($artifact_links as $artifact_link) {
-                    $tracker = $artifact_link->getTracker();
-                    if (in_array($tracker, $allowed_trackers)) {
-                        $semantics = Tracker_Semantic_Status::load($tracker);
-
-                        $children[] = new Tracker_ArtifactChildPresenter($artifact_link, $this, $semantics);
-                    }
-                }
-
-                $GLOBALS['Response']->sendJSON($children);exit;
+                $children = $this->getChildren($current_user);
+                $GLOBALS['Response']->sendJSON($children);
+                exit;
                 break;
             case 'update-comment':
                 if ((int)$request->get('changeset_id') && $request->get('content')) {
@@ -761,6 +750,27 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
                 }
                 break;
         }
+    }
+
+    private function getChildren(PFUser $current_user) {
+        $children         = array();
+        $artifact_links   = $this->getLinkedArtifacts($current_user);
+        $allowed_trackers = $this->getAllowedChildrenTypes();
+
+        foreach ($artifact_links as $artifact_link) {
+            $tracker      = $artifact_link->getTracker();
+            $has_children = $artifact_link->hasChildren($current_user);
+            if (in_array($tracker, $allowed_trackers)) {
+                $semantics = Tracker_Semantic_Status::load($tracker);
+
+                $children[] = new Tracker_ArtifactChildPresenter($artifact_link, $this, $semantics, $has_children);
+            }
+        }
+        return $children;
+    }
+
+    public function hasChildren(PFUser $current_user) {
+        return count($this->getChildren($current_user)) > 0;
     }
 
     private function sendAjaxCardsUpdateInfo(PFUser $current_user) {
