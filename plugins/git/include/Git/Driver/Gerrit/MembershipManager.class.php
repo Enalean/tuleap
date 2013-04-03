@@ -96,7 +96,7 @@ class Git_Driver_Gerrit_MembershipManager {
         }
     }
 
-    private function createGroupForServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+    protected function createGroupForServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
         if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
             $driver->createGroup($server, $gerrit_group_name, $ugroup->getLdapMembersIds($ugroup->getProject()->getID()));

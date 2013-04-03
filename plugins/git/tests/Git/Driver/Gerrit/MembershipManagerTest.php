@@ -283,28 +283,37 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
 
         $this->git_repository_factory                = mock('GitRepositoryFactory');
 
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            $this->git_repository_factory,
-            $this->remote_server_factory,
-            mock('Logger')
+        $this->membership_manager = partial_mock(
+            'Git_Driver_Gerrit_MembershipManager',
+            array('createGroupForServer'),
+            array(
+                $this->git_repository_factory,
+                $this->remote_server_factory,
+                mock('Logger')
+            )
         );
 
         $this->driver = mock('Git_Driver_Gerrit');
         stub($this->driver)->doesTheGroupExist()->returns(true);
+        
+        $project = stub('Project')->getUnixName()->returns('mozilla');
+        $this->ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $this->ugroup->setProject($project);
+        $this->source = new UGroup(array('ugroup_id' => 124, 'name' => 'coders'));
+        $this->source->setProject($project);
     }
 
     public function itAddBindingToAGroup() {
-        $project = stub('Project')->getUnixName()->returns('mozilla');
-        $ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
-        $ugroup->setProject($project);
-        $source = new UGroup(array('ugroup_id' => 124, 'name' => 'coders'));
-        $source->setProject($project);
-
         $gerrit_ugroup_name = 'mozilla/developers';
         $gerrit_source_name = 'mozilla/coders';
         expect($this->driver)->addIncludedGroup($this->remote_server, $gerrit_ugroup_name, $gerrit_source_name)->once();
 
-        $this->membership_manager->updateUGroupBinding($this->driver, $ugroup, $source);
+        $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
+    }
+
+    public function itReliesOnCreateGroupForSourceGroupCreation() {
+        expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->driver, $this->source)->once();
+        $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
     }
 
     public function itRemovesBindingWithAGroup() {
@@ -316,53 +325,6 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         expect($this->driver)->removeAllIncludedGroups($this->remote_server, $gerrit_ugroup_name)->once();
 
         $this->membership_manager->updateUGroupBinding($this->driver, $ugroup, null);
-    }
-
-    public function itAddBindingToAGroupNoYetMigrated() {}
-}
-
-class Git_Driver_Gerrit_MembershipManager_AddBindingToAGroupNotUsedByGerritTest extends TuleapTestCase {
-    public function setUp() {
-        parent::setUp();
-
-        $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
-        $this->remote_server                         = mock('Git_RemoteServer_GerritServer');
-        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
-
-        $this->git_repository_factory                = mock('GitRepositoryFactory');
-
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            $this->git_repository_factory,
-            $this->remote_server_factory,
-            mock('Logger')
-        );
-
-        $this->ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
-        $this->ugroup->setProject(stub('Project')->getUnixName()->returns('mozilla'));
-
-        $this->source = mock('UGroup');
-        stub($this->source)->getNormalizedName()->returns('coders');
-        stub($this->source)->getProject()->returns(stub('Project')->getUnixName()->returns('w3c'));
-
-        $this->driver = mock('Git_Driver_Gerrit');
-    }
-
-
-    public function itChecksIfSourceGroupAlreadyExists() {
-        stub($this->driver)->doesTheGroupExist()->returns(true);
-        expect($this->driver)->doesTheGroupExist($this->remote_server, 'w3c/coders')->once();
-
-        $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
-    }
-
-    public function itCreatesSourceGroupWhenNotAlreadyExists() {
-        stub($this->driver)->doesTheGroupExist()->returns(false);
-
-        stub($this->source)->getLdapMembersIds()->returns(array('ldap_id'));
-
-        expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', array('ldap_id'))->once();
-
-        $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
     }
 }
 
@@ -421,7 +383,6 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         $this->membership_manager->createGroup($this->driver, $this->ugroup);
     }
-
 
     public function itCreatesGerritGroupOnEachServer() {
         $remote_server1 = mock('Git_RemoteServer_GerritServer');
