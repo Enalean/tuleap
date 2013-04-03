@@ -336,7 +336,7 @@ class Git_Driver_Gerrit_MembershipManager_AddBindingToAGroupNotUsedByGerritTest 
             $this->remote_server_factory,
             mock('Logger')
         );
-        
+
         $this->ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
         $this->ugroup->setProject(stub('Project')->getUnixName()->returns('mozilla'));
 
@@ -363,6 +363,101 @@ class Git_Driver_Gerrit_MembershipManager_AddBindingToAGroupNotUsedByGerritTest 
         expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', array('ldap_id'))->once();
 
         $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
+    }
+}
+
+class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase {
+    private $ugroup;
+    private $logger;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
+        $this->remote_server                         = mock('Git_RemoteServer_GerritServer');
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
+        $this->git_repository_factory                = mock('GitRepositoryFactory');
+
+        $this->logger = mock('Logger');
+
+        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            $this->git_repository_factory,
+            $this->remote_server_factory,
+            $this->logger
+        );
+
+
+        $this->project = mock('Project');
+        stub($this->project)->getID()->returns(1236);
+        stub($this->project)->getUnixName()->returns('w3c');
+
+        $this->ugroup = mock('UGroup');
+        stub($this->ugroup)->getNormalizedName()->returns('coders');
+        stub($this->ugroup)->getProject()->returns($this->project);
+
+        $this->driver = mock('Git_Driver_Gerrit');
+    }
+
+    public function itCreateGroupOnAllGerritServersTheProjectUses() {
+        expect($this->remote_server_factory)->getServersForProject($this->project)->once();
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+    }
+
+    public function itCreatesGerritGroupFromUGroup() {
+        expect($this->ugroup)->getLdapMembersIds(1236)->once();
+        stub($this->ugroup)->getLdapMembersIds()->returns(array('ldap_id'));
+
+        expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', array('ldap_id'))->once();
+
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+    }
+
+    public function itDoesntCreateAGroupThatAlreadyExist() {
+        stub($this->driver)->doesTheGroupExist()->returns(true);
+        expect($this->driver)->doesTheGroupExist($this->remote_server, 'w3c/coders')->once();
+
+        expect($this->driver)->createGroup()->never();
+
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+    }
+
+
+    public function itCreatesGerritGroupOnEachServer() {
+        $remote_server1 = mock('Git_RemoteServer_GerritServer');
+        $remote_server2 = mock('Git_RemoteServer_GerritServer');
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
+
+        stub($this->ugroup)->getLdapMembersIds()->returns(array('ldap_id'));
+
+        expect($this->driver)->createGroup($remote_server1, 'w3c/coders', array('ldap_id'))->once();
+        expect($this->driver)->createGroup($remote_server2, 'w3c/coders', array('ldap_id'))->once();
+
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+    }
+
+    public function itLogsRemoteSSHErrors() {
+        stub($this->driver)->createGroup()->throws(new Git_Driver_Gerrit_RemoteSSHCommandFailure('whatever', 'whatever', 'whatever'));
+
+        expect($this->logger)->error(new PatternExpectation('/^exit_code:/'))->once();
+
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+    }
+
+    public function itLogsGerritExceptions() {
+        stub($this->driver)->createGroup()->throws(new Git_Driver_Gerrit_Exception('whatever'));
+
+        expect($this->logger)->error('whatever')->once();
+
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
+    }
+
+    public function itLogsAllOtherExceptions() {
+        stub($this->driver)->createGroup()->throws(new Exception('whatever'));
+
+        expect($this->logger)->error('Unknown error: whatever')->once();
+
+        $this->membership_manager->createGroup($this->driver, $this->ugroup);
     }
 }
 

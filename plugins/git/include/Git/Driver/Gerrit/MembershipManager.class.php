@@ -70,14 +70,41 @@ class Git_Driver_Gerrit_MembershipManager {
             $group_name = $ugroup->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
             if ($source_ugroup) {
                 $included_group_name = $source_ugroup->getProject()->getUnixName().'/'.$source_ugroup->getNormalizedName();
-                if (!$driver->doesTheGroupExist($remote_server, $included_group_name)) {
-                    $driver->createGroup($remote_server, $included_group_name, $source_ugroup->getLdapMembersIds($source_ugroup->getProject()->getID()));
-                }
+                $this->createGroupForServer($remote_server, $driver, $source_ugroup);
                 $driver->addIncludedGroup($remote_server, $group_name, $included_group_name);
             } else {
                 $driver->removeAllIncludedGroups($remote_server, $group_name);
             }
         }
+    }
+
+    public function createGroup(Git_Driver_Gerrit $driver, UGroup $ugroup) {
+        $remote_servers    = $this->gerrit_server_factory->getServersForProject($ugroup->getProject());
+        foreach ($remote_servers as $remote_server) {
+            try {
+                $this->createGroupForServer($remote_server, $driver, $ugroup);
+            }
+            catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                $this->logger->error($e->getMessage());
+            }
+            catch (Git_Driver_Gerrit_Exception $e) {
+                $this->logger->error($e->getMessage());
+            }
+            catch (Exception $e) {
+                $this->logger->error('Unknown error: ' . $e->getMessage());
+            }
+        }
+    }
+
+    private function createGroupForServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+        $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
+        if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
+            $driver->createGroup($server, $gerrit_group_name, $ugroup->getLdapMembersIds($ugroup->getProject()->getID()));
+        }
+    }
+
+    private function getFullyQualifiedUGroupName(UGroup $ugroup) {
+        return $ugroup->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
     }
 }
 ?>
