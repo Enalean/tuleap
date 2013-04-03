@@ -37,13 +37,16 @@ class Git_Driver_Gerrit_MembershipManager {
 
     private $git_repository_factory;
     private $gerrit_server_factory;
+    private $logger;
 
     public function __construct(
         GitRepositoryFactory $git_repository_factory,
-        Git_RemoteServer_GerritServerFactory $gerrit_server_factory
+        Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
+        Logger                               $logger
     ) {
         $this->git_repository_factory = $git_repository_factory;
         $this->gerrit_server_factory  = $gerrit_server_factory;
+        $this->logger                 = $logger;
     }
 
     public function updateUserMembership(PFUser $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
@@ -52,13 +55,21 @@ class Git_Driver_Gerrit_MembershipManager {
         }
 
         $remote_servers = $this->gerrit_server_factory->getServersForProject($project);
-        $logger         = new BackendLogger();
         foreach ($remote_servers as $remote_server) {
             try {
                 $command->execute($remote_server, $user, $project, $ugroup);
             } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-                $logger->error($e->getMessage());
+                $this->logger->error($e->getMessage());
             }
+        }
+    }
+
+    public function updateUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup = null) {
+        $remote_servers = $this->gerrit_server_factory->getServersForProject($ugroup->getProject());
+        foreach ($remote_servers as $remote_server) {
+            $group_name          = $ugroup->getProject()->getUnixName().'/'.$ugroup->getName();
+            $included_group_name = $source_ugroup->getProject()->getUnixName().'/'.$source_ugroup->getName();
+            $driver->addIncludedGroup($remote_server, $group_name, $included_group_name);
         }
     }
 }

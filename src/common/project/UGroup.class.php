@@ -72,6 +72,8 @@ class UGroup {
 
     protected $members      = null;
     protected $members_name = null;
+    /** @var Project */
+    protected $project      = null;
 
     protected $_ugroupdao;
     protected $_ugroupuserdao;
@@ -118,6 +120,10 @@ class UGroup {
     
     public function setUGroupUserDao(UGroupUserDao $dao) {
         $this->_ugroupuserdao = $dao;
+    }
+
+    public function setProject(Project $project) {
+        $this->project = $project;
     }
 
     /**
@@ -170,6 +176,13 @@ class UGroup {
 
     public function getProjectId() {
         return $this->group_id;
+    }
+
+    public function getProject() {
+        if (!$this->project) {
+            $this->project = ProjectManager::instance()->getProject($this->group_id);
+        }
+        return $this->project;
     }
 
     public function getDescription() {

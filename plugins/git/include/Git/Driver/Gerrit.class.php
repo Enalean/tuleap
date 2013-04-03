@@ -214,6 +214,9 @@ class Git_Driver_Gerrit {
         $this->flushGerritCaches($server);
     }
 
+    public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
+    }
+
     private function flushGerritCaches($server) {
         $query = self::COMMAND .' flush-caches';
         $this->ssh->execute($server, $query);

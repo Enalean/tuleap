@@ -76,7 +76,8 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory_without_gerrit,
-            $this->remote_server_factory_without_gerrit
+            $this->remote_server_factory_without_gerrit,
+            mock('Logger')
         );
         stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
     }
@@ -106,7 +107,8 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             $this->git_repository_factory,
-            $this->remote_server_factory
+            $this->remote_server_factory,
+            mock('Logger')
         );
     }
 }
@@ -269,6 +271,45 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
 //
 //        $this->membership_manager->updateUserMembership($this->user, $this->admin_ugroup, $this->project, $this->membership_command_add);
 //    }
+}
+
+class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCase {
+    public function setUp() {
+        parent::setUp();
+
+        $this->remote_server_factory                 = mock('Git_RemoteServer_GerritServerFactory');
+        $this->remote_server                         = mock('Git_RemoteServer_GerritServer');
+        stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
+
+        $this->git_repository_factory                = mock('GitRepositoryFactory');
+
+        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
+            $this->git_repository_factory,
+            $this->remote_server_factory,
+            mock('Logger')
+        );
+    }
+
+    public function itAddBindingToAGroup() {
+        $project = stub('Project')->getUnixName()->returns('mozilla');
+        $ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $ugroup->setProject($project);
+        $source = new UGroup(array('ugroup_id' => 124, 'name' => 'coders'));
+        $source->setProject($project);
+
+        $driver = mock('Git_Driver_Gerrit');
+        $gerrit_ugroup_name = 'mozilla/developers';
+        $gerrit_source_name = 'mozilla/coders';
+        expect($driver)->addIncludedGroup($this->remote_server, $gerrit_ugroup_name, $gerrit_source_name)->once();
+
+        $this->membership_manager->updateUGroupBinding($driver, $ugroup, $source);
+    }
+
+    public function itAddBindingToAGroupNoYetMigrated() {}
+    public function itAddBindingToAGroupNotUsedByGerrit() {}
+    
+    public function itRemoveBindingWithAGroup() {}
+    
 }
 
 ?>
