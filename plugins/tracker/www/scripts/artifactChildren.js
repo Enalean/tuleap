@@ -48,7 +48,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         this.body = this.container.down('tbody');
         this.row_template = new Template('<tr class="artifact-child" data-child-id="#{id}" data-parent-id="#{parent_id}"> \
                 <td> \
-                    <a href="#" class="toggle"><img src="'+ imgroot +'pointer_right.png" /></a> \
+                    <a href="#" class="toggle-child"><img src="'+ imgroot +'pointer_right.png" /></a> \
                     <a href="#{url}">#{xref}</a> \
                 </td> \
                 <td>#{title}</td> \
@@ -89,7 +89,7 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
 
         element = parent.next();
         if (! child.has_children) {
-            element.down('a.toggle').setStyle({
+            element.down('a.toggle-child').setStyle({
                 visibility: 'hidden'
             });
         }
@@ -147,7 +147,7 @@ tuleap.artifact.HierarchyViewer.Item = Class.create({
         this.children      = [];
         this.is_open       = false;
 
-        this.icon          = element.down('a.toggle img');
+        this.icon          = element.down('a.toggle-child img');
         this.icon.observe('click', function (evt) {
             if (this.is_open) {
                 this.close();
