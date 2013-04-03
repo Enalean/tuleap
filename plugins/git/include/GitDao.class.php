@@ -542,7 +542,7 @@ class GitDao extends DataAccessObject {
         return count($this->retrieve($sql)) > 0;
     }
 
-    public function searchGerritRepositoriesWithPermissionsForUGroup($project_id, $ugroup_ids) {
+    public function searchGerritRepositoriesWithPermissionsForUGroupAndProject($project_id, $ugroup_ids) {
         $project_id = $this->da->escapeInt($project_id);
         $ugroup_ids = $this->da->escapeIntImplode($ugroup_ids);
         $sql = "SELECT *

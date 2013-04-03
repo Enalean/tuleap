@@ -78,8 +78,8 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
     public function itCallsDaoWithArguments() {
         $ugroups = array(404, 416, 115);
-        expect($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup($this->project_id, $ugroups)->once();
-        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsEmptyDar();
+        expect($this->dao)->searchGerritRepositoriesWithPermissionsForUGroupAndProject($this->project_id, $ugroups)->once();
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroupAndProject()->returnsEmptyDar();
         $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
     }
 
@@ -87,7 +87,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         $db_row_for_repo_12 = array('repository_id' => 12, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115);
         $db_row_for_repo_23 = array('repository_id' => 23, 'permission_type' => Git::PERM_READ, 'ugroup_id' => 115);
 
-        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsDar(
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroupAndProject()->returnsDar(
             $db_row_for_repo_12,
             $db_row_for_repo_23
         );
@@ -100,7 +100,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
     }
 
     public function itReturnsOneRepositoryWithOnePermission() {
-        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsDar(
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroupAndProject()->returnsDar(
             array(
                 'repository_id'   => 12,
                 'permission_type' => Git::PERM_READ,
@@ -131,7 +131,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
     }
 
     public function itReturnsOneRepositoryWithTwoPermissions() {
-        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsDar(
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroupAndProject()->returnsDar(
             array(
                 'repository_id'   => 12,
                 'permission_type' => Git::PERM_READ,
@@ -167,7 +167,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
     }
 
     public function itReturnsOneRepositoryWithTwoGroupsForOnePermissionType() {
-        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsDar(
+        stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroupAndProject()->returnsDar(
             array(
                 'repository_id'   => 12,
                 'permission_type' => Git::PERM_READ,
