@@ -223,11 +223,13 @@ class UGroupManager {
      * @return Boolean
      */
     public function updateUgroupBinding($ugroupId, $sourceId = null) {
+        $ugroup = $this->getById($ugroupId);
+        $source = $sourceId !== null ? $this->getById($sourceId) : null;
         $this->getEventManager()->processEvent(
             'ugroup_manager_update_ugroup_binding',
             array(
-                'ugroup_id' => $ugroupId,
-                'source_id' => $sourceId,
+                'ugroup' => $ugroup,
+                'source' => $source,
             )
         );
         return $this->getDao()->updateUgroupBinding($ugroupId, $sourceId);
