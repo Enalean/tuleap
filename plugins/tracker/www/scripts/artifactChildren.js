@@ -109,6 +109,18 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
         child.down('td').setStyle({
             paddingLeft: padding_left + 'px'
         });
+    },
+
+    startSpinner: function () {
+        this.container.up('body').setStyle({
+            cursor: 'progress'
+        });
+    },
+
+    stopSpinner: function () {
+        this.container.up('body').setStyle({
+            cursor: 'default'
+        });
     }
 });
 
@@ -118,11 +130,14 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
 tuleap.artifact.HierarchyViewer.ItemProvider = Class.create({
 
     initialize : function(base_url, renderer) {
-        this.base_url     = base_url;
-        this.renderer     = renderer;
+        this.base_url   = base_url;
+        this.renderer   = renderer;
+        this.nb_request = 0;
     },
 
     injectChildren: function (item) {
+        this.nb_request--;
+        this.renderer.startSpinner();
         new Ajax.Request(this.base_url, {
             method: 'GET',
             parameters: {
@@ -131,6 +146,11 @@ tuleap.artifact.HierarchyViewer.ItemProvider = Class.create({
             },
             onSuccess: function (transport) {
                 this.receiveChildren(item, transport.responseJSON);
+            }.bind(this),
+            onComplete: function () {
+                if (this.nb_request--) {
+                    this.renderer.stopSpinner()
+                }
             }.bind(this)
         });
     },
