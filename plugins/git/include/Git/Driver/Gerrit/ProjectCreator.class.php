@@ -41,11 +41,21 @@ class Git_Driver_Gerrit_ProjectCreator {
     /** @var UGroupManager */
     private $ugroup_manager;
 
-    public function __construct($dir, Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder, UGroupManager $ugroup_manager) {
+    /** @var Git_Driver_Gerrit_MembershipManager */
+    private $membership_manager;
+
+    public function __construct(
+        $dir,
+        Git_Driver_Gerrit $driver,
+        Git_Driver_Gerrit_UserFinder $user_finder,
+        UGroupManager $ugroup_manager,
+        Git_Driver_Gerrit_MembershipManager $membership_manager
+    ) {
         $this->dir            = $dir;
         $this->driver         = $driver;
         $this->user_finder    = $user_finder;
         $this->ugroup_manager = $ugroup_manager;
+        $this->membership_manager = $membership_manager;
     }
 
     /**
@@ -108,16 +118,11 @@ class Git_Driver_Gerrit_ProjectCreator {
         $migrated_ugroups = array();
 
         foreach ($ugroups as $ugroup) {
-            try {
-                if (! $this->UGroupCanBeMigrated($ugroup)){
-                    continue;
-                }
-
-                $gerrit_group_name = $project->getUnixName().'/'.$ugroup->getNormalizedName();
-                $this->driver->createGroup($gerrit_server, $gerrit_group_name, $ugroup->getLdapMembersIds($project->getID()));
+            if (! $this->UGroupCanBeMigrated($ugroup)){
+                continue;
+            }
+            if ($this->membership_manager->createGroupForServer($gerrit_server, $this->driver, $ugroup)) {
                 $migrated_ugroups[] = $ugroup;
-            } catch (Exception $e) {
-                // Continue with the next group
             }
         }
 

@@ -702,7 +702,7 @@ class GitPlugin extends Plugin {
         $ugroup_manager = new UGroupManager();
         $ugroup         = $ugroup_manager->getUGroup($project, $params['ugroup_id']);
 
-        $this->getGerritMembershipManager()->createGroup($this->getGerritDriver(), $ugroup);
+        $this->getGerritMembershipManager()->createGroupOnProjectsServers($this->getGerritDriver(), $ugroup);
     }
 
     public function ugroup_manager_update_ugroup_binding($params) {
@@ -734,7 +734,13 @@ class GitPlugin extends Plugin {
 
     private function getProjectCreator() {
         $tmp_dir = Config::get('tmp_dir') .'/gerrit_'. uniqid();
-        return new Git_Driver_Gerrit_ProjectCreator($tmp_dir, $this->getGerritDriver(), $this->getGerritUserFinder(), new UGroupManager());
+        return new Git_Driver_Gerrit_ProjectCreator(
+            $tmp_dir,
+            $this->getGerritDriver(),
+            $this->getGerritUserFinder(),
+            new UGroupManager(),
+            $this->getGerritMembershipManager()
+        );
     }
 
     private function getGerritUserFinder() {

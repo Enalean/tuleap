@@ -70,7 +70,7 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     public function updateUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup = null) {
-        $remote_servers = $this->gerrit_server_factory->getServersForUGroup($ugroup->getProject());
+        $remote_servers = $this->gerrit_server_factory->getServersForUGroup($ugroup);
         foreach ($remote_servers as $remote_server) {
             $group_name = $this->getFullyQualifiedUGroupName($ugroup);
             if ($source_ugroup) {
@@ -82,33 +82,34 @@ class Git_Driver_Gerrit_MembershipManager {
         }
     }
 
-    public function createGroup(Git_Driver_Gerrit $driver, UGroup $ugroup) {
+    public function createGroupOnProjectsServers(Git_Driver_Gerrit $driver, UGroup $ugroup) {
         $group_name = '';
         $remote_servers    = $this->gerrit_server_factory->getServersForProject($ugroup->getProject());
         foreach ($remote_servers as $remote_server) {
-            try {
-                $group_name = $this->createGroupForServer($remote_server, $driver, $ugroup);
-            }
-            catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-                $this->logger->error($e->getMessage());
-            }
-            catch (Git_Driver_Gerrit_Exception $e) {
-                $this->logger->error($e->getMessage());
-            }
-            catch (Exception $e) {
-                $this->logger->error('Unknown error: ' . $e->getMessage());
-            }
+            $group_name = $this->createGroupForServer($remote_server, $driver, $ugroup);
         }
         return $group_name;
     }
 
-    protected function createGroupForServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
-        $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
-        if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
-            $driver->createGroup($server, $gerrit_group_name, $ugroup->getLdapMembersIds($ugroup->getProject()->getID()));
-            $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
+    public function createGroupForServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+        try {
+            $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
+            if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
+                $driver->createGroup($server, $gerrit_group_name, $ugroup->getLdapMembersIds($ugroup->getProject()->getID()));
+                $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
+            }
+            return $gerrit_group_name;
         }
-        return $gerrit_group_name;
+        catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+            $this->logger->error($e->getMessage());
+        }
+        catch (Git_Driver_Gerrit_Exception $e) {
+            $this->logger->error($e->getMessage());
+        }
+        catch (Exception $e) {
+            $this->logger->error('Unknown error: ' . $e->getMessage());
+        }
+        return false;
     }
 
     /**
