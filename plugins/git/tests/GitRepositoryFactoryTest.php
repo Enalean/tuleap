@@ -80,7 +80,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         $ugroups = array(404, 416, 115);
         expect($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup($this->project_id, $ugroups)->once();
         stub($this->dao)->searchGerritRepositoriesWithPermissionsForUGroup()->returnsEmptyDar();
-        $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
+        $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
     }
 
     public function itHydratesTheRepositoriesWithFactory() {
@@ -96,7 +96,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
         expect($this->factory)->instanciateFromRow($db_row_for_repo_23)->at(1);
         stub($this->factory)->instanciateFromRow()->returns(mock('GitRepository'));
 
-        $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
+        $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
     }
 
     public function itReturnsOneRepositoryWithOnePermission() {
@@ -112,7 +112,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         stub($this->factory)->instanciateFromRow()->returns($repository);
 
-        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
 
         $this->assertEqual(
             $git_with_permission,
@@ -148,7 +148,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         stub($this->factory)->instanciateFromRow()->returns($repository);
 
-        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
 
         $this->assertEqual(
             $git_with_permission,
@@ -184,7 +184,7 @@ class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest ext
 
         stub($this->factory)->instanciateFromRow()->returns($repository);
 
-        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroup($this->project, $this->ugroup, $this->user);
+        $git_with_permission = $this->factory->getGerritRepositoriesWithPermissionsForUGroupAndProject($this->project, $this->ugroup, $this->user);
 
         $this->assertEqual(
             $git_with_permission,
@@ -222,7 +222,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
 
         $this->factory = partial_mock(
             'GitRepositoryFactory',
-            array('instanciateFromRow', 'getGerritRepositoriesWithPermissionsForUGroup'),
+            array('instanciateFromRow', 'getGerritRepositoriesWithPermissionsForUGroupAndProject'),
             array(
                 $this->dao,
                 $this->project_manager
@@ -257,7 +257,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
         expect($this->factory)->instanciateFromRow(array('repository_id' => 23))->at(1);
         stub($this->factory)->instanciateFromRow()->returns(mock('GitRepository'));
 
-        stub($this->factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(array());
+        stub($this->factory)->getGerritRepositoriesWithPermissionsForUGroupAndProject()->returns(array());
 
         $this->factory->getAllGerritRepositoriesFromProject($this->project, $this->user);
     }
@@ -268,7 +268,7 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
         );
         stub($this->factory)->instanciateFromRow()->returns($this->repository);
 
-        stub($this->factory)->getGerritRepositoriesWithPermissionsForUGroup()->returns(
+        stub($this->factory)->getGerritRepositoriesWithPermissionsForUGroupAndProject()->returns(
             array(
                 12 => new GitRepositoryWithPermissions(
                     $this->repository,
