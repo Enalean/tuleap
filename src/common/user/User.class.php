@@ -557,7 +557,14 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
      */
     function getLdapId() {
         return $this->ldap_id;
-    }    
+    }
+
+    /**
+     * @return bool
+     */
+    public function isLdap() {
+        return $this->getLdapId() != null;
+    }
     /**
      * @return string the registration date of the user (timestamp format)
      */
