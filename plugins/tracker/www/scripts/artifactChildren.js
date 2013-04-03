@@ -38,6 +38,9 @@ tuleap.artifact.HierarchyViewer = Class.create({
     }
 });
 
+/**
+ * Display children and subchildren in the page
+ */
 tuleap.artifact.HierarchyViewer.Renderer = Class.create({
 
     initialize : function (container, locales, imgroot) {
@@ -109,6 +112,9 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
     }
 });
 
+/**
+ * Provide children of an item
+ */
 tuleap.artifact.HierarchyViewer.ItemProvider = Class.create({
 
     initialize : function(base_url, renderer) {
@@ -138,6 +144,9 @@ tuleap.artifact.HierarchyViewer.ItemProvider = Class.create({
     }
 });
 
+/**
+ * A child
+ */
 tuleap.artifact.HierarchyViewer.Item = Class.create({
 
     initialize: function(id, element, item_provider) {
