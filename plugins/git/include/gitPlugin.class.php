@@ -686,9 +686,12 @@ class GitPlugin extends Plugin {
 
     private function getGerritMembershipManager() {
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipManager.class.php';
-        $repository_factory = $this->getRepositoryFactory();
-        $server_factory     = $this->getGerritServerFactory();
-        return new Git_Driver_Gerrit_MembershipManager($repository_factory, $server_factory, new BackendLogger());
+        return new Git_Driver_Gerrit_MembershipManager(
+            new Git_Driver_Gerrit_MembershipDao(),
+            $this->getRepositoryFactory(),
+            $this->getGerritServerFactory(),
+            new BackendLogger()
+        );
     }
 
     public function project_admin_ugroup_creation($params) {

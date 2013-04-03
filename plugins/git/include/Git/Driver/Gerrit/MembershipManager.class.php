@@ -59,7 +59,7 @@ class Git_Driver_Gerrit_MembershipManager {
             return;
         }
 
-        $remote_servers = $this->gerrit_server_factory->getServersForProject($project);
+        $remote_servers = $this->gerrit_server_factory->getServersForUGroup($ugroup);
         foreach ($remote_servers as $remote_server) {
             try {
                 $command->execute($remote_server, $user, $project, $ugroup);
@@ -70,7 +70,7 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     public function updateUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup = null) {
-        $remote_servers = $this->gerrit_server_factory->getServersForProject($ugroup->getProject());
+        $remote_servers = $this->gerrit_server_factory->getServersForUGroup($ugroup->getProject());
         foreach ($remote_servers as $remote_server) {
             $group_name = $this->getFullyQualifiedUGroupName($ugroup);
             if ($source_ugroup) {
