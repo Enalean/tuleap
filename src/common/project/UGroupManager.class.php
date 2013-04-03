@@ -31,8 +31,14 @@ class UGroupManager {
      */
     private $dao;
 
-    public function __construct(UGroupDao $dao = null) {
-        $this->dao = $dao;
+    /**
+     * @var EventManager
+     */
+    private $event_manager;
+
+    public function __construct(UGroupDao $dao = null, EventManager $event_manager = null) {
+        $this->dao           = $dao;
+        $this->event_manager = $event_manager;
     }
 
     /**
@@ -143,7 +149,10 @@ class UGroupManager {
      * @return EventManager
      */
     private function getEventManager() {
-        return EventManager::instance();
+        if (!$this->event_manager) {
+            $this->event_manager = EventManager::instance();
+        }
+        return $this->event_manager;
     }
 
     /**
@@ -214,6 +223,13 @@ class UGroupManager {
      * @return Boolean
      */
     public function updateUgroupBinding($ugroupId, $sourceId = null) {
+        $this->getEventManager()->processEvent(
+            'ugroup_manager_update_ugroup_binding',
+            array(
+                'ugroup_id' => $ugroupId,
+                'source_id' => $sourceId,
+            )
+        );
         return $this->getDao()->updateUgroupBinding($ugroupId, $sourceId);
     }
 

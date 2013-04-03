@@ -132,4 +132,29 @@ class UGroupManager_getUGroupWithMembers_Test extends TuleapTestCase {
     }
 }
 
+class UGroupManager_UpdateUgroupBinding extends TuleapTestCase {
+
+    public function setUp() {
+        parent::setUp();
+        $this->dao            = mock('UGroupDao');
+        $this->event_manager  = mock('EventManager');
+        $this->ugroup_manager = new UGroupManager($this->dao, $this->event_manager);
+    }
+
+    public function itCallsDaoToRemoveABinding() {
+        expect($this->dao)->updateUgroupBinding(12, null)->once();
+        $this->ugroup_manager->updateUgroupBinding(12);
+    }
+
+    public function itCallsDaoToAddABinding() {
+        expect($this->dao)->updateUgroupBinding(12, 24)->once();
+        $this->ugroup_manager->updateUgroupBinding(12, 24);
+    }
+
+    public function itRaiseAnEventForTheNewEvent() {
+        expect($this->event_manager)->processEvent('ugroup_manager_update_ugroup_binding', array('ugroup_id' => 12, 'source_id' => 24))->once();
+        $this->ugroup_manager->updateUgroupBinding(12, 24);
+    }
+}
+
 ?>
