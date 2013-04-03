@@ -310,16 +310,57 @@ class GitRepositoryFactory_getAllGerritRepositoriesWithPermissionsForUGroupTest 
 
         $this->git_dao          = mock('GitDao');
         $this->project_manager  = mock('ProjectManager');
+        $this->factory          = new GitRepositoryFactory($this->git_dao, $this->project_manager);
     }
 
-    public function itReturnsAnEmptyArrayIfThereIsNoGerritRepositoryExistsForTheUGroup() {
+    public function itReturnsAnEmptyArrayForAnEmptyUGroupIdArray() {
         $empty_ugroups_list = array();
 
-        $repository_factory  = new GitRepositoryFactory($this->git_dao, $this->project_manager);
-        $gerrit_repositories = $repository_factory->getAllGerritRepositoriesWithPermissionsForUGroup($empty_ugroups_list);
+        $gerrit_repositories = $this->factory->getAllGerritRepositoriesWithPermissionsForUGroup($empty_ugroups_list);
 
         $this->assertTrue(is_array($gerrit_repositories));
         $this->assertArrayEmpty($gerrit_repositories);
     }
+
+    public function itReturnsAnEmptyArrayIfNoGerritRepositoryExistsForAnArrayOfUGroupIds() {
+        $ugroups_list = array(
+            45,
+            '12',
+            7,
+            99996,
+        );
+
+        $gerrit_repositories = $this->factory->getAllGerritRepositoriesWithPermissionsForUGroup($ugroups_list);
+
+        $this->assertTrue(is_array($gerrit_repositories));
+        $this->assertArrayEmpty($gerrit_repositories);
+    }
+
+    public function itReturnsAnArrayOfGerritRepositoriesWithPermissionsForAnArrayOfUGroupIds() {
+        $ugroups_list = array(
+            45,
+            '12',
+            7,
+            99996,
+        );
+        
+        $data_access_result = array(
+            array('a'),
+            array('b'),
+            array('v')
+        );
+
+        stub($this->git_dao)->searchGerritRepositoriesIdsWithPermissionsForUGroups()->returns($data_access_result);
+
+        $gerrit_repositories = $this->factory->getAllGerritRepositoriesWithPermissionsForUGroup($ugroups_list);
+
+        $this->assertTrue(is_array($gerrit_repositories));
+        $this->assertArrayNotEmpty($gerrit_repositories);
+
+        foreach ($gerrit_repositories as $gerrit_repository) {
+            $this->assertIsA($gerrit_repository, 'GitRepositoryWithPermissions');
+        }
+    }
+
 }
 ?>
