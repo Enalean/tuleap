@@ -19,6 +19,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
+// Tests are like gods, they can run an infinite time, eat all the memory and kill kittens
 ini_set('max_execution_time', 0);
 ini_set('memory_limit', -1);
 

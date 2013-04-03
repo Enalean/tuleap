@@ -22,35 +22,24 @@
  * I'm responsible of managing propagation of user membership changes (add/remove) to gerrit.
  */
 abstract class Git_Driver_Gerrit_MembershipCommand {
-    private   $user_finder;
+    /** @var Git_Driver_Gerrit_MembershipManager */
+    protected $membership_manager;
+    /** @var Git_Driver_Gerrit */
     protected $driver;
+    /** @var UGroup */
+    protected $ugroup;
 
-    public function __construct(Git_Driver_Gerrit $driver, Git_Driver_Gerrit_UserFinder $user_finder) {
-        $this->driver      = $driver;
-        $this->user_finder = $user_finder;
+    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+        $this->membership_manager = $membership_manager;
+        $this->driver = $driver;
+        $this->ugroup = $ugroup;
     }
 
-    protected abstract function propagateToGerrit(Git_RemoteServer_GerritServer $server, PFUser $user, $group_full_name);
-
-    protected abstract function isUserConcernedByPermission(PFUser $user, Project $project, $groups);
-
-    public function execute(Git_RemoteServer_GerritServer $server, PFUser $user, Project $project, UGroup $ugroup) {
-        $group_full_name = $this->getGerritGroupName($project, $ugroup->getNormalizedName());
-        $this->propagateToGerrit($server, $user, $group_full_name);
-    }
-    private function getGerritGroupName(Project $project, $ugroup_name) {
-        $project_name    = $project->getUnixName();
-        return "$project_name/$ugroup_name";
+    public function getUGroup() {
+        return $this->ugroup;
     }
 
-    protected function isUserInGroups($user, $project, $group_list) {
-        $user_groups = $user->getUgroups($project->getID(), null);
-        foreach ($user_groups as $user_group) {
-            if (in_array($user_group, $group_list)) {
-                return true;
-            }
-        }
-        return false;
-    }
+    abstract public function execute(Git_RemoteServer_GerritServer $server);
 }
+
 ?>
