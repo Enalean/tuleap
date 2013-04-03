@@ -75,10 +75,10 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
 
     insertRoot: function (root) {
         this.body.insert(this.row_template.evaluate(root));
-        var row = this.body.childElements().last();
-        row.setAttribute('data-is-root', 1);
-        row.hide();
-        return row;
+        var element = this.body.childElements().last();
+        element.setAttribute('data-is-root', 1);
+        element.hide();
+        return element;
     },
 
     insertChildAfter: function (parent_id, child) {
@@ -86,7 +86,13 @@ tuleap.artifact.HierarchyViewer.Renderer = Class.create({
             element;
 
         parent.insert({after: this.row_template.evaluate(child)});
+
         element = parent.next();
+        if (! child.has_children) {
+            element.down('a.toggle').setStyle({
+                visibility: 'hidden'
+            });
+        }
         this.adjustPadding(parent, element);
 
         return element;
