@@ -23,7 +23,8 @@ Mock::generatePartial(
     'Tracker_FormElement_Field_List_Bind_Users',
     'Tracker_FormElement_Field_List_Bind_UsersTestVersion',
     array(
-        'getAllValues'
+        'getAllValues',
+        'getAllValuesByUGroupList'
     )
 );
 Mock::generate('Tracker_FormElement_Field_List_Bind_UsersValue');
@@ -50,9 +51,9 @@ class Tracker_FormElement_Field_List_Bind_UsersTest extends TuleapTestCase {
         $value_function = ',project_members,project_admins';
         $default_values = $decorators = '';
 
-        $users =  partial_mock('Tracker_FormElement_Field_List_Bind_Users', array('getAllValues'), array($field, $value_function, $default_values, $decorators));
-        stub($users)->getAllValues()->returns(array(10 => $user1, 20 => $user2));
-
+        $users =  partial_mock('Tracker_FormElement_Field_List_Bind_Users', array('getAllValuesByUGroupList', 'getSoapBindValue'), array($field, $value_function, $default_values, $decorators));
+        stub($users)->getAllValuesByUGroupList()->returns(array(10 => $user1, 20 => $user2));
+        
         $soap_values = array(
             array('bind_value_id' => 10,
                   'bind_value_label' => 'user1',

@@ -215,8 +215,7 @@ class Tracker_FormElement_Field_List_Bind_Users extends Tracker_FormElement_Fiel
      *
      * @return Tracker_FormElement_Field_List_Bind_UsersValue[]
      */
-    
-    private function getAllValuesByUGroupList($ugroups, $keyword = null) {
+    protected function getAllValuesByUGroupList($ugroups, $keyword = null) {
         if ($this->values) {
             return $this->values;
         }
