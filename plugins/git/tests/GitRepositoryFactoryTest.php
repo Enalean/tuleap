@@ -57,7 +57,7 @@ class GitRepositoryFactoryTest extends TuleapTestCase {
     }
 }
 
-class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupTest extends TuleapTestCase {
+class GitRepositoryFactory_getGerritRepositoriesWithPermissionsForUGroupAndProjectTest extends TuleapTestCase {
 
     public function setUp() {
         parent::setUp();
@@ -298,6 +298,28 @@ class GitRepositoryFactory_getAllGerritRepositoriesFromProjectTest extends Tulea
                 )
             )
         );
+    }
+}
+
+class GitRepositoryFactory_getAllGerritRepositoriesWithPermissionsForUGroupTest extends TuleapTestCase {
+    private $git_dao;
+    private $project_manager;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->git_dao          = mock('GitDao');
+        $this->project_manager  = mock('ProjectManager');
+    }
+
+    public function itReturnsAnEmptyArrayIfThereIsNoGerritRepositoryExistsForTheUGroup() {
+        $empty_ugroups_list = array();
+
+        $repository_factory  = new GitRepositoryFactory($this->git_dao, $this->project_manager);
+        $gerrit_repositories = $repository_factory->getAllGerritRepositoriesWithPermissionsForUGroup($empty_ugroups_list);
+
+        $this->assertTrue(is_array($gerrit_repositories));
+        $this->assertArrayEmpty($gerrit_repositories);
     }
 }
 ?>

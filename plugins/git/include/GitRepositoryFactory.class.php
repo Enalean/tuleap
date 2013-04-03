@@ -175,6 +175,12 @@ class GitRepositoryFactory {
 
     }
 
+    public function getAllGerritRepositoriesWithPermissionsForUGroup(Array $ugroup_ids) {
+        $gerrit_repositories = array();
+
+        return $gerrit_repositories;
+    }
+
     /**
      * Attempt to get repository if path match given base directory
      * 
