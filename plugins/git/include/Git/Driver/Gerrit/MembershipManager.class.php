@@ -80,6 +80,7 @@ class Git_Driver_Gerrit_MembershipManager {
         $group_name = $this->getFullyQualifiedUGroupName($ugroup);
         if ($source_ugroup) {
             $included_group_name = $this->createGroupForServer($server, $driver, $source_ugroup);
+            $driver->removeAllGroupMembers($server, $group_name);
             $driver->addIncludedGroup($server, $group_name, $included_group_name);
         } else {
             $driver->removeAllIncludedGroups($server, $group_name);

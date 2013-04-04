@@ -316,6 +316,15 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
     }
 
+    public function itEmptyTheMemberListOnBindingAdd() {
+        stub($this->membership_manager)->createGroupForServer()->returns('mozilla/coders');
+
+        expect($this->driver)->removeAllGroupMembers($this->remote_server, 'mozilla/developers')->once();
+
+        $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
+    }
+
+
     public function itReliesOnCreateGroupForSourceGroupCreation() {
         expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->driver, $this->source)->once();
         $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);

@@ -223,6 +223,12 @@ class Git_Driver_Gerrit {
         $this->flushGerritCaches($server);
     }
 
+    public function removeAllGroupMembers(Git_RemoteServer_GerritServer $server, $group_name) {
+        $sql_query = "DELETE FROM account_group_members WHERE group_id=(SELECT group_id FROM account_groups WHERE name='". $group_name ."')";
+        $this->executeUnescapedQuery($server, $sql_query);
+        $this->flushGerritCaches($server);
+    }
+
     public function addIncludedGroup(Git_RemoteServer_GerritServer $server, $group_name, $included_group_name) {
         $this->insertAccountGroupIncludes($server, $group_name, $included_group_name);
         $this->flushGerritCaches($server);
@@ -247,6 +253,11 @@ class Git_Driver_Gerrit {
 
     private function flushGerritCaches($server) {
         $query = self::COMMAND .' flush-caches';
+        $this->ssh->execute($server, $query);
+    }
+
+    private function executeUnescapedQuery(Git_RemoteServer_GerritServer $server, $sql_query) {
+        $query = self::GSQL_COMMAND .' '. $this->escapeSQLQuery('"'.$sql_query.'"');
         $this->ssh->execute($server, $query);
     }
 
