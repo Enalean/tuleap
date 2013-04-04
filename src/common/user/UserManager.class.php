@@ -693,7 +693,7 @@ class UserManager {
      * @param String $keys
      */
     public function updateUserSSHKeys(PFUser $user, $keys) {
-        $original_authorised_keys = $user->getAuthorizedKeysArray();
+        $original_authorised_keys = $user->getAuthorizedKeysRaw();
 
         $ssh_validator = new User_SSHKeyValidator($this, $this->_getEventManager());
         $valid_keys    = $ssh_validator->filterValidKeys($keys);
