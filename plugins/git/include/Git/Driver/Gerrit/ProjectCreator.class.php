@@ -69,7 +69,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $project_name     = $project->getUnixName();
         $ugroups          = $this->ugroup_manager->getUGroups($project);
 
-        $migrated_ugroups = $this->migrateUGroups($ugroups, $project, $gerrit_server);
+        $migrated_ugroups = $this->migrateUGroups($ugroups, $gerrit_server);
         $admin_ugroup     = $this->getAdminUGroup($ugroups);
 
         if (! $this->driver->doesTheParentProjectExist($gerrit_server, $project_name) && $admin_ugroup) {
@@ -114,13 +114,10 @@ class Git_Driver_Gerrit_ProjectCreator {
      * @param Git_RemoteServer_GerritServer $gerrit_server
      * @return UGroup[]
      */
-    private function migrateUGroups(array $ugroups, Project $project, Git_RemoteServer_GerritServer $gerrit_server) {
+    private function migrateUGroups(array $ugroups, Git_RemoteServer_GerritServer $gerrit_server) {
         $migrated_ugroups = array();
 
         foreach ($ugroups as $ugroup) {
-            if (! $this->UGroupCanBeMigrated($ugroup)){
-                continue;
-            }
             if ($this->membership_manager->createGroupForServer($gerrit_server, $this->driver, $ugroup)) {
                 $migrated_ugroups[] = $ugroup;
             }
@@ -285,17 +282,6 @@ class Git_Driver_Gerrit_ProjectCreator {
         $backend = Backend::instance('System');
         $backend->recurseDeleteInDir($this->dir);
         rmdir($this->dir);
-    }
-
-    /**
-     *
-     * @param Ugroup $ugroup
-     * @return bool
-     */
-    private function UGroupCanBeMigrated(Ugroup $ugroup) {
-         return $ugroup->getId() > UGroup::NONE ||
-            $ugroup->getId() == UGroup::PROJECT_MEMBERS ||
-            $ugroup->getId() == UGroup::PROJECT_ADMIN;
     }
 }
 

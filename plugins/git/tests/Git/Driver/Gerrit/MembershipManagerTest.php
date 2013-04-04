@@ -365,6 +365,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
 
         $this->ugroup = mock('UGroup');
+        stub($this->ugroup)->getId()->returns(25698);
         stub($this->ugroup)->getNormalizedName()->returns('coders');
         stub($this->ugroup)->getProject()->returns($this->project);
         stub($this->ugroup)->getProjectId()->returns($project_id);
@@ -394,10 +395,9 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
     public function itStoresTheGroupInTheDb() {
         stub($this->remote_server_factory)->getServersForProject()->returns(array($this->remote_server));
 
-        stub($this->ugroup)->getId()->returns(444);
         stub($this->remote_server)->getId()->returns(666);
 
-        expect($this->dao)->addReference(1236, 444, 666)->once();
+        expect($this->dao)->addReference(1236, 25698, 666)->once();
 
         $this->membership_manager->createGroupOnProjectsServers($this->driver, $this->ugroup);
     }
@@ -443,13 +443,12 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         $remote_server2 = mock('Git_RemoteServer_GerritServer');
         stub($this->remote_server_factory)->getServersForProject()->returns(array($remote_server1, $remote_server2));
 
-        stub($this->ugroup)->getId()->returns(444);
         stub($remote_server1)->getId()->returns(666);
         stub($remote_server2)->getId()->returns(667);
 
         expect($this->dao)->addReference()->count(2);
-        expect($this->dao)->addReference(1236, 444, 666)->at(0);
-        expect($this->dao)->addReference(1236, 444, 667)->at(1);
+        expect($this->dao)->addReference(1236, 25698, 666)->at(0);
+        expect($this->dao)->addReference(1236, 25698, 667)->at(1);
         
         $this->membership_manager->createGroupOnProjectsServers($this->driver, $this->ugroup);
     }
@@ -500,6 +499,46 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         $gerrit_group_name = $this->membership_manager->createGroupOnProjectsServers($this->driver, $this->ugroup);
         $this->assertEqual($gerrit_group_name, 'w3c/coders');
+    }
+
+    public function itDoesntCreateGroupForSpecialNoneUGroup() {
+        expect($this->driver)->createGroup()->never();
+
+        $ugroup = new UGroup(array('ugroup_id' => UGroup::NONE));
+        $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $this->driver, $ugroup);
+        $this->assertEqual($gerrit_group_name, '');
+    }
+
+    public function itDoesntCreateGroupForSpecialWikiAdminGroup() {
+        expect($this->driver)->createGroup()->never();
+
+        $ugroup = new UGroup(array('ugroup_id' => UGroup::WIKI_ADMIN));
+        $gerrit_group_name = $this->membership_manager->createGroupForServer($this->remote_server, $this->driver, $ugroup);
+        $this->assertEqual($gerrit_group_name, '');
+    }
+
+    public function itCreatesGroupForSpecialProjectMembersGroup() {
+        expect($this->driver)->createGroup()->once();
+
+        $ugroup = mock('UGroup');
+        stub($ugroup)->getId()->returns(UGroup::PROJECT_MEMBERS);
+        stub($ugroup)->getNormalizedName()->returns('project_members');
+        stub($ugroup)->getProject()->returns($this->project);
+        stub($ugroup)->getProjectId()->returns(999);
+
+        $this->membership_manager->createGroupForServer($this->remote_server, $this->driver, $ugroup);
+    }
+
+    public function itCreatesGroupForSpecialProjectAdminsGroup() {
+        expect($this->driver)->createGroup()->once();
+
+        $ugroup = mock('UGroup');
+        stub($ugroup)->getId()->returns(UGroup::PROJECT_ADMIN);
+        stub($ugroup)->getNormalizedName()->returns('project_admin');
+        stub($ugroup)->getProject()->returns($this->project);
+        stub($ugroup)->getProjectId()->returns(999);
+
+        $this->membership_manager->createGroupForServer($this->remote_server, $this->driver, $ugroup);
     }
 }
 

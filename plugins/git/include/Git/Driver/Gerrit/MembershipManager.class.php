@@ -93,12 +93,16 @@ class Git_Driver_Gerrit_MembershipManager {
 
     public function createGroupForServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
         try {
-            $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
-            if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
-                $driver->createGroup($server, $gerrit_group_name, $ugroup->getLdapMembersIds($ugroup->getProject()->getID()));
-                $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
+            if ($this->UGroupCanBeMigrated($ugroup)) {
+                $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
+                if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
+                    $driver->createGroup($server, $gerrit_group_name, $ugroup->getLdapMembersIds($ugroup->getProject()->getID()));
+                    $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
+                }
+                return $gerrit_group_name;
+            } else {
+                return false;
             }
-            return $gerrit_group_name;
         }
         catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
             $this->logger->error($e->getMessage());
@@ -120,6 +124,17 @@ class Git_Driver_Gerrit_MembershipManager {
      */
     private function getFullyQualifiedUGroupName(UGroup $ugroup) {
         return $ugroup->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
+    }
+
+     /**
+     *
+     * @param Ugroup $ugroup
+     * @return bool
+     */
+    private function UGroupCanBeMigrated(Ugroup $ugroup) {
+         return $ugroup->getId() > UGroup::NONE ||
+            $ugroup->getId() == UGroup::PROJECT_MEMBERS ||
+            $ugroup->getId() == UGroup::PROJECT_ADMIN;
     }
 }
 ?>
