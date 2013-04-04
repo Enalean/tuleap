@@ -73,7 +73,8 @@ class GitRepository implements DVCSRepository {
     private $namespace;
     private $scope;
     private $remote_server_id;
-    
+    private $remote_server_disconnect_date;
+
     protected $backendType;
 
     public function __construct() {
@@ -843,7 +844,8 @@ class GitRepository implements DVCSRepository {
     
     public function canMigrateToGerrit() {
         return $this->getBackendType() == GitDao::BACKEND_GITOLITE && 
-               $this->getRemoteServerId() == false;
+               $this->getRemoteServerId() == false &&
+               $this->remote_server_disconnect_date == false;
     }
 
     public function setRemoteServerId($id) {
@@ -860,6 +862,10 @@ class GitRepository implements DVCSRepository {
         }
 
         return false;
+    }
+
+    public function setRemoteServerDisconnectDate($date) {
+        $this->remote_server_disconnect_date = $date;
     }
 
     /**

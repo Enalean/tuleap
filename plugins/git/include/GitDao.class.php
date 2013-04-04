@@ -50,7 +50,9 @@ class GitDao extends DataAccessObject {
 
     const BACKEND_GITSHELL = 'gitshell';
     const BACKEND_GITOLITE = 'gitolite';
-    const REMOTE_SERVER_ID = 'remote_server_id';
+
+    const REMOTE_SERVER_ID              = 'remote_server_id';
+    const REMOTE_SERVER_DISCONNECT_DATE = 'remote_server_disconnect_date';
 
     public function __construct() {
         parent::__construct( CodendiDataAccess::instance() );
@@ -468,6 +470,7 @@ class GitDao extends DataAccessObject {
         $repository->setNamespace($result[self::REPOSITORY_NAMESPACE]);
         $repository->setScope($result[self::REPOSITORY_SCOPE]);
         $repository->setRemoteServerId($result[self::REMOTE_SERVER_ID]);
+        $repository->setRemoteServerDisconnectDate($result[self::REMOTE_SERVER_DISCONNECT_DATE]);
         $repository->loadNotifiedMails();
     }
 
@@ -529,7 +532,16 @@ class GitDao extends DataAccessObject {
                 WHERE repository_id = $repository_id";
         return $this->update($sql);
     }
-    
+
+    public function disconnectFromGerrit($repository_id) {
+        $repository_id = $this->da->escapeInt($repository_id);
+        $sql = "UPDATE plugin_git
+                SET remote_server_id = 0,
+                    remote_server_disconnect_date = UNIX_TIMESTAMP()
+                WHERE repository_id = $repository_id";
+        return $this->update($sql);
+    }
+
     /**
      * @return bool
      */

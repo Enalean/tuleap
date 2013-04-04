@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS plugin_git_post_receive_mail;
 DROP TABLE IF EXISTS plugin_git_log;
 DROP TABLE IF EXISTS plugin_git_ci;
 DROP TABLE IF EXISTS plugin_git;
+DROP TABLE IF EXISTS plugin_git_remote_servers;
 
 DELETE FROM service WHERE short_name='plugin_git';
 DELETE FROM reference_group WHERE reference_id=30;
