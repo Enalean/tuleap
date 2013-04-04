@@ -286,6 +286,8 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     public function dump_ssh_keys($params) {
+        $this->getGerritServerFactory();
+
         $retVal = 0;
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
