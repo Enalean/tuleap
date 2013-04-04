@@ -339,5 +339,12 @@ class Tracker_ArtifactFactory {
     public function save(Tracker_Artifact $artifact) {
         return $this->getDao()->save($artifact->getId(), $artifact->getTrackerId(), $artifact->useArtifactPermissions());
     }
+
+    /**
+     * @return Tracker_Artifact[]
+     */
+    public function getChildren(Tracker_Artifact $artifact) {
+        return $this->getDao()->getChildren($artifact->getId())->instanciateWith(array($this, 'getInstanceFromRow'));
+    }
 }
 ?>
