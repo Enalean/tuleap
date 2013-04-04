@@ -204,6 +204,7 @@ class Git extends PluginController {
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
                                             'migrate_to_gerrit',
+                                            'disconnect_gerrit',
             );
         } else {
             $this->addPermittedAction('index');
@@ -449,6 +450,10 @@ class Git extends PluginController {
                     $this->addAction('migrateToGerrit', array($repo, $remote_server_id));
                     $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
                 }
+                break;
+            case 'disconnect_gerrit':
+                $this->addError('Not yet implemented!');
+                $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
                 break;
             #LIST
             default:

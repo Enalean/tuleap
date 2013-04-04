@@ -61,10 +61,10 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      */
     public function getContent() {
         $html  = '';
-        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
         if ($this->repository->getRemoteServerId()) {
             $html .= $this->getContentAlreadyMigrated();
         } else {
+            $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
             $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
             $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
             $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
@@ -93,17 +93,50 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     }
 
     private function getContentAlreadyMigrated() {
-        $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+        $gerrit_server = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+        $btn_name      = 'confirm_disconnect_gerrit';
+        if ($this->request->get($btn_name)) {
+            return $this->getDisconnectFromGerritConfirmationScreen($gerrit_server);
+        }
+
         $gerrit_project = $this->driver->getGerritProjectName($this->repository);
         $link = $gerrit_server->getProjectAdminUrl($gerrit_project);
 
         $html  = '';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
         $html .= '<p>';
         $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_server_already_migrated', array($this->repository->getName(), $gerrit_project, $link));
         $html .= '</p>';
         $html .= '<div class="git_repomanagement_gerrit_more_description">';
         $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrated_more_description', array($gerrit_project, $gerrit_server->getHost()));
         $html .= '</div>';
+
+        $html .= '<form method="POST" action="'. $_SERVER['REQUEST_URI'] .'">';
+        $html .= '<button type="submit" class="btn" name="'. $btn_name .'" value="1">';
+        $html .= '<i class="icon-off"></i> '. 'Disconnect from Gerrit';
+        $html .= '</button>';
+        $html .= '</form>';
+        return $html;
+    }
+
+    private function getDisconnectFromGerritConfirmationScreen(Git_RemoteServer_GerritServer $gerrit_server) {
+        $html  = '';
+        $html .= '<h3>'. 'Disconnect from Gerrit' .'</h3>';
+
+        $html .= '<form method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
+        $html .= '<input type="hidden" name="action" value="disconnect_gerrit" />';
+        $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
+        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
+        $html .= '<div class="alert alert-block">';
+        $html .= '<h4>Attention !</h4>';
+        $html .= '<p>Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par le serveur '. $gerrit_server->getHost() .'. Êtes vous certain de vouloir continuer ?</p>';
+        $html .= '<p>';
+        $html .= '<button type="submit" name="disconnect" value="1" class="btn btn-danger">'. 'Oui, je veux déconnecter ce dépôt de Gerrit' .'</button> ';
+        $html .= '<button type="button" class="btn" onclick="window.location=window.location;">'. 'Non' .'</button> ';
+        $html .= '</p>';
+        $html .= '</div>';
+        $html .= '</form>';
+
         return $html;
     }
 }
