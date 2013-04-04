@@ -58,6 +58,10 @@ plugin_git	dao_error_remove_notification	L'adresse mail n'a pas été supprimée
 
 plugin_git	dao_child_params	Paramètres invalides
 
+plugin_git	disconnect_gerrit_title	Déconnexion de Gerrit
+plugin_git	disconnect_gerrit_msg	Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par le serveur $1. Êtes vous certain de vouloir continuer ?
+plugin_git	disconnect_gerrit_yes	Oui, je veux déconnecter ce dépôt de Gerrit
+
 plugin_git	backend_delete_haschild_error	Impossible de supprimer le dépôt : est parent d'au moins un autre dépôt
 plugin_git	backend_delete_path_error	Impossible de supprimer le dépôt : chemin n'appartient pas au répertoire root du projet
 plugin_git	backend_gitroot_mkdir_error	Erreur à la création du répertoire racine des dépôts Git (Contactez l'administrateur)

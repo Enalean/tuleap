@@ -113,7 +113,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
         $html .= '<form method="POST" action="'. $_SERVER['REQUEST_URI'] .'">';
         $html .= '<button type="submit" class="btn" name="'. $btn_name .'" value="1">';
-        $html .= '<i class="icon-off"></i> '. 'Disconnect from Gerrit';
+        $html .= '<i class="icon-off"></i> '. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_title');
         $html .= '</button>';
         $html .= '</form>';
         return $html;
@@ -121,20 +121,22 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
     private function getDisconnectFromGerritConfirmationScreen(Git_RemoteServer_GerritServer $gerrit_server) {
         $html  = '';
-        $html .= '<h3>'. 'Disconnect from Gerrit' .'</h3>';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_title') .'</h3>';
 
         $html .= '<form method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
         $html .= '<input type="hidden" name="action" value="disconnect_gerrit" />';
         $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
         $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
+
         $html .= '<div class="alert alert-block">';
-        $html .= '<h4>Attention !</h4>';
-        $html .= '<p>Cette opération est <strong>irréversible</strong>. Ce dépôt ne pourra plus être géré de nouveau par le serveur '. $gerrit_server->getHost() .'. Êtes vous certain de vouloir continuer ?</p>';
+        $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning!') .'</h4>';
+        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_msg', $gerrit_server->getHost()) .'</p>';
         $html .= '<p>';
-        $html .= '<button type="submit" name="disconnect" value="1" class="btn btn-danger">'. 'Oui, je veux déconnecter ce dépôt de Gerrit' .'</button> ';
-        $html .= '<button type="button" class="btn" onclick="window.location=window.location;">'. 'Non' .'</button> ';
+        $html .= '<button type="submit" name="disconnect" value="1" class="btn btn-danger">'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_yes') .'</button> ';
+        $html .= '<button type="button" class="btn" onclick="window.location=window.location;">'. $GLOBALS['Language']->getText('plugin_git', 'no') .'</button> ';
         $html .= '</p>';
         $html .= '</div>';
+
         $html .= '</form>';
 
         return $html;
