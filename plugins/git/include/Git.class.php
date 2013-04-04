@@ -452,8 +452,14 @@ class Git extends PluginController {
                 }
                 break;
             case 'disconnect_gerrit':
-                $this->addError('Not yet implemented!');
-                $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                $repo = $this->factory->getRepositoryById($repoId);
+                if (empty($repo)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                } else {
+                    $this->addAction('disconnectFromGerrit', array($repo));
+                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                }
                 break;
             #LIST
             default:

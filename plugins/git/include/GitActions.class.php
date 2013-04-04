@@ -534,7 +534,11 @@ class GitActions extends PluginActions {
             }
         }
     }
-    
+
+    public function disconnectFromGerrit(GitRepository $repository) {
+        $GLOBALS['Response']->addFeedback('error', 'Not Yet Implemented');
+    }
+
     private function redirectToRepo($projectId, $repoId) {
         $this->getController()->redirect('/plugins/git/index.php/'.$projectId.'/view/'.$repoId.'/');
     }
