@@ -753,24 +753,23 @@ class Tracker_Artifact implements Recent_Element_Interface, Tracker_Dispatchable
     }
 
     private function getChildren(PFUser $current_user) {
-        $children         = array();
-        $artifact_links   = $this->getLinkedArtifacts($current_user);
-        $allowed_trackers = $this->getAllowedChildrenTypes();
-
-        foreach ($artifact_links as $artifact_link) {
-            $tracker      = $artifact_link->getTracker();
-            $has_children = $artifact_link->hasChildren($current_user);
-            if (in_array($tracker, $allowed_trackers)) {
-                $semantics = Tracker_Semantic_Status::load($tracker);
-
-                $children[] = new Tracker_ArtifactChildPresenter($artifact_link, $this, $semantics, $has_children);
+        $children = array();
+        foreach ($this->getArtifactFactory()->getChildren($this) as $child) {
+            if (! $child->userCanView($current_user)) {
+                continue;
             }
+
+            $tracker      = $child->getTracker();
+            $semantics    = Tracker_Semantic_Status::load($tracker);
+            $has_children = $child->hasChildren();
+
+            $children[] = new Tracker_ArtifactChildPresenter($child, $this, $semantics);
         }
         return $children;
     }
 
-    public function hasChildren(PFUser $current_user) {
-        return count($this->getChildren($current_user)) > 0;
+    public function hasChildren() {
+        return count($this->getArtifactFactory()->getChildren($this)) > 0;
     }
 
     private function sendAjaxCardsUpdateInfo(PFUser $current_user) {
