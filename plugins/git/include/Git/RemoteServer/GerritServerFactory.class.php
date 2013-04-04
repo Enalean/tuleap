@@ -140,6 +140,14 @@ class Git_RemoteServer_GerritServerFactory {
 
     /**
      *
+     * @param PFUser $user
+     */
+    public function getRemoteServersForUser(PFUser $user) {
+
+    }
+
+    /**
+     *
      * @param array $row
      * @return \Git_RemoteServer_GerritServer
      */
