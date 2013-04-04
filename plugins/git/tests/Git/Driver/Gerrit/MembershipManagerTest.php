@@ -334,9 +334,26 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $project = stub('Project')->getUnixName()->returns('mozilla');
         $ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
         $ugroup->setProject($project);
+        $ugroup->setSourceGroup(null);
 
         $gerrit_ugroup_name = 'mozilla/developers';
         expect($this->driver)->removeAllIncludedGroups($this->remote_server, $gerrit_ugroup_name)->once();
+
+        $this->membership_manager->updateUGroupBinding($this->driver, $ugroup, null);
+    }
+
+    public function itAddsMembersOfPreviousSourceAsHardCodedMembersOnRemove() {
+        $user = aUser()->withLdapId('blabla')->build();
+
+        $source_ugroup = mock('UGroup');
+        stub($source_ugroup)->getMembers()->returns(array($user));
+
+        $project = stub('Project')->getUnixName()->returns('mozilla');
+        $ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
+        $ugroup->setProject($project);
+        $ugroup->setSourceGroup($source_ugroup);
+
+        expect($this->driver)->addUserToGroup($this->remote_server, $user, 'mozilla/developers')->once();
 
         $this->membership_manager->updateUGroupBinding($this->driver, $ugroup, null);
     }

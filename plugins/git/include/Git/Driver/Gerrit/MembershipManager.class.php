@@ -19,6 +19,8 @@
  */
 
 require_once 'MembershipDao.class.php';
+require_once 'MembershipCommand/AddUser.class.php';
+require_once 'MembershipCommand/RemoveUser.class.php';
 
 class Git_Driver_Gerrit_MembershipManager {
     const GROUP_CONTRIBUTORS = 'contributors';
@@ -84,6 +86,13 @@ class Git_Driver_Gerrit_MembershipManager {
             $driver->addIncludedGroup($server, $group_name, $included_group_name);
         } else {
             $driver->removeAllIncludedGroups($server, $group_name);
+            $previous_source_group = $ugroup->getSourceGroup();
+            if ($previous_source_group) {
+                foreach ($previous_source_group->getMembers() as $user) {
+                    $add_command = new Git_Driver_Gerrit_MembershipCommand_AddUser($driver);
+                    $this->updateUserMembership($user, $ugroup, $ugroup->getProject(), $add_command);
+                }
+            }
         }
     }
 

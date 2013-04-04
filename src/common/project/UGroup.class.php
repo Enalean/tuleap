@@ -76,7 +76,7 @@ class UGroup {
     /** @var Project */
     protected $project      = null;
     /** @var UGroup */
-    protected $source_group  = null;
+    protected $source_group  = false;
 
     protected $_ugroupdao;
     protected $_ugroupuserdao;
@@ -480,11 +480,15 @@ class UGroup {
     }
 
     public function getSourceGroup() {
-        if (!$this->source_group) {
+        if ($this->source_group === false) {
             $ugroup_manager = new UGroupManager();
             $this->source_group = $ugroup_manager->getUgroupBindingSource($this->id);
         }
         return $this->source_group;
+    }
+
+    public function setSourceGroup(UGroup $ugroup = null) {
+        $this->source_group = $ugroup;
     }
 }
 ?>
