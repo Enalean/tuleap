@@ -19,12 +19,57 @@
  */
 
 require_once GIT_BASE_DIR .'/Git.class.php';
+require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/InvalidLDAPUserException.class.php';
 
 /**
  * Encapsulate the orchestration between PermissionsManager and UgroupManager
  */
 class Git_Driver_Gerrit_UserAccountManager {
-
     
+
+    /**
+     * @var Git_User
+     */
+    private $user;
+
+    /**
+     * @var Git_Driver_Gerrit
+     */
+    private $gerrit_driver;
+
+    public function __construct(PFUser $user, Git_Driver_Gerrit $gerrit_driver) {
+        if (! $user->isLDAP()) {
+            throw new Git_Driver_Gerrit_InvalidLDAPUserException();
+        }
+
+        $this->user          = $user;
+        $this->gerrit_driver = $gerrit_driver;
+    }
+
+    public function synchroniseSSHKeys(Array $original_keys, Array $new_keys, Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
+        if (! $this->areKeySetsDifferent($original_keys, $new_keys)) {
+            return;
+        }
+        $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
+
+    }
+
+    private function areKeySetsDifferent(Array $original_keys, Array $new_keys) {
+        if (count($original_keys) != count($new_keys)) {
+            return true;
+        }
+
+        $diff1 = array_diff($original_keys, $new_keys);
+        if ($diff1) {
+            return true;
+        }
+
+        $diff2 = array_diff($new_keys, $original_keys);
+        if ($diff2) {
+            return true;
+        }
+
+        return false;
+    }
 }
 ?>
