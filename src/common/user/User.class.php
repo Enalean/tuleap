@@ -562,7 +562,7 @@ class PFUser implements PFO_User, IHaveAnSSHKey {
     /**
      * @return bool
      */
-    public function isLdap() {
+    public function isLDAP() {
         return $this->getLdapId() != null;
     }
     /**
