@@ -350,11 +350,17 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         $this->dao    = mock('Git_Driver_Gerrit_MembershipDao');
 
-        $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
-            $this->dao,
-            $this->git_repository_factory,
-            $this->remote_server_factory,
-            $this->logger
+        $this->membership_manager = partial_mock(
+            'Git_Driver_Gerrit_MembershipManager',
+            array(
+                'updateUGroupBindinOnServer'
+            ),
+            array(
+                $this->dao,
+                $this->git_repository_factory,
+                $this->remote_server_factory,
+                $this->logger
+            )
         );
 
 
@@ -537,6 +543,23 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         stub($ugroup)->getNormalizedName()->returns('project_admin');
         stub($ugroup)->getProject()->returns($this->project);
         stub($ugroup)->getProjectId()->returns(999);
+
+        $this->membership_manager->createGroupForServer($this->remote_server, $this->driver, $ugroup);
+    }
+
+    public function itCreatesAnIncludedGroupWhenUGroupIsBinded() {
+        $source_group = mock('UGroup');
+        
+        $ugroup = mock('UGroup');
+        stub($ugroup)->getId()->returns(25698);
+        stub($ugroup)->getNormalizedName()->returns('coders');
+        stub($ugroup)->getProject()->returns($this->project);
+        stub($ugroup)->getProjectId()->returns(999);
+        stub($ugroup)->getLdapMembersIds()->returns(array('ldap_id'));
+        stub($ugroup)->getSourceGroup()->returns($source_group);
+
+        expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', array())->once();
+        expect($this->membership_manager)->updateUGroupBindinOnServer($this->remote_server, $this->driver, $ugroup, $source_group);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $this->driver, $ugroup);
     }

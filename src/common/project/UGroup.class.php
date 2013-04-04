@@ -69,11 +69,14 @@ class UGroup {
     protected $name         = null;
     protected $description  = null;
     protected $is_dynamic   = true;
+    protected $source_id    = null;
 
     protected $members      = null;
     protected $members_name = null;
     /** @var Project */
     protected $project      = null;
+    /** @var UGroup */
+    protected $source_group  = null;
 
     protected $_ugroupdao;
     protected $_ugroupuserdao;
@@ -91,6 +94,7 @@ class UGroup {
         $this->name        = isset($row['name'])        ? $row['name']        : null;
         $this->description = isset($row['description']) ? $row['description'] : null;
         $this->group_id    = isset($row['group_id'])    ? $row['group_id']    : 0;
+        $this->source_id   = isset($row['source_id'])   ? $row['source_id']   : null;
         $this->is_dynamic  = $this->id < 100;
     }
 
@@ -472,12 +476,15 @@ class UGroup {
      * @return Boolean
      */
     public function isBound() {
-        $dar = $this->getUGroupDao()->getUgroupBindingSource($this->id);
-        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
-            return  true;
-        } else {
-            return false;
+        return ($this->source_id != null);
+    }
+
+    public function getSourceGroup() {
+        if (!$this->source_group) {
+            $ugroup_manager = new UGroupManager();
+            $this->source_group = $ugroup_manager->getUgroupBindingSource($this->id);
         }
+        return $this->source_group;
     }
 }
 ?>

@@ -243,7 +243,12 @@ class UGroupManager {
      * @return DataAccessResult
      */
     public function getUgroupBindingSource($ugroupId) {
-        return $this->getDao()->getUgroupBindingSource($ugroupId);
+        $dar = $this->getDao()->getUgroupBindingSource($ugroupId);
+        if ($dar && !$dar->isError() && $dar->rowCount() == 1) {
+            return new UGroup($dar->getRow());
+        } else {
+            return null;
+        }
     }
 
     /**
