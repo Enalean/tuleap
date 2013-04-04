@@ -654,20 +654,14 @@ class GitPlugin extends Plugin {
     public function project_admin_ugroup_add_user($params) {
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/AddUser.class.php';
 
-        $command = new Git_Driver_Gerrit_MembershipCommand_AddUser(
-            $this->getGerritDriver(),
-            $this->getGerritUserFinder()
-        );
+        $command = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->getGerritDriver());
         $this->updateUserMembership($command, $params);
     }
 
     public function project_admin_ugroup_remove_user($params) {
         require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand/RemoveUser.class.php';
 
-        $command = new Git_Driver_Gerrit_MembershipCommand_RemoveUser(
-            $this->getGerritDriver(),
-            $this->getGerritUserFinder()
-        );
+        $command = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->getGerritDriver());
 
         $this->updateUserMembership($command, $params);
     }

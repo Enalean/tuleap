@@ -25,9 +25,5 @@ class Git_Driver_Gerrit_MembershipCommand_RemoveUser extends Git_Driver_Gerrit_M
         $this->driver->removeUserFromGroup($server, $user, $group_full_name);
     }
 
-    protected function isUserConcernedByPermission(PFUser $user, Project $project, $groups) {
-        return ! $this->isUserInGroups($user, $project, $groups);
-    }
-
 }
 ?>

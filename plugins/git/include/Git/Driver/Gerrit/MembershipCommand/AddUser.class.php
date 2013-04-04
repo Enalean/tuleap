@@ -25,9 +25,5 @@ class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_Memb
         $this->driver->addUserToGroup($server, $user, $group_full_name);
     }
 
-    protected function isUserConcernedByPermission(PFUser $user, Project $project, $groups) {
-        return $this->isUserInGroups($user, $project, $groups);
-    }
-
 }
 ?>
