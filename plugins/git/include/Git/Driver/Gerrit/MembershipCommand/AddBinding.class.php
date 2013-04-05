@@ -36,6 +36,9 @@ class Git_Driver_Gerrit_MembershipCommand_AddBinding extends Git_Driver_Gerrit_M
         $group_name = $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup);
         $included_group_name = $this->membership_manager->createGroupForServer($server, $this->source_ugroup);
         $this->driver->removeAllGroupMembers($server, $group_name);
+        if ($this->ugroup->getSourceGroup()) {
+            $this->driver->removeAllIncludedGroups($server, $group_name);
+        }
         $this->driver->addIncludedGroup($server, $group_name, $included_group_name);
     }
 }

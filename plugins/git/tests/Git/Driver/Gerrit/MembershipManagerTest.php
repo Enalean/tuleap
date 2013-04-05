@@ -280,6 +280,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $project = stub('Project')->getUnixName()->returns('mozilla');
         $this->ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
         $this->ugroup->setProject($project);
+        $this->ugroup->setSourceGroup(null);
         $this->source = new UGroup(array('ugroup_id' => 124, 'name' => 'coders'));
         $this->source->setProject($project);
     }
@@ -303,6 +304,13 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
     }
 
+    public function itReplaceBindingFromAGroupToAnother() {
+        $this->ugroup->setSourceGroup($this->source);
+
+        expect($this->driver)->removeAllIncludedGroups($this->remote_server, 'mozilla/developers')->once();
+
+        $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
+    }
 
     public function itReliesOnCreateGroupForSourceGroupCreation() {
         expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->source)->once();
