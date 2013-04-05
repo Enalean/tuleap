@@ -22,8 +22,11 @@
  * I'm responsible of managing propagation of user membership changes (add/remove) to gerrit.
  */
 abstract class Git_Driver_Gerrit_MembershipCommand {
+    /** @var Git_Driver_Gerrit_MembershipManager */
     protected $membership_manager;
+    /** @var Git_Driver_Gerrit */
     protected $driver;
+    /** @var UGroup */
     protected $ugroup;
 
     public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup) {

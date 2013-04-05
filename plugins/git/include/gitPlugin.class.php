@@ -668,14 +668,12 @@ class GitPlugin extends Plugin {
 
     public function project_admin_ugroup_creation($params) {
         $this->getGerritMembershipManager()->createGroupOnProjectsServers(
-            $this->getGerritDriver(),
             $this->getUGroupFromParams($params)
         );
     }
 
     public function ugroup_manager_update_ugroup_binding_add($params) {
         $this->getGerritMembershipManager()->addUGroupBinding(
-            $this->getGerritDriver(),
             $params['ugroup'],
             $params['source']
         );
@@ -683,7 +681,6 @@ class GitPlugin extends Plugin {
 
     public function ugroup_manager_update_ugroup_binding_remove($params) {
         $this->getGerritMembershipManager()->removeUGroupBinding(
-            $this->getGerritDriver(),
             $params['ugroup']
         );
     }

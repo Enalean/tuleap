@@ -118,7 +118,7 @@ class Git_Driver_Gerrit_ProjectCreator {
         $migrated_ugroups = array();
 
         foreach ($ugroups as $ugroup) {
-            if ($this->membership_manager->createGroupForServer($gerrit_server, $this->driver, $ugroup)) {
+            if ($this->membership_manager->createGroupForServer($gerrit_server, $ugroup)) {
                 $migrated_ugroups[] = $ugroup;
             }
         }

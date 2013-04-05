@@ -77,15 +77,15 @@ class Git_Driver_Gerrit_MembershipManager {
         );
     }
 
-    public function addUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup) {
+    public function addUGroupBinding(UGroup $ugroup, UGroup $source_ugroup) {
         $this->updateUGroupBinding(
-            new Git_Driver_Gerrit_MembershipCommand_AddBinding($this, $driver, $ugroup, $source_ugroup)
+            new Git_Driver_Gerrit_MembershipCommand_AddBinding($this, $this->driver, $ugroup, $source_ugroup)
         );
     }
 
-    public function removeUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup) {
+    public function removeUGroupBinding(UGroup $ugroup) {
         $this->updateUGroupBinding(
-            new Git_Driver_Gerrit_MembershipCommand_RemoveBinding($this, $driver, $ugroup)
+            new Git_Driver_Gerrit_MembershipCommand_RemoveBinding($this, $this->driver, $ugroup)
         );
     }
 
@@ -96,19 +96,19 @@ class Git_Driver_Gerrit_MembershipManager {
         );
     }
 
-    public function createGroupOnProjectsServers(Git_Driver_Gerrit $driver, UGroup $ugroup) {
+    public function createGroupOnProjectsServers(UGroup $ugroup) {
         $group_name = '';
         $remote_servers    = $this->gerrit_server_factory->getServersForProject($ugroup->getProject());
         foreach ($remote_servers as $remote_server) {
-            $group_name = $this->createGroupForServer($remote_server, $driver, $ugroup);
+            $group_name = $this->createGroupForServer($remote_server, $ugroup);
         }
         return $group_name;
     }
 
-    public function createGroupForServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+    public function createGroupForServer(Git_RemoteServer_GerritServer $server, UGroup $ugroup) {
         try {
             if ($this->UGroupCanBeMigrated($ugroup)) {
-                return $this->createGroupOnServerWithoutChecking($server, $driver, $ugroup);
+                return $this->createGroupOnServerWithoutChecking($server, $ugroup);
             } else {
                 return false;
             }
@@ -125,19 +125,19 @@ class Git_Driver_Gerrit_MembershipManager {
         return false;
     }
 
-    private function createGroupOnServerWithoutChecking(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup) {
+    private function createGroupOnServerWithoutChecking(Git_RemoteServer_GerritServer $server, UGroup $ugroup) {
         $gerrit_group_name = $this->getFullyQualifiedUGroupName($ugroup);
-        if (!$driver->doesTheGroupExist($server, $gerrit_group_name)) {
+        if (!$this->driver->doesTheGroupExist($server, $gerrit_group_name)) {
             $source_ugroup = $ugroup->getSourceGroup();
             if ($source_ugroup) {
                 $memberlist = array();
             } else {
                 $memberlist = $ugroup->getLdapMembersIds($ugroup->getProject()->getID());
             }
-            $driver->createGroup($server, $gerrit_group_name, $memberlist);
+            $this->driver->createGroup($server, $gerrit_group_name, $memberlist);
             $this->dao->addReference($ugroup->getProjectId(), $ugroup->getId(), $server->getId());
             if ($source_ugroup) {
-                $this->updateUGroupBindinOnServer($server, $driver, $ugroup, $source_ugroup);
+                $this->addUGroupBinding($ugroup, $source_ugroup);
             }
         }
         return $gerrit_group_name;
