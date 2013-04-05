@@ -20,10 +20,23 @@
 require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
 
 class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand {
+    private $user;
 
-    protected function propagateToGerrit(Git_RemoteServer_GerritServer $server, PFUser $user, $group_full_name) {
-        $this->driver->addUserToGroup($server, $user, $group_full_name);
+    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup, PFUser $user) {
+        parent::__construct($membership_manager, $driver, $ugroup);
+        $this->user   = $user;
     }
 
+    public function getUser() {
+        return $this->user;
+    }
+
+    public function execute(Git_RemoteServer_GerritServer $server) {
+        $this->driver->addUserToGroup(
+            $server,
+            $this->user,
+            $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup)
+        );
+    }
 }
 ?>

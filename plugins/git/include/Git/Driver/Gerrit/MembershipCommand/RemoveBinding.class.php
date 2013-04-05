@@ -22,25 +22,9 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Description of AddBinding
- *
- * @author manuel
- */
-class Git_Driver_Gerrit_MembershipCommand_RemoveBinding {
-    private $membership_manager;
-    private $driver;
-    private $ugroup;
+require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
 
-    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup) {
-        $this->membership_manager = $membership_manager;
-        $this->driver = $driver;
-        $this->ugroup = $ugroup;
-    }
-
-    public function getUGroup() {
-        return $this->ugroup;
-    }
+class Git_Driver_Gerrit_MembershipCommand_RemoveBinding extends Git_Driver_Gerrit_MembershipCommand {
 
     public function execute(Git_RemoteServer_GerritServer $server) {
         $group_name = $this->membership_manager->getFullyQualifiedUGroupName($this->ugroup);

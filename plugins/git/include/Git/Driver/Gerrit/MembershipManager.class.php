@@ -60,33 +60,25 @@ class Git_Driver_Gerrit_MembershipManager {
 
     public function addUserToGroup(PFUser $user, UGroup $ugroup) {
         $this->updateUserMembership(
-            $user,
-            $ugroup,
-            new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver)
+            new Git_Driver_Gerrit_MembershipCommand_AddUser($this, $this->driver, $ugroup, $user)
         );
     }
 
     public function removeUserFromGroup(PFUser $user, UGroup $ugroup) {
         $this->updateUserMembership(
-            $user,
-            $ugroup,
-            new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver)
+            new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this, $this->driver, $ugroup, $user)
         );
     }
 
-    private function updateUserMembership(PFUser $user, UGroup $ugroup, Git_Driver_Gerrit_MembershipCommand $command) {
-        if (! $user->getLdapId()) {
+    private function updateUserMembership(Git_Driver_Gerrit_MembershipCommand $command) {
+        if (! $command->getUser()->getLdapId()) {
             return;
         }
 
-        $remote_servers = $this->gerrit_server_factory->getServersForUGroup($ugroup);
-        foreach ($remote_servers as $remote_server) {
-            try {
-                $command->execute($remote_server, $user, $ugroup->getProject(), $ugroup);
-            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
-                $this->logger->error($e->getMessage());
-            }
-        }
+        $this->runCommandOnServers(
+            $this->gerrit_server_factory->getServersForUGroup($command->getUGroup()),
+            $command
+        );
     }
 
     public function addUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup) {
@@ -101,11 +93,11 @@ class Git_Driver_Gerrit_MembershipManager {
         );
     }
 
-    private function updateUGroupBinding($command) {
-        $remote_servers = $this->gerrit_server_factory->getServersForUGroup($command->getUGroup());
-        foreach ($remote_servers as $remote_server) {
-            $command->execute($remote_server);
-        }
+    private function updateUGroupBinding(Git_Driver_Gerrit_MembershipCommand $command) {
+        $this->runCommandOnServers(
+            $this->gerrit_server_factory->getServersForUGroup($command->getUGroup()),
+            $command
+        );
     }
 
     public function createGroupOnProjectsServers(Git_Driver_Gerrit $driver, UGroup $ugroup) {
@@ -175,5 +167,16 @@ class Git_Driver_Gerrit_MembershipManager {
             $ugroup->getId() == UGroup::PROJECT_MEMBERS ||
             $ugroup->getId() == UGroup::PROJECT_ADMIN;
     }
+
+    private function runCommandOnServers(array $remote_servers, Git_Driver_Gerrit_MembershipCommand $command) {
+        foreach ($remote_servers as $remote_server) {
+            try {
+                $command->execute($remote_server);
+            } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
+                $this->logger->error($e->getMessage());
+            }
+        }
+    }
+
 }
 ?>

@@ -22,25 +22,14 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/**
- * Description of AddBinding
- *
- * @author manuel
- */
-class Git_Driver_Gerrit_MembershipCommand_AddBinding {
-    private $membership_manager;
-    private $driver;
-    private $ugroup;
+require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
+
+class Git_Driver_Gerrit_MembershipCommand_AddBinding extends Git_Driver_Gerrit_MembershipCommand {
+    private $source_ugroup;
 
     public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup) {
-        $this->membership_manager = $membership_manager;
-        $this->driver = $driver;
-        $this->ugroup = $ugroup;
+        parent::__construct($membership_manager, $driver, $ugroup);
         $this->source_ugroup = $source_ugroup;
-    }
-
-    public function getUGroup() {
-        return $this->ugroup;
     }
 
     public function execute(Git_RemoteServer_GerritServer $server) {

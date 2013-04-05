@@ -52,8 +52,6 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         $this->u_group2                              = mock('UGroup');
         $this->u_group3                              = mock('UGroup');
         $this->git_repository                        = mock('GitRepository');
-        $this->membership_command_add                = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver, $this->user_finder);
-        $this->membership_command_remove             = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver, $this->user_finder);
 
         stub($this->u_group)->getProject()->returns($this->project);
         stub($this->u_group2)->getProject()->returns($this->project);
