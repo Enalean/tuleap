@@ -38,4 +38,5 @@ abstract class Git_Driver_Gerrit_MembershipCommand {
 
     abstract public function execute(Git_RemoteServer_GerritServer $server);
 }
+
 ?>

@@ -17,21 +17,11 @@
  * You should have received a copy of the GNU General Public License
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
-require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/MembershipCommand.class.php';
+require_once 'User.class.php';
 
-class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand {
-    private $user;
+class Git_Driver_Gerrit_MembershipCommand_AddUser extends Git_Driver_Gerrit_MembershipCommand_User {
 
-    public function __construct(Git_Driver_Gerrit_MembershipManager $membership_manager, Git_Driver_Gerrit $driver, UGroup $ugroup, PFUser $user) {
-        parent::__construct($membership_manager, $driver, $ugroup);
-        $this->user   = $user;
-    }
-
-    public function getUser() {
-        return $this->user;
-    }
-
-    public function execute(Git_RemoteServer_GerritServer $server) {
+    protected function executeForLdapUsers(Git_RemoteServer_GerritServer $server) {
         $this->driver->addUserToGroup(
             $server,
             $this->user,

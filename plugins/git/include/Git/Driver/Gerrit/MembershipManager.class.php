@@ -71,10 +71,6 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     private function updateUserMembership(Git_Driver_Gerrit_MembershipCommand $command) {
-        if (! $command->getUser()->getLdapId()) {
-            return;
-        }
-
         $this->runCommandOnServers(
             $this->gerrit_server_factory->getServersForUGroup($command->getUGroup()),
             $command
