@@ -42,23 +42,39 @@ class Git_Driver_Gerrit_MembershipManager {
     );
 
     private $dao;
-    private $git_repository_factory;
+    private $driver;
     private $gerrit_server_factory;
     private $logger;
 
     public function __construct(
         Git_Driver_Gerrit_MembershipDao      $dao,
-        GitRepositoryFactory $git_repository_factory,
+        Git_Driver_Gerrit                    $driver,
         Git_RemoteServer_GerritServerFactory $gerrit_server_factory,
         Logger                               $logger
     ) {
         $this->dao                    = $dao;
-        $this->git_repository_factory = $git_repository_factory;
+        $this->driver                 = $driver;
         $this->gerrit_server_factory  = $gerrit_server_factory;
         $this->logger                 = $logger;
     }
 
-    public function updateUserMembership(PFUser $user, UGroup $ugroup, Project $project, Git_Driver_Gerrit_MembershipCommand $command) {
+    public function addUserToGroup(PFUser $user, UGroup $ugroup) {
+        $this->updateUserMembership(
+            $user,
+            $ugroup,
+            new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver)
+        );
+    }
+
+    public function removeUserFromGroup(PFUser $user, UGroup $ugroup) {
+        $this->updateUserMembership(
+            $user,
+            $ugroup,
+            new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver)
+        );
+    }
+
+    private function updateUserMembership(PFUser $user, UGroup $ugroup, Git_Driver_Gerrit_MembershipCommand $command) {
         if (! $user->getLdapId()) {
             return;
         }
@@ -66,7 +82,7 @@ class Git_Driver_Gerrit_MembershipManager {
         $remote_servers = $this->gerrit_server_factory->getServersForUGroup($ugroup);
         foreach ($remote_servers as $remote_server) {
             try {
-                $command->execute($remote_server, $user, $project, $ugroup);
+                $command->execute($remote_server, $user, $ugroup->getProject(), $ugroup);
             } catch (Git_Driver_Gerrit_RemoteSSHCommandFailure $e) {
                 $this->logger->error($e->getMessage());
             }

@@ -48,8 +48,7 @@ class Git_Driver_Gerrit_MembershipCommand_RemoveBinding {
         $previous_source_group = $this->ugroup->getSourceGroup();
         if ($previous_source_group) {
             foreach ($previous_source_group->getMembers() as $user) {
-                $add_command = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver);
-                $this->membership_manager->updateUserMembership($user, $this->ugroup, $this->ugroup->getProject(), $add_command);
+                $this->membership_manager->addUserToGroup($user, $this->ugroup);
             }
         }
     }

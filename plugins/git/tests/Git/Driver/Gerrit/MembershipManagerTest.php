@@ -29,7 +29,6 @@ require_once 'common/include/Config.class.php';
 abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestCase {
     protected $membership_manager;
     protected $driver;
-    protected $git_repository_factory;
     protected $user_finder;
     protected $user;
     protected $project_name = 'someProject';
@@ -52,10 +51,13 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
         $this->u_group                               = mock('UGroup');
         $this->u_group2                              = mock('UGroup');
         $this->u_group3                              = mock('UGroup');
-        $this->git_repository_factory                = mock('GitRepositoryFactory');
         $this->git_repository                        = mock('GitRepository');
         $this->membership_command_add                = new Git_Driver_Gerrit_MembershipCommand_AddUser($this->driver, $this->user_finder);
         $this->membership_command_remove             = new Git_Driver_Gerrit_MembershipCommand_RemoveUser($this->driver, $this->user_finder);
+
+        stub($this->u_group)->getProject()->returns($this->project);
+        stub($this->u_group2)->getProject()->returns($this->project);
+        stub($this->u_group3)->getProject()->returns($this->project);
 
         stub($this->remote_server_factory)->getServer()->returns($this->remote_server);
         stub($this->project)->getUnixName()->returns($this->project_name);
@@ -63,20 +65,16 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonTest extends TuleapTestC
 }
 
 class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Gerrit_MembershipManagerCommonTest {
-    protected $git_repository_factory_without_gerrit;
 
     public function setUp() {
         parent::setUp();
-
-        $this->git_repository_factory_without_gerrit = mock('GitRepositoryFactory');
-        stub($this->git_repository_factory_without_gerrit)->getAllRepositories()->returns(array());
 
         $this->remote_server_factory_without_gerrit = mock('Git_RemoteServer_GerritServerFactory');
         stub($this->remote_server_factory_without_gerrit)->getServersForUGroup()->returns(array());
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             mock('Git_Driver_Gerrit_MembershipDao'),
-            $this->git_repository_factory_without_gerrit,
+            $this->driver,
             $this->remote_server_factory_without_gerrit,
             mock('Logger')
         );
@@ -87,14 +85,14 @@ class Git_Driver_Gerrit_MembershipManager_NoGerritRepoTest extends Git_Driver_Ge
         stub($this->project)->getId()->returns(456);
         expect($this->remote_server_factory_without_gerrit)->getServersForUGroup($this->u_group)->once();
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }
 
     public function itDoesNotCallTheGerritDriverIfNoneOfTheRepositoriesAreUnderGerrit() {
         expect($this->driver)->addUserToGroup()->never();
         expect($this->driver)->removeUserFromGroup()->never();
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }
 
 }
@@ -108,7 +106,7 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git
 
         $this->membership_manager = new Git_Driver_Gerrit_MembershipManager(
             mock('Git_Driver_Gerrit_MembershipDao'),
-            $this->git_repository_factory,
+            $this->driver,
             $this->remote_server_factory,
             mock('Logger')
         );
@@ -116,16 +114,6 @@ abstract class Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest extends Git
 }
 
 class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_MembershipManagerCommonWithRepoTest {
-
-    public function setUp() {
-        parent::setUp();
-
-        $git_permissions = array(
-            $this->git_repository,
-        );
-
-        stub($this->git_repository_factory)->getAllRepositories()->returns($git_permissions);
-    }
 
     public function itAsksTheGerritDriverToAddAUserToThreeGroups() {
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
@@ -144,9 +132,9 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
         expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_add);
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group2, $this->project, $this->membership_command_add);
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group3, $this->project, $this->membership_command_add);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group2);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group3);
     }
 
     public function itAsksTheGerritDriverToRemoveAUserFromThreeGroups() {
@@ -166,9 +154,9 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $second_group_expected)->at(1);
         expect($this->driver)->removeUserFromGroup($this->remote_server, $this->user, $third_group_expected)->at(2);
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $this->membership_command_remove);
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group2, $this->project, $this->membership_command_remove);
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group3, $this->project, $this->membership_command_remove);
+        $this->membership_manager->removeUserFromGroup($this->user, $this->u_group);
+        $this->membership_manager->removeUserFromGroup($this->user, $this->u_group2);
+        $this->membership_manager->removeUserFromGroup($this->user, $this->u_group3);
     }
 
     public function itDoesntAddNonLDAPUsersToGerrit() {
@@ -178,24 +166,22 @@ class Git_Driver_Gerrit_MembershipManagerTest extends Git_Driver_Gerrit_Membersh
 
         expect($this->driver)->addUserToGroup()->never();
 
-        $this->membership_manager->updateUserMembership($non_ldap_user, $this->u_group, $this->project, $this->membership_command_add);
+        $this->membership_manager->addUserToGroup($non_ldap_user, $this->u_group);
     }
 
     public function itContinuesToAddUserOnOtherServersIfOneOrMoreAreNotReachable() {
-
-        $membership_command_add = partial_mock('Git_Driver_Gerrit_MembershipCommand_AddUser', array('execute'), array($this->driver, $this->user_finder));
         $this->remote_server2   = mock('Git_RemoteServer_GerritServer');
 
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server, $this->remote_server2));
         stub($this->user)->getUgroups()->returns(array($this->u_group_id));
         stub($this->u_group)->getNormalizedName()->returns('project_members');
-        stub($membership_command_add)->execute()->throwsAt(0, new Git_Driver_Gerrit_RemoteSSHCommandFailure(1, 'error', 'error'));
+        stub($this->driver)->addUserToGroup()->throwsAt(0, new Git_Driver_Gerrit_RemoteSSHCommandFailure(1, 'error', 'error'));
 
-        $membership_command_add->expectCallCount('execute', 2);
-        expect($membership_command_add)->execute($this->remote_server, $this->user, $this->project, $this->u_group)->at(0);
-        expect($membership_command_add)->execute($this->remote_server2, $this->user, $this->project, $this->u_group)->at(1);
+        $this->driver->expectCallCount('addUserToGroup', 2);
+        expect($this->driver)->addUserToGroup($this->remote_server, '*', '*')->at(0);
+        expect($this->driver)->addUserToGroup($this->remote_server2, '*', '*')->at(1);
 
-        $this->membership_manager->updateUserMembership($this->user, $this->u_group, $this->project, $membership_command_add);
+        $this->membership_manager->addUserToGroup($this->user, $this->u_group);
     }
 }
 
@@ -225,21 +211,17 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
     public function setUp() {
         parent::setUp();
 
-        $git_permissions = array(
-            $this->git_repository,
-        );
-
         $this->admin_ugroup = mock('UGroup');
         stub($this->admin_ugroup)->getId()->returns(UGroup::PROJECT_ADMIN);
+        stub($this->admin_ugroup)->getProject()->returns($this->project);
 
         stub($this->user)->getUgroups()->returns(array($this->u_group_id, UGroup::PROJECT_ADMIN));
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
-        stub($this->git_repository_factory)->getAllRepositories()->returns($git_permissions);
     }
 
     public function itProcessesTheListOfGerritServersWhenWeModifyProjectAdminGroup() {
         expect($this->remote_server_factory)->getServersForUGroup($this->admin_ugroup)->once();
-        $this->membership_manager->updateUserMembership($this->user, $this->admin_ugroup, $this->project, $this->membership_command_add);
+        $this->membership_manager->addUserToGroup($this->user, $this->admin_ugroup);
     }
 
     public function itUpdatesGerritProjectAdminsGroupsFromTuleapWhenIAddANewProjectAdmin() {
@@ -249,7 +231,7 @@ class Git_Driver_Gerrit_MembershipManager_ProjectAdminTest extends Git_Driver_Ge
         $gerrit_project_project_admins_group_name = $this->project_name.'/'.'project_admins';
         expect($this->driver)->addUserToGroup($this->remote_server, $this->user, $gerrit_project_project_admins_group_name)->once();
 
-        $this->membership_manager->updateUserMembership($this->user, $this->admin_ugroup, $this->project, $this->membership_command_add);
+        $this->membership_manager->addUserToGroup($this->user, $this->admin_ugroup);
     }
 
 //    public function itUpdatesAllGerritGroupsWhenIAddANewProjectAdmin() {
@@ -283,20 +265,19 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $this->remote_server                         = mock('Git_RemoteServer_GerritServer');
         stub($this->remote_server_factory)->getServersForUGroup()->returns(array($this->remote_server));
 
-        $this->git_repository_factory                = mock('GitRepositoryFactory');
-
+        $this->driver = mock('Git_Driver_Gerrit');
+        
         $this->membership_manager = partial_mock(
             'Git_Driver_Gerrit_MembershipManager',
             array('createGroupForServer'),
             array(
                 mock('Git_Driver_Gerrit_MembershipDao'),
-                $this->git_repository_factory,
+                $this->driver,
                 $this->remote_server_factory,
                 mock('Logger')
             )
         );
 
-        $this->driver = mock('Git_Driver_Gerrit');
 
         $project = stub('Project')->getUnixName()->returns('mozilla');
         $this->ugroup = new UGroup(array('ugroup_id' => 112, 'name' => 'developers'));
@@ -376,6 +357,8 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
 
         $this->dao    = mock('Git_Driver_Gerrit_MembershipDao');
 
+        $this->driver = mock('Git_Driver_Gerrit');
+
         $this->membership_manager = partial_mock(
             'Git_Driver_Gerrit_MembershipManager',
             array(
@@ -383,7 +366,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
             ),
             array(
                 $this->dao,
-                $this->git_repository_factory,
+                $this->driver,
                 $this->remote_server_factory,
                 $this->logger
             )
@@ -402,7 +385,6 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         stub($this->ugroup)->getProject()->returns($this->project);
         stub($this->ugroup)->getProjectId()->returns($project_id);
 
-        $this->driver = mock('Git_Driver_Gerrit');
     }
 
     public function itCreateGroupOnAllGerritServersTheProjectUses() {
