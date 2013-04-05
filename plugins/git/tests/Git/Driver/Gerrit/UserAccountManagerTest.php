@@ -47,6 +47,8 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
     private $remote_gerrit_factory;
     private $original_keys;
     private $new_keys;
+    private $remote_server1;
+    private $remote_server2;
     /**
      * @var Git_Driver_Gerrit_UserAccountManager
      */
@@ -72,6 +74,11 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
             'Im an identical key',
         );
 
+        $this->remote_server1 = mock('Git_RemoteServer_GerritServer');
+        $this->remote_server2 = mock('Git_RemoteServer_GerritServer');
+
+        stub($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->returns(array($this->remote_server1, $this->remote_server2));
+
     }
 
     public function itCallsRemoteServerFactory() {
@@ -80,12 +87,12 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
     }
 
     public function itDoesntSynchroniseIfUserHasNoRemoteServers() {
-        stub($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->returns(array());
+        $remote_gerrit_factory = stub('Git_RemoteServer_GerritServerFactory')->getRemoteServersForUser($this->user)->returns(array());
 
         expect($this->gerrit_driver)->addSSHKeyToAccount()->never();
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->never();
 
-        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->remote_gerrit_factory);
+        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $remote_gerrit_factory);
     }
 
     public function itDoesntSynchroniseIfKeysAreTheSame() {
@@ -99,5 +106,12 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         $this->user_account_manager->synchroniseSSHKeys($original_keys, $new_keys, $this->remote_gerrit_factory);
     }
 
+    public function itCallsTheDriverToAddAndRemoveKeysTheRightNumberOfTimes() {
+        expect($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->once();
+        expect($this->gerrit_driver)->addSSHKeyToAccount()->count(4);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount()->count(6);
+
+        $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->remote_gerrit_factory);
+    }
 }
 ?>

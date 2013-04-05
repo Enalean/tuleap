@@ -25,7 +25,6 @@ require_once GIT_BASE_DIR .'/Git/Driver/Gerrit/InvalidLDAPUserException.class.ph
  * Encapsulate the orchestration between PermissionsManager and UgroupManager
  */
 class Git_Driver_Gerrit_UserAccountManager {
-    
 
     /**
      * @var Git_User
@@ -50,8 +49,35 @@ class Git_Driver_Gerrit_UserAccountManager {
         if (! $this->areKeySetsDifferent($original_keys, $new_keys)) {
             return;
         }
-        $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
 
+        $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
+        $keys_to_add    = $this->getKeysToAdd($original_keys, $new_keys);
+        $keys_to_remove = $this->getKeysToRemove($original_keys, $new_keys);
+
+        foreach($remote_servers as $remote_server) {
+            $this->addKeysToUserForServer($remote_server, $keys_to_add);
+            $this->removeKeysToUserForServer($remote_server, $keys_to_remove);
+        }
+    }
+
+    private function addKeysToUserForServer(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
+        foreach($keys as $key) {
+            $this->gerrit_driver->addSSHKeyToAccount($remote_server, $this->user, $key);
+        }
+    }
+
+    private function removeKeysToUserForServer(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
+        foreach($keys as $key) {
+            $this->gerrit_driver->removeSSHKeyFromAccount($remote_server, $this->user, $key);
+        }
+    }
+
+    private function getKeysToAdd(Array $original_keys, Array $new_keys) {
+        return array_diff($new_keys, $original_keys);
+    }
+
+    private function getKeysToRemove(Array $original_keys, Array $new_keys) {
+        return array_diff($original_keys, $new_keys);
     }
 
     private function areKeySetsDifferent(Array $original_keys, Array $new_keys) {
