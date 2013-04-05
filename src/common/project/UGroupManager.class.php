@@ -226,7 +226,7 @@ class UGroupManager {
         $ugroup = $this->getById($ugroupId);
         if ($sourceId === null) {
             $this->getEventManager()->processEvent(
-                'ugroup_manager_update_ugroup_binding_remove',
+                Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE,
                 array(
                     'ugroup' => $ugroup
                 )
@@ -234,7 +234,7 @@ class UGroupManager {
         } else {
             $source = $this->getById($sourceId);
             $this->getEventManager()->processEvent(
-                'ugroup_manager_update_ugroup_binding_add',
+                Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD,
                 array(
                     'ugroup' => $ugroup,
                     'source' => $source,

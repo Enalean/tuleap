@@ -89,8 +89,8 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_ugroup_deletion');
         $this->_addHook('project_admin_remove_user_from_project_ugroups');
         $this->_addHook('project_admin_ugroup_creation');
-        $this->_addHook('ugroup_manager_update_ugroup_binding_add');
-        $this->_addHook('ugroup_manager_update_ugroup_binding_remove');
+        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_ADD);
+        $this->_addHook(Event::UGROUP_MANAGER_UPDATE_UGROUP_BINDING_REMOVE);
     }
 
     public function site_admin_option_hook() {
