@@ -45,6 +45,22 @@ class Git_RemoteServer_Dao extends DataAccessObject {
         return $this->retrieve($sql);
     }
 
+    public function searchAllRemoteServersForUserId($user_id) {
+        $sql = "SELECT DISTINCT pgrs.*
+                FROM plugin_git_remote_servers pgrs
+                    INNER JOIN plugin_git ON (remote_server_id = pgrs.id)
+                    INNER JOIN user_group ON (user_group.group_id = plugin_git.project_id)
+                WHERE user_group.user_id = $user_id
+                UNION
+                SELECT DISTINCT pgrs.*
+                FROM plugin_git_remote_servers pgrs
+                    INNER JOIN plugin_git ON (remote_server_id = pgrs.id)
+                    INNER JOIN ugroup ON (ugroup.group_id = plugin_git.project_id)
+                    INNER JOIN ugroup_user ON (ugroup_user.ugroup_id = ugroup.ugroup_id)
+                WHERE ugroup_user.user_id = $user_id";
+        return $this->retrieve($sql);
+    }
+
     public function save($id, $host, $ssh_port, $http_port, $login, $identity_file) {
         $id            = $this->da->escapeInt($id);
         $host          = $this->da->quoteSmart($host);

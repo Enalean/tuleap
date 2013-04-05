@@ -143,7 +143,13 @@ class Git_RemoteServer_GerritServerFactory {
      * @param PFUser $user
      */
     public function getRemoteServersForUser(PFUser $user) {
+        $remote_servers = array();
+        $rows           = $this->dao->searchAllRemoteServersForUserId($user->getId());
+        foreach ($rows as $row) {
+            $remote_servers[] = $this->instantiateFromRow($row);
+        }
 
+        return $remote_servers;
     }
 
     /**

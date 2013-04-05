@@ -286,7 +286,7 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     public function dump_ssh_keys($params) {
-        $this->getGerritServerFactory();
+        $this->propagateKeysToGerrit($params);
 
         $retVal = 0;
         $output = array();
@@ -303,7 +303,27 @@ class GitPlugin extends Plugin {
             return false;
         }
     }
-    
+
+    private function propagateKeysToGerrit($params) {
+        require_once GIT_BASE_DIR . '/Git/Driver/Gerrit.class.php';
+        require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/UserAccountManager.class.php';
+
+        $user          = $params['user'];
+        $original_keys = array();
+        $new_keys      = $user->getAuthorizedKeysArray();
+        $gerrit_driver = new Git_Driver_Gerrit(
+            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
+            new BackendLogger()
+        );
+        $gerrit_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
+
+        if ($params['original_keys']) {
+            $original_keys = array_filter(explode('###', $params['original_keys']));
+        }
+
+        $gerrit_account_manager->synchroniseSSHKeys($original_keys, $new_keys, $this->getGerritServerFactory());
+    }
+
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {

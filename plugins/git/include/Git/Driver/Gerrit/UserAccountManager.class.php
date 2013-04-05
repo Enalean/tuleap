@@ -46,27 +46,28 @@ class Git_Driver_Gerrit_UserAccountManager {
     }
 
     public function synchroniseSSHKeys(Array $original_keys, Array $new_keys, Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
-        if (! $this->areKeySetsDifferent($original_keys, $new_keys)) {
+        $keys_to_add    = $this->getKeysToAdd($original_keys, $new_keys);
+        $keys_to_remove = $this->getKeysToRemove($original_keys, $new_keys);
+
+        if (! $this->areThereKeysToUpdate($keys_to_add, $keys_to_remove)) {
             return;
         }
 
         $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
-        $keys_to_add    = $this->getKeysToAdd($original_keys, $new_keys);
-        $keys_to_remove = $this->getKeysToRemove($original_keys, $new_keys);
 
         foreach($remote_servers as $remote_server) {
-            $this->addKeysToUserForServer($remote_server, $keys_to_add);
-            $this->removeKeysToUserForServer($remote_server, $keys_to_remove);
+            $this->addKeys($remote_server, $keys_to_add);
+            $this->removeKeys($remote_server, $keys_to_remove);
         }
     }
 
-    private function addKeysToUserForServer(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
+    private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
         foreach($keys as $key) {
             $this->gerrit_driver->addSSHKeyToAccount($remote_server, $this->user, $key);
         }
     }
 
-    private function removeKeysToUserForServer(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
+    private function removeKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
         foreach($keys as $key) {
             $this->gerrit_driver->removeSSHKeyFromAccount($remote_server, $this->user, $key);
         }
@@ -80,22 +81,8 @@ class Git_Driver_Gerrit_UserAccountManager {
         return array_diff($original_keys, $new_keys);
     }
 
-    private function areKeySetsDifferent(Array $original_keys, Array $new_keys) {
-        if (count($original_keys) != count($new_keys)) {
-            return true;
-        }
-
-        $diff1 = array_diff($original_keys, $new_keys);
-        if ($diff1) {
-            return true;
-        }
-
-        $diff2 = array_diff($new_keys, $original_keys);
-        if ($diff2) {
-            return true;
-        }
-
-        return false;
+    private function areThereKeysToUpdate(Array $keys_to_add, Array $keys_to_remove) {
+        return $keys_to_add || $keys_to_remove;
     }
 }
 ?>
