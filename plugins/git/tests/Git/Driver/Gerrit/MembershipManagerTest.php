@@ -289,7 +289,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $gerrit_source_name = 'mozilla/coders';
         expect($this->driver)->addIncludedGroup($this->remote_server, $gerrit_ugroup_name, $gerrit_source_name)->once();
 
-        expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->driver, $this->source)->once();
+        expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->source)->once();
         stub($this->membership_manager)->createGroupForServer()->returns('mozilla/coders');
 
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
@@ -305,7 +305,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
 
 
     public function itReliesOnCreateGroupForSourceGroupCreation() {
-        expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->driver, $this->source)->once();
+        expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->source)->once();
         $this->membership_manager->addUGroupBinding($this->ugroup, $this->source);
     }
 
@@ -360,7 +360,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         $this->membership_manager = partial_mock(
             'Git_Driver_Gerrit_MembershipManager',
             array(
-                'updateUGroupBindinOnServer'
+                'addUGroupBinding'
             ),
             array(
                 $this->dao,
@@ -565,7 +565,7 @@ class Git_Driver_Gerrit_MembershipManager_CreateGroupTest extends TuleapTestCase
         stub($ugroup)->getSourceGroup()->returns($source_group);
 
         expect($this->driver)->createGroup($this->remote_server, 'w3c/coders', array())->once();
-        expect($this->membership_manager)->updateUGroupBindinOnServer($this->remote_server, $ugroup, $source_group);
+        expect($this->membership_manager)->addUGroupBinding($ugroup, $source_group);
 
         $this->membership_manager->createGroupForServer($this->remote_server, $ugroup);
     }
