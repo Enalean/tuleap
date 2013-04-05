@@ -90,13 +90,15 @@ class Git_Driver_Gerrit_MembershipManager {
     }
 
     public function addUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup) {
-        $command        = new Git_Driver_Gerrit_MembershipCommand_AddBinding($this, $driver, $ugroup, $source_ugroup);
-        $this->updateUGroupBinding($command);
+        $this->updateUGroupBinding(
+            new Git_Driver_Gerrit_MembershipCommand_AddBinding($this, $driver, $ugroup, $source_ugroup)
+        );
     }
 
     public function removeUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup) {
-        $command        = new Git_Driver_Gerrit_MembershipCommand_RemoveBinding($this, $driver, $ugroup);
-        $this->updateUGroupBinding($command);
+        $this->updateUGroupBinding(
+            new Git_Driver_Gerrit_MembershipCommand_RemoveBinding($this, $driver, $ugroup)
+        );
     }
 
     private function updateUGroupBinding($command) {
