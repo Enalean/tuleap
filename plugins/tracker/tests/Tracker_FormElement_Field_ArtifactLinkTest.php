@@ -441,7 +441,10 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateCrossRefTest extends TuleapTe
                 'getCurrentUser'
             )
         );
-        stub($this->field)->getCurrentUser()->returns(aUser()->withId($this->current_user_id)->build());
+
+        $this->user = aUser()->withId($this->current_user_id)->build();
+
+        stub($this->field)->getCurrentUser()->returns($this->user);
         stub($this->field)->getReferenceManager()->returns($this->reference_manager);
         stub($this->field)->getArtifactFactory()->returns($this->artifact_factory);
     }
@@ -463,14 +466,17 @@ class Tracker_FormElement_Field_ArtifactLink_UpdateCrossRefTest extends TuleapTe
         $values   = array('new_values' => '567');
 
         $this->reference_manager->expectOnce(
-            'extractCrossRef',
+            'insertCrossReference',
             array(
-                'target #567',
-                $source_artifact_id,
+                $source_artifact->getId(),
+                $source_artifact->getTracker()->getGroupId(),
                 Tracker_Artifact::REFERENCE_NATURE,
-                $source_project_id,
-                $this->current_user_id,
-                $source_tracker_name
+                $source_artifact->getTracker()->getItemname(),
+                $art_567->getId(),
+                $art_567->getTracker()->getGroupId(),
+                Tracker_Artifact::REFERENCE_NATURE,
+                $art_567->getTracker()->getItemname(),
+                $this->user->getId()
             )
         );
 
