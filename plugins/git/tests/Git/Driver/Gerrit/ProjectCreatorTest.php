@@ -331,7 +331,7 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         expect($this->ugroup_manager)->getUGroups($this->project)->once();
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup));
 
-        expect($this->membership_manager)->createGroupForServer($this->server, $this->driver, $ugroup)->once();
+        expect($this->membership_manager)->createGroupForServer($this->server, $ugroup)->once();
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
 
@@ -355,8 +355,8 @@ class Git_Driver_Gerrit_ProjectCreator_CallsToGerritTest extends Git_Driver_Gerr
         stub($this->ugroup_manager)->getUGroups()->returns(array($ugroup_project_members, $ugroup_another_group));
 
         expect($this->membership_manager)->createGroupForServer()->count(2);
-        expect($this->membership_manager)->createGroupForServer($this->server, $this->driver, $ugroup_project_members)->at(0);
-        expect($this->membership_manager)->createGroupForServer($this->server, $this->driver, $ugroup_another_group)->at(1);
+        expect($this->membership_manager)->createGroupForServer($this->server, $ugroup_project_members)->at(0);
+        expect($this->membership_manager)->createGroupForServer($this->server, $ugroup_another_group)->at(1);
 
         $this->project_creator->createGerritProject($this->server, $this->repository);
     }
