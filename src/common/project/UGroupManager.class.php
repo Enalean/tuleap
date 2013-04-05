@@ -224,14 +224,23 @@ class UGroupManager {
      */
     public function updateUgroupBinding($ugroupId, $sourceId = null) {
         $ugroup = $this->getById($ugroupId);
-        $source = $sourceId !== null ? $this->getById($sourceId) : null;
-        $this->getEventManager()->processEvent(
-            'ugroup_manager_update_ugroup_binding',
-            array(
-                'ugroup' => $ugroup,
-                'source' => $source,
-            )
-        );
+        if ($sourceId === null) {
+            $this->getEventManager()->processEvent(
+                'ugroup_manager_update_ugroup_binding_remove',
+                array(
+                    'ugroup' => $ugroup
+                )
+            );
+        } else {
+            $source = $this->getById($sourceId);
+            $this->getEventManager()->processEvent(
+                'ugroup_manager_update_ugroup_binding_add',
+                array(
+                    'ugroup' => $ugroup,
+                    'source' => $source,
+                )
+            );
+        }
         return $this->getDao()->updateUgroupBinding($ugroupId, $sourceId);
     }
 

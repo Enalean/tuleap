@@ -89,7 +89,8 @@ class GitPlugin extends Plugin {
         $this->_addHook('project_admin_ugroup_deletion');
         $this->_addHook('project_admin_remove_user_from_project_ugroups');
         $this->_addHook('project_admin_ugroup_creation');
-        $this->_addHook('ugroup_manager_update_ugroup_binding');
+        $this->_addHook('ugroup_manager_update_ugroup_binding_add');
+        $this->_addHook('ugroup_manager_update_ugroup_binding_remove');
     }
 
     public function site_admin_option_hook() {
@@ -699,8 +700,12 @@ class GitPlugin extends Plugin {
         $this->getGerritMembershipManager()->createGroupOnProjectsServers($this->getGerritDriver(), $ugroup);
     }
 
-    public function ugroup_manager_update_ugroup_binding($params) {
-        $this->getGerritMembershipManager()->updateUGroupBinding($this->getGerritDriver(), $params['ugroup'], $params['source']);
+    public function ugroup_manager_update_ugroup_binding_add($params) {
+        $this->getGerritMembershipManager()->addUGroupBinding($this->getGerritDriver(), $params['ugroup'], $params['source']);
+    }
+
+    public function ugroup_manager_update_ugroup_binding_remove($params) {
+        $this->getGerritMembershipManager()->removeUGroupBinding($this->getGerritDriver(), $params['ugroup']);
     }
 
     /**

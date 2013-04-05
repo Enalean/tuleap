@@ -167,12 +167,12 @@ class UGroupManager_UpdateUgroupBindingEventTest extends TuleapTestCase {
     }
 
     public function itRaiseAnEventWithGroupsWhenOneIsAdded() {
-        expect($this->event_manager)->processEvent('ugroup_manager_update_ugroup_binding', array('ugroup' => $this->ugroup_12, 'source' => $this->ugroup_24))->once();
+        expect($this->event_manager)->processEvent('ugroup_manager_update_ugroup_binding_add', array('ugroup' => $this->ugroup_12, 'source' => $this->ugroup_24))->once();
         $this->ugroup_manager->updateUgroupBinding(12, 24);
     }
 
     public function itRaiseAnEventWithGroupsWhenOneIsRemoved() {
-        expect($this->event_manager)->processEvent('ugroup_manager_update_ugroup_binding', array('ugroup' => $this->ugroup_12, 'source' => null))->once();
+        expect($this->event_manager)->processEvent('ugroup_manager_update_ugroup_binding_remove', array('ugroup' => $this->ugroup_12))->once();
         $this->ugroup_manager->updateUgroupBinding(12);
     }
 }

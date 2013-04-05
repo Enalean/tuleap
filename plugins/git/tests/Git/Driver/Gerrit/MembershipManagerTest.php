@@ -313,7 +313,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->driver, $this->source)->once();
         stub($this->membership_manager)->createGroupForServer()->returns('mozilla/coders');
 
-        $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
+        $this->membership_manager->addUGroupBinding($this->driver, $this->ugroup, $this->source);
     }
 
     public function itEmptyTheMemberListOnBindingAdd() {
@@ -321,13 +321,13 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
 
         expect($this->driver)->removeAllGroupMembers($this->remote_server, 'mozilla/developers')->once();
 
-        $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
+        $this->membership_manager->addUGroupBinding($this->driver, $this->ugroup, $this->source);
     }
 
 
     public function itReliesOnCreateGroupForSourceGroupCreation() {
         expect($this->membership_manager)->createGroupForServer($this->remote_server, $this->driver, $this->source)->once();
-        $this->membership_manager->updateUGroupBinding($this->driver, $this->ugroup, $this->source);
+        $this->membership_manager->addUGroupBinding($this->driver, $this->ugroup, $this->source);
     }
 
     public function itRemovesBindingWithAGroup() {
@@ -339,7 +339,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
         $gerrit_ugroup_name = 'mozilla/developers';
         expect($this->driver)->removeAllIncludedGroups($this->remote_server, $gerrit_ugroup_name)->once();
 
-        $this->membership_manager->updateUGroupBinding($this->driver, $ugroup, null);
+        $this->membership_manager->removeUGroupBinding($this->driver, $ugroup);
     }
 
     public function itAddsMembersOfPreviousSourceAsHardCodedMembersOnRemove() {
@@ -355,7 +355,7 @@ class Git_Driver_Gerrit_MembershipManager_BindedUGroupsTest extends TuleapTestCa
 
         expect($this->driver)->addUserToGroup($this->remote_server, $user, 'mozilla/developers')->once();
 
-        $this->membership_manager->updateUGroupBinding($this->driver, $ugroup, null);
+        $this->membership_manager->removeUGroupBinding($this->driver, $ugroup);
     }
 }
 

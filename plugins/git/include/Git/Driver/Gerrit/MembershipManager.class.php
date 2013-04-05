@@ -21,6 +21,8 @@
 require_once 'MembershipDao.class.php';
 require_once 'MembershipCommand/AddUser.class.php';
 require_once 'MembershipCommand/RemoveUser.class.php';
+require_once 'MembershipCommand/AddBinding.class.php';
+require_once 'MembershipCommand/RemoveBinding.class.php';
 
 class Git_Driver_Gerrit_MembershipManager {
     const GROUP_CONTRIBUTORS = 'contributors';
@@ -71,28 +73,20 @@ class Git_Driver_Gerrit_MembershipManager {
         }
     }
 
-    public function updateUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup = null) {
-        $remote_servers = $this->gerrit_server_factory->getServersForUGroup($ugroup);
-        foreach ($remote_servers as $remote_server) {
-            $this->updateUGroupBindinOnServer($remote_server, $driver, $ugroup, $source_ugroup);
-        }
+    public function addUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup) {
+        $command        = new Git_Driver_Gerrit_MembershipCommand_AddBinding($this, $driver, $ugroup, $source_ugroup);
+        $this->updateUGroupBinding($command);
     }
 
-    protected function updateUGroupBindinOnServer(Git_RemoteServer_GerritServer $server, Git_Driver_Gerrit $driver, UGroup $ugroup, UGroup $source_ugroup = null) {
-        $group_name = $this->getFullyQualifiedUGroupName($ugroup);
-        if ($source_ugroup) {
-            $included_group_name = $this->createGroupForServer($server, $driver, $source_ugroup);
-            $driver->removeAllGroupMembers($server, $group_name);
-            $driver->addIncludedGroup($server, $group_name, $included_group_name);
-        } else {
-            $driver->removeAllIncludedGroups($server, $group_name);
-            $previous_source_group = $ugroup->getSourceGroup();
-            if ($previous_source_group) {
-                foreach ($previous_source_group->getMembers() as $user) {
-                    $add_command = new Git_Driver_Gerrit_MembershipCommand_AddUser($driver);
-                    $this->updateUserMembership($user, $ugroup, $ugroup->getProject(), $add_command);
-                }
-            }
+    public function removeUGroupBinding(Git_Driver_Gerrit $driver, UGroup $ugroup) {
+        $command        = new Git_Driver_Gerrit_MembershipCommand_RemoveBinding($this, $driver, $ugroup);
+        $this->updateUGroupBinding($command);
+    }
+
+    private function updateUGroupBinding($command) {
+        $remote_servers = $this->gerrit_server_factory->getServersForUGroup($command->getUGroup());
+        foreach ($remote_servers as $remote_server) {
+            $command->execute($remote_server);
         }
     }
 
@@ -149,7 +143,7 @@ class Git_Driver_Gerrit_MembershipManager {
      * @param UGroup $ugroup
      * @return String
      */
-    private function getFullyQualifiedUGroupName(UGroup $ugroup) {
+    public function getFullyQualifiedUGroupName(UGroup $ugroup) {
         return $ugroup->getProject()->getUnixName().'/'.$ugroup->getNormalizedName();
     }
 
