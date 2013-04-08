@@ -179,7 +179,7 @@ if ($git_plugin && $plugin_manager->isPluginAvailable($git_plugin)) {
     }
 
     if (isset($_POST['ssh_key_push'])) {
-        $git_plugin->pushSSHKeys($user);
+        $git_plugin->pushSSHKeysToRemoteServers($user);
     }
 }
 echo '</fieldset>';

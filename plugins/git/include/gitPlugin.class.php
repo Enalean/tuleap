@@ -343,8 +343,17 @@ class GitPlugin extends Plugin {
         return json_encode($servers);
     }
 
-    public function pushSSHKeys(PFUser $user) {
+    /**
+     * Copies all SSH Keys to Remote Git Servers
+     * @param PFUser $user
+     */
+    public function pushSSHKeysToRemoteServers(PFUser $user) {
+        $gerrit_driver = $this->getGerritDriver();
+        $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
 
+        $gerrit_user_account_manager->pushSSHKeys(
+            $this->getGerritServerFactory()
+        );
     }
 
     function permission_get_name($params) {
