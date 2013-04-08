@@ -127,7 +127,8 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[0]);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[1]);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[2]);
-        
+
+        //for each remote server
         expect($this->gerrit_driver)->addSSHKeyToAccount()->count(4);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->count(6);
 
