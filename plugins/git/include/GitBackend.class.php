@@ -18,13 +18,6 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 require_once('common/backend/Backend.class.php');
-require_once('GitDao.class.php');
-require_once('Git_LogDao.class.php');
-require_once('GitDriver.class.php');
-require_once('Git_Backend_Interface.php');
-require_once('GitRepositoryCreator.class.php');
-require_once('GitRepository.class.php');
-require_once('exceptions/GitBackendException.class.php');
 
 /**
  * Description of GitBackend

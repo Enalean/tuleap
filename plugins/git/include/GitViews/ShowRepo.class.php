@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'ShowRepo/Content.class.php';
-require_once 'ShowRepo/Download.class.php';
-require_once 'GitPhpViewer.class.php';
 
 class GitViews_ShowRepo {
     /**

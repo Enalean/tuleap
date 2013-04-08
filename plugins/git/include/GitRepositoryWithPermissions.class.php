@@ -23,7 +23,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitRepository.class.php';
 
 /**
  * Git Repository with its permissions

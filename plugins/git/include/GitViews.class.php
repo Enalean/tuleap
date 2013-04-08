@@ -19,18 +19,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/
  */
 
-require_once GIT_BASE_DIR .'/mvc/PluginViews.class.php';
-require_once GIT_BASE_DIR .'/gitPlugin.class.php';
-require_once GIT_BASE_DIR .'/GitDao.class.php';
-require_once GIT_BASE_DIR .'/Git_LogDao.class.php';
-require_once GIT_BASE_DIR .'/GitBackend.class.php';
-require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Selectbox.class.php';
-require_once GIT_BASE_DIR .'/GitViewsRepositoriesTraversalStrategy_Tree.class.php';
-require_once GIT_BASE_DIR .'/GitForkPermissionsManager.class.php';
 require_once 'www/project/admin/permissions.php';
 require_once 'common/include/CSRFSynchronizerToken.class.php';
-require_once 'GitViews/RepoManagement/RepoManagement.class.php';
-require_once 'GitViews/ShowRepo.class.php';
 
 /**
  * GitViews

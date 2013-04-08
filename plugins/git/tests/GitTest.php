@@ -18,8 +18,8 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once (dirname(__FILE__).'/../include/Git.class.php');
+require_once 'bootstrap.php';
+
 Mock::generate('PFUser');
 Mock::generate('UserManager');
 Mock::generate('Project');

@@ -19,9 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
-require_once dirname(__FILE__).'/../include/Git_Backend_Gitolite.class.php';
-require_once dirname(__FILE__).'/../include/Git_GitoliteDriver.class.php';
+require_once 'bootstrap.php';
 require_once 'common/project/Project.class.php';
 require_once 'common/backend/Backend.class.php';
 

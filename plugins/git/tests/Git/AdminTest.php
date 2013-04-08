@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__).'/../../include/constants.php';
-require_once GIT_BASE_DIR.'/Git/Admin.class.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 class Git_Admin_process_Test extends TuleapTestCase {
 

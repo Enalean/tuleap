@@ -18,9 +18,6 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once 'GitDao.class.php';
-require_once 'GitRepository.class.php';
-require_once 'GitRepositoryWithPermissions.class.php';
 
 class GitRepositoryFactory {
     /**

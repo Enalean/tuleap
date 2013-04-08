@@ -18,7 +18,7 @@
  * along with Codendi. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
+require_once 'bootstrap.php';
 require_once (dirname(__FILE__).'/../include/GitActions.class.php');
 Mock::generatePartial('GitActions', 'GitActionsTestVersion', array('getText', 'addData', 'getGitRepository', 'save'));
 require_once (dirname(__FILE__).'/../include/Git.class.php');

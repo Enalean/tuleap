@@ -19,8 +19,7 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-require_once(dirname(__FILE__).'/../../include/constants.php');
-require_once dirname(__FILE__).'/../../include/events/SystemEvent_GIT_REPO_DELETE.class.php';
+require_once dirname(__FILE__).'/../bootstrap.php';
 
 class SystemEvent_GIT_REPO_DELETETest extends TuleapTestCase {
     protected $project_id;

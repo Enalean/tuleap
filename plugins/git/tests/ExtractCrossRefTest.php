@@ -18,7 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once(dirname(__FILE__).'/../include/constants.php');
+require_once 'bootstrap.php';
 require_once (dirname(__FILE__) . '/../hooks/ExtractCrossRef.class.php');
 
 /**

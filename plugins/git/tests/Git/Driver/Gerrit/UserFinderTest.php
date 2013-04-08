@@ -18,8 +18,7 @@
  * along with Tuleap. If not, see <http://www.gnu.org/licenses/>.
  */
 
-require_once dirname(__FILE__) .'/../../../../include/constants.php';
-require_once GIT_BASE_DIR.'/Git/Driver/Gerrit/UserFinder.class.php';
+require_once dirname(__FILE__).'/../../../bootstrap.php';
 
 class Git_Driver_Gerrit_UserFinderTest extends TuleapTestCase {
 

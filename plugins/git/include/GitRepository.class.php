@@ -18,14 +18,8 @@
   * along with Codendi. If not, see <http://www.gnu.org/licenses/
   */
 
-
-require_once('GitBackend.class.php');
-require_once('Git_Backend_Gitolite.class.php');
-require_once('GitDriver.class.php');
-require_once('GitDao.class.php');
-require_once('PathJoinUtil.php');
 require_once(dirname(__FILE__).'/../DVCS/DVCSRepository.class.php');
-require_once('exceptions/GitRepositoryException.class.php');
+require_once 'PathJoinUtil.php';
 
 /**
  * Description of GitRepositoryclass
