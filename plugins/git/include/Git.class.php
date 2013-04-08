@@ -204,6 +204,7 @@ class Git extends PluginController {
                                             'do_fork_repositories',
                                             'view_last_git_pushes',
                                             'migrate_to_gerrit',
+                                            'disconnect_gerrit',
             );
         } else {
             $this->addPermittedAction('index');
@@ -447,6 +448,16 @@ class Git extends PluginController {
                     $this->redirect('/plugins/git/?group_id='. $this->groupId);
                 } else {
                     $this->addAction('migrateToGerrit', array($repo, $remote_server_id));
+                    $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
+                }
+                break;
+            case 'disconnect_gerrit':
+                $repo = $this->factory->getRepositoryById($repoId);
+                if (empty($repo)) {
+                    $this->addError($this->getText('actions_params_error'));
+                    $this->redirect('/plugins/git/?group_id='. $this->groupId);
+                } else {
+                    $this->addAction('disconnectFromGerrit', array($repo));
                     $this->addAction('redirectToRepoManagement', array($this->groupId, $repoId, $pane));
                 }
                 break;
