@@ -122,17 +122,107 @@ class Git_Driver_Gerrit_UserAccountManager_SynchroniseSSHKeysTest extends Tuleap
         expect($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->once();
         
         expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server1, $this->user, $added_keys[1]);
+        expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server2, $this->user, $added_keys[1]);
         expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server1, $this->user, $added_keys[0]);
+        expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server2, $this->user, $added_keys[0]);
 
         expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[0]);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server2, $this->user, $removed_keys[0]);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[1]);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server2, $this->user, $removed_keys[1]);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $removed_keys[2]);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server2, $this->user, $removed_keys[2]);
 
         //for each remote server
         expect($this->gerrit_driver)->addSSHKeyToAccount()->count(4);
         expect($this->gerrit_driver)->removeSSHKeyFromAccount()->count(6);
 
         $this->user_account_manager->synchroniseSSHKeys($this->original_keys, $this->new_keys, $this->remote_gerrit_factory);
+    }
+}
+
+class Git_Driver_Gerrit_UserAccountManager_PushSSHKeysTest extends TuleapTestCase {
+    /** @var PFUser */
+    private $user;
+    private $gerrit_driver;
+    private $remote_gerrit_factory;
+    private $remote_server1;
+    private $remote_server2;
+    /**
+     * @var Git_Driver_Gerrit_UserAccountManager
+     */
+    private $user_account_manager;
+
+    public function setUp() {
+        parent::setUp();
+
+        $this->user                  = aUser()->withLdapId("testUser")->build();
+        $key1 = 'key1';
+        $key2 = 'key2';
+
+        $this->user->setAuthorizedKeys($key1.PFUser::SSH_KEY_SEPARATOR.$key2);
+
+        $this->gerrit_driver         = mock('Git_Driver_Gerrit');
+        $this->remote_gerrit_factory = mock('Git_RemoteServer_GerritServerFactory');
+        $this->user_account_manager  = new Git_Driver_Gerrit_UserAccountManager($this->user, $this->gerrit_driver);
+
+
+        $this->remote_server1 = mock('Git_RemoteServer_GerritServer');
+        $this->remote_server2 = mock('Git_RemoteServer_GerritServer');
+
+        stub($this->remote_gerrit_factory)
+            ->getRemoteServersForUser($this->user)
+                ->returns(
+                    array(
+                        $this->remote_server1,
+                        $this->remote_server2,
+                    )
+                );
+    }
+
+    public function itDoesntPushIfUserHasNoRemoteServers() {
+        $remote_gerrit_factory = stub('Git_RemoteServer_GerritServerFactory')->getRemoteServersForUser($this->user)->returns(array());
+
+        expect($this->gerrit_driver)->addSSHKeyToAccount()->never();
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount()->never();
+
+        $this->user_account_manager->pushSSHKeys($remote_gerrit_factory);
+    }
+
+    public function itDoesntPushIfUserHasNoKeys() {
+        $this->user->setAuthorizedKeys('');
+
+        expect($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->never();
+        expect($this->gerrit_driver)->addSSHKeyToAccount()->never();
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount()->never();
+
+        $this->user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
+    }
+
+    public function itCallsTheDriverToAddAndRemoveKeysTheRightNumberOfTimes() {
+        $pushed_keys = array(
+            'Im a new key',
+            'Im another new key',
+        );
+
+        expect($this->remote_gerrit_factory)->getRemoteServersForUser($this->user)->once();
+
+        expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server1, $this->user, $pushed_keys[1]);
+        expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server2, $this->user, $pushed_keys[1]);
+        expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server1, $this->user, $pushed_keys[0]);
+        expect($this->gerrit_driver)->addSSHKeyToAccount($this->remote_server2, $this->user, $pushed_keys[0]);
+
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $pushed_keys[0]);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server2, $this->user, $pushed_keys[0]);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server1, $this->user, $pushed_keys[1]);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount($this->remote_server2, $this->user, $pushed_keys[1]);
+
+        //for each remote server
+        expect($this->gerrit_driver)->addSSHKeyToAccount()->count(4);
+        expect($this->gerrit_driver)->removeSSHKeyFromAccount()->count(4);
+
+        $this->user_account_manager->pushSSHKeys($this->remote_gerrit_factory);
+      
     }
 }
 ?>

@@ -68,6 +68,27 @@ class Git_Driver_Gerrit_UserAccountManager {
         }
     }
 
+    /**
+     * Makes sure there is one copy of each key on each remote server
+     * 
+     * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
+     * @return empty
+     */
+    public function pushSSHKeys(Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
+        $user_keys = array_unique($this->user->getAuthorizedKeysArray());
+
+        if (! $user_keys) {
+            return;
+        }
+
+        $remote_servers = $remote_gerrit_factory->getRemoteServersForUser($this->user);
+
+        foreach($remote_servers as $remote_server) {
+            $this->removeKeys($remote_server, $user_keys);
+            $this->addKeys($remote_server, $user_keys);
+        }
+    }
+
     private function addKeys(Git_RemoteServer_GerritServer $remote_server, Array $keys) {
         foreach($keys as $key) {
             $this->gerrit_driver->addSSHKeyToAccount($remote_server, $this->user, $key);
