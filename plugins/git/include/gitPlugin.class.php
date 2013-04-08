@@ -317,8 +317,10 @@ class GitPlugin extends Plugin {
             $original_keys = array_filter(explode('###', $params['original_keys']));
         }
         
-        $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
-
+        try {
+            $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
+        } catch (Git_Driver_Gerrit_InvalidLDAPUserException $e) {}
+        
         $gerrit_user_account_manager->synchroniseSSHKeys(
             $original_keys,
             $new_keys,
@@ -349,7 +351,12 @@ class GitPlugin extends Plugin {
      */
     public function pushSSHKeysToRemoteServers(PFUser $user) {
         $gerrit_driver = $this->getGerritDriver();
-        $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
+        try {
+            $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
+        } catch (Git_Driver_Gerrit_InvalidLDAPUserException $e) {
+            $logger = new BackendLogger();
+            $logger->error('Tried pushSSHKeysToRemoteServer for non-ldap user: ' . $user->getUnixName());
+        }
 
         $gerrit_user_account_manager->pushSSHKeys(
             $this->getGerritServerFactory()

@@ -45,6 +45,13 @@ class Git_Driver_Gerrit_UserAccountManager {
         $this->gerrit_driver = $gerrit_driver;
     }
 
+    /**
+     *
+     * @param array $original_keys
+     * @param array $new_keys
+     * @param Git_RemoteServer_GerritServerFactory $remote_gerrit_factory
+     * @return empty
+     */
     public function synchroniseSSHKeys(Array $original_keys, Array $new_keys, Git_RemoteServer_GerritServerFactory $remote_gerrit_factory) {
         $keys_to_add    = $this->getKeysToAdd($original_keys, $new_keys);
         $keys_to_remove = $this->getKeysToRemove($original_keys, $new_keys);
