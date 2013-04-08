@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (c) STMicroelectronics 2012. All rights reserved
+ * Copyright (c) Enalean SAS - 2013. All rights reserved
  *
  * Tuleap is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
