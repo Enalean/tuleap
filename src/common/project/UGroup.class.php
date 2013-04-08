@@ -69,7 +69,7 @@ class UGroup {
     protected $name         = null;
     protected $description  = null;
     protected $is_dynamic   = true;
-    protected $source_id    = null;
+    protected $source_id    = false;
 
     protected $members      = null;
     protected $members_name = null;
@@ -94,7 +94,7 @@ class UGroup {
         $this->name        = isset($row['name'])        ? $row['name']        : null;
         $this->description = isset($row['description']) ? $row['description'] : null;
         $this->group_id    = isset($row['group_id'])    ? $row['group_id']    : 0;
-        $this->source_id   = isset($row['source_id'])   ? $row['source_id']   : null;
+        $this->source_id   = isset($row['source_id'])   ? $row['source_id']   : false;
         $this->is_dynamic  = $this->id < 100;
     }
 
@@ -476,6 +476,10 @@ class UGroup {
      * @return Boolean
      */
     public function isBound() {
+        if ($this->source_id === false) {
+            $source_group = $this->getSourceGroup();
+            $this->source_id = ($source_group === null) ? null : $source_group->getId();
+        }
         return ($this->source_id != null);
     }
 
