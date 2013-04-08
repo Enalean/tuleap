@@ -149,6 +149,30 @@ foreach ($keys as $key) {
     echo '<li>'.substr($key, 0, 20).'...'.substr($key, -20).'</li>';
 }
 echo '</ol><a href="editsshkeys.php">['.$Language->getText('account_options', 'shell_edit_keys').']</a>';
+
+
+//get plugin manager
+require_once('common/plugin/PluginManager.class.php');
+$plugin_manager =& PluginManager::instance();
+$git_plugin =& $plugin_manager->getPluginByName('git');
+
+if ($git_plugin && $plugin_manager->isPluginAvailable($git_plugin)) {
+    $remote_servers = json_decode($git_plugin->getRemoteServersForUser($user));
+    if ($remote_servers) {
+        echo'<br />
+            <br />
+            <hr />
+            <br />
+            These keys are synchronised with the following Gerrit servers:
+            <ul>';
+
+        foreach ($remote_servers as $remote_server) {
+            echo '<li>'.$remote_server->host_name.'</li>';
+        }
+        echo '</ul>
+            <input type="button" title="Synchronise SSH keys with remote servers" value="Re-synchronise SSH keys"/>';
+    }
+}
 echo '</fieldset>';
 
 
