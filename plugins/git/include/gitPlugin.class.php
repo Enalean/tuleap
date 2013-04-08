@@ -343,6 +343,10 @@ class GitPlugin extends Plugin {
         return json_encode($servers);
     }
 
+    public function resynchroniseSSHKeys(PFUser $user) {
+
+    }
+
     function permission_get_name($params) {
         if (!$params['name']) {
             switch($params['permission_type']) {

@@ -163,14 +163,23 @@ if ($git_plugin && $plugin_manager->isPluginAvailable($git_plugin)) {
             <br />
             <hr />
             <br />
-            These keys are synchronised with the following Gerrit servers:
+            These keys are automatically synchronised with the following Gerrit servers:
             <ul>';
 
         foreach ($remote_servers as $remote_server) {
             echo '<li>'.$remote_server->host_name.'</li>';
         }
         echo '</ul>
-            <input type="button" title="Synchronise SSH keys with remote servers" value="Re-synchronise SSH keys"/>';
+            <form action="" method="post">
+                <input type="submit"
+                    title="Synchronise SSH keys with remote servers"
+                    value="Re-synchronise SSH keys"
+                    name="ssh_key_synch"/>
+            </form>';
+    }
+
+    if (isset($_POST['ssh_key_synch'])) {
+        $git_plugin->resynchroniseSSHKeys($user);
     }
 }
 echo '</fieldset>';
