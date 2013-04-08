@@ -60,35 +60,44 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
      * @see GitViews_RepoManagement_Pane::getContent()
      */
     public function getContent() {
-        $html  = '';
         if ($this->repository->getRemoteServerId()) {
-            $html .= $this->getContentAlreadyMigrated();
-        } else {
-            $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
-            $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
-            $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
-            $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
-            $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
-
-            $html .= '<p>';
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_description', $this->repository->getName());
-            $html .= '</p>';
-            $html .= '<div class="git_repomanagement_gerrit_more_description">';
-            $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_more_description', $this->driver->getGerritProjectName($this->repository));
-            $html .= '</div>';
-            $html .= '<p>';
-            $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
-            $html .= '<select name="remote_server_id" id="gerrit_url">';
-            $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
-            foreach ($this->gerrit_servers as $server) {
-                $html .= '<option value="'. (int)$server->getId() .'">'. $this->hp->purify($server->getHost()) .'</option>';
-            }
-            $html .= '</select>';
-            $html .= '</p>';
-
-            $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
-            $html .= '</form>';
+            return $this->getContentAlreadyMigrated();
+        } else if (! $this->repository->canMigrateToGerrit()) {
+            return $this->getContentCannotMigrate();
         }
+
+        $html  = '';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
+        $html .= '<form id="repoAction" name="repoAction" method="POST" action="/plugins/git/?group_id='. $this->repository->getProjectId() .'">';
+        $html .= '<input type="hidden" id="action" name="action" value="migrate_to_gerrit" />';
+        $html .= '<input type="hidden" name="pane" value="'. $this->getIdentifier() .'" />';
+        $html .= '<input type="hidden" id="repo_id" name="repo_id" value="'. $this->repository->getId() .'" />';
+
+        $html .= '<p>';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_description', $this->repository->getName());
+        $html .= '</p>';
+        $html .= '<div class="git_repomanagement_gerrit_more_description">';
+        $html .= $GLOBALS['Language']->getText('plugin_git', 'gerrit_migration_more_description', $this->driver->getGerritProjectName($this->repository));
+        $html .= '</div>';
+        $html .= '<p>';
+        $html .= '<label for="gerrit_url">'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_url') .'</label>';
+        $html .= '<select name="remote_server_id" id="gerrit_url">';
+        $html .= '<option value="">'. $GLOBALS['Language']->getText('global', 'please_choose_dashed') .'</option>';
+        foreach ($this->gerrit_servers as $server) {
+            $html .= '<option value="'. (int)$server->getId() .'">'. $this->hp->purify($server->getHost()) .'</option>';
+        }
+        $html .= '</select>';
+        $html .= '</p>';
+
+        $html .= '<p><input type="submit" name="save" value="'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_migrate_to') .'" /></p>';
+        $html .= '</form>';
+        return $html;
+    }
+
+    private function getContentCannotMigrate() {
+        $html  = '';
+        $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
+        $html .= '<p class="alert alert-block">'.  $GLOBALS['Language']->getText('plugin_git', 'gerrit_cannot_migrate_error_msg') .'</p>';
         return $html;
     }
 

@@ -217,3 +217,5 @@ plugin_git	logsdaily_field	Repository name
 plugin_git	logsdaily_title	Git pushes
 
 plugin_git	delegated_to_gerrit	The management of this Git repository has been delegated to the Gerrit platform:
+
+plugin_git	gerrit_cannot_migrate_error_msg	This repository cannot be migrated. This is because it was alreapy migrated in the past and cannot anymore be migrated again.

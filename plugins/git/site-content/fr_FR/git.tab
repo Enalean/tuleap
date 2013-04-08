@@ -214,3 +214,5 @@ plugin_git	logsdaily_field	Nom du répertoire
 plugin_git	logsdaily_title	Les Git push
 
 plugin_git	delegated_to_gerrit	La gestion de ce dépôt Git a été déléguée à la plateforme Gerrit:
+
+plugin_git	gerrit_cannot_migrate_error_msg	Ce dépôt ne peux pas être migré. Ceci est dû au fait qu'il a déjà été migré par le passé et ne peut plus être migré de nouveau.
