@@ -286,12 +286,11 @@ class GitPlugin extends Plugin {
      * @param array $params
      */
     public function dump_ssh_keys($params) {
-        $this->propagateKeysToGerrit($params);
-
         $retVal = 0;
         $output = array();
         $mvCmd  = $GLOBALS['codendi_dir'].'/src/utils/php-launcher.sh '.$GLOBALS['codendi_dir'].'/plugins/git/bin/gl-dump-sshkeys.php';
         if (isset($params['user'])) {
+            $this->propagateKeysToGerrit($params);
             $mvCmd .= ' '.$params['user']->getId();
         }
         $cmd    = 'su -l codendiadm -c "'.$mvCmd.' 2>&1"';
@@ -309,19 +308,22 @@ class GitPlugin extends Plugin {
         require_once GIT_BASE_DIR . '/Git/Driver/Gerrit/UserAccountManager.class.php';
 
         $user          = $params['user'];
-        $original_keys = array();
-        $new_keys      = $user->getAuthorizedKeysArray();
-        $gerrit_driver = new Git_Driver_Gerrit(
-            new Git_Driver_Gerrit_RemoteSSHCommand(new BackendLogger()),
-            new BackendLogger()
-        );
-        $gerrit_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
+        $gerrit_driver = $this->getGerritDriver();
 
-        if ($params['original_keys']) {
+        $new_keys      = $user->getAuthorizedKeysArray();
+        $original_keys = array();
+        
+        if (isset($params['original_keys']) && is_string($params['original_keys'])) {
             $original_keys = array_filter(explode('###', $params['original_keys']));
         }
+        
+        $gerrit_user_account_manager = new Git_Driver_Gerrit_UserAccountManager($user, $gerrit_driver);
 
-        $gerrit_account_manager->synchroniseSSHKeys($original_keys, $new_keys, $this->getGerritServerFactory());
+        $gerrit_user_account_manager->synchroniseSSHKeys(
+            $original_keys,
+            $new_keys,
+            $this->getGerritServerFactory()
+        );
     }
 
     function permission_get_name($params) {
