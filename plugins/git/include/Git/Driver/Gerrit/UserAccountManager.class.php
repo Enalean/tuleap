@@ -74,11 +74,11 @@ class Git_Driver_Gerrit_UserAccountManager {
     }
 
     private function getKeysToAdd(Array $original_keys, Array $new_keys) {
-        return array_diff($new_keys, $original_keys);
+        return array_unique(array_diff($new_keys, $original_keys));
     }
 
     private function getKeysToRemove(Array $original_keys, Array $new_keys) {
-        return array_diff($original_keys, $new_keys);
+        return array_unique(array_diff($original_keys, $new_keys));
     }
 
     private function areThereKeysToUpdate(Array $keys_to_add, Array $keys_to_remove) {
