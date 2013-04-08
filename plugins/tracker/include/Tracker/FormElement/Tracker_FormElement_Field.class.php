@@ -160,8 +160,16 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
     }
 
     public function fetchCriteria(Tracker_Report_Criteria $criteria) {
+        return $this->buildReportCriteria($criteria, $this->criteriaCanBeAdvanced());
+    }
+
+    public function fetchCriteriaWithoutExpandFunctionnality(Tracker_Report_Criteria $criteria) {
+        return $this->buildReportCriteria($criteria, false);
+    }
+
+    private function buildReportCriteria(Tracker_Report_Criteria $criteria, $advanced_criteria) {
         $html = '';
-        if ($this->criteriaCanBeAdvanced()) {
+        if ($advanced_criteria) {
             $html .= '<table cellpadding="0" cellspacing="0"><tbody><tr><td>';
             $html .= $GLOBALS['HTML']->getImage('ic/toggle_'. ($criteria->is_advanced ? 'minus' : 'plus' ) .'.png',
                                                 array('class' => 'tracker_report_criteria_advanced_toggle')
@@ -173,11 +181,11 @@ abstract class Tracker_FormElement_Field extends Tracker_FormElement implements 
         $html .= '</label>';
 
         $html .= '<br />';
-        if ($this->criteriaCanBeAdvanced()) {
+        if ($advanced_criteria) {
             $html .=  '<div class="tracker_report_criteria">';
         }
         $html .= $this->fetchCriteriaValue($criteria);
-        if ($this->criteriaCanBeAdvanced()) {
+        if ($advanced_criteria) {
             $html .= '</div></td></tr></tbody></table>';
         }
         $html .= $this->fetchCriteriaAdditionnalInfo($criteria);
