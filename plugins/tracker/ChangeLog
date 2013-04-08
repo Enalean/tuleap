@@ -1,3 +1,9 @@
+Version 5.106 - Tuleap 5.13
+    * Fix sla #2835: Search criteria disappear when used advanced search on a field
+
+Version 5.105 - Tuleap 5.13
+    * See grand-children of an artifact in its hierarchical view
+
 Version 5.104 - Tuleap 5.13
     * Fix SOAP getTrackerFields(): do not list registered_users
 
