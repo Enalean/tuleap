@@ -343,7 +343,7 @@ class GitPlugin extends Plugin {
         return json_encode($servers);
     }
 
-    public function resynchroniseSSHKeys(PFUser $user) {
+    public function pushSSHKeys(PFUser $user) {
 
     }
 
