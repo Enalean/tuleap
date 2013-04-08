@@ -314,7 +314,7 @@ class GitPlugin extends Plugin {
         $original_keys = array();
         
         if (isset($params['original_keys']) && is_string($params['original_keys'])) {
-            $original_keys = array_filter(explode('###', $params['original_keys']));
+            $original_keys = array_filter(explode(PFUser::SSH_KEY_SEPARATOR, $params['original_keys']));
         }
         
         try {
