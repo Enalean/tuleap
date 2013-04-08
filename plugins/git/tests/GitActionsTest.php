@@ -640,4 +640,24 @@ class GitActions_migrateToGerritTest extends TuleapTestCase {
         $this->actions->migrateToGerrit($repo, $server_id);
     }
 }
+
+class GitActions_disconnectFromGerritTest extends TuleapTestCase {
+
+    public function itDelegatesToGitoliteBackend() {
+        $backend = mock('Git_Backend_Gitolite');
+        $repo    = stub('GitRepository')->getBackend()->returns($backend);
+        $actions = new GitActions(
+            mock('Git'),
+            mock('SystemEventManager'),
+            mock('GitRepositoryFactory'),
+            mock('GitRepositoryManager'),
+            mock('Git_RemoteServer_GerritServerFactory'),
+            mock('Git_Driver_Gerrit')
+        );
+
+        expect($backend)->disconnectFromGerrit()->once();
+
+        $actions->disconnectFromGerrit($repo);
+    }
+}
 ?>
