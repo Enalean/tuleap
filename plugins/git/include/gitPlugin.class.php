@@ -144,6 +144,9 @@ class GitPlugin extends Plugin {
         switch($params['type']) {
             case 'GIT_REPO_CREATE' :
                 $params['class'] = 'SystemEvent_GIT_REPO_CREATE';
+                $params['dependencies'] = array(
+                    $this->getRepositoryFactory()
+                );
                 break;
             case 'GIT_REPO_DELETE' :
                 $params['class'] = 'SystemEvent_GIT_REPO_DELETE';
