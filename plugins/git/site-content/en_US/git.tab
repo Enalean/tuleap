@@ -71,7 +71,7 @@ plugin_git	dao_error_remove_notification	Mail not removed
 plugin_git	dao_child_params	Repository child search failed : missing repository id
 
 plugin_git	disconnect_gerrit_title	Disconnect from Gerrit
-plugin_git	disconnect_gerrit_msg	This operation <strong>cannot</strong> be undone. This repository will never again be managed by the gerrit server $1. Do you confirm the disconnection?
+plugin_git	disconnect_gerrit_msg	This operation <strong>cannot</strong> be undone. This repository will never again be managed by a gerrit server. Do you confirm the disconnection?
 plugin_git	disconnect_gerrit_yes	Yes, I want to disconnect from Gerrit
 
 plugin_git	backend_delete_haschild_error	Unable to delete repository: it has child(ren)

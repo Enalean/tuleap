@@ -102,14 +102,14 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
     }
 
     private function getContentAlreadyMigrated() {
-        $gerrit_server = $this->gerrit_servers[$this->repository->getRemoteServerId()];
         $btn_name      = 'confirm_disconnect_gerrit';
         if ($this->request->get($btn_name)) {
-            return $this->getDisconnectFromGerritConfirmationScreen($gerrit_server);
+            return $this->getDisconnectFromGerritConfirmationScreen();
         }
 
         $gerrit_project = $this->driver->getGerritProjectName($this->repository);
-        $link = $gerrit_server->getProjectAdminUrl($gerrit_project);
+        $gerrit_server  = $this->gerrit_servers[$this->repository->getRemoteServerId()];
+        $link           = $gerrit_server->getProjectAdminUrl($gerrit_project);
 
         $html  = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'gerrit_title') .'</h3>';
@@ -128,7 +128,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
         return $html;
     }
 
-    private function getDisconnectFromGerritConfirmationScreen(Git_RemoteServer_GerritServer $gerrit_server) {
+    private function getDisconnectFromGerritConfirmationScreen() {
         $html  = '';
         $html .= '<h3>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_title') .'</h3>';
 
@@ -139,7 +139,7 @@ class GitViews_RepoManagement_Pane_Gerrit extends GitViews_RepoManagement_Pane {
 
         $html .= '<div class="alert alert-block">';
         $html .= '<h4>'. $GLOBALS['Language']->getText('global', 'warning!') .'</h4>';
-        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_msg', $gerrit_server->getHost()) .'</p>';
+        $html .= '<p>'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_msg') .'</p>';
         $html .= '<p>';
         $html .= '<button type="submit" name="disconnect" value="1" class="btn btn-danger">'. $GLOBALS['Language']->getText('plugin_git', 'disconnect_gerrit_yes') .'</button> ';
         $html .= '<button type="button" class="btn" onclick="window.location=window.location;">'. $GLOBALS['Language']->getText('plugin_git', 'no') .'</button> ';
