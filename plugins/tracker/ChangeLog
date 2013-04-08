@@ -1,3 +1,6 @@
+Version 5.107 - Tuleap 5.13
+    * Fix request ##2932: project cross-reference created with artifact link are displayed in parent artifact
+
 Version 5.106 - Tuleap 5.13
     * Fix sla #2835: Search criteria disappear when used advanced search on a field
 
